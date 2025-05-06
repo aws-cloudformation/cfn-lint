@@ -5,8 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-import cfnlint.data.schemas.other.functions
-from cfnlint.rules.functions._BaseFn import BaseFn, SchemaDetails, singular_types
+from cfnlint.rules.functions._BaseFn import BaseFn, singular_types
 
 
 class FindInMap(BaseFn):
@@ -22,9 +21,6 @@ class FindInMap(BaseFn):
         super().__init__(
             "Fn::FindInMap",
             ("array",) + singular_types,
-            schema_details=SchemaDetails(
-                cfnlint.data.schemas.other.functions, "findinmap.json"
-            ),
             resolved_rule="W1034",
         )
         self.fn_findinmap = self.validate

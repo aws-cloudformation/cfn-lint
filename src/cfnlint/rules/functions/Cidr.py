@@ -5,8 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-import cfnlint.data.schemas.other.functions
-from cfnlint.rules.functions._BaseFn import BaseFn, SchemaDetails
+from cfnlint.rules.functions._BaseFn import BaseFn
 
 
 class Cidr(BaseFn):
@@ -23,8 +22,5 @@ class Cidr(BaseFn):
             "Fn::Cidr",
             ("array",),
             None,
-            schema_details=SchemaDetails(
-                cfnlint.data.schemas.other.functions, "cidr.json"
-            ),
         )
         self.fn_cidr = self.validate

@@ -9,7 +9,7 @@ from cfnlint import ConfigMixIn
 from cfnlint.config import _DEFAULT_RULESDIR
 from cfnlint.rules import Rules
 from cfnlint.runner import Runner
-from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
+from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, SchemaPatch, reset
 
 
 class TestInclude(BaseTestCase):
@@ -23,14 +23,19 @@ class TestInclude(BaseTestCase):
     def tearDown(self):
         """Tear Down"""
         # Reset the Spec override to prevent other tests to fail
-        PROVIDER_SCHEMA_MANAGER.reset()
+        reset()
 
     def test_fail_run(self):
         """Failure test required"""
         filename = "test/fixtures/templates/bad/override/include.yaml"
 
         PROVIDER_SCHEMA_MANAGER.patch(
-            "test/fixtures/templates/override_spec/include.json", regions=[self.region]
+            SchemaPatch(
+                excluded_resource_types=[],
+                included_resource_types=["AWS::EC2::*", "AWS::S3::Bucket"],
+                patches={},
+            ),
+            region=self.region,
         )
 
         config = ConfigMixIn(

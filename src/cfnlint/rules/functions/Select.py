@@ -5,8 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-import cfnlint.data.schemas.other.functions
-from cfnlint.rules.functions._BaseFn import BaseFn, SchemaDetails, all_types
+from cfnlint.rules.functions._BaseFn import BaseFn, all_types
 
 
 class Select(BaseFn):
@@ -22,9 +21,6 @@ class Select(BaseFn):
         super().__init__(
             "Fn::Select",
             all_types,
-            schema_details=SchemaDetails(
-                cfnlint.data.schemas.other.functions, "select.json"
-            ),
             resolved_rule="W1035",
         )
         self.fn_select = self.validate

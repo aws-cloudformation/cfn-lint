@@ -20,7 +20,6 @@ class _ChildRule(CloudFormationLintRule):
 def rule(request):
     rule = BaseFn(resolved_rule="XXXXX")
     rule._schema = request.param.get("schema")
-    rule.configure(request.param)
 
     rule.child_rules["XXXXX"] = _ChildRule()
     yield rule
@@ -57,25 +56,6 @@ def rule(request):
             },
             {"Fn::Sub": "2"},
             [],
-        ),
-        (
-            "Resolved Fn::Sub has no strict type validation",
-            {
-                "schema": {"type": ["string"]},
-                "patches": [{"op": "add", "path": "/enum", "value": ["bar"]}],
-            },
-            {"Fn::Sub": "foo"},
-            [
-                ValidationError(
-                    message=(
-                        "{'Fn::Sub': 'foo'} is not one of ['bar'] when '' is resolved"
-                    ),
-                    path=deque(["Fn::Sub"]),
-                    validator="",
-                    schema_path=deque(["enum"]),
-                    rule=_ChildRule(),
-                )
-            ],
         ),
         (
             "Standard error",

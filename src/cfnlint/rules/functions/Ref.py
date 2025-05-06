@@ -7,10 +7,9 @@ from __future__ import annotations
 
 from typing import Any
 
-import cfnlint.data.schemas.other.functions
 from cfnlint.helpers import VALID_PARAMETER_TYPES, VALID_PARAMETER_TYPES_LIST
 from cfnlint.jsonschema import ValidationError, Validator
-from cfnlint.rules.functions._BaseFn import BaseFn, SchemaDetails, all_types
+from cfnlint.rules.functions._BaseFn import BaseFn, all_types
 
 
 class Ref(BaseFn):
@@ -27,9 +26,6 @@ class Ref(BaseFn):
             "Ref",
             all_types,
             resolved_rule="W1030",
-            schema_details=SchemaDetails(
-                cfnlint.data.schemas.other.functions, "ref.json"
-            ),
         )
         self._all_refs = [
             "W2010",

@@ -7,9 +7,8 @@ from __future__ import annotations
 
 from typing import Any
 
-import cfnlint.data.schemas.other.functions
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
-from cfnlint.rules.functions._BaseFn import BaseFn, SchemaDetails
+from cfnlint.rules.functions._BaseFn import BaseFn
 
 
 class Length(BaseFn):
@@ -25,9 +24,6 @@ class Length(BaseFn):
         super().__init__(
             "Fn::Length",
             ("integer",),
-            schema_details=SchemaDetails(
-                cfnlint.data.schemas.other.functions, "length.json"
-            ),
         )
 
     def fn_length(

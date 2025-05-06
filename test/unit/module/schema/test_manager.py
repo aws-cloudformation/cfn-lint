@@ -8,8 +8,8 @@ import logging
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import MagicMock, call, mock_open, patch
 
+from cfnlint.schema._patch import SchemaPatch
 from cfnlint.schema.manager import ProviderSchemaManager, ResourceNotFoundError
-from cfnlint.schema.patch import SchemaPatch
 
 LOGGER = logging.getLogger("cfnlint.schema.manager")
 LOGGER.disabled = True
@@ -245,58 +245,6 @@ class TestUpdateResourceSchemas(BaseTestCase):
         fake_pool.starmap.assert_called_once()
 
 
-class TestManagerPatch(BaseTestCase):
-    """Used for Testing Resource Schemas"""
-
-    def setUp(self) -> None:
-        super().setUp()
-
-        self.manager = ProviderSchemaManager()
-        self.schemas = dict.fromkeys(["aws-lambda-codesigningconfig"])
-        for resource in self.schemas:
-            with open(f"test/fixtures/registry/schemas/{resource}.json") as fh:
-                self.schemas[resource] = fh.read()
-
-    def test_patch_file_not_found_error(self):
-        with patch("builtins.open", mock_open()) as mock_builtin_open:
-            err = FileNotFoundError()
-            err.errno = 2
-            mock_builtin_open.side_effect = [err]
-            with self.assertRaises(SystemExit) as mock_exit:
-                self.manager.patch("bad", regions=["us-east-1"])
-                self.assertEqual(mock_exit.type, SystemExit)
-                self.assertEqual(mock_exit.value.code == 1)
-
-    def test_patch_file_is_dir(self):
-        with patch("builtins.open", mock_open()) as mock_builtin_open:
-            err = IOError()
-            err.errno = 21
-            mock_builtin_open.side_effect = [err]
-            with self.assertRaises(SystemExit) as mock_exit:
-                self.manager.patch("bad", regions=["us-east-1"])
-                self.assertEqual(mock_exit.type, SystemExit)
-                self.assertEqual(mock_exit.value.code == 1)
-
-    def test_patch_permission_error(self):
-        with patch("builtins.open", mock_open()) as mock_builtin_open:
-            err = PermissionError()
-            err.errno = 13
-            mock_builtin_open.side_effect = [err]
-            with self.assertRaises(SystemExit) as mock_exit:
-                self.manager.patch("bad", regions=["us-east-1"])
-                self.assertEqual(mock_exit.type, SystemExit)
-                self.assertEqual(mock_exit.value.code == 1)
-
-    def test_patch_value_error(self):
-        with patch("builtins.open", mock_open()) as mock_builtin_open:
-            err = ValueError()
-            mock_builtin_open.side_effect = [err]
-            with self.assertRaises(SystemExit) as mock_exit:
-                self.manager.patch("bad", regions=["us-east-1"])
-                self.assertEqual(mock_exit.type, SystemExit)
-                self.assertEqual(mock_exit.value.code == 1)
-
-
 class TestManagerGetResourceSchema(BaseTestCase):
     """Test get resource schema"""
 
@@ -316,7 +264,7 @@ class TestManagerGetResourceSchema(BaseTestCase):
     def test_removed_types(self):
         rt = "AWS::EC2::VPC"
         region = "us-east-1"
-        self.manager._patch(SchemaPatch([], [rt], {}), region)
+        self.manager.patch(SchemaPatch([], [rt], {}), region)
 
         with self.assertRaises(ResourceNotFoundError):
             self.manager.get_resource_schema(region, rt)

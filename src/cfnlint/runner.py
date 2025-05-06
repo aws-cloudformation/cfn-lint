@@ -23,7 +23,7 @@ from cfnlint.exceptions import (
 from cfnlint.helpers import REGIONS
 from cfnlint.rules import Match, Rules
 from cfnlint.rules.errors import ConfigError, ParseError, TransformError
-from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
+from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, patch
 from cfnlint.template.template import Template
 
 LOGGER = logging.getLogger(__name__)
@@ -241,9 +241,7 @@ class Runner:
                 PROVIDER_SCHEMA_MANAGER.load_registry_schemas(path)
         # now we can patch after loading all registry schemas
         if self.config.override_spec:
-            PROVIDER_SCHEMA_MANAGER.patch(
-                self.config.override_spec, self.config.regions
-            )
+            patch(self.config.override_spec, self.config.regions)
 
     def _get_rules(self) -> None:
         """

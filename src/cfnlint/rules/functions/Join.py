@@ -7,10 +7,9 @@ from __future__ import annotations
 
 from typing import Any
 
-import cfnlint.data.schemas.other.functions
 from cfnlint.jsonschema import ValidationResult
 from cfnlint.jsonschema.protocols import Validator
-from cfnlint.rules.functions._BaseFn import BaseFn, SchemaDetails
+from cfnlint.rules.functions._BaseFn import BaseFn
 
 
 class Join(BaseFn):
@@ -27,9 +26,6 @@ class Join(BaseFn):
             "Fn::Join",
             ("string",),
             resolved_rule="W1032",
-            schema_details=SchemaDetails(
-                cfnlint.data.schemas.other.functions, "join.json"
-            ),
         )
         self.child_rules.update(
             {

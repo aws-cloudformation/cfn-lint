@@ -5,9 +5,8 @@ SPDX-License-Identifier: MIT-0
 
 from typing import Any, Iterator
 
-import cfnlint.data.schemas.other.functions
 from cfnlint.jsonschema import ValidationError, Validator
-from cfnlint.rules.functions._BaseFn import BaseFn, SchemaDetails, singular_types
+from cfnlint.rules.functions._BaseFn import BaseFn, singular_types
 
 
 class ImportValue(BaseFn):
@@ -23,9 +22,6 @@ class ImportValue(BaseFn):
         super().__init__(
             "Fn::ImportValue",
             singular_types,
-            schema_details=SchemaDetails(
-                cfnlint.data.schemas.other.functions, "importvalue.json"
-            ),
         )
         self.child_rules = {
             "W6001": None,

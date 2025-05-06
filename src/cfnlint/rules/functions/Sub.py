@@ -10,10 +10,9 @@ from typing import Any
 
 import regex as re
 
-import cfnlint.data.schemas.other.functions
 from cfnlint.helpers import REGEX_SUB_PARAMETERS, is_function
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
-from cfnlint.rules.functions._BaseFn import BaseFn, SchemaDetails
+from cfnlint.rules.functions._BaseFn import BaseFn
 
 
 class Sub(BaseFn):
@@ -30,9 +29,6 @@ class Sub(BaseFn):
             "Fn::Sub",
             ("string",),
             resolved_rule="W1031",
-            schema_details=SchemaDetails(
-                cfnlint.data.schemas.other.functions, "sub.json"
-            ),
         )
         self.child_rules.update(
             {

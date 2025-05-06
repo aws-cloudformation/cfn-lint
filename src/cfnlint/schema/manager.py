@@ -13,11 +13,10 @@ import multiprocessing
 import os
 import re
 import shutil
-import sys
 import zipfile
 from copy import copy
 from functools import lru_cache
-from typing import Any, Dict, Iterator, Sequence
+from typing import TYPE_CHECKING, Any, Dict, Iterator, Sequence
 
 import jsonpatch
 import jsonpointer
@@ -33,7 +32,9 @@ from cfnlint.helpers import (
 from cfnlint.schema._exceptions import ResourceNotFoundError
 from cfnlint.schema._getatts import AttributeDict
 from cfnlint.schema._schema import Schema
-from cfnlint.schema.patch import SchemaPatch
+
+if TYPE_CHECKING:
+    from cfnlint.schema._patch import SchemaPatch
 
 LOGGER = logging.getLogger(__name__)
 
@@ -515,33 +516,7 @@ class ProviderSchemaManager:
 
         return content
 
-    def patch(self, filename: str, regions: Sequence[str]):
-        try:
-            with open(filename, encoding="utf-8") as fp:
-                custom_spec_data = json.load(fp)
-                schema_patch = SchemaPatch.from_dict(custom_spec_data)
-                for region in regions:
-                    self._patch(schema_patch, region)
-        except IOError as e:
-            if e.errno == 2:
-                LOGGER.error("Override spec file not found: %s", filename)
-                sys.exit(1)
-            elif e.errno == 21:
-                LOGGER.error(
-                    "Override spec file references a directory, not a file: %s",
-                    filename,
-                )
-                sys.exit(1)
-            elif e.errno == 13:
-                LOGGER.error(
-                    "Permission denied when accessing override spec file: %s", filename
-                )
-                sys.exit(1)
-        except ValueError as err:
-            LOGGER.error("Override spec file %s is malformed: %s", filename, err)
-            sys.exit(1)
-
-    def _patch(self, patch: SchemaPatch, region: str) -> None:
+    def patch(self, patch: SchemaPatch, region: str) -> None:
         """Patch the schemas as needed
 
         Args:
