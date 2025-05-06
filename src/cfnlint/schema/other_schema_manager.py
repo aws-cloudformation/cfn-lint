@@ -88,11 +88,11 @@ class OtherSchemaManager:
         path_parts = path.split(".")
         module_name = ".".join(path_parts[:-1])
         filename = f"{path_parts[-1]}.json"
-        self._schema_modules[module_name] = __import__(
-            f"{self._root.module}.{module_name}", fromlist=[""]
-        )
-
         try:
+            self._schema_modules[module_name] = __import__(
+                f"{self._root.module}.{module_name}", fromlist=[""]
+            )
+
             self._schemas[path] = load_resource(
                 self._schema_modules[module_name],
                 filename=filename,

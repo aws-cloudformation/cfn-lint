@@ -39,7 +39,8 @@ def patch(filename: str, regions: Sequence[str]):
             schema_patch = SchemaPatch.from_dict(custom_spec_data)
             for region in regions:
                 PROVIDER_SCHEMA_MANAGER.patch(schema_patch, region)
-                OTHER_SCHEMA_MANAGER.patch(schema_patch, region)
+
+            OTHER_SCHEMA_MANAGER.patch(schema_patch, region)
     except IOError as e:
         if e.errno == 2:
             LOGGER.error("Override spec file not found: %s", filename)
