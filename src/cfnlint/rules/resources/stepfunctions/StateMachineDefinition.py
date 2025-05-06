@@ -78,6 +78,7 @@ class StateMachineDefinition(CfnLintJsonSchema):
                             "properties": {
                                 "Condition": {"type": "string"},
                                 "Next": {"pattern": "^.{1,128}$", "type": "string"},
+                                "Assign": {"type": "object"},
                             },
                             "additionalProperties": False,
                             "required": ["Condition", "Next"],
