@@ -35,15 +35,6 @@
     "Domain": {
      "type": "string"
     },
-    "Reason": {
-     "enum": [
-      "pending-validation",
-      "validation-failed",
-      "pending-activation",
-      "customer-activated"
-     ],
-     "type": "string"
-    },
     "Status": {
      "enum": [
       "active",
@@ -102,9 +93,14 @@
    "additionalProperties": false,
    "properties": {
     "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9-_]+",
      "type": "string"
     },
     "Value": {
+     "maxLength": 256,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -194,6 +190,7 @@
    "$ref": "#/definitions/ManagedCertificateRequest"
   },
   "Name": {
+   "pattern": "[a-zA-Z0-9][a-zA-Z0-9-.]{1,126}[a-zA-Z0-9]",
    "type": "string"
   },
   "Parameters": {

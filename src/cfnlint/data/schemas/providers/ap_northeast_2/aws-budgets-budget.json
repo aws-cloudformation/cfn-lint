@@ -1,0 +1,286 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/NotificationsWithSubscribers"
+ ],
+ "definitions": {
+  "AutoAdjustData": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoAdjustType": {
+     "type": "string"
+    },
+    "HistoricalOptions": {
+     "$ref": "#/definitions/HistoricalOptions"
+    }
+   },
+   "required": [
+    "AutoAdjustType"
+   ],
+   "type": "object"
+  },
+  "BudgetData": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoAdjustData": {
+     "$ref": "#/definitions/AutoAdjustData"
+    },
+    "BudgetLimit": {
+     "$ref": "#/definitions/Spend"
+    },
+    "BudgetName": {
+     "type": "string"
+    },
+    "BudgetType": {
+     "enum": [
+      "COST",
+      "RI_COVERAGE",
+      "RI_UTILIZATION",
+      "SAVINGS_PLANS_COVERAGE",
+      "SAVINGS_PLANS_UTILIZATION",
+      "USAGE"
+     ],
+     "type": "string"
+    },
+    "CostFilters": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "CostTypes": {
+     "$ref": "#/definitions/CostTypes"
+    },
+    "PlannedBudgetLimits": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "TimePeriod": {
+     "$ref": "#/definitions/TimePeriod"
+    },
+    "TimeUnit": {
+     "enum": [
+      "ANNUALLY",
+      "DAILY",
+      "MONTHLY",
+      "QUARTERLY"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "TimeUnit",
+    "BudgetType"
+   ],
+   "type": "object"
+  },
+  "CostTypes": {
+   "additionalProperties": false,
+   "properties": {
+    "IncludeCredit": {
+     "type": "boolean"
+    },
+    "IncludeDiscount": {
+     "type": "boolean"
+    },
+    "IncludeOtherSubscription": {
+     "type": "boolean"
+    },
+    "IncludeRecurring": {
+     "type": "boolean"
+    },
+    "IncludeRefund": {
+     "type": "boolean"
+    },
+    "IncludeSubscription": {
+     "type": "boolean"
+    },
+    "IncludeSupport": {
+     "type": "boolean"
+    },
+    "IncludeTax": {
+     "type": "boolean"
+    },
+    "IncludeUpfront": {
+     "type": "boolean"
+    },
+    "UseAmortized": {
+     "type": "boolean"
+    },
+    "UseBlended": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "HistoricalOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "BudgetAdjustmentPeriod": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "BudgetAdjustmentPeriod"
+   ],
+   "type": "object"
+  },
+  "Notification": {
+   "additionalProperties": false,
+   "properties": {
+    "ComparisonOperator": {
+     "enum": [
+      "EQUAL_TO",
+      "GREATER_THAN",
+      "LESS_THAN"
+     ],
+     "type": "string"
+    },
+    "NotificationType": {
+     "enum": [
+      "ACTUAL",
+      "FORECASTED"
+     ],
+     "type": "string"
+    },
+    "Threshold": {
+     "maximum": 1000000000,
+     "minimum": 0.1,
+     "type": "number"
+    },
+    "ThresholdType": {
+     "enum": [
+      "ABSOLUTE_VALUE",
+      "PERCENTAGE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ComparisonOperator",
+    "NotificationType",
+    "Threshold"
+   ],
+   "type": "object"
+  },
+  "NotificationWithSubscribers": {
+   "additionalProperties": false,
+   "properties": {
+    "Notification": {
+     "$ref": "#/definitions/Notification"
+    },
+    "Subscribers": {
+     "items": {
+      "$ref": "#/definitions/Subscriber"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Subscribers",
+    "Notification"
+   ],
+   "type": "object"
+  },
+  "ResourceTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Spend": {
+   "additionalProperties": false,
+   "properties": {
+    "Amount": {
+     "type": "number"
+    },
+    "Unit": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Amount",
+    "Unit"
+   ],
+   "type": "object"
+  },
+  "Subscriber": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "type": "string"
+    },
+    "SubscriptionType": {
+     "enum": [
+      "EMAIL",
+      "SNS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "SubscriptionType",
+    "Address"
+   ],
+   "type": "object"
+  },
+  "TimePeriod": {
+   "additionalProperties": false,
+   "properties": {
+    "End": {
+     "type": "string"
+    },
+    "Start": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Budget": {
+   "$ref": "#/definitions/BudgetData"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "NotificationsWithSubscribers": {
+   "items": {
+    "$ref": "#/definitions/NotificationWithSubscribers"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ResourceTags": {
+   "items": {
+    "$ref": "#/definitions/ResourceTag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Budget"
+ ],
+ "typeName": "AWS::Budgets::Budget"
+}

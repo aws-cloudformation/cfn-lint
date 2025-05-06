@@ -1,0 +1,502 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AssetModelType"
+ ],
+ "definitions": {
+  "AssetModelCompositeModel": {
+   "additionalProperties": false,
+   "properties": {
+    "ComposedAssetModelId": {
+     "type": "string"
+    },
+    "CompositeModelProperties": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/AssetModelProperty"
+     },
+     "type": "array"
+    },
+    "Description": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "[^\\u0000-\\u001F\\u007F]+",
+     "type": "string"
+    },
+    "ExternalId": {
+     "maxLength": 128,
+     "minLength": 2,
+     "pattern": "[a-zA-Z0-9_][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9_]+",
+     "type": "string"
+    },
+    "Id": {
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "[^\\u0000-\\u001F\\u007F]+",
+     "type": "string"
+    },
+    "ParentAssetModelCompositeModelExternalId": {
+     "maxLength": 128,
+     "minLength": 2,
+     "pattern": "[a-zA-Z0-9_][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9_]+",
+     "type": "string"
+    },
+    "Path": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Type": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "[^\\u0000-\\u001F\\u007F]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "AssetModelHierarchy": {
+   "additionalProperties": false,
+   "properties": {
+    "ChildAssetModelId": {
+     "maxLength": 139,
+     "minLength": 13,
+     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$|^externalId:[a-zA-Z0-9][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9]+",
+     "type": "string"
+    },
+    "ExternalId": {
+     "maxLength": 128,
+     "minLength": 2,
+     "pattern": "[a-zA-Z0-9_][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9_]+",
+     "type": "string"
+    },
+    "Id": {
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    },
+    "LogicalId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "[^\\u0000-\\u001F\\u007F]+",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "[^\\u0000-\\u001F\\u007F]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "ChildAssetModelId"
+   ],
+   "type": "object"
+  },
+  "AssetModelProperty": {
+   "additionalProperties": false,
+   "properties": {
+    "DataType": {
+     "$ref": "#/definitions/DataType"
+    },
+    "DataTypeSpec": {
+     "$ref": "#/definitions/DataTypeSpec"
+    },
+    "ExternalId": {
+     "maxLength": 128,
+     "minLength": 2,
+     "pattern": "[a-zA-Z0-9_][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9_]+",
+     "type": "string"
+    },
+    "Id": {
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    },
+    "LogicalId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "[^\\u0000-\\u001F\\u007F]+",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "[^\\u0000-\\u001F\\u007F]+",
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/PropertyType"
+    },
+    "Unit": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "[^\\u0000-\\u001F\\u007F]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "DataType",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Attribute": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultValue": {
+     "pattern": "[^\\u0000-\\u001F\\u007F]+",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DataType": {
+   "enum": [
+    "STRING",
+    "INTEGER",
+    "DOUBLE",
+    "BOOLEAN",
+    "STRUCT"
+   ],
+   "type": "string"
+  },
+  "DataTypeSpec": {
+   "enum": [
+    "AWS/ALARM_STATE"
+   ],
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ExpressionVariable": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[a-z][a-z0-9_]*$",
+     "type": "string"
+    },
+    "Value": {
+     "$ref": "#/definitions/VariableValue"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Interval": {
+   "maxLength": 23,
+   "minLength": 2,
+   "type": "string"
+  },
+  "Metric": {
+   "additionalProperties": false,
+   "properties": {
+    "Expression": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Variables": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ExpressionVariable"
+     },
+     "type": "array"
+    },
+    "Window": {
+     "$ref": "#/definitions/MetricWindow"
+    }
+   },
+   "required": [
+    "Expression",
+    "Variables",
+    "Window"
+   ],
+   "type": "object"
+  },
+  "MetricWindow": {
+   "additionalProperties": false,
+   "properties": {
+    "Tumbling": {
+     "$ref": "#/definitions/TumblingWindow"
+    }
+   },
+   "type": "object"
+  },
+  "Offset": {
+   "maxLength": 25,
+   "minLength": 2,
+   "type": "string"
+  },
+  "PropertyPathDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "[^\\u0000-\\u001F\\u007F]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "PropertyType": {
+   "additionalProperties": false,
+   "properties": {
+    "Attribute": {
+     "$ref": "#/definitions/Attribute"
+    },
+    "Metric": {
+     "$ref": "#/definitions/Metric"
+    },
+    "Transform": {
+     "$ref": "#/definitions/Transform"
+    },
+    "TypeName": {
+     "$ref": "#/definitions/TypeName"
+    }
+   },
+   "required": [
+    "TypeName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Transform": {
+   "additionalProperties": false,
+   "properties": {
+    "Expression": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Variables": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ExpressionVariable"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Expression",
+    "Variables"
+   ],
+   "type": "object"
+  },
+  "TumblingWindow": {
+   "additionalProperties": false,
+   "properties": {
+    "Interval": {
+     "$ref": "#/definitions/Interval"
+    },
+    "Offset": {
+     "$ref": "#/definitions/Offset"
+    }
+   },
+   "required": [
+    "Interval"
+   ],
+   "type": "object"
+  },
+  "TypeName": {
+   "enum": [
+    "Measurement",
+    "Attribute",
+    "Transform",
+    "Metric"
+   ],
+   "type": "string"
+  },
+  "VariableValue": {
+   "additionalProperties": false,
+   "properties": {
+    "HierarchyExternalId": {
+     "maxLength": 128,
+     "minLength": 2,
+     "pattern": "[a-zA-Z0-9_][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9_]+",
+     "type": "string"
+    },
+    "HierarchyId": {
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    },
+    "HierarchyLogicalId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "[^\\u0000-\\u001F\\u007F]+",
+     "type": "string"
+    },
+    "PropertyExternalId": {
+     "maxLength": 128,
+     "minLength": 2,
+     "pattern": "[a-zA-Z0-9_][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9_]+",
+     "type": "string"
+    },
+    "PropertyId": {
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    },
+    "PropertyLogicalId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "[^\\u0000-\\u001F\\u007F]+",
+     "type": "string"
+    },
+    "PropertyPath": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/PropertyPathDefinition"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AssetModelId"
+ ],
+ "properties": {
+  "AssetModelArn": {
+   "type": "string"
+  },
+  "AssetModelCompositeModels": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AssetModelCompositeModel"
+   },
+   "type": "array"
+  },
+  "AssetModelDescription": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "[^\\u0000-\\u001F\\u007F]+",
+   "type": "string"
+  },
+  "AssetModelExternalId": {
+   "maxLength": 128,
+   "minLength": 2,
+   "pattern": "[a-zA-Z0-9_][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9_]+",
+   "type": "string"
+  },
+  "AssetModelHierarchies": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AssetModelHierarchy"
+   },
+   "type": "array"
+  },
+  "AssetModelId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "AssetModelName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[^\\u0000-\\u001F\\u007F]+",
+   "type": "string"
+  },
+  "AssetModelProperties": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AssetModelProperty"
+   },
+   "type": "array"
+  },
+  "AssetModelType": {
+   "enum": [
+    "ASSET_MODEL",
+    "COMPONENT_MODEL"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssetModelArn",
+  "/properties/AssetModelId",
+  "/properties/AssetModelProperties/*/Id",
+  "/properties/AssetModelProperties/*/Type/Transform/Variables/*/Value/PropertyId",
+  "/properties/AssetModelProperties/*/Type/Metric/Variables/*/Value/PropertyId",
+  "/properties/AssetModelHierarchies/*/Id",
+  "/properties/AssetModelCompositeModels/*/Id",
+  "/properties/AssetModelCompositeModels/*/CompositeModelProperties/*/Id",
+  "/properties/AssetModelCompositeModels/*/CompositeModelProperties/*/Type/Transform/Variables/*/Value/PropertyId",
+  "/properties/AssetModelCompositeModels/*/CompositeModelProperties/*/Type/Metric/Variables/*/Value/PropertyId"
+ ],
+ "required": [
+  "AssetModelName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-IoTSiteWise.git",
+ "taggable": true,
+ "typeName": "AWS::IoTSiteWise::AssetModel",
+ "writeOnlyProperties": [
+  "/properties/AssetModelProperties/*/DataTypeSpec",
+  "/properties/AssetModelProperties/*/Type/Transform/Variables/*/Value/HierarchyLogicalId",
+  "/properties/AssetModelProperties/*/Type/Transform/Variables/*/Value/HierarchyId",
+  "/properties/AssetModelProperties/*/Type/Metric/Variables/*/Value/HierarchyId",
+  "/properties/AssetModelProperties/*/Type/Transform/Variables/*/Value/HierarchyExternalId",
+  "/properties/AssetModelProperties/*/Type/Metric/Variables/*/Value/PropertyPath/*/Name",
+  "/properties/AssetModelProperties/*/Type/Transform/Variables/*/Value/PropertyPath/*/Name",
+  "/properties/AssetModelProperties/*/Type/Transform/Variables/*/Value/HierarchyExternalId",
+  "/properties/AssetModelCompositeModels/*/CompositeModelProperties/*/Type/Transform/Variables/*/Value/HierarchyId",
+  "/properties/AssetModelCompositeModels/*/CompositeModelProperties/*/Type/Metric/Variables/*/Value/HierarchyId",
+  "/properties/AssetModelCompositeModels/*/CompositeModelProperties/*/Type/Transform/Variables/*/Value/HierarchyLogicalId",
+  "/properties/AssetModelCompositeModels/*/CompositeModelProperties/*/Type/Transform/Variables/*/Value/HierarchyExternalId",
+  "/properties/AssetModelCompositeModels/*/CompositeModelProperties/*/Type/Transform/Variables/*/Value/PropertyPath/*/Name",
+  "/properties/AssetModelCompositeModels/*/CompositeModelProperties/*/Type/Metric/Variables/*/Value/PropertyPath/*/Name",
+  "/properties/AssetModelCompositeModels/*/CompositeModelProperties/*/DataTypeSpec"
+ ]
+}

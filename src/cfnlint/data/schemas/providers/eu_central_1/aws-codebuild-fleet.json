@@ -1,0 +1,258 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ComputeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "disk": {
+     "type": "integer"
+    },
+    "instanceType": {
+     "type": "string"
+    },
+    "machineType": {
+     "enum": [
+      "GENERAL",
+      "NVME"
+     ],
+     "type": "string"
+    },
+    "memory": {
+     "type": "integer"
+    },
+    "vCpu": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "FleetProxyRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Effect": {
+     "enum": [
+      "ALLOW",
+      "DENY"
+     ],
+     "type": "string"
+    },
+    "Entities": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Type": {
+     "enum": [
+      "DOMAIN",
+      "IP"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ProxyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultBehavior": {
+     "enum": [
+      "ALLOW_ALL",
+      "DENY_ALL"
+     ],
+     "type": "string"
+    },
+    "OrderedProxyRules": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/FleetProxyRule"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ScalingConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxCapacity": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ScalingType": {
+     "enum": [
+      "TARGET_TRACKING_SCALING"
+     ],
+     "type": "string"
+    },
+    "TargetTrackingScalingConfigs": {
+     "items": {
+      "$ref": "#/definitions/TargetTrackingScalingConfiguration"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TargetTrackingScalingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MetricType": {
+     "enum": [
+      "FLEET_UTILIZATION_RATE"
+     ],
+     "type": "string"
+    },
+    "TargetValue": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Subnets": {
+     "format": "AWS::EC2::Subnet.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::Subnet.Id",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "VpcId": {
+     "format": "AWS::EC2::VPC.Id",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "BaseCapacity": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ComputeConfiguration": {
+   "$ref": "#/definitions/ComputeConfiguration"
+  },
+  "ComputeType": {
+   "enum": [
+    "BUILD_GENERAL1_SMALL",
+    "BUILD_GENERAL1_MEDIUM",
+    "BUILD_GENERAL1_LARGE",
+    "BUILD_GENERAL1_XLARGE",
+    "BUILD_GENERAL1_2XLARGE",
+    "ATTRIBUTE_BASED_COMPUTE",
+    "CUSTOM_INSTANCE_TYPE"
+   ],
+   "type": "string"
+  },
+  "EnvironmentType": {
+   "enum": [
+    "WINDOWS_SERVER_2019_CONTAINER",
+    "WINDOWS_SERVER_2022_CONTAINER",
+    "LINUX_CONTAINER",
+    "LINUX_GPU_CONTAINER",
+    "ARM_CONTAINER",
+    "MAC_ARM",
+    "LINUX_EC2",
+    "ARM_EC2",
+    "WINDOWS_EC2"
+   ],
+   "type": "string"
+  },
+  "FleetProxyConfiguration": {
+   "$ref": "#/definitions/ProxyConfiguration"
+  },
+  "FleetServiceRole": {
+   "minLength": 1,
+   "pattern": "^(?:arn:)[a-zA-Z+-=,._:/@]+$",
+   "type": "string"
+  },
+  "FleetVpcConfig": {
+   "$ref": "#/definitions/VpcConfig"
+  },
+  "ImageId": {
+   "format": "AWS::EC2::Image.Id",
+   "minLength": 1,
+   "pattern": "^((aws/codebuild/[A-Za-z-]+:[0-9]+(-[0-9._]+)?)|ami-[a-z0-9]{1,1020})$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 2,
+   "pattern": "[A-Za-z0-9][A-Za-z0-9\\-_]{1,127}",
+   "type": "string"
+  },
+  "OverflowBehavior": {
+   "enum": [
+    "QUEUE",
+    "ON_DEMAND"
+   ],
+   "type": "string"
+  },
+  "ScalingConfiguration": {
+   "$ref": "#/definitions/ScalingConfigurationInput"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CodeBuild::Fleet"
+}

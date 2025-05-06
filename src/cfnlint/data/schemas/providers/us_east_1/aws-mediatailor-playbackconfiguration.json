@@ -4,6 +4,18 @@
   "/properties/Name"
  ],
  "definitions": {
+  "AdConditioningConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "StreamingMediaFileConditioning": {
+     "$ref": "#/definitions/StreamingMediaFileConditioning"
+    }
+   },
+   "required": [
+    "StreamingMediaFileConditioning"
+   ],
+   "type": "object"
+  },
   "AdMarkerPassthrough": {
    "additionalProperties": false,
    "properties": {
@@ -122,6 +134,13 @@
    },
    "type": "object"
   },
+  "StreamingMediaFileConditioning": {
+   "enum": [
+    "TRANSCODE",
+    "NONE"
+   ],
+   "type": "string"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -143,6 +162,9 @@
   "/properties/Name"
  ],
  "properties": {
+  "AdConditioningConfiguration": {
+   "$ref": "#/definitions/AdConditioningConfiguration"
+  },
   "AdDecisionServerUrl": {
    "type": "string"
   },

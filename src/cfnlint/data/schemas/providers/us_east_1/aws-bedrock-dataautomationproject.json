@@ -31,6 +31,15 @@
    ],
    "type": "string"
   },
+  "AudioOverrideConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ModalityProcessing": {
+     "$ref": "#/definitions/ModalityProcessingConfiguration"
+    }
+   },
+   "type": "object"
+  },
   "AudioStandardExtraction": {
    "additionalProperties": false,
    "properties": {
@@ -139,6 +148,15 @@
    ],
    "type": "string"
   },
+  "DesiredModality": {
+   "enum": [
+    "DOCUMENT",
+    "IMAGE",
+    "VIDEO",
+    "AUDIO"
+   ],
+   "type": "string"
+  },
   "DocumentBoundingBox": {
    "additionalProperties": false,
    "properties": {
@@ -227,6 +245,9 @@
   "DocumentOverrideConfiguration": {
    "additionalProperties": false,
    "properties": {
+    "ModalityProcessing": {
+     "$ref": "#/definitions/ModalityProcessingConfiguration"
+    },
     "Splitter": {
      "$ref": "#/definitions/SplitterConfiguration"
     }
@@ -315,6 +336,15 @@
    ],
    "type": "string"
   },
+  "ImageOverrideConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ModalityProcessing": {
+     "$ref": "#/definitions/ModalityProcessingConfiguration"
+    }
+   },
+   "type": "object"
+  },
   "ImageStandardExtraction": {
    "additionalProperties": false,
    "properties": {
@@ -369,11 +399,50 @@
    },
    "type": "object"
   },
+  "ModalityProcessingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "State": {
+     "$ref": "#/definitions/State"
+    }
+   },
+   "type": "object"
+  },
+  "ModalityRoutingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "jpeg": {
+     "$ref": "#/definitions/DesiredModality"
+    },
+    "mov": {
+     "$ref": "#/definitions/DesiredModality"
+    },
+    "mp4": {
+     "$ref": "#/definitions/DesiredModality"
+    },
+    "png": {
+     "$ref": "#/definitions/DesiredModality"
+    }
+   },
+   "type": "object"
+  },
   "OverrideConfiguration": {
    "additionalProperties": false,
    "properties": {
+    "Audio": {
+     "$ref": "#/definitions/AudioOverrideConfiguration"
+    },
     "Document": {
      "$ref": "#/definitions/DocumentOverrideConfiguration"
+    },
+    "Image": {
+     "$ref": "#/definitions/ImageOverrideConfiguration"
+    },
+    "ModalityRouting": {
+     "$ref": "#/definitions/ModalityRoutingConfiguration"
+    },
+    "Video": {
+     "$ref": "#/definitions/VideoOverrideConfiguration"
     }
    },
    "type": "object"
@@ -477,6 +546,15 @@
     "LOGOS"
    ],
    "type": "string"
+  },
+  "VideoOverrideConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ModalityProcessing": {
+     "$ref": "#/definitions/ModalityProcessingConfiguration"
+    }
+   },
+   "type": "object"
   },
   "VideoStandardExtraction": {
    "additionalProperties": false,

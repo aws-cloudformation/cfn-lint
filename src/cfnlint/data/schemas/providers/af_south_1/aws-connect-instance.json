@@ -1,0 +1,163 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DirectoryId",
+  "/properties/InstanceAlias",
+  "/properties/IdentityManagementType"
+ ],
+ "definitions": {
+  "Attributes": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoResolveBestVoices": {
+     "$ref": "#/definitions/AutoResolveBestVoices"
+    },
+    "ContactLens": {
+     "$ref": "#/definitions/ContactLens"
+    },
+    "ContactflowLogs": {
+     "$ref": "#/definitions/ContactflowLogs"
+    },
+    "EarlyMedia": {
+     "$ref": "#/definitions/EarlyMedia"
+    },
+    "InboundCalls": {
+     "$ref": "#/definitions/InboundCalls"
+    },
+    "OutboundCalls": {
+     "$ref": "#/definitions/OutboundCalls"
+    },
+    "UseCustomTTSVoices": {
+     "$ref": "#/definitions/UseCustomTTSVoices"
+    }
+   },
+   "required": [
+    "InboundCalls",
+    "OutboundCalls"
+   ],
+   "type": "object"
+  },
+  "AutoResolveBestVoices": {
+   "type": "boolean"
+  },
+  "ContactLens": {
+   "type": "boolean"
+  },
+  "ContactflowLogs": {
+   "type": "boolean"
+  },
+  "EarlyMedia": {
+   "type": "boolean"
+  },
+  "InboundCalls": {
+   "type": "boolean"
+  },
+  "OutboundCalls": {
+   "type": "boolean"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UseCustomTTSVoices": {
+   "type": "boolean"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Attributes": {
+   "$ref": "#/definitions/Attributes"
+  },
+  "CreatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DirectoryId": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^d-[0-9a-f]{10}$",
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "IdentityManagementType": {
+   "enum": [
+    "SAML",
+    "CONNECT_MANAGED",
+    "EXISTING_DIRECTORY"
+   ],
+   "type": "string"
+  },
+  "InstanceAlias": {
+   "maxLength": 62,
+   "minLength": 1,
+   "pattern": "^(?!d-)([\\da-zA-Z]+)([-]*[\\da-zA-Z])*$",
+   "type": "string"
+  },
+  "InstanceStatus": {
+   "enum": [
+    "CREATION_IN_PROGRESS",
+    "CREATION_FAILED",
+    "ACTIVE"
+   ],
+   "type": "string"
+  },
+  "ServiceRole": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/ServiceRole",
+  "/properties/CreatedTime",
+  "/properties/InstanceStatus"
+ ],
+ "required": [
+  "IdentityManagementType",
+  "Attributes"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::Instance",
+ "writeOnlyProperties": [
+  "/properties/DirectoryId"
+ ]
+}

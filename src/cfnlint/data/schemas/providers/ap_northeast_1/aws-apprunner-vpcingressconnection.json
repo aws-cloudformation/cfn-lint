@@ -1,0 +1,113 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/VpcIngressConnectionName",
+  "/properties/ServiceArn"
+ ],
+ "definitions": {
+  "IngressVpcConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "VpcEndpointId": {
+     "maxLength": 51200,
+     "type": "string"
+    },
+    "VpcId": {
+     "format": "AWS::EC2::VPC.Id",
+     "maxLength": 51200,
+     "type": "string"
+    }
+   },
+   "required": [
+    "VpcId",
+    "VpcEndpointId"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:).+",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VpcIngressConnectionArn"
+ ],
+ "properties": {
+  "DomainName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "[A-Za-z0-9*.-]{1,255}",
+   "type": "string"
+  },
+  "IngressVpcConfiguration": {
+   "$ref": "#/definitions/IngressVpcConfiguration"
+  },
+  "ServiceArn": {
+   "maxLength": 1011,
+   "minLength": 1,
+   "pattern": "arn:aws(-[\\w]+)*:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[0-9]{12}:(\\w|/|-){1,1011}",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "AVAILABLE",
+    "PENDING_CREATION",
+    "PENDING_UPDATE",
+    "PENDING_DELETION",
+    "FAILED_CREATION",
+    "FAILED_UPDATE",
+    "FAILED_DELETION",
+    "DELETED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "VpcIngressConnectionArn": {
+   "maxLength": 1011,
+   "minLength": 1,
+   "pattern": "arn:aws(-[\\w]+)*:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[0-9]{12}:(\\w|/|-){1,1011}",
+   "type": "string"
+  },
+  "VpcIngressConnectionName": {
+   "maxLength": 40,
+   "minLength": 4,
+   "pattern": "[A-Za-z0-9][A-Za-z0-9\\-_]{3,39}",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VpcIngressConnectionArn",
+  "/properties/DomainName",
+  "/properties/Status"
+ ],
+ "required": [
+  "ServiceArn",
+  "IngressVpcConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apprunner.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::AppRunner::VpcIngressConnection"
+}

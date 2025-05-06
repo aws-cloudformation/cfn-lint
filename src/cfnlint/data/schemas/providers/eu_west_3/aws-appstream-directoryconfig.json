@@ -1,0 +1,78 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DirectoryName"
+ ],
+ "definitions": {
+  "CertificateBasedAuthProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateAuthorityArn": {
+     "pattern": "^arn:aws(?:\\-cn|\\-iso\\-b|\\-iso|\\-us\\-gov)?:[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.\\\\-]{0,1023}$",
+     "type": "string"
+    },
+    "Status": {
+     "enum": [
+      "DISABLED",
+      "ENABLED",
+      "ENABLED_NO_DIRECTORY_LOGIN_FALLBACK"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ServiceAccountCredentials": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountName": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "AccountPassword": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "AccountName",
+    "AccountPassword"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DirectoryName"
+ ],
+ "properties": {
+  "CertificateBasedAuthProperties": {
+   "$ref": "#/definitions/CertificateBasedAuthProperties"
+  },
+  "DirectoryName": {
+   "type": "string"
+  },
+  "OrganizationalUnitDistinguishedNames": {
+   "items": {
+    "maxLength": 2000,
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ServiceAccountCredentials": {
+   "$ref": "#/definitions/ServiceAccountCredentials"
+  }
+ },
+ "required": [
+  "DirectoryName",
+  "OrganizationalUnitDistinguishedNames"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::AppStream::DirectoryConfig",
+ "writeOnlyProperties": [
+  "/properties/ServiceAccountCredentials/AccountPassword"
+ ]
+}

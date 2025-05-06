@@ -111,6 +111,13 @@
      "maxLength": 1024,
      "minLength": 1,
      "type": "string"
+    },
+    "SsmParameterConfigurations": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/SsmParameterConfiguration"
+     },
+     "type": "array"
     }
    },
    "required": [
@@ -226,6 +233,32 @@
   "LicenseConfigurationArn": {
    "pattern": "^arn:aws[^:]*:license-manager:[^:]+:[0-9]{12}:license-configuration:lic-[a-z0-9-_]{32}$",
    "type": "string"
+  },
+  "SsmParameterConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AmiAccountId": {
+     "pattern": "^[0-9]{12}$",
+     "type": "string"
+    },
+    "DataType": {
+     "enum": [
+      "text",
+      "aws:ec2:image"
+     ],
+     "type": "string"
+    },
+    "ParameterName": {
+     "maxLength": 1011,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_.\\-\\/]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ParameterName"
+   ],
+   "type": "object"
   },
   "TargetContainerRepository": {
    "additionalProperties": false,
