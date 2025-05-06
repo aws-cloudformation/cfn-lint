@@ -1,0 +1,154 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FallbackModel",
+  "/properties/Models",
+  "/properties/PromptRouterName",
+  "/properties/RoutingCriteria",
+  "/properties/Description"
+ ],
+ "definitions": {
+  "PromptRouterStatus": {
+   "enum": [
+    "AVAILABLE"
+   ],
+   "type": "string"
+  },
+  "PromptRouterTargetModel": {
+   "additionalProperties": false,
+   "properties": {
+    "ModelArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "(^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}::foundation-model/[a-z0-9-]{1,63}[.]{1}([a-z0-9-]{1,63}[.]){0,2}[a-z0-9-]{1,63}([:][a-z0-9-]{1,63}){0,2})|(^arn:aws(|-us-gov|-cn|-iso|-iso-b):bedrock:(|[0-9a-z-]{0,20}):(|[0-9]{12}):(inference-profile|application-inference-profile)/[a-zA-Z0-9-:.]+)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ModelArn"
+   ],
+   "type": "object"
+  },
+  "PromptRouterType": {
+   "enum": [
+    "custom",
+    "default"
+   ],
+   "type": "string"
+  },
+  "RoutingCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "ResponseQualityDifference": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "required": [
+    "ResponseQualityDifference"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PromptRouterArn"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^([0-9a-zA-Z:.][ _-]?)+$",
+   "type": "string"
+  },
+  "FallbackModel": {
+   "$ref": "#/definitions/PromptRouterTargetModel"
+  },
+  "Models": {
+   "items": {
+    "$ref": "#/definitions/PromptRouterTargetModel"
+   },
+   "type": "array"
+  },
+  "PromptRouterArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:(default-)?prompt-router/[a-zA-Z0-9-:.]+$",
+   "type": "string"
+  },
+  "PromptRouterName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^([0-9a-zA-Z][ _-]?)+$",
+   "type": "string"
+  },
+  "RoutingCriteria": {
+   "$ref": "#/definitions/RoutingCriteria"
+  },
+  "Status": {
+   "$ref": "#/definitions/PromptRouterStatus"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Type": {
+   "$ref": "#/definitions/PromptRouterType"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/PromptRouterArn",
+  "/properties/Status",
+  "/properties/Type",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "FallbackModel",
+  "Models",
+  "PromptRouterName",
+  "RoutingCriteria"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Bedrock::IntelligentPromptRouter"
+}

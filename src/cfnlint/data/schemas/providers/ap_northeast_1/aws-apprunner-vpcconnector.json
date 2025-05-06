@@ -1,0 +1,92 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/VpcConnectorName",
+  "/properties/Subnets",
+  "/properties/SecurityGroups",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:).+",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VpcConnectorArn"
+ ],
+ "properties": {
+  "SecurityGroups": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "maxLength": 51200,
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Subnets": {
+   "format": "AWS::EC2::Subnet.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::Subnet.Id",
+    "maxLength": 51200,
+    "type": "string"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "VpcConnectorArn": {
+   "maxLength": 1011,
+   "minLength": 44,
+   "pattern": "arn:aws(-[\\w]+)*:[a-z0-9-\\\\.]{0,63}:[a-z0-9-\\\\.]{0,63}:[0-9]{12}:(\\w|\\/|-){1,1011}",
+   "type": "string"
+  },
+  "VpcConnectorName": {
+   "maxLength": 40,
+   "minLength": 4,
+   "pattern": "^[A-Za-z0-9][A-Za-z0-9-\\\\_]{3,39}$",
+   "type": "string"
+  },
+  "VpcConnectorRevision": {
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VpcConnectorArn",
+  "/properties/VpcConnectorRevision"
+ ],
+ "required": [
+  "Subnets"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apprunner.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::AppRunner::VpcConnector"
+}

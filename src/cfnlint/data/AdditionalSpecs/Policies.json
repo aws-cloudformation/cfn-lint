@@ -7583,7 +7583,7 @@
   "Resources": {
    "gateway": {
     "ARNFormats": [
-     "arn:${Partition}:backup-gateway::${Account}:gateway/.*"
+     "arn:${Partition}:backup-gateway:${Region}:${Account}:gateway/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -7591,7 +7591,7 @@
    },
    "hypervisor": {
     "ARNFormats": [
-     "arn:${Partition}:backup-gateway::${Account}:hypervisor/.*"
+     "arn:${Partition}:backup-gateway:${Region}:${Account}:hypervisor/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -7599,7 +7599,7 @@
    },
    "virtualmachine": {
     "ARNFormats": [
-     "arn:${Partition}:backup-gateway::${Account}:vm/.*"
+     "arn:${Partition}:backup-gateway:${Region}:${Account}:vm/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -13374,6 +13374,16 @@
      "distribution"
     ]
    },
+   "associatedistributiontenantwebacl": {
+    "Resources": [
+     "distribution-tenant"
+    ]
+   },
+   "associatedistributionwebacl": {
+    "Resources": [
+     "distribution"
+    ]
+   },
    "copydistribution": {
     "Resources": [
      "distribution"
@@ -13394,6 +13404,7 @@
      "origin-access-identity"
     ]
    },
+   "createconnectiongroup": {},
    "createcontinuousdeploymentpolicy": {
     "Resources": [
      "continuous-deployment-policy"
@@ -13404,6 +13415,7 @@
      "distribution"
     ]
    },
+   "createdistributiontenant": {},
    "createfieldlevelencryptionconfig": {},
    "createfieldlevelencryptionprofile": {},
    "createfunction": {
@@ -13414,6 +13426,11 @@
    "createinvalidation": {
     "Resources": [
      "distribution"
+    ]
+   },
+   "createinvalidationfordistributiontenant": {
+    "Resources": [
+     "distribution-tenant"
     ]
    },
    "createkeygroup": {},
@@ -13467,6 +13484,11 @@
      "origin-access-identity"
     ]
    },
+   "deleteconnectiongroup": {
+    "Resources": [
+     "connection-group"
+    ]
+   },
    "deletecontinuousdeploymentpolicy": {
     "Resources": [
      "continuous-deployment-policy"
@@ -13475,6 +13497,11 @@
    "deletedistribution": {
     "Resources": [
      "distribution"
+    ]
+   },
+   "deletedistributiontenant": {
+    "Resources": [
+     "distribution-tenant"
     ]
    },
    "deletefieldlevelencryptionconfig": {
@@ -13540,6 +13567,16 @@
      "key-value-store"
     ]
    },
+   "disassociatedistributiontenantwebacl": {
+    "Resources": [
+     "distribution-tenant"
+    ]
+   },
+   "disassociatedistributionwebacl": {
+    "Resources": [
+     "distribution"
+    ]
+   },
    "getanycastiplist": {
     "Resources": [
      "anycast-ip-list"
@@ -13565,6 +13602,16 @@
      "origin-access-identity"
     ]
    },
+   "getconnectiongroup": {
+    "Resources": [
+     "connection-group"
+    ]
+   },
+   "getconnectiongroupbyroutingendpoint": {
+    "Resources": [
+     "connection-group"
+    ]
+   },
    "getcontinuousdeploymentpolicy": {
     "Resources": [
      "continuous-deployment-policy"
@@ -13583,6 +13630,16 @@
    "getdistributionconfig": {
     "Resources": [
      "distribution"
+    ]
+   },
+   "getdistributiontenant": {
+    "Resources": [
+     "distribution-tenant"
+    ]
+   },
+   "getdistributiontenantbydomain": {
+    "Resources": [
+     "distribution-tenant"
     ]
    },
    "getfieldlevelencryption": {
@@ -13615,8 +13672,18 @@
      "distribution"
     ]
    },
+   "getinvalidationfordistributiontenant": {
+    "Resources": [
+     "distribution-tenant"
+    ]
+   },
    "getkeygroup": {},
    "getkeygroupconfig": {},
+   "getmanagedcertificatedetails": {
+    "Resources": [
+     "distribution-tenant"
+    ]
+   },
    "getmonitoringsubscription": {},
    "getoriginaccesscontrol": {
     "Resources": [
@@ -13679,10 +13746,12 @@
      "distribution"
     ]
    },
+   "listconnectiongroups": {},
    "listcontinuousdeploymentpolicies": {},
    "listdistributions": {},
    "listdistributionsbyanycastiplistid": {},
    "listdistributionsbycachepolicyid": {},
+   "listdistributionsbyconnectionmode": {},
    "listdistributionsbykeygroup": {},
    "listdistributionsbylambdafunction": {},
    "listdistributionsbyoriginrequestpolicyid": {},
@@ -13690,12 +13759,25 @@
    "listdistributionsbyresponseheaderspolicyid": {},
    "listdistributionsbyvpcoriginid": {},
    "listdistributionsbywebaclid": {},
+   "listdistributiontenants": {},
+   "listdistributiontenantsbycustomization": {},
+   "listdomainconflicts": {
+    "Resources": [
+     "distribution",
+     "distribution-tenant"
+    ]
+   },
    "listfieldlevelencryptionconfigs": {},
    "listfieldlevelencryptionprofiles": {},
    "listfunctions": {},
    "listinvalidations": {
     "Resources": [
      "distribution"
+    ]
+   },
+   "listinvalidationsfordistributiontenant": {
+    "Resources": [
+     "distribution-tenant"
     ]
    },
    "listkeygroups": {},
@@ -13711,7 +13793,9 @@
    "listtagsforresource": {
     "Resources": [
      "anycast-ip-list",
+     "connection-group",
      "distribution",
+     "distribution-tenant",
      "vpcorigin"
     ]
    },
@@ -13725,7 +13809,9 @@
    "tagresource": {
     "Resources": [
      "anycast-ip-list",
+     "connection-group",
      "distribution",
+     "distribution-tenant",
      "streaming-distribution",
      "vpcorigin"
     ]
@@ -13738,7 +13824,9 @@
    "untagresource": {
     "Resources": [
      "anycast-ip-list",
+     "connection-group",
      "distribution",
+     "distribution-tenant",
      "streaming-distribution",
      "vpcorigin"
     ]
@@ -13753,6 +13841,11 @@
      "origin-access-identity"
     ]
    },
+   "updateconnectiongroup": {
+    "Resources": [
+     "connection-group"
+    ]
+   },
    "updatecontinuousdeploymentpolicy": {
     "Resources": [
      "continuous-deployment-policy"
@@ -13763,9 +13856,20 @@
      "distribution"
     ]
    },
+   "updatedistributiontenant": {
+    "Resources": [
+     "distribution-tenant"
+    ]
+   },
    "updatedistributionwithstagingconfig": {
     "Resources": [
      "distribution"
+    ]
+   },
+   "updatedomainassociation": {
+    "Resources": [
+     "distribution",
+     "distribution-tenant"
     ]
    },
    "updatefieldlevelencryptionconfig": {},
@@ -13816,6 +13920,11 @@
     "Resources": [
      "vpcorigin"
     ]
+   },
+   "verifydnsconfiguration": {
+    "Resources": [
+     "distribution-tenant"
+    ]
    }
   },
   "Resources": {
@@ -13832,6 +13941,14 @@
      "arn:${Partition}:cloudfront::${Account}:cache-policy/.*"
     ]
    },
+   "connection-group": {
+    "ARNFormats": [
+     "arn:${Partition}:cloudfront::${Account}:connection-group/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "continuous-deployment-policy": {
     "ARNFormats": [
      "arn:${Partition}:cloudfront::${Account}:continuous-deployment-policy/.*"
@@ -13840,6 +13957,14 @@
    "distribution": {
     "ARNFormats": [
      "arn:${Partition}:cloudfront::${Account}:distribution/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "distribution-tenant": {
+    "ARNFormats": [
+     "arn:${Partition}:cloudfront::${Account}:distribution-tenant/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -23014,7 +23139,8 @@
      "farm",
      "fleet",
      "license-endpoint",
-     "queue"
+     "queue",
+     "worker"
     ]
    },
    "listtasks": {
@@ -23065,7 +23191,8 @@
      "farm",
      "fleet",
      "license-endpoint",
-     "queue"
+     "queue",
+     "worker"
     ]
    },
    "untagresource": {
@@ -23073,7 +23200,8 @@
      "farm",
      "fleet",
      "license-endpoint",
-     "queue"
+     "queue",
+     "worker"
     ]
    },
    "updatebudget": {
@@ -23230,6 +23358,7 @@
      "arn:${Partition}:deadline:${Region}:${Account}:farm/.*"
     ],
     "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}",
      "deadline:FarmMembershipLevels",
      "deadline:FleetMembershipLevels"
     ]
@@ -24768,21 +24897,6 @@
     ]
    },
    "batchstartrecommendations": {},
-   "cancelmetadatamodelassessment": {
-    "Resources": [
-     "MigrationProject"
-    ]
-   },
-   "cancelmetadatamodelconversion": {
-    "Resources": [
-     "MigrationProject"
-    ]
-   },
-   "cancelmetadatamodelexport": {
-    "Resources": [
-     "MigrationProject"
-    ]
-   },
    "cancelreplicationtaskassessmentrun": {
     "Resources": [
      "ReplicationTaskAssessmentRun"
@@ -24900,11 +25014,6 @@
     ]
    },
    "describedatamigrations": {},
-   "describedataproviders": {
-    "Resources": [
-     "DataProvider"
-    ]
-   },
    "describeendpoints": {},
    "describeendpointsettings": {},
    "describeendpointtypes": {},
@@ -24912,50 +25021,13 @@
    "describeeventcategories": {},
    "describeevents": {},
    "describeeventsubscriptions": {},
-   "describeextensionpackassociations": {
-    "Resources": [
-     "MigrationProject"
-    ]
-   },
    "describefleetadvisorcollectors": {},
    "describefleetadvisordatabases": {},
    "describefleetadvisorlsaanalysis": {},
    "describefleetadvisorschemaobjectsummary": {},
    "describefleetadvisorschemas": {},
-   "describeinstanceprofiles": {
-    "Resources": [
-     "InstanceProfile"
-    ]
-   },
-   "describemetadatamodelassessments": {
-    "Resources": [
-     "MigrationProject"
-    ]
-   },
-   "describemetadatamodelconversions": {
-    "Resources": [
-     "MigrationProject"
-    ]
-   },
-   "describemetadatamodelexportsasscript": {
-    "Resources": [
-     "MigrationProject"
-    ]
-   },
-   "describemetadatamodelexportstotarget": {
-    "Resources": [
-     "MigrationProject"
-    ]
-   },
    "describemetadatamodelimports": {
     "Resources": [
-     "MigrationProject"
-    ]
-   },
-   "describemigrationprojects": {
-    "Resources": [
-     "DataProvider",
-     "InstanceProfile",
      "MigrationProject"
     ]
    },
@@ -25011,17 +25083,7 @@
      "ReplicationTask"
     ]
    },
-   "disassociateextensionpack": {
-    "Resources": [
-     "MigrationProject"
-    ]
-   },
    "exportmetadatamodelassessment": {
-    "Resources": [
-     "MigrationProject"
-    ]
-   },
-   "getmetadatamodel": {
     "Resources": [
      "MigrationProject"
     ]
@@ -25086,19 +25148,9 @@
      "ReplicationTaskIndividualAssessment"
     ]
    },
-   "modifyconversionconfiguration": {
-    "Resources": [
-     "MigrationProject"
-    ]
-   },
    "modifydatamigration": {
     "Resources": [
      "DataMigration"
-    ]
-   },
-   "modifydataprovider": {
-    "Resources": [
-     "DataProvider"
     ]
    },
    "modifyendpoint": {
@@ -25110,16 +25162,6 @@
    "modifyeventsubscription": {},
    "modifyfleetadvisorcollector": {},
    "modifyfleetadvisorcollectorstatuses": {},
-   "modifyinstanceprofile": {
-    "Resources": [
-     "InstanceProfile"
-    ]
-   },
-   "modifymigrationproject": {
-    "Resources": [
-     "MigrationProject"
-    ]
-   },
    "modifyreplicationconfig": {
     "Resources": [
      "ReplicationConfig"
@@ -25186,22 +25228,12 @@
      "DataMigration"
     ]
    },
-   "startextensionpackassociation": {
-    "Resources": [
-     "MigrationProject"
-    ]
-   },
    "startmetadatamodelassessment": {
     "Resources": [
      "MigrationProject"
     ]
    },
    "startmetadatamodelconversion": {
-    "Resources": [
-     "MigrationProject"
-    ]
-   },
-   "startmetadatamodelexportasscript": {
     "Resources": [
      "MigrationProject"
     ]
@@ -26471,6 +26503,11 @@
      "Cluster"
     ]
    },
+   "getvpcendpointservicename": {
+    "Resources": [
+     "Cluster"
+    ]
+   },
    "listclusters": {},
    "listtagsforresource": {
     "Resources": [
@@ -27046,6 +27083,12 @@
      "natgateway"
     ]
    },
+   "associaterouteserver": {
+    "Resources": [
+     "route-server",
+     "vpc"
+    ]
+   },
    "associateroutetable": {
     "Resources": [
      "internet-gateway",
@@ -27496,6 +27539,24 @@
    "createroute": {
     "Resources": [
      "route-table"
+    ]
+   },
+   "createrouteserver": {
+    "Resources": [
+     "route-server"
+    ]
+   },
+   "createrouteserverendpoint": {
+    "Resources": [
+     "route-server",
+     "route-server-endpoint",
+     "subnet"
+    ]
+   },
+   "createrouteserverpeer": {
+    "Resources": [
+     "route-server-endpoint",
+     "route-server-peer"
     ]
    },
    "createroutetable": {
@@ -28027,6 +28088,21 @@
      "route-table"
     ]
    },
+   "deleterouteserver": {
+    "Resources": [
+     "route-server"
+    ]
+   },
+   "deleterouteserverendpoint": {
+    "Resources": [
+     "route-server-endpoint"
+    ]
+   },
+   "deleterouteserverpeer": {
+    "Resources": [
+     "route-server-peer"
+    ]
+   },
    "deleteroutetable": {
     "Resources": [
      "route-table"
@@ -28331,11 +28407,7 @@
    "describeawsnetworkperformancemetricsubscriptions": {},
    "describebundletasks": {},
    "describebyoipcidrs": {},
-   "describecapacityblockextensionhistory": {
-    "Resources": [
-     "capacity-reservation"
-    ]
-   },
+   "describecapacityblockextensionhistory": {},
    "describecapacityblockextensionofferings": {
     "Resources": [
      "capacity-reservation"
@@ -28357,11 +28429,7 @@
      "client-vpn-endpoint"
     ]
    },
-   "describeclientvpnendpoints": {
-    "Resources": [
-     "client-vpn-endpoint"
-    ]
-   },
+   "describeclientvpnendpoints": {},
    "describeclientvpnroutes": {
     "Resources": [
      "client-vpn-endpoint"
@@ -28472,6 +28540,9 @@
    "describereservedinstanceslistings": {},
    "describereservedinstancesmodifications": {},
    "describereservedinstancesofferings": {},
+   "describerouteserverendpoints": {},
+   "describerouteserverpeers": {},
+   "describerouteservers": {},
    "describeroutetables": {},
    "describescheduledinstanceavailability": {},
    "describescheduledinstances": {},
@@ -28546,11 +28617,7 @@
    "describevpcblockpublicaccessoptions": {},
    "describevpcclassiclink": {},
    "describevpcclassiclinkdnssupport": {},
-   "describevpcendpointassociations": {
-    "Resources": [
-     "vpc-endpoint"
-    ]
-   },
+   "describevpcendpointassociations": {},
    "describevpcendpointconnectionnotifications": {},
    "describevpcendpointconnections": {},
    "describevpcendpoints": {},
@@ -28636,6 +28703,12 @@
     ]
    },
    "disableipamorganizationadminaccount": {},
+   "disablerouteserverpropagation": {
+    "Resources": [
+     "route-server",
+     "route-table"
+    ]
+   },
    "disableserialconsoleaccess": {},
    "disablesnapshotblockpublicaccess": {},
    "disabletransitgatewayroutetablepropagation": {
@@ -28704,6 +28777,12 @@
      "elastic-ip",
      "natgateway",
      "network-interface"
+    ]
+   },
+   "disassociaterouteserver": {
+    "Resources": [
+     "route-server",
+     "vpc"
     ]
    },
    "disassociateroutetable": {
@@ -28794,6 +28873,12 @@
    },
    "enableipamorganizationadminaccount": {},
    "enablereachabilityanalyzerorganizationsharing": {},
+   "enablerouteserverpropagation": {
+    "Resources": [
+     "route-server",
+     "route-table"
+    ]
+   },
    "enableserialconsoleaccess": {},
    "enablesnapshotblockpublicaccess": {},
    "enabletransitgatewayroutetablepropagation": {
@@ -28978,6 +29063,22 @@
      "ipam-pool",
      "placement-group",
      "verified-access-group"
+    ]
+   },
+   "getrouteserverassociations": {
+    "Resources": [
+     "route-server"
+    ]
+   },
+   "getrouteserverpropagations": {
+    "Resources": [
+     "route-server",
+     "route-table"
+    ]
+   },
+   "getrouteserverroutingdatabase": {
+    "Resources": [
+     "route-server"
     ]
    },
    "getsecuritygroupsforvpc": {
@@ -29253,6 +29354,11 @@
    "modifyreservedinstances": {
     "Resources": [
      "reserved-instances"
+    ]
+   },
+   "modifyrouteserver": {
+    "Resources": [
+     "route-server"
     ]
    },
    "modifysecuritygrouprules": {
@@ -29845,12 +29951,14 @@
      "ec2:Attribute",
      "ec2:Attribute/${AttributeName}",
      "ec2:AvailabilityZone",
+     "ec2:AvailabilityZoneId",
      "ec2:CapacityReservationFleet",
      "ec2:CreateDate",
      "ec2:DestinationCapacityReservationId",
      "ec2:EbsOptimized",
      "ec2:EndDate",
      "ec2:EndDateType",
+     "ec2:EphemeralStorage",
      "ec2:InstanceCount",
      "ec2:InstanceMatchCriteria",
      "ec2:InstancePlatform",
@@ -30604,6 +30712,44 @@
    "role": {
     "ARNFormats": [
      "arn:${Partition}:iam::${Account}:role/.*"
+    ]
+   },
+   "route-server": {
+    "ARNFormats": [
+     "arn:${Partition}:ec2:${Region}:${Account}:route-server/.*"
+    ],
+    "ConditionKeys": [
+     "aws:RequestTag/${TagKey}",
+     "aws:ResourceTag/${TagKey}",
+     "aws:TagKeys",
+     "ec2:Region",
+     "ec2:ResourceTag/${TagKey}"
+    ]
+   },
+   "route-server-endpoint": {
+    "ARNFormats": [
+     "arn:${Partition}:ec2:${Region}:${Account}:route-server-endpoint/.*"
+    ],
+    "ConditionKeys": [
+     "aws:RequestTag/${TagKey}",
+     "aws:ResourceTag/${TagKey}",
+     "aws:TagKeys",
+     "ec2:AvailabilityZone",
+     "ec2:Region",
+     "ec2:ResourceTag/${TagKey}"
+    ]
+   },
+   "route-server-peer": {
+    "ARNFormats": [
+     "arn:${Partition}:ec2:${Region}:${Account}:route-server-peer/.*"
+    ],
+    "ConditionKeys": [
+     "aws:RequestTag/${TagKey}",
+     "aws:ResourceTag/${TagKey}",
+     "aws:TagKeys",
+     "ec2:AvailabilityZone",
+     "ec2:Region",
+     "ec2:ResourceTag/${TagKey}"
     ]
    },
    "route-table": {
@@ -50591,6 +50737,12 @@
     ]
    },
    "liststreams": {},
+   "listtagsforresource": {
+    "Resources": [
+     "consumer",
+     "stream"
+    ]
+   },
    "listtagsforstream": {
     "Resources": [
      "stream"
@@ -50647,6 +50799,18 @@
    "subscribetoshard": {
     "Resources": [
      "consumer"
+    ]
+   },
+   "tagresource": {
+    "Resources": [
+     "consumer",
+     "stream"
+    ]
+   },
+   "untagresource": {
+    "Resources": [
+     "consumer",
+     "stream"
     ]
    },
    "updateshardcount": {},
@@ -59702,6 +59866,11 @@
      "brokers"
     ]
    },
+   "deleteconfiguration": {
+    "Resources": [
+     "configurations"
+    ]
+   },
    "deletetags": {
     "Resources": [
      "brokers",
@@ -63846,7 +64015,12 @@
     ]
    },
    "createkey": {},
-   "decryptdata": {},
+   "decryptdata": {
+    "Resources": [
+     "alias",
+     "key"
+    ]
+   },
    "deletealias": {
     "Resources": [
      "alias"
@@ -63857,21 +64031,41 @@
      "key"
     ]
    },
-   "encryptdata": {},
+   "encryptdata": {
+    "Resources": [
+     "alias",
+     "key"
+    ]
+   },
    "exportkey": {
     "Resources": [
      "key"
     ]
    },
-   "generatecardvalidationdata": {},
-   "generatemac": {},
+   "generatecardvalidationdata": {
+    "Resources": [
+     "alias",
+     "key"
+    ]
+   },
+   "generatemac": {
+    "Resources": [
+     "alias",
+     "key"
+    ]
+   },
    "generatemacemvpinchange": {
     "Resources": [
      "alias",
      "key"
     ]
    },
-   "generatepindata": {},
+   "generatepindata": {
+    "Resources": [
+     "alias",
+     "key"
+    ]
+   },
    "getalias": {
     "Resources": [
      "alias",
@@ -63898,7 +64092,12 @@
      "key"
     ]
    },
-   "reencryptdata": {},
+   "reencryptdata": {
+    "Resources": [
+     "alias",
+     "key"
+    ]
+   },
    "restorekey": {
     "Resources": [
      "key"
@@ -63919,7 +64118,12 @@
      "key"
     ]
    },
-   "translatepindata": {},
+   "translatepindata": {
+    "Resources": [
+     "alias",
+     "key"
+    ]
+   },
    "untagresource": {
     "Resources": [
      "key"
@@ -63931,10 +64135,30 @@
      "key"
     ]
    },
-   "verifyauthrequestcryptogram": {},
-   "verifycardvalidationdata": {},
-   "verifymac": {},
-   "verifypindata": {}
+   "verifyauthrequestcryptogram": {
+    "Resources": [
+     "alias",
+     "key"
+    ]
+   },
+   "verifycardvalidationdata": {
+    "Resources": [
+     "alias",
+     "key"
+    ]
+   },
+   "verifymac": {
+    "Resources": [
+     "alias",
+     "key"
+    ]
+   },
+   "verifypindata": {
+    "Resources": [
+     "alias",
+     "key"
+    ]
+   }
   },
   "Resources": {
    "alias": {
@@ -66320,6 +66544,11 @@
    },
    "updateauthgrant": {},
    "updateoauthappconnection": {},
+   "updateplugin": {
+    "Resources": [
+     "plugin"
+    ]
+   },
    "updatetroubleshootingcommandresult": {},
    "useplugin": {
     "Resources": [
@@ -66648,6 +66877,12 @@
     "Resources": [
      "application",
      "index"
+    ]
+   },
+   "createanonymouswebexperienceurl": {
+    "Resources": [
+     "application",
+     "web-experience"
     ]
    },
    "createapplication": {},
@@ -73546,11 +73781,13 @@
    },
    "getresolverrule": {
     "Resources": [
+     "autodefined-rule",
      "resolver-rule"
     ]
    },
    "getresolverruleassociation": {
     "Resources": [
+     "autodefined-rule",
      "resolver-rule"
     ]
    },
@@ -73699,6 +73936,14 @@
    }
   },
   "Resources": {
+   "autodefined-rule": {
+    "ARNFormats": [
+     "arn:${Partition}:route53resolver:${Region}:${Account}:autodefined-rule/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "firewall-config": {
     "ARNFormats": [
      "arn:${Partition}:route53resolver:${Region}:${Account}:firewall-config/.*"
@@ -82675,6 +82920,7 @@
    },
    "deleteresourcepolicy": {
     "Resources": [
+     "document",
      "opsitemgroup",
      "parameter"
     ]
@@ -82808,6 +83054,11 @@
     ]
    },
    "executeapi": {},
+   "getaccesstoken": {
+    "Resources": [
+     "opsitem"
+    ]
+   },
    "getautomationexecution": {
     "Resources": [
      "automation-execution"
@@ -82902,6 +83153,7 @@
    "getpatchbaselineforpatchgroup": {},
    "getresourcepolicies": {
     "Resources": [
+     "document",
      "opsitemgroup",
      "parameter"
     ]
@@ -82997,6 +83249,7 @@
    },
    "putresourcepolicy": {
     "Resources": [
+     "document",
      "opsitemgroup",
      "parameter"
     ]
@@ -83056,6 +83309,12 @@
     "Resources": [
      "bucket",
      "document",
+     "instance",
+     "managed-instance"
+    ]
+   },
+   "startaccessrequest": {
+    "Resources": [
      "instance",
      "managed-instance"
     ]
@@ -83583,9 +83842,12 @@
  "ssm-guiconnect": {
   "Actions": {
    "cancelconnection": {},
+   "deleteconnectionrecordingpreferences": {},
    "getconnection": {},
+   "getconnectionrecordingpreferences": {},
    "listconnections": {},
-   "startconnection": {}
+   "startconnection": {},
+   "updateconnectionrecordingpreferences": {}
   },
   "Resources": {}
  },
@@ -85331,6 +85593,11 @@
    }
   },
   "Resources": {
+   "context-provider": {
+    "ARNFormats": [
+     "arn:${Partition}:iam::aws:contextProvider/.*"
+    ]
+   },
    "role": {
     "ARNFormats": [
      "arn:${Partition}:iam::${Account}:role/.*"
@@ -87616,7 +87883,22 @@
      "policy-store"
     ]
    },
+   "listtagsforresource": {
+    "Resources": [
+     "policy-store"
+    ]
+   },
    "putschema": {
+    "Resources": [
+     "policy-store"
+    ]
+   },
+   "tagresource": {
+    "Resources": [
+     "policy-store"
+    ]
+   },
+   "untagresource": {
     "Resources": [
      "policy-store"
     ]
@@ -87646,6 +87928,9 @@
    "policy-store": {
     "ARNFormats": [
      "arn:${Partition}:verifiedpermissions::${Account}:policy-store/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    }
   }

@@ -1,0 +1,90 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PrimaryKeyArn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/KeyId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 8192,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Enabled": {
+   "type": "boolean"
+  },
+  "KeyId": {
+   "type": "string"
+  },
+  "KeyPolicy": {
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "PendingWindowInDays": {
+   "maximum": 30,
+   "minimum": 7,
+   "type": "integer"
+  },
+  "PrimaryKeyArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/KeyId"
+ ],
+ "required": [
+  "PrimaryKeyArn",
+  "KeyPolicy"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kms",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::KMS::ReplicaKey",
+ "writeOnlyProperties": [
+  "/properties/PendingWindowInDays"
+ ]
+}

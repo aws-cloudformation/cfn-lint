@@ -39,6 +39,78 @@
    "minLength": 1,
    "type": "string"
   },
+  "HandlerBehavior": {
+   "enum": [
+    "CODE",
+    "DIRECT"
+   ],
+   "type": "string"
+  },
+  "HandlerConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Behavior": {
+     "$ref": "#/definitions/HandlerBehavior"
+    },
+    "Integration": {
+     "$ref": "#/definitions/Integration"
+    }
+   },
+   "required": [
+    "Behavior",
+    "Integration"
+   ],
+   "type": "object"
+  },
+  "HandlerConfigs": {
+   "additionalProperties": false,
+   "properties": {
+    "OnPublish": {
+     "$ref": "#/definitions/HandlerConfig"
+    },
+    "OnSubscribe": {
+     "$ref": "#/definitions/HandlerConfig"
+    }
+   },
+   "type": "object"
+  },
+  "Integration": {
+   "additionalProperties": false,
+   "properties": {
+    "DataSourceName": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "([_A-Za-z][_0-9A-Za-z]{0,511})?",
+     "type": "string"
+    },
+    "LambdaConfig": {
+     "$ref": "#/definitions/LambdaConfig"
+    }
+   },
+   "required": [
+    "DataSourceName"
+   ],
+   "type": "object"
+  },
+  "InvokeType": {
+   "enum": [
+    "REQUEST_RESPONSE",
+    "EVENT"
+   ],
+   "type": "string"
+  },
+  "LambdaConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "InvokeType": {
+     "$ref": "#/definitions/InvokeType"
+    }
+   },
+   "required": [
+    "InvokeType"
+   ],
+   "type": "object"
+  },
   "Namespace": {
    "maxLength": 50,
    "minLength": 1,
@@ -91,6 +163,9 @@
   },
   "CodeS3Location": {
    "type": "string"
+  },
+  "HandlerConfigs": {
+   "$ref": "#/definitions/HandlerConfigs"
   },
   "Name": {
    "$ref": "#/definitions/Namespace"

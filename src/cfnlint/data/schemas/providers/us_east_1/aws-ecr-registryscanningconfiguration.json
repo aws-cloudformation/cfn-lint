@@ -1,0 +1,108 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Filter": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-z0-9*](?:[._\\-/a-z0-9*]?[a-z0-9*]+)*$",
+   "type": "string"
+  },
+  "FilterType": {
+   "enum": [
+    "WILDCARD"
+   ],
+   "type": "string"
+  },
+  "RegistryId": {
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "RepositoryFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Filter": {
+     "$ref": "#/definitions/Filter"
+    },
+    "FilterType": {
+     "$ref": "#/definitions/FilterType"
+    }
+   },
+   "required": [
+    "Filter",
+    "FilterType"
+   ],
+   "type": "object"
+  },
+  "ScanFrequency": {
+   "enum": [
+    "SCAN_ON_PUSH",
+    "CONTINUOUS_SCAN"
+   ],
+   "type": "string"
+  },
+  "ScanType": {
+   "enum": [
+    "BASIC",
+    "ENHANCED"
+   ],
+   "type": "string"
+  },
+  "ScanningRule": {
+   "additionalProperties": false,
+   "properties": {
+    "RepositoryFilters": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/RepositoryFilter"
+     },
+     "maxItems": 100,
+     "minItems": 0,
+     "type": "array"
+    },
+    "ScanFrequency": {
+     "$ref": "#/definitions/ScanFrequency"
+    }
+   },
+   "required": [
+    "ScanFrequency",
+    "RepositoryFilters"
+   ],
+   "type": "object"
+  },
+  "ScanningRules": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ScanningRule"
+   },
+   "maxItems": 2,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RegistryId"
+ ],
+ "properties": {
+  "RegistryId": {
+   "$ref": "#/definitions/RegistryId"
+  },
+  "Rules": {
+   "$ref": "#/definitions/ScanningRules"
+  },
+  "ScanType": {
+   "$ref": "#/definitions/ScanType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RegistryId"
+ ],
+ "required": [
+  "Rules",
+  "ScanType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ecr.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ECR::RegistryScanningConfiguration"
+}
