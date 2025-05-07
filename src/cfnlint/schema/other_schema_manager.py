@@ -9,6 +9,7 @@ import fnmatch
 import json
 import logging
 import os
+import sys
 from functools import lru_cache
 from typing import TYPE_CHECKING, Any
 
@@ -116,9 +117,13 @@ class OtherSchemaManager:
             except SchemaNotFoundError:
                 # Resource type doesn't exist in this region
                 continue
-            jsonpatch.JsonPatch(patches).apply(
-                self._schemas[schema_path], in_place=True
-            )
+            try:
+                jsonpatch.JsonPatch(patches).apply(
+                    self._schemas[schema_path], in_place=True
+                )
+            except Exception as e:
+                print(f"Error applying patch {patches} for {schema_path}: {e}")
+                sys.exit(1)
 
 
 OTHER_SCHEMA_MANAGER: OtherSchemaManager = OtherSchemaManager()

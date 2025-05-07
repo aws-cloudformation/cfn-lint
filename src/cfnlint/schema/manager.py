@@ -13,6 +13,7 @@ import multiprocessing
 import os
 import re
 import shutil
+import sys
 import zipfile
 from copy import copy
 from functools import lru_cache
@@ -562,7 +563,11 @@ class ProviderSchemaManager:
             except ResourceNotFoundError:
                 # Resource type doesn't exist in this region
                 continue
-            schema.patch(patches=patches)
+            try:
+                schema.patch(patches=patches)
+            except Exception as e:
+                print(f"Error applying patch {patches} for {resource_type}: {e}")
+                sys.exit(1)
 
     @lru_cache(maxsize=None)
     def get_type_getatts(self, resource_type: str, region: str) -> AttributeDict:

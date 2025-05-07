@@ -289,3 +289,41 @@ class TestManagerGetResourceSchema(BaseTestCase):
         self.manager._registry_schemas[rt] = True
         schema = self.manager.get_resource_schema("us-east-1", rt)
         assert schema is True
+
+
+class TestManagerPatch(BaseTestCase):
+    """Test patching schemas"""
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.manager = ProviderSchemaManager()
+        self.schema_patch = [{"op": "add", "path": "/cfnSchema", "value": ["test"]}]
+
+    @patch("cfnlint.schema.manager.print")
+    @patch("cfnlint.schema.manager.sys.exit")
+    def test_patch_failure(self, mock_exit, mock_print):
+        """Test when patching a schema fails"""
+        # Create a mock schema that will raise an exception when patch is called
+        mock_schema = MagicMock()
+        mock_schema.patch.side_effect = Exception("Invalid patch operation")
+
+        # Mock get_resource_schema to return our mocked schema
+        self.manager.get_resource_schema = MagicMock(return_value=mock_schema)
+
+        # Create a patch
+        resource_type = "AWS::EC2::Instance"
+        patch = SchemaPatch([], [], {resource_type: self.schema_patch})
+
+        # Apply the patch
+        self.manager.patch(patch, "us-east-1")
+
+        # Verify that print was called with the error message
+        mock_print.assert_called_with(
+            (
+                f"Error applying patch {self.schema_patch} for "
+                f"{resource_type}: Invalid patch operation"
+            )
+        )
+
+        # Verify that sys.exit was called with exit code 1
+        mock_exit.assert_called_with(1)
