@@ -1,0 +1,94 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VolumeId"
+ ],
+ "properties": {
+  "AutoEnableIO": {
+   "type": "boolean"
+  },
+  "AvailabilityZone": {
+   "type": "string"
+  },
+  "Encrypted": {
+   "type": "boolean"
+  },
+  "Iops": {
+   "type": "integer"
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "MultiAttachEnabled": {
+   "type": "boolean"
+  },
+  "OutpostArn": {
+   "type": "string"
+  },
+  "Size": {
+   "type": "integer"
+  },
+  "SnapshotId": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Throughput": {
+   "type": "integer"
+  },
+  "VolumeId": {
+   "type": "string"
+  },
+  "VolumeType": {
+   "enum": [
+    "gp2",
+    "gp3",
+    "io1",
+    "io2",
+    "sc1",
+    "st1",
+    "standard"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VolumeId"
+ ],
+ "required": [
+  "AvailabilityZone"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::Volume"
+}

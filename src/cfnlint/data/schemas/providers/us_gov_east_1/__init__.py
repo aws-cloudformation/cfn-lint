@@ -1016,7 +1016,6 @@ cached: list[str] = [
     "aws-ec2-verifiedaccessgroup.json",
     "aws-ec2-verifiedaccessinstance.json",
     "aws-ec2-verifiedaccesstrustprovider.json",
-    "aws-ec2-volume.json",
     "aws-ec2-vpc.json",
     "aws-ec2-vpcblockpublicaccessexclusion.json",
     "aws-ec2-vpcblockpublicaccessoptions.json",
