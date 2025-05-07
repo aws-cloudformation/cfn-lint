@@ -1,3 +1,12 @@
+### v1.35.0
+## What's Changed
+* Make intrinsic functions configurable by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4129
+* Add `Assign` to `Jsonata` choices by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4130
+* Create a schema manager for non resource schemas by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4131
+* Update CloudFormation schemas to `2025-05-06` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4124
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.34.2...v1.35.0
+
 ### v1.34.2
 ## What's Changed
 * Unschedule v0 maintenance work by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4120
