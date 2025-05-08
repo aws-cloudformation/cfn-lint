@@ -1,3 +1,11 @@
+### v1.35.1
+## What's Changed
+* Gracefully exit of a override schema patch fails by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4134
+* Allow for `Fn::Transform` with other properties by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4137
+* Update CloudFormation schemas to `2025-05-07` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4132
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.35.0...v1.35.1
+
 ### v1.35.0
 ## What's Changed
 * Make intrinsic functions configurable by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4129
