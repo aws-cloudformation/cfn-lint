@@ -79,7 +79,7 @@ class TestCli(BaseTestCase):
 
         self.assertEqual(e.exception.code, 1)
         mock_print_help.assert_called_once()
-        mock_isatty.assert_called_once()
+        self.assertEqual(mock_isatty.call_count, 2)
 
     def test_bad_regions(self):
         config = ConfigMixIn(

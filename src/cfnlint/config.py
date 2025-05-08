@@ -775,10 +775,12 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
 
         if cli_alt_args:
             filenames = cli_alt_args
-        elif file_args:
-            filenames = file_args
         elif cli_args:
             filenames = cli_args
+        elif not sys.stdin.isatty():
+            return []
+        elif file_args:
+            filenames = file_args
         else:
             # No filenames found, could be piped in or be using the api.
             return None
