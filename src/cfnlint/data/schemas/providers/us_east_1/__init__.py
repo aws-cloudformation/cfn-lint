@@ -156,6 +156,7 @@ types: list[str] = [
     "AWS::Bedrock::FlowVersion",
     "AWS::Bedrock::Guardrail",
     "AWS::Bedrock::GuardrailVersion",
+    "AWS::Bedrock::IntelligentPromptRouter",
     "AWS::Bedrock::KnowledgeBase",
     "AWS::Bedrock::Prompt",
     "AWS::Bedrock::PromptVersion",

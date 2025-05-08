@@ -1165,7 +1165,6 @@ cached: list[str] = [
     "aws-ec2-transitgatewayroutetableassociation.json",
     "aws-ec2-transitgatewayroutetablepropagation.json",
     "aws-ec2-transitgatewayvpcattachment.json",
-    "aws-ec2-volume.json",
     "aws-ec2-volumeattachment.json",
     "aws-ec2-vpc.json",
     "aws-ec2-vpcblockpublicaccessexclusion.json",
