@@ -190,6 +190,13 @@ def test_cfn_context_with_refs(instance, schema, mock_resolver, expected, valida
                 )
             ],
         ),
+        # Test case where function matches and should be allowed
+        (
+            {"Foo": True, "Fn::Transform": {}},
+            {"additionalProperties": False, "properties": {"Foo": {}}},
+            ["Fn::Transform"],
+            [],
+        ),
         # Test with empty instance
         (
             {},
