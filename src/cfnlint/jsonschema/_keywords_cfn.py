@@ -20,6 +20,8 @@ from __future__ import annotations
 
 from typing import Any
 
+import regex as re
+
 import cfnlint.jsonschema._keywords as validators_standard
 from cfnlint.helpers import BOOLEAN_STRINGS, ensure_list, is_function
 from cfnlint.jsonschema import ValidationError, Validator
@@ -29,13 +31,25 @@ from cfnlint.jsonschema._typing import V, ValidationResult
 def additionalProperties(
     validator: Validator, aP: Any, instance: Any, schema: Any
 ) -> ValidationResult:
+    # is function will just return if one item is present
+    # as this is the standard. We will handle exceptions below
     k, _ = is_function(instance)
     if k in validator.context.functions:
         return
     for err in validators_standard.additionalProperties(
         validator, aP, instance, schema
     ):
-        yield err
+        # Some functions can exist at the same level
+        # so we need to validate that if those functions are
+        # currently supported by the context and are part of the
+        # error
+        for fn in ["Fn::Transform"]:
+            if fn in validator.context.functions:
+                if len(err.path) > 0:
+                    if re.fullmatch(fn, str(err.path[0])):
+                        break
+        else:
+            yield err
 
 
 def cfnContext(
