@@ -7,6 +7,7 @@ import json
 import sys
 from pathlib import Path
 from test.testlib.testcase import BaseTestCase
+from unittest.mock import patch
 
 import defusedxml.ElementTree as ET
 
@@ -214,8 +215,10 @@ class TestFormatters(BaseTestCase):
                 ),
             )
 
-    def test_pretty_formatter_pipe(self):
+    @patch("sys.stdin.isatty", return_va=True)
+    def test_pretty_formatter_pipe(self, isatty_mock):
         """Test pretty formatter"""
+        isatty_mock.return_value = True
         formatter = PrettyFormatter()
         self.config.cli_args.templates = None
         results = formatter.print_matches(

@@ -167,9 +167,10 @@ class TestConfigMixIn(BaseTestCase):
         self.assertEqual(config.update_specs, True)
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
-    def test_config_expand_paths(self, yaml_mock):
+    @patch("sys.stdin.isatty", return_va=True)
+    def test_config_expand_paths(self, isatty_mock, yaml_mock):
         """Test precedence in"""
-
+        isatty_mock.return_value = True
         yaml_mock.side_effect = [
             {"templates": ["test/fixtures/templates/public/*.yaml"]},
             {},
@@ -198,10 +199,12 @@ class TestConfigMixIn(BaseTestCase):
         )
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
-    def test_config_expand_paths_nomatch(self, yaml_mock):
+    @patch("sys.stdin.isatty", return_va=True)
+    def test_config_expand_paths_nomatch(self, isatty_mock, yaml_mock):
         """Test precedence in"""
 
         filename = "test/fixtures/templates/nonexistant/*.yaml"
+        isatty_mock.return_value = True
         yaml_mock.side_effect = [
             {"templates": [filename]},
             {},
@@ -212,10 +215,14 @@ class TestConfigMixIn(BaseTestCase):
             self.assertEqual(len(config.templates), 1)
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
-    def test_config_expand_paths_nomatch_ignore_bad_template(self, yaml_mock):
+    @patch("sys.stdin.isatty", return_va=True)
+    def test_config_expand_paths_nomatch_ignore_bad_template(
+        self, isatty_mock, yaml_mock
+    ):
         """Test precedence in"""
 
         filename = "test/fixtures/templates/nonexistant/*.yaml"
+        isatty_mock.return_value = True
         yaml_mock.side_effect = [
             {"templates": [filename], "ignore_bad_template": True},
             {},
@@ -226,9 +233,10 @@ class TestConfigMixIn(BaseTestCase):
         self.assertEqual(config.templates, [])
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
-    def test_config_expand_ignore_templates(self, yaml_mock):
+    @patch("sys.stdin.isatty", return_va=True)
+    def test_config_expand_ignore_templates(self, isatty_mock, yaml_mock):
         """Test ignore templates"""
-
+        isatty_mock.return_value = True
         yaml_mock.side_effect = [
             {
                 "templates": ["test/fixtures/templates/bad/resources/iam/*.yaml"],
@@ -248,9 +256,13 @@ class TestConfigMixIn(BaseTestCase):
         self.assertEqual(len(config.templates), 3)
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
-    def test_config_expand_and_ignore_templates_with_bad_path(self, yaml_mock):
+    @patch("sys.stdin.isatty", return_va=True)
+    def test_config_expand_and_ignore_templates_with_bad_path(
+        self, isatty_mock, yaml_mock
+    ):
         """Test ignore templates"""
 
+        isatty_mock.return_value = True
         yaml_mock.side_effect = [
             {
                 "templates": ["test/fixtures/templates/bad/resources/iam/*.yaml"],
@@ -270,9 +282,11 @@ class TestConfigMixIn(BaseTestCase):
         self.assertEqual(len(config.templates), 4)
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
-    def test_config_merge(self, yaml_mock):
+    @patch("sys.stdin.isatty", return_va=True)
+    def test_config_merge(self, isatty_mock, yaml_mock):
         """Test merging lists"""
 
+        isatty_mock.return_value = True
         yaml_mock.side_effect = [
             {
                 "include_checks": ["I"],
