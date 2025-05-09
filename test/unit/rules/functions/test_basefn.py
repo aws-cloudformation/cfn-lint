@@ -7,6 +7,7 @@ from collections import deque
 
 import pytest
 
+from cfnlint.context.parameters import ParameterSet
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules.functions._BaseFn import BaseFn
@@ -25,8 +26,13 @@ def rule(request):
     yield rule
 
 
+@pytest.fixture
+def template():
+    return {"Parameters": {"MyString": {"Type": "String"}}}
+
+
 @pytest.mark.parametrize(
-    "name,rule,instance,expected",
+    "name,rule,instance,parameters,expected",
     [
         (
             "Dynamic references are ignored",
@@ -34,36 +40,34 @@ def rule(request):
                 "schema": {
                     "enum": ["Foo"],
                 },
-                "patches": [],
             },
             {"Fn::Sub": "{{resolve:ssm:${AWS::AccountId}/${AWS::Region}/ac}}"},
+            [],
             [],
         ),
         (
             "Everything is fine",
-            {
-                "schema": {"enum": ["Foo"]},
-                "patches": [],
-            },
+            {"schema": {"enum": ["Foo"]}},
             {"Fn::Sub": "Foo"},
+            {},
             [],
         ),
         (
             "Resolved Fn::Sub has no strict type validation",
             {
                 "schema": {"type": ["integer"]},
-                "patches": [],
             },
             {"Fn::Sub": "2"},
+            [],
             [],
         ),
         (
             "Standard error",
             {
                 "schema": {"enum": ["Foo"]},
-                "patches": [],
             },
             {"Fn::Sub": "Bar"},
+            [],
             [
                 ValidationError(
                     message=(
@@ -81,9 +85,9 @@ def rule(request):
             "Errors with context error",
             {
                 "schema": {"anyOf": [{"enum": ["Foo"]}]},
-                "patches": [],
             },
             {"Fn::Sub": "Bar"},
+            [],
             [
                 ValidationError(
                     message=(
@@ -110,9 +114,59 @@ def rule(request):
                 )
             ],
         ),
+        (
+            "Ref of a parameter with parameter set",
+            {
+                "schema": {"enum": ["Foo"]},
+            },
+            {"Ref": "MyString"},
+            [
+                ParameterSet(
+                    parameters={"MyString": "Bar"},
+                    source=None,
+                )
+            ],
+            [
+                ValidationError(
+                    message=(
+                        "{'Ref': 'MyString'} is not one of "
+                        "['Foo'] when '' is resolved to 'Bar'"
+                    ),
+                    path=deque(["Ref"]),
+                    validator="",
+                    schema_path=deque(["enum"]),
+                    rule=_ChildRule(),
+                )
+            ],
+        ),
+        (
+            "Fn::Sub of a parameter with parameter set",
+            {
+                "schema": {"enum": ["Foo"]},
+            },
+            {"Fn::Sub": "${MyString}"},
+            [
+                ParameterSet(
+                    parameters={"MyString": "Bar"},
+                    source=None,
+                )
+            ],
+            [
+                ValidationError(
+                    message=(
+                        "{'Fn::Sub': '${MyString}'} is not one of "
+                        "['Foo'] when '' is resolved"
+                    ),
+                    path=deque(["Fn::Sub"]),
+                    validator="",
+                    schema_path=deque(["enum"]),
+                    rule=_ChildRule(),
+                )
+            ],
+        ),
     ],
-    indirect=["rule"],
+    indirect=["rule", "parameters"],
 )
-def test_resolve(name, instance, expected, validator, rule):
-    errs = list(rule.resolve(validator, rule.schema(validator, instance), instance, {}))
+def test_resolve(name, instance, parameters, rule, expected, validator):
+    errs = list(rule.resolve(validator, rule._schema, instance, {}))
     assert errs == expected, f"{name!r} failed and got errors {errs!r}"
