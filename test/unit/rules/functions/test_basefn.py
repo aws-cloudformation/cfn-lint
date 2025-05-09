@@ -32,7 +32,7 @@ def template():
 
 
 @pytest.mark.parametrize(
-    "name,instance,schema,parameters,expected",
+    "name,rule,instance,parameters,expected",
     [
         (
             "Dynamic references are ignored",
@@ -40,18 +40,22 @@ def template():
                 "schema": {
                     "enum": ["Foo"],
                 },
-                "patches": [],
             },
             {"Fn::Sub": "{{resolve:ssm:${AWS::AccountId}/${AWS::Region}/ac}}"},
             [],
             [],
         ),
-        ("Everything is fine", {"Fn::Sub": "Foo"}, {"enum": ["Foo"]}, {}, []),
+        (
+            "Everything is fine",
+            {"schema": {"enum": ["Foo"]}},
+            {"Fn::Sub": "Foo"},
+            {},
+            [],
+        ),
         (
             "Resolved Fn::Sub has no strict type validation",
             {
                 "schema": {"type": ["integer"]},
-                "patches": [],
             },
             {"Fn::Sub": "2"},
             [],
@@ -61,10 +65,8 @@ def template():
             "Standard error",
             {
                 "schema": {"enum": ["Foo"]},
-                "patches": [],
             },
             {"Fn::Sub": "Bar"},
-            {"enum": ["Foo"]},
             [],
             [
                 ValidationError(
@@ -83,10 +85,8 @@ def template():
             "Errors with context error",
             {
                 "schema": {"anyOf": [{"enum": ["Foo"]}]},
-                "patches": [],
             },
             {"Fn::Sub": "Bar"},
-            {"anyOf": [{"enum": ["Foo"]}]},
             [],
             [
                 ValidationError(
@@ -116,8 +116,10 @@ def template():
         ),
         (
             "Ref of a parameter with parameter set",
+            {
+                "schema": {"enum": ["Foo"]},
+            },
             {"Ref": "MyString"},
-            {"enum": ["Foo"]},
             [
                 ParameterSet(
                     parameters={"MyString": "Bar"},
@@ -139,8 +141,10 @@ def template():
         ),
         (
             "Fn::Sub of a parameter with parameter set",
+            {
+                "schema": {"enum": ["Foo"]},
+            },
             {"Fn::Sub": "${MyString}"},
-            {"enum": ["Foo"]},
             [
                 ParameterSet(
                     parameters={"MyString": "Bar"},
@@ -161,8 +165,8 @@ def template():
             ],
         ),
     ],
-    indirect=["parameters"],
+    indirect=["rule", "parameters"],
 )
-def test_resolve(name, instance, schema, parameters, expected, validator, rule):
-    errs = list(rule.resolve(validator, schema, instance, {}))
+def test_resolve(name, instance, parameters, rule, expected, validator):
+    errs = list(rule.resolve(validator, rule._schema, instance, {}))
     assert errs == expected, f"{name!r} failed and got errors {errs!r}"
