@@ -693,12 +693,11 @@ class ManualArgs(TypedDict, total=False):
     merge_configs: bool
     non_zero_exit_code: str
     output_file: str
+    parameter_files: list[str]
+    parameters: list[ParameterSet]
     regions: list
     registry_schemas: list[str]
     template_parameters: list[dict[str, Any]]
-    parameters: list[dict[str, Any]]
-    parameters: list[ParameterSet]
-    parameter_files: list[str]
     templates: list[str]
 
 
@@ -756,20 +755,16 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
                 "ignore_checks": self.ignore_checks,
                 "include_checks": self.include_checks,
                 "include_experimental": self.include_experimental,
-                "configure_rules": self.configure_rules,
-                "registry_schemas": self.registry_schemas,
-                "regions": self.regions,
-                "ignore_bad_template": self.ignore_bad_template,
-                "debug": self.debug,
                 "info": self.info,
                 "mandatory_checks": self.mandatory_checks,
                 "merge_configs": self.merge_configs,
                 "non_zero_exit_code": self.non_zero_exit_code,
-                "patch_specs": self.patch_specs,
                 "override_spec": self.override_spec,
                 "parameter_files": self.parameter_files,
                 "parameters": self.parameters,
+                "patch_specs": self.patch_specs,
                 "regions": self.regions,
+                "registry_schemas": self.registry_schemas,
                 "templates": self.templates,
             }
         )

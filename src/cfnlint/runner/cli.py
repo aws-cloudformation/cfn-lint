@@ -15,7 +15,6 @@ import cfnlint.maintenance
 from cfnlint.config import ConfigMixIn, configure_logging
 from cfnlint.exceptions import CfnLintExitException, UnexpectedRuleException
 from cfnlint.rules import Match, Rules
-from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, patch
 from cfnlint.rules.errors import ConfigError
 from cfnlint.runner.deployment_file.runner import expand_deployment_files
 from cfnlint.runner.parameter_file.runner import expand_parameter_files
@@ -24,7 +23,7 @@ from cfnlint.runner.template import (
     run_template_by_file_paths,
     run_template_by_pipe,
 )
-from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
+from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, patch
 
 LOGGER = logging.getLogger(__name__)
 
