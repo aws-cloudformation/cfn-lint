@@ -1,0 +1,158 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PoolName"
+ ],
+ "definitions": {
+  "ApplicationSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "SettingsGroup": {
+     "maxLength": 100,
+     "pattern": "^[A-Za-z0-9_./()!*'-]+$",
+     "type": "string"
+    },
+    "Status": {
+     "$ref": "#/definitions/ApplicationSettingsStatus"
+    }
+   },
+   "required": [
+    "Status"
+   ],
+   "type": "object"
+  },
+  "ApplicationSettingsStatus": {
+   "enum": [
+    "DISABLED",
+    "ENABLED"
+   ],
+   "type": "string"
+  },
+  "Capacity": {
+   "additionalProperties": false,
+   "properties": {
+    "DesiredUserSessions": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "DesiredUserSessions"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TimeoutSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "DisconnectTimeoutInSeconds": {
+     "maximum": 36000,
+     "minimum": 60,
+     "type": "integer"
+    },
+    "IdleDisconnectTimeoutInSeconds": {
+     "maximum": 36000,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MaxUserDurationInSeconds": {
+     "maximum": 432000,
+     "minimum": 600,
+     "type": "integer"
+    }
+   },
+   "required": [],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PoolId"
+ ],
+ "properties": {
+  "ApplicationSettings": {
+   "$ref": "#/definitions/ApplicationSettings"
+  },
+  "BundleId": {
+   "pattern": "^wsb-[0-9a-z]{8,63}$",
+   "type": "string"
+  },
+  "Capacity": {
+   "$ref": "#/definitions/Capacity"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_./() -]+$",
+   "type": "string"
+  },
+  "DirectoryId": {
+   "maxLength": 65,
+   "minLength": 10,
+   "pattern": "^wsd-[0-9a-z]{8,63}$",
+   "type": "string"
+  },
+  "PoolArn": {
+   "pattern": "^arn:aws[a-z-]{0,7}:[A-Za-z0-9][A-za-z0-9_/.-]{0,62}:[A-za-z0-9_/.-]{0,63}:[A-za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-za-z0-9_/.-]{0,127}$",
+   "type": "string"
+  },
+  "PoolId": {
+   "pattern": "^wspool-[0-9a-z]{9}$",
+   "type": "string"
+  },
+  "PoolName": {
+   "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TimeoutSettings": {
+   "$ref": "#/definitions/TimeoutSettings"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PoolId",
+  "/properties/PoolArn",
+  "/properties/CreatedAt"
+ ],
+ "required": [
+  "PoolName",
+  "BundleId",
+  "DirectoryId",
+  "Capacity"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::WorkSpaces::WorkspacesPool"
+}

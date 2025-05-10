@@ -1,6 +1,30 @@
 {
  "additionalProperties": false,
  "definitions": {
+  "DeletionMode": {
+   "default": "DISABLED",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "DeletionProtection": {
+   "additionalProperties": false,
+   "enum": [
+    "DISABLED",
+    "ENABLED"
+   ],
+   "properties": {
+    "Mode": {
+     "$ref": "#/definitions/DeletionMode"
+    }
+   },
+   "required": [
+    "Mode"
+   ],
+   "type": "object"
+  },
   "SchemaDefinition": {
    "additionalProperties": false,
    "properties": {
@@ -58,6 +82,9 @@
    "minLength": 1,
    "pattern": "^arn:[^:]*:[^:]*:[^:]*:[^:]*:.*$",
    "type": "string"
+  },
+  "DeletionProtection": {
+   "$ref": "#/definitions/DeletionProtection"
   },
   "Description": {
    "maxLength": 150,
