@@ -52,6 +52,10 @@ _enum_ is used to restrict a value to a fixed set of values. [JSON Schema docs](
 
 _pattern_ keyword is used to validate a string against a regular expression. [JSON Schema docs](https://json-schema.org/understanding-json-schema/reference/string#regexp)
 
+##### enumCaseInsensitive
+
+_enumCaseInsensitive_ is similar to _enum_ but performs case-insensitive matching for string values. This is useful for validating against values where case doesn't matter, such as certain AWS service names or property values.
+
 #### length
 
 _minLength_ and _maxLength_ are used to are used to constrain the size of a string. [JSON Schema docs](https://json-schema.org/understanding-json-schema/reference/string#length)
@@ -72,6 +76,18 @@ _minItems_ and _maxItems_ is used to provide the inclusive length of an array.
 ##### prefixItems
 
 _prefixItems_ is similar to the definition of [prefixItems](https://json-schema.org/understanding-json-schema/reference/array#tupleValidation) but doesn't actually do the prefix. The current resource schema doesn't support [items](https://json-schema.org/understanding-json-schema/reference/array#items) being an array. We use `prefixItems` to validate array items where ordering matters.
+
+##### uniqueKeys
+
+_uniqueKeys_ validates that array items have unique values for specified keys. This is useful for ensuring that collections of objects don't contain duplicates based on specific identifying properties.
+
+```json
+{
+  "uniqueKeys": ["id", "name"]
+}
+```
+
+This ensures that no two objects in the array have the same combination of values for the specified keys.
 
 #### Objects
 
@@ -171,7 +187,17 @@ is equivalent to the JSON schema
 
 ##### dependentRequired
 
-_dependentRequired_ has been backported into cfn-lint. You can read the definition [here](https://json-schema.org/understanding-json-schema/reference/conditionals#dependentRequired)
+_dependentRequired_ has been backported into cfn-lint from JSON Schema 2019-09. It specifies that certain properties must be present if a given property is present.
+
+```json
+{
+  "dependentRequired": {
+    "credit_card": ["billing_address"]
+  }
+}
+```
+
+This means that if the `credit_card` property is present, the `billing_address` property must also be present. You can read more about this keyword [here](https://json-schema.org/understanding-json-schema/reference/conditionals#dependentRequired).
 
 ##### dependentExcluded
 
