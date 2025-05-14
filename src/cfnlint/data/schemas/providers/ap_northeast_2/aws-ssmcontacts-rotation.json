@@ -1,0 +1,257 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CoverageTime": {
+   "additionalProperties": false,
+   "properties": {
+    "EndTime": {
+     "$ref": "#/definitions/HandOffTime"
+    },
+    "StartTime": {
+     "$ref": "#/definitions/HandOffTime"
+    }
+   },
+   "required": [
+    "StartTime",
+    "EndTime"
+   ],
+   "type": "object"
+  },
+  "DailySetting": {
+   "additionalProperties": false,
+   "properties": {
+    "HandOffTime": {
+     "$ref": "#/definitions/HandOffTime"
+    }
+   },
+   "required": [
+    "HandOffTime"
+   ],
+   "type": "object"
+  },
+  "DayOfWeek": {
+   "enum": [
+    "MON",
+    "TUE",
+    "WED",
+    "THU",
+    "FRI",
+    "SAT",
+    "SUN"
+   ],
+   "type": "string"
+  },
+  "HandOffTime": {
+   "pattern": "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$",
+   "type": "string"
+  },
+  "MonthlySetting": {
+   "additionalProperties": false,
+   "properties": {
+    "DayOfMonth": {
+     "maximum": 31,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "HandOffTime": {
+     "$ref": "#/definitions/HandOffTime"
+    }
+   },
+   "required": [
+    "DayOfMonth",
+    "HandOffTime"
+   ],
+   "type": "object"
+  },
+  "RecurrenceSettings": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "NumberOfOnCalls",
+      "RecurrenceMultiplier",
+      "WeeklySettings"
+     ]
+    },
+    {
+     "required": [
+      "NumberOfOnCalls",
+      "RecurrenceMultiplier",
+      "MonthlySettings"
+     ]
+    },
+    {
+     "required": [
+      "NumberOfOnCalls",
+      "RecurrenceMultiplier",
+      "DailySettings"
+     ]
+    }
+   ],
+   "properties": {
+    "DailySettings": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/HandOffTime"
+     },
+     "type": "array"
+    },
+    "MonthlySettings": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/MonthlySetting"
+     },
+     "type": "array"
+    },
+    "NumberOfOnCalls": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "RecurrenceMultiplier": {
+     "maximum": 100,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ShiftCoverages": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ShiftCoverage"
+     },
+     "type": "array"
+    },
+    "WeeklySettings": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/WeeklySetting"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ShiftCoverage": {
+   "additionalProperties": false,
+   "properties": {
+    "CoverageTimes": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CoverageTime"
+     },
+     "type": "array"
+    },
+    "DayOfWeek": {
+     "$ref": "#/definitions/DayOfWeek"
+    }
+   },
+   "required": [
+    "DayOfWeek",
+    "CoverageTimes"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[\\\\\\/a-zA-Z0-9_+=\\-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[\\p{L}\\p{Z}\\p{N}_.:\\/=+\\-@]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "WeeklySetting": {
+   "additionalProperties": false,
+   "properties": {
+    "DayOfWeek": {
+     "$ref": "#/definitions/DayOfWeek"
+    },
+    "HandOffTime": {
+     "$ref": "#/definitions/HandOffTime"
+    }
+   },
+   "required": [
+    "DayOfWeek",
+    "HandOffTime"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ContactIds": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "minLength": 1,
+    "pattern": "arn:(aws|aws-cn|aws-us-gov):ssm-contacts:[-\\w+=\\/,.@]*:[0-9]+:([\\w+=\\/,.@:-]+)*",
+    "type": "string"
+   },
+   "maxItems": 30,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_]*$",
+   "type": "string"
+  },
+  "Recurrence": {
+   "$ref": "#/definitions/RecurrenceSettings"
+  },
+  "StartTime": {
+   "pattern": "^(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2})$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TimeZoneId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[:a-zA-Z0-9_\\-\\s\\.\\\\/]*$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "ContactIds",
+  "StartTime",
+  "TimeZoneId",
+  "Recurrence"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::SSMContacts::Rotation"
+}

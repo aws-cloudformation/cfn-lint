@@ -1,0 +1,249 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PipelineName"
+ ],
+ "definitions": {
+  "BufferOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "PersistentBufferEnabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "PersistentBufferEnabled"
+   ],
+   "type": "object"
+  },
+  "EncryptionAtRestOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyArn": {
+     "maxLength": 2048,
+     "minLength": 7,
+     "type": "string"
+    }
+   },
+   "required": [
+    "KmsKeyArn"
+   ],
+   "type": "object"
+  },
+  "LogPublishingOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogDestination": {
+     "additionalProperties": false,
+     "properties": {
+      "LogGroup": {
+       "maxLength": 512,
+       "minLength": 1,
+       "pattern": "\\/aws\\/vendedlogs\\/[\\.\\-_/#A-Za-z0-9]+",
+       "type": "string"
+      }
+     },
+     "required": [
+      "LogGroup"
+     ],
+     "type": "object"
+    },
+    "IsLoggingEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VpcEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "VpcEndpointId": {
+     "type": "string"
+    },
+    "VpcId": {
+     "format": "AWS::EC2::VPC.Id",
+     "type": "string"
+    },
+    "VpcOptions": {
+     "$ref": "#/definitions/VpcOptions"
+    }
+   },
+   "type": "object"
+  },
+  "VpcOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "maxLength": 20,
+      "minLength": 11,
+      "pattern": "sg-\\w{8}(\\w{9})?",
+      "type": "string"
+     },
+     "maxItems": 12,
+     "minItems": 1,
+     "type": "array"
+    },
+    "SubnetIds": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 24,
+      "minLength": 15,
+      "pattern": "subnet-\\w{8}(\\w{9})?",
+      "type": "string"
+     },
+     "maxItems": 12,
+     "minItems": 1,
+     "type": "array"
+    },
+    "VpcAttachmentOptions": {
+     "additionalProperties": false,
+     "properties": {
+      "AttachToVpc": {
+       "type": "boolean"
+      },
+      "CidrBlock": {
+       "format": "ipv4-network",
+       "pattern": "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/(3[0-2]|[12]?[0-9])$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "AttachToVpc",
+      "CidrBlock"
+     ],
+     "type": "object"
+    },
+    "VpcEndpointManagement": {
+     "enum": [
+      "CUSTOMER",
+      "SERVICE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "SubnetIds"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PipelineArn"
+ ],
+ "properties": {
+  "BufferOptions": {
+   "$ref": "#/definitions/BufferOptions"
+  },
+  "EncryptionAtRestOptions": {
+   "$ref": "#/definitions/EncryptionAtRestOptions"
+  },
+  "IngestEndpointUrls": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "LogPublishingOptions": {
+   "$ref": "#/definitions/LogPublishingOptions"
+  },
+  "MaxUnits": {
+   "maximum": 384,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "MinUnits": {
+   "maximum": 384,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "PipelineArn": {
+   "maxLength": 76,
+   "minLength": 46,
+   "pattern": "^arn:(aws|aws\\-cn|aws\\-us\\-gov|aws\\-iso|aws\\-iso\\-b):osis:.+:pipeline\\/.+$",
+   "type": "string"
+  },
+  "PipelineConfigurationBody": {
+   "maxLength": 24000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "PipelineName": {
+   "maxLength": 28,
+   "minLength": 3,
+   "pattern": "[a-z][a-z0-9\\-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VpcEndpointService": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "VpcEndpoints": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/VpcEndpoint"
+   },
+   "type": "array"
+  },
+  "VpcOptions": {
+   "$ref": "#/definitions/VpcOptions"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PipelineArn",
+  "/properties/IngestEndpointUrls",
+  "/properties/VpcEndpoints",
+  "/properties/VpcEndpointService"
+ ],
+ "required": [
+  "MaxUnits",
+  "MinUnits",
+  "PipelineConfigurationBody",
+  "PipelineName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-osis.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::OSIS::Pipeline",
+ "writeOnlyProperties": [
+  "/properties/VpcOptions"
+ ]
+}

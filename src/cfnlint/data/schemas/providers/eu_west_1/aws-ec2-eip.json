@@ -1,0 +1,94 @@
+{
+ "$schema": "https://raw.githubusercontent.com/aws-cloudformation/cloudformation-resource-schema/blob/master/src/main/resources/schema/provider.definition.schema.v1.json",
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/NetworkBorderGroup",
+  "/properties/TransferAddress",
+  "/properties/IpamPoolId",
+  "/properties/Address"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PublicIp",
+  "/properties/AllocationId"
+ ],
+ "properties": {
+  "Address": {
+   "type": "string"
+  },
+  "AllocationId": {
+   "type": "string"
+  },
+  "Domain": {
+   "enum": [
+    "standard",
+    "vpc"
+   ],
+   "type": "string"
+  },
+  "InstanceId": {
+   "type": "string"
+  },
+  "IpamPoolId": {
+   "type": "string"
+  },
+  "NetworkBorderGroup": {
+   "type": "string"
+  },
+  "PublicIp": {
+   "type": "string"
+  },
+  "PublicIpv4Pool": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TransferAddress": {
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/Domain": "\"vpc\""
+ },
+ "readOnlyProperties": [
+  "/properties/PublicIp",
+  "/properties/AllocationId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::EIP",
+ "writeOnlyProperties": [
+  "/properties/TransferAddress",
+  "/properties/IpamPoolId",
+  "/properties/Address"
+ ]
+}

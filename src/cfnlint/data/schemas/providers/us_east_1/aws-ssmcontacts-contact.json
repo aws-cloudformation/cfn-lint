@@ -71,6 +71,28 @@
    },
    "type": "object"
   },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[\\\\\\/a-zA-Z0-9_+=\\-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[\\p{L}\\p{Z}\\p{N}_.:\\/=+\\-@]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
   "Targets": {
    "additionalProperties": false,
    "oneOf": [
@@ -121,6 +143,15 @@
    },
    "type": "array"
   },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": false
+  },
   "Type": {
    "enum": [
     "PERSONAL",
@@ -139,6 +170,13 @@
   "Type"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::SSMContacts::Contact",
  "writeOnlyProperties": [
   "/properties/Plan"
