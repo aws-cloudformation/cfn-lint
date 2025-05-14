@@ -9,8 +9,8 @@ from unittest.mock import patch
 import pytest
 
 from cfnlint.config import ConfigMixIn
-from cfnlint.runner import PROVIDER_SCHEMA_MANAGER, Runner
-from cfnlint.schema import Schema, reset
+from cfnlint.runner import Runner
+from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, Schema, reset
 
 
 def patch_registry(path):
@@ -72,7 +72,7 @@ def test_init_schemas(name, registry_path, patch_path, expected):
     with patch.object(
         PROVIDER_SCHEMA_MANAGER, "load_registry_schemas", new=patch_registry
     ):
-        with patch("cfnlint.runner.patch", new=patch_schema):
+        with patch("cfnlint.runner.cli.patch", new=patch_schema):
             Runner(config)
 
             if registry_path:
