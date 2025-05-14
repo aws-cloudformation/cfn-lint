@@ -1,0 +1,206 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/WorkflowId",
+  "/properties/VersionName",
+  "/properties/DefinitionUri",
+  "/properties/Engine",
+  "/properties/Main",
+  "/properties/ParameterTemplate",
+  "/properties/Accelerators",
+  "/properties/WorkflowBucketOwnerId"
+ ],
+ "definitions": {
+  "Accelerators": {
+   "enum": [
+    "GPU"
+   ],
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "StorageType": {
+   "enum": [
+    "STATIC",
+    "DYNAMIC"
+   ],
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "WorkflowEngine": {
+   "enum": [
+    "WDL",
+    "NEXTFLOW",
+    "CWL"
+   ],
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "WorkflowParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
+     "type": "string"
+    },
+    "Optional": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "WorkflowParameterTemplate": {
+   "additionalProperties": false,
+   "maxProperties": 1000,
+   "minProperties": 1,
+   "patternProperties": {
+    "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$": {
+     "$ref": "#/definitions/WorkflowParameter"
+    }
+   },
+   "type": "object"
+  },
+  "WorkflowStatus": {
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "UPDATING",
+    "DELETED",
+    "FAILED",
+    "INACTIVE"
+   ],
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "WorkflowType": {
+   "enum": [
+    "PRIVATE",
+    "READY2RUN"
+   ],
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Accelerators": {
+   "$ref": "#/definitions/Accelerators"
+  },
+  "Arn": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^arn:.+$",
+   "type": "string"
+  },
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DefinitionUri": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
+   "type": "string"
+  },
+  "Engine": {
+   "$ref": "#/definitions/WorkflowEngine"
+  },
+  "Main": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
+   "type": "string"
+  },
+  "ParameterTemplate": {
+   "$ref": "#/definitions/WorkflowParameterTemplate"
+  },
+  "Status": {
+   "$ref": "#/definitions/WorkflowStatus"
+  },
+  "StorageCapacity": {
+   "maximum": 100000,
+   "minimum": 0,
+   "type": "number"
+  },
+  "StorageType": {
+   "$ref": "#/definitions/StorageType"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  },
+  "Type": {
+   "$ref": "#/definitions/WorkflowType"
+  },
+  "Uuid": {
+   "maxLength": 36,
+   "minLength": 1,
+   "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+   "type": "string"
+  },
+  "VersionName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9][A-Za-z0-9\\-\\._]*$",
+   "type": "string"
+  },
+  "WorkflowBucketOwnerId": {
+   "maxLength": 12,
+   "minLength": 1,
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "WorkflowId": {
+   "maxLength": 18,
+   "minLength": 1,
+   "pattern": "^[0-9]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationTime",
+  "/properties/Status",
+  "/properties/Type",
+  "/properties/Uuid"
+ ],
+ "required": [
+  "WorkflowId",
+  "VersionName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Omics::WorkflowVersion",
+ "writeOnlyProperties": [
+  "/properties/DefinitionUri"
+ ]
+}

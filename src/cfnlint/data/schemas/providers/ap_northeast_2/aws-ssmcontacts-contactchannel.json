@@ -1,0 +1,59 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ContactId",
+  "/properties/ChannelType"
+ ],
+ "oneOf": [
+  {
+   "required": [
+    "ContactId",
+    "ChannelName",
+    "ChannelType",
+    "ChannelAddress"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ChannelAddress": {
+   "type": "string"
+  },
+  "ChannelName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "[a-zA-Z 0-9_\\-+'&amp;\\uD83C-\\uDBFF\\uDC00-\\uDFFF\\u2000-\\u3300]+",
+   "type": "string"
+  },
+  "ChannelType": {
+   "enum": [
+    "SMS",
+    "VOICE",
+    "EMAIL"
+   ],
+   "type": "string"
+  },
+  "ContactId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "arn:[-\\w+=\\/,.@]+:[-\\w+=\\/,.@]+:[-\\w+=\\/,.@]*:[0-9]+:([\\w+=\\/,.@:-]+)*",
+   "type": "string"
+  },
+  "DeferActivation": {
+   "type": "boolean"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::SSMContacts::ContactChannel",
+ "writeOnlyProperties": [
+  "/properties/DeferActivation"
+ ]
+}

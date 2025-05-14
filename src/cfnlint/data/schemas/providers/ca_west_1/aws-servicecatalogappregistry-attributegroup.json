@@ -1,0 +1,74 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "Tags": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "patternProperties": {
+    "^[a-zA-Z+-=._:/]+$": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "documentationUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalog-appregistry-attributegroup.html",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "arn:aws[-a-z]*:servicecatalog:[a-z]{2}(-gov)?-[a-z]+-\\d:\\d{12}:/attribute-groups/[a-z0-9]+",
+   "type": "string"
+  },
+  "Attributes": {
+   "format": "json",
+   "maxLength": 8000,
+   "minLength": 1,
+   "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u00FF]+",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Description": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "Id": {
+   "pattern": "[a-z0-9]{12}",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "\\w+",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "Attributes"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-servicecatalog-appregistry.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ServiceCatalogAppRegistry::AttributeGroup"
+}

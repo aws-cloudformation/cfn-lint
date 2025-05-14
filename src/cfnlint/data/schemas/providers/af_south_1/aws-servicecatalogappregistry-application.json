@@ -1,0 +1,82 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "Tags": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "patternProperties": {
+    "^[a-zA-Z+-=._:/]+$": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "documentationUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalog-appregistry-application.html",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ApplicationName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "\\w+",
+   "type": "string"
+  },
+  "ApplicationTagKey": {
+   "maxLength": 128,
+   "pattern": "\\w+",
+   "type": "string"
+  },
+  "ApplicationTagValue": {
+   "maxLength": 256,
+   "pattern": "\\[a-zA-Z0-9_-:/]+",
+   "type": "string"
+  },
+  "Arn": {
+   "pattern": "arn:aws[-a-z]*:servicecatalog:[a-z]{2}(-gov)?-[a-z]+-\\d:\\d{12}:/applications/[a-z0-9]+",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "Id": {
+   "pattern": "[a-z0-9]{26}",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "\\w+",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/ApplicationName",
+  "/properties/ApplicationTagKey",
+  "/properties/ApplicationTagValue"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-servicecatalog-appregistry.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ServiceCatalogAppRegistry::Application"
+}

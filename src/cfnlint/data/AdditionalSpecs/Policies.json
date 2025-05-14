@@ -26468,6 +26468,11 @@
  },
  "dsql": {
   "Actions": {
+   "addpeercluster": {
+    "Resources": [
+     "Cluster"
+    ]
+   },
    "createcluster": {
     "Resources": [
      "Cluster"
@@ -26510,6 +26515,21 @@
    },
    "listclusters": {},
    "listtagsforresource": {
+    "Resources": [
+     "Cluster"
+    ]
+   },
+   "putmultiregionproperties": {
+    "Resources": [
+     "Cluster"
+    ]
+   },
+   "putwitnessregion": {
+    "Resources": [
+     "Cluster"
+    ]
+   },
+   "removepeercluster": {
     "Resources": [
      "Cluster"
     ]
@@ -27458,6 +27478,19 @@
      "vpc"
     ]
    },
+   "createlocalgatewayvirtualinterface": {
+    "Resources": [
+     "local-gateway-virtual-interface",
+     "local-gateway-virtual-interface-group",
+     "outpost-lag"
+    ]
+   },
+   "createlocalgatewayvirtualinterfacegroup": {
+    "Resources": [
+     "local-gateway",
+     "local-gateway-virtual-interface-group"
+    ]
+   },
    "createmanagedprefixlist": {
     "Resources": [
      "prefix-list"
@@ -28015,6 +28048,16 @@
      "local-gateway-route-table-vpc-association"
     ]
    },
+   "deletelocalgatewayvirtualinterface": {
+    "Resources": [
+     "local-gateway-virtual-interface"
+    ]
+   },
+   "deletelocalgatewayvirtualinterfacegroup": {
+    "Resources": [
+     "local-gateway-virtual-interface-group"
+    ]
+   },
    "deletemanagedprefixlist": {
     "Resources": [
      "prefix-list"
@@ -28530,6 +28573,7 @@
    "describenetworkinterfaceattribute": {},
    "describenetworkinterfacepermissions": {},
    "describenetworkinterfaces": {},
+   "describeoutpostlags": {},
    "describeplacementgroups": {},
    "describeprefixlists": {},
    "describeprincipalidformat": {},
@@ -28554,6 +28598,7 @@
    "describesecuritygrouprules": {},
    "describesecuritygroups": {},
    "describesecuritygroupvpcassociations": {},
+   "describeservicelinkvirtualinterfaces": {},
    "describesnapshotattribute": {
     "Resources": [
      "snapshot"
@@ -30649,6 +30694,18 @@
      "ec2:Vpc"
     ]
    },
+   "outpost-lag": {
+    "ARNFormats": [
+     "arn:${Partition}:ec2:${Region}:${Account}:outpost-lag/.*"
+    ],
+    "ConditionKeys": [
+     "aws:RequestTag/${TagKey}",
+     "aws:ResourceTag/${TagKey}",
+     "aws:TagKeys",
+     "ec2:Region",
+     "ec2:ResourceTag/${TagKey}"
+    ]
+   },
    "placement-group": {
     "ARNFormats": [
      "arn:${Partition}:ec2:${Region}:${Account}:placement-group/.*"
@@ -30815,6 +30872,7 @@
      "ec2:Location",
      "ec2:OutpostArn",
      "ec2:Owner",
+     "ec2:ParentSnapshot",
      "ec2:ParentVolume",
      "ec2:Region",
      "ec2:Remove/group",
@@ -52886,7 +52944,10 @@
    "listresourceinventory": {},
    "listtagsforresource": {
     "Resources": [
-     "license-configuration"
+     "grant",
+     "license",
+     "license-configuration",
+     "report-generator"
     ]
    },
    "listtokens": {},
@@ -52902,12 +52963,18 @@
    },
    "tagresource": {
     "Resources": [
-     "license-configuration"
+     "grant",
+     "license",
+     "license-configuration",
+     "report-generator"
     ]
    },
    "untagresource": {
     "Resources": [
-     "license-configuration"
+     "grant",
+     "license",
+     "license-configuration",
+     "report-generator"
     ]
    },
    "updatelicenseconfiguration": {
@@ -52931,11 +52998,17 @@
    "grant": {
     "ARNFormats": [
      "arn:${Partition}:license-manager::${Account}:grant:.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "license": {
     "ARNFormats": [
      "arn:${Partition}:license-manager::${Account}:license:.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "license-configuration": {
@@ -52943,6 +53016,7 @@
      "arn:${Partition}:license-manager:${Region}:${Account}:license-configuration:.*"
     ],
     "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}",
      "license-manager:ResourceTag/${TagKey}"
     ]
    },
@@ -52951,6 +53025,7 @@
      "arn:${Partition}:license-manager:${Region}:${Account}:report-generator:.*"
     ],
     "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}",
      "license-manager:ResourceTag/${TagKey}"
     ]
    }
@@ -56299,7 +56374,7 @@
    "listnodes": {},
    "listofferings": {},
    "listreservations": {},
-   "listsdisource": {},
+   "listsdisources": {},
    "listsignalmaps": {},
    "listtagsforresource": {
     "Resources": [
@@ -66495,6 +66570,7 @@
      "profile"
     ]
    },
+   "deleteconversation": {},
    "deleteoauthappconnection": {},
    "deleteplugin": {
     "Resources": [
@@ -66543,6 +66619,7 @@
     ]
    },
    "updateauthgrant": {},
+   "updateconversation": {},
    "updateoauthappconnection": {},
    "updateplugin": {
     "Resources": [
@@ -78810,6 +78887,11 @@
      "instance"
     ]
    },
+   "createdatalakenamespace": {
+    "Resources": [
+     "instance"
+    ]
+   },
    "createinstance": {
     "Resources": [
      "instance"
@@ -78828,6 +78910,11 @@
    "deletedatalakedataset": {
     "Resources": [
      "dataset"
+    ]
+   },
+   "deletedatalakenamespace": {
+    "Resources": [
+     "namespace"
     ]
    },
    "deleteinstance": {
@@ -78850,7 +78937,17 @@
      "bill-of-materials-import-job"
     ]
    },
+   "getdataintegrationevent": {
+    "Resources": [
+     "instance"
+    ]
+   },
    "getdataintegrationflow": {
+    "Resources": [
+     "data-integration-flow"
+    ]
+   },
+   "getdataintegrationflowexecution": {
     "Resources": [
      "data-integration-flow"
     ]
@@ -78858,6 +78955,11 @@
    "getdatalakedataset": {
     "Resources": [
      "dataset"
+    ]
+   },
+   "getdatalakenamespace": {
+    "Resources": [
+     "namespace"
     ]
    },
    "getinstance": {
@@ -78870,12 +78972,27 @@
      "instance"
     ]
    },
+   "listdataintegrationevents": {
+    "Resources": [
+     "instance"
+    ]
+   },
+   "listdataintegrationflowexecutions": {
+    "Resources": [
+     "data-integration-flow"
+    ]
+   },
    "listdataintegrationflows": {
     "Resources": [
      "instance"
     ]
    },
    "listdatalakedatasets": {
+    "Resources": [
+     "instance"
+    ]
+   },
+   "listdatalakenamespaces": {
     "Resources": [
      "instance"
     ]
@@ -78920,6 +79037,11 @@
      "dataset"
     ]
    },
+   "updatedatalakenamespace": {
+    "Resources": [
+     "namespace"
+    ]
+   },
    "updateinstance": {
     "Resources": [
      "instance"
@@ -78943,6 +79065,11 @@
     ]
    },
    "instance": {
+    "ARNFormats": [
+     "arn:${Partition}:scn:${Region}:${Account}:instance/.*"
+    ]
+   },
+   "namespace": {
     "ARNFormats": [
      "arn:${Partition}:scn:${Region}:${Account}:instance/.*"
     ]
@@ -86018,6 +86145,11 @@
     ]
    },
    "startcanary": {
+    "Resources": [
+     "canary"
+    ]
+   },
+   "startcanarydryrun": {
     "Resources": [
      "canary"
     ]
