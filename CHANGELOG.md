@@ -1,3 +1,11 @@
+### v1.35.2
+## What's Changed
+* Stdin overrides `.cfnlintrc` when determining templates by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4138
+* Add in more custom schema information to the docs by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4141
+* Update CloudFormation schemas to `2025-05-14` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4140
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.35.1...v1.35.2
+
 ### v1.35.1
 ## What's Changed
 * Gracefully exit of a override schema patch fails by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4134
