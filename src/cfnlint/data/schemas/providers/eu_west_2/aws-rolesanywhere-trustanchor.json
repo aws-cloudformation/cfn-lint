@@ -1,0 +1,171 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "NotificationChannel": {
+   "enum": [
+    "ALL"
+   ],
+   "type": "string"
+  },
+  "NotificationEvent": {
+   "enum": [
+    "CA_CERTIFICATE_EXPIRY",
+    "END_ENTITY_CERTIFICATE_EXPIRY"
+   ],
+   "type": "string"
+  },
+  "NotificationSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "Channel": {
+     "$ref": "#/definitions/NotificationChannel"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "Event": {
+     "$ref": "#/definitions/NotificationEvent"
+    },
+    "Threshold": {
+     "maximum": 360,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Enabled",
+    "Event"
+   ],
+   "type": "object"
+  },
+  "Source": {
+   "additionalProperties": false,
+   "properties": {
+    "SourceData": {
+     "$ref": "#/definitions/SourceData"
+    },
+    "SourceType": {
+     "$ref": "#/definitions/TrustAnchorType"
+    }
+   },
+   "type": "object"
+  },
+  "SourceData": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "X509CertificateData": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "X509CertificateData"
+     ],
+     "title": "X509CertificateData",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "AcmPcaArn": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "AcmPcaArn"
+     ],
+     "title": "AcmPcaArn",
+     "type": "object"
+    }
+   ]
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[ a-zA-Z0-9_.:/=+@-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[ a-zA-Z0-9_.:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TrustAnchorType": {
+   "enum": [
+    "AWS_ACM_PCA",
+    "CERTIFICATE_BUNDLE",
+    "SELF_SIGNED_REPOSITORY"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TrustAnchorId"
+ ],
+ "properties": {
+  "Enabled": {
+   "type": "boolean"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[ a-zA-Z0-9-_]*$",
+   "type": "string"
+  },
+  "NotificationSettings": {
+   "items": {
+    "$ref": "#/definitions/NotificationSetting"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Source": {
+   "$ref": "#/definitions/Source"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "TrustAnchorArn": {
+   "pattern": "[a-f0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}",
+   "type": "string"
+  },
+  "TrustAnchorId": {
+   "pattern": "[a-f0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TrustAnchorId",
+  "/properties/TrustAnchorArn"
+ ],
+ "required": [
+  "Name",
+  "Source"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RolesAnywhere::TrustAnchor"
+}
