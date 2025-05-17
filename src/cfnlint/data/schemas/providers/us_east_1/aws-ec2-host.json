@@ -7,6 +7,24 @@
   "/properties/OutpostArn",
   "/properties/AssetId"
  ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
  "primaryIdentifier": [
   "/properties/HostId"
  ],
@@ -49,6 +67,14 @@
   },
   "OutpostArn": {
    "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
   }
  },
  "readOnlyProperties": [
@@ -58,5 +84,12 @@
   "AvailabilityZone"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::EC2::Host"
 }

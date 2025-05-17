@@ -1,0 +1,183 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/Content",
+  "/properties/Attachments",
+  "/properties/VersionName",
+  "/properties/DocumentFormat",
+  "/properties/TargetType",
+  "/properties/Requires"
+ ],
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/DocumentType"
+ ],
+ "definitions": {
+  "AttachmentsSource": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "enum": [
+      "SourceUrl",
+      "S3FileUrl",
+      "AttachmentReference"
+     ],
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 100000,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "DocumentRequires": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 200,
+     "pattern": "^[a-zA-Z0-9_\\-.:/]{3,200}$",
+     "type": "string"
+    },
+    "Version": {
+     "maxLength": 8,
+     "pattern": "([$]LATEST|[$]DEFAULT|^[1-9][0-9]*$)",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Attachments": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AttachmentsSource"
+   },
+   "maxItems": 20,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Content": {
+   "minLength": 1,
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "DocumentFormat": {
+   "default": "JSON",
+   "enum": [
+    "YAML",
+    "JSON",
+    "TEXT"
+   ],
+   "type": "string"
+  },
+  "DocumentType": {
+   "enum": [
+    "ApplicationConfiguration",
+    "ApplicationConfigurationSchema",
+    "Automation",
+    "Automation.ChangeTemplate",
+    "ChangeCalendar",
+    "CloudFormation",
+    "Command",
+    "DeploymentStrategy",
+    "Package",
+    "Policy",
+    "ProblemAnalysis",
+    "ProblemAnalysisTemplate",
+    "Session"
+   ],
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[a-zA-Z0-9_\\-.]{3,128}$",
+   "type": "string"
+  },
+  "Requires": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DocumentRequires"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 1000,
+   "type": "array"
+  },
+  "TargetType": {
+   "maxLength": 200,
+   "pattern": "^\\/[\\w\\.\\-\\:\\/]*$",
+   "type": "string"
+  },
+  "UpdateMethod": {
+   "default": "Replace",
+   "enum": [
+    "Replace",
+    "NewVersion"
+   ],
+   "type": "string"
+  },
+  "VersionName": {
+   "pattern": "^[a-zA-Z0-9_\\-.]{1,128}$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "Content"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ssm",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SSM::Document",
+ "writeOnlyProperties": [
+  "/properties/UpdateMethod",
+  "/properties/Attachments"
+ ]
+}

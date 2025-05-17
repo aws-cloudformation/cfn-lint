@@ -16852,6 +16852,11 @@
     ]
    },
    "listactiontypes": {},
+   "listdeployactionexecutiontargets": {
+    "Resources": [
+     "pipeline"
+    ]
+   },
    "listpipelineexecutions": {
     "Resources": [
      "pipeline"
@@ -35518,8 +35523,10 @@
    },
    "createarchive": {
     "Resources": [
+     "alias",
      "archive",
-     "event-bus"
+     "event-bus",
+     "key"
     ]
    },
    "createconnection": {
@@ -35740,7 +35747,9 @@
    },
    "updatearchive": {
     "Resources": [
-     "archive"
+     "alias",
+     "archive",
+     "key"
     ]
    },
    "updateconnection": {
@@ -35760,6 +35769,11 @@
    }
   },
   "Resources": {
+   "alias": {
+    "ARNFormats": [
+     "arn:${Partition}:kms:${Region}:${Account}:alias/.*"
+    ]
+   },
    "api-destination": {
     "ARNFormats": [
      "arn:${Partition}:events:${Region}:${Account}:api-destination/.*"
@@ -35796,6 +35810,11 @@
    "event-source": {
     "ARNFormats": [
      "arn:${Partition}:events:${Region}::event-source/.*"
+    ]
+   },
+   "key": {
+    "ARNFormats": [
+     "arn:${Partition}:kms:${Region}:${Account}:key/.*"
     ]
    },
    "reboot-instance": {
@@ -57637,6 +57656,21 @@
      "imageset"
     ]
    },
+   "searchdicominstances": {
+    "Resources": [
+     "datastore"
+    ]
+   },
+   "searchdicomseries": {
+    "Resources": [
+     "datastore"
+    ]
+   },
+   "searchdicomstudies": {
+    "Resources": [
+     "datastore"
+    ]
+   },
    "searchimagesets": {
     "Resources": [
      "datastore"
@@ -65450,6 +65484,12 @@
      "domains"
     ]
    },
+   "createdomainlayout": {
+    "Resources": [
+     "domains",
+     "layouts"
+    ]
+   },
    "createeventstream": {
     "Resources": [
      "domains",
@@ -65504,6 +65544,12 @@
    "deletedomain": {
     "Resources": [
      "domains"
+    ]
+   },
+   "deletedomainlayout": {
+    "Resources": [
+     "domains",
+     "layouts"
     ]
    },
    "deleteeventstream": {
@@ -65582,6 +65628,12 @@
    "getdomain": {
     "Resources": [
      "domains"
+    ]
+   },
+   "getdomainlayout": {
+    "Resources": [
+     "domains",
+     "layouts"
     ]
    },
    "geteventstream": {
@@ -65669,6 +65721,11 @@
     ]
    },
    "listcalculatedattributesforprofile": {
+    "Resources": [
+     "domains"
+    ]
+   },
+   "listdomainlayouts": {
     "Resources": [
      "domains"
     ]
@@ -65798,6 +65855,12 @@
      "domains"
     ]
    },
+   "updatedomainlayout": {
+    "Resources": [
+     "domains",
+     "layouts"
+    ]
+   },
    "updateeventtrigger": {
     "Resources": [
      "domains",
@@ -65844,6 +65907,14 @@
     ]
    },
    "integrations": {
+    "ARNFormats": [
+     "arn:${Partition}:profile:${Region}:${Account}:domains/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "layouts": {
     "ARNFormats": [
      "arn:${Partition}:profile:${Region}:${Account}:domains/.*"
     ],
@@ -71859,7 +71930,11 @@
      "application"
     ]
    },
-   "createapp": {},
+   "createapp": {
+    "Resources": [
+     "application"
+    ]
+   },
    "createappversionappcomponent": {
     "Resources": [
      "application"
@@ -71875,7 +71950,11 @@
      "application"
     ]
    },
-   "createresiliencypolicy": {},
+   "createresiliencypolicy": {
+    "Resources": [
+     "resiliency-policy"
+    ]
+   },
    "deleteapp": {
     "Resources": [
      "application"
@@ -85758,6 +85837,7 @@
    "createcase": {},
    "describeattachment": {},
    "describecaseattributes": {},
+   "describecaseoptions": {},
    "describecases": {},
    "describecommunication": {},
    "describecommunications": {},
@@ -85779,7 +85859,8 @@
    "refreshtrustedadvisorcheck": {},
    "resolvecase": {},
    "searchforcases": {},
-   "startinteraction": {}
+   "startinteraction": {},
+   "updatecaseseverity": {}
   },
   "Resources": {}
  },
@@ -87539,6 +87620,36 @@
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
+    ]
+   }
+  }
+ },
+ "transform": {
+  "Actions": {
+   "associateconnectorresource": {},
+   "createprofile": {
+    "Resources": [
+     "profile"
+    ]
+   },
+   "deleteprofile": {
+    "Resources": [
+     "profile"
+    ]
+   },
+   "getconnector": {},
+   "listprofiles": {},
+   "rejectconnector": {},
+   "updateprofile": {
+    "Resources": [
+     "profile"
+    ]
+   }
+  },
+  "Resources": {
+   "profile": {
+    "ARNFormats": [
+     "arn:${Partition}:transform:${Region}:${Account}:profile/.*"
     ]
    }
   }

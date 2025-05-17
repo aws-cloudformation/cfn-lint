@@ -1,0 +1,110 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ServerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ServerHostname": {
+     "type": "string"
+    },
+    "ServerPort": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ServerHostname"
+   ],
+   "type": "object"
+  },
+  "ServerCredentials": {
+   "additionalProperties": false,
+   "properties": {
+    "Password": {
+     "type": "string"
+    },
+    "Username": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Username",
+    "Password"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AgentArns": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "CloudWatchLogGroupArn": {
+   "type": "string"
+  },
+  "ConnectivityStatus": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "SecretsManagerArn": {
+   "type": "string"
+  },
+  "ServerConfiguration": {
+   "$ref": "#/definitions/ServerConfiguration"
+  },
+  "ServerCredentials": {
+   "$ref": "#/definitions/ServerCredentials"
+  },
+  "StorageSystemArn": {
+   "type": "string"
+  },
+  "SystemType": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/StorageSystemArn",
+  "/properties/SecretsManagerArn",
+  "/properties/ConnectivityStatus"
+ ],
+ "required": [
+  "ServerConfiguration",
+  "SystemType",
+  "AgentArns"
+ ],
+ "typeName": "AWS::DataSync::StorageSystem"
+}

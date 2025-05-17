@@ -280,6 +280,26 @@
    ],
    "type": "object"
   },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
   "TargetConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -296,7 +316,10 @@
  "deprecatedProperties": [
   "/properties/LogPaths",
   "/properties/ServerLaunchParameters",
-  "/properties/ServerLaunchPath"
+  "/properties/ServerLaunchPath",
+  "/properties/MinSize",
+  "/properties/MaxSize",
+  "/properties/DesiredEC2Instances"
  ],
  "primaryIdentifier": [
   "/properties/FleetId"
@@ -345,6 +368,10 @@
   },
   "EC2InstanceType": {
    "pattern": "^.*..*$",
+   "type": "string"
+  },
+  "FleetArn": {
+   "pattern": "^arn:.*:fleet/[a-z]*fleet-[a-zA-Z0-9\\-]+$",
    "type": "string"
   },
   "FleetId": {
@@ -460,16 +487,35 @@
    "minLength": 1,
    "pattern": "[A-Za-z0-9_:.+\\/\\\\\\- ]+",
    "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
   }
  },
+ "propertyTransform": {
+  "/properties/AnywhereConfiguration/Cost": "$contains(Cost, \".\") ? Cost : Cost & \".0\""
+ },
  "readOnlyProperties": [
-  "/properties/FleetId"
+  "/properties/FleetId",
+  "/properties/FleetArn"
  ],
  "required": [
   "Name"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-gamelift.git",
- "taggable": true,
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::GameLift::Fleet",
  "writeOnlyProperties": [
   "/properties/ApplyCapacity"
