@@ -1,3 +1,9 @@
+### v1.35.3
+## What's Changed
+* Undo change [4138](https://github.com/aws-cloudformation/cfn-lint/pull/4138) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4149
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.35.2...v1.35.3
+
 ### v1.35.2
 ## What's Changed
 * Stdin overrides `.cfnlintrc` when determining templates by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4138
