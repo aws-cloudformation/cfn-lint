@@ -83,6 +83,19 @@
    ],
    "type": "string"
   },
+  "RetryConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxRetries": {
+     "maximum": 2,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxRetries"
+   ],
+   "type": "object"
+  },
   "RunConfig": {
    "additionalProperties": false,
    "properties": {
@@ -140,6 +153,9 @@
      "maxLength": 1024,
      "minLength": 1,
      "type": "string"
+    },
+    "RetryConfig": {
+     "$ref": "#/definitions/RetryConfig"
     }
    },
    "required": [
@@ -241,6 +257,9 @@
   "DeleteLambdaResourcesOnCanaryDeletion": {
    "type": "boolean"
   },
+  "DryRunAndUpdate": {
+   "type": "boolean"
+  },
   "ExecutionRoleArn": {
    "maxLength": 2048,
    "minLength": 1,
@@ -338,6 +357,7 @@
   "/properties/StartCanaryAfterCreation",
   "/properties/ResourcesToReplicateTags",
   "/properties/RunConfig/EnvironmentVariables",
-  "/properties/VisualReference"
+  "/properties/VisualReference",
+  "/properties/DryRunAndUpdate"
  ]
 }

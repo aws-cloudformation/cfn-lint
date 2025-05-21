@@ -1,0 +1,145 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "IpamOperatingRegion": {
+   "additionalProperties": false,
+   "properties": {
+    "RegionName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RegionName"
+   ],
+   "type": "object"
+  },
+  "IpamOrganizationalUnitExclusion": {
+   "additionalProperties": false,
+   "properties": {
+    "OrganizationsEntityPath": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "OrganizationsEntityPath"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IpamId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "DefaultResourceDiscoveryAssociationId": {
+   "type": "string"
+  },
+  "DefaultResourceDiscoveryId": {
+   "type": "string"
+  },
+  "DefaultResourceDiscoveryOrganizationalUnitExclusions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IpamOrganizationalUnitExclusion"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Description": {
+   "type": "string"
+  },
+  "EnablePrivateGua": {
+   "type": "boolean"
+  },
+  "IpamId": {
+   "type": "string"
+  },
+  "MeteredAccount": {
+   "enum": [
+    "ipam-owner",
+    "resource-owner"
+   ],
+   "type": "string"
+  },
+  "OperatingRegions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IpamOperatingRegion"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "PrivateDefaultScopeId": {
+   "type": "string"
+  },
+  "PublicDefaultScopeId": {
+   "maxLength": 255,
+   "type": "string"
+  },
+  "ResourceDiscoveryAssociationCount": {
+   "type": "integer"
+  },
+  "ScopeCount": {
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tier": {
+   "enum": [
+    "free",
+    "advanced"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IpamId",
+  "/properties/Arn",
+  "/properties/PublicDefaultScopeId",
+  "/properties/PrivateDefaultScopeId",
+  "/properties/ScopeCount",
+  "/properties/ResourceDiscoveryAssociationCount",
+  "/properties/DefaultResourceDiscoveryId",
+  "/properties/DefaultResourceDiscoveryAssociationId"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ipam.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::IPAM"
+}

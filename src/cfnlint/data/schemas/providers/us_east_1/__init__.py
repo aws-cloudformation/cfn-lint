@@ -870,6 +870,8 @@ types: list[str] = [
     "AWS::M2::Application",
     "AWS::M2::Deployment",
     "AWS::M2::Environment",
+    "AWS::MPA::ApprovalTeam",
+    "AWS::MPA::IdentitySource",
     "AWS::MSK::BatchScramSecret",
     "AWS::MSK::Cluster",
     "AWS::MSK::ClusterPolicy",
