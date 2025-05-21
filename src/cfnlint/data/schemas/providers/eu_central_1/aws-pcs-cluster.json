@@ -1,0 +1,275 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Networking",
+  "/properties/Scheduler",
+  "/properties/Size",
+  "/properties/SlurmConfiguration"
+ ],
+ "definitions": {
+  "Accounting": {
+   "properties": {
+    "DefaultPurgeTimeInDays": {
+     "default": -1,
+     "maximum": 10000,
+     "minimum": -1,
+     "type": "integer"
+    },
+    "Mode": {
+     "default": "NONE",
+     "enum": [
+      "STANDARD",
+      "NONE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Mode"
+   ],
+   "type": "object"
+  },
+  "AuthKey": {
+   "additionalProperties": false,
+   "properties": {
+    "SecretArn": {
+     "type": "string"
+    },
+    "SecretVersion": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretArn",
+    "SecretVersion"
+   ],
+   "type": "object"
+  },
+  "Endpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Port": {
+     "type": "string"
+    },
+    "PrivateIpAddress": {
+     "type": "string"
+    },
+    "PublicIpAddress": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "SLURMCTLD",
+      "SLURMDBD"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Port",
+    "PrivateIpAddress",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ErrorInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "Code": {
+     "type": "string"
+    },
+    "Message": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SecurityGroupId": {
+   "format": "AWS::EC2::SecurityGroup.Id",
+   "pattern": "sg-\\w{8,17}",
+   "type": "string"
+  },
+  "SlurmCustomSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "ParameterName": {
+     "type": "string"
+    },
+    "ParameterValue": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ParameterName",
+    "ParameterValue"
+   ],
+   "type": "object"
+  },
+  "SubnetId": {
+   "pattern": "subnet-\\w{8,17}",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Endpoints": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Endpoint"
+   },
+   "type": "array"
+  },
+  "ErrorInfo": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ErrorInfo"
+   },
+   "type": "array"
+  },
+  "Id": {
+   "pattern": "^(pcs_[a-zA-Z0-9]+|[A-Za-z][A-Za-z0-9-]{1,40})$",
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Networking": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SecurityGroupId"
+     },
+     "type": "array"
+    },
+    "SubnetIds": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SubnetId"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Scheduler": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "enum": [
+      "SLURM"
+     ],
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Version"
+   ],
+   "type": "object"
+  },
+  "Size": {
+   "enum": [
+    "SMALL",
+    "MEDIUM",
+    "LARGE"
+   ],
+   "type": "string"
+  },
+  "SlurmConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Accounting": {
+     "$ref": "#/definitions/Accounting"
+    },
+    "AuthKey": {
+     "$ref": "#/definitions/AuthKey"
+    },
+    "ScaleDownIdleTimeInSeconds": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "SlurmCustomSettings": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SlurmCustomSetting"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Status": {
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "UPDATING",
+    "DELETING",
+    "CREATE_FAILED",
+    "DELETE_FAILED",
+    "UPDATE_FAILED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   }
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Endpoints",
+  "/properties/ErrorInfo",
+  "/properties/Id",
+  "/properties/Status"
+ ],
+ "required": [
+  "Networking",
+  "Scheduler",
+  "Size"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-pcs.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::PCS::Cluster"
+}
