@@ -1,0 +1,933 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ActionFailurePolicy": {
+   "enum": [
+    "CONTINUE",
+    "DROP"
+   ],
+   "type": "string"
+  },
+  "AddHeaderAction": {
+   "additionalProperties": false,
+   "properties": {
+    "HeaderName": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[xX]\\-[a-zA-Z0-9\\-]+$",
+     "type": "string"
+    },
+    "HeaderValue": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "HeaderName",
+    "HeaderValue"
+   ],
+   "type": "object"
+  },
+  "Analysis": {
+   "additionalProperties": false,
+   "properties": {
+    "Analyzer": {
+     "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
+     "type": "string"
+    },
+    "ResultField": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^(addon\\.)?[\\sa-zA-Z0-9_]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Analyzer",
+    "ResultField"
+   ],
+   "type": "object"
+  },
+  "ArchiveAction": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionFailurePolicy": {
+     "$ref": "#/definitions/ActionFailurePolicy"
+    },
+    "TargetArchive": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TargetArchive"
+   ],
+   "type": "object"
+  },
+  "DeliverToMailboxAction": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionFailurePolicy": {
+     "$ref": "#/definitions/ActionFailurePolicy"
+    },
+    "MailboxArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
+     "type": "string"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "MailboxArn",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "DeliverToQBusinessAction": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionFailurePolicy": {
+     "$ref": "#/definitions/ActionFailurePolicy"
+    },
+    "ApplicationId": {
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[a-z0-9-]+$",
+     "type": "string"
+    },
+    "IndexId": {
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[a-z0-9-]+$",
+     "type": "string"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ApplicationId",
+    "IndexId",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "DropAction": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "MailFrom": {
+   "enum": [
+    "REPLACE",
+    "PRESERVE"
+   ],
+   "type": "string"
+  },
+  "RelayAction": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionFailurePolicy": {
+     "$ref": "#/definitions/ActionFailurePolicy"
+    },
+    "MailFrom": {
+     "$ref": "#/definitions/MailFrom"
+    },
+    "Relay": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Relay"
+   ],
+   "type": "object"
+  },
+  "ReplaceRecipientAction": {
+   "additionalProperties": false,
+   "properties": {
+    "ReplaceWith": {
+     "items": {
+      "maxLength": 254,
+      "minLength": 0,
+      "pattern": "^[0-9A-Za-z@+.-]+$",
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "properties": {
+    "Actions": {
+     "items": {
+      "$ref": "#/definitions/RuleAction"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/RuleCondition"
+     },
+     "maxItems": 10,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Name": {
+     "maxLength": 32,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_.-]+$",
+     "type": "string"
+    },
+    "Unless": {
+     "items": {
+      "$ref": "#/definitions/RuleCondition"
+     },
+     "maxItems": 10,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Actions"
+   ],
+   "type": "object"
+  },
+  "RuleAction": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Drop": {
+       "$ref": "#/definitions/DropAction"
+      }
+     },
+     "required": [
+      "Drop"
+     ],
+     "title": "Drop",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Relay": {
+       "$ref": "#/definitions/RelayAction"
+      }
+     },
+     "required": [
+      "Relay"
+     ],
+     "title": "Relay",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Archive": {
+       "$ref": "#/definitions/ArchiveAction"
+      }
+     },
+     "required": [
+      "Archive"
+     ],
+     "title": "Archive",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "WriteToS3": {
+       "$ref": "#/definitions/S3Action"
+      }
+     },
+     "required": [
+      "WriteToS3"
+     ],
+     "title": "WriteToS3",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Send": {
+       "$ref": "#/definitions/SendAction"
+      }
+     },
+     "required": [
+      "Send"
+     ],
+     "title": "Send",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "AddHeader": {
+       "$ref": "#/definitions/AddHeaderAction"
+      }
+     },
+     "required": [
+      "AddHeader"
+     ],
+     "title": "AddHeader",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ReplaceRecipient": {
+       "$ref": "#/definitions/ReplaceRecipientAction"
+      }
+     },
+     "required": [
+      "ReplaceRecipient"
+     ],
+     "title": "ReplaceRecipient",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "DeliverToMailbox": {
+       "$ref": "#/definitions/DeliverToMailboxAction"
+      }
+     },
+     "required": [
+      "DeliverToMailbox"
+     ],
+     "title": "DeliverToMailbox",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "DeliverToQBusiness": {
+       "$ref": "#/definitions/DeliverToQBusinessAction"
+      }
+     },
+     "required": [
+      "DeliverToQBusiness"
+     ],
+     "title": "DeliverToQBusiness",
+     "type": "object"
+    }
+   ]
+  },
+  "RuleBooleanEmailAttribute": {
+   "enum": [
+    "READ_RECEIPT_REQUESTED",
+    "TLS",
+    "TLS_WRAPPED"
+   ],
+   "type": "string"
+  },
+  "RuleBooleanExpression": {
+   "additionalProperties": false,
+   "properties": {
+    "Evaluate": {
+     "$ref": "#/definitions/RuleBooleanToEvaluate"
+    },
+    "Operator": {
+     "$ref": "#/definitions/RuleBooleanOperator"
+    }
+   },
+   "required": [
+    "Evaluate",
+    "Operator"
+   ],
+   "type": "object"
+  },
+  "RuleBooleanOperator": {
+   "enum": [
+    "IS_TRUE",
+    "IS_FALSE"
+   ],
+   "type": "string"
+  },
+  "RuleBooleanToEvaluate": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Attribute": {
+       "$ref": "#/definitions/RuleBooleanEmailAttribute"
+      }
+     },
+     "required": [
+      "Attribute"
+     ],
+     "title": "Attribute",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Analysis": {
+       "$ref": "#/definitions/Analysis"
+      }
+     },
+     "required": [
+      "Analysis"
+     ],
+     "title": "Analysis",
+     "type": "object"
+    }
+   ]
+  },
+  "RuleCondition": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "BooleanExpression": {
+       "$ref": "#/definitions/RuleBooleanExpression"
+      }
+     },
+     "required": [
+      "BooleanExpression"
+     ],
+     "title": "BooleanExpression",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "StringExpression": {
+       "$ref": "#/definitions/RuleStringExpression"
+      }
+     },
+     "required": [
+      "StringExpression"
+     ],
+     "title": "StringExpression",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "NumberExpression": {
+       "$ref": "#/definitions/RuleNumberExpression"
+      }
+     },
+     "required": [
+      "NumberExpression"
+     ],
+     "title": "NumberExpression",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "IpExpression": {
+       "$ref": "#/definitions/RuleIpExpression"
+      }
+     },
+     "required": [
+      "IpExpression"
+     ],
+     "title": "IpExpression",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "VerdictExpression": {
+       "$ref": "#/definitions/RuleVerdictExpression"
+      }
+     },
+     "required": [
+      "VerdictExpression"
+     ],
+     "title": "VerdictExpression",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "DmarcExpression": {
+       "$ref": "#/definitions/RuleDmarcExpression"
+      }
+     },
+     "required": [
+      "DmarcExpression"
+     ],
+     "title": "DmarcExpression",
+     "type": "object"
+    }
+   ]
+  },
+  "RuleDmarcExpression": {
+   "additionalProperties": false,
+   "properties": {
+    "Operator": {
+     "$ref": "#/definitions/RuleDmarcOperator"
+    },
+    "Values": {
+     "items": {
+      "$ref": "#/definitions/RuleDmarcPolicy"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Operator",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "RuleDmarcOperator": {
+   "enum": [
+    "EQUALS",
+    "NOT_EQUALS"
+   ],
+   "type": "string"
+  },
+  "RuleDmarcPolicy": {
+   "enum": [
+    "NONE",
+    "QUARANTINE",
+    "REJECT"
+   ],
+   "type": "string"
+  },
+  "RuleIpEmailAttribute": {
+   "enum": [
+    "SOURCE_IP"
+   ],
+   "type": "string"
+  },
+  "RuleIpExpression": {
+   "additionalProperties": false,
+   "properties": {
+    "Evaluate": {
+     "$ref": "#/definitions/RuleIpToEvaluate"
+    },
+    "Operator": {
+     "$ref": "#/definitions/RuleIpOperator"
+    },
+    "Values": {
+     "items": {
+      "maxLength": 43,
+      "minLength": 1,
+      "pattern": "^(([0-9]|.|:|/)*)$",
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Evaluate",
+    "Operator",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "RuleIpOperator": {
+   "enum": [
+    "CIDR_MATCHES",
+    "NOT_CIDR_MATCHES"
+   ],
+   "type": "string"
+  },
+  "RuleIpToEvaluate": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Attribute": {
+       "$ref": "#/definitions/RuleIpEmailAttribute"
+      }
+     },
+     "required": [
+      "Attribute"
+     ],
+     "title": "Attribute",
+     "type": "object"
+    }
+   ]
+  },
+  "RuleNumberEmailAttribute": {
+   "enum": [
+    "MESSAGE_SIZE"
+   ],
+   "type": "string"
+  },
+  "RuleNumberExpression": {
+   "additionalProperties": false,
+   "properties": {
+    "Evaluate": {
+     "$ref": "#/definitions/RuleNumberToEvaluate"
+    },
+    "Operator": {
+     "$ref": "#/definitions/RuleNumberOperator"
+    },
+    "Value": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "Evaluate",
+    "Operator",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "RuleNumberOperator": {
+   "enum": [
+    "EQUALS",
+    "NOT_EQUALS",
+    "LESS_THAN",
+    "GREATER_THAN",
+    "LESS_THAN_OR_EQUAL",
+    "GREATER_THAN_OR_EQUAL"
+   ],
+   "type": "string"
+  },
+  "RuleNumberToEvaluate": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Attribute": {
+       "$ref": "#/definitions/RuleNumberEmailAttribute"
+      }
+     },
+     "required": [
+      "Attribute"
+     ],
+     "title": "Attribute",
+     "type": "object"
+    }
+   ]
+  },
+  "RuleStringEmailAttribute": {
+   "enum": [
+    "MAIL_FROM",
+    "HELO",
+    "RECIPIENT",
+    "SENDER",
+    "FROM",
+    "SUBJECT",
+    "TO",
+    "CC"
+   ],
+   "type": "string"
+  },
+  "RuleStringExpression": {
+   "additionalProperties": false,
+   "properties": {
+    "Evaluate": {
+     "$ref": "#/definitions/RuleStringToEvaluate"
+    },
+    "Operator": {
+     "$ref": "#/definitions/RuleStringOperator"
+    },
+    "Values": {
+     "items": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Evaluate",
+    "Operator",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "RuleStringOperator": {
+   "enum": [
+    "EQUALS",
+    "NOT_EQUALS",
+    "STARTS_WITH",
+    "ENDS_WITH",
+    "CONTAINS"
+   ],
+   "type": "string"
+  },
+  "RuleStringToEvaluate": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Attribute": {
+       "$ref": "#/definitions/RuleStringEmailAttribute"
+      }
+     },
+     "required": [
+      "Attribute"
+     ],
+     "title": "Attribute",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "MimeHeaderAttribute": {
+       "pattern": "^X-[a-zA-Z0-9-]{1,256}$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "MimeHeaderAttribute"
+     ],
+     "title": "MimeHeaderAttribute",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Analysis": {
+       "$ref": "#/definitions/Analysis"
+      }
+     },
+     "required": [
+      "Analysis"
+     ],
+     "title": "Analysis",
+     "type": "object"
+    }
+   ]
+  },
+  "RuleVerdict": {
+   "enum": [
+    "PASS",
+    "FAIL",
+    "GRAY",
+    "PROCESSING_FAILED"
+   ],
+   "type": "string"
+  },
+  "RuleVerdictAttribute": {
+   "enum": [
+    "SPF",
+    "DKIM"
+   ],
+   "type": "string"
+  },
+  "RuleVerdictExpression": {
+   "additionalProperties": false,
+   "properties": {
+    "Evaluate": {
+     "$ref": "#/definitions/RuleVerdictToEvaluate"
+    },
+    "Operator": {
+     "$ref": "#/definitions/RuleVerdictOperator"
+    },
+    "Values": {
+     "items": {
+      "$ref": "#/definitions/RuleVerdict"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Evaluate",
+    "Operator",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "RuleVerdictOperator": {
+   "enum": [
+    "EQUALS",
+    "NOT_EQUALS"
+   ],
+   "type": "string"
+  },
+  "RuleVerdictToEvaluate": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Attribute": {
+       "$ref": "#/definitions/RuleVerdictAttribute"
+      }
+     },
+     "required": [
+      "Attribute"
+     ],
+     "title": "Attribute",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Analysis": {
+       "$ref": "#/definitions/Analysis"
+      }
+     },
+     "required": [
+      "Analysis"
+     ],
+     "title": "Analysis",
+     "type": "object"
+    }
+   ]
+  },
+  "S3Action": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionFailurePolicy": {
+     "$ref": "#/definitions/ActionFailurePolicy"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
+     "type": "string"
+    },
+    "S3Bucket": {
+     "maxLength": 62,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9.-]+$",
+     "type": "string"
+    },
+    "S3Prefix": {
+     "maxLength": 62,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9!_.*'()/-]+$",
+     "type": "string"
+    },
+    "S3SseKmsKeyId": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^[a-zA-Z0-9-:/]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn",
+    "S3Bucket"
+   ],
+   "type": "object"
+  },
+  "SendAction": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionFailurePolicy": {
+     "$ref": "#/definitions/ActionFailurePolicy"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9/_\\+=\\.:@\\-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9/_\\+=\\.:@\\-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RuleSetId"
+ ],
+ "properties": {
+  "RuleSetArn": {
+   "type": "string"
+  },
+  "RuleSetId": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RuleSetName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_.-]+$",
+   "type": "string"
+  },
+  "Rules": {
+   "items": {
+    "$ref": "#/definitions/Rule"
+   },
+   "maxItems": 40,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RuleSetArn",
+  "/properties/RuleSetId"
+ ],
+ "required": [
+  "Rules"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses-mailmanager",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SES::MailManagerRuleSet"
+}

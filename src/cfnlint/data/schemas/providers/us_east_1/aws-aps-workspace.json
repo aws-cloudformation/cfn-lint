@@ -4,6 +4,20 @@
   "/properties/KmsKeyArn"
  ],
  "definitions": {
+  "CloudWatchLogDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroupArn": {
+     "maxLength": 512,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "LogGroupArn"
+   ],
+   "type": "object"
+  },
   "Label": {
    "additionalProperties": false,
    "properties": {
@@ -64,6 +78,52 @@
      "type": "string"
     }
    },
+   "type": "object"
+  },
+  "LoggingDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogs": {
+     "$ref": "#/definitions/CloudWatchLogDestination"
+    },
+    "Filters": {
+     "$ref": "#/definitions/LoggingFilter"
+    }
+   },
+   "required": [
+    "CloudWatchLogs",
+    "Filters"
+   ],
+   "type": "object"
+  },
+  "LoggingFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "QspThreshold": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "QspThreshold"
+   ],
+   "type": "object"
+  },
+  "QueryLoggingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Destinations": {
+     "items": {
+      "$ref": "#/definitions/LoggingDestination"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Destinations"
+   ],
    "type": "object"
   },
   "Tag": {
@@ -135,6 +195,9 @@
   },
   "PrometheusEndpoint": {
    "type": "string"
+  },
+  "QueryLoggingConfiguration": {
+   "$ref": "#/definitions/QueryLoggingConfiguration"
   },
   "Tags": {
    "insertionOrder": false,

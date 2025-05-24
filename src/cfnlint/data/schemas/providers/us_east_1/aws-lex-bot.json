@@ -1680,6 +1680,9 @@
     "SlotTypeName": {
      "$ref": "#/definitions/SlotTypeName"
     },
+    "SubSlotSetting": {
+     "$ref": "#/definitions/SubSlotSetting"
+    },
     "ValueElicitationSetting": {
      "$ref": "#/definitions/SlotValueElicitationSetting"
     }
@@ -1819,6 +1822,12 @@
    ],
    "type": "object"
   },
+  "SlotTypeId": {
+   "maxLength": 25,
+   "minLength": 1,
+   "pattern": "^((AMAZON\\.)[a-zA-Z_]+?|[0-9a-zA-Z]+)$",
+   "type": "string"
+  },
   "SlotTypeName": {
    "type": "string"
   },
@@ -1957,6 +1966,22 @@
    },
    "type": "array"
   },
+  "Specifications": {
+   "additionalProperties": false,
+   "properties": {
+    "SlotTypeId": {
+     "$ref": "#/definitions/SlotTypeId"
+    },
+    "ValueElicitationSetting": {
+     "$ref": "#/definitions/SubSlotValueElicitationSetting"
+    }
+   },
+   "required": [
+    "SlotTypeId",
+    "ValueElicitationSetting"
+   ],
+   "type": "object"
+  },
   "StillWaitingResponseFrequency": {
    "maximum": 300,
    "minimum": 1,
@@ -1990,6 +2015,29 @@
    "minimum": 1,
    "type": "integer"
   },
+  "SubSlotSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "Expression": {
+     "maxLength": 1000,
+     "minLength": 1,
+     "pattern": "[0-9A-Za-z_\\-\\s\\(\\)]+",
+     "type": "string"
+    },
+    "SlotSpecifications": {
+     "additionalProperties": false,
+     "maxProperties": 6,
+     "minProperties": 0,
+     "patternProperties": {
+      "^([0-9a-zA-Z][_-]?){1,100}$": {
+       "$ref": "#/definitions/Specifications"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
   "SubSlotTypeComposition": {
    "additionalProperties": false,
    "properties": {
@@ -2000,16 +2048,31 @@
      "type": "string"
     },
     "SlotTypeId": {
-     "maxLength": 25,
-     "minLength": 1,
-     "pattern": "^((AMAZON\\.)[a-zA-Z_]+?|[0-9a-zA-Z]+)$",
-     "type": "string"
+     "$ref": "#/definitions/SlotTypeId"
     }
    },
    "required": [
     "Name",
     "SlotTypeId"
    ],
+   "type": "object"
+  },
+  "SubSlotValueElicitationSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultValueSpecification": {
+     "$ref": "#/definitions/SlotDefaultValueSpecification"
+    },
+    "PromptSpecification": {
+     "$ref": "#/definitions/PromptSpecification"
+    },
+    "SampleUtterances": {
+     "$ref": "#/definitions/SampleUtterancesList"
+    },
+    "WaitAndContinueSpecification": {
+     "$ref": "#/definitions/WaitAndContinueSpecification"
+    }
+   },
    "type": "object"
   },
   "SynonymList": {

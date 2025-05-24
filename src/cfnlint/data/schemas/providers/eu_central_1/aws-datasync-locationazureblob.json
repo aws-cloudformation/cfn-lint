@@ -1,0 +1,138 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AzureBlobContainerUrl"
+ ],
+ "definitions": {
+  "AzureBlobSasConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AzureBlobSasToken": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "(^.+$)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AzureBlobSasToken"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:/-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LocationArn"
+ ],
+ "properties": {
+  "AgentArns": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 128,
+    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:agent/agent-[0-9a-z]{17}$",
+    "type": "string"
+   },
+   "maxItems": 4,
+   "minItems": 1,
+   "type": "array"
+  },
+  "AzureAccessTier": {
+   "default": "HOT",
+   "enum": [
+    "HOT",
+    "COOL",
+    "ARCHIVE"
+   ],
+   "type": "string"
+  },
+  "AzureBlobAuthenticationType": {
+   "default": "SAS",
+   "enum": [
+    "SAS"
+   ],
+   "type": "string"
+  },
+  "AzureBlobContainerUrl": {
+   "maxLength": 325,
+   "pattern": "^https://[A-Za-z0-9]((.|-+)?[A-Za-z0-9]){0,252}/[a-z0-9](-?[a-z0-9]){2,62}$",
+   "type": "string"
+  },
+  "AzureBlobSasConfiguration": {
+   "$ref": "#/definitions/AzureBlobSasConfiguration"
+  },
+  "AzureBlobType": {
+   "default": "BLOCK",
+   "enum": [
+    "BLOCK"
+   ],
+   "type": "string"
+  },
+  "LocationArn": {
+   "maxLength": 128,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:location/loc-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "LocationUri": {
+   "maxLength": 4356,
+   "pattern": "^(azure-blob)://[a-zA-Z0-9./\\-]+$",
+   "type": "string"
+  },
+  "Subdirectory": {
+   "maxLength": 1024,
+   "pattern": "^[\\p{L}\\p{M}\\p{Z}\\p{S}\\p{N}\\p{P}\\p{C}]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LocationArn",
+  "/properties/LocationUri"
+ ],
+ "required": [
+  "AzureBlobAuthenticationType",
+  "AgentArns"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datasync.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataSync::LocationAzureBlob",
+ "writeOnlyProperties": [
+  "/properties/Subdirectory",
+  "/properties/AzureBlobSasConfiguration",
+  "/properties/AzureBlobContainerUrl"
+ ]
+}
