@@ -1,0 +1,656 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AdditionalModelRequestFields": {
+   "type": "object"
+  },
+  "AnyToolChoice": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "AutoToolChoice": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "CachePointBlock": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "$ref": "#/definitions/CachePointType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "CachePointType": {
+   "enum": [
+    "default"
+   ],
+   "type": "string"
+  },
+  "ChatPromptTemplateConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InputVariables": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/PromptInputVariable"
+     },
+     "maxItems": 20,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Messages": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Message"
+     },
+     "minItems": 0,
+     "type": "array"
+    },
+    "System": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/SystemContentBlock"
+     },
+     "minItems": 0,
+     "type": "array"
+    },
+    "ToolConfiguration": {
+     "$ref": "#/definitions/ToolConfiguration"
+    }
+   },
+   "required": [
+    "Messages"
+   ],
+   "type": "object"
+  },
+  "ContentBlock": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Text": {
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "required": [
+      "Text"
+     ],
+     "title": "Text",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CachePoint": {
+       "$ref": "#/definitions/CachePointBlock"
+      }
+     },
+     "required": [
+      "CachePoint"
+     ],
+     "title": "CachePoint",
+     "type": "object"
+    }
+   ]
+  },
+  "ConversationRole": {
+   "enum": [
+    "user",
+    "assistant"
+   ],
+   "type": "string"
+  },
+  "Message": {
+   "additionalProperties": false,
+   "properties": {
+    "Content": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ContentBlock"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "Role": {
+     "$ref": "#/definitions/ConversationRole"
+    }
+   },
+   "required": [
+    "Role",
+    "Content"
+   ],
+   "type": "object"
+  },
+  "PromptAgentResource": {
+   "additionalProperties": false,
+   "properties": {
+    "AgentIdentifier": {
+     "maxLength": 2048,
+     "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:agent-alias/[0-9a-zA-Z]{10}/[0-9a-zA-Z]{10}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AgentIdentifier"
+   ],
+   "type": "object"
+  },
+  "PromptGenAiResource": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Agent": {
+       "$ref": "#/definitions/PromptAgentResource"
+      }
+     },
+     "required": [
+      "Agent"
+     ],
+     "title": "Agent",
+     "type": "object"
+    }
+   ]
+  },
+  "PromptInferenceConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Text": {
+       "$ref": "#/definitions/PromptModelInferenceConfiguration"
+      }
+     },
+     "required": [
+      "Text"
+     ],
+     "title": "Text",
+     "type": "object"
+    }
+   ]
+  },
+  "PromptInputVariable": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PromptMetadataEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "$ref": "#/definitions/PromptMetadataKey"
+    },
+    "Value": {
+     "$ref": "#/definitions/PromptMetadataValue"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "PromptMetadataKey": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+   "type": "string"
+  },
+  "PromptMetadataList": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/PromptMetadataEntry"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "PromptMetadataValue": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+   "type": "string"
+  },
+  "PromptModelInferenceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxTokens": {
+     "maximum": 4096,
+     "minimum": 0,
+     "type": "number"
+    },
+    "StopSequences": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 4,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Temperature": {
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    },
+    "TopP": {
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "PromptTemplateConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Text": {
+       "$ref": "#/definitions/TextPromptTemplateConfiguration"
+      }
+     },
+     "required": [
+      "Text"
+     ],
+     "title": "Text",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Chat": {
+       "$ref": "#/definitions/ChatPromptTemplateConfiguration"
+      }
+     },
+     "required": [
+      "Chat"
+     ],
+     "title": "Chat",
+     "type": "object"
+    }
+   ]
+  },
+  "PromptTemplateType": {
+   "enum": [
+    "TEXT",
+    "CHAT"
+   ],
+   "type": "string"
+  },
+  "PromptVariant": {
+   "additionalProperties": false,
+   "properties": {
+    "AdditionalModelRequestFields": {
+     "$ref": "#/definitions/AdditionalModelRequestFields"
+    },
+    "GenAiResource": {
+     "$ref": "#/definitions/PromptGenAiResource"
+    },
+    "InferenceConfiguration": {
+     "$ref": "#/definitions/PromptInferenceConfiguration"
+    },
+    "Metadata": {
+     "$ref": "#/definitions/PromptMetadataList"
+    },
+    "ModelId": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^(arn:aws(-[^:]{1,12})?:(bedrock|sagemaker):[a-z0-9-]{1,20}:([0-9]{12})?:([a-z-]+/)?)?([a-zA-Z0-9.-]{1,63}){0,2}(([:][a-z0-9-]{1,63}){0,2})?(/[a-z0-9]{1,12})?$",
+     "type": "string"
+    },
+    "Name": {
+     "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+     "type": "string"
+    },
+    "TemplateConfiguration": {
+     "$ref": "#/definitions/PromptTemplateConfiguration"
+    },
+    "TemplateType": {
+     "$ref": "#/definitions/PromptTemplateType"
+    }
+   },
+   "required": [
+    "Name",
+    "TemplateType",
+    "TemplateConfiguration"
+   ],
+   "type": "object"
+  },
+  "SpecificToolChoice": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "SystemContentBlock": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Text": {
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "required": [
+      "Text"
+     ],
+     "title": "Text",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CachePoint": {
+       "$ref": "#/definitions/CachePointBlock"
+      }
+     },
+     "required": [
+      "CachePoint"
+     ],
+     "title": "CachePoint",
+     "type": "object"
+    }
+   ]
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z0-9\\s._:/=+@-]*$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TextPromptTemplateConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CachePoint": {
+     "$ref": "#/definitions/CachePointBlock"
+    },
+    "InputVariables": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/PromptInputVariable"
+     },
+     "maxItems": 20,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Text": {
+     "maxLength": 200000,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TextS3Location": {
+     "$ref": "#/definitions/TextS3Location"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "TextS3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "^[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]$",
+     "type": "string"
+    },
+    "Key": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Version": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tool": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ToolSpec": {
+       "$ref": "#/definitions/ToolSpecification"
+      }
+     },
+     "required": [
+      "ToolSpec"
+     ],
+     "title": "ToolSpec",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CachePoint": {
+       "$ref": "#/definitions/CachePointBlock"
+      }
+     },
+     "required": [
+      "CachePoint"
+     ],
+     "title": "CachePoint",
+     "type": "object"
+    }
+   ]
+  },
+  "ToolChoice": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Auto": {
+       "$ref": "#/definitions/AutoToolChoice"
+      }
+     },
+     "required": [
+      "Auto"
+     ],
+     "title": "Auto",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Any": {
+       "$ref": "#/definitions/AnyToolChoice"
+      }
+     },
+     "required": [
+      "Any"
+     ],
+     "title": "Any",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Tool": {
+       "$ref": "#/definitions/SpecificToolChoice"
+      }
+     },
+     "required": [
+      "Tool"
+     ],
+     "title": "Tool",
+     "type": "object"
+    }
+   ]
+  },
+  "ToolConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ToolChoice": {
+     "$ref": "#/definitions/ToolChoice"
+    },
+    "Tools": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Tool"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Tools"
+   ],
+   "type": "object"
+  },
+  "ToolInputSchema": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Json": {
+       "type": "object"
+      }
+     },
+     "required": [
+      "Json"
+     ],
+     "title": "Json",
+     "type": "object"
+    }
+   ]
+  },
+  "ToolSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "InputSchema": {
+     "$ref": "#/definitions/ToolInputSchema"
+    },
+    "Name": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "InputSchema"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^(arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:prompt/[0-9a-zA-Z]{10})$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "CustomerEncryptionKeyArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(|-cn|-us-gov):kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
+   "type": "string"
+  },
+  "DefaultVariant": {
+   "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Id": {
+   "pattern": "^[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Variants": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/PromptVariant"
+   },
+   "maxItems": 1,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Version": {
+   "maxLength": 5,
+   "minLength": 5,
+   "pattern": "^DRAFT$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/Id",
+  "/properties/UpdatedAt",
+  "/properties/Version"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Bedrock::Prompt",
+ "writeOnlyProperties": [
+  "/properties/Variants/*/TemplateConfiguration/Text/TextS3Location"
+ ]
+}

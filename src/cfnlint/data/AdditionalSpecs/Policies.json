@@ -5360,6 +5360,11 @@
      "workspace"
     ]
    },
+   "createqueryloggingconfiguration": {
+    "Resources": [
+     "workspace"
+    ]
+   },
    "createrulegroupsnamespace": {
     "Resources": [
      "rulegroupsnamespace"
@@ -5387,6 +5392,11 @@
      "workspace"
     ]
    },
+   "deletequeryloggingconfiguration": {
+    "Resources": [
+     "workspace"
+    ]
+   },
    "deleterulegroupsnamespace": {
     "Resources": [
      "rulegroupsnamespace"
@@ -5408,6 +5418,11 @@
     ]
    },
    "describeloggingconfiguration": {
+    "Resources": [
+     "workspace"
+    ]
+   },
+   "describequeryloggingconfiguration": {
     "Resources": [
      "workspace"
     ]
@@ -5542,6 +5557,11 @@
     ]
    },
    "updateloggingconfiguration": {
+    "Resources": [
+     "workspace"
+    ]
+   },
+   "updatequeryloggingconfiguration": {
     "Resources": [
      "workspace"
     ]
@@ -8147,7 +8167,8 @@
    },
    "applyguardrail": {
     "Resources": [
-     "guardrail"
+     "guardrail",
+     "guardrail-profile"
     ]
    },
    "associateagentcollaborator": {
@@ -8214,7 +8235,11 @@
     ]
    },
    "createfoundationmodelagreement": {},
-   "createguardrail": {},
+   "createguardrail": {
+    "Resources": [
+     "guardrail-profile"
+    ]
+   },
    "createguardrailversion": {
     "Resources": [
      "guardrail"
@@ -8497,6 +8522,13 @@
      "evaluation-job"
     ]
    },
+   "getexecutionflowsnapshot": {
+    "Resources": [
+     "flow",
+     "flow-alias",
+     "flow-execution"
+    ]
+   },
    "getflow": {
     "Resources": [
      "flow"
@@ -8505,6 +8537,13 @@
    "getflowalias": {
     "Resources": [
      "flow-alias"
+    ]
+   },
+   "getflowexecution": {
+    "Resources": [
+     "flow",
+     "flow-alias",
+     "flow-execution"
     ]
    },
    "getflowversion": {
@@ -8716,6 +8755,19 @@
      "flow"
     ]
    },
+   "listflowexecutionevents": {
+    "Resources": [
+     "flow",
+     "flow-alias",
+     "flow-execution"
+    ]
+   },
+   "listflowexecutions": {
+    "Resources": [
+     "flow",
+     "flow-alias"
+    ]
+   },
    "listflows": {},
    "listflowversions": {
     "Resources": [
@@ -8836,6 +8888,12 @@
     ]
    },
    "retrieveandgenerate": {},
+   "startflowexecution": {
+    "Resources": [
+     "flow",
+     "flow-alias"
+    ]
+   },
    "startingestionjob": {
     "Resources": [
      "knowledge-base"
@@ -8844,6 +8902,13 @@
    "stopevaluationjob": {
     "Resources": [
      "evaluation-job"
+    ]
+   },
+   "stopflowexecution": {
+    "Resources": [
+     "flow",
+     "flow-alias",
+     "flow-execution"
     ]
    },
    "stopingestionjob": {
@@ -8971,7 +9036,8 @@
    },
    "updateguardrail": {
     "Resources": [
-     "guardrail"
+     "guardrail",
+     "guardrail-profile"
     ]
    },
    "updateknowledgebase": {
@@ -9044,6 +9110,9 @@
    "blueprint": {
     "ARNFormats": [
      "arn:${Partition}:bedrock:${Region}:${Account}:blueprint/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "custom-model": {
@@ -9057,6 +9126,9 @@
    "data-automation-invocation-job": {
     "ARNFormats": [
      "arn:${Partition}:bedrock:${Region}:${Account}:data-automation-invocation/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "data-automation-profile": {
@@ -9067,6 +9139,9 @@
    "data-automation-project": {
     "ARNFormats": [
      "arn:${Partition}:bedrock:${Region}:${Account}:data-automation-project/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "default-prompt-router": {
@@ -9098,6 +9173,11 @@
      "aws:ResourceTag/${TagKey}"
     ]
    },
+   "flow-execution": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock:${Region}:${Account}:flow/.*"
+    ]
+   },
    "foundation-model": {
     "ARNFormats": [
      "arn:${Partition}:bedrock:${Region}::foundation-model/.*"
@@ -9109,6 +9189,11 @@
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "guardrail-profile": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock:${Region}:${Account}:guardrail-profile/.*"
     ]
    },
    "imported-model": {
@@ -26484,11 +26569,6 @@
      "Cluster"
     ]
    },
-   "createmultiregionclusters": {
-    "Resources": [
-     "Cluster"
-    ]
-   },
    "dbconnect": {
     "Resources": [
      "Cluster"
@@ -26504,12 +26584,17 @@
      "Cluster"
     ]
    },
-   "deletemultiregionclusters": {
+   "getbackupjob": {
     "Resources": [
      "Cluster"
     ]
    },
    "getcluster": {
+    "Resources": [
+     "Cluster"
+    ]
+   },
+   "getrestorejob": {
     "Resources": [
      "Cluster"
     ]
@@ -26536,6 +26621,26 @@
     ]
    },
    "removepeercluster": {
+    "Resources": [
+     "Cluster"
+    ]
+   },
+   "startbackupjob": {
+    "Resources": [
+     "Cluster"
+    ]
+   },
+   "startrestorejob": {
+    "Resources": [
+     "Cluster"
+    ]
+   },
+   "stopbackupjob": {
+    "Resources": [
+     "Cluster"
+    ]
+   },
+   "stoprestorejob": {
     "Resources": [
      "Cluster"
     ]
@@ -32289,6 +32394,16 @@
     ]
    },
    "listclusters": {},
+   "listdashboarddata": {
+    "Resources": [
+     "dashboard"
+    ]
+   },
+   "listdashboardresources": {
+    "Resources": [
+     "dashboard"
+    ]
+   },
    "listeksanywheresubscriptions": {},
    "listfargateprofiles": {
     "Resources": [
@@ -32319,6 +32434,7 @@
     "Resources": [
      "addon",
      "cluster",
+     "dashboard",
      "eks-anywhere-subscription",
      "fargateprofile",
      "identityproviderconfig",
@@ -32338,6 +32454,7 @@
      "access-entry",
      "addon",
      "cluster",
+     "dashboard",
      "eks-anywhere-subscription",
      "fargateprofile",
      "identityproviderconfig",
@@ -32350,6 +32467,7 @@
      "access-entry",
      "addon",
      "cluster",
+     "dashboard",
      "eks-anywhere-subscription",
      "fargateprofile",
      "identityproviderconfig",
@@ -32429,6 +32547,14 @@
    "cluster": {
     "ARNFormats": [
      "arn:${Partition}:eks:${Region}:${Account}:cluster/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "dashboard": {
+    "ARNFormats": [
+     "arn:${Partition}:eks:${Region}:${Account}:dashboard/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -44585,6 +44711,7 @@
    "enabledelegatedadminaccount": {},
    "getcisscanreport": {},
    "getcisscanresultdetails": {},
+   "getclustersforimage": {},
    "getconfiguration": {},
    "getdelegatedadminaccount": {},
    "getec2deepinspectionconfiguration": {},
@@ -46928,20 +47055,6 @@
    "associatevehiclefleet": {
     "Resources": [
      "fleet",
-     "vehicle"
-    ]
-   },
-   "batchcreatevehicle": {
-    "Resources": [
-     "decodermanifest",
-     "modelmanifest",
-     "vehicle"
-    ]
-   },
-   "batchupdatevehicle": {
-    "Resources": [
-     "decodermanifest",
-     "modelmanifest",
      "vehicle"
     ]
    },
@@ -57621,6 +57734,11 @@
      "datastore"
     ]
    },
+   "getdicomseriesmetadata": {
+    "Resources": [
+     "datastore"
+    ]
+   },
    "getimageframe": {
     "Resources": [
      "datastore",
@@ -66768,12 +66886,6 @@
      "qapp"
     ]
    },
-   "createpresignedurl": {
-    "Resources": [
-     "qapp",
-     "qapp-session"
-    ]
-   },
    "createqapp": {
     "Resources": [
      "application"
@@ -66843,18 +66955,6 @@
    "importdocument": {
     "Resources": [
      "qapp",
-     "qapp-session"
-    ]
-   },
-   "importdocumenttoqapp": {
-    "Resources": [
-     "application",
-     "qapp"
-    ]
-   },
-   "importdocumenttoqappsession": {
-    "Resources": [
-     "application",
      "qapp-session"
     ]
    },
@@ -80597,6 +80697,7 @@
  "servicequotas": {
   "Actions": {
    "associateservicequotatemplate": {},
+   "createsupportcase": {},
    "deleteservicequotaincreaserequestfromtemplate": {},
    "disassociateservicequotatemplate": {},
    "getassociationforservicequotatemplate": {},

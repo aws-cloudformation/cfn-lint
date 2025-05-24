@@ -1,0 +1,125 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/OwnerAccount",
+  "/properties/PackageId",
+  "/properties/PackageVersion",
+  "/properties/PatchVersion"
+ ],
+ "definitions": {
+  "NodePackageArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "NodePackageId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-\\_\\/]+$",
+   "type": "string"
+  },
+  "NodePackageName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-\\_]+$",
+   "type": "string"
+  },
+  "NodePackagePatchVersion": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-z0-9]+$",
+   "type": "string"
+  },
+  "NodePackageVersion": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^([0-9]+)\\.([0-9]+)$",
+   "type": "string"
+  },
+  "PackageOwnerAccount": {
+   "maxLength": 12,
+   "minLength": 1,
+   "pattern": "^[0-9a-z\\_]+$",
+   "type": "string"
+  },
+  "PackageVersionStatus": {
+   "enum": [
+    "REGISTER_PENDING",
+    "REGISTER_COMPLETED",
+    "FAILED",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "PackageVersionStatusDescription": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "TimeStamp": {
+   "type": "integer"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PackageId",
+  "/properties/PackageVersion",
+  "/properties/PatchVersion"
+ ],
+ "properties": {
+  "IsLatestPatch": {
+   "type": "boolean"
+  },
+  "MarkLatest": {
+   "type": "boolean"
+  },
+  "OwnerAccount": {
+   "$ref": "#/definitions/PackageOwnerAccount"
+  },
+  "PackageArn": {
+   "$ref": "#/definitions/NodePackageArn"
+  },
+  "PackageId": {
+   "$ref": "#/definitions/NodePackageId"
+  },
+  "PackageName": {
+   "$ref": "#/definitions/NodePackageName"
+  },
+  "PackageVersion": {
+   "$ref": "#/definitions/NodePackageVersion"
+  },
+  "PatchVersion": {
+   "$ref": "#/definitions/NodePackagePatchVersion"
+  },
+  "RegisteredTime": {
+   "$ref": "#/definitions/TimeStamp"
+  },
+  "Status": {
+   "$ref": "#/definitions/PackageVersionStatus"
+  },
+  "StatusDescription": {
+   "$ref": "#/definitions/PackageVersionStatusDescription"
+  },
+  "UpdatedLatestPatchVersion": {
+   "$ref": "#/definitions/NodePackagePatchVersion"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PackageName",
+  "/properties/PackageArn",
+  "/properties/Status",
+  "/properties/StatusDescription",
+  "/properties/IsLatestPatch",
+  "/properties/RegisteredTime"
+ ],
+ "required": [
+  "PackageId",
+  "PackageVersion",
+  "PatchVersion"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-panorama.git",
+ "taggable": false,
+ "typeName": "AWS::Panorama::PackageVersion",
+ "writeOnlyProperties": [
+  "/properties/UpdatedLatestPatchVersion"
+ ]
+}

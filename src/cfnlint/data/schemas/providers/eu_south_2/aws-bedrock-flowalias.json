@@ -1,0 +1,108 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FlowArn"
+ ],
+ "definitions": {
+  "FlowAliasRoutingConfigurationListItem": {
+   "additionalProperties": false,
+   "properties": {
+    "FlowVersion": {
+     "maxLength": 5,
+     "minLength": 1,
+     "pattern": "^(DRAFT|[0-9]{0,4}[1-9][0-9]{0,4})$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z0-9\\s._:/=+@-]*$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn",
+  "/properties/FlowArn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:flow/[0-9a-zA-Z]{10}/alias/[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FlowArn": {
+   "maxLength": 2048,
+   "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:flow/[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "FlowId": {
+   "pattern": "^[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 10,
+   "minLength": 10,
+   "pattern": "^(\\bTSTALIASID\\b|[0-9a-zA-Z]+)$",
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+   "type": "string"
+  },
+  "RoutingConfiguration": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/FlowAliasRoutingConfigurationListItem"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/FlowId",
+  "/properties/Id",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "Name",
+  "FlowArn",
+  "RoutingConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-bedrock-flows",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Bedrock::FlowAlias"
+}

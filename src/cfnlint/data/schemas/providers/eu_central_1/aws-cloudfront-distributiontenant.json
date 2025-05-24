@@ -1,0 +1,238 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Certificate": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Customizations": {
+   "additionalProperties": false,
+   "properties": {
+    "Certificate": {
+     "$ref": "#/definitions/Certificate"
+    },
+    "GeoRestrictions": {
+     "$ref": "#/definitions/GeoRestrictionCustomization"
+    },
+    "WebAcl": {
+     "$ref": "#/definitions/WebAclCustomization"
+    }
+   },
+   "type": "object"
+  },
+  "DomainResult": {
+   "additionalProperties": false,
+   "properties": {
+    "Domain": {
+     "type": "string"
+    },
+    "Status": {
+     "enum": [
+      "active",
+      "inactive"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "GeoRestrictionCustomization": {
+   "additionalProperties": false,
+   "properties": {
+    "Locations": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "RestrictionType": {
+     "enum": [
+      "blacklist",
+      "whitelist",
+      "none"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ManagedCertificateRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateTransparencyLoggingPreference": {
+     "enum": [
+      "enabled",
+      "disabled"
+     ],
+     "type": "string"
+    },
+    "PrimaryDomainName": {
+     "type": "string"
+    },
+    "ValidationTokenHost": {
+     "enum": [
+      "cloudfront",
+      "self-hosted"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Parameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9-_]+",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "WebAclCustomization": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "enum": [
+      "override",
+      "disable"
+     ],
+     "type": "string"
+    },
+    "Arn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ConnectionGroupId": {
+   "type": "string"
+  },
+  "CreatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Customizations": {
+   "$ref": "#/definitions/Customizations"
+  },
+  "DistributionId": {
+   "type": "string"
+  },
+  "DomainResults": {
+   "items": {
+    "$ref": "#/definitions/DomainResult"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Domains": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ETag": {
+   "type": "string"
+  },
+  "Enabled": {
+   "type": "boolean"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "ManagedCertificateRequest": {
+   "$ref": "#/definitions/ManagedCertificateRequest"
+  },
+  "Name": {
+   "pattern": "[a-zA-Z0-9][a-zA-Z0-9-.]{1,126}[a-zA-Z0-9]",
+   "type": "string"
+  },
+  "Parameters": {
+   "items": {
+    "$ref": "#/definitions/Parameter"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Status": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/DomainResults",
+  "/properties/ETag",
+  "/properties/Status",
+  "/properties/CreatedTime",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "DistributionId",
+  "Name",
+  "Domains"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudFront::DistributionTenant",
+ "writeOnlyProperties": [
+  "/properties/ManagedCertificateRequest"
+ ]
+}
