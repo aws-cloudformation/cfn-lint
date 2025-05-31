@@ -50,6 +50,18 @@
    },
    "type": "object"
   },
+  "InputSdpLocation": {
+   "additionalProperties": false,
+   "properties": {
+    "MediaIndex": {
+     "type": "integer"
+    },
+    "SdpUrl": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "InputSourceRequest": {
    "additionalProperties": false,
    "properties": {
@@ -117,6 +129,51 @@
     },
     "Url": {
      "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Smpte2110ReceiverGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "SdpSettings": {
+     "$ref": "#/definitions/Smpte2110ReceiverGroupSdpSettings"
+    }
+   },
+   "type": "object"
+  },
+  "Smpte2110ReceiverGroupSdpSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "AncillarySdps": {
+     "items": {
+      "$ref": "#/definitions/InputSdpLocation"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "AudioSdps": {
+     "items": {
+      "$ref": "#/definitions/InputSdpLocation"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "VideoSdp": {
+     "$ref": "#/definitions/InputSdpLocation"
+    }
+   },
+   "type": "object"
+  },
+  "Smpte2110ReceiverGroupSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "Smpte2110ReceiverGroups": {
+     "items": {
+      "$ref": "#/definitions/Smpte2110ReceiverGroup"
+     },
+     "type": "array",
+     "uniqueItems": false
     }
    },
    "type": "object"
@@ -220,6 +277,16 @@
   "RoleArn": {
    "format": "AWS::IAM::Role.Arn",
    "type": "string"
+  },
+  "SdiSources": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Smpte2110ReceiverGroupSettings": {
+   "$ref": "#/definitions/Smpte2110ReceiverGroupSettings"
   },
   "Sources": {
    "items": {

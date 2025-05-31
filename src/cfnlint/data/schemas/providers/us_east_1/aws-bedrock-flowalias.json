@@ -4,6 +4,30 @@
   "/properties/FlowArn"
  ],
  "definitions": {
+  "ConcurrencyType": {
+   "enum": [
+    "Automatic",
+    "Manual"
+   ],
+   "type": "string"
+  },
+  "FlowAliasConcurrencyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxConcurrency": {
+     "maximum": 100,
+     "minimum": 1,
+     "type": "number"
+    },
+    "Type": {
+     "$ref": "#/definitions/ConcurrencyType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
   "FlowAliasRoutingConfigurationListItem": {
    "additionalProperties": false,
    "properties": {
@@ -38,6 +62,9 @@
    "maxLength": 2048,
    "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:flow/[0-9a-zA-Z]{10}/alias/[0-9a-zA-Z]{10}$",
    "type": "string"
+  },
+  "ConcurrencyConfiguration": {
+   "$ref": "#/definitions/FlowAliasConcurrencyConfiguration"
   },
   "CreatedAt": {
    "format": "date-time",

@@ -1,0 +1,69 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Description"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TrafficMirrorNetworkService": {
+   "enum": [
+    "amazon-dns"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Description": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "NetworkServices": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TrafficMirrorNetworkService"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::TrafficMirrorFilter"
+}

@@ -95,6 +95,25 @@
    ],
    "type": "object"
   },
+  "DockerServer": {
+   "additionalProperties": false,
+   "properties": {
+    "ComputeType": {
+     "type": "string"
+    },
+    "SecurityGroupIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "ComputeType"
+   ],
+   "type": "object"
+  },
   "Environment": {
    "additionalProperties": false,
    "properties": {
@@ -117,6 +136,9 @@
       "CUSTOM_INSTANCE_TYPE"
      ],
      "type": "string"
+    },
+    "DockerServer": {
+     "$ref": "#/definitions/DockerServer"
     },
     "EnvironmentVariables": {
      "items": {
