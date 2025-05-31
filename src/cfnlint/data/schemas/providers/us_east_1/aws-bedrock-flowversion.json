@@ -372,6 +372,19 @@
      ],
      "title": "Collector",
      "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "InlineCode": {
+       "$ref": "#/definitions/InlineCodeFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "InlineCode"
+     ],
+     "title": "InlineCode",
+     "type": "object"
     }
    ]
   },
@@ -438,7 +451,8 @@
     "Iterator",
     "Collector",
     "Storage",
-    "Retrieval"
+    "Retrieval",
+    "InlineCode"
    ],
    "type": "string"
   },
@@ -464,6 +478,23 @@
      "type": "string"
     }
    },
+   "type": "object"
+  },
+  "InlineCodeFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Code": {
+     "maxLength": 5000000,
+     "type": "string"
+    },
+    "Language": {
+     "$ref": "#/definitions/SupportedLanguages"
+    }
+   },
+   "required": [
+    "Code",
+    "Language"
+   ],
    "type": "object"
   },
   "InputFlowNodeConfiguration": {
@@ -776,6 +807,12 @@
      "type": "object"
     }
    ]
+  },
+  "SupportedLanguages": {
+   "enum": [
+    "Python_3"
+   ],
+   "type": "string"
   },
   "TextPromptTemplateConfiguration": {
    "additionalProperties": false,

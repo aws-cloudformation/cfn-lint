@@ -333,8 +333,32 @@
      ],
      "title": "DeliverToQBusiness",
      "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "PublishToSns": {
+       "$ref": "#/definitions/SnsAction"
+      }
+     },
+     "required": [
+      "PublishToSns"
+     ],
+     "title": "PublishToSns",
+     "type": "object"
     }
    ]
+  },
+  "RuleAddressListEmailAttribute": {
+   "enum": [
+    "RECIPIENT",
+    "MAIL_FROM",
+    "SENDER",
+    "FROM",
+    "TO",
+    "CC"
+   ],
+   "type": "string"
   },
   "RuleBooleanEmailAttribute": {
    "enum": [
@@ -393,6 +417,19 @@
       "Analysis"
      ],
      "title": "Analysis",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "IsInAddressList": {
+       "$ref": "#/definitions/RuleIsInAddressList"
+      }
+     },
+     "required": [
+      "IsInAddressList"
+     ],
+     "title": "IsInAddressList",
      "type": "object"
     }
    ]
@@ -572,6 +609,28 @@
      "type": "object"
     }
    ]
+  },
+  "RuleIsInAddressList": {
+   "additionalProperties": false,
+   "properties": {
+    "AddressLists": {
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Attribute": {
+     "$ref": "#/definitions/RuleAddressListEmailAttribute"
+    }
+   },
+   "required": [
+    "Attribute",
+    "AddressLists"
+   ],
+   "type": "object"
   },
   "RuleNumberEmailAttribute": {
    "enum": [
@@ -855,6 +914,51 @@
     "RoleArn"
    ],
    "type": "object"
+  },
+  "SnsAction": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionFailurePolicy": {
+     "$ref": "#/definitions/ActionFailurePolicy"
+    },
+    "Encoding": {
+     "$ref": "#/definitions/SnsNotificationEncoding"
+    },
+    "PayloadType": {
+     "$ref": "#/definitions/SnsNotificationPayloadType"
+    },
+    "RoleArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
+     "type": "string"
+    },
+    "TopicArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov):sns:[a-z]{2}-[a-z]+-\\d{1}:\\d{12}:[\\w\\-]{1,256}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TopicArn",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "SnsNotificationEncoding": {
+   "enum": [
+    "UTF-8",
+    "BASE64"
+   ],
+   "type": "string"
+  },
+  "SnsNotificationPayloadType": {
+   "enum": [
+    "CONTENT",
+    "HEADERS"
+   ],
+   "type": "string"
   },
   "Tag": {
    "additionalProperties": false,

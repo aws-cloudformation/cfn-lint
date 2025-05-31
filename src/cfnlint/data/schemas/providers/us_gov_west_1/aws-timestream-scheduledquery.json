@@ -1,0 +1,466 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ScheduledQueryName",
+  "/properties/QueryString",
+  "/properties/ScheduleConfiguration",
+  "/properties/NotificationConfiguration",
+  "/properties/ClientToken",
+  "/properties/ScheduledQueryExecutionRoleArn",
+  "/properties/TargetConfiguration",
+  "/properties/ErrorReportConfiguration",
+  "/properties/KmsKeyId"
+ ],
+ "definitions": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "BucketName": {
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]",
+   "type": "string"
+  },
+  "ClientToken": {
+   "maxLength": 128,
+   "minLength": 32,
+   "type": "string"
+  },
+  "DatabaseName": {
+   "type": "string"
+  },
+  "DimensionMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "DimensionValueType": {
+     "$ref": "#/definitions/DimensionValueType"
+    },
+    "Name": {
+     "$ref": "#/definitions/DimensionMappingName"
+    }
+   },
+   "required": [
+    "Name",
+    "DimensionValueType"
+   ],
+   "type": "object"
+  },
+  "DimensionMappingName": {
+   "type": "string"
+  },
+  "DimensionMappings": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DimensionMapping"
+   },
+   "type": "array"
+  },
+  "DimensionValueType": {
+   "enum": [
+    "VARCHAR"
+   ],
+   "type": "string"
+  },
+  "EncryptionOption": {
+   "enum": [
+    "SSE_S3",
+    "SSE_KMS"
+   ],
+   "type": "string"
+  },
+  "ErrorReportConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Configuration": {
+     "$ref": "#/definitions/S3Configuration"
+    }
+   },
+   "required": [
+    "S3Configuration"
+   ],
+   "type": "object"
+  },
+  "Key": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MeasureNameColumn": {
+   "type": "string"
+  },
+  "MixedMeasureMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "MeasureName": {
+     "$ref": "#/definitions/MixedMeasureMappingMeasureName"
+    },
+    "MeasureValueType": {
+     "$ref": "#/definitions/MixedMeasureMappingMeasureValueType"
+    },
+    "MultiMeasureAttributeMappings": {
+     "$ref": "#/definitions/MultiMeasureAttributeMappingList"
+    },
+    "SourceColumn": {
+     "$ref": "#/definitions/MixedMeasureMappingSourceColumn"
+    },
+    "TargetMeasureName": {
+     "$ref": "#/definitions/MixedMeasureMappingTargetMeasureName"
+    }
+   },
+   "required": [
+    "MeasureValueType"
+   ],
+   "type": "object"
+  },
+  "MixedMeasureMappingMeasureName": {
+   "type": "string"
+  },
+  "MixedMeasureMappingMeasureValueType": {
+   "enum": [
+    "BIGINT",
+    "BOOLEAN",
+    "DOUBLE",
+    "VARCHAR",
+    "MULTI"
+   ],
+   "type": "string"
+  },
+  "MixedMeasureMappingSourceColumn": {
+   "type": "string"
+  },
+  "MixedMeasureMappingTargetMeasureName": {
+   "type": "string"
+  },
+  "MixedMeasureMappings": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/MixedMeasureMapping"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "MultiMeasureAttributeMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "MeasureValueType": {
+     "$ref": "#/definitions/MultiMeasureAttributeMappingMeasureValueType"
+    },
+    "SourceColumn": {
+     "$ref": "#/definitions/MultiMeasureAttributeMappingSourceColumn"
+    },
+    "TargetMultiMeasureAttributeName": {
+     "$ref": "#/definitions/TargetMultiMeasureAttributeName"
+    }
+   },
+   "required": [
+    "SourceColumn",
+    "MeasureValueType"
+   ],
+   "type": "object"
+  },
+  "MultiMeasureAttributeMappingList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/MultiMeasureAttributeMapping"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "MultiMeasureAttributeMappingMeasureValueType": {
+   "enum": [
+    "BIGINT",
+    "BOOLEAN",
+    "DOUBLE",
+    "VARCHAR",
+    "TIMESTAMP"
+   ],
+   "type": "string"
+  },
+  "MultiMeasureAttributeMappingSourceColumn": {
+   "type": "string"
+  },
+  "MultiMeasureMappings": {
+   "additionalProperties": false,
+   "properties": {
+    "MultiMeasureAttributeMappings": {
+     "$ref": "#/definitions/MultiMeasureAttributeMappingList"
+    },
+    "TargetMultiMeasureName": {
+     "$ref": "#/definitions/TargetMultiMeasureName"
+    }
+   },
+   "required": [
+    "MultiMeasureAttributeMappings"
+   ],
+   "type": "object"
+  },
+  "NotificationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SnsConfiguration": {
+     "$ref": "#/definitions/SnsConfiguration"
+    }
+   },
+   "required": [
+    "SnsConfiguration"
+   ],
+   "type": "object"
+  },
+  "ObjectKeyPrefix": {
+   "maxLength": 896,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9|!\\-_*'\\(\\)]([a-zA-Z0-9]|[!\\-_*'\\(\\)\\/.])+",
+   "type": "string"
+  },
+  "QueryString": {
+   "maxLength": 262144,
+   "minLength": 1,
+   "type": "string"
+  },
+  "S3Configuration": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "$ref": "#/definitions/BucketName"
+    },
+    "EncryptionOption": {
+     "$ref": "#/definitions/EncryptionOption"
+    },
+    "ObjectKeyPrefix": {
+     "$ref": "#/definitions/ObjectKeyPrefix"
+    }
+   },
+   "required": [
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "ScheduleConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ScheduleExpression": {
+     "$ref": "#/definitions/ScheduleExpression"
+    }
+   },
+   "required": [
+    "ScheduleExpression"
+   ],
+   "type": "object"
+  },
+  "ScheduleExpression": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ScheduledQueryExecutionRoleArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ScheduledQueryName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_.-]+",
+   "type": "string"
+  },
+  "SnsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "TopicArn": {
+     "$ref": "#/definitions/TopicArn"
+    }
+   },
+   "required": [
+    "TopicArn"
+   ],
+   "type": "object"
+  },
+  "TableName": {
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "$ref": "#/definitions/Key"
+    },
+    "Value": {
+     "$ref": "#/definitions/Value"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  },
+  "TargetConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "TimestreamConfiguration": {
+     "$ref": "#/definitions/TimestreamConfiguration"
+    }
+   },
+   "required": [
+    "TimestreamConfiguration"
+   ],
+   "type": "object"
+  },
+  "TargetMultiMeasureAttributeName": {
+   "type": "string"
+  },
+  "TargetMultiMeasureName": {
+   "type": "string"
+  },
+  "TimeColumn": {
+   "type": "string"
+  },
+  "TimestreamConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DatabaseName": {
+     "$ref": "#/definitions/DatabaseName"
+    },
+    "DimensionMappings": {
+     "$ref": "#/definitions/DimensionMappings"
+    },
+    "MeasureNameColumn": {
+     "$ref": "#/definitions/MeasureNameColumn"
+    },
+    "MixedMeasureMappings": {
+     "$ref": "#/definitions/MixedMeasureMappings"
+    },
+    "MultiMeasureMappings": {
+     "$ref": "#/definitions/MultiMeasureMappings"
+    },
+    "TableName": {
+     "$ref": "#/definitions/TableName"
+    },
+    "TimeColumn": {
+     "$ref": "#/definitions/TimeColumn"
+    }
+   },
+   "required": [
+    "DatabaseName",
+    "TableName",
+    "TimeColumn",
+    "DimensionMappings"
+   ],
+   "type": "object"
+  },
+  "TopicArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Value": {
+   "maxLength": 256,
+   "minLength": 0,
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "ClientToken": {
+   "$ref": "#/definitions/ClientToken"
+  },
+  "ErrorReportConfiguration": {
+   "$ref": "#/definitions/ErrorReportConfiguration"
+  },
+  "KmsKeyId": {
+   "$ref": "#/definitions/KmsKeyId"
+  },
+  "NotificationConfiguration": {
+   "$ref": "#/definitions/NotificationConfiguration"
+  },
+  "QueryString": {
+   "$ref": "#/definitions/QueryString"
+  },
+  "SQErrorReportConfiguration": {
+   "type": "string"
+  },
+  "SQKmsKeyId": {
+   "type": "string"
+  },
+  "SQName": {
+   "type": "string"
+  },
+  "SQNotificationConfiguration": {
+   "type": "string"
+  },
+  "SQQueryString": {
+   "type": "string"
+  },
+  "SQScheduleConfiguration": {
+   "type": "string"
+  },
+  "SQScheduledQueryExecutionRoleArn": {
+   "type": "string"
+  },
+  "SQTargetConfiguration": {
+   "type": "string"
+  },
+  "ScheduleConfiguration": {
+   "$ref": "#/definitions/ScheduleConfiguration"
+  },
+  "ScheduledQueryExecutionRoleArn": {
+   "$ref": "#/definitions/ScheduledQueryExecutionRoleArn"
+  },
+  "ScheduledQueryName": {
+   "$ref": "#/definitions/ScheduledQueryName"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "TargetConfiguration": {
+   "$ref": "#/definitions/TargetConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/SQName",
+  "/properties/SQQueryString",
+  "/properties/SQScheduleConfiguration",
+  "/properties/SQNotificationConfiguration",
+  "/properties/SQScheduledQueryExecutionRoleArn",
+  "/properties/SQTargetConfiguration",
+  "/properties/SQErrorReportConfiguration",
+  "/properties/SQKmsKeyId"
+ ],
+ "required": [
+  "QueryString",
+  "ScheduleConfiguration",
+  "NotificationConfiguration",
+  "ScheduledQueryExecutionRoleArn",
+  "ErrorReportConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-timestream.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Timestream::ScheduledQuery"
+}
