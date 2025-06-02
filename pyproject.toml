@@ -10,6 +10,11 @@ where = ["src"]
 [tool.setuptools.dynamic]
 version = {attr = "cfnlint.version.__version__"}
 readme = {file = ["README.md"], content-type = "text/markdown"}
+dependencies = { file = ["requirements/base.txt"] }
+optional-dependencies.graph = { file = ["requirements/optional-graph.txt"] }
+optional-dependencies.junit = { file = ["requirements/optional-junit.txt"] }
+optional-dependencies.sarif = { file = ["requirements/optional-sarif.txt"] }
+optional-dependencies.full = { file = ["requirements/optional-graph.txt","requirements/optional-junit.txt","requirements/optional-sarif.txt"] }
 
 [project]
 name = "cfn-lint"
@@ -33,34 +38,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
-dynamic = ["version", "readme"]
-dependencies = [
-    "pyyaml>5.4",
-    "aws-sam-translator>=1.97.0",
-    "jsonpatch",
-    "networkx>=2.4,<4",
-    "sympy>=1.0.0",
-    "regex",
-    "typing_extensions",
-]
-
-[project.optional-dependencies]
-graph = [
-    "pydot"
-]
-junit = [
-    "junit-xml~=1.9"
-]
-sarif = [
-    "jschema_to_python~=1.2.3",
-    "sarif-om~=1.0.4",
-]
-full = [
-    "junit-xml~=1.9",
-    "jschema_to_python~=1.2.3",
-    "sarif-om~=1.0.4",
-    "pydot"
-]
+dynamic = ["version", "readme", "dependencies", "optional-dependencies"]
 
 [project.scripts]
 cfn-lint = "cfnlint.runner:main"

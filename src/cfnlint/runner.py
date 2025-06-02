@@ -462,3 +462,8 @@ def main() -> None:
         sys.exit(1)
     runner = Runner(config)
     runner.cli()
+
+
+# for pyinstaller
+if __name__ == "__main__":  # pragma: no cover
+    main()
