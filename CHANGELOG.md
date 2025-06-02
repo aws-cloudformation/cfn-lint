@@ -1,3 +1,9 @@
+### v1.35.4
+## What's Changed
+* Update CloudFormation schemas to `2025-06-02` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4148
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.35.3...v1.35.4
+
 ### v1.35.3
 ## What's Changed
 * Undo change [4138](https://github.com/aws-cloudformation/cfn-lint/pull/4138) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4149
