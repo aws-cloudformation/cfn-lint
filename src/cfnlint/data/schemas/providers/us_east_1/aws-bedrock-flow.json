@@ -212,7 +212,7 @@
      "items": {
       "$ref": "#/definitions/FlowNodeInput"
      },
-     "maxItems": 5,
+     "maxItems": 20,
      "type": "array"
     },
     "Name": {
@@ -394,6 +394,19 @@
      ],
      "title": "Retrieval",
      "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "InlineCode": {
+       "$ref": "#/definitions/InlineCodeFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "InlineCode"
+     ],
+     "title": "InlineCode",
+     "type": "object"
     }
    ]
   },
@@ -460,7 +473,8 @@
     "Storage",
     "Retrieval",
     "Iterator",
-    "Collector"
+    "Collector",
+    "InlineCode"
    ],
    "type": "string"
   },
@@ -505,6 +519,23 @@
      "type": "string"
     }
    },
+   "type": "object"
+  },
+  "InlineCodeFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Code": {
+     "maxLength": 5000000,
+     "type": "string"
+    },
+    "Language": {
+     "$ref": "#/definitions/SupportedLanguages"
+    }
+   },
+   "required": [
+    "Code",
+    "Language"
+   ],
    "type": "object"
   },
   "InputFlowNodeConfiguration": {
@@ -843,6 +874,12 @@
      "type": "object"
     }
    ]
+  },
+  "SupportedLanguages": {
+   "enum": [
+    "Python_3"
+   ],
+   "type": "string"
   },
   "TagsMap": {
    "additionalProperties": false,

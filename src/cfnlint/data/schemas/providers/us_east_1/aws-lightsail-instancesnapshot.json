@@ -1,0 +1,112 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceSnapshotName",
+  "/properties/InstanceName"
+ ],
+ "definitions": {
+  "Location": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "type": "string"
+    },
+    "RegionName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InstanceSnapshotName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "FromInstanceArn": {
+   "type": "string"
+  },
+  "FromInstanceName": {
+   "type": "string"
+  },
+  "InstanceName": {
+   "pattern": "\\w[\\w\\-]*\\w",
+   "type": "string"
+  },
+  "InstanceSnapshotName": {
+   "pattern": "\\w[\\w\\-]*\\w",
+   "type": "string"
+  },
+  "IsFromAutoSnapshot": {
+   "type": "boolean"
+  },
+  "Location": {
+   "$ref": "#/definitions/Location"
+  },
+  "ResourceType": {
+   "type": "string"
+  },
+  "SizeInGb": {
+   "type": "integer"
+  },
+  "State": {
+   "type": "string"
+  },
+  "SupportCode": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/IsFromAutoSnapshot",
+  "/properties/Location",
+  "/properties/FromInstanceName",
+  "/properties/FromInstanceArn",
+  "/properties/ResourceType",
+  "/properties/SizeInGb",
+  "/properties/State",
+  "/properties/SupportCode"
+ ],
+ "required": [
+  "InstanceSnapshotName",
+  "InstanceName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Lightsail::InstanceSnapshot"
+}

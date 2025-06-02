@@ -1,23 +1,29 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/OutpostArn",
   "/properties/Direction",
-  "/properties/SecurityGroupIds",
-  "/properties/PreferredInstanceType"
+  "/properties/OutpostArn",
+  "/properties/PreferredInstanceType",
+  "/properties/SecurityGroupIds"
  ],
  "definitions": {
   "IpAddressRequest": {
    "additionalProperties": false,
    "properties": {
     "Ip": {
+     "maxLength": 36,
+     "minLength": 7,
      "type": "string"
     },
     "Ipv6": {
+     "maxLength": 39,
+     "minLength": 7,
      "type": "string"
     },
     "SubnetId": {
      "format": "AWS::EC2::Subnet.Id",
+     "maxLength": 32,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -30,15 +36,18 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
+     "maxLength": 128,
+     "minLength": 1,
      "type": "string"
     },
     "Value": {
+     "maxLength": 256,
      "type": "string"
     }
    },
    "required": [
-    "Value",
-    "Key"
+    "Key",
+    "Value"
    ],
    "type": "object"
   }
@@ -64,25 +73,43 @@
    "type": "string"
   },
   "IpAddresses": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/IpAddressRequest"
    },
+   "maxItems": 20,
+   "minItems": 2,
    "type": "array",
    "uniqueItems": false
   },
   "Name": {
+   "maxLength": 64,
+   "pattern": "(?!^[0-9]+$)([a-zA-Z0-9\\-_' ']+)",
    "type": "string"
   },
   "OutpostArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^arn:aws([a-z-]+)?:outposts:[a-z\\d-]+:\\d{12}:outpost/op-[a-f0-9]{17}$",
    "type": "string"
   },
   "PreferredInstanceType": {
+   "maxLength": 255,
+   "minLength": 1,
    "type": "string"
   },
   "Protocols": {
+   "insertionOrder": false,
    "items": {
+    "enum": [
+     "Do53",
+     "DoH",
+     "DoH-FIPS"
+    ],
     "type": "string"
    },
+   "maxItems": 2,
+   "minItems": 1,
    "type": "array",
    "uniqueItems": false
   },
@@ -90,35 +117,53 @@
    "type": "string"
   },
   "ResolverEndpointType": {
+   "enum": [
+    "IPV6",
+    "IPV4",
+    "DUALSTACK"
+   ],
    "type": "string"
   },
   "SecurityGroupIds": {
    "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
    "items": {
     "format": "AWS::EC2::SecurityGroup.Id",
+    "maxLength": 64,
+    "minLength": 1,
     "type": "string"
    },
    "type": "array",
    "uniqueItems": false
   },
   "Tags": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
    },
+   "maxItems": 200,
    "type": "array",
    "uniqueItems": false
   }
  },
  "readOnlyProperties": [
-  "/properties/ResolverEndpointId",
-  "/properties/IpAddressCount",
   "/properties/Arn",
-  "/properties/HostVPCId"
+  "/properties/HostVPCId",
+  "/properties/IpAddressCount",
+  "/properties/ResolverEndpointId"
  ],
  "required": [
-  "IpAddresses",
   "Direction",
+  "IpAddresses",
   "SecurityGroupIds"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53resolver",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::Route53Resolver::ResolverEndpoint"
 }

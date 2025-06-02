@@ -5360,6 +5360,11 @@
      "workspace"
     ]
    },
+   "createqueryloggingconfiguration": {
+    "Resources": [
+     "workspace"
+    ]
+   },
    "createrulegroupsnamespace": {
     "Resources": [
      "rulegroupsnamespace"
@@ -5387,6 +5392,11 @@
      "workspace"
     ]
    },
+   "deletequeryloggingconfiguration": {
+    "Resources": [
+     "workspace"
+    ]
+   },
    "deleterulegroupsnamespace": {
     "Resources": [
      "rulegroupsnamespace"
@@ -5408,6 +5418,11 @@
     ]
    },
    "describeloggingconfiguration": {
+    "Resources": [
+     "workspace"
+    ]
+   },
+   "describequeryloggingconfiguration": {
     "Resources": [
      "workspace"
     ]
@@ -5542,6 +5557,11 @@
     ]
    },
    "updateloggingconfiguration": {
+    "Resources": [
+     "workspace"
+    ]
+   },
+   "updatequeryloggingconfiguration": {
     "Resources": [
      "workspace"
     ]
@@ -6651,7 +6671,6 @@
      "ChangeSet"
     ]
    },
-   "completetask": {},
    "createagreementrequest": {},
    "createprivatemarketplacerequests": {},
    "deleteresourcepolicy": {
@@ -6674,7 +6693,6 @@
    },
    "describeprivatemarketplacerequests": {},
    "describeprocurementsystemconfiguration": {},
-   "describetask": {},
    "disassociateproductsfromprivatemarketplace": {},
    "getagreementapprovalrequest": {},
    "getagreemententitlements": {},
@@ -6713,7 +6731,6 @@
      "Entity"
     ]
    },
-   "listtasks": {},
    "meterusage": {},
    "putdeploymentparameter": {
     "Resources": [
@@ -6754,7 +6771,6 @@
    },
    "updateagreementapprovalrequest": {},
    "updatepurchaseorders": {},
-   "updatetask": {},
    "viewsubscriptions": {}
   },
   "Resources": {
@@ -8147,7 +8163,8 @@
    },
    "applyguardrail": {
     "Resources": [
-     "guardrail"
+     "guardrail",
+     "guardrail-profile"
     ]
    },
    "associateagentcollaborator": {
@@ -8214,7 +8231,11 @@
     ]
    },
    "createfoundationmodelagreement": {},
-   "createguardrail": {},
+   "createguardrail": {
+    "Resources": [
+     "guardrail-profile"
+    ]
+   },
    "createguardrailversion": {
     "Resources": [
      "guardrail"
@@ -8497,6 +8518,13 @@
      "evaluation-job"
     ]
    },
+   "getexecutionflowsnapshot": {
+    "Resources": [
+     "flow",
+     "flow-alias",
+     "flow-execution"
+    ]
+   },
    "getflow": {
     "Resources": [
      "flow"
@@ -8505,6 +8533,13 @@
    "getflowalias": {
     "Resources": [
      "flow-alias"
+    ]
+   },
+   "getflowexecution": {
+    "Resources": [
+     "flow",
+     "flow-alias",
+     "flow-execution"
     ]
    },
    "getflowversion": {
@@ -8716,6 +8751,19 @@
      "flow"
     ]
    },
+   "listflowexecutionevents": {
+    "Resources": [
+     "flow",
+     "flow-alias",
+     "flow-execution"
+    ]
+   },
+   "listflowexecutions": {
+    "Resources": [
+     "flow",
+     "flow-alias"
+    ]
+   },
    "listflows": {},
    "listflowversions": {
     "Resources": [
@@ -8836,6 +8884,12 @@
     ]
    },
    "retrieveandgenerate": {},
+   "startflowexecution": {
+    "Resources": [
+     "flow",
+     "flow-alias"
+    ]
+   },
    "startingestionjob": {
     "Resources": [
      "knowledge-base"
@@ -8844,6 +8898,13 @@
    "stopevaluationjob": {
     "Resources": [
      "evaluation-job"
+    ]
+   },
+   "stopflowexecution": {
+    "Resources": [
+     "flow",
+     "flow-alias",
+     "flow-execution"
     ]
    },
    "stopingestionjob": {
@@ -8971,7 +9032,8 @@
    },
    "updateguardrail": {
     "Resources": [
-     "guardrail"
+     "guardrail",
+     "guardrail-profile"
     ]
    },
    "updateknowledgebase": {
@@ -9044,6 +9106,9 @@
    "blueprint": {
     "ARNFormats": [
      "arn:${Partition}:bedrock:${Region}:${Account}:blueprint/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "custom-model": {
@@ -9057,6 +9122,9 @@
    "data-automation-invocation-job": {
     "ARNFormats": [
      "arn:${Partition}:bedrock:${Region}:${Account}:data-automation-invocation/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "data-automation-profile": {
@@ -9067,6 +9135,9 @@
    "data-automation-project": {
     "ARNFormats": [
      "arn:${Partition}:bedrock:${Region}:${Account}:data-automation-project/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "default-prompt-router": {
@@ -9098,6 +9169,11 @@
      "aws:ResourceTag/${TagKey}"
     ]
    },
+   "flow-execution": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock:${Region}:${Account}:flow/.*"
+    ]
+   },
    "foundation-model": {
     "ARNFormats": [
      "arn:${Partition}:bedrock:${Region}::foundation-model/.*"
@@ -9109,6 +9185,11 @@
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "guardrail-profile": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock:${Region}:${Account}:guardrail-profile/.*"
     ]
    },
    "imported-model": {
@@ -10190,12 +10271,22 @@
      "billingview"
     ]
    },
+   "getcostandusagecomparisons": {
+    "Resources": [
+     "billingview"
+    ]
+   },
    "getcostandusagewithresources": {
     "Resources": [
      "billingview"
     ]
    },
    "getcostcategories": {
+    "Resources": [
+     "billingview"
+    ]
+   },
+   "getcostcomparisondrivers": {
     "Resources": [
      "billingview"
     ]
@@ -14516,6 +14607,11 @@
      "dashboard"
     ]
    },
+   "geteventconfiguration": {
+    "Resources": [
+     "eventdatastore"
+    ]
+   },
    "geteventdatastore": {
     "Resources": [
      "eventdatastore"
@@ -14587,6 +14683,11 @@
    },
    "listtrails": {},
    "lookupevents": {},
+   "puteventconfiguration": {
+    "Resources": [
+     "eventdatastore"
+    ]
+   },
    "puteventselectors": {
     "Resources": [
      "trail"
@@ -26484,11 +26585,6 @@
      "Cluster"
     ]
    },
-   "createmultiregionclusters": {
-    "Resources": [
-     "Cluster"
-    ]
-   },
    "dbconnect": {
     "Resources": [
      "Cluster"
@@ -26504,12 +26600,17 @@
      "Cluster"
     ]
    },
-   "deletemultiregionclusters": {
+   "getbackupjob": {
     "Resources": [
      "Cluster"
     ]
    },
    "getcluster": {
+    "Resources": [
+     "Cluster"
+    ]
+   },
+   "getrestorejob": {
     "Resources": [
      "Cluster"
     ]
@@ -26536,6 +26637,26 @@
     ]
    },
    "removepeercluster": {
+    "Resources": [
+     "Cluster"
+    ]
+   },
+   "startbackupjob": {
+    "Resources": [
+     "Cluster"
+    ]
+   },
+   "startrestorejob": {
+    "Resources": [
+     "Cluster"
+    ]
+   },
+   "stopbackupjob": {
+    "Resources": [
+     "Cluster"
+    ]
+   },
+   "stoprestorejob": {
     "Resources": [
      "Cluster"
     ]
@@ -26987,7 +27108,11 @@
      "capacity-reservation"
     ]
    },
-   "acceptreservedinstancesexchangequote": {},
+   "acceptreservedinstancesexchangequote": {
+    "Resources": [
+     "reserved-instances"
+    ]
+   },
    "accepttransitgatewaymulticastdomainassociations": {
     "Resources": [
      "transit-gateway-attachment",
@@ -27341,6 +27466,12 @@
    },
    "createdefaultsubnet": {},
    "createdefaultvpc": {},
+   "createdelegatemacvolumeownershiptask": {
+    "Resources": [
+     "instance",
+     "mac-modification-task"
+    ]
+   },
    "createdhcpoptions": {
     "Resources": [
      "dhcp-options"
@@ -27497,6 +27628,12 @@
      "local-gateway-virtual-interface-group"
     ]
    },
+   "createmacsystemintegrityprotectionmodificationtask": {
+    "Resources": [
+     "instance",
+     "mac-modification-task"
+    ]
+   },
    "createmanagedprefixlist": {
     "Resources": [
      "prefix-list"
@@ -27636,7 +27773,11 @@
      "vpc"
     ]
    },
-   "createsubnetcidrreservation": {},
+   "createsubnetcidrreservation": {
+    "Resources": [
+     "subnet"
+    ]
+   },
    "createtags": {
     "Resources": [
      "capacity-reservation",
@@ -27690,6 +27831,9 @@
      "prefix-list",
      "replace-root-volume-task",
      "reserved-instances",
+     "route-server",
+     "route-server-endpoint",
+     "route-server-peer",
      "route-table",
      "security-group",
      "security-group-rule",
@@ -28124,7 +28268,11 @@
      "ipv4pool-ec2"
     ]
    },
-   "deletequeuedreservedinstances": {},
+   "deletequeuedreservedinstances": {
+    "Resources": [
+     "reserved-instances"
+    ]
+   },
    "deleteresourcepolicy": {
     "Resources": [
      "ipam-pool",
@@ -28227,6 +28375,9 @@
      "prefix-list",
      "replace-root-volume-task",
      "reserved-instances",
+     "route-server",
+     "route-server-endpoint",
+     "route-server-peer",
      "route-table",
      "security-group",
      "security-group-rule",
@@ -28568,6 +28719,7 @@
    "describelocalgatewayvirtualinterfaces": {},
    "describelockedsnapshots": {},
    "describemachosts": {},
+   "describemacmodificationtasks": {},
    "describemanagedprefixlists": {},
    "describemovingaddresses": {},
    "describenatgateways": {},
@@ -28988,7 +29140,11 @@
      "certificate"
     ]
    },
-   "getassociatedipv6poolcidrs": {},
+   "getassociatedipv6poolcidrs": {
+    "Resources": [
+     "ipv6pool-ec2"
+    ]
+   },
    "getawsnetworkperformancedata": {},
    "getcapacityreservationusage": {
     "Resources": [
@@ -29108,7 +29264,11 @@
      "instance"
     ]
    },
-   "getreservedinstancesexchangequote": {},
+   "getreservedinstancesexchangequote": {
+    "Resources": [
+     "reserved-instances"
+    ]
+   },
    "getresourcepolicy": {
     "Resources": [
      "ipam-pool",
@@ -29400,6 +29560,11 @@
    "modifyprivatednsnameoptions": {
     "Resources": [
      "instance"
+    ]
+   },
+   "modifypublicipdnsnameoptions": {
+    "Resources": [
+     "network-interface"
     ]
    },
    "modifyreservedinstances": {
@@ -30370,6 +30535,8 @@
      "aws:RequestTag/${TagKey}",
      "aws:ResourceTag/${TagKey}",
      "aws:TagKeys",
+     "ec2:Attribute",
+     "ec2:Attribute/${AttributeName}",
      "ec2:Region",
      "ec2:ResourceTag/${TagKey}"
     ]
@@ -30437,6 +30604,8 @@
      "aws:RequestTag/${TagKey}",
      "aws:ResourceTag/${TagKey}",
      "aws:TagKeys",
+     "ec2:Attribute",
+     "ec2:Attribute/${AttributeName}",
      "ec2:Region",
      "ec2:ResourceTag/${TagKey}"
     ]
@@ -30549,6 +30718,7 @@
      "aws:RequestTag/${TagKey}",
      "aws:ResourceTag/${TagKey}",
      "aws:TagKeys",
+     "ec2:Attribute/${AttributeName}",
      "ec2:Region",
      "ec2:ResourceTag/${TagKey}"
     ]
@@ -30592,6 +30762,18 @@
    "local-gateway-virtual-interface-group": {
     "ARNFormats": [
      "arn:${Partition}:ec2:${Region}:${Account}:local-gateway-virtual-interface-group/.*"
+    ],
+    "ConditionKeys": [
+     "aws:RequestTag/${TagKey}",
+     "aws:ResourceTag/${TagKey}",
+     "aws:TagKeys",
+     "ec2:Region",
+     "ec2:ResourceTag/${TagKey}"
+    ]
+   },
+   "mac-modification-task": {
+    "ARNFormats": [
+     "arn:${Partition}:ec2:${Region}:${Account}:mac-modification-task/.*"
     ],
     "ConditionKeys": [
      "aws:RequestTag/${TagKey}",
@@ -30880,6 +31062,7 @@
      "ec2:Owner",
      "ec2:ParentSnapshot",
      "ec2:ParentVolume",
+     "ec2:ProductCode",
      "ec2:Region",
      "ec2:Remove/group",
      "ec2:Remove/userId",
@@ -30930,6 +31113,8 @@
      "ec2:Attribute",
      "ec2:Attribute/${AttributeName}",
      "ec2:AvailabilityZone",
+     "ec2:Ipv4IpamPoolId",
+     "ec2:Ipv6IpamPoolId",
      "ec2:IsLaunchTemplateResource",
      "ec2:LaunchTemplate",
      "ec2:Region",
@@ -31109,6 +31294,7 @@
      "aws:RequestTag/${TagKey}",
      "aws:ResourceTag/${TagKey}",
      "aws:TagKeys",
+     "ec2:Attribute/${AttributeName}",
      "ec2:Region",
      "ec2:ResourceTag/${TagKey}"
     ]
@@ -31133,6 +31319,8 @@
      "aws:RequestTag/${TagKey}",
      "aws:ResourceTag/${TagKey}",
      "aws:TagKeys",
+     "ec2:Attribute",
+     "ec2:Attribute/${AttributeName}",
      "ec2:Region",
      "ec2:ResourceTag/${TagKey}"
     ]
@@ -31145,6 +31333,8 @@
      "aws:RequestTag/${TagKey}",
      "aws:ResourceTag/${TagKey}",
      "aws:TagKeys",
+     "ec2:Attribute",
+     "ec2:Attribute/${AttributeName}",
      "ec2:Region",
      "ec2:ResourceTag/${TagKey}"
     ]
@@ -31169,6 +31359,8 @@
      "aws:RequestTag/${TagKey}",
      "aws:ResourceTag/${TagKey}",
      "aws:TagKeys",
+     "ec2:Attribute",
+     "ec2:Attribute/${AttributeName}",
      "ec2:Region",
      "ec2:ResourceTag/${TagKey}"
     ]
@@ -31225,6 +31417,8 @@
      "aws:RequestTag/${TagKey}",
      "aws:ResourceTag/${TagKey}",
      "aws:TagKeys",
+     "ec2:Attribute",
+     "ec2:Attribute/${AttributeName}",
      "ec2:Region",
      "ec2:ResourceTag/${TagKey}"
     ]
@@ -31242,7 +31436,9 @@
      "ec2:Region",
      "ec2:ResourceTag/${TagKey}",
      "ec2:VpceServiceName",
-     "ec2:VpceServiceOwner"
+     "ec2:VpceServiceOwner",
+     "ec2:vpceMultiRegion",
+     "ec2:vpceServiceRegion"
     ]
    },
    "vpc-endpoint-connection": {
@@ -32289,6 +32485,16 @@
     ]
    },
    "listclusters": {},
+   "listdashboarddata": {
+    "Resources": [
+     "dashboard"
+    ]
+   },
+   "listdashboardresources": {
+    "Resources": [
+     "dashboard"
+    ]
+   },
    "listeksanywheresubscriptions": {},
    "listfargateprofiles": {
     "Resources": [
@@ -32319,6 +32525,7 @@
     "Resources": [
      "addon",
      "cluster",
+     "dashboard",
      "eks-anywhere-subscription",
      "fargateprofile",
      "identityproviderconfig",
@@ -32338,6 +32545,7 @@
      "access-entry",
      "addon",
      "cluster",
+     "dashboard",
      "eks-anywhere-subscription",
      "fargateprofile",
      "identityproviderconfig",
@@ -32350,6 +32558,7 @@
      "access-entry",
      "addon",
      "cluster",
+     "dashboard",
      "eks-anywhere-subscription",
      "fargateprofile",
      "identityproviderconfig",
@@ -32429,6 +32638,14 @@
    "cluster": {
     "ARNFormats": [
      "arn:${Partition}:eks:${Region}:${Account}:cluster/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "dashboard": {
+    "ARNFormats": [
+     "arn:${Partition}:eks:${Region}:${Account}:dashboard/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -44585,6 +44802,7 @@
    "enabledelegatedadminaccount": {},
    "getcisscanreport": {},
    "getcisscanresultdetails": {},
+   "getclustersforimage": {},
    "getconfiguration": {},
    "getdelegatedadminaccount": {},
    "getec2deepinspectionconfiguration": {},
@@ -46931,20 +47149,6 @@
      "vehicle"
     ]
    },
-   "batchcreatevehicle": {
-    "Resources": [
-     "decodermanifest",
-     "modelmanifest",
-     "vehicle"
-    ]
-   },
-   "batchupdatevehicle": {
-    "Resources": [
-     "decodermanifest",
-     "modelmanifest",
-     "vehicle"
-    ]
-   },
    "createcampaign": {
     "Resources": [
      "campaign",
@@ -47127,6 +47331,7 @@
      "fleet",
      "modelmanifest",
      "signalcatalog",
+     "statetemplate",
      "vehicle"
     ]
    },
@@ -54065,6 +54270,7 @@
     ]
    },
    "listlogdeliveries": {},
+   "listloggroups": {},
    "listloggroupsforentity": {},
    "listloggroupsforquery": {},
    "listtagsforresource": {
@@ -57621,6 +57827,11 @@
      "datastore"
     ]
    },
+   "getdicomseriesmetadata": {
+    "Resources": [
+     "datastore"
+    ]
+   },
    "getimageframe": {
     "Resources": [
      "datastore",
@@ -60511,6 +60722,12 @@
      "TLSInspectionConfiguration"
     ]
    },
+   "createvpcendpointassociation": {
+    "Resources": [
+     "Firewall",
+     "VpcEndpointAssociation"
+    ]
+   },
    "deletefirewall": {
     "Resources": [
      "Firewall"
@@ -60523,6 +60740,7 @@
    },
    "deleteresourcepolicy": {
     "Resources": [
+     "Firewall",
      "FirewallPolicy",
      "StatefulRuleGroup",
      "StatelessRuleGroup"
@@ -60539,7 +60757,17 @@
      "TLSInspectionConfiguration"
     ]
    },
+   "deletevpcendpointassociation": {
+    "Resources": [
+     "VpcEndpointAssociation"
+    ]
+   },
    "describefirewall": {
+    "Resources": [
+     "Firewall"
+    ]
+   },
+   "describefirewallmetadata": {
     "Resources": [
      "Firewall"
     ]
@@ -60564,6 +60792,7 @@
    },
    "describeresourcepolicy": {
     "Resources": [
+     "Firewall",
      "FirewallPolicy",
      "StatefulRuleGroup",
      "StatelessRuleGroup"
@@ -60584,6 +60813,11 @@
    "describetlsinspectionconfiguration": {
     "Resources": [
      "TLSInspectionConfiguration"
+    ]
+   },
+   "describevpcendpointassociation": {
+    "Resources": [
+     "VpcEndpointAssociation"
     ]
    },
    "disassociatesubnets": {
@@ -60628,7 +60862,8 @@
      "FirewallPolicy",
      "StatefulRuleGroup",
      "StatelessRuleGroup",
-     "TLSInspectionConfiguration"
+     "TLSInspectionConfiguration",
+     "VpcEndpointAssociation"
     ]
    },
    "listtlsinspectionconfigurations": {
@@ -60636,8 +60871,14 @@
      "TLSInspectionConfiguration"
     ]
    },
+   "listvpcendpointassociations": {
+    "Resources": [
+     "VpcEndpointAssociation"
+    ]
+   },
    "putresourcepolicy": {
     "Resources": [
+     "Firewall",
      "FirewallPolicy",
      "StatefulRuleGroup",
      "StatelessRuleGroup"
@@ -60664,7 +60905,8 @@
      "FirewallPolicy",
      "StatefulRuleGroup",
      "StatelessRuleGroup",
-     "TLSInspectionConfiguration"
+     "TLSInspectionConfiguration",
+     "VpcEndpointAssociation"
     ]
    },
    "untagresource": {
@@ -60673,7 +60915,8 @@
      "FirewallPolicy",
      "StatefulRuleGroup",
      "StatelessRuleGroup",
-     "TLSInspectionConfiguration"
+     "TLSInspectionConfiguration",
+     "VpcEndpointAssociation"
     ]
    },
    "updatefirewallanalysissettings": {
@@ -60767,6 +61010,14 @@
    "tlsinspectionconfiguration": {
     "ARNFormats": [
      "arn:${Partition}:network-firewall:${Region}:${Account}:tls-configuration/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "vpcendpointassociation": {
+    "ARNFormats": [
+     "arn:${Partition}:network-firewall:${Region}:${Account}:vpc-endpoint-association/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -66768,12 +67019,6 @@
      "qapp"
     ]
    },
-   "createpresignedurl": {
-    "Resources": [
-     "qapp",
-     "qapp-session"
-    ]
-   },
    "createqapp": {
     "Resources": [
      "application"
@@ -66843,18 +67088,6 @@
    "importdocument": {
     "Resources": [
      "qapp",
-     "qapp-session"
-    ]
-   },
-   "importdocumenttoqapp": {
-    "Resources": [
-     "application",
-     "qapp"
-    ]
-   },
-   "importdocumenttoqappsession": {
-    "Resources": [
-     "application",
      "qapp-session"
     ]
    },
@@ -70709,7 +70942,6 @@
    "fetchresults": {},
    "getclustercredentials": {
     "Resources": [
-     "dbgroup",
      "dbname",
      "dbuser"
     ]
@@ -78350,23 +78582,6 @@
    }
   }
  },
- "sagemaker-groundtruth-synthetic": {
-  "Actions": {
-   "createproject": {},
-   "deleteproject": {},
-   "getaccountdetails": {},
-   "getbatch": {},
-   "getproject": {},
-   "listbatchdatatransfers": {},
-   "listbatchsummaries": {},
-   "listprojectdatatransfers": {},
-   "listprojectsummaries": {},
-   "startbatchdatatransfer": {},
-   "startprojectdatatransfer": {},
-   "updatebatch": {}
-  },
-  "Resources": {}
- },
  "sagemaker-mlflow": {
   "Actions": {
    "accessui": {},
@@ -80597,6 +80812,7 @@
  "servicequotas": {
   "Actions": {
    "associateservicequotatemplate": {},
+   "createsupportcase": {},
    "deleteservicequotaincreaserequestfromtemplate": {},
    "disassociateservicequotatemplate": {},
    "getassociationforservicequotatemplate": {},

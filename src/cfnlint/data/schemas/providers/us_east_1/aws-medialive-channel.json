@@ -1,8 +1,7 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/Vpc",
-  "/properties/AnywhereSettings"
+  "/properties/Vpc"
  ],
  "definitions": {
   "AacSettings": {
@@ -452,6 +451,9 @@
     "AfdSignaling": {
      "type": "string"
     },
+    "Bitrate": {
+     "type": "integer"
+    },
     "BufSize": {
      "type": "integer"
     },
@@ -493,6 +495,9 @@
     },
     "QvbrQualityLevel": {
      "type": "integer"
+    },
+    "RateControlMode": {
+     "type": "string"
     },
     "SceneChangeDetect": {
      "type": "string"
@@ -804,9 +809,28 @@
    },
    "type": "object"
   },
+  "CmafIngestCaptionLanguageMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "CaptionChannel": {
+     "type": "integer"
+    },
+    "LanguageCode": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "CmafIngestGroupSettings": {
    "additionalProperties": false,
    "properties": {
+    "CaptionLanguageMappings": {
+     "items": {
+      "$ref": "#/definitions/CmafIngestCaptionLanguageMapping"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
     "Destination": {
      "$ref": "#/definitions/OutputLocationRef"
     },
@@ -842,6 +866,15 @@
     },
     "SendDelayMs": {
      "type": "integer"
+    },
+    "TimedMetadataId3Frame": {
+     "type": "string"
+    },
+    "TimedMetadataId3Period": {
+     "type": "integer"
+    },
+    "TimedMetadataPassthrough": {
+     "type": "string"
     }
    },
    "type": "object"
@@ -1106,6 +1139,12 @@
    "properties": {
     "CopyrightHolder": {
      "type": "string"
+    },
+    "DefaultFontSize": {
+     "type": "integer"
+    },
+    "DefaultLineHeight": {
+     "type": "integer"
     },
     "FillLineGap": {
      "type": "string"
@@ -2845,6 +2884,13 @@
    "properties": {
     "Id": {
      "type": "string"
+    },
+    "LogicalInterfaceNames": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
     },
     "MediaPackageSettings": {
      "items": {
