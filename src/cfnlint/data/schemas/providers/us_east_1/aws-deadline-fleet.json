@@ -114,6 +114,9 @@
      "pattern": "^sp-[0-9a-f]{32}$",
      "type": "string"
     },
+    "TagPropagationMode": {
+     "$ref": "#/definitions/TagPropagationMode"
+    },
     "WorkerCapabilities": {
      "$ref": "#/definitions/CustomerManagedWorkerCapabilities"
     }
@@ -324,6 +327,26 @@
    ],
    "type": "string"
   },
+  "HostConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ScriptBody": {
+     "maxLength": 15000,
+     "minLength": 0,
+     "type": "string"
+    },
+    "ScriptTimeoutSeconds": {
+     "default": 300,
+     "maximum": 3600,
+     "minimum": 300,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ScriptBody"
+   ],
+   "type": "object"
+  },
   "MemoryMiBRange": {
    "additionalProperties": false,
    "properties": {
@@ -462,6 +485,13 @@
    ],
    "type": "object"
   },
+  "TagPropagationMode": {
+   "enum": [
+    "NO_PROPAGATION",
+    "PROPAGATE_TAGS_TO_WORKERS_AT_LAUNCH"
+   ],
+   "type": "string"
+  },
   "VCpuCountRange": {
    "additionalProperties": false,
    "properties": {
@@ -514,6 +544,9 @@
   "FleetId": {
    "pattern": "^fleet-[0-9a-f]{32}$",
    "type": "string"
+  },
+  "HostConfiguration": {
+   "$ref": "#/definitions/HostConfiguration"
   },
   "MaxWorkerCount": {
    "maximum": 2147483647,

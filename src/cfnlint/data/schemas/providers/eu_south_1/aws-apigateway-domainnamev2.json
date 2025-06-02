@@ -1,0 +1,94 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName",
+  "/properties/SecurityPolicy",
+  "/properties/EndpointConfiguration"
+ ],
+ "definitions": {
+  "EndpointConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IpAddressType": {
+     "type": "string"
+    },
+    "Types": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainNameArn"
+ ],
+ "properties": {
+  "CertificateArn": {
+   "type": "string"
+  },
+  "DomainName": {
+   "type": "string"
+  },
+  "DomainNameArn": {
+   "type": "string"
+  },
+  "DomainNameId": {
+   "type": "string"
+  },
+  "EndpointConfiguration": {
+   "$ref": "#/definitions/EndpointConfiguration"
+  },
+  "Policy": {
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "RoutingMode": {
+   "default": "BASE_PATH_MAPPING_ONLY",
+   "enum": [
+    "BASE_PATH_MAPPING_ONLY",
+    "ROUTING_RULE_THEN_BASE_PATH_MAPPING",
+    "ROUTING_RULE_ONLY"
+   ],
+   "type": "string"
+  },
+  "SecurityPolicy": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DomainNameId",
+  "/properties/DomainNameArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ApiGateway::DomainNameV2"
+}

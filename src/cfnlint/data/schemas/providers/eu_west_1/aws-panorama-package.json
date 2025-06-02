@@ -1,0 +1,118 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PackageName"
+ ],
+ "definitions": {
+  "NodePackageArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "NodePackageId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-\\_\\/]+$",
+   "type": "string"
+  },
+  "NodePackageName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-\\_]+$",
+   "type": "string"
+  },
+  "StorageLocation": {
+   "additionalProperties": false,
+   "properties": {
+    "BinaryPrefixLocation": {
+     "type": "string"
+    },
+    "Bucket": {
+     "type": "string"
+    },
+    "GeneratedPrefixLocation": {
+     "type": "string"
+    },
+    "ManifestPrefixLocation": {
+     "type": "string"
+    },
+    "RepoPrefixLocation": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^.+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^.+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TagList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Timestamp": {
+   "type": "integer"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PackageId"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/NodePackageArn"
+  },
+  "CreatedTime": {
+   "$ref": "#/definitions/Timestamp"
+  },
+  "PackageId": {
+   "$ref": "#/definitions/NodePackageId"
+  },
+  "PackageName": {
+   "$ref": "#/definitions/NodePackageName"
+  },
+  "StorageLocation": {
+   "$ref": "#/definitions/StorageLocation"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagList"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PackageId",
+  "/properties/Arn",
+  "/properties/CreatedTime",
+  "/properties/StorageLocation/Bucket",
+  "/properties/StorageLocation/RepoPrefixLocation",
+  "/properties/StorageLocation/GeneratedPrefixLocation",
+  "/properties/StorageLocation/BinaryPrefixLocation",
+  "/properties/StorageLocation/ManifestPrefixLocation"
+ ],
+ "required": [
+  "PackageName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "taggable": true,
+ "typeName": "AWS::Panorama::Package"
+}

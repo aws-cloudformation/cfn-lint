@@ -19,6 +19,56 @@
    ],
    "type": "object"
   },
+  "CmkSecretConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyArn": {
+     "maxLength": 2048,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):kms:[a-z-0-9]+:[0-9]{12}:key/.*|)$",
+     "type": "string"
+    },
+    "SecretArn": {
+     "maxLength": 2048,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):secretsmanager:[a-z-0-9]+:[0-9]{12}:secret:.*|)$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CustomSecretConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecretAccessRoleArn": {
+     "maxLength": 2048,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):iam::[0-9]{12}:role/.*|)$",
+     "type": "string"
+    },
+    "SecretArn": {
+     "maxLength": 2048,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):secretsmanager:[a-z-0-9]+:[0-9]{12}:secret:.*|)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretArn",
+    "SecretAccessRoleArn"
+   ],
+   "type": "object"
+  },
+  "ManagedSecretConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecretArn": {
+     "maxLength": 2048,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):secretsmanager:[a-z-0-9]+:[0-9]{12}:secret:.*|)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretArn"
+   ],
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -69,7 +119,8 @@
   "AzureBlobAuthenticationType": {
    "default": "SAS",
    "enum": [
-    "SAS"
+    "SAS",
+    "NONE"
    ],
    "type": "string"
   },
@@ -88,6 +139,12 @@
    ],
    "type": "string"
   },
+  "CmkSecretConfig": {
+   "$ref": "#/definitions/CmkSecretConfig"
+  },
+  "CustomSecretConfig": {
+   "$ref": "#/definitions/CustomSecretConfig"
+  },
   "LocationArn": {
    "maxLength": 128,
    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:location/loc-[0-9a-z]{17}$",
@@ -97,6 +154,9 @@
    "maxLength": 4356,
    "pattern": "^(azure-blob)://[a-zA-Z0-9./\\-]+$",
    "type": "string"
+  },
+  "ManagedSecretConfig": {
+   "$ref": "#/definitions/ManagedSecretConfig"
   },
   "Subdirectory": {
    "maxLength": 1024,
@@ -115,11 +175,12 @@
  },
  "readOnlyProperties": [
   "/properties/LocationArn",
-  "/properties/LocationUri"
+  "/properties/LocationUri",
+  "/properties/ManagedSecretConfig",
+  "/properties/CmkSecretConfig/SecretArn"
  ],
  "required": [
-  "AzureBlobAuthenticationType",
-  "AgentArns"
+  "AzureBlobAuthenticationType"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datasync.git",
  "tagging": {
