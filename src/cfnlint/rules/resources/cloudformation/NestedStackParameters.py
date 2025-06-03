@@ -5,8 +5,11 @@ SPDX-License-Identifier: MIT-0
 
 import os
 
+import regex as re
+
 from cfnlint._typing import RuleMatches
 from cfnlint.decode import decode
+from cfnlint.helpers import REGEX_DYN_REF
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 from cfnlint.template.template import Template
 
@@ -107,6 +110,8 @@ class NestedStackParameters(CloudFormationLintRule):
                             template_path = os.path.normpath(
                                 os.path.join(base_dir, template_url)
                             )
+                            if re.match(REGEX_DYN_REF, template_path):
+                                continue
                             nested_parameters = self.__get_template_parameters(
                                 template_path
                             )

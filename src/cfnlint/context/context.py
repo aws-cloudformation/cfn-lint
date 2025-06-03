@@ -12,12 +12,15 @@ from dataclasses import InitVar, dataclass, field, fields
 from functools import lru_cache
 from typing import TYPE_CHECKING, Any, Deque, Iterator, Sequence, Set, Tuple
 
+import regex as re
+
 from cfnlint.context._mappings import Mappings
 from cfnlint.context.conditions._conditions import Conditions
 from cfnlint.helpers import (
     BOOLEAN_STRINGS_TRUE,
     FUNCTIONS,
     PSEUDOPARAMS,
+    REGEX_DYN_REF,
     REGION_PRIMARY,
     TRANSFORM_LANGUAGE_EXTENSION,
     TRANSFORM_SAM,
@@ -405,6 +408,8 @@ def _nested_stack_get_atts(filename: str, template_url: str) -> None | Attribute
     base_dir = os.path.dirname(os.path.abspath(filename))
     template_path = os.path.normpath(os.path.join(base_dir, template_url))
 
+    if re.match(REGEX_DYN_REF, template_path):
+        return None
     try:
         from cfnlint.decode import decode
 

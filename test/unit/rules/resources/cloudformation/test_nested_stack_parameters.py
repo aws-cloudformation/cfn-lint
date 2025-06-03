@@ -26,7 +26,8 @@ class TestNestedStackParameters(BaseRuleTestCase):
         logger = logging.getLogger("cfnlint.decode.decode")
         logger.disabled = True
         self.success_templates = [
-            "test/fixtures/templates/good/resources/cloudformation/stacks.yaml"
+            "test/fixtures/templates/good/resources/cloudformation/stacks.yaml",
+            "test/fixtures/templates/good/resources/cloudformation/nested_stack_dynamic.yaml",
         ]
 
     def test_file_positive(self):
