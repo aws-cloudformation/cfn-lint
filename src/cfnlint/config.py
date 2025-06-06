@@ -778,7 +778,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         elif cli_args:
             filenames = cli_args
         # elif not sys.stdin.isatty():
-        #    if (select.select([sys.stdin], [], [], 0.0)[0]):
+        #    if bool(select.select([sys.stdin], [], [], 0)):
         #        return []
         elif file_args:
             filenames = file_args
