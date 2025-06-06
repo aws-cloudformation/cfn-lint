@@ -1,7 +1,6 @@
 #!/bin/sh
 
 binary_zip_filename="cfn-lint.zip"
-mac_arch="$(uname -m)"
 
 set -eux
 
@@ -20,7 +19,7 @@ for item in ../[!.]*; do
 done
 
 echo "Installing Python Libraries"
-/usr/local/bin/python3.11 -m venv venv
+python3.11 -m venv venv
 ./venv/bin/pip install --upgrade pip
 ./venv/bin/pip install -r src/requirements/base.txt
 
@@ -31,10 +30,9 @@ echo "Installing PyInstaller"
 # Building the binary using pyinstaller
 echo "Building Binary"
 cd src
-echo "cfnlint-mac.spec content is:"
-cat scripts/installer/cfnlint-mac.spec
-# Note: onefile/onedir options are not valid when spec file is used on mac
-../venv/bin/python -m PyInstaller --clean scripts/installer/cfnlint-mac.spec
+echo "cfnlint.spec content is:"
+cat scripts/installer/cfnlint.spec
+../venv/bin/python -m PyInstaller --clean scripts/installer/cfnlint.spec
 
 # Organizing the pyinstaller-output folder
 mkdir pyinstaller-output

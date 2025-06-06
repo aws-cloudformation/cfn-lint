@@ -1,0 +1,56 @@
+name: "[CI] Validate Pyinstaller Build"
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-for-linux:
+    name: build-pyinstaller-linux
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'aws-cloudformation'
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build PyInstaller in manylinux container
+        run: |
+          docker run --rm -v .:/cfnlint -w /cfnlint \
+          quay.io/pypa/manylinux2014_x86_64:latest /cfnlint/scripts/installer/build.sh
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+      - name: Basic tests for PyInstaller
+        run: |
+          unzip build/output/cfn-lint.zip -d cfnlint-installation
+          ./cfnlint-installation/cfn-lint --version
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cfnlint-linux-zip
+          path: .build/output/cfn-lint.zip
+          retention-days: 15
+  build-for-macos:
+    name: build-pyinstaller-macos
+    runs-on: macos-latest
+    if: github.repository_owner == 'aws-cloudformation'
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Build PyInstaller
+        run: |
+          ./scripts/installer/build.sh
+      - name: Basic tests for PyInstaller
+        run: |
+          unzip build/output/cfn-lint.zip -d cfnlint-installation
+          ./cfnlint-installation/cfn-lint --version
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cfnlint-macos-zip
+          path: build/output/cfn-lint.zip
+          retention-days: 15
