@@ -1,0 +1,108 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Arn": {
+   "maxLength": 1000,
+   "type": "string"
+  },
+  "CapacityUnitsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "RescoreCapacityUnits": {
+     "$ref": "#/definitions/RescoreCapacityUnits"
+    }
+   },
+   "required": [
+    "RescoreCapacityUnits"
+   ],
+   "type": "object"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "pattern": "^\\P{C}*$",
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 36,
+   "minLength": 36,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9][a-zA-Z0-9_-]*",
+   "type": "string"
+  },
+  "RescoreCapacityUnits": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "CapacityUnits": {
+   "$ref": "#/definitions/CapacityUnitsConfiguration"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "Id": {
+   "$ref": "#/definitions/Id"
+  },
+  "Name": {
+   "$ref": "#/definitions/Name"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/kendra/latest/dg/hiw-index.html",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::KendraRanking::ExecutionPlan"
+}

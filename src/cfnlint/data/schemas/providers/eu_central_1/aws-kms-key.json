@@ -1,0 +1,141 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/KeyId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "BypassPolicyLockoutSafetyCheck": {
+   "default": false,
+   "type": "boolean"
+  },
+  "Description": {
+   "maxLength": 8192,
+   "minLength": 0,
+   "type": "string"
+  },
+  "EnableKeyRotation": {
+   "type": "boolean"
+  },
+  "Enabled": {
+   "type": "boolean"
+  },
+  "KeyId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "KeyPolicy": {
+   "default": "{\n    \"Version\": \"2012-10-17\",\n    \"Id\": \"key-default\",\n    \"Statement\": [\n        {\n            \"Sid\": \"Enable IAM User Permissions\",\n            \"Effect\": \"Allow\",\n            \"Principal\": {\n                \"AWS\": \"arn:<partition>:iam::<account-id>:root\"\n            },\n            \"Action\": \"kms:*\",\n            \"Resource\": \"*\"\n        }\n    ]\n}",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "KeySpec": {
+   "default": "SYMMETRIC_DEFAULT",
+   "enum": [
+    "SYMMETRIC_DEFAULT",
+    "RSA_2048",
+    "RSA_3072",
+    "RSA_4096",
+    "ECC_NIST_P256",
+    "ECC_NIST_P384",
+    "ECC_NIST_P521",
+    "ECC_SECG_P256K1",
+    "HMAC_224",
+    "HMAC_256",
+    "HMAC_384",
+    "HMAC_512",
+    "SM2",
+    "ML_DSA_44",
+    "ML_DSA_65",
+    "ML_DSA_87"
+   ],
+   "type": "string"
+  },
+  "KeyUsage": {
+   "default": "ENCRYPT_DECRYPT",
+   "enum": [
+    "ENCRYPT_DECRYPT",
+    "SIGN_VERIFY",
+    "GENERATE_VERIFY_MAC",
+    "KEY_AGREEMENT"
+   ],
+   "type": "string"
+  },
+  "MultiRegion": {
+   "default": false,
+   "type": "boolean"
+  },
+  "Origin": {
+   "default": "AWS_KMS",
+   "enum": [
+    "AWS_KMS",
+    "EXTERNAL"
+   ],
+   "type": "string"
+  },
+  "PendingWindowInDays": {
+   "maximum": 30,
+   "minimum": 7,
+   "type": "integer"
+  },
+  "RotationPeriodInDays": {
+   "default": 365,
+   "maximum": 2560,
+   "minimum": 90,
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/KeyId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kms",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::KMS::Key",
+ "writeOnlyProperties": [
+  "/properties/PendingWindowInDays",
+  "/properties/BypassPolicyLockoutSafetyCheck",
+  "/properties/RotationPeriodInDays"
+ ]
+}

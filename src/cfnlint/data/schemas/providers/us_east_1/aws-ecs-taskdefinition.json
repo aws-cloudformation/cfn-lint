@@ -1025,7 +1025,8 @@
   }
  },
  "propertyTransform": {
-  "/properties/TaskRoleArn": "TaskRoleArn $OR $split(TaskRoleArn, \"role/\")[-1]"
+  "/properties/ExecutionRoleArn": "ExecutionRoleArn $OR $join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:iam::[0-9]{12}[:]role/\", ExecutionRoleArn])",
+  "/properties/TaskRoleArn": "TaskRoleArn $OR $split(TaskRoleArn, \"role/\")[-1] $OR $join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:iam::[0-9]{12}[:]role/\", TaskRoleArn])"
  },
  "readOnlyProperties": [
   "/properties/TaskDefinitionArn"

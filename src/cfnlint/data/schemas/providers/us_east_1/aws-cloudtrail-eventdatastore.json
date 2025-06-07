@@ -111,6 +111,36 @@
    ],
    "type": "object"
   },
+  "ContextKeySelector": {
+   "additionalProperties": false,
+   "properties": {
+    "Equals": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "(.+)",
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Type": {
+     "enum": [
+      "RequestContext",
+      "TagContext"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Equals"
+   ],
+   "type": "object"
+  },
   "InsightSelector": {
    "additionalProperties": false,
    "properties": {
@@ -163,6 +193,15 @@
    ],
    "type": "string"
   },
+  "ContextKeySelectors": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ContextKeySelector"
+   },
+   "maxItems": 2,
+   "type": "array",
+   "uniqueItems": true
+  },
   "CreatedTimestamp": {
    "$ref": "#/definitions/Timestamp"
   },
@@ -196,6 +235,13 @@
    "maxLength": 350,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9._/\\-:]+$",
+   "type": "string"
+  },
+  "MaxEventSize": {
+   "enum": [
+    "Standard",
+    "Large"
+   ],
    "type": "string"
   },
   "MultiRegionEnabled": {

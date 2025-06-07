@@ -1,0 +1,435 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ExperimentOptions/AccountTargeting"
+ ],
+ "definitions": {
+  "ActionId": {
+   "maxLength": 64,
+   "type": "string"
+  },
+  "CloudWatchDashboard": {
+   "additionalProperties": false,
+   "properties": {
+    "DashboardIdentifier": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "[\\S]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "DashboardIdentifier"
+   ],
+   "type": "object"
+  },
+  "ExperimentTemplateAction": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionId": {
+     "$ref": "#/definitions/ActionId"
+    },
+    "Description": {
+     "$ref": "#/definitions/ExperimentTemplateActionItemDescription"
+    },
+    "Parameters": {
+     "additionalProperties": false,
+     "patternProperties": {
+      ".{1,64}": {
+       "$ref": "#/definitions/ExperimentTemplateActionItemParameter"
+      }
+     },
+     "type": "object"
+    },
+    "StartAfter": {
+     "$ref": "#/definitions/ExperimentTemplateActionItemStartAfterList"
+    },
+    "Targets": {
+     "additionalProperties": false,
+     "patternProperties": {
+      ".{1,64}": {
+       "$ref": "#/definitions/ExperimentTemplateActionItemTarget"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "ActionId"
+   ],
+   "type": "object"
+  },
+  "ExperimentTemplateActionItemDescription": {
+   "maxLength": 512,
+   "type": "string"
+  },
+  "ExperimentTemplateActionItemParameter": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "ExperimentTemplateActionItemStartAfter": {
+   "maxLength": 64,
+   "type": "string"
+  },
+  "ExperimentTemplateActionItemStartAfterList": {
+   "items": {
+    "$ref": "#/definitions/ExperimentTemplateActionItemStartAfter"
+   },
+   "type": "array"
+  },
+  "ExperimentTemplateActionItemTarget": {
+   "maxLength": 64,
+   "type": "string"
+  },
+  "ExperimentTemplateActionMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "[\\S]{1,64}": {
+     "$ref": "#/definitions/ExperimentTemplateAction"
+    }
+   },
+   "type": "object"
+  },
+  "ExperimentTemplateDescription": {
+   "maxLength": 512,
+   "pattern": "[\\s\\S]+",
+   "type": "string"
+  },
+  "ExperimentTemplateExperimentOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountTargeting": {
+     "enum": [
+      "multi-account",
+      "single-account"
+     ],
+     "type": "string"
+    },
+    "EmptyTargetResolutionMode": {
+     "enum": [
+      "fail",
+      "skip"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ExperimentTemplateExperimentReportConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DataSources": {
+     "additionalProperties": false,
+     "properties": {
+      "CloudWatchDashboards": {
+       "items": {
+        "$ref": "#/definitions/CloudWatchDashboard"
+       },
+       "type": "array"
+      }
+     },
+     "type": "object"
+    },
+    "Outputs": {
+     "additionalProperties": false,
+     "properties": {
+      "ExperimentReportS3Configuration": {
+       "additionalProperties": false,
+       "properties": {
+        "BucketName": {
+         "maxLength": 63,
+         "minLength": 3,
+         "type": "string"
+        },
+        "Prefix": {
+         "maxLength": 256,
+         "minLength": 1,
+         "type": "string"
+        }
+       },
+       "required": [
+        "BucketName"
+       ],
+       "type": "object"
+      }
+     },
+     "required": [
+      "ExperimentReportS3Configuration"
+     ],
+     "type": "object"
+    },
+    "PostExperimentDuration": {
+     "maxLength": 32,
+     "pattern": "[\\S]+",
+     "type": "string"
+    },
+    "PreExperimentDuration": {
+     "maxLength": 32,
+     "pattern": "[\\S]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Outputs"
+   ],
+   "type": "object"
+  },
+  "ExperimentTemplateId": {
+   "type": "string"
+  },
+  "ExperimentTemplateLogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogsConfiguration": {
+     "additionalProperties": false,
+     "properties": {
+      "LogGroupArn": {
+       "maxLength": 2048,
+       "minLength": 20,
+       "pattern": "[\\S]+",
+       "type": "string"
+      }
+     },
+     "required": [
+      "LogGroupArn"
+     ],
+     "type": "object"
+    },
+    "LogSchemaVersion": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "S3Configuration": {
+     "additionalProperties": false,
+     "properties": {
+      "BucketName": {
+       "maxLength": 63,
+       "minLength": 3,
+       "pattern": "[\\S]+",
+       "type": "string"
+      },
+      "Prefix": {
+       "maxLength": 700,
+       "minLength": 1,
+       "pattern": "[\\s\\S]+",
+       "type": "string"
+      }
+     },
+     "required": [
+      "BucketName"
+     ],
+     "type": "object"
+    }
+   },
+   "required": [
+    "LogSchemaVersion"
+   ],
+   "type": "object"
+  },
+  "ExperimentTemplateStopCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "Source": {
+     "$ref": "#/definitions/StopConditionSource"
+    },
+    "Value": {
+     "$ref": "#/definitions/StopConditionValue"
+    }
+   },
+   "required": [
+    "Source"
+   ],
+   "type": "object"
+  },
+  "ExperimentTemplateStopConditionList": {
+   "items": {
+    "$ref": "#/definitions/ExperimentTemplateStopCondition"
+   },
+   "type": "array"
+  },
+  "ExperimentTemplateTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "Filters": {
+     "$ref": "#/definitions/ExperimentTemplateTargetFilterList"
+    },
+    "Parameters": {
+     "additionalProperties": false,
+     "patternProperties": {
+      ".{1,64}": {
+       "maxLength": 1024,
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "ResourceArns": {
+     "$ref": "#/definitions/ResourceArnList"
+    },
+    "ResourceTags": {
+     "additionalProperties": false,
+     "patternProperties": {
+      ".{1,128}": {
+       "maxLength": 256,
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "ResourceType": {
+     "$ref": "#/definitions/ResourceType"
+    },
+    "SelectionMode": {
+     "$ref": "#/definitions/ExperimentTemplateTargetSelectionMode"
+    }
+   },
+   "required": [
+    "ResourceType",
+    "SelectionMode"
+   ],
+   "type": "object"
+  },
+  "ExperimentTemplateTargetFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Path": {
+     "$ref": "#/definitions/ExperimentTemplateTargetFilterPath"
+    },
+    "Values": {
+     "$ref": "#/definitions/ExperimentTemplateTargetFilterValues"
+    }
+   },
+   "required": [
+    "Path",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "ExperimentTemplateTargetFilterList": {
+   "items": {
+    "$ref": "#/definitions/ExperimentTemplateTargetFilter"
+   },
+   "type": "array"
+  },
+  "ExperimentTemplateTargetFilterPath": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "ExperimentTemplateTargetFilterValue": {
+   "maxLength": 128,
+   "type": "string"
+  },
+  "ExperimentTemplateTargetFilterValues": {
+   "items": {
+    "$ref": "#/definitions/ExperimentTemplateTargetFilterValue"
+   },
+   "type": "array"
+  },
+  "ExperimentTemplateTargetMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,64}": {
+     "$ref": "#/definitions/ExperimentTemplateTarget"
+    }
+   },
+   "type": "object"
+  },
+  "ExperimentTemplateTargetSelectionMode": {
+   "maxLength": 64,
+   "type": "string"
+  },
+  "ResourceArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "ResourceArnList": {
+   "items": {
+    "$ref": "#/definitions/ResourceArn"
+   },
+   "type": "array"
+  },
+  "ResourceType": {
+   "maxLength": 64,
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 1224,
+   "minLength": 20,
+   "pattern": "[\\S]+",
+   "type": "string"
+  },
+  "StopConditionSource": {
+   "maxLength": 64,
+   "pattern": "[\\S]+",
+   "type": "string"
+  },
+  "StopConditionValue": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "[\\s\\S]+",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Actions": {
+   "$ref": "#/definitions/ExperimentTemplateActionMap"
+  },
+  "Description": {
+   "$ref": "#/definitions/ExperimentTemplateDescription"
+  },
+  "ExperimentOptions": {
+   "$ref": "#/definitions/ExperimentTemplateExperimentOptions"
+  },
+  "ExperimentReportConfiguration": {
+   "$ref": "#/definitions/ExperimentTemplateExperimentReportConfiguration"
+  },
+  "Id": {
+   "$ref": "#/definitions/ExperimentTemplateId"
+  },
+  "LogConfiguration": {
+   "$ref": "#/definitions/ExperimentTemplateLogConfiguration"
+  },
+  "RoleArn": {
+   "$ref": "#/definitions/RoleArn"
+  },
+  "StopConditions": {
+   "$ref": "#/definitions/ExperimentTemplateStopConditionList"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,128}": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Targets": {
+   "$ref": "#/definitions/ExperimentTemplateTargetMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Description",
+  "StopConditions",
+  "Targets",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-fis.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::FIS::ExperimentTemplate"
+}
