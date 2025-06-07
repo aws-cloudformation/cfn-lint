@@ -6182,12 +6182,14 @@
    },
    "batchcreatedelegationbyassessment": {
     "Resources": [
-     "assessment"
+     "assessment",
+     "assessmentControlSet"
     ]
    },
    "batchdeletedelegationbyassessment": {
     "Resources": [
-     "assessment"
+     "assessment",
+     "assessmentControlSet"
     ]
    },
    "batchdisassociateassessmentreportevidence": {
@@ -6321,12 +6323,14 @@
    "tagresource": {
     "Resources": [
      "assessment",
+     "assessmentFramework",
      "control"
     ]
    },
    "untagresource": {
     "Resources": [
      "assessment",
+     "assessmentFramework",
      "control"
     ]
    },
@@ -6350,7 +6354,11 @@
      "assessmentFramework"
     ]
    },
-   "updateassessmentframeworkshare": {},
+   "updateassessmentframeworkshare": {
+    "Resources": [
+     "assessmentFramework"
+    ]
+   },
    "updateassessmentstatus": {
     "Resources": [
      "assessment"
@@ -6368,6 +6376,9 @@
    "assessment": {
     "ARNFormats": [
      "arn:${Partition}:auditmanager:${Region}:${Account}:assessment/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "assessmentcontrolset": {
@@ -6378,6 +6389,9 @@
    "assessmentframework": {
     "ARNFormats": [
      "arn:${Partition}:auditmanager:${Region}:${Account}:assessmentFramework/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "control": {
@@ -29134,6 +29148,11 @@
      "verified-access-instance"
     ]
    },
+   "getactivevpntunnelstatus": {
+    "Resources": [
+     "vpn-connection"
+    ]
+   },
    "getallowedimagessettings": {},
    "getassociatedenclavecertificateiamroles": {
     "Resources": [
@@ -35147,6 +35166,11 @@
      "SchemaMapping"
     ]
    },
+   "generatematchid": {
+    "Resources": [
+     "MatchingWorkflow"
+    ]
+   },
    "getidmappingjob": {
     "Resources": [
      "IdMappingWorkflow"
@@ -35201,11 +35225,7 @@
     ]
    },
    "listmatchingworkflows": {},
-   "listproviderservices": {
-    "Resources": [
-     "ProviderService"
-    ]
-   },
+   "listproviderservices": {},
    "listschemamappings": {},
    "listtagsforresource": {},
    "putpolicy": {},
@@ -49606,6 +49626,11 @@
      "Stage"
     ]
    },
+   "listparticipantreplicas": {
+    "Resources": [
+     "Stage"
+    ]
+   },
    "listparticipants": {
     "Resources": [
      "Stage"
@@ -49678,6 +49703,11 @@
      "Storage-Configuration"
     ]
    },
+   "startparticipantreplication": {
+    "Resources": [
+     "Stage"
+    ]
+   },
    "startviewersessionrevocation": {
     "Resources": [
      "Channel"
@@ -49686,6 +49716,11 @@
    "stopcomposition": {
     "Resources": [
      "Composition"
+    ]
+   },
+   "stopparticipantreplication": {
+    "Resources": [
+     "Stage"
     ]
    },
    "stopstream": {
@@ -58849,6 +58884,8 @@
     "Resources": [
      "ApplicationResource",
      "ConnectorResource",
+     "ExportResource",
+     "ImportResource",
      "JobResource",
      "LaunchConfigurationTemplateResource",
      "ReplicationConfigurationTemplateResource",
@@ -69783,6 +69820,7 @@
      "db"
     ]
    },
+   "describedbmajorengineversions": {},
    "describedbparametergroups": {
     "Resources": [
      "pg"
@@ -85991,6 +86029,7 @@
    "getcalleridentity": {},
    "getfederationtoken": {
     "Resources": [
+     "federated-user",
      "user"
     ]
    },
@@ -86019,6 +86058,11 @@
    "context-provider": {
     "ARNFormats": [
      "arn:${Partition}:iam::aws:contextProvider/.*"
+    ]
+   },
+   "federated-user": {
+    "ARNFormats": [
+     "arn:${Partition}:sts::${Account}:federated-user/.*"
     ]
    },
    "role": {
@@ -88120,14 +88164,6 @@
    "listclaims": {},
    "listusersubscriptions": {},
    "updateclaim": {}
-  },
-  "Resources": {}
- },
- "uxc": {
-  "Actions": {
-   "deleteaccountcolor": {},
-   "getaccountcolor": {},
-   "putaccountcolor": {}
   },
   "Resources": {}
  },

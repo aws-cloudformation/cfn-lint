@@ -6,6 +6,9 @@
  ],
  "additionalProperties": false,
  "definitions": {
+  "AdditionalModelRequestFields": {
+   "type": "object"
+  },
   "AgentFlowNodeConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -19,6 +22,12 @@
     "AgentAliasArn"
    ],
    "type": "object"
+  },
+  "BedrockRerankingModelArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^(arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}::foundation-model/(.*))?$",
+   "type": "string"
   },
   "CollectorFlowNodeConfiguration": {
    "additionalProperties": false,
@@ -62,6 +71,29 @@
     }
    },
    "type": "object"
+  },
+  "FieldForReranking": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldName": {
+     "maxLength": 2000,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "FieldName"
+   ],
+   "type": "object"
+  },
+  "FieldsForReranking": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/FieldForReranking"
+   },
+   "maxItems": 100,
+   "minItems": 1,
+   "type": "array"
   },
   "FlowCondition": {
    "additionalProperties": false,
@@ -407,6 +439,45 @@
      ],
      "title": "InlineCode",
      "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Loop": {
+       "$ref": "#/definitions/LoopFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Loop"
+     ],
+     "title": "Loop",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "LoopInput": {
+       "$ref": "#/definitions/LoopInputFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "LoopInput"
+     ],
+     "title": "LoopInput",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "LoopController": {
+       "$ref": "#/definitions/LoopControllerFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "LoopController"
+     ],
+     "title": "LoopController",
+     "type": "object"
     }
    ]
   },
@@ -423,6 +494,9 @@
   "FlowNodeInput": {
    "additionalProperties": false,
    "properties": {
+    "Category": {
+     "$ref": "#/definitions/FlowNodeInputCategory"
+    },
     "Expression": {
      "maxLength": 64,
      "minLength": 1,
@@ -442,6 +516,14 @@
     "Type"
    ],
    "type": "object"
+  },
+  "FlowNodeInputCategory": {
+   "enum": [
+    "LoopCondition",
+    "ReturnValueToLoopStart",
+    "ExitLoop"
+   ],
+   "type": "string"
   },
   "FlowNodeOutput": {
    "additionalProperties": false,
@@ -474,7 +556,10 @@
     "Retrieval",
     "Iterator",
     "Collector",
-    "InlineCode"
+    "InlineCode",
+    "Loop",
+    "LoopInput",
+    "LoopController"
    ],
    "type": "string"
   },
@@ -552,6 +637,9 @@
     "GuardrailConfiguration": {
      "$ref": "#/definitions/GuardrailConfiguration"
     },
+    "InferenceConfiguration": {
+     "$ref": "#/definitions/PromptInferenceConfiguration"
+    },
     "KnowledgeBaseId": {
      "maxLength": 10,
      "pattern": "^[0-9a-zA-Z]+$",
@@ -562,12 +650,64 @@
      "minLength": 1,
      "pattern": "^(arn:aws(-[^:]{1,12})?:(bedrock|sagemaker):[a-z0-9-]{1,20}:([0-9]{12})?:([a-z-]+/)?)?([a-zA-Z0-9.-]{1,63}){0,2}(([:][a-z0-9-]{1,63}){0,2})?(/[a-z0-9]{1,12})?$",
      "type": "string"
+    },
+    "NumberOfResults": {
+     "maximum": 100,
+     "minimum": 1,
+     "type": "number"
+    },
+    "OrchestrationConfiguration": {
+     "$ref": "#/definitions/KnowledgeBaseOrchestrationConfiguration"
+    },
+    "PromptTemplate": {
+     "$ref": "#/definitions/KnowledgeBasePromptTemplate"
+    },
+    "RerankingConfiguration": {
+     "$ref": "#/definitions/VectorSearchRerankingConfiguration"
     }
    },
    "required": [
     "KnowledgeBaseId"
    ],
    "type": "object"
+  },
+  "KnowledgeBaseOrchestrationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdditionalModelRequestFields": {
+     "$ref": "#/definitions/AdditionalModelRequestFields"
+    },
+    "InferenceConfig": {
+     "$ref": "#/definitions/PromptInferenceConfiguration"
+    },
+    "PerformanceConfig": {
+     "$ref": "#/definitions/PerformanceConfiguration"
+    },
+    "PromptTemplate": {
+     "$ref": "#/definitions/KnowledgeBasePromptTemplate"
+    }
+   },
+   "title": "KnowledgeBaseOrchestrationConfiguration",
+   "type": "object"
+  },
+  "KnowledgeBasePromptTemplate": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "TextPromptTemplate": {
+       "maxLength": 100000,
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "required": [
+      "TextPromptTemplate"
+     ],
+     "title": "Text",
+     "type": "object"
+    }
+   ]
   },
   "LambdaFunctionFlowNodeConfiguration": {
    "additionalProperties": false,
@@ -603,9 +743,76 @@
    ],
    "type": "object"
   },
+  "LoopControllerFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ContinueCondition": {
+     "$ref": "#/definitions/FlowCondition"
+    },
+    "MaxIterations": {
+     "default": 10,
+     "maximum": 1000,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "ContinueCondition"
+   ],
+   "type": "object"
+  },
+  "LoopFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Definition": {
+     "$ref": "#/definitions/FlowDefinition"
+    }
+   },
+   "required": [
+    "Definition"
+   ],
+   "type": "object"
+  },
+  "LoopInputFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "MetadataConfigurationForReranking": {
+   "additionalProperties": false,
+   "properties": {
+    "SelectionMode": {
+     "$ref": "#/definitions/RerankingMetadataSelectionMode"
+    },
+    "SelectiveModeConfiguration": {
+     "$ref": "#/definitions/RerankingMetadataSelectiveModeConfiguration"
+    }
+   },
+   "required": [
+    "SelectionMode"
+   ],
+   "title": "MetadataConfigurationForReranking",
+   "type": "object"
+  },
   "OutputFlowNodeConfiguration": {
    "additionalProperties": false,
    "type": "object"
+  },
+  "PerformanceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Latency": {
+     "$ref": "#/definitions/PerformanceConfigurationLatency"
+    }
+   },
+   "title": "PerformanceConfiguration",
+   "type": "object"
+  },
+  "PerformanceConfigurationLatency": {
+   "enum": [
+    "standard",
+    "optimized"
+   ],
+   "type": "string"
   },
   "PromptFlowNodeConfiguration": {
    "additionalProperties": false,
@@ -771,6 +978,43 @@
    ],
    "type": "string"
   },
+  "RerankingMetadataSelectionMode": {
+   "enum": [
+    "SELECTIVE",
+    "ALL"
+   ],
+   "type": "string"
+  },
+  "RerankingMetadataSelectiveModeConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "FieldsToInclude": {
+       "$ref": "#/definitions/FieldsForReranking"
+      }
+     },
+     "required": [
+      "FieldsToInclude"
+     ],
+     "title": "FieldsToInclude",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "FieldsToExclude": {
+       "$ref": "#/definitions/FieldsForReranking"
+      }
+     },
+     "required": [
+      "FieldsToExclude"
+     ],
+     "title": "FieldsToExclude",
+     "type": "object"
+    }
+   ]
+  },
   "RetrievalFlowNodeConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -916,6 +1160,65 @@
     "Text"
    ],
    "type": "object"
+  },
+  "VectorSearchBedrockRerankingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MetadataConfiguration": {
+     "$ref": "#/definitions/MetadataConfigurationForReranking"
+    },
+    "ModelConfiguration": {
+     "$ref": "#/definitions/VectorSearchBedrockRerankingModelConfiguration"
+    },
+    "NumberOfRerankedResults": {
+     "maximum": 100,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "ModelConfiguration"
+   ],
+   "title": "VectorSearchBedrockRerankingConfiguration",
+   "type": "object"
+  },
+  "VectorSearchBedrockRerankingModelConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdditionalModelRequestFields": {
+     "$ref": "#/definitions/AdditionalModelRequestFields"
+    },
+    "ModelArn": {
+     "$ref": "#/definitions/BedrockRerankingModelArn"
+    }
+   },
+   "required": [
+    "ModelArn"
+   ],
+   "title": "VectorSearchBedrockRerankingModelConfiguration",
+   "type": "object"
+  },
+  "VectorSearchRerankingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BedrockRerankingConfiguration": {
+     "$ref": "#/definitions/VectorSearchBedrockRerankingConfiguration"
+    },
+    "Type": {
+     "$ref": "#/definitions/VectorSearchRerankingConfigurationType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "title": "VectorSearchRerankingConfiguration",
+   "type": "object"
+  },
+  "VectorSearchRerankingConfigurationType": {
+   "enum": [
+    "BEDROCK_RERANKING_MODEL"
+   ],
+   "type": "string"
   }
  },
  "primaryIdentifier": [
