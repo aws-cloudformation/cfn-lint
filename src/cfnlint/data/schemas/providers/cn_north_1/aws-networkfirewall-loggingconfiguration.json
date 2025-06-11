@@ -1,0 +1,97 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FirewallName",
+  "/properties/FirewallArn"
+ ],
+ "definitions": {
+  "LogDestinationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "LogDestination": {
+     "additionalProperties": false,
+     "minProperties": 1,
+     "patternProperties": {
+      "^[0-9A-Za-z.\\-_@\\/]+$": {
+       "maxLength": 1024,
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "LogDestinationType": {
+     "enum": [
+      "S3",
+      "CloudWatchLogs",
+      "KinesisDataFirehose"
+     ],
+     "type": "string"
+    },
+    "LogType": {
+     "enum": [
+      "ALERT",
+      "FLOW",
+      "TLS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "LogType",
+    "LogDestinationType",
+    "LogDestination"
+   ],
+   "type": "object"
+  },
+  "LoggingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogDestinationConfigs": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/LogDestinationConfig"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "LogDestinationConfigs"
+   ],
+   "type": "object"
+  },
+  "ResourceArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:aws.*$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FirewallArn"
+ ],
+ "properties": {
+  "FirewallArn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "FirewallName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "LoggingConfiguration": {
+   "$ref": "#/definitions/LoggingConfiguration"
+  }
+ },
+ "required": [
+  "FirewallArn",
+  "LoggingConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkfirewall.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::NetworkFirewall::LoggingConfiguration"
+}

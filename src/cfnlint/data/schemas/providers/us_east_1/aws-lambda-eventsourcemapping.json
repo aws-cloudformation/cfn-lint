@@ -4,9 +4,7 @@
   "/properties/EventSourceArn",
   "/properties/StartingPosition",
   "/properties/StartingPositionTimestamp",
-  "/properties/SelfManagedEventSource",
-  "/properties/AmazonManagedKafkaEventSourceConfig",
-  "/properties/SelfManagedKafkaEventSourceConfig"
+  "/properties/SelfManagedEventSource"
  ],
  "definitions": {
   "AmazonManagedKafkaEventSourceConfig": {
@@ -14,6 +12,9 @@
    "properties": {
     "ConsumerGroupId": {
      "$ref": "#/definitions/ConsumerGroupId"
+    },
+    "SchemaRegistryConfig": {
+     "$ref": "#/definitions/SchemaRegistryConfig"
     }
    },
    "type": "object"
@@ -163,6 +164,75 @@
    },
    "type": "object"
   },
+  "SchemaRegistryAccessConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "enum": [
+      "BASIC_AUTH",
+      "CLIENT_CERTIFICATE_TLS_AUTH",
+      "SERVER_ROOT_CA_CERTIFICATE"
+     ],
+     "type": "string"
+    },
+    "URI": {
+     "maxLength": 10000,
+     "minLength": 1,
+     "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:([a-z]{2}(-gov)?(-iso([a-z])?)?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SchemaRegistryConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessConfigs": {
+     "items": {
+      "$ref": "#/definitions/SchemaRegistryAccessConfig"
+     },
+     "maxItems": 2,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "EventRecordFormat": {
+     "enum": [
+      "JSON",
+      "SOURCE"
+     ],
+     "type": "string"
+    },
+    "SchemaRegistryURI": {
+     "maxLength": 10000,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9-/*:_+=.@-]*",
+     "type": "string"
+    },
+    "SchemaValidationConfigs": {
+     "items": {
+      "$ref": "#/definitions/SchemaValidationConfig"
+     },
+     "maxItems": 2,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "SchemaValidationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Attribute": {
+     "enum": [
+      "KEY",
+      "VALUE"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "SelfManagedEventSource": {
    "additionalProperties": false,
    "properties": {
@@ -177,6 +247,9 @@
    "properties": {
     "ConsumerGroupId": {
      "$ref": "#/definitions/ConsumerGroupId"
+    },
+    "SchemaRegistryConfig": {
+     "$ref": "#/definitions/SchemaRegistryConfig"
     }
    },
    "type": "object"
@@ -387,6 +460,7 @@
   }
  },
  "propertyTransform": {
+  "/properties/FunctionName": "$split(FunctionName, \":\")[-1] $OR FunctionName $OR $join([\"((arn:.*:lambda:.*:[0-9]{12}:function)|([0-9]{12}:function)):\", $split(FunctionName, \":\")[-1]])",
   "/properties/StartingPositionTimestamp": "StartingPositionTimestamp * 1000"
  },
  "readOnlyProperties": [

@@ -1,0 +1,84 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterName",
+  "/properties/Namespace",
+  "/properties/ServiceAccount"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AssociationArn"
+ ],
+ "properties": {
+  "AssociationArn": {
+   "type": "string"
+  },
+  "AssociationId": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "ClusterName": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "Namespace": {
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "type": "string"
+  },
+  "ServiceAccount": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssociationArn",
+  "/properties/AssociationId"
+ ],
+ "replacementStrategy": "create_then_delete",
+ "required": [
+  "ClusterName",
+  "RoleArn",
+  "Namespace",
+  "ServiceAccount"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-eks.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EKS::PodIdentityAssociation"
+}

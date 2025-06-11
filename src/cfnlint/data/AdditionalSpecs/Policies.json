@@ -6182,12 +6182,14 @@
    },
    "batchcreatedelegationbyassessment": {
     "Resources": [
-     "assessment"
+     "assessment",
+     "assessmentControlSet"
     ]
    },
    "batchdeletedelegationbyassessment": {
     "Resources": [
-     "assessment"
+     "assessment",
+     "assessmentControlSet"
     ]
    },
    "batchdisassociateassessmentreportevidence": {
@@ -6321,12 +6323,14 @@
    "tagresource": {
     "Resources": [
      "assessment",
+     "assessmentFramework",
      "control"
     ]
    },
    "untagresource": {
     "Resources": [
      "assessment",
+     "assessmentFramework",
      "control"
     ]
    },
@@ -6350,7 +6354,11 @@
      "assessmentFramework"
     ]
    },
-   "updateassessmentframeworkshare": {},
+   "updateassessmentframeworkshare": {
+    "Resources": [
+     "assessmentFramework"
+    ]
+   },
    "updateassessmentstatus": {
     "Resources": [
      "assessment"
@@ -6368,6 +6376,9 @@
    "assessment": {
     "ARNFormats": [
      "arn:${Partition}:auditmanager:${Region}:${Account}:assessment/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "assessmentcontrolset": {
@@ -6378,6 +6389,9 @@
    "assessmentframework": {
     "ARNFormats": [
      "arn:${Partition}:auditmanager:${Region}:${Account}:assessmentFramework/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "control": {
@@ -29134,6 +29148,11 @@
      "verified-access-instance"
     ]
    },
+   "getactivevpntunnelstatus": {
+    "Resources": [
+     "vpn-connection"
+    ]
+   },
    "getallowedimagessettings": {},
    "getassociatedenclavecertificateiamroles": {
     "Resources": [
@@ -35147,6 +35166,11 @@
      "SchemaMapping"
     ]
    },
+   "generatematchid": {
+    "Resources": [
+     "MatchingWorkflow"
+    ]
+   },
    "getidmappingjob": {
     "Resources": [
      "IdMappingWorkflow"
@@ -35201,11 +35225,7 @@
     ]
    },
    "listmatchingworkflows": {},
-   "listproviderservices": {
-    "Resources": [
-     "ProviderService"
-    ]
-   },
+   "listproviderservices": {},
    "listschemamappings": {},
    "listtagsforresource": {},
    "putpolicy": {},
@@ -36258,6 +36278,67 @@
    "segment": {
     "ARNFormats": [
      "arn:${Partition}:evidently:${Region}:${Account}:segment/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   }
+  }
+ },
+ "evs": {
+  "Actions": {
+   "createenvironment": {},
+   "createenvironmenthost": {
+    "Resources": [
+     "environment"
+    ]
+   },
+   "deleteenvironment": {
+    "Resources": [
+     "environment"
+    ]
+   },
+   "deleteenvironmenthost": {
+    "Resources": [
+     "environment"
+    ]
+   },
+   "getenvironment": {
+    "Resources": [
+     "environment"
+    ]
+   },
+   "listenvironmenthosts": {
+    "Resources": [
+     "environment"
+    ]
+   },
+   "listenvironments": {},
+   "listenvironmentvlans": {
+    "Resources": [
+     "environment"
+    ]
+   },
+   "listtagsforresource": {
+    "Resources": [
+     "environment"
+    ]
+   },
+   "tagresource": {
+    "Resources": [
+     "environment"
+    ]
+   },
+   "untagresource": {
+    "Resources": [
+     "environment"
+    ]
+   }
+  },
+  "Resources": {
+   "environment": {
+    "ARNFormats": [
+     "arn:${Partition}:evs:${Region}:${Account}:environment/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -49606,6 +49687,11 @@
      "Stage"
     ]
    },
+   "listparticipantreplicas": {
+    "Resources": [
+     "Stage"
+    ]
+   },
    "listparticipants": {
     "Resources": [
      "Stage"
@@ -49678,6 +49764,11 @@
      "Storage-Configuration"
     ]
    },
+   "startparticipantreplication": {
+    "Resources": [
+     "Stage"
+    ]
+   },
    "startviewersessionrevocation": {
     "Resources": [
      "Channel"
@@ -49686,6 +49777,11 @@
    "stopcomposition": {
     "Resources": [
      "Composition"
+    ]
+   },
+   "stopparticipantreplication": {
+    "Resources": [
+     "Stage"
     ]
    },
    "stopstream": {
@@ -58849,6 +58945,8 @@
     "Resources": [
      "ApplicationResource",
      "ConnectorResource",
+     "ExportResource",
+     "ImportResource",
      "JobResource",
      "LaunchConfigurationTemplateResource",
      "ReplicationConfigurationTemplateResource",
@@ -69783,6 +69881,7 @@
      "db"
     ]
    },
+   "describedbmajorengineversions": {},
    "describedbparametergroups": {
     "Resources": [
      "pg"
@@ -79720,17 +79819,26 @@
    },
    "batchupdatefindings": {
     "Resources": [
-     "hub"
+     "hub",
+     "hubv2"
     ]
    },
    "batchupdatestandardscontrolassociations": {},
+   "connectorregistrationsv2": {
+    "Resources": [
+     "connectorv2"
+    ]
+   },
    "createactiontarget": {
     "Resources": [
      "hub"
     ]
    },
+   "createaggregatorv2": {},
    "createautomationrule": {},
+   "createautomationrulev2": {},
    "createconfigurationpolicy": {},
+   "createconnectorv2": {},
    "createfindingaggregator": {},
    "createinsight": {
     "Resources": [
@@ -79740,6 +79848,12 @@
    "createmembers": {
     "Resources": [
      "hub"
+    ]
+   },
+   "createticketv2": {
+    "Resources": [
+     "hub",
+     "hubv2"
     ]
    },
    "declineinvitations": {
@@ -79752,9 +79866,24 @@
      "hub"
     ]
    },
+   "deleteaggregatorv2": {
+    "Resources": [
+     "aggregatorv2"
+    ]
+   },
+   "deleteautomationrulev2": {
+    "Resources": [
+     "automation-rulev2"
+    ]
+   },
    "deleteconfigurationpolicy": {
     "Resources": [
      "configuration-policy"
+    ]
+   },
+   "deleteconnectorv2": {
+    "Resources": [
+     "connectorv2"
     ]
    },
    "deletefindingaggregator": {
@@ -79797,6 +79926,12 @@
      "hub"
     ]
    },
+   "describeproductsv2": {
+    "Resources": [
+     "hubv2"
+    ]
+   },
+   "describesecurityhubv2": {},
    "describestandards": {
     "Resources": [
      "hub"
@@ -79822,6 +79957,7 @@
      "hub"
     ]
    },
+   "disablesecurityhubv2": {},
    "disassociatefromadministratoraccount": {
     "Resources": [
      "hub"
@@ -79852,14 +79988,26 @@
      "hub"
     ]
    },
+   "enablesecurityhubv2": {},
    "getadhocinsightresults": {
     "Resources": [
-     "hub"
+     "hub",
+     "hubv2"
     ]
    },
    "getadministratoraccount": {
     "Resources": [
      "hub"
+    ]
+   },
+   "getaggregatorv2": {
+    "Resources": [
+     "aggregatorv2"
+    ]
+   },
+   "getautomationrulev2": {
+    "Resources": [
+     "automation-rulev2"
     ]
    },
    "getconfigurationpolicy": {
@@ -79868,6 +80016,11 @@
     ]
    },
    "getconfigurationpolicyassociation": {},
+   "getconnectorv2": {
+    "Resources": [
+     "connectorv2"
+    ]
+   },
    "getcontrolfindingsummary": {
     "Resources": [
      "hub"
@@ -79890,7 +80043,8 @@
    },
    "getfindings": {
     "Resources": [
-     "hub"
+     "hub",
+     "hubv2"
     ]
    },
    "getfreetrialenddate": {
@@ -79933,6 +80087,16 @@
      "hub"
     ]
    },
+   "getresourcestatisticsv2": {
+    "Resources": [
+     "hubv2"
+    ]
+   },
+   "getresourcesv2": {
+    "Resources": [
+     "hubv2"
+    ]
+   },
    "getsecuritycontroldefinition": {},
    "getusage": {
     "Resources": [
@@ -79944,9 +80108,12 @@
      "hub"
     ]
    },
+   "listaggregatorv2s": {},
    "listautomationrules": {},
+   "listautomationrulesv2": {},
    "listconfigurationpolicies": {},
    "listconfigurationpolicyassociations": {},
+   "listconnectorsv2": {},
    "listcontrolevaluationsummaries": {
     "Resources": [
      "hub"
@@ -80005,15 +80172,21 @@
    "tagresource": {
     "Resources": [
      "automation-rule",
+     "automation-rulev2",
      "configuration-policy",
-     "hub"
+     "connectorv2",
+     "hub",
+     "hubv2"
     ]
    },
    "untagresource": {
     "Resources": [
      "automation-rule",
+     "automation-rulev2",
      "configuration-policy",
-     "hub"
+     "connectorv2",
+     "hub",
+     "hubv2"
     ]
    },
    "updateactiontarget": {
@@ -80021,9 +80194,24 @@
      "hub"
     ]
    },
+   "updateaggregatorv2": {
+    "Resources": [
+     "aggregatorv2"
+    ]
+   },
+   "updateautomationrulev2": {
+    "Resources": [
+     "automation-rulev2"
+    ]
+   },
    "updateconfigurationpolicy": {
     "Resources": [
      "configuration-policy"
+    ]
+   },
+   "updateconnectorv2": {
+    "Resources": [
+     "connectorv2"
     ]
    },
    "updatefindingaggregator": {
@@ -80059,14 +80247,35 @@
    }
   },
   "Resources": {
+   "aggregatorv2": {
+    "ARNFormats": [
+     "arn:${Partition}:securityhub:${Region}:${Account}:aggregatorv2/.*"
+    ]
+   },
    "automation-rule": {
     "ARNFormats": [
      "arn:${Partition}:securityhub:${Region}:${Account}:automation-rule/.*"
     ]
    },
+   "automation-rulev2": {
+    "ARNFormats": [
+     "arn:${Partition}:securityhub:${Region}:${Account}:automation-rulev2/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "configuration-policy": {
     "ARNFormats": [
      "arn:${Partition}:securityhub:${Region}:${Account}:configuration-policy/.*"
+    ]
+   },
+   "connectorv2": {
+    "ARNFormats": [
+     "arn:${Partition}:securityhub:${Region}:${Account}:connectorv2/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "finding-aggregator": {
@@ -80077,6 +80286,14 @@
    "hub": {
     "ARNFormats": [
      "arn:${Partition}:securityhub:${Region}:${Account}:hub/default"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "hubv2": {
+    "ARNFormats": [
+     "arn:${Partition}:securityhub:${Region}:${Account}:hubv2/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -85991,6 +86208,7 @@
    "getcalleridentity": {},
    "getfederationtoken": {
     "Resources": [
+     "federated-user",
      "user"
     ]
    },
@@ -86019,6 +86237,11 @@
    "context-provider": {
     "ARNFormats": [
      "arn:${Partition}:iam::aws:contextProvider/.*"
+    ]
+   },
+   "federated-user": {
+    "ARNFormats": [
+     "arn:${Partition}:sts::${Account}:federated-user/.*"
     ]
    },
    "role": {
@@ -88120,14 +88343,6 @@
    "listclaims": {},
    "listusersubscriptions": {},
    "updateclaim": {}
-  },
-  "Resources": {}
- },
- "uxc": {
-  "Actions": {
-   "deleteaccountcolor": {},
-   "getaccountcolor": {},
-   "putaccountcolor": {}
   },
   "Resources": {}
  },
@@ -92513,6 +92728,73 @@
    "workspacespoolid": {
     "ARNFormats": [
      "arn:${Partition}:workspaces:${Region}:${Account}:workspacespool/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   }
+  }
+ },
+ "workspaces-instances": {
+  "Actions": {
+   "associatevolume": {
+    "Resources": [
+     "WorkspaceInstanceId"
+    ]
+   },
+   "createvolume": {},
+   "createworkspaceinstance": {},
+   "deletevolume": {
+    "Resources": [
+     "VolumeId"
+    ]
+   },
+   "deleteworkspaceinstance": {
+    "Resources": [
+     "WorkspaceInstanceId"
+    ]
+   },
+   "disassociatevolume": {
+    "Resources": [
+     "WorkspaceInstanceId"
+    ]
+   },
+   "getworkspaceinstance": {
+    "Resources": [
+     "WorkspaceInstanceId"
+    ]
+   },
+   "listinstancetypes": {},
+   "listregions": {},
+   "listtagsforresource": {
+    "Resources": [
+     "WorkspaceInstanceId"
+    ]
+   },
+   "listworkspaceinstances": {},
+   "tagresource": {
+    "Resources": [
+     "WorkspaceInstanceId"
+    ]
+   },
+   "untagresource": {
+    "Resources": [
+     "WorkspaceInstanceId"
+    ]
+   }
+  },
+  "Resources": {
+   "volumeid": {
+    "ARNFormats": [
+     "arn:${Partition}:ec2:${Region}:${Account}:volume/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "workspaceinstanceid": {
+    "ARNFormats": [
+     "arn:${Partition}:workspaces-instances:${Region}:${Account}:workspaceinstance/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"

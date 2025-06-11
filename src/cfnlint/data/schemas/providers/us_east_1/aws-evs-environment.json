@@ -1,0 +1,432 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EnvironmentName",
+  "/properties/VpcId",
+  "/properties/ServiceAccessSubnetId",
+  "/properties/VcfVersion",
+  "/properties/TermsAccepted",
+  "/properties/LicenseInfo",
+  "/properties/ConnectivityInfo",
+  "/properties/VcfHostnames",
+  "/properties/SiteId",
+  "/properties/KmsKeyId",
+  "/properties/ServiceAccessSecurityGroups"
+ ],
+ "definitions": {
+  "Check": {
+   "properties": {
+    "ImpairedSince": {
+     "type": "string"
+    },
+    "Result": {
+     "$ref": "#/definitions/CheckResult"
+    },
+    "Type": {
+     "enum": [
+      "KEY_REUSE",
+      "KEY_COVERAGE",
+      "REACHABILITY",
+      "VCF_VERSION",
+      "HOST_COUNT"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Result"
+   ],
+   "type": "object"
+  },
+  "CheckResult": {
+   "enum": [
+    "PASSED",
+    "FAILED",
+    "UNKNOWN"
+   ],
+   "type": "string"
+  },
+  "EnvironmentState": {
+   "enum": [
+    "CREATING",
+    "CREATED",
+    "DELETING",
+    "DELETED",
+    "CREATE_FAILED"
+   ],
+   "type": "string"
+  },
+  "HostInfoForCreate": {
+   "dependencies": {
+    "PlacementGroupId": {
+     "oneOf": [
+      {
+       "required": [
+        "DedicatedHostId"
+       ]
+      },
+      {}
+     ]
+    }
+   },
+   "properties": {
+    "DedicatedHostId": {
+     "maxLength": 25,
+     "minLength": 1,
+     "pattern": "^h-[a-f0-9]{8}([a-f0-9]{9})?$",
+     "type": "string"
+    },
+    "HostName": {
+     "$ref": "#/definitions/HostName"
+    },
+    "InstanceType": {
+     "enum": [
+      "i4i.metal"
+     ],
+     "type": "string"
+    },
+    "KeyName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "PlacementGroupId": {
+     "maxLength": 25,
+     "minLength": 1,
+     "pattern": "^pg-[a-f0-9]{8}([a-f0-9]{9})?$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "HostName",
+    "KeyName",
+    "InstanceType"
+   ],
+   "type": "object"
+  },
+  "HostName": {
+   "pattern": "^([a-zA-Z0-9\\-]*)$",
+   "type": "string"
+  },
+  "InitialVlanInfo": {
+   "properties": {
+    "Cidr": {
+     "pattern": "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/(3[0-2]|[1-2][0-9]|[0-9])$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Cidr"
+   ],
+   "type": "object"
+  },
+  "RouteServerPeering": {
+   "maxLength": 21,
+   "minLength": 3,
+   "type": "string"
+  },
+  "Secret": {
+   "properties": {
+    "SecretArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SecurityGroupId": {
+   "maxLength": 25,
+   "minLength": 3,
+   "pattern": "^sg-[0-9a-zA-Z]*$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Timestamp": {
+   "type": "string"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/Checks/*/ImpairedSince",
+  "/properties/Checks/*/Result",
+  "/properties/Checks/*/Type",
+  "/properties/Credentials/*/SecretArn"
+ ],
+ "primaryIdentifier": [
+  "/properties/EnvironmentId"
+ ],
+ "properties": {
+  "Checks": {
+   "items": {
+    "$ref": "#/definitions/Check"
+   },
+   "type": "array"
+  },
+  "ConnectivityInfo": {
+   "properties": {
+    "PrivateRouteServerPeerings": {
+     "items": {
+      "$ref": "#/definitions/RouteServerPeering"
+     },
+     "maxItems": 2,
+     "minItems": 2,
+     "type": "array"
+    }
+   },
+   "required": [
+    "PrivateRouteServerPeerings"
+   ],
+   "type": "object"
+  },
+  "CreatedAt": {
+   "$ref": "#/definitions/Timestamp"
+  },
+  "Credentials": {
+   "items": {
+    "$ref": "#/definitions/Secret"
+   },
+   "type": "array"
+  },
+  "EnvironmentArn": {
+   "maxLength": 1011,
+   "minLength": 1,
+   "pattern": "^arn:aws:evs:[a-z]{2}-[a-z]+-[0-9]:[0-9]{12}:environment/[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "EnvironmentId": {
+   "pattern": "^(env-[a-zA-Z0-9]{10})$",
+   "type": "string"
+  },
+  "EnvironmentName": {
+   "pattern": "^[a-zA-Z0-9_-]{1,100}$",
+   "type": "string"
+  },
+  "EnvironmentState": {
+   "$ref": "#/definitions/EnvironmentState"
+  },
+  "Hosts": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/HostInfoForCreate"
+   },
+   "maxItems": 4,
+   "minItems": 4,
+   "type": "array"
+  },
+  "InitialVlans": {
+   "properties": {
+    "EdgeVTep": {
+     "$ref": "#/definitions/InitialVlanInfo"
+    },
+    "ExpansionVlan1": {
+     "$ref": "#/definitions/InitialVlanInfo"
+    },
+    "ExpansionVlan2": {
+     "$ref": "#/definitions/InitialVlanInfo"
+    },
+    "Hcx": {
+     "$ref": "#/definitions/InitialVlanInfo"
+    },
+    "NsxUpLink": {
+     "$ref": "#/definitions/InitialVlanInfo"
+    },
+    "VMotion": {
+     "$ref": "#/definitions/InitialVlanInfo"
+    },
+    "VSan": {
+     "$ref": "#/definitions/InitialVlanInfo"
+    },
+    "VTep": {
+     "$ref": "#/definitions/InitialVlanInfo"
+    },
+    "VmManagement": {
+     "$ref": "#/definitions/InitialVlanInfo"
+    },
+    "VmkManagement": {
+     "$ref": "#/definitions/InitialVlanInfo"
+    }
+   },
+   "required": [
+    "VmkManagement",
+    "VmManagement",
+    "VMotion",
+    "VSan",
+    "VTep",
+    "EdgeVTep",
+    "NsxUpLink",
+    "Hcx",
+    "ExpansionVlan1",
+    "ExpansionVlan2"
+   ],
+   "type": "object"
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "LicenseInfo": {
+   "additionalProperties": false,
+   "maxItems": 1,
+   "minItems": 1,
+   "properties": {
+    "SolutionKey": {
+     "pattern": "^[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}$",
+     "type": "string"
+    },
+    "VsanKey": {
+     "pattern": "^[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SolutionKey",
+    "VsanKey"
+   ],
+   "type": "object"
+  },
+  "ModifiedAt": {
+   "$ref": "#/definitions/Timestamp"
+  },
+  "ServiceAccessSecurityGroups": {
+   "properties": {
+    "SecurityGroups": {
+     "items": {
+      "$ref": "#/definitions/SecurityGroupId"
+     },
+     "maxItems": 2,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ServiceAccessSubnetId": {
+   "maxLength": 24,
+   "minLength": 15,
+   "pattern": "^subnet-[a-f0-9]{8}([a-f0-9]{9})?$",
+   "type": "string"
+  },
+  "SiteId": {
+   "type": "string"
+  },
+  "StateDetails": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TermsAccepted": {
+   "type": "boolean"
+  },
+  "VcfHostnames": {
+   "properties": {
+    "CloudBuilder": {
+     "$ref": "#/definitions/HostName"
+    },
+    "Nsx": {
+     "$ref": "#/definitions/HostName"
+    },
+    "NsxEdge1": {
+     "$ref": "#/definitions/HostName"
+    },
+    "NsxEdge2": {
+     "$ref": "#/definitions/HostName"
+    },
+    "NsxManager1": {
+     "$ref": "#/definitions/HostName"
+    },
+    "NsxManager2": {
+     "$ref": "#/definitions/HostName"
+    },
+    "NsxManager3": {
+     "$ref": "#/definitions/HostName"
+    },
+    "SddcManager": {
+     "$ref": "#/definitions/HostName"
+    },
+    "VCenter": {
+     "$ref": "#/definitions/HostName"
+    }
+   },
+   "required": [
+    "VCenter",
+    "Nsx",
+    "NsxManager1",
+    "NsxManager2",
+    "NsxManager3",
+    "NsxEdge1",
+    "NsxEdge2",
+    "SddcManager",
+    "CloudBuilder"
+   ],
+   "type": "object"
+  },
+  "VcfVersion": {
+   "enum": [
+    "VCF-5.2.1"
+   ],
+   "type": "string"
+  },
+  "VpcId": {
+   "maxLength": 21,
+   "minLength": 12,
+   "pattern": "^vpc-[a-f0-9]{8}([a-f0-9]{9})?$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/EnvironmentId",
+  "/properties/Checks",
+  "/properties/EnvironmentArn",
+  "/properties/Credentials",
+  "/properties/EnvironmentState",
+  "/properties/StateDetails",
+  "/properties/CreatedAt",
+  "/properties/ModifiedAt"
+ ],
+ "required": [
+  "VpcId",
+  "ServiceAccessSubnetId",
+  "VcfVersion",
+  "TermsAccepted",
+  "LicenseInfo",
+  "ConnectivityInfo",
+  "VcfHostnames",
+  "SiteId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EVS::Environment",
+ "writeOnlyProperties": [
+  "/properties/Hosts",
+  "/properties/InitialVlans"
+ ]
+}

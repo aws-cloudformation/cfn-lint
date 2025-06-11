@@ -1,0 +1,475 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/KmsKey",
+  "/properties/NetworkConfiguration/SubnetIds",
+  "/properties/EndpointManagement"
+ ],
+ "definitions": {
+  "AirflowArn": {
+   "maxLength": 1224,
+   "minLength": 1,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b)(-[a-z]+)?:airflow:[a-z0-9\\-]+:\\d{12}:environment/\\w+",
+   "type": "string"
+  },
+  "AirflowVersion": {
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "^[0-9a-z.]+$",
+   "type": "string"
+  },
+  "CeleryExecutorQueue": {
+   "maxLength": 1224,
+   "type": "string"
+  },
+  "CloudWatchLogGroupArn": {
+   "maxLength": 1224,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b)(-[a-z]+)?:logs:[a-z0-9\\-]+:\\d{12}:log-group:\\w+",
+   "type": "string"
+  },
+  "ConfigKey": {
+   "maxLength": 64,
+   "pattern": "^[a-z]+([a-z._]*[a-z]+)?$",
+   "type": "string"
+  },
+  "ConfigValue": {
+   "maxLength": 256,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "DatabaseVpcEndpointService": {
+   "maxLength": 1224,
+   "type": "string"
+  },
+  "EndpointManagement": {
+   "enum": [
+    "CUSTOMER",
+    "SERVICE"
+   ],
+   "type": "string"
+  },
+  "EnvironmentArn": {
+   "maxLength": 1224,
+   "minLength": 1,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b)(-[a-z]+)?:airflow:[a-z0-9\\-]+:\\d{12}:environment/\\w+",
+   "type": "string"
+  },
+  "EnvironmentClass": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "EnvironmentName": {
+   "maxLength": 80,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z][0-9a-zA-Z\\-_]*$",
+   "type": "string"
+  },
+  "EnvironmentStatus": {
+   "enum": [
+    "CREATING",
+    "CREATE_FAILED",
+    "AVAILABLE",
+    "UPDATING",
+    "DELETING",
+    "DELETED",
+    "UPDATE_FAILED",
+    "UNAVAILABLE",
+    "PENDING"
+   ],
+   "type": "string"
+  },
+  "ErrorCode": {
+   "type": "string"
+  },
+  "ErrorMessage": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^.+$",
+   "type": "string"
+  },
+  "ExecutionRoleArn": {
+   "maxLength": 1224,
+   "minLength": 1,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b)(-[a-z]+)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "KmsKey": {
+   "maxLength": 1224,
+   "minLength": 1,
+   "pattern": "^(((arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b)(-[a-z]+)?:kms:[a-z]{2}-[a-z]+-\\d:\\d+:)?key\\/)?[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}|(arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):kms:[a-z]{2}-[a-z]+-\\d:\\d+:)?alias/.+)$",
+   "type": "string"
+  },
+  "LastUpdate": {
+   "additionalProperties": false,
+   "properties": {
+    "CreatedAt": {
+     "$ref": "#/definitions/UpdateCreatedAt"
+    },
+    "Error": {
+     "$ref": "#/definitions/UpdateError"
+    },
+    "Status": {
+     "$ref": "#/definitions/UpdateStatus"
+    },
+    "WorkerReplacementStrategy": {
+     "$ref": "#/definitions/WorkerReplacementStrategy"
+    }
+   },
+   "type": "object"
+  },
+  "LoggingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DagProcessingLogs": {
+     "$ref": "#/definitions/ModuleLoggingConfiguration"
+    },
+    "SchedulerLogs": {
+     "$ref": "#/definitions/ModuleLoggingConfiguration"
+    },
+    "TaskLogs": {
+     "$ref": "#/definitions/ModuleLoggingConfiguration"
+    },
+    "WebserverLogs": {
+     "$ref": "#/definitions/ModuleLoggingConfiguration"
+    },
+    "WorkerLogs": {
+     "$ref": "#/definitions/ModuleLoggingConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "LoggingConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "DagProcessingLogs": {
+     "$ref": "#/definitions/ModuleLoggingConfigurationInput"
+    },
+    "SchedulerLogs": {
+     "$ref": "#/definitions/ModuleLoggingConfigurationInput"
+    },
+    "TaskLogs": {
+     "$ref": "#/definitions/ModuleLoggingConfigurationInput"
+    },
+    "WebserverLogs": {
+     "$ref": "#/definitions/ModuleLoggingConfigurationInput"
+    },
+    "WorkerLogs": {
+     "$ref": "#/definitions/ModuleLoggingConfigurationInput"
+    }
+   },
+   "type": "object"
+  },
+  "LoggingEnabled": {
+   "type": "boolean"
+  },
+  "LoggingLevel": {
+   "enum": [
+    "CRITICAL",
+    "ERROR",
+    "WARNING",
+    "INFO",
+    "DEBUG"
+   ],
+   "type": "string"
+  },
+  "MaxWebservers": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "MaxWorkers": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "MinWebservers": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "MinWorkers": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ModuleLoggingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogGroupArn": {
+     "$ref": "#/definitions/CloudWatchLogGroupArn"
+    },
+    "Enabled": {
+     "$ref": "#/definitions/LoggingEnabled"
+    },
+    "LogLevel": {
+     "$ref": "#/definitions/LoggingLevel"
+    }
+   },
+   "type": "object"
+  },
+  "ModuleLoggingConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "$ref": "#/definitions/LoggingEnabled"
+    },
+    "LogLevel": {
+     "$ref": "#/definitions/LoggingLevel"
+    }
+   },
+   "type": "object"
+  },
+  "NetworkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/SecurityGroupId"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    },
+    "SubnetIds": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/SubnetId"
+     },
+     "maxItems": 2,
+     "minItems": 2,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "RelativePath": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "S3BucketArn": {
+   "maxLength": 1224,
+   "minLength": 1,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b)(-[a-z]+)?:s3:::[a-z0-9.\\-]+$",
+   "type": "string"
+  },
+  "S3ObjectVersion": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Schedulers": {
+   "maximum": 5,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "SecurityGroupId": {
+   "format": "AWS::EC2::SecurityGroup.Id",
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^sg-[a-zA-Z0-9\\-._]+$",
+   "type": "string"
+  },
+  "ServiceRoleArn": {
+   "maxLength": 1224,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b)(-[a-z]+)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "SubnetId": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^subnet-[a-zA-Z0-9\\-._]+$",
+   "type": "string"
+  },
+  "UpdateCreatedAt": {
+   "type": "string"
+  },
+  "UpdateError": {
+   "additionalProperties": false,
+   "properties": {
+    "ErrorCode": {
+     "$ref": "#/definitions/ErrorCode"
+    },
+    "ErrorMessage": {
+     "$ref": "#/definitions/ErrorMessage"
+    }
+   },
+   "type": "object"
+  },
+  "UpdateStatus": {
+   "enum": [
+    "SUCCESS",
+    "PENDING",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "WebserverAccessMode": {
+   "enum": [
+    "PRIVATE_ONLY",
+    "PUBLIC_ONLY"
+   ],
+   "type": "string"
+  },
+  "WebserverUrl": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^https://.+$",
+   "type": "string"
+  },
+  "WebserverVpcEndpointService": {
+   "maxLength": 1224,
+   "type": "string"
+  },
+  "WeeklyMaintenanceWindowStart": {
+   "maxLength": 9,
+   "minLength": 1,
+   "pattern": "(MON|TUE|WED|THU|FRI|SAT|SUN):([01]\\d|2[0-3]):(00|30)",
+   "type": "string"
+  },
+  "WorkerReplacementStrategy": {
+   "enum": [
+    "FORCED",
+    "GRACEFUL"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "AirflowConfigurationOptions": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "AirflowVersion": {
+   "$ref": "#/definitions/AirflowVersion"
+  },
+  "Arn": {
+   "$ref": "#/definitions/EnvironmentArn"
+  },
+  "CeleryExecutorQueue": {
+   "$ref": "#/definitions/CeleryExecutorQueue"
+  },
+  "DagS3Path": {
+   "$ref": "#/definitions/RelativePath"
+  },
+  "DatabaseVpcEndpointService": {
+   "$ref": "#/definitions/DatabaseVpcEndpointService"
+  },
+  "EndpointManagement": {
+   "$ref": "#/definitions/EndpointManagement"
+  },
+  "EnvironmentClass": {
+   "$ref": "#/definitions/EnvironmentClass"
+  },
+  "ExecutionRoleArn": {
+   "$ref": "#/definitions/ExecutionRoleArn"
+  },
+  "KmsKey": {
+   "$ref": "#/definitions/KmsKey"
+  },
+  "LoggingConfiguration": {
+   "$ref": "#/definitions/LoggingConfiguration"
+  },
+  "MaxWebservers": {
+   "$ref": "#/definitions/MaxWebservers"
+  },
+  "MaxWorkers": {
+   "$ref": "#/definitions/MaxWorkers"
+  },
+  "MinWebservers": {
+   "$ref": "#/definitions/MinWebservers"
+  },
+  "MinWorkers": {
+   "$ref": "#/definitions/MinWorkers"
+  },
+  "Name": {
+   "$ref": "#/definitions/EnvironmentName"
+  },
+  "NetworkConfiguration": {
+   "$ref": "#/definitions/NetworkConfiguration"
+  },
+  "PluginsS3ObjectVersion": {
+   "$ref": "#/definitions/S3ObjectVersion"
+  },
+  "PluginsS3Path": {
+   "$ref": "#/definitions/RelativePath"
+  },
+  "RequirementsS3ObjectVersion": {
+   "$ref": "#/definitions/S3ObjectVersion"
+  },
+  "RequirementsS3Path": {
+   "$ref": "#/definitions/RelativePath"
+  },
+  "Schedulers": {
+   "$ref": "#/definitions/Schedulers"
+  },
+  "SourceBucketArn": {
+   "$ref": "#/definitions/S3BucketArn"
+  },
+  "StartupScriptS3ObjectVersion": {
+   "$ref": "#/definitions/S3ObjectVersion"
+  },
+  "StartupScriptS3Path": {
+   "$ref": "#/definitions/RelativePath"
+  },
+  "Tags": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "WebserverAccessMode": {
+   "$ref": "#/definitions/WebserverAccessMode"
+  },
+  "WebserverUrl": {
+   "$ref": "#/definitions/WebserverUrl"
+  },
+  "WebserverVpcEndpointService": {
+   "$ref": "#/definitions/WebserverVpcEndpointService"
+  },
+  "WeeklyMaintenanceWindowStart": {
+   "$ref": "#/definitions/WeeklyMaintenanceWindowStart"
+  },
+  "WorkerReplacementStrategy": {
+   "$ref": "#/definitions/WorkerReplacementStrategy"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CeleryExecutorQueue",
+  "/properties/DatabaseVpcEndpointService",
+  "/properties/WebserverVpcEndpointService",
+  "/properties/WebserverUrl",
+  "/properties/LoggingConfiguration/DagProcessingLogs/CloudWatchLogGroupArn",
+  "/properties/LoggingConfiguration/SchedulerLogs/CloudWatchLogGroupArn",
+  "/properties/LoggingConfiguration/WebserverLogs/CloudWatchLogGroupArn",
+  "/properties/LoggingConfiguration/WorkerLogs/CloudWatchLogGroupArn",
+  "/properties/LoggingConfiguration/TaskLogs/CloudWatchLogGroupArn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mwaa.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MWAA::Environment",
+ "writeOnlyProperties": [
+  "/properties/WorkerReplacementStrategy"
+ ]
+}

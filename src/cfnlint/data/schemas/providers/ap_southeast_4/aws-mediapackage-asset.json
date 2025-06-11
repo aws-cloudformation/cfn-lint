@@ -1,0 +1,97 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "EgressEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "PackagingConfigurationId": {
+     "type": "string"
+    },
+    "Url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PackagingConfigurationId",
+    "Url"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "EgressEndpoints": {
+   "items": {
+    "$ref": "#/definitions/EgressEndpoint"
+   },
+   "type": "array"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "PackagingGroupId": {
+   "type": "string"
+  },
+  "ResourceId": {
+   "type": "string"
+  },
+  "SourceArn": {
+   "type": "string"
+  },
+  "SourceRoleArn": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/EgressEndpoints/*/PackagingConfigurationId",
+  "/properties/EgressEndpoints/*/Url"
+ ],
+ "required": [
+  "Id",
+  "PackagingGroupId",
+  "SourceArn",
+  "SourceRoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaPackage::Asset"
+}

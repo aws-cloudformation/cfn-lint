@@ -1,0 +1,214 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName",
+  "/properties/ObjectTypeName"
+ ],
+ "definitions": {
+  "FieldMap": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "ObjectTypeField": {
+     "$ref": "#/definitions/ObjectTypeField"
+    }
+   },
+   "type": "object"
+  },
+  "KeyMap": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "ObjectTypeKeyList": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ObjectTypeKey"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ObjectTypeField": {
+   "additionalProperties": false,
+   "properties": {
+    "ContentType": {
+     "enum": [
+      "STRING",
+      "NUMBER",
+      "PHONE_NUMBER",
+      "EMAIL_ADDRESS",
+      "NAME"
+     ],
+     "type": "string"
+    },
+    "Source": {
+     "maxLength": 1000,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Target": {
+     "maxLength": 1000,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ObjectTypeKey": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldNames": {
+     "items": {
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_-]+$",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "StandardIdentifiers": {
+     "items": {
+      "enum": [
+       "PROFILE",
+       "UNIQUE",
+       "SECONDARY",
+       "LOOKUP_ONLY",
+       "NEW_ONLY",
+       "ASSET",
+       "CASE",
+       "ORDER"
+      ],
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainName",
+  "/properties/ObjectTypeName"
+ ],
+ "properties": {
+  "AllowProfileCreation": {
+   "type": "boolean"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DomainName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "EncryptionKey": {
+   "maxLength": 255,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ExpirationDays": {
+   "maximum": 1098,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Fields": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/FieldMap"
+   },
+   "type": "array"
+  },
+  "Keys": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/KeyMap"
+   },
+   "type": "array"
+  },
+  "LastUpdatedAt": {
+   "type": "string"
+  },
+  "ObjectTypeName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z_][a-zA-Z_0-9-]*$",
+   "type": "string"
+  },
+  "SourceLastUpdatedTimestampFormat": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "TemplateId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LastUpdatedAt",
+  "/properties/CreatedAt"
+ ],
+ "required": [
+  "DomainName",
+  "ObjectTypeName",
+  "Description"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-customer-profiles.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CustomerProfiles::ObjectType"
+}
