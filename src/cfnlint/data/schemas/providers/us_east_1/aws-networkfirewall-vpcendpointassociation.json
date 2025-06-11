@@ -1,0 +1,134 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FirewallArn",
+  "/properties/Description",
+  "/properties/VpcId",
+  "/properties/SubnetMapping"
+ ],
+ "definitions": {
+  "Description": {
+   "maxLength": 512,
+   "pattern": "^.*$",
+   "type": "string"
+  },
+  "EndpointId": {
+   "type": "string"
+  },
+  "ResourceArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^(arn:aws.*)$",
+   "type": "string"
+  },
+  "ResourceId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^([0-9a-f]{8})-([0-9a-f]{4}-){3}([0-9a-f]{12})$",
+   "type": "string"
+  },
+  "SubnetMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "IPAddressType": {
+     "enum": [
+      "DUALSTACK",
+      "IPV4",
+      "IPV6"
+     ],
+     "type": "string"
+    },
+    "SubnetId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SubnetId"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^.*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 0,
+     "pattern": "^.*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VpcId": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^vpc-[0-9a-f]+$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VpcEndpointAssociationArn"
+ ],
+ "properties": {
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "EndpointId": {
+   "$ref": "#/definitions/EndpointId"
+  },
+  "FirewallArn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "SubnetMapping": {
+   "$ref": "#/definitions/SubnetMapping"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VpcEndpointAssociationArn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "VpcEndpointAssociationId": {
+   "$ref": "#/definitions/ResourceId"
+  },
+  "VpcId": {
+   "$ref": "#/definitions/VpcId"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VpcEndpointAssociationArn",
+  "/properties/VpcEndpointAssociationId",
+  "/properties/EndpointId"
+ ],
+ "required": [
+  "FirewallArn",
+  "VpcId",
+  "SubnetMapping"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkfirewall.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkFirewall::VpcEndpointAssociation"
+}

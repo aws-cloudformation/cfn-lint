@@ -1,0 +1,494 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName",
+  "/properties/SegmentDefinitionName",
+  "/properties/DisplayName",
+  "/properties/SegmentGroups"
+ ],
+ "definitions": {
+  "AddressDimension": {
+   "additionalProperties": false,
+   "properties": {
+    "City": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "Country": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "County": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "PostalCode": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "Province": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "State": {
+     "$ref": "#/definitions/ProfileDimension"
+    }
+   },
+   "type": "object"
+  },
+  "AttributeDimension": {
+   "additionalProperties": false,
+   "properties": {
+    "DimensionType": {
+     "$ref": "#/definitions/AttributeDimensionType"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "DimensionType",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "AttributeDimensionType": {
+   "enum": [
+    "INCLUSIVE",
+    "EXCLUSIVE",
+    "CONTAINS",
+    "BEGINS_WITH",
+    "ENDS_WITH",
+    "BEFORE",
+    "AFTER",
+    "BETWEEN",
+    "NOT_BETWEEN",
+    "ON",
+    "GREATER_THAN",
+    "LESS_THAN",
+    "GREATER_THAN_OR_EQUAL",
+    "LESS_THAN_OR_EQUAL",
+    "EQUAL"
+   ],
+   "type": "string"
+  },
+  "CalculatedAttributeDimension": {
+   "additionalProperties": false,
+   "properties": {
+    "ConditionOverrides": {
+     "$ref": "#/definitions/ConditionOverrides"
+    },
+    "DimensionType": {
+     "$ref": "#/definitions/AttributeDimensionType"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "DimensionType",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "CalculatedCustomAttributes": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z_][a-zA-Z_0-9-]*$": {
+     "$ref": "#/definitions/CalculatedAttributeDimension"
+    }
+   },
+   "type": "object"
+  },
+  "ConditionOverrides": {
+   "additionalProperties": false,
+   "properties": {
+    "Range": {
+     "$ref": "#/definitions/RangeOverride"
+    }
+   },
+   "type": "object"
+  },
+  "CustomAttributes": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z_][a-zA-Z_0-9-]*$": {
+     "$ref": "#/definitions/AttributeDimension"
+    }
+   },
+   "type": "object"
+  },
+  "DateDimension": {
+   "additionalProperties": false,
+   "properties": {
+    "DimensionType": {
+     "$ref": "#/definitions/DateDimensionType"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "DimensionType",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "DateDimensionType": {
+   "enum": [
+    "BEFORE",
+    "AFTER",
+    "BETWEEN",
+    "NOT_BETWEEN",
+    "ON"
+   ],
+   "type": "string"
+  },
+  "Dimension": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ProfileAttributes": {
+       "$ref": "#/definitions/ProfileAttributes"
+      }
+     },
+     "required": [
+      "ProfileAttributes"
+     ],
+     "title": "ProfileAttributes",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CalculatedAttributes": {
+       "$ref": "#/definitions/CalculatedCustomAttributes"
+      }
+     },
+     "title": "CalculatedAttributes",
+     "type": "object"
+    }
+   ]
+  },
+  "ExtraLengthValueProfileDimension": {
+   "additionalProperties": false,
+   "properties": {
+    "DimensionType": {
+     "$ref": "#/definitions/StringDimensionType"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 1000,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "DimensionType",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "Group": {
+   "additionalProperties": false,
+   "properties": {
+    "Dimensions": {
+     "items": {
+      "$ref": "#/definitions/Dimension"
+     },
+     "type": "array"
+    },
+    "SourceSegments": {
+     "items": {
+      "$ref": "#/definitions/SourceSegment"
+     },
+     "type": "array"
+    },
+    "SourceType": {
+     "$ref": "#/definitions/IncludeOptions"
+    },
+    "Type": {
+     "$ref": "#/definitions/IncludeOptions"
+    }
+   },
+   "type": "object"
+  },
+  "IncludeOptions": {
+   "enum": [
+    "ALL",
+    "ANY",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "ProfileAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountNumber": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "AdditionalInformation": {
+     "$ref": "#/definitions/ExtraLengthValueProfileDimension"
+    },
+    "Address": {
+     "$ref": "#/definitions/AddressDimension"
+    },
+    "Attributes": {
+     "$ref": "#/definitions/CustomAttributes"
+    },
+    "BillingAddress": {
+     "$ref": "#/definitions/AddressDimension"
+    },
+    "BirthDate": {
+     "$ref": "#/definitions/DateDimension"
+    },
+    "BusinessEmailAddress": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "BusinessName": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "BusinessPhoneNumber": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "EmailAddress": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "FirstName": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "GenderString": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "HomePhoneNumber": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "LastName": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "MailingAddress": {
+     "$ref": "#/definitions/AddressDimension"
+    },
+    "MiddleName": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "MobilePhoneNumber": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "PartyTypeString": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "PersonalEmailAddress": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "PhoneNumber": {
+     "$ref": "#/definitions/ProfileDimension"
+    },
+    "ShippingAddress": {
+     "$ref": "#/definitions/AddressDimension"
+    }
+   },
+   "type": "object"
+  },
+  "ProfileDimension": {
+   "additionalProperties": false,
+   "properties": {
+    "DimensionType": {
+     "$ref": "#/definitions/StringDimensionType"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "DimensionType",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "RangeOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "End": {
+     "maximum": 366,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "Start": {
+     "maximum": 366,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Unit": {
+     "enum": [
+      "DAYS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Start",
+    "Unit"
+   ],
+   "type": "object"
+  },
+  "SegmentGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "Groups": {
+     "items": {
+      "$ref": "#/definitions/Group"
+     },
+     "type": "array"
+    },
+    "Include": {
+     "$ref": "#/definitions/IncludeOptions"
+    }
+   },
+   "type": "object"
+  },
+  "SourceSegment": {
+   "additionalProperties": false,
+   "properties": {
+    "SegmentDefinitionName": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "StringDimensionType": {
+   "enum": [
+    "INCLUSIVE",
+    "EXCLUSIVE",
+    "CONTAINS",
+    "BEGINS_WITH",
+    "ENDS_WITH"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainName",
+  "/properties/SegmentDefinitionName"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DomainName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "SegmentDefinitionArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SegmentDefinitionName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "SegmentGroups": {
+   "$ref": "#/definitions/SegmentGroup"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/SegmentDefinitionArn"
+ ],
+ "required": [
+  "DomainName",
+  "DisplayName",
+  "SegmentDefinitionName",
+  "SegmentGroups"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-customer-profiles",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CustomerProfiles::SegmentDefinition"
+}

@@ -2,7 +2,10 @@
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/DomainName",
-  "/properties/CalculatedAttributeName"
+  "/properties/CalculatedAttributeName",
+  "/properties/UseHistoricalData",
+  "/properties/Conditions/Range/TimestampSource",
+  "/properties/Conditions/Range/TimestampFormat"
  ],
  "definitions": {
   "AttributeDetails": {
@@ -93,22 +96,34 @@
    "type": "string"
   },
   "ObjectCount": {
-   "maximum": 100,
+   "maximum": 300,
    "minimum": 1,
    "type": "integer"
   },
   "Range": {
    "additionalProperties": false,
    "properties": {
+    "TimestampFormat": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TimestampSource": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
     "Unit": {
      "$ref": "#/definitions/RangeUnit"
     },
     "Value": {
      "$ref": "#/definitions/RangeValue"
+    },
+    "ValueRange": {
+     "$ref": "#/definitions/ValueRange"
     }
    },
    "required": [
-    "Value",
     "Unit"
    ],
    "type": "object"
@@ -120,9 +135,23 @@
    "type": "string"
   },
   "RangeValue": {
-   "maximum": 366,
+   "maximum": 2147483647,
    "minimum": 1,
    "type": "integer"
+  },
+  "Readiness": {
+   "additionalProperties": false,
+   "properties": {
+    "Message": {
+     "type": "string"
+    },
+    "ProgressPercentage": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
   },
   "Statistic": {
    "enum": [
@@ -196,6 +225,26 @@
    "maxLength": 255,
    "minLength": 1,
    "type": "string"
+  },
+  "ValueRange": {
+   "additionalProperties": false,
+   "properties": {
+    "End": {
+     "maximum": 2147483647,
+     "minimum": -2147483648,
+     "type": "integer"
+    },
+    "Start": {
+     "maximum": 2147483647,
+     "minimum": -2147483648,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Start",
+    "End"
+   ],
+   "type": "object"
   }
  },
  "primaryIdentifier": [
@@ -227,16 +276,33 @@
   "LastUpdatedAt": {
    "type": "string"
   },
+  "Readiness": {
+   "$ref": "#/definitions/Readiness"
+  },
   "Statistic": {
    "$ref": "#/definitions/Statistic"
   },
+  "Status": {
+   "enum": [
+    "IN_PROGRESS",
+    "PREPARING",
+    "COMPLETED",
+    "FAILED"
+   ],
+   "type": "string"
+  },
   "Tags": {
    "$ref": "#/definitions/Tags"
+  },
+  "UseHistoricalData": {
+   "type": "boolean"
   }
  },
  "readOnlyProperties": [
   "/properties/CreatedAt",
-  "/properties/LastUpdatedAt"
+  "/properties/LastUpdatedAt",
+  "/properties/Status",
+  "/properties/Readiness"
  ],
  "required": [
   "DomainName",

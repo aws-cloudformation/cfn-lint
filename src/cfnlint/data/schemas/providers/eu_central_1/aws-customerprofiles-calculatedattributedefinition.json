@@ -1,0 +1,256 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName",
+  "/properties/CalculatedAttributeName"
+ ],
+ "definitions": {
+  "AttributeDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "$ref": "#/definitions/AttributeList"
+    },
+    "Expression": {
+     "$ref": "#/definitions/Expression"
+    }
+   },
+   "required": [
+    "Attributes",
+    "Expression"
+   ],
+   "type": "object"
+  },
+  "AttributeItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "$ref": "#/definitions/AttributeName"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "AttributeList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AttributeItem"
+   },
+   "maxItems": 2,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "AttributeName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_.-]+$",
+   "type": "string"
+  },
+  "CalculatedAttributeName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z_][a-zA-Z_0-9-]*$",
+   "type": "string"
+  },
+  "Conditions": {
+   "additionalProperties": false,
+   "properties": {
+    "ObjectCount": {
+     "$ref": "#/definitions/ObjectCount"
+    },
+    "Range": {
+     "$ref": "#/definitions/Range"
+    },
+    "Threshold": {
+     "$ref": "#/definitions/Threshold"
+    }
+   },
+   "type": "object"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z_][a-zA-Z_0-9-\\s]*$",
+   "type": "string"
+  },
+  "DomainName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "Expression": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ObjectCount": {
+   "maximum": 100,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Range": {
+   "additionalProperties": false,
+   "properties": {
+    "Unit": {
+     "$ref": "#/definitions/RangeUnit"
+    },
+    "Value": {
+     "$ref": "#/definitions/RangeValue"
+    }
+   },
+   "required": [
+    "Value",
+    "Unit"
+   ],
+   "type": "object"
+  },
+  "RangeUnit": {
+   "enum": [
+    "DAYS"
+   ],
+   "type": "string"
+  },
+  "RangeValue": {
+   "maximum": 366,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Statistic": {
+   "enum": [
+    "FIRST_OCCURRENCE",
+    "LAST_OCCURRENCE",
+    "COUNT",
+    "SUM",
+    "MINIMUM",
+    "MAXIMUM",
+    "AVERAGE",
+    "MAX_OCCURRENCE"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Threshold": {
+   "additionalProperties": false,
+   "properties": {
+    "Operator": {
+     "$ref": "#/definitions/ThresholdOperator"
+    },
+    "Value": {
+     "$ref": "#/definitions/ThresholdValue"
+    }
+   },
+   "required": [
+    "Value",
+    "Operator"
+   ],
+   "type": "object"
+  },
+  "ThresholdOperator": {
+   "enum": [
+    "EQUAL_TO",
+    "GREATER_THAN",
+    "LESS_THAN",
+    "NOT_EQUAL_TO"
+   ],
+   "type": "string"
+  },
+  "ThresholdValue": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainName",
+  "/properties/CalculatedAttributeName"
+ ],
+ "properties": {
+  "AttributeDetails": {
+   "$ref": "#/definitions/AttributeDetails"
+  },
+  "CalculatedAttributeName": {
+   "$ref": "#/definitions/CalculatedAttributeName"
+  },
+  "Conditions": {
+   "$ref": "#/definitions/Conditions"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "DisplayName": {
+   "$ref": "#/definitions/DisplayName"
+  },
+  "DomainName": {
+   "$ref": "#/definitions/DomainName"
+  },
+  "LastUpdatedAt": {
+   "type": "string"
+  },
+  "Statistic": {
+   "$ref": "#/definitions/Statistic"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/LastUpdatedAt"
+ ],
+ "required": [
+  "DomainName",
+  "CalculatedAttributeName",
+  "AttributeDetails",
+  "Statistic"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-customer-profiles",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CustomerProfiles::CalculatedAttributeDefinition"
+}
