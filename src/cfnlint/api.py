@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import List
 
 from cfnlint.config import ConfigMixIn, ManualArgs
@@ -82,3 +83,42 @@ def lint_all(s: str) -> list[Match]:
             include_checks=["I"], include_experimental=True, regions=REGIONS
         ),
     )
+
+
+def lint_file(
+    template: Path,
+    config: ManualArgs | None = None,
+) -> list[Match]:
+    """Validate a template file using the configuration provided.
+
+    Parameters
+    ----------
+    filename : str
+        Path to the CloudFormation template file
+    config : ManualArgs
+        Configuration options for the linter
+
+    Returns
+    -------
+    list
+        a list of errors if any were found, else an empty list
+    """
+
+    if not template.exists():
+        from cfnlint.rules.errors import ParseError
+
+        return [
+            Match.create(
+                filename=str(template),
+                rule=ParseError(),
+                message=f"Template file not found: {str(template)}",
+            )
+        ]
+
+    if not config:
+        config_mixin = ConfigMixIn(["--template", str(template)])
+    else:
+        config_mixin = ConfigMixIn(["--template", str(template)], **config)
+
+    runner = Runner(config_mixin)
+    return list(runner.run())
