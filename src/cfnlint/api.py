@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-import os
+from pathlib import Path
 from typing import List
 
 from cfnlint.config import ConfigMixIn, ManualArgs
@@ -86,7 +86,7 @@ def lint_all(s: str) -> list[Match]:
 
 
 def lint_file(
-    filename: str,
+    template: Path,
     config: ManualArgs | None = None,
 ) -> list[Match]:
     """Validate a template file using the configuration provided.
@@ -103,21 +103,22 @@ def lint_file(
     list
         a list of errors if any were found, else an empty list
     """
-    if not os.path.isfile(filename):
+
+    if not template.exists():
         from cfnlint.rules.errors import ParseError
 
         return [
             Match.create(
-                filename=filename,
+                filename=str(template),
                 rule=ParseError(),
-                message=f"Template file not found: {filename}",
+                message=f"Template file not found: {str(template)}",
             )
         ]
 
     if not config:
-        config_mixin = ConfigMixIn(["--template", filename])
+        config_mixin = ConfigMixIn(["--template", str(template)])
     else:
-        config_mixin = ConfigMixIn(["--template", filename], **config)
+        config_mixin = ConfigMixIn(["--template", str(template)], **config)
 
     runner = Runner(config_mixin)
     return list(runner.run())
