@@ -1222,3 +1222,86 @@ class TestTransformValueOneEmpty(TestCase):
                 self.result,
                 template,
             )
+
+
+class TestTransformValueIsStringInMap(TestCase):
+    def setUp(self) -> None:
+        self.template_obj = convert_dict(
+            {
+                "Transform": ["AWS::LanguageExtensions"],
+                "Mappings": {
+                    "EngineMap": {
+                        "8.0.mysql-aurora.3.07.0": {
+                            "Engine": "aurora-mysql",
+                            "EngineVersion": "8.0.mysql_aurora.3.07.0",
+                        },
+                        "aurora-postgresql-15.10": {
+                            "Engine": "aurora-postgresql",
+                            "EngineVersion": "15.10",
+                        },
+                    }
+                },
+                "Resources": {
+                    "DBCluster": {
+                        "Type": "AWS::RDS::DBCluster",
+                        "Properties": {
+                            "Engine": {
+                                "Fn::FindInMap": [
+                                    "EngineMap",
+                                    {"Ref": "Engine"},
+                                    "Engine",
+                                ]
+                            },
+                            "EngineVersion": {
+                                "Fn::FindInMap": [
+                                    "EngineMap",
+                                    {"Ref": "Engine"},
+                                    "EngineVersion",
+                                ]
+                            },
+                        },
+                    }
+                },
+            }
+        )
+
+        self.result = {
+            "Mappings": {
+                "EngineMap": {
+                    "8.0.mysql-aurora.3.07.0": {
+                        "Engine": "aurora-mysql",
+                        "EngineVersion": "8.0.mysql_aurora.3.07.0",
+                    },
+                    "aurora-postgresql-15.10": {
+                        "Engine": "aurora-postgresql",
+                        "EngineVersion": "15.10",
+                    },
+                }
+            },
+            "Resources": {
+                "DBCluster": {
+                    "Type": "AWS::RDS::DBCluster",
+                    "Properties": {
+                        "Engine": "aurora-postgresql",
+                        "EngineVersion": "15.10",
+                    },
+                }
+            },
+            "Transform": ["AWS::LanguageExtensions"],
+        }
+
+    def test_transform(self):
+        self.maxDiff = None
+        with mock.patch(
+            "cfnlint.template.transforms._language_extensions._ACCOUNT_ID", None
+        ):
+            cfn = Template(
+                filename="", template=self.template_obj, regions=["us-east-1"]
+            )
+            matches, template = language_extension(cfn)
+            self.assertListEqual(matches, [])
+            self.assertDictEqual(
+                template,
+                self.result,
+                template,
+            )

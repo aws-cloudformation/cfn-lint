@@ -368,14 +368,14 @@ class _ForEachValueFnFindInMap(_ForEachValue):
                 t_map[1].value(cfn, params, only_params)
             except _ResolveError:
                 try:
-                    t_map[2].value(cfn, params)
+                    t_map_2_value = t_map[2].value(cfn, params, only_params)
                     max_length = -1
                     for k, v in mapping.items():
                         if isinstance(v, dict):
-                            if t_map[2].value(cfn, params, only_params) in v:
+                            if t_map_2_value in v:
                                 if (
-                                    len(v[t_map[2].value(cfn, params, only_params)])
-                                    <= max_length
+                                    isinstance(v[t_map_2_value], list)
+                                    and len(v[t_map_2_value]) <= max_length
                                 ):
                                     continue
                                 if isinstance(t_map[1], _ForEachValueRef):
@@ -383,9 +383,8 @@ class _ForEachValueFnFindInMap(_ForEachValue):
                                         global _ACCOUNT_ID
                                         _ACCOUNT_ID = k
                                 t_map[1] = _ForEachValue.create(k)
-                                max_length = len(
-                                    v[t_map[2].value(cfn, params, only_params)]
-                                )
+                                if isinstance(v[t_map_2_value], list):
+                                    max_length = len(v[t_map_2_value])
                 except _ResolveError:
                     pass
 
@@ -444,7 +443,7 @@ class _ForEachValueRef(_ForEachValue):
     def __init__(self, _hash: str, obj: Any) -> None:
         super().__init__(_hash)
         if not isinstance(obj, (str, dict)):
-            raise _TypeError("Fn::FindInMap should be a list", obj)
+            raise _TypeError("Fn::Ref should be a list", obj)
 
         self._ref = _ForEachValue.create(obj)
         self._obj = obj
