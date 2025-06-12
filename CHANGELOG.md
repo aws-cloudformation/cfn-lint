@@ -1,3 +1,16 @@
+### v1.36.0
+## What's Changed
+* Don't decode when `TemplateURL` is dynamic reference by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4156
+* Break out requirements into separate files by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4158
+* chore(deps): bump pyinstaller from 6.13.0 to 6.14.0 in /requirements by @dependabot in https://github.com/aws-cloudformation/cfn-lint/pull/4160
+* chore(deps): bump pyinstaller from 6.14.0 to 6.14.1 in /requirements by @dependabot in https://github.com/aws-cloudformation/cfn-lint/pull/4161
+* Better logic of FindInMap resolution when ref isn't resolved by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4162
+* chore(deps): bump setuptools from 80.8.0 to 80.9.0 in /requirements by @dependabot in https://github.com/aws-cloudformation/cfn-lint/pull/4159
+* Update CloudFormation schemas to 2025-06-11 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4155
+* Create an API for linting a file by path by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4163
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.35.4...v1.36.0
+
 ### v1.35.4
 ## What's Changed
 * Update CloudFormation schemas to `2025-06-02` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4148
