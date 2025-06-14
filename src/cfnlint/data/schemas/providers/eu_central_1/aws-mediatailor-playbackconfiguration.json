@@ -1,0 +1,309 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "AdConditioningConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "StreamingMediaFileConditioning": {
+     "$ref": "#/definitions/StreamingMediaFileConditioning"
+    }
+   },
+   "required": [
+    "StreamingMediaFileConditioning"
+   ],
+   "type": "object"
+  },
+  "AdMarkerPassthrough": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "AdsInteractionLog": {
+   "additionalProperties": false,
+   "properties": {
+    "ExcludeEventTypes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "PublishOptInEventTypes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "AvailSuppression": {
+   "additionalProperties": false,
+   "properties": {
+    "FillPolicy": {
+     "enum": [
+      "PARTIAL_AVAIL",
+      "FULL_AVAIL_ONLY"
+     ],
+     "type": "string"
+    },
+    "Mode": {
+     "enum": [
+      "OFF",
+      "BEHIND_LIVE_EDGE",
+      "AFTER_LIVE_EDGE"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Bumper": {
+   "additionalProperties": false,
+   "properties": {
+    "EndUrl": {
+     "type": "string"
+    },
+    "StartUrl": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CdnConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdSegmentUrlPrefix": {
+     "type": "string"
+    },
+    "ContentSegmentUrlPrefix": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ConfigurationAliases": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "player_params\\.\\w+\\Z": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    }
+   }
+  },
+  "DashConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ManifestEndpointPrefix": {
+     "type": "string"
+    },
+    "MpdLocation": {
+     "type": "string"
+    },
+    "OriginManifestType": {
+     "enum": [
+      "SINGLE_PERIOD",
+      "MULTI_PERIOD"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HlsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ManifestEndpointPrefix": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LivePreRollConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdDecisionServerUrl": {
+     "type": "string"
+    },
+    "MaxDurationSeconds": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "LogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdsInteractionLog": {
+     "$ref": "#/definitions/AdsInteractionLog"
+    },
+    "EnabledLoggingStrategies": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ManifestServiceInteractionLog": {
+     "$ref": "#/definitions/ManifestServiceInteractionLog"
+    },
+    "PercentEnabled": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "PercentEnabled"
+   ],
+   "type": "object"
+  },
+  "ManifestProcessingRules": {
+   "additionalProperties": false,
+   "properties": {
+    "AdMarkerPassthrough": {
+     "$ref": "#/definitions/AdMarkerPassthrough"
+    }
+   },
+   "type": "object"
+  },
+  "ManifestServiceInteractionLog": {
+   "additionalProperties": false,
+   "properties": {
+    "ExcludeEventTypes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "StreamingMediaFileConditioning": {
+   "enum": [
+    "TRANSCODE",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "AdConditioningConfiguration": {
+   "$ref": "#/definitions/AdConditioningConfiguration"
+  },
+  "AdDecisionServerUrl": {
+   "type": "string"
+  },
+  "AvailSuppression": {
+   "$ref": "#/definitions/AvailSuppression"
+  },
+  "Bumper": {
+   "$ref": "#/definitions/Bumper"
+  },
+  "CdnConfiguration": {
+   "$ref": "#/definitions/CdnConfiguration"
+  },
+  "ConfigurationAliases": {
+   "$ref": "#/definitions/ConfigurationAliases"
+  },
+  "DashConfiguration": {
+   "$ref": "#/definitions/DashConfiguration"
+  },
+  "HlsConfiguration": {
+   "$ref": "#/definitions/HlsConfiguration"
+  },
+  "LivePreRollConfiguration": {
+   "$ref": "#/definitions/LivePreRollConfiguration"
+  },
+  "LogConfiguration": {
+   "$ref": "#/definitions/LogConfiguration"
+  },
+  "ManifestProcessingRules": {
+   "$ref": "#/definitions/ManifestProcessingRules"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "PersonalizationThresholdSeconds": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "PlaybackConfigurationArn": {
+   "type": "string"
+  },
+  "PlaybackEndpointPrefix": {
+   "type": "string"
+  },
+  "SessionInitializationEndpointPrefix": {
+   "type": "string"
+  },
+  "SlateAdUrl": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TranscodeProfileName": {
+   "type": "string"
+  },
+  "VideoContentSourceUrl": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SessionInitializationEndpointPrefix",
+  "/properties/HlsConfiguration/ManifestEndpointPrefix",
+  "/properties/DashConfiguration/ManifestEndpointPrefix",
+  "/properties/PlaybackConfigurationArn",
+  "/properties/PlaybackEndpointPrefix"
+ ],
+ "required": [
+  "Name",
+  "VideoContentSourceUrl",
+  "AdDecisionServerUrl"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediatailor.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaTailor::PlaybackConfiguration"
+}

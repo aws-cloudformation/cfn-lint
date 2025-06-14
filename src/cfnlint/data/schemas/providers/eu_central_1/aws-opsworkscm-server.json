@@ -1,0 +1,163 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KeyPair",
+  "/properties/CustomPrivateKey",
+  "/properties/ServiceRoleArn",
+  "/properties/InstanceType",
+  "/properties/CustomCertificate",
+  "/properties/CustomDomain",
+  "/properties/InstanceProfileArn",
+  "/properties/SecurityGroupIds",
+  "/properties/ServerName",
+  "/properties/SubnetIds",
+  "/properties/BackupId",
+  "/properties/EngineModel",
+  "/properties/AssociatePublicIpAddress",
+  "/properties/EngineVersion",
+  "/properties/Engine"
+ ],
+ "definitions": {
+  "EngineAttribute": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AssociatePublicIpAddress": {
+   "type": "boolean"
+  },
+  "BackupId": {
+   "type": "string"
+  },
+  "BackupRetentionCount": {
+   "type": "integer"
+  },
+  "CustomCertificate": {
+   "type": "string"
+  },
+  "CustomDomain": {
+   "type": "string"
+  },
+  "CustomPrivateKey": {
+   "type": "string"
+  },
+  "DisableAutomatedBackup": {
+   "type": "boolean"
+  },
+  "Endpoint": {
+   "type": "string"
+  },
+  "Engine": {
+   "pattern": "(?s).*",
+   "type": "string"
+  },
+  "EngineAttributes": {
+   "items": {
+    "$ref": "#/definitions/EngineAttribute"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "EngineModel": {
+   "pattern": "(?s).*",
+   "type": "string"
+  },
+  "EngineVersion": {
+   "pattern": "(?s).*",
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InstanceProfileArn": {
+   "type": "string"
+  },
+  "InstanceType": {
+   "pattern": "(?s).*",
+   "type": "string"
+  },
+  "KeyPair": {
+   "type": "string"
+  },
+  "PreferredBackupWindow": {
+   "type": "string"
+  },
+  "PreferredMaintenanceWindow": {
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "pattern": "(?s).*",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ServerName": {
+   "type": "string"
+  },
+  "ServiceRoleArn": {
+   "type": "string"
+  },
+  "SubnetIds": {
+   "items": {
+    "pattern": "(?s).*",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Endpoint",
+  "/properties/Arn"
+ ],
+ "required": [
+  "ServiceRoleArn",
+  "InstanceProfileArn",
+  "InstanceType"
+ ],
+ "typeName": "AWS::OpsWorksCM::Server"
+}
