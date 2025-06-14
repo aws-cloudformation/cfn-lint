@@ -1,0 +1,116 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Type"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:aws.*:organizations::[0-9]{12}:policy/o-[a-z0-9]{10}/(service_control|tag|backup|aiservices_opt_out)_policy/p-[a-z0-9]{8}",
+   "type": "string"
+  },
+  "AwsManaged": {
+   "type": "boolean"
+  },
+  "Content": {
+   "maxLength": 1000000,
+   "minLength": 1,
+   "pattern": "[\\s\\S]*",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Description": {
+   "maxLength": 512,
+   "pattern": "[\\s\\S]*",
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 130,
+   "pattern": "^p-[0-9a-zA-Z_]{8,128}$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[\\s\\S]*",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TargetIds": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^(r-[0-9a-z]{4,32})|(\\d{12})|(ou-[0-9a-z]{4,32}-[a-z0-9]{8,32})$",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "enum": [
+    "SERVICE_CONTROL_POLICY",
+    "AISERVICES_OPT_OUT_POLICY",
+    "BACKUP_POLICY",
+    "TAG_POLICY",
+    "CHATBOT_POLICY",
+    "RESOURCE_CONTROL_POLICY",
+    "DECLARATIVE_POLICY_EC2",
+    "SECURITYHUB_POLICY"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/AwsManaged"
+ ],
+ "required": [
+  "Name",
+  "Type",
+  "Content"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-organizations",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Organizations::Policy"
+}
