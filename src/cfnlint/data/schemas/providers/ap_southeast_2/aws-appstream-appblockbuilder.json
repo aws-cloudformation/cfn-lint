@@ -1,0 +1,169 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "AccessEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "EndpointType": {
+     "enum": [
+      "STREAMING"
+     ],
+     "type": "string"
+    },
+    "VpceId": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "EndpointType",
+    "VpceId"
+   ],
+   "type": "object"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "PlatformType": {
+   "enum": [
+    "WINDOWS_SERVER_2019"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 5,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SubnetIds": {
+     "insertionOrder": false,
+     "items": {
+      "minLength": 1,
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "AccessEndpoints": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AccessEndpoint"
+   },
+   "maxItems": 4,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "AppBlockArns": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Arn"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "CreatedTime": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "EnableDefaultInternetAccess": {
+   "type": "boolean"
+  },
+  "IamRoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "pattern": "^arn:aws(?:\\-cn|\\-iso\\-b|\\-iso|\\-us\\-gov)?:[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.\\\\-]{0,1023}$",
+   "type": "string"
+  },
+  "InstanceType": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,100}$",
+   "type": "string"
+  },
+  "Platform": {
+   "$ref": "#/definitions/PlatformType"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VpcConfig": {
+   "$ref": "#/definitions/VpcConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedTime"
+ ],
+ "required": [
+  "Name",
+  "Platform",
+  "InstanceType",
+  "VpcConfig"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appstream.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AppStream::AppBlockBuilder",
+ "writeOnlyProperties": [
+  "/properties/AppBlockArns"
+ ]
+}

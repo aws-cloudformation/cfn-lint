@@ -209,14 +209,21 @@
    "uniqueItems": false
   }
  },
+ "propertyTransform": {
+  "/properties/AppImageConfigName": "$lowercase(AppImageConfigName) $OR AppImageConfigName"
+ },
  "readOnlyProperties": [
   "/properties/AppImageConfigArn"
  ],
  "required": [
   "AppImageConfigName"
  ],
- "typeName": "AWS::SageMaker::AppImageConfig",
- "writeOnlyProperties": [
-  "/properties/Tags"
- ]
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::AppImageConfig"
 }
