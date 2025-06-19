@@ -307,6 +307,9 @@
     "PhoneNumber": {
      "$ref": "#/definitions/ProfileDimension"
     },
+    "ProfileType": {
+     "$ref": "#/definitions/ProfileTypeDimension"
+    },
     "ShippingAddress": {
      "$ref": "#/definitions/AddressDimension"
     }
@@ -337,17 +340,53 @@
    ],
    "type": "object"
   },
+  "ProfileType": {
+   "enum": [
+    "ACCOUNT_PROFILE",
+    "PROFILE"
+   ],
+   "type": "string"
+  },
+  "ProfileTypeDimension": {
+   "additionalProperties": false,
+   "properties": {
+    "DimensionType": {
+     "$ref": "#/definitions/ProfileTypeDimensionType"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ProfileType"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "DimensionType",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "ProfileTypeDimensionType": {
+   "enum": [
+    "INCLUSIVE",
+    "EXCLUSIVE"
+   ],
+   "type": "string"
+  },
   "RangeOverride": {
    "additionalProperties": false,
    "properties": {
     "End": {
-     "maximum": 366,
-     "minimum": 0,
+     "maximum": 2147483647,
+     "minimum": -2147483648,
      "type": "integer"
     },
     "Start": {
-     "maximum": 366,
-     "minimum": 1,
+     "maximum": 2147483647,
+     "minimum": -2147483648,
      "type": "integer"
     },
     "Unit": {

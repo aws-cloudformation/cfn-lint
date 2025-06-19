@@ -1,0 +1,69 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Region": {
+   "pattern": "^[a-zA-Z0-9-]{1,32}$",
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "patternProperties": {
+    "^(?!aws:)[a-zA-Z+-=._:/]+$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AggregatorV2Arn"
+ ],
+ "properties": {
+  "AggregationRegion": {
+   "$ref": "#/definitions/Region"
+  },
+  "AggregatorV2Arn": {
+   "pattern": "arn:aws\\S*:securityhub:\\S*",
+   "type": "string"
+  },
+  "LinkedRegions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Region"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RegionLinkingMode": {
+   "enum": [
+    "SPECIFIED_REGIONS"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AggregatorV2Arn",
+  "/properties/AggregationRegion"
+ ],
+ "required": [
+  "RegionLinkingMode",
+  "LinkedRegions"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securityhub",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityHub::AggregatorV2"
+}

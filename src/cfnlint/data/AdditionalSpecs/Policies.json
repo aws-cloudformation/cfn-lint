@@ -747,6 +747,11 @@
      "certificate"
     ]
    },
+   "revokecertificate": {
+    "Resources": [
+     "certificate"
+    ]
+   },
    "updatecertificateoptions": {
     "Resources": [
      "certificate"
@@ -7046,6 +7051,11 @@
  },
  "backup": {
   "Actions": {
+   "associatebackupvaultmpaapprovalteam": {
+    "Resources": [
+     "backupVault"
+    ]
+   },
    "cancellegalhold": {
     "Resources": [
      "legalHold"
@@ -7094,6 +7104,11 @@
    "createreportplan": {
     "Resources": [
      "reportPlan"
+    ]
+   },
+   "createrestoreaccessbackupvault": {
+    "Resources": [
+     "backupVault"
     ]
    },
    "createrestoretestingplan": {
@@ -7193,6 +7208,11 @@
     ]
    },
    "describerestorejob": {},
+   "disassociatebackupvaultmpaapprovalteam": {
+    "Resources": [
+     "backupVault"
+    ]
+   },
    "disassociaterecoverypoint": {
     "Resources": [
      "recoveryPoint"
@@ -7299,6 +7319,11 @@
    "listrecoverypointsbyresource": {},
    "listreportjobs": {},
    "listreportplans": {},
+   "listrestoreaccessbackupvaults": {
+    "Resources": [
+     "backupVault"
+    ]
+   },
    "listrestorejobs": {},
    "listrestorejobsbyprotectedresource": {},
    "listrestorejobsummaries": {},
@@ -7340,6 +7365,11 @@
     ]
    },
    "putrestorevalidationresult": {},
+   "revokerestoreaccessbackupvault": {
+    "Resources": [
+     "backupVault"
+    ]
+   },
    "searchrecoverypoint": {
     "Resources": [
      "recoveryPoint"
@@ -9572,7 +9602,6 @@
  "braket": {
   "Actions": {
    "acceptuseragreement": {},
-   "accessbraketfeature": {},
    "canceljob": {
     "Resources": [
      "job"
@@ -17956,6 +17985,7 @@
      "userpool"
     ]
    },
+   "gettokensfromrefreshtoken": {},
    "getuicustomization": {
     "Resources": [
      "userpool"
@@ -21117,6 +21147,7 @@
     ]
    },
    "getconnectinstanceconfig": {},
+   "getinstancecommunicationlimits": {},
    "getinstanceonboardingjobstatus": {},
    "listcampaigns": {},
    "listconnectinstanceintegrations": {},
@@ -21136,6 +21167,7 @@
      "campaign"
     ]
    },
+   "putinstancecommunicationlimits": {},
    "putoutboundrequestbatch": {
     "Resources": [
      "campaign"
@@ -21261,6 +21293,7 @@
     ]
    },
    "listcommoncontrols": {},
+   "listcontrolmappings": {},
    "listcontrols": {
     "Resources": [
      "control"
@@ -52485,6 +52518,12 @@
      "bot alias"
     ]
    },
+   "createresourcepolicystatement": {
+    "Resources": [
+     "bot",
+     "bot alias"
+    ]
+   },
    "createslot": {
     "Resources": [
      "bot"
@@ -52574,6 +52613,12 @@
     ]
    },
    "deleteresourcepolicy": {
+    "Resources": [
+     "bot",
+     "bot alias"
+    ]
+   },
+   "deleteresourcepolicystatement": {
     "Resources": [
      "bot",
      "bot alias"
@@ -60260,6 +60305,104 @@
    }
   }
  },
+ "mpa": {
+  "Actions": {
+   "cancelsession": {
+    "Resources": [
+     "session"
+    ]
+   },
+   "createapprovalteam": {
+    "Resources": [
+     "approval-team"
+    ]
+   },
+   "createidentitysource": {
+    "Resources": [
+     "identity-source"
+    ]
+   },
+   "deleteidentitysource": {
+    "Resources": [
+     "identity-source"
+    ]
+   },
+   "deleteinactiveapprovalteamversion": {
+    "Resources": [
+     "approval-team"
+    ]
+   },
+   "deleteresourcepolicy": {},
+   "getapprovalteam": {
+    "Resources": [
+     "approval-team"
+    ]
+   },
+   "getidentitysource": {
+    "Resources": [
+     "identity-source"
+    ]
+   },
+   "getpolicyversion": {},
+   "getresourcepolicy": {},
+   "getsession": {
+    "Resources": [
+     "session"
+    ]
+   },
+   "listapprovalteams": {},
+   "listidentitysources": {},
+   "listpolicies": {},
+   "listpolicyversions": {},
+   "listresourcepolicies": {},
+   "listsessions": {},
+   "listtagsforresource": {},
+   "putresourcepolicy": {},
+   "startactiveapprovalteamdeletion": {
+    "Resources": [
+     "approval-team"
+    ]
+   },
+   "startsession": {
+    "Resources": [
+     "session"
+    ]
+   },
+   "tagresource": {},
+   "untagresource": {},
+   "updateapprovalteam": {
+    "Resources": [
+     "approval-team"
+    ]
+   }
+  },
+  "Resources": {
+   "approval-team": {
+    "ARNFormats": [
+     "arn:${Partition}:mpa:${Region}:${Account}:approval-team/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "identity-source": {
+    "ARNFormats": [
+     "arn:${Partition}:mpa:${Region}:${Account}:identity-source/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "session": {
+    "ARNFormats": [
+     "arn:${Partition}:mpa:${Region}:${Account}:session/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   }
+  }
+ },
  "mq": {
   "Actions": {
    "createbroker": {},
@@ -60784,6 +60927,16 @@
  },
  "network-firewall": {
   "Actions": {
+   "acceptnetworkfirewalltransitgatewayattachment": {
+    "Resources": [
+     "Firewall"
+    ]
+   },
+   "associateavailabilityzones": {
+    "Resources": [
+     "Firewall"
+    ]
+   },
    "associatefirewallpolicy": {
     "Resources": [
      "Firewall",
@@ -60834,6 +60987,11 @@
    "deletefirewallpolicy": {
     "Resources": [
      "FirewallPolicy"
+    ]
+   },
+   "deletenetworkfirewalltransitgatewayattachment": {
+    "Resources": [
+     "Firewall"
     ]
    },
    "deleteresourcepolicy": {
@@ -60918,6 +61076,11 @@
      "VpcEndpointAssociation"
     ]
    },
+   "disassociateavailabilityzones": {
+    "Resources": [
+     "Firewall"
+    ]
+   },
    "disassociatesubnets": {
     "Resources": [
      "Firewall"
@@ -60982,6 +61145,11 @@
      "StatelessRuleGroup"
     ]
    },
+   "rejectnetworkfirewalltransitgatewayattachment": {
+    "Resources": [
+     "Firewall"
+    ]
+   },
    "startanalysisreport": {
     "Resources": [
      "Firewall"
@@ -61015,6 +61183,11 @@
      "StatelessRuleGroup",
      "TLSInspectionConfiguration",
      "VpcEndpointAssociation"
+    ]
+   },
+   "updateavailabilityzonechangeprotection": {
+    "Resources": [
+     "Firewall"
     ]
    },
    "updatefirewallanalysissettings": {
@@ -64024,7 +64197,11 @@
      "site"
     ]
    },
-   "createprivateconnectivityconfig": {},
+   "createprivateconnectivityconfig": {
+    "Resources": [
+     "outpost"
+    ]
+   },
    "createsite": {},
    "deleteoutpost": {
     "Resources": [
@@ -64059,7 +64236,11 @@
      "outpost"
     ]
    },
-   "getprivateconnectivityconfig": {},
+   "getprivateconnectivityconfig": {
+    "Resources": [
+     "outpost"
+    ]
+   },
    "getsite": {
     "Resources": [
      "site"
@@ -64075,7 +64256,11 @@
      "outpost"
     ]
    },
-   "listassets": {},
+   "listassets": {
+    "Resources": [
+     "outpost"
+    ]
+   },
    "listblockinginstancesforcapacitytask": {
     "Resources": [
      "outpost"
@@ -65885,6 +66070,11 @@
      "domains"
     ]
    },
+   "createuploadjob": {
+    "Resources": [
+     "domains"
+    ]
+   },
    "deletecalculatedattributedefinition": {
     "Resources": [
      "calculated-attributes",
@@ -66054,6 +66244,16 @@
      "domains"
     ]
    },
+   "getuploadjob": {
+    "Resources": [
+     "domains"
+    ]
+   },
+   "getuploadjobpath": {
+    "Resources": [
+     "domains"
+    ]
+   },
    "getworkflow": {
     "Resources": [
      "domains"
@@ -66139,8 +66339,16 @@
      "calculated-attributes",
      "domains",
      "event-streams",
+     "event-triggers",
      "integrations",
-     "object-types"
+     "layouts",
+     "object-types",
+     "segment-definitions"
+    ]
+   },
+   "listuploadjobs": {
+    "Resources": [
+     "domains"
     ]
    },
    "listworkflows": {
@@ -66176,13 +66384,26 @@
      "domains"
     ]
    },
+   "startuploadjob": {
+    "Resources": [
+     "domains"
+    ]
+   },
+   "stopuploadjob": {
+    "Resources": [
+     "domains"
+    ]
+   },
    "tagresource": {
     "Resources": [
      "calculated-attributes",
      "domains",
      "event-streams",
+     "event-triggers",
      "integrations",
-     "object-types"
+     "layouts",
+     "object-types",
+     "segment-definitions"
     ]
    },
    "untagresource": {
@@ -66190,8 +66411,11 @@
      "calculated-attributes",
      "domains",
      "event-streams",
+     "event-triggers",
      "integrations",
-     "object-types"
+     "layouts",
+     "object-types",
+     "segment-definitions"
     ]
    },
    "updatecalculatedattributedefinition": {
@@ -75877,6 +76101,7 @@
    },
    "createsession": {
     "Resources": [
+     "accesspoint",
      "bucket"
     ]
    },
@@ -79824,11 +80049,7 @@
     ]
    },
    "batchupdatestandardscontrolassociations": {},
-   "connectorregistrationsv2": {
-    "Resources": [
-     "connectorv2"
-    ]
-   },
+   "connectorregistrationsv2": {},
    "createactiontarget": {
     "Resources": [
      "hub"
@@ -79852,8 +80073,7 @@
    },
    "createticketv2": {
     "Resources": [
-     "hub",
-     "hubv2"
+     "connectorv2"
     ]
    },
    "declineinvitations": {
@@ -80087,7 +80307,7 @@
      "hub"
     ]
    },
-   "getresourcestatisticsv2": {
+   "getresourcesstatisticsv2": {
     "Resources": [
      "hubv2"
     ]
@@ -80108,7 +80328,7 @@
      "hub"
     ]
    },
-   "listaggregatorv2s": {},
+   "listaggregatorsv2": {},
    "listautomationrules": {},
    "listautomationrulesv2": {},
    "listconfigurationpolicies": {},
@@ -86300,7 +86520,24 @@
    "resolvecase": {},
    "searchforcases": {},
    "startinteraction": {},
-   "updatecaseseverity": {}
+   "updatecaseseverity": {},
+   "updateinteraction": {}
+  },
+  "Resources": {}
+ },
+ "support-console": {
+  "Actions": {
+   "checksubscription": {},
+   "createcasedraft": {},
+   "createcontact": {},
+   "deletecasedraft": {},
+   "describedynamichelp": {},
+   "getaccountgovcloudenabled": {},
+   "getaccountstate": {},
+   "getbanner": {},
+   "getcasedraft": {},
+   "getquestionnaire": {},
+   "savefeedback": {}
   },
   "Resources": {}
  },

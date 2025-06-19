@@ -35,6 +35,15 @@
     "AwsAccountId": {
      "$ref": "#/definitions/StringFilterList"
     },
+    "CodeVulnerabilityDetectorName": {
+     "$ref": "#/definitions/StringFilterList"
+    },
+    "CodeVulnerabilityDetectorTags": {
+     "$ref": "#/definitions/StringFilterList"
+    },
+    "CodeVulnerabilityFilePath": {
+     "$ref": "#/definitions/StringFilterList"
+    },
     "ComponentId": {
      "$ref": "#/definitions/StringFilterList"
     },
@@ -68,6 +77,12 @@
     "EcrImageTags": {
      "$ref": "#/definitions/StringFilterList"
     },
+    "EpssScore": {
+     "$ref": "#/definitions/NumberFilterList"
+    },
+    "ExploitAvailable": {
+     "$ref": "#/definitions/StringFilterList"
+    },
     "FindingArn": {
      "$ref": "#/definitions/StringFilterList"
     },
@@ -80,8 +95,26 @@
     "FirstObservedAt": {
      "$ref": "#/definitions/DateFilterList"
     },
+    "FixAvailable": {
+     "$ref": "#/definitions/StringFilterList"
+    },
     "InspectorScore": {
      "$ref": "#/definitions/NumberFilterList"
+    },
+    "LambdaFunctionExecutionRoleArn": {
+     "$ref": "#/definitions/StringFilterList"
+    },
+    "LambdaFunctionLastModifiedAt": {
+     "$ref": "#/definitions/DateFilterList"
+    },
+    "LambdaFunctionLayers": {
+     "$ref": "#/definitions/StringFilterList"
+    },
+    "LambdaFunctionName": {
+     "$ref": "#/definitions/StringFilterList"
+    },
+    "LambdaFunctionRuntime": {
+     "$ref": "#/definitions/StringFilterList"
     },
     "LastObservedAt": {
      "$ref": "#/definitions/DateFilterList"
@@ -124,6 +157,16 @@
     },
     "VulnerablePackages": {
      "$ref": "#/definitions/PackageFilterList"
+    }
+   },
+   "type": "object"
+  },
+  "FilterTagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.{2,127}$": {
+     "pattern": "^.{1,255}$",
+     "type": "string"
     }
    },
    "type": "object"
@@ -201,10 +244,16 @@
     "Epoch": {
      "$ref": "#/definitions/NumberFilter"
     },
+    "FilePath": {
+     "$ref": "#/definitions/StringFilter"
+    },
     "Name": {
      "$ref": "#/definitions/StringFilter"
     },
     "Release": {
+     "$ref": "#/definitions/StringFilter"
+    },
+    "SourceLambdaLayerArn": {
      "$ref": "#/definitions/StringFilter"
     },
     "SourceLayerHash": {
@@ -318,6 +367,9 @@
    "maxLength": 128,
    "minLength": 1,
    "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/FilterTagMap"
   }
  },
  "readOnlyProperties": [
@@ -330,7 +382,11 @@
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-inspector.git",
  "tagging": {
-  "taggable": false
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
  },
  "typeName": "AWS::InspectorV2::Filter"
 }

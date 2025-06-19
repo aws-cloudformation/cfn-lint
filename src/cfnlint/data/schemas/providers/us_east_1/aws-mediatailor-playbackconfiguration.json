@@ -25,6 +25,24 @@
    },
    "type": "object"
   },
+  "AdsInteractionLog": {
+   "additionalProperties": false,
+   "properties": {
+    "ExcludeEventTypes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "PublishOptInEventTypes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
   "AvailSuppression": {
    "additionalProperties": false,
    "properties": {
@@ -125,11 +143,49 @@
    },
    "type": "object"
   },
+  "LogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdsInteractionLog": {
+     "$ref": "#/definitions/AdsInteractionLog"
+    },
+    "EnabledLoggingStrategies": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ManifestServiceInteractionLog": {
+     "$ref": "#/definitions/ManifestServiceInteractionLog"
+    },
+    "PercentEnabled": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "PercentEnabled"
+   ],
+   "type": "object"
+  },
   "ManifestProcessingRules": {
    "additionalProperties": false,
    "properties": {
     "AdMarkerPassthrough": {
      "$ref": "#/definitions/AdMarkerPassthrough"
+    }
+   },
+   "type": "object"
+  },
+  "ManifestServiceInteractionLog": {
+   "additionalProperties": false,
+   "properties": {
+    "ExcludeEventTypes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
     }
    },
    "type": "object"
@@ -188,6 +244,9 @@
   },
   "LivePreRollConfiguration": {
    "$ref": "#/definitions/LivePreRollConfiguration"
+  },
+  "LogConfiguration": {
+   "$ref": "#/definitions/LogConfiguration"
   },
   "ManifestProcessingRules": {
    "$ref": "#/definitions/ManifestProcessingRules"
