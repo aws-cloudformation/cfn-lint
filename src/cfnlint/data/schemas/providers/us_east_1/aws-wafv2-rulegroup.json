@@ -29,6 +29,25 @@
    ],
    "type": "object"
   },
+  "AsnMatchStatement": {
+   "additionalProperties": false,
+   "properties": {
+    "AsnList": {
+     "items": {
+      "maximum": 4294967295,
+      "minimum": 0,
+      "type": "integer"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array"
+    },
+    "ForwardedIPConfig": {
+     "$ref": "#/definitions/ForwardedIPConfiguration"
+    }
+   },
+   "type": "object"
+  },
   "BlockAction": {
    "additionalProperties": false,
    "properties": {
@@ -1022,6 +1041,9 @@
   "RateBasedStatementCustomKey": {
    "additionalProperties": false,
    "properties": {
+    "ASN": {
+     "$ref": "#/definitions/RateLimitAsn"
+    },
     "Cookie": {
      "$ref": "#/definitions/RateLimitCookie"
     },
@@ -1062,6 +1084,9 @@
    "maximum": 2000000000,
    "minimum": 10,
    "type": "integer"
+  },
+  "RateLimitAsn": {
+   "type": "object"
   },
   "RateLimitCookie": {
    "additionalProperties": false,
@@ -1485,6 +1510,9 @@
    "properties": {
     "AndStatement": {
      "$ref": "#/definitions/AndStatement"
+    },
+    "AsnMatchStatement": {
+     "$ref": "#/definitions/AsnMatchStatement"
     },
     "ByteMatchStatement": {
      "$ref": "#/definitions/ByteMatchStatement"

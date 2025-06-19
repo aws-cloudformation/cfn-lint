@@ -1,0 +1,50 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ISO8601DateString": {
+   "pattern": "^(\\d\\d\\d\\d)-([0][1-9]|[1][0-2])-([0][1-9]|[1-2](\\d)|[3][0-1])[T](?:([0-1](\\d)|[2][0-3]):[0-5](\\d):[0-5](\\d)|23:59:60)(?:\\.(\\d)+)?([Z]|[+-](\\d\\d)(:?(\\d\\d))?)$",
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "patternProperties": {
+    "^(?!aws:)[a-zA-Z+-=._:/]{1,128}$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/HubV2Arn"
+ ],
+ "properties": {
+  "HubV2Arn": {
+   "pattern": "arn:aws(?:-[a-z]+)*:securityhub:[a-z0-9-]+:\\d{12}:hubv2/[^/](.{0,1022}[^/:])?$",
+   "type": "string"
+  },
+  "SubscribedAt": {
+   "$ref": "#/definitions/ISO8601DateString"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/HubV2Arn",
+  "/properties/SubscribedAt"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "sourceUrl": "https://placeholder.notreal",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityHub::HubV2"
+}

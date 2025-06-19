@@ -115,6 +115,9 @@
     },
     "Status": {
      "$ref": "#/definitions/UpdateStatus"
+    },
+    "WorkerReplacementStrategy": {
+     "$ref": "#/definitions/WorkerReplacementStrategy"
     }
    },
    "type": "object"
@@ -327,6 +330,13 @@
    "minLength": 1,
    "pattern": "(MON|TUE|WED|THU|FRI|SAT|SUN):([01]\\d|2[0-3]):(00|30)",
    "type": "string"
+  },
+  "WorkerReplacementStrategy": {
+   "enum": [
+    "FORCED",
+    "GRACEFUL"
+   ],
+   "type": "string"
   }
  },
  "primaryIdentifier": [
@@ -430,6 +440,9 @@
   },
   "WeeklyMaintenanceWindowStart": {
    "$ref": "#/definitions/WeeklyMaintenanceWindowStart"
+  },
+  "WorkerReplacementStrategy": {
+   "$ref": "#/definitions/WorkerReplacementStrategy"
   }
  },
  "readOnlyProperties": [
@@ -455,5 +468,8 @@
   "tagUpdatable": true,
   "taggable": true
  },
- "typeName": "AWS::MWAA::Environment"
+ "typeName": "AWS::MWAA::Environment",
+ "writeOnlyProperties": [
+  "/properties/WorkerReplacementStrategy"
+ ]
 }

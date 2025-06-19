@@ -1,0 +1,161 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AssetHierarchy": {
+   "additionalProperties": false,
+   "properties": {
+    "ChildAssetId": {
+     "type": "string"
+    },
+    "ExternalId": {
+     "maxLength": 128,
+     "minLength": 2,
+     "pattern": "[a-zA-Z0-9_][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9_]+",
+     "type": "string"
+    },
+    "Id": {
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    },
+    "LogicalId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "[^\\u0000-\\u001F\\u007F]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ChildAssetId"
+   ],
+   "type": "object"
+  },
+  "AssetProperty": {
+   "additionalProperties": false,
+   "properties": {
+    "Alias": {
+     "type": "string"
+    },
+    "ExternalId": {
+     "maxLength": 128,
+     "minLength": 2,
+     "pattern": "[a-zA-Z0-9_][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9_]+",
+     "type": "string"
+    },
+    "Id": {
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    },
+    "LogicalId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "[^\\u0000-\\u001F\\u007F]+",
+     "type": "string"
+    },
+    "NotificationState": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "Unit": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AssetId"
+ ],
+ "properties": {
+  "AssetArn": {
+   "type": "string"
+  },
+  "AssetDescription": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "[^\\u0000-\\u001F\\u007F]+",
+   "type": "string"
+  },
+  "AssetExternalId": {
+   "maxLength": 128,
+   "minLength": 2,
+   "pattern": "[a-zA-Z0-9_][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9_]+",
+   "type": "string"
+  },
+  "AssetHierarchies": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AssetHierarchy"
+   },
+   "type": "array"
+  },
+  "AssetId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "AssetModelId": {
+   "maxLength": 139,
+   "minLength": 13,
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$|^externalId:[a-zA-Z0-9][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9]+",
+   "type": "string"
+  },
+  "AssetName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[^\\u0000-\\u001F\\u007F]+",
+   "type": "string"
+  },
+  "AssetProperties": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AssetProperty"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssetArn",
+  "/properties/AssetId",
+  "/properties/AssetProperties/*/Id",
+  "/properties/AssetHierarchies/*/Id"
+ ],
+ "required": [
+  "AssetName",
+  "AssetModelId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-IoTSiteWise.git",
+ "taggable": true,
+ "typeName": "AWS::IoTSiteWise::Asset"
+}

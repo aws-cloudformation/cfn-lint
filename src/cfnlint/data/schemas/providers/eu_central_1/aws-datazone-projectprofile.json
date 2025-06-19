@@ -1,0 +1,251 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainIdentifier"
+ ],
+ "definitions": {
+  "AwsAccount": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsAccountId": {
+     "pattern": "^\\d{12}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AwsAccountId"
+   ],
+   "type": "object"
+  },
+  "DeploymentMode": {
+   "enum": [
+    "ON_CREATE",
+    "ON_DEMAND"
+   ],
+   "type": "string"
+  },
+  "DesignationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DesignationId": {
+     "maxLength": 36,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "DesignationId"
+   ],
+   "type": "object"
+  },
+  "EnvironmentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsAccount": {
+     "$ref": "#/definitions/AwsAccount"
+    },
+    "AwsRegion": {
+     "$ref": "#/definitions/Region"
+    },
+    "ConfigurationParameters": {
+     "$ref": "#/definitions/EnvironmentConfigurationParametersDetails"
+    },
+    "DeploymentMode": {
+     "$ref": "#/definitions/DeploymentMode"
+    },
+    "DeploymentOrder": {
+     "maximum": 16,
+     "minimum": 0,
+     "type": "number"
+    },
+    "Description": {
+     "maxLength": 2048,
+     "type": "string"
+    },
+    "EnvironmentBlueprintId": {
+     "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+     "type": "string"
+    },
+    "Id": {
+     "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[\\w -]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AwsRegion",
+    "EnvironmentBlueprintId",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "EnvironmentConfigurationParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "IsEditable": {
+     "type": "boolean"
+    },
+    "Name": {
+     "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EnvironmentConfigurationParametersDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "ParameterOverrides": {
+     "items": {
+      "$ref": "#/definitions/EnvironmentConfigurationParameter"
+     },
+     "type": "array"
+    },
+    "ResolvedParameters": {
+     "items": {
+      "$ref": "#/definitions/EnvironmentConfigurationParameter"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ProjectScope": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[\\w -]+$",
+     "type": "string"
+    },
+    "Policy": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Region": {
+   "additionalProperties": false,
+   "properties": {
+    "RegionName": {
+     "maxLength": 16,
+     "minLength": 4,
+     "pattern": "^[a-z]{2}-?(iso|gov)?-{1}[a-z]*-{1}[0-9]$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RegionName"
+   ],
+   "type": "object"
+  },
+  "Status": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainIdentifier",
+  "/properties/Identifier"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "CreatedBy": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "DomainId": {
+   "pattern": "^dzd[_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "DomainIdentifier": {
+   "pattern": "^dzd[_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "DomainUnitId": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-z0-9_\\-]+$",
+   "type": "string"
+  },
+  "DomainUnitIdentifier": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-z0-9_\\-]+$",
+   "type": "string"
+  },
+  "EnvironmentConfigurations": {
+   "items": {
+    "$ref": "#/definitions/EnvironmentConfiguration"
+   },
+   "type": "array"
+  },
+  "Id": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Identifier": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "LastUpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[\\w -]+$",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/Status"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/CreatedBy",
+  "/properties/DomainId",
+  "/properties/DomainUnitId",
+  "/properties/Id",
+  "/properties/Identifier",
+  "/properties/LastUpdatedAt",
+  "/properties/EnvironmentConfigurations/*/Id",
+  "/properties/EnvironmentConfigurations/*/ConfigurationParameters/ResolvedParameters"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::DataZone::ProjectProfile",
+ "writeOnlyProperties": [
+  "/properties/DomainUnitIdentifier"
+ ]
+}

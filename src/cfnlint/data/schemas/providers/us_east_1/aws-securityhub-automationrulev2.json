@@ -1,0 +1,498 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AllowedOperators": {
+   "enum": [
+    "AND",
+    "OR"
+   ],
+   "type": "string"
+  },
+  "AutomationRulesActionV2": {
+   "additionalProperties": false,
+   "properties": {
+    "ExternalIntegrationConfiguration": {
+     "$ref": "#/definitions/ExternalIntegrationConfiguration"
+    },
+    "FindingFieldsUpdate": {
+     "$ref": "#/definitions/AutomationRulesFindingFieldsUpdateV2"
+    },
+    "Type": {
+     "enum": [
+      "FINDING_FIELDS_UPDATE",
+      "EXTERNAL_INTEGRATION"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "AutomationRulesFindingFieldsUpdateV2": {
+   "additionalProperties": false,
+   "properties": {
+    "Comment": {
+     "pattern": ".*\\S.*",
+     "type": "string"
+    },
+    "SeverityId": {
+     "type": "integer"
+    },
+    "StatusId": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "BooleanFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Value"
+   ],
+   "type": "object"
+  },
+  "CompositeFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "BooleanFilters": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/OcsfBooleanFilter"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "DateFilters": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/OcsfDateFilter"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "MapFilters": {
+     "items": {
+      "$ref": "#/definitions/OcsfMapFilter"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array"
+    },
+    "NumberFilters": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/OcsfNumberFilter"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Operator": {
+     "$ref": "#/definitions/AllowedOperators"
+    },
+    "StringFilters": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/OcsfStringFilter"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Criteria": {
+   "additionalProperties": false,
+   "properties": {
+    "OcsfFindingCriteria": {
+     "$ref": "#/definitions/OcsfFindingFilters"
+    }
+   },
+   "type": "object"
+  },
+  "DateFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "DateRange": {
+     "$ref": "#/definitions/DateRange"
+    },
+    "End": {
+     "$ref": "#/definitions/ISO8601DateString"
+    },
+    "Start": {
+     "$ref": "#/definitions/ISO8601DateString"
+    }
+   },
+   "type": "object"
+  },
+  "DateRange": {
+   "additionalProperties": false,
+   "properties": {
+    "Unit": {
+     "enum": [
+      "DAYS"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "Unit",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "ExternalIntegrationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectorArn": {
+     "pattern": ".*\\S.*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ISO8601DateString": {
+   "pattern": "^(\\d\\d\\d\\d)-([0][1-9]|[1][0-2])-([0][1-9]|[1-2](\\d)|[3][0-1])[T](?:([0-1](\\d)|[2][0-3]):[0-5](\\d):[0-5](\\d)|23:59:60)(?:\\.(\\d)+)?([Z]|[+-](\\d\\d)(:?(\\d\\d))?)$",
+   "type": "string"
+  },
+  "MapFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Comparison": {
+     "enum": [
+      "EQUALS",
+      "NOT_EQUALS"
+     ],
+     "type": "string"
+    },
+    "Key": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Comparison",
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "NumberFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Eq": {
+     "type": "number"
+    },
+    "Gte": {
+     "type": "number"
+    },
+    "Lte": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "OcsfBooleanFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldName": {
+     "enum": [
+      "compliance.assessments.meets_criteria",
+      "vulnerabilities.is_exploit_available",
+      "vulnerabilities.is_fix_available"
+     ],
+     "type": "string"
+    },
+    "Filter": {
+     "$ref": "#/definitions/BooleanFilter"
+    }
+   },
+   "required": [
+    "FieldName",
+    "Filter"
+   ],
+   "type": "object"
+  },
+  "OcsfDateFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldName": {
+     "enum": [
+      "finding_info.created_time_dt",
+      "finding_info.first_seen_time_dt",
+      "finding_info.last_seen_time_dt",
+      "finding_info.modified_time_dt"
+     ],
+     "type": "string"
+    },
+    "Filter": {
+     "$ref": "#/definitions/DateFilter"
+    }
+   },
+   "required": [
+    "FieldName",
+    "Filter"
+   ],
+   "type": "object"
+  },
+  "OcsfFindingFilters": {
+   "additionalProperties": false,
+   "properties": {
+    "CompositeFilters": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/CompositeFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "CompositeOperator": {
+     "$ref": "#/definitions/AllowedOperators"
+    }
+   },
+   "type": "object"
+  },
+  "OcsfMapFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldName": {
+     "enum": [
+      "resources.tags"
+     ],
+     "type": "string"
+    },
+    "Filter": {
+     "$ref": "#/definitions/MapFilter"
+    }
+   },
+   "required": [
+    "FieldName",
+    "Filter"
+   ],
+   "type": "object"
+  },
+  "OcsfNumberFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldName": {
+     "enum": [
+      "activity_id",
+      "compliance.status_id",
+      "confidence_score",
+      "severity_id",
+      "status_id",
+      "finding_info.related_events_count"
+     ],
+     "type": "string"
+    },
+    "Filter": {
+     "$ref": "#/definitions/NumberFilter"
+    }
+   },
+   "required": [
+    "FieldName",
+    "Filter"
+   ],
+   "type": "object"
+  },
+  "OcsfStringField": {
+   "enum": [
+    "metadata.uid",
+    "activity_name",
+    "cloud.account.name",
+    "cloud.account.uid",
+    "cloud.provider",
+    "cloud.region",
+    "compliance.assessments.category",
+    "compliance.assessments.name",
+    "compliance.control",
+    "compliance.status",
+    "compliance.standards",
+    "finding_info.desc",
+    "finding_info.src_url",
+    "finding_info.title",
+    "finding_info.types",
+    "finding_info.uid",
+    "finding_info.related_events.uid",
+    "finding_info.related_events.product.uid",
+    "finding_info.related_events.title",
+    "metadata.product.feature.uid",
+    "metadata.product.name",
+    "metadata.product.uid",
+    "metadata.product.vendor_name",
+    "remediation.desc",
+    "remediation.references",
+    "resources.cloud_partition",
+    "resources.name",
+    "resources.region",
+    "resources.type",
+    "resources.uid",
+    "severity",
+    "status",
+    "comment",
+    "vulnerabilities.fix_coverage",
+    "class_name"
+   ],
+   "type": "string"
+  },
+  "OcsfStringFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldName": {
+     "$ref": "#/definitions/OcsfStringField"
+    },
+    "Filter": {
+     "$ref": "#/definitions/StringFilter"
+    }
+   },
+   "required": [
+    "FieldName",
+    "Filter"
+   ],
+   "type": "object"
+  },
+  "StringFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Comparison": {
+     "enum": [
+      "EQUALS",
+      "PREFIX",
+      "NOT_EQUALS",
+      "PREFIX_NOT_EQUALS",
+      "CONTAINS"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Comparison"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^(?!aws:)[a-zA-Z+-=._:/]{1,128}$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RuleArn"
+ ],
+ "properties": {
+  "Actions": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/AutomationRulesActionV2"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CreatedAt": {
+   "$ref": "#/definitions/ISO8601DateString"
+  },
+  "Criteria": {
+   "$ref": "#/definitions/Criteria"
+  },
+  "Description": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "RuleArn": {
+   "pattern": "^arn:aws\\S*:securityhub:[a-z0-9-]+:[0-9]{12}:automation-rulev2/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "RuleId": {
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "RuleName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "RuleOrder": {
+   "maximum": 1000.0,
+   "minimum": 1.0,
+   "type": "number"
+  },
+  "RuleStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "UpdatedAt": {
+   "$ref": "#/definitions/ISO8601DateString"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RuleArn",
+  "/properties/RuleId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "RuleName",
+  "Description",
+  "RuleOrder",
+  "Criteria",
+  "Actions"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securityhub",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityHub::AutomationRuleV2"
+}

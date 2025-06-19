@@ -58,6 +58,21 @@
    ],
    "type": "object"
   },
+  "AWSManagedRulesAntiDDoSRuleSet": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientSideActionConfig": {
+     "$ref": "#/definitions/ClientSideActionConfig"
+    },
+    "SensitivityToBlock": {
+     "$ref": "#/definitions/SensitivityToAct"
+    }
+   },
+   "required": [
+    "ClientSideActionConfig"
+   ],
+   "type": "object"
+  },
   "AWSManagedRulesBotControlRuleSet": {
    "additionalProperties": false,
    "properties": {
@@ -102,6 +117,25 @@
    "required": [
     "Statements"
    ],
+   "type": "object"
+  },
+  "AsnMatchStatement": {
+   "additionalProperties": false,
+   "properties": {
+    "AsnList": {
+     "items": {
+      "maximum": 4294967295,
+      "minimum": 0,
+      "type": "integer"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array"
+    },
+    "ForwardedIPConfig": {
+     "$ref": "#/definitions/ForwardedIPConfiguration"
+    }
+   },
    "type": "object"
   },
   "AssociationConfig": {
@@ -203,6 +237,36 @@
      "$ref": "#/definitions/ImmunityTimeProperty"
     }
    },
+   "type": "object"
+  },
+  "ClientSideAction": {
+   "additionalProperties": false,
+   "properties": {
+    "ExemptUriRegularExpressions": {
+     "$ref": "#/definitions/RegularExpressionList"
+    },
+    "Sensitivity": {
+     "$ref": "#/definitions/SensitivityToAct"
+    },
+    "UsageOfAction": {
+     "$ref": "#/definitions/UsageOfAction"
+    }
+   },
+   "required": [
+    "UsageOfAction"
+   ],
+   "type": "object"
+  },
+  "ClientSideActionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Challenge": {
+     "$ref": "#/definitions/ClientSideAction"
+    }
+   },
+   "required": [
+    "Challenge"
+   ],
    "type": "object"
   },
   "CookieMatchPattern": {
@@ -1138,6 +1202,9 @@
     "AWSManagedRulesATPRuleSet": {
      "$ref": "#/definitions/AWSManagedRulesATPRuleSet"
     },
+    "AWSManagedRulesAntiDDoSRuleSet": {
+     "$ref": "#/definitions/AWSManagedRulesAntiDDoSRuleSet"
+    },
     "AWSManagedRulesBotControlRuleSet": {
      "$ref": "#/definitions/AWSManagedRulesBotControlRuleSet"
     },
@@ -1228,6 +1295,22 @@
    },
    "required": [
     "Statement"
+   ],
+   "type": "object"
+  },
+  "OnSourceDDoSProtectionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ALBLowReputationMode": {
+     "enum": [
+      "ACTIVE_UNDER_DDOS",
+      "ALWAYS_ON"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ALBLowReputationMode"
    ],
    "type": "object"
   },
@@ -1335,6 +1418,9 @@
   "RateBasedStatementCustomKey": {
    "additionalProperties": false,
    "properties": {
+    "ASN": {
+     "$ref": "#/definitions/RateLimitAsn"
+    },
     "Cookie": {
      "$ref": "#/definitions/RateLimitCookie"
     },
@@ -1375,6 +1461,9 @@
    "maximum": 2000000000,
    "minimum": 10,
    "type": "integer"
+  },
+  "RateLimitAsn": {
+   "type": "object"
   },
   "RateLimitCookie": {
    "additionalProperties": false,
@@ -1543,6 +1632,14 @@
    ],
    "type": "object"
   },
+  "Regex": {
+   "properties": {
+    "RegexString": {
+     "$ref": "#/definitions/RegexPatternString"
+    }
+   },
+   "type": "object"
+  },
   "RegexMatchStatement": {
    "additionalProperties": false,
    "properties": {
@@ -1592,6 +1689,17 @@
     "TextTransformations"
    ],
    "type": "object"
+  },
+  "RegexPatternString": {
+   "maxLength": 512,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RegularExpressionList": {
+   "items": {
+    "$ref": "#/definitions/Regex"
+   },
+   "type": "array"
   },
   "RequestBody": {
    "additionalProperties": false,
@@ -1992,6 +2100,14 @@
    ],
    "type": "string"
   },
+  "SensitivityToAct": {
+   "enum": [
+    "LOW",
+    "MEDIUM",
+    "HIGH"
+   ],
+   "type": "string"
+  },
   "SingleHeader": {
    "additionalProperties": false,
    "properties": {
@@ -2085,6 +2201,9 @@
    "properties": {
     "AndStatement": {
      "$ref": "#/definitions/AndStatement"
+    },
+    "AsnMatchStatement": {
+     "$ref": "#/definitions/AsnMatchStatement"
     },
     "ByteMatchStatement": {
      "$ref": "#/definitions/ByteMatchStatement"
@@ -2224,6 +2343,13 @@
     "string"
    ]
   },
+  "UsageOfAction": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
   "VisibilityConfig": {
    "additionalProperties": false,
    "properties": {
@@ -2311,7 +2437,9 @@
   "Name": {
    "$ref": "#/definitions/EntityName"
   },
-  "OnSourceDDoSProtectionConfig": {},
+  "OnSourceDDoSProtectionConfig": {
+   "$ref": "#/definitions/OnSourceDDoSProtectionConfig"
+  },
   "Rules": {
    "items": {
     "$ref": "#/definitions/Rule"

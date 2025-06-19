@@ -15,10 +15,16 @@
     }
    },
    "required": [
-    "Value",
-    "Key"
+    "Key",
+    "Value"
    ],
    "type": "object"
+  },
+  "TrafficMirrorNetworkService": {
+   "enum": [
+    "amazon-dns"
+   ],
+   "type": "string"
   }
  },
  "primaryIdentifier": [
@@ -32,13 +38,15 @@
    "type": "string"
   },
   "NetworkServices": {
+   "insertionOrder": false,
    "items": {
-    "type": "string"
+    "$ref": "#/definitions/TrafficMirrorNetworkService"
    },
    "type": "array",
-   "uniqueItems": false
+   "uniqueItems": true
   },
   "Tags": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
    },
@@ -49,5 +57,13 @@
  "readOnlyProperties": [
   "/properties/Id"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::EC2::TrafficMirrorFilter"
 }
