@@ -1,3 +1,11 @@
+### v1.36.1
+## What's Changed
+* Allow `*` for resource partition by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4168
+* Update regex dynamic ref for ssm by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4170
+* Update CloudFormation schemas to `2025-06-19` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4165
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.36.0...v1.36.1
+
 ### v1.36.0
 ## What's Changed
 * Don't decode when `TemplateURL` is dynamic reference by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4156
