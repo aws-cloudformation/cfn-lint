@@ -1,0 +1,218 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/AnalyzerConfiguration"
+ ],
+ "createOnlyProperties": [
+  "/properties/AnalyzerName",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "AnalysisRuleCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountIds": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ResourceTags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tags"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ArchiveRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Filter": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Filter"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "RuleName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "[A-Za-z][A-Za-z0-9_.-]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Filter",
+    "RuleName"
+   ],
+   "type": "object"
+  },
+  "Filter": {
+   "additionalProperties": false,
+   "properties": {
+    "Contains": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Eq": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Exists": {
+     "type": "boolean"
+    },
+    "Neq": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Property": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Property"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UnusedAccessConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AnalysisRule": {
+     "additionalProperties": false,
+     "properties": {
+      "Exclusions": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/AnalysisRuleCriteria"
+       },
+       "type": "array"
+      }
+     },
+     "type": "object"
+    },
+    "UnusedAccessAge": {
+     "maximum": 365,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AnalyzerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "UnusedAccessConfiguration": {
+     "$ref": "#/definitions/UnusedAccessConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "AnalyzerName": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "[A-Za-z][A-Za-z0-9_.-]*",
+   "type": "string"
+  },
+  "ArchiveRules": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ArchiveRule"
+   },
+   "type": "array"
+  },
+  "Arn": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "enum": [
+    "ACCOUNT",
+    "ACCOUNT_INTERNAL_ACCESS",
+    "ACCOUNT_UNUSED_ACCESS",
+    "ORGANIZATION",
+    "ORGANIZATION_INTERNAL_ACCESS",
+    "ORGANIZATION_UNUSED_ACCESS"
+   ],
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Type"
+ ],
+ "resourceLink": {
+  "mappings": {
+   "AnalyzerName": "/AnalyzerName"
+  },
+  "templateUri": "/access-analyzer/home?region=${awsRegion}#/analyzer/${AnalyzerName}"
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-accessanalyzer.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AccessAnalyzer::Analyzer"
+}

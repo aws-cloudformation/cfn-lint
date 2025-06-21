@@ -251,6 +251,7 @@ types: list[str] = [
     "AWS::EKS::AccessEntry",
     "AWS::EKS::Addon",
     "AWS::EKS::Cluster",
+    "AWS::EKS::FargateProfile",
     "AWS::EKS::IdentityProviderConfig",
     "AWS::EKS::Nodegroup",
     "AWS::EKS::PodIdentityAssociation",
@@ -529,7 +530,6 @@ types: list[str] = [
 # pylint: disable=too-many-lines
 cached: list[str] = [
     "Module",
-    "aws-accessanalyzer-analyzer.json",
     "aws-acmpca-certificate.json",
     "aws-acmpca-certificateauthority.json",
     "aws-acmpca-certificateauthorityactivation.json",
@@ -660,6 +660,7 @@ cached: list[str] = [
     "aws-ec2-capacityreservation.json",
     "aws-ec2-customergateway.json",
     "aws-ec2-dhcpoptions.json",
+    "aws-ec2-egressonlyinternetgateway.json",
     "aws-ec2-eip.json",
     "aws-ec2-eipassociation.json",
     "aws-ec2-flowlog.json",
@@ -742,6 +743,7 @@ cached: list[str] = [
     "aws-eks-accessentry.json",
     "aws-eks-addon.json",
     "aws-eks-cluster.json",
+    "aws-eks-fargateprofile.json",
     "aws-eks-identityproviderconfig.json",
     "aws-eks-nodegroup.json",
     "aws-eks-podidentityassociation.json",

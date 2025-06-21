@@ -88,6 +88,52 @@
    ],
    "type": "object"
   },
+  "InternalAccessAnalysisRuleCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountIds": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ResourceArns": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ResourceTypes": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "InternalAccessConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InternalAccessAnalysisRule": {
+     "additionalProperties": false,
+     "properties": {
+      "Inclusions": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/InternalAccessAnalysisRuleCriteria"
+       },
+       "type": "array"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -147,6 +193,9 @@
   "AnalyzerConfiguration": {
    "additionalProperties": false,
    "properties": {
+    "InternalAccessConfiguration": {
+     "$ref": "#/definitions/InternalAccessConfiguration"
+    },
     "UnusedAccessConfiguration": {
      "$ref": "#/definitions/UnusedAccessConfiguration"
     }

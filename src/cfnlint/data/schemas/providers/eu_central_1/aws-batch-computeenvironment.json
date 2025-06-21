@@ -1,0 +1,328 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ComputeEnvironmentName"
+  ]
+ ],
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/ComputeResources/AllocationStrategy",
+  "/properties/ComputeResources/BidPercentage",
+  "/properties/ComputeResources/Ec2Configuration",
+  "/properties/ComputeResources/Ec2KeyPair",
+  "/properties/ComputeResources/ImageId",
+  "/properties/ComputeResources/InstanceRole",
+  "/properties/ComputeResources/InstanceTypes",
+  "/properties/ComputeResources/LaunchTemplate",
+  "/properties/ComputeResources/PlacementGroup",
+  "/properties/ComputeResources/SecurityGroupIds",
+  "/properties/ComputeResources/Subnets",
+  "/properties/ComputeResources/Tags",
+  "/properties/ComputeResources/Type"
+ ],
+ "createOnlyProperties": [
+  "/properties/ComputeResources/SpotIamFleetRole",
+  "/properties/ComputeEnvironmentName",
+  "/properties/Tags",
+  "/properties/Type",
+  "/properties/EksConfiguration"
+ ],
+ "definitions": {
+  "ComputeResources": {
+   "additionalProperties": false,
+   "properties": {
+    "AllocationStrategy": {
+     "enumCaseInsensitive": [
+      "best_fit",
+      "best_fit_progressive",
+      "spot_capacity_optimized",
+      "spot_price_capacity_optimized"
+     ],
+     "type": "string"
+    },
+    "BidPercentage": {
+     "type": "integer"
+    },
+    "DesiredvCpus": {
+     "type": "integer"
+    },
+    "Ec2Configuration": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Ec2ConfigurationObject"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Ec2KeyPair": {
+     "type": "string"
+    },
+    "ImageId": {
+     "format": "AWS::EC2::Image.Id",
+     "type": "string"
+    },
+    "InstanceRole": {
+     "type": "string"
+    },
+    "InstanceTypes": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "LaunchTemplate": {
+     "$ref": "#/definitions/LaunchTemplateSpecification"
+    },
+    "MaxvCpus": {
+     "type": "integer"
+    },
+    "MinvCpus": {
+     "type": "integer"
+    },
+    "PlacementGroup": {
+     "type": "string"
+    },
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SpotIamFleetRole": {
+     "type": "string"
+    },
+    "Subnets": {
+     "format": "AWS::EC2::Subnet.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::Subnet.Id",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Tags": {
+     "additionalProperties": false,
+     "patternProperties": {
+      ".*": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Type": {
+     "enumCaseInsensitive": [
+      "ec2",
+      "fargate",
+      "fargate_spot",
+      "spot"
+     ],
+     "type": "string"
+    },
+    "UpdateToLatestImageVersion": {
+     "default": false,
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Subnets",
+    "Type",
+    "MaxvCpus"
+   ],
+   "type": "object"
+  },
+  "Ec2ConfigurationObject": {
+   "additionalProperties": false,
+   "properties": {
+    "ImageIdOverride": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ImageKubernetesVersion": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ImageType": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ImageType"
+   ],
+   "type": "object"
+  },
+  "EksConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EksClusterArn": {
+     "default": false,
+     "type": "string"
+    },
+    "KubernetesNamespace": {
+     "default": false,
+     "type": "string"
+    }
+   },
+   "required": [
+    "EksClusterArn",
+    "KubernetesNamespace"
+   ],
+   "type": "object"
+  },
+  "LaunchTemplateSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "LaunchTemplateId": {
+     "type": "string"
+    },
+    "LaunchTemplateName": {
+     "type": "string"
+    },
+    "Overrides": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/LaunchTemplateSpecificationOverride"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "UserdataType": {
+     "enum": [
+      "EKS_BOOTSTRAP_SH",
+      "EKS_NODEADM"
+     ],
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LaunchTemplateSpecificationOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "LaunchTemplateId": {
+     "type": "string"
+    },
+    "LaunchTemplateName": {
+     "type": "string"
+    },
+    "TargetInstanceTypes": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "UserdataType": {
+     "enum": [
+      "EKS_BOOTSTRAP_SH",
+      "EKS_NODEADM"
+     ],
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "UpdatePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "JobExecutionTimeoutMinutes": {
+     "default": 30,
+     "type": "integer"
+    },
+    "TerminateJobsOnUpdate": {
+     "default": false,
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ComputeEnvironmentArn"
+ ],
+ "properties": {
+  "ComputeEnvironmentArn": {
+   "type": "string"
+  },
+  "ComputeEnvironmentName": {
+   "type": "string"
+  },
+  "ComputeResources": {
+   "$ref": "#/definitions/ComputeResources"
+  },
+  "Context": {
+   "type": "string"
+  },
+  "EksConfiguration": {
+   "$ref": "#/definitions/EksConfiguration"
+  },
+  "ReplaceComputeEnvironment": {
+   "default": true,
+   "type": "boolean"
+  },
+  "ServiceRole": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".*": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Type": {
+   "enumCaseInsensitive": [
+    "managed",
+    "unmanaged"
+   ],
+   "type": "string"
+  },
+  "UnmanagedvCpus": {
+   "type": "integer"
+  },
+  "UpdatePolicy": {
+   "$ref": "#/definitions/UpdatePolicy"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ComputeEnvironmentArn"
+ ],
+ "required": [
+  "Type"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::Batch::ComputeEnvironment",
+ "writeOnlyProperties": [
+  "/properties/ComputeResources/UpdateToLatestImageVersion",
+  "/properties/ReplaceComputeEnvironment",
+  "/properties/UpdatePolicy"
+ ]
+}

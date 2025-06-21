@@ -1275,6 +1275,7 @@ types: list[str] = [
     "AWS::SecurityHub::DelegatedAdmin",
     "AWS::SecurityHub::FindingAggregator",
     "AWS::SecurityHub::Hub",
+    "AWS::SecurityHub::HubV2",
     "AWS::SecurityHub::Insight",
     "AWS::SecurityHub::OrganizationConfiguration",
     "AWS::SecurityHub::PolicyAssociation",
