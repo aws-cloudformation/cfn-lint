@@ -1,0 +1,125 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StorageLocation",
+  "/properties/OperatingSystem",
+  "/properties/ServerSdkVersion"
+ ],
+ "definitions": {
+  "StorageLocation": {
+   "$comment": "Contains object details present in the S3 Bucket",
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "Key": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "ObjectVersion": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BuildId"
+ ],
+ "properties": {
+  "BuildArn": {
+   "pattern": "^arn:.*:build\\/build-\\S+",
+   "type": "string"
+  },
+  "BuildId": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OperatingSystem": {
+   "enum": [
+    "AMAZON_LINUX",
+    "AMAZON_LINUX_2",
+    "AMAZON_LINUX_2023",
+    "WINDOWS_2012",
+    "WINDOWS_2016"
+   ],
+   "type": "string"
+  },
+  "ServerSdkVersion": {
+   "maxLength": 128,
+   "pattern": "^\\d+\\.\\d+\\.\\d+$",
+   "type": "string"
+  },
+  "StorageLocation": {
+   "$ref": "#/definitions/StorageLocation"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Version": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/BuildId",
+  "/properties/BuildArn"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GameLift::Build",
+ "writeOnlyProperties": [
+  "/properties/StorageLocation"
+ ]
+}

@@ -1,0 +1,190 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/InstanceFamilies",
+  "/properties/Platforms"
+ ],
+ "definitions": {
+  "ApplicationAttribute": {
+   "type": "string"
+  },
+  "Arn": {
+   "pattern": "^arn:aws(?:\\-cn|\\-iso\\-b|\\-iso|\\-us\\-gov)?:[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.\\\\-]{0,1023}$",
+   "type": "string"
+  },
+  "PlatformType": {
+   "enum": [
+    "AMAZON_LINUX2",
+    "RHEL8",
+    "ROCKY_LINUX8",
+    "WINDOWS",
+    "WINDOWS_SERVER_2016",
+    "WINDOWS_SERVER_2019",
+    "WINDOWS_SERVER_2022"
+   ],
+   "type": "string"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Bucket": {
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "^[0-9a-z\\.\\-]*(?<!\\.)$",
+     "type": "string"
+    },
+    "S3Key": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3Bucket",
+    "S3Key"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Key": {
+       "type": "string"
+      },
+      "Value": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "Key",
+      "Value"
+     ],
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "TagKey": {
+       "type": "string"
+      },
+      "TagValue": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "TagKey",
+      "TagValue"
+     ],
+     "type": "object"
+    }
+   ]
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/Tags/*/TagKey",
+  "/properties/Tags/*/TagValue"
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AppBlockArn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "AttributesToDelete": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ApplicationAttribute"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CreatedTime": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "IconS3Location": {
+   "$ref": "#/definitions/S3Location"
+  },
+  "InstanceFamilies": {
+   "insertionOrder": false,
+   "items": {
+    "minLength": 1,
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "LaunchParameters": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "LaunchPath": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,100}$",
+   "type": "string"
+  },
+  "Platforms": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PlatformType"
+   },
+   "maxItems": 4,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "WorkingDirectory": {
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedTime"
+ ],
+ "required": [
+  "Name",
+  "IconS3Location",
+  "LaunchPath",
+  "Platforms",
+  "InstanceFamilies",
+  "AppBlockArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appstream.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::AppStream::Application",
+ "writeOnlyProperties": [
+  "/properties/Tags",
+  "/properties/AttributesToDelete"
+ ]
+}

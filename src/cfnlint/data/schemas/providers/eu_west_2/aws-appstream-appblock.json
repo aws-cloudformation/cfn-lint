@@ -1,0 +1,172 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/DisplayName",
+  "/properties/Description",
+  "/properties/SourceS3Location",
+  "/properties/SetupScriptDetails",
+  "/properties/PackagingType",
+  "/properties/PostSetupScriptDetails"
+ ],
+ "definitions": {
+  "Arn": {
+   "type": "string"
+  },
+  "PackagingType": {
+   "enum": [
+    "APPSTREAM2",
+    "CUSTOM"
+   ],
+   "type": "string"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Bucket": {
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "^[0-9a-z\\.\\-]*(?<!\\.)$",
+     "type": "string"
+    },
+    "S3Key": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3Bucket"
+   ],
+   "type": "object"
+  },
+  "ScriptDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "ExecutableParameters": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "ExecutablePath": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "ScriptS3Location": {
+     "$ref": "#/definitions/S3Location"
+    },
+    "TimeoutInSeconds": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ScriptS3Location",
+    "ExecutablePath",
+    "TimeoutInSeconds"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Key": {
+       "type": "string"
+      },
+      "Value": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "Key",
+      "Value"
+     ],
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "TagKey": {
+       "type": "string"
+      },
+      "TagValue": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "TagKey",
+      "TagValue"
+     ],
+     "type": "object"
+    }
+   ]
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/Tags/*/TagKey",
+  "/properties/Tags/*/TagValue"
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "CreatedTime": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,100}$",
+   "type": "string"
+  },
+  "PackagingType": {
+   "$ref": "#/definitions/PackagingType"
+  },
+  "PostSetupScriptDetails": {
+   "$ref": "#/definitions/ScriptDetails"
+  },
+  "SetupScriptDetails": {
+   "$ref": "#/definitions/ScriptDetails"
+  },
+  "SourceS3Location": {
+   "$ref": "#/definitions/S3Location"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedTime"
+ ],
+ "required": [
+  "Name",
+  "SourceS3Location"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appstream.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::AppStream::AppBlock",
+ "writeOnlyProperties": [
+  "/properties/Tags"
+ ]
+}

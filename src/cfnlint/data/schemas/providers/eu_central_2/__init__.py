@@ -748,7 +748,6 @@ types: list[str] = [
 # pylint: disable=too-many-lines
 cached: list[str] = [
     "Module",
-    "aws-accessanalyzer-analyzer.json",
     "aws-acmpca-certificate.json",
     "aws-acmpca-certificateauthority.json",
     "aws-acmpca-certificateauthorityactivation.json",
@@ -970,7 +969,7 @@ cached: list[str] = [
     "aws-ec2-clientvpntargetnetworkassociation.json",
     "aws-ec2-customergateway.json",
     "aws-ec2-dhcpoptions.json",
-    "aws-ec2-ec2fleet.json",
+    "aws-ec2-egressonlyinternetgateway.json",
     "aws-ec2-eip.json",
     "aws-ec2-eipassociation.json",
     "aws-ec2-flowlog.json",
@@ -1430,6 +1429,8 @@ cached: list[str] = [
     "aws-wafv2-ipset.json",
     "aws-wafv2-loggingconfiguration.json",
     "aws-wafv2-regexpatternset.json",
+    "aws-wafv2-rulegroup.json",
+    "aws-wafv2-webacl.json",
     "aws-wafv2-webaclassociation.json",
     "aws-workspaces-workspace.json",
     "aws-xray-group.json",

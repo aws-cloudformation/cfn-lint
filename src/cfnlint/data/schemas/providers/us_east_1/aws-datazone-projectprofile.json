@@ -115,11 +115,6 @@
       "$ref": "#/definitions/EnvironmentConfigurationParameter"
      },
      "type": "array"
-    },
-    "SsmPath": {
-     "maxLength": 2048,
-     "minLength": 1,
-     "type": "string"
     }
    },
    "type": "object"
@@ -201,6 +196,12 @@
    "pattern": "^[a-z0-9_\\-]+$",
    "type": "string"
   },
+  "EnvironmentConfigurations": {
+   "items": {
+    "$ref": "#/definitions/EnvironmentConfiguration"
+   },
+   "type": "array"
+  },
   "Id": {
    "pattern": "^[a-zA-Z0-9_-]{1,36}$",
    "type": "string"
@@ -230,7 +231,9 @@
   "/properties/DomainUnitId",
   "/properties/Id",
   "/properties/Identifier",
-  "/properties/LastUpdatedAt"
+  "/properties/LastUpdatedAt",
+  "/properties/EnvironmentConfigurations/*/Id",
+  "/properties/EnvironmentConfigurations/*/ConfigurationParameters/ResolvedParameters"
  ],
  "required": [
   "Name"

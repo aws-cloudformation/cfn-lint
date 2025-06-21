@@ -747,7 +747,6 @@ types: list[str] = [
 # pylint: disable=too-many-lines
 cached: list[str] = [
     "Module",
-    "aws-accessanalyzer-analyzer.json",
     "aws-acmpca-certificate.json",
     "aws-acmpca-certificateauthority.json",
     "aws-acmpca-certificateauthorityactivation.json",
