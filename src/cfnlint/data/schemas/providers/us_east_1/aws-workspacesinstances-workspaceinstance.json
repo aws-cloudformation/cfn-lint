@@ -1,0 +1,621 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/Tags"
+ ],
+ "createOnlyProperties": [
+  "/properties/ManagedInstance"
+ ],
+ "definitions": {
+  "BlockDeviceMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "DeviceName": {
+     "maxLength": 32,
+     "type": "string"
+    },
+    "Ebs": {
+     "$ref": "#/definitions/EbsBlockDevice"
+    },
+    "NoDevice": {
+     "maxLength": 32,
+     "type": "string"
+    },
+    "VirtualName": {
+     "pattern": "^ephemeral(0|[1-9][0-9]{0,2})$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CapacityReservationSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "CapacityReservationPreference": {
+     "enum": [
+      "capacity-reservations-only",
+      "open",
+      "none"
+     ],
+     "type": "string"
+    },
+    "CapacityReservationTarget": {
+     "$ref": "#/definitions/CapacityReservationTarget"
+    }
+   },
+   "type": "object"
+  },
+  "CapacityReservationTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "CapacityReservationId": {
+     "maxLength": 128,
+     "type": "string"
+    },
+    "CapacityReservationResourceGroupArn": {
+     "pattern": "^arn:.*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ConnectionTrackingSpecificationRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "TcpEstablishedTimeout": {
+     "type": "integer"
+    },
+    "UdpStreamTimeout": {
+     "type": "integer"
+    },
+    "UdpTimeout": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "CpuOptionsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "CoreCount": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "ThreadsPerCore": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "CreditSpecificationRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "CpuCredits": {
+     "enum": [
+      "standard",
+      "unlimited"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EC2ManagedInstance": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EbsBlockDevice": {
+   "additionalProperties": false,
+   "properties": {
+    "Encrypted": {
+     "type": "boolean"
+    },
+    "Iops": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "KmsKeyId": {
+     "maxLength": 128,
+     "type": "string"
+    },
+    "Throughput": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "VolumeSize": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "VolumeType": {
+     "enum": [
+      "standard",
+      "io1",
+      "io2",
+      "gp2",
+      "sc1",
+      "st1",
+      "gp3"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EnaSrdSpecificationRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "EnaSrdEnabled": {
+     "type": "boolean"
+    },
+    "EnaSrdUdpSpecification": {
+     "$ref": "#/definitions/EnaSrdUdpSpecificationRequest"
+    }
+   },
+   "type": "object"
+  },
+  "EnaSrdUdpSpecificationRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "EnaSrdUdpEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "EnclaveOptionsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "HibernationOptionsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Configured": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "IamInstanceProfileSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 64,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceIpv6Address": {
+   "additionalProperties": false,
+   "properties": {
+    "Ipv6Address": {
+     "maxLength": 128,
+     "type": "string"
+    },
+    "IsPrimaryIpv6": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceMaintenanceOptionsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoRecovery": {
+     "enum": [
+      "disabled",
+      "default"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceMarketOptionsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "MarketType": {
+     "enum": [
+      "spot",
+      "capacity-block"
+     ],
+     "type": "string"
+    },
+    "SpotOptions": {
+     "$ref": "#/definitions/SpotMarketOptions"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceMetadataOptionsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "HttpEndpoint": {
+     "enum": [
+      "enabled",
+      "disabled"
+     ],
+     "type": "string"
+    },
+    "HttpProtocolIpv6": {
+     "enum": [
+      "enabled",
+      "disabled"
+     ],
+     "type": "string"
+    },
+    "HttpPutResponseHopLimit": {
+     "maximum": 64,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "HttpTokens": {
+     "enum": [
+      "optional",
+      "required"
+     ],
+     "type": "string"
+    },
+    "InstanceMetadataTags": {
+     "enum": [
+      "enabled",
+      "disabled"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceNetworkInterfaceSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "maxLength": 1000,
+     "pattern": "^[\\S\\s]*$",
+     "type": "string"
+    },
+    "DeviceIndex": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "Groups": {
+     "items": {
+      "pattern": "^sg-[0-9a-zA-Z]{1,63}$",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SubnetId": {
+     "pattern": "^subnet-[0-9a-zA-Z]{1,63}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceNetworkPerformanceOptionsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "BandwidthWeighting": {
+     "enum": [
+      "default",
+      "vpc-1",
+      "ebs-1"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Ipv4PrefixSpecificationRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Ipv4Prefix": {
+     "maxLength": 128,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Ipv6PrefixSpecificationRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Ipv6Prefix": {
+     "maxLength": 128,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LicenseConfigurationRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "LicenseConfigurationArn": {
+     "pattern": "^arn:.*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Placement": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "pattern": "^[a-z]{2}-[a-z]+-\\d[a-z](-[a-z0-9]+)?$",
+     "type": "string"
+    },
+    "GroupName": {
+     "maxLength": 255,
+     "type": "string"
+    },
+    "Tenancy": {
+     "enum": [
+      "default",
+      "dedicated",
+      "host"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PrivateDnsNameOptionsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableResourceNameDnsAAAARecord": {
+     "type": "boolean"
+    },
+    "EnableResourceNameDnsARecord": {
+     "type": "boolean"
+    },
+    "HostnameType": {
+     "enum": [
+      "ip-name",
+      "resource-name"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PrivateIpAddressSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Primary": {
+     "type": "boolean"
+    },
+    "PrivateIpAddress": {
+     "maxLength": 128,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RunInstancesMonitoringEnabled": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "SpotMarketOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "BlockDurationMinutes": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "InstanceInterruptionBehavior": {
+     "enum": [
+      "hibernate",
+      "stop"
+     ],
+     "type": "string"
+    },
+    "MaxPrice": {
+     "maxLength": 64,
+     "type": "string"
+    },
+    "SpotInstanceType": {
+     "enum": [
+      "one-time",
+      "persistent"
+     ],
+     "type": "string"
+    },
+    "ValidUntilUtc": {
+     "format": "date-time",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]+)",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TagSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceType": {
+     "enum": [
+      "instance",
+      "volume",
+      "spot-instances-request",
+      "network-interface"
+     ],
+     "type": "string"
+    },
+    "Tags": {
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "maxItems": 30,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WorkspaceInstanceId"
+ ],
+ "properties": {
+  "EC2ManagedInstance": {
+   "$ref": "#/definitions/EC2ManagedInstance"
+  },
+  "ManagedInstance": {
+   "additionalProperties": false,
+   "properties": {
+    "BlockDeviceMappings": {
+     "items": {
+      "$ref": "#/definitions/BlockDeviceMapping"
+     },
+     "type": "array"
+    },
+    "CpuOptions": {
+     "$ref": "#/definitions/CpuOptionsRequest"
+    },
+    "CreditSpecification": {
+     "$ref": "#/definitions/CreditSpecificationRequest"
+    },
+    "DisableApiStop": {
+     "type": "boolean"
+    },
+    "EbsOptimized": {
+     "type": "boolean"
+    },
+    "EnclaveOptions": {
+     "$ref": "#/definitions/EnclaveOptionsRequest"
+    },
+    "HibernationOptions": {
+     "$ref": "#/definitions/HibernationOptionsRequest"
+    },
+    "IamInstanceProfile": {
+     "$ref": "#/definitions/IamInstanceProfileSpecification"
+    },
+    "ImageId": {
+     "pattern": "^ami-[0-9a-zA-Z]{1,63}$",
+     "type": "string"
+    },
+    "InstanceType": {
+     "pattern": "^([a-z0-9-]+)\\.([a-z0-9]+)$",
+     "type": "string"
+    },
+    "KeyName": {
+     "maxLength": 64,
+     "type": "string"
+    },
+    "MaintenanceOptions": {
+     "$ref": "#/definitions/InstanceMaintenanceOptionsRequest"
+    },
+    "MetadataOptions": {
+     "$ref": "#/definitions/InstanceMetadataOptionsRequest"
+    },
+    "Monitoring": {
+     "$ref": "#/definitions/RunInstancesMonitoringEnabled"
+    },
+    "NetworkInterfaces": {
+     "items": {
+      "$ref": "#/definitions/InstanceNetworkInterfaceSpecification"
+     },
+     "type": "array"
+    },
+    "NetworkPerformanceOptions": {
+     "$ref": "#/definitions/InstanceNetworkPerformanceOptionsRequest"
+    },
+    "Placement": {
+     "$ref": "#/definitions/Placement"
+    },
+    "PrivateDnsNameOptions": {
+     "$ref": "#/definitions/PrivateDnsNameOptionsRequest"
+    },
+    "TagSpecifications": {
+     "items": {
+      "$ref": "#/definitions/TagSpecification"
+     },
+     "maxItems": 30,
+     "type": "array"
+    },
+    "UserData": {
+     "maxLength": 16000,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ImageId",
+    "InstanceType"
+   ],
+   "type": "object"
+  },
+  "ProvisionState": {
+   "enum": [
+    "ALLOCATING",
+    "ALLOCATED",
+    "DEALLOCATING",
+    "DEALLOCATED",
+    "ERROR_ALLOCATING",
+    "ERROR_DEALLOCATING"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 30,
+   "type": "array"
+  },
+  "WorkspaceInstanceId": {
+   "pattern": "^wsinst-[0-9a-zA-Z]{8,63}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/WorkspaceInstanceId",
+  "/properties/ProvisionState",
+  "/properties/EC2ManagedInstance",
+  "/properties/EC2ManagedInstance/InstanceId"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-schema.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::WorkspacesInstances::WorkspaceInstance",
+ "writeOnlyProperties": [
+  "/properties/ManagedInstance"
+ ]
+}

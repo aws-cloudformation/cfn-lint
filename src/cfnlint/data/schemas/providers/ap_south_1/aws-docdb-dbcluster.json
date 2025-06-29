@@ -1,0 +1,188 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SnapshotIdentifier",
+  "/properties/KmsKeyId",
+  "/properties/MasterUsername",
+  "/properties/SourceDBClusterIdentifier",
+  "/properties/GlobalClusterIdentifier",
+  "/properties/DBClusterIdentifier",
+  "/properties/AvailabilityZones",
+  "/properties/DBSubnetGroupName",
+  "/properties/StorageEncrypted"
+ ],
+ "definitions": {
+  "ServerlessV2ScalingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxCapacity": {
+     "type": "number"
+    },
+    "MinCapacity": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "MinCapacity",
+    "MaxCapacity"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AvailabilityZones": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "BackupRetentionPeriod": {
+   "maximum": 35,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ClusterResourceId": {
+   "type": "string"
+  },
+  "CopyTagsToSnapshot": {
+   "type": "boolean"
+  },
+  "DBClusterIdentifier": {
+   "type": "string"
+  },
+  "DBClusterParameterGroupName": {
+   "type": "string"
+  },
+  "DBSubnetGroupName": {
+   "type": "string"
+  },
+  "DeletionProtection": {
+   "type": "boolean"
+  },
+  "EnableCloudwatchLogsExports": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Endpoint": {
+   "type": "string"
+  },
+  "EngineVersion": {
+   "enum": [
+    "3.6.0",
+    "4.0",
+    "4.0.0",
+    "5.0.0"
+   ],
+   "type": "string"
+  },
+  "GlobalClusterIdentifier": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "ManageMasterUserPassword": {
+   "type": "boolean"
+  },
+  "MasterUserPassword": {
+   "type": "string"
+  },
+  "MasterUserSecretKmsKeyId": {
+   "type": "string"
+  },
+  "MasterUsername": {
+   "type": "string"
+  },
+  "NetworkType": {
+   "type": "string"
+  },
+  "Port": {
+   "type": "integer"
+  },
+  "PreferredBackupWindow": {
+   "type": "string"
+  },
+  "PreferredMaintenanceWindow": {
+   "type": "string"
+  },
+  "ReadEndpoint": {
+   "type": "string"
+  },
+  "RestoreToTime": {
+   "type": "string"
+  },
+  "RestoreType": {
+   "type": "string"
+  },
+  "RotateMasterUserPassword": {
+   "type": "boolean"
+  },
+  "ServerlessV2ScalingConfiguration": {
+   "$ref": "#/definitions/ServerlessV2ScalingConfiguration"
+  },
+  "SnapshotIdentifier": {
+   "type": "string"
+  },
+  "SourceDBClusterIdentifier": {
+   "type": "string"
+  },
+  "StorageEncrypted": {
+   "type": "boolean"
+  },
+  "StorageType": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "UseLatestRestorableTime": {
+   "type": "boolean"
+  },
+  "VpcSecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ReadEndpoint",
+  "/properties/Id",
+  "/properties/Endpoint",
+  "/properties/ClusterResourceId"
+ ],
+ "typeName": "AWS::DocDB::DBCluster"
+}
