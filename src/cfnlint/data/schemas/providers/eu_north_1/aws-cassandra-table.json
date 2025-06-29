@@ -1,0 +1,319 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KeyspaceName",
+  "/properties/TableName",
+  "/properties/PartitionKeyColumns",
+  "/properties/ClusteringKeyColumns",
+  "/properties/ClientSideTimestampsEnabled"
+ ],
+ "definitions": {
+  "AutoScalingSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoScalingDisabled": {
+     "default": false,
+     "type": "boolean"
+    },
+    "MaximumUnits": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MinimumUnits": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ScalingPolicy": {
+     "$ref": "#/definitions/ScalingPolicy"
+    }
+   },
+   "type": "object"
+  },
+  "AutoScalingSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ReadCapacityAutoScaling": {
+     "$ref": "#/definitions/AutoScalingSetting"
+    },
+    "WriteCapacityAutoScaling": {
+     "$ref": "#/definitions/AutoScalingSetting"
+    }
+   },
+   "type": "object"
+  },
+  "BillingMode": {
+   "additionalProperties": false,
+   "properties": {
+    "Mode": {
+     "$ref": "#/definitions/Mode"
+    },
+    "ProvisionedThroughput": {
+     "$ref": "#/definitions/ProvisionedThroughput"
+    }
+   },
+   "required": [
+    "Mode"
+   ],
+   "type": "object"
+  },
+  "ClusteringKeyColumn": {
+   "additionalProperties": false,
+   "properties": {
+    "Column": {
+     "$ref": "#/definitions/Column"
+    },
+    "OrderBy": {
+     "default": "ASC",
+     "enum": [
+      "ASC",
+      "DESC"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Column"
+   ],
+   "type": "object"
+  },
+  "Column": {
+   "additionalProperties": false,
+   "properties": {
+    "ColumnName": {
+     "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_]{1,47}$",
+     "type": "string"
+    },
+    "ColumnType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ColumnName",
+    "ColumnType"
+   ],
+   "type": "object"
+  },
+  "EncryptionSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionType": {
+     "$ref": "#/definitions/EncryptionType"
+    },
+    "KmsKeyIdentifier": {
+     "$ref": "#/definitions/KmsKeyIdentifier"
+    }
+   },
+   "required": [
+    "EncryptionType"
+   ],
+   "type": "object"
+  },
+  "EncryptionType": {
+   "default": "AWS_OWNED_KMS_KEY",
+   "enum": [
+    "AWS_OWNED_KMS_KEY",
+    "CUSTOMER_MANAGED_KMS_KEY"
+   ],
+   "type": "string"
+  },
+  "KmsKeyIdentifier": {
+   "type": "string"
+  },
+  "Mode": {
+   "default": "ON_DEMAND",
+   "enum": [
+    "PROVISIONED",
+    "ON_DEMAND"
+   ],
+   "type": "string"
+  },
+  "ProvisionedThroughput": {
+   "additionalProperties": false,
+   "properties": {
+    "ReadCapacityUnits": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "WriteCapacityUnits": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ReadCapacityUnits",
+    "WriteCapacityUnits"
+   ],
+   "type": "object"
+  },
+  "ReplicaSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ReadCapacityAutoScaling": {
+     "$ref": "#/definitions/AutoScalingSetting"
+    },
+    "ReadCapacityUnits": {
+     "type": "integer"
+    },
+    "Region": {
+     "maxLength": 25,
+     "minLength": 2,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Region"
+   ],
+   "type": "object"
+  },
+  "ScalingPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "TargetTrackingScalingPolicyConfiguration": {
+     "$ref": "#/definitions/TargetTrackingScalingPolicyConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TargetTrackingScalingPolicyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DisableScaleIn": {
+     "default": "false",
+     "type": "boolean"
+    },
+    "ScaleInCooldown": {
+     "default": 0,
+     "type": "integer"
+    },
+    "ScaleOutCooldown": {
+     "default": 0,
+     "type": "integer"
+    },
+    "TargetValue": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "TargetValue"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/KeyspaceName",
+  "/properties/TableName"
+ ],
+ "properties": {
+  "AutoScalingSpecifications": {
+   "$ref": "#/definitions/AutoScalingSpecification"
+  },
+  "BillingMode": {
+   "$ref": "#/definitions/BillingMode"
+  },
+  "ClientSideTimestampsEnabled": {
+   "type": "boolean"
+  },
+  "ClusteringKeyColumns": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/ClusteringKeyColumn"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DefaultTimeToLive": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "EncryptionSpecification": {
+   "$ref": "#/definitions/EncryptionSpecification"
+  },
+  "KeyspaceName": {
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_]{1,47}$",
+   "type": "string"
+  },
+  "PartitionKeyColumns": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Column"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "PointInTimeRecoveryEnabled": {
+   "type": "boolean"
+  },
+  "RegularColumns": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Column"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ReplicaSpecifications": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/ReplicaSpecification"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TableName": {
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_]{1,47}$",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/ClusteringKeyColumns/*/Column/ColumnType": "$lowercase(ColumnType)",
+  "/properties/PartitionKeyColumns/*/ColumnType": "$lowercase(ColumnType)",
+  "/properties/RegularColumns/*/ColumnType": "$lowercase(ColumnType)"
+ },
+ "required": [
+  "KeyspaceName",
+  "PartitionKeyColumns"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Cassandra::Table",
+ "writeOnlyProperties": [
+  "/properties/AutoScalingSpecifications",
+  "/properties/ReplicaSpecifications"
+ ]
+}

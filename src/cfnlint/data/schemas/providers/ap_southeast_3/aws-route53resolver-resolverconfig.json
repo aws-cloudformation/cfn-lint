@@ -1,0 +1,56 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceId",
+  "/properties/AutodefinedReverseFlag"
+ ],
+ "primaryIdentifier": [
+  "/properties/ResourceId"
+ ],
+ "properties": {
+  "AutodefinedReverse": {
+   "enum": [
+    "ENABLING",
+    "ENABLED",
+    "DISABLING",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "AutodefinedReverseFlag": {
+   "enum": [
+    "DISABLE"
+   ],
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OwnerId": {
+   "maxLength": 32,
+   "minLength": 12,
+   "type": "string"
+  },
+  "ResourceId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/AutodefinedReverseFlag": "$join([AutodefinedReverseFlag, \"D\"])"
+ },
+ "readOnlyProperties": [
+  "/properties/OwnerId",
+  "/properties/Id",
+  "/properties/AutodefinedReverse"
+ ],
+ "required": [
+  "ResourceId",
+  "AutodefinedReverseFlag"
+ ],
+ "taggable": false,
+ "typeName": "AWS::Route53Resolver::ResolverConfig"
+}

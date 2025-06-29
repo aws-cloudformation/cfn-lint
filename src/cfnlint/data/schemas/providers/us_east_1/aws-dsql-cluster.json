@@ -32,7 +32,28 @@
   "DeletionProtectionEnabled": {
    "type": "boolean"
   },
+  "EncryptionDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionStatus": {
+     "type": "string"
+    },
+    "EncryptionType": {
+     "type": "string"
+    },
+    "KmsKeyArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "Identifier": {
+   "type": "string"
+  },
+  "KmsEncryptionKey": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9:/_-]+",
    "type": "string"
   },
   "MultiRegionProperties": {
@@ -77,7 +98,8 @@
   "/properties/Identifier",
   "/properties/CreationTime",
   "/properties/Status",
-  "/properties/VpcEndpointServiceName"
+  "/properties/VpcEndpointServiceName",
+  "/properties/EncryptionDetails"
  ],
  "required": [],
  "tagging": {
@@ -87,5 +109,8 @@
   "tagUpdatable": true,
   "taggable": true
  },
- "typeName": "AWS::DSQL::Cluster"
+ "typeName": "AWS::DSQL::Cluster",
+ "writeOnlyProperties": [
+  "/properties/KmsEncryptionKey"
+ ]
 }

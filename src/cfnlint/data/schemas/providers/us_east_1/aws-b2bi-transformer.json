@@ -1,6 +1,15 @@
 {
  "additionalProperties": false,
  "definitions": {
+  "AdvancedOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "X12": {
+     "$ref": "#/definitions/X12AdvancedOptions"
+    }
+   },
+   "type": "object"
+  },
   "EdiType": {
    "oneOf": [
     {
@@ -52,6 +61,9 @@
   "InputConversion": {
    "additionalProperties": false,
    "properties": {
+    "AdvancedOptions": {
+     "$ref": "#/definitions/AdvancedOptions"
+    },
     "FormatOptions": {
      "$ref": "#/definitions/FormatOptions"
     },
@@ -173,6 +185,15 @@
    ],
    "type": "string"
   },
+  "X12AdvancedOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "SplitOptions": {
+     "$ref": "#/definitions/X12SplitOptions"
+    }
+   },
+   "type": "object"
+  },
   "X12Details": {
    "additionalProperties": false,
    "properties": {
@@ -181,6 +202,22 @@
     },
     "Version": {
      "$ref": "#/definitions/X12Version"
+    }
+   },
+   "type": "object"
+  },
+  "X12SplitBy": {
+   "enum": [
+    "NONE",
+    "TRANSACTION"
+   ],
+   "type": "string"
+  },
+  "X12SplitOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "SplitBy": {
+     "$ref": "#/definitions/X12SplitBy"
     }
    },
    "type": "object"
