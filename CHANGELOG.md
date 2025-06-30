@@ -1,3 +1,10 @@
+### v1.37.0
+## What's Changed
+* Update CloudFormation schemas to 2025-06-30 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4173
+* Validate deployment files by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3884
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.36.1...v1.37.0
+
 ### v1.36.1
 ## What's Changed
 * Allow `*` for resource partition by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4168
