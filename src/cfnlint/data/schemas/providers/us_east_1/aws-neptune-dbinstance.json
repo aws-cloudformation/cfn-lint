@@ -1,11 +1,16 @@
 {
  "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/AutoMinorVersionUpgrade",
+  "/properties/DBParameterGroupName",
+  "/properties/PreferredMaintenanceWindow"
+ ],
  "createOnlyProperties": [
-  "/properties/DBClusterIdentifier",
   "/properties/AvailabilityZone",
+  "/properties/DBClusterIdentifier",
   "/properties/DBInstanceIdentifier",
-  "/properties/DBSubnetGroupName",
-  "/properties/DBSnapshotIdentifier"
+  "/properties/DBSnapshotIdentifier",
+  "/properties/DBSubnetGroupName"
  ],
  "definitions": {
   "Tag": {
@@ -19,14 +24,17 @@
     }
    },
    "required": [
-    "Value",
-    "Key"
+    "Key",
+    "Value"
    ],
    "type": "object"
   }
  },
+ "deprecatedProperties": [
+  "/properties/DBSnapshotIdentifier"
+ ],
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/DBInstanceIdentifier"
  ],
  "properties": {
   "AllowMajorVersionUpgrade": {
@@ -59,9 +67,6 @@
   "Endpoint": {
    "type": "string"
   },
-  "Id": {
-   "type": "string"
-  },
   "Port": {
    "type": "string"
   },
@@ -69,20 +74,39 @@
    "type": "string"
   },
   "Tags": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
    },
    "type": "array",
-   "uniqueItems": false
+   "uniqueItems": true
   }
+ },
+ "propertyTransform": {
+  "/properties/DBClusterIdentifier": "$lowercase(DBClusterIdentifier)",
+  "/properties/DBInstanceIdentifier": "$lowercase(DBInstanceIdentifier)",
+  "/properties/DBParameterGroupName": "$lowercase(DBParameterGroupName)",
+  "/properties/DBSnapshotIdentifier": "$lowercase(DBSnapshotIdentifier)",
+  "/properties/DBSubnetGroupName": "$lowercase(DBSubnetGroupName)"
  },
  "readOnlyProperties": [
   "/properties/Endpoint",
-  "/properties/Port",
-  "/properties/Id"
+  "/properties/Port"
  ],
  "required": [
   "DBInstanceClass"
  ],
- "typeName": "AWS::Neptune::DBInstance"
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Neptune::DBInstance",
+ "writeOnlyProperties": [
+  "/properties/DBSnapshotIdentifier",
+  "/properties/AllowMajorVersionUpgrade"
+ ]
 }

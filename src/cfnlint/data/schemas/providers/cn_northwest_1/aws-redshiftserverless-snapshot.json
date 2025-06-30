@@ -1,0 +1,146 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/NamespaceName",
+  "/properties/SnapshotName",
+  "/properties/Tags",
+  "/properties/Tags/*/Key",
+  "/properties/Tags/*/Value"
+ ],
+ "definitions": {
+  "Snapshot": {
+   "additionalProperties": false,
+   "properties": {
+    "AdminUsername": {
+     "type": "string"
+    },
+    "KmsKeyId": {
+     "type": "string"
+    },
+    "NamespaceArn": {
+     "type": "string"
+    },
+    "NamespaceName": {
+     "maxLength": 64,
+     "minLength": 3,
+     "pattern": "^[a-z0-9-]+$",
+     "type": "string"
+    },
+    "OwnerAccount": {
+     "type": "string"
+    },
+    "RetentionPeriod": {
+     "type": "integer"
+    },
+    "SnapshotArn": {
+     "type": "string"
+    },
+    "SnapshotCreateTime": {
+     "type": "string"
+    },
+    "SnapshotName": {
+     "maxLength": 64,
+     "minLength": 3,
+     "pattern": "^[a-z0-9-]+$",
+     "type": "string"
+    },
+    "Status": {
+     "$ref": "#/definitions/SnapshotStatus"
+    }
+   },
+   "type": "object"
+  },
+  "SnapshotStatus": {
+   "enum": [
+    "AVAILABLE",
+    "CREATING",
+    "DELETED",
+    "CANCELLED",
+    "FAILED",
+    "COPYING"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SnapshotName"
+ ],
+ "properties": {
+  "NamespaceName": {
+   "maxLength": 64,
+   "minLength": 3,
+   "pattern": "^(?=^[a-z0-9-]+$).{3,64}$",
+   "type": "string"
+  },
+  "OwnerAccount": {
+   "type": "string"
+  },
+  "RetentionPeriod": {
+   "type": "integer"
+  },
+  "Snapshot": {
+   "$ref": "#/definitions/Snapshot"
+  },
+  "SnapshotName": {
+   "maxLength": 64,
+   "minLength": 3,
+   "pattern": "^(?=^[a-z0-9-]+$).{3,64}$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Snapshot",
+  "/properties/OwnerAccount",
+  "/properties/Snapshot/SnapshotName",
+  "/properties/Snapshot/NamespaceName",
+  "/properties/Snapshot/NamespaceArn",
+  "/properties/Snapshot/SnapshotArn",
+  "/properties/Snapshot/SnapshotCreateTime",
+  "/properties/Snapshot/Status",
+  "/properties/Snapshot/AdminUsername",
+  "/properties/Snapshot/KmsKeyId",
+  "/properties/Snapshot/OwnerAccount",
+  "/properties/Snapshot/RetentionPeriod"
+ ],
+ "required": [
+  "SnapshotName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-redshift-serverless",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::RedshiftServerless::Snapshot"
+}

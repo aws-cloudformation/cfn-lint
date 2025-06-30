@@ -1,0 +1,99 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TrafficMirrorFilterId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TrafficMirrorPortRange": {
+   "additionalProperties": false,
+   "properties": {
+    "FromPort": {
+     "type": "integer"
+    },
+    "ToPort": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "FromPort",
+    "ToPort"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Description": {
+   "type": "string"
+  },
+  "DestinationCidrBlock": {
+   "format": "ipv4-network",
+   "type": "string"
+  },
+  "DestinationPortRange": {
+   "$ref": "#/definitions/TrafficMirrorPortRange"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Protocol": {
+   "type": "integer"
+  },
+  "RuleAction": {
+   "type": "string"
+  },
+  "RuleNumber": {
+   "type": "integer"
+  },
+  "SourceCidrBlock": {
+   "format": "ipv4-network",
+   "type": "string"
+  },
+  "SourcePortRange": {
+   "$ref": "#/definitions/TrafficMirrorPortRange"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TrafficDirection": {
+   "type": "string"
+  },
+  "TrafficMirrorFilterId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "RuleAction",
+  "SourceCidrBlock",
+  "RuleNumber",
+  "DestinationCidrBlock",
+  "TrafficMirrorFilterId",
+  "TrafficDirection"
+ ],
+ "typeName": "AWS::EC2::TrafficMirrorFilterRule"
+}

@@ -146,6 +146,21 @@
    ],
    "type": "string"
   },
+  "GuardrailCrossRegionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "GuardrailProfileArn": {
+     "maxLength": 2048,
+     "minLength": 15,
+     "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:guardrail-profile/[a-z0-9-]+[.]{1}guardrail[.]{1}v[0-9:]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "GuardrailProfileArn"
+   ],
+   "type": "object"
+  },
   "GuardrailStatus": {
    "enum": [
     "CREATING",
@@ -505,6 +520,9 @@
   "CreatedAt": {
    "format": "date-time",
    "type": "string"
+  },
+  "CrossRegionConfig": {
+   "$ref": "#/definitions/GuardrailCrossRegionConfig"
   },
   "Description": {
    "maxLength": 200,

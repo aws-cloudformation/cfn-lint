@@ -20,6 +20,13 @@
    ],
    "type": "object"
   },
+  "TrafficDirection": {
+   "enum": [
+    "egress",
+    "ingress"
+   ],
+   "type": "string"
+  },
   "TrafficMirrorPortRange": {
    "additionalProperties": false,
    "properties": {
@@ -35,10 +42,17 @@
     "ToPort"
    ],
    "type": "object"
+  },
+  "TrafficMirrorRuleAction": {
+   "enum": [
+    "accept",
+    "reject"
+   ],
+   "type": "string"
   }
  },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/TrafficMirrorFilterRuleId"
  ],
  "properties": {
   "Description": {
@@ -51,14 +65,11 @@
   "DestinationPortRange": {
    "$ref": "#/definitions/TrafficMirrorPortRange"
   },
-  "Id": {
-   "type": "string"
-  },
   "Protocol": {
    "type": "integer"
   },
   "RuleAction": {
-   "type": "string"
+   "$ref": "#/definitions/TrafficMirrorRuleAction"
   },
   "RuleNumber": {
    "type": "integer"
@@ -71,6 +82,7 @@
    "$ref": "#/definitions/TrafficMirrorPortRange"
   },
   "Tags": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
    },
@@ -78,14 +90,17 @@
    "uniqueItems": false
   },
   "TrafficDirection": {
-   "type": "string"
+   "$ref": "#/definitions/TrafficDirection"
   },
   "TrafficMirrorFilterId": {
+   "type": "string"
+  },
+  "TrafficMirrorFilterRuleId": {
    "type": "string"
   }
  },
  "readOnlyProperties": [
-  "/properties/Id"
+  "/properties/TrafficMirrorFilterRuleId"
  ],
  "required": [
   "RuleAction",
@@ -95,5 +110,13 @@
   "TrafficMirrorFilterId",
   "TrafficDirection"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::EC2::TrafficMirrorFilterRule"
 }
