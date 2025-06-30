@@ -94,6 +94,16 @@ class RuleMatch:
         for k, v in kwargs.items():
             setattr(self, k, v)
 
+    def __repr__(self):
+        return cfnlint.helpers.format_json_string(
+            {
+                "path": self.path,
+                "path_string": self.path_string,
+                "message": self.message,
+                "context": self.context,
+            }
+        )
+
     def __eq__(self, item):
         """
         Override the equality comparison operator to compare rule

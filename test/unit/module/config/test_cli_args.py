@@ -121,6 +121,14 @@ class TestArgsParser(BaseTestCase):
             {"E3012": {"key": "value", "strict": "true"}, "E3001": {"key": "value"}},
         )
 
+    @patch("argparse.ArgumentParser.print_help")
+    def test_bad_rule_configuration(self, mock_print_help):
+        with self.assertRaises(SystemExit) as e:
+            cfnlint.config.CliArgs(["-x", "E3012:key;value"])
+
+        self.assertEqual(e.exception.code, 1)
+        mock_print_help.assert_called_once()
+
     def test_exit_code_parameter(self):
         """Test values of exit code"""
 

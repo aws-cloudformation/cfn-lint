@@ -9,7 +9,7 @@ import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
 from cfnlint import ConfigMixIn
 from cfnlint.config import _DEFAULT_RULESDIR
 from cfnlint.rules import Rules
-from cfnlint.runner import TemplateRunner
+from cfnlint.runner.template.runner import _run_template
 
 
 class TestCustomRuleParsing(BaseTestCase):
@@ -142,5 +142,4 @@ class TestCustomRuleParsing(BaseTestCase):
             template = cfnlint.decode.cfn_yaml.load(filename)
             rules = Rules()
             rules.update(rules.create_from_custom_rules_file(rulename))
-            runner = TemplateRunner(filename, template, ConfigMixIn({}), rules)
-            return list(runner.run())
+            return list(_run_template(filename, template, ConfigMixIn({}), rules))

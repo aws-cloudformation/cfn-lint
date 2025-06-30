@@ -8,7 +8,7 @@ from __future__ import annotations
 from collections import deque
 from typing import Any, Tuple
 
-from cfnlint.helpers import ToPy, ensure_list, is_types_compatible
+from cfnlint.helpers import ToPy, ensure_list, is_function, is_types_compatible
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 from cfnlint.schema import OTHER_SCHEMA_MANAGER
@@ -62,16 +62,37 @@ class BaseFn(CfnLintJsonSchema):
         )
 
     def _clean_resolve_errors(
-        self, err: ValidationError, value: Any, instance: Any
+        self, err: ValidationError, value: Any, instance: Any, validator: Validator
     ) -> ValidationError:
         if len(err.path) > 1:
             err.path = deque([err.path[0]])
         err.message = err.message.replace(f"{value!r}", f"{instance!r}")
         err.message = f"{err.message} when {self.fn.name!r} is resolved"
+        if validator.context.parameter_sets:
+            k, v = is_function(instance)
+            if k == "Ref":
+                if v in validator.context.parameters:
+                    deployment_files = []
+                    for parameter_set in validator.context.parameter_sets:
+                        if (
+                            v in parameter_set.parameters
+                            and value == parameter_set.parameters[v]
+                        ):
+                            if parameter_set.source:
+                                deployment_files.append(parameter_set.source)
+                            else:
+                                err.message = f"{err.message} to {value!r}"
+                                break
+                    else:
+                        err.message = (
+                            f"{err.message} to {value!r} from {deployment_files!r}"
+                        )
         if self.child_rules[self.resolved_rule]:
             err.rule = self.child_rules[self.resolved_rule]
             for i, err_ctx in enumerate(err.context):
-                err.context[i] = self._clean_resolve_errors(err_ctx, value, instance)
+                err.context[i] = self._clean_resolve_errors(
+                    err_ctx, value, instance, validator
+                )
         return err
 
     def resolve(
@@ -106,11 +127,13 @@ class BaseFn(CfnLintJsonSchema):
                 )
             )
 
-            if not errs:
+            if not errs and not v.context.is_resolved_from_parameters:
                 return
 
             for err in errs:
-                all_errs.append(self._clean_resolve_errors(err, value, instance))
+                all_errs.append(
+                    self._clean_resolve_errors(err, value, instance, validator)
+                )
 
         yield from iter(all_errs)
 

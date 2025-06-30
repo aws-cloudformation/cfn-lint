@@ -9,7 +9,8 @@ from pathlib import Path
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
 
-import cfnlint.config  # pylint: disable=E0401
+import cfnlint.config
+from cfnlint.context import ParameterSet
 from cfnlint.helpers import REGIONS
 
 LOGGER = logging.getLogger("cfnlint")
@@ -313,3 +314,92 @@ class TestConfigMixIn(BaseTestCase):
         )
         # template file wins over config file
         self.assertEqual(config.ignore_checks, ["W3001", "E3001"])
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_parameters(self, yaml_mock):
+        yaml_mock.side_effect = [{}, {}]
+        config = cfnlint.config.ConfigMixIn(["--parameters", "Foo=Bar"])
+
+        # test defaults
+        self.assertEqual(getattr(config.cli_args, "parameters"), [{"Foo": "Bar"}])
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_parameters_lists(self, yaml_mock):
+        yaml_mock.side_effect = [{}, {}]
+        config = cfnlint.config.ConfigMixIn(["--parameters", "A=1", "B=2"])
+
+        # test defaults
+        self.assertEqual(getattr(config.cli_args, "parameters"), [{"A": "1", "B": "2"}])
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_parameters_lists_bad_value(self, yaml_mock):
+        yaml_mock.side_effect = [{}, {}]
+
+        with patch("sys.exit") as exit:
+            cfnlint.config.ConfigMixIn(
+                [
+                    "--parameters",
+                    "A",
+                ]
+            )
+            exit.assert_called_once_with(1)
+
+    @patch("glob.glob")
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_template_deployment_files(self, yaml_mock, glob_mock):
+        _filenames = ["one.yaml"]
+        yaml_mock.side_effect = [{}, {}]
+        glob_mock.side_effect = [_filenames]
+        config = cfnlint.config.ConfigMixIn(["--deployment-files", "*.yaml"])
+
+        self.assertEqual(config.deployment_files, _filenames)
+        glob_mock.assert_called_once()
+
+    @patch("glob.glob")
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_template_parameter_files(self, yaml_mock, glob_mock):
+        _filenames = ["one.json"]
+        yaml_mock.side_effect = [{}, {}]
+
+        glob_mock.side_effect = [_filenames]
+        config = cfnlint.config.ConfigMixIn(["--parameter-files", "*.json"])
+
+        self.assertEqual(config.parameter_files, _filenames)
+        glob_mock.assert_called_once()
+
+    @patch("argparse.ArgumentParser.print_help")
+    def test_templates_with_deployment_files(self, mock_print_help):
+
+        with self.assertRaises(SystemExit) as e:
+            cfnlint.config.ConfigMixIn(
+                [
+                    "--deployment-files",
+                    "test/fixtures/templates/good/generic.yaml",
+                    "--template",
+                    "test/fixtures/templates/good/generic.yaml",
+                ]
+            )
+
+        self.assertEqual(e.exception.code, 1)
+        mock_print_help.assert_called_once()
+
+    def test_conversion_of_template_parameters(self):
+
+        config = cfnlint.ConfigMixIn(["--parameters", "Foo=Bar"])
+
+        self.assertEqual(
+            config.parameters, [ParameterSet(source=None, parameters={"Foo": "Bar"})]
+        )
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_config_compares(self, yaml_mock):
+        yaml_mock.side_effect = [{}, {}, {}, {}]
+        config1 = cfnlint.config.ConfigMixIn(
+            ["--template", "test/fixtures/templates/good/generic.yaml"]
+        )
+        config2 = cfnlint.config.ConfigMixIn(
+            ["--template", "test/fixtures/templates/bad/generic.yaml"]
+        )
+
+        self.assertNotEqual(config1, 1)
+        self.assertNotEqual(config1, config2)

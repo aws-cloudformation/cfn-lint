@@ -25,7 +25,7 @@ from dataclasses import dataclass, field, fields
 from typing import Any, Callable
 
 from cfnlint.conditions import UnknownSatisfisfaction
-from cfnlint.context import Context, create_context_for_template
+from cfnlint.context import Context
 from cfnlint.helpers import is_function
 from cfnlint.jsonschema import _keywords, _keywords_cfn, _resolvers_cfn
 from cfnlint.jsonschema._filter import FunctionFilter
@@ -92,7 +92,7 @@ def create(
 
         def __post_init__(self):
             if self.context is None:
-                self.context = create_context_for_template(self.cfn)
+                self.context = self.cfn.context.evolve()
             if self.resolver is None:
                 self.resolver = RefResolver.from_schema(
                     schema=self.schema,

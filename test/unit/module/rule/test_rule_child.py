@@ -9,7 +9,7 @@ from typing import Any, Dict
 from cfnlint import ConfigMixIn
 from cfnlint.decode.decode import decode_str
 from cfnlint.rules import CloudFormationLintRule, Match, RuleMatch, Rules
-from cfnlint.runner import TemplateRunner
+from cfnlint.runner import run_template_by_data
 
 
 class TestCloudFormationRuleChild(BaseTestCase):
@@ -50,8 +50,9 @@ class TestCloudFormationRuleChild(BaseTestCase):
         template, _ = decode_str('{"key": "value"}')
         self.assertIsNotNone(template)
         if template is not None:
-            runner = TemplateRunner(None, template, ConfigMixIn([]), rule_collection)
-            failures = list(runner.run())
+            failures = list(
+                run_template_by_data(template, ConfigMixIn([]), rule_collection)
+            )
 
             self.assertListEqual(
                 failures,
@@ -105,13 +106,13 @@ class TestCloudFormationRuleChild(BaseTestCase):
         template, _ = decode_str('{"key": "value"}')
         self.assertIsNotNone(template)
         if template is not None:
-            runner = TemplateRunner(
-                None,
-                template,
-                ConfigMixIn(ignore_checks=["E1001"]),
-                rule_collection,
+            failures = list(
+                run_template_by_data(
+                    template,
+                    ConfigMixIn(ignore_checks=["E1001"]),
+                    rule_collection,
+                )
             )
-            failures = list(runner.run())
 
             self.assertListEqual(failures, [])
 
@@ -158,12 +159,12 @@ class TestCloudFormationRuleChild(BaseTestCase):
         template, _ = decode_str('{"key": "value"}')
         self.assertIsNotNone(template)
         if template is not None:
-            runner = TemplateRunner(
-                None,
-                template,
-                ConfigMixIn(configure_rules={"E1001": {"pass": False}}),
-                rule_collection,
+            failures = list(
+                run_template_by_data(
+                    template,
+                    ConfigMixIn(configure_rules={"E1001": {"pass": False}}),
+                    rule_collection,
+                )
             )
-            failures = list(runner.run())
 
             self.assertListEqual(failures, [])

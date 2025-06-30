@@ -37,7 +37,7 @@ def _decode(
 ) -> Decode:
     """Decode payload using yaml_f and json_f, using filename for log output."""
     template = None
-    matches = []
+    matches: Matches = []
     try:
         template = yaml_f(payload)
     except IOError as e:
@@ -133,19 +133,9 @@ def _decode(
     except (YAMLError, Exception) as err:
         matches = [create_match_file_error(filename, str(err))]
 
-    if not isinstance(template, dict) and not matches:
-        # pylint: disable=import-outside-toplevel
-        from cfnlint.rules.errors import ParseError
-
-        # Template isn't a dict which means nearly nothing will work
-        matches = [
-            Match.create(
-                filename=filename or "",
-                rule=ParseError(),
-                message="Template needs to be an object.",
-            )
-        ]
-    return (template, matches)
+    if matches:
+        return None, matches
+    return template, matches
 
 
 def create_match_yaml_parser_error(parser_error, filename):
