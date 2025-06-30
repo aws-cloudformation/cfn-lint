@@ -1006,6 +1006,11 @@
     "Resources": [
      "investigation-group"
     ]
+   },
+   "validateinvestigationgroup": {
+    "Resources": [
+     "investigation-group"
+    ]
    }
   },
   "Resources": {
@@ -8228,6 +8233,7 @@
      "evaluation-job"
     ]
    },
+   "callwithbearertoken": {},
    "createagent": {},
    "createagentactiongroup": {
     "Resources": [
@@ -8245,6 +8251,7 @@
      "blueprint"
     ]
    },
+   "createcustommodel": {},
    "createdataautomationproject": {
     "Resources": [
      "blueprint"
@@ -10181,6 +10188,22 @@
      "table"
     ]
    },
+   "getrecords": {
+    "Resources": [
+     "stream"
+    ]
+   },
+   "getsharditerator": {
+    "Resources": [
+     "stream"
+    ]
+   },
+   "getstream": {
+    "Resources": [
+     "stream"
+    ]
+   },
+   "liststreams": {},
    "modify": {
     "Resources": [
      "table"
@@ -10220,6 +10243,7 @@
    "tagresource": {
     "Resources": [
      "keyspace",
+     "stream",
      "table"
     ]
    },
@@ -10232,6 +10256,7 @@
    "untagresource": {
     "Resources": [
      "keyspace",
+     "stream",
      "table"
     ]
    },
@@ -10243,6 +10268,14 @@
   },
   "Resources": {
    "keyspace": {
+    "ARNFormats": [
+     "arn:${Partition}:cassandra:${Region}:${Account}:/keyspace/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "stream": {
     "ARNFormats": [
      "arn:${Partition}:cassandra:${Region}:${Account}:/keyspace/.*"
     ],
@@ -12763,8 +12796,7 @@
      "environment"
     ]
    },
-   "updateusersettings": {},
-   "validateenvironmentname": {}
+   "updateusersettings": {}
   },
   "Resources": {
    "environment": {
@@ -29606,7 +29638,8 @@
     "Resources": [
      "instance",
      "network-interface",
-     "security-group"
+     "security-group",
+     "subnet"
     ]
    },
    "modifyprivatednsnameoptions": {
@@ -31071,8 +31104,6 @@
      "aws:RequestTag/${TagKey}",
      "aws:ResourceTag/${TagKey}",
      "aws:TagKeys",
-     "ec2:Attribute",
-     "ec2:Attribute/${AttributeName}",
      "ec2:IsLaunchTemplateResource",
      "ec2:LaunchTemplate",
      "ec2:Region",
@@ -34321,6 +34352,11 @@
  },
  "elasticmapreduce": {
   "Actions": {
+   "accessalleventlogs": {
+    "Resources": [
+     "cluster"
+    ]
+   },
    "addinstancefleet": {
     "Resources": [
      "cluster"
@@ -38344,6 +38380,11 @@
      "volume"
     ]
    },
+   "createandattachs3accesspoint": {
+    "Resources": [
+     "volume"
+    ]
+   },
    "createbackup": {
     "Resources": [
      "backup",
@@ -38463,10 +38504,16 @@
     ]
    },
    "describefilesystems": {},
+   "describes3accesspointattachments": {},
    "describesharedvpcconfiguration": {},
    "describesnapshots": {},
    "describestoragevirtualmachines": {},
    "describevolumes": {},
+   "detachanddeletes3accesspoint": {
+    "Resources": [
+     "volume"
+    ]
+   },
    "disassociatefilegateway": {
     "Resources": [
      "file-system"
@@ -47610,41 +47657,68 @@
  },
  "iotmanagedintegrations": {
   "Actions": {
+   "createaccountassociation": {},
+   "createcloudconnector": {},
+   "createconnectordestination": {},
    "createcredentiallocker": {},
    "createdestination": {},
    "createeventlogconfiguration": {},
-   "createmanagedthing": {},
+   "createmanagedthing": {
+    "Resources": [
+     "credential-locker"
+    ]
+   },
    "createnotificationconfiguration": {},
    "createotatask": {},
    "createotataskconfiguration": {},
    "createprovisioningprofile": {},
+   "deleteaccountassociation": {
+    "Resources": [
+     "account-association"
+    ]
+   },
+   "deletecloudconnector": {},
+   "deleteconnectordestination": {},
    "deletecredentiallocker": {
     "Resources": [
-     "CredentialLockerResource"
+     "credential-locker"
     ]
    },
    "deletedestination": {},
    "deleteeventlogconfiguration": {},
    "deletemanagedthing": {
     "Resources": [
-     "ManagedThingResource"
+     "managed-thing"
     ]
    },
    "deletenotificationconfiguration": {},
    "deleteotatask": {
     "Resources": [
-     "OtaTaskResource"
+     "ota-task"
     ]
    },
    "deleteotataskconfiguration": {},
    "deleteprovisioningprofile": {
     "Resources": [
-     "ProvisioningProfileResource"
+     "provisioning-profile"
     ]
    },
+   "deregisteraccountassociation": {
+    "Resources": [
+     "account-association",
+     "managed-thing"
+    ]
+   },
+   "getaccountassociation": {
+    "Resources": [
+     "account-association"
+    ]
+   },
+   "getcloudconnector": {},
+   "getconnectordestination": {},
    "getcredentiallocker": {
     "Resources": [
-     "CredentialLockerResource"
+     "credential-locker"
     ]
    },
    "getcustomendpoint": {},
@@ -47655,102 +47729,185 @@
    "gethubconfiguration": {},
    "getmanagedthing": {
     "Resources": [
-     "ManagedThingResource"
+     "managed-thing"
     ]
    },
    "getmanagedthingcapabilities": {
     "Resources": [
-     "ManagedThingResource"
+     "managed-thing"
     ]
    },
    "getmanagedthingconnectivitydata": {
     "Resources": [
-     "ManagedThingResource"
+     "managed-thing"
     ]
    },
    "getmanagedthingmetadata": {
     "Resources": [
-     "ManagedThingResource"
+     "managed-thing"
     ]
    },
    "getmanagedthingstate": {
     "Resources": [
-     "ManagedThingResource"
+     "managed-thing"
     ]
    },
    "getnotificationconfiguration": {},
    "getotatask": {
     "Resources": [
-     "OtaTaskResource"
+     "ota-task"
     ]
    },
    "getotataskconfiguration": {},
    "getprovisioningprofile": {
     "Resources": [
-     "ProvisioningProfileResource"
+     "provisioning-profile"
     ]
    },
    "getruntimelogconfiguration": {},
    "getschemaversion": {},
+   "listaccountassociations": {},
+   "listcloudconnectors": {},
+   "listconnectordestinations": {},
    "listcredentiallockers": {},
    "listdestinations": {},
+   "listdevicediscoveries": {},
+   "listdiscovereddevices": {},
    "listeventlogconfigurations": {},
+   "listmanagedthingaccountassociations": {},
    "listmanagedthings": {},
    "listmanagedthingschemas": {
     "Resources": [
-     "ManagedThingResource"
+     "managed-thing"
     ]
    },
    "listnotificationconfigurations": {},
    "listotataskconfigurations": {},
    "listotataskexecutions": {
     "Resources": [
-     "OtaTaskResource"
+     "ota-task"
     ]
    },
    "listotatasks": {},
    "listprovisioningprofiles": {},
    "listschemaversions": {},
+   "listtagsforresource": {
+    "Resources": [
+     "account-association",
+     "credential-locker",
+     "managed-thing",
+     "ota-task",
+     "provisioning-profile"
+    ]
+   },
    "putdefaultencryptionconfiguration": {},
    "puthubconfiguration": {},
    "putruntimelogconfiguration": {},
+   "registeraccountassociation": {
+    "Resources": [
+     "account-association",
+     "managed-thing"
+    ]
+   },
    "registercustomendpoint": {},
    "resetruntimelogconfiguration": {},
-   "sendmanagedthingcommand": {},
-   "startdevicediscovery": {},
+   "sendconnectorevent": {},
+   "sendmanagedthingcommand": {
+    "Resources": [
+     "account-association",
+     "managed-thing"
+    ]
+   },
+   "startaccountassociationrefresh": {
+    "Resources": [
+     "account-association"
+    ]
+   },
+   "startdevicediscovery": {
+    "Resources": [
+     "account-association",
+     "managed-thing"
+    ]
+   },
+   "tagresource": {
+    "Resources": [
+     "account-association",
+     "credential-locker",
+     "managed-thing",
+     "ota-task",
+     "provisioning-profile"
+    ]
+   },
+   "untagresource": {
+    "Resources": [
+     "account-association",
+     "credential-locker",
+     "managed-thing",
+     "ota-task",
+     "provisioning-profile"
+    ]
+   },
+   "updateaccountassociation": {
+    "Resources": [
+     "account-association"
+    ]
+   },
+   "updatecloudconnector": {},
+   "updateconnectordestination": {},
    "updatedestination": {},
    "updateeventlogconfiguration": {},
    "updatemanagedthing": {
     "Resources": [
-     "ManagedThingResource"
+     "credential-locker",
+     "managed-thing"
     ]
    },
    "updatenotificationconfiguration": {},
    "updateotatask": {
     "Resources": [
-     "OtaTaskResource"
+     "ota-task"
     ]
    }
   },
   "Resources": {
-   "credentiallockerresource": {
+   "account-association": {
+    "ARNFormats": [
+     "arn:${Partition}:iotmanagedintegrations:${Region}:${Account}:account-association/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "credential-locker": {
     "ARNFormats": [
      "arn:${Partition}:iotmanagedintegrations:${Region}:${Account}:credential-locker/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
-   "managedthingresource": {
+   "managed-thing": {
     "ARNFormats": [
      "arn:${Partition}:iotmanagedintegrations:${Region}:${Account}:managed-thing/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
-   "otataskresource": {
+   "ota-task": {
     "ARNFormats": [
      "arn:${Partition}:iotmanagedintegrations:${Region}:${Account}:ota-task/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
-   "provisioningprofileresource": {
+   "provisioning-profile": {
     "ARNFormats": [
      "arn:${Partition}:iotmanagedintegrations:${Region}:${Account}:provisioning-profile/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    }
   }
@@ -62724,6 +62881,274 @@
   },
   "Resources": {}
  },
+ "odb": {
+  "Actions": {
+   "acceptmarketplaceregistration": {},
+   "createcloudautonomousvmcluster": {
+    "Resources": [
+     "cloud-exadata-infrastructure",
+     "odb-network"
+    ]
+   },
+   "createcloudexadatainfrastructure": {},
+   "createcloudvmcluster": {
+    "Resources": [
+     "cloud-exadata-infrastructure",
+     "odb-network"
+    ]
+   },
+   "createdbnode": {
+    "Resources": [
+     "db-node"
+    ]
+   },
+   "createodbnetwork": {},
+   "createodbpeeringconnection": {
+    "Resources": [
+     "odb-network"
+    ]
+   },
+   "createoutboundintegration": {
+    "Resources": [
+     "cloud-autonomous-vm-cluster",
+     "cloud-vm-cluster"
+    ]
+   },
+   "deletecloudautonomousvmcluster": {
+    "Resources": [
+     "cloud-autonomous-vm-cluster"
+    ]
+   },
+   "deletecloudexadatainfrastructure": {
+    "Resources": [
+     "cloud-exadata-infrastructure"
+    ]
+   },
+   "deletecloudvmcluster": {
+    "Resources": [
+     "cloud-vm-cluster"
+    ]
+   },
+   "deletedbnode": {
+    "Resources": [
+     "db-node"
+    ]
+   },
+   "deleteodbnetwork": {
+    "Resources": [
+     "odb-network"
+    ]
+   },
+   "deleteodbpeeringconnection": {
+    "Resources": [
+     "odb-peering-connection"
+    ]
+   },
+   "deleteresourcepolicy": {
+    "Resources": [
+     "cloud-exadata-infrastructure",
+     "odb-network"
+    ]
+   },
+   "getcloudautonomousvmcluster": {
+    "Resources": [
+     "cloud-autonomous-vm-cluster"
+    ]
+   },
+   "getcloudexadatainfrastructure": {
+    "Resources": [
+     "cloud-exadata-infrastructure"
+    ]
+   },
+   "getcloudexadatainfrastructureunallocatedresources": {
+    "Resources": [
+     "cloud-exadata-infrastructure"
+    ]
+   },
+   "getcloudvmcluster": {
+    "Resources": [
+     "cloud-vm-cluster"
+    ]
+   },
+   "getdbnode": {
+    "Resources": [
+     "cloud-vm-cluster",
+     "db-node"
+    ]
+   },
+   "getdbserver": {
+    "Resources": [
+     "cloud-exadata-infrastructure"
+    ]
+   },
+   "getocionboardingstatus": {},
+   "getodbnetwork": {
+    "Resources": [
+     "odb-network"
+    ]
+   },
+   "getodbpeeringconnection": {
+    "Resources": [
+     "odb-peering-connection"
+    ]
+   },
+   "getresourcepolicy": {
+    "Resources": [
+     "cloud-exadata-infrastructure",
+     "odb-network"
+    ]
+   },
+   "initializeservice": {},
+   "listautonomousvirtualmachines": {
+    "Resources": [
+     "cloud-autonomous-vm-cluster"
+    ]
+   },
+   "listcloudautonomousvmclusters": {
+    "Resources": [
+     "cloud-exadata-infrastructure"
+    ]
+   },
+   "listcloudexadatainfrastructures": {},
+   "listcloudvmclusters": {
+    "Resources": [
+     "cloud-exadata-infrastructure"
+    ]
+   },
+   "listdbnodes": {
+    "Resources": [
+     "cloud-vm-cluster"
+    ]
+   },
+   "listdbservers": {
+    "Resources": [
+     "cloud-exadata-infrastructure"
+    ]
+   },
+   "listdbsystemshapes": {},
+   "listgiversions": {},
+   "listodbnetworks": {},
+   "listodbpeeringconnections": {
+    "Resources": [
+     "odb-network"
+    ]
+   },
+   "listsystemversions": {},
+   "listtagsforresource": {
+    "Resources": [
+     "cloud-autonomous-vm-cluster",
+     "cloud-exadata-infrastructure",
+     "cloud-vm-cluster",
+     "db-node",
+     "odb-network",
+     "odb-peering-connection"
+    ]
+   },
+   "putresourcepolicy": {
+    "Resources": [
+     "cloud-exadata-infrastructure",
+     "odb-network"
+    ]
+   },
+   "rebootdbnode": {
+    "Resources": [
+     "cloud-vm-cluster",
+     "db-node"
+    ]
+   },
+   "startdbnode": {
+    "Resources": [
+     "cloud-vm-cluster",
+     "db-node"
+    ]
+   },
+   "stopdbnode": {
+    "Resources": [
+     "cloud-vm-cluster"
+    ]
+   },
+   "tagresource": {
+    "Resources": [
+     "cloud-autonomous-vm-cluster",
+     "cloud-exadata-infrastructure",
+     "cloud-vm-cluster",
+     "db-node",
+     "odb-network",
+     "odb-peering-connection"
+    ]
+   },
+   "untagresource": {
+    "Resources": [
+     "cloud-autonomous-vm-cluster",
+     "cloud-exadata-infrastructure",
+     "cloud-vm-cluster",
+     "db-node",
+     "odb-network",
+     "odb-peering-connection"
+    ]
+   },
+   "updatecloudexadatainfrastructure": {
+    "Resources": [
+     "cloud-exadata-infrastructure"
+    ]
+   },
+   "updateodbnetwork": {
+    "Resources": [
+     "odb-network"
+    ]
+   }
+  },
+  "Resources": {
+   "cloud-autonomous-vm-cluster": {
+    "ARNFormats": [
+     "arn:${Partition}:odb:${Region}:${Account}:cloud-autonomous-vm-cluster/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "cloud-exadata-infrastructure": {
+    "ARNFormats": [
+     "arn:${Partition}:odb:${Region}:${Account}:cloud-exadata-infrastructure/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "cloud-vm-cluster": {
+    "ARNFormats": [
+     "arn:${Partition}:odb:${Region}:${Account}:cloud-vm-cluster/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "db-node": {
+    "ARNFormats": [
+     "arn:${Partition}:odb:${Region}:${Account}:db-node/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "odb-network": {
+    "ARNFormats": [
+     "arn:${Partition}:odb:${Region}:${Account}:odb-network/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "odb-peering-connection": {
+    "ARNFormats": [
+     "arn:${Partition}:odb:${Region}:${Account}:odb-peering-connection/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   }
+  }
+ },
  "omics": {
   "Actions": {
    "abortmultipartreadsetupload": {
@@ -67595,6 +68020,11 @@
      "application"
     ]
    },
+   "createdataaccessorwithtti": {
+    "Resources": [
+     "application"
+    ]
+   },
    "createdatasource": {
     "Resources": [
      "application",
@@ -72243,11 +72673,7 @@
      "project"
     ]
    },
-   "liststreamprocessors": {
-    "Resources": [
-     "streamprocessor"
-    ]
-   },
+   "liststreamprocessors": {},
    "listtagsforresource": {
     "Resources": [
      "collection",
@@ -89010,6 +89436,7 @@
  },
  "vpc-lattice": {
   "Actions": {
+   "associateviaawsservice": {},
    "associateviaawsservice-eventsandstates": {},
    "createaccesslogsubscription": {
     "Resources": [

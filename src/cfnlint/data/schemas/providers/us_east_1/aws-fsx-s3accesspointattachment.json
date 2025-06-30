@@ -1,0 +1,175 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Type",
+  "/properties/OpenZFSConfiguration",
+  "/properties/S3AccessPoint"
+ ],
+ "definitions": {
+  "FileSystemGID": {
+   "additionalProperties": false,
+   "properties": {
+    "Gid": {
+     "maximum": 4294967295,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Gid"
+   ],
+   "type": "object"
+  },
+  "OpenZFSFileSystemIdentity": {
+   "additionalProperties": false,
+   "properties": {
+    "PosixUser": {
+     "$ref": "#/definitions/OpenZFSPosixFileSystemUser"
+    },
+    "Type": {
+     "enum": [
+      "POSIX"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "PosixUser"
+   ],
+   "type": "object"
+  },
+  "OpenZFSPosixFileSystemUser": {
+   "additionalProperties": false,
+   "properties": {
+    "Gid": {
+     "maximum": 4294967295,
+     "minimum": 0,
+     "type": "number"
+    },
+    "SecondaryGids": {
+     "items": {
+      "$ref": "#/definitions/FileSystemGID"
+     },
+     "maxItems": 15,
+     "type": "array"
+    },
+    "Uid": {
+     "maximum": 4294967295,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Uid",
+    "Gid"
+   ],
+   "type": "object"
+  },
+  "S3AccessPoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Alias": {
+     "maxLength": 63,
+     "minLength": 1,
+     "pattern": "^[0-9a-z\\\\-]{1,63}",
+     "type": "string"
+    },
+    "Policy": {
+     "maxLength": 200000,
+     "minLength": 1,
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "ResourceARN": {
+     "maxLength": 1024,
+     "minLength": 8,
+     "pattern": "^arn:[^:]{1,63}:[^:]{0,63}:[^:]{0,63}:(?:|\\d{12}):[^/].{0,1023}$",
+     "type": "string"
+    },
+    "VpcConfiguration": {
+     "$ref": "#/definitions/S3AccessPointVpcConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "S3AccessPointOpenZFSConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "FileSystemIdentity": {
+     "$ref": "#/definitions/OpenZFSFileSystemIdentity"
+    },
+    "VolumeId": {
+     "maxLength": 23,
+     "minLength": 23,
+     "pattern": "^(fsvol-[0-9a-f]{17,})$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "VolumeId",
+    "FileSystemIdentity"
+   ],
+   "type": "object"
+  },
+  "S3AccessPointVpcConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "VpcId": {
+     "maxLength": 21,
+     "minLength": 12,
+     "pattern": "^(vpc-[0-9a-f]{8,})$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "VpcId"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Name": {
+   "maxLength": 50,
+   "minLength": 3,
+   "pattern": "^(?=[a-z0-9])[a-z0-9-]{1,48}[a-z0-9]$",
+   "type": "string"
+  },
+  "OpenZFSConfiguration": {
+   "$ref": "#/definitions/S3AccessPointOpenZFSConfiguration"
+  },
+  "S3AccessPoint": {
+   "$ref": "#/definitions/S3AccessPoint"
+  },
+  "Type": {
+   "enum": [
+    "OPENZFS"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/S3AccessPoint/ResourceARN",
+  "/properties/S3AccessPoint/Alias"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "Name",
+  "Type",
+  "OpenZFSConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::FSx::S3AccessPointAttachment",
+ "writeOnlyProperties": [
+  "/properties/S3AccessPoint/Policy"
+ ]
+}

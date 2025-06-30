@@ -1,0 +1,185 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/RetentionInDays"
+ ],
+ "definitions": {
+  "ChatbotNotificationChannel": {
+   "additionalProperties": false,
+   "properties": {
+    "ChatConfigurationArns": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SNSTopicArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CrossAccountConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SourceRoleArn": {
+     "$ref": "#/definitions/RoleArn"
+    }
+   },
+   "type": "object"
+  },
+  "EncryptionConfigMap": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionConfigurationType": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "KmsKeyId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InvestigationGroupArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "RoleArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:.*",
+   "type": "string"
+  },
+  "StringWithPatternAndLengthLimits": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "[\\-_A-Za-z0-9\\[\\]\\(\\)\\{\\}\\.: ]+",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Timestamp": {
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/InvestigationGroupArn"
+  },
+  "ChatbotNotificationChannels": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ChatbotNotificationChannel"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CreatedAt": {
+   "$ref": "#/definitions/Timestamp"
+  },
+  "CreatedBy": {
+   "$ref": "#/definitions/StringWithPatternAndLengthLimits"
+  },
+  "CrossAccountConfigurations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CrossAccountConfiguration"
+   },
+   "maxItems": 25,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "EncryptionConfig": {
+   "$ref": "#/definitions/EncryptionConfigMap"
+  },
+  "InvestigationGroupPolicy": {
+   "type": "string"
+  },
+  "IsCloudTrailEventHistoryEnabled": {
+   "type": "boolean"
+  },
+  "LastModifiedAt": {
+   "$ref": "#/definitions/StringWithPatternAndLengthLimits"
+  },
+  "LastModifiedBy": {
+   "$ref": "#/definitions/StringWithPatternAndLengthLimits"
+  },
+  "Name": {
+   "$ref": "#/definitions/StringWithPatternAndLengthLimits"
+  },
+  "RetentionInDays": {
+   "type": "integer"
+  },
+  "RoleArn": {
+   "$ref": "#/definitions/RoleArn"
+  },
+  "TagKeyBoundaries": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 200,
+    "minLength": 1,
+    "pattern": "([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]+)",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedBy",
+  "/properties/CreatedAt",
+  "/properties/LastModifiedBy",
+  "/properties/LastModifiedAt",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AIOps::InvestigationGroup"
+}

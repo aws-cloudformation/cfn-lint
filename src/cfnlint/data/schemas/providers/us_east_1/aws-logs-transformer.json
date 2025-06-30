@@ -47,6 +47,16 @@
    ],
    "type": "object"
   },
+  "EventSource": {
+   "enum": [
+    "CloudTrail",
+    "Route53Resolver",
+    "VPCFlow",
+    "EKSAudit",
+    "AWSWAF"
+   ],
+   "type": "string"
+  },
   "MatchPattern": {
    "$ref": "#/definitions/NonEmptyString"
   },
@@ -85,6 +95,12 @@
    "pattern": "^.*[a-zA-Z0-9]+.*$",
    "type": "string"
   },
+  "OcsfVersion": {
+   "enum": [
+    "V1.1"
+   ],
+   "type": "string"
+  },
   "ParseCloudfront": {
    "additionalProperties": false,
    "properties": {
@@ -110,6 +126,25 @@
      "$ref": "#/definitions/NonEmptyString"
     }
    },
+   "type": "object"
+  },
+  "ParseToOCSF": {
+   "additionalProperties": false,
+   "properties": {
+    "EventSource": {
+     "$ref": "#/definitions/EventSource"
+    },
+    "OcsfVersion": {
+     "$ref": "#/definitions/OcsfVersion"
+    },
+    "Source": {
+     "$ref": "#/definitions/NonEmptyString"
+    }
+   },
+   "required": [
+    "EventSource",
+    "OcsfVersion"
+   ],
    "type": "object"
   },
   "ParseVPC": {
@@ -404,6 +439,9 @@
     },
     "ParseRoute53": {
      "$ref": "#/definitions/ParseRoute53"
+    },
+    "ParseToOCSF": {
+     "$ref": "#/definitions/ParseToOCSF"
     },
     "ParseVPC": {
      "$ref": "#/definitions/ParseVPC"

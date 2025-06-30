@@ -1,0 +1,204 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "EndpointEventBus": {
+   "additionalProperties": false,
+   "properties": {
+    "EventBusArn": {
+     "$ref": "#/definitions/EventBusArn"
+    }
+   },
+   "required": [
+    "EventBusArn"
+   ],
+   "type": "object"
+  },
+  "EventBusArn": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^arn:aws[a-z-]*:events:[a-z]{2}-[a-z-]+-\\d+:\\d{12}:event-bus/[\\w.-]+$",
+   "type": "string"
+  },
+  "EventBuses": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EndpointEventBus"
+   },
+   "maxItems": 2,
+   "minItems": 2,
+   "type": "array"
+  },
+  "FailoverConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Primary": {
+     "$ref": "#/definitions/Primary"
+    },
+    "Secondary": {
+     "$ref": "#/definitions/Secondary"
+    }
+   },
+   "required": [
+    "Primary",
+    "Secondary"
+   ],
+   "type": "object"
+  },
+  "HealthCheck": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "pattern": "^arn:aws([a-z]|\\-)*:route53:::healthcheck/[\\-a-z0-9]+$",
+   "type": "string"
+  },
+  "Primary": {
+   "additionalProperties": false,
+   "properties": {
+    "HealthCheck": {
+     "$ref": "#/definitions/HealthCheck"
+    }
+   },
+   "required": [
+    "HealthCheck"
+   ],
+   "type": "object"
+  },
+  "ReplicationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "State": {
+     "$ref": "#/definitions/ReplicationState"
+    }
+   },
+   "required": [
+    "State"
+   ],
+   "type": "object"
+  },
+  "ReplicationState": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Route": {
+   "maxLength": 20,
+   "minLength": 9,
+   "pattern": "^[\\-a-z0-9]+$",
+   "type": "string"
+  },
+  "RoutingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FailoverConfig": {
+     "$ref": "#/definitions/FailoverConfig"
+    }
+   },
+   "required": [
+    "FailoverConfig"
+   ],
+   "type": "object"
+  },
+  "Secondary": {
+   "additionalProperties": false,
+   "properties": {
+    "Route": {
+     "$ref": "#/definitions/Route"
+    }
+   },
+   "required": [
+    "Route"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "pattern": "^arn:aws([a-z]|\\-)*:events:([a-z]|\\d|\\-)*:([0-9]{12})?:endpoint\\/[/\\.\\-_A-Za-z0-9]+$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 512,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "EndpointId": {
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9\\-]+[\\.][A-Za-z0-9\\-]+$",
+   "type": "string"
+  },
+  "EndpointUrl": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^(https://)?[\\.\\-a-z0-9]+$",
+   "type": "string"
+  },
+  "EventBuses": {
+   "$ref": "#/definitions/EventBuses"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[\\.\\-_A-Za-z0-9]+$",
+   "type": "string"
+  },
+  "ReplicationConfig": {
+   "$ref": "#/definitions/ReplicationConfig"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:aws[a-z-]*:iam::\\d{12}:role\\/[\\w+=,.@/-]+$",
+   "type": "string"
+  },
+  "RoutingConfig": {
+   "$ref": "#/definitions/RoutingConfig"
+  },
+  "State": {
+   "enum": [
+    "ACTIVE",
+    "CREATING",
+    "UPDATING",
+    "DELETING",
+    "CREATE_FAILED",
+    "UPDATE_FAILED"
+   ],
+   "type": "string"
+  },
+  "StateReason": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^.*$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/EndpointId",
+  "/properties/EndpointUrl",
+  "/properties/State",
+  "/properties/StateReason"
+ ],
+ "required": [
+  "RoutingConfig",
+  "EventBuses"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-events.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Events::Endpoint"
+}

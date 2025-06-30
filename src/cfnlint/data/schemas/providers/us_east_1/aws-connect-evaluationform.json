@@ -1,6 +1,15 @@
 {
  "additionalProperties": false,
  "definitions": {
+  "AutoEvaluationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
   "EvaluationFormBaseItem": {
    "additionalProperties": false,
    "properties": {
@@ -28,13 +37,11 @@
   "EvaluationFormNumericQuestionAutomation": {
    "additionalProperties": false,
    "properties": {
+    "AnswerSource": {},
     "PropertyValue": {
      "$ref": "#/definitions/NumericQuestionPropertyValueAutomation"
     }
    },
-   "required": [
-    "PropertyValue"
-   ],
    "type": "object"
   },
   "EvaluationFormNumericQuestionOption": {
@@ -270,7 +277,10 @@
       "NUMBER_OF_INTERRUPTIONS",
       "CONTACT_DURATION",
       "AGENT_INTERACTION_DURATION",
-      "CUSTOMER_HOLD_TIME"
+      "CUSTOMER_HOLD_TIME",
+      "LONGEST_HOLD_DURATION",
+      "NUMBER_OF_HOLDS",
+      "AGENT_INTERACTION_AND_HOLD_DURATION"
      ],
      "type": "string"
     }
@@ -369,6 +379,9 @@
   "/properties/EvaluationFormArn"
  ],
  "properties": {
+  "AutoEvaluationConfiguration": {
+   "$ref": "#/definitions/AutoEvaluationConfiguration"
+  },
   "Description": {
    "maxLength": 1024,
    "type": "string"
