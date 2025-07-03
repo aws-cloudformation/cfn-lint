@@ -369,7 +369,6 @@ class TestConfigMixIn(BaseTestCase):
 
     @patch("argparse.ArgumentParser.print_help")
     def test_templates_with_deployment_files(self, mock_print_help):
-
         with self.assertRaises(SystemExit) as e:
             cfnlint.config.ConfigMixIn(
                 [
@@ -384,7 +383,6 @@ class TestConfigMixIn(BaseTestCase):
         mock_print_help.assert_called_once()
 
     def test_conversion_of_template_parameters(self):
-
         config = cfnlint.ConfigMixIn(["--parameters", "Foo=Bar"])
 
         self.assertEqual(
@@ -403,3 +401,210 @@ class TestConfigMixIn(BaseTestCase):
 
         self.assertNotEqual(config1, 1)
         self.assertNotEqual(config1, config2)
+
+
+class TestConfigMixInValidation(BaseTestCase):
+    """Test ConfigMixIn validation functionality"""
+
+    def test_validate_no_templates_or_deployment_files(self):
+        """Test validation fails when no templates or deployment files are specified"""
+        config = cfnlint.config.ConfigMixIn()
+
+        with self.assertRaises(ValueError) as context:
+            config.validate()  # Don't allow stdin for API usage
+
+        self.assertIn(
+            "No templates or deployment files specified", str(context.exception)
+        )
+
+    def test_validate_no_templates_or_deployment_files_with_stdin_allowed(self):
+        """Test validation passes when no templates/deployment files but stdin is
+        allowed"""
+        config = cfnlint.config.ConfigMixIn()
+
+        # Should not raise any exception when stdin is allowed
+        try:
+            config.validate(allow_stdin=True)
+        except ValueError:
+            self.fail("validate(allow_stdin=True) raised ValueError unexpectedly!")
+
+    def test_validate_with_positional_templates_argument(self):
+        """Test validation works with positional templates argument
+        (covers elif cli_args branch)"""
+        # This tests the elif cli_args: branch in validate method (line 824)
+        config = cfnlint.config.ConfigMixIn(
+            ["template.yaml"]
+        )  # Positional argument goes to templates, not template_alt
+
+        # Should not raise any exception for valid config
+        try:
+            config.validate()
+        except ValueError:
+            self.fail("validate() raised ValueError unexpectedly!")
+
+    def test_validate_with_string_template_conversion(self):
+        """Test validation converts string template to list (covers line 828)"""
+        # This tests the string to list conversion logic (line 828)
+        config = cfnlint.config.ConfigMixIn(
+            templates="single_template.yaml"
+        )  # Single string template
+
+        # Should not raise any exception and should handle string conversion
+        try:
+            config.validate()
+        except ValueError:
+            self.fail("validate() raised ValueError unexpectedly!")
+
+    def test_validate_deployment_files_with_templates(self):
+        """Test validation fails when deployment files are used with templates"""
+        config = cfnlint.config.ConfigMixIn(
+            deployment_files=["deployment.yaml"], templates=["template.yaml"]
+        )
+
+        with self.assertRaises(ValueError) as context:
+            config.validate()
+
+        self.assertIn("Deployment files cannot be used with", str(context.exception))
+
+    def test_validate_deployment_files_with_parameters(self):
+        """Test validation fails when deployment files are used with parameters"""
+        config = cfnlint.config.ConfigMixIn(
+            deployment_files=["deployment.yaml"], parameters={"Key": "Value"}
+        )
+
+        with self.assertRaises(ValueError) as context:
+            config.validate()
+
+        self.assertIn("Deployment files cannot be used with", str(context.exception))
+
+    def test_validate_deployment_files_with_parameter_files(self):
+        """Test validation fails when deployment files are used with parameter files"""
+        config = cfnlint.config.ConfigMixIn(
+            deployment_files=["deployment.yaml"], parameter_files=["params.json"]
+        )
+
+        with self.assertRaises(ValueError) as context:
+            config.validate()
+
+        self.assertIn("Deployment files cannot be used with", str(context.exception))
+
+    def test_validate_parameters_and_parameter_files(self):
+        """Test validation fails when both parameters and parameter files are
+        specified"""
+        config = cfnlint.config.ConfigMixIn(
+            templates=["template.yaml"],
+            parameters={"Key": "Value"},
+            parameter_files=["params.json"],
+        )
+
+        with self.assertRaises(ValueError) as context:
+            config.validate()
+
+        self.assertIn(
+            "Cannot specify both --parameters and --parameter-files",
+            str(context.exception),
+        )
+
+    def test_validate_multiple_templates_with_parameters(self):
+        """Test validation fails when parameters are used with multiple templates"""
+        config = cfnlint.config.ConfigMixIn(
+            templates=["template1.yaml", "template2.yaml"], parameters={"Key": "Value"}
+        )
+
+        with self.assertRaises(ValueError) as context:
+            config.validate()
+
+        self.assertIn(
+            "Parameters can only be used with a single template", str(context.exception)
+        )
+
+    def test_validate_multiple_templates_with_parameter_files(self):
+        """Test validation fails when parameter files are used with multiple
+        templates"""
+        config = cfnlint.config.ConfigMixIn(
+            templates=["template1.yaml", "template2.yaml"],
+            parameter_files=["params.json"],
+        )
+
+        with self.assertRaises(ValueError) as context:
+            config.validate()
+
+        self.assertIn(
+            "Parameters can only be used with a single template", str(context.exception)
+        )
+
+    def test_validate_cli_template_with_manual_deployment_files(self):
+        """Test validation fails when CLI template conflicts with manual
+        deployment files"""
+        config = cfnlint.config.ConfigMixIn(
+            [
+                "--template",
+                "test/fixtures/templates/good/generic.yaml",
+            ],
+            deployment_files=[
+                "test/fixtures/templates/good/generic.yaml",
+            ],
+        )
+
+        with self.assertRaises(ValueError) as context:
+            config.validate()
+
+        self.assertIn("Deployment files cannot be used with", str(context.exception))
+
+    def test_validate_valid_configuration_with_templates(self):
+        """Test validation passes with valid template configuration"""
+        config = cfnlint.config.ConfigMixIn(templates=["template.yaml"])
+
+        # Should not raise any exception
+        try:
+            config.validate()
+        except ValueError:
+            self.fail("validate() raised ValueError unexpectedly!")
+
+    def test_validate_valid_configuration_with_deployment_files(self):
+        """Test validation passes with valid deployment files configuration"""
+        config = cfnlint.config.ConfigMixIn(deployment_files=["deployment.yaml"])
+
+        # Should not raise any exception
+        try:
+            config.validate()
+        except ValueError:
+            self.fail("validate() raised ValueError unexpectedly!")
+
+    def test_validate_valid_configuration_with_single_template_and_parameters(self):
+        """Test validation passes with single template and parameters"""
+        config = cfnlint.config.ConfigMixIn(
+            templates=["template.yaml"], parameters={"Key": "Value"}
+        )
+
+        # Should not raise any exception
+        try:
+            config.validate()
+        except ValueError:
+            self.fail("validate() raised ValueError unexpectedly!")
+
+    def test_validate_valid_configuration_with_single_template_and_parameter_files(
+        self,
+    ):
+        """Test validation passes with single template and parameter files"""
+        config = cfnlint.config.ConfigMixIn(
+            templates=["template.yaml"], parameter_files=["params.json"]
+        )
+
+        # Should not raise any exception
+        try:
+            config.validate()
+        except ValueError:
+            self.fail("validate() raised ValueError unexpectedly!")
+
+    def test_validate_valid_configuration_with_multiple_templates_no_parameters(self):
+        """Test validation passes with multiple templates and no parameters"""
+        config = cfnlint.config.ConfigMixIn(
+            templates=["template1.yaml", "template2.yaml"]
+        )
+
+        # Should not raise any exception
+        try:
+            config.validate()
+        except ValueError:
+            self.fail("validate() raised ValueError unexpectedly!")

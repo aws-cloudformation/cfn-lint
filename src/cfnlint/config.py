@@ -731,7 +731,6 @@ def _merge_configs(
 
 # pylint: disable=too-many-public-methods
 class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
-
     def __init__(self, cli_args: list[str] | None = None, **kwargs: Unpack[ManualArgs]):
         self._manual_args = kwargs or ManualArgs()
         CliArgs.__init__(self, cli_args)
@@ -1094,7 +1093,6 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         return self._get_argument_value("force", False, False)
 
     def evolve(self, **kwargs: Unpack[ManualArgs]) -> "ConfigMixIn":
-
         config = deepcopy(self)
         config._manual_args.update(kwargs)
         return config
