@@ -285,26 +285,22 @@ class Runner:
             print(self.rules)
             sys.exit(0)
 
-        if not self.config.templates and not self.config.deployment_files:
-            if sys.stdin.isatty():
-                self.config.parser.print_help()
-                sys.exit(1)
-
-        if self.config.deployment_files:
-            if (
-                self.config.templates
-                or self.config.parameters
-                or self.config.parameter_files
-            ):
-                self.config.parser.print_help()
-                sys.exit(1)
-
-        if self.config.parameters and self.config.parameter_files:
+        # Use centralized configuration validation
+        # For CLI, we allow stdin input when no templates/deployment files are specified
+        try:
+            self.config.validate(allow_stdin=True)
+        except ValueError as e:
+            print(f"Configuration error: {e}")
             self.config.parser.print_help()
             sys.exit(1)
 
-        if self.config.parameters or self.config.parameter_files:
-            if len(self.config.templates) > 1:
+        # Special case: if no templates/deployment files and stdin is a tty, show help
+        raw_templates = self.config._get_argument_value("templates", True, False) or []
+        raw_deployment_files = (
+            self.config._get_argument_value("deployment_files", False, False) or []
+        )
+        if not raw_templates and not raw_deployment_files:
+            if sys.stdin.isatty():
                 self.config.parser.print_help()
                 sys.exit(1)
 
