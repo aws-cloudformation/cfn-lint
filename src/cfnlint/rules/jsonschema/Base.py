@@ -10,6 +10,7 @@ from typing import Any, Sequence
 
 from cfnlint.context import Context
 from cfnlint.jsonschema import V, ValidationError, Validator
+from cfnlint.jsonschema.exceptions import _unset
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 from cfnlint.schema.resolver import RefResolver
 
@@ -33,8 +34,13 @@ class BaseJsonSchema(CloudFormationLintRule):
     ):
         matches = []
         kwargs: dict[Any, Any] = {}
+
+        # Only add validator and instance if they are not unset
+        if e.validator is not _unset:
+            kwargs["validator"] = e.validator
+
         if e.extra_args:
-            kwargs = e.extra_args
+            kwargs.update(e.extra_args)
         e_path = list(path) + list(e.path)
         if len(e.path) > 0:
             e_path_override = e.path_override
