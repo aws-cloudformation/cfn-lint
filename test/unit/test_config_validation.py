@@ -173,6 +173,25 @@ class TestConfigValidation(unittest.TestCase):
         except ValueError:
             self.fail("validate() raised ValueError unexpectedly!")
 
+    def test_validate_cli_template_with_manual_deployment_files(self):
+        """Test validation fails when CLI template conflicts
+        with manual deployment files
+        """
+        config = ConfigMixIn(
+            [
+                "--template",
+                "test/fixtures/templates/good/generic.yaml",
+            ],
+            deployment_files=[
+                "test/fixtures/templates/good/generic.yaml",
+            ],
+        )
+
+        with self.assertRaises(ValueError) as context:
+            config.validate()
+
+        self.assertIn("Deployment files cannot be used with", str(context.exception))
+
     def test_validate_valid_configuration_with_multiple_templates_no_parameters(self):
         """Test validation passes with multiple templates and no parameters"""
         config = ConfigMixIn(

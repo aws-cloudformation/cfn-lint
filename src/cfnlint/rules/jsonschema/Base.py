@@ -38,8 +38,6 @@ class BaseJsonSchema(CloudFormationLintRule):
         # Only add validator and instance if they are not unset
         if e.validator is not _unset:
             kwargs["validator"] = e.validator
-        if e.instance is not _unset:
-            kwargs["instance"] = e.instance
 
         if e.extra_args:
             kwargs.update(e.extra_args)

@@ -9,18 +9,7 @@ from collections import deque
 from test.unit.rules import BaseRuleTestCase
 
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules.jsonschema.Base import BaseJsonSchema
-
-
-class TestRule(CloudFormationLintRule):
-    """Test Rule for unset handling"""
-
-    id = "E3UNSET"
-    shortdesc = "Test Rule"
-    description = "Test Rule"
-    source_url = ""
-    tags: list[str] = []
 
 
 class TestBaseJsonSchemaUnsetHandling(BaseRuleTestCase):
@@ -72,11 +61,12 @@ class TestBaseJsonSchemaUnsetHandling(BaseRuleTestCase):
         self.assertEqual(len(matches), 1)
         match = matches[0]
 
-        # Check that validator and instance are in the match attributes
+        # Check that validator is in the match attributes
+        # (instance is intentionally excluded)
         self.assertTrue(hasattr(match, "validator"))
-        self.assertTrue(hasattr(match, "instance"))
         self.assertEqual(match.validator, "type")
-        self.assertEqual(match.instance, 123)
+        # Instance is not included to avoid large data in matches
+        self.assertFalse(hasattr(match, "instance"))
 
     def test_convert_validation_errors_mixed_set_unset(self):
         """Test mixed scenarios where one value is set and another is unset"""
@@ -104,25 +94,6 @@ class TestBaseJsonSchemaUnsetHandling(BaseRuleTestCase):
         self.assertTrue(hasattr(match, "validator"))
         self.assertFalse(hasattr(match, "instance"))
         self.assertEqual(match.validator, "enum")
-
-        # Test case 2: validator is unset (default), instance is set
-        error_instance_set = ValidationError(
-            "Test error with instance set",
-            path=deque(["test2"]),
-            # validator defaults to _unset
-            instance="test_value",
-        )
-
-        matches = rule._convert_validation_errors_to_matches(
-            ["root"], error_instance_set
-        )
-
-        self.assertEqual(len(matches), 1)
-        match = matches[0]
-
-        self.assertFalse(hasattr(match, "validator"))
-        self.assertTrue(hasattr(match, "instance"))
-        self.assertEqual(match.instance, "test_value")
 
     def test_convert_validation_errors_with_extra_args_and_unset(self):
         """Test that extra_args work correctly when validator/instance are unset"""
@@ -166,8 +137,6 @@ class TestBaseJsonSchemaUnsetHandling(BaseRuleTestCase):
         context_error1 = ValidationError(
             "Context error 1 - validator unset",
             path=deque(["context1"]),
-            # validator defaults to _unset
-            instance="context_value1",
         )
 
         context_error2 = ValidationError(
@@ -182,7 +151,6 @@ class TestBaseJsonSchemaUnsetHandling(BaseRuleTestCase):
             "Main error",
             path=deque(["main"]),
             validator="anyOf",
-            instance={"test": "value"},
             context=[context_error1, context_error2],
         )
 
@@ -193,9 +161,7 @@ class TestBaseJsonSchemaUnsetHandling(BaseRuleTestCase):
 
         # Check main match has both validator and instance
         self.assertTrue(hasattr(main_match, "validator"))
-        self.assertTrue(hasattr(main_match, "instance"))
         self.assertEqual(main_match.validator, "anyOf")
-        self.assertEqual(main_match.instance, {"test": "value"})
 
         # Check context matches
         self.assertEqual(len(main_match.context), 2)
@@ -203,11 +169,8 @@ class TestBaseJsonSchemaUnsetHandling(BaseRuleTestCase):
         # Context match 1: validator unset, instance set
         context_match1 = main_match.context[0]
         self.assertFalse(hasattr(context_match1, "validator"))
-        self.assertTrue(hasattr(context_match1, "instance"))
-        self.assertEqual(context_match1.instance, "context_value1")
 
         # Context match 2: validator set, instance unset
         context_match2 = main_match.context[1]
         self.assertTrue(hasattr(context_match2, "validator"))
-        self.assertFalse(hasattr(context_match2, "instance"))
         self.assertEqual(context_match2.validator, "type")

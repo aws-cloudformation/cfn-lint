@@ -810,8 +810,23 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         Raises:
             ValueError: When configuration is invalid with a descriptive message
         """
-        # Get raw configuration values to avoid file globbing issues
-        raw_templates = self._get_argument_value("templates", True, False) or []
+        # Get raw configuration values using the same logic as the templates property
+        # For templates, we need to check both templates and template_alt
+        raw_templates = []
+        if "templates" in self._manual_args:
+            raw_templates = self._manual_args["templates"]
+        else:
+            cli_alt_args = self._get_argument_value("template_alt", False, False)
+            cli_args = self._get_argument_value("templates", False, False)
+            if cli_alt_args:
+                raw_templates = cli_alt_args
+            elif cli_args:
+                raw_templates = cli_args
+
+        # Ensure it's a list
+        if isinstance(raw_templates, str):
+            raw_templates = [raw_templates]
+        raw_templates = raw_templates or []
         raw_deployment_files = (
             self._get_argument_value("deployment_files", False, False) or []
         )
