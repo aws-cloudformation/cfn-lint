@@ -4,8 +4,41 @@
   "/properties/ApplicationId",
   "/properties/StatementId",
   "/properties/Actions",
-  "/properties/Principal"
+  "/properties/Principal",
+  "/properties/Conditions"
  ],
+ "definitions": {
+  "Condition": {
+   "additionalProperties": false,
+   "properties": {
+    "ConditionKey": {
+     "pattern": "^aws:PrincipalTag/qbusiness-dataaccessor:[a-zA-Z]+",
+     "type": "string"
+    },
+    "ConditionOperator": {
+     "enum": [
+      "StringEquals"
+     ],
+     "type": "string"
+    },
+    "ConditionValues": {
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$",
+     "type": "array"
+    }
+   },
+   "required": [
+    "ConditionOperator",
+    "ConditionKey",
+    "ConditionValues"
+   ],
+   "type": "object"
+  }
+ },
  "primaryIdentifier": [
   "/properties/ApplicationId",
   "/properties/StatementId"
@@ -25,6 +58,14 @@
    "minLength": 36,
    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
    "type": "string"
+  },
+  "Conditions": {
+   "items": {
+    "$ref": "#/definitions/Condition"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
   },
   "Principal": {
    "maxLength": 1284,

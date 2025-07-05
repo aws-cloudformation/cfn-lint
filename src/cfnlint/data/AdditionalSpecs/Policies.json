@@ -1814,6 +1814,11 @@
      "PrivateDomainName"
     ]
    },
+   "createroutingrule": {
+    "Resources": [
+     "RoutingRule"
+    ]
+   },
    "delete": {
     "Resources": [
      "AccessLogSettings",
@@ -1851,6 +1856,11 @@
      "UsagePlan",
      "UsagePlanKey",
      "VpcLink"
+    ]
+   },
+   "deleteroutingrule": {
+    "Resources": [
+     "RoutingRule"
     ]
    },
    "get": {
@@ -1917,6 +1927,16 @@
      "UsagePlans",
      "VpcLink",
      "VpcLinks"
+    ]
+   },
+   "getroutingrule": {
+    "Resources": [
+     "RoutingRule"
+    ]
+   },
+   "listroutingrule": {
+    "Resources": [
+     "RoutingRule"
     ]
    },
    "patch": {
@@ -2028,6 +2048,11 @@
     "Resources": [
      "RestApi",
      "RestApis"
+    ]
+   },
+   "updateroutingrule": {
+    "Resources": [
+     "RoutingRule"
     ]
    }
   },
@@ -2252,6 +2277,7 @@
      "apigateway:Resource/EndpointType",
      "apigateway:Resource/MtlsTrustStoreUri",
      "apigateway:Resource/MtlsTrustStoreVersion",
+     "apigateway:Resource/RoutingMode",
      "apigateway:Resource/SecurityPolicy",
      "aws:ResourceTag/${TagKey}"
     ]
@@ -2280,6 +2306,7 @@
      "apigateway:Request/MtlsTrustStoreUri",
      "apigateway:Request/MtlsTrustStoreVersion",
      "apigateway:Request/SecurityPolicy",
+     "apigateway:Resource/RoutingMode",
      "aws:ResourceTag/${TagKey}"
     ]
    },
@@ -2410,6 +2437,7 @@
     "ConditionKeys": [
      "apigateway:Request/EndpointType",
      "apigateway:Resource/EndpointType",
+     "apigateway:Resource/RoutingMode",
      "aws:ResourceTag/${TagKey}"
     ]
    },
@@ -2536,6 +2564,16 @@
      "aws:ResourceTag/${TagKey}"
     ]
    },
+   "routingrule": {
+    "ARNFormats": [
+     "arn:${Partition}:apigateway:${Region}:${Account}:/domainnames/.*"
+    ],
+    "ConditionKeys": [
+     "apigateway:Resource/ConditionBasePaths",
+     "apigateway:Resource/Priority",
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "sdk": {
     "ARNFormats": [
      "arn:${Partition}:apigateway:${Region}::/restapis/.*"
@@ -2653,6 +2691,11 @@
      "data-integration"
     ]
    },
+   "createdataintegrationschedule": {
+    "Resources": [
+     "data-integration"
+    ]
+   },
    "createeventintegration": {
     "Resources": [
      "event-integration"
@@ -2703,6 +2746,16 @@
      "data-integration"
     ]
    },
+   "getdataintegrationexecution": {
+    "Resources": [
+     "data-integration"
+    ]
+   },
+   "getdataintegrationschedule": {
+    "Resources": [
+     "data-integration"
+    ]
+   },
    "geteventintegration": {
     "Resources": [
      "event-integration"
@@ -2711,7 +2764,17 @@
    "listapplicationassociations": {},
    "listapplications": {},
    "listdataintegrationassociations": {},
+   "listdataintegrationexecutions": {
+    "Resources": [
+     "data-integration"
+    ]
+   },
    "listdataintegrations": {},
+   "listdataintegrationschedules": {
+    "Resources": [
+     "data-integration"
+    ]
+   },
    "listeventintegrationassociations": {},
    "listeventintegrations": {},
    "listtagsforresource": {
@@ -2721,6 +2784,11 @@
      "data-integration-association",
      "event-integration",
      "event-integration-association"
+    ]
+   },
+   "startdataintegrationexecution": {
+    "Resources": [
+     "data-integration"
     ]
    },
    "tagresource": {
@@ -2756,6 +2824,11 @@
    "updatedataintegrationassociation": {
     "Resources": [
      "data-integration-association"
+    ]
+   },
+   "updatedataintegrationschedule": {
+    "Resources": [
+     "data-integration"
     ]
    },
    "updateeventintegration": {
@@ -5731,17 +5804,6 @@
      "agreement"
     ]
    },
-   "downloadagreement": {
-    "Resources": [
-     "agreement",
-     "customer-agreement"
-    ]
-   },
-   "get": {
-    "Resources": [
-     "report-package"
-    ]
-   },
    "getaccountsettings": {},
    "getagreement": {
     "Resources": [
@@ -5797,11 +5859,10 @@
    "report": {
     "ARNFormats": [
      "arn:${Partition}:artifact:${Region}::.*"
-    ]
-   },
-   "report-package": {
-    "ARNFormats": [
-     "arn:${Partition}:artifact:::report-package/*"
+    ],
+    "ConditionKeys": [
+     "artifact:ReportCategory",
+     "artifact:ReportSeries"
     ]
    }
   }
@@ -26795,6 +26856,11 @@
      "table"
     ]
    },
+   "createglobaltablewitness": {
+    "Resources": [
+     "table"
+    ]
+   },
    "createtable": {
     "Resources": [
      "table"
@@ -26808,6 +26874,11 @@
    "deletebackup": {
     "Resources": [
      "backup"
+    ]
+   },
+   "deleteglobaltablewitness": {
+    "Resources": [
+     "table"
     ]
    },
    "deleteitem": {
@@ -68015,6 +68086,11 @@
     ]
    },
    "createapplication": {},
+   "createchatresponseconfiguration": {
+    "Resources": [
+     "application"
+    ]
+   },
    "createdataaccessor": {
     "Resources": [
      "application"
@@ -68080,6 +68156,12 @@
    "deletechatcontrolsconfiguration": {
     "Resources": [
      "application"
+    ]
+   },
+   "deletechatresponseconfiguration": {
+    "Resources": [
+     "application",
+     "chat-response-configuration"
     ]
    },
    "deleteconversation": {
@@ -68161,6 +68243,12 @@
      "application"
     ]
    },
+   "getchatresponseconfiguration": {
+    "Resources": [
+     "application",
+     "chat-response-configuration"
+    ]
+   },
    "getdataaccessor": {
     "Resources": [
      "application",
@@ -68232,6 +68320,11 @@
    },
    "listapplications": {},
    "listattachments": {
+    "Resources": [
+     "application"
+    ]
+   },
+   "listchatresponseconfigurations": {
     "Resources": [
      "application"
     ]
@@ -68312,6 +68405,7 @@
    "listtagsforresource": {
     "Resources": [
      "application",
+     "chat-response-configuration",
      "data-accessor",
      "data-source",
      "index",
@@ -68372,6 +68466,7 @@
    "tagresource": {
     "Resources": [
      "application",
+     "chat-response-configuration",
      "data-accessor",
      "data-source",
      "index",
@@ -68384,6 +68479,7 @@
    "untagresource": {
     "Resources": [
      "application",
+     "chat-response-configuration",
      "data-accessor",
      "data-source",
      "index",
@@ -68401,6 +68497,12 @@
    "updatechatcontrolsconfiguration": {
     "Resources": [
      "application"
+    ]
+   },
+   "updatechatresponseconfiguration": {
+    "Resources": [
+     "application",
+     "chat-response-configuration"
     ]
    },
    "updatedataaccessor": {
@@ -68460,6 +68562,14 @@
   },
   "Resources": {
    "application": {
+    "ARNFormats": [
+     "arn:${Partition}:qbusiness:${Region}:${Account}:application/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "chat-response-configuration": {
     "ARNFormats": [
      "arn:${Partition}:qbusiness:${Region}:${Account}:application/.*"
     ],
@@ -76556,7 +76666,11 @@
      "bucket"
     ]
    },
-   "getaccesspoint": {},
+   "getaccesspoint": {
+    "Resources": [
+     "accesspoint"
+    ]
+   },
    "getaccesspointpolicy": {
     "Resources": [
      "accesspoint"
@@ -76584,6 +76698,11 @@
    },
    "listaccesspointsfordirectorybuckets": {},
    "listallmydirectorybuckets": {},
+   "listtagsforresource": {
+    "Resources": [
+     "bucket"
+    ]
+   },
    "putaccesspointpolicy": {
     "Resources": [
      "accesspoint"
@@ -76608,6 +76727,16 @@
     "Resources": [
      "bucket"
     ]
+   },
+   "tagresource": {
+    "Resources": [
+     "bucket"
+    ]
+   },
+   "untagresource": {
+    "Resources": [
+     "bucket"
+    ]
    }
   },
   "Resources": {
@@ -76619,6 +76748,10 @@
    "bucket": {
     "ARNFormats": [
      "arn:${Partition}:s3express:${Region}:${Account}:bucket/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}",
+     "s3express:BucketTag/${TagKey}"
     ]
    }
   }
@@ -82585,6 +82718,12 @@
      "attack"
     ]
    },
+   "describeattackcontributors": {
+    "Resources": [
+     "attack",
+     "protection-group"
+    ]
+   },
    "describeattackstatistics": {},
    "describedrtaccess": {},
    "describeemergencycontactsettings": {},
@@ -82610,8 +82749,14 @@
    },
    "enableapplicationlayerautomaticresponse": {},
    "enableproactiveengagement": {},
+   "getglobalthreatdata": {},
    "getsubscriptionstate": {},
    "listattacks": {},
+   "listmitigations": {
+    "Resources": [
+     "attack"
+    ]
+   },
    "listprotectiongroups": {},
    "listprotections": {},
    "listresourcesinprotectiongroup": {

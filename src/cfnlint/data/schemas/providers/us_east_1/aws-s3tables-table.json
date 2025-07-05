@@ -1,0 +1,199 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TableBucketARN",
+  "/properties/OpenTableFormat",
+  "/properties/IcebergMetadata",
+  "/properties/WithoutMetadata"
+ ],
+ "definitions": {
+  "Compaction": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "enum": [
+      "enabled",
+      "disabled"
+     ],
+     "type": "string"
+    },
+    "TargetFileSizeMB": {
+     "minimum": 64,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "IcebergMetadata": {
+   "additionalProperties": false,
+   "properties": {
+    "IcebergSchema": {
+     "$ref": "#/definitions/IcebergSchema"
+    }
+   },
+   "required": [
+    "IcebergSchema"
+   ],
+   "type": "object"
+  },
+  "IcebergSchema": {
+   "additionalProperties": false,
+   "properties": {
+    "SchemaFieldList": {
+     "$ref": "#/definitions/SchemaFieldList"
+    }
+   },
+   "required": [
+    "SchemaFieldList"
+   ],
+   "type": "object"
+  },
+  "Namespace": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "[0-9a-z_]*",
+   "type": "string"
+  },
+  "OpenTableFormat": {
+   "enum": [
+    "ICEBERG"
+   ],
+   "type": "string"
+  },
+  "SchemaField": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Required": {
+     "type": "boolean"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "SchemaFieldList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SchemaField"
+   },
+   "type": "array"
+  },
+  "SnapshotManagement": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxSnapshotAgeHours": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MinSnapshotsToKeep": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Status": {
+     "enum": [
+      "enabled",
+      "disabled"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TableARN": {
+   "examples": [
+    "arn:aws:s3tables:us-west-2:123456789012:bucket/mytablebucket/table/813aadd1-a378-4d0f-8467-e3247306f309"
+   ],
+   "type": "string"
+  },
+  "TableBucketARN": {
+   "examples": [
+    "arn:aws:s3tables:us-west-2:123456789012:bucket/mytablebucket"
+   ],
+   "pattern": "(arn:aws[-a-z0-9]*:[a-z0-9]+:[-a-z0-9]*:[0-9]{12}:bucket/[a-z0-9_-]{3,63})",
+   "type": "string"
+  },
+  "TableName": {
+   "type": "string"
+  },
+  "VersionToken": {
+   "type": "string"
+  },
+  "WarehouseLocation": {
+   "type": "string"
+  },
+  "WithoutMetadata": {
+   "enum": [
+    "Yes"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TableARN"
+ ],
+ "properties": {
+  "Compaction": {
+   "$ref": "#/definitions/Compaction"
+  },
+  "IcebergMetadata": {
+   "$ref": "#/definitions/IcebergMetadata"
+  },
+  "Namespace": {
+   "$ref": "#/definitions/Namespace"
+  },
+  "OpenTableFormat": {
+   "$ref": "#/definitions/OpenTableFormat"
+  },
+  "SnapshotManagement": {
+   "$ref": "#/definitions/SnapshotManagement"
+  },
+  "TableARN": {
+   "$ref": "#/definitions/TableARN"
+  },
+  "TableBucketARN": {
+   "$ref": "#/definitions/TableBucketARN"
+  },
+  "TableName": {
+   "$ref": "#/definitions/TableName"
+  },
+  "VersionToken": {
+   "$ref": "#/definitions/VersionToken"
+  },
+  "WarehouseLocation": {
+   "$ref": "#/definitions/WarehouseLocation"
+  },
+  "WithoutMetadata": {
+   "$ref": "#/definitions/WithoutMetadata"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TableARN",
+  "/properties/WarehouseLocation",
+  "/properties/VersionToken"
+ ],
+ "required": [
+  "TableBucketARN",
+  "Namespace",
+  "TableName",
+  "OpenTableFormat"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::S3Tables::Table",
+ "writeOnlyProperties": [
+  "/properties/IcebergMetadata",
+  "/properties/WithoutMetadata"
+ ]
+}
