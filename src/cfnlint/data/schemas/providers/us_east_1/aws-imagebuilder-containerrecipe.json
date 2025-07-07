@@ -14,8 +14,7 @@
   "/properties/KmsKeyId",
   "/properties/PlatformOverride",
   "/properties/WorkingDirectory",
-  "/properties/Components",
-  "/properties/Tags"
+  "/properties/Components"
  ],
  "definitions": {
   "ComponentConfiguration": {
@@ -170,18 +169,6 @@
  "oneOf": [
   {
    "required": [
-    "DockerfileTemplateData",
-    "Name",
-    "Version",
-    "Components",
-    "ParentImage",
-    "TargetRepository",
-    "ContainerType"
-   ]
-  },
-  {
-   "required": [
-    "DockerfileTemplateUri",
     "Name",
     "Version",
     "Components",
@@ -276,9 +263,6 @@
    "type": "string"
   }
  },
- "propertyTransform": {
-  "/properties/InstanceConfiguration/BlockDeviceMappings/*/Ebs/VolumeType": "$uppercase(VolumeType)"
- },
  "readOnlyProperties": [
   "/properties/Arn"
  ],
@@ -287,7 +271,7 @@
   "cloudFormationSystemTags": true,
   "tagOnCreate": true,
   "tagProperty": "/properties/Tags",
-  "tagUpdatable": false,
+  "tagUpdatable": true,
   "taggable": true
  },
  "typeName": "AWS::ImageBuilder::ContainerRecipe",

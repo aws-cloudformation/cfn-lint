@@ -1,0 +1,206 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AvailabilityZone",
+  "/properties/AvailabilityZoneId",
+  "/properties/Shape",
+  "/properties/DatabaseServerType",
+  "/properties/StorageServerType",
+  "/properties/DisplayName",
+  "/properties/ComputeCount",
+  "/properties/CustomerContactsToSendToOCI",
+  "/properties/StorageCount"
+ ],
+ "definitions": {
+  "CustomerContact": {
+   "additionalProperties": false,
+   "properties": {
+    "Email": {
+     "maxLength": 320,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CloudExadataInfrastructureArn"
+ ],
+ "properties": {
+  "ActivatedStorageCount": {
+   "type": "integer"
+  },
+  "AdditionalStorageCount": {
+   "type": "integer"
+  },
+  "AvailabilityZone": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "AvailabilityZoneId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "AvailableStorageSizeInGBs": {
+   "type": "integer"
+  },
+  "CloudExadataInfrastructureArn": {
+   "type": "string"
+  },
+  "CloudExadataInfrastructureId": {
+   "type": "string"
+  },
+  "ComputeCount": {
+   "type": "integer"
+  },
+  "ComputeModel": {
+   "type": "string"
+  },
+  "CpuCount": {
+   "type": "integer"
+  },
+  "CustomerContactsToSendToOCI": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CustomerContact"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "DataStorageSizeInTBs": {
+   "type": "number"
+  },
+  "DatabaseServerType": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_\\/.=-]+$",
+   "type": "string"
+  },
+  "DbNodeStorageSizeInGBs": {
+   "type": "integer"
+  },
+  "DbServerIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "DbServerVersion": {
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z_](?!.*--)[a-zA-Z0-9_-]*$",
+   "type": "string"
+  },
+  "MaxCpuCount": {
+   "type": "integer"
+  },
+  "MaxDataStorageInTBs": {
+   "type": "number"
+  },
+  "MaxDbNodeStorageSizeInGBs": {
+   "type": "integer"
+  },
+  "MaxMemoryInGBs": {
+   "type": "integer"
+  },
+  "MemorySizeInGBs": {
+   "type": "integer"
+  },
+  "OciResourceAnchorName": {
+   "type": "string"
+  },
+  "OciUrl": {
+   "type": "string"
+  },
+  "Ocid": {
+   "type": "string"
+  },
+  "Shape": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_\\/.=-]+$",
+   "type": "string"
+  },
+  "StorageCount": {
+   "type": "integer"
+  },
+  "StorageServerType": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_\\/.=-]+$",
+   "type": "string"
+  },
+  "StorageServerVersion": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TotalStorageSizeInGBs": {
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ActivatedStorageCount",
+  "/properties/AdditionalStorageCount",
+  "/properties/AvailableStorageSizeInGBs",
+  "/properties/CloudExadataInfrastructureArn",
+  "/properties/CloudExadataInfrastructureId",
+  "/properties/ComputeModel",
+  "/properties/CpuCount",
+  "/properties/DataStorageSizeInTBs",
+  "/properties/DbNodeStorageSizeInGBs",
+  "/properties/DbServerVersion",
+  "/properties/MaxCpuCount",
+  "/properties/MaxDataStorageInTBs",
+  "/properties/MaxDbNodeStorageSizeInGBs",
+  "/properties/MaxMemoryInGBs",
+  "/properties/MemorySizeInGBs",
+  "/properties/OciResourceAnchorName",
+  "/properties/OciUrl",
+  "/properties/Ocid",
+  "/properties/StorageServerVersion",
+  "/properties/TotalStorageSizeInGBs",
+  "/properties/DbServerIds"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ODB::CloudExadataInfrastructure"
+}

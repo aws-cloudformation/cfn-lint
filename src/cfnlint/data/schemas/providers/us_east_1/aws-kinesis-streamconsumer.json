@@ -2,10 +2,33 @@
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/ConsumerName",
-  "/properties/StreamARN"
+  "/properties/StreamARN",
+  "/properties/Tags"
  ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/ConsumerARN"
  ],
  "properties": {
   "ConsumerARN": {
@@ -15,27 +38,46 @@
    "type": "string"
   },
   "ConsumerName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_.-]+$",
    "type": "string"
   },
   "ConsumerStatus": {
    "type": "string"
   },
-  "Id": {
+  "StreamARN": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws.*:kinesis:.*:\\d{12}:stream/\\S+",
    "type": "string"
   },
-  "StreamARN": {
-   "type": "string"
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": false
   }
  },
  "readOnlyProperties": [
-  "/properties/ConsumerStatus",
   "/properties/ConsumerARN",
-  "/properties/ConsumerCreationTimestamp",
-  "/properties/Id"
+  "/properties/ConsumerStatus",
+  "/properties/ConsumerCreationTimestamp"
  ],
  "required": [
   "ConsumerName",
   "StreamARN"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kinesis.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
  "typeName": "AWS::Kinesis::StreamConsumer"
 }

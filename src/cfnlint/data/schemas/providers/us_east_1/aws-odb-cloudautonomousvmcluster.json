@@ -1,0 +1,321 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/OdbNetworkId",
+  "/properties/CloudExadataInfrastructureId",
+  "/properties/DbServers",
+  "/properties/IsMtlsEnabledVmCluster",
+  "/properties/MemoryPerOracleComputeUnitInGBs",
+  "/properties/ScanListenerPortNonTls",
+  "/properties/ScanListenerPortTls",
+  "/properties/TimeZone",
+  "/properties/AutonomousDataStorageSizeInTBs",
+  "/properties/DisplayName",
+  "/properties/CpuCoreCountPerNode",
+  "/properties/Description",
+  "/properties/LicenseModel",
+  "/properties/MaintenanceWindow",
+  "/properties/TotalContainerDatabases"
+ ],
+ "definitions": {
+  "MaintenanceWindow": {
+   "additionalProperties": false,
+   "properties": {
+    "DaysOfWeek": {
+     "items": {
+      "enum": [
+       "MONDAY",
+       "TUESDAY",
+       "WEDNESDAY",
+       "THURSDAY",
+       "FRIDAY",
+       "SATURDAY",
+       "SUNDAY"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "HoursOfDay": {
+     "items": {
+      "type": "integer"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "LeadTimeInWeeks": {
+     "maxLength": 4,
+     "minLength": 1,
+     "type": "integer"
+    },
+    "Months": {
+     "items": {
+      "enum": [
+       "JANUARY",
+       "FEBRUARY",
+       "MARCH",
+       "APRIL",
+       "MAY",
+       "JUNE",
+       "JULY",
+       "AUGUST",
+       "SEPTEMBER",
+       "OCTOBER",
+       "NOVEMBER",
+       "DECEMBER"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Preference": {
+     "enum": [
+      "NO_PREFERENCE",
+      "CUSTOM_PREFERENCE"
+     ],
+     "type": "string"
+    },
+    "WeeksOfMonth": {
+     "items": {
+      "type": "integer"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CloudAutonomousVmClusterArn"
+ ],
+ "properties": {
+  "AutonomousDataStoragePercentage": {
+   "type": "number"
+  },
+  "AutonomousDataStorageSizeInTBs": {
+   "type": "number"
+  },
+  "AvailableAutonomousDataStorageSizeInTBs": {
+   "type": "number"
+  },
+  "AvailableContainerDatabases": {
+   "type": "integer"
+  },
+  "AvailableCpus": {
+   "type": "number"
+  },
+  "CloudAutonomousVmClusterArn": {
+   "type": "string"
+  },
+  "CloudAutonomousVmClusterId": {
+   "type": "string"
+  },
+  "CloudExadataInfrastructureId": {
+   "maxLength": 2048,
+   "minLength": 6,
+   "pattern": "(arn:(?:aws|aws-cn|aws-us-gov|aws-iso-{0,1}[a-z]{0,1}):[a-z0-9-]+:[a-z0-9-]*:[0-9]+:[a-z0-9-]+/[a-zA-Z0-9_~.-]{6,64}|[a-zA-Z0-9_~.-]{6,64})",
+   "type": "string"
+  },
+  "ComputeModel": {
+   "enum": [
+    "ECPU",
+    "OCPU"
+   ],
+   "type": "string"
+  },
+  "CpuCoreCount": {
+   "type": "integer"
+  },
+  "CpuCoreCountPerNode": {
+   "type": "integer"
+  },
+  "CpuPercentage": {
+   "type": "number"
+  },
+  "DataStorageSizeInGBs": {
+   "type": "number"
+  },
+  "DataStorageSizeInTBs": {
+   "type": "number"
+  },
+  "DbNodeStorageSizeInGBs": {
+   "type": "integer"
+  },
+  "DbServers": {
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 1024,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Description": {
+   "maxLength": 400,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z_](?!.*--)[a-zA-Z0-9_-]*$",
+   "type": "string"
+  },
+  "Domain": {
+   "type": "string"
+  },
+  "ExadataStorageInTBsLowestScaledValue": {
+   "type": "number"
+  },
+  "Hostname": {
+   "type": "string"
+  },
+  "IsMtlsEnabledVmCluster": {
+   "type": "boolean"
+  },
+  "LicenseModel": {
+   "enum": [
+    "BRING_YOUR_OWN_LICENSE",
+    "LICENSE_INCLUDED"
+   ],
+   "type": "string"
+  },
+  "MaintenanceWindow": {
+   "$ref": "#/definitions/MaintenanceWindow"
+  },
+  "MaxAcdsLowestScaledValue": {
+   "type": "integer"
+  },
+  "MemoryPerOracleComputeUnitInGBs": {
+   "type": "integer"
+  },
+  "MemorySizeInGBs": {
+   "type": "integer"
+  },
+  "NodeCount": {
+   "type": "integer"
+  },
+  "NonProvisionableAutonomousContainerDatabases": {
+   "type": "integer"
+  },
+  "OciResourceAnchorName": {
+   "type": "string"
+  },
+  "OciUrl": {
+   "type": "string"
+  },
+  "Ocid": {
+   "type": "string"
+  },
+  "OdbNetworkId": {
+   "maxLength": 2048,
+   "minLength": 6,
+   "pattern": "(arn:(?:aws|aws-cn|aws-us-gov|aws-iso-{0,1}[a-z]{0,1}):[a-z0-9-]+:[a-z0-9-]*:[0-9]+:[a-z0-9-]+/[a-zA-Z0-9_~.-]{6,64}|[a-zA-Z0-9_~.-]{6,64})",
+   "type": "string"
+  },
+  "ProvisionableAutonomousContainerDatabases": {
+   "type": "integer"
+  },
+  "ProvisionedAutonomousContainerDatabases": {
+   "type": "integer"
+  },
+  "ProvisionedCpus": {
+   "type": "number"
+  },
+  "ReclaimableCpus": {
+   "type": "number"
+  },
+  "ReservedCpus": {
+   "type": "number"
+  },
+  "ScanListenerPortNonTls": {
+   "maximum": 8999,
+   "minimum": 1024,
+   "type": "integer"
+  },
+  "ScanListenerPortTls": {
+   "maximum": 8999,
+   "minimum": 1024,
+   "type": "integer"
+  },
+  "Shape": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TimeZone": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "TotalContainerDatabases": {
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CloudAutonomousVmClusterId",
+  "/properties/CloudAutonomousVmClusterArn",
+  "/properties/OciResourceAnchorName",
+  "/properties/AutonomousDataStoragePercentage",
+  "/properties/AvailableAutonomousDataStorageSizeInTBs",
+  "/properties/AvailableContainerDatabases",
+  "/properties/AvailableCpus",
+  "/properties/ComputeModel",
+  "/properties/CpuCoreCount",
+  "/properties/CpuPercentage",
+  "/properties/DataStorageSizeInGBs",
+  "/properties/DataStorageSizeInTBs",
+  "/properties/DbNodeStorageSizeInGBs",
+  "/properties/Domain",
+  "/properties/ExadataStorageInTBsLowestScaledValue",
+  "/properties/Hostname",
+  "/properties/Ocid",
+  "/properties/OciUrl",
+  "/properties/MaxAcdsLowestScaledValue",
+  "/properties/MemorySizeInGBs",
+  "/properties/NodeCount",
+  "/properties/NonProvisionableAutonomousContainerDatabases",
+  "/properties/ProvisionableAutonomousContainerDatabases",
+  "/properties/ProvisionedAutonomousContainerDatabases",
+  "/properties/ProvisionedCpus",
+  "/properties/ReclaimableCpus",
+  "/properties/ReservedCpus",
+  "/properties/Shape"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ODB::CloudAutonomousVmCluster"
+}

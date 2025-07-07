@@ -1,0 +1,407 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AuthenticationMaterial",
+  "/properties/AuthenticationMaterialType",
+  "/properties/Role",
+  "/properties/Tags",
+  "/properties/SerialNumber"
+ ],
+ "definitions": {
+  "AuthMaterialType": {
+   "enum": [
+    "WIFI_SETUP_QR_BAR_CODE",
+    "ZWAVE_QR_BAR_CODE",
+    "ZIGBEE_QR_BAR_CODE"
+   ],
+   "type": "string"
+  },
+  "CapabilityReport": {
+   "additionalProperties": false,
+   "properties": {
+    "Endpoints": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CapabilityReportEndpoint"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array"
+    },
+    "NodeId": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9=_.,@\\+\\-/]+$",
+     "type": "string"
+    },
+    "Version": {
+     "maxLength": 10,
+     "minLength": 1,
+     "pattern": "^1\\.0\\.0$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Endpoints",
+    "Version"
+   ],
+   "type": "object"
+  },
+  "CapabilityReportCapability": {
+   "additionalProperties": false,
+   "properties": {
+    "Actions": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[/a-zA-Z0-9\\._ ]+$",
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Events": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[/a-zA-Z0-9\\._ ]+$",
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Id": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9.\\/]+(@(\\d+\\.\\d+|\\$latest))?$",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[/a-zA-Z0-9\\._ ]+$",
+     "type": "string"
+    },
+    "Properties": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[/a-zA-Z0-9\\._ ]+$",
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Version": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^(0|[1-9][0-9]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Actions",
+    "Events",
+    "Id",
+    "Name",
+    "Properties",
+    "Version"
+   ],
+   "type": "object"
+  },
+  "CapabilityReportEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Capabilities": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CapabilityReportCapability"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array"
+    },
+    "DeviceTypes": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 256,
+      "pattern": "^[a-zA-Z0-9=_. ,@\\+\\-/]+$",
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Id": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[0-9a-zA-Z]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Capabilities",
+    "DeviceTypes",
+    "Id"
+   ],
+   "type": "object"
+  },
+  "HubNetworkMode": {
+   "enum": [
+    "STANDARD",
+    "NETWORK_WIDE_EXCLUSION"
+   ],
+   "type": "string"
+  },
+  "MetaData": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "minProperties": 1,
+   "patternProperties": {
+    "[a-zA-Z0-9_.,@/:#-]+": {
+     "maxLength": 800,
+     "pattern": "[a-zA-Z0-9_.,@/:#-]*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ProvisioningStatus": {
+   "enum": [
+    "UNASSOCIATED",
+    "PRE_ASSOCIATED",
+    "DISCOVERED",
+    "ACTIVATED",
+    "DELETION_FAILED",
+    "DELETE_IN_PROGRESS",
+    "ISOLATED",
+    "DELETED"
+   ],
+   "type": "string"
+  },
+  "Role": {
+   "enum": [
+    "CONTROLLER",
+    "DEVICE"
+   ],
+   "type": "string"
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "minProperties": 1,
+   "patternProperties": {
+    ".+": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/ActivatedAt",
+  "/properties/AdvertisedProductId",
+  "/properties/ConnectorDeviceId",
+  "/properties/ConnectorPolicyId",
+  "/properties/DeviceSpecificKey",
+  "/properties/InternationalArticleNumber",
+  "/properties/MacAddress",
+  "/properties/ParentControllerId",
+  "/properties/HubNetworkMode"
+ ],
+ "primaryIdentifier": [
+  "/properties/Identifier"
+ ],
+ "properties": {
+  "ActivatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "AdvertisedProductId": {
+   "maxLength": 5,
+   "minLength": 5,
+   "pattern": "^([A-Za-z0-9!#$%&()*\\+\\-;<=>?@^_`{|}~])+$",
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 1011,
+   "minLength": 32,
+   "pattern": "^arn:[^:]+:iotmanagedintegrations:[0-9a-zA-Z-]+:[0-9]+:managed-thing/([0-9a-zA-Z:_-])+$",
+   "type": "string"
+  },
+  "AuthenticationMaterial": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^[0-9A-Za-z!#$%&()*\\+\\-;<=>?@^_`{|}~\\/: ]+$",
+   "type": "string"
+  },
+  "AuthenticationMaterialType": {
+   "$ref": "#/definitions/AuthMaterialType"
+  },
+  "Brand": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9-_ ]+$",
+   "type": "string"
+  },
+  "CapabilityReport": {
+   "$ref": "#/definitions/CapabilityReport"
+  },
+  "Classification": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ConnectorDeviceId": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_.,@-]+$",
+   "type": "string"
+  },
+  "ConnectorPolicyId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9-_]+$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "CredentialLockerId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "DeviceSpecificKey": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9=_.,@\\+\\-]+$",
+   "type": "string"
+  },
+  "HubNetworkMode": {
+   "$ref": "#/definitions/HubNetworkMode"
+  },
+  "Id": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9:_-]*$",
+   "type": "string"
+  },
+  "Identifier": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9:_-]*$",
+   "type": "string"
+  },
+  "InternationalArticleNumber": {
+   "maxLength": 13,
+   "minLength": 8,
+   "pattern": "^[0-9]+$",
+   "type": "string"
+  },
+  "MacAddress": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MetaData": {
+   "$ref": "#/definitions/MetaData"
+  },
+  "Model": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9-_ ]+$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[A-Za-z]+$",
+   "type": "string"
+  },
+  "Owner": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_.,@-]+$",
+   "type": "string"
+  },
+  "ParentControllerId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9]+$",
+   "type": "string"
+  },
+  "ProvisioningStatus": {
+   "$ref": "#/definitions/ProvisioningStatus"
+  },
+  "Role": {
+   "$ref": "#/definitions/Role"
+  },
+  "SerialNumber": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9-_ ]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  },
+  "UniversalProductCode": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[0-9]+$",
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ActivatedAt",
+  "/properties/AdvertisedProductId",
+  "/properties/Arn",
+  "/properties/ConnectorDeviceId",
+  "/properties/ConnectorPolicyId",
+  "/properties/CreatedAt",
+  "/properties/DeviceSpecificKey",
+  "/properties/HubNetworkMode",
+  "/properties/Id",
+  "/properties/Identifier",
+  "/properties/InternationalArticleNumber",
+  "/properties/MacAddress",
+  "/properties/ParentControllerId",
+  "/properties/ProvisioningStatus",
+  "/properties/UniversalProductCode",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "Role"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTManagedIntegrations::ManagedThing",
+ "writeOnlyProperties": [
+  "/properties/AuthenticationMaterial",
+  "/properties/AuthenticationMaterialType"
+ ]
+}

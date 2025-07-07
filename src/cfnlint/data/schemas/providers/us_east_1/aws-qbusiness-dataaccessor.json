@@ -75,6 +75,71 @@
    },
    "type": "object"
   },
+  "DataAccessorAuthenticationConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "IdcTrustedTokenIssuerConfiguration": {
+       "$ref": "#/definitions/DataAccessorIdcTrustedTokenIssuerConfiguration"
+      }
+     },
+     "required": [
+      "IdcTrustedTokenIssuerConfiguration"
+     ],
+     "title": "IdcTrustedTokenIssuerConfiguration",
+     "type": "object"
+    }
+   ]
+  },
+  "DataAccessorAuthenticationDetail": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthenticationConfiguration": {
+     "$ref": "#/definitions/DataAccessorAuthenticationConfiguration"
+    },
+    "AuthenticationType": {
+     "$ref": "#/definitions/DataAccessorAuthenticationType"
+    },
+    "ExternalIds": {
+     "items": {
+      "maxLength": 1000,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$",
+      "type": "string"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "AuthenticationType"
+   ],
+   "type": "object"
+  },
+  "DataAccessorAuthenticationType": {
+   "enum": [
+    "AWS_IAM_IDC_TTI",
+    "AWS_IAM_IDC_AUTH_CODE"
+   ],
+   "type": "string"
+  },
+  "DataAccessorIdcTrustedTokenIssuerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IdcTrustedTokenIssuerArn": {
+     "maxLength": 1284,
+     "minLength": 0,
+     "pattern": "^arn:aws:sso::[0-9]{12}:trustedTokenIssuer/(sso)?ins-[a-zA-Z0-9-.]{16}/tti-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "IdcTrustedTokenIssuerArn"
+   ],
+   "type": "object"
+  },
   "DocumentAttribute": {
    "additionalProperties": false,
    "properties": {
@@ -200,6 +265,9 @@
    "minLength": 36,
    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
    "type": "string"
+  },
+  "AuthenticationDetail": {
+   "$ref": "#/definitions/DataAccessorAuthenticationDetail"
   },
   "CreatedAt": {
    "format": "date-time",
