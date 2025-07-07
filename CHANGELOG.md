@@ -1,3 +1,11 @@
+### v1.37.1
+## What's Changed
+* Create API for just taking a config by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4177
+* chore(deps): bump pyinstaller from 6.14.1 to 6.14.2 in /requirements by @dependabot in https://github.com/aws-cloudformation/cfn-lint/pull/4179
+* Update CloudFormation schemas to `2025-07-07` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4176
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.37.0...v1.37.1
+
 ### v1.37.0
 ## What's Changed
 * Update CloudFormation schemas to 2025-06-30 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4173
