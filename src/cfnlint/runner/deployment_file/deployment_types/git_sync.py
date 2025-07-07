@@ -15,7 +15,7 @@ from cfnlint.runner.deployment_file.deployment import DeploymentFileData
 
 
 def create_deployment_from_git_sync(
-    data: dict[str, Any]
+    data: dict[str, Any],
 ) -> tuple[DeploymentFileData | None, RuleMatches | None]:
 
     schema = load_resource(cfnlint.data.schemas.other.deployment_files, "git_sync.json")

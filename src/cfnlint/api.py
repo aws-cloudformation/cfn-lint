@@ -127,3 +127,37 @@ def lint_file(
 
     runner = Runner(config_mixin)
     return list(runner.run())
+
+
+def lint_by_config(config: ManualArgs) -> list[Match]:
+    """Validate a template using a Config
+
+    Parameters
+    ----------
+    config : ManualArgs
+        Configuration options for the linter
+
+    Returns
+    -------
+    list
+        a list of errors if any were found, else an empty list
+    """
+
+    config_mixin = ConfigMixIn(**config)
+
+    # Use the centralized validation logic
+    try:
+        config_mixin.validate()
+    except ValueError as e:
+        from cfnlint.rules.errors import ConfigError
+
+        return [
+            Match.create(
+                message=str(e),
+                filename="",
+                rule=ConfigError(),
+            )
+        ]
+
+    runner = Runner(config_mixin)
+    return list(runner.run())
