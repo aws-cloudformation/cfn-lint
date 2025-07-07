@@ -10,10 +10,11 @@ import tempfile
 from pathlib import Path
 from unittest import TestCase
 
-from cfnlint import lint, lint_all, lint_file
+from cfnlint import lint, lint_all, lint_by_config, lint_file
 from cfnlint.config import ManualArgs
 from cfnlint.core import get_rules
 from cfnlint.helpers import REGIONS
+from cfnlint.rules.errors import ConfigError
 
 
 class TestLint(TestCase):
@@ -280,3 +281,93 @@ class TestLintFile(TestCase):
         filename = Path("test/fixtures/templates/good/generic.yaml")
         matches = lint_file(filename)
         self.assertEqual([], matches, f"Got matches: {matches!r}")
+
+
+class TestLintByConfig(TestCase):
+    """Test lint_by_config function"""
+
+    def test_lint_by_config_with_invalid_config(self):
+        """Test lint_by_config returns ConfigError for invalid configuration"""
+        # Test with no templates or deployment files
+        result = lint_by_config(ManualArgs())
+
+        self.assertEqual(len(result), 1)
+        self.assertIsInstance(result[0].rule, ConfigError)
+        self.assertIn("No templates or deployment files specified", result[0].message)
+
+    def test_lint_by_config_with_conflicting_deployment_files(self):
+        """Test lint_by_config returns ConfigError for conflicting deployment files"""
+        result = lint_by_config(
+            ManualArgs(
+                deployment_files=["deployment.yaml"], templates=["template.yaml"]
+            )
+        )
+
+        self.assertEqual(len(result), 1)
+        self.assertIsInstance(result[0].rule, ConfigError)
+        self.assertIn("Deployment files cannot be used with", result[0].message)
+
+    def test_lint_by_config_with_conflicting_parameters(self):
+        """Test lint_by_config returns ConfigError for conflicting parameters"""
+        result = lint_by_config(
+            ManualArgs(
+                templates=["template.yaml"],
+                parameters={"Key": "Value"},
+                parameter_files=["params.json"],
+            )
+        )
+
+        self.assertEqual(len(result), 1)
+        self.assertIsInstance(result[0].rule, ConfigError)
+        self.assertIn(
+            "Cannot specify both --parameters and --parameter-files", result[0].message
+        )
+
+    def test_lint_by_config_with_multiple_templates_and_parameters(self):
+        """Test lint_by_config returns ConfigError for multiple templates
+        with parameters
+        """
+        result = lint_by_config(
+            ManualArgs(
+                templates=["template1.yaml", "template2.yaml"],
+                parameters={"Key": "Value"},
+            )
+        )
+
+        self.assertEqual(len(result), 1)
+        self.assertIsInstance(result[0].rule, ConfigError)
+        self.assertIn(
+            "Parameters can only be used with a single template", result[0].message
+        )
+
+    def test_lint_by_config_with_valid_config_runs_successfully(self):
+        """Test lint_by_config runs successfully with valid config and calls
+        runner.run()"""
+        # Create a simple valid template file for testing
+        import os
+        import tempfile
+
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
+            f.write(
+                """
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  TestResource:
+    Type: AWS::S3::Bucket
+"""
+            )
+            temp_file = f.name
+
+        try:
+            result = lint_by_config(ManualArgs(templates=[temp_file]))
+
+            # Should return a list (may be empty or contain linting errors,
+            # but should not be a config error)
+            self.assertIsInstance(result, list)
+            # If there are any results, they should not be ConfigError
+            for match in result:
+                self.assertNotIsInstance(match.rule, ConfigError)
+
+        finally:
+            # Clean up the temporary file
+            os.unlink(temp_file)

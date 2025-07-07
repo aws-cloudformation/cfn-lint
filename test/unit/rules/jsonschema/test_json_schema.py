@@ -66,7 +66,7 @@ class TestJsonSchema(BaseRuleTestCase):
         self.template = build_dict({})
         self.cfn = Template("", self.template, ["us-east-1"])
 
-    def build_result(self, message: str, path: Path) -> RuleMatch:
+    def build_result(self, message: str, path: Path, **kwargs) -> RuleMatch:
         if len(path) > 0:
             return RuleMatch(
                 path[:],
@@ -78,9 +78,12 @@ class TestJsonSchema(BaseRuleTestCase):
                     f"{path[-1]}-em-line",
                     f"{path[-1]}-em-column",
                 ),
+                **kwargs,
             )
 
-        return RuleMatch(path[:], message, rule=self.rule, location=(1, 1, 1, 1))
+        return RuleMatch(
+            path[:], message, rule=self.rule, location=(1, 1, 1, 1), **kwargs
+        )
 
     def validate(self, expected):
         matches = self.rule.match(self.cfn)
@@ -96,6 +99,7 @@ class TestJsonSchema(BaseRuleTestCase):
             self.build_result(
                 "'Resources' is a required property",
                 [],
+                validator="required",
             ),
         ]
 
@@ -108,6 +112,7 @@ class TestJsonSchema(BaseRuleTestCase):
             self.build_result(
                 "Additional properties are not allowed ('Foo' was unexpected)",
                 ["Foo"],
+                validator="additionalProperties",
             ),
         ]
         self.cfn = Template(

@@ -731,7 +731,6 @@ def _merge_configs(
 
 # pylint: disable=too-many-public-methods
 class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
-
     def __init__(self, cli_args: list[str] | None = None, **kwargs: Unpack[ManualArgs]):
         self._manual_args = kwargs or ManualArgs()
         CliArgs.__init__(self, cli_args)
@@ -792,6 +791,68 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
                 return False
 
         return True
+
+    def validate(self, allow_stdin: bool = False) -> None:
+        """
+        Validate the configuration for logical consistency.
+
+        This method validates configuration constraints that may not be enforced
+        by argparse when using the API directly (vs CLI usage). While the CLI
+        uses argparse mutually exclusive groups to prevent some conflicts, the
+        API bypasses argparse, so this method ensures all constraints are enforced
+        consistently across both usage patterns.
+
+        Args:
+            allow_stdin: If True, allows validation to pass when no templates/deployment
+                        files are specified (for CLI stdin handling)
+
+        Raises:
+            ValueError: When configuration is invalid with a descriptive message
+        """
+        # Get raw configuration values using the same logic as the templates property
+        # For templates, we need to check both templates and template_alt
+        raw_templates = []
+        if "templates" in self._manual_args:
+            raw_templates = self._manual_args["templates"]
+        else:
+            cli_alt_args = self._get_argument_value("template_alt", False, False)
+            cli_args = self._get_argument_value("templates", False, False)
+            if cli_alt_args:
+                raw_templates = cli_alt_args
+            elif cli_args:
+                raw_templates = cli_args
+
+        # Ensure it's a list
+        if isinstance(raw_templates, str):
+            raw_templates = [raw_templates]
+        raw_templates = raw_templates or []
+        raw_deployment_files = (
+            self._get_argument_value("deployment_files", False, False) or []
+        )
+        raw_parameters = self._get_argument_value("parameters", False, False) or {}
+        raw_parameter_files = (
+            self._get_argument_value("parameter_files", False, False) or []
+        )
+
+        # Check if no templates or deployment files are specified
+        if not raw_templates and not raw_deployment_files and not allow_stdin:
+            raise ValueError("No templates or deployment files specified")
+
+        # Check for conflicting deployment files with other options
+        if raw_deployment_files:
+            if raw_templates or raw_parameters or raw_parameter_files:
+                raise ValueError(
+                    "Deployment files cannot be used with templates, parameters, "
+                    "or parameter files"
+                )
+
+        # Check for conflicting parameter options
+        if raw_parameters and raw_parameter_files:
+            raise ValueError("Cannot specify both --parameters and --parameter-files")
+
+        # Check for multiple templates with parameters
+        if (raw_parameters or raw_parameter_files) and len(raw_templates) > 1:
+            raise ValueError("Parameters can only be used with a single template")
 
     def _get_argument_value(self, arg_name, is_template, is_config_file):
         cli_value = getattr(self.cli_args, arg_name)
@@ -1032,7 +1093,6 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         return self._get_argument_value("force", False, False)
 
     def evolve(self, **kwargs: Unpack[ManualArgs]) -> "ConfigMixIn":
-
         config = deepcopy(self)
         config._manual_args.update(kwargs)
         return config
