@@ -1,0 +1,163 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SourceViews",
+  "/properties/Description",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Arn": {
+   "pattern": "arn:aws[a-z-]*:(billing)::[0-9]{12}:billingview/[a-zA-Z0-9_+=.@-]{1,75}",
+   "type": "string"
+  },
+  "BillingViewType": {
+   "enum": [
+    "PRIMARY",
+    "BILLING_GROUP",
+    "CUSTOM"
+   ],
+   "type": "string"
+  },
+  "DimensionKey": {
+   "enum": [
+    "LINKED_ACCOUNT"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "BillingViewType": {
+   "$ref": "#/definitions/BillingViewType"
+  },
+  "CreatedAt": {
+   "type": "number"
+  },
+  "DataFilterExpression": {
+   "additionalProperties": false,
+   "properties": {
+    "Dimensions": {
+     "additionalProperties": false,
+     "properties": {
+      "Key": {
+       "$ref": "#/definitions/DimensionKey"
+      },
+      "Values": {
+       "items": {
+        "maxLength": 1024,
+        "pattern": "[\\S\\s]*",
+        "type": "string"
+       },
+       "maxItems": 200,
+       "minItems": 1,
+       "type": "array"
+      }
+     },
+     "type": "object"
+    },
+    "Tags": {
+     "additionalProperties": false,
+     "properties": {
+      "Key": {
+       "maxLength": 1024,
+       "pattern": "[\\S\\s]*",
+       "type": "string"
+      },
+      "Values": {
+       "items": {
+        "maxLength": 1024,
+        "pattern": "[\\S\\s]*",
+        "type": "string"
+       },
+       "maxItems": 200,
+       "minItems": 1,
+       "type": "array"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_\\+=\\.\\-@]+",
+   "type": "string"
+  },
+  "OwnerAccountId": {
+   "pattern": "[0-9]{12}",
+   "type": "string"
+  },
+  "SourceViews": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "arn:aws[a-z-]*:(billing)::[0-9]{12}:billingview/[a-zA-Z0-9_+=.@-]{1,75}",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdatedAt": {
+   "type": "number"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/OwnerAccountId",
+  "/properties/BillingViewType"
+ ],
+ "required": [
+  "Name",
+  "SourceViews"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-billing-billing-view.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Billing::BillingView"
+}

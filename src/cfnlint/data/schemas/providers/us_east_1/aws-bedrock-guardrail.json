@@ -67,9 +67,28 @@
    ],
    "type": "string"
   },
+  "ContentFiltersTierName": {
+   "enum": [
+    "CLASSIC",
+    "STANDARD"
+   ],
+   "type": "string"
+  },
   "ContentPolicyConfig": {
    "additionalProperties": false,
    "properties": {
+    "ContentFiltersTierConfig": {
+     "additionalProperties": false,
+     "properties": {
+      "TierName": {
+       "$ref": "#/definitions/ContentFiltersTierName"
+      }
+     },
+     "required": [
+      "TierName"
+     ],
+     "type": "object"
+    },
     "FiltersConfig": {
      "items": {
       "$ref": "#/definitions/ContentFilterConfig"
@@ -430,6 +449,18 @@
      "maxItems": 30,
      "minItems": 1,
      "type": "array"
+    },
+    "TopicsTierConfig": {
+     "additionalProperties": false,
+     "properties": {
+      "TierName": {
+       "$ref": "#/definitions/TopicsTierName"
+      }
+     },
+     "required": [
+      "TierName"
+     ],
+     "type": "object"
     }
    },
    "required": [
@@ -440,6 +471,13 @@
   "TopicType": {
    "enum": [
     "DENY"
+   ],
+   "type": "string"
+  },
+  "TopicsTierName": {
+   "enum": [
+    "CLASSIC",
+    "STANDARD"
    ],
    "type": "string"
   },

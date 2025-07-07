@@ -1,0 +1,97 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CaCertificate",
+  "/properties/ProvisioningType",
+  "/properties/Tags",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ProvisioningType": {
+   "enum": [
+    "FLEET_PROVISIONING",
+    "JITR"
+   ],
+   "type": "string"
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "minProperties": 1,
+   "patternProperties": {
+    ".+": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Identifier"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1011,
+   "minLength": 32,
+   "pattern": "^arn:[^:]+:iotmanagedintegrations:[0-9a-zA-Z-]+:[0-9]+:provisioning-profile/[0-9a-zA-Z:_-]+$",
+   "type": "string"
+  },
+  "CaCertificate": {
+   "pattern": "^-----BEGIN CERTIFICATE-----.*(.|\\\n)*-----END CERTIFICATE-----\\n?$",
+   "type": "string"
+  },
+  "ClaimCertificate": {
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9-_]+$",
+   "type": "string"
+  },
+  "Identifier": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9-_]+$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 36,
+   "minLength": 1,
+   "pattern": "^[0-9A-Za-z_-]+$",
+   "type": "string"
+  },
+  "ProvisioningType": {
+   "$ref": "#/definitions/ProvisioningType"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ClaimCertificate",
+  "/properties/Id",
+  "/properties/Identifier"
+ ],
+ "required": [
+  "ProvisioningType"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTManagedIntegrations::ProvisioningProfile",
+ "writeOnlyProperties": [
+  "/properties/CaCertificate"
+ ]
+}
