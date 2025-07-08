@@ -41,8 +41,8 @@ class TestConditionsWithRules(TestCase):
         self.assertListEqual(
             [equal.hash for equal in cfn.conditions._rules[0].equals],
             [
-                "d0f5e92fc5233a6b011342df171f191838491056",
-                "362a2ca660fa34c91feeee4681e8433101d2a687",
+                "b35dea1a59b5e61fc42036a0100a5c4f906c1d09",
+                "f8640cf81907d2a1c75433d951c9f0d4bbb25b60",
             ],
         )
 
@@ -93,8 +93,8 @@ class TestConditionsWithRules(TestCase):
         self.assertListEqual(
             [equal.hash for equal in cfn.conditions._rules[0].equals],
             [
-                "d0f5e92fc5233a6b011342df171f191838491056",
-                "362a2ca660fa34c91feeee4681e8433101d2a687",
+                "b35dea1a59b5e61fc42036a0100a5c4f906c1d09",
+                "f8640cf81907d2a1c75433d951c9f0d4bbb25b60",
             ],
         )
 
@@ -158,15 +158,15 @@ class TestConditionsWithRules(TestCase):
         self.assertListEqual(
             [equal.hash for equal in cfn.conditions._rules[0].equals],
             [
-                "d0f5e92fc5233a6b011342df171f191838491056",
-                "362a2ca660fa34c91feeee4681e8433101d2a687",
+                "b35dea1a59b5e61fc42036a0100a5c4f906c1d09",
+                "f8640cf81907d2a1c75433d951c9f0d4bbb25b60",
             ],
         )
         self.assertListEqual(
             [equal.hash for equal in cfn.conditions._rules[1].equals],
             [
-                "d2dab653475dd270354fe84c4f80b54883e958bb",
-                "362a2ca660fa34c91feeee4681e8433101d2a687",
+                "227dcb1c5c68059b461d105f3ef724b760870a6d",
+                "f8640cf81907d2a1c75433d951c9f0d4bbb25b60",
             ],
         )
 
@@ -257,13 +257,13 @@ class TestConditionsWithRules(TestCase):
         self.assertListEqual(
             [equal.hash for equal in cfn.conditions._rules[0].equals],
             [
-                "e7e68477799682e53ecb09f476128abaeba0bdae",
+                "e3ae9aa78380b708c78deae1dc0aef69b24d695f",
             ],
         )
         self.assertListEqual(
             [equal.hash for equal in cfn.conditions._rules[1].equals],
             [
-                "da2a95009a205d5caacd42c3c11ebd4c151b3409",
+                "504e5798cd5ef2173c32fa04cb13291999cead05",
             ],
         )
 
@@ -291,7 +291,7 @@ class TestConditionsWithRules(TestCase):
         self.assertListEqual(
             [equal.hash for equal in cfn.conditions._rules[0].equals],
             [
-                "da2a95009a205d5caacd42c3c11ebd4c151b3409",
+                "504e5798cd5ef2173c32fa04cb13291999cead05",
             ],
         )
 
@@ -322,7 +322,7 @@ class TestConditionsWithRules(TestCase):
         self.assertListEqual(
             [equal.hash for equal in cfn.conditions._rules[0].equals],
             [
-                "f36e61f3d5bf6cdc6ea2e7f01487af728094a439",
+                "9189b0bd9d179a54767b86e0ff6675e6e1c1640d",
             ],
         )
 
@@ -354,8 +354,8 @@ class TestConditionsWithRules(TestCase):
         self.assertListEqual(
             [equal.hash for equal in cfn.conditions._rules[0].equals],
             [
-                "f36e61f3d5bf6cdc6ea2e7f01487af728094a439",
-                "f36e61f3d5bf6cdc6ea2e7f01487af728094a439",
+                "9189b0bd9d179a54767b86e0ff6675e6e1c1640d",
+                "9189b0bd9d179a54767b86e0ff6675e6e1c1640d",
             ],
         )
 
@@ -431,8 +431,8 @@ class TestConditionsWithRules(TestCase):
         self.assertListEqual(
             [equal.hash for equal in cfn.conditions._rules[0].equals],
             [
-                "d0d70a1e66dc83d7a0fce24c2eca396af1f34e53",
-                "bbf5c94c1a4b5a79c7a7863fe9463884cb422450",
+                "1816223f5e09cdd1207303ef4c6c0f4bbe1d7ba3",
+                "a629a1fcd96f6545d896132262f1847e1d22ad00",
             ],
         )
 
