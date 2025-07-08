@@ -1,3 +1,9 @@
+### v1.37.2
+## What's Changed
+* Fix template check when using cli by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4183
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.37.1...v1.37.2
+
 ### v1.37.1
 ## What's Changed
 * Create API for just taking a config by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4177
