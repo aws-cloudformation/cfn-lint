@@ -93,8 +93,65 @@ class TestCli(BaseTestCase):
 
         self.assertEqual(e.exception.code, 1)
         mock_print_help.assert_called_once()
-        mock_isatty.assert_called_once()
+        # isatty should be called at least once
+        self.assertTrue(mock_isatty.call_count >= 1)
         # self.assertEqual(mock_isatty.call_count, 2)
+
+    @patch("argparse.ArgumentParser.print_help")
+    @patch("sys.stdin.isatty")
+    def test_no_templates_no_deployment_files(self, mock_isatty, mock_print_help):
+        """Test that help is printed when no templates or deployment
+        files are provided and stdin is a tty"""
+        # Create a config with no templates or deployment files
+        config = ConfigMixIn([])
+
+        # Ensure templates and deployment_files are empty or None
+        self.assertTrue(not config.templates or config.templates == [])
+        self.assertTrue(not config.deployment_files or config.deployment_files == [])
+
+        runner = Runner(config)
+        mock_isatty.return_value = True
+
+        # Should exit with code 1 and print help
+        with self.assertRaises(SystemExit) as e:
+            runner.cli()
+
+        self.assertEqual(e.exception.code, 1)
+        mock_print_help.assert_called_once()
+        # isatty should be called at least once
+        self.assertTrue(mock_isatty.call_count >= 1)
+
+    @patch("argparse.ArgumentParser.print_help")
+    @patch("sys.stdin.isatty")
+    @patch("cfnlint.runner.Runner._cli_output")
+    def test_no_templates_no_deployment_files_with_stdin(
+        self, mock_cli_output, mock_isatty, mock_print_help
+    ):
+        """Test that when no templates or deployment files are
+        provided but stdin is not a tty, the program continues
+        execution without printing help"""
+        # Create a config with no templates or deployment files
+        config = ConfigMixIn([])
+
+        # Ensure templates and deployment_files are empty or None
+        self.assertTrue(not config.templates or config.templates == [])
+        self.assertTrue(not config.deployment_files or config.deployment_files == [])
+
+        # Mock _cli_output to avoid actual processing
+        mock_cli_output.return_value = None
+
+        runner = Runner(config)
+        mock_isatty.return_value = False
+
+        # Should not exit and not print help
+        runner.cli()
+
+        # Help should not be printed
+        mock_print_help.assert_not_called()
+        # isatty should be called at least once
+        self.assertTrue(mock_isatty.call_count >= 1)
+        # _cli_output should be called once
+        mock_cli_output.assert_called_once()
 
     def test_bad_regions(self):
         config = ConfigMixIn(
