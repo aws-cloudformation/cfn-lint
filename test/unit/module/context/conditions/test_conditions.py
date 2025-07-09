@@ -6,7 +6,12 @@ SPDX-License-Identifier: MIT-0
 import pytest
 
 from cfnlint.context import create_context_for_template
-from cfnlint.context.conditions._conditions import Conditions
+from cfnlint.context.conditions._conditions import (
+    _MAX_CACHE_SIZE,
+    Conditions,
+    _add_to_satisfiable_cache,
+    _satisfiable_cache,
+)
 from cfnlint.context.conditions.exceptions import Unsatisfiable
 from cfnlint.template import Template
 
@@ -297,3 +302,29 @@ def test_evolve_from_instance(current_status, instance, expected):
 def test_condition_failures():
     with pytest.raises(ValueError):
         Conditions.create_from_instance([], {}, {})
+
+
+def test_add_to_satisfiable_cache():
+    """Test _add_to_satisfiable_cache function with cache size management"""
+    # Clear the cache before testing
+    _satisfiable_cache.clear()
+
+    # Add items to fill the cache
+    for i in range(_MAX_CACHE_SIZE):
+        _add_to_satisfiable_cache(f"test_key_{i}", True)
+
+    # Verify cache size
+    assert len(_satisfiable_cache) == _MAX_CACHE_SIZE
+
+    # Add one more item to trigger cache management (line 48)
+    _add_to_satisfiable_cache("overflow_key", False)
+
+    # Verify cache size remains at max
+    assert len(_satisfiable_cache) == _MAX_CACHE_SIZE
+
+    # Verify the first item was removed (oldest item)
+    assert "test_key_0" not in _satisfiable_cache
+
+    # Verify the new item was added
+    assert "overflow_key" in _satisfiable_cache
+    assert _satisfiable_cache["overflow_key"] is False
