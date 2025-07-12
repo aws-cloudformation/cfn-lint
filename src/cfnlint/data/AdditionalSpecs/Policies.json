@@ -38412,9 +38412,13 @@
  },
  "freetier": {
   "Actions": {
+   "getaccountactivity": {},
+   "getaccountplanstate": {},
    "getfreetieralertpreference": {},
    "getfreetierusage": {},
-   "putfreetieralertpreference": {}
+   "listaccountactivities": {},
+   "putfreetieralertpreference": {},
+   "upgradeaccountplan": {}
   },
   "Resources": {}
  },
@@ -61294,6 +61298,12 @@
      "StatelessRuleGroup"
     ]
    },
+   "describerulegroupsummary": {
+    "Resources": [
+     "StatefulRuleGroup",
+     "StatelessRuleGroup"
+    ]
+   },
    "describetlsinspectionconfiguration": {
     "Resources": [
      "TLSInspectionConfiguration"
@@ -61523,6 +61533,20 @@
     ]
    }
   }
+ },
+ "network-security-director": {
+  "Actions": {
+   "getfinding": {},
+   "getnetworksecurityscan": {},
+   "getresource": {},
+   "listfindings": {},
+   "listinsights": {},
+   "listremediations": {},
+   "listresources": {},
+   "startnetworksecurityscan": {},
+   "updatefinding": {}
+  },
+  "Resources": {}
  },
  "networkflowmonitor": {
   "Actions": {
@@ -76993,6 +77017,7 @@
      "model-quality-job-definition",
      "monitoring-schedule",
      "notebook-instance",
+     "notebook-instance-lifecycle-config",
      "optimization-job",
      "partner-app",
      "pipeline",
@@ -77174,6 +77199,12 @@
    "createhub": {
     "Resources": [
      "hub"
+    ]
+   },
+   "createhubcontentpresignedurls": {
+    "Resources": [
+     "hub",
+     "hub-content"
     ]
    },
    "createhubcontentreference": {
@@ -77701,6 +77732,7 @@
      "model-quality-job-definition",
      "monitoring-schedule",
      "notebook-instance",
+     "notebook-instance-lifecycle-config",
      "optimization-job",
      "partner-app",
      "pipeline",
@@ -77788,6 +77820,11 @@
     ]
    },
    "describecluster": {
+    "Resources": [
+     "cluster"
+    ]
+   },
+   "describeclusterinference": {
     "Resources": [
      "cluster"
     ]
@@ -78275,6 +78312,11 @@
     ]
    },
    "listpipelines": {},
+   "listpipelineversions": {
+    "Resources": [
+     "pipeline"
+    ]
+   },
    "listprocessingjobs": {},
    "listprojects": {},
    "listresourcecatalogs": {},
@@ -78334,9 +78376,11 @@
      "model-quality-job-definition",
      "monitoring-schedule",
      "notebook-instance",
+     "notebook-instance-lifecycle-config",
      "optimization-job",
      "partner-app",
      "pipeline",
+     "pipeline-execution",
      "processing-job",
      "project",
      "reserved-capacity",
@@ -78441,6 +78485,11 @@
    "startpipelineexecution": {
     "Resources": [
      "pipeline"
+    ]
+   },
+   "startsession": {
+    "Resources": [
+     "space"
     ]
    },
    "stopautomljob": {
@@ -78554,6 +78603,11 @@
      "cluster",
      "reserved-capacity",
      "training-plan"
+    ]
+   },
+   "updateclusterinference": {
+    "Resources": [
+     "cluster"
     ]
    },
    "updateclusterschedulerconfig": {
@@ -78713,6 +78767,11 @@
    "updatepipelineexecution": {
     "Resources": [
      "pipeline-execution"
+    ]
+   },
+   "updatepipelineversion": {
+    "Resources": [
+     "pipeline"
     ]
    },
    "updateproject": {
@@ -79194,6 +79253,10 @@
    "notebook-instance-lifecycle-config": {
     "ARNFormats": [
      "arn:${Partition}:sagemaker:${Region}:${Account}:notebook-instance-lifecycle-config/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}",
+     "sagemaker:ResourceTag/${TagKey}"
     ]
    },
    "optimization-job": {
@@ -79226,6 +79289,10 @@
    "pipeline-execution": {
     "ARNFormats": [
      "arn:${Partition}:sagemaker:${Region}:${Account}:pipeline/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}",
+     "sagemaker:ResourceTag/${TagKey}"
     ]
    },
    "processing-job": {
@@ -79493,6 +79560,16 @@
      "mlflow-tracking-server"
     ]
    },
+   "deleteloggedmodel": {
+    "Resources": [
+     "mlflow-tracking-server"
+    ]
+   },
+   "deleteloggedmodeltag": {
+    "Resources": [
+     "mlflow-tracking-server"
+    ]
+   },
    "deletemodelversion": {
     "Resources": [
      "mlflow-tracking-server"
@@ -79543,6 +79620,11 @@
      "mlflow-tracking-server"
     ]
    },
+   "finalizeloggedmodel": {
+    "Resources": [
+     "mlflow-tracking-server"
+    ]
+   },
    "getdownloaduriformodelversionartifacts": {
     "Resources": [
      "mlflow-tracking-server"
@@ -79559,6 +79641,11 @@
     ]
    },
    "getlatestmodelversions": {
+    "Resources": [
+     "mlflow-tracking-server"
+    ]
+   },
+   "getloggedmodel": {
     "Resources": [
      "mlflow-tracking-server"
     ]
@@ -79598,6 +79685,11 @@
      "mlflow-tracking-server"
     ]
    },
+   "listloggedmodelartifacts": {
+    "Resources": [
+     "mlflow-tracking-server"
+    ]
+   },
    "logbatch": {
     "Resources": [
      "mlflow-tracking-server"
@@ -79608,12 +79700,22 @@
      "mlflow-tracking-server"
     ]
    },
+   "logloggedmodelparams": {
+    "Resources": [
+     "mlflow-tracking-server"
+    ]
+   },
    "logmetric": {
     "Resources": [
      "mlflow-tracking-server"
     ]
    },
    "logmodel": {
+    "Resources": [
+     "mlflow-tracking-server"
+    ]
+   },
+   "logoutputs": {
     "Resources": [
      "mlflow-tracking-server"
     ]
@@ -79643,6 +79745,11 @@
      "mlflow-tracking-server"
     ]
    },
+   "searchloggedmodels": {
+    "Resources": [
+     "mlflow-tracking-server"
+    ]
+   },
    "searchmodelversions": {
     "Resources": [
      "mlflow-tracking-server"
@@ -79664,6 +79771,11 @@
     ]
    },
    "setexperimenttag": {
+    "Resources": [
+     "mlflow-tracking-server"
+    ]
+   },
+   "setloggedmodeltags": {
     "Resources": [
      "mlflow-tracking-server"
     ]
