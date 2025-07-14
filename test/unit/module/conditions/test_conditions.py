@@ -329,3 +329,26 @@ class TestConditions(TestCase):
             cfn.conditions.satisfiable(
                 {"HasSecurityGroups": True}, {"SecurityGroups": [""]}
             )
+
+    def test_unknown_condition_satisfaction(self):
+        """Test raising UnknownSatisfisfaction when condition name
+        is not in conditions"""
+        template = decode_str(
+            """
+        Parameters:
+          Environment:
+            Type: String
+            Default: "dev"
+        Conditions:
+          IsProd: !Equals [!Ref Environment, "prod"]
+        """
+        )[0]
+
+        cfn = Template("", template)
+
+        # Test for line 412 in conditions.py - when condition_name
+        # not in self._conditions
+        with self.assertRaises(UnknownSatisfisfaction):
+            cfn.conditions.satisfiable(
+                {"NonExistentCondition": True}, {"Environment": "dev"}
+            )
