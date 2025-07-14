@@ -2180,7 +2180,6 @@ cached: list[str] = [
     "aws-kafkaconnect-workerconfiguration.json",
     "aws-kendra-datasource.json",
     "aws-kendra-faq.json",
-    "aws-kendra-index.json",
     "aws-kendraranking-executionplan.json",
     "aws-kinesis-resourcepolicy.json",
     "aws-kinesis-stream.json",
