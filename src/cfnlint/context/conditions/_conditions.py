@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 import itertools
+from collections import OrderedDict
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Iterator
 
@@ -23,6 +24,29 @@ from cfnlint.context.conditions.exceptions import Unsatisfiable
 
 if TYPE_CHECKING:
     from cfnlint.context.context import Context, Parameter
+
+
+# Use OrderedDict for LRU-like behavior
+_satisfiable_cache: OrderedDict[str, bool] = OrderedDict()
+_MAX_CACHE_SIZE = 10000  # Limit cache size to prevent memory issues
+
+
+def _get_from_satisfiable_cache(cnf_hash: str) -> bool | None:
+    """Get result from cache with LRU behavior"""
+    if cnf_hash in _satisfiable_cache:
+        # Move to end (most recently used)
+        value = _satisfiable_cache.pop(cnf_hash)
+        _satisfiable_cache[cnf_hash] = value
+        return value
+    return None
+
+
+def _add_to_satisfiable_cache(cnf_hash: str, result: bool) -> None:
+    """Add result to cache with size management"""
+    if len(_satisfiable_cache) >= _MAX_CACHE_SIZE:
+        # Remove oldest item (first in OrderedDict)
+        _satisfiable_cache.popitem(last=False)
+    _satisfiable_cache[cnf_hash] = result
 
 
 @dataclass(frozen=True)
@@ -78,6 +102,21 @@ class Conditions:
     def evolve(self, status: dict[str, bool]) -> "Conditions":
         cls = self.__class__
 
+        if not status:
+            return self
+
+        # Check if we're trying to set the same status
+        all_same = True
+        for condition, condition_status in status.items():
+            if (
+                condition in self.conditions
+                and self.conditions[condition].status != condition_status
+            ):
+                all_same = False
+                break
+        if all_same:
+            return self
+
         conditions: dict[str, Condition] = {}
         cnf = self.cnf
         for condition, value in self.conditions.items():
@@ -103,11 +142,22 @@ class Conditions:
                     current_status=self.status,
                 ) from e
 
-        if not satisfiable(cnf):
-            raise Unsatisfiable(
-                new_status=status,
-                current_status=self.status,
-            )
+        cnf_hash = get_hash(str(cnf))
+        cached_result = _get_from_satisfiable_cache(cnf_hash)
+        if cached_result is not None:
+            if not cached_result:
+                raise Unsatisfiable(
+                    new_status=status,
+                    current_status=self.status,
+                )
+        else:
+            is_sat = satisfiable(cnf)
+            _add_to_satisfiable_cache(cnf_hash, bool(is_sat))
+            if not is_sat:
+                raise Unsatisfiable(
+                    new_status=status,
+                    current_status=self.status,
+                )
 
         return cls(
             conditions=conditions,

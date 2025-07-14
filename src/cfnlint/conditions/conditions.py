@@ -408,6 +408,10 @@ class Conditions:
         at_least_one_param_found = False
 
         for condition_name, opt in conditions.items():
+            if condition_name not in self._conditions:
+                raise UnknownSatisfisfaction(
+                    f"Can't resolve satisfaction for {condition_name!r}"
+                )
             for c_equals in self._conditions[condition_name].equals:
                 found_params = {}
                 for param, value in parameter_values.items():
