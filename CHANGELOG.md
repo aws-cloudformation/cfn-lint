@@ -1,3 +1,10 @@
+### v1.38.0
+## What's Changed
+* Improve condition processing by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4187
+* Update CloudFormation schemas to 2025-07-14 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4181
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.37.2...v1.38.0
+
 ### v1.37.2
 ## What's Changed
 * Fix template check when using cli by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4183
