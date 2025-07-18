@@ -284,6 +284,12 @@ class Runner:
         if self.config.listrules:
             print(self.rules)
             sys.exit(0)
+        if self.config.listtemplates:
+            if not self.config.templates:
+                print("None")
+            else:
+                print("\n".join(self.config.templates))
+            sys.exit(0)
 
         # Use centralized configuration validation
         # For CLI, we allow stdin input when no templates/deployment files are specified

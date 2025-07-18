@@ -486,6 +486,14 @@ class CliArgs:
             action="store_true",
             help="list all the rules",
         )
+        advanced.add_argument(
+            "-L",
+            "--list-templates",
+            dest="listtemplates",
+            default=False,
+            action="store_true",
+            help="List all the templates would have linted",
+        )
         standard.add_argument(
             "-r",
             "--regions",
@@ -1026,6 +1034,13 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
                 )
 
         return results
+
+    @property
+    def listtemplates(self) -> bool:
+        """
+        Get the listtemplates from the CLI arguments or config file.
+        """
+        return self._get_argument_value("listtemplates", False, False)
 
     @property
     def override_spec(self):
