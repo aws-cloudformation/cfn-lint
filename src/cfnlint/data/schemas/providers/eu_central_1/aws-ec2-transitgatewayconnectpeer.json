@@ -1,0 +1,128 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TransitGatewayAttachmentId",
+  "/properties/ConnectPeerConfiguration",
+  "/properties/ConnectPeerConfiguration/PeerAddress",
+  "/properties/ConnectPeerConfiguration/InsideCidrBlocks",
+  "/properties/ConnectPeerConfiguration/TransitGatewayAddress",
+  "/properties/ConnectPeerConfiguration/BgpConfigurations/*/PeerAsn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TransitGatewayAttachmentBgpConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BgpStatus": {
+     "type": "string"
+    },
+    "PeerAddress": {
+     "type": "string"
+    },
+    "PeerAsn": {
+     "type": "number"
+    },
+    "TransitGatewayAddress": {
+     "type": "string"
+    },
+    "TransitGatewayAsn": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "TransitGatewayConnectPeerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BgpConfigurations": {
+     "items": {
+      "$ref": "#/definitions/TransitGatewayAttachmentBgpConfiguration"
+     },
+     "type": "array"
+    },
+    "InsideCidrBlocks": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "PeerAddress": {
+     "type": "string"
+    },
+    "Protocol": {
+     "type": "string"
+    },
+    "TransitGatewayAddress": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PeerAddress",
+    "InsideCidrBlocks"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TransitGatewayConnectPeerId"
+ ],
+ "properties": {
+  "ConnectPeerConfiguration": {
+   "$ref": "#/definitions/TransitGatewayConnectPeerConfiguration"
+  },
+  "CreationTime": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "TransitGatewayAttachmentId": {
+   "type": "string"
+  },
+  "TransitGatewayConnectPeerId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TransitGatewayConnectPeerId",
+  "/properties/ConnectPeerConfiguration/Protocol",
+  "/properties/ConnectPeerConfiguration/BgpConfigurations",
+  "/properties/ConnectPeerConfiguration/BgpConfigurations/*/TransitGatewayAddress",
+  "/properties/ConnectPeerConfiguration/BgpConfigurations/*/BgpStatus",
+  "/properties/ConnectPeerConfiguration/BgpConfigurations/*/PeerAddress",
+  "/properties/ConnectPeerConfiguration/BgpConfigurations/*/TransitGatewayAsn",
+  "/properties/State",
+  "/properties/CreationTime"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "TransitGatewayAttachmentId",
+  "ConnectPeerConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-myservice",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::TransitGatewayConnectPeer"
+}

@@ -1,0 +1,204 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "SftpConnectorTrustedHostKey": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConnectorId"
+ ],
+ "properties": {
+  "AccessRole": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:.*role/.*",
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 1600,
+   "minLength": 20,
+   "pattern": "arn:.*",
+   "type": "string"
+  },
+  "As2Config": {
+   "additionalProperties": false,
+   "properties": {
+    "BasicAuthSecretId": {
+     "maxLength": 2048,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Compression": {
+     "enum": [
+      "ZLIB",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "EncryptionAlgorithm": {
+     "enum": [
+      "AES128_CBC",
+      "AES192_CBC",
+      "AES256_CBC",
+      "NONE",
+      "DES_EDE3_CBC"
+     ],
+     "type": "string"
+    },
+    "LocalProfileId": {
+     "maxLength": 19,
+     "minLength": 19,
+     "pattern": "^p-([0-9a-f]{17})$",
+     "type": "string"
+    },
+    "MdnResponse": {
+     "enum": [
+      "SYNC",
+      "NONE"
+     ],
+     "type": "string"
+    },
+    "MdnSigningAlgorithm": {
+     "enum": [
+      "SHA256",
+      "SHA384",
+      "SHA512",
+      "SHA1",
+      "NONE",
+      "DEFAULT"
+     ],
+     "type": "string"
+    },
+    "MessageSubject": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^[\\u0020-\\u007E\\t]+$",
+     "type": "string"
+    },
+    "PartnerProfileId": {
+     "maxLength": 19,
+     "minLength": 19,
+     "pattern": "^p-([0-9a-f]{17})$",
+     "type": "string"
+    },
+    "PreserveContentType": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "SigningAlgorithm": {
+     "enum": [
+      "SHA256",
+      "SHA384",
+      "SHA512",
+      "SHA1",
+      "NONE"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ConnectorId": {
+   "maxLength": 19,
+   "minLength": 19,
+   "pattern": "^c-([0-9a-f]{17})$",
+   "type": "string"
+  },
+  "LoggingRole": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:.*role/.*",
+   "type": "string"
+  },
+  "SecurityPolicyName": {
+   "maxLength": 50,
+   "pattern": "TransferSFTPConnectorSecurityPolicy-[A-Za-z0-9-]+",
+   "type": "string"
+  },
+  "ServiceManagedEgressIpAddresses": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "SftpConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "TrustedHostKeys": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SftpConnectorTrustedHostKey"
+     },
+     "maxItems": 10,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "UserSecretId": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Url": {
+   "maxLength": 255,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ConnectorId",
+  "/properties/ServiceManagedEgressIpAddresses"
+ ],
+ "required": [
+  "AccessRole",
+  "Url"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Transfer::Connector"
+}

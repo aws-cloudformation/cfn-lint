@@ -1,0 +1,193 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KnowledgeBaseArn"
+ ],
+ "definitions": {
+  "ChannelType": {
+   "enum": [
+    "Chat",
+    "Email"
+   ],
+   "maxLength": 10,
+   "minLength": 1,
+   "type": "string"
+  },
+  "GroupingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Criteria": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/GroupingValue"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Criteria",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "GroupingValue": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "QuickResponseContentProvider": {
+   "additionalProperties": false,
+   "properties": {
+    "Content": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "QuickResponseContents": {
+   "additionalProperties": false,
+   "properties": {
+    "Markdown": {
+     "$ref": "#/definitions/QuickResponseContentProvider"
+    },
+    "PlainText": {
+     "$ref": "#/definitions/QuickResponseContentProvider"
+    }
+   },
+   "type": "object"
+  },
+  "Status": {
+   "enum": [
+    "CREATE_IN_PROGRESS",
+    "CREATE_FAILED",
+    "CREATED",
+    "DELETE_IN_PROGRESS",
+    "DELETE_FAILED",
+    "DELETED",
+    "UPDATE_IN_PROGRESS",
+    "UPDATE_FAILED"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/QuickResponseArn"
+ ],
+ "properties": {
+  "Channels": {
+   "items": {
+    "$ref": "#/definitions/ChannelType"
+   },
+   "type": "array"
+  },
+  "Content": {
+   "$ref": "#/definitions/QuickResponseContentProvider"
+  },
+  "ContentType": {
+   "pattern": "^(application/x\\.quickresponse;format=(plain|markdown))$",
+   "type": "string"
+  },
+  "Contents": {
+   "$ref": "#/definitions/QuickResponseContents"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "GroupingConfiguration": {
+   "$ref": "#/definitions/GroupingConfiguration"
+  },
+  "IsActive": {
+   "type": "boolean"
+  },
+  "KnowledgeBaseArn": {
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}){0,2}$",
+   "type": "string"
+  },
+  "Language": {
+   "maxLength": 5,
+   "minLength": 2,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "QuickResponseArn": {
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}){0,2}$",
+   "type": "string"
+  },
+  "QuickResponseId": {
+   "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+   "type": "string"
+  },
+  "ShortcutKey": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/Status"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/QuickResponseId",
+  "/properties/QuickResponseArn",
+  "/properties/Status",
+  "/properties/Contents"
+ ],
+ "replacementStrategy": "create_then_delete",
+ "required": [
+  "KnowledgeBaseArn",
+  "Content",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-wisdom",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Wisdom::QuickResponse"
+}
