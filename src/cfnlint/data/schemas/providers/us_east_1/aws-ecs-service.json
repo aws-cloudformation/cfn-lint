@@ -1,8 +1,5 @@
 {
  "additionalProperties": false,
- "conditionalCreateOnlyProperties": [
-  "/properties/DeploymentController"
- ],
  "createOnlyProperties": [
   "/properties/Cluster",
   "/properties/LaunchType",
@@ -11,6 +8,27 @@
   "/properties/ServiceName"
  ],
  "definitions": {
+  "AdvancedConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AlternateTargetGroupArn": {
+     "type": "string"
+    },
+    "ProductionListenerRule": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "TestListenerRule": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AlternateTargetGroupArn"
+   ],
+   "type": "object"
+  },
   "AwsVpcConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -104,14 +122,32 @@
     "Alarms": {
      "$ref": "#/definitions/DeploymentAlarms"
     },
+    "BakeTimeInMinutes": {
+     "maximum": 1440,
+     "minimum": 0,
+     "type": "integer"
+    },
     "DeploymentCircuitBreaker": {
      "$ref": "#/definitions/DeploymentCircuitBreaker"
+    },
+    "LifecycleHooks": {
+     "items": {
+      "$ref": "#/definitions/DeploymentLifecycleHook"
+     },
+     "type": "array"
     },
     "MaximumPercent": {
      "type": "integer"
     },
     "MinimumHealthyPercent": {
      "type": "integer"
+    },
+    "Strategy": {
+     "enum": [
+      "ROLLING",
+      "BLUE_GREEN"
+     ],
+     "type": "string"
     }
    },
    "type": "object"
@@ -128,6 +164,39 @@
      "type": "string"
     }
    },
+   "type": "object"
+  },
+  "DeploymentLifecycleHook": {
+   "additionalProperties": false,
+   "properties": {
+    "HookTargetArn": {
+     "type": "string"
+    },
+    "LifecycleStages": {
+     "items": {
+      "enum": [
+       "RECONCILE_SERVICE",
+       "PRE_SCALE_UP",
+       "POST_SCALE_UP",
+       "TEST_TRAFFIC_SHIFT",
+       "POST_TEST_TRAFFIC_SHIFT",
+       "PRODUCTION_TRAFFIC_SHIFT",
+       "POST_PRODUCTION_TRAFFIC_SHIFT"
+      ],
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "RoleArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "HookTargetArn",
+    "RoleArn",
+    "LifecycleStages"
+   ],
    "type": "object"
   },
   "EBSTagSpecification": {
@@ -162,6 +231,9 @@
   "LoadBalancer": {
    "additionalProperties": false,
    "properties": {
+    "AdvancedConfiguration": {
+     "$ref": "#/definitions/AdvancedConfiguration"
+    },
     "ContainerName": {
      "type": "string"
     },
@@ -275,6 +347,9 @@
     "Port": {
      "maximum": 65535,
      "type": "integer"
+    },
+    "TestTrafficRules": {
+     "$ref": "#/definitions/ServiceConnectTestTrafficRules"
     }
    },
    "required": [
@@ -334,6 +409,45 @@
    },
    "required": [
     "PortName"
+   ],
+   "type": "object"
+  },
+  "ServiceConnectTestTrafficRules": {
+   "additionalProperties": false,
+   "properties": {
+    "Header": {
+     "$ref": "#/definitions/ServiceConnectTestTrafficRulesHeader"
+    }
+   },
+   "required": [
+    "Header"
+   ],
+   "type": "object"
+  },
+  "ServiceConnectTestTrafficRulesHeader": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "$ref": "#/definitions/ServiceConnectTestTrafficRulesHeaderValue"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "ServiceConnectTestTrafficRulesHeaderValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Exact": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Exact"
    ],
    "type": "object"
   },

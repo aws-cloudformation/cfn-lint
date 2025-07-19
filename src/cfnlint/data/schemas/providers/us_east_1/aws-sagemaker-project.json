@@ -4,9 +4,68 @@
   "/properties/ProjectName",
   "/properties/ProjectDescription",
   "/properties/ServiceCatalogProvisioningDetails",
+  "/properties/TemplateProviderDetails",
   "/properties/Tags"
  ],
  "definitions": {
+  "CfnStackParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 4096,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "CfnStackParameters": {
+   "items": {
+    "$ref": "#/definitions/CfnStackParameter"
+   },
+   "maxItems": 180,
+   "minItems": 0,
+   "type": "array"
+  },
+  "CfnTemplateProviderDetail": {
+   "additionalProperties": false,
+   "properties": {
+    "Parameters": {
+     "$ref": "#/definitions/CfnStackParameters"
+    },
+    "RoleARN": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+",
+     "type": "string"
+    },
+    "TemplateName": {
+     "maxLength": 32,
+     "minLength": 1,
+     "pattern": "(?=.{1,32}$)[a-zA-Z0-9](-*[a-zA-Z0-9])*",
+     "type": "string"
+    },
+    "TemplateURL": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "(?=.{1,1024}$)(https)://([^/]+)/(.+)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TemplateName",
+    "TemplateURL"
+   ],
+   "type": "object"
+  },
   "PathId": {
    "maxLength": 100,
    "minLength": 1,
@@ -91,8 +150,36 @@
     "Value"
    ],
    "type": "object"
+  },
+  "TemplateProviderDetail": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "CfnTemplateProviderDetail"
+     ]
+    }
+   ],
+   "properties": {
+    "CfnTemplateProviderDetail": {
+     "$ref": "#/definitions/CfnTemplateProviderDetail"
+    }
+   },
+   "type": "object"
   }
  },
+ "oneOf": [
+  {
+   "required": [
+    "ServiceCatalogProvisioningDetails"
+   ]
+  },
+  {
+   "required": [
+    "TemplateProviderDetails"
+   ]
+  }
+ ],
  "primaryIdentifier": [
   "/properties/ProjectArn"
  ],
@@ -166,6 +253,15 @@
    },
    "maxItems": 40,
    "type": "array"
+  },
+  "TemplateProviderDetails": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/TemplateProviderDetail"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
   }
  },
  "readOnlyProperties": [
@@ -175,8 +271,7 @@
   "/properties/ProjectStatus"
  ],
  "required": [
-  "ProjectName",
-  "ServiceCatalogProvisioningDetails"
+  "ProjectName"
  ],
  "tagging": {
   "cloudFormationSystemTags": false,

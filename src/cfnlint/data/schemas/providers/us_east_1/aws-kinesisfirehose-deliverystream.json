@@ -259,6 +259,12 @@
      "minLength": 1,
      "pattern": "arn:.*",
      "type": "string"
+    },
+    "WarehouseLocation": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "s3:\\/\\/.*",
+     "type": "string"
     }
    },
    "type": "object"
@@ -561,6 +567,19 @@
      "minLength": 1,
      "pattern": "[a-zA-Z0-9\\.\\_]+",
      "type": "string"
+    },
+    "PartitionSpec": {
+     "additionalProperties": false,
+     "properties": {
+      "Identity": {
+       "items": {
+        "$ref": "#/definitions/PartitionField"
+       },
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "type": "object"
     },
     "S3ErrorOutputPrefix": {
      "maxLength": 1024,
@@ -1028,6 +1047,12 @@
     "S3Configuration": {
      "$ref": "#/definitions/S3DestinationConfiguration"
     },
+    "SchemaEvolutionConfiguration": {
+     "$ref": "#/definitions/SchemaEvolutionConfiguration"
+    },
+    "TableCreationConfiguration": {
+     "$ref": "#/definitions/TableCreationConfiguration"
+    },
     "s3BackupMode": {
      "enum": [
       "AllData",
@@ -1253,6 +1278,21 @@
      "type": "string"
     }
    },
+   "type": "object"
+  },
+  "PartitionField": {
+   "additionalProperties": false,
+   "properties": {
+    "SourceName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^\\S+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceName"
+   ],
    "type": "object"
   },
   "ProcessingConfiguration": {
@@ -1552,6 +1592,15 @@
    },
    "type": "object"
   },
+  "SchemaEvolutionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
   "SecretsManagerConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -1841,6 +1890,15 @@
     "DurationInSeconds": {
      "maximum": 7200,
      "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "TableCreationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
     }
    },
    "type": "object"

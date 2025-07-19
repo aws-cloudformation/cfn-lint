@@ -1,7 +1,8 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/BucketName"
+  "/properties/BucketName",
+  "/properties/MetadataConfiguration/JournalTableConfiguration/EncryptionConfiguration"
  ],
  "definitions": {
   "AbortIncompleteMultipartUpload": {
@@ -393,6 +394,52 @@
    ],
    "type": "object"
   },
+  "InventoryTableConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ConfigurationState": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "EncryptionConfiguration": {
+     "$ref": "#/definitions/MetadataTableEncryptionConfiguration"
+    },
+    "TableArn": {
+     "type": "string"
+    },
+    "TableName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ConfigurationState"
+   ],
+   "type": "object"
+  },
+  "JournalTableConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionConfiguration": {
+     "$ref": "#/definitions/MetadataTableEncryptionConfiguration"
+    },
+    "RecordExpiration": {
+     "$ref": "#/definitions/RecordExpiration"
+    },
+    "TableArn": {
+     "type": "string"
+    },
+    "TableName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RecordExpiration"
+   ],
+   "type": "object"
+  },
   "LambdaConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -451,6 +498,46 @@
    },
    "type": "object"
   },
+  "MetadataConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "$ref": "#/definitions/MetadataDestination"
+    },
+    "InventoryTableConfiguration": {
+     "$ref": "#/definitions/InventoryTableConfiguration"
+    },
+    "JournalTableConfiguration": {
+     "$ref": "#/definitions/JournalTableConfiguration"
+    }
+   },
+   "required": [
+    "JournalTableConfiguration"
+   ],
+   "type": "object"
+  },
+  "MetadataDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "TableBucketArn": {
+     "type": "string"
+    },
+    "TableBucketType": {
+     "enum": [
+      "aws",
+      "customer"
+     ],
+     "type": "string"
+    },
+    "TableNamespace": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TableBucketType"
+   ],
+   "type": "object"
+  },
   "MetadataTableConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -460,6 +547,25 @@
    },
    "required": [
     "S3TablesDestination"
+   ],
+   "type": "object"
+  },
+  "MetadataTableEncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyArn": {
+     "type": "string"
+    },
+    "SseAlgorithm": {
+     "enum": [
+      "aws:kms",
+      "AES256"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "SseAlgorithm"
    ],
    "type": "object"
   },
@@ -699,6 +805,25 @@
    "required": [
     "Event",
     "Queue"
+   ],
+   "type": "object"
+  },
+  "RecordExpiration": {
+   "additionalProperties": false,
+   "properties": {
+    "Days": {
+     "type": "integer"
+    },
+    "Expiration": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Expiration"
    ],
    "type": "object"
   },
@@ -1425,6 +1550,9 @@
   "LoggingConfiguration": {
    "$ref": "#/definitions/LoggingConfiguration"
   },
+  "MetadataConfiguration": {
+   "$ref": "#/definitions/MetadataConfiguration"
+  },
   "MetadataTableConfiguration": {
    "$ref": "#/definitions/MetadataTableConfiguration"
   },
@@ -1494,6 +1622,11 @@
   "/properties/RegionalDomainName",
   "/properties/MetadataTableConfiguration/S3TablesDestination/TableNamespace",
   "/properties/MetadataTableConfiguration/S3TablesDestination/TableArn",
+  "/properties/MetadataConfiguration/Destination",
+  "/properties/MetadataConfiguration/JournalTableConfiguration/TableName",
+  "/properties/MetadataConfiguration/JournalTableConfiguration/TableArn",
+  "/properties/MetadataConfiguration/InventoryTableConfiguration/TableName",
+  "/properties/MetadataConfiguration/InventoryTableConfiguration/TableArn",
   "/properties/WebsiteURL"
  ],
  "tagging": {
@@ -1506,6 +1639,8 @@
  "typeName": "AWS::S3::Bucket",
  "writeOnlyProperties": [
   "/properties/AccessControl",
+  "/properties/MetadataConfiguration/JournalTableConfiguration/EncryptionConfiguration",
+  "/properties/MetadataConfiguration/InventoryTableConfiguration/EncryptionConfiguration",
   "/properties/LifecycleConfiguration/Rules/*/NoncurrentVersionExpirationInDays",
   "/properties/LifecycleConfiguration/Rules/*/NoncurrentVersionTransition",
   "/properties/LifecycleConfiguration/Rules/*/Transition",

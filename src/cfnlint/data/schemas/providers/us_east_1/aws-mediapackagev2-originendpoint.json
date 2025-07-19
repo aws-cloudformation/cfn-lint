@@ -40,6 +40,42 @@
    ],
    "type": "string"
   },
+  "DashBaseUrl": {
+   "additionalProperties": false,
+   "properties": {
+    "DvbPriority": {
+     "maximum": 15000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "DvbWeight": {
+     "maximum": 15000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ServiceLocation": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Url": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Url"
+   ],
+   "type": "object"
+  },
+  "DashCompactness": {
+   "enum": [
+    "STANDARD",
+    "NONE"
+   ],
+   "type": "string"
+  },
   "DashDrmSignaling": {
    "enum": [
     "INDIVIDUAL",
@@ -47,11 +83,83 @@
    ],
    "type": "string"
   },
+  "DashDvbFontDownload": {
+   "additionalProperties": false,
+   "properties": {
+    "FontFamily": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MimeType": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_/-]*[a-zA-Z0-9]$",
+     "type": "string"
+    },
+    "Url": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DashDvbMetricsReporting": {
+   "additionalProperties": false,
+   "properties": {
+    "Probability": {
+     "maximum": 1000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ReportingUrl": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ReportingUrl"
+   ],
+   "type": "object"
+  },
+  "DashDvbSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "ErrorMetrics": {
+     "items": {
+      "$ref": "#/definitions/DashDvbMetricsReporting"
+     },
+     "maxItems": 20,
+     "minItems": 0,
+     "type": "array"
+    },
+    "FontDownload": {
+     "$ref": "#/definitions/DashDvbFontDownload"
+    }
+   },
+   "type": "object"
+  },
   "DashManifestConfiguration": {
    "additionalProperties": false,
    "properties": {
+    "BaseUrls": {
+     "items": {
+      "$ref": "#/definitions/DashBaseUrl"
+     },
+     "maxItems": 20,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Compactness": {
+     "$ref": "#/definitions/DashCompactness"
+    },
     "DrmSignaling": {
      "$ref": "#/definitions/DashDrmSignaling"
+    },
+    "DvbSettings": {
+     "$ref": "#/definitions/DashDvbSettings"
     },
     "FilterConfiguration": {
      "$ref": "#/definitions/FilterConfiguration"
@@ -83,11 +191,25 @@
      "minItems": 0,
      "type": "array"
     },
+    "Profiles": {
+     "items": {
+      "$ref": "#/definitions/DashProfile"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array"
+    },
+    "ProgramInformation": {
+     "$ref": "#/definitions/DashProgramInformation"
+    },
     "ScteDash": {
      "$ref": "#/definitions/ScteDash"
     },
     "SegmentTemplateFormat": {
      "$ref": "#/definitions/DashSegmentTemplateFormat"
+    },
+    "SubtitleConfiguration": {
+     "$ref": "#/definitions/DashSubtitleConfiguration"
     },
     "SuggestedPresentationDelaySeconds": {
      "maximum": 3600,
@@ -112,9 +234,75 @@
    ],
    "type": "string"
   },
+  "DashProfile": {
+   "enum": [
+    "DVB_DASH"
+   ],
+   "type": "string"
+  },
+  "DashProgramInformation": {
+   "additionalProperties": false,
+   "properties": {
+    "Copyright": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "LanguageCode": {
+     "maxLength": 5,
+     "minLength": 2,
+     "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*[a-zA-Z0-9]$",
+     "type": "string"
+    },
+    "MoreInformationUrl": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Source": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Title": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "DashSegmentTemplateFormat": {
    "enum": [
     "NUMBER_WITH_TIMELINE"
+   ],
+   "type": "string"
+  },
+  "DashSubtitleConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "TtmlConfiguration": {
+     "$ref": "#/definitions/DashTtmlConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "DashTtmlConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "TtmlProfile": {
+     "$ref": "#/definitions/DashTtmlProfile"
+    }
+   },
+   "required": [
+    "TtmlProfile"
+   ],
+   "type": "object"
+  },
+  "DashTtmlProfile": {
+   "enum": [
+    "IMSC_1",
+    "EBU_TT_D_101"
    ],
    "type": "string"
   },
