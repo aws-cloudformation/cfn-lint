@@ -1036,7 +1036,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         return results
 
     @property
-    def listtemplates(self) -> bool:
+    def listtemplates(self):
         """
         Get the listtemplates from the CLI arguments or config file.
         """
