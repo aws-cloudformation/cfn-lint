@@ -15,7 +15,6 @@ from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
 class DeprecatedRuntimeEol(CfnLintKeyword):
-
     id = "W2531"
     shortdesc = "Check if EOL Lambda Function Runtimes are used"
     description = (
@@ -52,11 +51,9 @@ class DeprecatedRuntimeEol(CfnLintKeyword):
             > self.current_date
         ):
             yield ValidationError(
-                (
-                    f"Runtime {runtime!r} was deprecated on "
-                    f"{runtime_data['deprecated']!r}. Creation was disabled on "
-                    f"{runtime_data['create-block']!r} and update on "
-                    f"{runtime_data['update-block']!r}. Please consider "
-                    f"updating to {runtime_data['successor']!r}"
-                ),
+                f"Runtime {runtime!r} was deprecated on "
+                f"{runtime_data['deprecated']!r}. Creation was disabled on "
+                f"{runtime_data['create-block']!r} and update on "
+                f"{runtime_data['update-block']!r}. Please consider "
+                f"updating to {runtime_data['successor']!r}",
             )

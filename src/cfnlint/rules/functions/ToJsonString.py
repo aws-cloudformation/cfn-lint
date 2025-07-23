@@ -33,10 +33,8 @@ class ToJsonString(BaseFn):
     ) -> ValidationResult:
         if not validator.context.transforms.has_language_extensions_transform():
             yield ValidationError(
-                (
-                    f"{self.fn.name} is not supported without "
-                    f"{TRANSFORM_LANGUAGE_EXTENSION!r} transform"
-                ),
+                f"{self.fn.name} is not supported without "
+                f"{TRANSFORM_LANGUAGE_EXTENSION!r} transform",
                 validator=self.fn.py,
                 rule=self,
             )

@@ -38,10 +38,8 @@ def rule():
             {"MonitoringInterval": "1"},
             [
                 ValidationError(
-                    (
-                        "You must have 'MonitoringRoleArn' specified "
-                        "with 'MonitoringInterval' greater than 0"
-                    ),
+                    "You must have 'MonitoringRoleArn' specified "
+                    "with 'MonitoringInterval' greater than 0",
                     rule=DbClusterMonitoring(),
                     path=deque([]),
                     schema_path=deque(["else", "then", "required"]),
@@ -56,10 +54,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "You must have 'MonitoringRoleArn' specified "
-                        "with 'MonitoringInterval' greater than 0"
-                    ),
+                    "You must have 'MonitoringRoleArn' specified "
+                    "with 'MonitoringInterval' greater than 0",
                     rule=DbClusterMonitoring(),
                     path=deque([]),
                     schema_path=deque(["then", "required"]),
@@ -75,10 +71,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "You must have 'MonitoringRoleArn' specified "
-                        "with 'MonitoringInterval' greater than 0"
-                    ),
+                    "You must have 'MonitoringRoleArn' specified "
+                    "with 'MonitoringInterval' greater than 0",
                     rule=DbClusterMonitoring(),
                     path=deque(["MonitoringInterval"]),
                     schema_path=deque(

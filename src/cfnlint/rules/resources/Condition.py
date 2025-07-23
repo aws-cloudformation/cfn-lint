@@ -10,7 +10,6 @@ from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 
 
 class Condition(CfnLintJsonSchema):
-
     id = "E3015"
     shortdesc = "Validate the resource condition is valid"
     description = (

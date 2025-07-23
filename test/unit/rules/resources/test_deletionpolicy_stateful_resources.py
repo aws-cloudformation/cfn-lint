@@ -50,22 +50,18 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "'DeletionPolicy' is a required property (The default "
-                        "action when replacing/removing a resource is to delete "
-                        "it. Set explicit values for stateful resource)"
-                    ),
+                    "'DeletionPolicy' is a required property (The default "
+                    "action when replacing/removing a resource is to delete "
+                    "it. Set explicit values for stateful resource)",
                     rule=UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes(),
                     path=deque([]),
                     validator="required",
                     schema_path=deque(["required"]),
                 ),
                 ValidationError(
-                    (
-                        "'UpdateReplacePolicy' is a required property (The default "
-                        "action when replacing/removing a resource is to delete "
-                        "it. Set explicit values for stateful resource)"
-                    ),
+                    "'UpdateReplacePolicy' is a required property (The default "
+                    "action when replacing/removing a resource is to delete "
+                    "it. Set explicit values for stateful resource)",
                     rule=UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes(),
                     path=deque([]),
                     validator="required",

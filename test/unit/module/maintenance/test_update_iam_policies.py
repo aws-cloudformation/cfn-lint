@@ -25,7 +25,9 @@ class TestUpdateIamPolicies(BaseTestCase):
         services = [
             {
                 "service": "foo",
-                "url": "https://servicereference.us-east-1.amazonaws.com/v1/foo/foo.json",
+                "url": (
+                    "https://servicereference.us-east-1.amazonaws.com/v1/foo/foo.json"
+                ),
             }
         ]
 

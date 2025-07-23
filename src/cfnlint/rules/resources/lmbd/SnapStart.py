@@ -45,8 +45,6 @@ class SnapStart(CfnLintKeyword):
             return
 
         yield ValidationError(
-            (
-                f"'SnapStart' is enabled but an {lambda_version_type!r} "
-                "resource is not attached"
-            ),
+            f"'SnapStart' is enabled but an {lambda_version_type!r} "
+            "resource is not attached",
         )

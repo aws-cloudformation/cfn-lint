@@ -78,7 +78,7 @@ def context(cfn):
             },
             [
                 ValidationError(
-                    ("Additional properties are not allowed ('Name' was unexpected)"),
+                    "Additional properties are not allowed ('Name' was unexpected)",
                     validator="additionalProperties",
                     schema_path=deque(
                         [
@@ -112,8 +112,7 @@ def context(cfn):
         (
             "Long key name",
             {
-                "a"
-                * 256: {
+                "a" * 256: {
                     "Value": "Foo",
                 }
             },

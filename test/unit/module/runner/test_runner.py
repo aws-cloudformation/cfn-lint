@@ -104,8 +104,8 @@ def test_no_templates():
         with patch("sys.stdout", new=StringIO()) as out:
             exit.assert_not_called()
             Runner(config)
-            assert out.getvalue().strip() == (
-                "E0003 does-not-exist.yaml could not "
+            assert (
+                out.getvalue().strip() == "E0003 does-not-exist.yaml could not "
                 "be processed by glob.glob\nNone:1:1"
             )
             exit.assert_called_once_with(2)

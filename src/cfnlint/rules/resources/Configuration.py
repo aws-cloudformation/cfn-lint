@@ -59,7 +59,6 @@ class Configuration(CfnLintJsonSchema):
     def validate(
         self, validator: Validator, keywords: Any, instance: Any, schema: Any
     ) -> ValidationResult:
-
         cfn_validator = self.extend_validator(
             validator=validator,
             schema=self._schema,

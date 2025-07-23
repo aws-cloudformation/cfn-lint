@@ -87,7 +87,6 @@ class ServiceFargate(CfnLintKeyword):
                 task_definition,
                 path=deque(["Properties", "NetworkMode"]),
             ):
-
                 if network_mode == "awsvpc" or network_mode_validator.is_type(
                     network_mode, "object"
                 ):
@@ -110,7 +109,6 @@ class ServiceFargate(CfnLintKeyword):
     def validate(
         self, validator: Validator, _: Any, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
-
         for (
             task_definition_resource_name,
             launch_type,

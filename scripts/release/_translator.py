@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 
 
 def required_xor(properties: list[str]) -> dict[str, list[Any]]:
-
     return {"oneOf": [{"required": [p]} for p in properties]}
 
 
@@ -39,7 +38,6 @@ _keywords = {
 
 
 def _find_keywords(schema: Any) -> Iterator[deque[str | int]]:
-
     if isinstance(schema, list):
         for i, item in enumerate(schema):
             for path in _find_keywords(item):

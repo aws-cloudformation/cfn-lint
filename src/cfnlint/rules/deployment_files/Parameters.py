@@ -84,7 +84,6 @@ class Parameters(CfnLintJsonSchema):
             return
 
         for parameter_set in validator.context.parameter_sets:
-
             cfn_validator = self.extend_validator(
                 validator=validator,
                 schema=self._build_schema(instance),

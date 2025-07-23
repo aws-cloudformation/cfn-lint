@@ -48,8 +48,7 @@ patches: AllPatches = {
     },
     "AWS::ApplicationAutoScaling::ScalingPolicy": {
         (
-            "/definitions/PredefinedMetricSpecification/"
-            "properties/PredefinedMetricType"
+            "/definitions/PredefinedMetricSpecification/properties/PredefinedMetricType"
         ): Patch(
             source=["application-autoscaling", "2016-02-06"],
             shape="MetricType",
@@ -79,8 +78,7 @@ patches: AllPatches = {
             shape="MetricStatistic",
         ),
         (
-            "/definitions/PredefinedMetricSpecification/"
-            "properties/PredefinedMetricType"
+            "/definitions/PredefinedMetricSpecification/properties/PredefinedMetricType"
         ): Patch(
             source=["autoscaling", "2011-01-01"],
             shape="MetricType",

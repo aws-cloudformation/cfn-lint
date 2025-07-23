@@ -10,7 +10,6 @@ from cfnlint.template import Template
 
 @pytest.fixture
 def cfn() -> Template:
-
     return Template(
         None,
         {
@@ -106,21 +105,20 @@ def cfn() -> Template:
     ],
 )
 def test_paths(name, path, starting_conditions, expected, cfn):
-
     context = cfn.context.evolve(
         conditions=cfn.context.conditions.evolve(starting_conditions)
     )
 
     results = list(cfn.get_cfn_path(path, context))
 
-    assert len(results) == len(
-        expected
-    ), f"{name!r} test failed. Got results {results!r}"
+    assert len(results) == len(expected), (
+        f"{name!r} test failed. Got results {results!r}"
+    )
 
     for i, value in enumerate(results):
-        assert (
-            value[0] == expected[i][0]
-        ), f"{name!r} test failed for {i}. Got value {value[0]!r}"
+        assert value[0] == expected[i][0], (
+            f"{name!r} test failed for {i}. Got value {value[0]!r}"
+        )
         assert value[1].conditions.status == expected[i][1], (
             f"{name!r} test failed for {i}. Got "
             f"conditions {value[1].conditions.status[0]!r}"

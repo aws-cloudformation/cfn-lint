@@ -247,11 +247,9 @@ def template():
             },
             [
                 ValidationError(
-                    (
-                        "action 'cloudformation:CreateStack' "
-                        "requires a resource of "
-                        "['arn:${Partition}:cloudformation:${Region}:${Account}:stack/.*']"
-                    ),
+                    "action 'cloudformation:CreateStack' "
+                    "requires a resource of "
+                    "['arn:${Partition}:cloudformation:${Region}:${Account}:stack/.*']",
                     rule=StatementResources(),
                     path=deque(["Resource"]),
                 ),
@@ -271,11 +269,9 @@ def template():
             },
             [
                 ValidationError(
-                    (
-                        "action 'cloudformation:CreateStack' "
-                        "requires a resource of "
-                        "['arn:${Partition}:cloudformation:${Region}:${Account}:stack/.*']"
-                    ),
+                    "action 'cloudformation:CreateStack' "
+                    "requires a resource of "
+                    "['arn:${Partition}:cloudformation:${Region}:${Account}:stack/.*']",
                     rule=StatementResources(),
                     path=deque(["Resource"]),
                 ),
@@ -333,11 +329,9 @@ def template():
             },
             [
                 ValidationError(
-                    (
-                        "action 'cloudformation:CreateStack' requires "
-                        "a resource of "
-                        "['arn:${Partition}:cloudformation:${Region}:${Account}:stack/.*']"
-                    ),
+                    "action 'cloudformation:CreateStack' requires "
+                    "a resource of "
+                    "['arn:${Partition}:cloudformation:${Region}:${Account}:stack/.*']",
                     rule=StatementResources(),
                     path=deque(["Resource"]),
                 ),

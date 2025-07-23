@@ -51,7 +51,7 @@ def template():
             {"Foo": "Bar"},
             [
                 ValidationError(
-                    ("Additional properties are not allowed " "('Foo' was unexpected)"),
+                    "Additional properties are not allowed ('Foo' was unexpected)",
                     validator="additionalProperties",
                     schema_path=deque(["additionalProperties"]),
                     rule=InterfaceConfiguration(),

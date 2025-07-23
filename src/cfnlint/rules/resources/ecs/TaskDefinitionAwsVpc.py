@@ -18,8 +18,7 @@ class TaskDefinitionAwsVpc(CfnLintKeyword):
     id = "E3053"
     shortdesc = "Validate ECS task definition is has correct values for 'HostPort'"
     description = (
-        "The 'HostPort' must either be undefined or equal to "
-        "the 'ContainerPort' value"
+        "The 'HostPort' must either be undefined or equal to the 'ContainerPort' value"
     )
     tags = ["resources", "ecs"]
 
@@ -31,7 +30,6 @@ class TaskDefinitionAwsVpc(CfnLintKeyword):
     def _get_port_mappings(
         self, validator: Validator, instance: Any
     ) -> Iterator[tuple[str | int | None, str | int | None, Validator]]:
-
         for container_definition, container_definition_validator in get_value_from_path(
             validator,
             instance,
@@ -57,7 +55,6 @@ class TaskDefinitionAwsVpc(CfnLintKeyword):
     def validate(
         self, validator: Validator, _: Any, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
-
         for network_mode, _ in get_value_from_path(
             validator,
             instance,

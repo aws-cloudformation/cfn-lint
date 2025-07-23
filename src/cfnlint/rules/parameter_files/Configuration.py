@@ -9,7 +9,6 @@ from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
 
 class Configuration(BaseJsonSchema):
-
     id = "E0200"
     shortdesc = "Validate parameter file configuration"
     description = (

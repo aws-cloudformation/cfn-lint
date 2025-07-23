@@ -65,7 +65,6 @@ def resource_schema():
 
 
 def test_schema(resource_schema):
-
     schema = Schema(schema=resource_schema)
 
     assert schema.resolver.resolve_from_url("#/") == resource_schema

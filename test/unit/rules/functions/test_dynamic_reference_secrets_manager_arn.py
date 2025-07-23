@@ -64,11 +64,9 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "Dynamic reference '{{resolve:secretsmanager:secret}}'"
-                        " to secrets manager when the field 'SecretArn' expects "
-                        "the ARN to the secret and not the secret"
-                    ),
+                    "Dynamic reference '{{resolve:secretsmanager:secret}}'"
+                    " to secrets manager when the field 'SecretArn' expects "
+                    "the ARN to the secret and not the secret",
                     rule=DynamicReferenceSecretsManagerArn(),
                 )
             ],
@@ -83,12 +81,10 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "Dynamic reference "
-                        "'\\\\\"{{resolve:secretsmanager:${MyParameter}}}\\\\\"'"
-                        " to secrets manager when the field 'SecretArn' "
-                        "expects the ARN to the secret and not the secret"
-                    ),
+                    "Dynamic reference "
+                    "'\\\\\"{{resolve:secretsmanager:${MyParameter}}}\\\\\"'"
+                    " to secrets manager when the field 'SecretArn' "
+                    "expects the ARN to the secret and not the secret",
                     rule=DynamicReferenceSecretsManagerArn(),
                 )
             ],

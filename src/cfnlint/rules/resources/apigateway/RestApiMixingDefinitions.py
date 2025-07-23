@@ -41,7 +41,6 @@ class RestApiMixingDefinitions(CfnLintKeyword):
     def validate(
         self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
-
         if validator.cfn.graph is None:  # pragma: no cover
             return  # pragma: no cover
 

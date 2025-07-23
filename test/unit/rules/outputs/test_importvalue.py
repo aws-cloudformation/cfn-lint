@@ -47,10 +47,8 @@ def rule():
             {"type": "string"},
             [
                 ValidationError(
-                    (
-                        "The output value {'Fn::ImportValue': 'Export'} "
-                        "is an import from another output"
-                    ),
+                    "The output value {'Fn::ImportValue': 'Export'} "
+                    "is an import from another output",
                     path=deque(["Fn::ImportValue"]),
                     rule=ImportValue(),
                 )

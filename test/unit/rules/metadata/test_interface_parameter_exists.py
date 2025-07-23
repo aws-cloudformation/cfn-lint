@@ -39,7 +39,7 @@ def template():
             "Bar",
             [
                 ValidationError(
-                    ("'Bar' is not one of ['Foo']"),
+                    "'Bar' is not one of ['Foo']",
                     validator="enum",
                     schema_path=deque(["enum"]),
                     rule=InterfaceParameterExists(),

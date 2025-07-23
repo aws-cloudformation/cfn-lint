@@ -24,6 +24,6 @@ from cfnlint.context.context import Transforms
 def test_transforms(name, instance, expected):
     transforms = Transforms(instance)
 
-    assert (
-        expected == transforms.has_language_extensions_transform()
-    ), f"{name!r} test got {transforms.has_language_extensions_transform()}"
+    assert expected == transforms.has_language_extensions_transform(), (
+        f"{name!r} test got {transforms.has_language_extensions_transform()}"
+    )

@@ -572,10 +572,8 @@ class _ForEachCollection:
                                 yield value
                             else:
                                 raise _ValueError(
-                                    (
-                                        "Fn::ForEach collection value "
-                                        f"must be a {_SCALAR_TYPES!r}"
-                                    ),
+                                    "Fn::ForEach collection value "
+                                    f"must be a {_SCALAR_TYPES!r}",
                                     self._obj,
                                 )
                         return

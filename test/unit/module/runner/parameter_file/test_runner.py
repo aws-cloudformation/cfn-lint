@@ -22,7 +22,7 @@ def mock_glob(value, recursive):
 
 
 @pytest.mark.parametrize(
-    ("name,parameter_files,expected"),
+    "name,parameter_files,expected",
     [
         (
             "A standard parameter file",
@@ -105,8 +105,7 @@ def mock_glob(value, recursive):
                             columnnumberend=1,
                             filename=_filename_dev,
                             message=(
-                                "Parameter file 'parameters-dev.json' "
-                                "is not supported"
+                                "Parameter file 'parameters-dev.json' is not supported"
                             ),
                             rule=Configuration(),
                         )
@@ -124,8 +123,7 @@ def mock_glob(value, recursive):
                             columnnumberend=1,
                             filename=_filename_dev,
                             message=(
-                                "Parameter file 'parameters-dev.json' "
-                                "is not supported"
+                                "Parameter file 'parameters-dev.json' is not supported"
                             ),
                             rule=Configuration(),
                         ),
@@ -157,8 +155,7 @@ def mock_glob(value, recursive):
                             columnnumberend=1,
                             filename=_filename_dev,
                             message=(
-                                "Parameter file 'parameters-dev.json' "
-                                "is not supported"
+                                "Parameter file 'parameters-dev.json' is not supported"
                             ),
                             rule=Configuration(),
                         ),
@@ -173,11 +170,9 @@ def test_runner(
     parameter_files,
     expected,
 ):
-
     decode_results = [v for _, v in parameter_files.items()]
     parameter_files = [k for k, _ in parameter_files.items()]
     with patch("glob.glob", MagicMock(side_effect=mock_glob)):
-
         with patch(
             "cfnlint.config.ConfigMixIn.parameter_files", new_callable=PropertyMock
         ) as mock_parameter_files:

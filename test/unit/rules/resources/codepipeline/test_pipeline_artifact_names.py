@@ -276,7 +276,6 @@ def _append_queues(queue1: Iterable, queue2: Iterable) -> deque:
     ],
 )
 def test_validate(instances, expected, rule, validator):
-
     errs = []
     for instance in instances:
         instance_validator = validator.evolve(

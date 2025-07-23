@@ -50,47 +50,63 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CfnLintJsonSchema):
             "AWS::Kinesis::Stream": [
                 {
                     "Attribute": "RetentionPeriodHours",
-                    "SourceUrl": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesis-stream.html#cfn-kinesis-stream-retentionperiodhours",
+                    "SourceUrl": (
+                        "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesis-stream.html#cfn-kinesis-stream-retentionperiodhours"
+                    ),
                 }
             ],
             "AWS::SQS::Queue": [
                 {
                     "Attribute": "MessageRetentionPeriod",
-                    "SourceUrl": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sqs-queues.html#aws-sqs-queue-msgretentionperiod",
+                    "SourceUrl": (
+                        "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sqs-queues.html#aws-sqs-queue-msgretentionperiod"
+                    ),
                 }
             ],
             "AWS::DocDB::DBCluster": [
                 {
                     "Attribute": "BackupRetentionPeriod",
-                    "SourceUrl": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-backupretentionperiod",
+                    "SourceUrl": (
+                        "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-backupretentionperiod"
+                    ),
                 }
             ],
             "AWS::Synthetics::Canary": [
                 {
                     "Attribute": "SuccessRetentionPeriod",
-                    "SourceUrl": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-synthetics-canary.html#cfn-synthetics-canary-successretentionperiod",
+                    "SourceUrl": (
+                        "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-synthetics-canary.html#cfn-synthetics-canary-successretentionperiod"
+                    ),
                 },
                 {
                     "Attribute": "FailureRetentionPeriod",
-                    "SourceUrl": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-synthetics-canary.html#cfn-synthetics-canary-failureretentionperiod",
+                    "SourceUrl": (
+                        "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-synthetics-canary.html#cfn-synthetics-canary-failureretentionperiod"
+                    ),
                 },
             ],
             "AWS::Redshift::Cluster": [
                 {
                     "Attribute": "AutomatedSnapshotRetentionPeriod",
-                    "SourceUrl": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-automatedsnapshotretentionperiod",
+                    "SourceUrl": (
+                        "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-automatedsnapshotretentionperiod"
+                    ),
                 }
             ],
             "AWS::RDS::DBInstance": [
                 {
                     "Attribute": "BackupRetentionPeriod",
-                    "SourceUrl": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-backupretentionperiod",
+                    "SourceUrl": (
+                        "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-backupretentionperiod"
+                    ),
                 }
             ],
             "AWS::RDS::DBCluster": [
                 {
                     "Attribute": "BackupRetentionPeriod",
-                    "SourceUrl": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-backuprententionperiod",
+                    "SourceUrl": (
+                        "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-backuprententionperiod"
+                    ),
                 }
             ],
         }

@@ -86,7 +86,6 @@ class ServiceNetworkConfiguration(CfnLintKeyword):
     def validate(
         self, validator: Validator, _: Any, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
-
         for (
             task_definition_resource_name,
             network_configuration,

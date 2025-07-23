@@ -121,7 +121,6 @@ from cfnlint.runner.deployment_file.deployment_types import (
     ],
 )
 def test_git_sync(name, instance, expected):
-
     results = create_deployment_from_git_sync(instance)
 
     assert results == expected, f"{name}: {results} != {expected}"

@@ -140,10 +140,8 @@ def rule():
             False,
             [
                 ValidationError(
-                    (
-                        "'dotnetcore2.1' is not supported for "
-                        "'SnapStart' enabled functions"
-                    ),
+                    "'dotnetcore2.1' is not supported for "
+                    "'SnapStart' enabled functions",
                     path=deque(["SnapStart", "ApplyOn"]),
                 )
             ],
@@ -234,9 +232,10 @@ def test_validate(
     errs = list(rule.validate(validator, "", instance, {}))
 
     if child_rule_called:
-        child_rule.validate.assert_called_with(
-            instance.get("Runtime")
-        ), f"{name!r}: child rule not called"
+        (
+            child_rule.validate.assert_called_with(instance.get("Runtime")),
+            f"{name!r}: child rule not called",
+        )
     else:
         child_rule.validate.assert_not_called(), f"{name!r}: child rule called"
 

@@ -38,10 +38,8 @@ def rule():
             {"EngineMode": "serverless", "ServerlessV2ScalingConfiguration": "foo"},
             [
                 ValidationError(
-                    (
-                        "EngineMode 'serverless'  doesn't allow additional "
-                        "properties 'ServerlessV2ScalingConfiguration'"
-                    ),
+                    "EngineMode 'serverless'  doesn't allow additional "
+                    "properties 'ServerlessV2ScalingConfiguration'",
                     rule=DbClusterServerlessExclusive(),
                     path=deque(["ServerlessV2ScalingConfiguration"]),
                     validator=None,
@@ -61,10 +59,8 @@ def rule():
             {"EngineMode": "provisioned", "ScalingConfiguration": "foo"},
             [
                 ValidationError(
-                    (
-                        "EngineMode 'provisioned'  doesn't allow "
-                        "additional properties 'ScalingConfiguration'"
-                    ),
+                    "EngineMode 'provisioned'  doesn't allow "
+                    "additional properties 'ScalingConfiguration'",
                     rule=DbClusterServerlessExclusive(),
                     path=deque(["ScalingConfiguration"]),
                     validator=None,
@@ -82,10 +78,7 @@ def rule():
             {"ScalingConfiguration": "foo"},
             [
                 ValidationError(
-                    (
-                        "Additional properties are not allowed "
-                        "('ScalingConfiguration')"
-                    ),
+                    "Additional properties are not allowed ('ScalingConfiguration')",
                     rule=DbClusterServerlessExclusive(),
                     path=deque(["ScalingConfiguration"]),
                     validator=None,

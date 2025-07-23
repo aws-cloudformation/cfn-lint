@@ -20,7 +20,6 @@ LOGGER = logging.getLogger(__name__)
 def _parse_parameter_file(
     filename: str,
 ) -> dict[str, Any] | list[Match]:
-
     data, matches = decode(filename)
 
     if data is None:

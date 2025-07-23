@@ -16,7 +16,6 @@ from cfnlint.rules.jsonschema import CfnLintKeyword
 
 
 class PermissionSourceAccount(CfnLintKeyword):
-
     id = "W3663"
     shortdesc = "Validate SourceAccount is required property"
     description = (

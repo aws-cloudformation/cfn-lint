@@ -123,10 +123,8 @@ def template():
             },
             [
                 ValidationError(
-                    (
-                        "Source queue type 'FIFO' does not match "
-                        "destination queue type 'standard'"
-                    ),
+                    "Source queue type 'FIFO' does not match "
+                    "destination queue type 'standard'",
                     rule=QueueDLQ(),
                     path=deque(["RedrivePolicy", "deadLetterTargetArn"]),
                 )
@@ -141,10 +139,8 @@ def template():
             },
             [
                 ValidationError(
-                    (
-                        "Source queue type 'FIFO' does not match "
-                        "destination queue type 'standard'"
-                    ),
+                    "Source queue type 'FIFO' does not match "
+                    "destination queue type 'standard'",
                     rule=QueueDLQ(),
                     path=deque(["RedrivePolicy", "deadLetterTargetArn"]),
                 )
@@ -159,10 +155,8 @@ def template():
             },
             [
                 ValidationError(
-                    (
-                        "Source queue type 'standard' does not "
-                        "match destination queue type 'FIFO'"
-                    ),
+                    "Source queue type 'standard' does not "
+                    "match destination queue type 'FIFO'",
                     rule=QueueDLQ(),
                     path=deque(["RedrivePolicy", "deadLetterTargetArn"]),
                 )
@@ -189,18 +183,14 @@ def template():
             },
             [
                 ValidationError(
-                    (
-                        "Source queue type 'FIFO' does not match "
-                        "destination queue type 'standard'"
-                    ),
+                    "Source queue type 'FIFO' does not match "
+                    "destination queue type 'standard'",
                     rule=QueueDLQ(),
                     path=deque(["RedrivePolicy", "deadLetterTargetArn", "Fn::If", 1]),
                 ),
                 ValidationError(
-                    (
-                        "Source queue type 'standard' does "
-                        "not match destination queue type 'FIFO'"
-                    ),
+                    "Source queue type 'standard' does "
+                    "not match destination queue type 'FIFO'",
                     rule=QueueDLQ(),
                     path=deque(["RedrivePolicy", "deadLetterTargetArn", "Fn::If", 2]),
                 ),

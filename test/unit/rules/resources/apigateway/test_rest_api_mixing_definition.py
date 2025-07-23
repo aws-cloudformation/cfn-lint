@@ -105,12 +105,10 @@ _api_stage = {
             },
             [
                 ValidationError(
-                    (
-                        "Defining 'Body' with a relation to "
-                        "resource 'RootResource' of type "
-                        "'AWS::ApiGateway::Resource' may result "
-                        "in drift and orphaned resources"
-                    ),
+                    "Defining 'Body' with a relation to "
+                    "resource 'RootResource' of type "
+                    "'AWS::ApiGateway::Resource' may result "
+                    "in drift and orphaned resources",
                     rule=RestApiMixingDefinitions(),
                     path=deque([]),
                 )
@@ -141,21 +139,17 @@ _api_stage = {
             },
             [
                 ValidationError(
-                    (
-                        "Defining 'Body' with a relation to "
-                        "resource 'RootResource' of type "
-                        "'AWS::ApiGateway::Resource' may result "
-                        "in drift and orphaned resources"
-                    ),
+                    "Defining 'Body' with a relation to "
+                    "resource 'RootResource' of type "
+                    "'AWS::ApiGateway::Resource' may result "
+                    "in drift and orphaned resources",
                     rule=RestApiMixingDefinitions(),
                 ),
                 ValidationError(
-                    (
-                        "Defining 'Body' with a relation to "
-                        "resource 'Model' of type "
-                        "'AWS::ApiGateway::Model' may result "
-                        "in drift and orphaned resources"
-                    ),
+                    "Defining 'Body' with a relation to "
+                    "resource 'Model' of type "
+                    "'AWS::ApiGateway::Model' may result "
+                    "in drift and orphaned resources",
                     rule=RestApiMixingDefinitions(),
                 ),
             ],

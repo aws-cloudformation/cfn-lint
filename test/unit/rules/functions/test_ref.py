@@ -71,13 +71,11 @@ def context(cfn):
             {},
             [
                 ValidationError(
-                    (
-                        "['foo'] is not one of ['MyParameter', 'MyArrayParameter', "
-                        "'MyVolume', 'MyInstance', 'AWS::AccountId', "
-                        "'AWS::NoValue', 'AWS::NotificationARNs', "
-                        "'AWS::Partition', 'AWS::Region', "
-                        "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix']"
-                    ),
+                    "['foo'] is not one of ['MyParameter', 'MyArrayParameter', "
+                    "'MyVolume', 'MyInstance', 'AWS::AccountId', "
+                    "'AWS::NoValue', 'AWS::NotificationARNs', "
+                    "'AWS::Partition', 'AWS::Region', "
+                    "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix']",
                     path=deque(["Ref"]),
                     schema_path=deque(
                         ["else", "cfnContext", "schema", "dynamicValidation", "enum"]
@@ -106,13 +104,11 @@ def context(cfn):
             {},
             [
                 ValidationError(
-                    (
-                        "'Foo' is not one of ['MyParameter', 'MyArrayParameter', "
-                        "'MyVolume', 'MyInstance', 'AWS::AccountId', "
-                        "'AWS::NoValue', 'AWS::NotificationARNs', "
-                        "'AWS::Partition', 'AWS::Region', "
-                        "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix']"
-                    ),
+                    "'Foo' is not one of ['MyParameter', 'MyArrayParameter', "
+                    "'MyVolume', 'MyInstance', 'AWS::AccountId', "
+                    "'AWS::NoValue', 'AWS::NotificationARNs', "
+                    "'AWS::Partition', 'AWS::Region', "
+                    "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix']",
                     path=deque(["Ref"]),
                     schema_path=deque(
                         ["else", "cfnContext", "schema", "dynamicValidation", "enum"]

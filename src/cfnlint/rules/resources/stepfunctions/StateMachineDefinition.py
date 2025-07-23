@@ -110,7 +110,6 @@ class StateMachineDefinition(CfnLintJsonSchema):
         add_path_to_message: bool,
         k: str,
     ) -> ValidationResult:
-
         for err in validator.iter_errors(value):
             if validator.is_type(err.instance, "string"):
                 if (
@@ -137,7 +136,6 @@ class StateMachineDefinition(CfnLintJsonSchema):
     def validate(
         self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
-
         definition_keys = ["Definition"]
         if not validator.cfn.has_serverless_transform():
             definition_keys.append("DefinitionString")

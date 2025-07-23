@@ -56,7 +56,7 @@ class SubNotJoin(CloudFormationLintRule):
 
         if self._check_elements(value[1]):
             yield ValidationError(
-                ("Prefer using Fn::Sub over Fn::Join with an empty delimiter"),
+                "Prefer using Fn::Sub over Fn::Join with an empty delimiter",
                 path=deque([key, 0]),
                 rule=self,
             )

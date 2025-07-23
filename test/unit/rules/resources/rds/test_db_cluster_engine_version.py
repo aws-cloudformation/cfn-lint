@@ -96,7 +96,7 @@ def schema():
             {"Engine": "foo"},
             [
                 ValidationError(
-                    ("'foo' is not one of ['mysql']"),
+                    "'foo' is not one of ['mysql']",
                     rule=DbClusterEngineVersion(),
                     path=deque(["Engine"]),
                     validator="enum",
@@ -110,10 +110,8 @@ def schema():
             {"Engine": "mysql", "EngineVersion": "foo"},
             [
                 ValidationError(
-                    (
-                        "'foo' is not one of ['8.0.39', '8.0.40', "
-                        "'8.0.41', '8.4.3', '8.4.4']"
-                    ),
+                    "'foo' is not one of ['8.0.39', '8.0.40', "
+                    "'8.0.41', '8.4.3', '8.4.4']",
                     rule=DbClusterEngineVersion(),
                     path=deque(["EngineVersion"]),
                     validator="enum",

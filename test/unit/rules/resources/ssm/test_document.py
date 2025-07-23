@@ -76,10 +76,8 @@ def rule():
             "arn:aws-us-gov:iam::123456789012:role/test",
             [
                 ValidationError(
-                    (
-                        "'arn:aws-us-gov:iam::123456789012:role/test' is not "
-                        "of type 'object'"
-                    ),
+                    "'arn:aws-us-gov:iam::123456789012:role/test' is not "
+                    "of type 'object'",
                     rule=Document(),
                     validator="type",
                     schema_path=deque(["type"]),

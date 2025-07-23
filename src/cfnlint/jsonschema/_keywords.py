@@ -66,19 +66,15 @@ def additionalProperties(
                 for key in schema.get("properties", {}).keys():
                     if SequenceMatcher(a=extra, b=key).ratio() > 0.8:
                         yield ValidationError(
-                            (
-                                f"Additional properties are not allowed ({extra!r} "
-                                f"was unexpected. Did you mean {key!r}?)"
-                            ),
+                            f"Additional properties are not allowed ({extra!r} "
+                            f"was unexpected. Did you mean {key!r}?)",
                             path=[extra],
                         )
                         break
                 else:
                     yield ValidationError(
-                        (
-                            f"Additional properties are not allowed ({extra!r} "
-                            "was unexpected)"
-                        ),
+                        f"Additional properties are not allowed ({extra!r} "
+                        "was unexpected)",
                         path=[extra],
                     )
 
@@ -314,7 +310,14 @@ def if_(
             add_cfn_lint_keyword=False,
         )
     )
-    if validator.evolve(schema=if_schema).is_valid(instance):
+
+    if_validator = validator.evolve(
+        context=validator.context.evolve(
+            allow_exceptions=False,
+        )
+    )
+
+    if if_validator.evolve(schema=if_schema).is_valid(instance):
         if "then" in schema:
             then = schema["then"]
             yield from validator.descend(instance, then, schema_path="then")
@@ -339,7 +342,7 @@ def items(
         rest = instance[prefix:] if extra != 1 else instance[prefix]
         item = "items" if prefix != 1 else "item"
         yield ValidationError(
-            f"Expected at most {prefix} {item} but found {extra} " f"extra: {rest!r}",
+            f"Expected at most {prefix} {item} but found {extra} extra: {rest!r}",
         )
     else:
         for index in range(prefix, total):

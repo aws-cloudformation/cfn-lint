@@ -44,8 +44,12 @@ def rule():
                             "Resource": "arn:aws:states:::batch:submitJob.sync",
                             "Parameters": {
                                 "JobName": "BatchJobNotification",
-                                "JobQueue": "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd",
-                                "JobDefinition": "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1",
+                                "JobQueue": (
+                                    "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd"
+                                ),
+                                "JobDefinition": (
+                                    "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1"
+                                ),
                             },
                             "Next": "Notify Success",
                             "Catch": [
@@ -59,8 +63,13 @@ def rule():
                             "Type": "Task",
                             "Resource": "arn:aws:states:::sns:publish",
                             "Parameters": {
-                                "Message": "Batch job submitted through Step Functions succeeded",
-                                "TopicArn": "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM",
+                                "Message": (
+                                    "Batch job submitted through Step Functions"
+                                    " succeeded"
+                                ),
+                                "TopicArn": (
+                                    "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM"
+                                ),
                             },
                             "End": True,
                         },
@@ -68,8 +77,12 @@ def rule():
                             "Type": "Task",
                             "Resource": "arn:aws:states:::sns:publish",
                             "Parameters": {
-                                "Message": "Batch job submitted through Step Functions failed",
-                                "TopicArn": "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM",
+                                "Message": (
+                                    "Batch job submitted through Step Functions failed"
+                                ),
+                                "TopicArn": (
+                                    "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM"
+                                ),
                             },
                             "End": True,
                         },
@@ -82,7 +95,10 @@ def rule():
             "Fan out example",
             {
                 "Definition": {
-                    "Comment": "An example of the Amazon States Language for fanning out AWS Batch job",
+                    "Comment": (
+                        "An example of the Amazon States Language for fanning out AWS"
+                        " Batch job"
+                    ),
                     "StartAt": "Generate batch job input",
                     "TimeoutSeconds": 3600,
                     "States": {
@@ -91,12 +107,17 @@ def rule():
                             "Resource": "arn:aws:states:::lambda:invoke",
                             "OutputPath": "$.Payload",
                             "Parameters": {
-                                "FunctionName": "<GENERATE_BATCH_JOB_INPUT_LAMBDA_FUNCTION_NAME>"
+                                "FunctionName": (
+                                    "<GENERATE_BATCH_JOB_INPUT_LAMBDA_FUNCTION_NAME>"
+                                )
                             },
                             "Next": "Fan out batch jobs",
                         },
                         "Fan out batch jobs": {
-                            "Comment": "Start multiple executions of batch job depending on pre-processed data",
+                            "Comment": (
+                                "Start multiple executions of batch job depending on"
+                                " pre-processed data"
+                            ),
                             "Type": "Map",
                             "End": True,
                             "ItemsPath": "$",
@@ -106,11 +127,15 @@ def rule():
                                 "States": {
                                     "Submit Batch Job": {
                                         "Type": "Task",
-                                        "Resource": "arn:aws:states:::batch:submitJob.sync",
+                                        "Resource": (
+                                            "arn:aws:states:::batch:submitJob.sync"
+                                        ),
                                         "Parameters": {
                                             "JobName": "BatchJobFanOut",
                                             "JobQueue": "<BATCH_QUEUE_ARN>",
-                                            "JobDefinition": "<BATCH_JOB_DEFINITION_ARN>",
+                                            "JobDefinition": (
+                                                "<BATCH_JOB_DEFINITION_ARN>"
+                                            ),
                                         },
                                         "End": True,
                                     }
@@ -125,7 +150,8 @@ def rule():
         (
             "Error handling",
             {
-                "Definition": """
+                "Definition": (
+                    """
                 {
                     "Comment": "An example of the Amazon States Language for notification on an AWS Batch job completion",
                     "StartAt": "Submit Batch Job",
@@ -173,6 +199,7 @@ def rule():
                     }
                 }
             """
+                )
             },
             [],
         ),
@@ -180,13 +207,18 @@ def rule():
             "Transfer data records",
             {
                 "Definition": {
-                    "Comment": "An example of the Amazon States Language for reading messages from a DynamoDB table and sending them to SQS",
+                    "Comment": (
+                        "An example of the Amazon States Language for reading messages"
+                        " from a DynamoDB table and sending them to SQS"
+                    ),
                     "StartAt": "Seed the DynamoDB Table",
                     "TimeoutSeconds": 3600,
                     "States": {
                         "Seed the DynamoDB Table": {
                             "Type": "Task",
-                            "Resource": "arn:aws:lambda:us-east-1:123456789012:function:sqsconnector-SeedingFunction-T3U43VYDU5OQ",
+                            "Resource": (
+                                "arn:aws:lambda:us-east-1:123456789012:function:sqsconnector-SeedingFunction-T3U43VYDU5OQ"
+                            ),
                             "ResultPath": "$.List",
                             "Next": "For Loop Condition",
                         },
@@ -218,7 +250,9 @@ def rule():
                             "Resource": "arn:aws:states:::sqs:sendMessage",
                             "Parameters": {
                                 "MessageBody.$": "$.DynamoDB.Item.Message.S",
-                                "QueueUrl": "https://sqs.us-east-1.amazonaws.com/123456789012/sqsconnector-SQSQueue-QVGQBW134PWK",
+                                "QueueUrl": (
+                                    "https://sqs.us-east-1.amazonaws.com/123456789012/sqsconnector-SQSQueue-QVGQBW134PWK"
+                                ),
                             },
                             "ResultPath": "$.SQS",
                             "Next": "Pop Element from List",
@@ -238,7 +272,10 @@ def rule():
             "A map",
             {
                 "Definition": {
-                    "Comment": "An example of the Amazon States Language for reading messages from an SQS queue and iteratively processing each message.",
+                    "Comment": (
+                        "An example of the Amazon States Language for reading messages"
+                        " from an SQS queue and iteratively processing each message."
+                    ),
                     "StartAt": "Read messages from SQS Queue",
                     "States": {
                         "Read messages from SQS Queue": {
@@ -246,7 +283,9 @@ def rule():
                             "Resource": "arn:aws:states:::lambda:invoke",
                             "OutputPath": "$.Payload",
                             "Parameters": {
-                                "FunctionName": "MapSampleProj-ReadFromSQSQueueLambda-1MY3M63RMJVA9"
+                                "FunctionName": (
+                                    "MapSampleProj-ReadFromSQSQueueLambda-1MY3M63RMJVA9"
+                                )
                             },
                             "Next": "Are there messages to process?",
                         },
@@ -277,7 +316,9 @@ def rule():
                                         "Resource": "arn:aws:states:::dynamodb:putItem",
                                         "ResultPath": None,
                                         "Parameters": {
-                                            "TableName": "MapSampleProj-DDBTable-YJDJ1MKIN6C5",
+                                            "TableName": (
+                                                "MapSampleProj-DDBTable-YJDJ1MKIN6C5"
+                                            ),
                                             "ReturnConsumedCapacity": "TOTAL",
                                             "Item": {
                                                 "MessageId": {
@@ -296,7 +337,9 @@ def rule():
                                         "InputPath": "$.MessageDetails",
                                         "ResultPath": None,
                                         "Parameters": {
-                                            "FunctionName": "MapSampleProj-DeleteFromSQSQueueLambda-198J2839ZO5K2",
+                                            "FunctionName": (
+                                                "MapSampleProj-DeleteFromSQSQueueLambda-198J2839ZO5K2"
+                                            ),
                                             "Payload": {
                                                 "ReceiptHandle.$": "$.ReceiptHandle"
                                             },
@@ -310,7 +353,9 @@ def rule():
                                         "Parameters": {
                                             "Subject": "Message from Step Functions!",
                                             "Message.$": "$.Body",
-                                            "TopicArn": "arn:aws:sns:us-east-1:012345678910:MapSampleProj-SNSTopic-1CQO4HQ3IR1KN",
+                                            "TopicArn": (
+                                                "arn:aws:sns:us-east-1:012345678910:MapSampleProj-SNSTopic-1CQO4HQ3IR1KN"
+                                            ),
                                         },
                                         "End": True,
                                     },
@@ -384,17 +429,23 @@ def rule():
                         },
                         "Public": {
                             "Type": "Task",
-                            "Resource": "arn:aws:lambda:us-east-1:123456789012:function:Foo",
+                            "Resource": (
+                                "arn:aws:lambda:us-east-1:123456789012:function:Foo"
+                            ),
                             "Next": "NextState",
                         },
                         "ValueIsZero": {
                             "Type": "Task",
-                            "Resource": "arn:aws:lambda:us-east-1:123456789012:function:Zero",
+                            "Resource": (
+                                "arn:aws:lambda:us-east-1:123456789012:function:Zero"
+                            ),
                             "Next": "NextState",
                         },
                         "ValueInTwenties": {
                             "Type": "Task",
-                            "Resource": "arn:aws:lambda:us-east-1:123456789012:function:Bar",
+                            "Resource": (
+                                "arn:aws:lambda:us-east-1:123456789012:function:Bar"
+                            ),
                             "Next": "NextState",
                         },
                         "ValueIsNegative": {
@@ -478,13 +529,15 @@ def rule():
         (
             "Invalid string definition",
             {
-                "Definition": """
+                "Definition": (
+                    """
                     {
                         "States": {
                             "NoType": {}
                         }
                     }
                 """
+                )
             },
             [
                 ValidationError(
@@ -533,8 +586,12 @@ def rule():
                             "Resource": "${jobqueue}",
                             "Parameters": {
                                 "JobName": "BatchJobNotification",
-                                "JobQueue": "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd",
-                                "JobDefinition": "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1",
+                                "JobQueue": (
+                                    "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd"
+                                ),
+                                "JobDefinition": (
+                                    "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1"
+                                ),
                             },
                             "Next": "Notify Success",
                             "Catch": [
@@ -548,8 +605,13 @@ def rule():
                             "Type": "Task",
                             "Resource": "${invalid}",
                             "Parameters": {
-                                "Message": "Batch job submitted through Step Functions succeeded",
-                                "TopicArn": "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM",
+                                "Message": (
+                                    "Batch job submitted through Step Functions"
+                                    " succeeded"
+                                ),
+                                "TopicArn": (
+                                    "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM"
+                                ),
                             },
                             "End": True,
                         },
@@ -557,8 +619,12 @@ def rule():
                             "Type": "Task",
                             "Resource": [],
                             "Parameters": {
-                                "Message": "Batch job submitted through Step Functions failed",
-                                "TopicArn": "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM",
+                                "Message": (
+                                    "Batch job submitted through Step Functions failed"
+                                ),
+                                "TopicArn": (
+                                    "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM"
+                                ),
                             },
                             "End": True,
                         },
@@ -567,10 +633,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "'${invalid}' does not match "
-                        "'^arn:aws:([a-z]|-)+:([a-z]|[0-9]|-)*:[0-9]*:([a-z]|-)+:[a-zA-Z0-9-_.]+(:(\\\\$LATEST|[a-zA-Z0-9-_\\\\.]+))?$'"
-                    ),
+                    "'${invalid}' does not match "
+                    "'^arn:aws:([a-z]|-)+:([a-z]|[0-9]|-)*:[0-9]*:([a-z]|-)+:[a-zA-Z0-9-_.]+(:(\\\\$LATEST|[a-zA-Z0-9-_\\\\.]+))?$'",
                     rule=StateMachineDefinition(),
                     validator="pattern",
                     schema_path=deque(
@@ -590,7 +654,7 @@ def rule():
                     path=deque(["Definition", "States", "Notify Success", "Resource"]),
                 ),
                 ValidationError(
-                    ("[] is not of type 'string'"),
+                    "[] is not of type 'string'",
                     rule=StateMachineDefinition(),
                     validator="type",
                     schema_path=deque(
@@ -629,8 +693,12 @@ def rule():
                             "Resource": "${jobqueue}",
                             "Parameters": {
                                 "JobName": "BatchJobNotification",
-                                "JobQueue": "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd",
-                                "JobDefinition": "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1",
+                                "JobQueue": (
+                                    "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd"
+                                ),
+                                "JobDefinition": (
+                                    "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1"
+                                ),
                             },
                             "Next": "Notify Success",
                             "Catch": [
@@ -644,8 +712,13 @@ def rule():
                             "Type": "Task",
                             "Resource": "arn:aws:states:::sns:publish",
                             "Parameters": {
-                                "Message": "Batch job submitted through Step Functions succeeded",
-                                "TopicArn": "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM",
+                                "Message": (
+                                    "Batch job submitted through Step Functions"
+                                    " succeeded"
+                                ),
+                                "TopicArn": (
+                                    "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM"
+                                ),
                             },
                             "End": True,
                         },
@@ -653,8 +726,12 @@ def rule():
                             "Type": "Task",
                             "Resource": "arn:aws:states:::sns:publish",
                             "Parameters": {
-                                "Message": "Batch job submitted through Step Functions failed",
-                                "TopicArn": "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM",
+                                "Message": (
+                                    "Batch job submitted through Step Functions failed"
+                                ),
+                                "TopicArn": (
+                                    "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM"
+                                ),
                             },
                             "End": True,
                         },
@@ -663,10 +740,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "'${jobqueue}' does not match "
-                        "'^arn:aws:([a-z]|-)+:([a-z]|[0-9]|-)*:[0-9]*:([a-z]|-)+:[a-zA-Z0-9-_.]+(:(\\\\$LATEST|[a-zA-Z0-9-_\\\\.]+))?$'"
-                    ),
+                    "'${jobqueue}' does not match "
+                    "'^arn:aws:([a-z]|-)+:([a-z]|[0-9]|-)*:[0-9]*:([a-z]|-)+:[a-zA-Z0-9-_.]+(:(\\\\$LATEST|[a-zA-Z0-9-_\\\\.]+))?$'",
                     rule=StateMachineDefinition(),
                     validator="pattern",
                     schema_path=deque(
@@ -712,8 +787,12 @@ def rule():
                             "Resource": "${jobqueue}",
                             "Parameters": {  # fails because JSONata doesn't support Parameters
                                 "JobName": "BatchJobNotification",
-                                "JobQueue": "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd",
-                                "JobDefinition": "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1",
+                                "JobQueue": (
+                                    "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd"
+                                ),
+                                "JobDefinition": (
+                                    "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1"
+                                ),
                             },
                             "Next": "Notify Success",
                             "Catch": [
@@ -729,8 +808,12 @@ def rule():
                             "Resource": "${jobqueue}",
                             "Arguments": {  # fails because JSONPath doesn't support Arguments
                                 "JobName": "BatchJobNotification",
-                                "JobQueue": "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd",
-                                "JobDefinition": "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1",
+                                "JobQueue": (
+                                    "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd"
+                                ),
+                                "JobDefinition": (
+                                    "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1"
+                                ),
                             },
                             "Next": "Notify Success",
                             "Catch": [
@@ -746,8 +829,12 @@ def rule():
                             "Resource": "${jobqueue}",
                             "Arguments": {  # fails because JSONPath is the default for Query Language
                                 "JobName": "BatchJobNotification",
-                                "JobQueue": "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd",
-                                "JobDefinition": "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1",
+                                "JobQueue": (
+                                    "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd"
+                                ),
+                                "JobDefinition": (
+                                    "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1"
+                                ),
                             },
                             "Next": "Notify Success",
                             "Catch": [
@@ -798,8 +885,13 @@ def rule():
                             "Type": "Task",
                             "Resource": "arn:aws:states:::sns:publish",
                             "Parameters": {
-                                "Message": "Batch job submitted through Step Functions succeeded",
-                                "TopicArn": "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM",
+                                "Message": (
+                                    "Batch job submitted through Step Functions"
+                                    " succeeded"
+                                ),
+                                "TopicArn": (
+                                    "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM"
+                                ),
                             },
                             "End": True,
                         },
@@ -807,8 +899,12 @@ def rule():
                             "Type": "Task",
                             "Resource": "arn:aws:states:::sns:publish",
                             "Parameters": {
-                                "Message": "Batch job submitted through Step Functions failed",
-                                "TopicArn": "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM",
+                                "Message": (
+                                    "Batch job submitted through Step Functions failed"
+                                ),
+                                "TopicArn": (
+                                    "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM"
+                                ),
                             },
                             "End": True,
                         },
@@ -817,9 +913,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "Additional properties are not allowed ('Parameters' was unexpected)"
-                    ),
+                    "Additional properties are not allowed ('Parameters' was"
+                    " unexpected)",
                     rule=StateMachineDefinition(),
                     validator=None,
                     schema_path=deque(
@@ -843,9 +938,8 @@ def rule():
                     ),
                 ),
                 ValidationError(
-                    (
-                        "Additional properties are not allowed ('Arguments' was unexpected)"
-                    ),
+                    "Additional properties are not allowed ('Arguments' was"
+                    " unexpected)",
                     rule=StateMachineDefinition(),
                     validator=None,
                     schema_path=deque(
@@ -869,9 +963,8 @@ def rule():
                     ),
                 ),
                 ValidationError(
-                    (
-                        "Additional properties are not allowed ('Arguments' was unexpected)"
-                    ),
+                    "Additional properties are not allowed ('Arguments' was"
+                    " unexpected)",
                     rule=StateMachineDefinition(),
                     validator=None,
                     schema_path=deque(
@@ -895,20 +988,23 @@ def rule():
                     ),
                 ),
                 ValidationError(
-                    (
-                        "Only one of ['And', 'BooleanEquals', 'BooleanEqualsPath', 'IsBoolean', 'IsNull', "
-                        "'IsNumeric', 'IsPresent', 'IsString', 'IsTimestamp', 'Not', 'NumericEquals', "
-                        "'NumericEqualsPath', 'NumericGreaterThan', 'NumericGreaterThanPath', "
-                        "'NumericGreaterThanEquals', 'NumericGreaterThanEqualsPath', 'NumericLessThan', "
-                        "'NumericLessThanPath', 'NumericLessThanEquals', 'NumericLessThanEqualsPath', 'Or', "
-                        "'StringEquals', 'StringEqualsPath', 'StringGreaterThan', 'StringGreaterThanPath', "
-                        "'StringGreaterThanEquals', 'StringGreaterThanEqualsPath', 'StringLessThan', "
-                        "'StringLessThanPath', 'StringLessThanEquals', 'StringLessThanEqualsPath', "
-                        "'StringMatches', 'TimestampEquals', 'TimestampEqualsPath', 'TimestampGreaterThan', "
-                        "'TimestampGreaterThanPath', 'TimestampGreaterThanEquals', 'TimestampGreaterThanEqualsPath', "
-                        "'TimestampLessThan', 'TimestampLessThanPath', 'TimestampLessThanEquals', "
-                        "'TimestampLessThanEqualsPath'] is a required property"
-                    ),
+                    "Only one of ['And', 'BooleanEquals', 'BooleanEqualsPath',"
+                    " 'IsBoolean', 'IsNull', 'IsNumeric', 'IsPresent', 'IsString',"
+                    " 'IsTimestamp', 'Not', 'NumericEquals', 'NumericEqualsPath',"
+                    " 'NumericGreaterThan', 'NumericGreaterThanPath',"
+                    " 'NumericGreaterThanEquals', 'NumericGreaterThanEqualsPath',"
+                    " 'NumericLessThan', 'NumericLessThanPath',"
+                    " 'NumericLessThanEquals', 'NumericLessThanEqualsPath', 'Or',"
+                    " 'StringEquals', 'StringEqualsPath', 'StringGreaterThan',"
+                    " 'StringGreaterThanPath', 'StringGreaterThanEquals',"
+                    " 'StringGreaterThanEqualsPath', 'StringLessThan',"
+                    " 'StringLessThanPath', 'StringLessThanEquals',"
+                    " 'StringLessThanEqualsPath', 'StringMatches', 'TimestampEquals',"
+                    " 'TimestampEqualsPath', 'TimestampGreaterThan',"
+                    " 'TimestampGreaterThanPath', 'TimestampGreaterThanEquals',"
+                    " 'TimestampGreaterThanEqualsPath', 'TimestampLessThan',"
+                    " 'TimestampLessThanPath', 'TimestampLessThanEquals',"
+                    " 'TimestampLessThanEqualsPath'] is a required property",
                     rule=StateMachineDefinition(),
                     validator="requiredXor",
                     schema_path=deque(
@@ -932,7 +1028,7 @@ def rule():
                     path=deque(["Definition", "States", "Choices2", "Choices", 0]),
                 ),
                 ValidationError(
-                    ("'Next' is a required property"),
+                    "'Next' is a required property",
                     rule=StateMachineDefinition(),
                     validator="required",
                     schema_path=deque(
@@ -956,7 +1052,7 @@ def rule():
                     path=deque(["Definition", "States", "Choices2", "Choices", 1]),
                 ),
                 ValidationError(
-                    ("'Condition' is a required property"),
+                    "'Condition' is a required property",
                     rule=StateMachineDefinition(),
                     validator="required",
                     schema_path=deque(
@@ -998,11 +1094,17 @@ def rule():
                         "Submit Batch Job 1": {
                             "Type": "Task",
                             "Resource": "${jobqueue}",
-                            "QueryLanguage": "JSONPath",  # fails because QueryLanguage for JSONata can't be over written
+                            "QueryLanguage": (
+                                "JSONPath"
+                            ),  # fails because QueryLanguage for JSONata can't be over written
                             "Parameters": {  # fails because JSONata doesn't support Parameters
                                 "JobName": "BatchJobNotification",
-                                "JobQueue": "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd",
-                                "JobDefinition": "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1",
+                                "JobQueue": (
+                                    "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd"
+                                ),
+                                "JobDefinition": (
+                                    "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1"
+                                ),
                             },
                             "Next": "Notify Success",
                             "Catch": [
@@ -1017,8 +1119,12 @@ def rule():
                             "Resource": "${jobqueue}",
                             "Arguments": {
                                 "JobName": "BatchJobNotification",
-                                "JobQueue": "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd",
-                                "JobDefinition": "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1",
+                                "JobQueue": (
+                                    "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd"
+                                ),
+                                "JobDefinition": (
+                                    "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1"
+                                ),
                             },
                             "Next": "Notify Success",
                             "Catch": [
@@ -1034,8 +1140,12 @@ def rule():
                             "Resource": "${jobqueue}",
                             "Arguments": {
                                 "JobName": "BatchJobNotification",
-                                "JobQueue": "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd",
-                                "JobDefinition": "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1",
+                                "JobQueue": (
+                                    "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd"
+                                ),
+                                "JobDefinition": (
+                                    "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1"
+                                ),
                             },
                             "Next": "Notify Success",
                             "Catch": [
@@ -1049,8 +1159,13 @@ def rule():
                             "Type": "Task",
                             "Resource": "arn:aws:states:::sns:publish",
                             "Parameters": {  # fails because the default is now JSONata
-                                "Message": "Batch job submitted through Step Functions succeeded",
-                                "TopicArn": "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM",
+                                "Message": (
+                                    "Batch job submitted through Step Functions"
+                                    " succeeded"
+                                ),
+                                "TopicArn": (
+                                    "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM"
+                                ),
                             },
                             "End": True,
                         },
@@ -1058,7 +1173,9 @@ def rule():
                             "Type": "Choice",
                             "Choices": [
                                 {
-                                    "Condition": "{% $states.input.type != 'Private' %}",
+                                    "Condition": (
+                                        "{% $states.input.type != 'Private' %}"
+                                    ),
                                     "Next": "Notify Failure",
                                 },
                             ],
@@ -1078,8 +1195,12 @@ def rule():
                             "Type": "Task",
                             "Resource": "arn:aws:states:::sns:publish",
                             "Parameters": {  # fails because the default is now JSONata
-                                "Message": "Batch job submitted through Step Functions failed",
-                                "TopicArn": "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM",
+                                "Message": (
+                                    "Batch job submitted through Step Functions failed"
+                                ),
+                                "TopicArn": (
+                                    "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM"
+                                ),
                             },
                             "End": True,
                         },
@@ -1088,7 +1209,7 @@ def rule():
             },
             [
                 ValidationError(
-                    ("'JSONata' was expected"),
+                    "'JSONata' was expected",
                     rule=StateMachineDefinition(),
                     validator="const",
                     schema_path=deque(
@@ -1112,9 +1233,8 @@ def rule():
                     ),
                 ),
                 ValidationError(
-                    (
-                        "Additional properties are not allowed ('Parameters' was unexpected)"
-                    ),
+                    "Additional properties are not allowed ('Parameters' was"
+                    " unexpected)",
                     rule=StateMachineDefinition(),
                     validator=None,
                     schema_path=deque(
@@ -1137,9 +1257,8 @@ def rule():
                     ),
                 ),
                 ValidationError(
-                    (
-                        "Additional properties are not allowed ('Parameters' was unexpected)"
-                    ),
+                    "Additional properties are not allowed ('Parameters' was"
+                    " unexpected)",
                     rule=StateMachineDefinition(),
                     validator=None,
                     schema_path=deque(
@@ -1162,7 +1281,7 @@ def rule():
                     ),
                 ),
                 ValidationError(
-                    ("'Condition' is a required property"),
+                    "'Condition' is a required property",
                     rule=StateMachineDefinition(),
                     validator="required",
                     schema_path=deque(
@@ -1185,7 +1304,7 @@ def rule():
                     path=deque(["Definition", "States", "Choices2", "Choices", 0]),
                 ),
                 ValidationError(
-                    ("Additional properties are not allowed ('And' was unexpected)"),
+                    "Additional properties are not allowed ('And' was unexpected)",
                     rule=StateMachineDefinition(),
                     validator="additionalProperties",
                     schema_path=deque(
@@ -1210,9 +1329,8 @@ def rule():
                     ),
                 ),
                 ValidationError(
-                    (
-                        "Additional properties are not allowed ('Parameters' was unexpected)"
-                    ),
+                    "Additional properties are not allowed ('Parameters' was"
+                    " unexpected)",
                     rule=StateMachineDefinition(),
                     validator=None,
                     schema_path=deque(

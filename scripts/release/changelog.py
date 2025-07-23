@@ -17,7 +17,6 @@ with open("CHANGELOG.md", "r") as f:
 output = []
 
 for line in text.splitlines():
-
     if line.startswith("### "):
         if args.version == line[3:].strip():
             found = True

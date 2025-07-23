@@ -303,7 +303,7 @@ class CloudFormationLintRule:
                         self.config[key] = int(value)
                     elif self.config_definition[key]["type"] == "list":
                         self.config[key] = []
-                        for l_value in value:
+                        for l_value in cfnlint.helpers.ensure_list(value):
                             if self.config_definition[key]["itemtype"] == "boolean":
                                 self.config[key].append(
                                     cfnlint.helpers.bool_compare(l_value, True)

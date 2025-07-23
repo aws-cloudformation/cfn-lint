@@ -11,7 +11,6 @@ from cfnlint.template import Template
 
 
 class TestConditionsWithRules(TestCase):
-
     def test_conditions_with_rules(self):
         template = decode_str(
             """

@@ -60,10 +60,25 @@ def rule():
                     # 255 "a" characters + quotes
                     '"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"',
                     # 255 "a" characters and 255 "b" characters
-                    '"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa""bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"',
+                    '"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"',
                     # 255 "a" characters and 255 "b" characters and
                     # 255 "c" characters with a space between b and c
-                    '"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa""bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" "ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"',  # noqa: E501
+                    (  # noqa: E501
+                        '"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"'
+                        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                        "aaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+                        "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+                        "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+                        "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+                        'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"'
+                        ' "cccccccccccccccccccccccccccccccccccccccccccccccccccccc"'
+                        "ccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+                        "ccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+                        "cccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+                        'ccccccccccccccccccccccccccccccccccc"'
+                    ),
                 ],
             },
             [],
@@ -83,7 +98,8 @@ def rule():
             },
             [
                 ValidationError(
-                    '\'"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"\' does not match \'^("[^"]{1,255}" *)*"[^"]{1,255}"$\'',  # noqa: E501
+                    "'\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"'"
+                    ' does not match \'^("[^"]{1,255}" *)*"[^"]{1,255}"$\'',  # noqa: E501
                     rule=RecordSet(),
                     path=deque(["ResourceRecords", 0]),
                     validator="pattern",
@@ -100,7 +116,8 @@ def rule():
                     ),
                 ),
                 ValidationError(
-                    '\'"a""bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"\' does not match \'^("[^"]{1,255}" *)*"[^"]{1,255}"$\'',  # noqa: E501
+                    '\'"a""bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"\''
+                    ' does not match \'^("[^"]{1,255}" *)*"[^"]{1,255}"$\'',  # noqa: E501
                     rule=RecordSet(),
                     path=deque(["ResourceRecords", 1]),
                     validator="pattern",
@@ -273,10 +290,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "'127.0.0.1' does not match "
-                        "'^(0|128)\\\\s([a-zA-Z0-9]+)\\\\s(\".+\")$'"
-                    ),
+                    "'127.0.0.1' does not match "
+                    "'^(0|128)\\\\s([a-zA-Z0-9]+)\\\\s(\".+\")$'",
                     rule=RecordSet(),
                     path=deque(["ResourceRecords", 0]),
                     validator="pattern",
@@ -293,10 +308,8 @@ def rule():
                     ),
                 ),
                 ValidationError(
-                    (
-                        "'0 issue amazon.com; henk' does not match "
-                        "'^(0|128)\\\\s([a-zA-Z0-9]+)\\\\s(\".+\")$'"
-                    ),
+                    "'0 issue amazon.com; henk' does not match "
+                    "'^(0|128)\\\\s([a-zA-Z0-9]+)\\\\s(\".+\")$'",
                     rule=RecordSet(),
                     path=deque(["ResourceRecords", 1]),
                     validator="pattern",
@@ -349,20 +362,16 @@ def rule():
                     context=deque(
                         [
                             ValidationError(
-                                (
-                                    "'foo√bar' does not match "
-                                    "'^[a-zA-Z0-9\\\\!\"\\\\#\\\\$\\\\%\\\\&\\\\\\'\\\\(\\\\)\\\\*\\\\+\\\\,-\\\\/\\\\:\\\\;\\\\<\\\\=\\\\>\\\\?\\\\@\\\\[\\\\\\\\\\\\]\\\\^\\\\_\\\\`\\\\{\\\\|\\\\}\\\\~\\\\.]+$'"
-                                ),  # noqa: E501
+                                "'foo√bar' does not match "
+                                "'^[a-zA-Z0-9\\\\!\"\\\\#\\\\$\\\\%\\\\&\\\\\\'\\\\(\\\\)\\\\*\\\\+\\\\,-\\\\/\\\\:\\\\;\\\\<\\\\=\\\\>\\\\?\\\\@\\\\[\\\\\\\\\\\\]\\\\^\\\\_\\\\`\\\\{\\\\|\\\\}\\\\~\\\\.]+$'",  # noqa: E501
                                 path=deque([]),
                                 validator="pattern",
                                 schema_path=deque([0, "pattern"]),
                                 rule=RecordSet(),
                             ),
                             ValidationError(
-                                (
-                                    "'foo√bar' does not match "
-                                    "'^.*\\\\.acm-validations\\\\.aws\\\\.?$'"
-                                ),
+                                "'foo√bar' does not match "
+                                "'^.*\\\\.acm-validations\\\\.aws\\\\.?$'",
                                 path=deque([]),
                                 validator="pattern",
                                 schema_path=deque([1, "pattern"]),
@@ -410,10 +419,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "'No valid domain name' is not valid "
-                        "under any of the given schemas"
-                    ),
+                    "'No valid domain name' is not valid "
+                    "under any of the given schemas",
                     rule=RecordSet(),
                     path=deque(["ResourceRecords", 0]),
                     validator="anyOf",
@@ -430,10 +437,8 @@ def rule():
                                 rule=RecordSet(),
                             ),
                             ValidationError(
-                                (
-                                    "'No valid domain name' does not match "
-                                    "'^.*\\\\.acm-validations\\\\.aws\\\\.?$'"
-                                ),
+                                "'No valid domain name' does not match "
+                                "'^.*\\\\.acm-validations\\\\.aws\\\\.?$'",
                                 path=deque([]),
                                 validator="pattern",
                                 schema_path=deque([1, "pattern"]),
@@ -475,10 +480,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "'127.0.0.1' does not match "
-                        "'^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{1-3}|65[0-4][0-9]{1-2}|655[0-2][0-9]|6553[0-5])\\\\s[a-zA-Z0-9\\\\!\"\\\\#\\\\$\\\\%\\\\&\\\\\\'\\\\(\\\\)\\\\*\\\\+\\\\,-\\\\/\\\\:\\\\;\\\\<\\\\=\\\\>\\\\?\\\\@\\\\[\\\\\\\\\\\\]\\\\^\\\\_\\\\`\\\\{\\\\|\\\\}\\\\~\\\\.]+$'"
-                    ),
+                    "'127.0.0.1' does not match "
+                    "'^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{1-3}|65[0-4][0-9]{1-2}|655[0-2][0-9]|6553[0-5])\\\\s[a-zA-Z0-9\\\\!\"\\\\#\\\\$\\\\%\\\\&\\\\\\'\\\\(\\\\)\\\\*\\\\+\\\\,-\\\\/\\\\:\\\\;\\\\<\\\\=\\\\>\\\\?\\\\@\\\\[\\\\\\\\\\\\]\\\\^\\\\_\\\\`\\\\{\\\\|\\\\}\\\\~\\\\.]+$'",
                     rule=RecordSet(),
                     path=deque(["ResourceRecords", 0]),
                     validator="pattern",
@@ -495,10 +498,8 @@ def rule():
                     ),
                 ),
                 ValidationError(
-                    (
-                        "'10 my domain' does not match "
-                        "'^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{1-3}|65[0-4][0-9]{1-2}|655[0-2][0-9]|6553[0-5])\\\\s[a-zA-Z0-9\\\\!\"\\\\#\\\\$\\\\%\\\\&\\\\\\'\\\\(\\\\)\\\\*\\\\+\\\\,-\\\\/\\\\:\\\\;\\\\<\\\\=\\\\>\\\\?\\\\@\\\\[\\\\\\\\\\\\]\\\\^\\\\_\\\\`\\\\{\\\\|\\\\}\\\\~\\\\.]+$'"
-                    ),
+                    "'10 my domain' does not match "
+                    "'^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{1-3}|65[0-4][0-9]{1-2}|655[0-2][0-9]|6553[0-5])\\\\s[a-zA-Z0-9\\\\!\"\\\\#\\\\$\\\\%\\\\&\\\\\\'\\\\(\\\\)\\\\*\\\\+\\\\,-\\\\/\\\\:\\\\;\\\\<\\\\=\\\\>\\\\?\\\\@\\\\[\\\\\\\\\\\\]\\\\^\\\\_\\\\`\\\\{\\\\|\\\\}\\\\~\\\\.]+$'",
                     rule=RecordSet(),
                     path=deque(["ResourceRecords", 1]),
                     validator="pattern",

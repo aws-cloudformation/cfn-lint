@@ -71,8 +71,7 @@ def template():
             [
                 ValidationError(
                     message=(
-                        "{'Fn::Sub': 'Bar'} is not one of "
-                        "['Foo'] when '' is resolved"
+                        "{'Fn::Sub': 'Bar'} is not one of ['Foo'] when '' is resolved"
                     ),
                     path=deque(["Fn::Sub"]),
                     validator="",

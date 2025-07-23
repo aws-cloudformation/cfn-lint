@@ -74,7 +74,6 @@ class SnapStartSupported(CfnLintKeyword):
     def validate(
         self, validator: Validator, _, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
-
         for scenario in validator.cfn.get_object_without_conditions(
             instance,
             ["Runtime", "SnapStart"],
@@ -103,10 +102,8 @@ class SnapStartSupported(CfnLintKeyword):
                     if region not in self.regions
                 ]
                 yield ValidationError(
-                    (
-                        "'SnapStart' enabled functions are not supported in "
-                        f"{unsupported_regions!r}"
-                    ),
+                    "'SnapStart' enabled functions are not supported in "
+                    f"{unsupported_regions!r}",
                     path=deque(["SnapStart", "ApplyOn"]),
                 )
 

@@ -74,15 +74,12 @@ def _check_metadata_directives(
 def _run_template_per_config(
     cfn: Template, config: ConfigMixIn, rules: Rules
 ) -> Iterator[Match]:
-
     LOGGER.info("Run scan of template %s", cfn.filename)
     if not set(config.regions).issubset(set(REGIONS)):
         unsupported_regions = list(set(config.regions).difference(set(REGIONS)))
         raise InvalidRegionException(
-            (
-                f"Regions {unsupported_regions!r} are unsupported. "
-                f"Supported regions are {REGIONS!r}"
-            ),
+            f"Regions {unsupported_regions!r} are unsupported. "
+            f"Supported regions are {REGIONS!r}",
             32,
         )
 
@@ -105,7 +102,6 @@ def _run_template_per_config(
 def _run_template(
     filename: str | None, template: Any, config: ConfigMixIn, rules: Rules
 ) -> Iterator[Match]:
-
     if not isinstance(template, dict):
         # pylint: disable=import-outside-toplevel
         from cfnlint.rules.errors import ParseError

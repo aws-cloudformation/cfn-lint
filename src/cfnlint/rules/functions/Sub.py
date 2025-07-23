@@ -82,7 +82,6 @@ class Sub(BaseFn):
     def fn_sub(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
-
         errs = list(super().validate(validator, s, instance, schema))
         if errs:
             yield from iter(errs)

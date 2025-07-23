@@ -31,10 +31,8 @@ def _message_errors(name, arn, errors, **kwargs):
             "Invalid Arn",
             "test",
             [
-                (
-                    "'test' does not match '^arn:(aws[a-zA-Z-]*)?:"
-                    "iam::\\\\d{12}:role/[a-zA-Z_0-9+=,.@\\\\-_/]+$'"
-                )
+                "'test' does not match '^arn:(aws[a-zA-Z-]*)?:"
+                "iam::\\\\d{12}:role/[a-zA-Z_0-9+=,.@\\\\-_/]+$'"
             ],
         ),
         (

@@ -27,9 +27,9 @@ def test_resource(name, instance, expected_ref):
     region = "us-east-1"
     resource = Resource(instance)
 
-    assert expected_ref == resource.ref(
-        region
-    ), f"{name!r} test got {resource.ref(region)}"
+    assert expected_ref == resource.ref(region), (
+        f"{name!r} test got {resource.ref(region)}"
+    )
 
 
 @pytest.mark.parametrize(
@@ -119,6 +119,6 @@ def test_nested_stacks(name, instance, filename, decode_results, expected_getatt
 
         resource = Resource(instance, filename)
 
-        assert expected_getatts == resource.get_atts(
-            region
-        ), f"{name!r} test got {resource.get_atts(region)}"
+        assert expected_getatts == resource.get_atts(region), (
+            f"{name!r} test got {resource.get_atts(region)}"
+        )

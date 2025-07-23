@@ -19,7 +19,9 @@ def template():
         "Parameters": {
             "ImageId": {
                 "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
-                "Default": "/aws/service/ami-amazon-linux-latest/amzn-ami-hvm-x86_64-gp2",  # noqa: E501
+                "Default": (  # noqa: E501
+                    "/aws/service/ami-amazon-linux-latest/amzn-ami-hvm-x86_64-gp2"
+                ),
             }
         },
         "Conditions": {
@@ -186,9 +188,9 @@ def test_get_value_from_path(name, instance, v_path, status, expected, validator
     assert len(results) == len(expected), f"Test {name!r} got {len(results)!r}"
     for result, exp in zip(results, expected):
         assert result[0] == exp[0], f"Test {name!r} got {result[0]!r}"
-        assert (
-            result[1].context.conditions.status == exp[1]
-        ), f"Test {name!r} got {result[1].context.conditions.status!r}"
-        assert (
-            result[1].context.path.path == exp[2]
-        ), f"Test {name!r} got {result[1].context.path.path!r}"
+        assert result[1].context.conditions.status == exp[1], (
+            f"Test {name!r} got {result[1].context.conditions.status!r}"
+        )
+        assert result[1].context.path.path == exp[2], (
+            f"Test {name!r} got {result[1].context.path.path!r}"
+        )

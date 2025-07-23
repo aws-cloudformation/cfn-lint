@@ -57,7 +57,7 @@ def template():
             {},
             [
                 ValidationError(
-                    ("'a' is not one of ['b']"),
+                    "'a' is not one of ['b']",
                     path=deque([]),
                     schema_path=deque([]),
                     path_override=deque([]),
@@ -71,7 +71,7 @@ def template():
             {"value_path": ["Parameters", "MyString", "AllowedValues", 0]},
             [
                 ValidationError(
-                    ("'a' is not one of ['b']"),
+                    "'a' is not one of ['b']",
                     path=deque([]),
                     schema_path=deque([]),
                     rule=ParameterEnum(),
@@ -112,7 +112,7 @@ def test_validate_enum(name, instance, enums, expected, rule, validator):
             {},
             [
                 ValidationError(
-                    ("'a' is not one of ['b'] (case-insensitive)"),
+                    "'a' is not one of ['b'] (case-insensitive)",
                     path=deque([]),
                     schema_path=deque([]),
                     path_override=deque([]),
@@ -126,7 +126,7 @@ def test_validate_enum(name, instance, enums, expected, rule, validator):
             {"value_path": ["Parameters", "MyString", "AllowedValues", 0]},
             [
                 ValidationError(
-                    ("'a' is not one of ['b'] (case-insensitive)"),
+                    "'a' is not one of ['b'] (case-insensitive)",
                     path=deque([]),
                     schema_path=deque([]),
                     rule=ParameterEnum(),

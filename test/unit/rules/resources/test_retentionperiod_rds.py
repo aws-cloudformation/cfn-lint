@@ -59,12 +59,10 @@ def path():
             },
             [
                 ValidationError(
-                    (
-                        "'BackupRetentionPeriod' is a required property (The "
-                        "default retention period will delete the data after "
-                        "a pre-defined time. Set an explicit values to avoid "
-                        "data loss on resource)"
-                    ),
+                    "'BackupRetentionPeriod' is a required property (The "
+                    "default retention period will delete the data after "
+                    "a pre-defined time. Set an explicit values to avoid "
+                    "data loss on resource)",
                     rule=RetentionPeriodOnResourceTypesWithAutoExpiringContent(),
                     schema_path=deque(["then", "required"]),
                     validator="required",

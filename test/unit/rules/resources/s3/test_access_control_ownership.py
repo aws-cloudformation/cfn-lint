@@ -47,10 +47,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "A bucket with 'AccessControl' set should also "
-                        "have at least one 'OwnershipControl' configured"
-                    ),
+                    "A bucket with 'AccessControl' set should also "
+                    "have at least one 'OwnershipControl' configured",
                     path=deque([]),
                     validator="required",
                     schema_path=deque(["then", "required"]),
@@ -65,10 +63,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "A bucket with 'AccessControl' set should also "
-                        "have at least one 'OwnershipControl' configured"
-                    ),
+                    "A bucket with 'AccessControl' set should also "
+                    "have at least one 'OwnershipControl' configured",
                     path=deque(["OwnershipControls"]),
                     validator="required",
                     schema_path=deque(
@@ -87,10 +83,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "A bucket with 'AccessControl' set should also "
-                        "have at least one 'OwnershipControl' configured"
-                    ),
+                    "A bucket with 'AccessControl' set should also "
+                    "have at least one 'OwnershipControl' configured",
                     path=deque(["OwnershipControls", "Rules"]),
                     validator="minItems",
                     schema_path=deque(

@@ -12,7 +12,7 @@ class NumberRange(CloudFormationLintRule):
     id = "W3034"
     shortdesc = "Check if parameter values are between min and max"
     description = (
-        "Check if parameter values value being between the minimum" " and maximum"
+        "Check if parameter values value being between the minimum and maximum"
     )
     source_url = "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#number-size"
     tags = ["resources", "property", "number", "size"]

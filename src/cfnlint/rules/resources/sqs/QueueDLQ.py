@@ -51,13 +51,13 @@ class QueueDLQ(CfnLintJsonSchema):
             validator=validator, instance=instance, path=deque(["FifoQueue"])
         ):
             yield (
-                fifo if bool_compare(queue_type, True) else standard
-            ), queue_type_validator
+                (fifo if bool_compare(queue_type, True) else standard),
+                queue_type_validator,
+            )
 
     def validate(
         self, validator: Validator, _: Any, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
-
         for queue_type, queue_type_validator in self._is_fifo_queue(
             validator=validator,
             instance=instance,
@@ -94,10 +94,8 @@ class QueueDLQ(CfnLintJsonSchema):
                 ):
                     if queue_type != dest_queue_type:
                         yield ValidationError(
-                            (
-                                f"Source queue type {queue_type!r} does not "
-                                f"match destination queue type {dest_queue_type!r}"
-                            ),
+                            f"Source queue type {queue_type!r} does not "
+                            f"match destination queue type {dest_queue_type!r}",
                             rule=self,
                             path=target_validator.context.path.path,
                         )

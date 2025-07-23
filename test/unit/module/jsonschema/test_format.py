@@ -13,11 +13,9 @@ class TestFormat(unittest.TestCase):
     def test_format_checker(self):
         self.assertEqual(
             str(cfn_format_checker),
-            (
-                "<FormatChecker checkers=['date', 'date-time',"
-                " 'email', 'ipv4', 'ipv4-network', 'ipv6', "
-                "'ipv6-network', 'regex', 'time']>"
-            ),
+            "<FormatChecker checkers=['date', 'date-time',"
+            " 'email', 'ipv4', 'ipv4-network', 'ipv6', "
+            "'ipv6-network', 'regex', 'time']>",
         )
 
         self.assertIsNone(cfn_format_checker.check("aws@amazon.com", "email"))

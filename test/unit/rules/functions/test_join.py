@@ -139,10 +139,8 @@ def rule():
             {"type": "string"},
             [
                 ValidationError(
-                    (
-                        "{'Fn::Split': ['-', {'Ref': 'MyResource'}]} "
-                        "is not of type 'string'"
-                    ),
+                    "{'Fn::Split': ['-', {'Ref': 'MyResource'}]} "
+                    "is not of type 'string'",
                     path=deque(["Fn::Join", 1, 0]),
                     schema_path=deque(
                         [

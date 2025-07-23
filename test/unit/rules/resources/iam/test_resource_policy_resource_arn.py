@@ -52,10 +52,8 @@ def rule():
             {"cfn_path": deque(["Resources", "AWS::S3::BucketPolicy", "Properties"])},
             [
                 ValidationError(
-                    (
-                        "'*' does not match "
-                        "'^arn:aws[A-Za-z\\\\-]*?:[^:]+:[^:]*(:(?:\\\\d{12}|\\\\*|aws)?:.+|)$'"
-                    ),
+                    "'*' does not match "
+                    "'^arn:aws[A-Za-z\\\\-]*?:[^:]+:[^:]*(:(?:\\\\d{12}|\\\\*|aws)?:.+|)$'",
                     rule=ResourcePolicyResourceArn(),
                 )
             ],
@@ -66,10 +64,8 @@ def rule():
             {"cfn_path": deque(["Resources", "AWS::S3::BucketPolicy", "Properties"])},
             [
                 ValidationError(
-                    (
-                        "'arn:aws*' does not match "
-                        "'^arn:aws[A-Za-z\\\\-]*?:[^:]+:[^:]*(:(?:\\\\d{12}|\\\\*|aws)?:.+|)$'"
-                    ),
+                    "'arn:aws*' does not match "
+                    "'^arn:aws[A-Za-z\\\\-]*?:[^:]+:[^:]*(:(?:\\\\d{12}|\\\\*|aws)?:.+|)$'",
                     rule=ResourcePolicyResourceArn(),
                 )
             ],
@@ -92,10 +88,8 @@ def rule():
             {"cfn_path": deque(["Resources", "AWS::SQS::QueuePolicy", "Properties"])},
             [
                 ValidationError(
-                    (
-                        "'arn:aws*' does not match "
-                        "'^(arn:aws[A-Za-z\\\\-]*?:[^:]+:[^:]*(:(?:\\\\d{12}|\\\\*|aws)?:.+|)|\\\\*)$'"
-                    ),
+                    "'arn:aws*' does not match "
+                    "'^(arn:aws[A-Za-z\\\\-]*?:[^:]+:[^:]*(:(?:\\\\d{12}|\\\\*|aws)?:.+|)|\\\\*)$'",
                     rule=ResourcePolicyResourceArn(),
                 )
             ],

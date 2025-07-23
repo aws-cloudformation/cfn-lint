@@ -51,7 +51,7 @@ def rule():
             },
             [
                 ValidationError(
-                    ("1 is less than the minimum of 90"),
+                    "1 is less than the minimum of 90",
                     path=deque(["Days"]),
                     validator="minimum",
                     schema_path=deque(["minimum"]),
@@ -66,7 +66,7 @@ def rule():
             },
             [
                 ValidationError(
-                    ("99999 is greater than the maximum of 730"),
+                    "99999 is greater than the maximum of 730",
                     path=deque(["Days"]),
                     validator="maximum",
                     schema_path=deque(["maximum"]),

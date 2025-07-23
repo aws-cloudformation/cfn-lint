@@ -53,3 +53,27 @@ def test_pattern_exceptions(rule, validator):
 
     assert len(list(rule.pattern(validator, "foo", "Another AWS::Instance", {}))) == 1
     assert len(list(rule.pattern(validator, "foo", "AWS::Dummy::Resource", {}))) == 0
+
+
+def test_is_exception_method(rule, validator):
+    """Test the _is_exception method directly"""
+    rule.configure({"exceptions": ["AWS::", "Test::"]})
+
+    # Test with allow_exceptions=True (default behavior)
+    validator_with_exceptions = validator.evolve(
+        context=validator.context.evolve(allow_exceptions=True)
+    )
+
+    assert rule._is_exception(validator_with_exceptions, "AWS::EC2::Instance")
+    assert rule._is_exception(validator_with_exceptions, "Test::Resource")
+    assert not rule._is_exception(validator_with_exceptions, "Other::Resource")
+
+    # Test with allow_exceptions=False
+    validator_no_exceptions = validator.evolve(
+        context=validator.context.evolve(allow_exceptions=False)
+    )
+
+    # All should return False when allow_exceptions=False, regardless of pattern match
+    assert not rule._is_exception(validator_no_exceptions, "AWS::EC2::Instance")
+    assert not rule._is_exception(validator_no_exceptions, "Test::Resource")
+    assert not rule._is_exception(validator_no_exceptions, "Other::Resource")

@@ -86,7 +86,6 @@ class _Assertions:
             self._assertions.append(_Assertion(assert_, all_conditions))
 
     def build_cnf(self, params: dict[str, Symbol]) -> BooleanFunction | Symbol | None:
-
         assertions = []
         for assertion in self._assertions:
             assertions.append(assertion.build_cnf(params))
@@ -99,7 +98,6 @@ class _Assertions:
 
     @property
     def equals(self) -> list[Equal]:
-
         results = []
         for assertion in self._assertions:
             results.extend(assertion.equals)
@@ -107,7 +105,6 @@ class _Assertions:
 
 
 class Rule:
-
     def __init__(self, rule: _RULE, all_conditions: dict[str, dict]) -> None:
         self._condition: _Assertion | None = None
         self._assertions: _Assertions | None = None
@@ -137,7 +134,6 @@ class Rule:
         return result
 
     def build_cnf(self, params: dict[str, Symbol]) -> BooleanFunction | Symbol | None:
-
         if self._assertions:
             if self._condition:
                 return Implies(

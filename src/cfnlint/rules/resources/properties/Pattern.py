@@ -39,7 +39,9 @@ class Pattern(CloudFormationLintRule):
         }
         self.configure()
 
-    def _is_exception(self, instance: str) -> bool:
+    def _is_exception(self, validator: Validator, instance: str) -> bool:
+        if not validator.context.allow_exceptions:
+            return False
         for exception in self.config["exceptions"]:
             if re.match(exception, instance):
                 return True
@@ -66,5 +68,5 @@ class Pattern(CloudFormationLintRule):
                 )
             return
         for err in pattern(validator, patrn, instance, schema):
-            if not self._is_exception(instance):
+            if not self._is_exception(validator, instance):
                 yield err

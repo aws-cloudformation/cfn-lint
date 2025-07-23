@@ -14,7 +14,6 @@ from cfnlint.rules.jsonschema import CfnLintJsonSchema, SchemaDetails
 
 
 class FunctionEnvironmentKeys(CfnLintJsonSchema):
-
     id = "E3663"
     shortdesc = "Validate Lambda environment variable names aren't reserved"
     description = (

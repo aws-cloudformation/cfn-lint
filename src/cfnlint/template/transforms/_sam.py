@@ -137,7 +137,6 @@ class Transform:
                 Transform._update_to_s3_uri("DefinitionUri", resource_dict)
 
     def _find_and_replace(self, item, parameters):
-
         k, v = is_function(item)
         if k == "Ref":
             if v in parameters:

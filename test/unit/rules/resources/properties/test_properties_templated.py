@@ -53,7 +53,7 @@ def path():
             [],
             [
                 ValidationError(
-                    ("This code may only work with 'package' cli command"),
+                    "This code may only work with 'package' cli command",
                 )
             ],
         ),

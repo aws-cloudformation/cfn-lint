@@ -94,9 +94,9 @@ def test_parameter(name, instance, expected_type, expected_ref_value):
     parameter = Parameter(instance)
 
     assert expected_type == parameter.type
-    assert expected_ref_value == list(
-        parameter.ref_value(context)
-    ), f"{name!r} test got {list(parameter.ref_value(context))}"
+    assert expected_ref_value == list(parameter.ref_value(context)), (
+        f"{name!r} test got {list(parameter.ref_value(context))}"
+    )
     assert {} == parameter.ref()
 
 

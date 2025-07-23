@@ -11,7 +11,6 @@ from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
 
 class Configuration(BaseJsonSchema):
-
     id = "E0100"
     shortdesc = "Validate deployment file configuration"
     description = (

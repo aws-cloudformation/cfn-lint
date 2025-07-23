@@ -58,7 +58,7 @@ def rule():
             },
             [
                 ValidationError(
-                    ("'aurora' is not one of ['io1', 'io2', 'gp3']"),
+                    "'aurora' is not one of ['io1', 'io2', 'gp3']",
                     rule=DbClusterMultiAz(),
                     path=deque(["StorageType"]),
                     validator="enum",
@@ -74,28 +74,28 @@ def rule():
             },
             [
                 ValidationError(
-                    ("'AllocatedStorage' is a required property"),
+                    "'AllocatedStorage' is a required property",
                     rule=DbClusterMultiAz(),
                     path=deque([]),
                     validator="required",
                     schema_path=deque(["then", "required"]),
                 ),
                 ValidationError(
-                    ("'DBClusterInstanceClass' is a required property"),
+                    "'DBClusterInstanceClass' is a required property",
                     rule=DbClusterMultiAz(),
                     path=deque([]),
                     validator="required",
                     schema_path=deque(["then", "required"]),
                 ),
                 ValidationError(
-                    ("'Iops' is a required property"),
+                    "'Iops' is a required property",
                     rule=DbClusterMultiAz(),
                     path=deque([]),
                     validator="required",
                     schema_path=deque(["then", "required"]),
                 ),
                 ValidationError(
-                    ("'StorageType' is a required property"),
+                    "'StorageType' is a required property",
                     rule=DbClusterMultiAz(),
                     path=deque([]),
                     validator="required",
@@ -114,10 +114,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "Additional properties are not allowed 'Domain' "
-                        "when creating Multi-AZ cluster"
-                    ),
+                    "Additional properties are not allowed 'Domain' "
+                    "when creating Multi-AZ cluster",
                     rule=DbClusterMultiAz(),
                     path=deque(["Domain"]),
                     validator=None,

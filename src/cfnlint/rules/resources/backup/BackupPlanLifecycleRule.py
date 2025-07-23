@@ -47,11 +47,9 @@ class BackupPlanLifecycleRule(CfnLintKeyword):
             return
         if delete_after_days - move_to_cold_storage_after_days < 90:
             yield ValidationError(
-                (
-                    f"DeleteAfterDays {delete_after_days!r} must be at least "
-                    "90 days after MoveToColdStorageAfterDays "
-                    f"{move_to_cold_storage_after_days}"
-                ),
+                f"DeleteAfterDays {delete_after_days!r} must be at least "
+                "90 days after MoveToColdStorageAfterDays "
+                f"{move_to_cold_storage_after_days}",
                 path=deque(["DeleteAfterDays"]),
                 rule=self,
             )
