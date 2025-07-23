@@ -47,11 +47,9 @@ def template():
             {"format": "AWS::EC2::Image.Id"},
             [
                 ValidationError(
-                    (
-                        "{'Ref': 'MyVpc'} with formats "
-                        "['AWS::EC2::VPC.Id'] does not match "
-                        "destination format of 'AWS::EC2::Image.Id'"
-                    ),
+                    "{'Ref': 'MyVpc'} with formats "
+                    "['AWS::EC2::VPC.Id'] does not match "
+                    "destination format of 'AWS::EC2::Image.Id'",
                     rule=RefFormat(),
                 )
             ],
@@ -62,10 +60,8 @@ def template():
             {"format": "AWS::EC2::Image.Id"},
             [
                 ValidationError(
-                    (
-                        "{'Ref': 'MyBucket'} does not match "
-                        "destination format of 'AWS::EC2::Image.Id'"
-                    ),
+                    "{'Ref': 'MyBucket'} does not match "
+                    "destination format of 'AWS::EC2::Image.Id'",
                     rule=RefFormat(),
                 )
             ],

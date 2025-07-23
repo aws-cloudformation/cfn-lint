@@ -36,7 +36,7 @@ def rule():
             },
             [
                 ValidationError(
-                    ("'Certificates' is a required property"),
+                    "'Certificates' is a required property",
                     rule=ListenerCertificate(),
                     path=deque([]),
                     validator="required",

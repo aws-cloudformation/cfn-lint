@@ -36,9 +36,7 @@ class ServerlessTransform(CfnLintKeyword):
 
         if instance.startswith("AWS::Serverless::"):
             yield ValidationError(
-                (
-                    f"{instance!r} type used without the "
-                    f"serverless transform {TRANSFORM_SAM!r}"
-                ),
+                f"{instance!r} type used without the "
+                f"serverless transform {TRANSFORM_SAM!r}",
                 rule=self,
             )

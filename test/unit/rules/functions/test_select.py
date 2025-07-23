@@ -144,10 +144,8 @@ def template():
             {"type": "string"},
             [
                 ValidationError(
-                    (
-                        "{'Fn::Select': [1, ['foo', {'foo': 'bar'}]]} is not of type "
-                        "'string' when 'Fn::Select' is resolved"
-                    ),
+                    "{'Fn::Select': [1, ['foo', {'foo': 'bar'}]]} is not of type "
+                    "'string' when 'Fn::Select' is resolved",
                     path=deque(["Fn::Select"]),
                     schema_path=deque(["type"]),
                     validator="fn_select",

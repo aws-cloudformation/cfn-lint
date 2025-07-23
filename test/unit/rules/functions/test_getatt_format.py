@@ -78,10 +78,8 @@ def template():
             {"format": "AWS::EC2::VPC.Id"},
             [
                 ValidationError(
-                    (
-                        "{'Fn::GetAtt': ['MyBucket', 'Arn']} "
-                        "does not match destination format of 'AWS::EC2::VPC.Id'"
-                    ),
+                    "{'Fn::GetAtt': ['MyBucket', 'Arn']} "
+                    "does not match destination format of 'AWS::EC2::VPC.Id'",
                     rule=GetAttFormat(),
                 )
             ],
@@ -92,11 +90,9 @@ def template():
             {"format": "AWS::EC2::VPC.Id"},
             [
                 ValidationError(
-                    (
-                        "{'Fn::GetAtt': ['MyBucket', 'WebsiteURL']} "
-                        "with formats ['uri'] does not match "
-                        "destination format of 'AWS::EC2::VPC.Id'"
-                    ),
+                    "{'Fn::GetAtt': ['MyBucket', 'WebsiteURL']} "
+                    "with formats ['uri'] does not match "
+                    "destination format of 'AWS::EC2::VPC.Id'",
                     rule=GetAttFormat(),
                 )
             ],

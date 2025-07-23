@@ -74,10 +74,8 @@ def rule():
             "email.*.example.com",
             [
                 ValidationError(
-                    (
-                        "'email.*.example.com' does not match "
-                        "'^(?!.*(?:\\\\.\\\\*\\\\.)).*'"
-                    ),
+                    "'email.*.example.com' does not match "
+                    "'^(?!.*(?:\\\\.\\\\*\\\\.)).*'",
                     rule=Aliases(),
                     path=deque([]),
                     validator="pattern",
@@ -89,10 +87,8 @@ def rule():
             "WWW.EXAMPLE.COM",
             [
                 ValidationError(
-                    (
-                        "'WWW.EXAMPLE.COM' does not match "
-                        "'^(?:[a-z0-9\\\\*](?:[a-z0-9-]{0,61}[a-z0-9])?\\\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$'"
-                    ),
+                    "'WWW.EXAMPLE.COM' does not match "
+                    "'^(?:[a-z0-9\\\\*](?:[a-z0-9-]{0,61}[a-z0-9])?\\\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$'",
                     rule=Aliases(),
                     path=deque([]),
                     validator="pattern",
@@ -104,10 +100,8 @@ def rule():
             "-example.com",
             [
                 ValidationError(
-                    (
-                        "'-example.com' does not match "
-                        "'^(?:[a-z0-9\\\\*](?:[a-z0-9-]{0,61}[a-z0-9])?\\\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$'"
-                    ),
+                    "'-example.com' does not match "
+                    "'^(?:[a-z0-9\\\\*](?:[a-z0-9-]{0,61}[a-z0-9])?\\\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$'",
                     rule=Aliases(),
                     path=deque([]),
                     validator="pattern",
@@ -119,10 +113,8 @@ def rule():
             "example.c",
             [
                 ValidationError(
-                    (
-                        "'example.c' does not match "
-                        "'^(?:[a-z0-9\\\\*](?:[a-z0-9-]{0,61}[a-z0-9])?\\\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$'"
-                    ),
+                    "'example.c' does not match "
+                    "'^(?:[a-z0-9\\\\*](?:[a-z0-9-]{0,61}[a-z0-9])?\\\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$'",
                     rule=Aliases(),
                     path=deque([]),
                     validator="pattern",
@@ -134,10 +126,8 @@ def rule():
             "www.example.com ",
             [
                 ValidationError(
-                    (
-                        "'www.example.com ' does not match "
-                        "'^(?:[a-z0-9\\\\*](?:[a-z0-9-]{0,61}[a-z0-9])?\\\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$'"
-                    ),
+                    "'www.example.com ' does not match "
+                    "'^(?:[a-z0-9\\\\*](?:[a-z0-9-]{0,61}[a-z0-9])?\\\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$'",
                     rule=Aliases(),
                     path=deque([]),
                     validator="pattern",
@@ -149,10 +139,8 @@ def rule():
             "www.-example.com",
             [
                 ValidationError(
-                    (
-                        "'www.-example.com' does not match "
-                        "'^(?:[a-z0-9\\\\*](?:[a-z0-9-]{0,61}[a-z0-9])?\\\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$'"
-                    ),
+                    "'www.-example.com' does not match "
+                    "'^(?:[a-z0-9\\\\*](?:[a-z0-9-]{0,61}[a-z0-9])?\\\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$'",
                     rule=Aliases(),
                     path=deque([]),
                     validator="pattern",
@@ -164,10 +152,8 @@ def rule():
             "-www.example.com",
             [
                 ValidationError(
-                    (
-                        "'-www.example.com' does not match "
-                        "'^(?:[a-z0-9\\\\*](?:[a-z0-9-]{0,61}[a-z0-9])?\\\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$'"
-                    ),
+                    "'-www.example.com' does not match "
+                    "'^(?:[a-z0-9\\\\*](?:[a-z0-9-]{0,61}[a-z0-9])?\\\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$'",
                     rule=Aliases(),
                     path=deque([]),
                     validator="pattern",
@@ -179,10 +165,8 @@ def rule():
             "www.example.com-",
             [
                 ValidationError(
-                    (
-                        "'www.example.com-' does not match "
-                        "'^(?:[a-z0-9\\\\*](?:[a-z0-9-]{0,61}[a-z0-9])?\\\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$'"
-                    ),
+                    "'www.example.com-' does not match "
+                    "'^(?:[a-z0-9\\\\*](?:[a-z0-9-]{0,61}[a-z0-9])?\\\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$'",
                     rule=Aliases(),
                     path=deque([]),
                     validator="pattern",

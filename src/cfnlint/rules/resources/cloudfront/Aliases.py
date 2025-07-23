@@ -34,7 +34,6 @@ class Aliases(CfnLintKeyword):
     def validate(
         self, validator: Validator, _, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
-
         if isinstance(instance, str):
             if re.match(REGEX_DYN_REF, instance):
                 return
@@ -51,7 +50,9 @@ class Aliases(CfnLintKeyword):
                 instance=instance,
                 schema={
                     # ruff: noqa: E501
-                    "pattern": "^(?:[a-z0-9\\*](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$",
+                    "pattern": (
+                        "^(?:[a-z0-9\\*](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$"
+                    ),
                 },
             ):
                 err.rule = self

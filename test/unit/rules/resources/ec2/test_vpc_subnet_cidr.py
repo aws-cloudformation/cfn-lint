@@ -169,10 +169,8 @@ _template = {
             {"path": ["Resources", "Vpc", "Properties"]},
             [
                 ValidationError(
-                    (
-                        "'2001:db8::/32' is specified on a VPC that "
-                        "has no ipv6 networks defined"
-                    ),
+                    "'2001:db8::/32' is specified on a VPC that "
+                    "has no ipv6 networks defined",
                     rule=VpcSubnetCidr(),
                     path_override=deque(
                         ["Resources", "VpcV4Subnet1", "Properties", "Ipv6CidrBlock"]
@@ -343,6 +341,6 @@ _template = {
 def test_validate(name, instance, expected, rule, validator):
     errs = list(rule.validate(validator, "", instance, {}))
 
-    assert (
-        errs == expected
-    ), f"Expected test {name!r} to have {expected!r} but got {errs!r}"
+    assert errs == expected, (
+        f"Expected test {name!r} to have {expected!r} but got {errs!r}"
+    )

@@ -43,7 +43,6 @@ class GetAtt(BaseFn):
         s: Any,
         paths: Sequence[Any],
     ) -> ValidationResult:
-
         for resource_name, resource_name_validator, _ in validator.resolve_value(
             value[0]
         ):
@@ -76,11 +75,9 @@ class GetAtt(BaseFn):
                             ].get_atts(region)
                         ):
                             err = ValidationError(
-                                (
-                                    f"{attribute_name!r} is not one of "
-                                    f"{validator.context.resources[resource_name].get_atts(region)!r}"
-                                    f" in {regions!r}"
-                                ),
+                                f"{attribute_name!r} is not one of "
+                                f"{validator.context.resources[resource_name].get_atts(region)!r}"
+                                f" in {regions!r}",
                                 validator=self.fn.py,
                                 path=deque([self.fn.name, 1]),
                             )
@@ -129,7 +126,7 @@ class GetAtt(BaseFn):
 
                         reprs = ", ".join(repr(type) for type in types)
                         yield ValidationError(
-                            (f"{instance!r} is not of type {reprs}"),
+                            f"{instance!r} is not of type {reprs}",
                             validator=self.fn.py,
                             path=deque([self.fn.name]),
                             schema_path=deque(["type"]),

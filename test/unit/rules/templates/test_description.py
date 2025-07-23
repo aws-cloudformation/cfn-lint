@@ -30,7 +30,7 @@ def rule():
             {},
             [
                 ValidationError(
-                    ("{} is not of type 'string'"),
+                    "{} is not of type 'string'",
                     rule=Description(),
                     schema_path=deque(["type"]),
                     validator="type",

@@ -4,7 +4,8 @@ SPDX-License-Identifier: MIT-0
 """
 
 import cfnlint.data.schemas.other.template
-from cfnlint.rules import CfnLintJsonSchema, SchemaDetails
+from cfnlint.rules import SchemaDetails
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 
 
 class Description(CfnLintJsonSchema):

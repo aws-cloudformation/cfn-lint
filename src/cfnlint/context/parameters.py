@@ -11,6 +11,5 @@ from typing import Any
 
 @dataclass
 class ParameterSet:
-
     source: str | None = field(default=None)
     parameters: dict[str, Any] = field(default_factory=dict)

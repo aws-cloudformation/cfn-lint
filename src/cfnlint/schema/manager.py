@@ -398,7 +398,6 @@ class ProviderSchemaManager:
             LOGGER.info("Issuing updating schemas for %s: %s", region, e)
 
     def patch_schemas(self) -> None:
-
         self._patch_region_schemas(self._region_primary.name)
         # pylint: disable=not-context-manager
         with multiprocessing.Pool() as pool:

@@ -27,10 +27,8 @@ def rule():
             {},
             [
                 ValidationError(
-                    (
-                        "Fn::Length is not supported without "
-                        "'AWS::LanguageExtensions' transform"
-                    ),
+                    "Fn::Length is not supported without "
+                    "'AWS::LanguageExtensions' transform",
                     path=deque([]),
                     schema_path=deque([]),
                     validator="fn_length",

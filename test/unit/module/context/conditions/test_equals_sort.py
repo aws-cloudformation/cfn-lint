@@ -100,6 +100,6 @@ from cfnlint.context.conditions._equals import _equals_cmp_key
     ],
 )
 def test_sorted(name, instance, expected):
-    assert expected == sorted(
-        instance, key=_equals_cmp_key
-    ), f"{name} got {sorted(instance, key=_equals_cmp_key)}"
+    assert expected == sorted(instance, key=_equals_cmp_key), (
+        f"{name} got {sorted(instance, key=_equals_cmp_key)}"
+    )

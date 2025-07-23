@@ -34,7 +34,7 @@ def rule():
             },
             [
                 ValidationError(
-                    ("'SSLCertificateId' is a required property"),
+                    "'SSLCertificateId' is a required property",
                     rule=Certificate(),
                     path=deque([]),
                     validator="required",

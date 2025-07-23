@@ -26,7 +26,6 @@ class DynamicReferenceSecretsManagerArn(CloudFormationLintRule):
     tags = ["functions", "dynamic reference"]
 
     def validate(self, validator: Validator, s: Any, instance: Any, schema: Any):
-
         if "Fn::Sub" == validator.context.path.path[-1]:
             if not re.match(r"^(\\\")?{{resolve:secretsmanager:.*}}(\\\")?$", instance):
                 return
@@ -52,10 +51,8 @@ class DynamicReferenceSecretsManagerArn(CloudFormationLintRule):
         for field in fields:
             if any(field == p for p in validator.context.path.path):
                 yield ValidationError(
-                    (
-                        f"Dynamic reference {instance!r} to secrets manager when "
-                        f"the field {field!r} expects the ARN to the secret and "
-                        "not the secret"
-                    ),
+                    f"Dynamic reference {instance!r} to secrets manager when "
+                    f"the field {field!r} expects the ARN to the secret and "
+                    "not the secret",
                     rule=self,
                 )

@@ -52,10 +52,8 @@ class RecordSetName(CfnLintKeyword):
 
                 if name != hz_name and not name.endswith(f".{hz_name}"):
                     yield ValidationError(
-                        (
-                            f"{props.get('Name')!r} must be a subdomain "
-                            f"of or equal to {props.get('HostedZoneName')!r}"
-                        ),
+                        f"{props.get('Name')!r} must be a subdomain "
+                        f"of or equal to {props.get('HostedZoneName')!r}",
                         path=deque(["Name"]),
                         instance=props.get("Name"),
                     )

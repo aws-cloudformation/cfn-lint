@@ -54,10 +54,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "DeleteAfterDays 10 must be at least 90 "
-                        "days after MoveToColdStorageAfterDays 30"
-                    ),
+                    "DeleteAfterDays 10 must be at least 90 "
+                    "days after MoveToColdStorageAfterDays 30",
                     rule=BackupPlanLifecycleRule(),
                     path=deque(["DeleteAfterDays"]),
                 )

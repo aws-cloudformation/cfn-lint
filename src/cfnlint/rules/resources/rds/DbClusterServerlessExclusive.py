@@ -32,7 +32,6 @@ class DbClusterServerlessExclusive(CfnLintJsonSchema):
         )
 
     def message(self, instance: Any, err: ValidationError) -> str:
-
         # validator None means the schema is falsy
         if err.validator is None:
             if instance.get("EngineMode") in ["serverless", "provisioned"]:
@@ -41,6 +40,6 @@ class DbClusterServerlessExclusive(CfnLintJsonSchema):
                     f" doesn't allow additional properties {err.path[0]!r}"
                 )
             else:
-                return "Additional properties are not allowed " f"({err.path[0]!r})"
+                return f"Additional properties are not allowed ({err.path[0]!r})"
 
         return err.message

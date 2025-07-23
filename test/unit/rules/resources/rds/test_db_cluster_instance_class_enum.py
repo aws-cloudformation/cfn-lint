@@ -76,10 +76,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "'a' is not one of ['db.m5d.12xlarge', "
-                        "'db.m5d.16xlarge'] in 'us-east-1'"
-                    ),
+                    "'a' is not one of ['db.m5d.12xlarge', "
+                    "'db.m5d.16xlarge'] in 'us-east-1'",
                     rule=DbClusterInstanceClassEnum(),
                     path=deque(["DBClusterInstanceClass"]),
                     validator="enum",

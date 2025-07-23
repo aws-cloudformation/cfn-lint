@@ -44,6 +44,6 @@ class Ebs(CfnLintJsonSchema):
                 )
 
         return (
-            f"'Iops' is a required property when 'VolumeType' has a value "
+            "'Iops' is a required property when 'VolumeType' has a value "
             f"of {instance.get('VolumeType')!r}"
         )

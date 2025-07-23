@@ -28,21 +28,19 @@ def rule():
             {"AWS_REGION": "Bar"},
             [
                 ValidationError(
-                    (
-                        "'AWS_REGION' is a reserved variable name, one of "
-                        "['_HANDLER', '_X_AMZN_TRACE_ID', 'AWS_DEFAULT_REGION', "
-                        "'AWS_REGION', 'AWS_EXECUTION_ENV', "
-                        "'AWS_LAMBDA_FUNCTION_NAME', "
-                        "'AWS_LAMBDA_FUNCTION_MEMORY_SIZE', "
-                        "'AWS_LAMBDA_FUNCTION_VERSION', "
-                        "'AWS_LAMBDA_INITIALIZATION_TYPE', "
-                        "'AWS_LAMBDA_LOG_GROUP_NAME', "
-                        "'AWS_LAMBDA_LOG_STREAM_NAME', "
-                        "'AWS_ACCESS_KEY', 'AWS_ACCESS_KEY_ID', "
-                        "'AWS_SECRET_ACCESS_KEY', "
-                        "'AWS_SESSION_TOKEN', 'AWS_LAMBDA_RUNTIME_API', "
-                        "'LAMBDA_TASK_ROOT', 'LAMBDA_RUNTIME_DIR']"
-                    ),
+                    "'AWS_REGION' is a reserved variable name, one of "
+                    "['_HANDLER', '_X_AMZN_TRACE_ID', 'AWS_DEFAULT_REGION', "
+                    "'AWS_REGION', 'AWS_EXECUTION_ENV', "
+                    "'AWS_LAMBDA_FUNCTION_NAME', "
+                    "'AWS_LAMBDA_FUNCTION_MEMORY_SIZE', "
+                    "'AWS_LAMBDA_FUNCTION_VERSION', "
+                    "'AWS_LAMBDA_INITIALIZATION_TYPE', "
+                    "'AWS_LAMBDA_LOG_GROUP_NAME', "
+                    "'AWS_LAMBDA_LOG_STREAM_NAME', "
+                    "'AWS_ACCESS_KEY', 'AWS_ACCESS_KEY_ID', "
+                    "'AWS_SECRET_ACCESS_KEY', "
+                    "'AWS_SESSION_TOKEN', 'AWS_LAMBDA_RUNTIME_API', "
+                    "'LAMBDA_TASK_ROOT', 'LAMBDA_RUNTIME_DIR']",
                     schema_path=deque(["propertyNames", "not"]),
                     path=deque(["AWS_REGION"]),
                     rule=FunctionEnvironmentKeys(),
@@ -59,42 +57,38 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "'AWS_REGION' is a reserved variable name, one of "
-                        "['_HANDLER', '_X_AMZN_TRACE_ID', 'AWS_DEFAULT_REGION', "
-                        "'AWS_REGION', 'AWS_EXECUTION_ENV', "
-                        "'AWS_LAMBDA_FUNCTION_NAME', "
-                        "'AWS_LAMBDA_FUNCTION_MEMORY_SIZE', "
-                        "'AWS_LAMBDA_FUNCTION_VERSION', "
-                        "'AWS_LAMBDA_INITIALIZATION_TYPE', "
-                        "'AWS_LAMBDA_LOG_GROUP_NAME', "
-                        "'AWS_LAMBDA_LOG_STREAM_NAME', "
-                        "'AWS_ACCESS_KEY', 'AWS_ACCESS_KEY_ID', "
-                        "'AWS_SECRET_ACCESS_KEY', "
-                        "'AWS_SESSION_TOKEN', 'AWS_LAMBDA_RUNTIME_API', "
-                        "'LAMBDA_TASK_ROOT', 'LAMBDA_RUNTIME_DIR']"
-                    ),
+                    "'AWS_REGION' is a reserved variable name, one of "
+                    "['_HANDLER', '_X_AMZN_TRACE_ID', 'AWS_DEFAULT_REGION', "
+                    "'AWS_REGION', 'AWS_EXECUTION_ENV', "
+                    "'AWS_LAMBDA_FUNCTION_NAME', "
+                    "'AWS_LAMBDA_FUNCTION_MEMORY_SIZE', "
+                    "'AWS_LAMBDA_FUNCTION_VERSION', "
+                    "'AWS_LAMBDA_INITIALIZATION_TYPE', "
+                    "'AWS_LAMBDA_LOG_GROUP_NAME', "
+                    "'AWS_LAMBDA_LOG_STREAM_NAME', "
+                    "'AWS_ACCESS_KEY', 'AWS_ACCESS_KEY_ID', "
+                    "'AWS_SECRET_ACCESS_KEY', "
+                    "'AWS_SESSION_TOKEN', 'AWS_LAMBDA_RUNTIME_API', "
+                    "'LAMBDA_TASK_ROOT', 'LAMBDA_RUNTIME_DIR']",
                     schema_path=deque(["propertyNames", "not"]),
                     path=deque(["AWS_REGION"]),
                     rule=FunctionEnvironmentKeys(),
                     validator="not",
                 ),
                 ValidationError(
-                    (
-                        "'AWS_ACCESS_KEY' is a reserved variable name, one of "
-                        "['_HANDLER', '_X_AMZN_TRACE_ID', 'AWS_DEFAULT_REGION', "
-                        "'AWS_REGION', 'AWS_EXECUTION_ENV', "
-                        "'AWS_LAMBDA_FUNCTION_NAME', "
-                        "'AWS_LAMBDA_FUNCTION_MEMORY_SIZE', "
-                        "'AWS_LAMBDA_FUNCTION_VERSION', "
-                        "'AWS_LAMBDA_INITIALIZATION_TYPE', "
-                        "'AWS_LAMBDA_LOG_GROUP_NAME', "
-                        "'AWS_LAMBDA_LOG_STREAM_NAME', "
-                        "'AWS_ACCESS_KEY', 'AWS_ACCESS_KEY_ID', "
-                        "'AWS_SECRET_ACCESS_KEY', "
-                        "'AWS_SESSION_TOKEN', 'AWS_LAMBDA_RUNTIME_API', "
-                        "'LAMBDA_TASK_ROOT', 'LAMBDA_RUNTIME_DIR']"
-                    ),
+                    "'AWS_ACCESS_KEY' is a reserved variable name, one of "
+                    "['_HANDLER', '_X_AMZN_TRACE_ID', 'AWS_DEFAULT_REGION', "
+                    "'AWS_REGION', 'AWS_EXECUTION_ENV', "
+                    "'AWS_LAMBDA_FUNCTION_NAME', "
+                    "'AWS_LAMBDA_FUNCTION_MEMORY_SIZE', "
+                    "'AWS_LAMBDA_FUNCTION_VERSION', "
+                    "'AWS_LAMBDA_INITIALIZATION_TYPE', "
+                    "'AWS_LAMBDA_LOG_GROUP_NAME', "
+                    "'AWS_LAMBDA_LOG_STREAM_NAME', "
+                    "'AWS_ACCESS_KEY', 'AWS_ACCESS_KEY_ID', "
+                    "'AWS_SECRET_ACCESS_KEY', "
+                    "'AWS_SESSION_TOKEN', 'AWS_LAMBDA_RUNTIME_API', "
+                    "'LAMBDA_TASK_ROOT', 'LAMBDA_RUNTIME_DIR']",
                     schema_path=deque(["propertyNames", "not"]),
                     path=deque(["AWS_ACCESS_KEY"]),
                     rule=FunctionEnvironmentKeys(),

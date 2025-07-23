@@ -66,7 +66,6 @@ def _create_cidr_patch(type_name: str, ref: str, resolver: RefResolver, format: 
 
 
 def _create_subnet_ids_patch(type_name: str, ref: str, resolver: RefResolver):
-
     _, resolved = resolver.resolve(ref)
     if "$ref" in resolved:
         return _create_subnet_ids_patch(
@@ -159,7 +158,6 @@ def _create_security_group_id(type_name: str, ref: str, resolver: RefResolver):
 
 
 def _create_security_group_name(type_name: str, ref: str, resolver: RefResolver):
-
     _, resolved = resolver.resolve(ref)
     if "$ref" in resolved:
         return _create_security_group_name(

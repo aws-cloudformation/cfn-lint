@@ -103,7 +103,7 @@ def update_documentation(rules):
             rule_id = rule.id + "*" if rule.experimental else rule.id
             tags = ",".join(f"`{tag}`" for tag in rule.tags)
             config = "<br />".join(
-                f'{key}:{values.get("type")}:{values.get("default")}'
+                f"{key}:{values.get('type')}:{values.get('default')}"
                 for key, values in rule.config_definition.items()
             )
             new_file.write(

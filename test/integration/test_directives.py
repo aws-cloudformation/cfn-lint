@@ -37,7 +37,10 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 7, "LineNumber": 17},
                     },
-                    "Message": "Additional properties are not allowed ('BucketName1' was unexpected. Did you mean 'BucketName'?)",
+                    "Message": (
+                        "Additional properties are not allowed ('BucketName1' was"
+                        " unexpected. Did you mean 'BucketName'?)"
+                    ),
                     "ParentId": None,
                     "Rule": {
                         "Description": (
@@ -46,7 +49,9 @@ class TestDirectives(BaseCliTestCase):
                         ),
                         "Id": "E3002",
                         "ShortDescription": "Resource properties are invalid",
-                        "Source": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#properties",
+                        "Source": (
+                            "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#properties"
+                        ),
                     },
                 },
                 {
@@ -65,7 +70,10 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 7, "LineNumber": 28},
                     },
-                    "Message": "Additional properties are not allowed ('BadKey' was unexpected)",
+                    "Message": (
+                        "Additional properties are not allowed ('BadKey' was"
+                        " unexpected)"
+                    ),
                     "ParentId": None,
                     "Rule": {
                         "Description": (
@@ -74,7 +82,9 @@ class TestDirectives(BaseCliTestCase):
                         ),
                         "Id": "E3002",
                         "ShortDescription": "Resource properties are invalid",
-                        "Source": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#properties",
+                        "Source": (
+                            "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#properties"
+                        ),
                     },
                 },
                 {
@@ -92,7 +102,10 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 5, "LineNumber": 32},
                     },
-                    "Message": "Additional properties are not allowed ('BadProperty' was unexpected)",
+                    "Message": (
+                        "Additional properties are not allowed ('BadProperty' was"
+                        " unexpected)"
+                    ),
                     "ParentId": None,
                     "Rule": {
                         "Description": (
@@ -101,7 +114,7 @@ class TestDirectives(BaseCliTestCase):
                         ),
                         "Id": "E3001",
                         "ShortDescription": "Basic CloudFormation Resource Check",
-                        "Source": ("https://github.com/aws-cloudformation/cfn-lint"),
+                        "Source": "https://github.com/aws-cloudformation/cfn-lint",
                     },
                 },
                 {
@@ -120,7 +133,10 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 7, "LineNumber": 35},
                     },
-                    "Message": "Additional properties are not allowed ('BadKey' was unexpected)",
+                    "Message": (
+                        "Additional properties are not allowed ('BadKey' was"
+                        " unexpected)"
+                    ),
                     "ParentId": None,
                     "Rule": {
                         "Description": (
@@ -129,7 +145,9 @@ class TestDirectives(BaseCliTestCase):
                         ),
                         "Id": "E3002",
                         "ShortDescription": "Resource properties are invalid",
-                        "Source": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#properties",
+                        "Source": (
+                            "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#properties"
+                        ),
                     },
                 },
                 {
@@ -158,7 +176,9 @@ class TestDirectives(BaseCliTestCase):
                         ),
                         "Id": "E3030",
                         "ShortDescription": "Check if properties have a valid value",
-                        "Source": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#enum",
+                        "Source": (
+                            "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#enum"
+                        ),
                     },
                 },
             ],

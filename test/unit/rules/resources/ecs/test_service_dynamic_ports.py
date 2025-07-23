@@ -258,12 +258,10 @@ _service = {
             deque(["Resources", "Service", "Properties"]),
             [
                 ValidationError(
-                    (
-                        "When using an ECS task definition of host "
-                        "port 0 and associating that container to "
-                        "an ELB the target group has to have a "
-                        "'HealthCheckPort' of 'traffic-port'"
-                    ),
+                    "When using an ECS task definition of host "
+                    "port 0 and associating that container to "
+                    "an ELB the target group has to have a "
+                    "'HealthCheckPort' of 'traffic-port'",
                     validator="const",
                     path_override=deque(
                         ["Resources", "TargetGroup", "Properties", "HealthCheckPort"]
@@ -321,12 +319,10 @@ _service = {
             deque(["Resources", "Service", "Properties"]),
             [
                 ValidationError(
-                    (
-                        "When using an ECS task definition of host "
-                        "port 0 and associating that container to "
-                        "an ELB the target group has to have a "
-                        "'HealthCheckPort' of 'traffic-port'"
-                    ),
+                    "When using an ECS task definition of host "
+                    "port 0 and associating that container to "
+                    "an ELB the target group has to have a "
+                    "'HealthCheckPort' of 'traffic-port'",
                     validator="const",
                     path_override=deque(
                         ["Resources", "TargetGroup", "Properties", "HealthCheckPort"]
@@ -351,12 +347,10 @@ _service = {
             deque(["Resources", "Service", "Properties"]),
             [
                 ValidationError(
-                    (
-                        "When using an ECS task definition of host "
-                        "port 0 and associating that container to "
-                        "an ELB the target group has to have a "
-                        "'HealthCheckPort' of 'traffic-port'"
-                    ),
+                    "When using an ECS task definition of host "
+                    "port 0 and associating that container to "
+                    "an ELB the target group has to have a "
+                    "'HealthCheckPort' of 'traffic-port'",
                     validator="required",
                     path_override=deque(
                         ["Resources", "TargetGroup", "Properties", "HealthCheckPort"]

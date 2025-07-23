@@ -76,13 +76,11 @@ def template():
             deque([]),
             [
                 ValidationError(
-                    (
-                        "'Foo' is not one of ['ParentBucket', "
-                        "'ChildBucket', "
-                        "'ParentBucketWithGoodCondition', "
-                        "'ParentBucketWithBadCondition', "
-                        "'ChildBucketWithBadCondition', 'ToMySelf']"
-                    ),
+                    "'Foo' is not one of ['ParentBucket', "
+                    "'ChildBucket', "
+                    "'ParentBucketWithGoodCondition', "
+                    "'ParentBucketWithBadCondition', "
+                    "'ChildBucketWithBadCondition', 'ToMySelf']",
                 )
             ],
         ),
@@ -104,12 +102,10 @@ def template():
             deque(["Resources", "ChildBucket", "DependsOn"]),
             [
                 ValidationError(
-                    (
-                        "'Foo' is not one of ['ParentBucket', "
-                        "'ParentBucketWithGoodCondition', "
-                        "'ParentBucketWithBadCondition', "
-                        "'ChildBucketWithBadCondition', 'ToMySelf']"
-                    ),
+                    "'Foo' is not one of ['ParentBucket', "
+                    "'ParentBucketWithGoodCondition', "
+                    "'ParentBucketWithBadCondition', "
+                    "'ChildBucketWithBadCondition', 'ToMySelf']",
                 )
             ],
         ),
@@ -119,10 +115,8 @@ def template():
             deque(["Resources", "ChildBucketWithBadCondition", "DependsOn"]),
             [
                 ValidationError(
-                    (
-                        "'ParentBucketWithBadCondition' will not exist when condition "
-                        "'IsUsEast1' is False"
-                    ),
+                    "'ParentBucketWithBadCondition' will not exist when condition "
+                    "'IsUsEast1' is False",
                 )
             ],
         ),
@@ -132,18 +126,15 @@ def template():
             deque(["Resources", "ToMySelf", "DependsOn"]),
             [
                 ValidationError(
-                    (
-                        "'ToMySelf' is not one of ['ParentBucket', 'ChildBucket', "
-                        "'ParentBucketWithGoodCondition', "
-                        "'ParentBucketWithBadCondition', 'ChildBucketWithBadCondition']"
-                    ),
+                    "'ToMySelf' is not one of ['ParentBucket', 'ChildBucket', "
+                    "'ParentBucketWithGoodCondition', "
+                    "'ParentBucketWithBadCondition', 'ChildBucketWithBadCondition']",
                 )
             ],
         ),
     ],
 )
 def test_validate(name, instance, path, expected, rule, validator):
-
     validator = validator.evolve(context=validator.context.evolve(path=Path(path)))
     errs = list(rule.validate(validator, False, instance, {}))
 

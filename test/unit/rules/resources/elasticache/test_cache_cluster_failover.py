@@ -5,8 +5,8 @@ SPDX-License-Identifier: MIT-0
 
 from test.unit.rules import BaseRuleTestCase
 
-from cfnlint.rules.resources.elasticache.CacheClusterFailover import (
-    CacheClusterFailover,  # pylint: disable=E0401
+from cfnlint.rules.resources.elasticache.CacheClusterFailover import (  # pylint: disable=E0401
+    CacheClusterFailover,
 )
 
 

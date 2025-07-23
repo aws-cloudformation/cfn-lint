@@ -95,7 +95,7 @@ def template():
             [],
             [
                 ValidationError(
-                    ("[] is not of type 'object'"),
+                    "[] is not of type 'object'",
                     path=deque([]),
                     schema_path=deque(["type"]),
                     validator="type",

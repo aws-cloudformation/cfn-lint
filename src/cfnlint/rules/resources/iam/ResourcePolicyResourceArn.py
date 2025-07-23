@@ -14,7 +14,6 @@ from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
 class ResourcePolicyResourceArn(CfnLintKeyword):
-
     id = "E3514"
     shortdesc = "Validate IAM resource policy resource ARNs"
     description = "Validates an IAM resource policy has a compliant resource ARN"

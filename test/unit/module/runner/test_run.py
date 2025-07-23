@@ -47,7 +47,6 @@ from cfnlint.runner import Runner
     ],
 )
 def test_run(name, config, expected_count):
-
     runner = Runner(config)
 
     errs = list(runner.run())

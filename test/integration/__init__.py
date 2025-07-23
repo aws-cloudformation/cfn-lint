@@ -121,10 +121,8 @@ class BaseCliTestCase(unittest.TestCase):
                         exit.assert_called_once_with(scenario.get("exit_code", 0))
                     except AssertionError:
                         raise AssertionError(
-                            (
-                                f"Expected exit code {scenario.get('exit_code', 0)!r} "
-                                f"for {filename}: {output}"
-                            )
+                            f"Expected exit code {scenario.get('exit_code', 0)!r} "
+                            f"for {filename}: {output}"
                         )
 
                     self.assertEqual(

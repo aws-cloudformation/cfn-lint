@@ -58,10 +58,8 @@ def context(cfn):
             ["Outputs", "MyOutput", "Export", "Name"],
             [
                 ValidationError(
-                    (
-                        "Dynamic reference '{{resolve:ssm:Parameter}}' "
-                        "to SSM parameters are not allowed here"
-                    ),
+                    "Dynamic reference '{{resolve:ssm:Parameter}}' "
+                    "to SSM parameters are not allowed here",
                     rule=DynamicReferenceSsmPath(),
                 )
             ],
@@ -72,10 +70,8 @@ def context(cfn):
             ["Outputs"],
             [
                 ValidationError(
-                    (
-                        "Dynamic reference '{{resolve:ssm:Parameter}}' "
-                        "to SSM parameters are not allowed here"
-                    ),
+                    "Dynamic reference '{{resolve:ssm:Parameter}}' "
+                    "to SSM parameters are not allowed here",
                     rule=DynamicReferenceSsmPath(),
                 )
             ],
@@ -86,10 +82,8 @@ def context(cfn):
             ["Parameters", "MyParameter", "Type"],
             [
                 ValidationError(
-                    (
-                        "Dynamic reference '{{resolve:ssm:Parameter}}' "
-                        "to SSM parameters are not allowed here"
-                    ),
+                    "Dynamic reference '{{resolve:ssm:Parameter}}' "
+                    "to SSM parameters are not allowed here",
                     rule=DynamicReferenceSsmPath(),
                 )
             ],
@@ -100,10 +94,8 @@ def context(cfn):
             ["Parameters", "MyParameter"],
             [
                 ValidationError(
-                    (
-                        "Dynamic reference '{{resolve:ssm:Parameter}}' "
-                        "to SSM parameters are not allowed here"
-                    ),
+                    "Dynamic reference '{{resolve:ssm:Parameter}}' "
+                    "to SSM parameters are not allowed here",
                     rule=DynamicReferenceSsmPath(),
                 )
             ],
@@ -114,10 +106,8 @@ def context(cfn):
             ["Resources", "MyResource"],
             [
                 ValidationError(
-                    (
-                        "Dynamic reference '{{resolve:ssm:Parameter}}' "
-                        "to SSM parameters are not allowed here"
-                    ),
+                    "Dynamic reference '{{resolve:ssm:Parameter}}' "
+                    "to SSM parameters are not allowed here",
                     rule=DynamicReferenceSsmPath(),
                 )
             ],
@@ -128,10 +118,8 @@ def context(cfn):
             ["Resources", "MyResource", "Type"],
             [
                 ValidationError(
-                    (
-                        "Dynamic reference '{{resolve:ssm:Parameter}}' "
-                        "to SSM parameters are not allowed here"
-                    ),
+                    "Dynamic reference '{{resolve:ssm:Parameter}}' "
+                    "to SSM parameters are not allowed here",
                     rule=DynamicReferenceSsmPath(),
                 )
             ],
@@ -142,10 +130,8 @@ def context(cfn):
             ["Metadata"],
             [
                 ValidationError(
-                    (
-                        "Dynamic reference '{{resolve:ssm:Parameter}}' "
-                        "to SSM parameters are not allowed here"
-                    ),
+                    "Dynamic reference '{{resolve:ssm:Parameter}}' "
+                    "to SSM parameters are not allowed here",
                     rule=DynamicReferenceSsmPath(),
                 )
             ],
@@ -156,10 +142,8 @@ def context(cfn):
             [],
             [
                 ValidationError(
-                    (
-                        "Dynamic reference '{{resolve:ssm:Parameter}}' "
-                        "to SSM parameters are not allowed here"
-                    ),
+                    "Dynamic reference '{{resolve:ssm:Parameter}}' "
+                    "to SSM parameters are not allowed here",
                     rule=DynamicReferenceSsmPath(),
                 )
             ],

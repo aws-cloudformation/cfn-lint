@@ -36,10 +36,8 @@ def rule():
             {"SourceDBClusterIdentifier": "foo", "MasterUsername": "foo"},
             [
                 ValidationError(
-                    (
-                        "Additional properties are ignored ('MasterUsername', "
-                        "'MasterUserPassword', 'StorageEncrypted')"
-                    ),
+                    "Additional properties are ignored ('MasterUsername', "
+                    "'MasterUserPassword', 'StorageEncrypted')",
                     rule=DbClusterSourceDBClusterIdentifier(),
                     path=deque(["MasterUsername"]),
                     validator=None,

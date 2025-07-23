@@ -60,7 +60,6 @@ class CreationPolicy(CfnLintJsonSchema):
                 },
             }
         if resource_type == "AWS::CloudFormation::WaitCondition":
-
             return {
                 "type": "object",
                 "additionalProperties": False,

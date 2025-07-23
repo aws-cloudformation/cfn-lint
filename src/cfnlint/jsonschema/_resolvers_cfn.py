@@ -55,23 +55,29 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
             if "DefaultValue" in options:
                 default_value_found = True
                 for value, v, _ in validator.resolve_value(options["DefaultValue"]):
-                    yield value, v.evolve(
-                        context=v.context.evolve(
-                            path=v.context.path.evolve(
-                                value_path=deque([4, "DefaultValue"])
-                            )
+                    yield (
+                        value,
+                        v.evolve(
+                            context=v.context.evolve(
+                                path=v.context.path.evolve(
+                                    value_path=deque([4, "DefaultValue"])
+                                )
+                            ),
                         ),
-                    ), None
+                        None,
+                    )
 
     if not default_value_found and not validator.context.mappings.maps:
         if validator.context.mappings.is_transform:
             return
-        yield None, validator, ValidationError(
-            (
+        yield (
+            None,
+            validator,
+            ValidationError(
                 f"{instance[0]!r} is not one of "
-                f"{list(validator.context.mappings.maps.keys())!r}"
+                f"{list(validator.context.mappings.maps.keys())!r}",
+                path=deque([0]),
             ),
-            path=deque([0]),
         )
 
     mappings = list(validator.context.mappings.maps.keys())
@@ -155,22 +161,26 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                                 )
 
                 if not found_top_level_key:
-                    yield None, validator, ValidationError(
-                        (
+                    yield (
+                        None,
+                        validator,
+                        ValidationError(
                             f"{instance[1]!r} is not a "
-                            f"first level key for mapping {map_name!r}"
+                            f"first level key for mapping {map_name!r}",
+                            path=deque([1]),
                         ),
-                        path=deque([1]),
                     )
                 elif not found_second_key:
-                    yield None, validator, ValidationError(
-                        (
+                    yield (
+                        None,
+                        validator,
+                        ValidationError(
                             f"{instance[2]!r} is not a "
                             "second level key when "
                             f"{instance[1]!r} is resolved "
-                            f"for mapping {map_name!r}"
+                            f"for mapping {map_name!r}",
+                            path=deque([2]),
                         ),
-                        path=deque([2]),
                     )
             continue
 
@@ -188,11 +198,9 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                             None,
                             top_v,
                             ValidationError(
-                                (
-                                    f"{top_level_key!r} is not one of "
-                                    f"{top_level_keys!r} for mapping "
-                                    f"{map_name!r}"
-                                ),
+                                f"{top_level_key!r} is not one of "
+                                f"{top_level_keys!r} for mapping "
+                                f"{map_name!r}",
                                 path=deque([1]),
                             ),
                         )
@@ -229,12 +237,10 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                                 None,
                                 second_v,
                                 ValidationError(
-                                    (
-                                        f"{second_level_key!r} is not "
-                                        f"one of {second_level_keys!r} "
-                                        f"for mapping {map_name!r} and "
-                                        f"key {top_level_key!r}"
-                                    ),
+                                    f"{second_level_key!r} is not "
+                                    f"one of {second_level_keys!r} "
+                                    f"for mapping {map_name!r} and "
+                                    f"key {top_level_key!r}",
                                     path=deque([2]),
                                 ),
                             )
@@ -328,15 +334,17 @@ def join(validator: Validator, instance: Any) -> ResolutionResult:
             try:
                 for value, expansion_validator in _join_expansion(values_v, values):
                     # reset the value path because we could get a Ref value_path
-                    yield delimiter.join(
-                        [str(v) for v in value]
-                    ), expansion_validator.evolve(
-                        context=expansion_validator.context.evolve(
-                            path=expansion_validator.context.path.evolve(
-                                value_path=deque([])
+                    yield (
+                        delimiter.join([str(v) for v in value]),
+                        expansion_validator.evolve(
+                            context=expansion_validator.context.evolve(
+                                path=expansion_validator.context.path.evolve(
+                                    value_path=deque([])
+                                )
                             )
-                        )
-                    ), None
+                        ),
+                        None,
+                    )
             except (ValueError, TypeError):
                 return
 

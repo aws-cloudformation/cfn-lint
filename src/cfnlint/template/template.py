@@ -133,10 +133,8 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             LOGGER.info("DOT representation of the graph written to %s", path)
         except ImportError:
             LOGGER.error(
-                (
-                    "Could not write the graph in DOT format. "
-                    "Please install either `pygraphviz` or `pydot` modules."
-                )
+                "Could not write the graph in DOT format. "
+                "Please install either `pygraphviz` or `pydot` modules."
             )
 
     def has_language_extensions_transform(self) -> bool:
@@ -810,7 +808,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                                 # Example: Fn::FindInMap becomes
                                 # check_find_in_map
                                 # ruff: noqa: E501
-                                function_name = f'check_{camel_to_snake(dict_name.replace("Fn::", ""))}'
+                                function_name = f"check_{camel_to_snake(dict_name.replace('Fn::', ''))}"
                                 if function_name == "check_ref":
                                     if check_ref:
                                         matches.extend(

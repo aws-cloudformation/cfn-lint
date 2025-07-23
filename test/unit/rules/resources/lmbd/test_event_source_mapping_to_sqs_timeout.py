@@ -85,9 +85,7 @@ _template = {
                 [
                     {
                         "op": "add",
-                        "path": (
-                            "/Resources/MyFifoQueue/" "Properties/VisibilityTimeout"
-                        ),
+                        "path": "/Resources/MyFifoQueue/Properties/VisibilityTimeout",
                         "value": "300",
                     },
                 ],
@@ -102,9 +100,7 @@ _template = {
                 [
                     {
                         "op": "add",
-                        "path": (
-                            "/Resources/MyFifoQueue/" "Properties/VisibilityTimeout"
-                        ),
+                        "path": "/Resources/MyFifoQueue/Properties/VisibilityTimeout",
                         "value": {"Ref": "AWS::Region"},
                     },
                 ],
@@ -119,9 +115,7 @@ _template = {
                 [
                     {
                         "op": "add",
-                        "path": (
-                            "/Resources/MyFifoQueue/" "Properties/VisibilityTimeout"
-                        ),
+                        "path": "/Resources/MyFifoQueue/Properties/VisibilityTimeout",
                         "value": "a",
                     },
                 ],
@@ -141,10 +135,8 @@ _template = {
             {"path": deque(["Resources", "Lambda", "Properties", "Timeout"])},
             [
                 ValidationError(
-                    (
-                        "Queue visibility timeout (300) is less "
-                        "than Function timeout (600) seconds"
-                    ),
+                    "Queue visibility timeout (300) is less "
+                    "than Function timeout (600) seconds",
                     rule=EventSourceMappingToSqsTimeout(),
                 )
             ],

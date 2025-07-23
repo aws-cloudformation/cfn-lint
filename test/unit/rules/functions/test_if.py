@@ -166,16 +166,14 @@ def validator(cfn, context):
             {"type": "boolean"},
             [
                 ValidationError(
-                    (
-                        "['Fn::If', 1] is not reachable. When setting condition "
-                        "'IsUsEast1' to True from current status False"
-                    ),
+                    "['Fn::If', 1] is not reachable. When setting condition "
+                    "'IsUsEast1' to True from current status False",
                     path=deque(["Fn::If", 2, "Fn::If", 1]),
                     schema_path=deque(["fn_if"]),
                     validator="fn_if",
                 ),
                 ValidationError(
-                    ("'foo' is not of type 'boolean'"),
+                    "'foo' is not of type 'boolean'",
                     path=deque(["Fn::If", 2, "Fn::If", 1]),
                     schema_path=deque(["fn_if", "type"]),
                     validator="type",

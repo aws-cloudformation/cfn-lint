@@ -57,7 +57,6 @@ def resource_schema():
 
 
 def test_schema(resource_schema):
-
     schema = Schema(schema=resource_schema)
     assert list(schema.get_atts.keys()) == ["Arn", "Id", "List"]
     assert schema.get_atts["Arn"] == "/properties/Arn"
@@ -236,7 +235,9 @@ def resource_servicecatalog_schema():
                 "type": "object",
             },
         },
-        "documentationUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalog-cloudformationprovisionedproduct.html",
+        "documentationUrl": (
+            "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalog-cloudformationprovisionedproduct.html"
+        ),
         "handlers": {
             "create": {"permissions": ["*"], "timeoutInMinutes": 720},
             "delete": {"permissions": ["*"]},
@@ -297,13 +298,14 @@ def resource_servicecatalog_schema():
             "/properties/Outputs",
             "/properties/ProvisionedProductId",
         ],
-        "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+        "sourceUrl": (
+            "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git"
+        ),
         "typeName": "AWS::ServiceCatalog::CloudFormationProvisionedProduct",
     }
 
 
 def test_servicecatalog_cloudformation_schema(resource_servicecatalog_schema):
-
     schema = Schema(schema=resource_servicecatalog_schema)
     assert list(schema.get_atts.keys()) == [
         "RecordId",

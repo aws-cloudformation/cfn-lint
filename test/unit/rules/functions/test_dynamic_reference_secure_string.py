@@ -52,10 +52,8 @@ def template():
             {"cfn_path": ["Outputs", "*", "Value"]},
             [
                 ValidationError(
-                    (
-                        "Dynamic reference '{{resolve:ssm-secure:Parameter}}' "
-                        "to SSM secure strings can only be used in resource properties"
-                    ),
+                    "Dynamic reference '{{resolve:ssm-secure:Parameter}}' "
+                    "to SSM secure strings can only be used in resource properties",
                     rule=DynamicReferenceSecureString(),
                 )
             ],
@@ -64,6 +62,5 @@ def template():
     indirect=["path"],
 )
 def test_validate(name, instance, path, expected, rule, validator):
-
     errs = list(rule.validate(validator, {"type": "string"}, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"

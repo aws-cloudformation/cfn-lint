@@ -7,7 +7,6 @@ from cfnlint.rules._rule import CloudFormationLintRule
 
 
 class ConfigError(CloudFormationLintRule):
-
     id = "E0003"
     shortdesc = "Error with cfn-lint configuration"
     description = "Error as a result of the cfn-lint configuration"

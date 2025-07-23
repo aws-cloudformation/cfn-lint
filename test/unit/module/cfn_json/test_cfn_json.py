@@ -61,9 +61,9 @@ class TestCfnJson(BaseTestCase):
             cfn = Template(filename, template, ["us-east-1"])
 
             matches = list(self.rules.run(filename, cfn, self.config))
-            assert (
-                len(matches) == failures
-            ), "Expected {} failures, got {} on {}".format(failures, matches, filename)
+            assert len(matches) == failures, (
+                "Expected {} failures, got {} on {}".format(failures, matches, filename)
+            )
 
     def test_success_escape_character(self):
         """Test Successful JSON Parsing"""
@@ -89,10 +89,10 @@ class TestCfnJson(BaseTestCase):
                 cfn = Template(filename, template, ["us-east-1"])
 
                 matches = list(self.rules.run(filename, cfn, self.config))
-                assert (
-                    len(matches) == failures
-                ), "Expected {} failures, got {} on {}".format(
-                    failures, matches, values.get("filename")
+                assert len(matches) == failures, (
+                    "Expected {} failures, got {} on {}".format(
+                        failures, matches, values.get("filename")
+                    )
                 )
 
     def test_fail_run(self):

@@ -123,10 +123,8 @@ def rule():
             {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
             [
                 ValidationError(
-                    (
-                        "'' is not a valid action. Must be "
-                        "of the form service:action or '*'"
-                    ),
+                    "'' is not a valid action. Must be "
+                    "of the form service:action or '*'",
                     rule=Permissions(),
                 )
             ],
@@ -205,7 +203,6 @@ def rule():
     indirect=["path"],
 )
 def test_permissions(name, instance, expected, rule, validator):
-
     rule._service_map = {
         "iam": {
             "Actions": {

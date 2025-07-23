@@ -104,7 +104,7 @@ _service = {
             deque(["Resources", "Service", "Properties"]),
             [
                 ValidationError(
-                    ("'RequiresCompatibilities' is a required property"),
+                    "'RequiresCompatibilities' is a required property",
                     validator="required",
                     rule=ServiceFargate(),
                     path_override=deque(["Resources", "TaskDefinition", "Properties"]),
@@ -184,7 +184,7 @@ _service = {
             deque(["Resources", "Service", "Properties"]),
             [
                 ValidationError(
-                    ("'RequiresCompatibilities' is a required property"),
+                    "'RequiresCompatibilities' is a required property",
                     validator="required",
                     rule=ServiceFargate(),
                     path_override=deque(["Resources", "TaskDefinition", "Properties"]),
@@ -262,7 +262,7 @@ _service = {
             deque(["Resources", "Service", "Properties"]),
             [
                 ValidationError(
-                    ("['EC2', 'EXTERNAL'] does not contain items matching 'FARGATE'"),
+                    "['EC2', 'EXTERNAL'] does not contain items matching 'FARGATE'",
                     validator="contains",
                     rule=ServiceFargate(),
                     path_override=deque(
@@ -385,7 +385,7 @@ _service = {
             deque(["Resources", "Service", "Properties"]),
             [
                 ValidationError(
-                    ("'RequiresCompatibilities' is a required property"),
+                    "'RequiresCompatibilities' is a required property",
                     validator="required",
                     rule=ServiceFargate(),
                     path_override=deque(["Resources", "TaskDefinition", "Properties"]),

@@ -54,10 +54,8 @@ class PipelineActionConfiguration(CfnLintKeyword):
                 input_artficat_names.add(input_name)
             else:
                 yield ValidationError(
-                    (
-                        f"{template_path.split('::')[0]!r} is not "
-                        f"one of {list(input_artficat_names)!r}"
-                    ),
+                    f"{template_path.split('::')[0]!r} is not "
+                    f"one of {list(input_artficat_names)!r}",
                     validator="enum",
                     rule=self,
                     path_override=template_path_validator.context.path.path,

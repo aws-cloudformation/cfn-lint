@@ -132,10 +132,8 @@ class TestOtherSchemaManager(BaseTestCase):
 
         # Verify that print was called with the error message
         mock_print.assert_called_with(
-            (
-                f"Error applying patch {self.schema_patch} for "
-                f"{schema_path}: Invalid patch operation"
-            )
+            f"Error applying patch {self.schema_patch} for "
+            f"{schema_path}: Invalid patch operation"
         )
 
         # Verify that sys.exit was called with exit code 1

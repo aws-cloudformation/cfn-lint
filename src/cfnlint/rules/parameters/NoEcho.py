@@ -35,10 +35,8 @@ class NoEcho(CloudFormationLintRule):
                     and validator.context.path.path[2] == "Metadata"
                 ):
                     yield ValidationError(
-                        (
-                            f"Don't use 'NoEcho' parameter {instance!r} "
-                            "in resource metadata"
-                        ),
+                        f"Don't use 'NoEcho' parameter {instance!r} "
+                        "in resource metadata",
                         rule=self,
                         path=deque(["Ref"]),
                     )
@@ -46,10 +44,8 @@ class NoEcho(CloudFormationLintRule):
             if len(validator.context.path.path) > 0:
                 if validator.context.path.path[0] in ["Metadata", "Outputs"]:
                     yield ValidationError(
-                        (
-                            f"Don't use 'NoEcho' parameter {instance!r} "
-                            f"in {validator.context.path.path[0]!r}"
-                        ),
+                        f"Don't use 'NoEcho' parameter {instance!r} "
+                        f"in {validator.context.path.path[0]!r}",
                         rule=self,
                         path=deque(["Ref"]),
                     )

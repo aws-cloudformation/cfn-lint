@@ -44,7 +44,6 @@ def _build_message(current_status: dict[str, bool], new_status: dict[str, bool])
 
 
 class Unsatisfiable(ValueError):
-
     def __init__(
         self,
         new_status: dict[str, bool],

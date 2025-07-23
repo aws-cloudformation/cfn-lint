@@ -64,10 +64,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "Additional properties are not allowed "
-                        "('ContentBasedDeduplication' was unexpected)"
-                    ),
+                    "Additional properties are not allowed "
+                    "('ContentBasedDeduplication' was unexpected)",
                     rule=QueueProperties(),
                     path=deque(["ContentBasedDeduplication"]),
                     validator=None,

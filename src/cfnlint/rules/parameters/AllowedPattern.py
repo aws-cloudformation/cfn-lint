@@ -12,7 +12,6 @@ from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
 class AllowedPattern(CfnLintKeyword):
-
     id = "I2003"
     shortdesc = "Validate AllowedPattern is a valid regexs"
     description = (
@@ -33,7 +32,6 @@ class AllowedPattern(CfnLintKeyword):
     def validate(
         self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
-
         if not validator.is_type(instance, "string"):
             return
 

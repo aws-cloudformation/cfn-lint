@@ -40,7 +40,9 @@ class TestQuickStartTemplates(BaseCliTestCase):
             ),
             "results": [
                 {
-                    "Filename": "test/fixtures/templates/bad/transform_serverless_template.yaml",
+                    "Filename": (
+                        "test/fixtures/templates/bad/transform_serverless_template.yaml"
+                    ),
                     "Id": "9e05773a-b0d0-f157-2955-596d9bd54749",
                     "Level": "Error",
                     "Location": {
@@ -48,17 +50,28 @@ class TestQuickStartTemplates(BaseCliTestCase):
                         "Path": None,
                         "Start": {"ColumnNumber": 1, "LineNumber": 1},
                     },
-                    "Message": "Error transforming template: Resource with id [myFunctionMyTimer] is invalid. Missing required property 'Schedule'.",
+                    "Message": (
+                        "Error transforming template: Resource with id"
+                        " [myFunctionMyTimer] is invalid. Missing required property"
+                        " 'Schedule'."
+                    ),
                     "ParentId": None,
                     "Rule": {
-                        "Description": "Errors found when performing transformation on the template",
+                        "Description": (
+                            "Errors found when performing transformation on the"
+                            " template"
+                        ),
                         "Id": "E0001",
-                        "ShortDescription": "Error found when transforming the template",
+                        "ShortDescription": (
+                            "Error found when transforming the template"
+                        ),
                         "Source": "https://github.com/aws-cloudformation/cfn-lint",
                     },
                 },
                 {
-                    "Filename": "test/fixtures/templates/bad/transform_serverless_template.yaml",
+                    "Filename": (
+                        "test/fixtures/templates/bad/transform_serverless_template.yaml"
+                    ),
                     "Id": "fd751fa3-7d1f-e194-7108-eb08352814c8",
                     "Level": "Error",
                     "Location": {
@@ -66,17 +79,27 @@ class TestQuickStartTemplates(BaseCliTestCase):
                         "Path": None,
                         "Start": {"ColumnNumber": 1, "LineNumber": 1},
                     },
-                    "Message": "Error transforming template: Resource with id [ExampleLayer] is invalid. Missing required property 'ContentUri'.",
+                    "Message": (
+                        "Error transforming template: Resource with id [ExampleLayer]"
+                        " is invalid. Missing required property 'ContentUri'."
+                    ),
                     "ParentId": None,
                     "Rule": {
-                        "Description": "Errors found when performing transformation on the template",
+                        "Description": (
+                            "Errors found when performing transformation on the"
+                            " template"
+                        ),
                         "Id": "E0001",
-                        "ShortDescription": "Error found when transforming the template",
+                        "ShortDescription": (
+                            "Error found when transforming the template"
+                        ),
                         "Source": "https://github.com/aws-cloudformation/cfn-lint",
                     },
                 },
                 {
-                    "Filename": "test/fixtures/templates/bad/transform_serverless_template.yaml",
+                    "Filename": (
+                        "test/fixtures/templates/bad/transform_serverless_template.yaml"
+                    ),
                     "Id": "74181426-e865-10eb-96fd-908dfd30a358",
                     "Level": "Error",
                     "Location": {
@@ -84,12 +107,21 @@ class TestQuickStartTemplates(BaseCliTestCase):
                         "Path": None,
                         "Start": {"ColumnNumber": 1, "LineNumber": 1},
                     },
-                    "Message": "Error transforming template: Resource with id [AppName] is invalid. Resource is missing the required [Location] property.",
+                    "Message": (
+                        "Error transforming template: Resource with id [AppName] is"
+                        " invalid. Resource is missing the required [Location]"
+                        " property."
+                    ),
                     "ParentId": None,
                     "Rule": {
-                        "Description": "Errors found when performing transformation on the template",
+                        "Description": (
+                            "Errors found when performing transformation on the"
+                            " template"
+                        ),
                         "Id": "E0001",
-                        "ShortDescription": "Error found when transforming the template",
+                        "ShortDescription": (
+                            "Error found when transforming the template"
+                        ),
                         "Source": "https://github.com/aws-cloudformation/cfn-lint",
                     },
                 },
@@ -107,12 +139,16 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "exit_code": 0,
         },
         {
-            "filename": "test/fixtures/templates/good/resources_cognito_userpool_tag_is_string_map.yaml",
+            "filename": (
+                "test/fixtures/templates/good/resources_cognito_userpool_tag_is_string_map.yaml"
+            ),
             "results": [],
             "exit_code": 0,
         },
         {
-            "filename": "test/fixtures/templates/bad/resources_cognito_userpool_tag_is_list.yaml",
+            "filename": (
+                "test/fixtures/templates/bad/resources_cognito_userpool_tag_is_list.yaml"
+            ),
             "results": [
                 {
                     "Filename": str(
@@ -144,7 +180,9 @@ class TestQuickStartTemplates(BaseCliTestCase):
                         ),
                         "Id": "E3012",
                         "ShortDescription": "Check resource properties values",
-                        "Source": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#type",
+                        "Source": (
+                            "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#type"
+                        ),
                     },
                 }
             ],
@@ -180,17 +218,24 @@ class TestQuickStartTemplates(BaseCliTestCase):
                         "Path": ["Resources", "myFunction", "Properties", "Runtime"],
                         "Start": {"ColumnNumber": 3, "LineNumber": 10},
                     },
-                    "Message": "Runtime 'nodejs6.10' was deprecated on '2019-08-12'. Creation was disabled on '2019-08-12' and update on '2019-08-12'. Please consider updating to 'nodejs22.x'",
+                    "Message": (
+                        "Runtime 'nodejs6.10' was deprecated on '2019-08-12'. Creation"
+                        " was disabled on '2019-08-12' and update on '2019-08-12'."
+                        " Please consider updating to 'nodejs22.x'"
+                    ),
                     "ParentId": None,
                     "Rule": {
                         "Description": (
-                            "Check if an EOL Lambda Runtime is specified and you cannot update the function"
+                            "Check if an EOL Lambda Runtime is specified and you cannot"
+                            " update the function"
                         ),
                         "Id": "E2533",
                         "ShortDescription": (
                             "Check if Lambda Function Runtimes are updatable"
                         ),
-                        "Source": "https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html",
+                        "Source": (
+                            "https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html"
+                        ),
                     },
                 }
             ],

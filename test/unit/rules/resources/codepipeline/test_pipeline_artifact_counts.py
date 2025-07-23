@@ -88,11 +88,9 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "expected maximum item count: 1, found: 2 "
-                        "when using {'Owner': 'ThirdParty', "
-                        "'Category': 'Source', 'Provider': 'GitHub'}"
-                    ),
+                    "expected maximum item count: 1, found: 2 "
+                    "when using {'Owner': 'ThirdParty', "
+                    "'Category': 'Source', 'Provider': 'GitHub'}",
                     rule=PipelineArtifactCounts(),
                     validator="maxItems",
                     path=deque(["OutputArtifacts"]),
@@ -112,11 +110,9 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "'InputArtifacts' is a required "
-                        "property when using {'Owner': 'AWS', "
-                        "'Category': 'Build', 'Provider': 'CodeBuild'}"
-                    ),
+                    "'InputArtifacts' is a required "
+                    "property when using {'Owner': 'AWS', "
+                    "'Category': 'Build', 'Provider': 'CodeBuild'}",
                     rule=PipelineArtifactCounts(),
                     validator="required",
                     path=deque([]),
@@ -138,22 +134,18 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "expected maximum item count: 1, found: 2 when "
-                        "using {'Owner': 'AWS', 'Category': "
-                        "'Deploy', 'Provider': 'S3'}"
-                    ),
+                    "expected maximum item count: 1, found: 2 when "
+                    "using {'Owner': 'AWS', 'Category': "
+                    "'Deploy', 'Provider': 'S3'}",
                     rule=PipelineArtifactCounts(),
                     validator="maxItems",
                     path=deque(["InputArtifacts"]),
                     schema_path=deque(["properties", "InputArtifacts", "maxItems"]),
                 ),
                 ValidationError(
-                    (
-                        "expected maximum item count: 0, found: 2 "
-                        "when using {'Owner': 'AWS', 'Category': "
-                        "'Deploy', 'Provider': 'S3'}"
-                    ),
+                    "expected maximum item count: 0, found: 2 "
+                    "when using {'Owner': 'AWS', 'Category': "
+                    "'Deploy', 'Provider': 'S3'}",
                     rule=PipelineArtifactCounts(),
                     validator="maxItems",
                     path=deque(["OutputArtifacts"]),

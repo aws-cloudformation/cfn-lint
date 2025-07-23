@@ -63,11 +63,9 @@ def path():
             "Parent1Bucket",
             [
                 ValidationError(
-                    (
-                        "'Parent1Bucket' dependency already "
-                        "enforced by a 'Ref' at "
-                        "'Resources/ChildBucket/Properties/BucketName'"
-                    ),
+                    "'Parent1Bucket' dependency already "
+                    "enforced by a 'Ref' at "
+                    "'Resources/ChildBucket/Properties/BucketName'",
                 )
             ],
         ),
@@ -90,7 +88,6 @@ def test_validate(name, instance, expected, rule, validator):
     ],
 )
 def test_validate_no_cfn_graph(name, instance, expected, rule, validator):
-
     validator.cfn.graph = None
     errs = list(rule.validate(validator, False, instance, {}))
 

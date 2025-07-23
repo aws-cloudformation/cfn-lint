@@ -28,7 +28,6 @@ def validator():
 
 
 def test_validator_raises_exception(validator):
-
     errs = list(validator.iter_errors(""))
 
     assert errs == [

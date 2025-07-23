@@ -92,7 +92,7 @@ class Password(CloudFormationLintRule):
 
         for paramname in fix_params:
             message = (
-                f'Parameter {paramname["Name"]} used as {paramname["Use"]}, therefore'
+                f"Parameter {paramname['Name']} used as {paramname['Use']}, therefore"
                 " NoEcho should be True"
             )
             tree = ["Parameters", paramname["Name"]]

@@ -16,7 +16,7 @@ class FargateDeploymentSchedulingStrategy(CfnLintJsonSchema):
         "use SchedulingStrategy of REPLICA"
     )
     description = (
-        "When using a LaunchType of Fargate the SchedulingStrategy " "has to be Replica"
+        "When using a LaunchType of Fargate the SchedulingStrategy has to be Replica"
     )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html#cfn-ecs-service-schedulingstrategy"
     tags = ["properties", "ecs", "service", "container", "fargate"]

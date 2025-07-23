@@ -77,7 +77,6 @@ class Conditions:
 
         cnf = None
         for p_k, p_v in parameters.items():
-
             if not p_v.allowed_values:
                 continue
             allowed_values = p_v.allowed_values.copy()
@@ -182,16 +181,18 @@ class Conditions:
     def evolve_from_instance(
         self, instance: Any, context: "Context"
     ) -> Iterator[tuple[Any, "Conditions"]]:
-
         conditions = get_conditions_from_property(instance)
 
         for scenario in self._build_conditions(conditions):
-            yield build_instance_from_scenario(
-                instance,
-                scenario.status,
-                is_root=True,
-                context=context,
-            ), scenario
+            yield (
+                build_instance_from_scenario(
+                    instance,
+                    scenario.status,
+                    is_root=True,
+                    context=context,
+                ),
+                scenario,
+            )
 
     @property
     def status(self) -> dict[str, bool]:

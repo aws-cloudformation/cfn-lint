@@ -86,10 +86,8 @@ def rule():
             {"MyMapping": {"Key": {"Value": {}}}},
             [
                 ValidationError(
-                    (
-                        "{} is not of type 'string', 'boolean', "
-                        "'integer', 'number', 'array'"
-                    ),
+                    "{} is not of type 'string', 'boolean', "
+                    "'integer', 'number', 'array'",
                     validator="type",
                     schema_path=deque(
                         [

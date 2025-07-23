@@ -52,10 +52,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "['FromPort', 'ToPort'] are ignored when using "
-                        "'IpProtocol' value -1"
-                    ),
+                    "['FromPort', 'ToPort'] are ignored when using "
+                    "'IpProtocol' value -1",
                     rule=SecurityGroupProtocolsAndPortsExclusive(),
                     path=deque(["FromPort"]),
                     instance=-1,

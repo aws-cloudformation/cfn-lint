@@ -42,10 +42,8 @@ def rule():
             {},
             [
                 ValidationError(
-                    (
-                        "'Name' is a required property when not specifying "
-                        "one of ['Body', 'BodyS3Location']"
-                    ),
+                    "'Name' is a required property when not specifying "
+                    "one of ['Body', 'BodyS3Location']",
                     rule=RestApiOpenApi(),
                     path=deque([]),
                     validator="required",

@@ -151,7 +151,7 @@ _task_definition = {
                             },
                             {
                                 "op": "replace",
-                                "path": ("/Properties/NetworkMode"),
+                                "path": "/Properties/NetworkMode",
                                 "value": "bridge",
                             },
                         ],
@@ -182,7 +182,7 @@ _task_definition = {
             deque(["Resources", "TaskDefinition", "Properties"]),
             [
                 ValidationError(
-                    ("'80' does not equal 8080"),
+                    "'80' does not equal 8080",
                     validator="const",
                     rule=TaskDefinitionAwsVpc(),
                     path_override=deque(

@@ -41,6 +41,6 @@ def test_cfn_lint_rules_have_validate_function():
     for rule in rules:
         assert hasattr(rule, "validate")
         assert callable(rule.validate)
-        assert all(
-            r in parent_rules for r in rule._parent_rules
-        ), f"{rule._parent_rules!r} not in {parent_rules!r}"
+        assert all(r in parent_rules for r in rule._parent_rules), (
+            f"{rule._parent_rules!r} not in {parent_rules!r}"
+        )

@@ -182,6 +182,10 @@ class Context:
     parameter_sets: list[ParameterSet] | None = field(init=True, default_factory=list)
     is_resolved_from_parameters: bool = field(init=True, default=False)
 
+    # For rule exceptions.  This is primarily used for if/then/else statements in which
+    # exceptions will affect the results.
+    allow_exceptions: bool = field(init=True, default=True)
+
     def evolve(self, **kwargs) -> "Context":
         """
         Create a new context without merging together attributes
@@ -222,13 +226,16 @@ class Context:
             for region in self.regions:
                 # We can resolve all region based pseudo values
                 # as we are now deciding on a region.
-                yield _get_pseudo_value_by_region(instance, region), self.evolve(
-                    regions=[region],
-                    ref_values={
-                        p: _get_pseudo_value_by_region(p, region)
-                        for p in PSEUDOPARAMS
-                        if p not in _PSEUDOPARAMS_NON_REGION
-                    },
+                yield (
+                    _get_pseudo_value_by_region(instance, region),
+                    self.evolve(
+                        regions=[region],
+                        ref_values={
+                            p: _get_pseudo_value_by_region(p, region)
+                            for p in PSEUDOPARAMS
+                            if p not in _PSEUDOPARAMS_NON_REGION
+                        },
+                    ),
                 )
 
         if instance in self.parameters:
@@ -237,35 +244,44 @@ class Context:
             if self.parameter_sets is not None and len(self.parameter_sets) > 0:
                 for parameter_set in self.parameter_sets:
                     if instance in parameter_set.parameters:
-                        yield parameter_set.parameters[instance], self.evolve(
-                            ref_values=parameter_set.parameters,
-                            parameter_sets=None,
-                            is_resolved_from_parameters=True,
+                        yield (
+                            parameter_set.parameters[instance],
+                            self.evolve(
+                                ref_values=parameter_set.parameters,
+                                parameter_sets=None,
+                                is_resolved_from_parameters=True,
+                            ),
                         )
                     else:
                         for v, path in self.parameters[instance].default_value():
                             parameters = deepcopy(parameter_set.parameters)
                             parameters.update({instance: v})
-                            yield v, self.evolve(
-                                path=self.path.evolve(
-                                    value_path=deque(["Parameters", instance]) + path
+                            yield (
+                                v,
+                                self.evolve(
+                                    path=self.path.evolve(
+                                        value_path=deque(["Parameters", instance])
+                                        + path
+                                    ),
+                                    ref_values=parameters,
+                                    parameter_sets=None,
+                                    is_resolved_from_parameters=True,
                                 ),
-                                ref_values=parameters,
-                                parameter_sets=None,
-                                is_resolved_from_parameters=True,
                             )
                 return
 
             for v, path in self.parameters[instance].ref_value(self):
-
                 # validate that ref is possible with path
                 # need to evaluate if Fn::If would be not true if value is
                 # what it is
-                yield v, self.evolve(
-                    path=self.path.evolve(
-                        value_path=deque(["Parameters", instance]) + path
+                yield (
+                    v,
+                    self.evolve(
+                        path=self.path.evolve(
+                            value_path=deque(["Parameters", instance]) + path
+                        ),
+                        ref_values={instance: v},
                     ),
-                    ref_values={instance: v},
                 )
 
     @property

@@ -91,7 +91,6 @@ class TestMaxLengthNoChild(BaseRuleTestCase):
 
 
 class TestPropertyNames(BaseRuleTestCase):
-
     def test_rule_no_rule_id(self):
         validator = CfnTemplateValidator({})
 

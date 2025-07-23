@@ -77,10 +77,8 @@ def template():
             deque(["Resources", "BadSnapStart", "Properties", "SnapStart", "ApplyOn"]),
             [
                 ValidationError(
-                    (
-                        "'SnapStart' is enabled but an 'AWS::Lambda::Version' "
-                        "resource is not attached"
-                    ),
+                    "'SnapStart' is enabled but an 'AWS::Lambda::Version' "
+                    "resource is not attached",
                 )
             ],
         ),

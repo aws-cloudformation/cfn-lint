@@ -211,7 +211,6 @@ NodeConstructor.add_constructor(  # type: ignore
 
 
 class _Scanner(Scanner):
-
     def __init__(self) -> None:
         super().__init__()
         self.ESCAPE_REPLACEMENTS = {

@@ -59,17 +59,15 @@ RootInstanceProfile -> RootRole [key=0, source_paths="[\\"Properties\\", \\"Role
 MyEC2Instance -> RootInstanceProfile [key=0, source_paths="[\\"Properties\\", \\"IamInstanceProfile\\"]", label=Ref, color=black];
 ElasticLoadBalancer -> MyEC2Instance [key=0, source_paths="[\\"Properties\\", \\"Instances\\", 0]", label=Ref, color=black];
 }
-""".split(
-            "\n"
-        )
+""".split("\n")
 
         assert os.path.exists(dot)
         with open(dot, "r") as file:
             file_contents = file.read().split("\n")
             # doing set equality instead of string equality because python 2.7 and 3.8 produce the same graph but with different edge order
-            assert len(file_contents) == len(
-                expected_content
-            ), f"Length {len(file_contents)} != {len(expected_content)}"
+            assert len(file_contents) == len(expected_content), (
+                f"Length {len(file_contents)} != {len(expected_content)}"
+            )
             assert sorted(file_contents) == sorted(expected_content)
 
         os.remove(dot)
@@ -78,27 +76,28 @@ ElasticLoadBalancer -> MyEC2Instance [key=0, source_paths="[\\"Properties\\", \\
         """Test Success on Get Resources"""
         valid_resource_count = 13
         resources = self.template.get_resources()
-        assert (
-            len(resources) == valid_resource_count
-        ), "Expected {} resources, got {}".format(valid_resource_count, len(resources))
+        assert len(resources) == valid_resource_count, (
+            "Expected {} resources, got {}".format(valid_resource_count, len(resources))
+        )
 
     def test_get_modules_success(self):
         """Test Success on Get Modules"""
         expected_modules_count = 1
         actual_modules = self.template.get_modules()
-        assert (
-            len(actual_modules) == expected_modules_count
-        ), "Expected {} modules, got {}".format(
-            expected_modules_count, len(actual_modules)
+        assert len(actual_modules) == expected_modules_count, (
+            "Expected {} modules, got {}".format(
+                expected_modules_count, len(actual_modules)
+            )
         )
 
     def test_get_resource_children(self):
         """Test Success on Get Resources"""
         resources = list(self.template.get_resource_children("RootRole"))
-        self.assertListEqual(
-            resources, ["RolePolicies", "RootInstanceProfile"]
-        ), "Expected {} resources, got {}".format(
-            ["RolePolicies", "RootInstanceProfile"], resources
+        (
+            self.assertListEqual(resources, ["RolePolicies", "RootInstanceProfile"]),
+            "Expected {} resources, got {}".format(
+                ["RolePolicies", "RootInstanceProfile"], resources
+            ),
         )
 
         resources = list(
@@ -106,13 +105,15 @@ ElasticLoadBalancer -> MyEC2Instance [key=0, source_paths="[\\"Properties\\", \\
                 "RootRole", ["AWS::IAM::InstanceProfile"]
             )
         )
-        self.assertListEqual(
-            resources, ["RootInstanceProfile"]
-        ), "Expected {} resources, got {}".format(["RootInstanceProfile"], resources)
+        (
+            self.assertListEqual(resources, ["RootInstanceProfile"]),
+            "Expected {} resources, got {}".format(["RootInstanceProfile"], resources),
+        )
 
         resources = list(self.template.get_resource_children("ElasticIP", []))
-        self.assertListEqual(resources, []), "Expected {} resources, got {}".format(
-            [], resources
+        (
+            self.assertListEqual(resources, []),
+            "Expected {} resources, got {}".format([], resources),
         )
 
     def test_get_resources_bad(self):

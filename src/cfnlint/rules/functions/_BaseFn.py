@@ -138,7 +138,6 @@ class BaseFn(CfnLintJsonSchema):
         yield from iter(all_errs)
 
     def _resolve_ref(self, validator, schema) -> Any:
-
         resolve = getattr(validator.resolver, "resolve", None)
         ref = schema["$ref"]
         if resolve is None:

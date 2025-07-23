@@ -80,7 +80,7 @@ def rule():
             },
             [
                 ValidationError(
-                    ("'PlacementConstraints' isn't supported for Fargate tasks"),
+                    "'PlacementConstraints' isn't supported for Fargate tasks",
                     rule=TaskFargateProperties(),
                     path=deque(["PlacementConstraints"]),
                     validator="not",
@@ -106,10 +106,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "128 is not one of ['256', '512', '1024', '2048', "
-                        "'4096', '8192', '16384']"
-                    ),
+                    "128 is not one of ['256', '512', '1024', '2048', "
+                    "'4096', '8192', '16384']",
                     rule=TaskFargateProperties(),
                     path=deque(["Cpu"]),
                     validator="enum",
@@ -145,7 +143,7 @@ def rule():
             },
             [
                 ValidationError(
-                    ("'NetworkMode' is a required property"),
+                    "'NetworkMode' is a required property",
                     rule=TaskFargateProperties(),
                     path=deque([]),
                     validator="required",
@@ -215,7 +213,7 @@ def rule():
             },
             [
                 ValidationError(
-                    ("'sumologic' is not one of ['awslogs', 'splunk', 'awsfirelens']"),
+                    "'sumologic' is not one of ['awslogs', 'splunk', 'awsfirelens']",
                     rule=TaskFargateProperties(),
                     path=deque(
                         ["ContainerDefinitions", 0, "LogConfiguration", "LogDriver"]

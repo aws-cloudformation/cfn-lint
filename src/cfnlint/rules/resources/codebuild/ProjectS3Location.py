@@ -15,7 +15,7 @@ from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, Schema
 class ProjectS3Location(CfnLintJsonSchema):
     id = "E3636"
     shortdesc = "Validate CodeBuild projects using S3 also have Location"
-    description = "When using 'S3' for 'Type' then you must also specify " "'Location'"
+    description = "When using 'S3' for 'Type' then you must also specify 'Location'"
     tags = ["resources", "codebuild"]
 
     def __init__(self) -> None:

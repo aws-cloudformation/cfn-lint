@@ -161,9 +161,9 @@ def test_get_resource_by_name(name, resource_name, types, status, expected, vali
     result = get_resource_by_name(validator, resource_name, types)
 
     assert result[0] == expected[0], f"Test {name!r} got {result[0]!r}"
-    assert (
-        result[1].context.conditions.status == expected[1]
-    ), f"Test {name!r} got {result[1].context.conditions.status!r}"
-    assert (
-        result[1].context.path.path == expected[2]
-    ), f"Test {name!r} got {result[1].context.path.path!r}"
+    assert result[1].context.conditions.status == expected[1], (
+        f"Test {name!r} got {result[1].context.conditions.status!r}"
+    )
+    assert result[1].context.path.path == expected[2], (
+        f"Test {name!r} got {result[1].context.path.path!r}"
+    )

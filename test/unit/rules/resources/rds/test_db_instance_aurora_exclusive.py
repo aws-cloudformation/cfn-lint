@@ -78,11 +78,9 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "Additional properties are not "
-                        "allowed (['DeletionProtection', "
-                        "'CopyTagsToSnapshot'])"
-                    ),
+                    "Additional properties are not "
+                    "allowed (['DeletionProtection', "
+                    "'CopyTagsToSnapshot'])",
                     rule=DbInstanceAuroraExclusive(),
                     path=deque([]),
                     instance={

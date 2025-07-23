@@ -56,10 +56,8 @@ def template():
             deque(["Resources", "MyResource"]),
             [
                 ValidationError(
-                    (
-                        "Both 'UpdateReplacePolicy' and 'DeletionPolicy' are "
-                        "needed to protect resource from deletion"
-                    ),
+                    "Both 'UpdateReplacePolicy' and 'DeletionPolicy' are "
+                    "needed to protect resource from deletion",
                     path=deque([]),
                     rule=UpdateReplacePolicyDeletionPolicy(),
                     schema_path=deque(["anyOf"]),
@@ -74,10 +72,8 @@ def template():
             deque(["Resources", "MyResource"]),
             [
                 ValidationError(
-                    (
-                        "Both 'UpdateReplacePolicy' and 'DeletionPolicy' are "
-                        "needed to protect resource from deletion"
-                    ),
+                    "Both 'UpdateReplacePolicy' and 'DeletionPolicy' are "
+                    "needed to protect resource from deletion",
                     path=deque([]),
                     rule=UpdateReplacePolicyDeletionPolicy(),
                     schema_path=deque(["anyOf"]),

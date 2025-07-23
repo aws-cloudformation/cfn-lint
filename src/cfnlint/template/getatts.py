@@ -86,9 +86,7 @@ class GetAtts:
             attr_enum = []
             for attribute in attributes:
                 attr_enum.append(attribute)
-                schema_strings["enum"].append(
-                    f"{resource_name}.{attribute}"
-                )  # type: ignore
+                schema_strings["enum"].append(f"{resource_name}.{attribute}")  # type: ignore
 
             schema_array["items"][0]["enum"].append(resource_name)  # type: ignore
             schema_array["allOf"].append(  # type: ignore
