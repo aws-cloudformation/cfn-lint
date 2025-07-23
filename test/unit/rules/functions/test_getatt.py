@@ -8,8 +8,8 @@ from collections import deque
 import pytest
 
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules import CfnLintKeyword
 from cfnlint.rules.functions.GetAtt import GetAtt
+from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
 @pytest.fixture(scope="module")

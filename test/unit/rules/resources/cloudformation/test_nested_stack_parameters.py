@@ -6,8 +6,8 @@ SPDX-License-Identifier: MIT-0
 import logging
 from test.unit.rules import BaseRuleTestCase
 
-from cfnlint.rules.resources.cloudformation.NestedStackParameters import (
-    NestedStackParameters,  # pylint: disable=E0401
+from cfnlint.rules.resources.cloudformation.NestedStackParameters import (  # pylint: disable=E0401
+    NestedStackParameters,
 )
 
 
