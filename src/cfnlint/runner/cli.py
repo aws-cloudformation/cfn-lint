@@ -284,11 +284,17 @@ class Runner:
         if self.config.listrules:
             print(self.rules)
             sys.exit(0)
+        
         if self.config.listtemplates:
             if not self.config.templates:
                 print("None")
-            else:
-                print("\n".join(self.config.templates))
+                exit(0)
+            
+            for template in self.config.templates:
+                if not os.path.isdir(template):
+                    print(template)
+                else:
+                    print(f"not a file: {template}")
             sys.exit(0)
 
         # Use centralized configuration validation
