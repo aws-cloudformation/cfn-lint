@@ -127,10 +127,8 @@ def _append_queues(queue1: Iterable, queue2: Iterable) -> deque:
             },
             [
                 ValidationError(
-                    (
-                        "'Source' is not one of ['Build', 'Approval', "
-                        "'Deploy', 'Test', 'Invoke', 'Compute']"
-                    ),
+                    "'Source' is not one of ['Build', 'Approval', "
+                    "'Deploy', 'Test', 'Invoke', 'Compute']",
                     rule=PipelineFirstStageHasSource(),
                     validator="enum",
                 )
@@ -146,10 +144,8 @@ def _append_queues(queue1: Iterable, queue2: Iterable) -> deque:
             },
             [
                 ValidationError(
-                    (
-                        "'Source' is not one of ['Build', 'Approval', "
-                        "'Deploy', 'Test', 'Invoke', 'Compute']"
-                    ),
+                    "'Source' is not one of ['Build', 'Approval', "
+                    "'Deploy', 'Test', 'Invoke', 'Compute']",
                     rule=PipelineFirstStageHasSource(),
                     validator="enum",
                 )

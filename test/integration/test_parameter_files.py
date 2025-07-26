@@ -15,7 +15,7 @@ from cfnlint.runner import Runner
 
 
 @pytest.mark.parametrize(
-    ("name,parameter_files,templates,expected"),
+    "name,parameter_files,templates,expected",
     [
         (
             "Correctly configured deployment file",
@@ -138,7 +138,6 @@ def test_parameter_files(
     templates,
     expected,
 ):
-
     config = ConfigMixIn(
         cli_args=[],
         parameter_files=parameter_files,

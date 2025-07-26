@@ -73,7 +73,7 @@ def rule():
             "daily",
             [
                 ValidationError(
-                    ("'daily' has to be either 'cron()' or 'rate()'"),
+                    "'daily' has to be either 'cron()' or 'rate()'",
                 )
             ],
         ),
@@ -82,7 +82,7 @@ def rule():
             "cron()",
             [
                 ValidationError(
-                    ("'' is not of type 'string'"),
+                    "'' is not of type 'string'",
                 )
             ],
         ),
@@ -91,7 +91,7 @@ def rule():
             "rate()",
             [
                 ValidationError(
-                    ("'' is not of type 'string'"),
+                    "'' is not of type 'string'",
                 )
             ],
         ),
@@ -100,7 +100,7 @@ def rule():
             "rate(5)",
             [
                 ValidationError(
-                    ("'5' has to be of format rate(Value Unit)"),
+                    "'5' has to be of format rate(Value Unit)",
                 )
             ],
         ),
@@ -109,7 +109,7 @@ def rule():
             "rate(five minutes)",
             [
                 ValidationError(
-                    ("'five' is not of type 'integer'"),
+                    "'five' is not of type 'integer'",
                 )
             ],
         ),
@@ -118,12 +118,8 @@ def rule():
             "cron(0 */1 * * WED)",
             [
                 ValidationError(
-                    (
-                        (
-                            "'0' is not of length 6. (Minutes Hours "
-                            "Day-of-month Month Day-of-week Year)"
-                        )
-                    ),
+                    "'0' is not of length 6. (Minutes Hours "
+                    "Day-of-month Month Day-of-week Year)",
                 )
             ],
         ),
@@ -135,13 +131,9 @@ def rule():
             "cron(* 1 * * * *)",
             [
                 ValidationError(
-                    (
-                        (
-                            "'*' specifies both Day-of-month and "
-                            "Day-of-week. (Minutes Hours "
-                            "Day-of-month Month Day-of-week Year)"
-                        )
-                    ),
+                    "'*' specifies both Day-of-month and "
+                    "Day-of-week. (Minutes Hours "
+                    "Day-of-month Month Day-of-week Year)",
                 )
             ],
         ),
@@ -150,7 +142,7 @@ def rule():
             "rate(1 minutes)",
             [
                 ValidationError(
-                    ("'minutes' is not one of ['minute', 'hour', 'day']"),
+                    "'minutes' is not one of ['minute', 'hour', 'day']",
                 )
             ],
         ),
@@ -159,13 +151,12 @@ def rule():
             "rate(0 hour)",
             [
                 ValidationError(
-                    ("'0' is less than the minimum of 0"),
+                    "'0' is less than the minimum of 0",
                 )
             ],
         ),
     ],
 )
 def test_validate(name, instance, expected, rule, validator):
-
     errs = list(rule.validate(validator, {}, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"

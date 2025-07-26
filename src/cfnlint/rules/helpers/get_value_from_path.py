@@ -83,10 +83,13 @@ def get_value_from_path(
         if fn_k == "Fn::If":
             yield from _get_relationship_fn_if(validator, fn_k, fn_v, path)
         elif fn_k == "Ref" and fn_v == "AWS::NoValue":
-            yield None, validator.evolve(
-                context=validator.context.evolve(
-                    path=validator.context.path.descend(path=fn_k)
-                )
+            yield (
+                None,
+                validator.evolve(
+                    context=validator.context.evolve(
+                        path=validator.context.path.descend(path=fn_k)
+                    )
+                ),
             )
         elif not path:
             yield instance, validator

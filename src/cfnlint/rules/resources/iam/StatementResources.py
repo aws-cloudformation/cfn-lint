@@ -19,7 +19,6 @@ LOGGER = logging.getLogger(__name__)
 
 
 class _Arn:
-
     def __init__(self, full_arn: str):
         arn_parts = full_arn.split(":", 5)
 
@@ -75,7 +74,6 @@ class _Arn:
 
 
 class StatementResources(CfnLintKeyword):
-
     id = "I3510"
     shortdesc = "Validate statement resources match the actions"
     description = (
@@ -95,7 +93,6 @@ class StatementResources(CfnLintKeyword):
     def validate(
         self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
-
         if not validator.is_type(instance, "object"):
             return
 
@@ -128,7 +125,6 @@ class StatementResources(CfnLintKeyword):
             actions = ensure_list(actions)
 
             for action in actions:
-
                 if not validator.is_type(action, "string"):
                     continue
                 if any(x in action for x in ["*", "?"]):
@@ -165,10 +161,7 @@ class StatementResources(CfnLintKeyword):
                             break
                     else:
                         yield ValidationError(
-                            (
-                                f"action {action!r} requires "
-                                f"a resource of {arn_formats!r}"
-                            ),
+                            f"action {action!r} requires a resource of {arn_formats!r}",
                             path=deque(["Resource"]),
                             rule=self,
                         )

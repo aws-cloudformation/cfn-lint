@@ -22,11 +22,11 @@ def test_rule_descriptions():
     for rule in rules:
         if not rule.id:
             continue
-        assert (
-            rule.description not in descriptions
-        ), f"Duplicate description {rule.description!r}"
-        assert (
-            rule.shortdesc not in shortdesc
-        ), f"Duplicate shortdesc {rule.shortdesc!r}"
+        assert rule.description not in descriptions, (
+            f"Duplicate description {rule.description!r}"
+        )
+        assert rule.shortdesc not in shortdesc, (
+            f"Duplicate shortdesc {rule.shortdesc!r}"
+        )
         descriptions.add(rule.description)
         shortdesc.add(rule.shortdesc)

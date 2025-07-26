@@ -74,7 +74,7 @@ def rule():
             },
             [
                 ValidationError(
-                    ("'origin-id' is not one of ['foo', 'bar']"),
+                    "'origin-id' is not one of ['foo', 'bar']",
                     rule=DistributionTargetOriginId(),
                     path=deque([]),
                     validator="enum",
@@ -143,10 +143,7 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "'origin-id' is not one of "
-                        "['foo', 'bar', 'group-1', 'group-2']"
-                    ),
+                    "'origin-id' is not one of ['foo', 'bar', 'group-1', 'group-2']",
                     rule=DistributionTargetOriginId(),
                     path=deque([]),
                     validator="enum",

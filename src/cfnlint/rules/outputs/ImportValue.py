@@ -32,7 +32,7 @@ class ImportValue(CloudFormationLintRule):
             ):
                 key = list(instance.keys())[0]
                 yield ValidationError(
-                    (f"The output value {instance!r} is an import from another output"),
+                    f"The output value {instance!r} is an import from another output",
                     rule=self,
                     path=deque([key]),
                 )

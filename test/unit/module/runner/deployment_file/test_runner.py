@@ -22,7 +22,7 @@ def mock_glob(value, recursive):
 
 
 @pytest.mark.parametrize(
-    ("name,deployment_files,expected"),
+    "name,deployment_files,expected",
     [
         (
             "A standard git sync file",
@@ -195,7 +195,7 @@ def mock_glob(value, recursive):
                             columnnumberend=1,
                             filename=_filename_dev,
                             message=(
-                                f"Deployment file {_filename_dev!r} " "is not supported"
+                                f"Deployment file {_filename_dev!r} is not supported"
                             ),
                             rule=Configuration(),
                         )
@@ -245,11 +245,9 @@ def test_runner(
     deployment_files,
     expected,
 ):
-
     decode_results = [v for _, v in deployment_files.items()]
     deployment_files = [k for k, _ in deployment_files.items()]
     with patch("glob.glob", MagicMock(side_effect=mock_glob)):
-
         with patch(
             "cfnlint.config.ConfigMixIn.deployment_files", new_callable=PropertyMock
         ) as mock_deployment_files:

@@ -155,7 +155,8 @@ def create(
                     fn_resolved_validator,
                     fn_resolved_err,
                 ) in self.fn_resolvers[key](
-                    value_resolved_validator, value_resolved_value  # type: ignore
+                    value_resolved_validator,  # type: ignore
+                    value_resolved_value,
                 ):
                     if fn_resolved_err:
                         fn_resolved_err.path.appendleft(key)
@@ -184,11 +185,15 @@ def create(
                                     region_context.conditions.status,
                                     region_context.ref_values,
                                 ):
-                                    yield r_value, r_validator.evolve(
-                                        context=region_context.evolve(
-                                            is_resolved_value=True,
-                                        )
-                                    ), r_errs
+                                    yield (
+                                        r_value,
+                                        r_validator.evolve(
+                                            context=region_context.evolve(
+                                                is_resolved_value=True,
+                                            )
+                                        ),
+                                        r_errs,
+                                    )
                         except UnknownSatisfisfaction as err:
                             LOGGER.debug(err)
                             return

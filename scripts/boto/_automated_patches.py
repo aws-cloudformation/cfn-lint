@@ -109,7 +109,6 @@ def _nested_arrays(
     start_path: str,
     source: list[str],
 ):
-
     shape = shape_data.get("member", {}).get("shape")
     if not shape:
         return []
@@ -230,7 +229,6 @@ def _per_resource_patch(
 def get_resource_patches(
     service_dir: Path, schema_path: Path, service_name: str, last_date: str
 ) -> AllPatches:
-
     results: AllPatches = {}
 
     services_file = Path(f"{service_dir}/{last_date}/service-2.json")

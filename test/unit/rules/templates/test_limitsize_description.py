@@ -41,7 +41,7 @@ def rule():
             None,
             [
                 ValidationError(
-                    ("expected maximum length: 3, found: 6"),
+                    "expected maximum length: 3, found: 6",
                 )
             ],
         ),
@@ -59,7 +59,7 @@ def rule():
             [ValidationError("Bad")],
             [
                 ValidationError(
-                    ("Bad"),
+                    "Bad",
                 )
             ],
         ),

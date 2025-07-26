@@ -14,12 +14,10 @@ class TestQuickStartTemplates(BaseCliTestCase):
     scenarios = [
         {
             "filename": (
-                "test/fixtures/templates/integration"
-                "/resources-cloudformation-init.yaml"
+                "test/fixtures/templates/integration/resources-cloudformation-init.yaml"
             ),
             "results_filename": (
-                "test/fixtures/results/integration/"
-                "resources-cloudformation-init.json"
+                "test/fixtures/results/integration/resources-cloudformation-init.json"
             ),
             "exit_code": 0,
         },
@@ -32,34 +30,34 @@ class TestQuickStartTemplates(BaseCliTestCase):
         },
         {
             "filename": "test/fixtures/templates/integration/ref-no-value.yaml",
-            "results_filename": ("test/fixtures/results/integration/ref-no-value.json"),
+            "results_filename": "test/fixtures/results/integration/ref-no-value.json",
             "exit_code": 2,
         },
         {
             "filename": "test/fixtures/templates/integration/metdata.yaml",
-            "results_filename": ("test/fixtures/results/integration/metadata.json"),
+            "results_filename": "test/fixtures/results/integration/metadata.json",
             "exit_code": 4,
         },
         {
-            "filename": ("test/fixtures/templates/integration/availability-zones.yaml"),
+            "filename": "test/fixtures/templates/integration/availability-zones.yaml",
             "results_filename": (
                 "test/fixtures/results/integration/availability-zones.json"
             ),
             "exit_code": 2,
         },
         {
-            "filename": ("test/fixtures/templates/integration/getatt-types.yaml"),
-            "results_filename": ("test/fixtures/results/integration/getatt-types.json"),
+            "filename": "test/fixtures/templates/integration/getatt-types.yaml",
+            "results_filename": "test/fixtures/results/integration/getatt-types.json",
             "exit_code": 10,
         },
         {
-            "filename": ("test/fixtures/templates/integration/ref-types.yaml"),
-            "results_filename": ("test/fixtures/results/integration/ref-types.json"),
+            "filename": "test/fixtures/templates/integration/ref-types.yaml",
+            "results_filename": "test/fixtures/results/integration/ref-types.json",
             "exit_code": 2,
         },
         {
-            "filename": ("test/fixtures/templates/integration/formats.yaml"),
-            "results_filename": ("test/fixtures/results/integration/formats.json"),
+            "filename": "test/fixtures/templates/integration/formats.yaml",
+            "results_filename": "test/fixtures/results/integration/formats.json",
             "exit_code": 2,
         },
         {
@@ -72,7 +70,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "exit_code": 2,
         },
         {
-            "filename": ("test/fixtures/templates/integration/aws-ec2-instance.yaml"),
+            "filename": "test/fixtures/templates/integration/aws-ec2-instance.yaml",
             "results_filename": (
                 "test/fixtures/results/integration/aws-ec2-instance.json"
             ),
@@ -88,14 +86,12 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "exit_code": 2,
         },
         {
-            "filename": ("test/fixtures/templates/integration/aws-ec2-subnet.yaml"),
-            "results_filename": (
-                "test/fixtures/results/integration/aws-ec2-subnet.json"
-            ),
+            "filename": "test/fixtures/templates/integration/aws-ec2-subnet.yaml",
+            "results_filename": "test/fixtures/results/integration/aws-ec2-subnet.json",
             "exit_code": 2,
         },
         {
-            "filename": ("test/fixtures/templates/integration/aws-dynamodb-table.yaml"),
+            "filename": "test/fixtures/templates/integration/aws-dynamodb-table.yaml",
             "results_filename": (
                 "test/fixtures/results/integration/aws-dynamodb-table.json"
             ),

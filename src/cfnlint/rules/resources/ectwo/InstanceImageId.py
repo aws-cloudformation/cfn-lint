@@ -34,7 +34,6 @@ class InstanceImageId(CfnLintKeyword):
     def _get_related_launch_template(
         self, validator: Validator, instance: Any
     ) -> Iterator[tuple[Any, Validator]]:
-
         for launch_template, launch_template_validator in get_value_from_path(
             validator, instance, deque(["LaunchTemplate"])
         ):
@@ -55,7 +54,6 @@ class InstanceImageId(CfnLintKeyword):
     def validate(
         self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
-
         for (
             instance_image_id,
             instance_image_id_validator,

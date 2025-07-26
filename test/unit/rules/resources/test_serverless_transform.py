@@ -44,11 +44,9 @@ def rule():
             {},
             [
                 ValidationError(
-                    (
-                        "'AWS::Serverless::Function' type used "
-                        "without the serverless transform "
-                        "'AWS::Serverless-2016-10-31'"
-                    ),
+                    "'AWS::Serverless::Function' type used "
+                    "without the serverless transform "
+                    "'AWS::Serverless-2016-10-31'",
                     rule=ServerlessTransform(),
                 )
             ],

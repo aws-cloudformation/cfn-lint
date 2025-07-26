@@ -30,10 +30,8 @@ def rule():
             {"config": {"ignore_bad_key": ["E3002"]}},
             [
                 ValidationError(
-                    (
-                        "Additional properties are not allowed "
-                        "('ignore_bad_key' was unexpected)"
-                    ),
+                    "Additional properties are not allowed "
+                    "('ignore_bad_key' was unexpected)",
                     validator="additionalProperties",
                     schema_path=deque(["properties", "config", "additionalProperties"]),
                     rule=CfnLint(),

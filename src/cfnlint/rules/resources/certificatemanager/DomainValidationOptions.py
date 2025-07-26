@@ -54,10 +54,8 @@ class DomainValidationOptions(CfnLintKeyword):
 
                 if not domain_name.endswith("." + validation_domain):
                     yield ValidationError(
-                        (
-                            f"{validation_domain!r} must be a "
-                            f"superdomain of {domain_name!r}"
-                        ),
+                        f"{validation_domain!r} must be a "
+                        f"superdomain of {domain_name!r}",
                         path=deque(["DomainName"]),
                         instance=domain_name,
                     )

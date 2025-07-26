@@ -137,7 +137,6 @@ class Transform:
                 Transform._update_to_s3_uri("DefinitionUri", resource_dict)
 
     def _find_and_replace(self, item, parameters):
-
         k, v = is_function(item)
         if k == "Ref":
             if v in parameters:
@@ -203,8 +202,8 @@ class Transform:
         except InvalidDocumentException as e:
             # pylint: disable=import-outside-toplevel
             from cfnlint.match import Match  # pylint: disable=cyclic-import
-            from cfnlint.rules.errors import (  # pylint: disable=cyclic-import
-                TransformError,
+            from cfnlint.rules.errors import (
+                TransformError,  # pylint: disable=cyclic-import
             )
 
             message = "Error transforming template: {0}"
@@ -219,8 +218,8 @@ class Transform:
         except Exception as e:  # pylint: disable=W0703
             # pylint: disable=import-outside-toplevel
             from cfnlint.match import Match  # pylint: disable=cyclic-import
-            from cfnlint.rules.errors import (  # pylint: disable=cyclic-import
-                TransformError,
+            from cfnlint.rules.errors import (
+                TransformError,  # pylint: disable=cyclic-import
             )
 
             LOGGER.debug("Error transforming template: %s", str(e))

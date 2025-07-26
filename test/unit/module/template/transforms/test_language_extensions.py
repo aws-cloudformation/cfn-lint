@@ -406,7 +406,6 @@ class TestFindInMap(TestCase):
             fe.value(self.cfn)
 
     def test_account_id(self):
-
         cfnlint.template.transforms._language_extensions._ACCOUNT_ID = None
 
         with mock.patch(
@@ -1038,7 +1037,6 @@ class TestTransformValueAccountId(TestCase):
 
 class TestTransformValueEmptyList(TestCase):
     def setUp(self) -> None:
-
         cfnlint.template.transforms._language_extensions._ACCOUNT_ID = None
 
         self.template_obj = convert_dict(

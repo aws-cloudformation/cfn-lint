@@ -279,7 +279,6 @@ class TestManagerGetResourceSchema(BaseTestCase):
         self.assertTrue(schema_iso.is_cached)
 
     def test_type_normalization(self):
-
         rt = "MyCompany::MODULE"
         schema = self.manager.get_resource_schema("us-east-1", rt)
 
@@ -319,10 +318,8 @@ class TestManagerPatch(BaseTestCase):
 
         # Verify that print was called with the error message
         mock_print.assert_called_with(
-            (
-                f"Error applying patch {self.schema_patch} for "
-                f"{resource_type}: Invalid patch operation"
-            )
+            f"Error applying patch {self.schema_patch} for "
+            f"{resource_type}: Invalid patch operation"
         )
 
         # Verify that sys.exit was called with exit code 1

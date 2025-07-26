@@ -34,7 +34,7 @@ def rule():
             {"Engine": "aurora-mysql", "StorageType": "io1"},
             [
                 ValidationError(
-                    ("'io1' is not one of ['aurora', 'aurora-iopt1']"),
+                    "'io1' is not one of ['aurora', 'aurora-iopt1']",
                     rule=DbClusterAurora(),
                     path=deque(["StorageType"]),
                     validator="enum",
@@ -53,30 +53,24 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "Additional properties are not allowed "
-                        "'AllocatedStorage' when creating Aurora cluster"
-                    ),
+                    "Additional properties are not allowed "
+                    "'AllocatedStorage' when creating Aurora cluster",
                     rule=DbClusterAurora(),
                     path=deque(["AllocatedStorage"]),
                     validator=None,
                     schema_path=deque(["then", "properties", "AllocatedStorage"]),
                 ),
                 ValidationError(
-                    (
-                        "Additional properties are not allowed "
-                        "'DBClusterInstanceClass' when creating Aurora cluster"
-                    ),
+                    "Additional properties are not allowed "
+                    "'DBClusterInstanceClass' when creating Aurora cluster",
                     rule=DbClusterAurora(),
                     path=deque(["DBClusterInstanceClass"]),
                     schema_path=deque(["then", "properties", "DBClusterInstanceClass"]),
                     validator=None,
                 ),
                 ValidationError(
-                    (
-                        "Additional properties are not allowed 'Iops' "
-                        "when creating Aurora cluster"
-                    ),
+                    "Additional properties are not allowed 'Iops' "
+                    "when creating Aurora cluster",
                     rule=DbClusterAurora(),
                     path=deque(["Iops"]),
                     schema_path=deque(["then", "properties", "Iops"]),

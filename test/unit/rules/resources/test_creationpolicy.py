@@ -166,7 +166,6 @@ def template():
     indirect=["path"],
 )
 def test_deletion_policy(name, instance, expected, rule, validator):
-
     rule = CreationPolicy()
     errors = list(
         rule.validate(

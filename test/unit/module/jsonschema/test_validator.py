@@ -294,10 +294,8 @@ def test_validator(name, schema, instance, expected, validator):
             {"foooooa": 2},
             [
                 ValidationError(
-                    (
-                        "Additional properties are not allowed ('foooooa' "
-                        "was unexpected. Did you mean 'foooooo'?)"
-                    ),
+                    "Additional properties are not allowed ('foooooa' "
+                    "was unexpected. Did you mean 'foooooo'?)",
                 )
             ],
         ),
@@ -686,10 +684,8 @@ def test_validator(name, schema, instance, expected, validator):
             ["foo", 2],
             [
                 ValidationError(
-                    (
-                        "Too few items match the given schema "
-                        "(expected at least 2 but only 1 matched)"
-                    ),
+                    "Too few items match the given schema "
+                    "(expected at least 2 but only 1 matched)",
                     validator="minContains",
                     validator_value=2,
                 )
@@ -1090,7 +1086,7 @@ def test_validator(name, schema, instance, expected, validator):
             ],
             [
                 ValidationError(
-                    "array items are not unique " "for keys ['Name']",
+                    "array items are not unique for keys ['Name']",
                 )
             ],
         ),

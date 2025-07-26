@@ -24,9 +24,9 @@ def _resolve(name, instance, expected_results, **kwargs):
     validator = CfnTemplateValidator().evolve(**kwargs)
     resolutions = list(validator.resolve_value(instance))
 
-    assert len(resolutions) == len(
-        expected_results
-    ), f"{name!r} got {len(resolutions)!r}"
+    assert len(resolutions) == len(expected_results), (
+        f"{name!r} got {len(resolutions)!r}"
+    )
 
     for i, (instance, v, errors) in enumerate(resolutions):
         assert instance == expected_results[i][0], f"{name!r} got {instance!r}"
@@ -34,12 +34,12 @@ def _resolve(name, instance, expected_results, **kwargs):
         if not errors:
             expected_context = expected_results[i][1]
             _, expected_context = list(expected_context.ref_value("AWS::Region"))[0]
-            assert (
-                v.context.path == expected_context.path
-            ), f"{name!r} got {v.context.path!r}"
-            assert (
-                v.context.ref_values == expected_context.ref_values
-            ), f"{name!r} got {v.context.ref_values!r}"
+            assert v.context.path == expected_context.path, (
+                f"{name!r} got {v.context.path!r}"
+            )
+            assert v.context.ref_values == expected_context.ref_values, (
+                f"{name!r} got {v.context.ref_values!r}"
+            )
 
 
 @pytest.mark.parametrize(
@@ -274,11 +274,9 @@ def test_invalid_functions(name, instance, response):
                     None,
                     Context(),
                     ValidationError(
-                        (
-                            "'bar' is not one of ['foo', "
-                            "'transformFirstKey', 'transformSecondKey', "
-                            "'integers', 'accounts', 'environments']"
-                        ),
+                        "'bar' is not one of ['foo', "
+                        "'transformFirstKey', 'transformSecondKey', "
+                        "'integers', 'accounts', 'environments']",
                         path=deque(["Fn::FindInMap", 0]),
                     ),
                 )
@@ -315,7 +313,7 @@ def test_invalid_functions(name, instance, response):
                     None,
                     Context(),
                     ValidationError(
-                        ("'second' is not one of ['first'] for " "mapping 'foo'"),
+                        "'second' is not one of ['first'] for mapping 'foo'",
                         path=deque(["Fn::FindInMap", 1]),
                     ),
                 )
@@ -399,11 +397,9 @@ def test_invalid_functions(name, instance, response):
                     None,
                     Context(),
                     ValidationError(
-                        (
-                            "'bar' is not a second level key "
-                            "when {'Ref': 'AWS::AccountId'} is "
-                            "resolved for mapping 'accounts'"
-                        ),
+                        "'bar' is not a second level key "
+                        "when {'Ref': 'AWS::AccountId'} is "
+                        "resolved for mapping 'accounts'",
                         path=deque(["Fn::FindInMap", 2]),
                     ),
                 )
@@ -417,10 +413,8 @@ def test_invalid_functions(name, instance, response):
                     None,
                     Context(),
                     ValidationError(
-                        (
-                            "{'Ref': 'AWS::AccountId'} is not a "
-                            "first level key for mapping 'foo'"
-                        ),
+                        "{'Ref': 'AWS::AccountId'} is not a "
+                        "first level key for mapping 'foo'",
                         path=deque(["Fn::FindInMap", 1]),
                     ),
                 )
@@ -439,10 +433,8 @@ def test_invalid_functions(name, instance, response):
                     None,
                     Context(),
                     ValidationError(
-                        (
-                            "'third' is not one of ['second'] for "
-                            "mapping 'foo' and key 'first'"
-                        ),
+                        "'third' is not one of ['second'] for "
+                        "mapping 'foo' and key 'first'",
                         path=deque(["Fn::FindInMap", 2]),
                     ),
                 )
@@ -619,7 +611,7 @@ def test_invalid_functions(name, instance, response):
             [],
         ),
         (
-            ("Valid FindInMap with a Sub with no parameters"),
+            "Valid FindInMap with a Sub with no parameters",
             {"Fn::FindInMap": ["environments", "lion", {"Fn::Sub": "dev"}]},
             [
                 (
@@ -636,7 +628,7 @@ def test_invalid_functions(name, instance, response):
             ],
         ),
         (
-            ("Valid FindInMap with sub to a paremter"),
+            "Valid FindInMap with sub to a paremter",
             {"Fn::FindInMap": ["environments", "lion", {"Fn::Sub": "${Environment}"}]},
             [
                 (
@@ -678,7 +670,7 @@ def test_invalid_functions(name, instance, response):
             ],
         ),
         (
-            ("Valid FindInMap with sub list value to a paramter"),
+            "Valid FindInMap with sub list value to a paramter",
             {
                 "Fn::FindInMap": [
                     "environments",
@@ -726,7 +718,7 @@ def test_invalid_functions(name, instance, response):
             ],
         ),
         (
-            ("Valid FindInMap with an invalid sub"),
+            "Valid FindInMap with an invalid sub",
             {
                 "Fn::FindInMap": [
                     "environments",
@@ -834,7 +826,7 @@ def test_valid_functions(name, instance, response):
                     None,
                     Context(),
                     ValidationError(
-                        ("{'Ref': 'MyParameter'} is not one of []"),
+                        "{'Ref': 'MyParameter'} is not one of []",
                         path=deque(["Fn::FindInMap", 0]),
                     ),
                 )

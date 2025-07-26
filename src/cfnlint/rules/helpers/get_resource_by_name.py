@@ -16,7 +16,6 @@ from cfnlint.jsonschema import Validator
 def get_resource_by_name(
     validator: Validator, name: str, types: Sequence[str] | None = None
 ) -> tuple[Any, Validator]:
-
     resource = validator.context.resources.get(name)
     if not resource:
         return None, validator

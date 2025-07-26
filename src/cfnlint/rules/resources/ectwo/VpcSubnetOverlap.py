@@ -70,11 +70,9 @@ class VpcSubnetOverlap(CfnLintKeyword):
     def validate(
         self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
-
         for vpc_id, vpc_validator in get_value_from_path(
             validator=validator, instance=instance, path=deque(["VpcId"])
         ):
-
             if not isinstance(vpc_id, (str, dict)):
                 return
 
@@ -96,7 +94,6 @@ class VpcSubnetOverlap(CfnLintKeyword):
                 for cidr_block, cidr_block_validator in get_value_from_path(
                     validator=vpc_validator, instance=instance, path=deque([key])
                 ):
-
                     cidr_network = self._create_network(cidr_block)
                     if not cidr_network:
                         continue
@@ -121,10 +118,8 @@ class VpcSubnetOverlap(CfnLintKeyword):
                             saved_subnet,
                         ):
                             yield ValidationError(
-                                (
-                                    f"{str(cidr_network)!r} overlaps "
-                                    f"with {str(saved_subnet)!r}"
-                                ),
+                                f"{str(cidr_network)!r} overlaps "
+                                f"with {str(saved_subnet)!r}",
                                 rule=self,
                                 path=deque(
                                     list(cidr_block_validator.context.path.path)[1:]

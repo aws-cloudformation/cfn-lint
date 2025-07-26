@@ -152,7 +152,7 @@ _service = {
             deque(["Resources", "Service", "Properties"]),
             [
                 ValidationError(
-                    ("'NetworkConfiguration' is a required property"),
+                    "'NetworkConfiguration' is a required property",
                     validator="required",
                     rule=ServiceNetworkConfiguration(),
                 )
@@ -181,7 +181,7 @@ _service = {
             deque(["Resources", "Service", "Properties"]),
             [
                 ValidationError(
-                    ("'NetworkConfiguration' is a required property"),
+                    "'NetworkConfiguration' is a required property",
                     validator="required",
                     rule=ServiceNetworkConfiguration(),
                 )

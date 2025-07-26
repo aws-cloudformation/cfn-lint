@@ -172,7 +172,6 @@ class TestCli(BaseTestCase):
 
     @patch("argparse.ArgumentParser.print_help")
     def test_templates_with_deployment_files(self, mock_print_help):
-
         config = ConfigMixIn(
             [
                 "--template",
@@ -193,7 +192,6 @@ class TestCli(BaseTestCase):
 
     @patch("argparse.ArgumentParser.print_help")
     def test_templates_with_parameters_and_parameter_files(self, mock_print_help):
-
         config = ConfigMixIn(
             [
                 "--template",
@@ -215,7 +213,6 @@ class TestCli(BaseTestCase):
 
     @patch("argparse.ArgumentParser.print_help")
     def test_templates_with_deployment_files_and_parameters(self, mock_print_help):
-
         config = ConfigMixIn(
             [],
             parameters=[
@@ -234,7 +231,6 @@ class TestCli(BaseTestCase):
 
     @patch("argparse.ArgumentParser.print_help")
     def test_templates_with_parameters_and_multiple_templates(self, mock_print_help):
-
         config = ConfigMixIn(
             [
                 "--template",

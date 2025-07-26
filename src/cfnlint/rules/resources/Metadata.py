@@ -18,8 +18,7 @@ class Metadata(CfnLintJsonSchema):
     id = "E3028"
     shortdesc = "Validate the metadata section of a resource"
     description = (
-        "The metadata section can be unstructured but we do "
-        "validate the items we can"
+        "The metadata section can be unstructured but we do validate the items we can"
     )
     source_url = "https://github.com/aws-cloudformation/cfn-lint"
     tags = ["resources"]

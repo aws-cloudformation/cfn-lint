@@ -40,10 +40,10 @@ class TestYamlParse(BaseTestCase):
             cfn = Template(filename, template, ["us-east-1"])
 
             matches = list(self.rules.run(filename, cfn, ConfigMixIn({})))
-            assert (
-                len(matches) == failures
-            ), "Expected {} failures, got {} on {}".format(
-                failures, len(matches), filename
+            assert len(matches) == failures, (
+                "Expected {} failures, got {} on {}".format(
+                    failures, len(matches), filename
+                )
             )
 
     def test_success_parse_stdin(self):
@@ -60,10 +60,10 @@ class TestYamlParse(BaseTestCase):
 
                 matches = []
                 matches.extend(self.rules.run(filename, cfn, ConfigMixIn({})))
-                assert (
-                    len(matches) == failures
-                ), "Expected {} failures, got {} on {}".format(
-                    failures, len(matches), values.get("filename")
+                assert len(matches) == failures, (
+                    "Expected {} failures, got {} on {}".format(
+                        failures, len(matches), values.get("filename")
+                    )
                 )
 
     def test_map_failure(self):

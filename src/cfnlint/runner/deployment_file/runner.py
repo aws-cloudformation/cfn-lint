@@ -23,7 +23,6 @@ LOGGER = logging.getLogger(__name__)
 def _parse_deployment_file(
     filename: str,
 ) -> DeploymentFileData | list[Match]:
-
     data, matches = decode(filename)
 
     if data is None:
@@ -88,10 +87,8 @@ def expand_deployment_files(
             )
         except ValueError:
             LOGGER.debug(
-                (
-                    f"Template file path {deployment_data.template_file_path!r} "
-                    "is not relative to the current working directory"
-                )
+                f"Template file path {deployment_data.template_file_path!r} "
+                "is not relative to the current working directory"
             )
             template_path = (
                 Path(deployment_file).parent / deployment_data.template_file_path

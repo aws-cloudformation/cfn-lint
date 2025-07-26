@@ -34,7 +34,6 @@ class DistributionTargetOriginId(CfnLintKeyword):
     def validate(
         self, validator: Validator, _, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
-
         for cache_origin_id, cache_validator in get_value_from_path(
             validator, instance, path=deque(["DefaultCacheBehavior", "TargetOriginId"])
         ):

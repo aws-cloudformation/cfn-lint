@@ -12,7 +12,6 @@ if TYPE_CHECKING:
 
 
 class Ref:
-
     def __init__(self, schema: "Schema") -> None:
         primary_ids = schema.schema.get("primaryIdentifier", [])
         if len(primary_ids) > 1:

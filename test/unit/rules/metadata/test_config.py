@@ -30,7 +30,7 @@ def rule():
             [],
             [
                 ValidationError(
-                    ("[] is not of type 'object'"),
+                    "[] is not of type 'object'",
                     validator="type",
                     schema_path=deque(["type"]),
                     rule=Configuration(),
@@ -42,11 +42,9 @@ def rule():
             {"foo": None},
             [
                 ValidationError(
-                    (
-                        "None is not of type "
-                        "'string', 'integer', 'object', "
-                        "'array', 'boolean'"
-                    ),
+                    "None is not of type "
+                    "'string', 'integer', 'object', "
+                    "'array', 'boolean'",
                     validator="type",
                     schema_path=deque(["additionalProperties", "type"]),
                     path=deque(["foo"]),

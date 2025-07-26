@@ -71,7 +71,6 @@ def cfnContext(
     instance: Any,
     schema: Any,
 ) -> ValidationResult:
-
     context_parameters: dict[str, Any] = {}
 
     functions = s.get("functions")
@@ -126,10 +125,8 @@ def dynamicValidation(
     if transform_check is not None:
         if transform_check not in validator.context.transforms.transforms:
             yield ValidationError(
-                (
-                    f"Transform {transform_check!r} is required "
-                    "but not present in the template"
-                )
+                f"Transform {transform_check!r} is required "
+                "but not present in the template"
             )
 
     # Handle dynamic source validation

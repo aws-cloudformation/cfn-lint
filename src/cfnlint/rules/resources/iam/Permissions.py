@@ -53,10 +53,8 @@ class Permissions(CfnLintKeyword):
                 continue
             if ":" not in action:
                 yield ValidationError(
-                    (
-                        f"{action!r} is not a valid action. "
-                        "Must be of the form service:action or '*'"
-                    ),
+                    f"{action!r} is not a valid action. "
+                    "Must be of the form service:action or '*'",
                     rule=self,
                 )
                 return
@@ -76,10 +74,8 @@ class Permissions(CfnLintKeyword):
                         ]
                     ):
                         yield ValidationError(
-                            (
-                                f"{service!r} is not one of "
-                                f"{self._resource_action_limitations[validator.context.path.cfn_path[1]]!r}"
-                            ),
+                            f"{service!r} is not one of "
+                            f"{self._resource_action_limitations[validator.context.path.cfn_path[1]]!r}",
                             rule=self,
                         )
 

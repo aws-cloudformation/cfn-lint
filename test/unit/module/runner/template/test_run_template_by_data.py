@@ -65,7 +65,6 @@ def test_runner(
     runner_results,
     expected_parameters,
 ):
-
     with patch(
         "cfnlint.rules._rules.RulesCollection.run", side_effect=runner_results
     ) as mock_run:

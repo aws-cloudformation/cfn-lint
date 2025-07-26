@@ -100,6 +100,75 @@ class TestCloudFormationRule(BaseTestCase):
         self.assertListEqual(config.get("testListString"), ["foo"])
         self.assertListEqual(config.get("testListInteger"), [1])
 
+    def test_config_with_single_value_for_list(self):
+        """Test Configuration with single value for
+        list type (ensure_list functionality)"""
+
+        class TestRule(CloudFormationLintRule):
+            """Def Rule"""
+
+            id = "E1000"
+            shortdesc = "Test Rule"
+            description = "Test Rule"
+            source_url = "https://github.com/aws-cloudformation/cfn-lint/"
+            tags = ["resources"]
+
+            def __init__(self):
+                """Init"""
+                super(TestRule, self).__init__()
+                self.config_definition = {
+                    "testListBoolean": {
+                        "type": "list",
+                        "itemtype": "boolean",
+                        "default": [False],
+                    },
+                    "testListString": {
+                        "type": "list",
+                        "itemtype": "string",
+                        "default": ["bar"],
+                    },
+                    "testListInteger": {
+                        "type": "list",
+                        "itemtype": "integer",
+                        "default": [0],
+                    },
+                }
+                self.configure()
+
+            def get_config(self):
+                """Get the Config"""
+                return self.config
+
+        rule = TestRule()
+
+        # Test with single values that should be converted to lists
+        rule.configure(
+            {
+                "testListBoolean": "true",  # Single string value
+                "testListString": "foo",  # Single string value
+                "testListInteger": 5,  # Single integer value
+            }
+        )
+
+        config = rule.get_config()
+        self.assertListEqual(config.get("testListBoolean"), [True])
+        self.assertListEqual(config.get("testListString"), ["foo"])
+        self.assertListEqual(config.get("testListInteger"), [5])
+
+        # Test with already list values (should work as before)
+        rule.configure(
+            {
+                "testListBoolean": ["false", "true"],
+                "testListString": ["foo", "bar"],
+                "testListInteger": [1, 2, 3],
+            }
+        )
+
+        config = rule.get_config()
+        self.assertListEqual(config.get("testListBoolean"), [False, True])
+        self.assertListEqual(config.get("testListString"), ["foo", "bar"])
+        self.assertListEqual(config.get("testListInteger"), [1, 2, 3])
+
     def test_experimental(self):
         """Test Configuration"""
 

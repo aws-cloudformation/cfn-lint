@@ -13,8 +13,7 @@ class DynamicReferenceSsmPath(CloudFormationLintRule):
     id = "E1052"
     shortdesc = "Validate dynamic references to SSM are in a valid location"
     description = (
-        "Dynamic references to SSM parameters are only supported "
-        "in certain locations"
+        "Dynamic references to SSM parameters are only supported in certain locations"
     )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html#dynamic-references-ssm"
     tags = ["functions", "dynamic reference"]
@@ -35,6 +34,6 @@ class DynamicReferenceSsmPath(CloudFormationLintRule):
                         return
 
         yield ValidationError(
-            (f"Dynamic reference {instance!r} to SSM parameters are not allowed here"),
+            f"Dynamic reference {instance!r} to SSM parameters are not allowed here",
             rule=self,
         )

@@ -41,11 +41,9 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "'7.1.0' is not one of "
-                        "['4.0.10', '5.0.6', "
-                        "'6.0', '6.2', '7.0', '7.1']"
-                    ),
+                    "'7.1.0' is not one of "
+                    "['4.0.10', '5.0.6', "
+                    "'6.0', '6.2', '7.0', '7.1']",
                     validator="enum",
                     path=deque(["EngineVersion"]),
                     schema_path=[
@@ -67,7 +65,7 @@ def rule():
             },
             [
                 ValidationError(
-                    ("'oss-redis' is not one of " "['memcached', 'redis', 'valkey']"),
+                    "'oss-redis' is not one of ['memcached', 'redis', 'valkey']",
                     validator="enum",
                     path=deque(["Engine"]),
                     schema_path=["allOf", 0, "then", "properties", "Engine", "enum"],

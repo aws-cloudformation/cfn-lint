@@ -14,7 +14,6 @@ from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
 class EventSourceMappingToSqsTimeout(CfnLintKeyword):
-
     id = "E3505"
     shortdesc = (
         "Validate SQS 'VisibilityTimeout' is greater than a function's 'Timeout'"
@@ -34,7 +33,6 @@ class EventSourceMappingToSqsTimeout(CfnLintKeyword):
     def validate(
         self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
-
         if validator.is_type(instance, "string"):
             try:
                 instance = int(instance)
@@ -87,7 +85,7 @@ class EventSourceMappingToSqsTimeout(CfnLintKeyword):
                             if visibility_timeout < instance:
                                 yield ValidationError(
                                     message=(
-                                        f"Queue visibility timeout "
+                                        "Queue visibility timeout "
                                         f"({visibility_timeout!r}) "
                                         "is less than Function timeout "
                                         f"({instance!r}) seconds"

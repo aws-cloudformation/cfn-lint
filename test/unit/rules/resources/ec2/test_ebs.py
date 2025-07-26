@@ -50,10 +50,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "'Iops' is a required property when 'VolumeType' "
-                        "has a value of 'io1'"
-                    ),
+                    "'Iops' is a required property when 'VolumeType' "
+                    "has a value of 'io1'",
                     rule=Ebs(),
                     path=deque([]),
                     validator="required",
@@ -71,10 +69,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "Additional properties are not allowed (Iops) was "
-                        "unexpected when 'VolumeType' has a value of 'standard'"
-                    ),
+                    "Additional properties are not allowed (Iops) was "
+                    "unexpected when 'VolumeType' has a value of 'standard'",
                     rule=Ebs(),
                     path=deque(["Iops"]),
                     validator=None,

@@ -26,7 +26,7 @@ class Used(CloudFormationLintRule):
         k, _ = is_function(mappings)
         if k == "Fn::Transform":
             self.logger.debug(
-                (f"Mapping Name has a transform. Disabling check {self.id!r}"),
+                f"Mapping Name has a transform. Disabling check {self.id!r}",
             )
             return matches
 
@@ -38,10 +38,8 @@ class Used(CloudFormationLintRule):
                     map_name = maptree[-1][0]
                     if isinstance(map_name, dict):
                         self.logger.debug(
-                            (
-                                "Mapping Name has a function that can have too many"
-                                " variations. Disabling check %s"
-                            ),
+                            "Mapping Name has a function that can have too many"
+                            " variations. Disabling check %s",
                             self.id,
                         )
                         return matches

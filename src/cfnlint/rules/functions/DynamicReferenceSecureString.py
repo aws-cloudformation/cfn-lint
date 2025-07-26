@@ -43,9 +43,7 @@ class DynamicReferenceSecureString(BaseFn):
             return
 
         yield ValidationError(
-            (
-                f"Dynamic reference {instance!r} to SSM secure strings "
-                "can only be used in resource properties"
-            ),
+            f"Dynamic reference {instance!r} to SSM secure strings "
+            "can only be used in resource properties",
             rule=self,
         )

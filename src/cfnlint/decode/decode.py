@@ -121,10 +121,8 @@ def _decode(
                     [
                         create_match_file_error(
                             filename,
-                            (
-                                f"Tried to parse {filename} as JSON but got error:"
-                                f" {str(json_err)}"
-                            ),
+                            f"Tried to parse {filename} as JSON but got error:"
+                            f" {str(json_err)}",
                         )
                     ],
                 )

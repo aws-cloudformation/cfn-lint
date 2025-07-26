@@ -29,10 +29,8 @@ from cfnlint.rules.resources.DeletionPolicy import DeletionPolicy
                     rule=DeletionPolicy(),
                 ),
                 ValidationError(
-                    (
-                        "{'Foo': 'Bar'} is not one of ['Delete', 'Retain', "
-                        "'RetainExceptOnCreate', 'Snapshot']"
-                    ),
+                    "{'Foo': 'Bar'} is not one of ['Delete', 'Retain', "
+                    "'RetainExceptOnCreate', 'Snapshot']",
                     schema_path=deque(["enum"]),
                     validator="enum",
                     rule=DeletionPolicy(),
@@ -45,10 +43,8 @@ from cfnlint.rules.resources.DeletionPolicy import DeletionPolicy
             deque(["Resources", "MyInstance"]),
             [
                 ValidationError(
-                    (
-                        "'Snapshot' is not one of ['Delete', 'Retain', "
-                        "'RetainExceptOnCreate']"
-                    ),
+                    "'Snapshot' is not one of ['Delete', 'Retain', "
+                    "'RetainExceptOnCreate']",
                     schema_path=deque(["enum"]),
                     validator="enum",
                     rule=DeletionPolicy(),

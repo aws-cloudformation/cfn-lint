@@ -31,10 +31,8 @@ class Length(BaseFn):
     ) -> ValidationResult:
         if not validator.context.transforms.has_language_extensions_transform():
             yield ValidationError(
-                (
-                    f"{self.fn.name} is not supported without "
-                    "'AWS::LanguageExtensions' transform"
-                ),
+                f"{self.fn.name} is not supported without "
+                "'AWS::LanguageExtensions' transform",
                 validator=self.fn.py,
                 rule=self,
             )

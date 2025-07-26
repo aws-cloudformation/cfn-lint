@@ -28,13 +28,15 @@ class PrettyFormatter(BaseFormatter):
 
         # ruff: noqa: E501
         results.append(
-            f"Cfn-lint scanned {colored(1 if config.templates is None else len(config.templates), color.bold_reset)}"
+            "Cfn-lint scanned"
+            f" {colored(1 if config.templates is None else len(config.templates), color.bold_reset)}"
             " templates against "
             f"{colored(len(rules.used_rules), color.bold_reset)} rules and found "
-            f'{colored(len([i for i in matches if i.rule.severity.lower() == "error"]), color.error)} '
-            f'errors, {colored(len([i for i in matches if i.rule.severity.lower() == "warning"]), color.warning)} '
+            f"{colored(len([i for i in matches if i.rule.severity.lower() == 'error']), color.error)} "
+            "errors,"
+            f" {colored(len([i for i in matches if i.rule.severity.lower() == 'warning']), color.warning)} "
             f"warnings, and "
-            f'{colored(len([i for i in matches if i.rule.severity.lower() == "informational"]), color.informational)} '
+            f"{colored(len([i for i in matches if i.rule.severity.lower() == 'informational']), color.informational)} "
             f"informational violations"
         )
         return "\n".join(results)

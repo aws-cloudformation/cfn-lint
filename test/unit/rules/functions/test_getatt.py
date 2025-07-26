@@ -8,8 +8,8 @@ from collections import deque
 import pytest
 
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules import CfnLintKeyword
 from cfnlint.rules.functions.GetAtt import GetAtt
+from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
 @pytest.fixture(scope="module")
@@ -74,14 +74,12 @@ class _Fail(CfnLintKeyword):
             {},
             [
                 ValidationError(
-                    (
-                        "'foo' is not one of ['Arn', 'DomainName', "
-                        "'DualStackDomainName', 'RegionalDomainName', "
-                        "'MetadataTableConfiguration.S3TablesDestination.TableNamespace',"
-                        " 'MetadataTableConfiguration.S3TablesDestination.TableArn',"
-                        " 'WebsiteURL'] "
-                        "in ['us-east-1']"
-                    ),
+                    "'foo' is not one of ['Arn', 'DomainName', "
+                    "'DualStackDomainName', 'RegionalDomainName', "
+                    "'MetadataTableConfiguration.S3TablesDestination.TableNamespace',"
+                    " 'MetadataTableConfiguration.S3TablesDestination.TableArn',"
+                    " 'WebsiteURL'] "
+                    "in ['us-east-1']",
                     path=deque(["Fn::GetAtt", 1]),
                     schema_path=deque([]),
                     validator="fn_getatt",
@@ -96,10 +94,8 @@ class _Fail(CfnLintKeyword):
             {},
             [
                 ValidationError(
-                    (
-                        "'Foo' is not one of ['MyBucket', "
-                        "'MyCodePipeline', 'DocDBCluster']"
-                    ),
+                    "'Foo' is not one of ['MyBucket', "
+                    "'MyCodePipeline', 'DocDBCluster']",
                     path=deque(["Fn::GetAtt", 0]),
                     schema_path=deque(["enum"]),
                     validator="fn_getatt",
@@ -219,14 +215,12 @@ class _Fail(CfnLintKeyword):
             {},
             [
                 ValidationError(
-                    (
-                        "'MyBucket' is not one of ['Arn', 'DomainName', "
-                        "'DualStackDomainName', 'RegionalDomainName', "
-                        "'MetadataTableConfiguration.S3TablesDestination.TableNamespace',"
-                        " 'MetadataTableConfiguration.S3TablesDestination.TableArn',"
-                        " 'WebsiteURL'] in ['us-east-1'] when "
-                        "{'Ref': 'MyResourceParameter'} is resolved"
-                    ),
+                    "'MyBucket' is not one of ['Arn', 'DomainName', "
+                    "'DualStackDomainName', 'RegionalDomainName', "
+                    "'MetadataTableConfiguration.S3TablesDestination.TableNamespace',"
+                    " 'MetadataTableConfiguration.S3TablesDestination.TableArn',"
+                    " 'WebsiteURL'] in ['us-east-1'] when "
+                    "{'Ref': 'MyResourceParameter'} is resolved",
                     path=deque(["Fn::GetAtt", 1]),
                     validator="fn_getatt",
                 )
@@ -240,11 +234,9 @@ class _Fail(CfnLintKeyword):
             {},
             [
                 ValidationError(
-                    (
-                        "'Arn' is not one of ['MyBucket', "
-                        "'MyCodePipeline', 'DocDBCluster'] when "
-                        "{'Ref': 'MyAttributeParameter'} is resolved"
-                    ),
+                    "'Arn' is not one of ['MyBucket', "
+                    "'MyCodePipeline', 'DocDBCluster'] when "
+                    "{'Ref': 'MyAttributeParameter'} is resolved",
                     path=deque(["Fn::GetAtt", 0]),
                     schema_path=deque(["enum"]),
                     validator="fn_getatt",

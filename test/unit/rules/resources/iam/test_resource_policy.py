@@ -67,9 +67,14 @@ class TestResourcePolicy(TestCase):
                         "AWS": [
                             "arn:aws:iam::123456789012:root",
                             "999999999999",
-                            "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity E1234ABCDE12AB",
+                            (
+                                "arn:aws:iam::cloudfront:user/CloudFront Origin Access"
+                                " Identity E1234ABCDE12AB"
+                            ),
                         ],
-                        "CanonicalUser": "79a59df900b949e55d96a1e698fbacedfd6e09d98eacf8f8d5218e7cd47ef2be",
+                        "CanonicalUser": (
+                            "79a59df900b949e55d96a1e698fbacedfd6e09d98eacf8f8d5218e7cd47ef2be"
+                        ),
                     },
                     "Condition": {
                         "Null": {
@@ -89,11 +94,11 @@ class TestResourcePolicy(TestCase):
         self.assertEqual(len(errs), 2, errs)
         self.assertEqual(
             errs[0].message,
-            ("Only one of ['Action', 'NotAction'] is a required property"),
+            "Only one of ['Action', 'NotAction'] is a required property",
         )
         self.assertEqual(
             errs[1].message,
-            ("Only one of ['Action', 'NotAction'] is a required property"),
+            "Only one of ['Action', 'NotAction'] is a required property",
         )
         self.assertIn(
             ["Statement", 0, "NotAction"], [list(errs[0].path), list(errs[1].path)]
@@ -124,7 +129,9 @@ class TestResourcePolicy(TestCase):
                     ],
                     "Resource": [
                         {
-                            "Fn::Sub": "arn:${AWS::Partition}:iam::123456789012:role/object-role"
+                            "Fn::Sub": (
+                                "arn:${AWS::Partition}:iam::123456789012:role/object-role"
+                            )
                         },
                         {
                             "NotValid": [
@@ -150,7 +157,8 @@ class TestResourcePolicy(TestCase):
         self.assertListEqual(list(errs[1].path), ["Statement", 0, "Effect"])
         self.assertEqual(
             errs[2].message,
-            "{'NotValid': ['arn:${AWS::Partition}:iam::123456789012:role/object-role']} is not of type 'string'",
+            "{'NotValid': ['arn:${AWS::Partition}:iam::123456789012:role/object-role']}"
+            " is not of type 'string'",
         )
         self.assertListEqual(list(errs[2].path), ["Statement", 0, "Resource", 1])
 
@@ -197,7 +205,8 @@ class TestResourcePolicy(TestCase):
         )
         self.assertEqual(
             errs[1].message,
-            "{'Fn::Sub': ['arn:${AWS::Partition}:iam::123456789012/role/string-role']} is not of type 'string'",
+            "{'Fn::Sub': ['arn:${AWS::Partition}:iam::123456789012/role/string-role']}"
+            " is not of type 'string'",
         )
         self.assertListEqual(list(errs[1].path), ["Statement", 0, "Resource", 1])
         self.assertEqual(
@@ -222,7 +231,9 @@ class TestResourcePolicy(TestCase):
                     "Effect": "Allow",
                     "Action": "*",
                     "Resource": {
-                        "Fn::Sub": "arn:${AWS::Partition}:iam::123456789012:role/object-role"
+                        "Fn::Sub": (
+                            "arn:${AWS::Partition}:iam::123456789012:role/object-role"
+                        )
                     },
                     "Principal": "*",
                 },
@@ -230,7 +241,9 @@ class TestResourcePolicy(TestCase):
                     "Effect": "Allow",
                     "Action": "*",
                     "Resource": {
-                        "Fn::Sub": "arn:${AWS::Partition}:iam::123456789012:role/object-role"
+                        "Fn::Sub": (
+                            "arn:${AWS::Partition}:iam::123456789012:role/object-role"
+                        )
                     },
                     "Principal": {
                         "AWS": "*",
@@ -240,7 +253,9 @@ class TestResourcePolicy(TestCase):
                     "Effect": "Allow",
                     "Action": "*",
                     "Resource": {
-                        "Fn::Sub": "arn:${AWS::Partition}:iam::123456789012:role/object-role"
+                        "Fn::Sub": (
+                            "arn:${AWS::Partition}:iam::123456789012:role/object-role"
+                        )
                     },
                     "Principal": {"Fn::Sub": "*"},
                 },
@@ -272,7 +287,9 @@ class TestResourcePolicy(TestCase):
                     "Action": "*",
                     "Resource": "arn:aws:s3:::bucket",
                     "Principal": {
-                        "AWS": "arn:aws:sts::123456789012:assumed-role/rolename/rolesessionname"
+                        "AWS": (
+                            "arn:aws:sts::123456789012:assumed-role/rolename/rolesessionname"
+                        )
                     },
                 },
             ],
@@ -304,7 +321,9 @@ class TestResourcePolicy(TestCase):
                     "Action": "*",
                     "Resource": "arn:aws:s3:::bucket",
                     "Principal": {
-                        "AWS": "arn:aws:sts::123456789012:assumed-role/rolename/rolesessionname"
+                        "AWS": (
+                            "arn:aws:sts::123456789012:assumed-role/rolename/rolesessionname"
+                        )
                     },
                 },
                 {
@@ -313,7 +332,9 @@ class TestResourcePolicy(TestCase):
                     "Action": "*",
                     "Resource": "arn:aws:s3:::bucket",
                     "Principal": {
-                        "AWS": "arn:aws:sts::123456789012:assumed-role/rolename/rolesessionname"
+                        "AWS": (
+                            "arn:aws:sts::123456789012:assumed-role/rolename/rolesessionname"
+                        )
                     },
                 },
             ],

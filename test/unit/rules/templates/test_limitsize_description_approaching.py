@@ -30,7 +30,7 @@ def rule():
             "a" * 19,
             [
                 ValidationError(
-                    f"'{'a'*19}' is approaching the max length of 20",
+                    f"'{'a' * 19}' is approaching the max length of 20",
                     rule=ApproachingLimitDescription(),
                 )
             ],

@@ -45,10 +45,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "['FromPort', 'ToPort'] are required properties "
-                        "when using 'IpProtocol' value 'tcp'"
-                    ),
+                    "['FromPort', 'ToPort'] are required properties "
+                    "when using 'IpProtocol' value 'tcp'",
                     rule=SecurityGroupProtocolsAndPortsInclusive(),
                     path=deque([]),
                     instance={"IpProtocol": "tcp", "FromPort": 1},

@@ -14,7 +14,6 @@ from cfnlint.rules import CloudFormationLintRule
 
 
 class FormatKeyword(CloudFormationLintRule):
-
     def __init__(self, format: str | None = None, pattern: str | None = None) -> None:
         super().__init__()
         self.format_keyword = format

@@ -45,7 +45,6 @@ LOGGER.disabled = True
     ],
 )
 def test_schema(name, resource_schema, expected):
-
     schema = Schema(resource_schema)
 
     assert schema.ref == expected, f"{name!r} test got {schema.ref!r}"

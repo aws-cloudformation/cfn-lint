@@ -11,7 +11,6 @@ from typing import Any
 
 @dataclass(frozen=True)
 class DeploymentFileData:
-
     template_file_path: str = field()
     parameters: dict[str, Any] = field(default_factory=dict)
     tags: dict[str, str] = field(default_factory=dict)

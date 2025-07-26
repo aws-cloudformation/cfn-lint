@@ -30,11 +30,9 @@ def rule():
             "^abc|def)$",
             [
                 ValidationError(
-                    (
-                        "'^abc|def)$' could not be "
-                        "compiled (unbalanced parenthesis "
-                        "at position 8)"
-                    ),
+                    "'^abc|def)$' could not be "
+                    "compiled (unbalanced parenthesis "
+                    "at position 8)",
                     rule=AllowedPattern(),
                 )
             ],

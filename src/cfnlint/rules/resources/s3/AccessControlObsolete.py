@@ -40,10 +40,8 @@ class AccessControlObsolete(CfnLintKeyword):
             access_control = props.get("AccessControl", None)
             if access_control:
                 yield ValidationError(
-                    (
-                        "'AccessControl' is a legacy property. Consider "
-                        "using 'AWS::S3::BucketPolicy' instead"
-                    ),
+                    "'AccessControl' is a legacy property. Consider "
+                    "using 'AWS::S3::BucketPolicy' instead",
                     path=deque(["AccessControl"]),
                     instance=access_control,
                 )

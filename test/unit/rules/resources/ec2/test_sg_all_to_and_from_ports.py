@@ -54,7 +54,7 @@ def rule():
             },
             [
                 ValidationError(
-                    ("Both ['FromPort', 'ToPort'] must " "be -1 when one is -1"),
+                    "Both ['FromPort', 'ToPort'] must be -1 when one is -1",
                     rule=SecurityGroupAllToAndFromPorts(),
                     path=deque([]),
                     validator="required",
@@ -74,7 +74,7 @@ def rule():
             },
             [
                 ValidationError(
-                    ("Both ['FromPort', 'ToPort'] must " "be -1 when one is -1"),
+                    "Both ['FromPort', 'ToPort'] must be -1 when one is -1",
                     rule=SecurityGroupAllToAndFromPorts(),
                     path=deque([]),
                     validator="required",
@@ -95,7 +95,7 @@ def rule():
             },
             [
                 ValidationError(
-                    ("Both ['FromPort', 'ToPort'] must " "be -1 when one is -1"),
+                    "Both ['FromPort', 'ToPort'] must be -1 when one is -1",
                     rule=SecurityGroupAllToAndFromPorts(),
                     path=deque(["FromPort"]),
                     validator="enum",
@@ -115,7 +115,7 @@ def rule():
             },
             [
                 ValidationError(
-                    ("Both ['FromPort', 'ToPort'] must " "be -1 when one is -1"),
+                    "Both ['FromPort', 'ToPort'] must be -1 when one is -1",
                     rule=SecurityGroupAllToAndFromPorts(),
                     path=deque(["ToPort"]),
                     validator="enum",
@@ -136,7 +136,7 @@ def rule():
             },
             [
                 ValidationError(
-                    ("Both ['FromPort', 'ToPort'] must " "be -1 when one is -1"),
+                    "Both ['FromPort', 'ToPort'] must be -1 when one is -1",
                     rule=SecurityGroupAllToAndFromPorts(),
                     path=deque(["ToPort"]),
                     validator="enum",

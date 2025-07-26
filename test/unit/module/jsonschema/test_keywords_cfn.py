@@ -182,10 +182,8 @@ def test_cfn_context_with_refs(instance, schema, mock_resolver, expected, valida
             ["Ref", "Fn::GetAtt"],
             [
                 ValidationError(
-                    (
-                        "Additional properties are not allowed "
-                        "('Fn::GetAtt' was unexpected)"
-                    ),
+                    "Additional properties are not allowed "
+                    "('Fn::GetAtt' was unexpected)",
                     path=deque(["Fn::GetAtt"]),
                 )
             ],
@@ -234,10 +232,8 @@ def test_additional_properties_with_functions(
             {},
             [
                 ValidationError(
-                    (
-                        "Transform 'AWS::LanguageExtensions' is "
-                        "required but not present in the template"
-                    ),
+                    "Transform 'AWS::LanguageExtensions' is "
+                    "required but not present in the template",
                     path=deque([]),
                 )
             ],
@@ -298,10 +294,8 @@ def test_additional_properties_with_functions(
             {},
             [
                 ValidationError(
-                    (
-                        "'Parameters/MyParam' does not match "
-                        "'^Resources/MyResource/Properties.*$'"
-                    ),
+                    "'Parameters/MyParam' does not match "
+                    "'^Resources/MyResource/Properties.*$'",
                     schema_path=deque(["pattern"]),
                     path=deque([]),
                     validator="pattern",

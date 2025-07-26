@@ -85,7 +85,6 @@ class VpcSubnetCidr(CfnLintKeyword):
                 instance,
                 deque([key]),
             ):
-
                 if cidr is None:
                     continue
                 yield self._create_network(cidr), cidr_validator
@@ -93,7 +92,6 @@ class VpcSubnetCidr(CfnLintKeyword):
     def validate(
         self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
-
         if not validator.cfn.graph:
             return
 
@@ -190,7 +188,7 @@ class VpcSubnetCidr(CfnLintKeyword):
                                         f"{[f'{str(v)}' for v in vpc_ipv6_networks]!r}"
                                     )
                             yield ValidationError(
-                                (f"{str(subnet_network)!r} {reprs}"),
+                                f"{str(subnet_network)!r} {reprs}",
                                 rule=self,
                                 path_override=subnet_validator.context.path.path,
                             )

@@ -44,5 +44,4 @@ class UsingMerge(CloudFormationLintRule):
         return matches
 
     def match(self, cfn: Template):
-
         return self._nested_obj(cfn.template, [])

@@ -100,13 +100,11 @@ def cfn():
             {"type": "string"},
             [
                 ValidationError(
-                    (
-                        "'bar' is not one of ["
-                        "'MyParameter', 'MyResource', 'MySimpleAd', 'MyPolicy', "
-                        "'AWS::AccountId', 'AWS::NoValue', 'AWS::NotificationARNs', "
-                        "'AWS::Partition', 'AWS::Region', "
-                        "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix']"
-                    ),
+                    "'bar' is not one of ["
+                    "'MyParameter', 'MyResource', 'MySimpleAd', 'MyPolicy', "
+                    "'AWS::AccountId', 'AWS::NoValue', 'AWS::NotificationARNs', "
+                    "'AWS::Partition', 'AWS::Region', "
+                    "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix']",
                     path=deque(["Fn::Sub"]),
                     schema_path=deque([]),
                     validator="fn_sub",
@@ -119,13 +117,11 @@ def cfn():
             {"type": "string"},
             [
                 ValidationError(
-                    (
-                        "'foo' is not one of ["
-                        "'MyParameter', 'MyResource', 'MySimpleAd', 'MyPolicy', "
-                        "'AWS::AccountId', 'AWS::NoValue', 'AWS::NotificationARNs', "
-                        "'AWS::Partition', 'AWS::Region', "
-                        "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix']"
-                    ),
+                    "'foo' is not one of ["
+                    "'MyParameter', 'MyResource', 'MySimpleAd', 'MyPolicy', "
+                    "'AWS::AccountId', 'AWS::NoValue', 'AWS::NotificationARNs', "
+                    "'AWS::Partition', 'AWS::Region', "
+                    "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix']",
                     path=deque(["Fn::Sub"]),
                     schema_path=deque([]),
                     validator="fn_sub",
@@ -174,10 +170,8 @@ def cfn():
             {"type": "string"},
             [
                 ValidationError(
-                    (
-                        "{'Fn::Split': [',', '${AWS::AccountId}']} is "
-                        "not of type 'array', 'string'"
-                    ),
+                    "{'Fn::Split': [',', '${AWS::AccountId}']} is "
+                    "not of type 'array', 'string'",
                     path=deque(["Fn::Sub"]),
                     schema_path=deque(["cfnContext", "schema", "type"]),
                     validator="fn_sub",
@@ -288,15 +282,13 @@ def cfn():
             {"type": "string"},
             [
                 ValidationError(
-                    (
-                        "'Foo' is not one of ['Arn', "
-                        "'DomainName', "
-                        "'DualStackDomainName', "
-                        "'RegionalDomainName', "
-                        "'MetadataTableConfiguration.S3TablesDestination.TableNamespace',"
-                        " 'MetadataTableConfiguration.S3TablesDestination.TableArn',"
-                        " 'WebsiteURL'] in ['us-east-1']"
-                    ),
+                    "'Foo' is not one of ['Arn', "
+                    "'DomainName', "
+                    "'DualStackDomainName', "
+                    "'RegionalDomainName', "
+                    "'MetadataTableConfiguration.S3TablesDestination.TableNamespace',"
+                    " 'MetadataTableConfiguration.S3TablesDestination.TableArn',"
+                    " 'WebsiteURL'] in ['us-east-1']",
                     path=deque(["Fn::Sub"]),
                     schema_path=deque([]),
                     validator="fn_sub",
@@ -322,7 +314,7 @@ def cfn():
             {"type": "string"},
             [
                 ValidationError(
-                    ("'MySimpleAd.DnsIpAddresses' is not of type 'string'"),
+                    "'MySimpleAd.DnsIpAddresses' is not of type 'string'",
                     instance="MySimpleAd.DnsIpAddresses",
                     path=deque(["Fn::Sub"]),
                     schema_path=deque([]),
@@ -336,7 +328,7 @@ def cfn():
             {"type": "string"},
             [
                 ValidationError(
-                    ("'MyPolicy.AttachmentCount' is not of type 'string'"),
+                    "'MyPolicy.AttachmentCount' is not of type 'string'",
                     instance="MySimpleAd.DnsIpAddresses",
                     path=deque(["Fn::Sub"]),
                     schema_path=deque([]),
@@ -356,14 +348,14 @@ def cfn():
             {"type": "string", "const": "three"},
             [
                 ValidationError(
-                    ("'three' was expected when 'Fn::Sub' is resolved"),
+                    "'three' was expected when 'Fn::Sub' is resolved",
                     path=deque(["Fn::Sub"]),
                     schema_path=deque(["const"]),
                     validator="fn_sub",
                     rule=SubResolved(),
                 ),
                 ValidationError(
-                    ("'three' was expected when 'Fn::Sub' is resolved"),
+                    "'three' was expected when 'Fn::Sub' is resolved",
                     path=deque(["Fn::Sub"]),
                     schema_path=deque(["const"]),
                     validator="fn_sub",

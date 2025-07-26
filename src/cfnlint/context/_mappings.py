@@ -23,7 +23,6 @@ class Mappings:
 
     @classmethod
     def create_from_dict(cls, instance: Any) -> Mappings:
-
         if not isinstance(instance, dict):
             return cls({})
         try:

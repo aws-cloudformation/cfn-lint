@@ -93,11 +93,9 @@ def context(cfn):
             },
             [
                 ValidationError(
-                    (
-                        "'AllowedPattern' is not one of ['AllowedValues', "
-                        "'ConstraintDescription', 'Default', 'Description', "
-                        "'MaxValue', 'MinValue', 'NoEcho', 'Type']"
-                    ),
+                    "'AllowedPattern' is not one of ['AllowedValues', "
+                    "'ConstraintDescription', 'Default', 'Description', "
+                    "'MaxValue', 'MinValue', 'NoEcho', 'Type']",
                     validator="enum",
                     schema_path=deque(
                         [
@@ -123,12 +121,10 @@ def context(cfn):
             },
             [
                 ValidationError(
-                    (
-                        "'MinValue' is not one of ['AllowedPattern', "
-                        "'AllowedValues', 'ConstraintDescription', "
-                        "'Default', 'Description', 'MaxLength', "
-                        "'MinLength', 'NoEcho', 'Type']"
-                    ),
+                    "'MinValue' is not one of ['AllowedPattern', "
+                    "'AllowedValues', 'ConstraintDescription', "
+                    "'Default', 'Description', 'MaxLength', "
+                    "'MinLength', 'NoEcho', 'Type']",
                     validator="enum",
                     schema_path=deque(
                         [
@@ -165,8 +161,7 @@ def context(cfn):
         (
             "Long key name",
             {
-                "a"
-                * 256: {
+                "a" * 256: {
                     "Type": "String",
                 }
             },

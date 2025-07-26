@@ -39,10 +39,8 @@ def cfn():
             {},
             [
                 ValidationError(
-                    (
-                        "Fn::ToJsonString is not supported without "
-                        "'AWS::LanguageExtensions' transform"
-                    ),
+                    "Fn::ToJsonString is not supported without "
+                    "'AWS::LanguageExtensions' transform",
                     path=deque([]),
                     schema_path=deque([]),
                     validator="fn_tojsonstring",
@@ -109,12 +107,10 @@ def cfn():
             {"transforms": Transforms(["AWS::LanguageExtensions"])},
             [
                 ValidationError(
-                    (
-                        "'AWS::NotificationARNs' is not one of "
-                        "['MyResource', 'AWS::AccountId', "
-                        "'AWS::NoValue', 'AWS::Partition', 'AWS::Region', "
-                        "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix']"
-                    ),
+                    "'AWS::NotificationARNs' is not one of "
+                    "['MyResource', 'AWS::AccountId', "
+                    "'AWS::NoValue', 'AWS::Partition', 'AWS::Region', "
+                    "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix']",
                     path=deque(["Fn::ToJsonString", "Ref"]),
                     schema_path=deque(
                         [

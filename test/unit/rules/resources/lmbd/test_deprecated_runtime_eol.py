@@ -40,12 +40,10 @@ def rule():
             datetime(2023, 12, 4),
             [
                 ValidationError(
-                    (
-                        "Runtime 'python3.7' was deprecated on "
-                        "'2023-12-04'. Creation was disabled on "
-                        "'2024-01-09' and update on '2025-11-01'. "
-                        "Please consider updating to 'python3.13'"
-                    ),
+                    "Runtime 'python3.7' was deprecated on "
+                    "'2023-12-04'. Creation was disabled on "
+                    "'2024-01-09' and update on '2025-11-01'. "
+                    "Please consider updating to 'python3.13'",
                 )
             ],
         ),

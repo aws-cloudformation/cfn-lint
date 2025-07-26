@@ -40,7 +40,6 @@ class ServiceHealthCheckGracePeriodSeconds(CfnLintJsonSchema):
     def validate(
         self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
-
         cfn_validator = self.extend_validator(
             validator=validator.evolve(
                 function_filter=validator.function_filter.evolve(

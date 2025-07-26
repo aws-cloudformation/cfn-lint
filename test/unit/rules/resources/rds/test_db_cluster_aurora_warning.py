@@ -47,10 +47,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "Additional properties are not allowed "
-                        "'PerformanceInsightsEnabled' when creating Aurora cluster"
-                    ),
+                    "Additional properties are not allowed "
+                    "'PerformanceInsightsEnabled' when creating Aurora cluster",
                     rule=DbClusterAuroraWarning(),
                     path=deque(["PerformanceInsightsEnabled"]),
                     validator=None,

@@ -44,7 +44,6 @@ class BucketTieringConfiguration(CfnLintKeyword):
     def validate(
         self, validator: Validator, _, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
-
         for archive_access, archive_access_validator in get_value_from_path(
             validator, instance, deque(["AccessTier"])
         ):

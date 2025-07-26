@@ -26,10 +26,8 @@ def rule():
             },
             [
                 ValidationError(
-                    (
-                        "'AccessControl' is a legacy property. "
-                        "Consider using 'AWS::S3::BucketPolicy' instead"
-                    ),
+                    "'AccessControl' is a legacy property. "
+                    "Consider using 'AWS::S3::BucketPolicy' instead",
                     path=deque(["AccessControl"]),
                 )
             ],

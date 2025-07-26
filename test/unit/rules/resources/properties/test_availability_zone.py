@@ -115,7 +115,7 @@ def validator_cdk():
             },
             [
                 ValidationError(
-                    ("Avoid hardcoding availability zones 'us-east-1a'"),
+                    "Avoid hardcoding availability zones 'us-east-1a'",
                     rule=AvailabilityZone(),
                 )
             ],
@@ -128,11 +128,11 @@ def validator_cdk():
             },
             [
                 ValidationError(
-                    ("Avoid hardcoding availability zones 'us-east-1a'"),
+                    "Avoid hardcoding availability zones 'us-east-1a'",
                     rule=AvailabilityZone(),
                 ),
                 ValidationError(
-                    ("Avoid hardcoding availability zones 'us-east-1b'"),
+                    "Avoid hardcoding availability zones 'us-east-1b'",
                     rule=AvailabilityZone(),
                 ),
             ],
