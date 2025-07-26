@@ -172,15 +172,18 @@ class TestArgsParser(BaseTestCase):
 
         args = [
             "--list-templates", 
-            "-t", "template1.yaml", 
-            "-t", "template2.yaml"
+            "-t", "test/fixtures/templates/public/lambda-poller.yaml",
+            "-t", "test/fixtures/templates/public/rds-cluster.yaml"
         ]
 
         # Test the CLI argument parsing for --list-templates with multiple templates
         config = cfnlint.config.CliArgs(args)
         self.assertEqual(config.cli_args.listtemplates, True)
         self.assertEqual(config.cli_args.templates, [])
-        self.assertEqual(config.cli_args.template_alt, ["template1.yaml", "template2.yaml"])
+        self.assertEqual(config.cli_args.template_alt, [
+            "test/fixtures/templates/public/lambda-poller.yaml", 
+            "test/fixtures/templates/public/rds-cluster.yaml"
+        ])
 
         # Run cfn-lint and validate the output
         result = subprocess.run(
@@ -190,7 +193,7 @@ class TestArgsParser(BaseTestCase):
             text=True
         )
 
-        expected_output = 'template1.yaml\ntemplate2.yaml'
+        expected_output = 'test/fixtures/templates/public/lambda-poller.yaml\ntest/fixtures/templates/public/rds-cluster.yaml'
         self.assertEqual(result.returncode, 0)
         self.assertEqual(result.stdout.strip(), expected_output)
 
@@ -227,7 +230,8 @@ class TestArgsParser(BaseTestCase):
         pwd = os.getcwd()
         args = [
             "--list-templates", 
-            "-t", "template1.yaml", 
+            "-t", "test/fixtures/templates/public/lambda-poller.yaml",
+            "-t", "test/fixtures/templates/public/rds-cluster.yaml",
             "-t", pwd # Current directory
         ]
 
@@ -235,7 +239,7 @@ class TestArgsParser(BaseTestCase):
         config = cfnlint.config.CliArgs(args)
         self.assertEqual(config.cli_args.listtemplates, True)
         self.assertEqual(config.cli_args.templates, [])
-        self.assertEqual(config.cli_args.template_alt, ["template1.yaml", pwd])
+        self.assertEqual(config.cli_args.template_alt, ["test/fixtures/templates/public/lambda-poller.yaml", "test/fixtures/templates/public/rds-cluster.yaml", pwd])
 
         # Run cfn-lint and validate the output
         result = subprocess.run(
@@ -245,6 +249,6 @@ class TestArgsParser(BaseTestCase):
             text=True
         )
 
-        expected_output = f'not a file: {pwd}\ntemplate1.yaml'
+        expected_output = f'not a file: {pwd}\ntest/fixtures/templates/public/lambda-poller.yaml\ntest/fixtures/templates/public/rds-cluster.yaml'
         self.assertEqual(result.returncode, 0)
         self.assertEqual(result.stdout.strip(), expected_output)
