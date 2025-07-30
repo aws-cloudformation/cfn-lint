@@ -288,6 +288,11 @@ def cfn():
                     "'RegionalDomainName', "
                     "'MetadataTableConfiguration.S3TablesDestination.TableNamespace',"
                     " 'MetadataTableConfiguration.S3TablesDestination.TableArn',"
+                    " 'MetadataConfiguration.Destination',"
+                    " 'MetadataConfiguration.JournalTableConfiguration.TableName',"
+                    " 'MetadataConfiguration.JournalTableConfiguration.TableArn',"
+                    " 'MetadataConfiguration.InventoryTableConfiguration.TableName',"
+                    " 'MetadataConfiguration.InventoryTableConfiguration.TableArn',"
                     " 'WebsiteURL'] in ['us-east-1']",
                     path=deque(["Fn::Sub"]),
                     schema_path=deque([]),
