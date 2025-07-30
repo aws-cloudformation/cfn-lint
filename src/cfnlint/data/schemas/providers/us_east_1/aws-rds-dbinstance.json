@@ -66,6 +66,24 @@
    ],
    "type": "object"
   },
+  "DBInstanceStatusInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "Message": {
+     "type": "string"
+    },
+    "Normal": {
+     "type": "boolean"
+    },
+    "Status": {
+     "type": "string"
+    },
+    "StatusType": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "Endpoint": {
    "additionalProperties": false,
    "properties": {
@@ -190,6 +208,9 @@
    "minimum": 1,
    "type": "integer"
   },
+  "AutomaticRestartTime": {
+   "type": "string"
+  },
   "AvailabilityZone": {
    "type": "string"
   },
@@ -235,6 +256,9 @@
    "maxLength": 63,
    "minLength": 1,
    "pattern": "^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  },
+  "DBInstanceStatus": {
    "type": "string"
   },
   "DBName": {
@@ -323,14 +347,28 @@
   "EngineVersion": {
    "type": "string"
   },
+  "InstanceCreateTime": {
+   "format": "date-time",
+   "type": "string"
+  },
   "Iops": {
    "type": "integer"
+  },
+  "IsStorageConfigUpgradeAvailable": {
+   "type": "boolean"
   },
   "KmsKeyId": {
    "type": "string"
   },
+  "LatestRestorableTime": {
+   "format": "date-time",
+   "type": "string"
+  },
   "LicenseModel": {
    "type": "string"
+  },
+  "ListenerEndpoint": {
+   "$ref": "#/definitions/Endpoint"
   },
   "ManageMasterUserPassword": {
    "type": "boolean"
@@ -366,6 +404,9 @@
    "type": "string"
   },
   "OptionGroupName": {
+   "type": "string"
+  },
+  "PercentProgress": {
    "type": "string"
   },
   "PerformanceInsightsKMSKeyId": {
@@ -425,6 +466,18 @@
   "PubliclyAccessible": {
    "type": "boolean"
   },
+  "ReadReplicaDBClusterIdentifiers": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ReadReplicaDBInstanceIdentifiers": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
   "ReplicaMode": {
    "enum": [
     "mounted",
@@ -434,6 +487,12 @@
   },
   "RestoreTime": {
    "format": "date-time",
+   "type": "string"
+  },
+  "ResumeFullAutomationModeTime": {
+   "type": "string"
+  },
+  "SecondaryAvailabilityZone": {
    "type": "string"
   },
   "SourceDBClusterIdentifier": {
@@ -450,6 +509,12 @@
   },
   "SourceRegion": {
    "type": "string"
+  },
+  "StatusInfos": {
+   "items": {
+    "$ref": "#/definitions/DBInstanceStatusInfo"
+   },
+   "type": "array"
   },
   "StorageEncrypted": {
    "type": "boolean"
@@ -513,16 +578,31 @@
   "/properties/StorageType": "$lowercase(StorageType)"
  },
  "readOnlyProperties": [
+  "/properties/AutomaticRestartTime",
+  "/properties/CertificateDetails",
+  "/properties/CertificateDetails/CAIdentifier",
+  "/properties/CertificateDetails/ValidTill",
   "/properties/Endpoint",
   "/properties/Endpoint/Address",
   "/properties/Endpoint/Port",
   "/properties/Endpoint/HostedZoneId",
   "/properties/DbiResourceId",
   "/properties/DBInstanceArn",
+  "/properties/DBInstanceStatus",
+  "/properties/InstanceCreateTime",
+  "/properties/IsStorageConfigUpgradeAvailable",
+  "/properties/LatestRestorableTime",
+  "/properties/ListenerEndpoint",
+  "/properties/ListenerEndpoint/Address",
+  "/properties/ListenerEndpoint/Port",
+  "/properties/ListenerEndpoint/HostedZoneId",
   "/properties/MasterUserSecret/SecretArn",
-  "/properties/CertificateDetails",
-  "/properties/CertificateDetails/CAIdentifier",
-  "/properties/CertificateDetails/ValidTill"
+  "/properties/PercentProgress",
+  "/properties/ReadReplicaDBClusterIdentifiers",
+  "/properties/ReadReplicaDBInstanceIdentifiers",
+  "/properties/ResumeFullAutomationModeTime",
+  "/properties/SecondaryAvailabilityZone",
+  "/properties/StatusInfo"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
  "tagging": {

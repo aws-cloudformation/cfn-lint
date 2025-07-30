@@ -1,0 +1,81 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ServiceEnvironmentName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ServiceEnvironmentName",
+  "/properties/ServiceEnvironmentType"
+ ],
+ "definitions": {
+  "CapacityLimit": {
+   "additionalProperties": false,
+   "properties": {
+    "CapacityUnit": {
+     "type": "string"
+    },
+    "MaxCapacity": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "CapacityLimits": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CapacityLimit"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ServiceEnvironmentArn"
+ ],
+ "properties": {
+  "CapacityLimits": {
+   "$ref": "#/definitions/CapacityLimits"
+  },
+  "ServiceEnvironmentArn": {
+   "type": "string"
+  },
+  "ServiceEnvironmentName": {
+   "type": "string"
+  },
+  "ServiceEnvironmentType": {
+   "enumCaseInsensitive": [
+    "sagemaker_training"
+   ],
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".*": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ServiceEnvironmentArn"
+ ],
+ "required": [
+  "ServiceEnvironmentType",
+  "CapacityLimits"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Batch::ServiceEnvironment"
+}

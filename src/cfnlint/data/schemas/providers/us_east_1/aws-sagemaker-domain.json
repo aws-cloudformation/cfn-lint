@@ -253,6 +253,9 @@
     },
     "FSxLustreFileSystemConfig": {
      "$ref": "#/definitions/FSxLustreFileSystemConfig"
+    },
+    "S3FileSystemConfig": {
+     "$ref": "#/definitions/S3FileSystemConfig"
     }
    },
    "type": "object"
@@ -816,6 +819,23 @@
    },
    "type": "object"
   },
+  "S3FileSystemConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "MountPath": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "S3Uri": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "(s3)://([^/]+)/?(.*)",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "SharingSettings": {
    "additionalProperties": false,
    "properties": {
@@ -949,6 +969,10 @@
      "maxLength": 100,
      "minLength": 1,
      "pattern": "[\\w\\.-]+$",
+     "type": "string"
+    },
+    "SingleSignOnApplicationArn": {
+     "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso::[0-9]+:application/[a-zA-Z0-9-_.]+/apl-[a-zA-Z0-9]+$",
      "type": "string"
     },
     "StudioWebPortalAccess": {
@@ -1172,9 +1196,7 @@
  "required": [
   "AuthMode",
   "DefaultUserSettings",
-  "DomainName",
-  "SubnetIds",
-  "VpcId"
+  "DomainName"
  ],
  "typeName": "AWS::SageMaker::Domain",
  "writeOnlyProperties": [

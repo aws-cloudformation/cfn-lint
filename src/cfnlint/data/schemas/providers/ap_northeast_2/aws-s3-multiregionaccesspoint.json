@@ -1,0 +1,92 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/PublicAccessBlockConfiguration",
+  "/properties/Regions"
+ ],
+ "definitions": {
+  "PublicAccessBlockConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BlockPublicAcls": {
+     "type": "boolean"
+    },
+    "BlockPublicPolicy": {
+     "type": "boolean"
+    },
+    "IgnorePublicAcls": {
+     "type": "boolean"
+    },
+    "RestrictPublicBuckets": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "Region": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "^[a-z0-9][a-z0-9//.//-]*[a-z0-9]$",
+     "relationshipRef": {
+      "propertyPath": "/properties/BucketName",
+      "typeName": "AWS::S3::Bucket"
+     },
+     "type": "string"
+    },
+    "BucketAccountId": {
+     "maxLength": 12,
+     "minLength": 12,
+     "pattern": "^[0-9]{12}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Alias": {
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 50,
+   "minLength": 3,
+   "pattern": "^[a-z0-9][-a-z0-9]{1,48}[a-z0-9]$",
+   "type": "string"
+  },
+  "PublicAccessBlockConfiguration": {
+   "$ref": "#/definitions/PublicAccessBlockConfiguration"
+  },
+  "Regions": {
+   "items": {
+    "$ref": "#/definitions/Region"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Alias",
+  "/properties/CreatedAt"
+ ],
+ "required": [
+  "Regions"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::S3::MultiRegionAccessPoint"
+}

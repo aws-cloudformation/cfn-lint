@@ -1,0 +1,373 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterIdentifier",
+  "/properties/OwnerAccount",
+  "/properties/SnapshotIdentifier",
+  "/properties/DBName",
+  "/properties/SnapshotClusterIdentifier",
+  "/properties/ClusterSubnetGroupName",
+  "/properties/MasterUsername"
+ ],
+ "definitions": {
+  "Endpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LoggingProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "relationshipRef": {
+      "propertyPath": "/properties/BucketName",
+      "typeName": "AWS::S3::Bucket"
+     },
+     "type": "string"
+    },
+    "LogDestinationType": {
+     "type": "string"
+    },
+    "LogExports": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 3,
+     "type": "array"
+    },
+    "S3KeyPrefix": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterIdentifier"
+ ],
+ "properties": {
+  "AllowVersionUpgrade": {
+   "type": "boolean"
+  },
+  "AquaConfigurationStatus": {
+   "enum": [
+    "auto",
+    "disabled",
+    "enabled"
+   ],
+   "type": "string"
+  },
+  "AutomatedSnapshotRetentionPeriod": {
+   "type": "integer"
+  },
+  "AvailabilityZone": {
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "AvailabilityZoneRelocation": {
+   "type": "boolean"
+  },
+  "AvailabilityZoneRelocationStatus": {
+   "type": "string"
+  },
+  "Classic": {
+   "type": "boolean"
+  },
+  "ClusterIdentifier": {
+   "maxLength": 63,
+   "type": "string"
+  },
+  "ClusterNamespaceArn": {
+   "type": "string"
+  },
+  "ClusterParameterGroupName": {
+   "maxLength": 255,
+   "type": "string"
+  },
+  "ClusterSecurityGroups": {
+   "insertionOrder": false,
+   "items": {
+    "anyOf": [
+     {
+      "relationshipRef": {
+       "propertyPath": "/properties/Id",
+       "typeName": "AWS::EC2::SecurityGroup"
+      }
+     },
+     {
+      "relationshipRef": {
+       "propertyPath": "/properties/Id",
+       "typeName": "AWS::Redshift::ClusterSecurityGroup"
+      }
+     }
+    ],
+    "maxLength": 2147483647,
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ClusterSubnetGroupName": {
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "ClusterType": {
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "ClusterVersion": {
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "DBName": {
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "DeferMaintenance": {
+   "type": "boolean"
+  },
+  "DeferMaintenanceDuration": {
+   "type": "integer"
+  },
+  "DeferMaintenanceEndTime": {
+   "type": "string"
+  },
+  "DeferMaintenanceIdentifier": {
+   "type": "string"
+  },
+  "DeferMaintenanceStartTime": {
+   "type": "string"
+  },
+  "DestinationRegion": {
+   "type": "string"
+  },
+  "ElasticIp": {
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "Encrypted": {
+   "type": "boolean"
+  },
+  "Endpoint": {
+   "$ref": "#/definitions/Endpoint"
+  },
+  "EnhancedVpcRouting": {
+   "type": "boolean"
+  },
+  "HsmClientCertificateIdentifier": {
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "HsmConfigurationIdentifier": {
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "IamRoles": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2147483647,
+    "relationshipRef": {
+     "propertyPath": "/properties/Arn",
+     "typeName": "AWS::IAM::Role"
+    },
+    "type": "string"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "KmsKeyId": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::KMS::Key"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/KeyId",
+      "typeName": "AWS::KMS::Key"
+     }
+    }
+   ],
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "LoggingProperties": {
+   "$ref": "#/definitions/LoggingProperties"
+  },
+  "MaintenanceTrackName": {
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "ManageMasterPassword": {
+   "type": "boolean"
+  },
+  "ManualSnapshotRetentionPeriod": {
+   "type": "integer"
+  },
+  "MasterPasswordSecretArn": {
+   "type": "string"
+  },
+  "MasterPasswordSecretKmsKeyId": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::KMS::Key"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/KeyId",
+      "typeName": "AWS::KMS::Key"
+     }
+    }
+   ],
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "MasterUserPassword": {
+   "maxLength": 64,
+   "type": "string"
+  },
+  "MasterUsername": {
+   "maxLength": 128,
+   "type": "string"
+  },
+  "MultiAZ": {
+   "type": "boolean"
+  },
+  "NamespaceResourcePolicy": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "NodeType": {
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "NumberOfNodes": {
+   "maximum": 100,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "OwnerAccount": {
+   "type": "string"
+  },
+  "Port": {
+   "type": "integer"
+  },
+  "PreferredMaintenanceWindow": {
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "PubliclyAccessible": {
+   "type": "boolean"
+  },
+  "ResourceAction": {
+   "type": "string"
+  },
+  "RevisionTarget": {
+   "type": "string"
+  },
+  "RotateEncryptionKey": {
+   "type": "boolean"
+  },
+  "SnapshotClusterIdentifier": {
+   "type": "string"
+  },
+  "SnapshotCopyGrantName": {
+   "type": "string"
+  },
+  "SnapshotCopyManual": {
+   "type": "boolean"
+  },
+  "SnapshotCopyRetentionPeriod": {
+   "type": "integer"
+  },
+  "SnapshotIdentifier": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcSecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "maxLength": 2147483647,
+    "relationshipRef": {
+     "propertyPath": "/properties/VpcId",
+     "typeName": "AWS::EC2::VPC"
+    },
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DeferMaintenanceIdentifier",
+  "/properties/Endpoint/Port",
+  "/properties/Endpoint/Address",
+  "/properties/ClusterNamespaceArn",
+  "/properties/MasterPasswordSecretArn"
+ ],
+ "required": [
+  "NodeType",
+  "MasterUsername",
+  "DBName",
+  "ClusterType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::Redshift::Cluster",
+ "writeOnlyProperties": [
+  "/properties/MasterUserPassword",
+  "/properties/Classic",
+  "/properties/SnapshotIdentifier",
+  "/properties/DeferMaintenance",
+  "/properties/DeferMaintenanceDuration",
+  "/properties/ManageMasterPassword"
+ ]
+}
