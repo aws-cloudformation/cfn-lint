@@ -1,3 +1,14 @@
+### v1.38.1
+## What's Changed
+* Add `--list-templates` advanced / debugging parameter by @gbudge in https://github.com/aws-cloudformation/cfn-lint/pull/4195
+* Add to context to allow exceptions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4197
+* Update CloudFormation schemas to `2025-07-30` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4190
+
+## New Contributors
+* @gbudge made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4195
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.38.0...v1.38.1
+
 ### v1.38.0
 ## What's Changed
 * Improve condition processing by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4187
