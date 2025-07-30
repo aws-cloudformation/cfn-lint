@@ -1,0 +1,151 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ChannelGroupName",
+   "/properties/ChannelName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ChannelGroupName",
+  "/properties/ChannelName",
+  "/properties/InputType"
+ ],
+ "definitions": {
+  "IngestEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Url": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InputSwitchConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MQCSInputSwitching": {
+     "type": "boolean"
+    },
+    "PreferredInput": {
+     "maximum": 2,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "InputType": {
+   "enum": [
+    "HLS",
+    "CMAF"
+   ],
+   "type": "string"
+  },
+  "OutputHeaderConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "PublishMQCS": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ChannelGroupName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "ChannelName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "IngestEndpointUrls": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "IngestEndpoints": {
+   "items": {
+    "$ref": "#/definitions/IngestEndpoint"
+   },
+   "type": "array"
+  },
+  "InputSwitchConfiguration": {
+   "$ref": "#/definitions/InputSwitchConfiguration"
+  },
+  "InputType": {
+   "$ref": "#/definitions/InputType"
+  },
+  "ModifiedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "OutputHeaderConfiguration": {
+   "$ref": "#/definitions/OutputHeaderConfiguration"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/IngestEndpoints",
+  "/properties/IngestEndpointUrls",
+  "/properties/ModifiedAt"
+ ],
+ "required": [
+  "ChannelGroupName",
+  "ChannelName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediapackagev2",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaPackageV2::Channel"
+}

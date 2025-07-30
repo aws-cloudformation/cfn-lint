@@ -74,10 +74,15 @@ class _Fail(CfnLintKeyword):
             {},
             [
                 ValidationError(
-                    "'foo' is not one of ['Arn', 'DomainName', "
-                    "'DualStackDomainName', 'RegionalDomainName', "
-                    "'MetadataTableConfiguration.S3TablesDestination.TableNamespace',"
+                    "'foo' is not one of ['Arn', 'DomainName',"
+                    " 'DualStackDomainName', 'RegionalDomainName',"
+                    " 'MetadataTableConfiguration.S3TablesDestination.TableNamespace',"
                     " 'MetadataTableConfiguration.S3TablesDestination.TableArn',"
+                    " 'MetadataConfiguration.Destination',"
+                    " 'MetadataConfiguration.JournalTableConfiguration.TableName',"
+                    " 'MetadataConfiguration.JournalTableConfiguration.TableArn',"
+                    " 'MetadataConfiguration.InventoryTableConfiguration.TableName',"
+                    " 'MetadataConfiguration.InventoryTableConfiguration.TableArn',"
                     " 'WebsiteURL'] "
                     "in ['us-east-1']",
                     path=deque(["Fn::GetAtt", 1]),
@@ -215,10 +220,15 @@ class _Fail(CfnLintKeyword):
             {},
             [
                 ValidationError(
-                    "'MyBucket' is not one of ['Arn', 'DomainName', "
-                    "'DualStackDomainName', 'RegionalDomainName', "
-                    "'MetadataTableConfiguration.S3TablesDestination.TableNamespace',"
+                    "'MyBucket' is not one of ['Arn', 'DomainName',"
+                    " 'DualStackDomainName', 'RegionalDomainName',"
+                    " 'MetadataTableConfiguration.S3TablesDestination.TableNamespace',"
                     " 'MetadataTableConfiguration.S3TablesDestination.TableArn',"
+                    " 'MetadataConfiguration.Destination',"
+                    " 'MetadataConfiguration.JournalTableConfiguration.TableName',"
+                    " 'MetadataConfiguration.JournalTableConfiguration.TableArn',"
+                    " 'MetadataConfiguration.InventoryTableConfiguration.TableName',"
+                    " 'MetadataConfiguration.InventoryTableConfiguration.TableArn',"
                     " 'WebsiteURL'] in ['us-east-1'] when "
                     "{'Ref': 'MyResourceParameter'} is resolved",
                     path=deque(["Fn::GetAtt", 1]),

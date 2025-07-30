@@ -3,7 +3,8 @@
  "createOnlyProperties": [
   "/properties/AwsAccountId",
   "/properties/FolderArns",
-  "/properties/TopicId"
+  "/properties/TopicId",
+  "/properties/Tags"
  ],
  "definitions": {
   "AggregationFunctionParameters": {
@@ -118,6 +119,20 @@
     "COLLECTIVE"
    ],
    "type": "string"
+  },
+  "CustomInstructions": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomInstructionsString": {
+     "maxLength": 5000,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "CustomInstructionsString"
+   ],
+   "type": "object"
   },
   "DataAggregation": {
    "additionalProperties": false,
@@ -482,6 +497,26 @@
      "$ref": "#/definitions/TypeParameters"
     }
    },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
    "type": "object"
   },
   "TopicCalculatedField": {
@@ -969,6 +1004,9 @@
   "ConfigOptions": {
    "$ref": "#/definitions/TopicConfigOptions"
   },
+  "CustomInstructions": {
+   "$ref": "#/definitions/CustomInstructions"
+  },
   "DataSets": {
    "items": {
     "$ref": "#/definitions/DatasetMetadata"
@@ -993,6 +1031,14 @@
    "minLength": 1,
    "type": "string"
   },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 1,
+   "type": "array"
+  },
   "TopicId": {
    "maxLength": 256,
    "minLength": 0,
@@ -1008,9 +1054,10 @@
  ],
  "tagging": {
   "cloudFormationSystemTags": false,
-  "tagOnCreate": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
   "tagUpdatable": false,
-  "taggable": false
+  "taggable": true
  },
  "typeName": "AWS::QuickSight::Topic",
  "writeOnlyProperties": [

@@ -1,0 +1,165 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EndpointName",
+  "/properties/ClusterIdentifier",
+  "/properties/ResourceOwner",
+  "/properties/SubnetGroupName"
+ ],
+ "definitions": {
+  "NetworkInterface": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "type": "string"
+    },
+    "NetworkInterfaceId": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Id",
+      "typeName": "AWS::EC2::NetworkInterface"
+     },
+     "type": "string"
+    },
+    "PrivateIpAddress": {
+     "relationshipRef": {
+      "propertyPath": "/properties/PrivateIpAddress",
+      "typeName": "AWS::EC2::NetworkInterface"
+     },
+     "type": "string"
+    },
+    "SubnetId": {
+     "format": "AWS::EC2::Subnet.Id",
+     "relationshipRef": {
+      "propertyPath": "/properties/SubnetId",
+      "typeName": "AWS::EC2::NetworkInterface"
+     },
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VpcSecurityGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "type": "string"
+    },
+    "VpcSecurityGroupId": {
+     "format": "AWS::EC2::SecurityGroup.Id",
+     "relationshipRef": {
+      "propertyPath": "/properties/Id",
+      "typeName": "AWS::EC2::SecurityGroup"
+     },
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EndpointName"
+ ],
+ "properties": {
+  "Address": {
+   "type": "string"
+  },
+  "ClusterIdentifier": {
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "EndpointCreateTime": {
+   "type": "string"
+  },
+  "EndpointName": {
+   "pattern": "^(?=^[a-z][a-z0-9]*(-[a-z0-9]+)*$).{1,30}$",
+   "type": "string"
+  },
+  "EndpointStatus": {
+   "type": "string"
+  },
+  "Port": {
+   "type": "integer"
+  },
+  "ResourceOwner": {
+   "maxLength": 2147483647,
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "SubnetGroupName": {
+   "pattern": "^(?=^[a-zA-Z0-9-]+$).{1,255}$",
+   "type": "string"
+  },
+  "VpcEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "NetworkInterfaces": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/NetworkInterface"
+     },
+     "type": "array"
+    },
+    "VpcEndpointId": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Id",
+      "typeName": "AWS::EC2::VPCEndpoint"
+     },
+     "type": "string"
+    },
+    "VpcId": {
+     "format": "AWS::EC2::VPC.Id",
+     "relationshipRef": {
+      "propertyPath": "/properties/VpcId",
+      "typeName": "AWS::EC2::VPCEndpoint"
+     },
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VpcSecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "maxLength": 2147483647,
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "VpcSecurityGroups": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/VpcSecurityGroup"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Address",
+  "/properties/EndpointStatus",
+  "/properties/EndpointCreateTime",
+  "/properties/Port",
+  "/properties/VpcSecurityGroups",
+  "/properties/VpcSecurityGroups/*/VpcSecurityGroupId",
+  "/properties/VpcSecurityGroups/*/Status",
+  "/properties/VpcEndpoint",
+  "/properties/VpcEndpoint/VpcEndpointId",
+  "/properties/VpcEndpoint/VpcId",
+  "/properties/VpcEndpoint/NetworkInterfaces/*/NetworkInterfaceId",
+  "/properties/VpcEndpoint/NetworkInterfaces/*/PrivateIpAddress",
+  "/properties/VpcEndpoint/NetworkInterfaces/*/SubnetId",
+  "/properties/VpcEndpoint/NetworkInterfaces/*/AvailabilityZone"
+ ],
+ "required": [
+  "ClusterIdentifier",
+  "SubnetGroupName",
+  "EndpointName",
+  "VpcSecurityGroupIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-redshift",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Redshift::EndpointAccess"
+}

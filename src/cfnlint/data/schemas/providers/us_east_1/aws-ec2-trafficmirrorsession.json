@@ -1,8 +1,5 @@
 {
  "additionalProperties": false,
- "createOnlyProperties": [
-  "/properties/NetworkInterfaceId"
- ],
  "definitions": {
   "Tag": {
    "additionalProperties": false,
@@ -15,10 +12,18 @@
     }
    },
    "required": [
-    "Value",
-    "Key"
+    "Key",
+    "Value"
    ],
    "type": "object"
+  },
+  "TrafficMirrorSessionField": {
+   "enum": [
+    "packet-length",
+    "description",
+    "virtual-network-id"
+   ],
+   "type": "string"
   }
  },
  "primaryIdentifier": [
@@ -34,6 +39,9 @@
   "NetworkInterfaceId": {
    "type": "string"
   },
+  "OwnerId": {
+   "type": "string"
+  },
   "PacketLength": {
    "type": "integer"
   },
@@ -41,6 +49,7 @@
    "type": "integer"
   },
   "Tags": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
    },
@@ -61,10 +70,18 @@
   "/properties/Id"
  ],
  "required": [
-  "TrafficMirrorTargetId",
   "NetworkInterfaceId",
   "TrafficMirrorFilterId",
-  "SessionNumber"
+  "SessionNumber",
+  "TrafficMirrorTargetId"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-tm.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::EC2::TrafficMirrorSession"
 }

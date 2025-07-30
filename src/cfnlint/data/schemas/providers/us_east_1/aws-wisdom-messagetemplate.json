@@ -21,6 +21,15 @@
    },
    "type": "object"
   },
+  "AttachmentName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "AttachmentUrl": {
+   "minLength": 1,
+   "type": "string"
+  },
   "ChannelSubtype": {
    "enum": [
     "EMAIL",
@@ -443,6 +452,26 @@
    "minLength": 1,
    "type": "string"
   },
+  "MessageTemplateAttachment": {
+   "additionalProperties": false,
+   "properties": {
+    "AttachmentId": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "AttachmentName": {
+     "$ref": "#/definitions/AttachmentName"
+    },
+    "S3PresignedUrl": {
+     "$ref": "#/definitions/AttachmentUrl"
+    }
+   },
+   "required": [
+    "AttachmentName",
+    "S3PresignedUrl"
+   ],
+   "type": "object"
+  },
   "MessageTemplateAttributes": {
    "additionalProperties": false,
    "properties": {
@@ -577,6 +606,13 @@
    "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})?$",
    "type": "string"
   },
+  "MessageTemplateAttachments": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/MessageTemplateAttachment"
+   },
+   "type": "array"
+  },
   "MessageTemplateContentSha256": {
    "maxLength": 64,
    "minLength": 1,
@@ -604,7 +640,8 @@
  "readOnlyProperties": [
   "/properties/MessageTemplateId",
   "/properties/MessageTemplateArn",
-  "/properties/MessageTemplateContentSha256"
+  "/properties/MessageTemplateContentSha256",
+  "/properties/MessageTemplateAttachments/*/AttachmentId"
  ],
  "replacementStrategy": "create_then_delete",
  "required": [
@@ -621,5 +658,8 @@
   "tagUpdatable": true,
   "taggable": true
  },
- "typeName": "AWS::Wisdom::MessageTemplate"
+ "typeName": "AWS::Wisdom::MessageTemplate",
+ "writeOnlyProperties": [
+  "/properties/MessageTemplateAttachments/*/S3PresignedUrl"
+ ]
 }

@@ -42,10 +42,6 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "https:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/CollectionEndpoint",
-      "typeName": "AWS::OpenSearchServerless::Collection"
-     },
      "type": "string"
     },
     "IndexName": {
@@ -64,10 +60,6 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "arn:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::IAM::Role"
-     },
      "type": "string"
     },
     "S3BackupMode": {
@@ -166,10 +158,6 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "arn:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::IAM::Role"
-     },
      "type": "string"
     },
     "S3BackupMode": {
@@ -223,10 +211,6 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "arn:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::IAM::Role"
-     },
      "type": "string"
     }
    },
@@ -259,6 +243,12 @@
      "minLength": 1,
      "pattern": "arn:.*",
      "type": "string"
+    },
+    "WarehouseLocation": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "s3:\\/\\/.*",
+     "type": "string"
     }
    },
    "type": "object"
@@ -273,19 +263,11 @@
      "format": "AWS::Logs::LogGroup.Name",
      "maxLength": 512,
      "pattern": "[\\.\\-_/#A-Za-z0-9]*",
-     "relationshipRef": {
-      "propertyPath": "/properties/LogGroupName",
-      "typeName": "AWS::Logs::LogGroup"
-     },
      "type": "string"
     },
     "LogStreamName": {
      "maxLength": 512,
      "pattern": "[^:*]*",
-     "relationshipRef": {
-      "propertyPath": "/properties/LogStreamName",
-      "typeName": "AWS::Logs::LogStream"
-     },
      "type": "string"
     }
    },
@@ -516,10 +498,6 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "arn:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::KMS::Key"
-     },
      "type": "string"
     },
     "KeyType": {
@@ -561,6 +539,19 @@
      "minLength": 1,
      "pattern": "[a-zA-Z0-9\\.\\_]+",
      "type": "string"
+    },
+    "PartitionSpec": {
+     "additionalProperties": false,
+     "properties": {
+      "Identity": {
+       "items": {
+        "$ref": "#/definitions/PartitionField"
+       },
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "type": "object"
     },
     "S3ErrorOutputPrefix": {
      "maxLength": 1024,
@@ -705,10 +696,6 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "arn:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::IAM::Role"
-     },
      "type": "string"
     },
     "S3BackupMode": {
@@ -769,10 +756,6 @@
      "maxLength": 2048,
      "minLength": 1,
      "pattern": "arn:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::S3::Bucket"
-     },
      "type": "string"
     },
     "BufferingHints": {
@@ -830,10 +813,6 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "arn:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::IAM::Role"
-     },
      "type": "string"
     },
     "S3BackupConfiguration": {
@@ -942,10 +921,6 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "arn:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::IAM::Role"
-     },
      "type": "string"
     },
     "S3BackupMode": {
@@ -1019,14 +994,16 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "arn:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::IAM::Role"
-     },
      "type": "string"
     },
     "S3Configuration": {
      "$ref": "#/definitions/S3DestinationConfiguration"
+    },
+    "SchemaEvolutionConfiguration": {
+     "$ref": "#/definitions/SchemaEvolutionConfiguration"
+    },
+    "TableCreationConfiguration": {
+     "$ref": "#/definitions/TableCreationConfiguration"
     },
     "s3BackupMode": {
      "enum": [
@@ -1059,10 +1036,6 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "arn:.*:kms:[a-zA-Z0-9\\-]+:\\d{12}:(key|alias)/[a-zA-Z_0-9+=,.@\\-_/]+",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::KMS::Key"
-     },
      "type": "string"
     }
    },
@@ -1078,10 +1051,6 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "arn:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::Kinesis::Stream"
-     },
      "type": "string"
     },
     "RoleARN": {
@@ -1089,10 +1058,6 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "arn:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::IAM::Role"
-     },
      "type": "string"
     }
    },
@@ -1112,10 +1077,6 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "arn:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::MSK::Cluster"
-     },
      "type": "string"
     },
     "ReadFromTimestamp": {
@@ -1255,6 +1216,21 @@
    },
    "type": "object"
   },
+  "PartitionField": {
+   "additionalProperties": false,
+   "properties": {
+    "SourceName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^\\S+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceName"
+   ],
+   "type": "object"
+  },
   "ProcessingConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -1381,10 +1357,6 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "arn:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::IAM::Role"
-     },
      "type": "string"
     },
     "S3BackupConfiguration": {
@@ -1444,10 +1416,6 @@
      "maxLength": 2048,
      "minLength": 1,
      "pattern": "arn:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::S3::Bucket"
-     },
      "type": "string"
     },
     "BufferingHints": {
@@ -1484,10 +1452,6 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "arn:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::IAM::Role"
-     },
      "type": "string"
     }
    },
@@ -1510,10 +1474,6 @@
      "maxLength": 1024,
      "minLength": 1,
      "pattern": "^\\S+$",
-     "relationshipRef": {
-      "propertyPath": "/properties/Id",
-      "typeName": "AWS::Glue::Database"
-     },
      "type": "string"
     },
     "Region": {
@@ -1527,20 +1487,12 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "arn:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::IAM::Role"
-     },
      "type": "string"
     },
     "TableName": {
      "maxLength": 1024,
      "minLength": 1,
      "pattern": "^\\S+$",
-     "relationshipRef": {
-      "propertyPath": "/properties/Id",
-      "typeName": "AWS::Glue::Table"
-     },
      "type": "string"
     },
     "VersionId": {
@@ -1548,6 +1500,15 @@
      "minLength": 1,
      "pattern": "^\\S+$",
      "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SchemaEvolutionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
     }
    },
    "type": "object"
@@ -1563,20 +1524,12 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "arn:.*:iam::\\d{12}:role/[a-zA-Z_0-9+=,.@\\-_/]+",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::IAM::Role"
-     },
      "type": "string"
     },
     "SecretARN": {
      "maxLength": 2048,
      "minLength": 1,
      "pattern": "arn:.*:secretsmanager:[a-zA-Z0-9\\-]+:\\d{12}:secret:[a-zA-Z0-9\\-/_+=.@]+",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::SecretsManager::Secret"
-     },
      "type": "string"
     }
    },
@@ -1672,10 +1625,6 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "arn:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::IAM::Role"
-     },
      "type": "string"
     },
     "S3BackupMode": {
@@ -1845,6 +1794,15 @@
    },
    "type": "object"
   },
+  "TableCreationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -1880,10 +1838,6 @@
      "maxLength": 512,
      "minLength": 1,
      "pattern": "arn:.*",
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::IAM::Role"
-     },
      "type": "string"
     },
     "SecurityGroupIds": {
