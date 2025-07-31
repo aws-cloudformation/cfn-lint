@@ -193,7 +193,10 @@ class TestArgsParser(BaseTestCase):
             text=True
         )
 
-        expected_output = 'test/fixtures/templates/public/lambda-poller.yaml\ntest/fixtures/templates/public/rds-cluster.yaml'
+        expected_output = (
+            'test/fixtures/templates/public/lambda-poller.yaml\n'
+            'test/fixtures/templates/public/rds-cluster.yaml'
+        )
         self.assertEqual(result.returncode, 0)
         self.assertEqual(result.stdout.strip(), expected_output)
 
