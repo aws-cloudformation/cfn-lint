@@ -1934,7 +1934,7 @@
      "RoutingRule"
     ]
    },
-   "listroutingrule": {
+   "listroutingrules": {
     "Resources": [
      "RoutingRule"
     ]
@@ -4715,64 +4715,36 @@
      "app-block-builder"
     ]
    },
-   "describeappblockbuilders": {
-    "Resources": [
-     "app-block-builder"
-    ]
-   },
-   "describeappblocks": {
-    "Resources": [
-     "app-block"
-    ]
-   },
+   "describeappblockbuilders": {},
+   "describeappblocks": {},
    "describeapplicationfleetassociations": {
     "Resources": [
      "application",
      "fleet"
     ]
    },
-   "describeapplications": {
-    "Resources": [
-     "application"
-    ]
-   },
+   "describeapplications": {},
    "describedirectoryconfigs": {},
    "describeentitlements": {
     "Resources": [
      "stack"
     ]
    },
-   "describefleets": {
-    "Resources": [
-     "fleet"
-    ]
-   },
-   "describeimagebuilders": {
-    "Resources": [
-     "image-builder"
-    ]
-   },
+   "describefleets": {},
+   "describeimagebuilders": {},
    "describeimagepermissions": {
     "Resources": [
      "image"
     ]
    },
-   "describeimages": {
-    "Resources": [
-     "image"
-    ]
-   },
+   "describeimages": {},
    "describesessions": {
     "Resources": [
      "fleet",
      "stack"
     ]
    },
-   "describestacks": {
-    "Resources": [
-     "stack"
-    ]
-   },
+   "describestacks": {},
    "describethemeforstack": {
     "Resources": [
      "stack"
@@ -8313,6 +8285,11 @@
     ]
    },
    "createcustommodel": {},
+   "createcustommodeldeployment": {
+    "Resources": [
+     "custom-model"
+    ]
+   },
    "createdataautomationproject": {
     "Resources": [
      "blueprint"
@@ -8445,6 +8422,11 @@
    "deletecustommodel": {
     "Resources": [
      "custom-model"
+    ]
+   },
+   "deletecustommodeldeployment": {
+    "Resources": [
+     "custom-model-deployment"
     ]
    },
    "deletedataautomationproject": {
@@ -8608,6 +8590,11 @@
    "getcustommodel": {
     "Resources": [
      "custom-model"
+    ]
+   },
+   "getcustommodeldeployment": {
+    "Resources": [
+     "custom-model-deployment"
     ]
    },
    "getdataautomationproject": {
@@ -8794,6 +8781,7 @@
      "application-inference-profile",
      "async-invoke",
      "bedrock-marketplace-model-endpoint",
+     "custom-model-deployment",
      "default-prompt-router",
      "foundation-model",
      "imported-model",
@@ -8806,6 +8794,7 @@
     "Resources": [
      "application-inference-profile",
      "bedrock-marketplace-model-endpoint",
+     "custom-model-deployment",
      "default-prompt-router",
      "foundation-model",
      "imported-model",
@@ -8846,6 +8835,7 @@
      "data-automation-project"
     ]
    },
+   "listcustommodeldeployments": {},
    "listcustommodels": {},
    "listdataautomationprojects": {
     "Resources": [
@@ -8934,6 +8924,7 @@
      "async-invoke",
      "blueprint",
      "custom-model",
+     "custom-model-deployment",
      "data-automation-invocation-job",
      "data-automation-project",
      "evaluation-job",
@@ -9042,6 +9033,7 @@
      "async-invoke",
      "blueprint",
      "custom-model",
+     "custom-model-deployment",
      "data-automation-invocation-job",
      "data-automation-project",
      "evaluation-job",
@@ -9070,6 +9062,7 @@
      "async-invoke",
      "blueprint",
      "custom-model",
+     "custom-model-deployment",
      "data-automation-invocation-job",
      "data-automation-project",
      "evaluation-job",
@@ -9224,6 +9217,14 @@
     ]
    },
    "custom-model": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock:${Region}:${Account}:custom-model/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "custom-model-deployment": {
     "ARNFormats": [
      "arn:${Partition}:bedrock:${Region}:${Account}:custom-model/.*"
     ],
@@ -9404,6 +9405,333 @@
    }
   }
  },
+ "bedrock-agentcore": {
+  "Actions": {
+   "allowvendedlogdeliveryforresource": {
+    "Resources": [
+     "memory"
+    ]
+   },
+   "connectbrowserautomationstream": {},
+   "connectbrowserliveviewstream": {},
+   "createagentruntime": {},
+   "createagentruntimeendpoint": {},
+   "createapikeycredentialprovider": {},
+   "createbrowser": {},
+   "createcodeinterpreter": {},
+   "createevent": {
+    "Resources": [
+     "memory"
+    ]
+   },
+   "creategateway": {},
+   "creategatewaytarget": {
+    "Resources": [
+     "gateway"
+    ]
+   },
+   "creatememory": {},
+   "createoauth2credentialprovider": {},
+   "createworkloadidentity": {},
+   "deleteagentruntime": {
+    "Resources": [
+     "runtime"
+    ]
+   },
+   "deleteagentruntimeendpoint": {
+    "Resources": [
+     "runtime",
+     "runtime-endpoint"
+    ]
+   },
+   "deleteapikeycredentialprovider": {},
+   "deletebrowser": {
+    "Resources": [
+     "browser-custom"
+    ]
+   },
+   "deletecodeinterpreter": {
+    "Resources": [
+     "code-interpreter-custom"
+    ]
+   },
+   "deleteevent": {
+    "Resources": [
+     "memory"
+    ]
+   },
+   "deletegateway": {
+    "Resources": [
+     "gateway"
+    ]
+   },
+   "deletegatewaytarget": {
+    "Resources": [
+     "gateway"
+    ]
+   },
+   "deletememory": {
+    "Resources": [
+     "memory"
+    ]
+   },
+   "deletememoryrecord": {
+    "Resources": [
+     "memory"
+    ]
+   },
+   "deleteoauth2credentialprovider": {},
+   "deleteworkloadidentity": {},
+   "getagentruntime": {
+    "Resources": [
+     "runtime"
+    ]
+   },
+   "getagentruntimeendpoint": {
+    "Resources": [
+     "runtime",
+     "runtime-endpoint"
+    ]
+   },
+   "getapikeycredentialprovider": {},
+   "getbrowser": {
+    "Resources": [
+     "browser-custom"
+    ]
+   },
+   "getbrowsersession": {
+    "Resources": [
+     "browser",
+     "browser-custom"
+    ]
+   },
+   "getcodeinterpreter": {
+    "Resources": [
+     "code-interpreter-custom"
+    ]
+   },
+   "getcodeinterpretersession": {
+    "Resources": [
+     "code-interpreter",
+     "code-interpreter-custom"
+    ]
+   },
+   "getevent": {
+    "Resources": [
+     "memory"
+    ]
+   },
+   "getgateway": {
+    "Resources": [
+     "gateway"
+    ]
+   },
+   "getgatewaytarget": {
+    "Resources": [
+     "gateway"
+    ]
+   },
+   "getmemory": {
+    "Resources": [
+     "memory"
+    ]
+   },
+   "getmemoryrecord": {
+    "Resources": [
+     "memory"
+    ]
+   },
+   "getoauth2credentialprovider": {},
+   "getresourceapikey": {},
+   "getresourceoauth2token": {},
+   "gettokenvault": {},
+   "getworkloadaccesstoken": {},
+   "getworkloadaccesstokenforjwt": {},
+   "getworkloadaccesstokenforuserid": {},
+   "getworkloadidentity": {},
+   "invokeagentruntimeendpoint": {
+    "Resources": [
+     "runtime",
+     "runtime-endpoint"
+    ]
+   },
+   "invokecodeinterpreter": {
+    "Resources": [
+     "code-interpreter",
+     "code-interpreter-custom"
+    ]
+   },
+   "listactors": {
+    "Resources": [
+     "memory"
+    ]
+   },
+   "listagentruntimeendpoints": {},
+   "listagentruntimes": {},
+   "listagentruntimeversions": {},
+   "listapikeycredentialproviders": {},
+   "listbrowsers": {},
+   "listbrowsersessions": {},
+   "listcodeinterpreters": {},
+   "listcodeinterpretersessions": {
+    "Resources": [
+     "code-interpreter",
+     "code-interpreter-custom"
+    ]
+   },
+   "listevents": {
+    "Resources": [
+     "memory"
+    ]
+   },
+   "listgateways": {},
+   "listgatewaytargets": {
+    "Resources": [
+     "gateway"
+    ]
+   },
+   "listmemories": {},
+   "listmemoryrecords": {
+    "Resources": [
+     "memory"
+    ]
+   },
+   "listoauth2credentialproviders": {},
+   "listsessions": {
+    "Resources": [
+     "memory"
+    ]
+   },
+   "listworkloadidentities": {},
+   "retrievememoryrecords": {
+    "Resources": [
+     "memory"
+    ]
+   },
+   "settokenvaultcmk": {},
+   "startbrowsersession": {
+    "Resources": [
+     "browser",
+     "browser-custom"
+    ]
+   },
+   "startcodeinterpretersession": {
+    "Resources": [
+     "code-interpreter",
+     "code-interpreter-custom"
+    ]
+   },
+   "stopbrowsersession": {
+    "Resources": [
+     "browser",
+     "browser-custom"
+    ]
+   },
+   "stopcodeinterpretersession": {
+    "Resources": [
+     "code-interpreter",
+     "code-interpreter-custom"
+    ]
+   },
+   "synchronizegatewaytargets": {
+    "Resources": [
+     "gateway"
+    ]
+   },
+   "updateagentruntime": {
+    "Resources": [
+     "runtime"
+    ]
+   },
+   "updateagentruntimeendpoint": {
+    "Resources": [
+     "runtime",
+     "runtime-endpoint"
+    ]
+   },
+   "updateapikeycredentialprovider": {},
+   "updatebrowserstream": {
+    "Resources": [
+     "browser",
+     "browser-custom"
+    ]
+   },
+   "updategateway": {
+    "Resources": [
+     "gateway"
+    ]
+   },
+   "updategatewaytarget": {
+    "Resources": [
+     "gateway"
+    ]
+   },
+   "updatememory": {
+    "Resources": [
+     "memory"
+    ]
+   },
+   "updateoauth2credentialprovider": {},
+   "updateworkloadidentity": {}
+  },
+  "Resources": {
+   "apikeycredentialprovider": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:token-vault/.*"
+    ]
+   },
+   "browser": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:aws:browser/.*"
+    ]
+   },
+   "browser-custom": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:browser-custom/.*"
+    ]
+   },
+   "code-interpreter": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:aws:code-interpreter/.*"
+    ]
+   },
+   "code-interpreter-custom": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:code-interpreter-custom/.*"
+    ]
+   },
+   "gateway": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:gateway/.*"
+    ]
+   },
+   "memory": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:memory/.*"
+    ]
+   },
+   "oauth2credentialprovider": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:token-vault/.*"
+    ]
+   },
+   "runtime": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:runtime/.*"
+    ]
+   },
+   "runtime-endpoint": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:runtime/.*"
+    ]
+   },
+   "workload-identity": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:workload-identity-directory/.*"
+    ]
+   }
+  }
+ },
  "billing": {
   "Actions": {
    "createbillingview": {
@@ -9426,6 +9754,11 @@
    "getbillingnotifications": {},
    "getbillingpreferences": {},
    "getbillingview": {
+    "Resources": [
+     "billingview"
+    ]
+   },
+   "getbillingviewdata": {
     "Resources": [
      "billingview"
     ]
@@ -12294,6 +12627,11 @@
      "configuredtable"
     ]
    },
+   "updateconfiguredtableallowedcolumns": {
+    "Resources": [
+     "configuredtable"
+    ]
+   },
    "updateconfiguredtableanalysisrule": {
     "Resources": [
      "configuredtable"
@@ -12307,6 +12645,11 @@
    "updateconfiguredtableassociationanalysisrule": {
     "Resources": [
      "configuredtableassociation"
+    ]
+   },
+   "updateconfiguredtablereference": {
+    "Resources": [
+     "configuredtable"
     ]
    },
    "updateidmappingtable": {
@@ -21915,10 +22258,26 @@
      "revisions"
     ]
    },
-   "createdatagrant": {},
-   "createdataset": {},
-   "createeventaction": {},
-   "createjob": {},
+   "createdatagrant": {
+    "Resources": [
+     "data-grants"
+    ]
+   },
+   "createdataset": {
+    "Resources": [
+     "data-sets"
+    ]
+   },
+   "createeventaction": {
+    "Resources": [
+     "event-actions"
+    ]
+   },
+   "createjob": {
+    "Resources": [
+     "jobs"
+    ]
+   },
    "createrevision": {
     "Resources": [
      "data-sets"
@@ -22009,6 +22368,7 @@
     "Resources": [
      "data-grants",
      "data-sets",
+     "event-actions",
      "revisions"
     ]
    },
@@ -22047,6 +22407,7 @@
     "Resources": [
      "data-grants",
      "data-sets",
+     "event-actions",
      "revisions"
     ]
    },
@@ -22054,6 +22415,7 @@
     "Resources": [
      "data-grants",
      "data-sets",
+     "event-actions",
      "revisions"
     ]
    },
@@ -22118,6 +22480,9 @@
    "event-actions": {
     "ARNFormats": [
      "arn:${Partition}:dataexchange:${Region}:${Account}:event-actions/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "jobs": {
@@ -22744,6 +23109,7 @@
    "searchuserprofiles": {},
    "ssologin": {},
    "ssologout": {},
+   "startaccountbootstrapaction": {},
    "startdatasourcerun": {},
    "startmetadatagenerationrun": {},
    "stopmetadatagenerationrun": {},
@@ -23386,6 +23752,7 @@
      "farm",
      "fleet",
      "license-endpoint",
+     "monitor",
      "queue",
      "worker"
     ]
@@ -23438,6 +23805,7 @@
      "farm",
      "fleet",
      "license-endpoint",
+     "monitor",
      "queue",
      "worker"
     ]
@@ -23447,6 +23815,7 @@
      "farm",
      "fleet",
      "license-endpoint",
+     "monitor",
      "queue",
      "worker"
     ]
@@ -23588,6 +23957,9 @@
    "monitor": {
     "ARNFormats": [
      "arn:${Partition}:deadline:${Region}:${Account}:monitor/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "queue": {
@@ -25336,11 +25708,7 @@
     ]
    },
    "importcertificate": {},
-   "listdataproviders": {
-    "Resources": [
-     "DataProvider"
-    ]
-   },
+   "listdataproviders": {},
    "listextensionpacks": {
     "Resources": [
      "MigrationProject"
@@ -27930,6 +28298,7 @@
    },
    "createtags": {
     "Resources": [
+     "capacity-block",
      "capacity-reservation",
      "capacity-reservation-fleet",
      "carrier-gateway",
@@ -28474,6 +28843,7 @@
    "deletesubnetcidrreservation": {},
    "deletetags": {
     "Resources": [
+     "capacity-block",
      "capacity-reservation",
      "capacity-reservation-fleet",
      "carrier-gateway",
@@ -28764,6 +29134,8 @@
     ]
    },
    "describecapacityblockofferings": {},
+   "describecapacityblocks": {},
+   "describecapacityblockstatus": {},
    "describecapacityreservationbillingrequests": {},
    "describecapacityreservationfleets": {},
    "describecapacityreservations": {},
@@ -30312,6 +30684,20 @@
    "withdrawbyoipcidr": {}
   },
   "Resources": {
+   "capacity-block": {
+    "ARNFormats": [
+     "arn:${Partition}:ec2:${Region}:${Account}:capacity-block/.*"
+    ],
+    "ConditionKeys": [
+     "aws:RequestTag/${TagKey}",
+     "aws:ResourceTag/${TagKey}",
+     "aws:TagKeys",
+     "ec2:Attribute",
+     "ec2:Attribute/${AttributeName}",
+     "ec2:Region",
+     "ec2:ResourceTag/${TagKey}"
+    ]
+   },
    "capacity-reservation": {
     "ARNFormats": [
      "arn:${Partition}:ec2:${Region}:${Account}:capacity-reservation/.*"
@@ -31539,6 +31925,7 @@
      "ec2:Region",
      "ec2:ResourceTag/${TagKey}",
      "ec2:VolumeID",
+     "ec2:VolumeInitializationRate",
      "ec2:VolumeIops",
      "ec2:VolumeSize",
      "ec2:VolumeThroughput",
@@ -35092,6 +35479,7 @@
      "jobRun",
      "jobTemplate",
      "managedEndpoint",
+     "securityConfiguration",
      "virtualCluster"
     ]
    },
@@ -35106,6 +35494,7 @@
      "jobRun",
      "jobTemplate",
      "managedEndpoint",
+     "securityConfiguration",
      "virtualCluster"
     ]
    },
@@ -35114,16 +35503,12 @@
      "jobRun",
      "jobTemplate",
      "managedEndpoint",
+     "securityConfiguration",
      "virtualCluster"
     ]
    }
   },
   "Resources": {
-   "certificate": {
-    "ARNFormats": [
-     "arn:${Partition}:emr-containers:${Region}:${Account}:/certificates/.*"
-    ]
-   },
    "jobrun": {
     "ARNFormats": [
      "arn:${Partition}:emr-containers:${Region}:${Account}:/virtualclusters/.*"
@@ -35176,6 +35561,11 @@
    "accesslivyendpoints": {
     "Resources": [
      "application"
+    ]
+   },
+   "accesssystemprofilelogs": {
+    "Resources": [
+     "jobRun"
     ]
    },
    "canceljobrun": {
@@ -44657,7 +45047,7 @@
    },
    "listcomponentbuildversions": {
     "Resources": [
-     "componentVersion"
+     "allComponentBuildVersions"
     ]
    },
    "listcomponents": {},
@@ -44665,7 +45055,7 @@
    "listdistributionconfigurations": {},
    "listimagebuildversions": {
     "Resources": [
-     "imageVersion"
+     "allImageBuildVersions"
     ]
    },
    "listimagepackages": {
@@ -44722,7 +45112,7 @@
    "listwaitingworkflowsteps": {},
    "listworkflowbuildversions": {
     "Resources": [
-     "workflowVersion"
+     "allWorkflowBuildVersions"
     ]
    },
    "listworkflowexecutions": {
@@ -44820,15 +45210,22 @@
    }
   },
   "Resources": {
-   "component": {
+   "allcomponentbuildversions": {
     "ARNFormats": [
      "arn:${Partition}:imagebuilder:${Region}:${Account}:component/.*"
-    ],
-    "ConditionKeys": [
-     "aws:ResourceTag/${TagKey}"
     ]
    },
-   "componentversion": {
+   "allimagebuildversions": {
+    "ARNFormats": [
+     "arn:${Partition}:imagebuilder:${Region}:${Account}:image/.*"
+    ]
+   },
+   "allworkflowbuildversions": {
+    "ARNFormats": [
+     "arn:${Partition}:imagebuilder:${Region}:${Account}:workflow/.*"
+    ]
+   },
+   "component": {
     "ARNFormats": [
      "arn:${Partition}:imagebuilder:${Region}:${Account}:component/.*"
     ],
@@ -44892,11 +45289,6 @@
      "aws:ResourceTag/${TagKey}"
     ]
    },
-   "kmskey": {
-    "ARNFormats": [
-     "arn:${Partition}:kms:${Region}:${Account}:key/.*"
-    ]
-   },
    "lifecycleexecution": {
     "ARNFormats": [
      "arn:${Partition}:imagebuilder:${Region}:${Account}:lifecycle-execution/.*"
@@ -44926,14 +45318,6 @@
    "workflowstepexecution": {
     "ARNFormats": [
      "arn:${Partition}:imagebuilder:${Region}:${Account}:workflow-step-execution/.*"
-    ]
-   },
-   "workflowversion": {
-    "ARNFormats": [
-     "arn:${Partition}:imagebuilder:${Region}:${Account}:workflow/.*"
-    ],
-    "ConditionKeys": [
-     "aws:ResourceTag/${TagKey}"
     ]
    }
   }
@@ -45000,6 +45384,8 @@
  "inspector2": {
   "Actions": {
    "associatemember": {},
+   "batchassociatecodesecurityscanconfiguration": {},
+   "batchdisassociatecodesecurityscanconfiguration": {},
    "batchgetaccountstatus": {},
    "batchgetcodesnippet": {},
    "batchgetfindingdetails": {},
@@ -45013,6 +45399,16 @@
      "CIS Scan Configuration"
     ]
    },
+   "createcodesecurityintegration": {
+    "Resources": [
+     "Code Security Integration"
+    ]
+   },
+   "createcodesecurityscanconfiguration": {
+    "Resources": [
+     "Code Security Scan Configuration"
+    ]
+   },
    "createfilter": {
     "Resources": [
      "Filter"
@@ -45023,6 +45419,16 @@
    "deletecisscanconfiguration": {
     "Resources": [
      "CIS Scan Configuration"
+    ]
+   },
+   "deletecodesecurityintegration": {
+    "Resources": [
+     "Code Security Integration"
+    ]
+   },
+   "deletecodesecurityscanconfiguration": {
+    "Resources": [
+     "Code Security Scan Configuration"
     ]
    },
    "deletefilter": {
@@ -45039,6 +45445,9 @@
    "getcisscanreport": {},
    "getcisscanresultdetails": {},
    "getclustersforimage": {},
+   "getcodesecurityintegration": {},
+   "getcodesecurityscan": {},
+   "getcodesecurityscanconfiguration": {},
    "getconfiguration": {},
    "getdelegatedadminaccount": {},
    "getec2deepinspectionconfiguration": {},
@@ -45051,6 +45460,9 @@
    "listcisscanresultsaggregatedbychecks": {},
    "listcisscanresultsaggregatedbytargetresource": {},
    "listcisscans": {},
+   "listcodesecurityintegrations": {},
+   "listcodesecurityscanconfigurationassociations": {},
+   "listcodesecurityscanconfigurations": {},
    "listcoverage": {},
    "listcoveragestatistics": {},
    "listdelegatedadminaccounts": {},
@@ -45065,22 +45477,37 @@
    "sendcissessionhealth": {},
    "sendcissessiontelemetry": {},
    "startcissession": {},
+   "startcodesecurityscan": {},
    "stopcissession": {},
    "tagresource": {
     "Resources": [
      "CIS Scan Configuration",
+     "Code Security Integration",
+     "Code Security Scan Configuration",
      "Filter"
     ]
    },
    "untagresource": {
     "Resources": [
      "CIS Scan Configuration",
+     "Code Security Integration",
+     "Code Security Scan Configuration",
      "Filter"
     ]
    },
    "updatecisscanconfiguration": {
     "Resources": [
      "CIS Scan Configuration"
+    ]
+   },
+   "updatecodesecurityintegration": {
+    "Resources": [
+     "Code Security Integration"
+    ]
+   },
+   "updatecodesecurityscanconfiguration": {
+    "Resources": [
+     "Code Security Scan Configuration"
     ]
    },
    "updateconfiguration": {},
@@ -45096,6 +45523,22 @@
   },
   "Resources": {
    "cis scan configuration": {
+    "ARNFormats": [
+     "arn:${Partition}:inspector2:${Region}:${Account}:owner/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "code security integration": {
+    "ARNFormats": [
+     "arn:${Partition}:inspector2:${Region}:${Account}:codesecurity-integration/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "code security scan configuration": {
     "ARNFormats": [
      "arn:${Partition}:inspector2:${Region}:${Account}:owner/.*"
     ],
@@ -48052,6 +48495,12 @@
     ]
    },
    "createbulkimportjob": {},
+   "createcomputationmodel": {
+    "Resources": [
+     "asset",
+     "asset-model"
+    ]
+   },
    "createdashboard": {
     "Resources": [
      "project"
@@ -48083,6 +48532,11 @@
    "deleteassetmodelcompositemodel": {
     "Resources": [
      "asset-model"
+    ]
+   },
+   "deletecomputationmodel": {
+    "Resources": [
+     "computation-model"
     ]
    },
    "deletedashboard": {
@@ -48123,7 +48577,8 @@
    },
    "describeaction": {
     "Resources": [
-     "asset"
+     "asset",
+     "computation-model"
     ]
    },
    "describeasset": {
@@ -48152,6 +48607,17 @@
     ]
    },
    "describebulkimportjob": {},
+   "describecomputationmodel": {
+    "Resources": [
+     "computation-model"
+    ]
+   },
+   "describecomputationmodelexecutionsummary": {
+    "Resources": [
+     "asset",
+     "computation-model"
+    ]
+   },
    "describedashboard": {
     "Resources": [
      "dashboard"
@@ -48163,6 +48629,7 @@
     ]
    },
    "describedefaultencryptionconfiguration": {},
+   "describeexecution": {},
    "describegateway": {
     "Resources": [
      "gateway"
@@ -48205,7 +48672,8 @@
    "enablesitewiseintegration": {},
    "executeaction": {
     "Resources": [
-     "asset"
+     "asset",
+     "computation-model"
     ]
    },
    "executequery": {},
@@ -48242,7 +48710,8 @@
    },
    "listactions": {
     "Resources": [
-     "asset"
+     "asset",
+     "computation-model"
     ]
    },
    "listassetmodelcompositemodels": {
@@ -48282,12 +48751,30 @@
      "asset-model"
     ]
    },
+   "listcomputationmodeldatabindingusages": {
+    "Resources": [
+     "asset",
+     "asset-model"
+    ]
+   },
+   "listcomputationmodelresolvetoresources": {
+    "Resources": [
+     "computation-model"
+    ]
+   },
+   "listcomputationmodels": {},
    "listdashboards": {
     "Resources": [
      "project"
     ]
    },
    "listdatasets": {},
+   "listexecutions": {
+    "Resources": [
+     "asset",
+     "computation-model"
+    ]
+   },
    "listgateways": {},
    "listportals": {},
    "listprojectassets": {
@@ -48305,6 +48792,7 @@
      "access-policy",
      "asset",
      "asset-model",
+     "computation-model",
      "dashboard",
      "dataset",
      "gateway",
@@ -48326,6 +48814,7 @@
      "access-policy",
      "asset",
      "asset-model",
+     "computation-model",
      "dashboard",
      "dataset",
      "gateway",
@@ -48339,6 +48828,7 @@
      "access-policy",
      "asset",
      "asset-model",
+     "computation-model",
      "dashboard",
      "dataset",
      "gateway",
@@ -48375,6 +48865,13 @@
    "updateassetproperty": {
     "Resources": [
      "asset"
+    ]
+   },
+   "updatecomputationmodel": {
+    "Resources": [
+     "asset",
+     "asset-model",
+     "computation-model"
     ]
    },
    "updatedashboard": {
@@ -48428,6 +48925,14 @@
    "asset-model": {
     "ARNFormats": [
      "arn:${Partition}:iotsitewise:${Region}:${Account}:asset-model/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "computation-model": {
+    "ARNFormats": [
+     "arn:${Partition}:iotsitewise:${Region}:${Account}:computation-model/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -56289,17 +56794,9 @@
    "addflowoutputs": {},
    "addflowsources": {},
    "addflowvpcinterfaces": {},
-   "createbridge": {
-    "Resources": [
-     "Bridge"
-    ]
-   },
+   "createbridge": {},
    "createflow": {},
-   "creategateway": {
-    "Resources": [
-     "Gateway"
-    ]
-   },
+   "creategateway": {},
    "deletebridge": {
     "Resources": [
      "Bridge"
@@ -58180,6 +58677,11 @@
      "datastore"
     ]
    },
+   "getdicombulkdata": {
+    "Resources": [
+     "datastore"
+    ]
+   },
    "getdicomimportjob": {
     "Resources": [
      "datastore"
@@ -58262,6 +58764,16 @@
     ]
    },
    "startdicomimportjob": {
+    "Resources": [
+     "datastore"
+    ]
+   },
+   "storedicom": {
+    "Resources": [
+     "datastore"
+    ]
+   },
+   "storedicomstudy": {
     "Resources": [
      "datastore"
     ]
@@ -58469,6 +58981,11 @@
      "snapshot",
      "subnetgroup",
      "user"
+    ]
+   },
+   "pausemultiregionclusterreplication": {
+    "Resources": [
+     "multiregioncluster"
     ]
    },
    "purchasereservednodesoffering": {
@@ -70302,6 +70819,7 @@
      "db",
      "deployment",
      "es",
+     "global-cluster",
      "integration",
      "og",
      "pg",
@@ -70835,6 +71353,7 @@
      "cluster-snapshot",
      "db",
      "es",
+     "global-cluster",
      "integration",
      "og",
      "pg",
@@ -71033,6 +71552,7 @@
      "db",
      "deployment",
      "es",
+     "global-cluster",
      "integration",
      "og",
      "pg",
@@ -71277,6 +71797,9 @@
    "global-cluster": {
     "ARNFormats": [
      "arn:${Partition}:rds::${Account}:global-cluster:.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "integration": {
@@ -72077,9 +72600,6 @@
    "namespace": {
     "ARNFormats": [
      "arn:${Partition}:redshift:${Region}:${Account}:namespace:.*"
-    ],
-    "ConditionKeys": [
-     "aws:ResourceTag/${TagKey}"
     ]
    },
    "parametergroup": {
@@ -76153,6 +76673,16 @@
      "accessgrantslocation"
     ]
    },
+   "updatebucketmetadatainventorytableconfiguration": {
+    "Resources": [
+     "bucket"
+    ]
+   },
+   "updatebucketmetadatajournaltableconfiguration": {
+    "Resources": [
+     "bucket"
+    ]
+   },
    "updatejobpriority": {
     "Resources": [
      "job"
@@ -76957,6 +77487,98 @@
    "tablebucket": {
     "ARNFormats": [
      "arn:${Partition}:s3tables:${Region}:${Account}:bucket/.*"
+    ]
+   }
+  }
+ },
+ "s3vectors": {
+  "Actions": {
+   "createindex": {
+    "Resources": [
+     "Index"
+    ]
+   },
+   "createvectorbucket": {
+    "Resources": [
+     "VectorBucket"
+    ]
+   },
+   "deleteindex": {
+    "Resources": [
+     "Index"
+    ]
+   },
+   "deletevectorbucket": {
+    "Resources": [
+     "VectorBucket"
+    ]
+   },
+   "deletevectorbucketpolicy": {
+    "Resources": [
+     "VectorBucket"
+    ]
+   },
+   "deletevectors": {
+    "Resources": [
+     "Index"
+    ]
+   },
+   "getindex": {
+    "Resources": [
+     "Index"
+    ]
+   },
+   "getvectorbucket": {
+    "Resources": [
+     "VectorBucket"
+    ]
+   },
+   "getvectorbucketpolicy": {
+    "Resources": [
+     "VectorBucket"
+    ]
+   },
+   "getvectors": {
+    "Resources": [
+     "Index"
+    ]
+   },
+   "listindexes": {
+    "Resources": [
+     "VectorBucket"
+    ]
+   },
+   "listvectorbuckets": {},
+   "listvectors": {
+    "Resources": [
+     "Index"
+    ]
+   },
+   "putvectorbucketpolicy": {
+    "Resources": [
+     "VectorBucket"
+    ]
+   },
+   "putvectors": {
+    "Resources": [
+     "Index"
+    ]
+   },
+   "queryvectors": {
+    "Resources": [
+     "Index"
+    ]
+   }
+  },
+  "Resources": {
+   "index": {
+    "ARNFormats": [
+     "arn:${Partition}:s3vectors:${Region}:${Account}:bucket/.*"
+    ]
+   },
+   "vectorbucket": {
+    "ARNFormats": [
+     "arn:${Partition}:s3vectors:${Region}:${Account}:bucket/.*"
     ]
    }
   }
@@ -87249,13 +87871,6 @@
    "getsupportplanupdatestatus": {},
    "listsupportplanmodifiers": {},
    "startsupportplanupdate": {}
-  },
-  "Resources": {}
- },
- "supportrecommendations": {
-  "Actions": {
-   "getsupporttroubleshootingresponse": {},
-   "startsupporttroubleshooting": {}
   },
   "Resources": {}
  },

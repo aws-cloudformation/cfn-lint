@@ -2478,6 +2478,9 @@
    "properties": {
     "Destination": {
      "$ref": "#/definitions/OutputLocationRef"
+    },
+    "MediapackageV2GroupSettings": {
+     "$ref": "#/definitions/MediaPackageV2GroupSettings"
     }
    },
    "type": "object"
@@ -2498,11 +2501,44 @@
    "type": "object"
   },
   "MediaPackageOutputSettings": {
-   "format": "json",
-   "type": [
-    "object",
-    "string"
-   ]
+   "additionalProperties": false,
+   "properties": {
+    "MediaPackageV2DestinationSettings": {
+     "$ref": "#/definitions/MediaPackageV2DestinationSettings"
+    }
+   },
+   "type": "object"
+  },
+  "MediaPackageV2DestinationSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "AudioGroupId": {
+     "type": "string"
+    },
+    "AudioRenditionSets": {
+     "type": "string"
+    },
+    "HlsAutoSelect": {
+     "type": "string"
+    },
+    "HlsDefault": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MediaPackageV2GroupSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "CaptionLanguageMappings": {
+     "items": {
+      "$ref": "#/definitions/CaptionLanguageMapping"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
   },
   "MotionGraphicsConfiguration": {
    "additionalProperties": false,

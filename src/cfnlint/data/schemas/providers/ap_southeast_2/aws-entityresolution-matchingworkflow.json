@@ -1,0 +1,348 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/WorkflowName"
+ ],
+ "definitions": {
+  "AttributeName": {
+   "maxLength": 255,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z_0-9- \\t]*$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 0,
+   "type": "string"
+  },
+  "EntityName": {
+   "maxLength": 255,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z_0-9-]*$",
+   "type": "string"
+  },
+  "IncrementalRunConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "IncrementalRunType": {
+     "enum": [
+      "IMMEDIATE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "IncrementalRunType"
+   ],
+   "type": "object"
+  },
+  "InputSource": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplyNormalization": {
+     "type": "boolean"
+    },
+    "InputSourceARN": {
+     "pattern": "arn:(aws|aws-us-gov|aws-cn):.*:.*:[0-9]+:.*$",
+     "type": "string"
+    },
+    "SchemaArn": {
+     "$ref": "#/definitions/SchemaMappingArn",
+     "type": "string"
+    }
+   },
+   "required": [
+    "InputSourceARN",
+    "SchemaArn"
+   ],
+   "type": "object"
+  },
+  "IntermediateSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IntermediateS3Path": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "s3://[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9](/.*)?",
+     "type": "string"
+    }
+   },
+   "required": [
+    "IntermediateS3Path"
+   ],
+   "type": "object"
+  },
+  "KMSArn": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):kms:.*:[0-9]+:.*$",
+   "type": "string"
+  },
+  "MatchingWorkflowArn": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):entityresolution:.*:[0-9]+:(matchingworkflow/.*)$",
+   "type": "string"
+  },
+  "OutputAttribute": {
+   "additionalProperties": false,
+   "properties": {
+    "Hashed": {
+     "type": "boolean"
+    },
+    "Name": {
+     "$ref": "#/definitions/AttributeName"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "OutputSource": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplyNormalization": {
+     "type": "boolean"
+    },
+    "KMSArn": {
+     "$ref": "#/definitions/KMSArn"
+    },
+    "Output": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/OutputAttribute"
+     },
+     "maxItems": 750,
+     "minItems": 0,
+     "type": "array"
+    },
+    "OutputS3Path": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^s3://([^/]+)/?(.*?([^/]+)/?)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Output",
+    "OutputS3Path"
+   ],
+   "type": "object"
+  },
+  "ProviderProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "IntermediateSourceConfiguration": {
+     "$ref": "#/definitions/IntermediateSourceConfiguration"
+    },
+    "ProviderConfiguration": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^.+$": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "ProviderServiceArn": {
+     "maxLength": 255,
+     "minLength": 20,
+     "pattern": "arn:(aws|aws-us-gov|aws-cn):(entityresolution):([a-z]{2}-[a-z]{1,10}-[0-9])::providerservice/([a-zA-Z0-9_-]{1,255})/([a-zA-Z0-9_-]{1,255})",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ProviderServiceArn"
+   ],
+   "type": "object"
+  },
+  "ResolutionTechniques": {
+   "additionalProperties": false,
+   "properties": {
+    "ProviderProperties": {
+     "$ref": "#/definitions/ProviderProperties"
+    },
+    "ResolutionType": {
+     "$ref": "#/definitions/ResolutionType"
+    },
+    "RuleBasedProperties": {
+     "$ref": "#/definitions/RuleBasedProperties"
+    }
+   },
+   "type": "object"
+  },
+  "ResolutionType": {
+   "enum": [
+    "RULE_MATCHING",
+    "ML_MATCHING",
+    "PROVIDER"
+   ],
+   "type": "string"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "properties": {
+    "MatchingKeys": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/AttributeName"
+     },
+     "maxItems": 15,
+     "minItems": 1,
+     "type": "array"
+    },
+    "RuleName": {
+     "maxLength": 255,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z_0-9- \\t]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RuleName",
+    "MatchingKeys"
+   ],
+   "type": "object"
+  },
+  "RuleBasedProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "AttributeMatchingModel": {
+     "enum": [
+      "ONE_TO_ONE",
+      "MANY_TO_MANY"
+     ],
+     "type": "string"
+    },
+    "MatchPurpose": {
+     "enum": [
+      "IDENTIFIER_GENERATION",
+      "INDEXING"
+     ],
+     "type": "string"
+    },
+    "Rules": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Rule"
+     },
+     "maxItems": 15,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "AttributeMatchingModel",
+    "Rules"
+   ],
+   "type": "object"
+  },
+  "SchemaMappingArn": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):entityresolution:.*:[0-9]+:(schemamapping/.*)$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WorkflowName"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "$ref": "#/definitions/CreatedAt"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "IncrementalRunConfig": {
+   "$ref": "#/definitions/IncrementalRunConfig"
+  },
+  "InputSourceConfig": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/InputSource"
+   },
+   "maxItems": 20,
+   "minItems": 1,
+   "type": "array"
+  },
+  "OutputSourceConfig": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/OutputSource"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
+  },
+  "ResolutionTechniques": {
+   "$ref": "#/definitions/ResolutionTechniques"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdatedAt": {
+   "$ref": "#/definitions/UpdatedAt"
+  },
+  "WorkflowArn": {
+   "$ref": "#/definitions/MatchingWorkflowArn"
+  },
+  "WorkflowName": {
+   "$ref": "#/definitions/EntityName"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/WorkflowArn",
+  "/properties/UpdatedAt",
+  "/properties/CreatedAt"
+ ],
+ "required": [
+  "WorkflowName",
+  "InputSourceConfig",
+  "OutputSourceConfig",
+  "ResolutionTechniques",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-entity-resolution.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EntityResolution::MatchingWorkflow"
+}

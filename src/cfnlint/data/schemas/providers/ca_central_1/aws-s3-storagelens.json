@@ -1,0 +1,402 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StorageLensConfiguration/Id"
+ ],
+ "definitions": {
+  "AccountLevel": {
+   "additionalProperties": false,
+   "properties": {
+    "ActivityMetrics": {
+     "$ref": "#/definitions/ActivityMetrics"
+    },
+    "AdvancedCostOptimizationMetrics": {
+     "$ref": "#/definitions/AdvancedCostOptimizationMetrics"
+    },
+    "AdvancedDataProtectionMetrics": {
+     "$ref": "#/definitions/AdvancedDataProtectionMetrics"
+    },
+    "BucketLevel": {
+     "$ref": "#/definitions/BucketLevel"
+    },
+    "DetailedStatusCodesMetrics": {
+     "$ref": "#/definitions/DetailedStatusCodesMetrics"
+    },
+    "StorageLensGroupLevel": {
+     "$ref": "#/definitions/StorageLensGroupLevel"
+    }
+   },
+   "required": [
+    "BucketLevel"
+   ],
+   "type": "object"
+  },
+  "ActivityMetrics": {
+   "additionalProperties": false,
+   "properties": {
+    "IsEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "AdvancedCostOptimizationMetrics": {
+   "additionalProperties": false,
+   "properties": {
+    "IsEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "AdvancedDataProtectionMetrics": {
+   "additionalProperties": false,
+   "properties": {
+    "IsEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "AwsOrg": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "$ref": "#/definitions/Arn"
+    }
+   },
+   "required": [
+    "Arn"
+   ],
+   "type": "object"
+  },
+  "BucketLevel": {
+   "additionalProperties": false,
+   "properties": {
+    "ActivityMetrics": {
+     "$ref": "#/definitions/ActivityMetrics"
+    },
+    "AdvancedCostOptimizationMetrics": {
+     "$ref": "#/definitions/AdvancedCostOptimizationMetrics"
+    },
+    "AdvancedDataProtectionMetrics": {
+     "$ref": "#/definitions/AdvancedDataProtectionMetrics"
+    },
+    "DetailedStatusCodesMetrics": {
+     "$ref": "#/definitions/DetailedStatusCodesMetrics"
+    },
+    "PrefixLevel": {
+     "$ref": "#/definitions/PrefixLevel"
+    }
+   },
+   "type": "object"
+  },
+  "BucketsAndRegions": {
+   "additionalProperties": false,
+   "properties": {
+    "Buckets": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Arn"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Regions": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "CloudWatchMetrics": {
+   "additionalProperties": false,
+   "properties": {
+    "IsEnabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "IsEnabled"
+   ],
+   "type": "object"
+  },
+  "DataExport": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchMetrics": {
+     "$ref": "#/definitions/CloudWatchMetrics"
+    },
+    "S3BucketDestination": {
+     "$ref": "#/definitions/S3BucketDestination"
+    }
+   },
+   "type": "object"
+  },
+  "DetailedStatusCodesMetrics": {
+   "additionalProperties": false,
+   "properties": {
+    "IsEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "Encryption": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "SSES3": {
+       "additionalProperties": false,
+       "type": "object"
+      }
+     },
+     "required": [
+      "SSES3"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "SSEKMS": {
+       "$ref": "#/definitions/SSEKMS"
+      }
+     },
+     "required": [
+      "SSEKMS"
+     ]
+    }
+   ],
+   "type": "object"
+  },
+  "Id": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-_.]+$",
+   "type": "string"
+  },
+  "PrefixLevel": {
+   "additionalProperties": false,
+   "properties": {
+    "StorageMetrics": {
+     "$ref": "#/definitions/PrefixLevelStorageMetrics"
+    }
+   },
+   "required": [
+    "StorageMetrics"
+   ],
+   "type": "object"
+  },
+  "PrefixLevelStorageMetrics": {
+   "additionalProperties": false,
+   "properties": {
+    "IsEnabled": {
+     "type": "boolean"
+    },
+    "SelectionCriteria": {
+     "$ref": "#/definitions/SelectionCriteria"
+    }
+   },
+   "type": "object"
+  },
+  "S3BucketDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountId": {
+     "type": "string"
+    },
+    "Arn": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::S3::Bucket"
+     },
+     "type": "string"
+    },
+    "Encryption": {
+     "$ref": "#/definitions/Encryption"
+    },
+    "Format": {
+     "enum": [
+      "CSV",
+      "Parquet"
+     ],
+     "type": "string"
+    },
+    "OutputSchemaVersion": {
+     "enum": [
+      "V_1"
+     ],
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "OutputSchemaVersion",
+    "Format",
+    "AccountId",
+    "Arn"
+   ],
+   "type": "object"
+  },
+  "SSEKMS": {
+   "additionalProperties": false,
+   "properties": {
+    "KeyId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "KeyId"
+   ],
+   "type": "object"
+  },
+  "SelectionCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "Delimiter": {
+     "type": "string"
+    },
+    "MaxDepth": {
+     "type": "integer"
+    },
+    "MinStorageBytesPercentage": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "StorageLensConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountLevel": {
+     "$ref": "#/definitions/AccountLevel"
+    },
+    "AwsOrg": {
+     "$ref": "#/definitions/AwsOrg"
+    },
+    "DataExport": {
+     "$ref": "#/definitions/DataExport"
+    },
+    "Exclude": {
+     "$ref": "#/definitions/BucketsAndRegions"
+    },
+    "Id": {
+     "$ref": "#/definitions/Id"
+    },
+    "Include": {
+     "$ref": "#/definitions/BucketsAndRegions"
+    },
+    "IsEnabled": {
+     "type": "boolean"
+    },
+    "StorageLensArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Id",
+    "AccountLevel",
+    "IsEnabled"
+   ],
+   "type": "object"
+  },
+  "StorageLensGroupArn": {
+   "type": "string"
+  },
+  "StorageLensGroupLevel": {
+   "additionalProperties": false,
+   "properties": {
+    "StorageLensGroupSelectionCriteria": {
+     "$ref": "#/definitions/StorageLensGroupSelectionCriteria"
+    }
+   },
+   "type": "object"
+  },
+  "StorageLensGroupSelectionCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "Exclude": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/StorageLensGroupArn"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Include": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/StorageLensGroupArn"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "^(?!aws:.*)[a-zA-Z0-9\\s\\_\\.\\/\\=\\+\\-\\@\\:]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^(?!aws:.*)[a-zA-Z0-9\\s\\_\\.\\/\\=\\+\\-\\@\\:]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/StorageLensConfiguration/Id"
+ ],
+ "properties": {
+  "StorageLensConfiguration": {
+   "$ref": "#/definitions/StorageLensConfiguration"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/StorageLensConfiguration/StorageLensArn"
+ ],
+ "required": [
+  "StorageLensConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-s3-storagelens",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::S3::StorageLens"
+}

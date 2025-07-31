@@ -1,0 +1,174 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "EndpointConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IpAddressType": {
+     "type": "string"
+    },
+    "Types": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "VpcEndpointIds": {
+     "items": {
+      "relationshipRef": {
+       "propertyPath": "/properties/Id",
+       "typeName": "AWS::EC2::VPCEndpoint"
+      },
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "relationshipRef": {
+      "propertyPath": "/properties/BucketName",
+      "typeName": "AWS::S3::Bucket"
+     },
+     "type": "string"
+    },
+    "ETag": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RestApiId"
+ ],
+ "properties": {
+  "ApiKeySourceType": {
+   "enum": [
+    "AUTHORIZER",
+    "HEADER"
+   ],
+   "type": "string"
+  },
+  "BinaryMediaTypes": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Body": {
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "BodyS3Location": {
+   "$ref": "#/definitions/S3Location"
+  },
+  "CloneFrom": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DisableExecuteApiEndpoint": {
+   "type": "boolean"
+  },
+  "EndpointConfiguration": {
+   "$ref": "#/definitions/EndpointConfiguration"
+  },
+  "FailOnWarnings": {
+   "type": "boolean"
+  },
+  "MinimumCompressionSize": {
+   "type": "integer"
+  },
+  "Mode": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Parameters": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Policy": {
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "RestApiId": {
+   "type": "string"
+  },
+  "RootResourceId": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RestApiId",
+  "/properties/RootResourceId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ApiGateway::RestApi",
+ "writeOnlyProperties": [
+  "/properties/Body",
+  "/properties/BodyS3Location",
+  "/properties/CloneFrom",
+  "/properties/FailOnWarnings",
+  "/properties/Mode",
+  "/properties/Parameters"
+ ]
+}

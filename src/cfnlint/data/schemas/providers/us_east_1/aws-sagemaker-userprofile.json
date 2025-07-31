@@ -251,6 +251,9 @@
     },
     "FSxLustreFileSystemConfig": {
      "$ref": "#/definitions/FSxLustreFileSystemConfig"
+    },
+    "S3FileSystemConfig": {
+     "$ref": "#/definitions/S3FileSystemConfig"
     }
    },
    "type": "object"
@@ -645,6 +648,23 @@
     "SageMakerImageVersionArn": {
      "maxLength": 256,
      "pattern": "^arn:aws(-[\\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "S3FileSystemConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "MountPath": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "S3Uri": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "(s3)://([^/]+)/?(.*)",
      "type": "string"
     }
    },

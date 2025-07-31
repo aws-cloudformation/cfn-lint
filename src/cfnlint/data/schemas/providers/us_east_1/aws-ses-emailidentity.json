@@ -59,6 +59,26 @@
     }
    },
    "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
   }
  },
  "primaryIdentifier": [
@@ -100,6 +120,15 @@
   },
   "MailFromAttributes": {
    "$ref": "#/definitions/MailFromAttributes"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
   }
  },
  "readOnlyProperties": [
@@ -114,6 +143,13 @@
   "EmailIdentity"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::SES::EmailIdentity",
  "writeOnlyProperties": [
   "/properties/DkimSigningAttributes/DomainSigningSelector",
