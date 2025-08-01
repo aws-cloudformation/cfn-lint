@@ -44,7 +44,7 @@ def template():
     [
         (
             "Correct for app stream",
-            {"StartFleet": {"Type": True}},
+            {"StartFleet": True},
             {
                 "path": deque(["Resources", "MyAppStreamFleet", "CreationPolicy"]),
             },
@@ -62,14 +62,21 @@ def template():
             },
             [
                 ValidationError(
-                    "{} is not of type 'boolean'",
+                    "Additional properties are not allowed ('Type' was unexpected)",
                     rule=CreationPolicy(),
                     path=deque(["StartFleet", "Type"]),
                     schema_path=deque(
-                        ["properties", "StartFleet", "properties", "Type", "type"]
+                        ["properties", "StartFleet", "additionalProperties"]
                     ),
+                    validator="additionalProperties",
+                ),
+                ValidationError(
+                    "{'Type': {}} is not of type 'boolean'",
+                    rule=CreationPolicy(),
+                    path=deque(["StartFleet"]),
+                    schema_path=deque(["properties", "StartFleet", "type"]),
                     validator="type",
-                )
+                ),
             ],
         ),
         (
