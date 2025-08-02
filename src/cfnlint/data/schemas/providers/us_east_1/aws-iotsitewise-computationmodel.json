@@ -1,0 +1,189 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AnomalyDetectionComputationModelConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InputProperties": {
+     "maxLength": 67,
+     "minLength": 4,
+     "pattern": "^\\$\\{[a-z][a-z0-9_]*\\}$",
+     "type": "string"
+    },
+    "ResultProperty": {
+     "maxLength": 67,
+     "minLength": 4,
+     "pattern": "^\\$\\{[a-z][a-z0-9_]*\\}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "InputProperties",
+    "ResultProperty"
+   ],
+   "type": "object"
+  },
+  "AssetModelPropertyBindingValue": {
+   "additionalProperties": false,
+   "properties": {
+    "AssetModelId": {
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    },
+    "PropertyId": {
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AssetModelId",
+    "PropertyId"
+   ],
+   "type": "object"
+  },
+  "AssetPropertyBindingValue": {
+   "additionalProperties": false,
+   "properties": {
+    "AssetId": {
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    },
+    "PropertyId": {
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AssetId",
+    "PropertyId"
+   ],
+   "type": "object"
+  },
+  "ComputationModelConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AnomalyDetection": {
+     "$ref": "#/definitions/AnomalyDetectionComputationModelConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "ComputationModelDataBinding": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-z][a-z0-9_]{0,63}$": {
+     "$ref": "#/definitions/ComputationModelDataBindingValue"
+    }
+   },
+   "type": "object"
+  },
+  "ComputationModelDataBindingValue": {
+   "additionalProperties": false,
+   "properties": {
+    "AssetModelProperty": {
+     "$ref": "#/definitions/AssetModelPropertyBindingValue"
+    },
+    "AssetProperty": {
+     "$ref": "#/definitions/AssetPropertyBindingValue"
+    },
+    "List": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ComputationModelDataBindingValue"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ComputationModelId"
+ ],
+ "properties": {
+  "ComputationModelArn": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "pattern": "^arn:aws(-cn|-us-gov)?:[a-zA-Z0-9-:/_\\.]+$",
+   "type": "string"
+  },
+  "ComputationModelConfiguration": {
+   "$ref": "#/definitions/ComputationModelConfiguration"
+  },
+  "ComputationModelDataBinding": {
+   "$ref": "#/definitions/ComputationModelDataBinding"
+  },
+  "ComputationModelDescription": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9 _\\-#$*!@]+$",
+   "type": "string"
+  },
+  "ComputationModelId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "ComputationModelName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9 _\\-#$*!@]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ComputationModelArn",
+  "/properties/ComputationModelId"
+ ],
+ "required": [
+  "ComputationModelName",
+  "ComputationModelConfiguration",
+  "ComputationModelDataBinding"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-IoTSiteWise.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTSiteWise::ComputationModel"
+}

@@ -1,0 +1,129 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Tags",
+  "/properties/JobQueueName"
+ ],
+ "definitions": {
+  "ComputeEnvironmentOrder": {
+   "additionalProperties": false,
+   "properties": {
+    "ComputeEnvironment": {
+     "type": "string"
+    },
+    "Order": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ComputeEnvironment",
+    "Order"
+   ],
+   "type": "object"
+  },
+  "JobStateTimeLimitAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "enum": [
+      "CANCEL"
+     ],
+     "type": "string"
+    },
+    "MaxTimeSeconds": {
+     "maximum": 86400,
+     "minimum": 600,
+     "type": "integer"
+    },
+    "Reason": {
+     "type": "string"
+    },
+    "State": {
+     "enum": [
+      "RUNNABLE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Action",
+    "MaxTimeSeconds",
+    "Reason",
+    "State"
+   ],
+   "type": "object"
+  },
+  "ResourceArn": {
+   "pattern": "arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/JobQueueArn"
+ ],
+ "properties": {
+  "ComputeEnvironmentOrder": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/ComputeEnvironmentOrder"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "JobQueueArn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "JobQueueName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "JobStateTimeLimitActions": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/JobStateTimeLimitAction"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Priority": {
+   "maximum": 1000,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "SchedulingPolicyArn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "State": {
+   "enum": [
+    "DISABLED",
+    "ENABLED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".*": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/JobQueueArn"
+ ],
+ "required": [
+  "ComputeEnvironmentOrder",
+  "Priority"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::Batch::JobQueue"
+}

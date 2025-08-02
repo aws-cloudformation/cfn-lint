@@ -1,0 +1,459 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ListenerArn"
+ ],
+ "definitions": {
+  "Action": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthenticateCognitoConfig": {
+     "$ref": "#/definitions/AuthenticateCognitoConfig"
+    },
+    "AuthenticateOidcConfig": {
+     "$ref": "#/definitions/AuthenticateOidcConfig"
+    },
+    "FixedResponseConfig": {
+     "$ref": "#/definitions/FixedResponseConfig"
+    },
+    "ForwardConfig": {
+     "$ref": "#/definitions/ForwardConfig"
+    },
+    "Order": {
+     "maximum": 50000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "RedirectConfig": {
+     "$ref": "#/definitions/RedirectConfig"
+    },
+    "TargetGroupArn": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "authenticate-cognito",
+      "authenticate-oidc",
+      "fixed-response",
+      "forward",
+      "redirect"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "AuthenticateCognitoConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthenticationRequestExtraParams": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "OnUnauthenticatedRequest": {
+     "enum": [
+      "allow",
+      "authenticate",
+      "deny"
+     ],
+     "type": "string"
+    },
+    "Scope": {
+     "type": "string"
+    },
+    "SessionCookieName": {
+     "type": "string"
+    },
+    "SessionTimeout": {
+     "type": "integer"
+    },
+    "UserPoolArn": {
+     "type": "string"
+    },
+    "UserPoolClientId": {
+     "type": "string"
+    },
+    "UserPoolDomain": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "UserPoolClientId",
+    "UserPoolDomain",
+    "UserPoolArn"
+   ],
+   "type": "object"
+  },
+  "AuthenticateOidcConfig": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "ClientSecret"
+     ]
+    },
+    {
+     "required": [
+      "UseExistingClientSecret"
+     ]
+    }
+   ],
+   "properties": {
+    "AuthenticationRequestExtraParams": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "AuthorizationEndpoint": {
+     "type": "string"
+    },
+    "ClientId": {
+     "type": "string"
+    },
+    "ClientSecret": {
+     "type": "string"
+    },
+    "Issuer": {
+     "type": "string"
+    },
+    "OnUnauthenticatedRequest": {
+     "enum": [
+      "allow",
+      "authenticate",
+      "deny"
+     ],
+     "type": "string"
+    },
+    "Scope": {
+     "type": "string"
+    },
+    "SessionCookieName": {
+     "type": "string"
+    },
+    "SessionTimeout": {
+     "type": "integer"
+    },
+    "TokenEndpoint": {
+     "type": "string"
+    },
+    "UseExistingClientSecret": {
+     "type": "boolean"
+    },
+    "UserInfoEndpoint": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TokenEndpoint",
+    "Issuer",
+    "UserInfoEndpoint",
+    "ClientId",
+    "AuthorizationEndpoint"
+   ],
+   "type": "object"
+  },
+  "FixedResponseConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ContentType": {
+     "maxLength": 32,
+     "type": "string"
+    },
+    "MessageBody": {
+     "maxLength": 1024,
+     "type": "string"
+    },
+    "StatusCode": {
+     "pattern": "^(2|4|5)\\d\\d$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "StatusCode"
+   ],
+   "type": "object"
+  },
+  "ForwardConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "TargetGroupStickinessConfig": {
+     "$ref": "#/definitions/TargetGroupStickinessConfig"
+    },
+    "TargetGroups": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/TargetGroupTuple"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "HostHeaderConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "HttpHeaderConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "HttpHeaderName": {
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "HttpRequestMethodConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "PathPatternConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 5,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "QueryStringConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/QueryStringKeyValue"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "QueryStringKeyValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RedirectConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Host": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Path": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "type": "string"
+    },
+    "Protocol": {
+     "pattern": "^(HTTPS?|#\\{protocol\\})$",
+     "type": "string"
+    },
+    "Query": {
+     "maxLength": 128,
+     "type": "string"
+    },
+    "StatusCode": {
+     "enum": [
+      "HTTP_301",
+      "HTTP_302"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "StatusCode"
+   ],
+   "type": "object"
+  },
+  "RuleCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "Field": {
+     "maxLength": 64,
+     "type": "string"
+    },
+    "HostHeaderConfig": {
+     "$ref": "#/definitions/HostHeaderConfig"
+    },
+    "HttpHeaderConfig": {
+     "$ref": "#/definitions/HttpHeaderConfig"
+    },
+    "HttpRequestMethodConfig": {
+     "$ref": "#/definitions/HttpRequestMethodConfig"
+    },
+    "PathPatternConfig": {
+     "$ref": "#/definitions/PathPatternConfig"
+    },
+    "QueryStringConfig": {
+     "$ref": "#/definitions/QueryStringConfig"
+    },
+    "SourceIpConfig": {
+     "$ref": "#/definitions/SourceIpConfig"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "SourceIpConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "TargetGroupStickinessConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DurationSeconds": {
+     "type": "integer"
+    },
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "TargetGroupTuple": {
+   "additionalProperties": false,
+   "properties": {
+    "TargetGroupArn": {
+     "type": "string"
+    },
+    "Weight": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RuleArn"
+ ],
+ "properties": {
+  "Actions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Action"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Conditions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RuleCondition"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "IsDefault": {
+   "type": "boolean"
+  },
+  "ListenerArn": {
+   "type": "string"
+  },
+  "Priority": {
+   "maximum": 50000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "RuleArn": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RuleArn",
+  "/properties/IsDefault"
+ ],
+ "required": [
+  "Actions",
+  "Priority",
+  "Conditions"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticloadbalancingv2",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ElasticLoadBalancingV2::ListenerRule",
+ "writeOnlyProperties": [
+  "/properties/Actions/*/AuthenticateOidcConfig/ClientSecret",
+  "/properties/ListenerArn"
+ ]
+}
