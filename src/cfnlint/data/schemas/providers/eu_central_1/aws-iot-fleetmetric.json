@@ -1,0 +1,173 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MetricName"
+ ],
+ "definitions": {
+  "AggregationType": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "enum": [
+      "Cardinality",
+      "Percentiles",
+      "Statistics"
+     ],
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 12,
+      "minLength": 1,
+      "pattern": "[a-zA-Z0-9]+",
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Name",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "iso8601UTC": {
+   "pattern": "^([0-2]\\d{3})-(0[0-9]|1[0-2])-([0-2]\\d|3[01])T([01]\\d|2[0-4]):([0-5]\\d):([0-6]\\d)((\\.\\d{3})?)Z$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MetricName"
+ ],
+ "properties": {
+  "AggregationField": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "AggregationType": {
+   "$ref": "#/definitions/AggregationType"
+  },
+  "CreationDate": {
+   "$ref": "#/definitions/iso8601UTC"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "pattern": "[\\p{Graph}\\x20]*",
+   "type": "string"
+  },
+  "IndexName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9:_-]+",
+   "type": "string"
+  },
+  "LastModifiedDate": {
+   "$ref": "#/definitions/iso8601UTC"
+  },
+  "MetricArn": {
+   "type": "string"
+  },
+  "MetricName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_\\-\\.]+",
+   "type": "string"
+  },
+  "Period": {
+   "maximum": 86400,
+   "minimum": 60,
+   "type": "integer"
+  },
+  "QueryString": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "QueryVersion": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Unit": {
+   "enum": [
+    "Bits",
+    "Bits/Second",
+    "Bytes",
+    "Bytes/Second",
+    "Count",
+    "Count/Second",
+    "Gigabits",
+    "Gigabits/Second",
+    "Gigabytes",
+    "Gigabytes/Second",
+    "Kilobits",
+    "Kilobits/Second",
+    "Kilobytes",
+    "Kilobytes/Second",
+    "Megabits",
+    "Megabits/Second",
+    "Megabytes",
+    "Megabytes/Second",
+    "Microseconds",
+    "Milliseconds",
+    "None",
+    "Percent",
+    "Seconds",
+    "Terabits",
+    "Terabits/Second",
+    "Terabytes",
+    "Terabytes/Second"
+   ],
+   "type": "string"
+  },
+  "Version": {
+   "type": "number"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/MetricArn",
+  "/properties/CreationDate",
+  "/properties/LastModifiedDate",
+  "/properties/Version"
+ ],
+ "required": [
+  "MetricName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::FleetMetric"
+}

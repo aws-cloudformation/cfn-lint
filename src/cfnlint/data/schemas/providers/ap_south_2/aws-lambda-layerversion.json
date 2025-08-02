@@ -1,0 +1,87 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CompatibleRuntimes",
+  "/properties/LicenseInfo",
+  "/properties/CompatibleArchitectures",
+  "/properties/LayerName",
+  "/properties/Description",
+  "/properties/Content"
+ ],
+ "definitions": {
+  "Content": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Bucket": {
+     "type": "string"
+    },
+    "S3Key": {
+     "type": "string"
+    },
+    "S3ObjectVersion": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3Bucket",
+    "S3Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LayerVersionArn"
+ ],
+ "properties": {
+  "CompatibleArchitectures": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "CompatibleRuntimes": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Content": {
+   "$ref": "#/definitions/Content"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "LayerName": {
+   "maxLength": 140,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LayerVersionArn": {
+   "type": "string"
+  },
+  "LicenseInfo": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LayerVersionArn"
+ ],
+ "required": [
+  "Content"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lambda.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Lambda::LayerVersion",
+ "writeOnlyProperties": [
+  "/properties/Content"
+ ]
+}
