@@ -258,6 +258,10 @@ class TestArgsParser(BaseTestCase):
             text=True
         )
 
-        expected_output = f'not a file: {pwd}\n${template1}\n${template2}'
+        expected_output = (
+            f'not a file: {pwd}\n'
+            f'{template1}\n'
+            f'{template2}'
+        )
         self.assertEqual(result.returncode, 0)
         self.assertEqual(result.stdout.strip(), expected_output)
