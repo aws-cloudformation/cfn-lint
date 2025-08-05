@@ -20,6 +20,9 @@ def main():
     policyLoader = ManagedPolicyLoader(client)
     policyLoader.load()
 
+    # Exception from PR #4209
+    policyLoader._policy_map.pop("AmazonGuardDutyFullAccess")
+
     filename = "src/cfnlint/data/Serverless/ManagedPolicies.json"
     with open(filename, "w+", encoding="utf-8") as f:
         json.dump(
