@@ -1740,6 +1740,7 @@
    "batchgetvpcendpoint": {},
    "createaccesspolicy": {},
    "createcollection": {},
+   "createindex": {},
    "createlifecyclepolicy": {},
    "createsecurityconfig": {},
    "createsecuritypolicy": {},
@@ -1755,12 +1756,14 @@
      "Collection"
     ]
    },
+   "deleteindex": {},
    "deletelifecyclepolicy": {},
    "deletesecurityconfig": {},
    "deletesecuritypolicy": {},
    "deletevpcendpoint": {},
    "getaccesspolicy": {},
    "getaccountsettings": {},
+   "getindex": {},
    "getpoliciesstats": {},
    "getsecurityconfig": {},
    "getsecuritypolicy": {},
@@ -1780,6 +1783,7 @@
      "Collection"
     ]
    },
+   "updateindex": {},
    "updatelifecyclepolicy": {},
    "updatesecurityconfig": {},
    "updatesecuritypolicy": {},
@@ -6359,7 +6363,11 @@
     ]
    },
    "createassessment": {},
-   "createassessmentframework": {},
+   "createassessmentframework": {
+    "Resources": [
+     "control"
+    ]
+   },
    "createassessmentreport": {
     "Resources": [
      "assessment"
@@ -6507,7 +6515,8 @@
    },
    "updateassessmentframework": {
     "Resources": [
-     "assessmentFramework"
+     "assessmentFramework",
+     "control"
     ]
    },
    "updateassessmentframeworkshare": {
@@ -7932,12 +7941,18 @@
     "Resources": [
      "compute-environment",
      "job-queue",
-     "scheduling-policy"
+     "scheduling-policy",
+     "service-environment"
     ]
    },
    "createschedulingpolicy": {
     "Resources": [
      "scheduling-policy"
+    ]
+   },
+   "createserviceenvironment": {
+    "Resources": [
+     "service-environment"
     ]
    },
    "deletecomputeenvironment": {
@@ -7960,6 +7975,11 @@
      "scheduling-policy"
     ]
    },
+   "deleteserviceenvironment": {
+    "Resources": [
+     "service-environment"
+    ]
+   },
    "deregisterjobdefinition": {
     "Resources": [
      "job-definition-revision"
@@ -7975,6 +7995,8 @@
    "describejobqueues": {},
    "describejobs": {},
    "describeschedulingpolicies": {},
+   "describeserviceenvironments": {},
+   "describeservicejob": {},
    "getjobqueuesnapshot": {
     "Resources": [
      "job-queue"
@@ -7988,6 +8010,7 @@
     ]
    },
    "listschedulingpolicies": {},
+   "listservicejobs": {},
    "listtagsforresource": {
     "Resources": [
      "compute-environment",
@@ -7995,7 +8018,9 @@
      "job",
      "job-definition-revision",
      "job-queue",
-     "scheduling-policy"
+     "scheduling-policy",
+     "service-environment",
+     "service-job"
     ]
    },
    "registerjobdefinition": {
@@ -8012,6 +8037,12 @@
      "job-queue"
     ]
    },
+   "submitservicejob": {
+    "Resources": [
+     "job-queue",
+     "service-job"
+    ]
+   },
    "tagresource": {
     "Resources": [
      "compute-environment",
@@ -8019,12 +8050,19 @@
      "job",
      "job-definition-revision",
      "job-queue",
-     "scheduling-policy"
+     "scheduling-policy",
+     "service-environment",
+     "service-job"
     ]
    },
    "terminatejob": {
     "Resources": [
      "job"
+    ]
+   },
+   "terminateservicejob": {
+    "Resources": [
+     "service-job"
     ]
    },
    "untagresource": {
@@ -8034,7 +8072,9 @@
      "job",
      "job-definition-revision",
      "job-queue",
-     "scheduling-policy"
+     "scheduling-policy",
+     "service-environment",
+     "service-job"
     ]
    },
    "updatecomputeenvironment": {
@@ -8057,6 +8097,11 @@
    "updateschedulingpolicy": {
     "Resources": [
      "scheduling-policy"
+    ]
+   },
+   "updateserviceenvironment": {
+    "Resources": [
+     "service-environment"
     ]
    }
   },
@@ -8109,6 +8154,22 @@
    "scheduling-policy": {
     "ARNFormats": [
      "arn:${Partition}:batch:${Region}:${Account}:scheduling-policy/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "service-environment": {
+    "ARNFormats": [
+     "arn:${Partition}:batch:${Region}:${Account}:service-environment/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "service-job": {
+    "ARNFormats": [
+     "arn:${Partition}:batch:${Region}:${Account}:service-job/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -8380,6 +8441,11 @@
     ]
    },
    "callwithbearertoken": {},
+   "cancelautomatedreasoningpolicybuildworkflow": {
+    "Resources": [
+     "automated-reasoning-policy"
+    ]
+   },
    "createagent": {},
    "createagentactiongroup": {
     "Resources": [
@@ -8389,6 +8455,17 @@
    "createagentalias": {
     "Resources": [
      "agent"
+    ]
+   },
+   "createautomatedreasoningpolicy": {},
+   "createautomatedreasoningpolicytestcase": {
+    "Resources": [
+     "automated-reasoning-policy"
+    ]
+   },
+   "createautomatedreasoningpolicyversion": {
+    "Resources": [
+     "automated-reasoning-policy"
     ]
    },
    "createblueprint": {},
@@ -8435,6 +8512,8 @@
    "createfoundationmodelagreement": {},
    "createguardrail": {
     "Resources": [
+     "automated-reasoning-policy",
+     "automated-reasoning-policy-version",
      "guardrail-profile"
     ]
    },
@@ -8525,6 +8604,22 @@
    "deleteagentversion": {
     "Resources": [
      "agent"
+    ]
+   },
+   "deleteautomatedreasoningpolicy": {
+    "Resources": [
+     "automated-reasoning-policy",
+     "automated-reasoning-policy-version"
+    ]
+   },
+   "deleteautomatedreasoningpolicybuildworkflow": {
+    "Resources": [
+     "automated-reasoning-policy"
+    ]
+   },
+   "deleteautomatedreasoningpolicytestcase": {
+    "Resources": [
+     "automated-reasoning-policy"
     ]
    },
    "deleteblueprint": {
@@ -8652,6 +8747,12 @@
      "session"
     ]
    },
+   "exportautomatedreasoningpolicyversion": {
+    "Resources": [
+     "automated-reasoning-policy",
+     "automated-reasoning-policy-version"
+    ]
+   },
    "generatequery": {},
    "getagent": {
     "Resources": [
@@ -8692,6 +8793,42 @@
    "getasyncinvoke": {
     "Resources": [
      "async-invoke"
+    ]
+   },
+   "getautomatedreasoningpolicy": {
+    "Resources": [
+     "automated-reasoning-policy",
+     "automated-reasoning-policy-version"
+    ]
+   },
+   "getautomatedreasoningpolicyannotations": {
+    "Resources": [
+     "automated-reasoning-policy"
+    ]
+   },
+   "getautomatedreasoningpolicybuildworkflow": {
+    "Resources": [
+     "automated-reasoning-policy"
+    ]
+   },
+   "getautomatedreasoningpolicybuildworkflowresultassets": {
+    "Resources": [
+     "automated-reasoning-policy"
+    ]
+   },
+   "getautomatedreasoningpolicynextscenario": {
+    "Resources": [
+     "automated-reasoning-policy"
+    ]
+   },
+   "getautomatedreasoningpolicytestcase": {
+    "Resources": [
+     "automated-reasoning-policy"
+    ]
+   },
+   "getautomatedreasoningpolicytestresult": {
+    "Resources": [
+     "automated-reasoning-policy"
     ]
    },
    "getblueprint": {
@@ -8870,6 +9007,12 @@
      "agent-alias"
     ]
    },
+   "invokeautomatedreasoningpolicy": {
+    "Resources": [
+     "automated-reasoning-policy",
+     "automated-reasoning-policy-version"
+    ]
+   },
    "invokeblueprintrecommendationasync": {
     "Resources": [
      "data-automation-profile"
@@ -8943,6 +9086,26 @@
     ]
    },
    "listasyncinvokes": {},
+   "listautomatedreasoningpolicies": {
+    "Resources": [
+     "automated-reasoning-policy"
+    ]
+   },
+   "listautomatedreasoningpolicybuildworkflows": {
+    "Resources": [
+     "automated-reasoning-policy"
+    ]
+   },
+   "listautomatedreasoningpolicytestcases": {
+    "Resources": [
+     "automated-reasoning-policy"
+    ]
+   },
+   "listautomatedreasoningpolicytestresults": {
+    "Resources": [
+     "automated-reasoning-policy"
+    ]
+   },
    "listblueprints": {
     "Resources": [
      "data-automation-project"
@@ -9035,6 +9198,8 @@
      "agent-alias",
      "application-inference-profile",
      "async-invoke",
+     "automated-reasoning-policy",
+     "automated-reasoning-policy-version",
      "blueprint",
      "custom-model",
      "custom-model-deployment",
@@ -9100,6 +9265,16 @@
     ]
    },
    "retrieveandgenerate": {},
+   "startautomatedreasoningpolicybuildworkflow": {
+    "Resources": [
+     "automated-reasoning-policy"
+    ]
+   },
+   "startautomatedreasoningpolicytestworkflow": {
+    "Resources": [
+     "automated-reasoning-policy"
+    ]
+   },
    "startflowexecution": {
     "Resources": [
      "flow",
@@ -9144,6 +9319,8 @@
      "agent-alias",
      "application-inference-profile",
      "async-invoke",
+     "automated-reasoning-policy",
+     "automated-reasoning-policy-version",
      "blueprint",
      "custom-model",
      "custom-model-deployment",
@@ -9173,6 +9350,8 @@
      "agent-alias",
      "application-inference-profile",
      "async-invoke",
+     "automated-reasoning-policy",
+     "automated-reasoning-policy-version",
      "blueprint",
      "custom-model",
      "custom-model-deployment",
@@ -9222,6 +9401,21 @@
      "knowledge-base"
     ]
    },
+   "updateautomatedreasoningpolicy": {
+    "Resources": [
+     "automated-reasoning-policy"
+    ]
+   },
+   "updateautomatedreasoningpolicyannotations": {
+    "Resources": [
+     "automated-reasoning-policy"
+    ]
+   },
+   "updateautomatedreasoningpolicytestcase": {
+    "Resources": [
+     "automated-reasoning-policy"
+    ]
+   },
    "updateblueprint": {
     "Resources": [
      "blueprint"
@@ -9250,6 +9444,8 @@
    },
    "updateguardrail": {
     "Resources": [
+     "automated-reasoning-policy",
+     "automated-reasoning-policy-version",
      "guardrail",
      "guardrail-profile"
     ]
@@ -9311,6 +9507,22 @@
    "async-invoke": {
     "ARNFormats": [
      "arn:${Partition}:bedrock:${Region}:${Account}:async-invoke/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "automated-reasoning-policy": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock:${Region}:${Account}:automated-reasoning-policy/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "automated-reasoning-policy-version": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock:${Region}:${Account}:.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -10546,6 +10758,12 @@
      "Template"
     ]
    },
+   "deletecase": {
+    "Resources": [
+     "Case",
+     "Domain"
+    ]
+   },
    "deletecaserule": {
     "Resources": [
      "CaseRule",
@@ -11180,8 +11398,18 @@
    "listtagsforresource": {},
    "redeemmicrosoftteamsoauthcode": {},
    "redeemslackoauthcode": {},
-   "tagresource": {},
-   "untagresource": {},
+   "tagresource": {
+    "Resources": [
+     "ChatbotConfiguration",
+     "custom-action"
+    ]
+   },
+   "untagresource": {
+    "Resources": [
+     "ChatbotConfiguration",
+     "custom-action"
+    ]
+   },
    "updateaccountpreferences": {},
    "updatechimewebhookconfiguration": {
     "Resources": [
@@ -11208,11 +11436,17 @@
    "chatbotconfiguration": {
     "ARNFormats": [
      "arn:${Partition}:chatbot::${Account}:chat-configuration/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "custom-action": {
     "ARNFormats": [
      "arn:${Partition}:chatbot::${Account}:custom-action/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    }
   }
@@ -23180,6 +23414,7 @@
    },
    "cancelmetadatagenerationrun": {},
    "cancelsubscription": {},
+   "createaccountpool": {},
    "createasset": {},
    "createassetfilter": {},
    "createassetrevision": {},
@@ -23207,6 +23442,7 @@
    "createsubscriptionrequest": {},
    "createsubscriptiontarget": {},
    "createuserprofile": {},
+   "deleteaccountpool": {},
    "deleteasset": {},
    "deleteassetfilter": {},
    "deleteassettype": {},
@@ -23238,6 +23474,7 @@
    "deletesubscriptiontarget": {},
    "deletetimeseriesdatapoints": {},
    "disassociateenvironmentrole": {},
+   "getaccountpool": {},
    "getasset": {},
    "getassetfilter": {},
    "getassettype": {},
@@ -23282,6 +23519,8 @@
    "getupdateeligibility": {},
    "getuserprofile": {},
    "listaccountenvironments": {},
+   "listaccountpools": {},
+   "listaccountsinaccountpool": {},
    "listassetfilters": {},
    "listassetrevisions": {},
    "listconnections": {},
@@ -23358,6 +23597,7 @@
      "domain"
     ]
    },
+   "updateaccountpool": {},
    "updateassetfilter": {},
    "updateconnection": {},
    "updatedatasource": {},
@@ -48789,6 +49029,11 @@
      "asset-model"
     ]
    },
+   "deleteassetmodelinterfacerelationship": {
+    "Resources": [
+     "asset-model"
+    ]
+   },
    "deletecomputationmodel": {
     "Resources": [
      "computation-model"
@@ -48852,6 +49097,11 @@
     ]
    },
    "describeassetmodelcompositemodel": {
+    "Resources": [
+     "asset-model"
+    ]
+   },
+   "describeassetmodelinterfacerelationship": {
     "Resources": [
      "asset-model"
     ]
@@ -49031,6 +49281,11 @@
     ]
    },
    "listgateways": {},
+   "listinterfacerelationships": {
+    "Resources": [
+     "asset-model"
+    ]
+   },
    "listportals": {},
    "listprojectassets": {
     "Resources": [
@@ -49059,6 +49314,11 @@
    "listtimeseries": {
     "Resources": [
      "asset"
+    ]
+   },
+   "putassetmodelinterfacerelationship": {
+    "Resources": [
+     "asset-model"
     ]
    },
    "putdefaultencryptionconfiguration": {},
@@ -68899,12 +69159,6 @@
  },
  "qbusiness": {
   "Actions": {
-   "adduserlicenses": {},
-   "allowvendedlogdeliveryforresource": {
-    "Resources": [
-     "application"
-    ]
-   },
    "associatepermission": {
     "Resources": [
      "application"
@@ -68982,7 +69236,6 @@
      "application"
     ]
    },
-   "createlicense": {},
    "createplugin": {
     "Resources": [
      "application"
@@ -69127,6 +69380,12 @@
      "index"
     ]
    },
+   "getdocumentcontent": {
+    "Resources": [
+     "application",
+     "index"
+    ]
+   },
    "getgroup": {
     "Resources": [
      "application",
@@ -69143,11 +69402,6 @@
     "Resources": [
      "application",
      "integration"
-    ]
-   },
-   "getlicense": {
-    "Resources": [
-     "user-license"
     ]
    },
    "getmedia": {
@@ -69280,7 +69534,6 @@
      "web-experience"
     ]
    },
-   "listuserlicenses": {},
    "listwebexperiences": {
     "Resources": [
      "application"
@@ -69302,7 +69555,6 @@
      "application"
     ]
    },
-   "removeuserlicenses": {},
    "searchrelevantcontent": {
     "Resources": [
      "application"
@@ -69491,11 +69743,6 @@
     ]
    },
    "subscription": {
-    "ARNFormats": [
-     "arn:${Partition}:qbusiness:${Region}:${Account}:application/.*"
-    ]
-   },
-   "user-license": {
     "ARNFormats": [
      "arn:${Partition}:qbusiness:${Region}:${Account}:application/.*"
     ]
@@ -73804,12 +74051,27 @@
  },
  "repostspace": {
   "Actions": {
+   "batchaddchannelroletoaccessors": {
+    "Resources": [
+     "space"
+    ]
+   },
    "batchaddrole": {
     "Resources": [
      "space"
     ]
    },
+   "batchremovechannelrolefromaccessors": {
+    "Resources": [
+     "space"
+    ]
+   },
    "batchremoverole": {
+    "Resources": [
+     "space"
+    ]
+   },
+   "createchannel": {
     "Resources": [
      "space"
     ]
@@ -73825,7 +74087,17 @@
      "space"
     ]
    },
+   "getchannel": {
+    "Resources": [
+     "space"
+    ]
+   },
    "getspace": {
+    "Resources": [
+     "space"
+    ]
+   },
+   "listchannels": {
     "Resources": [
      "space"
     ]
@@ -73852,6 +74124,11 @@
     ]
    },
    "untagresource": {
+    "Resources": [
+     "space"
+    ]
+   },
+   "updatechannel": {
     "Resources": [
      "space"
     ]
@@ -77995,6 +78272,16 @@
      "experiment-trial-component"
     ]
    },
+   "attachclusternodevolume": {
+    "Resources": [
+     "cluster"
+    ]
+   },
+   "batchaddclusternodes": {
+    "Resources": [
+     "cluster"
+    ]
+   },
    "batchdeleteclusternodes": {
     "Resources": [
      "cluster"
@@ -78780,6 +79067,11 @@
      "cluster"
     ]
    },
+   "describeclusterevent": {
+    "Resources": [
+     "cluster"
+    ]
+   },
    "describeclusterinference": {
     "Resources": [
      "cluster"
@@ -79087,6 +79379,11 @@
      "workteam"
     ]
    },
+   "detachclusternodevolume": {
+    "Resources": [
+     "cluster"
+    ]
+   },
    "disablesagemakerservicecatalogportfolio": {},
    "disassociatetrialcomponent": {
     "Resources": [
@@ -79167,6 +79464,11 @@
    "listassociations": {},
    "listautomljobs": {},
    "listcandidatesforautomljob": {},
+   "listclusterevents": {
+    "Resources": [
+     "cluster"
+    ]
+   },
    "listclusternodes": {
     "Resources": [
      "cluster"

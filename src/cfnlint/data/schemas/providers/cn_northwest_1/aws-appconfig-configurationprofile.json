@@ -1,0 +1,140 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/LocationUri",
+  "/properties/Type",
+  "/properties/ApplicationId"
+ ],
+ "definitions": {
+  "Tags": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Validators": {
+   "additionalProperties": false,
+   "properties": {
+    "Content": {
+     "maxLength": 32768,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "JSON_SCHEMA",
+      "LAMBDA"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationId",
+  "/properties/ConfigurationProfileId"
+ ],
+ "properties": {
+  "ApplicationId": {
+   "pattern": "[a-z0-9]{4,7}",
+   "type": "string"
+  },
+  "ConfigurationProfileId": {
+   "type": "string"
+  },
+  "DeletionProtectionCheck": {
+   "enum": [
+    "ACCOUNT_DEFAULT",
+    "APPLY",
+    "BYPASS"
+   ],
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:(aws[a-zA-Z-]*)?:[a-z]+:([a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1})?:(\\d{12})?:[a-zA-Z0-9-_/:.]+",
+   "type": "string"
+  },
+  "KmsKeyIdentifier": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12}|alias/[a-zA-Z0-9/_-]{1,250}|arn:aws[a-zA-Z-]*:kms:[a-z]{2}(-gov|-iso(b?))?-[a-z]+-\\d{1}:\\d{12}:(key/[0-9a-f-]{36}|alias/[a-zA-Z0-9/_-]{1,250})$",
+   "type": "string"
+  },
+  "LocationUri": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RetrievalRoleArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^((arn):(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):(iam)::\\d{12}:role[/].*)$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tags"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Type": {
+   "pattern": "^[a-zA-Z\\.]+",
+   "type": "string"
+  },
+  "Validators": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Validators"
+   },
+   "maxItems": 2,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConfigurationProfileId",
+  "/properties/KmsKeyArn"
+ ],
+ "required": [
+  "LocationUri",
+  "ApplicationId",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appconfig",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AppConfig::ConfigurationProfile",
+ "writeOnlyProperties": [
+  "/properties/DeletionProtectionCheck"
+ ]
+}

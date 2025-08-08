@@ -1,0 +1,121 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationId",
+  "/properties/ConfigurationProfileId",
+  "/properties/DeploymentStrategyId",
+  "/properties/EnvironmentId",
+  "/properties/Description",
+  "/properties/ConfigurationVersion",
+  "/properties/KmsKeyIdentifier",
+  "/properties/DynamicExtensionParameters",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "DynamicExtensionParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ExtensionReference": {
+     "type": "string"
+    },
+    "ParameterName": {
+     "type": "string"
+    },
+    "ParameterValue": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationId",
+  "/properties/EnvironmentId",
+  "/properties/DeploymentNumber"
+ ],
+ "properties": {
+  "ApplicationId": {
+   "pattern": "[a-z0-9]{4,7}",
+   "type": "string"
+  },
+  "ConfigurationProfileId": {
+   "pattern": "[a-z0-9]{4,7}",
+   "type": "string"
+  },
+  "ConfigurationVersion": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DeploymentNumber": {
+   "type": "string"
+  },
+  "DeploymentStrategyId": {
+   "pattern": "(^[a-z0-9]{4,7}$|^AppConfig\\.[A-Za-z0-9]{9,40}$)",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "DynamicExtensionParameters": {
+   "items": {
+    "$ref": "#/definitions/DynamicExtensionParameters"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "EnvironmentId": {
+   "pattern": "[a-z0-9]{4,7}",
+   "type": "string"
+  },
+  "KmsKeyIdentifier": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12}|alias/[a-zA-Z0-9/_-]{1,250}|arn:aws[a-zA-Z-]*:kms:[a-z]{2}(-gov|-iso(b?))?-[a-z]+-\\d{1}:\\d{12}:(key/[0-9a-f-]{36}|alias/[a-zA-Z0-9/_-]{1,250})$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DeploymentNumber"
+ ],
+ "required": [
+  "ApplicationId",
+  "ConfigurationProfileId",
+  "DeploymentStrategyId",
+  "EnvironmentId",
+  "ConfigurationVersion"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::AppConfig::Deployment",
+ "writeOnlyProperties": [
+  "/properties/DynamicExtensionParameters"
+ ]
+}
