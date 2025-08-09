@@ -42,6 +42,9 @@
     "ExecutionRole": {
      "$ref": "#/definitions/ExecutionRole"
     },
+    "ImageId": {
+     "$ref": "#/definitions/ImageId"
+    },
     "InstanceCount": {
      "maximum": 6758,
      "minimum": 0,
@@ -257,6 +260,12 @@
     "PerUnitStorageThroughput"
    ],
    "type": "object"
+  },
+  "ImageId": {
+   "maxLength": 21,
+   "minLength": 12,
+   "pattern": "^ami-[0-9a-fA-F]{8,17}|default$",
+   "type": "string"
   },
   "InstanceGroupName": {
    "maxLength": 63,
@@ -496,6 +505,12 @@
   },
   "InstanceGroups": {
    "$ref": "#/definitions/ClusterInstanceGroupsList"
+  },
+  "NodeProvisioningMode": {
+   "enum": [
+    "Continuous"
+   ],
+   "type": "string"
   },
   "NodeRecovery": {
    "enum": [

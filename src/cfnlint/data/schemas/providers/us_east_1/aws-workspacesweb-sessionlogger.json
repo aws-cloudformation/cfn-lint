@@ -1,0 +1,232 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AdditionalEncryptionContext",
+  "/properties/CustomerManagedKey"
+ ],
+ "definitions": {
+  "EncryptionContextMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[\\s\\S]*$": {
+     "maxLength": 131072,
+     "minLength": 0,
+     "pattern": "^[\\s\\S]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Event": {
+   "enum": [
+    "WebsiteInteract",
+    "FileDownloadFromSecureBrowserToRemoteDisk",
+    "FileTransferFromRemoteToLocalDisk",
+    "FileTransferFromLocalToRemoteDisk",
+    "FileUploadFromRemoteDiskToSecureBrowser",
+    "ContentPasteToWebsite",
+    "ContentTransferFromLocalToRemoteClipboard",
+    "ContentCopyFromWebsite",
+    "UrlLoad",
+    "TabOpen",
+    "TabClose",
+    "PrintJobSubmit",
+    "SessionConnect",
+    "SessionStart",
+    "SessionDisconnect",
+    "SessionEnd",
+    "UrlBlockByContentFilter"
+   ],
+   "type": "string"
+  },
+  "EventFilter": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "All": {
+       "$ref": "#/definitions/Unit"
+      }
+     },
+     "required": [
+      "All"
+     ],
+     "title": "All",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Include": {
+       "items": {
+        "$ref": "#/definitions/Event"
+       },
+       "maxItems": 100,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "required": [
+      "Include"
+     ],
+     "title": "Include",
+     "type": "object"
+    }
+   ]
+  },
+  "FolderStructure": {
+   "enum": [
+    "Flat",
+    "NestedByDate"
+   ],
+   "type": "string"
+  },
+  "LogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "S3": {
+     "$ref": "#/definitions/S3LogConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "LogFileFormat": {
+   "enum": [
+    "JSONLines",
+    "Json"
+   ],
+   "type": "string"
+  },
+  "S3LogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]$",
+     "type": "string"
+    },
+    "BucketOwner": {
+     "pattern": "^[0-9]{12}$",
+     "type": "string"
+    },
+    "FolderStructure": {
+     "$ref": "#/definitions/FolderStructure"
+    },
+    "KeyPrefix": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[\\d\\w\\-_/!().*']+$",
+     "type": "string"
+    },
+    "LogFileFormat": {
+     "$ref": "#/definitions/LogFileFormat"
+    }
+   },
+   "required": [
+    "Bucket",
+    "FolderStructure",
+    "LogFileFormat"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SessionLoggerArn"
+ ],
+ "properties": {
+  "AdditionalEncryptionContext": {
+   "$ref": "#/definitions/EncryptionContextMap"
+  },
+  "AssociatedPortalArns": {
+   "items": {
+    "maxLength": 2048,
+    "minLength": 20,
+    "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "CreationDate": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "CustomerManagedKey": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:kms:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:key\\/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[ _\\-\\d\\w]+$",
+   "type": "string"
+  },
+  "EventFilter": {
+   "$ref": "#/definitions/EventFilter"
+  },
+  "LogConfiguration": {
+   "$ref": "#/definitions/LogConfiguration"
+  },
+  "SessionLoggerArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssociatedPortalArns",
+  "/properties/CreationDate",
+  "/properties/SessionLoggerArn"
+ ],
+ "required": [
+  "EventFilter",
+  "LogConfiguration"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::WorkSpacesWeb::SessionLogger"
+}

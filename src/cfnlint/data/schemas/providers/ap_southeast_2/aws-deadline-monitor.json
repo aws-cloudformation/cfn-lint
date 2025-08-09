@@ -1,0 +1,62 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IdentityCenterInstanceArn"
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:(aws[a-zA-Z-]*):deadline:[a-z0-9-]+:[0-9]+:monitor/monitor-[0-9a-z]{32}$",
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "IdentityCenterApplicationArn": {
+   "type": "string"
+  },
+  "IdentityCenterInstanceArn": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}$",
+   "type": "string"
+  },
+  "MonitorId": {
+   "pattern": "^monitor-[0-9a-f]{32}$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "pattern": "^arn:(aws[a-zA-Z-]*):iam::\\d{12}:role(/[!-.0-~]+)*/[\\w+=,.@-]+$",
+   "type": "string"
+  },
+  "Subdomain": {
+   "pattern": "^[a-z0-9-]{1,100}$",
+   "type": "string"
+  },
+  "Url": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IdentityCenterApplicationArn",
+  "/properties/MonitorId",
+  "/properties/Url",
+  "/properties/Arn"
+ ],
+ "required": [
+  "DisplayName",
+  "IdentityCenterInstanceArn",
+  "RoleArn",
+  "Subdomain"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Deadline::Monitor"
+}

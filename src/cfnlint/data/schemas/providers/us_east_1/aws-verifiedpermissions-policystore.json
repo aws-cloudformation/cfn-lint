@@ -25,14 +25,38 @@
    ],
    "type": "object"
   },
+  "SchemaCedarFormat": {
+   "type": "string"
+  },
   "SchemaDefinition": {
-   "additionalProperties": false,
-   "properties": {
-    "CedarJson": {
-     "$ref": "#/definitions/SchemaJson"
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CedarJson": {
+       "$ref": "#/definitions/SchemaJson"
+      }
+     },
+     "required": [
+      "CedarJson"
+     ],
+     "title": "CedarJson",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CedarFormat": {
+       "$ref": "#/definitions/SchemaCedarFormat"
+      }
+     },
+     "required": [
+      "CedarFormat"
+     ],
+     "title": "CedarFormat",
+     "type": "object"
     }
-   },
-   "type": "object"
+   ]
   },
   "SchemaJson": {
    "type": "string"
