@@ -1,0 +1,101 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SubnetId",
+  "/properties/ConnectivityType",
+  "/properties/AllocationId",
+  "/properties/PrivateIpAddress"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/NatGatewayId"
+ ],
+ "properties": {
+  "AllocationId": {
+   "type": "string"
+  },
+  "ConnectivityType": {
+   "enum": [
+    "private",
+    "public"
+   ],
+   "type": "string"
+  },
+  "MaxDrainDurationSeconds": {
+   "type": "integer"
+  },
+  "NatGatewayId": {
+   "type": "string"
+  },
+  "PrivateIpAddress": {
+   "type": "string"
+  },
+  "SecondaryAllocationIds": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SecondaryPrivateIpAddressCount": {
+   "maximum": 31,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "SecondaryPrivateIpAddresses": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SubnetId": {
+   "format": "AWS::EC2::Subnet.Id",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/NatGatewayId"
+ ],
+ "required": [
+  "SubnetId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::NatGateway",
+ "writeOnlyProperties": [
+  "/properties/MaxDrainDurationSeconds"
+ ]
+}

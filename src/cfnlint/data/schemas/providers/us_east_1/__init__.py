@@ -1420,6 +1420,7 @@ types: list[str] = [
     "AWS::WorkSpacesWeb::IpAccessSettings",
     "AWS::WorkSpacesWeb::NetworkSettings",
     "AWS::WorkSpacesWeb::Portal",
+    "AWS::WorkSpacesWeb::SessionLogger",
     "AWS::WorkSpacesWeb::TrustStore",
     "AWS::WorkSpacesWeb::UserAccessLoggingSettings",
     "AWS::WorkSpacesWeb::UserSettings",

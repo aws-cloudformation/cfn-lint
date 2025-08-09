@@ -540,6 +540,14 @@
    ],
    "type": "object"
   },
+  "SummaryRuleOption": {
+   "enum": [
+    "SID",
+    "MSG",
+    "METADATA"
+   ],
+   "type": "string"
+  },
   "TCPFlag": {
    "enum": [
     "FIN",
@@ -643,6 +651,20 @@
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9-]+$",
    "type": "string"
+  },
+  "SummaryConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "RuleOptions": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/SummaryRuleOption"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
   },
   "Tags": {
    "insertionOrder": false,

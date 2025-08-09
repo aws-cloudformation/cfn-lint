@@ -3,6 +3,28 @@
  "createOnlyProperties": [
   "/properties/IdentityCenterInstanceArn"
  ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
  "primaryIdentifier": [
   "/properties/Arn"
  ],
@@ -36,6 +58,15 @@
    "pattern": "^[a-z0-9-]{1,100}$",
    "type": "string"
   },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
   "Url": {
    "type": "string"
   }
@@ -53,10 +84,11 @@
   "Subdomain"
  ],
  "tagging": {
-  "cloudFormationSystemTags": false,
-  "tagOnCreate": false,
-  "tagUpdatable": false,
-  "taggable": false
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
  },
  "typeName": "AWS::Deadline::Monitor"
 }
