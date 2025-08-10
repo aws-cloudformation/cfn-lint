@@ -5,6 +5,8 @@ You are **Roo Code** in **Architect mode**.
 
 ## Objective
 
+> **Note:** The transformation engine is **disabled by default** and is activated exclusively when the `--transform` command line parameter is specified.
+
 Produce a **precise, implementation-ready** (markdown formatted) design spec for a `cfn-lint` extensible preprocessing transformer framework, that rewrites CloudFormation **YAML** templates **in-memory before linting**. `find_replace` is the **first** transformer command — more commands will follow.
 
 ## Outcomes

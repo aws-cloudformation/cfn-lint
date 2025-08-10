@@ -6,6 +6,8 @@ This document outlines the design for an extensible preprocessing transformer fr
 
 The transformer framework is designed as a modular component within the `cfn-lint` pipeline. It operates between the initial template loading and the final rule processing.
 
+> **Note:** By default, the transformation engine remains disabled. It is activated exclusively when the `--transform` command line parameter is provided.
+
 The core components are:
 - **Directive Parser**: Scans the template for `# cfn-lint:` directives and continuation lines, parsing them into structured `Directive` objects.
 - **Command Registry**: A central, extensible registry that maps command tokens (e.g., `find_replace`) to their corresponding `TransformerHandler` implementations.
