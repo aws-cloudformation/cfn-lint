@@ -18,6 +18,47 @@ all_types = ("array", "boolean", "integer", "number", "object", "string")
 singular_types = ("boolean", "integer", "number", "string")
 
 
+def _schema_needs_resolution(schema: dict[str, Any]) -> bool:
+    """
+    Check if schema has constraints that require value resolution.
+
+    If the schema only has basic type validation without constraints,
+    we can skip expensive function resolution.
+    """
+    if not isinstance(schema, dict):
+        return False
+
+    # Keywords that require actual resolved values to validate
+    value_dependent_keywords = {
+        # String validation
+        "minLength",
+        "maxLength",
+        "pattern",
+        "format",
+        # Number validation
+        "minimum",
+        "maximum",
+        "exclusiveMinimum",
+        "exclusiveMaximum",
+        "multipleOf",
+        # Array validation
+        "minItems",
+        "maxItems",
+        "uniqueItems",
+        "contains",
+        # Object validation
+        "minProperties",
+        "maxProperties",
+        "required",
+        "dependentRequired",
+        # Value matching
+        "enum",
+        "const",
+    }
+
+    return any(keyword in schema for keyword in value_dependent_keywords)
+
+
 class BaseFn(CfnLintJsonSchema):
     def __init__(
         self,
@@ -117,6 +158,7 @@ class BaseFn(CfnLintJsonSchema):
             if resolve_err:
                 yield from self.fix_errors(iter([resolve_err]))
                 continue
+
             errs = list(
                 self.fix_errors(
                     v.descend(
@@ -163,9 +205,28 @@ class BaseFn(CfnLintJsonSchema):
     ) -> ValidationResult:
         tS = self.resolve_type(validator, s)
         if tS:
-            if not is_types_compatible(self.types, tS):
-                reprs = ", ".join(repr(type) for type in tS)
-                yield ValidationError(f"{instance!r} is not of type {reprs}")
+            # Check if schema requires strict object validation
+            # If type is object AND properties are defined, we need an actual object
+            if isinstance(s, dict) and "object" in tS and "properties" in s:
+                # Use strict type checking - no type coercion allowed
+                if not is_types_compatible(self.types, tS, strict_types=True):
+                    reprs = ", ".join(repr(type) for type in tS)
+                    yield ValidationError(f"{instance!r} is not of type {reprs}")
+            else:
+                # Use normal type checking with array->object compatibility
+                if not is_types_compatible(self.types, tS):
+                    # Special case: allow array functions for bare object types
+                    if (
+                        "array" in self.types
+                        and "object" in tS
+                        and isinstance(s, dict)
+                        and "properties" not in s
+                    ):
+                        # This is a bare object type, allow array compatibility
+                        pass
+                    else:
+                        reprs = ", ".join(repr(type) for type in tS)
+                        yield ValidationError(f"{instance!r} is not of type {reprs}")
 
     def validate(
         self,
@@ -197,4 +258,7 @@ class BaseFn(CfnLintJsonSchema):
             yield from iter(errs)
             return
 
-        yield from self.resolve(validator, s, instance, schema)
+        # OPTIMIZATION: Skip expensive resolution if schema doesn't need it
+        # BUT always resolve if function has its own validation logic (resolved_rule)
+        if self.resolved_rule or _schema_needs_resolution(s):
+            yield from self.resolve(validator, s, instance, schema)

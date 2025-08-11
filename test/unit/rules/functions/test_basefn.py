@@ -10,7 +10,7 @@ import pytest
 from cfnlint.context.parameters import ParameterSet
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules.functions._BaseFn import BaseFn
+from cfnlint.rules.functions._BaseFn import BaseFn, _schema_needs_resolution
 
 
 class _ChildRule(CloudFormationLintRule):
@@ -169,3 +169,55 @@ def template():
 def test_resolve(name, instance, parameters, rule, expected, validator):
     errs = list(rule.resolve(validator, rule._schema, instance, {}))
     assert errs == expected, f"{name!r} failed and got errors {errs!r}"
+
+
+class TestSchemaResolutionOptimization:
+    """Test the _schema_needs_resolution optimization function"""
+
+    def test_schema_needs_resolution_false(self):
+        """Test schemas that don't need resolution"""
+        # Basic type only
+        assert not _schema_needs_resolution({"type": "string"})
+        assert not _schema_needs_resolution({"type": "number"})
+        assert not _schema_needs_resolution({"type": "boolean"})
+
+        # Type with description (no constraints)
+        assert not _schema_needs_resolution(
+            {"type": "string", "description": "A simple string"}
+        )
+
+    def test_schema_needs_resolution_true(self):
+        """Test schemas that need resolution"""
+        # String constraints
+        assert _schema_needs_resolution({"type": "string", "minLength": 1})
+        assert _schema_needs_resolution({"type": "string", "maxLength": 10})
+        assert _schema_needs_resolution({"type": "string", "pattern": "^[a-z]+$"})
+        assert _schema_needs_resolution({"type": "string", "format": "email"})
+
+        # Number constraints
+        assert _schema_needs_resolution({"type": "number", "minimum": 0})
+        assert _schema_needs_resolution({"type": "number", "maximum": 100})
+        assert _schema_needs_resolution({"type": "number", "multipleOf": 5})
+
+        # Value matching
+        assert _schema_needs_resolution({"enum": ["a", "b", "c"]})
+        assert _schema_needs_resolution({"const": "specific_value"})
+
+        # Array constraints
+        assert _schema_needs_resolution({"type": "array", "minItems": 1})
+        assert _schema_needs_resolution({"type": "array", "maxItems": 5})
+        assert _schema_needs_resolution({"type": "array", "uniqueItems": True})
+
+        # Object constraints
+        assert _schema_needs_resolution({"type": "object", "minProperties": 1})
+        assert _schema_needs_resolution({"type": "object", "required": ["name"]})
+
+    def test_schema_needs_resolution_edge_cases(self):
+        """Test edge cases"""
+        # Non-dict schemas
+        assert not _schema_needs_resolution("string")
+        assert not _schema_needs_resolution(None)
+        assert not _schema_needs_resolution([])
+
+        # Empty schema
+        assert not _schema_needs_resolution({})
