@@ -185,6 +185,40 @@
    "minLength": 1,
    "type": "string"
   },
+  "EnforcedAssetModelInterfacePropertyMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "AssetModelPropertyExternalId": {
+     "type": "string"
+    },
+    "AssetModelPropertyLogicalId": {
+     "type": "string"
+    },
+    "InterfaceAssetModelPropertyExternalId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "InterfaceAssetModelPropertyExternalId"
+   ],
+   "type": "object"
+  },
+  "EnforcedAssetModelInterfaceRelationship": {
+   "additionalProperties": false,
+   "properties": {
+    "InterfaceAssetModelId": {
+     "type": "string"
+    },
+    "PropertyMappings": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/EnforcedAssetModelInterfacePropertyMapping"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
   "ExpressionVariable": {
    "additionalProperties": false,
    "properties": {
@@ -214,7 +248,6 @@
    "properties": {
     "Expression": {
      "maxLength": 1024,
-     "minLength": 1,
      "type": "string"
     },
     "Variables": {
@@ -306,7 +339,6 @@
    "properties": {
     "Expression": {
      "maxLength": 1024,
-     "minLength": 1,
      "type": "string"
     },
     "Variables": {
@@ -452,9 +484,17 @@
   "AssetModelType": {
    "enum": [
     "ASSET_MODEL",
-    "COMPONENT_MODEL"
+    "COMPONENT_MODEL",
+    "INTERFACE"
    ],
    "type": "string"
+  },
+  "EnforcedAssetModelInterfaceRelationships": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EnforcedAssetModelInterfaceRelationship"
+   },
+   "type": "array"
   },
   "Tags": {
    "insertionOrder": false,

@@ -21,6 +21,9 @@
     "Enabled": {
      "type": "boolean"
     },
+    "IAMFederationOptions": {
+     "$ref": "#/definitions/IAMFederationOptions"
+    },
     "InternalUserDatabaseEnabled": {
      "type": "boolean"
     },
@@ -161,6 +164,21 @@
      "type": "boolean"
     },
     "KmsKeyId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "IAMFederationOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "RolesKey": {
+     "type": "string"
+    },
+    "SubjectKey": {
      "type": "string"
     }
    },
@@ -586,6 +604,9 @@
   "VPCOptions": {
    "$ref": "#/definitions/VPCOptions"
   }
+ },
+ "propertyTransform": {
+  "/properties/EncryptionAtRestOptions/KmsKeyId": "$split(EncryptionAtRestOptions.KmsKeyId, \"/\")[-1] $OR EncryptionAtRestOptions.KmsKeyId"
  },
  "readOnlyProperties": [
   "/properties/Id",
