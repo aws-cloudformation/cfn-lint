@@ -585,6 +585,12 @@
    ],
    "type": "string"
   },
+  "HealthCheckIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
   "HealthCheckState": {
    "additionalProperties": false,
    "properties": {
@@ -596,6 +602,12 @@
     }
    },
    "type": "object"
+  },
+  "HostedZoneIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
   },
   "KubernetesResourceType": {
    "additionalProperties": false,
@@ -695,6 +707,12 @@
    ],
    "type": "object"
   },
+  "RecordNames": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
   "RecoveryApproach": {
    "enum": [
     "activeActive",
@@ -749,6 +767,12 @@
     }
    },
    "type": "object"
+  },
+  "Regions": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
   },
   "Route53HealthCheckConfiguration": {
    "additionalProperties": false,
@@ -957,6 +981,9 @@
    "type": "string"
   }
  },
+ "deprecatedProperties": [
+  "/properties/HealthChecksForPlan"
+ ],
  "primaryIdentifier": [
   "/properties/Arn"
  ],
@@ -1015,6 +1042,24 @@
    "minItems": 2,
    "type": "array"
   },
+  "Route53HealthChecks": {
+   "additionalProperties": false,
+   "properties": {
+    "HealthCheckIds": {
+     "$ref": "#/definitions/HealthCheckIds"
+    },
+    "HostedZoneIds": {
+     "$ref": "#/definitions/HostedZoneIds"
+    },
+    "RecordNames": {
+     "$ref": "#/definitions/RecordNames"
+    },
+    "Regions": {
+     "$ref": "#/definitions/Regions"
+    }
+   },
+   "type": "object"
+  },
   "Tags": {
    "$ref": "#/definitions/Tags"
   },
@@ -1038,7 +1083,8 @@
   "/properties/Arn",
   "/properties/Owner",
   "/properties/Version",
-  "/properties/HealthChecksForPlan"
+  "/properties/HealthChecksForPlan",
+  "/properties/Route53HealthChecks"
  ],
  "required": [
   "ExecutionRole",

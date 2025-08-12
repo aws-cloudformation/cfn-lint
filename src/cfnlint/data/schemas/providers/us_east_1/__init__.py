@@ -991,6 +991,8 @@ types: list[str] = [
     "AWS::OSIS::Pipeline",
     "AWS::Oam::Link",
     "AWS::Oam::Sink",
+    "AWS::ObservabilityAdmin::OrganizationTelemetryRule",
+    "AWS::ObservabilityAdmin::TelemetryRule",
     "AWS::Omics::AnnotationStore",
     "AWS::Omics::ReferenceStore",
     "AWS::Omics::RunGroup",
