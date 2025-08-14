@@ -66,6 +66,24 @@
    ],
    "type": "object"
   },
+  "DBInstanceStatusInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "Message": {
+     "type": "string"
+    },
+    "Normal": {
+     "type": "boolean"
+    },
+    "Status": {
+     "type": "string"
+    },
+    "StatusType": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "Endpoint": {
    "additionalProperties": false,
    "properties": {
@@ -189,6 +207,9 @@
   "AutomaticBackupReplicationRetentionPeriod": {
    "minimum": 1,
    "type": "integer"
+  },
+  "AutomaticRestartTime": {
+   "type": "string"
   },
   "AvailabilityZone": {
    "type": "string"
@@ -385,6 +406,9 @@
   "OptionGroupName": {
    "type": "string"
   },
+  "PercentProgress": {
+   "type": "string"
+  },
   "PerformanceInsightsKMSKeyId": {
    "type": "string"
   },
@@ -465,6 +489,12 @@
    "format": "date-time",
    "type": "string"
   },
+  "ResumeFullAutomationModeTime": {
+   "type": "string"
+  },
+  "SecondaryAvailabilityZone": {
+   "type": "string"
+  },
   "SourceDBClusterIdentifier": {
    "type": "string"
   },
@@ -479,6 +509,12 @@
   },
   "SourceRegion": {
    "type": "string"
+  },
+  "StatusInfos": {
+   "items": {
+    "$ref": "#/definitions/DBInstanceStatusInfo"
+   },
+   "type": "array"
   },
   "StorageEncrypted": {
    "type": "boolean"
@@ -542,6 +578,7 @@
   "/properties/StorageType": "$lowercase(StorageType)"
  },
  "readOnlyProperties": [
+  "/properties/AutomaticRestartTime",
   "/properties/CertificateDetails",
   "/properties/CertificateDetails/CAIdentifier",
   "/properties/CertificateDetails/ValidTill",
@@ -560,8 +597,12 @@
   "/properties/ListenerEndpoint/Port",
   "/properties/ListenerEndpoint/HostedZoneId",
   "/properties/MasterUserSecret/SecretArn",
+  "/properties/PercentProgress",
   "/properties/ReadReplicaDBClusterIdentifiers",
-  "/properties/ReadReplicaDBInstanceIdentifiers"
+  "/properties/ReadReplicaDBInstanceIdentifiers",
+  "/properties/ResumeFullAutomationModeTime",
+  "/properties/SecondaryAvailabilityZone",
+  "/properties/StatusInfos"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
  "tagging": {

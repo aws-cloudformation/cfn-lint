@@ -5,6 +5,21 @@
   "/properties/FirewallName"
  ],
  "definitions": {
+  "AvailabilityZoneMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "\\S+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AvailabilityZone"
+   ],
+   "type": "object"
+  },
   "EnabledAnalysisType": {
    "enum": [
     "TLS_SNI",
@@ -67,6 +82,17 @@
   "/properties/FirewallArn"
  ],
  "properties": {
+  "AvailabilityZoneChangeProtection": {
+   "type": "boolean"
+  },
+  "AvailabilityZoneMappings": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AvailabilityZoneMapping"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
   "DeleteProtection": {
    "type": "boolean"
   },
@@ -118,7 +144,6 @@
    "items": {
     "$ref": "#/definitions/SubnetMapping"
    },
-   "minItems": 1,
    "type": "array",
    "uniqueItems": true
   },
@@ -131,6 +156,12 @@
    "minItems": 1,
    "type": "array",
    "uniqueItems": true
+  },
+  "TransitGatewayId": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^tgw-[0-9a-z]+$",
+   "type": "string"
   },
   "VpcId": {
    "format": "AWS::EC2::VPC.Id",
@@ -147,9 +178,7 @@
  ],
  "required": [
   "FirewallName",
-  "FirewallPolicyArn",
-  "VpcId",
-  "SubnetMappings"
+  "FirewallPolicyArn"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkfirewall.git",
  "tagging": {

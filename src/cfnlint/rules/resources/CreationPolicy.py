@@ -31,9 +31,7 @@ class CreationPolicy(CfnLintJsonSchema):
                 "additionalProperties": False,
                 "properties": {
                     "StartFleet": {
-                        "additionalProperties": False,
-                        "type": "object",
-                        "properties": {"Type": {"type": "boolean"}},
+                        "type": "boolean",
                     }
                 },
             }

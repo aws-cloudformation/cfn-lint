@@ -13,7 +13,12 @@
   "/properties/InstanceGroups/*/ExecutionRole",
   "/properties/InstanceGroups/*/InstanceGroupName",
   "/properties/InstanceGroups/*/InstanceType",
-  "/properties/InstanceGroups/*/ThreadsPerCore"
+  "/properties/InstanceGroups/*/ThreadsPerCore",
+  "/properties/RestrictedInstanceGroups/*/OverrideVpcConfig",
+  "/properties/RestrictedInstanceGroups/*/ExecutionRole",
+  "/properties/RestrictedInstanceGroups/*/InstanceGroupName",
+  "/properties/RestrictedInstanceGroups/*/InstanceType",
+  "/properties/RestrictedInstanceGroups/*/ThreadsPerCore"
  ],
  "definitions": {
   "ClusterEbsVolumeConfig": {
@@ -36,6 +41,9 @@
     },
     "ExecutionRole": {
      "$ref": "#/definitions/ExecutionRole"
+    },
+    "ImageId": {
+     "$ref": "#/definitions/ImageId"
     },
     "InstanceCount": {
      "maximum": 6758,
@@ -64,6 +72,12 @@
      "maximum": 2,
      "minimum": 1,
      "type": "integer"
+    },
+    "TrainingPlanArn": {
+     "maxLength": 2048,
+     "minLength": 50,
+     "pattern": "^arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:training-plan/.*$",
+     "type": "string"
     }
    },
    "required": [
@@ -142,6 +156,69 @@
    ],
    "type": "object"
   },
+  "ClusterRestrictedInstanceGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "CurrentCount": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "EnvironmentConfig": {
+     "$ref": "#/definitions/EnvironmentConfig"
+    },
+    "ExecutionRole": {
+     "$ref": "#/definitions/ExecutionRole"
+    },
+    "InstanceCount": {
+     "maximum": 6758,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "InstanceGroupName": {
+     "$ref": "#/definitions/InstanceGroupName"
+    },
+    "InstanceStorageConfigs": {
+     "$ref": "#/definitions/ClusterInstanceStorageConfigs"
+    },
+    "InstanceType": {
+     "$ref": "#/definitions/InstanceType"
+    },
+    "OnStartDeepHealthChecks": {
+     "$ref": "#/definitions/OnStartDeepHealthChecks"
+    },
+    "OverrideVpcConfig": {
+     "$ref": "#/definitions/VpcConfig"
+    },
+    "ThreadsPerCore": {
+     "maximum": 2,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "TrainingPlanArn": {
+     "maxLength": 2048,
+     "minLength": 50,
+     "pattern": "^arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:training-plan/.*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ExecutionRole",
+    "InstanceCount",
+    "InstanceGroupName",
+    "InstanceType",
+    "EnvironmentConfig"
+   ],
+   "type": "object"
+  },
+  "ClusterRestrictedInstanceGroupsList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ClusterRestrictedInstanceGroup"
+   },
+   "maxItems": 100,
+   "minItems": 1,
+   "type": "array"
+  },
   "DeepHealthCheckType": {
    "enum": [
     "InstanceStress",
@@ -149,10 +226,45 @@
    ],
    "type": "string"
   },
+  "EnvironmentConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FSxLustreConfig": {
+     "$ref": "#/definitions/FSxLustreConfig"
+    }
+   },
+   "type": "object"
+  },
   "ExecutionRole": {
    "maxLength": 2048,
    "minLength": 20,
    "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "FSxLustreConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "PerUnitStorageThroughput": {
+     "maximum": 1000,
+     "minimum": 125,
+     "type": "integer"
+    },
+    "SizeInGiB": {
+     "maximum": 100800,
+     "minimum": 1200,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "SizeInGiB",
+    "PerUnitStorageThroughput"
+   ],
+   "type": "object"
+  },
+  "ImageId": {
+   "maxLength": 21,
+   "minLength": 12,
+   "pattern": "^ami-[0-9a-fA-F]{8,17}|default$",
    "type": "string"
   },
   "InstanceGroupName": {
@@ -394,6 +506,12 @@
   "InstanceGroups": {
    "$ref": "#/definitions/ClusterInstanceGroupsList"
   },
+  "NodeProvisioningMode": {
+   "enum": [
+    "Continuous"
+   ],
+   "type": "string"
+  },
   "NodeRecovery": {
    "enum": [
     "Automatic",
@@ -403,6 +521,9 @@
   },
   "Orchestrator": {
    "$ref": "#/definitions/Orchestrator"
+  },
+  "RestrictedInstanceGroups": {
+   "$ref": "#/definitions/ClusterRestrictedInstanceGroupsList"
   },
   "Tags": {
    "insertionOrder": false,
@@ -422,11 +543,10 @@
   "/properties/CreationTime",
   "/properties/ClusterStatus",
   "/properties/FailureMessage",
-  "/properties/InstanceGroups/*/CurrentCount"
+  "/properties/InstanceGroups/*/CurrentCount",
+  "/properties/RestrictedInstanceGroups/*/CurrentCount"
  ],
- "required": [
-  "InstanceGroups"
- ],
+ "required": [],
  "tagging": {
   "cloudFormationSystemTags": false,
   "tagOnCreate": true,

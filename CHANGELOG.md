@@ -1,3 +1,22 @@
+### v1.38.3
+## What's Changed
+* Update CloudFormation schemas to `2025-08-12` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4212
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.38.2...v1.38.3
+
+### v1.38.2
+## What's Changed
+* Fix unit testing with lambda EOL date changes by @gbudge in https://github.com/aws-cloudformation/cfn-lint/pull/4208
+* Remove `AmazonGuardDutyFullAccess` from ManagedPolicies by @syldyer in https://github.com/aws-cloudformation/cfn-lint/pull/4209
+* chore(deps): bump pyinstaller from 6.14.2 to 6.15.0 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4211
+* Update `CreationPolicy` `StartFleet` type by @syldyer in https://github.com/aws-cloudformation/cfn-lint/pull/4210
+* Update CloudFormation schemas to `2025-08-04` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4204
+
+## New Contributors
+* @syldyer made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4209
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.38.1...v1.38.2
+
 ### v1.38.1
 ## What's Changed
 * Add `--list-templates` advanced / debugging parameter by @gbudge in https://github.com/aws-cloudformation/cfn-lint/pull/4195
