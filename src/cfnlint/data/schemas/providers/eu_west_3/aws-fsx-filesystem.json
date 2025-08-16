@@ -1,0 +1,497 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyId",
+  "/properties/SecurityGroupIds",
+  "/properties/FileSystemType",
+  "/properties/SubnetIds",
+  "/properties/BackupId"
+ ],
+ "definitions": {
+  "AuditLogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AuditLogDestination": {
+     "type": "string"
+    },
+    "FileAccessAuditLogLevel": {
+     "type": "string"
+    },
+    "FileShareAccessAuditLogLevel": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "FileAccessAuditLogLevel",
+    "FileShareAccessAuditLogLevel"
+   ],
+   "type": "object"
+  },
+  "ClientConfigurations": {
+   "additionalProperties": false,
+   "properties": {
+    "Clients": {
+     "type": "string"
+    },
+    "Options": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "DataReadCacheConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SizeGiB": {
+     "type": "integer"
+    },
+    "SizingMode": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DiskIopsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Iops": {
+     "type": "integer"
+    },
+    "Mode": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LustreConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoImportPolicy": {
+     "type": "string"
+    },
+    "AutomaticBackupRetentionDays": {
+     "type": "integer"
+    },
+    "CopyTagsToBackups": {
+     "type": "boolean"
+    },
+    "DailyAutomaticBackupStartTime": {
+     "type": "string"
+    },
+    "DataCompressionType": {
+     "type": "string"
+    },
+    "DataReadCacheConfiguration": {
+     "$ref": "#/definitions/DataReadCacheConfiguration"
+    },
+    "DeploymentType": {
+     "type": "string"
+    },
+    "DriveCacheType": {
+     "type": "string"
+    },
+    "EfaEnabled": {
+     "type": "boolean"
+    },
+    "ExportPath": {
+     "type": "string"
+    },
+    "ImportPath": {
+     "type": "string"
+    },
+    "ImportedFileChunkSize": {
+     "type": "integer"
+    },
+    "MetadataConfiguration": {
+     "$ref": "#/definitions/MetadataConfiguration"
+    },
+    "PerUnitStorageThroughput": {
+     "type": "integer"
+    },
+    "ThroughputCapacity": {
+     "type": "integer"
+    },
+    "WeeklyMaintenanceStartTime": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MetadataConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Iops": {
+     "type": "integer"
+    },
+    "Mode": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "NfsExports": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientConfigurations": {
+     "items": {
+      "$ref": "#/definitions/ClientConfigurations"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "OntapConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AutomaticBackupRetentionDays": {
+     "type": "integer"
+    },
+    "DailyAutomaticBackupStartTime": {
+     "type": "string"
+    },
+    "DeploymentType": {
+     "type": "string"
+    },
+    "DiskIopsConfiguration": {
+     "$ref": "#/definitions/DiskIopsConfiguration"
+    },
+    "EndpointIpAddressRange": {
+     "type": "string"
+    },
+    "FsxAdminPassword": {
+     "type": "string"
+    },
+    "HAPairs": {
+     "type": "integer"
+    },
+    "PreferredSubnetId": {
+     "type": "string"
+    },
+    "RouteTableIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ThroughputCapacity": {
+     "type": "integer"
+    },
+    "ThroughputCapacityPerHAPair": {
+     "type": "integer"
+    },
+    "WeeklyMaintenanceStartTime": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DeploymentType"
+   ],
+   "type": "object"
+  },
+  "OpenZFSConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AutomaticBackupRetentionDays": {
+     "type": "integer"
+    },
+    "CopyTagsToBackups": {
+     "type": "boolean"
+    },
+    "CopyTagsToVolumes": {
+     "type": "boolean"
+    },
+    "DailyAutomaticBackupStartTime": {
+     "type": "string"
+    },
+    "DeploymentType": {
+     "type": "string"
+    },
+    "DiskIopsConfiguration": {
+     "$ref": "#/definitions/DiskIopsConfiguration"
+    },
+    "EndpointIpAddressRange": {
+     "type": "string"
+    },
+    "Options": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "PreferredSubnetId": {
+     "type": "string"
+    },
+    "ReadCacheConfiguration": {
+     "$ref": "#/definitions/ReadCacheConfiguration"
+    },
+    "RootVolumeConfiguration": {
+     "$ref": "#/definitions/RootVolumeConfiguration"
+    },
+    "RouteTableIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ThroughputCapacity": {
+     "type": "integer"
+    },
+    "WeeklyMaintenanceStartTime": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DeploymentType"
+   ],
+   "type": "object"
+  },
+  "ReadCacheConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SizeGiB": {
+     "type": "integer"
+    },
+    "SizingMode": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RootVolumeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CopyTagsToSnapshots": {
+     "type": "boolean"
+    },
+    "DataCompressionType": {
+     "type": "string"
+    },
+    "NfsExports": {
+     "items": {
+      "$ref": "#/definitions/NfsExports"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ReadOnly": {
+     "type": "boolean"
+    },
+    "RecordSizeKiB": {
+     "type": "integer"
+    },
+    "UserAndGroupQuotas": {
+     "items": {
+      "$ref": "#/definitions/UserAndGroupQuotas"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "SelfManagedActiveDirectoryConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DnsIps": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "DomainName": {
+     "type": "string"
+    },
+    "FileSystemAdministratorsGroup": {
+     "type": "string"
+    },
+    "OrganizationalUnitDistinguishedName": {
+     "type": "string"
+    },
+    "Password": {
+     "type": "string"
+    },
+    "UserName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "UserAndGroupQuotas": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "integer"
+    },
+    "StorageCapacityQuotaGiB": {
+     "type": "integer"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "WindowsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ActiveDirectoryId": {
+     "type": "string"
+    },
+    "Aliases": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "AuditLogConfiguration": {
+     "$ref": "#/definitions/AuditLogConfiguration"
+    },
+    "AutomaticBackupRetentionDays": {
+     "type": "integer"
+    },
+    "CopyTagsToBackups": {
+     "type": "boolean"
+    },
+    "DailyAutomaticBackupStartTime": {
+     "type": "string"
+    },
+    "DeploymentType": {
+     "type": "string"
+    },
+    "DiskIopsConfiguration": {
+     "$ref": "#/definitions/DiskIopsConfiguration"
+    },
+    "PreferredSubnetId": {
+     "type": "string"
+    },
+    "SelfManagedActiveDirectoryConfiguration": {
+     "$ref": "#/definitions/SelfManagedActiveDirectoryConfiguration"
+    },
+    "ThroughputCapacity": {
+     "type": "integer"
+    },
+    "WeeklyMaintenanceStartTime": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ThroughputCapacity"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "BackupId": {
+   "type": "string"
+  },
+  "DNSName": {
+   "type": "string"
+  },
+  "FileSystemType": {
+   "type": "string"
+  },
+  "FileSystemTypeVersion": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "LustreConfiguration": {
+   "$ref": "#/definitions/LustreConfiguration"
+  },
+  "LustreMountName": {
+   "type": "string"
+  },
+  "OntapConfiguration": {
+   "$ref": "#/definitions/OntapConfiguration"
+  },
+  "OpenZFSConfiguration": {
+   "$ref": "#/definitions/OpenZFSConfiguration"
+  },
+  "ResourceARN": {
+   "type": "string"
+  },
+  "RootVolumeId": {
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "StorageCapacity": {
+   "maximum": 65536,
+   "minimum": 32,
+   "type": "integer"
+  },
+  "StorageType": {
+   "type": "string"
+  },
+  "SubnetIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "WindowsConfiguration": {
+   "$ref": "#/definitions/WindowsConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ResourceARN",
+  "/properties/Id",
+  "/properties/LustreMountName",
+  "/properties/RootVolumeId",
+  "/properties/DNSName"
+ ],
+ "required": [
+  "FileSystemType",
+  "SubnetIds"
+ ],
+ "typeName": "AWS::FSx::FileSystem"
+}

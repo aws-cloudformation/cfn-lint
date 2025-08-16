@@ -1,0 +1,124 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Format",
+  "/properties/DetectorId"
+ ],
+ "definitions": {
+  "TagItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id",
+  "/properties/DetectorId"
+ ],
+ "properties": {
+  "Activate": {
+   "type": "boolean"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "DetectorId": {
+   "maxLength": 32,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ErrorDetails": {
+   "type": "string"
+  },
+  "ExpectedBucketOwner": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[0-9]+$",
+   "type": "string"
+  },
+  "Format": {
+   "enum": [
+    "ALIEN_VAULT",
+    "FIRE_EYE",
+    "OTX_CSV",
+    "PROOF_POINT",
+    "STIX",
+    "TXT"
+   ],
+   "maxLength": 300,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Location": {
+   "maxLength": 300,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 300,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "INACTIVE",
+    "ACTIVATING",
+    "ACTIVE",
+    "DEACTIVATING",
+    "ERROR",
+    "DELETE_PENDING",
+    "DELETED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/TagItem"
+   },
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Status",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/ErrorDetails"
+ ],
+ "required": [
+  "Format",
+  "Location"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GuardDuty::TrustedEntitySet",
+ "writeOnlyProperties": [
+  "/properties/Activate"
+ ]
+}
