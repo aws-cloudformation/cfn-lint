@@ -115,9 +115,14 @@ def _run_template(
 
         return
 
-    config.set_template_args(template)
-    cfn = Template(filename, template, config.regions, config.parameters)
-    yield from _dedup(_run_template_per_config(cfn, config, rules))
+    config_with_template = config.with_template_args(template)
+    cfn = Template(
+        filename,
+        template,
+        config_with_template.regions,
+        config_with_template.parameters,
+    )
+    yield from _dedup(_run_template_per_config(cfn, config_with_template, rules))
 
 
 def run_template_by_file_path(
@@ -209,7 +214,8 @@ def run_template_by_file_paths(config: ConfigMixIn, rules: Rules) -> Iterator[Ma
             mandatory_rules=config.mandatory_checks,
         ):
             ignore_bad_template = True
-    for filename in config.templates:
-        yield from run_template_by_file_path(
-            filename, config, rules, ignore_bad_template
-        )
+    if config.templates:
+        for filename in config.templates:
+            yield from run_template_by_file_path(
+                filename, config, rules, ignore_bad_template
+            )

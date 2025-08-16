@@ -7,12 +7,13 @@ from __future__ import annotations
 
 import argparse
 import copy
+import functools
 import glob
 import json
 import logging
 import os
 import sys
-from copy import deepcopy
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, Sequence, TypedDict
 
@@ -690,6 +691,7 @@ class TemplateArgs:
 
 
 class ManualArgs(TypedDict, total=False):
+    append_rules: list[str]
     configure_rules: dict[str, dict[str, Any]]
     deployment_files: list[str]
     ignore_bad_template: bool
@@ -738,15 +740,136 @@ def _merge_configs(
 
 
 # pylint: disable=too-many-public-methods
-class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
+@dataclass(frozen=True)
+class ConfigMixIn:
+    """
+    Immutable configuration with automatic caching.
+
+    Drop-in replacement for the current ConfigMixIn using dataclass + cached_property
+    for optimal performance without manual cache invalidation complexity.
+    """
+
+    # Init-only parameters (backward-compatible API)
+    cli_args_list: list[str] | None = field(default=None)
+    append_rules_init: list[str] = field(default_factory=list)
+    configure_rules_init: dict[str, dict[str, Any]] = field(default_factory=dict)
+    deployment_files_init: list[str] = field(default_factory=list)
+    ignore_bad_template_init: bool = field(default=False)
+    ignore_checks_init: list[str] = field(default_factory=list)
+    ignore_templates_init: list = field(default_factory=list)
+    include_checks_init: list[str] = field(default_factory=list)
+    include_experimental_init: bool = field(default=False)
+    mandatory_checks_init: list[str] = field(default_factory=list)
+    merge_configs_init: bool = field(default=False)
+    non_zero_exit_code_init: str = field(default="informational")
+    output_file_init: str = field(default="")
+    parameter_files_init: list[str] = field(default_factory=list)
+    parameters_init: list = field(default_factory=list)
+    regions_init: list = field(default_factory=list)
+    registry_schemas_init: list[str] = field(default_factory=list)
+    template_parameters_init: list[dict[str, Any]] = field(default_factory=list)
+    templates_init: list[str] = field(default_factory=list)
+
+    # Internal data
+    _cli_args: CliArgs = field(init=False, repr=False)
+    _template_args: dict = field(init=False, repr=False, default_factory=dict)
+    _file_args: dict = field(init=False, repr=False, default_factory=dict)
+    _manual_args: dict = field(init=False, repr=False, default_factory=dict)
+
     def __init__(self, cli_args: list[str] | None = None, **kwargs: Unpack[ManualArgs]):
-        self._manual_args = kwargs or ManualArgs()
-        CliArgs.__init__(self, cli_args)
-        # configure debug as soon as we can
-        TemplateArgs.__init__(self, {})
-        ConfigFileArgs.__init__(
-            self, config_file=self._get_argument_value("config_file", False, False)
+        """Backward-compatible initialization."""
+        # Set the init-only fields directly
+        object.__setattr__(self, "cli_args_list", cli_args)
+        object.__setattr__(self, "append_rules_init", kwargs.get("append_rules", []))
+        object.__setattr__(
+            self, "configure_rules_init", kwargs.get("configure_rules", {})
         )
+        object.__setattr__(
+            self, "deployment_files_init", kwargs.get("deployment_files", [])
+        )
+        object.__setattr__(
+            self, "ignore_bad_template_init", kwargs.get("ignore_bad_template", False)
+        )
+        object.__setattr__(self, "ignore_checks_init", kwargs.get("ignore_checks", []))
+        object.__setattr__(
+            self, "ignore_templates_init", kwargs.get("ignore_templates", [])
+        )
+        object.__setattr__(
+            self, "include_checks_init", kwargs.get("include_checks", [])
+        )
+        object.__setattr__(
+            self, "include_experimental_init", kwargs.get("include_experimental", False)
+        )
+        object.__setattr__(
+            self, "mandatory_checks_init", kwargs.get("mandatory_checks", [])
+        )
+        object.__setattr__(
+            self, "merge_configs_init", kwargs.get("merge_configs", False)
+        )
+        object.__setattr__(
+            self,
+            "non_zero_exit_code_init",
+            kwargs.get("non_zero_exit_code", "informational"),
+        )
+        object.__setattr__(self, "output_file_init", kwargs.get("output_file", ""))
+        object.__setattr__(
+            self, "parameter_files_init", kwargs.get("parameter_files", [])
+        )
+        object.__setattr__(self, "parameters_init", kwargs.get("parameters", []))
+        object.__setattr__(self, "regions_init", kwargs.get("regions", []))
+        object.__setattr__(
+            self, "registry_schemas_init", kwargs.get("registry_schemas", [])
+        )
+        object.__setattr__(
+            self, "template_parameters_init", kwargs.get("template_parameters", [])
+        )
+        object.__setattr__(self, "templates_init", kwargs.get("templates", []))
+
+        # Call post_init to set up internal data
+        self.__post_init__()
+
+    def __post_init__(self):
+        """Initialize internal data from init parameters."""
+        # Initialize the base classes properly
+        cli_args_obj = CliArgs(self.cli_args_list)
+        object.__setattr__(self, "_cli_args", cli_args_obj)
+
+        # ConfigFileArgs needs the config_file from CLI args
+        config_file = getattr(cli_args_obj.cli_args, "config_file", None)
+        file_args_obj = ConfigFileArgs(config_file=config_file)
+        object.__setattr__(self, "_file_args", file_args_obj.file_args)
+
+        # Template args (empty initially, will be set via set_template_args)
+        object.__setattr__(self, "_template_args", {})
+
+        # Manual args from init fields
+        manual_args = {}
+        field_mapping = {
+            "append_rules": self.append_rules_init,
+            "configure_rules": self.configure_rules_init,
+            "deployment_files": self.deployment_files_init,
+            "ignore_bad_template": self.ignore_bad_template_init,
+            "ignore_checks": self.ignore_checks_init,
+            "ignore_templates": self.ignore_templates_init,
+            "include_checks": self.include_checks_init,
+            "include_experimental": self.include_experimental_init,
+            "mandatory_checks": self.mandatory_checks_init,
+            "merge_configs": self.merge_configs_init,
+            "non_zero_exit_code": self.non_zero_exit_code_init,
+            "output_file": self.output_file_init,
+            "parameter_files": self.parameter_files_init,
+            "parameters": self.parameters_init,
+            "regions": self.regions_init,
+            "registry_schemas": self.registry_schemas_init,
+            "template_parameters": self.template_parameters_init,
+            "templates": self.templates_init,
+        }
+
+        for key, value in field_mapping.items():
+            if value:  # Only include non-empty values
+                manual_args[key] = value
+
+        object.__setattr__(self, "_manual_args", manual_args)
 
     def __repr__(self):
         return format_json_string(
@@ -776,8 +899,9 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
             }
         )
 
-    def __eq__(self, value):
-        if not isinstance(value, ConfigMixIn):
+    def __eq__(self, other):
+        """Equality comparison for testing."""
+        if not isinstance(other, ConfigMixIn):
             return False
         for key in [
             "configure_rules",
@@ -795,30 +919,14 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
             "parameters",
             "templates",
         ]:
-            if getattr(self, key) != getattr(value, key):
+            if getattr(self, key) != getattr(other, key):
                 return False
-
         return True
 
+    # Additional methods for compatibility
     def validate(self, allow_stdin: bool = False) -> None:
-        """
-        Validate the configuration for logical consistency.
-
-        This method validates configuration constraints that may not be enforced
-        by argparse when using the API directly (vs CLI usage). While the CLI
-        uses argparse mutually exclusive groups to prevent some conflicts, the
-        API bypasses argparse, so this method ensures all constraints are enforced
-        consistently across both usage patterns.
-
-        Args:
-            allow_stdin: If True, allows validation to pass when no templates/deployment
-                        files are specified (for CLI stdin handling)
-
-        Raises:
-            ValueError: When configuration is invalid with a descriptive message
-        """
-        # Get raw configuration values using the same logic as the templates property
-        # For templates, we need to check both templates and template_alt
+        """Validate the configuration for logical consistency."""
+        # Get raw configuration values
         raw_templates = []
         if "templates" in self._manual_args:
             raw_templates = self._manual_args["templates"]
@@ -862,14 +970,17 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         if (raw_parameters or raw_parameter_files) and len(raw_templates) > 1:
             raise ValueError("Parameters can only be used with a single template")
 
-    def _get_argument_value(self, arg_name, is_template, is_config_file):
-        cli_value = getattr(self.cli_args, arg_name)
-        template_value = self.template_args.get(arg_name)
-        file_value = self.file_args.get(arg_name)
+    def _get_argument_value(
+        self, arg_name: str, is_template: bool, is_config_file: bool
+    ) -> Any:
+        """Core configuration resolution logic with proper precedence."""
+        # Access CLI args from the parsed cli_args object
+        cli_value = getattr(self._cli_args.cli_args, arg_name, None)
+        template_value = self._template_args.get(arg_name)
+        file_value = self._file_args.get(arg_name)
         manual_value = self._manual_args.get(arg_name)
 
-        # merge list configurations
-        # make sure we don't do an infinite loop so skip this check for merge_configs
+        # Handle configuration merging for list/dict types
         if arg_name != "merge_configs":
             if self.merge_configs:
                 if isinstance(cli_value, (list, dict)):
@@ -877,7 +988,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
                         cli_value, template_value, file_value, manual_value
                     )
 
-        # return individual items
+        # Apply precedence: manual > cli > template > file > cli_default
         if manual_value:
             return manual_value
         if cli_value:
@@ -888,61 +999,64 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
             return file_value
         return cli_value
 
-    @property
-    def ignore_checks(self):
-        return self._get_argument_value("ignore_checks", True, True)
+    @functools.cached_property
+    def ignore_checks(self) -> list[str]:
+        result = self._get_argument_value("ignore_checks", True, True)
+        return result if isinstance(result, list) else []
 
-    @property
-    def include_checks(self):
+    @functools.cached_property
+    def include_checks(self) -> list[str]:
         results = self._get_argument_value("include_checks", True, True)
-        return ["W", "E"] + results
+        if not isinstance(results, list):
+            results = []
+        # Ensure results is definitely a list[str]
+        validated_results: list[str] = [str(item) for item in results if item]
+        return ["W", "E"] + validated_results
 
-    @property
-    def mandatory_checks(self):
-        return self._get_argument_value("mandatory_checks", False, True)
+    @functools.cached_property
+    def mandatory_checks(self) -> list[str]:
+        result = self._get_argument_value("mandatory_checks", False, True)
+        return result if isinstance(result, list) else []
 
-    @property
-    def include_experimental(self):
-        return self._get_argument_value("include_experimental", True, True)
+    @functools.cached_property
+    def include_experimental(self) -> bool:
+        result = self._get_argument_value("include_experimental", True, True)
+        return bool(result)
 
-    @property
-    def regions(self):
+    @functools.cached_property
+    def regions(self) -> list[str]:
         results = self._get_argument_value("regions", True, True)
         if not results:
             default_region_env = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
-            return [os.environ.get("AWS_REGION", default_region_env)]
-        if "ALL_REGIONS" in results:
+            region = os.environ.get("AWS_REGION", default_region_env) or "us-east-1"
+            return [region]
+        if isinstance(results, list) and "ALL_REGIONS" in results:
             return REGIONS
-        return results
+        return results if isinstance(results, list) else []
 
-    @property
-    def ignore_bad_template(self):
-        return self._get_argument_value("ignore_bad_template", True, True)
+    @functools.cached_property
+    def ignore_bad_template(self) -> bool:
+        result = self._get_argument_value("ignore_bad_template", True, True)
+        return bool(result)
 
-    @property
-    def debug(self):
-        return self._get_argument_value("debug", False, True)
+    @functools.cached_property
+    def debug(self) -> bool:
+        result = self._get_argument_value("debug", False, True)
+        return bool(result)
 
-    @property
-    def info(self):
-        return self._get_argument_value("info", False, False)
+    @functools.cached_property
+    def info(self) -> bool:
+        result = self._get_argument_value("info", False, False)
+        return bool(result)
 
-    @property
-    def format(self):
-        return self._get_argument_value("format", False, True)
+    @functools.cached_property
+    def format(self) -> str:
+        result = self._get_argument_value("format", False, True)
+        return str(result) if result else ""
 
-    @property
-    def templates(self):
-        """
-
-        Returns a list of Cloudformation templates to lint.
-
-        Order of precedence:
-        - Filenames provided via `-t` CLI
-        - Filenames specified in the config file.
-        - Arguments provided via `cfn-lint` CLI.
-        """
-
+    @functools.cached_property
+    def templates(self) -> list[str] | None:
+        """Resolved templates with complex precedence logic."""
         all_filenames = []
 
         cli_alt_args = self._get_argument_value("template_alt", False, False)
@@ -955,13 +1069,13 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
             filenames = cli_alt_args
         elif cli_args:
             filenames = cli_args
-        # elif not sys.stdin.isatty():
-        #    if bool(select.select([sys.stdin], [], [], 0)):
-        #        return []
         elif file_args:
             filenames = file_args
         else:
-            # No filenames found, could be piped in or be using the api.
+            return None
+
+        # If we have no filenames at this point, return None
+        if not filenames:
             return None
 
         if isinstance(filenames, str):
@@ -971,19 +1085,16 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         all_filenames.extend(self._glob_filenames(filenames))
 
         found_files = [i for i in all_filenames if i not in ignore_templates]
-        LOGGER.debug(
-            f"List of Cloudformation Templates to lint: {found_files} from {filenames}"
-        )
         return found_files
 
-    def _ignore_templates(self):
+    def _ignore_templates(self) -> list[str]:
+        """Helper for templates property."""
         ignore_template_args = self._get_argument_value("ignore_templates", False, True)
         if ignore_template_args:
             filenames = ignore_template_args
         else:
             return []
 
-        # if only one is specified convert it to array
         if isinstance(filenames, str):
             filenames = [filenames]
 
@@ -992,33 +1103,40 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
     def _glob_filenames(
         self, filenames: Sequence[str], raise_exception: bool = True
     ) -> list[str]:
-        # handle different shells and Config files
-        # some shells don't expand * and configparser won't expand wildcards
-        all_filenames = []
+        """Handle file globbing with error handling."""
+        if not filenames:
+            return []
 
+        all_filenames = []
         for filename in filenames:
             add_filenames = glob.glob(filename, recursive=True)
-
             if not add_filenames and not self.ignore_bad_template:
                 if raise_exception:
                     raise ValueError(f"{filename} could not be processed by glob.glob")
-
             all_filenames.extend(add_filenames)
 
         return sorted(list(map(str, map(Path, all_filenames))))
 
-    @property
-    def append_rules(self):
-        return [_DEFAULT_RULESDIR] + self._get_argument_value(
-            "append_rules", False, True
-        )
+    def with_template_args(self, template_args: dict) -> "ConfigMixIn":
+        """Create a new immutable ConfigMixIn instance with template args applied."""
+        new_config = ConfigMixIn(cli_args=self.cli_args_list, **self._manual_args)
 
-    @property
-    def parameter_files(self):
+        template_parser = TemplateArgs(template_args)
+        object.__setattr__(new_config, "_template_args", template_parser.template_args)
+
+        return new_config
+
+    @functools.cached_property
+    def append_rules(self) -> list[str]:
+        append_rules = self._get_argument_value("append_rules", False, True) or []
+        return [_DEFAULT_RULESDIR] + append_rules
+
+    @functools.cached_property
+    def parameter_files(self) -> list[str]:
         filenames = self._get_argument_value("parameter_files", True, True)
         return self._glob_filenames(filenames, raise_exception=True)
 
-    @property
+    @functools.cached_property
     def parameters(self) -> list[ParameterSet]:
         parameter_sets = self._get_argument_value("parameters", True, True)
         results: list[ParameterSet] = []
@@ -1026,88 +1144,103 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
             if isinstance(parameter_set, ParameterSet):
                 results.append(parameter_set)
             else:
-                results.append(
-                    ParameterSet(
-                        source=None,
-                        parameters=parameter_set,
-                    )
-                )
-
+                results.append(ParameterSet(source=None, parameters=parameter_set))
         return results
 
-    @property
-    def listtemplates(self):
-        """
-        Get the listtemplates from the CLI arguments or config file.
-        """
-        return self._get_argument_value("listtemplates", False, False)
+    @functools.cached_property
+    def listtemplates(self) -> bool:
+        result = self._get_argument_value("listtemplates", False, False)
+        return bool(result)
 
-    @property
-    def override_spec(self):
-        return self._get_argument_value("override_spec", False, True)
+    @functools.cached_property
+    def override_spec(self) -> str:
+        result = self._get_argument_value("override_spec", False, True)
+        return str(result) if result else ""
 
-    @property
-    def custom_rules(self):
-        return self._get_argument_value("custom_rules", False, True)
+    @functools.cached_property
+    def custom_rules(self) -> str:
+        result = self._get_argument_value("custom_rules", False, True)
+        return str(result) if result else ""
 
-    @property
-    def update_specs(self):
-        return self._get_argument_value("update_specs", False, False)
+    @functools.cached_property
+    def update_specs(self) -> bool:
+        result = self._get_argument_value("update_specs", False, False)
+        return bool(result)
 
-    @property
-    def patch_specs(self):
-        return self._get_argument_value("patch_specs", False, False)
+    @functools.cached_property
+    def patch_specs(self) -> bool:
+        result = self._get_argument_value("patch_specs", False, False)
+        return bool(result)
 
-    @property
-    def update_documentation(self):
-        return self._get_argument_value("update_documentation", False, False)
+    @functools.cached_property
+    def update_documentation(self) -> bool:
+        result = self._get_argument_value("update_documentation", False, False)
+        return bool(result)
 
-    @property
-    def update_iam_policies(self):
-        return self._get_argument_value("update_iam_policies", False, False)
+    @functools.cached_property
+    def update_iam_policies(self) -> bool:
+        result = self._get_argument_value("update_iam_policies", False, False)
+        return bool(result)
 
-    @property
-    def listrules(self):
-        return self._get_argument_value("listrules", False, False)
+    @functools.cached_property
+    def listrules(self) -> bool:
+        result = self._get_argument_value("listrules", False, False)
+        return bool(result)
 
-    @property
-    def configure_rules(self):
-        return self._get_argument_value("configure_rules", True, True)
+    @functools.cached_property
+    def configure_rules(self) -> dict[str, dict[str, Any]]:
+        result = self._get_argument_value("configure_rules", True, True)
+        return result if isinstance(result, dict) else {}
 
-    @property
-    def deployment_files(self):
+    @functools.cached_property
+    def deployment_files(self) -> list[str]:
         deployment_files = self._get_argument_value("deployment_files", False, True)
         return self._glob_filenames(deployment_files, True)
 
-    @property
-    def config_file(self):
-        return self._get_argument_value("config_file", False, False)
+    @functools.cached_property
+    def config_file(self) -> str:
+        result = self._get_argument_value("config_file", False, False)
+        return str(result) if result else ""
+
+    @functools.cached_property
+    def build_graph(self) -> bool:
+        result = self._get_argument_value("build_graph", False, False)
+        return bool(result)
+
+    @functools.cached_property
+    def output_file(self) -> str:
+        result = self._get_argument_value("output_file", False, True)
+        return str(result) if result else ""
+
+    @functools.cached_property
+    def registry_schemas(self) -> list[str]:
+        result = self._get_argument_value("registry_schemas", False, True)
+        return result if isinstance(result, list) else []
+
+    @functools.cached_property
+    def merge_configs(self) -> bool:
+        result = self._get_argument_value("merge_configs", True, True)
+        return bool(result)
+
+    @functools.cached_property
+    def non_zero_exit_code(self) -> str:
+        result = self._get_argument_value("non_zero_exit_code", False, False)
+        return str(result) if result else "informational"
+
+    @functools.cached_property
+    def force(self) -> bool:
+        result = self._get_argument_value("force", False, False)
+        return bool(result)
 
     @property
-    def build_graph(self):
-        return self._get_argument_value("build_graph", False, False)
+    def parser(self):
+        """Access to the argument parser for backward compatibility."""
+        return self._cli_args.parser
 
-    @property
-    def output_file(self):
-        return self._get_argument_value("output_file", False, True)
-
-    @property
-    def registry_schemas(self):
-        return self._get_argument_value("registry_schemas", False, True)
-
-    @property
-    def merge_configs(self):
-        return self._get_argument_value("merge_configs", True, True)
-
-    @property
-    def non_zero_exit_code(self):
-        return self._get_argument_value("non_zero_exit_code", False, False)
-
-    @property
-    def force(self):
-        return self._get_argument_value("force", False, False)
-
+    # Evolution methods for backward compatibility and internal use
     def evolve(self, **kwargs: Unpack[ManualArgs]) -> "ConfigMixIn":
-        config = deepcopy(self)
-        config._manual_args.update(kwargs)
-        return config
+        """Create new ConfigMixIn with updated manual args (backward compatible)."""
+        # Merge existing manual args with new kwargs
+        merged_args = self._manual_args.copy()
+        merged_args.update(kwargs)
+        return ConfigMixIn(cli_args=self.cli_args_list, **merged_args)

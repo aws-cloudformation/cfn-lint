@@ -206,9 +206,10 @@ class TestFormatters(BaseTestCase):
         """Test pretty formatter"""
         isatty_mock.return_value = True
         formatter = PrettyFormatter()
-        self.config.cli_args.templates = None
+        # Create a config with no templates to test formatter behavior
+        config_no_templates = ConfigMixIn([])
         results = formatter.print_matches(
-            self.results, rules=self.rules, config=self.config
+            self.results, rules=self.rules, config=config_no_templates
         ).splitlines()
 
         if sys.stdout.isatty():
