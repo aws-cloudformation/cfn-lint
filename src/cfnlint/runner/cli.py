@@ -284,12 +284,12 @@ class Runner:
         if self.config.listrules:
             print(self.rules)
             sys.exit(0)
-        
+
         if self.config.listtemplates:
             if not self.config.templates:
                 print("None")
                 sys.exit(0)
-            
+
             # Separate directories and files
             directories = []
             files = []
@@ -298,13 +298,13 @@ class Runner:
                     directories.append(f"not a file: {template}")
                 else:
                     files.append(template)
-            
+
             # Print directories first, then files
             for msg in directories:
                 print(msg)
             for file in files:
                 print(file)
-            
+
             sys.exit(0)
 
         # Use centralized configuration validation

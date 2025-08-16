@@ -144,7 +144,7 @@ class TestArgsParser(BaseTestCase):
             with patch("sys.stderr", devnull):
                 with self.assertRaises(SystemExit):
                     cfnlint.config.CliArgs(["--non-zero-exit-code", "bad"])
-    
+
     def test_list_templates_none(self):
         """Test that --list-templates prints 'None' and exits cleanly"""
 
@@ -158,44 +158,49 @@ class TestArgsParser(BaseTestCase):
 
         # Run cfn-lint and validate the output
         result = subprocess.run(
-            ['cfn-lint', *args],
+            ["cfn-lint", *args],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            text=True
+            text=True,
         )
 
         self.assertEqual(result.returncode, 0)
-        self.assertEqual(result.stdout.strip(), 'None')
+        self.assertEqual(result.stdout.strip(), "None")
 
     def test_list_templates_files_only(self):
         """Test that --list-templates prints the file names"""
 
         args = [
-            "--list-templates", 
-            "-t", "test/fixtures/templates/public/lambda-poller.yaml",
-            "-t", "test/fixtures/templates/public/rds-cluster.yaml"
+            "--list-templates",
+            "-t",
+            "test/fixtures/templates/public/lambda-poller.yaml",
+            "-t",
+            "test/fixtures/templates/public/rds-cluster.yaml",
         ]
 
         # Test the CLI argument parsing for --list-templates with multiple templates
         config = cfnlint.config.CliArgs(args)
         self.assertEqual(config.cli_args.listtemplates, True)
         self.assertEqual(config.cli_args.templates, [])
-        self.assertEqual(config.cli_args.template_alt, [
-            "test/fixtures/templates/public/lambda-poller.yaml", 
-            "test/fixtures/templates/public/rds-cluster.yaml"
-        ])
+        self.assertEqual(
+            config.cli_args.template_alt,
+            [
+                "test/fixtures/templates/public/lambda-poller.yaml",
+                "test/fixtures/templates/public/rds-cluster.yaml",
+            ],
+        )
 
         # Run cfn-lint and validate the output
         result = subprocess.run(
-            ['cfn-lint', *args],
+            ["cfn-lint", *args],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            text=True
+            text=True,
         )
 
         expected_output = (
-            'test/fixtures/templates/public/lambda-poller.yaml\n'
-            'test/fixtures/templates/public/rds-cluster.yaml'
+            "test/fixtures/templates/public/lambda-poller.yaml\n"
+            "test/fixtures/templates/public/rds-cluster.yaml"
         )
         self.assertEqual(result.returncode, 0)
         self.assertEqual(result.stdout.strip(), expected_output)
@@ -205,8 +210,9 @@ class TestArgsParser(BaseTestCase):
 
         pwd = os.getcwd()
         args = [
-            "--list-templates", 
-            "-t", pwd # Current directory
+            "--list-templates",
+            "-t",
+            pwd,  # Current directory
         ]
 
         # Test the CLI argument parsing for --list-templates with multiple templates
@@ -217,51 +223,46 @@ class TestArgsParser(BaseTestCase):
 
         # Run cfn-lint and validate the output
         result = subprocess.run(
-            ['cfn-lint', *args],
+            ["cfn-lint", *args],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            text=True
+            text=True,
         )
 
-        expected_output = 'not a file: {}'.format(pwd)
+        expected_output = "not a file: {}".format(pwd)
         self.assertEqual(result.returncode, 0)
         self.assertEqual(result.stdout.strip(), expected_output)
 
     def test_list_templates_files_and_directories(self):
         """Test that --list-templates prints file names and directory warnings"""
-        
+
         template1 = "test/fixtures/templates/public/lambda-poller.yaml"
         template2 = "test/fixtures/templates/public/rds-cluster.yaml"
         pwd = os.getcwd()
         args = [
-            "--list-templates", 
-            "-t", template1,
-            "-t", template2,
-            "-t", pwd # Current directory
+            "--list-templates",
+            "-t",
+            template1,
+            "-t",
+            template2,
+            "-t",
+            pwd,  # Current directory
         ]
 
         # Test the CLI argument parsing for --list-templates with multiple templates
         config = cfnlint.config.CliArgs(args)
         self.assertEqual(config.cli_args.listtemplates, True)
         self.assertEqual(config.cli_args.templates, [])
-        self.assertEqual(config.cli_args.template_alt, [
-            template1,
-            template2,
-            pwd
-        ])
+        self.assertEqual(config.cli_args.template_alt, [template1, template2, pwd])
 
         # Run cfn-lint and validate the output
         result = subprocess.run(
-            ['cfn-lint', *args],
+            ["cfn-lint", *args],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            text=True
+            text=True,
         )
 
-        expected_output = (
-            f'not a file: {pwd}\n'
-            f'{template1}\n'
-            f'{template2}'
-        )
+        expected_output = f"not a file: {pwd}\n{template1}\n{template2}"
         self.assertEqual(result.returncode, 0)
         self.assertEqual(result.stdout.strip(), expected_output)
