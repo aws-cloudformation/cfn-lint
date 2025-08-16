@@ -143,3 +143,19 @@ class TestArgsParser(BaseTestCase):
             with patch("sys.stderr", devnull):
                 with self.assertRaises(SystemExit):
                     cfnlint.config.CliArgs(["--non-zero-exit-code", "bad"])
+
+    def test_parameters_single(self):
+        """Test parsing single parameter"""
+        config = cfnlint.config.CliArgs(["--parameters", "Foo=Bar"])
+        self.assertEqual(config.cli_args.parameters, [{"Foo": "Bar"}])
+
+    def test_parameters_multiple(self):
+        """Test parsing multiple parameters"""
+        config = cfnlint.config.CliArgs(["--parameters", "A=1", "B=2"])
+        self.assertEqual(config.cli_args.parameters, [{"A": "1", "B": "2"}])
+
+    def test_parameters_bad_format(self):
+        """Test error handling for bad parameter format"""
+        with patch("sys.exit") as exit:
+            cfnlint.config.CliArgs(["--parameters", "A"])
+            exit.assert_called_once_with(1)

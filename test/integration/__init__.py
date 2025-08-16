@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 from unittest.mock import patch
 
-from cfnlint.config import configure_logging
+from cfnlint.config import ConfigMixIn, configure_logging
 from cfnlint.decode import cfn_yaml
 from cfnlint.formatters import JsonFormatter
 from cfnlint.runner import Runner
@@ -106,10 +106,14 @@ class BaseCliTestCase(unittest.TestCase):
             for result in expected_results:
                 result["Filename"] = str(Path(result.get("Filename")))
 
-            # template = cfn_yaml.load(filename)
-            scenario_config = deepcopy(config)
-            scenario_config.cli_args.template_alt = [filename]
-            scenario_config.cli_args.format = "json"
+            # Create a new config with the format set correctly from the start
+            scenario_config = ConfigMixIn(
+                ["-f", "json", "-t", filename],
+                include_checks=config.include_checks,
+                ignore_checks=config.ignore_checks,
+                configure_rules=config.configure_rules,
+                include_experimental=config.include_experimental,
+            )
 
             runner = Runner(scenario_config)
 

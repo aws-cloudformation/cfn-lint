@@ -47,15 +47,26 @@ class TestConfigMixIn(BaseTestCase):
                 "regions": ["us-west-2"],
             },
             {},
+            {
+                "include_checks": ["I"],
+                "ignore_checks": ["E3001"],
+                "regions": ["us-west-2"],
+            },
+            {},
         ]
         config = cfnlint.config.ConfigMixIn(["--include-checks", "I1234", "I4321"])
-        config.template_args = {
-            "Metadata": {
-                "cfn-lint": {
-                    "config": {"include_checks": ["I9876"], "ignore_checks": ["W3001"]}
+        config = config.with_template_args(
+            {
+                "Metadata": {
+                    "cfn-lint": {
+                        "config": {
+                            "include_checks": ["I9876"],
+                            "ignore_checks": ["W3001"],
+                        }
+                    }
                 }
             }
-        }
+        )
         # config files wins
         self.assertEqual(config.regions, ["us-west-2"])
         # CLI should win
@@ -295,17 +306,28 @@ class TestConfigMixIn(BaseTestCase):
                 "regions": ["us-west-2"],
             },
             {},
+            {
+                "include_checks": ["I"],
+                "ignore_checks": ["E3001"],
+                "regions": ["us-west-2"],
+            },
+            {},
         ]
         config = cfnlint.config.ConfigMixIn(
             ["--include-checks", "I1234", "I4321", "--merge-configs"]
         )
-        config.template_args = {
-            "Metadata": {
-                "cfn-lint": {
-                    "config": {"include_checks": ["I9876"], "ignore_checks": ["W3001"]}
+        config = config.with_template_args(
+            {
+                "Metadata": {
+                    "cfn-lint": {
+                        "config": {
+                            "include_checks": ["I9876"],
+                            "ignore_checks": ["W3001"],
+                        }
+                    }
                 }
             }
-        }
+        )
         # config files wins
         self.assertEqual(config.regions, ["us-west-2"])
         # CLI should win
@@ -314,35 +336,6 @@ class TestConfigMixIn(BaseTestCase):
         )
         # template file wins over config file
         self.assertEqual(config.ignore_checks, ["W3001", "E3001"])
-
-    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
-    def test_parameters(self, yaml_mock):
-        yaml_mock.side_effect = [{}, {}]
-        config = cfnlint.config.ConfigMixIn(["--parameters", "Foo=Bar"])
-
-        # test defaults
-        self.assertEqual(getattr(config.cli_args, "parameters"), [{"Foo": "Bar"}])
-
-    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
-    def test_parameters_lists(self, yaml_mock):
-        yaml_mock.side_effect = [{}, {}]
-        config = cfnlint.config.ConfigMixIn(["--parameters", "A=1", "B=2"])
-
-        # test defaults
-        self.assertEqual(getattr(config.cli_args, "parameters"), [{"A": "1", "B": "2"}])
-
-    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
-    def test_parameters_lists_bad_value(self, yaml_mock):
-        yaml_mock.side_effect = [{}, {}]
-
-        with patch("sys.exit") as exit:
-            cfnlint.config.ConfigMixIn(
-                [
-                    "--parameters",
-                    "A",
-                ]
-            )
-            exit.assert_called_once_with(1)
 
     @patch("glob.glob")
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
@@ -608,3 +601,81 @@ class TestConfigMixInValidation(BaseTestCase):
             config.validate()
         except ValueError:
             self.fail("validate() raised ValueError unexpectedly!")
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_template_args_cache_invalidation(self, yaml_mock):
+        """Test that set_template_args properly invalidates cached properties"""
+        yaml_mock.side_effect = [{}, {}, {}, {}]
+
+        config = cfnlint.config.ConfigMixIn([])
+
+        # Access properties to cache them
+        initial_ignore = config.ignore_checks
+        initial_include = config.include_checks
+
+        # Verify initial values
+        self.assertEqual(initial_ignore, [])
+        self.assertEqual(initial_include, ["W", "E"])
+
+        # Set template args with configuration
+        template_data = {
+            "AWSTemplateFormatVersion": "2010-09-09",
+            "Metadata": {
+                "cfn-lint": {
+                    "config": {"ignore_checks": ["W", "E"], "include_checks": ["I1002"]}
+                }
+            },
+            "Resources": {},
+        }
+
+        config_with_template = config.with_template_args(template_data)
+
+        # Access properties on the new instance - should have template values
+        new_ignore = config_with_template.ignore_checks
+        new_include = config_with_template.include_checks
+
+        # Verify template configuration takes precedence
+        self.assertEqual(new_ignore, ["W", "E"])
+        self.assertEqual(new_include, ["W", "E", "I1002"])
+
+        # Verify original config is unchanged (immutability)
+        self.assertEqual(config.ignore_checks, initial_ignore)
+        self.assertEqual(config.include_checks, initial_include)
+
+        # Verify the new instance has different values
+        self.assertNotEqual(new_ignore, initial_ignore)
+        self.assertNotEqual(new_include, initial_include)
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_immutable_config_with_template_args_proper_approach(self, yaml_mock):
+        """Test the proper immutable approach to handling template args"""
+        yaml_mock.side_effect = [{}, {}, {}, {}]  # Need more mocks for the new instance
+
+        config = cfnlint.config.ConfigMixIn([])
+
+        # Initial state
+        self.assertEqual(config.ignore_checks, [])
+        self.assertEqual(config.include_checks, ["W", "E"])
+
+        # Template data with config metadata
+        template_data = {
+            "AWSTemplateFormatVersion": "2010-09-09",
+            "Metadata": {
+                "cfn-lint": {
+                    "config": {"ignore_checks": ["W1000"], "include_checks": ["I1002"]}
+                }
+            },
+            "Resources": {},
+        }
+
+        # Create a new immutable instance with template args
+        config_with_template = config.with_template_args(template_data)
+        self.assertEqual(config_with_template.ignore_checks, ["W1000"])
+        self.assertEqual(config_with_template.include_checks, ["W", "E", "I1002"])
+
+        # Original config should be unchanged (immutability preserved)
+        self.assertEqual(config.ignore_checks, [])
+        self.assertEqual(config.include_checks, ["W", "E"])
+
+        # Verify they are different instances
+        self.assertIsNot(config, config_with_template)
