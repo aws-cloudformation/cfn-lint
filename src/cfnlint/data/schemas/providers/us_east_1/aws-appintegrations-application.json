@@ -1,11 +1,36 @@
 {
  "additionalProperties": false,
  "definitions": {
+  "ApplicationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ContactHandling": {
+     "$ref": "#/definitions/ContactHandling"
+    }
+   },
+   "type": "object"
+  },
   "ApprovedOrigins": {
    "maxLength": 1000,
    "minLength": 1,
    "pattern": "^\\w+\\:\\/\\/.*$",
    "type": "string"
+  },
+  "ContactHandling": {
+   "additionalProperties": false,
+   "properties": {
+    "Scope": {
+     "enum": [
+      "CROSS_CONTACTS",
+      "PER_CONTACT"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Scope"
+   ],
+   "type": "object"
   },
   "ExternalUrlConfig": {
    "additionalProperties": false,
@@ -29,6 +54,34 @@
    "required": [
     "AccessUrl"
    ],
+   "type": "object"
+  },
+  "IframeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Allow": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[a-z-]+$",
+      "type": "string"
+     },
+     "maxItems": 25,
+     "type": "array"
+    },
+    "Sandbox": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[a-z-]+$",
+      "type": "string"
+     },
+     "maxItems": 25,
+     "type": "array"
+    }
+   },
    "type": "object"
   },
   "Permissions": {
@@ -69,6 +122,9 @@
    "pattern": "^arn:aws[-a-z0-9]*:app-integrations:[-a-z0-9]*:[0-9]{12}:application/[-a-zA-Z0-9]*",
    "type": "string"
   },
+  "ApplicationConfig": {
+   "$ref": "#/definitions/ApplicationConfig"
+  },
   "ApplicationSourceConfig": {
    "additionalProperties": false,
    "properties": {
@@ -91,6 +147,18 @@
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9/\\._\\-]+$",
    "type": "string"
+  },
+  "IframeConfig": {
+   "$ref": "#/definitions/IframeConfig"
+  },
+  "InitializationTimeout": {
+   "maximum": 600000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "IsService": {
+   "default": false,
+   "type": "boolean"
   },
   "Name": {
    "maxLength": 255,
