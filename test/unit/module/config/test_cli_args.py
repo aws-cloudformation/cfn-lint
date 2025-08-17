@@ -199,8 +199,9 @@ class TestArgsParser(BaseTestCase):
         )
 
         expected_output = (
-            "test/fixtures/templates/public/lambda-poller.yaml\n"
-            "test/fixtures/templates/public/rds-cluster.yaml"
+            os.path.normpath("test/fixtures/templates/public/lambda-poller.yaml")
+            + "\n"
+            + os.path.normpath("test/fixtures/templates/public/rds-cluster.yaml")
         )
         self.assertEqual(result.returncode, 0)
         self.assertEqual(result.stdout.strip(), expected_output)
@@ -229,7 +230,7 @@ class TestArgsParser(BaseTestCase):
             text=True,
         )
 
-        expected_output = "not a file: {}".format(pwd)
+        expected_output = "not a file: {}".format(os.path.normpath(pwd))
         self.assertEqual(result.returncode, 0)
         self.assertEqual(result.stdout.strip(), expected_output)
 
@@ -263,6 +264,12 @@ class TestArgsParser(BaseTestCase):
             text=True,
         )
 
-        expected_output = f"not a file: {pwd}\n{template1}\n{template2}"
+        expected_output = (
+            f"not a file: {os.path.normpath(pwd)}"
+            + "\n"
+            + os.path.normpath(template1)
+            + "\n"
+            + os.path.normpath(template2)
+        )
         self.assertEqual(result.returncode, 0)
         self.assertEqual(result.stdout.strip(), expected_output)
