@@ -90,9 +90,12 @@ class Rules(TypedRules):
         return self._used_rules
 
     # pylint: disable=inconsistent-return-statements
-    def run_check(self, check, filename, rule_id, config, *args) -> Iterator[Match]:
+    def run_check(
+        self, check, filename, rule_id, config, enabled_rule_ids=set(), *args
+    ) -> Iterator[Match]:
         """Run a check"""
-        if self.is_rule_enabled(rule_id, config):
+        # Use enabled_rule_ids set if provided
+        if rule_id in enabled_rule_ids:
             self._used_rules[rule_id] = self.data[rule_id]
         try:
             yield from iter(check(*args))
@@ -120,15 +123,27 @@ class Rules(TypedRules):
             if self.is_rule_enabled(match.rule, config):
                 yield match
 
+    def _filter_matches_with_enabled_set(
+        self, enabled_rule_ids: set[str], matches: Iterator[Match]
+    ) -> Iterator[Match]:
+        """Filter matches using pre-computed enabled rules set"""
+        for match in matches:
+            if match.rule.id in enabled_rule_ids:
+                yield match
+
     def run(
         self, filename: str | None, cfn: Template, config: ConfigMixIn
     ) -> Iterator[Match]:
         """Run rules"""
+        # Build enabled rules set once to avoid repeated is_rule_enabled calls
+        enabled_rule_ids = set()
         for rule_id, rule in self.data.items():
             rule.configure(
                 config.configure_rules.get(rule_id, None), config.include_experimental
             )
             rule.initialize(cfn)
+            if self.is_rule_enabled(rule_id, config):
+                enabled_rule_ids.add(rule_id)
 
         for rule_id, rule in self.data.items():
             for key in rule.child_rules.keys():
@@ -140,9 +155,17 @@ class Rules(TypedRules):
                     self.data[parent_rule].child_rules[rule_id] = rule
 
         for rule_id, rule in self.data.items():
-            yield from self._filter_matches(
-                config,
-                self.run_check(rule.matchall, filename, rule_id, config, filename, cfn),
+            yield from self._filter_matches_with_enabled_set(
+                enabled_rule_ids,
+                self.run_check(
+                    rule.matchall,
+                    filename,
+                    rule_id,
+                    config,
+                    enabled_rule_ids,
+                    filename,
+                    cfn,
+                ),
             )
 
         for resource_name, resource_attributes in cfn.get_resources().items():
@@ -151,13 +174,14 @@ class Rules(TypedRules):
             if isinstance(resource_type, str) and isinstance(resource_properties, dict):
                 path = ["Resources", resource_name, "Properties"]
                 for rule_id, rule in self.data.items():
-                    yield from self._filter_matches(
-                        config,
+                    yield from self._filter_matches_with_enabled_set(
+                        enabled_rule_ids,
                         self.run_check(
                             rule.matchall_resource_properties,
                             filename,
                             rule_id,
                             config,
+                            enabled_rule_ids,
                             filename,
                             cfn,
                             resource_properties,
