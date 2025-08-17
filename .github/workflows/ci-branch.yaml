@@ -27,13 +27,14 @@ jobs:
         run: |
           tox -e py -- -m "data or not data"
       - uses: codecov/codecov-action@v5
-        if: matrix.os == 'ubuntu-latest'
+        # Skip code coverage if on a fork (no token available)
+        if: matrix.os == 'ubuntu-latest' && github.event.repository.fork == false
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml # optional
           name: py${{ matrix.python }}-${{ matrix.os }}
           flags: unittests # optional
-          fail_ci_if_error: false # optional (default = false)
+          fail_ci_if_error: true # optional (default = false)
   integration:
     runs-on: ${{ matrix.os }}
     strategy:
