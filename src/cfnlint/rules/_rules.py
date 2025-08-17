@@ -116,14 +116,6 @@ class Rules(TypedRules):
                 )
 
     def _filter_matches(
-        self, config: ConfigMixIn, matches: Iterator[Match]
-    ) -> Iterator[Match]:
-        """Filter matches by config"""
-        for match in matches:
-            if self.is_rule_enabled(match.rule, config):
-                yield match
-
-    def _filter_matches_with_enabled_set(
         self, enabled_rule_ids: set[str], matches: Iterator[Match]
     ) -> Iterator[Match]:
         """Filter matches using pre-computed enabled rules set"""
@@ -155,7 +147,7 @@ class Rules(TypedRules):
                     self.data[parent_rule].child_rules[rule_id] = rule
 
         for rule_id, rule in self.data.items():
-            yield from self._filter_matches_with_enabled_set(
+            yield from self._filter_matches(
                 enabled_rule_ids,
                 self.run_check(
                     rule.matchall,
@@ -174,7 +166,7 @@ class Rules(TypedRules):
             if isinstance(resource_type, str) and isinstance(resource_properties, dict):
                 path = ["Resources", resource_name, "Properties"]
                 for rule_id, rule in self.data.items():
-                    yield from self._filter_matches_with_enabled_set(
+                    yield from self._filter_matches(
                         enabled_rule_ids,
                         self.run_check(
                             rule.matchall_resource_properties,
