@@ -1,0 +1,102 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "FunctionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Comment": {
+     "type": "string"
+    },
+    "KeyValueStoreAssociations": {
+     "items": {
+      "$ref": "#/definitions/KeyValueStoreAssociation"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Runtime": {
+     "enum": [
+      "cloudfront-js-1.0",
+      "cloudfront-js-2.0"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Comment",
+    "Runtime"
+   ],
+   "type": "object"
+  },
+  "FunctionMetadata": {
+   "additionalProperties": false,
+   "properties": {
+    "FunctionARN": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "KeyValueStoreAssociation": {
+   "additionalProperties": false,
+   "properties": {
+    "KeyValueStoreARN": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "KeyValueStoreARN"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FunctionARN"
+ ],
+ "properties": {
+  "AutoPublish": {
+   "type": "boolean"
+  },
+  "FunctionARN": {
+   "type": "string"
+  },
+  "FunctionCode": {
+   "type": "string"
+  },
+  "FunctionConfig": {
+   "$ref": "#/definitions/FunctionConfig"
+  },
+  "FunctionMetadata": {
+   "$ref": "#/definitions/FunctionMetadata"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9-_]{1,64}",
+   "type": "string"
+  },
+  "Stage": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/FunctionARN",
+  "/properties/FunctionMetadata/FunctionARN",
+  "/properties/Stage"
+ ],
+ "required": [
+  "Name",
+  "FunctionConfig",
+  "FunctionCode"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::CloudFront::Function",
+ "writeOnlyProperties": [
+  "/properties/AutoPublish"
+ ]
+}

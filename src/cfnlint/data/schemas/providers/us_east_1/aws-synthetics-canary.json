@@ -46,6 +46,13 @@
     }
    ],
    "properties": {
+    "Dependencies": {
+     "items": {
+      "$ref": "#/definitions/Dependency"
+     },
+     "maxItems": 1,
+     "type": "array"
+    },
     "Handler": {
      "maxLength": 128,
      "minLength": 1,
@@ -74,6 +81,27 @@
    },
    "required": [
     "Handler"
+   ],
+   "type": "object"
+  },
+  "Dependency": {
+   "additionalProperties": false,
+   "properties": {
+    "Reference": {
+     "maxLength": 140,
+     "minLength": 1,
+     "pattern": "arn:[a-zA-Z0-9-]+:lambda:[a-zA-Z0-9-]+:\\d{12}:layer:[a-zA-Z0-9-_]+:[0-9]+",
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "LambdaLayer"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Reference"
    ],
    "type": "object"
   },
