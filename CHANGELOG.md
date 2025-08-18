@@ -1,3 +1,12 @@
+### v1.39.0
+## What's Changed
+* Optimize rule filtering performance by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4222
+* Improved handling of directories for --list-templates by @gbudge in https://github.com/aws-cloudformation/cfn-lint/pull/4220
+* chore(deps): bump actions/checkout from 4 to 5 by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4224
+* Update CloudFormation schemas to `2025-08-18` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4217
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.38.3...v1.39.0
+
 ### v1.38.3
 ## What's Changed
 * Update CloudFormation schemas to `2025-08-12` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4212
