@@ -1,0 +1,189 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CreateIntegrationDetails",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "CreateDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "gitlabSelfManaged": {
+     "$ref": "#/definitions/CreateGitLabSelfManagedIntegrationDetail"
+    }
+   },
+   "required": [
+    "gitlabSelfManaged"
+   ],
+   "type": "object"
+  },
+  "CreateGitLabSelfManagedIntegrationDetail": {
+   "additionalProperties": false,
+   "properties": {
+    "accessToken": {
+     "type": "string"
+    },
+    "instanceUrl": {
+     "pattern": "^https://[-a-zA-Z0-9()@:%_+.~#?&//=]{1,1024}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "instanceUrl",
+    "accessToken"
+   ],
+   "type": "object"
+  },
+  "IntegrationStatus": {
+   "enum": [
+    "PENDING",
+    "IN_PROGRESS",
+    "ACTIVE",
+    "INACTIVE",
+    "DISABLING"
+   ],
+   "type": "string"
+  },
+  "IntegrationType": {
+   "enum": [
+    "GITLAB_SELF_MANAGED",
+    "GITHUB"
+   ],
+   "type": "string"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.{2,127}$": {
+     "pattern": "^.{1,255}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "UpdateDetails": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "gitlabSelfManaged"
+     ]
+    },
+    {
+     "required": [
+      "github"
+     ]
+    }
+   ],
+   "properties": {
+    "github": {
+     "$ref": "#/definitions/UpdateGitHubIntegrationDetail"
+    },
+    "gitlabSelfManaged": {
+     "$ref": "#/definitions/UpdateGitLabSelfManagedIntegrationDetail"
+    }
+   },
+   "type": "object"
+  },
+  "UpdateGitHubIntegrationDetail": {
+   "additionalProperties": false,
+   "properties": {
+    "code": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "installationId": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "code",
+    "installationId"
+   ],
+   "type": "object"
+  },
+  "UpdateGitLabSelfManagedIntegrationDetail": {
+   "additionalProperties": false,
+   "properties": {
+    "authCode": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "authCode"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:(aws[a-zA-Z-]*)?:inspector2:[a-z]{2}(-gov)?-[a-z]+-\\d{1}:\\d{12}:codesecurity-integration/[a-f0-9-]{36}$",
+   "type": "string"
+  },
+  "AuthorizationUrl": {
+   "pattern": "^https://[-a-zA-Z0-9()@:%_+.~#?&//=]{1,1024}$",
+   "type": "string"
+  },
+  "CreateIntegrationDetails": {
+   "$ref": "#/definitions/CreateDetails"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "LastUpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 60,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_$:.]*$",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/IntegrationStatus"
+  },
+  "StatusReason": {
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  },
+  "Type": {
+   "$ref": "#/definitions/IntegrationType"
+  },
+  "UpdateIntegrationDetails": {
+   "$ref": "#/definitions/UpdateDetails"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Status",
+  "/properties/StatusReason",
+  "/properties/AuthorizationUrl",
+  "/properties/CreatedAt",
+  "/properties/LastUpdatedAt"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-inspector.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::InspectorV2::CodeSecurityIntegration",
+ "writeOnlyProperties": [
+  "/properties/CreateIntegrationDetails",
+  "/properties/UpdateIntegrationDetails"
+ ]
+}
