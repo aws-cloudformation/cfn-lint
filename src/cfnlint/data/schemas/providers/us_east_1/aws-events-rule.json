@@ -485,9 +485,12 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
+     "maxLength": 128,
+     "minLength": 1,
      "type": "string"
     },
     "Value": {
+     "maxLength": 256,
      "type": "string"
     }
    },
@@ -613,6 +616,14 @@
    ],
    "type": "string"
   },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
   "Targets": {
    "insertionOrder": false,
    "items": {
@@ -632,7 +643,11 @@
   "ScheduleExpression"
  ],
  "tagging": {
-  "taggable": false
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
  },
  "typeName": "AWS::Events::Rule"
 }

@@ -1,0 +1,92 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "WebhookAuthConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedIPRange": {
+     "type": "string"
+    },
+    "SecretToken": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "WebhookFilterRule": {
+   "additionalProperties": false,
+   "properties": {
+    "JsonPath": {
+     "type": "string"
+    },
+    "MatchEquals": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "JsonPath"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Authentication": {
+   "enum": [
+    "GITHUB_HMAC",
+    "IP",
+    "UNAUTHENTICATED"
+   ],
+   "type": "string"
+  },
+  "AuthenticationConfiguration": {
+   "$ref": "#/definitions/WebhookAuthConfiguration"
+  },
+  "Filters": {
+   "items": {
+    "$ref": "#/definitions/WebhookFilterRule"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "RegisterWithThirdParty": {
+   "type": "boolean"
+  },
+  "TargetAction": {
+   "type": "string"
+  },
+  "TargetPipeline": {
+   "type": "string"
+  },
+  "TargetPipelineVersion": {
+   "type": "integer"
+  },
+  "Url": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Url"
+ ],
+ "required": [
+  "AuthenticationConfiguration",
+  "Filters",
+  "Authentication",
+  "TargetPipeline",
+  "TargetAction",
+  "TargetPipelineVersion"
+ ],
+ "typeName": "AWS::CodePipeline::Webhook"
+}
