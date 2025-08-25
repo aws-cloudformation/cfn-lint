@@ -27,6 +27,13 @@
     }
    ]
   },
+  "ElementRequirement": {
+   "enum": [
+    "OPTIONAL",
+    "MANDATORY"
+   ],
+   "type": "string"
+  },
   "FileFormat": {
    "enum": [
     "XML",
@@ -103,6 +110,9 @@
   "OutputConversion": {
    "additionalProperties": false,
    "properties": {
+    "AdvancedOptions": {
+     "$ref": "#/definitions/AdvancedOptions"
+    },
     "FormatOptions": {
      "$ref": "#/definitions/FormatOptions"
     },
@@ -190,8 +200,38 @@
    "properties": {
     "SplitOptions": {
      "$ref": "#/definitions/X12SplitOptions"
+    },
+    "ValidationOptions": {
+     "$ref": "#/definitions/X12ValidationOptions"
     }
    },
+   "type": "object"
+  },
+  "X12CodeListValidationRule": {
+   "additionalProperties": false,
+   "properties": {
+    "CodesToAdd": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "CodesToRemove": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ElementId": {
+     "maxLength": 4,
+     "minLength": 4,
+     "pattern": "^[0-9]{4}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ElementId"
+   ],
    "type": "object"
   },
   "X12Details": {
@@ -204,6 +244,50 @@
      "$ref": "#/definitions/X12Version"
     }
    },
+   "type": "object"
+  },
+  "X12ElementLengthValidationRule": {
+   "additionalProperties": false,
+   "properties": {
+    "ElementId": {
+     "maxLength": 4,
+     "minLength": 4,
+     "pattern": "^[0-9]{4}$",
+     "type": "string"
+    },
+    "MaxLength": {
+     "maximum": 1000000,
+     "minimum": 1,
+     "type": "number"
+    },
+    "MinLength": {
+     "maximum": 1000000,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "ElementId",
+    "MaxLength",
+    "MinLength"
+   ],
+   "type": "object"
+  },
+  "X12ElementRequirementValidationRule": {
+   "additionalProperties": false,
+   "properties": {
+    "ElementPosition": {
+     "pattern": "^[a-zA-Z0-9]+(?:-\\d{2})(?:-\\d{2})?$",
+     "type": "string"
+    },
+    "Requirement": {
+     "$ref": "#/definitions/ElementRequirement"
+    }
+   },
+   "required": [
+    "ElementPosition",
+    "Requirement"
+   ],
    "type": "object"
   },
   "X12SplitBy": {
@@ -568,6 +652,61 @@
     "X12_999_X231"
    ],
    "type": "string"
+  },
+  "X12ValidationOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "ValidationRules": {
+     "items": {
+      "$ref": "#/definitions/X12ValidationRule"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "X12ValidationRule": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CodeListValidationRule": {
+       "$ref": "#/definitions/X12CodeListValidationRule"
+      }
+     },
+     "required": [
+      "CodeListValidationRule"
+     ],
+     "title": "CodeListValidationRule",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ElementLengthValidationRule": {
+       "$ref": "#/definitions/X12ElementLengthValidationRule"
+      }
+     },
+     "required": [
+      "ElementLengthValidationRule"
+     ],
+     "title": "ElementLengthValidationRule",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ElementRequirementValidationRule": {
+       "$ref": "#/definitions/X12ElementRequirementValidationRule"
+      }
+     },
+     "required": [
+      "ElementRequirementValidationRule"
+     ],
+     "title": "ElementRequirementValidationRule",
+     "type": "object"
+    }
+   ]
   },
   "X12Version": {
    "enum": [
