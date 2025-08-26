@@ -1,3 +1,16 @@
+### v1.39.1
+## What's Changed
+* Remove rule `E3056` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4230
+* Update CloudFormation schemas to `2025-08-26` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4226
+* Reformat format keyword in some json files by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4232
+* Update StateMachine map to support legacy `Iterator` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4231
+* Add output to Statemachine choice by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4233
+* Update SAM transform URI replacement to allow `Fn::If` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4234
+* SAM transform comma lists to array by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4235
+* Update [I3510](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3510) to skip dynamic references by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4236
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.39.0...v1.39.1
+
 ### v1.39.0
 ## What's Changed
 * Optimize rule filtering performance by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4222
