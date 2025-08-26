@@ -8,9 +8,13 @@
    "additionalProperties": false,
    "properties": {
     "AllowedIPRange": {
+     "maxLength": 100,
+     "minLength": 1,
      "type": "string"
     },
     "SecretToken": {
+     "maxLength": 100,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -20,9 +24,13 @@
    "additionalProperties": false,
    "properties": {
     "JsonPath": {
+     "maxLength": 150,
+     "minLength": 1,
      "type": "string"
     },
     "MatchEquals": {
+     "maxLength": 150,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -48,6 +56,7 @@
    "$ref": "#/definitions/WebhookAuthConfiguration"
   },
   "Filters": {
+   "insertionOrder": true,
    "items": {
     "$ref": "#/definitions/WebhookFilterRule"
    },
@@ -58,15 +67,24 @@
    "type": "string"
   },
   "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "[A-Za-z0-9.@\\-_]+",
    "type": "string"
   },
   "RegisterWithThirdParty": {
    "type": "boolean"
   },
   "TargetAction": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "[A-Za-z0-9.@\\-_]+",
    "type": "string"
   },
   "TargetPipeline": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "[A-Za-z0-9.@\\-_]+",
    "type": "string"
   },
   "TargetPipelineVersion": {
@@ -85,8 +103,15 @@
   "Filters",
   "Authentication",
   "TargetPipeline",
-  "TargetAction",
-  "TargetPipelineVersion"
+  "TargetAction"
  ],
- "typeName": "AWS::CodePipeline::Webhook"
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codepipeline-webhook",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::CodePipeline::Webhook",
+ "writeOnlyProperties": [
+  "/properties/TargetPipelineVersion",
+  "/properties/RegisterWithThirdParty"
+ ]
 }
