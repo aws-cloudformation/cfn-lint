@@ -1,0 +1,84 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "AllowedPattern": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "DataType": {
+   "enum": [
+    "text",
+    "aws:ec2:image"
+   ],
+   "maxLength": 128,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^(?i)((?!aws|ssm)[\\w.-]+|\\/(?!aws|ssm)[\\w.-]+(\\/[\\w.-]+)*)$",
+   "type": "string"
+  },
+  "Policies": {
+   "maxLength": 4096,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "maxItems": 1000,
+   "patternProperties": {
+    "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tier": {
+   "enum": [
+    "Standard",
+    "Advanced",
+    "Intelligent-Tiering"
+   ],
+   "type": "string"
+  },
+  "Type": {
+   "enum": [
+    "String",
+    "StringList"
+   ],
+   "type": "string"
+  },
+  "Value": {
+   "type": "string"
+  }
+ },
+ "required": [
+  "Value",
+  "Type"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SSM::Parameter",
+ "writeOnlyProperties": [
+  "/properties/Description",
+  "/properties/Tier",
+  "/properties/AllowedPattern",
+  "/properties/Policies"
+ ]
+}

@@ -5,6 +5,11 @@
   "/properties/Name"
  ],
  "definitions": {
+  "Purpose": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
   "StringList": {
    "insertionOrder": false,
    "items": {
@@ -25,6 +30,18 @@
   "/properties/Name"
  ],
  "properties": {
+  "AttributeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableValueValidationOnAssociation": {
+     "type": "boolean"
+    },
+    "IsReadOnly": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
   "InstanceArn": {
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
    "type": "string"
@@ -40,6 +57,15 @@
    "maxLength": 100,
    "minLength": 1,
    "type": "string"
+  },
+  "Purposes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Purpose"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
   },
   "Values": {
    "additionalProperties": false,

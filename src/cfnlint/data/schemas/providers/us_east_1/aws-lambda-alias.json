@@ -85,7 +85,7 @@
   }
  },
  "propertyTransform": {
-  "/properties/FunctionName": "$split(FunctionName, \":\")[-1] $OR FunctionName"
+  "/properties/FunctionName": "$split(FunctionName, \":\")[-1] $OR FunctionName $OR $join([\"((arn:.*:lambda:.*:[0-9]{12}:function)|([0-9]{12}:function)):\", $split(FunctionName, \":\")[-1]])"
  },
  "readOnlyProperties": [
   "/properties/AliasArn"
