@@ -549,6 +549,7 @@
       "null"
      ]
     },
+    "Iterator": {},
     "Label": {
      "type": "string"
     },
@@ -642,12 +643,21 @@
     }
    },
    "required": [
-    "Type",
-    "ItemProcessor"
+    "Type"
    ],
-   "requiredXor": [
-    "Next",
-    "End"
+   "allOf": [
+    {
+     "requiredXor": [
+        "Next",
+        "End"
+     ]
+    },
+    {
+     "requiredXor": [
+        "ItemProcessor",
+        "Iterator"
+     ]
+    }
    ],
    "type": "object"
   },
