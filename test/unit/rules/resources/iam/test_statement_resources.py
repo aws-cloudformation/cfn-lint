@@ -189,6 +189,13 @@ def template():
         ),
         (
             {
+                "Action": ["kms:Encrypt"],
+                "Resource": ["{{resolve:ssm:/My/resources/kms_key_arn}}"],
+            },
+            [],
+        ),
+        (
+            {
                 "Action": ["cloudformation:CreateStackSet"],
                 "Resource": ["arn:aws:cloudformation:us-east-1:123456789012:*", "*"],
             },
