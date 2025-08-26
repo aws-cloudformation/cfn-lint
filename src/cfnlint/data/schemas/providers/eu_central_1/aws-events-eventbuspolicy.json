@@ -1,0 +1,91 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EventBusName",
+  "/properties/StatementId"
+ ],
+ "definitions": {
+  "Condition": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "enum": [
+      "aws:PrincipalOrgID"
+     ],
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "StringEquals"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/Principal",
+  "/properties/Condition",
+  "/properties/Action"
+ ],
+ "primaryIdentifier": [
+  "/properties/EventBusName",
+  "/properties/StatementId"
+ ],
+ "properties": {
+  "Action": {
+   "enum": [
+    "events:PutEvents"
+   ],
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "events:[a-zA-Z]+",
+   "type": "string"
+  },
+  "Condition": {
+   "$ref": "#/definitions/Condition"
+  },
+  "EventBusName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[\\.\\-_A-Za-z0-9]+",
+   "type": "string"
+  },
+  "Principal": {
+   "maxLength": 12,
+   "minLength": 1,
+   "pattern": "(\\d{12}|\\*)",
+   "type": "string"
+  },
+  "Statement": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "StatementId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9-_]+",
+   "type": "string"
+  }
+ },
+ "required": [
+  "StatementId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-events-eventbuspolicy",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Events::EventBusPolicy",
+ "writeOnlyProperties": [
+  "/properties/Principal",
+  "/properties/Condition",
+  "/properties/Action"
+ ]
+}

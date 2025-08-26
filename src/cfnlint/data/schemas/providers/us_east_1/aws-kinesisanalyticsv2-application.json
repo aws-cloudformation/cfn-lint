@@ -31,6 +31,9 @@
     "ApplicationCodeConfiguration": {
      "$ref": "#/definitions/ApplicationCodeConfiguration"
     },
+    "ApplicationEncryptionConfiguration": {
+     "$ref": "#/definitions/ApplicationEncryptionConfiguration"
+    },
     "ApplicationSnapshotConfiguration": {
      "$ref": "#/definitions/ApplicationSnapshotConfiguration"
     },
@@ -53,6 +56,28 @@
      "$ref": "#/definitions/ZeppelinApplicationConfiguration"
     }
    },
+   "type": "object"
+  },
+  "ApplicationEncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KeyId": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^(?:arn:.*:kms:.*:.*:(?:key\\/.*|alias\\/.*)|alias\\/.*|(?i)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+     "type": "string"
+    },
+    "KeyType": {
+     "enum": [
+      "AWS_OWNED_KEY",
+      "CUSTOMER_MANAGED_KEY"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "KeyType"
+   ],
    "type": "object"
   },
   "ApplicationMaintenanceConfiguration": {
@@ -818,6 +843,9 @@
    "type": "array",
    "uniqueItems": false
   }
+ },
+ "propertyTransform": {
+  "/properties/ApplicationConfiguration/ApplicationEncryptionConfiguration/KeyId": "\"arn:aws[-a-z]*:kms:[a-z0-9-]+:[0-9]{12}:key/[a-zA-Z0-9-]+\""
  },
  "required": [
   "RuntimeEnvironment",

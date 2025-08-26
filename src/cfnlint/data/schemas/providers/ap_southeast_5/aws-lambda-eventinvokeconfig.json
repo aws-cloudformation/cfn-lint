@@ -1,0 +1,94 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FunctionName",
+  "/properties/Qualifier"
+ ],
+ "definitions": {
+  "DestinationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "OnFailure": {
+     "$ref": "#/definitions/OnFailure"
+    },
+    "OnSuccess": {
+     "$ref": "#/definitions/OnSuccess"
+    }
+   },
+   "type": "object"
+  },
+  "OnFailure": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "maxLength": 350,
+     "minLength": 0,
+     "pattern": "^$|arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:([a-z]{2}(-gov)?(-iso([a-z])?)?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Destination"
+   ],
+   "type": "object"
+  },
+  "OnSuccess": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "maxLength": 350,
+     "minLength": 0,
+     "pattern": "^$|arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:([a-z]{2}(-gov)?(-iso([a-z])?)?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Destination"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FunctionName",
+  "/properties/Qualifier"
+ ],
+ "properties": {
+  "DestinationConfig": {
+   "$ref": "#/definitions/DestinationConfig"
+  },
+  "FunctionName": {
+   "maxLength": 140,
+   "minLength": 1,
+   "pattern": "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?(-iso([a-z])?)?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
+   "type": "string"
+  },
+  "MaximumEventAgeInSeconds": {
+   "maximum": 21600,
+   "minimum": 60,
+   "type": "integer"
+  },
+  "MaximumRetryAttempts": {
+   "maximum": 2,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Qualifier": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^(|[a-zA-Z0-9$_-]{1,129})$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "FunctionName",
+  "Qualifier"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Lambda::EventInvokeConfig"
+}
