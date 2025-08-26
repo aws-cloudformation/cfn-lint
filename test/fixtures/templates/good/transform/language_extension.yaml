@@ -16,6 +16,11 @@ Parameters:
   Environment:
     Type: String
     Default: Prod
+  MyVpc:
+    Type: AWS::EC2::VPC::Id
+  AZIds:
+    Type: CommaDelimitedList
+    Default: use1-az1,use1-az2
 Mappings:
   StackIdMap01:
     teststack1:
@@ -81,3 +86,10 @@ Resources:
     Properties:
       GroupDescription: Example security group
       VpcId: !Ref VpcId
+
+  MySubnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+        VpcId: !Ref MyVpc
+        CidrBlock: 10.0.0.0/8
+        AvailabilityZoneId: !Select [ 0, !Ref AZIds ]
