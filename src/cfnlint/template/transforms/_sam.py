@@ -161,8 +161,12 @@ class Transform:
                 if isinstance(p_type, str):
                     if p_type.startswith("AWS::SSM::Parameter::"):
                         continue
-                if isinstance(v, dict) and v.get("Default"):
-                    parameters[k] = v.get("Default")
+                if isinstance(v, dict):
+                    if v.get("Default"):
+                        if v.get("Type") == "CommaDelimitedList":
+                            parameters[k] = v.get("Default").split(",")
+                        else:
+                            parameters[k] = v.get("Default")
 
             self._template["Resources"] = self._find_and_replace(
                 self._template.get("Resources", {}), parameters
