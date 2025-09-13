@@ -1,0 +1,133 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CountryRule": {
+   "additionalProperties": false,
+   "properties": {
+    "CountryCode": {
+     "pattern": "^[A-Z]{2}$",
+     "type": "string"
+    },
+    "ProtectStatus": {
+     "enum": [
+      "ALLOW",
+      "BLOCK",
+      "MONITOR",
+      "FILTER"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "CountryCode",
+    "ProtectStatus"
+   ],
+   "type": "object"
+  },
+  "CountryRuleSet": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "SMS"
+     ]
+    },
+    {
+     "required": [
+      "VOICE"
+     ]
+    },
+    {
+     "required": [
+      "MMS"
+     ]
+    }
+   ],
+   "properties": {
+    "MMS": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CountryRule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SMS": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CountryRule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "VOICE": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CountryRule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ProtectConfigurationId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "CountryRuleSet": {
+   "$ref": "#/definitions/CountryRuleSet"
+  },
+  "DeletionProtectionEnabled": {
+   "type": "boolean"
+  },
+  "ProtectConfigurationId": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ProtectConfigurationId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resoource-providers-smsvoice.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SMSVOICE::ProtectConfiguration"
+}

@@ -32,7 +32,7 @@
   }
  },
  "propertyTransform": {
-  "/properties/Principal": "Principal $OR $join([\".*AWS.*[arn:aws:iam::\", Principal, \":root].*\"]) $OR $join([\".*AWS.*[\", Principal, \"].*\"])"
+  "/properties/Principal": "Principal $OR $join([\"^arn:aws[a-zA-Z-]*:iam::\",Principal,\":[a-zA-Z-]*\"]) $OR $join([\".*AWS.*[\", Principal, \"].*\"]) $OR $replace(Principal, /^arn:aws-([a-zA-Z]+)(-)?([a-zA-Z]+)?:/, \"arn:aws[a-zA-Z-]*:\")"
  },
  "readOnlyProperties": [
   "/properties/Id"

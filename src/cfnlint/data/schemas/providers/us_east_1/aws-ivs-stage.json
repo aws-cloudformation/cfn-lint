@@ -5,23 +5,7 @@
    "additionalProperties": false,
    "properties": {
     "HlsConfiguration": {
-     "additionalProperties": false,
-     "properties": {
-      "ParticipantRecordingHlsConfiguration": {
-       "additionalProperties": false,
-       "properties": {
-        "TargetSegmentDurationSeconds": {
-         "default": 6,
-         "maximum": 10,
-         "minimum": 2,
-         "type": "integer"
-        }
-       },
-       "type": "object"
-      }
-     },
-     "required": [],
-     "type": "object"
+     "$ref": "#/definitions/HlsConfiguration"
     },
     "MediaTypes": {
      "default": [
@@ -53,53 +37,34 @@
      "type": "string"
     },
     "ThumbnailConfiguration": {
-     "additionalProperties": false,
-     "properties": {
-      "ParticipantThumbnailConfiguration": {
-       "additionalProperties": false,
-       "properties": {
-        "RecordingMode": {
-         "default": "INTERVAL",
-         "enum": [
-          "INTERVAL",
-          "DISABLED"
-         ],
-         "type": "string"
-        },
-        "Storage": {
-         "default": [
-          "SEQUENTIAL"
-         ],
-         "insertionOrder": false,
-         "items": {
-          "enum": [
-           "SEQUENTIAL",
-           "LATEST"
-          ],
-          "type": "string"
-         },
-         "maxItems": 2,
-         "minItems": 0,
-         "type": "array",
-         "uniqueItems": true
-        },
-        "TargetIntervalSeconds": {
-         "default": 60,
-         "maximum": 86400,
-         "minimum": 1,
-         "type": "integer"
-        }
-       },
-       "type": "object"
-      }
-     },
-     "required": [],
-     "type": "object"
+     "$ref": "#/definitions/ThumbnailConfiguration"
     }
    },
    "required": [
     "StorageConfigurationArn"
    ],
+   "type": "object"
+  },
+  "HlsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ParticipantRecordingHlsConfiguration": {
+     "$ref": "#/definitions/ParticipantRecordingHlsConfiguration"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "ParticipantRecordingHlsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "TargetSegmentDurationSeconds": {
+     "default": 6,
+     "maximum": 10,
+     "minimum": 2,
+     "type": "integer"
+    }
+   },
    "type": "object"
   },
   "Tag": {
@@ -120,6 +85,50 @@
     "Value",
     "Key"
    ],
+   "type": "object"
+  },
+  "ThumbnailConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ParticipantThumbnailConfiguration": {
+     "additionalProperties": false,
+     "properties": {
+      "RecordingMode": {
+       "default": "DISABLED",
+       "enum": [
+        "INTERVAL",
+        "DISABLED"
+       ],
+       "type": "string"
+      },
+      "Storage": {
+       "default": [
+        "SEQUENTIAL"
+       ],
+       "insertionOrder": false,
+       "items": {
+        "enum": [
+         "SEQUENTIAL",
+         "LATEST"
+        ],
+        "type": "string"
+       },
+       "maxItems": 2,
+       "minItems": 0,
+       "type": "array",
+       "uniqueItems": true
+      },
+      "TargetIntervalSeconds": {
+       "default": 60,
+       "maximum": 86400,
+       "minimum": 1,
+       "type": "integer"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [],
    "type": "object"
   }
  },

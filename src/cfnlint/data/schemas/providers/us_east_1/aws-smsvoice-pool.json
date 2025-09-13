@@ -1,0 +1,175 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "MandatoryKeyword": {
+   "additionalProperties": false,
+   "properties": {
+    "Message": {
+     "maxLength": 1600,
+     "pattern": "^(?!\\s*$)[\\s\\S]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Message"
+   ],
+   "type": "object"
+  },
+  "OptionalKeyword": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "enum": [
+      "AUTOMATIC_RESPONSE",
+      "OPT_OUT",
+      "OPT_IN"
+     ],
+     "type": "string"
+    },
+    "Keyword": {
+     "maxLength": 30,
+     "pattern": "^(?!.*(?i)(stop|help))[ \\S]+",
+     "type": "string"
+    },
+    "Message": {
+     "maxLength": 1600,
+     "pattern": "^(?!\\s*$)[\\s\\S]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Keyword",
+    "Message",
+    "Action"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PoolId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "DeletionProtectionEnabled": {
+   "type": "boolean"
+  },
+  "MandatoryKeywords": {
+   "additionalProperties": false,
+   "properties": {
+    "HELP": {
+     "$ref": "#/definitions/MandatoryKeyword"
+    },
+    "STOP": {
+     "$ref": "#/definitions/MandatoryKeyword"
+    }
+   },
+   "required": [
+    "STOP",
+    "HELP"
+   ],
+   "type": "object"
+  },
+  "OptOutListName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9_:/-]+$",
+   "type": "string"
+  },
+  "OptionalKeywords": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/OptionalKeyword"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "OriginationIdentities": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 256,
+    "minLength": 20,
+    "pattern": "^arn:\\S+",
+    "type": "string"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "PoolId": {
+   "type": "string"
+  },
+  "SelfManagedOptOutsEnabled": {
+   "type": "boolean"
+  },
+  "SharedRoutesEnabled": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TwoWay": {
+   "additionalProperties": false,
+   "properties": {
+    "ChannelArn": {
+     "pattern": "^[ \\S]+",
+     "type": "string"
+    },
+    "ChannelRole": {
+     "pattern": "^arn:\\S+$",
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/PoolId"
+ ],
+ "required": [
+  "OriginationIdentities",
+  "MandatoryKeywords"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-smsvoice.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SMSVOICE::Pool"
+}

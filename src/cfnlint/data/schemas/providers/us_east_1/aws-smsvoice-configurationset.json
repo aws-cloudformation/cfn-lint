@@ -1,0 +1,186 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConfigurationSetName"
+ ],
+ "definitions": {
+  "CloudWatchLogsDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "IamRoleArn": {
+     "pattern": "^arn:\\S+$",
+     "type": "string"
+    },
+    "LogGroupArn": {
+     "pattern": "^arn:\\S+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "IamRoleArn",
+    "LogGroupArn"
+   ],
+   "type": "object"
+  },
+  "EventDestination": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "CloudWatchLogsDestination"
+     ]
+    },
+    {
+     "required": [
+      "KinesisFirehoseDestination"
+     ]
+    },
+    {
+     "required": [
+      "SnsDestination"
+     ]
+    }
+   ],
+   "properties": {
+    "CloudWatchLogsDestination": {
+     "$ref": "#/definitions/CloudWatchLogsDestination"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "EventDestinationName": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9_-]+$",
+     "type": "string"
+    },
+    "KinesisFirehoseDestination": {
+     "$ref": "#/definitions/KinesisFirehoseDestination"
+    },
+    "MatchingEventTypes": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SnsDestination": {
+     "$ref": "#/definitions/SnsDestination"
+    }
+   },
+   "required": [
+    "EventDestinationName",
+    "Enabled",
+    "MatchingEventTypes"
+   ],
+   "type": "object"
+  },
+  "KinesisFirehoseDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "DeliveryStreamArn": {
+     "pattern": "^arn:\\S+$",
+     "type": "string"
+    },
+    "IamRoleArn": {
+     "pattern": "^arn:\\S+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "IamRoleArn",
+    "DeliveryStreamArn"
+   ],
+   "type": "object"
+  },
+  "SnsDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "TopicArn": {
+     "pattern": "^arn:\\S+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TopicArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConfigurationSetName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ConfigurationSetName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9_-]+$",
+   "type": "string"
+  },
+  "DefaultSenderId": {
+   "pattern": "^[A-Za-z0-9_-]+$",
+   "type": "string"
+  },
+  "EventDestinations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EventDestination"
+   },
+   "maxItems": 5,
+   "type": "array"
+  },
+  "MessageFeedbackEnabled": {
+   "type": "boolean"
+  },
+  "ProtectConfigurationId": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9_:/-]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resoource-providers-smsvoice.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SMSVOICE::ConfigurationSet"
+}

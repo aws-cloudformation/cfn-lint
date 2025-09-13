@@ -6,7 +6,12 @@
   "/properties/Main",
   "/properties/ParameterTemplate",
   "/properties/StorageCapacity",
-  "/properties/Accelerators"
+  "/properties/Accelerators",
+  "/properties/DefinitionRepository",
+  "/properties/ParameterTemplatePath",
+  "/properties/readmePath",
+  "/properties/readmeUri",
+  "/properties/WorkflowBucketOwnerId"
  ],
  "definitions": {
   "Accelerators": {
@@ -16,6 +21,48 @@
    "maxLength": 64,
    "minLength": 1,
    "type": "string"
+  },
+  "DefinitionRepository": {
+   "properties": {
+    "connectionArn": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^arn:aws(-[\\\\w]+)*:.+:.+:[0-9]{12}:.+$",
+     "type": "string"
+    },
+    "excludeFilePatterns": {
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array"
+    },
+    "fullRepositoryId": {
+     "pattern": ".+/.+",
+     "type": "string"
+    },
+    "sourceReference": {
+     "$ref": "#/definitions/SourceReference"
+    }
+   },
+   "type": "object"
+  },
+  "SourceReference": {
+   "properties": {
+    "type": {
+     "enum": [
+      "BRANCH",
+      "TAG",
+      "COMMIT"
+     ],
+     "type": "string"
+    },
+    "value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
   },
   "StorageType": {
    "enum": [
@@ -115,6 +162,9 @@
    "format": "date-time",
    "type": "string"
   },
+  "DefinitionRepository": {
+   "$ref": "#/definitions/DefinitionRepository"
+  },
   "DefinitionUri": {
    "maxLength": 256,
    "minLength": 1,
@@ -151,6 +201,12 @@
   "ParameterTemplate": {
    "$ref": "#/definitions/WorkflowParameterTemplate"
   },
+  "ParameterTemplatePath": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[\\S]+$",
+   "type": "string"
+  },
   "Status": {
    "$ref": "#/definitions/WorkflowStatus"
   },
@@ -170,6 +226,23 @@
   },
   "Uuid": {
    "$ref": "#/definitions/Uuid"
+  },
+  "WorkflowBucketOwnerId": {
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "readmeMarkdown": {
+   "type": "string"
+  },
+  "readmePath": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
+   "type": "string"
+  },
+  "readmeUri": {
+   "pattern": "^s3://([a-z0-9][a-z0-9-.]{1,61}[a-z0-9])/((.{1,1024}))$",
+   "type": "string"
   }
  },
  "readOnlyProperties": [
@@ -189,6 +262,11 @@
  },
  "typeName": "AWS::Omics::Workflow",
  "writeOnlyProperties": [
-  "/properties/DefinitionUri"
+  "/properties/DefinitionUri",
+  "/properties/WorkflowBucketOwnerId",
+  "/properties/ParameterTemplatePath",
+  "/properties/DefinitionRepository",
+  "/properties/readmeUri",
+  "/properties/readmeMarkdown"
  ]
 }

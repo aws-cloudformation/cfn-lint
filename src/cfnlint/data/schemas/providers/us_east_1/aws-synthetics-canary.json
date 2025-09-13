@@ -30,6 +30,25 @@
    ],
    "type": "object"
   },
+  "BrowserConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "BrowserType": {
+     "$ref": "#/definitions/BrowserType"
+    }
+   },
+   "required": [
+    "BrowserType"
+   ],
+   "type": "object"
+  },
+  "BrowserType": {
+   "enum": [
+    "CHROME",
+    "FIREFOX"
+   ],
+   "type": "string"
+  },
   "Code": {
    "additionalProperties": false,
    "oneOf": [
@@ -260,6 +279,9 @@
       "$ref": "#/definitions/BaseScreenshot"
      },
      "type": "array"
+    },
+    "BrowserType": {
+     "$ref": "#/definitions/BrowserType"
     }
    },
    "required": [
@@ -269,7 +291,8 @@
   }
  },
  "deprecatedProperties": [
-  "/properties/DeleteLambdaResourcesOnCanaryDeletion"
+  "/properties/DeleteLambdaResourcesOnCanaryDeletion",
+  "/properties/VisualReference"
  ],
  "primaryIdentifier": [
   "/properties/Name"
@@ -283,6 +306,14 @@
    "minLength": 1,
    "pattern": "^(s3|S3)://",
    "type": "string"
+  },
+  "BrowserConfigs": {
+   "items": {
+    "$ref": "#/definitions/BrowserConfig"
+   },
+   "maxItems": 2,
+   "minItems": 1,
+   "type": "array"
   },
   "Code": {
    "$ref": "#/definitions/Code"
@@ -357,6 +388,14 @@
   },
   "VisualReference": {
    "$ref": "#/definitions/VisualReference"
+  },
+  "VisualReferences": {
+   "items": {
+    "$ref": "#/definitions/VisualReference"
+   },
+   "maxItems": 2,
+   "minItems": 1,
+   "type": "array"
   }
  },
  "readOnlyProperties": [
@@ -391,6 +430,7 @@
   "/properties/ResourcesToReplicateTags",
   "/properties/RunConfig/EnvironmentVariables",
   "/properties/VisualReference",
+  "/properties/VisualReferences",
   "/properties/DryRunAndUpdate"
  ]
 }

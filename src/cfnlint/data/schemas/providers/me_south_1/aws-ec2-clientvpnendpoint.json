@@ -1,0 +1,255 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TransportProtocol",
+  "/properties/ClientCidrBlock",
+  "/properties/TagSpecifications",
+  "/properties/AuthenticationOptions"
+ ],
+ "definitions": {
+  "CertificateAuthenticationRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientRootCertificateChainArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClientRootCertificateChainArn"
+   ],
+   "type": "object"
+  },
+  "ClientAuthenticationRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "ActiveDirectory": {
+     "$ref": "#/definitions/DirectoryServiceAuthenticationRequest"
+    },
+    "FederatedAuthentication": {
+     "$ref": "#/definitions/FederatedAuthenticationRequest"
+    },
+    "MutualAuthentication": {
+     "$ref": "#/definitions/CertificateAuthenticationRequest"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ClientConnectOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "LambdaFunctionArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "ClientLoginBannerOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "BannerText": {
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "ClientRouteEnforcementOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Enforced": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "ConnectionLogOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudwatchLogGroup": {
+     "type": "string"
+    },
+    "CloudwatchLogStream": {
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "DirectoryServiceAuthenticationRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "DirectoryId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DirectoryId"
+   ],
+   "type": "object"
+  },
+  "FederatedAuthenticationRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "SAMLProviderArn": {
+     "type": "string"
+    },
+    "SelfServiceSAMLProviderArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SAMLProviderArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TagSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceType": {
+     "type": "string"
+    },
+    "Tags": {
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "ResourceType",
+    "Tags"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AuthenticationOptions": {
+   "items": {
+    "$ref": "#/definitions/ClientAuthenticationRequest"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ClientCidrBlock": {
+   "type": "string"
+  },
+  "ClientConnectOptions": {
+   "$ref": "#/definitions/ClientConnectOptions"
+  },
+  "ClientLoginBannerOptions": {
+   "$ref": "#/definitions/ClientLoginBannerOptions"
+  },
+  "ClientRouteEnforcementOptions": {
+   "$ref": "#/definitions/ClientRouteEnforcementOptions"
+  },
+  "ConnectionLogOptions": {
+   "$ref": "#/definitions/ConnectionLogOptions"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DisconnectOnSessionTimeout": {
+   "type": "boolean"
+  },
+  "DnsServers": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Id": {
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SelfServicePortal": {
+   "type": "string"
+  },
+  "ServerCertificateArn": {
+   "type": "string"
+  },
+  "SessionTimeoutHours": {
+   "type": "integer"
+  },
+  "SplitTunnel": {
+   "type": "boolean"
+  },
+  "TagSpecifications": {
+   "items": {
+    "$ref": "#/definitions/TagSpecification"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TransportProtocol": {
+   "type": "string"
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "type": "string"
+  },
+  "VpnPort": {
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "ClientCidrBlock",
+  "ConnectionLogOptions",
+  "AuthenticationOptions",
+  "ServerCertificateArn"
+ ],
+ "typeName": "AWS::EC2::ClientVpnEndpoint"
+}

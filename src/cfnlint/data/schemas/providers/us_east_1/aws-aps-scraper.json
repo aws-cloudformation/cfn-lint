@@ -4,6 +4,32 @@
   "/properties/Source"
  ],
  "definitions": {
+  "CloudWatchLogDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroupArn": {
+     "maxLength": 512,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ComponentConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Options": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^[A-Za-z0-9]+$": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
   "Destination": {
    "additionalProperties": false,
    "oneOf": [
@@ -54,6 +80,59 @@
    "properties": {
     "ConfigurationBlob": {
      "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ScraperComponent": {
+   "additionalProperties": false,
+   "properties": {
+    "Config": {
+     "$ref": "#/definitions/ComponentConfig"
+    },
+    "Type": {
+     "$ref": "#/definitions/ScraperComponentType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ScraperComponentType": {
+   "enum": [
+    "SERVICE_DISCOVERY",
+    "COLLECTOR",
+    "EXPORTER"
+   ],
+   "type": "string"
+  },
+  "ScraperLoggingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LoggingDestination": {
+     "$ref": "#/definitions/ScraperLoggingDestination"
+    },
+    "ScraperComponents": {
+     "items": {
+      "$ref": "#/definitions/ScraperComponent"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "ScraperComponents",
+    "LoggingDestination"
+   ],
+   "type": "object"
+  },
+  "ScraperLoggingDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogs": {
+     "$ref": "#/definitions/CloudWatchLogDestination"
     }
    },
    "type": "object"
@@ -141,7 +220,7 @@
    "type": "string"
   },
   "Arn": {
-   "pattern": "^arn:(aws|aws-us-gov|aws-cn):aps:(af|ap|ca|eu|me|sa|us)-(central|north|(north(?:east|west))|south|south(?:east|west)|east|west)-[0-9]+:[0-9]+:scraper/s-[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$",
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):aps:[a-z0-9-]+:[0-9]+:scraper/s-[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$",
    "type": "string"
   },
   "Destination": {
@@ -165,6 +244,9 @@
    "minLength": 1,
    "pattern": "^s-[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$",
    "type": "string"
+  },
+  "ScraperLoggingConfiguration": {
+   "$ref": "#/definitions/ScraperLoggingConfiguration"
   },
   "Source": {
    "$ref": "#/definitions/Source"
