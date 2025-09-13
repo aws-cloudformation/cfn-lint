@@ -1,6 +1,32 @@
 {
  "additionalProperties": false,
  "definitions": {
+  "AutomatedReasoningPolicyConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ConfidenceThreshold": {
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    },
+    "Policies": {
+     "items": {
+      "maxLength": 2048,
+      "minLength": 15,
+      "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:automated-reasoning-policy\\/[a-z0-9]{12}(:([1-9][0-9]{0,11}))?$",
+      "type": "string"
+     },
+     "maxItems": 2,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Policies"
+   ],
+   "type": "object"
+  },
   "ContentFilterAction": {
    "enum": [
     "BLOCK",
@@ -539,6 +565,9 @@
   "/properties/GuardrailArn"
  ],
  "properties": {
+  "AutomatedReasoningPolicyConfig": {
+   "$ref": "#/definitions/AutomatedReasoningPolicyConfig"
+  },
   "BlockedInputMessaging": {
    "maxLength": 500,
    "minLength": 1,

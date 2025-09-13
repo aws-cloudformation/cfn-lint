@@ -1,0 +1,141 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PolicyArn",
+  "/properties/LastUpdatedDefinitionHash",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DefinitionHash": {
+   "maxLength": 128,
+   "minLength": 128,
+   "pattern": "^[0-9a-z]{128}$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "pattern": "^[\\s\\S]+$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[0-9a-zA-Z-_ ]+$",
+   "type": "string"
+  },
+  "PolicyArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:automated-reasoning-policy\\/[a-z0-9]{12}$",
+   "type": "string"
+  },
+  "PolicyId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[a-z0-9]{12}$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Version": {
+   "maxLength": 12,
+   "pattern": "^([1-9][0-9]{0,11})$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PolicyArn",
+  "/properties/Version"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "$ref": "#/definitions/CreatedAt"
+  },
+  "DefinitionHash": {
+   "$ref": "#/definitions/DefinitionHash"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "LastUpdatedDefinitionHash": {
+   "$ref": "#/definitions/DefinitionHash"
+  },
+  "Name": {
+   "$ref": "#/definitions/Name"
+  },
+  "PolicyArn": {
+   "$ref": "#/definitions/PolicyArn"
+  },
+  "PolicyId": {
+   "$ref": "#/definitions/PolicyId"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "UpdatedAt": {
+   "$ref": "#/definitions/UpdatedAt"
+  },
+  "Version": {
+   "$ref": "#/definitions/Version"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Version",
+  "/properties/Name",
+  "/properties/Description",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/PolicyId",
+  "/properties/DefinitionHash"
+ ],
+ "required": [
+  "PolicyArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::Bedrock::AutomatedReasoningPolicyVersion",
+ "writeOnlyProperties": [
+  "/properties/LastUpdatedDefinitionHash"
+ ]
+}

@@ -113,6 +113,7 @@
   "InitialVlanInfo": {
    "properties": {
     "Cidr": {
+     "format": "ipv4-network",
      "pattern": "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/(3[0-2]|[1-2][0-9]|[0-9])$",
      "type": "string"
     }
@@ -136,6 +137,7 @@
    "type": "object"
   },
   "SecurityGroupId": {
+   "format": "AWS::EC2::SecurityGroup.Id",
    "maxLength": 25,
    "minLength": 3,
    "pattern": "^sg-[0-9a-zA-Z]*$",
@@ -308,6 +310,7 @@
   "ServiceAccessSecurityGroups": {
    "properties": {
     "SecurityGroups": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
      "items": {
       "$ref": "#/definitions/SecurityGroupId"
      },
@@ -390,6 +393,7 @@
    "type": "string"
   },
   "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
    "maxLength": 21,
    "minLength": 12,
    "pattern": "^vpc-[a-f0-9]{8}([a-f0-9]{9})?$",

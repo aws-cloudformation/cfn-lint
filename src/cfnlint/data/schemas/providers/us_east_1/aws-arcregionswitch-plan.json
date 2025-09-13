@@ -591,6 +591,18 @@
    },
    "type": "array"
   },
+  "HealthCheckRecordNames": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "HealthCheckRegions": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
   "HealthCheckState": {
    "additionalProperties": false,
    "properties": {
@@ -602,6 +614,14 @@
     }
    },
    "type": "object"
+  },
+  "HealthChecks": {
+   "items": {
+    "$ref": "#/definitions/HealthCheckState"
+   },
+   "maxItems": 2,
+   "minItems": 2,
+   "type": "array"
   },
   "HostedZoneIds": {
    "items": {
@@ -707,12 +727,6 @@
    ],
    "type": "object"
   },
-  "RecordNames": {
-   "items": {
-    "type": "string"
-   },
-   "type": "array"
-  },
   "RecoveryApproach": {
    "enum": [
     "activeActive",
@@ -768,12 +782,6 @@
    },
    "type": "object"
   },
-  "Regions": {
-   "items": {
-    "type": "string"
-   },
-   "type": "array"
-  },
   "Route53HealthCheckConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -811,14 +819,6 @@
     "RecordName"
    ],
    "type": "object"
-  },
-  "Route53HealthChecks": {
-   "items": {
-    "$ref": "#/definitions/HealthCheckState"
-   },
-   "maxItems": 2,
-   "minItems": 2,
-   "type": "array"
   },
   "Route53ResourceRecordSet": {
    "additionalProperties": false,
@@ -1006,7 +1006,7 @@
    "additionalProperties": false,
    "patternProperties": {
     ".+": {
-     "$ref": "#/definitions/Route53HealthChecks"
+     "$ref": "#/definitions/HealthChecks"
     }
    },
    "type": "object"
@@ -1052,10 +1052,10 @@
      "$ref": "#/definitions/HostedZoneIds"
     },
     "RecordNames": {
-     "$ref": "#/definitions/RecordNames"
+     "$ref": "#/definitions/HealthCheckRecordNames"
     },
     "Regions": {
-     "$ref": "#/definitions/Regions"
+     "$ref": "#/definitions/HealthCheckRegions"
     }
    },
    "type": "object"
