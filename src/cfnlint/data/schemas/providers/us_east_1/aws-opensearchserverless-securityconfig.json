@@ -11,6 +11,24 @@
   "/properties/IamIdentityCenterOptions/InstanceArn"
  ],
  "definitions": {
+  "IamFederationConfigOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupAttribute": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "[A-Za-z][A-Za-z0-9_.:/=+\\-@]*",
+     "type": "string"
+    },
+    "UserAttribute": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "[A-Za-z][A-Za-z0-9_.:/=+\\-@]*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "IamIdentityCenterApplicationArn": {
    "type": "string"
   },
@@ -103,7 +121,8 @@
   "SecurityConfigType": {
    "enum": [
     "saml",
-    "iamidentitycenter"
+    "iamidentitycenter",
+    "iamfederation"
    ],
    "type": "string"
   }
@@ -116,6 +135,9 @@
    "maxLength": 1000,
    "minLength": 1,
    "type": "string"
+  },
+  "IamFederationOptions": {
+   "$ref": "#/definitions/IamFederationConfigOptions"
   },
   "IamIdentityCenterOptions": {
    "$ref": "#/definitions/IamIdentityCenterConfigOptions"

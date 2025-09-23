@@ -1,0 +1,190 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ConnectAttachmentId",
+   "/properties/CoreNetworkAddress",
+   "/properties/InsideCidrBlocks"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PeerAddress",
+  "/properties/CoreNetworkAddress",
+  "/properties/BgpOptions",
+  "/properties/InsideCidrBlocks",
+  "/properties/ConnectAttachmentId",
+  "/properties/SubnetArn"
+ ],
+ "definitions": {
+  "BgpOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "PeerAsn": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "ConnectPeerBgpConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CoreNetworkAddress": {
+     "type": "string"
+    },
+    "CoreNetworkAsn": {
+     "type": "number"
+    },
+    "PeerAddress": {
+     "type": "string"
+    },
+    "PeerAsn": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "ConnectPeerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BgpConfigurations": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ConnectPeerBgpConfiguration"
+     },
+     "type": "array"
+    },
+    "CoreNetworkAddress": {
+     "type": "string"
+    },
+    "InsideCidrBlocks": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "PeerAddress": {
+     "type": "string"
+    },
+    "Protocol": {
+     "$ref": "#/definitions/TunnelProtocol"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 10000000,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 10000000,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TunnelProtocol": {
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConnectPeerId"
+ ],
+ "properties": {
+  "BgpOptions": {
+   "$ref": "#/definitions/BgpOptions"
+  },
+  "Configuration": {
+   "$ref": "#/definitions/ConnectPeerConfiguration"
+  },
+  "ConnectAttachmentId": {
+   "maxLength": 50,
+   "pattern": "^attachment-([0-9a-f]{8,17})$",
+   "type": "string"
+  },
+  "ConnectPeerId": {
+   "type": "string"
+  },
+  "CoreNetworkAddress": {
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "[\\s\\S]*",
+   "type": "string"
+  },
+  "CoreNetworkId": {
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "EdgeLocation": {
+   "type": "string"
+  },
+  "InsideCidrBlocks": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 256,
+    "pattern": "[\\s\\S]*",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "PeerAddress": {
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "[\\s\\S]*",
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "SubnetArn": {
+   "maxLength": 500,
+   "pattern": "^arn:[^:]{1,63}:ec2:[^:]{0,63}:[^:]{0,63}:subnet\\/subnet-[0-9a-f]{8,17}$|^$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConnectPeerId",
+  "/properties/State",
+  "/properties/CreatedAt",
+  "/properties/Configuration",
+  "/properties/CoreNetworkId",
+  "/properties/EdgeLocation"
+ ],
+ "required": [
+  "ConnectAttachmentId",
+  "PeerAddress"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-connectpeer",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::ConnectPeer",
+ "writeOnlyProperties": [
+  "/properties/CoreNetworkAddress",
+  "/properties/BgpOptions",
+  "/properties/SubnetArn"
+ ]
+}

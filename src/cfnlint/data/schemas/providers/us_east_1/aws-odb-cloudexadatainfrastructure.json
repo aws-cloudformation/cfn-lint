@@ -23,6 +23,90 @@
    },
    "type": "object"
   },
+  "MaintenanceWindow": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomActionTimeoutInMins": {
+     "maximum": 120,
+     "minimum": 15,
+     "type": "integer"
+    },
+    "DaysOfWeek": {
+     "items": {
+      "enum": [
+       "MONDAY",
+       "TUESDAY",
+       "WEDNESDAY",
+       "THURSDAY",
+       "FRIDAY",
+       "SATURDAY",
+       "SUNDAY"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "HoursOfDay": {
+     "items": {
+      "type": "integer"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "IsCustomActionTimeoutEnabled": {
+     "type": "boolean"
+    },
+    "LeadTimeInWeeks": {
+     "maximum": 4,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Months": {
+     "items": {
+      "enum": [
+       "JANUARY",
+       "FEBRUARY",
+       "MARCH",
+       "APRIL",
+       "MAY",
+       "JUNE",
+       "JULY",
+       "AUGUST",
+       "SEPTEMBER",
+       "OCTOBER",
+       "NOVEMBER",
+       "DECEMBER"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "PatchingMode": {
+     "enum": [
+      "NONROLLING",
+      "ROLLING"
+     ],
+     "type": "string"
+    },
+    "Preference": {
+     "enum": [
+      "CUSTOM_PREFERENCE",
+      "NO_PREFERENCE"
+     ],
+     "type": "string"
+    },
+    "WeeksOfMonth": {
+     "items": {
+      "type": "integer"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -118,6 +202,9 @@
    "pattern": "^[a-zA-Z_](?!.*--)[a-zA-Z0-9_-]*$",
    "type": "string"
   },
+  "MaintenanceWindow": {
+   "$ref": "#/definitions/MaintenanceWindow"
+  },
   "MaxCpuCount": {
    "type": "integer"
   },
@@ -195,6 +282,7 @@
   "/properties/TotalStorageSizeInGBs",
   "/properties/DbServerIds"
  ],
+ "replacementStrategy": "delete_then_create",
  "tagging": {
   "cloudFormationSystemTags": true,
   "tagOnCreate": true,

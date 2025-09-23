@@ -1,0 +1,148 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Id"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AgentRuntimeId",
+  "/properties/Name",
+  "/properties/AgentRuntimeVersion"
+ ],
+ "definitions": {
+  "AgentEndpointDescription": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "AgentRuntimeArn": {
+   "pattern": "^arn:(-[^:]+)?:bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:agent/[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}:([0-9]{0,4}[1-9][0-9]{0,4})$",
+   "type": "string"
+  },
+  "AgentRuntimeEndpointArn": {
+   "pattern": "^arn:aws:bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:runtime/[a-zA-Z0-9_-]+/runtime-endpoint/[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "AgentRuntimeEndpointId": {
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "AgentRuntimeEndpointStatus": {
+   "enum": [
+    "CREATING",
+    "CREATE_FAILED",
+    "UPDATING",
+    "UPDATE_FAILED",
+    "READY",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "AgentRuntimeId": {
+   "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,99}-[a-zA-Z0-9]{10}$",
+   "type": "string"
+  },
+  "AgentRuntimeVersion": {
+   "pattern": "^([1-9][0-9]{0,4})$",
+   "type": "string"
+  },
+  "DateTimestamp": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "EndpointName": {
+   "maxLength": 48,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,47}$",
+   "type": "string"
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z0-9\\s._:/=+@-]*$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AgentRuntimeEndpointArn"
+ ],
+ "properties": {
+  "AgentRuntimeArn": {
+   "$ref": "#/definitions/AgentRuntimeArn"
+  },
+  "AgentRuntimeEndpointArn": {
+   "$ref": "#/definitions/AgentRuntimeEndpointArn"
+  },
+  "AgentRuntimeId": {
+   "$ref": "#/definitions/AgentRuntimeId"
+  },
+  "AgentRuntimeVersion": {
+   "$ref": "#/definitions/AgentRuntimeVersion"
+  },
+  "CreatedAt": {
+   "$ref": "#/definitions/DateTimestamp"
+  },
+  "Description": {
+   "$ref": "#/definitions/AgentEndpointDescription"
+  },
+  "FailureReason": {
+   "type": "string"
+  },
+  "Id": {
+   "$ref": "#/definitions/AgentRuntimeEndpointId"
+  },
+  "LastUpdatedAt": {
+   "$ref": "#/definitions/DateTimestamp"
+  },
+  "LiveVersion": {
+   "$ref": "#/definitions/AgentRuntimeVersion"
+  },
+  "Name": {
+   "$ref": "#/definitions/EndpointName"
+  },
+  "Status": {
+   "$ref": "#/definitions/AgentRuntimeEndpointStatus"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  },
+  "TargetVersion": {
+   "$ref": "#/definitions/AgentRuntimeVersion"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/AgentRuntimeEndpointArn",
+  "/properties/AgentRuntimeArn",
+  "/properties/Status",
+  "/properties/CreatedAt",
+  "/properties/LastUpdatedAt",
+  "/properties/FailureReason",
+  "/properties/TargetVersion",
+  "/properties/LiveVersion"
+ ],
+ "replacementStrategy": "create_then_delete",
+ "required": [
+  "AgentRuntimeId",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BedrockAgentCore::RuntimeEndpoint",
+ "writeOnlyProperties": [
+  "/properties/AgentRuntimeVersion"
+ ]
+}

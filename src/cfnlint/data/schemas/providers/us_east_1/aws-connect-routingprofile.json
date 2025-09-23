@@ -67,6 +67,18 @@
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/queue/[-a-zA-Z0-9]*$",
    "type": "string"
   },
+  "RoutingProfileManualAssignmentQueueConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "QueueReference": {
+     "$ref": "#/definitions/RoutingProfileQueueReference"
+    }
+   },
+   "required": [
+    "QueueReference"
+   ],
+   "type": "object"
+  },
   "RoutingProfileQueueConfig": {
    "additionalProperties": false,
    "properties": {
@@ -147,6 +159,15 @@
   "InstanceArn": {
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
    "type": "string"
+  },
+  "ManualAssignmentQueueConfigs": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RoutingProfileManualAssignmentQueueConfig"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
   },
   "MediaConcurrencies": {
    "insertionOrder": false,
