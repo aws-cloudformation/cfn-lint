@@ -1,0 +1,147 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CatalogId"
+ ],
+ "definitions": {
+  "DataLakePrincipal": {
+   "additionalProperties": false,
+   "properties": {
+    "DataLakePrincipalIdentifier": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DatabaseIdentifier": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "DatabaseName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Region": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DatabaseInput": {
+   "additionalProperties": false,
+   "properties": {
+    "CreateTableDefaultPermissions": {
+     "items": {
+      "$ref": "#/definitions/PrincipalPrivileges"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Description": {
+     "maxLength": 2048,
+     "type": "string"
+    },
+    "FederatedDatabase": {
+     "$ref": "#/definitions/FederatedDatabase"
+    },
+    "LocationUri": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Parameters": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "TargetDatabase": {
+     "$ref": "#/definitions/DatabaseIdentifier"
+    }
+   },
+   "type": "object"
+  },
+  "FederatedDatabase": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectionName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Identifier": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PrincipalPrivileges": {
+   "additionalProperties": false,
+   "properties": {
+    "Permissions": {
+     "items": {
+      "enum": [
+       "ALL",
+       "ALTER",
+       "CREATE_DATABASE",
+       "CREATE_TABLE",
+       "DATA_LOCATION_ACCESS",
+       "DELETE",
+       "DROP",
+       "INSERT",
+       "SELECT"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Principal": {
+     "$ref": "#/definitions/DataLakePrincipal"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "CatalogId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DatabaseInput": {
+   "$ref": "#/definitions/DatabaseInput"
+  },
+  "Id": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "DatabaseInput",
+  "CatalogId"
+ ],
+ "typeName": "AWS::Glue::Database"
+}

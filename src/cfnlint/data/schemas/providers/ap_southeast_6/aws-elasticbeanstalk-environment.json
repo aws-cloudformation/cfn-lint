@@ -1,0 +1,146 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CNAMEPrefix",
+  "/properties/EnvironmentName",
+  "/properties/ApplicationName",
+  "/properties/SolutionStackName"
+ ],
+ "definitions": {
+  "OptionSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "Namespace": {
+     "type": "string"
+    },
+    "OptionName": {
+     "type": "string"
+    },
+    "ResourceName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Namespace",
+    "OptionName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tier": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ApplicationName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CNAMEPrefix": {
+   "maxLength": 63,
+   "minLength": 4,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 200,
+   "type": "string"
+  },
+  "EndpointURL": {
+   "type": "string"
+  },
+  "EnvironmentName": {
+   "maxLength": 40,
+   "minLength": 4,
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "OperationsRole": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OptionSettings": {
+   "items": {
+    "$ref": "#/definitions/OptionSetting"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PlatformArn": {
+   "type": "string"
+  },
+  "SolutionStackName": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TemplateName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tier": {
+   "$ref": "#/definitions/Tier"
+  },
+  "VersionLabel": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/EndpointURL"
+ ],
+ "required": [
+  "ApplicationName"
+ ],
+ "typeName": "AWS::ElasticBeanstalk::Environment"
+}

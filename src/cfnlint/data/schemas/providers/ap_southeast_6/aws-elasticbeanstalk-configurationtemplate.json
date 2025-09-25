@@ -1,0 +1,92 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PlatformArn",
+  "/properties/ApplicationName",
+  "/properties/SolutionStackName",
+  "/properties/EnvironmentId",
+  "/properties/SourceConfiguration"
+ ],
+ "definitions": {
+  "ConfigurationOptionSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "Namespace": {
+     "type": "string"
+    },
+    "OptionName": {
+     "type": "string"
+    },
+    "ResourceName": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Namespace",
+    "OptionName"
+   ],
+   "type": "object"
+  },
+  "SourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationName": {
+     "type": "string"
+    },
+    "TemplateName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ApplicationName",
+    "TemplateName"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ApplicationName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "EnvironmentId": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "OptionSettings": {
+   "items": {
+    "$ref": "#/definitions/ConfigurationOptionSetting"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PlatformArn": {
+   "type": "string"
+  },
+  "SolutionStackName": {
+   "type": "string"
+  },
+  "SourceConfiguration": {
+   "$ref": "#/definitions/SourceConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "ApplicationName"
+ ],
+ "typeName": "AWS::ElasticBeanstalk::ConfigurationTemplate"
+}

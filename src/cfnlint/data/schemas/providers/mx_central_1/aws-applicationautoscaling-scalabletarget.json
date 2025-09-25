@@ -1,0 +1,161 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceId",
+  "/properties/ScalableDimension",
+  "/properties/ServiceNamespace"
+ ],
+ "definitions": {
+  "ScalableTargetAction": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxCapacity": {
+     "type": "integer"
+    },
+    "MinCapacity": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "ScheduledAction": {
+   "additionalProperties": false,
+   "properties": {
+    "EndTime": {
+     "type": "string"
+    },
+    "ScalableTargetAction": {
+     "$ref": "#/definitions/ScalableTargetAction"
+    },
+    "Schedule": {
+     "type": "string"
+    },
+    "ScheduledActionName": {
+     "type": "string"
+    },
+    "StartTime": {
+     "type": "string"
+    },
+    "Timezone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ScheduledActionName",
+    "Schedule"
+   ],
+   "type": "object"
+  },
+  "SuspendedState": {
+   "additionalProperties": false,
+   "properties": {
+    "DynamicScalingInSuspended": {
+     "type": "boolean"
+    },
+    "DynamicScalingOutSuspended": {
+     "type": "boolean"
+    },
+    "ScheduledScalingSuspended": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "MaxCapacity": {
+   "type": "integer"
+  },
+  "MinCapacity": {
+   "type": "integer"
+  },
+  "ResourceId": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RoleARN": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 1600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ScalableDimension": {
+   "enum": [
+    "appstream:fleet:DesiredCapacity",
+    "cassandra:table:ReadCapacityUnits",
+    "cassandra:table:WriteCapacityUnits",
+    "comprehend:document-classifier-endpoint:DesiredInferenceUnits",
+    "comprehend:entity-recognizer-endpoint:DesiredInferenceUnits",
+    "custom-resource:ResourceType:Property",
+    "dynamodb:index:ReadCapacityUnits",
+    "dynamodb:index:WriteCapacityUnits",
+    "dynamodb:table:ReadCapacityUnits",
+    "dynamodb:table:WriteCapacityUnits",
+    "ec2:spot-fleet-request:TargetCapacity",
+    "ecs:service:DesiredCount",
+    "elasticache:cache-cluster:Nodes",
+    "elasticache:replication-group:NodeGroups",
+    "elasticache:replication-group:Replicas",
+    "elasticmapreduce:instancegroup:InstanceCount",
+    "kafka:broker-storage:VolumeSize",
+    "lambda:function:ProvisionedConcurrency",
+    "neptune:cluster:ReadReplicaCount",
+    "rds:cluster:ReadReplicaCount",
+    "sagemaker:inference-component:DesiredCopyCount",
+    "sagemaker:variant:DesiredInstanceCount",
+    "sagemaker:variant:DesiredProvisionedConcurrency",
+    "workspaces:workspacespool:DesiredUserSessions"
+   ],
+   "type": "string"
+  },
+  "ScheduledActions": {
+   "items": {
+    "$ref": "#/definitions/ScheduledAction"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ServiceNamespace": {
+   "enum": [
+    "appstream",
+    "cassandra",
+    "comprehend",
+    "custom-resource",
+    "dynamodb",
+    "ec2",
+    "ecs",
+    "elasticache",
+    "elasticmapreduce",
+    "kafka",
+    "lambda",
+    "neptune",
+    "rds",
+    "sagemaker",
+    "workspaces"
+   ],
+   "type": "string"
+  },
+  "SuspendedState": {
+   "$ref": "#/definitions/SuspendedState"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "ResourceId",
+  "ServiceNamespace",
+  "ScalableDimension",
+  "MinCapacity",
+  "RoleARN",
+  "MaxCapacity"
+ ],
+ "typeName": "AWS::ApplicationAutoScaling::ScalableTarget"
+}

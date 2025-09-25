@@ -1080,6 +1080,8 @@ cached: list[str] = [
     "aws-imagebuilder-component.json",
     "aws-imagebuilder-containerrecipe.json",
     "aws-imagebuilder-distributionconfiguration.json",
+    "aws-imagebuilder-image.json",
+    "aws-imagebuilder-imagepipeline.json",
     "aws-imagebuilder-imagerecipe.json",
     "aws-imagebuilder-infrastructureconfiguration.json",
     "aws-imagebuilder-workflow.json",

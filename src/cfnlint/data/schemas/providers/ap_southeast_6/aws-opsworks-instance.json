@@ -1,0 +1,247 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Tenancy",
+  "/properties/VirtualizationType",
+  "/properties/TimeBasedAutoScaling",
+  "/properties/RootDeviceType",
+  "/properties/AutoScalingType",
+  "/properties/StackId",
+  "/properties/AvailabilityZone",
+  "/properties/SubnetId",
+  "/properties/BlockDeviceMappings",
+  "/properties/EbsOptimized"
+ ],
+ "definitions": {
+  "BlockDeviceMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "DeviceName": {
+     "type": "string"
+    },
+    "Ebs": {
+     "$ref": "#/definitions/EbsBlockDevice"
+    },
+    "NoDevice": {
+     "type": "string"
+    },
+    "VirtualName": {
+     "pattern": "^ephemeral([0-9]|[1][0-9]|[2][0-3])$",
+     "type": "string"
+    }
+   },
+   "requiredXor": [
+    "VirtualName",
+    "Ebs",
+    "NoDevice"
+   ],
+   "type": "object"
+  },
+  "EbsBlockDevice": {
+   "additionalProperties": false,
+   "properties": {
+    "DeleteOnTermination": {
+     "type": "boolean"
+    },
+    "Iops": {
+     "type": "integer"
+    },
+    "SnapshotId": {
+     "type": "string"
+    },
+    "VolumeSize": {
+     "type": "integer"
+    },
+    "VolumeType": {
+     "enum": [
+      "gp2",
+      "gp3",
+      "io1",
+      "io2",
+      "sc1",
+      "st1",
+      "standard"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TimeBasedAutoScaling": {
+   "additionalProperties": false,
+   "properties": {
+    "Friday": {
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Monday": {
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Saturday": {
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Sunday": {
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Thursday": {
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Tuesday": {
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Wednesday": {
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AgentVersion": {
+   "type": "string"
+  },
+  "AmiId": {
+   "format": "AWS::EC2::Image.Id",
+   "type": "string"
+  },
+  "Architecture": {
+   "type": "string"
+  },
+  "AutoScalingType": {
+   "type": "string"
+  },
+  "AvailabilityZone": {
+   "type": "string"
+  },
+  "BlockDeviceMappings": {
+   "items": {
+    "$ref": "#/definitions/BlockDeviceMapping"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "EbsOptimized": {
+   "type": "boolean"
+  },
+  "ElasticIps": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Hostname": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InstallUpdatesOnBoot": {
+   "type": "boolean"
+  },
+  "InstanceType": {
+   "type": "string"
+  },
+  "LayerIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Os": {
+   "type": "string"
+  },
+  "PrivateDnsName": {
+   "type": "string"
+  },
+  "PrivateIp": {
+   "type": "string"
+  },
+  "PublicDnsName": {
+   "type": "string"
+  },
+  "PublicIp": {
+   "type": "string"
+  },
+  "RootDeviceType": {
+   "type": "string"
+  },
+  "SshKeyName": {
+   "type": "string"
+  },
+  "StackId": {
+   "type": "string"
+  },
+  "SubnetId": {
+   "format": "AWS::EC2::Subnet.Id",
+   "type": "string"
+  },
+  "Tenancy": {
+   "type": "string"
+  },
+  "TimeBasedAutoScaling": {
+   "$ref": "#/definitions/TimeBasedAutoScaling"
+  },
+  "VirtualizationType": {
+   "type": "string"
+  },
+  "Volumes": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PublicIp",
+  "/properties/Id",
+  "/properties/PublicDnsName",
+  "/properties/PrivateDnsName",
+  "/properties/PrivateIp"
+ ],
+ "required": [
+  "LayerIds",
+  "InstanceType",
+  "StackId"
+ ],
+ "typeName": "AWS::OpsWorks::Instance"
+}

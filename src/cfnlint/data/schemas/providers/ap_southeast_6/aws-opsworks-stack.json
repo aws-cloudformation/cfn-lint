@@ -1,0 +1,234 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CloneAppIds",
+  "/properties/ClonePermissions",
+  "/properties/ServiceRoleArn",
+  "/properties/VpcId",
+  "/properties/SourceStackId"
+ ],
+ "definitions": {
+  "ChefConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BerkshelfVersion": {
+     "type": "string"
+    },
+    "ManageBerkshelf": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "ElasticIp": {
+   "additionalProperties": false,
+   "properties": {
+    "Ip": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Ip"
+   ],
+   "type": "object"
+  },
+  "RdsDbInstance": {
+   "additionalProperties": false,
+   "properties": {
+    "DbPassword": {
+     "type": "string"
+    },
+    "DbUser": {
+     "type": "string"
+    },
+    "RdsDbInstanceArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DbPassword",
+    "RdsDbInstanceArn",
+    "DbUser"
+   ],
+   "type": "object"
+  },
+  "Source": {
+   "additionalProperties": false,
+   "properties": {
+    "Password": {
+     "type": "string"
+    },
+    "Revision": {
+     "type": "string"
+    },
+    "SshKey": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    },
+    "Url": {
+     "type": "string"
+    },
+    "Username": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "StackConfigurationManager": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "dependentRequired": {
+  "VpcId": [
+   "DefaultSubnetId"
+  ]
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AgentVersion": {
+   "type": "string"
+  },
+  "Attributes": {
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ChefConfiguration": {
+   "$ref": "#/definitions/ChefConfiguration"
+  },
+  "CloneAppIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ClonePermissions": {
+   "type": "boolean"
+  },
+  "ConfigurationManager": {
+   "$ref": "#/definitions/StackConfigurationManager"
+  },
+  "CustomCookbooksSource": {
+   "$ref": "#/definitions/Source"
+  },
+  "CustomJson": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "DefaultAvailabilityZone": {
+   "type": "string"
+  },
+  "DefaultInstanceProfileArn": {
+   "type": "string"
+  },
+  "DefaultOs": {
+   "type": "string"
+  },
+  "DefaultRootDeviceType": {
+   "type": "string"
+  },
+  "DefaultSshKeyName": {
+   "type": "string"
+  },
+  "DefaultSubnetId": {
+   "type": "string"
+  },
+  "EcsClusterArn": {
+   "type": "string"
+  },
+  "ElasticIps": {
+   "items": {
+    "$ref": "#/definitions/ElasticIp"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "HostnameTheme": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "RdsDbInstances": {
+   "items": {
+    "$ref": "#/definitions/RdsDbInstance"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ServiceRoleArn": {
+   "type": "string"
+  },
+  "SourceStackId": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "UseCustomCookbooks": {
+   "type": "boolean"
+  },
+  "UseOpsworksSecurityGroups": {
+   "type": "boolean"
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "DefaultInstanceProfileArn",
+  "ServiceRoleArn",
+  "Name"
+ ],
+ "typeName": "AWS::OpsWorks::Stack"
+}

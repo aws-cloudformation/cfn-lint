@@ -1546,7 +1546,6 @@ cached: list[str] = [
     "aws-datazone-owner.json",
     "aws-datazone-policygrant.json",
     "aws-datazone-project.json",
-    "aws-datazone-projectmembership.json",
     "aws-datazone-projectprofile.json",
     "aws-datazone-subscriptiontarget.json",
     "aws-datazone-userprofile.json",

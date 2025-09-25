@@ -2445,7 +2445,6 @@ cached: list[str] = [
     "aws-pcaconnectorscep-challenge.json",
     "aws-pcaconnectorscep-connector.json",
     "aws-pcs-cluster.json",
-    "aws-pcs-computenodegroup.json",
     "aws-pcs-queue.json",
     "aws-personalize-dataset.json",
     "aws-personalize-datasetgroup.json",
