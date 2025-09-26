@@ -1,0 +1,279 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DefinitionHash": {
+   "maxLength": 128,
+   "minLength": 128,
+   "pattern": "^[0-9a-z]{128}$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "pattern": "^[\\s\\S]+$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[0-9a-zA-Z-_ ]+$",
+   "type": "string"
+  },
+  "PolicyArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:automated-reasoning-policy\\/[a-z0-9]{12}$",
+   "type": "string"
+  },
+  "PolicyDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Rules": {
+     "$ref": "#/definitions/PolicyDefinitionRuleList"
+    },
+    "Types": {
+     "$ref": "#/definitions/PolicyDefinitionTypeList"
+    },
+    "Variables": {
+     "$ref": "#/definitions/PolicyDefinitionVariableList"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PolicyDefinitionRule": {
+   "additionalProperties": false,
+   "properties": {
+    "AlternateExpression": {
+     "maxLength": 2048,
+     "pattern": "^[\\s\\S]+$",
+     "type": "string"
+    },
+    "Expression": {
+     "maxLength": 2048,
+     "pattern": "^[\\s\\S]+$",
+     "type": "string"
+    },
+    "Id": {
+     "maxLength": 12,
+     "minLength": 12,
+     "pattern": "^[A-Z][0-9A-Z]{11}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Id",
+    "Expression"
+   ],
+   "type": "object"
+  },
+  "PolicyDefinitionRuleList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PolicyDefinitionRule"
+   },
+   "maxItems": 500,
+   "type": "array"
+  },
+  "PolicyDefinitionType": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "maxLength": 1024,
+     "pattern": "^[\\s\\S]+$",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[A-Za-z][A-Za-z0-9_]+$",
+     "type": "string"
+    },
+    "Values": {
+     "$ref": "#/definitions/PolicyDefinitionTypeValueList"
+    }
+   },
+   "required": [
+    "Name",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "PolicyDefinitionTypeList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PolicyDefinitionType"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "PolicyDefinitionTypeValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "maxLength": 1024,
+     "pattern": "^[\\s\\S]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[A-Za-z][A-Za-z0-9_]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value"
+   ],
+   "type": "object"
+  },
+  "PolicyDefinitionTypeValueList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PolicyDefinitionTypeValue"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array"
+  },
+  "PolicyDefinitionVariable": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "maxLength": 1024,
+     "pattern": "^[\\s\\S]+$",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[A-Za-z][A-Za-z0-9_]+$",
+     "type": "string"
+    },
+    "Type": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[A-Za-z][A-Za-z0-9_]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Type",
+    "Description"
+   ],
+   "type": "object"
+  },
+  "PolicyDefinitionVariableList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PolicyDefinitionVariable"
+   },
+   "maxItems": 200,
+   "type": "array"
+  },
+  "PolicyId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[a-z0-9]{12}$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Version": {
+   "pattern": "^(([1-9][0-9]{0,11})|(DRAFT))$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PolicyArn"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "$ref": "#/definitions/CreatedAt"
+  },
+  "DefinitionHash": {
+   "$ref": "#/definitions/DefinitionHash"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "Name": {
+   "$ref": "#/definitions/Name"
+  },
+  "PolicyArn": {
+   "$ref": "#/definitions/PolicyArn"
+  },
+  "PolicyDefinition": {
+   "$ref": "#/definitions/PolicyDefinition"
+  },
+  "PolicyId": {
+   "$ref": "#/definitions/PolicyId"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "UpdatedAt": {
+   "$ref": "#/definitions/UpdatedAt"
+  },
+  "Version": {
+   "$ref": "#/definitions/Version"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Version",
+  "/properties/PolicyId",
+  "/properties/PolicyArn",
+  "/properties/DefinitionHash",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Bedrock::AutomatedReasoningPolicy"
+}

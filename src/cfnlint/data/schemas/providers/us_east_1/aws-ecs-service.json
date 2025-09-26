@@ -18,6 +18,7 @@
      "type": "string"
     },
     "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
      "type": "string"
     },
     "TestListenerRule": {
@@ -169,6 +170,12 @@
   "DeploymentLifecycleHook": {
    "additionalProperties": false,
    "properties": {
+    "HookDetails": {
+     "type": [
+      "string",
+      "object"
+     ]
+    },
     "HookTargetArn": {
      "type": "string"
     },
@@ -189,6 +196,7 @@
      "type": "array"
     },
     "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
      "type": "string"
     }
    },
@@ -225,6 +233,24 @@
    },
    "required": [
     "ResourceType"
+   ],
+   "type": "object"
+  },
+  "ForceNewDeployment": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableForceNewDeployment": {
+     "type": "boolean"
+    },
+    "ForceNewDeploymentNonce": {
+     "$comment": "A time-varying value that has at most a negligible chance of repeating; for example, a random value that is generated anew for each use, a time-stamp, a sequence number, or some combination of these.",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "EnableForceNewDeployment"
    ],
    "type": "object"
   },
@@ -623,7 +649,7 @@
  ],
  "properties": {
   "AvailabilityZoneRebalancing": {
-   "default": "DISABLED",
+   "default": "ENABLED",
    "enum": [
     "ENABLED",
     "DISABLED"
@@ -653,6 +679,9 @@
   },
   "EnableExecuteCommand": {
    "type": "boolean"
+  },
+  "ForceNewDeployment": {
+   "$ref": "#/definitions/ForceNewDeployment"
   },
   "HealthCheckGracePeriodSeconds": {
    "type": "integer"
@@ -766,6 +795,7 @@
  "typeName": "AWS::ECS::Service",
  "writeOnlyProperties": [
   "/properties/ServiceConnectConfiguration",
-  "/properties/VolumeConfigurations"
+  "/properties/VolumeConfigurations",
+  "/properties/ForceNewDeployment"
  ]
 }

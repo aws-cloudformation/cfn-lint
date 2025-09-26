@@ -1,0 +1,228 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "EcrConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerTags": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "RepositoryName": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ImageScanningConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EcrConfiguration": {
+     "$ref": "#/definitions/EcrConfiguration"
+    },
+    "ImageScanningEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "ImageTestsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ImageTestsEnabled": {
+     "type": "boolean"
+    },
+    "TimeoutMinutes": {
+     "maximum": 1440,
+     "minimum": 60,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Schedule": {
+   "additionalProperties": false,
+   "properties": {
+    "PipelineExecutionStartCondition": {
+     "enum": [
+      "EXPRESSION_MATCH_ONLY",
+      "EXPRESSION_MATCH_AND_DEPENDENCY_UPDATES_AVAILABLE"
+     ],
+     "type": "string"
+    },
+    "ScheduleExpression": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "WorkflowConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "OnFailure": {
+     "enum": [
+      "CONTINUE",
+      "ABORT"
+     ],
+     "type": "string"
+    },
+    "ParallelGroup": {
+     "maxLength": 100,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9][A-Za-z0-9-_+#]{0,99}$",
+     "type": "string"
+    },
+    "Parameters": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/WorkflowParameter"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "WorkflowArn": {
+     "pattern": "^arn:aws(?:-[a-z]+)*:imagebuilder:[a-z]{2,}(?:-[a-z]+)+-[0-9]+:(?:[0-9]{12}|aws(?:-[a-z-]+)?):workflow/(build|test|distribution)/[a-z0-9-_]+/(?:(?:([0-9]+|x)\\.([0-9]+|x)\\.([0-9]+|x))|(?:[0-9]+\\.[0-9]+\\.[0-9]+/[0-9]+))$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "WorkflowParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[^\\x00]+",
+     "type": "string"
+    },
+    "Value": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/WorkflowParameterValue"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "WorkflowParameterValue": {
+   "pattern": "[^\\x00]*",
+   "type": "string"
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "Name",
+    "ContainerRecipeArn",
+    "InfrastructureConfigurationArn"
+   ]
+  },
+  {
+   "required": [
+    "Name",
+    "ImageRecipeArn",
+    "InfrastructureConfigurationArn"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ContainerRecipeArn": {
+   "pattern": "^arn:aws[^:]*:imagebuilder:[^:]+:(?:[0-9]{12}|aws):container-recipe/[a-z0-9-_]+/[0-9]+\\.[0-9]+\\.[0-9]+$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DistributionConfigurationArn": {
+   "pattern": "^arn:aws[^:]*:imagebuilder:[^:]+:(?:[0-9]{12}|aws):distribution-configuration/[a-z0-9-_]+$",
+   "type": "string"
+  },
+  "EnhancedImageMetadataEnabled": {
+   "type": "boolean"
+  },
+  "ExecutionRole": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^(?:arn:aws(?:-[a-z]+)*:iam::[0-9]{12}:role/)?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "ImageRecipeArn": {
+   "pattern": "^arn:aws[^:]*:imagebuilder:[^:]+:(?:[0-9]{12}|aws):image-recipe/[a-z0-9-_]+/[0-9]+\\.[0-9]+\\.[0-9]+$",
+   "type": "string"
+  },
+  "ImageScanningConfiguration": {
+   "$ref": "#/definitions/ImageScanningConfiguration"
+  },
+  "ImageTestsConfiguration": {
+   "$ref": "#/definitions/ImageTestsConfiguration"
+  },
+  "InfrastructureConfigurationArn": {
+   "pattern": "^arn:aws[^:]*:imagebuilder:[^:]+:(?:[0-9]{12}|aws):infrastructure-configuration/[a-z0-9-_]+$",
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[-_A-Za-z-0-9][-_A-Za-z0-9 ]{1,126}[-_A-Za-z-0-9]$",
+   "type": "string"
+  },
+  "Schedule": {
+   "$ref": "#/definitions/Schedule"
+  },
+  "Status": {
+   "enum": [
+    "DISABLED",
+    "ENABLED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,}": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Workflows": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/WorkflowConfiguration"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ImageBuilder::ImagePipeline"
+}

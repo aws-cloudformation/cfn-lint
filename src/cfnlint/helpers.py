@@ -29,6 +29,7 @@ LOGGER = logging.getLogger(__name__)
 AVAILABILITY_ZONES = {
     "af-south-1": ["af-south-1a", "af-south-1b", "af-south-1c"],
     "ap-east-1": ["ap-east-1a", "ap-east-1b", "ap-east-1c"],
+    "ap-east-2": ["ap-east-2a", "ap-east-2b", "ap-east-2c"],
     "ap-northeast-1": [
         "ap-northeast-1a",
         "ap-northeast-1b",
@@ -60,6 +61,11 @@ AVAILABILITY_ZONES = {
         "ap-southeast-5a",
         "ap-southeast-5b",
         "ap-southeast-5c",
+    ],
+    "ap-southeast-6": [
+        "ap-southeast-6a",
+        "ap-southeast-6b",
+        "ap-southeast-6c",
     ],
     "ap-southeast-7": [
         "ap-southeast-7a",
@@ -102,6 +108,7 @@ AVAILABILITY_ZONES = {
         "me-central-1b",
         "me-central-1c",
     ],
+    "mx-central-1": ["mx-central-1a", "mx-central-1b", "mx-central-1c"],
     "sa-east-1": ["sa-east-1a", "sa-east-1b", "sa-east-1c"],
     "us-east-1": [
         "us-east-1a",

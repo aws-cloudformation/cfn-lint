@@ -8,7 +8,8 @@
   "/properties/JobLogStatus",
   "/properties/QueryLogStatus",
   "/properties/Members",
-  "/properties/CreatorPaymentConfiguration"
+  "/properties/CreatorPaymentConfiguration",
+  "/properties/AutoApprovedChangeTypes"
  ],
  "definitions": {
   "AnalyticsEngine": {
@@ -17,6 +18,20 @@
     "SPARK"
    ],
    "type": "string"
+  },
+  "AutoApprovedChangeType": {
+   "enum": [
+    "ADD_MEMBER"
+   ],
+   "type": "string"
+  },
+  "AutoApprovedChangeTypeList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AutoApprovedChangeType"
+   },
+   "type": "array",
+   "uniqueItems": true
   },
   "CollaborationJobLogStatus": {
    "enum": [
@@ -253,6 +268,9 @@
   "Arn": {
    "maxLength": 100,
    "type": "string"
+  },
+  "AutoApprovedChangeTypes": {
+   "$ref": "#/definitions/AutoApprovedChangeTypeList"
   },
   "CollaborationIdentifier": {
    "maxLength": 36,

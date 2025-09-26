@@ -1,0 +1,186 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConfigurationProperties",
+  "/properties/OutputArtifactDetails",
+  "/properties/Version",
+  "/properties/InputArtifactDetails",
+  "/properties/Settings",
+  "/properties/Provider",
+  "/properties/Category"
+ ],
+ "definitions": {
+  "ArtifactDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "MaximumCount": {
+     "maximum": 5,
+     "type": "integer"
+    },
+    "MinimumCount": {
+     "maximum": 5,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MinimumCount",
+    "MaximumCount"
+   ],
+   "type": "object"
+  },
+  "ConfigurationProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "maxLength": 160,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Key": {
+     "type": "boolean"
+    },
+    "Name": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Queryable": {
+     "type": "boolean"
+    },
+    "Required": {
+     "type": "boolean"
+    },
+    "Secret": {
+     "type": "boolean"
+    },
+    "Type": {
+     "enum": [
+      "Boolean",
+      "Number",
+      "String"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Secret",
+    "Required",
+    "Key",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Settings": {
+   "additionalProperties": false,
+   "properties": {
+    "EntityUrlTemplate": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ExecutionUrlTemplate": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "RevisionUrlTemplate": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ThirdPartyConfigurationUrl": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Category": {
+   "enum": [
+    "Approval",
+    "Build",
+    "Compute",
+    "Deploy",
+    "Invoke",
+    "Source",
+    "Test"
+   ],
+   "type": "string"
+  },
+  "ConfigurationProperties": {
+   "items": {
+    "$ref": "#/definitions/ConfigurationProperties"
+   },
+   "maxItems": 10,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InputArtifactDetails": {
+   "$ref": "#/definitions/ArtifactDetails"
+  },
+  "OutputArtifactDetails": {
+   "$ref": "#/definitions/ArtifactDetails"
+  },
+  "Provider": {
+   "maxLength": 35,
+   "minLength": 1,
+   "pattern": "[0-9A-Za-z_-]+",
+   "type": "string"
+  },
+  "Settings": {
+   "$ref": "#/definitions/Settings"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Version": {
+   "maxLength": 9,
+   "minLength": 1,
+   "pattern": "[0-9A-Za-z_-]+",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Category",
+  "InputArtifactDetails",
+  "Version",
+  "OutputArtifactDetails",
+  "Provider"
+ ],
+ "typeName": "AWS::CodePipeline::CustomActionType"
+}

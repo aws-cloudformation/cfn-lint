@@ -1,0 +1,73 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IsoCountryCode",
+  "/properties/SenderId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IsoCountryCode",
+  "/properties/SenderId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "DeletionProtectionEnabled": {
+   "type": "boolean"
+  },
+  "IsoCountryCode": {
+   "pattern": "^[A-Z]{2}$",
+   "type": "string"
+  },
+  "SenderId": {
+   "pattern": "^[A-Z0-9_-]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "IsoCountryCode",
+  "SenderId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resoource-providers-smsvoice.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SMSVOICE::SenderId"
+}

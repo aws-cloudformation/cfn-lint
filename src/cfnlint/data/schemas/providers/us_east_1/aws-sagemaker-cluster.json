@@ -63,9 +63,41 @@
    ],
    "type": "object"
   },
+  "ClusterAutoScalingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoScalerType": {
+     "default": "Karpenter",
+     "enum": [
+      "Karpenter"
+     ],
+     "type": "string"
+    },
+    "Mode": {
+     "enum": [
+      "Enable",
+      "Disable"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Mode"
+   ],
+   "type": "object"
+  },
   "ClusterEbsVolumeConfig": {
    "additionalProperties": false,
    "properties": {
+    "RootVolume": {
+     "type": "boolean"
+    },
+    "VolumeKmsKeyId": {
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9:/_-]*$",
+     "type": "string"
+    },
     "VolumeSizeInGB": {
      "maximum": 16384,
      "minimum": 1,
@@ -324,8 +356,9 @@
    "type": "object"
   },
   "ImageId": {
+   "format": "AWS::EC2::Image.Id",
    "maxLength": 21,
-   "minLength": 12,
+   "minLength": 7,
    "pattern": "^ami-[0-9a-fA-F]{8,17}|default$",
    "type": "string"
   },
@@ -570,6 +603,9 @@
   "/properties/ClusterArn"
  ],
  "properties": {
+  "AutoScaling": {
+   "$ref": "#/definitions/ClusterAutoScalingConfig"
+  },
   "ClusterArn": {
    "maxLength": 256,
    "pattern": "^arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:cluster/[a-z0-9]{12}$",
@@ -579,6 +615,12 @@
    "maxLength": 63,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  },
+  "ClusterRole": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
    "type": "string"
   },
   "ClusterStatus": {

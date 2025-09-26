@@ -280,6 +280,10 @@
    "type": "integer"
   }
  },
+ "propertyTransform": {
+  "/properties/CloudExadataInfrastructureId": "$split(CloudExadataInfrastructureId, \"cloud-exadata-infrastructure/\")[-1] $OR CloudExadataInfrastructureId",
+  "/properties/OdbNetworkId": "$split(OdbNetworkId, \"odb-network/\")[-1] $OR OdbNetworkId"
+ },
  "readOnlyProperties": [
   "/properties/CloudAutonomousVmClusterId",
   "/properties/CloudAutonomousVmClusterArn",
@@ -310,6 +314,7 @@
   "/properties/ReservedCpus",
   "/properties/Shape"
  ],
+ "replacementStrategy": "delete_then_create",
  "tagging": {
   "cloudFormationSystemTags": true,
   "tagOnCreate": true,

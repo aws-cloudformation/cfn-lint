@@ -1,0 +1,71 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "NotificationARNs": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Parameters": {
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": [
+      "string",
+      "number",
+      "integer",
+      "object",
+      "array",
+      "boolean"
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TemplateURL": {
+   "type": "string"
+  },
+  "TimeoutInMinutes": {
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "TemplateURL"
+ ],
+ "typeName": "AWS::CloudFormation::Stack"
+}

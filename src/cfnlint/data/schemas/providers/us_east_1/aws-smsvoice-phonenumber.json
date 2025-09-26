@@ -1,0 +1,197 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IsoCountryCode",
+  "/properties/NumberCapabilities",
+  "/properties/NumberType"
+ ],
+ "definitions": {
+  "MandatoryKeyword": {
+   "additionalProperties": false,
+   "properties": {
+    "Message": {
+     "maxLength": 1600,
+     "pattern": "^(?!\\s*$)[\\s\\S]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Message"
+   ],
+   "type": "object"
+  },
+  "OptionalKeyword": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "enum": [
+      "AUTOMATIC_RESPONSE",
+      "OPT_OUT",
+      "OPT_IN"
+     ],
+     "type": "string"
+    },
+    "Keyword": {
+     "maxLength": 30,
+     "pattern": "^(?!.*(?i)(stop|help))[ \\S]+",
+     "type": "string"
+    },
+    "Message": {
+     "maxLength": 1600,
+     "pattern": "^(?!\\s*$)[\\s\\S]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Keyword",
+    "Message",
+    "Action"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PhoneNumberId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "DeletionProtectionEnabled": {
+   "type": "boolean"
+  },
+  "IsoCountryCode": {
+   "pattern": "^[A-Z]{2}$",
+   "type": "string"
+  },
+  "MandatoryKeywords": {
+   "additionalProperties": false,
+   "properties": {
+    "HELP": {
+     "$ref": "#/definitions/MandatoryKeyword"
+    },
+    "STOP": {
+     "$ref": "#/definitions/MandatoryKeyword"
+    }
+   },
+   "required": [
+    "STOP",
+    "HELP"
+   ],
+   "type": "object"
+  },
+  "NumberCapabilities": {
+   "insertionOrder": false,
+   "items": {
+    "enum": [
+     "SMS",
+     "VOICE",
+     "MMS"
+    ],
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "NumberType": {
+   "enum": [
+    "LONG_CODE",
+    "TOLL_FREE",
+    "TEN_DLC",
+    "SIMULATOR"
+   ],
+   "type": "string"
+  },
+  "OptOutListName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9_:/-]+$",
+   "type": "string"
+  },
+  "OptionalKeywords": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/OptionalKeyword"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "PhoneNumber": {
+   "type": "string"
+  },
+  "PhoneNumberId": {
+   "type": "string"
+  },
+  "SelfManagedOptOutsEnabled": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TwoWay": {
+   "additionalProperties": false,
+   "properties": {
+    "ChannelArn": {
+     "pattern": "^arn:\\S+$",
+     "type": "string"
+    },
+    "ChannelRole": {
+     "pattern": "^arn:\\S+$",
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/PhoneNumberId",
+  "/properties/PhoneNumber"
+ ],
+ "required": [
+  "IsoCountryCode",
+  "NumberCapabilities",
+  "NumberType",
+  "MandatoryKeywords"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resoource-providers-smsvoice.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SMSVOICE::PhoneNumber"
+}

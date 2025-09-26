@@ -1,0 +1,55 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationName",
+  "/properties/SourceBundle"
+ ],
+ "definitions": {
+  "SourceBundle": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Bucket": {
+     "maxLength": 255,
+     "type": "string"
+    },
+    "S3Key": {
+     "maxLength": 1024,
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3Bucket",
+    "S3Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ApplicationName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 200,
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "SourceBundle": {
+   "$ref": "#/definitions/SourceBundle"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "ApplicationName",
+  "SourceBundle"
+ ],
+ "typeName": "AWS::ElasticBeanstalk::ApplicationVersion"
+}

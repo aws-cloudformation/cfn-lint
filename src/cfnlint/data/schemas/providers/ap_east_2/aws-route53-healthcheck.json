@@ -1,0 +1,127 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AlarmIdentifier": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Region": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Region",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "HealthCheckConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AlarmIdentifier": {
+     "$ref": "#/definitions/AlarmIdentifier"
+    },
+    "ChildHealthChecks": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "EnableSNI": {
+     "type": "boolean"
+    },
+    "FailureThreshold": {
+     "type": "integer"
+    },
+    "FullyQualifiedDomainName": {
+     "type": "string"
+    },
+    "HealthThreshold": {
+     "type": "integer"
+    },
+    "IPAddress": {
+     "type": "string"
+    },
+    "InsufficientDataHealthStatus": {
+     "type": "string"
+    },
+    "Inverted": {
+     "type": "boolean"
+    },
+    "MeasureLatency": {
+     "type": "boolean"
+    },
+    "Port": {
+     "type": "integer"
+    },
+    "Regions": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "RequestInterval": {
+     "type": "integer"
+    },
+    "ResourcePath": {
+     "type": "string"
+    },
+    "SearchString": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "HealthCheckTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "HealthCheckConfig": {
+   "$ref": "#/definitions/HealthCheckConfig"
+  },
+  "HealthCheckTags": {
+   "items": {
+    "$ref": "#/definitions/HealthCheckTag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Id": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "HealthCheckConfig"
+ ],
+ "typeName": "AWS::Route53::HealthCheck"
+}
