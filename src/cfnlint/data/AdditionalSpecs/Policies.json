@@ -10270,6 +10270,11 @@
  },
  "billing": {
   "Actions": {
+   "associatesourceviews": {
+    "Resources": [
+     "billingview"
+    ]
+   },
    "createbillingview": {
     "Resources": [
      "billingview"
@@ -10281,6 +10286,11 @@
     ]
    },
    "deleteresourcepolicy": {
+    "Resources": [
+     "billingview"
+    ]
+   },
+   "disassociatesourceviews": {
     "Resources": [
      "billingview"
     ]
@@ -10342,7 +10352,8 @@
      "billingview"
     ]
    },
-   "updateiamaccesspreference": {}
+   "updateiamaccesspreference": {},
+   "usesourceview": {}
   },
   "Resources": {
    "billingview": {
@@ -33308,6 +33319,12 @@
    "putclustercapacityproviders": {
     "Resources": [
      "cluster"
+    ]
+   },
+   "putsystemlogevents": {
+    "Resources": [
+     "cluster",
+     "container-instance"
     ]
    },
    "registercontainerinstance": {
@@ -65279,6 +65296,7 @@
      "site"
     ]
    },
+   "listusers": {},
    "listusersv1": {},
    "rebootdevice": {
     "Resources": [
@@ -66070,7 +66088,22 @@
  "osis": {
   "Actions": {
    "createpipeline": {},
+   "createpipelineendpoint": {
+    "Resources": [
+     "pipeline"
+    ]
+   },
    "deletepipeline": {
+    "Resources": [
+     "pipeline"
+    ]
+   },
+   "deletepipelineendpoint": {
+    "Resources": [
+     "pipeline-endpoint"
+    ]
+   },
+   "deleteresourcepolicy": {
     "Resources": [
      "pipeline"
     ]
@@ -66090,14 +66123,31 @@
      "pipeline"
     ]
    },
+   "getresourcepolicy": {
+    "Resources": [
+     "pipeline"
+    ]
+   },
    "ingest": {
     "Resources": [
      "pipeline"
     ]
    },
    "listpipelineblueprints": {},
+   "listpipelineendpointconnections": {},
+   "listpipelineendpoints": {},
    "listpipelines": {},
    "listtagsforresource": {
+    "Resources": [
+     "pipeline"
+    ]
+   },
+   "putresourcepolicy": {
+    "Resources": [
+     "pipeline"
+    ]
+   },
+   "revokepipelineendpointconnections": {
     "Resources": [
      "pipeline"
     ]
@@ -66141,6 +66191,14 @@
    "pipeline-blueprint": {
     "ARNFormats": [
      "arn:${Partition}:osis:${Region}:${Account}:blueprint/.*"
+    ]
+   },
+   "pipeline-endpoint": {
+    "ARNFormats": [
+     "arn:${Partition}:osis:${Region}:${Account}:endpoint/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    }
   }
@@ -88193,6 +88251,16 @@
  "sso-oauth": {
   "Actions": {
    "createtokenwithiam": {
+    "Resources": [
+     "Application"
+    ]
+   },
+   "introspecttokenwithiam": {
+    "Resources": [
+     "Application"
+    ]
+   },
+   "revoketokenwithiam": {
     "Resources": [
      "Application"
     ]

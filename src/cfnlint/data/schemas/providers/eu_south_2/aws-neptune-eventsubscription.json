@@ -1,14 +1,33 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/SubscriptionName",
-  "/properties/SnsTopicArn"
+  "/properties/SnsTopicArn",
+  "/properties/SubscriptionName"
  ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/SubscriptionName"
  ],
  "properties": {
   "Enabled": {
+   "default": true,
    "type": "boolean"
   },
   "EventCategories": {
@@ -16,33 +35,47 @@
     "type": "string"
    },
    "type": "array",
-   "uniqueItems": false
-  },
-  "Id": {
-   "type": "string"
+   "uniqueItems": true
   },
   "SnsTopicArn": {
    "type": "string"
   },
   "SourceIds": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
    "type": "array",
-   "uniqueItems": false
+   "uniqueItems": true
   },
   "SourceType": {
    "type": "string"
   },
   "SubscriptionName": {
+   "maxLength": 255,
    "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
   }
  },
- "readOnlyProperties": [
-  "/properties/Id"
- ],
+ "propertyTransform": {
+  "/properties/SubscriptionName": "$lowercase(SubscriptionName)"
+ },
  "required": [
   "SnsTopicArn"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-neptune",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::Neptune::EventSubscription"
 }

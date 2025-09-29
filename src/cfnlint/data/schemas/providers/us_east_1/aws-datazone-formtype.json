@@ -1,0 +1,116 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/Description",
+  "/properties/Model",
+  "/properties/Status",
+  "/properties/OwningProjectIdentifier"
+ ],
+ "createOnlyProperties": [
+  "/properties/DomainIdentifier",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Model": {
+   "additionalProperties": false,
+   "properties": {
+    "Smithy": {
+     "maxLength": 100000,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainIdentifier",
+  "/properties/FormTypeIdentifier"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "CreatedBy": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "type": "string"
+  },
+  "DomainId": {
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "DomainIdentifier": {
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "FormTypeIdentifier": {
+   "maxLength": 385,
+   "minLength": 1,
+   "pattern": "^(?!\\.)[\\w\\.]*\\w$",
+   "type": "string"
+  },
+  "Model": {
+   "$ref": "#/definitions/Model",
+   "type": "object"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^(?![0-9_])\\w+$|^_\\w*[a-zA-Z0-9]\\w*$",
+   "type": "string"
+  },
+  "OwningProjectId": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "OwningProjectIdentifier": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Revision": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DomainId",
+  "/properties/OwningProjectId",
+  "/properties/Revision",
+  "/properties/FormTypeIdentifier",
+  "/properties/CreatedAt",
+  "/properties/CreatedBy"
+ ],
+ "required": [
+  "DomainIdentifier",
+  "Model",
+  "Name",
+  "OwningProjectIdentifier"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::DataZone::FormType"
+}
