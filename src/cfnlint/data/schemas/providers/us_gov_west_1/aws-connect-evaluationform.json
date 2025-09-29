@@ -1,0 +1,450 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AutoEvaluationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "EvaluationFormBaseItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Section": {
+     "$ref": "#/definitions/EvaluationFormSection"
+    }
+   },
+   "required": [
+    "Section"
+   ],
+   "type": "object"
+  },
+  "EvaluationFormItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Question": {
+     "$ref": "#/definitions/EvaluationFormQuestion"
+    },
+    "Section": {
+     "$ref": "#/definitions/EvaluationFormSection"
+    }
+   },
+   "type": "object"
+  },
+  "EvaluationFormNumericQuestionAutomation": {
+   "additionalProperties": false,
+   "properties": {
+    "AnswerSource": {},
+    "PropertyValue": {
+     "$ref": "#/definitions/NumericQuestionPropertyValueAutomation"
+    }
+   },
+   "type": "object"
+  },
+  "EvaluationFormNumericQuestionOption": {
+   "additionalProperties": false,
+   "properties": {
+    "AutomaticFail": {
+     "type": "boolean"
+    },
+    "MaxValue": {
+     "type": "integer"
+    },
+    "MinValue": {
+     "type": "integer"
+    },
+    "Score": {
+     "$ref": "#/definitions/Score"
+    }
+   },
+   "required": [
+    "MinValue",
+    "MaxValue"
+   ],
+   "type": "object"
+  },
+  "EvaluationFormNumericQuestionProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Automation": {
+     "$ref": "#/definitions/EvaluationFormNumericQuestionAutomation"
+    },
+    "MaxValue": {
+     "type": "integer"
+    },
+    "MinValue": {
+     "type": "integer"
+    },
+    "Options": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/EvaluationFormNumericQuestionOption"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "MinValue",
+    "MaxValue"
+   ],
+   "type": "object"
+  },
+  "EvaluationFormQuestion": {
+   "additionalProperties": false,
+   "properties": {
+    "Instructions": {
+     "maxLength": 1024,
+     "type": "string"
+    },
+    "NotApplicableEnabled": {
+     "type": "boolean"
+    },
+    "QuestionType": {
+     "enum": [
+      "NUMERIC",
+      "SINGLESELECT",
+      "TEXT"
+     ],
+     "type": "string"
+    },
+    "QuestionTypeProperties": {
+     "$ref": "#/definitions/EvaluationFormQuestionTypeProperties"
+    },
+    "RefId": {
+     "$ref": "#/definitions/RefId"
+    },
+    "Title": {
+     "maxLength": 350,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Weight": {
+     "$ref": "#/definitions/Weight"
+    }
+   },
+   "required": [
+    "RefId",
+    "Title",
+    "QuestionType"
+   ],
+   "type": "object"
+  },
+  "EvaluationFormQuestionTypeProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Numeric": {
+     "$ref": "#/definitions/EvaluationFormNumericQuestionProperties"
+    },
+    "SingleSelect": {
+     "$ref": "#/definitions/EvaluationFormSingleSelectQuestionProperties"
+    }
+   },
+   "type": "object"
+  },
+  "EvaluationFormSection": {
+   "additionalProperties": false,
+   "properties": {
+    "Instructions": {
+     "maxLength": 1024,
+     "type": "string"
+    },
+    "Items": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/EvaluationFormItem"
+     },
+     "maxItems": 200,
+     "minItems": 1,
+     "type": "array"
+    },
+    "RefId": {
+     "$ref": "#/definitions/RefId"
+    },
+    "Title": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Weight": {
+     "$ref": "#/definitions/Weight"
+    }
+   },
+   "required": [
+    "RefId",
+    "Title"
+   ],
+   "type": "object"
+  },
+  "EvaluationFormSingleSelectQuestionAutomation": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultOptionRefId": {
+     "$ref": "#/definitions/RefId"
+    },
+    "Options": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/EvaluationFormSingleSelectQuestionAutomationOption"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Options"
+   ],
+   "type": "object"
+  },
+  "EvaluationFormSingleSelectQuestionAutomationOption": {
+   "additionalProperties": false,
+   "properties": {
+    "RuleCategory": {
+     "$ref": "#/definitions/SingleSelectQuestionRuleCategoryAutomation"
+    }
+   },
+   "required": [
+    "RuleCategory"
+   ],
+   "type": "object"
+  },
+  "EvaluationFormSingleSelectQuestionOption": {
+   "additionalProperties": false,
+   "properties": {
+    "AutomaticFail": {
+     "type": "boolean"
+    },
+    "RefId": {
+     "$ref": "#/definitions/RefId"
+    },
+    "Score": {
+     "$ref": "#/definitions/Score"
+    },
+    "Text": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "RefId",
+    "Text"
+   ],
+   "type": "object"
+  },
+  "EvaluationFormSingleSelectQuestionProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Automation": {
+     "$ref": "#/definitions/EvaluationFormSingleSelectQuestionAutomation"
+    },
+    "DisplayAs": {
+     "enum": [
+      "DROPDOWN",
+      "RADIO"
+     ],
+     "type": "string"
+    },
+    "Options": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/EvaluationFormSingleSelectQuestionOption"
+     },
+     "maxItems": 256,
+     "minItems": 2,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Options"
+   ],
+   "type": "object"
+  },
+  "NumericQuestionPropertyValueAutomation": {
+   "additionalProperties": false,
+   "properties": {
+    "Label": {
+     "enum": [
+      "OVERALL_CUSTOMER_SENTIMENT_SCORE",
+      "OVERALL_AGENT_SENTIMENT_SCORE",
+      "NON_TALK_TIME",
+      "NON_TALK_TIME_PERCENTAGE",
+      "NUMBER_OF_INTERRUPTIONS",
+      "CONTACT_DURATION",
+      "AGENT_INTERACTION_DURATION",
+      "CUSTOMER_HOLD_TIME",
+      "LONGEST_HOLD_DURATION",
+      "NUMBER_OF_HOLDS",
+      "AGENT_INTERACTION_AND_HOLD_DURATION"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Label"
+   ],
+   "type": "object"
+  },
+  "RefId": {
+   "pattern": "^[a-zA-Z0-9._-]{1,40}$",
+   "type": "string"
+  },
+  "Score": {
+   "maximum": 10,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "ScoringStrategy": {
+   "additionalProperties": false,
+   "properties": {
+    "Mode": {
+     "enum": [
+      "QUESTION_ONLY",
+      "SECTION_ONLY"
+     ],
+     "type": "string"
+    },
+    "Status": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Mode",
+    "Status"
+   ],
+   "type": "object"
+  },
+  "SingleSelectQuestionRuleCategoryAutomation": {
+   "additionalProperties": false,
+   "properties": {
+    "Category": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Condition": {
+     "enum": [
+      "PRESENT",
+      "NOT_PRESENT"
+     ],
+     "type": "string"
+    },
+    "OptionRefId": {
+     "$ref": "#/definitions/RefId"
+    }
+   },
+   "required": [
+    "Category",
+    "Condition",
+    "OptionRefId"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Weight": {
+   "maximum": 100,
+   "minimum": 0,
+   "type": "number"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EvaluationFormArn"
+ ],
+ "properties": {
+  "AutoEvaluationConfiguration": {
+   "$ref": "#/definitions/AutoEvaluationConfiguration"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "EvaluationFormArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/evaluation-form/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "InstanceArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Items": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/EvaluationFormBaseItem"
+   },
+   "maxItems": 200,
+   "minItems": 1,
+   "type": "array"
+  },
+  "ScoringStrategy": {
+   "$ref": "#/definitions/ScoringStrategy"
+  },
+  "Status": {
+   "default": "DRAFT",
+   "enum": [
+    "DRAFT",
+    "ACTIVE"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Title": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/EvaluationFormArn"
+ ],
+ "required": [
+  "Title",
+  "InstanceArn",
+  "Items",
+  "Status"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::EvaluationForm"
+}

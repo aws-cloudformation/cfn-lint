@@ -1,0 +1,114 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/LocalGatewayVirtualInterfaceGroupId",
+  "/properties/OutpostLagId",
+  "/properties/Vlan",
+  "/properties/LocalAddress",
+  "/properties/PeerAddress",
+  "/properties/PeerBgpAsn",
+  "/properties/PeerBgpAsnExtended"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "^(?!aws:.*)",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^(?!aws:.*)",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LocalGatewayVirtualInterfaceId"
+ ],
+ "properties": {
+  "ConfigurationState": {
+   "type": "string"
+  },
+  "LocalAddress": {
+   "type": "string"
+  },
+  "LocalBgpAsn": {
+   "type": "integer"
+  },
+  "LocalGatewayId": {
+   "type": "string"
+  },
+  "LocalGatewayVirtualInterfaceGroupId": {
+   "type": "string"
+  },
+  "LocalGatewayVirtualInterfaceId": {
+   "type": "string"
+  },
+  "OutpostLagId": {
+   "type": "string"
+  },
+  "OwnerId": {
+   "type": "string"
+  },
+  "PeerAddress": {
+   "type": "string"
+  },
+  "PeerBgpAsn": {
+   "type": "integer"
+  },
+  "PeerBgpAsnExtended": {
+   "format": "int64",
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Vlan": {
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LocalGatewayVirtualInterfaceId",
+  "/properties/LocalGatewayId",
+  "/properties/LocalBgpAsn",
+  "/properties/OwnerId",
+  "/properties/ConfigurationState"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "OutpostLagId",
+  "LocalGatewayVirtualInterfaceGroupId",
+  "Vlan",
+  "LocalAddress",
+  "PeerAddress"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-lgw.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::LocalGatewayVirtualInterface"
+}

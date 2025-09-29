@@ -1,0 +1,207 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/ClusterId",
+  "/properties/InstanceConfigs"
+ ],
+ "definitions": {
+  "ErrorInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "Code": {
+     "type": "string"
+    },
+    "Message": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceType": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SlurmCustomSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "ParameterName": {
+     "type": "string"
+    },
+    "ParameterValue": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ParameterName",
+    "ParameterValue"
+   ],
+   "type": "object"
+  },
+  "SubnetId": {
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AmiId": {
+   "format": "AWS::EC2::Image.Id",
+   "pattern": "^ami-[a-z0-9]+$",
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "ClusterId": {
+   "type": "string"
+  },
+  "CustomLaunchTemplate": {
+   "additionalProperties": false,
+   "properties": {
+    "TemplateId": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Version"
+   ],
+   "type": "object"
+  },
+  "ErrorInfo": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ErrorInfo"
+   },
+   "type": "array"
+  },
+  "IamInstanceProfileArn": {
+   "pattern": "^arn:aws([a-zA-Z-]{0,10})?:iam::[0-9]{12}:instance-profile/.{1,128}$",
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InstanceConfigs": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/InstanceConfig"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "PurchaseOption": {
+   "enum": [
+    "ONDEMAND",
+    "SPOT"
+   ],
+   "type": "string"
+  },
+  "ScalingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxInstanceCount": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MinInstanceCount": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxInstanceCount",
+    "MinInstanceCount"
+   ],
+   "type": "object"
+  },
+  "SlurmConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SlurmCustomSettings": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SlurmCustomSetting"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "SpotOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "AllocationStrategy": {
+     "enum": [
+      "lowest-price",
+      "capacity-optimized",
+      "price-capacity-optimized"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Status": {
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "UPDATING",
+    "DELETING",
+    "CREATE_FAILED",
+    "DELETE_FAILED",
+    "UPDATE_FAILED"
+   ],
+   "type": "string"
+  },
+  "SubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SubnetId"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   }
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ErrorInfo",
+  "/properties/Id",
+  "/properties/Status"
+ ],
+ "required": [
+  "ClusterId",
+  "CustomLaunchTemplate",
+  "IamInstanceProfileArn",
+  "InstanceConfigs",
+  "ScalingConfiguration",
+  "SubnetIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-pcs.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::PCS::ComputeNodeGroup"
+}

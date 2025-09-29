@@ -1,0 +1,175 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/CodeInterpreterArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Description",
+  "/properties/NetworkConfiguration",
+  "/properties/ExecutionRoleArn"
+ ],
+ "definitions": {
+  "CodeInterpreterArn": {
+   "pattern": "^arn:(-[^:]+)?:bedrock-agentcore:[a-z0-9-]+:(aws|[0-9]{12}):code-interpreter(-custom)?/(aws\\.codeinterpreter\\.v1|[a-zA-Z][a-zA-Z0-9_]{0,47}-[a-zA-Z0-9]{10})$",
+   "type": "string"
+  },
+  "CodeInterpreterId": {
+   "pattern": "^(aws\\.codeinterpreter\\.v1|[a-zA-Z][a-zA-Z0-9_]{0,47}-[a-zA-Z0-9]{10})$",
+   "type": "string"
+  },
+  "CodeInterpreterNetworkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "NetworkMode": {
+     "$ref": "#/definitions/CodeInterpreterNetworkMode",
+     "default": "SANDBOX"
+    }
+   },
+   "required": [
+    "NetworkMode"
+   ],
+   "type": "object"
+  },
+  "CodeInterpreterNetworkMode": {
+   "enum": [
+    "PUBLIC",
+    "SANDBOX"
+   ],
+   "type": "string"
+  },
+  "CodeInterpreterStatus": {
+   "enum": [
+    "CREATING",
+    "CREATE_FAILED",
+    "READY",
+    "DELETING",
+    "DELETE_FAILED",
+    "DELETED"
+   ],
+   "type": "string"
+  },
+  "CodeInterpreterSummaries": {
+   "items": {
+    "$ref": "#/definitions/CodeInterpreterSummary"
+   },
+   "type": "array"
+  },
+  "CodeInterpreterSummary": {
+   "additionalProperties": false,
+   "properties": {
+    "CodeInterpreterArn": {
+     "$ref": "#/definitions/CodeInterpreterArn"
+    },
+    "CodeInterpreterId": {
+     "$ref": "#/definitions/CodeInterpreterId"
+    },
+    "CreatedAt": {
+     "format": "date-time",
+     "type": "string"
+    },
+    "Description": {
+     "$ref": "#/definitions/Description"
+    },
+    "LastUpdatedAt": {
+     "format": "date-time",
+     "type": "string"
+    },
+    "Name": {
+     "$ref": "#/definitions/SandboxName"
+    },
+    "Status": {
+     "$ref": "#/definitions/CodeInterpreterStatus"
+    }
+   },
+   "required": [
+    "CodeInterpreterId",
+    "CodeInterpreterArn",
+    "Status",
+    "CreatedAt"
+   ],
+   "type": "object"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "RoleArn": {
+   "pattern": "^arn:aws(-[a-z]+)*:iam::[0-9]{12}:role/.+$",
+   "type": "string"
+  },
+  "SandboxName": {
+   "type": "string"
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z0-9\\s._:/=+@-]*$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CodeInterpreterId"
+ ],
+ "properties": {
+  "CodeInterpreterArn": {
+   "$ref": "#/definitions/CodeInterpreterArn"
+  },
+  "CodeInterpreterId": {
+   "$ref": "#/definitions/CodeInterpreterId"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "ExecutionRoleArn": {
+   "$ref": "#/definitions/RoleArn"
+  },
+  "LastUpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "$ref": "#/definitions/SandboxName"
+  },
+  "NetworkConfiguration": {
+   "$ref": "#/definitions/CodeInterpreterNetworkConfiguration"
+  },
+  "Status": {
+   "$ref": "#/definitions/CodeInterpreterStatus"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CodeInterpreterId",
+  "/properties/CodeInterpreterArn",
+  "/properties/Status",
+  "/properties/CreatedAt",
+  "/properties/LastUpdatedAt"
+ ],
+ "required": [
+  "Name",
+  "NetworkConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BedrockAgentCore::CodeInterpreterCustom"
+}

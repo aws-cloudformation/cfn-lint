@@ -3,6 +3,8 @@
  "createOnlyProperties": [
   "/properties/DBProxyName",
   "/properties/EngineFamily",
+  "/properties/EndpointNetworkType",
+  "/properties/TargetConnectionNetworkType",
   "/properties/VpcSubnetIds"
  ],
  "definitions": {
@@ -83,7 +85,22 @@
   "DebugLogging": {
    "type": "boolean"
   },
+  "DefaultAuthScheme": {
+   "enum": [
+    "IAM_AUTH",
+    "NONE"
+   ],
+   "type": "string"
+  },
   "Endpoint": {
+   "type": "string"
+  },
+  "EndpointNetworkType": {
+   "enum": [
+    "IPV4",
+    "IPV6",
+    "DUAL"
+   ],
    "type": "string"
   },
   "EngineFamily": {
@@ -110,6 +127,13 @@
     "$ref": "#/definitions/TagFormat"
    },
    "type": "array"
+  },
+  "TargetConnectionNetworkType": {
+   "enum": [
+    "IPV4",
+    "IPV6"
+   ],
+   "type": "string"
   },
   "VpcId": {
    "format": "AWS::EC2::VPC.Id",
@@ -140,7 +164,6 @@
   "/properties/VpcId"
  ],
  "required": [
-  "Auth",
   "DBProxyName",
   "EngineFamily",
   "RoleArn",

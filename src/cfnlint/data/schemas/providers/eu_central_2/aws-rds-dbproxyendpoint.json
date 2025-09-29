@@ -1,0 +1,110 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DBProxyName",
+  "/properties/DBProxyEndpointName",
+  "/properties/VpcSubnetIds"
+ ],
+ "definitions": {
+  "TagFormat": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "pattern": "(\\w|\\d|\\s|\\\\|-|\\.:=+-)*",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 128,
+     "pattern": "(\\w|\\d|\\s|\\\\|-|\\.:=+-)*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DBProxyEndpointName"
+ ],
+ "properties": {
+  "DBProxyEndpointArn": {
+   "pattern": "arn:aws[A-Za-z0-9-]{0,64}:rds:[A-Za-z0-9-]{1,64}:[0-9]{12}:.*",
+   "type": "string"
+  },
+  "DBProxyEndpointName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[0-z]*",
+   "type": "string"
+  },
+  "DBProxyName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[0-z]*",
+   "type": "string"
+  },
+  "Endpoint": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "IsDefault": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TagFormat"
+   },
+   "type": "array"
+  },
+  "TargetRole": {
+   "enum": [
+    "READ_WRITE",
+    "READ_ONLY"
+   ],
+   "type": "string"
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "type": "string"
+  },
+  "VpcSecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "type": "string"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "VpcSubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "minItems": 2,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DBProxyEndpointArn",
+  "/properties/Endpoint",
+  "/properties/VpcId",
+  "/properties/IsDefault"
+ ],
+ "required": [
+  "DBProxyName",
+  "DBProxyEndpointName",
+  "VpcSubnetIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RDS::DBProxyEndpoint"
+}
