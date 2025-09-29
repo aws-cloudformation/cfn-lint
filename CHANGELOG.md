@@ -1,3 +1,13 @@
+### v1.40.0
+## What's Changed
+* increase sqs MaximumMessageSize maximum value by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4242
+* chore(deps): bump actions/setup-python from 5 to 6 by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4243
+* chore(deps): bump pyinstaller from 6.15.0 to 6.16.0 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4244
+* Migrate from MarkedLoader to (C)SafeLoader by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4246
+* Update CloudFormation schemas to 2025-09-29 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4245
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.39.1...v1.40.0
+
 ### v1.39.1
 ## What's Changed
 * Remove rule `E3056` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4230
