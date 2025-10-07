@@ -779,7 +779,7 @@ def rule():
                         "Language for notification on an "
                         "AWS Batch job completion"
                     ),
-                    "StartAt": "Submit Batch Job",
+                    "StartAt": "Submit Batch Job 1",
                     "TimeoutSeconds": 3600,
                     "States": {
                         "Submit Batch Job 1": {
