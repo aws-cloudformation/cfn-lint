@@ -1,0 +1,101 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/ClusterId"
+ ],
+ "definitions": {
+  "ComputeNodeGroupConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ComputeNodeGroupId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ErrorInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "Code": {
+     "type": "string"
+    },
+    "Message": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^(.*?)",
+   "type": "string"
+  },
+  "ClusterId": {
+   "type": "string"
+  },
+  "ComputeNodeGroupConfigurations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ComputeNodeGroupConfiguration"
+   },
+   "type": "array"
+  },
+  "ErrorInfo": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ErrorInfo"
+   },
+   "type": "array"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "UPDATING",
+    "DELETING",
+    "CREATE_FAILED",
+    "DELETE_FAILED",
+    "UPDATE_FAILED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ErrorInfo",
+  "/properties/Id",
+  "/properties/Status"
+ ],
+ "required": [
+  "ClusterId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-pcs.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::PCS::Queue"
+}

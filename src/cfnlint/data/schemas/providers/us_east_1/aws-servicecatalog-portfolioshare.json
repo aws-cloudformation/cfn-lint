@@ -1,36 +1,42 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/AcceptLanguage",
   "/properties/AccountId",
   "/properties/PortfolioId"
  ],
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/PortfolioId",
+  "/properties/AccountId"
  ],
  "properties": {
   "AcceptLanguage": {
+   "maxLength": 100,
    "type": "string"
   },
   "AccountId": {
-   "type": "string"
-  },
-  "Id": {
+   "pattern": "^[0-9]{12}$",
    "type": "string"
   },
   "PortfolioId": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_\\-]*",
    "type": "string"
   },
   "ShareTagOptions": {
    "type": "boolean"
   }
  },
- "readOnlyProperties": [
-  "/properties/Id"
- ],
  "required": [
   "AccountId",
   "PortfolioId"
  ],
- "typeName": "AWS::ServiceCatalog::PortfolioShare"
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ServiceCatalog::PortfolioShare",
+ "writeOnlyProperties": [
+  "/properties/AcceptLanguage"
+ ]
 }

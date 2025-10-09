@@ -151,6 +151,9 @@
    "properties": {
     "NetworkMode": {
      "$ref": "#/definitions/NetworkMode"
+    },
+    "NetworkModeConfig": {
+     "$ref": "#/definitions/VpcConfig"
     }
    },
    "required": [
@@ -160,7 +163,8 @@
   },
   "NetworkMode": {
    "enum": [
-    "PUBLIC"
+    "PUBLIC",
+    "VPC"
    ],
    "type": "string"
   },
@@ -181,6 +185,32 @@
    "pattern": "^\\d{12}\\.dkr\\.ecr\\.([a-z0-9-]+)\\.amazonaws\\.com/((?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*)([:@]\\S+)$",
    "type": "string"
   },
+  "SecurityGroupId": {
+   "pattern": "^sg-[0-9a-zA-Z]{8,17}$",
+   "type": "string"
+  },
+  "SecurityGroups": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SecurityGroupId"
+   },
+   "maxItems": 16,
+   "minItems": 1,
+   "type": "array"
+  },
+  "SubnetId": {
+   "pattern": "^subnet-[0-9a-zA-Z]{8,17}$",
+   "type": "string"
+  },
+  "Subnets": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SubnetId"
+   },
+   "maxItems": 16,
+   "minItems": 1,
+   "type": "array"
+  },
   "TagsMap": {
    "additionalProperties": false,
    "patternProperties": {
@@ -191,6 +221,22 @@
      "type": "string"
     }
    },
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroups": {
+     "$ref": "#/definitions/SecurityGroups"
+    },
+    "Subnets": {
+     "$ref": "#/definitions/Subnets"
+    }
+   },
+   "required": [
+    "SecurityGroups",
+    "Subnets"
+   ],
    "type": "object"
   },
   "WorkloadIdentityArn": {

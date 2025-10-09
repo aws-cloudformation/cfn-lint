@@ -46,6 +46,7 @@
    "additionalProperties": false,
    "properties": {
     "Hosts": {
+     "insertionOrder": true,
      "items": {
       "type": "string"
      },
@@ -89,8 +90,7 @@
     "UserBase",
     "RoleSearchMatching",
     "ServiceAccountUsername",
-    "RoleBase",
-    "ServiceAccountPassword"
+    "RoleBase"
    ],
    "type": "object"
   },
@@ -110,9 +110,54 @@
    "additionalProperties": false,
    "properties": {
     "DayOfWeek": {
+     "anyOf": [
+      {
+       "enum": [
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY",
+        "SATURDAY",
+        "SUNDAY"
+       ],
+       "type": "string"
+      },
+      {
+       "pattern": "^[Mm][Oo][Nn][Dd][Aa][Yy]$"
+      },
+      {
+       "pattern": "^[Tt][Uu][Ee][Ss][Dd][Aa][Yy]$"
+      },
+      {
+       "pattern": "^[Ww][Ee][Dd][Nn][Ee][Ss][Dd][Aa][Yy]$"
+      },
+      {
+       "pattern": "^[Tt][Hh][Uu][Rr][Ss][Dd][Aa][Yy]$"
+      },
+      {
+       "pattern": "^[Ff][Rr][Ii][Dd][Aa][Yy]$"
+      },
+      {
+       "pattern": "^[Ss][Aa][Tt][Uu][Rr][Dd][Aa][Yy]$"
+      },
+      {
+       "pattern": "^[Ss][Uu][Nn][Dd][Aa][Yy]$"
+      }
+     ],
+     "enum": [
+      "FRIDAY",
+      "MONDAY",
+      "SATURDAY",
+      "SUNDAY",
+      "THURSDAY",
+      "TUESDAY",
+      "WEDNESDAY"
+     ],
      "type": "string"
     },
     "TimeOfDay": {
+     "pattern": "^[0-9]{1,2}:[0-9]{2}(:[0-9]{2})?$",
      "type": "string"
     },
     "TimeZone": {
@@ -137,8 +182,8 @@
     }
    },
    "required": [
-    "Value",
-    "Key"
+    "Key",
+    "Value"
    ],
    "type": "object"
   },
@@ -149,19 +194,25 @@
      "type": "boolean"
     },
     "Groups": {
+     "insertionOrder": false,
      "items": {
+      "pattern": "^[A-Za-z0-9._~-]{2,100}$",
       "type": "string"
      },
+     "maxItems": 20,
      "type": "array",
      "uniqueItems": false
     },
     "Password": {
+     "minLength": 12,
+     "pattern": "^[^,:=]+$",
      "type": "string"
     },
     "ReplicationUser": {
      "type": "boolean"
     },
     "Username": {
+     "pattern": "^[A-Za-z0-9_.~-]{2,100}$",
      "type": "string"
     }
    },
@@ -177,6 +228,7 @@
  ],
  "properties": {
   "AmqpEndpoints": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
@@ -184,9 +236,25 @@
    "uniqueItems": false
   },
   "Arn": {
+   "pattern": "^arn:.*",
    "type": "string"
   },
   "AuthenticationStrategy": {
+   "anyOf": [
+    {
+     "enum": [
+      "SIMPLE",
+      "LDAP"
+     ],
+     "type": "string"
+    },
+    {
+     "pattern": "^[Ss][Ii][Mm][Pp][Ll][Ee]$"
+    },
+    {
+     "pattern": "^[Ll][Dd][Aa][Pp]$"
+    }
+   ],
    "enum": [
     "CONFIG_MANAGED",
     "LDAP",
@@ -198,6 +266,7 @@
    "type": "boolean"
   },
   "BrokerName": {
+   "pattern": "^[0-9A-Za-z_-]{1,50}$",
    "type": "string"
   },
   "Configuration": {
@@ -207,9 +276,10 @@
    "type": "string"
   },
   "ConfigurationRevision": {
-   "type": "integer"
+   "type": "string"
   },
   "ConsoleURLs": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
@@ -217,6 +287,21 @@
    "uniqueItems": false
   },
   "DataReplicationMode": {
+   "anyOf": [
+    {
+     "enum": [
+      "NONE",
+      "CRDR"
+     ],
+     "type": "string"
+    },
+    {
+     "pattern": "^[Nn][Oo][Nn][Ee]$"
+    },
+    {
+     "pattern": "^[Cc][Rr][Dd][Rr]$"
+    }
+   ],
    "enum": [
     "CRDR",
     "NONE"
@@ -224,9 +309,29 @@
    "type": "string"
   },
   "DataReplicationPrimaryBrokerArn": {
+   "pattern": "^arn:.*",
    "type": "string"
   },
   "DeploymentMode": {
+   "anyOf": [
+    {
+     "enum": [
+      "SINGLE_INSTANCE",
+      "ACTIVE_STANDBY_MULTI_AZ",
+      "CLUSTER_MULTI_AZ"
+     ],
+     "type": "string"
+    },
+    {
+     "pattern": "^[Ss][Ii][Nn][Gg][Ll][Ee]_[Ii][Nn][Ss][Tt][Aa][Nn][Cc][Ee]$"
+    },
+    {
+     "pattern": "^[Aa][Cc][Tt][Ii][Vv][Ee]_[Ss][Tt][Aa][Nn][Dd][Bb][Yy][__][Mm][Uu][Ll][Tt][Ii]_[Aa][Zz]$"
+    },
+    {
+     "pattern": "^[Cc][Ll][Uu][Ss][Tt][Ee][Rr]_[Mm][Uu][Ll][Tt][Ii][__][Aa][Zz]$"
+    }
+   ],
    "enum": [
     "ACTIVE_STANDBY_MULTI_AZ",
     "CLUSTER_MULTI_AZ",
@@ -238,6 +343,21 @@
    "$ref": "#/definitions/EncryptionOptions"
   },
   "EngineType": {
+   "anyOf": [
+    {
+     "enum": [
+      "ACTIVEMQ",
+      "RABBITMQ"
+     ],
+     "type": "string"
+    },
+    {
+     "pattern": "^[Aa][Cc][Tt][Ii][Vv][Ee][Mm][Qq]$"
+    },
+    {
+     "pattern": "^[Rr][Aa][Bb][Bb][Ii][Tt][Mm][Qq]$"
+    }
+   ],
    "enum": [
     "ACTIVEMQ",
     "RABBITMQ"
@@ -247,6 +367,9 @@
   "EngineVersion": {
    "type": "string"
   },
+  "EngineVersionCurrent": {
+   "type": "string"
+  },
   "HostInstanceType": {
    "type": "string"
   },
@@ -254,6 +377,7 @@
    "type": "string"
   },
   "IpAddresses": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
@@ -270,6 +394,7 @@
    "$ref": "#/definitions/MaintenanceWindow"
   },
   "MqttEndpoints": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
@@ -277,6 +402,7 @@
    "uniqueItems": false
   },
   "OpenWireEndpoints": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
@@ -288,14 +414,18 @@
   },
   "SecurityGroups": {
    "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
    "items": {
     "format": "AWS::EC2::SecurityGroup.Id",
     "type": "string"
    },
+   "maxItems": 5,
+   "minItems": 1,
    "type": "array",
    "uniqueItems": false
   },
   "StompEndpoints": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
@@ -303,6 +433,18 @@
    "uniqueItems": false
   },
   "StorageType": {
+   "anyOf": [
+    {
+     "enum": [
+      "EBS",
+      "EFS"
+     ],
+     "type": "string"
+    },
+    {
+     "pattern": "^[Ee]([Bb]|[Ff])[Ss]$"
+    }
+   ],
    "enum": [
     "EBS",
     "EFS"
@@ -310,6 +452,7 @@
    "type": "string"
   },
   "SubnetIds": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
@@ -317,6 +460,7 @@
    "uniqueItems": false
   },
   "Tags": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/TagsEntry"
    },
@@ -324,6 +468,7 @@
    "uniqueItems": false
   },
   "Users": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/User"
    },
@@ -331,6 +476,7 @@
    "uniqueItems": false
   },
   "WssEndpoints": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
@@ -338,10 +484,19 @@
    "uniqueItems": false
   }
  },
+ "propertyTransform": {
+  "/properties/AuthenticationStrategy": "$uppercase(AuthenticationStrategy)",
+  "/properties/DataReplicationMode": "$uppercase(DataReplicationMode)",
+  "/properties/DeploymentMode": "$uppercase(DeploymentMode)",
+  "/properties/EngineType": "$uppercase(EngineType)",
+  "/properties/MaintenanceWindowStartTime/DayOfWeek": "$uppercase(MaintenanceWindowStartTime.DayOfWeek)",
+  "/properties/StorageType": "$uppercase(StorageType)"
+ },
  "readOnlyProperties": [
-  "/properties/IpAddresses",
-  "/properties/ConsoleURLs",
   "/properties/Id",
+  "/properties/Arn",
+  "/properties/EngineVersionCurrent",
+  "/properties/IpAddresses",
   "/properties/MqttEndpoints",
   "/properties/OpenWireEndpoints",
   "/properties/ConfigurationId",
@@ -349,15 +504,28 @@
   "/properties/StompEndpoints",
   "/properties/WssEndpoints",
   "/properties/AmqpEndpoints",
-  "/properties/Arn"
+  "/properties/ConsoleURLs"
  ],
  "required": [
+  "BrokerName",
+  "EngineType",
   "DeploymentMode",
   "HostInstanceType",
-  "EngineType",
-  "Users",
-  "PubliclyAccessible",
-  "BrokerName"
+  "PubliclyAccessible"
  ],
- "typeName": "AWS::AmazonMQ::Broker"
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AmazonMQ::Broker",
+ "writeOnlyProperties": [
+  "/properties/EngineVersion",
+  "/properties/Users",
+  "/properties/LdapServerMetadata/ServiceAccountPassword",
+  "/properties/DataReplicationPrimaryBrokerArn",
+  "/properties/Configuration"
+ ]
 }

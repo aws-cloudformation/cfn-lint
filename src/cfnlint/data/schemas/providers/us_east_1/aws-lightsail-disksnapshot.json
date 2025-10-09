@@ -1,0 +1,131 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DiskSnapshotName",
+  "/properties/DiskName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DiskSnapshotName"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DiskName": {
+   "maxLength": 255,
+   "minLength": 2,
+   "pattern": "^\\w[\\w\\-]*\\w$",
+   "type": "string"
+  },
+  "DiskSnapshotArn": {
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "DiskSnapshotName": {
+   "maxLength": 255,
+   "minLength": 2,
+   "pattern": "^\\w[\\w\\-]*\\w$",
+   "type": "string"
+  },
+  "FromDiskName": {
+   "pattern": "^\\w[\\w\\-]*\\w$",
+   "type": "string"
+  },
+  "IsFromAutoSnapshot": {
+   "type": "boolean"
+  },
+  "Location": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "type": "string"
+    },
+    "RegionName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Progress": {
+   "type": "string"
+  },
+  "ResourceType": {
+   "enum": [
+    "DiskSnapshot"
+   ],
+   "type": "string"
+  },
+  "SizeInGb": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "State": {
+   "enum": [
+    "pending",
+    "completed",
+    "error",
+    "unknown"
+   ],
+   "type": "string"
+  },
+  "SupportCode": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DiskSnapshotArn",
+  "/properties/Location",
+  "/properties/ResourceType",
+  "/properties/State",
+  "/properties/Progress",
+  "/properties/FromDiskName",
+  "/properties/SizeInGb",
+  "/properties/IsFromAutoSnapshot",
+  "/properties/CreatedAt",
+  "/properties/SupportCode"
+ ],
+ "required": [
+  "DiskSnapshotName",
+  "DiskName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Lightsail::DiskSnapshot"
+}
