@@ -382,6 +382,10 @@ def main():
                     )
 
             for path in _descend(obj, ["ImageId", "AmiId"]):
+                if resource_type == "AWS::Cloud9::EnvironmentEC2" and path == deque(
+                    ["properties", "ImageId"]
+                ):
+                    continue
                 if path[-2] == "properties":
                     resource_patches.append(
                         _create_patch(
