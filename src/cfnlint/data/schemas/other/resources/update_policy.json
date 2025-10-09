@@ -82,9 +82,75 @@
      }
     }
    }
+  },
+  {
+   "if": {
+    "properties": {
+     "Type": {
+      "const": "AWS::AppStream::Fleet"
+     }
+    },
+    "required": [
+     "Type"
+    ]
+   },
+   "then": {
+    "additionalProperties": true,
+    "properties": {
+     "UpdatePolicy": {
+      "$ref": "#/definitions/AppStreamFleetUpdatePolicy"
+     }
+    }
+   }
+  },
+  {
+   "else": {
+    "additionalProperties": true,
+    "properties": {
+     "UpdatePolicy": false
+    }
+   },
+   "if": {
+    "properties": {
+     "Type": {
+      "enum": [
+       "AWS::AppStream::Fleet",
+       "AWS::ElastiCache::ReplicationGroup",
+       "AWS::Elasticsearch::Domain",
+       "AWS::OpenSearchService::Domain",
+       "AWS::Lambda::Alias",
+       "AWS::AutoScaling::AutoScalingGroup"
+      ]
+     }
+    },
+    "required": [
+     "Type"
+    ]
+   }
   }
  ],
  "definitions": {
+  "AppStreamFleetUpdatePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "StartAfterUpdate": {
+     "$ref": "#/definitions/AppStreamFleetUpdateType"
+    },
+    "StopBeforeUpdate": {
+     "$ref": "#/definitions/AppStreamFleetUpdateType"
+    }
+   },
+   "type": "object"
+  },
+  "AppStreamFleetUpdateType": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
   "AutoScalingGroupUpdatePolicy": {
    "additionalProperties": false,
    "properties": {
