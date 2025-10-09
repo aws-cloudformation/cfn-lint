@@ -1,3 +1,17 @@
+### v1.40.1
+## What's Changed
+* Update `nodejs18.x` lifecycle dates in `LmbdRuntimeLifecycle.json` to match official AWS Docs by @cullancarey in https://github.com/aws-cloudformation/cfn-lint/pull/4250
+* Update integration tests by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4252
+* State Machine Unit Test: Fix `StartAt` typo by @r-heimann in https://github.com/aws-cloudformation/cfn-lint/pull/4251
+* Update CloudFormation schemas to `2025-10-09` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4248
+* Remove format patching for Cloud9 `ImageId` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4255
+
+## New Contributors
+* @cullancarey made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4250
+* @r-heimann made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4251
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.40.0...v1.40.1
+
 ### v1.40.0
 ## What's Changed
 * increase sqs MaximumMessageSize maximum value by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4242
