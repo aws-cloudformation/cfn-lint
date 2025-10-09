@@ -1,0 +1,445 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GatewayIdentifier"
+ ],
+ "definitions": {
+  "ApiKeyCredentialLocation": {
+   "enum": [
+    "HEADER",
+    "QUERY_PARAMETER"
+   ],
+   "type": "string"
+  },
+  "ApiKeyCredentialProvider": {
+   "additionalProperties": false,
+   "properties": {
+    "CredentialLocation": {
+     "$ref": "#/definitions/ApiKeyCredentialLocation"
+    },
+    "CredentialParameterName": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "CredentialPrefix": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ProviderArn": {
+     "pattern": "^arn:([^:]*):([^:]*):([^:]*):([0-9]{12})?:(.+)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ProviderArn"
+   ],
+   "type": "object"
+  },
+  "ApiSchemaConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "S3": {
+       "$ref": "#/definitions/S3Configuration"
+      }
+     },
+     "required": [
+      "S3"
+     ],
+     "title": "S3",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "InlinePayload": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "InlinePayload"
+     ],
+     "title": "InlinePayload",
+     "type": "object"
+    }
+   ]
+  },
+  "CredentialProvider": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "OauthCredentialProvider": {
+       "$ref": "#/definitions/OAuthCredentialProvider"
+      }
+     },
+     "required": [
+      "OauthCredentialProvider"
+     ],
+     "title": "OauthCredentialProvider",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ApiKeyCredentialProvider": {
+       "$ref": "#/definitions/ApiKeyCredentialProvider"
+      }
+     },
+     "required": [
+      "ApiKeyCredentialProvider"
+     ],
+     "title": "ApiKeyCredentialProvider",
+     "type": "object"
+    }
+   ]
+  },
+  "CredentialProviderConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CredentialProvider": {
+     "$ref": "#/definitions/CredentialProvider"
+    },
+    "CredentialProviderType": {
+     "$ref": "#/definitions/CredentialProviderType"
+    }
+   },
+   "required": [
+    "CredentialProviderType"
+   ],
+   "type": "object"
+  },
+  "CredentialProviderType": {
+   "enum": [
+    "GATEWAY_IAM_ROLE",
+    "OAUTH",
+    "API_KEY"
+   ],
+   "type": "string"
+  },
+  "McpLambdaTargetConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaArn": {
+     "maxLength": 170,
+     "minLength": 1,
+     "pattern": "^arn:(aws[a-zA-Z-]*)?:lambda:([a-z]{2}(-gov)?-[a-z]+-\\d{1}):(\\d{12}):function:([a-zA-Z0-9-_.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
+     "type": "string"
+    },
+    "ToolSchema": {
+     "$ref": "#/definitions/ToolSchema"
+    }
+   },
+   "required": [
+    "LambdaArn",
+    "ToolSchema"
+   ],
+   "type": "object"
+  },
+  "McpTargetConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "OpenApiSchema": {
+       "$ref": "#/definitions/ApiSchemaConfiguration"
+      }
+     },
+     "required": [
+      "OpenApiSchema"
+     ],
+     "title": "OpenApiSchema",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "SmithyModel": {
+       "$ref": "#/definitions/ApiSchemaConfiguration"
+      }
+     },
+     "required": [
+      "SmithyModel"
+     ],
+     "title": "SmithyModel",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Lambda": {
+       "$ref": "#/definitions/McpLambdaTargetConfiguration"
+      }
+     },
+     "required": [
+      "Lambda"
+     ],
+     "title": "Lambda",
+     "type": "object"
+    }
+   ]
+  },
+  "OAuthCredentialProvider": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomParameters": {
+     "$ref": "#/definitions/OAuthCustomParameters"
+    },
+    "ProviderArn": {
+     "pattern": "^arn:([^:]*):([^:]*):([^:]*):([0-9]{12})?:(.+)$",
+     "type": "string"
+    },
+    "Scopes": {
+     "items": {
+      "maxLength": 64,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 100,
+     "type": "array"
+    }
+   },
+   "required": [
+    "ProviderArn",
+    "Scopes"
+   ],
+   "type": "object"
+  },
+  "OAuthCustomParameters": {
+   "additionalProperties": false,
+   "maxProperties": 10,
+   "minProperties": 1,
+   "patternProperties": {
+    ".+": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "S3Configuration": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketOwnerAccountId": {
+     "pattern": "^[0-9]{12}$",
+     "type": "string"
+    },
+    "Uri": {
+     "pattern": "^s3://.{1,2043}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SchemaDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "Items": {
+     "$ref": "#/definitions/SchemaDefinition"
+    },
+    "Properties": {
+     "$ref": "#/definitions/SchemaProperties"
+    },
+    "Required": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Type": {
+     "$ref": "#/definitions/SchemaType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "SchemaProperties": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "$ref": "#/definitions/SchemaDefinition"
+    }
+   },
+   "type": "object"
+  },
+  "SchemaType": {
+   "enum": [
+    "string",
+    "number",
+    "object",
+    "array",
+    "boolean",
+    "integer"
+   ],
+   "type": "string"
+  },
+  "TargetConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Mcp": {
+       "$ref": "#/definitions/McpTargetConfiguration"
+      }
+     },
+     "required": [
+      "Mcp"
+     ],
+     "title": "Mcp",
+     "type": "object"
+    }
+   ]
+  },
+  "TargetStatus": {
+   "enum": [
+    "CREATING",
+    "UPDATING",
+    "UPDATE_UNSUCCESSFUL",
+    "DELETING",
+    "READY",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "ToolDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "InputSchema": {
+     "$ref": "#/definitions/SchemaDefinition"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "OutputSchema": {
+     "$ref": "#/definitions/SchemaDefinition"
+    }
+   },
+   "required": [
+    "Description",
+    "InputSchema",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "ToolSchema": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "S3": {
+       "$ref": "#/definitions/S3Configuration"
+      }
+     },
+     "required": [
+      "S3"
+     ],
+     "title": "S3",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "InlinePayload": {
+       "items": {
+        "$ref": "#/definitions/ToolDefinition"
+       },
+       "type": "array"
+      }
+     },
+     "required": [
+      "InlinePayload"
+     ],
+     "title": "InlinePayload",
+     "type": "object"
+    }
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GatewayIdentifier",
+  "/properties/TargetId"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "CredentialProviderConfigurations": {
+   "items": {
+    "$ref": "#/definitions/CredentialProviderConfiguration"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Description": {
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "GatewayArn": {
+   "pattern": "^arn:aws(|-cn|-us-gov):bedrock-agentcore:[a-z0-9-]{1,20}:[0-9]{12}:gateway/([0-9a-z][-]?){1,100}-[a-z0-9]{10}$",
+   "type": "string"
+  },
+  "GatewayIdentifier": {
+   "pattern": "^([0-9a-z][-]?){1,100}-[0-9a-z]{10}$",
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^([0-9a-zA-Z][-]?){1,100}$",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/TargetStatus"
+  },
+  "StatusReasons": {
+   "items": {
+    "maxLength": 2048,
+    "type": "string"
+   },
+   "maxItems": 100,
+   "type": "array"
+  },
+  "TargetConfiguration": {
+   "$ref": "#/definitions/TargetConfiguration"
+  },
+  "TargetId": {
+   "pattern": "^[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/GatewayArn",
+  "/properties/Status",
+  "/properties/StatusReasons",
+  "/properties/TargetId",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "CredentialProviderConfigurations",
+  "Name",
+  "TargetConfiguration"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "taggable": false
+ },
+ "typeName": "AWS::BedrockAgentCore::GatewayTarget"
+}

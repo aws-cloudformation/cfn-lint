@@ -26,6 +26,9 @@
     "NetworkMode": {
      "$ref": "#/definitions/CodeInterpreterNetworkMode",
      "default": "SANDBOX"
+    },
+    "VpcConfig": {
+     "$ref": "#/definitions/VpcConfig"
     }
    },
    "required": [
@@ -36,7 +39,8 @@
   "CodeInterpreterNetworkMode": {
    "enum": [
     "PUBLIC",
-    "SANDBOX"
+    "SANDBOX",
+    "VPC"
    ],
    "type": "string"
   },
@@ -102,6 +106,32 @@
   "SandboxName": {
    "type": "string"
   },
+  "SecurityGroupId": {
+   "pattern": "^sg-[0-9a-zA-Z]{8,17}$",
+   "type": "string"
+  },
+  "SecurityGroups": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SecurityGroupId"
+   },
+   "maxItems": 16,
+   "minItems": 1,
+   "type": "array"
+  },
+  "SubnetId": {
+   "pattern": "^subnet-[0-9a-zA-Z]{8,17}$",
+   "type": "string"
+  },
+  "Subnets": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SubnetId"
+   },
+   "maxItems": 16,
+   "minItems": 1,
+   "type": "array"
+  },
   "TagsMap": {
    "additionalProperties": false,
    "patternProperties": {
@@ -112,6 +142,22 @@
      "type": "string"
     }
    },
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroups": {
+     "$ref": "#/definitions/SecurityGroups"
+    },
+    "Subnets": {
+     "$ref": "#/definitions/Subnets"
+    }
+   },
+   "required": [
+    "SecurityGroups",
+    "Subnets"
+   ],
    "type": "object"
   }
  },
@@ -135,6 +181,9 @@
   "ExecutionRoleArn": {
    "$ref": "#/definitions/RoleArn"
   },
+  "FailureReason": {
+   "type": "string"
+  },
   "LastUpdatedAt": {
    "format": "date-time",
    "type": "string"
@@ -156,6 +205,7 @@
   "/properties/CodeInterpreterId",
   "/properties/CodeInterpreterArn",
   "/properties/Status",
+  "/properties/FailureReason",
   "/properties/CreatedAt",
   "/properties/LastUpdatedAt"
  ],

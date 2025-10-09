@@ -11,6 +11,18 @@
   "/properties/EnhancedImageMetadataEnabled"
  ],
  "definitions": {
+  "DeletionSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "ExecutionRole": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ExecutionRole"
+   ],
+   "type": "object"
+  },
   "EcrConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -26,6 +38,18 @@
     "RepositoryName": {
      "maxLength": 1024,
      "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ImageLoggingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroupName": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\-_/\\.]{1,512}$",
      "type": "string"
     }
    },
@@ -192,6 +216,9 @@
   "InfrastructureConfigurationArn": {
    "pattern": "^arn:aws[^:]*:imagebuilder:[^:]+:(?:[0-9]{12}|aws):infrastructure-configuration/[a-z0-9-_]+$",
    "type": "string"
+  },
+  "LoggingConfiguration": {
+   "$ref": "#/definitions/ImageLoggingConfiguration"
   },
   "Name": {
    "type": "string"

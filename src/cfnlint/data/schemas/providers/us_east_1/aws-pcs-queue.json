@@ -25,6 +25,22 @@
     }
    },
    "type": "object"
+  },
+  "SlurmCustomSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "ParameterName": {
+     "type": "string"
+    },
+    "ParameterValue": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ParameterName",
+    "ParameterValue"
+   ],
+   "type": "object"
   }
  },
  "primaryIdentifier": [
@@ -57,6 +73,19 @@
   },
   "Name": {
    "type": "string"
+  },
+  "SlurmConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SlurmCustomSettings": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SlurmCustomSetting"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
   },
   "Status": {
    "enum": [

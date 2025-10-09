@@ -1,0 +1,202 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/Ipv6CidrBlock"
+ ],
+ "createOnlyProperties": [
+  "/properties/VpcId",
+  "/properties/AvailabilityZone",
+  "/properties/AvailabilityZoneId",
+  "/properties/CidrBlock",
+  "/properties/OutpostArn",
+  "/properties/Ipv6Native",
+  "/properties/Ipv4IpamPoolId",
+  "/properties/Ipv4NetmaskLength",
+  "/properties/Ipv6IpamPoolId",
+  "/properties/Ipv6NetmaskLength"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "dependentExcluded": {
+  "AvailabilityZone": [
+   "AvailabilityZoneId"
+  ],
+  "AvailabilityZoneId": [
+   "AvailabilityZone"
+  ],
+  "CidrBlock": [
+   "Ipv4IpamPoolId"
+  ],
+  "Ipv4IpamPoolId": [
+   "CidrBlock"
+  ],
+  "Ipv6CidrBlock": [
+   "Ipv6IpamPoolId"
+  ],
+  "Ipv6IpamPoolId": [
+   "Ipv6CidrBlock"
+  ]
+ },
+ "dependentRequired": {
+  "Ipv4IpamPoolId": [
+   "Ipv4NetmaskLength"
+  ],
+  "Ipv4NetmaskLength": [
+   "Ipv4IpamPoolId"
+  ],
+  "Ipv6IpamPoolId": [
+   "Ipv6NetmaskLength"
+  ],
+  "Ipv6NetmaskLength": [
+   "Ipv6IpamPoolId"
+  ]
+ },
+ "primaryIdentifier": [
+  "/properties/SubnetId"
+ ],
+ "properties": {
+  "AssignIpv6AddressOnCreation": {
+   "type": "boolean"
+  },
+  "AvailabilityZone": {
+   "type": "string"
+  },
+  "AvailabilityZoneId": {
+   "type": "string"
+  },
+  "BlockPublicAccessStates": {
+   "additionalProperties": false,
+   "properties": {
+    "InternetGatewayBlockMode": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CidrBlock": {
+   "format": "ipv4-network",
+   "type": "string"
+  },
+  "EnableDns64": {
+   "type": "boolean"
+  },
+  "EnableLniAtDeviceIndex": {
+   "type": "integer"
+  },
+  "Ipv4IpamPoolId": {
+   "type": "string"
+  },
+  "Ipv4NetmaskLength": {
+   "type": "integer"
+  },
+  "Ipv6CidrBlock": {
+   "format": "ipv6-network",
+   "type": "string"
+  },
+  "Ipv6CidrBlocks": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Ipv6IpamPoolId": {
+   "type": "string"
+  },
+  "Ipv6Native": {
+   "type": "boolean"
+  },
+  "Ipv6NetmaskLength": {
+   "type": "integer"
+  },
+  "MapPublicIpOnLaunch": {
+   "type": "boolean"
+  },
+  "NetworkAclAssociationId": {
+   "type": "string"
+  },
+  "OutpostArn": {
+   "type": "string"
+  },
+  "PrivateDnsNameOptionsOnLaunch": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableResourceNameDnsAAAARecord": {
+     "type": "boolean"
+    },
+    "EnableResourceNameDnsARecord": {
+     "type": "boolean"
+    },
+    "HostnameType": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SubnetId": {
+   "format": "AWS::EC2::Subnet.Id",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/CidrBlock": "CidrBlock~>function($cidr){$split($cidr,\"/\")~>function($split_cidr){$number($split_cidr[1])~>function($sub_mask){$split($split_cidr[0],/[.]/).$number()~>function($octets){($octets.$formatBase($,2).$pad(-8,\"0\")~>$join())~>function($ip_bin_str){$substring($ip_bin_str,0,$sub_mask).$pad(32,\"0\")~>function($canon_ip_bin_str){$map($map([0..3],function($i){$substring($canon_ip_bin_str,$i*8,8)}),function($s){$split($s,\"\")})~>function($canon_octet_arrs){$map($canon_octet_arrs,function($section){$sum($map([0..7],function($bit){$number($section[$bit])*$power(2,7-$bit)}))})~>function($canon_octets){($canon_octets.$string()~>$join(\".\"))&\"/\"&$sub_mask}}}}}}}}",
+  "/properties/Ipv6CidrBlock": "Ipv6CidrBlock~>function($c){$split($c,\"/\")~>function($p){$number($p[1])~>function($n){$split($p[0],\":\")~>function($r){($map([0,1,2,3,4,5,6,7],function($i){$pad($r[$i],-4,\"0\")~>function($h){($i<$floor($n/16)?$h:($i=$floor($n/16)?$floor(($n%16)/4)~>function($k){($h~>$substring(0,$k))&$substring(\"0000\",0,4-$k)}:\"0000\"))~>$replace(/^0{1,3}/,\"\")}})~>$join(\":\")~>$replace(/(:0)+$/,\"::\"))&\"/\"&$p[1]}}}}"
+ },
+ "readOnlyProperties": [
+  "/properties/NetworkAclAssociationId",
+  "/properties/SubnetId",
+  "/properties/Ipv6CidrBlocks",
+  "/properties/BlockPublicAccessStates"
+ ],
+ "required": [
+  "VpcId"
+ ],
+ "requiredOr": [
+  "CidrBlock",
+  "Ipv4IpamPoolId",
+  "Ipv6IpamPoolId",
+  "Ipv6CidrBlock"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::Subnet",
+ "writeOnlyProperties": [
+  "/properties/EnableLniAtDeviceIndex",
+  "/properties/Ipv4IpamPoolId",
+  "/properties/Ipv4NetmaskLength",
+  "/properties/Ipv6IpamPoolId",
+  "/properties/Ipv6NetmaskLength"
+ ]
+}

@@ -4,6 +4,20 @@
   "/properties/Name"
  ],
  "definitions": {
+  "AutoDisablePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "FailureCount": {
+     "maximum": 10,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "FailureCount"
+   ],
+   "type": "object"
+  },
   "EcrConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -50,10 +64,30 @@
    },
    "type": "object"
   },
+  "PipelineLoggingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ImageLogGroupName": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\-_/\\.]{1,512}$",
+     "type": "string"
+    },
+    "PipelineLogGroupName": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\-_/\\.]{1,512}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "Schedule": {
    "additionalProperties": false,
    "properties": {
-    "AutoDisablePolicy": {},
+    "AutoDisablePolicy": {
+     "$ref": "#/definitions/AutoDisablePolicy"
+    },
     "PipelineExecutionStartCondition": {
      "enum": [
       "EXPRESSION_MATCH_ONLY",
@@ -182,6 +216,9 @@
   "InfrastructureConfigurationArn": {
    "pattern": "^arn:aws[^:]*:imagebuilder:[^:]+:(?:[0-9]{12}|aws):infrastructure-configuration/[a-z0-9-_]+$",
    "type": "string"
+  },
+  "LoggingConfiguration": {
+   "$ref": "#/definitions/PipelineLoggingConfiguration"
   },
   "Name": {
    "pattern": "^[-_A-Za-z-0-9][-_A-Za-z0-9 ]{1,126}[-_A-Za-z-0-9]$",

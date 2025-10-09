@@ -1,0 +1,254 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AuthorizerConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CustomJWTAuthorizer": {
+       "$ref": "#/definitions/CustomJWTAuthorizerConfiguration"
+      }
+     },
+     "required": [
+      "CustomJWTAuthorizer"
+     ],
+     "title": "CustomJWTAuthorizer",
+     "type": "object"
+    }
+   ]
+  },
+  "AuthorizerType": {
+   "enum": [
+    "CUSTOM_JWT",
+    "AWS_IAM"
+   ],
+   "type": "string"
+  },
+  "CustomJWTAuthorizerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedAudience": {
+     "items": {
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "AllowedClients": {
+     "items": {
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "DiscoveryUrl": {
+     "pattern": "^.+/\\.well-known/openid-configuration$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "DiscoveryUrl"
+   ],
+   "type": "object"
+  },
+  "ExceptionLevel": {
+   "enum": [
+    "DEBUG"
+   ],
+   "type": "string"
+  },
+  "GatewayProtocolConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Mcp": {
+       "$ref": "#/definitions/MCPGatewayConfiguration"
+      }
+     },
+     "required": [
+      "Mcp"
+     ],
+     "title": "Mcp",
+     "type": "object"
+    }
+   ]
+  },
+  "GatewayProtocolType": {
+   "enum": [
+    "MCP"
+   ],
+   "type": "string"
+  },
+  "GatewayStatus": {
+   "enum": [
+    "CREATING",
+    "UPDATING",
+    "UPDATE_UNSUCCESSFUL",
+    "DELETING",
+    "READY",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "MCPGatewayConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Instructions": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SearchType": {
+     "$ref": "#/definitions/SearchType"
+    },
+    "SupportedVersions": {
+     "items": {
+      "default": "2025-03-26",
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "SearchType": {
+   "enum": [
+    "SEMANTIC"
+   ],
+   "type": "string"
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "minProperties": 0,
+   "patternProperties": {
+    "^[a-zA-Z0-9\\s._:/=+@-]*$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "WorkloadIdentityDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "WorkloadIdentityArn": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "WorkloadIdentityArn"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GatewayIdentifier"
+ ],
+ "properties": {
+  "AuthorizerConfiguration": {
+   "$ref": "#/definitions/AuthorizerConfiguration"
+  },
+  "AuthorizerType": {
+   "$ref": "#/definitions/AuthorizerType"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ExceptionLevel": {
+   "$ref": "#/definitions/ExceptionLevel"
+  },
+  "GatewayArn": {
+   "pattern": "^arn:aws(|-cn|-us-gov):bedrock-agentcore:[a-z0-9-]{1,20}:[0-9]{12}:gateway/([0-9a-z][-]?){1,100}-[a-z0-9]{10}$",
+   "type": "string"
+  },
+  "GatewayIdentifier": {
+   "pattern": "^([0-9a-z][-]?){1,100}-[0-9a-z]{10}$",
+   "type": "string"
+  },
+  "GatewayUrl": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(|-cn|-us-gov):kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^([0-9a-zA-Z][-]?){1,100}$",
+   "type": "string"
+  },
+  "ProtocolConfiguration": {
+   "$ref": "#/definitions/GatewayProtocolConfiguration"
+  },
+  "ProtocolType": {
+   "$ref": "#/definitions/GatewayProtocolType"
+  },
+  "RoleArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[^:]+)?:iam::([0-9]{12})?:role/.+$",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/GatewayStatus"
+  },
+  "StatusReasons": {
+   "items": {
+    "maxLength": 2048,
+    "type": "string"
+   },
+   "maxItems": 100,
+   "type": "array"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "WorkloadIdentityDetails": {
+   "$ref": "#/definitions/WorkloadIdentityDetails"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/GatewayArn",
+  "/properties/GatewayIdentifier",
+  "/properties/GatewayUrl",
+  "/properties/Status",
+  "/properties/StatusReasons",
+  "/properties/UpdatedAt",
+  "/properties/WorkloadIdentityDetails"
+ ],
+ "required": [
+  "AuthorizerType",
+  "Name",
+  "ProtocolType",
+  "RoleArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BedrockAgentCore::Gateway"
+}

@@ -27,6 +27,9 @@
     "NetworkMode": {
      "$ref": "#/definitions/BrowserNetworkMode",
      "default": "PUBLIC"
+    },
+    "VpcConfig": {
+     "$ref": "#/definitions/VpcConfig"
     }
    },
    "required": [
@@ -36,7 +39,8 @@
   },
   "BrowserNetworkMode": {
    "enum": [
-    "PUBLIC"
+    "PUBLIC",
+    "VPC"
    ],
    "type": "string"
   },
@@ -127,6 +131,32 @@
    ],
    "type": "object"
   },
+  "SecurityGroupId": {
+   "pattern": "^sg-[0-9a-zA-Z]{8,17}$",
+   "type": "string"
+  },
+  "SecurityGroups": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SecurityGroupId"
+   },
+   "maxItems": 16,
+   "minItems": 1,
+   "type": "array"
+  },
+  "SubnetId": {
+   "pattern": "^subnet-[0-9a-zA-Z]{8,17}$",
+   "type": "string"
+  },
+  "Subnets": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SubnetId"
+   },
+   "maxItems": 16,
+   "minItems": 1,
+   "type": "array"
+  },
   "TagsMap": {
    "additionalProperties": false,
    "patternProperties": {
@@ -137,6 +167,22 @@
      "type": "string"
     }
    },
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroups": {
+     "$ref": "#/definitions/SecurityGroups"
+    },
+    "Subnets": {
+     "$ref": "#/definitions/Subnets"
+    }
+   },
+   "required": [
+    "SecurityGroups",
+    "Subnets"
+   ],
    "type": "object"
   }
  },
@@ -159,6 +205,9 @@
   },
   "ExecutionRoleArn": {
    "$ref": "#/definitions/RoleArn"
+  },
+  "FailureReason": {
+   "type": "string"
   },
   "LastUpdatedAt": {
    "format": "date-time",
@@ -184,6 +233,7 @@
   "/properties/BrowserId",
   "/properties/BrowserArn",
   "/properties/Status",
+  "/properties/FailureReason",
   "/properties/CreatedAt",
   "/properties/LastUpdatedAt"
  ],
