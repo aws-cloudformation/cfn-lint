@@ -1,0 +1,64 @@
+{
+ "$schema": "https://raw.githubusercontent.com/aws-cloudformation/cloudformation-cli/master/src/rpdk/core/data/schema/provider.definition.schema.v1.json",
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FilterName",
+  "/properties/LogGroupName"
+ ],
+ "primaryIdentifier": [
+  "/properties/FilterName",
+  "/properties/LogGroupName"
+ ],
+ "properties": {
+  "ApplyOnTransformedLogs": {
+   "type": "boolean"
+  },
+  "DestinationArn": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "Distribution": {
+   "enum": [
+    "Random",
+    "ByLogStream"
+   ],
+   "type": "string"
+  },
+  "FilterName": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "[^:*]*",
+   "type": "string"
+  },
+  "FilterPattern": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "LogGroupName": {
+   "format": "AWS::Logs::LogGroup.Name",
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "[\\.\\-_/#A-Za-z0-9]+",
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "DestinationArn",
+  "FilterPattern",
+  "LogGroupName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Logs::SubscriptionFilter"
+}

@@ -1,0 +1,78 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceKey"
+ ],
+ "definitions": {
+  "AutomationParameters": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z0-9_]+$": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[A-Za-z0-9 +=@_\\/:.-]+$": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9 +=@_\\/:.-]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AssociationId"
+ ],
+ "properties": {
+  "AssociationId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "AutomationDocument": {
+   "maxLength": 500,
+   "minLength": 1,
+   "pattern": "^\\S+$",
+   "type": "string"
+  },
+  "AutomationParameters": {
+   "$ref": "#/definitions/AutomationParameters"
+  },
+  "ResourceKey": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssociationId"
+ ],
+ "required": [
+  "AutomationDocument",
+  "ResourceKey",
+  "AutomationParameters"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SSMQuickSetup::LifecycleAutomation"
+}
