@@ -1,0 +1,157 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FilterName",
+  "/properties/LogGroupName"
+ ],
+ "definitions": {
+  "Dimension": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "MetricTransformation": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultValue": {
+     "type": "number"
+    },
+    "Dimensions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Dimension"
+     },
+     "maxItems": 3,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "MetricName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^((?![:*$])[\\x00-\\x7F]){1,255}",
+     "type": "string"
+    },
+    "MetricNamespace": {
+     "$comment": "Namespaces can be up to 256 characters long; valid characters include 0-9A-Za-z.-_/#",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[0-9a-zA-Z\\.\\-_\\/#]{1,256}",
+     "type": "string"
+    },
+    "MetricValue": {
+     "maxLength": 100,
+     "minLength": 1,
+     "pattern": "^(([0-9]*)|(\\$.*))$",
+     "type": "string"
+    },
+    "Unit": {
+     "enum": [
+      "Seconds",
+      "Microseconds",
+      "Milliseconds",
+      "Bytes",
+      "Kilobytes",
+      "Megabytes",
+      "Gigabytes",
+      "Terabytes",
+      "Bits",
+      "Kilobits",
+      "Megabits",
+      "Gigabits",
+      "Terabits",
+      "Percent",
+      "Count",
+      "Bytes/Second",
+      "Kilobytes/Second",
+      "Megabytes/Second",
+      "Gigabytes/Second",
+      "Terabytes/Second",
+      "Bits/Second",
+      "Kilobits/Second",
+      "Megabits/Second",
+      "Gigabits/Second",
+      "Terabits/Second",
+      "Count/Second",
+      "None"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "MetricName",
+    "MetricNamespace",
+    "MetricValue"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LogGroupName",
+  "/properties/FilterName"
+ ],
+ "properties": {
+  "ApplyOnTransformedLogs": {
+   "type": "boolean"
+  },
+  "FilterName": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^[^:*]{1,512}",
+   "type": "string"
+  },
+  "FilterPattern": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "LogGroupName": {
+   "format": "AWS::Logs::LogGroup.Name",
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^[.\\-_/#A-Za-z0-9]{1,512}",
+   "type": "string"
+  },
+  "MetricTransformations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/MetricTransformation"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
+  }
+ },
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "FilterPattern",
+  "LogGroupName",
+  "MetricTransformations"
+ ],
+ "resourceLink": {
+  "mappings": {
+   "LogGroupName": "/LogGroupName",
+   "MetricName": "/MetricName"
+  },
+  "templateUri": "/cloudwatch/home?region=${awsRegion}#logsV2:log-groups/log-group/${LogGroupName}/edit-metric-filter/${MetricName}"
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Logs::MetricFilter"
+}
