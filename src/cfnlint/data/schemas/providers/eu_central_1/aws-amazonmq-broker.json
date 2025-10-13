@@ -1,0 +1,516 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BrokerName",
+  "/properties/StorageType",
+  "/properties/DeploymentMode",
+  "/properties/EngineType",
+  "/properties/SubnetIds",
+  "/properties/AuthenticationStrategy",
+  "/properties/EncryptionOptions",
+  "/properties/PubliclyAccessible"
+ ],
+ "definitions": {
+  "ConfigurationId": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Revision": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Revision",
+    "Id"
+   ],
+   "type": "object"
+  },
+  "EncryptionOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "type": "string"
+    },
+    "UseAwsOwnedKey": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "UseAwsOwnedKey"
+   ],
+   "type": "object"
+  },
+  "LdapServerMetadata": {
+   "additionalProperties": false,
+   "properties": {
+    "Hosts": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "RoleBase": {
+     "type": "string"
+    },
+    "RoleName": {
+     "type": "string"
+    },
+    "RoleSearchMatching": {
+     "type": "string"
+    },
+    "RoleSearchSubtree": {
+     "type": "boolean"
+    },
+    "ServiceAccountPassword": {
+     "type": "string"
+    },
+    "ServiceAccountUsername": {
+     "type": "string"
+    },
+    "UserBase": {
+     "type": "string"
+    },
+    "UserRoleName": {
+     "type": "string"
+    },
+    "UserSearchMatching": {
+     "type": "string"
+    },
+    "UserSearchSubtree": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Hosts",
+    "UserSearchMatching",
+    "UserBase",
+    "RoleSearchMatching",
+    "ServiceAccountUsername",
+    "RoleBase"
+   ],
+   "type": "object"
+  },
+  "LogList": {
+   "additionalProperties": false,
+   "properties": {
+    "Audit": {
+     "type": "boolean"
+    },
+    "General": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "MaintenanceWindow": {
+   "additionalProperties": false,
+   "properties": {
+    "DayOfWeek": {
+     "anyOf": [
+      {
+       "enum": [
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY",
+        "SATURDAY",
+        "SUNDAY"
+       ],
+       "type": "string"
+      },
+      {
+       "pattern": "^[Mm][Oo][Nn][Dd][Aa][Yy]$"
+      },
+      {
+       "pattern": "^[Tt][Uu][Ee][Ss][Dd][Aa][Yy]$"
+      },
+      {
+       "pattern": "^[Ww][Ee][Dd][Nn][Ee][Ss][Dd][Aa][Yy]$"
+      },
+      {
+       "pattern": "^[Tt][Hh][Uu][Rr][Ss][Dd][Aa][Yy]$"
+      },
+      {
+       "pattern": "^[Ff][Rr][Ii][Dd][Aa][Yy]$"
+      },
+      {
+       "pattern": "^[Ss][Aa][Tt][Uu][Rr][Dd][Aa][Yy]$"
+      },
+      {
+       "pattern": "^[Ss][Uu][Nn][Dd][Aa][Yy]$"
+      }
+     ],
+     "enum": [
+      "FRIDAY",
+      "MONDAY",
+      "SATURDAY",
+      "SUNDAY",
+      "THURSDAY",
+      "TUESDAY",
+      "WEDNESDAY"
+     ],
+     "type": "string"
+    },
+    "TimeOfDay": {
+     "pattern": "^[0-9]{1,2}:[0-9]{2}(:[0-9]{2})?$",
+     "type": "string"
+    },
+    "TimeZone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DayOfWeek",
+    "TimeOfDay",
+    "TimeZone"
+   ],
+   "type": "object"
+  },
+  "TagsEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "User": {
+   "additionalProperties": false,
+   "properties": {
+    "ConsoleAccess": {
+     "type": "boolean"
+    },
+    "Groups": {
+     "insertionOrder": false,
+     "items": {
+      "pattern": "^[A-Za-z0-9._~-]{2,100}$",
+      "type": "string"
+     },
+     "maxItems": 20,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Password": {
+     "minLength": 12,
+     "pattern": "^[^,:=]+$",
+     "type": "string"
+    },
+    "ReplicationUser": {
+     "type": "boolean"
+    },
+    "Username": {
+     "pattern": "^[A-Za-z0-9_.~-]{2,100}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Username",
+    "Password"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AmqpEndpoints": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Arn": {
+   "pattern": "^arn:.*",
+   "type": "string"
+  },
+  "AuthenticationStrategy": {
+   "enum": [
+    "CONFIG_MANAGED",
+    "LDAP",
+    "SIMPLE"
+   ],
+   "type": "string"
+  },
+  "AutoMinorVersionUpgrade": {
+   "type": "boolean"
+  },
+  "BrokerName": {
+   "pattern": "^[0-9A-Za-z_-]{1,50}$",
+   "type": "string"
+  },
+  "Configuration": {
+   "$ref": "#/definitions/ConfigurationId"
+  },
+  "ConfigurationId": {
+   "type": "string"
+  },
+  "ConfigurationRevision": {
+   "type": "string"
+  },
+  "ConsoleURLs": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "DataReplicationMode": {
+   "anyOf": [
+    {
+     "enum": [
+      "NONE",
+      "CRDR"
+     ],
+     "type": "string"
+    },
+    {
+     "pattern": "^[Nn][Oo][Nn][Ee]$"
+    },
+    {
+     "pattern": "^[Cc][Rr][Dd][Rr]$"
+    }
+   ],
+   "enum": [
+    "CRDR",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "DataReplicationPrimaryBrokerArn": {
+   "pattern": "^arn:.*",
+   "type": "string"
+  },
+  "DeploymentMode": {
+   "anyOf": [
+    {
+     "enum": [
+      "SINGLE_INSTANCE",
+      "ACTIVE_STANDBY_MULTI_AZ",
+      "CLUSTER_MULTI_AZ"
+     ],
+     "type": "string"
+    },
+    {
+     "pattern": "^[Ss][Ii][Nn][Gg][Ll][Ee]_[Ii][Nn][Ss][Tt][Aa][Nn][Cc][Ee]$"
+    },
+    {
+     "pattern": "^[Aa][Cc][Tt][Ii][Vv][Ee]_[Ss][Tt][Aa][Nn][Dd][Bb][Yy][__][Mm][Uu][Ll][Tt][Ii]_[Aa][Zz]$"
+    },
+    {
+     "pattern": "^[Cc][Ll][Uu][Ss][Tt][Ee][Rr]_[Mm][Uu][Ll][Tt][Ii][__][Aa][Zz]$"
+    }
+   ],
+   "enum": [
+    "ACTIVE_STANDBY_MULTI_AZ",
+    "CLUSTER_MULTI_AZ",
+    "SINGLE_INSTANCE"
+   ],
+   "type": "string"
+  },
+  "EncryptionOptions": {
+   "$ref": "#/definitions/EncryptionOptions"
+  },
+  "EngineType": {
+   "anyOf": [
+    {
+     "enum": [
+      "ACTIVEMQ",
+      "RABBITMQ"
+     ],
+     "type": "string"
+    },
+    {
+     "pattern": "^[Aa][Cc][Tt][Ii][Vv][Ee][Mm][Qq]$"
+    },
+    {
+     "pattern": "^[Rr][Aa][Bb][Bb][Ii][Tt][Mm][Qq]$"
+    }
+   ],
+   "enum": [
+    "ACTIVEMQ",
+    "RABBITMQ"
+   ],
+   "type": "string"
+  },
+  "EngineVersion": {
+   "type": "string"
+  },
+  "EngineVersionCurrent": {
+   "type": "string"
+  },
+  "HostInstanceType": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "IpAddresses": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "LdapServerMetadata": {
+   "$ref": "#/definitions/LdapServerMetadata"
+  },
+  "Logs": {
+   "$ref": "#/definitions/LogList"
+  },
+  "MaintenanceWindowStartTime": {
+   "$ref": "#/definitions/MaintenanceWindow"
+  },
+  "MqttEndpoints": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "OpenWireEndpoints": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PubliclyAccessible": {
+   "type": "boolean"
+  },
+  "SecurityGroups": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "type": "string"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "StompEndpoints": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "StorageType": {
+   "anyOf": [
+    {
+     "enum": [
+      "EBS",
+      "EFS"
+     ],
+     "type": "string"
+    },
+    {
+     "pattern": "^[Ee]([Bb]|[Ff])[Ss]$"
+    }
+   ],
+   "enum": [
+    "EBS",
+    "EFS"
+   ],
+   "type": "string"
+  },
+  "SubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TagsEntry"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Users": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/User"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "WssEndpoints": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "propertyTransform": {
+  "/properties/AuthenticationStrategy": "$uppercase(AuthenticationStrategy)",
+  "/properties/DataReplicationMode": "$uppercase(DataReplicationMode)",
+  "/properties/DeploymentMode": "$uppercase(DeploymentMode)",
+  "/properties/EngineType": "$uppercase(EngineType)",
+  "/properties/MaintenanceWindowStartTime/DayOfWeek": "$uppercase(MaintenanceWindowStartTime.DayOfWeek)",
+  "/properties/StorageType": "$uppercase(StorageType)"
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/EngineVersionCurrent",
+  "/properties/IpAddresses",
+  "/properties/MqttEndpoints",
+  "/properties/OpenWireEndpoints",
+  "/properties/ConfigurationId",
+  "/properties/ConfigurationRevision",
+  "/properties/StompEndpoints",
+  "/properties/WssEndpoints",
+  "/properties/AmqpEndpoints",
+  "/properties/ConsoleURLs"
+ ],
+ "required": [
+  "BrokerName",
+  "EngineType",
+  "DeploymentMode",
+  "HostInstanceType",
+  "PubliclyAccessible"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AmazonMQ::Broker",
+ "writeOnlyProperties": [
+  "/properties/EngineVersion",
+  "/properties/Users",
+  "/properties/LdapServerMetadata/ServiceAccountPassword",
+  "/properties/DataReplicationPrimaryBrokerArn",
+  "/properties/Configuration"
+ ]
+}
