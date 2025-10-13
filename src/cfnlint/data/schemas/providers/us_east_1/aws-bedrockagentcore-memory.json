@@ -27,6 +27,9 @@
    "maxProperties": 1,
    "minProperties": 1,
    "properties": {
+    "SelfManagedConfiguration": {
+     "$ref": "#/definitions/SelfManagedConfiguration"
+    },
     "SemanticOverride": {
      "$ref": "#/definitions/SemanticOverride"
     },
@@ -127,6 +130,19 @@
    ],
    "type": "object"
   },
+  "InvocationConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "PayloadDeliveryBucketName": {
+     "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$",
+     "type": "string"
+    },
+    "TopicArn": {
+     "$ref": "#/definitions/Arn"
+    }
+   },
+   "type": "object"
+  },
   "MemoryArn": {
    "pattern": "^arn:aws:bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:memory/[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
    "type": "string"
@@ -172,6 +188,17 @@
    },
    "type": "object"
   },
+  "MessageBasedTriggerInput": {
+   "additionalProperties": false,
+   "properties": {
+    "MessageCount": {
+     "maximum": 50,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
   "Name": {
    "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,47}$",
    "type": "string"
@@ -192,6 +219,23 @@
    "maxLength": 30000,
    "minLength": 1,
    "type": "string"
+  },
+  "SelfManagedConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "HistoricalContextWindowSize": {
+     "maximum": 50,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "InvocationConfiguration": {
+     "$ref": "#/definitions/InvocationConfigurationInput"
+    },
+    "TriggerConditions": {
+     "$ref": "#/definitions/TriggerConditionList"
+    }
+   },
+   "type": "object"
   },
   "SemanticConsolidationOverride": {
    "additionalProperties": false,
@@ -441,6 +485,54 @@
     }
    },
    "type": "object"
+  },
+  "TimeBasedTriggerInput": {
+   "additionalProperties": false,
+   "properties": {
+    "IdleSessionTimeout": {
+     "maximum": 3000,
+     "minimum": 10,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "TokenBasedTriggerInput": {
+   "additionalProperties": false,
+   "properties": {
+    "TokenCount": {
+     "maximum": 500000,
+     "minimum": 100,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "TriggerConditionInput": {
+   "additionalProperties": false,
+   "maxProperties": 1,
+   "minProperties": 1,
+   "properties": {
+    "MessageBasedTrigger": {
+     "$ref": "#/definitions/MessageBasedTriggerInput"
+    },
+    "TimeBasedTrigger": {
+     "$ref": "#/definitions/TimeBasedTriggerInput"
+    },
+    "TokenBasedTrigger": {
+     "$ref": "#/definitions/TokenBasedTriggerInput"
+    }
+   },
+   "type": "object"
+  },
+  "TriggerConditionList": {
+   "additionalProperties": false,
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TriggerConditionInput"
+   },
+   "minItems": 1,
+   "type": "array"
   },
   "UserPreferenceConsolidationOverride": {
    "additionalProperties": false,
