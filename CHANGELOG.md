@@ -1,3 +1,12 @@
+### v1.40.2
+## What's Changed
+* Update the `UpdatePolicy` schema by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4257
+* Update gitsync schema parameter types by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4258
+* State Machine Unit Test: Fix another StartAt typo by @r-heimann in https://github.com/aws-cloudformation/cfn-lint/pull/4260
+* Update CloudFormation schemas to `2025-10-13` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4259
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.40.1...v1.40.2
+
 ### v1.40.1
 ## What's Changed
 * Update `nodejs18.x` lifecycle dates in `LmbdRuntimeLifecycle.json` to match official AWS Docs by @cullancarey in https://github.com/aws-cloudformation/cfn-lint/pull/4250
