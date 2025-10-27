@@ -10,6 +10,16 @@
    },
    "type": "object"
   },
+  "AutomaticFailConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "TargetSection": {
+     "pattern": "^[a-zA-Z0-9._-]{1,40}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "EvaluationFormBaseItem": {
    "additionalProperties": false,
    "properties": {
@@ -34,9 +44,134 @@
    },
    "type": "object"
   },
+  "EvaluationFormItemEnablementCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "Operands": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/EvaluationFormItemEnablementConditionOperand"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "Operator": {
+     "enum": [
+      "OR",
+      "AND"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Operands"
+   ],
+   "type": "object"
+  },
+  "EvaluationFormItemEnablementConditionOperand": {
+   "additionalProperties": false,
+   "properties": {
+    "Expression": {
+     "$ref": "#/definitions/EvaluationFormItemEnablementExpression"
+    }
+   },
+   "type": "object"
+  },
+  "EvaluationFormItemEnablementConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "enum": [
+      "DISABLE",
+      "ENABLE"
+     ],
+     "type": "string"
+    },
+    "Condition": {
+     "$ref": "#/definitions/EvaluationFormItemEnablementCondition"
+    },
+    "DefaultAction": {
+     "enum": [
+      "DISABLE",
+      "ENABLE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Condition",
+    "Action"
+   ],
+   "type": "object"
+  },
+  "EvaluationFormItemEnablementExpression": {
+   "additionalProperties": false,
+   "properties": {
+    "Comparator": {
+     "enum": [
+      "IN",
+      "NOT_IN"
+     ],
+     "type": "string"
+    },
+    "Source": {
+     "$ref": "#/definitions/EvaluationFormItemEnablementSource"
+    },
+    "Values": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/EvaluationFormItemEnablementSourceValue"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Source",
+    "Values",
+    "Comparator"
+   ],
+   "type": "object"
+  },
+  "EvaluationFormItemEnablementSource": {
+   "additionalProperties": false,
+   "properties": {
+    "RefId": {
+     "$ref": "#/definitions/RefId"
+    },
+    "Type": {
+     "enum": [
+      "QUESTION_REF_ID"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "EvaluationFormItemEnablementSourceValue": {
+   "additionalProperties": false,
+   "properties": {
+    "RefId": {
+     "$ref": "#/definitions/RefId"
+    },
+    "Type": {
+     "enum": [
+      "OPTION_REF_ID"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "EvaluationFormNumericQuestionAutomation": {
    "additionalProperties": false,
    "properties": {
+    "AnswerSource": {
+     "$ref": "#/definitions/EvaluationFormQuestionAutomationAnswerSource"
+    },
     "PropertyValue": {
      "$ref": "#/definitions/NumericQuestionPropertyValueAutomation"
     }
@@ -48,6 +183,9 @@
    "properties": {
     "AutomaticFail": {
      "type": "boolean"
+    },
+    "AutomaticFailConfiguration": {
+     "$ref": "#/definitions/AutomaticFailConfiguration"
     },
     "MaxValue": {
      "type": "integer"
@@ -96,6 +234,9 @@
   "EvaluationFormQuestion": {
    "additionalProperties": false,
    "properties": {
+    "Enablement": {
+     "$ref": "#/definitions/EvaluationFormItemEnablementConfiguration"
+    },
     "Instructions": {
      "maxLength": 1024,
      "type": "string"
@@ -133,6 +274,22 @@
    ],
    "type": "object"
   },
+  "EvaluationFormQuestionAutomationAnswerSource": {
+   "additionalProperties": false,
+   "properties": {
+    "SourceType": {
+     "enum": [
+      "CONTACT_LENS_DATA",
+      "GEN_AI"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceType"
+   ],
+   "type": "object"
+  },
   "EvaluationFormQuestionTypeProperties": {
    "additionalProperties": false,
    "properties": {
@@ -141,6 +298,9 @@
     },
     "SingleSelect": {
      "$ref": "#/definitions/EvaluationFormSingleSelectQuestionProperties"
+    },
+    "Text": {
+     "$ref": "#/definitions/EvaluationFormTextQuestionProperties"
     }
    },
    "type": "object"
@@ -182,6 +342,9 @@
   "EvaluationFormSingleSelectQuestionAutomation": {
    "additionalProperties": false,
    "properties": {
+    "AnswerSource": {
+     "$ref": "#/definitions/EvaluationFormQuestionAutomationAnswerSource"
+    },
     "DefaultOptionRefId": {
      "$ref": "#/definitions/RefId"
     },
@@ -217,6 +380,9 @@
    "properties": {
     "AutomaticFail": {
      "type": "boolean"
+    },
+    "AutomaticFailConfiguration": {
+     "$ref": "#/definitions/AutomaticFailConfiguration"
     },
     "RefId": {
      "$ref": "#/definitions/RefId"
@@ -262,6 +428,24 @@
    "required": [
     "Options"
    ],
+   "type": "object"
+  },
+  "EvaluationFormTextQuestionAutomation": {
+   "additionalProperties": false,
+   "properties": {
+    "AnswerSource": {
+     "$ref": "#/definitions/EvaluationFormQuestionAutomationAnswerSource"
+    }
+   },
+   "type": "object"
+  },
+  "EvaluationFormTextQuestionProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Automation": {
+     "$ref": "#/definitions/EvaluationFormTextQuestionAutomation"
+    }
+   },
    "type": "object"
   },
   "NumericQuestionPropertyValueAutomation": {

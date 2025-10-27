@@ -27,26 +27,38 @@
    "type": "object"
   }
  },
+ "deprecatedProperties": [
+  "/properties/Principal",
+  "/properties/Condition",
+  "/properties/Action"
+ ],
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/EventBusName",
+  "/properties/StatementId"
  ],
  "properties": {
   "Action": {
    "enum": [
     "events:PutEvents"
    ],
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "events:[a-zA-Z]+",
    "type": "string"
   },
   "Condition": {
    "$ref": "#/definitions/Condition"
   },
   "EventBusName": {
-   "type": "string"
-  },
-  "Id": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[\\.\\-_A-Za-z0-9]+",
    "type": "string"
   },
   "Principal": {
+   "maxLength": 12,
+   "minLength": 1,
+   "pattern": "(\\d{12}|\\*)",
    "type": "string"
   },
   "Statement": {
@@ -57,14 +69,23 @@
    ]
   },
   "StatementId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9-_]+",
    "type": "string"
   }
  },
- "readOnlyProperties": [
-  "/properties/Id"
- ],
  "required": [
   "StatementId"
  ],
- "typeName": "AWS::Events::EventBusPolicy"
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-events-eventbuspolicy",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Events::EventBusPolicy",
+ "writeOnlyProperties": [
+  "/properties/Principal",
+  "/properties/Condition",
+  "/properties/Action"
+ ]
 }

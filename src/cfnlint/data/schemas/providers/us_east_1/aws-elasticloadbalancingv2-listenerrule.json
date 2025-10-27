@@ -205,6 +205,9 @@
   "HostHeaderConfig": {
    "additionalProperties": false,
    "properties": {
+    "RegexValues": {
+     "$ref": "#/definitions/ListOfStrings"
+    },
     "Values": {
      "$ref": "#/definitions/ListOfStrings"
     }
@@ -216,6 +219,9 @@
    "properties": {
     "HttpHeaderName": {
      "type": "string"
+    },
+    "RegexValues": {
+     "$ref": "#/definitions/ListOfStrings"
     },
     "Values": {
      "$ref": "#/definitions/ListOfStrings"
@@ -243,6 +249,9 @@
   "PathPatternConfig": {
    "additionalProperties": false,
    "properties": {
+    "RegexValues": {
+     "$ref": "#/definitions/ListOfStrings"
+    },
     "Values": {
      "$ref": "#/definitions/ListOfStrings",
      "maxItems": 5
@@ -313,6 +322,42 @@
    ],
    "type": "object"
   },
+  "RewriteConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Regex": {
+     "type": "string"
+    },
+    "Replace": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Regex",
+    "Replace"
+   ],
+   "type": "object"
+  },
+  "RewriteConfigList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RewriteConfig"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RewriteConfigObject": {
+   "additionalProperties": false,
+   "properties": {
+    "Rewrites": {
+     "$ref": "#/definitions/RewriteConfigList"
+    }
+   },
+   "required": [
+    "Rewrites"
+   ],
+   "type": "object"
+  },
   "RuleCondition": {
    "additionalProperties": false,
    "properties": {
@@ -334,6 +379,9 @@
     },
     "QueryStringConfig": {
      "$ref": "#/definitions/QueryStringConfig"
+    },
+    "RegexValues": {
+     "$ref": "#/definitions/ListOfStrings"
     },
     "SourceIpConfig": {
      "$ref": "#/definitions/SourceIpConfig"
@@ -381,6 +429,40 @@
     }
    },
    "type": "object"
+  },
+  "Transform": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "HostHeaderRewriteConfig"
+     ]
+    },
+    {
+     "required": [
+      "UrlRewriteConfig"
+     ]
+    }
+   ],
+   "properties": {
+    "HostHeaderRewriteConfig": {
+     "$ref": "#/definitions/RewriteConfigObject"
+    },
+    "Type": {
+     "enum": [
+      "host-header-rewrite",
+      "url-rewrite"
+     ],
+     "type": "string"
+    },
+    "UrlRewriteConfig": {
+     "$ref": "#/definitions/RewriteConfigObject"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
   }
  },
  "primaryIdentifier": [
@@ -416,6 +498,14 @@
   },
   "RuleArn": {
    "type": "string"
+  },
+  "Transforms": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Transform"
+   },
+   "type": "array",
+   "uniqueItems": true
   }
  },
  "readOnlyProperties": [

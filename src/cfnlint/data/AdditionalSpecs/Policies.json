@@ -890,6 +890,12 @@
    }
   }
  },
+ "action-recommendations": {
+  "Actions": {
+   "listrecommendedactions": {}
+  },
+  "Resources": {}
+ },
  "activate": {
   "Actions": {
    "createform": {},
@@ -9840,6 +9846,14 @@
      "memory"
     ]
    },
+   "completeresourcetokenauth": {
+    "Resources": [
+     "oauth2credentialprovider",
+     "token-vault",
+     "workload-identity",
+     "workload-identity-directory"
+    ]
+   },
    "connectbrowserautomationstream": {},
    "connectbrowserliveviewstream": {},
    "createagentruntime": {},
@@ -10141,12 +10155,17 @@
    },
    "listtagsforresource": {
     "Resources": [
+     "apikeycredentialprovider",
      "browser-custom",
      "code-interpreter-custom",
      "gateway",
      "memory",
+     "oauth2credentialprovider",
      "runtime",
-     "runtime-endpoint"
+     "runtime-endpoint",
+     "token-vault",
+     "workload-identity",
+     "workload-identity-directory"
     ]
    },
    "listworkloadidentities": {
@@ -10202,22 +10221,32 @@
    },
    "tagresource": {
     "Resources": [
+     "apikeycredentialprovider",
      "browser-custom",
      "code-interpreter-custom",
      "gateway",
      "memory",
+     "oauth2credentialprovider",
      "runtime",
-     "runtime-endpoint"
+     "runtime-endpoint",
+     "token-vault",
+     "workload-identity",
+     "workload-identity-directory"
     ]
    },
    "untagresource": {
     "Resources": [
+     "apikeycredentialprovider",
      "browser-custom",
      "code-interpreter-custom",
      "gateway",
      "memory",
+     "oauth2credentialprovider",
      "runtime",
-     "runtime-endpoint"
+     "runtime-endpoint",
+     "token-vault",
+     "workload-identity",
+     "workload-identity-directory"
     ]
    },
    "updateagentruntime": {
@@ -10275,6 +10304,9 @@
    "apikeycredentialprovider": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:token-vault/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "browser": {
@@ -10322,6 +10354,9 @@
    "oauth2credentialprovider": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:token-vault/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "runtime": {
@@ -10343,16 +10378,25 @@
    "token-vault": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:token-vault/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "workload-identity": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:workload-identity-directory/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "workload-identity-directory": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:workload-identity-directory/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    }
   }
@@ -27839,12 +27883,22 @@
      "Cluster"
     ]
    },
+   "deleteclusterpolicy": {
+    "Resources": [
+     "Cluster"
+    ]
+   },
    "getbackupjob": {
     "Resources": [
      "Cluster"
     ]
    },
    "getcluster": {
+    "Resources": [
+     "Cluster"
+    ]
+   },
+   "getclusterpolicy": {
     "Resources": [
      "Cluster"
     ]
@@ -27859,13 +27913,14 @@
      "Cluster"
     ]
    },
-   "injecterror": {
+   "injecterror": {},
+   "listclusters": {},
+   "listtagsforresource": {
     "Resources": [
      "Cluster"
     ]
    },
-   "listclusters": {},
-   "listtagsforresource": {
+   "putclusterpolicy": {
     "Resources": [
      "Cluster"
     ]
@@ -33871,6 +33926,11 @@
      "addon",
      "cluster",
      "nodegroup"
+    ]
+   },
+   "mutateviakubernetesapi": {
+    "Resources": [
+     "cluster"
     ]
    },
    "registercluster": {},
@@ -44429,6 +44489,26 @@
      "datastore"
     ]
    },
+   "expandvaluesetwithget": {
+    "Resources": [
+     "datastore"
+    ]
+   },
+   "expandvaluesetwithpost": {
+    "Resources": [
+     "datastore"
+    ]
+   },
+   "generatedocumentwithget": {
+    "Resources": [
+     "datastore"
+    ]
+   },
+   "generatedocumentwithpost": {
+    "Resources": [
+     "datastore"
+    ]
+   },
    "getcapabilities": {
     "Resources": [
      "datastore"
@@ -44456,6 +44536,21 @@
     ]
    },
    "listtagsforresource": {
+    "Resources": [
+     "datastore"
+    ]
+   },
+   "lookupcodesystemwithget": {
+    "Resources": [
+     "datastore"
+    ]
+   },
+   "lookupcodesystemwithpost": {
+    "Resources": [
+     "datastore"
+    ]
+   },
+   "patchresource": {
     "Resources": [
      "datastore"
     ]
@@ -44516,6 +44611,11 @@
     ]
    },
    "updateresource": {
+    "Resources": [
+     "datastore"
+    ]
+   },
+   "validateresource": {
     "Resources": [
      "datastore"
     ]
@@ -52638,6 +52738,7 @@
      "stream"
     ]
    },
+   "injectapierror": {},
    "listshards": {
     "Resources": [
      "stream"
@@ -58224,10 +58325,12 @@
      "signal-map"
     ]
    },
+   "listalerts": {},
    "listchannelplacementgroups": {},
    "listchannels": {},
    "listcloudwatchalarmtemplategroups": {},
    "listcloudwatchalarmtemplates": {},
+   "listclusteralerts": {},
    "listclusters": {},
    "listeventbridgeruletemplategroups": {},
    "listeventbridgeruletemplates": {},
@@ -58235,6 +58338,7 @@
    "listinputdevicetransfers": {},
    "listinputs": {},
    "listinputsecuritygroups": {},
+   "listmultiplexalerts": {},
    "listmultiplexes": {},
    "listmultiplexprograms": {},
    "listnetworks": {},
@@ -64318,12 +64422,24 @@
      "organization-telemetry-rule"
     ]
    },
-   "getcentralizationrulefororganization": {},
+   "getcentralizationrulefororganization": {
+    "Resources": [
+     "organization-centralization-rule"
+    ]
+   },
    "gettelemetryenrichmentstatus": {},
    "gettelemetryevaluationstatus": {},
    "gettelemetryevaluationstatusfororganization": {},
-   "gettelemetryrule": {},
-   "gettelemetryrulefororganization": {},
+   "gettelemetryrule": {
+    "Resources": [
+     "telemetry-rule"
+    ]
+   },
+   "gettelemetryrulefororganization": {
+    "Resources": [
+     "organization-telemetry-rule"
+    ]
+   },
    "listcentralizationrulesfororganization": {},
    "listresourcetelemetry": {},
    "listresourcetelemetryfororganization": {},
@@ -64375,7 +64491,7 @@
   "Resources": {
    "organization-centralization-rule": {
     "ARNFormats": [
-     "arn:${Partition}:observabilityadmin:${Region}:${Account}:organization-centralization-rule:.*"
+     "arn:${Partition}:observabilityadmin:${Region}:${Account}:organization-centralization-rule/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -64383,7 +64499,7 @@
    },
    "organization-telemetry-rule": {
     "ARNFormats": [
-     "arn:${Partition}:observabilityadmin:${Region}:${Account}:organization-telemetry-rule:.*"
+     "arn:${Partition}:observabilityadmin:${Region}:${Account}:organization-telemetry-rule/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -64391,7 +64507,7 @@
    },
    "telemetry-rule": {
     "ARNFormats": [
-     "arn:${Partition}:observabilityadmin:${Region}:${Account}:telemetry-rule:.*"
+     "arn:${Partition}:observabilityadmin:${Region}:${Account}:telemetry-rule/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -64613,6 +64729,11 @@
    "updateodbnetwork": {
     "Resources": [
      "odb-network"
+    ]
+   },
+   "updateodbpeeringconnection": {
+    "Resources": [
+     "odb-peering-connection"
     ]
    }
   },
@@ -67717,6 +67838,7 @@
    },
    "listtagsforresource": {
     "Resources": [
+     "metric-resource",
      "perf-reports-resource"
     ]
    },
@@ -67735,6 +67857,9 @@
    "metric-resource": {
     "ARNFormats": [
      "arn:${Partition}:pi:${Region}:${Account}:metrics/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "perf-reports-resource": {
@@ -71120,6 +71245,7 @@
      "dashboard",
      "dataset",
      "datasource",
+     "emailCustomizationTemplate",
      "flow",
      "folder",
      "template",
@@ -71287,6 +71413,7 @@
      "dashboard",
      "dataset",
      "datasource",
+     "emailCustomizationTemplate",
      "flow",
      "folder",
      "ingestion",
@@ -71312,6 +71439,7 @@
      "dashboard",
      "dataset",
      "datasource",
+     "emailCustomizationTemplate",
      "flow",
      "folder",
      "ingestion",
@@ -71627,6 +71755,9 @@
    "emailcustomizationtemplate": {
     "ARNFormats": [
      "arn:${Partition}:quicksight:${Region}:${Account}:email-customization-template/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "extensionaccess": {
@@ -77001,6 +77132,159 @@
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
+    ]
+   }
+  }
+ },
+ "rtbfabric": {
+  "Actions": {
+   "acceptlink": {
+    "Resources": [
+     "Link"
+    ]
+   },
+   "createinboundexternallink": {
+    "Resources": [
+     "ResponderGateway"
+    ]
+   },
+   "createlink": {},
+   "createoutboundexternallink": {
+    "Resources": [
+     "RequesterGateway"
+    ]
+   },
+   "createrequestergateway": {},
+   "createrespondergateway": {},
+   "deleteinboundexternallink": {
+    "Resources": [
+     "InboundExternalLink",
+     "ResponderGateway"
+    ]
+   },
+   "deletelink": {
+    "Resources": [
+     "Link"
+    ]
+   },
+   "deleteoutboundexternallink": {
+    "Resources": [
+     "OutboundExternalLink",
+     "RequesterGateway"
+    ]
+   },
+   "deleterequestergateway": {
+    "Resources": [
+     "RequesterGateway"
+    ]
+   },
+   "deleterespondergateway": {
+    "Resources": [
+     "ResponderGateway"
+    ]
+   },
+   "getinboundexternallink": {
+    "Resources": [
+     "InboundExternalLink",
+     "ResponderGateway"
+    ]
+   },
+   "getlink": {
+    "Resources": [
+     "Link"
+    ]
+   },
+   "getoutboundexternallink": {
+    "Resources": [
+     "OutboundExternalLink",
+     "RequesterGateway"
+    ]
+   },
+   "getrequestergateway": {
+    "Resources": [
+     "RequesterGateway"
+    ]
+   },
+   "getrespondergateway": {
+    "Resources": [
+     "ResponderGateway"
+    ]
+   },
+   "listlinks": {},
+   "listrequestergateways": {},
+   "listrespondergateways": {},
+   "listtagsforresource": {},
+   "rejectlink": {
+    "Resources": [
+     "Link"
+    ]
+   },
+   "tagresource": {},
+   "untagresource": {},
+   "updatelink": {
+    "Resources": [
+     "Link"
+    ]
+   },
+   "updatelinkmoduleflow": {
+    "Resources": [
+     "Link"
+    ]
+   },
+   "updaterequestergateway": {
+    "Resources": [
+     "RequesterGateway"
+    ]
+   },
+   "updaterespondergateway": {
+    "Resources": [
+     "ResponderGateway"
+    ]
+   }
+  },
+  "Resources": {
+   "inboundexternallink": {
+    "ARNFormats": [
+     "arn:${Partition}:rtbfabric:${Region}:${Account}:gateway/.*"
+    ],
+    "ConditionKeys": [
+     "rtbfabric:InboundExternalLinkLinkId",
+     "rtbfabric:ResponderGatewayGatewayId"
+    ]
+   },
+   "link": {
+    "ARNFormats": [
+     "arn:${Partition}:rtbfabric:${Region}:${Account}:gateway/.*"
+    ],
+    "ConditionKeys": [
+     "rtbfabric:LinkLinkId",
+     "rtbfabric:RequesterGatewayGatewayId",
+     "rtbfabric:ResponderGatewayGatewayId"
+    ]
+   },
+   "outboundexternallink": {
+    "ARNFormats": [
+     "arn:${Partition}:rtbfabric:${Region}:${Account}:gateway/.*"
+    ],
+    "ConditionKeys": [
+     "rtbfabric:OutboundExternalLinkLinkId",
+     "rtbfabric:RequesterGatewayGatewayId"
+    ]
+   },
+   "requestergateway": {
+    "ARNFormats": [
+     "arn:${Partition}:rtbfabric:${Region}:${Account}:gateway/.*"
+    ],
+    "ConditionKeys": [
+     "rtbfabric:RequesterGatewayGatewayId"
+    ]
+   },
+   "respondergateway": {
+    "ARNFormats": [
+     "arn:${Partition}:rtbfabric:${Region}:${Account}:gateway/.*"
+    ],
+    "ConditionKeys": [
+     "rtbfabric:ResponderGatewayGatewayId"
     ]
    }
   }
@@ -85952,15 +86236,31 @@
  "social-messaging": {
   "Actions": {
    "associatewhatsappbusinessaccount": {},
-   "createwhatsappmessagetemplate": {},
-   "createwhatsappmessagetemplatefromlibrary": {},
-   "createwhatsappmessagetemplatemedia": {},
+   "createwhatsappmessagetemplate": {
+    "Resources": [
+     "waba"
+    ]
+   },
+   "createwhatsappmessagetemplatefromlibrary": {
+    "Resources": [
+     "waba"
+    ]
+   },
+   "createwhatsappmessagetemplatemedia": {
+    "Resources": [
+     "waba"
+    ]
+   },
    "deletewhatsappmessagemedia": {
     "Resources": [
      "phone-number-id"
     ]
    },
-   "deletewhatsappmessagetemplate": {},
+   "deletewhatsappmessagetemplate": {
+    "Resources": [
+     "waba"
+    ]
+   },
    "disassociatewhatsappbusinessaccount": {
     "Resources": [
      "waba"
@@ -85981,7 +86281,11 @@
      "phone-number-id"
     ]
    },
-   "getwhatsappmessagetemplate": {},
+   "getwhatsappmessagetemplate": {
+    "Resources": [
+     "waba"
+    ]
+   },
    "listlinkedwhatsappbusinessaccounts": {},
    "listtagsforresource": {
     "Resources": [
@@ -85989,8 +86293,16 @@
      "waba"
     ]
    },
-   "listwhatsappmessagetemplates": {},
-   "listwhatsapptemplatelibrary": {},
+   "listwhatsappmessagetemplates": {
+    "Resources": [
+     "waba"
+    ]
+   },
+   "listwhatsapptemplatelibrary": {
+    "Resources": [
+     "waba"
+    ]
+   },
    "postwhatsappmessagemedia": {
     "Resources": [
      "phone-number-id"
@@ -86018,7 +86330,11 @@
      "waba"
     ]
    },
-   "updatewhatsappmessagetemplate": {}
+   "updatewhatsappmessagetemplate": {
+    "Resources": [
+     "waba"
+    ]
+   }
   },
   "Resources": {
    "phone-number-id": {

@@ -22,7 +22,8 @@
   },
   "AdMarkerHls": {
    "enum": [
-    "DATERANGE"
+    "DATERANGE",
+    "SCTE35_ENHANCED"
    ],
    "type": "string"
   },
@@ -36,7 +37,8 @@
   "ContainerType": {
    "enum": [
     "TS",
-    "CMAF"
+    "CMAF",
+    "ISM"
    ],
    "type": "string"
   },
@@ -391,6 +393,9 @@
     "CmafEncryptionMethod": {
      "$ref": "#/definitions/CmafEncryptionMethod"
     },
+    "IsmEncryptionMethod": {
+     "$ref": "#/definitions/IsmEncryptionMethod"
+    },
     "TsEncryptionMethod": {
      "$ref": "#/definitions/TsEncryptionMethod"
     }
@@ -491,6 +496,12 @@
    ],
    "type": "object"
   },
+  "IsmEncryptionMethod": {
+   "enum": [
+    "CENC"
+   ],
+   "type": "string"
+  },
   "LowLatencyHlsManifestConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -535,6 +546,38 @@
     "ManifestName"
    ],
    "type": "object"
+  },
+  "MssManifestConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "FilterConfiguration": {
+     "$ref": "#/definitions/FilterConfiguration"
+    },
+    "ManifestLayout": {
+     "$ref": "#/definitions/MssManifestLayout"
+    },
+    "ManifestName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-]+$",
+     "type": "string"
+    },
+    "ManifestWindowSeconds": {
+     "minimum": 30,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ManifestName"
+   ],
+   "type": "object"
+  },
+  "MssManifestLayout": {
+   "enum": [
+    "FULL",
+    "COMPACT"
+   ],
+   "type": "string"
   },
   "PresetSpeke20Audio": {
    "enum": [
@@ -789,6 +832,18 @@
    "format": "date-time",
    "type": "string"
   },
+  "MssManifestUrls": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "MssManifests": {
+   "items": {
+    "$ref": "#/definitions/MssManifestConfiguration"
+   },
+   "type": "array"
+  },
   "OriginEndpointName": {
    "maxLength": 256,
    "minLength": 1,
@@ -815,6 +870,7 @@
   "/properties/Arn",
   "/properties/CreatedAt",
   "/properties/DashManifestUrls",
+  "/properties/MssManifestUrls",
   "/properties/HlsManifestUrls",
   "/properties/LowLatencyHlsManifestUrls",
   "/properties/ModifiedAt",

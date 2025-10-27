@@ -1,0 +1,118 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccountId"
+ ],
+ "properties": {
+  "AccountId": {
+   "maxLength": 12,
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "AccountName": {
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "[\\u0020-\\u007E]+",
+   "type": "string"
+  },
+  "Arn": {
+   "pattern": "^arn:aws.*:organizations::\\d{12}:account\\/o-[a-z0-9]{10,32}\\/\\d{12}",
+   "type": "string"
+  },
+  "Email": {
+   "maxLength": 64,
+   "minLength": 6,
+   "pattern": "[^\\s@]+@[^\\s@]+\\.[^\\s@]+",
+   "type": "string"
+  },
+  "JoinedMethod": {
+   "enum": [
+    "INVITED",
+    "CREATED"
+   ],
+   "type": "string"
+  },
+  "JoinedTimestamp": {
+   "type": "string"
+  },
+  "ParentIds": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^(r-[0-9a-z]{4,32})|(ou-[0-9a-z]{4,32}-[a-z0-9]{8,32})$",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RoleName": {
+   "default": "OrganizationAccountAccessRole",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[\\w+=,.@-]{1,64}",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "ACTIVE",
+    "SUSPENDED",
+    "PENDING_CLOSURE"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccountId",
+  "/properties/Status",
+  "/properties/JoinedTimestamp",
+  "/properties/JoinedMethod",
+  "/properties/Arn"
+ ],
+ "required": [
+  "AccountName",
+  "Email"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-organizations",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Organizations::Account",
+ "writeOnlyProperties": [
+  "/properties/RoleName"
+ ]
+}

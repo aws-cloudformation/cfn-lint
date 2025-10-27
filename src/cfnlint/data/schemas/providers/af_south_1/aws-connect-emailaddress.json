@@ -1,0 +1,85 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EmailAddress"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EmailAddressArn"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 250,
+   "minLength": 1,
+   "pattern": "(^[\\S].*[\\S]$)|(^[\\S]$)",
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "(^[\\S].*[\\S]$)|(^[\\S]$)",
+   "type": "string"
+  },
+  "EmailAddress": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "([^\\s@]+@[^\\s@]+\\.[^\\s@]+)",
+   "type": "string"
+  },
+  "EmailAddressArn": {
+   "pattern": "^arn:(aws|aws-us-gov):connect:[a-z]{2}-[a-z]+-[0-9]{1}:[0-9]{1,20}:instance/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/email-address/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+   "type": "string"
+  },
+  "InstanceArn": {
+   "maxLength": 250,
+   "minLength": 1,
+   "pattern": "^arn:(aws|aws-us-gov):connect:[a-z]{2}-[a-z]+-[0-9]{1}:[0-9]{1,20}:instance/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/EmailAddressArn"
+ ],
+ "required": [
+  "InstanceArn",
+  "EmailAddress"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::EmailAddress"
+}

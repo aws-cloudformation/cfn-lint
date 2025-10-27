@@ -54,6 +54,18 @@
    },
    "type": "object"
   },
+  "ResourcePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "Policy": {
+     "type": "object"
+    }
+   },
+   "required": [
+    "Policy"
+   ],
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -182,7 +194,7 @@
    "type": "integer"
   },
   "PipelineArn": {
-   "maxLength": 76,
+   "maxLength": 78,
    "minLength": 46,
    "pattern": "^arn:(aws|aws\\-cn|aws\\-us\\-gov|aws\\-iso|aws\\-iso\\-b):osis:.+:pipeline\\/.+$",
    "type": "string"
@@ -197,6 +209,15 @@
    "minLength": 3,
    "pattern": "[a-z][a-z0-9\\-]+",
    "type": "string"
+  },
+  "PipelineRoleArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:(aws|aws\\-cn|aws\\-us\\-gov|aws\\-iso|aws\\-iso\\-b|aws\\-iso\\-e|aws\\-iso\\-f):iam::[0-9]+:role\\/.*$",
+   "type": "string"
+  },
+  "ResourcePolicy": {
+   "$ref": "#/definitions/ResourcePolicy"
   },
   "Tags": {
    "insertionOrder": false,
