@@ -61,6 +61,23 @@
    },
    "type": "object"
   },
+  "CanaryConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CanaryBakeTimeInMinutes": {
+     "maximum": 1440,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "CanaryPercent": {
+     "maximum": 100,
+     "minimum": 0.1,
+     "multipleOf": 0.1,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
   "CapacityProviderStrategyItem": {
    "additionalProperties": false,
    "properties": {
@@ -128,6 +145,7 @@
      "minimum": 0,
      "type": "integer"
     },
+    "CanaryConfiguration": {},
     "DeploymentCircuitBreaker": {
      "$ref": "#/definitions/DeploymentCircuitBreaker"
     },
@@ -137,6 +155,7 @@
      },
      "type": "array"
     },
+    "LinearConfiguration": {},
     "MaximumPercent": {
      "type": "integer"
     },
@@ -146,7 +165,9 @@
     "Strategy": {
      "enum": [
       "ROLLING",
-      "BLUE_GREEN"
+      "BLUE_GREEN",
+      "LINEAR",
+      "CANARY"
      ],
      "type": "string"
     }
@@ -252,6 +273,23 @@
    "required": [
     "EnableForceNewDeployment"
    ],
+   "type": "object"
+  },
+  "LinearConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "StepBakeTimeInMinutes": {
+     "maximum": 1440,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "StepPercent": {
+     "maximum": 100,
+     "minimum": 3,
+     "multipleOf": 0.1,
+     "type": "number"
+    }
+   },
    "type": "object"
   },
   "LoadBalancer": {

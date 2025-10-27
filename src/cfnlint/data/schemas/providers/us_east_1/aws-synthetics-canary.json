@@ -54,17 +54,42 @@
    "oneOf": [
     {
      "required": [
+      "Handler",
       "S3Bucket",
       "S3Key"
      ]
     },
     {
      "required": [
+      "BlueprintTypes",
+      "S3Bucket",
+      "S3Key"
+     ]
+    },
+    {
+     "required": [
+      "Handler",
+      "Script"
+     ]
+    },
+    {
+     "required": [
+      "BlueprintTypes",
       "Script"
      ]
     }
    ],
    "properties": {
+    "BlueprintTypes": {
+     "items": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "[0-9a-zA-Z_\\-\\.]+",
+      "type": "string"
+     },
+     "maxItems": 1,
+     "type": "array"
+    },
     "Dependencies": {
      "items": {
       "$ref": "#/definitions/Dependency"
@@ -97,9 +122,6 @@
      "type": "string"
     }
    },
-   "required": [
-    "Handler"
-   ],
    "type": "object"
   },
   "Dependency": {

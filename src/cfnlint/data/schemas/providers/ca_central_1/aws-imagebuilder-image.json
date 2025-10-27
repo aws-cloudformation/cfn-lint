@@ -1,5 +1,8 @@
 {
  "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/ImagePipelineExecutionSettings"
+ ],
  "createOnlyProperties": [
   "/properties/ImageRecipeArn",
   "/properties/ContainerRecipeArn",
@@ -201,6 +204,9 @@
    "pattern": "^arn:aws[^:]*:imagebuilder:[^:]+:(?:[0-9]{12}|aws):container-recipe/[a-z0-9-_]+/[0-9]+\\.[0-9]+\\.[0-9]+$",
    "type": "string"
   },
+  "DeletionSettings": {
+   "$ref": "#/definitions/DeletionSettings"
+  },
   "DistributionConfigurationArn": {
    "pattern": "^arn:aws[^:]*:imagebuilder:[^:]+:(?:[0-9]{12}|aws):distribution-configuration/[a-z0-9-_]+$",
    "type": "string"
@@ -217,6 +223,60 @@
   "ImageId": {
    "format": "AWS::EC2::Image.Id",
    "type": "string"
+  },
+  "ImagePipelineExecutionSettings": {
+   "$ref": "#/definitions/ImagePipelineExecutionSettings",
+   "dependencies": {
+    "ImagePipelineExecutionSettings": {
+     "oneOf": [
+      {
+       "required": [
+        "ImageRecipeArn"
+       ]
+      },
+      {
+       "required": [
+        "ContainerRecipeArn"
+       ]
+      },
+      {
+       "required": [
+        "InfrastructureConfigurationArn"
+       ]
+      },
+      {
+       "required": [
+        "Workflows"
+       ]
+      },
+      {
+       "required": [
+        "DistributionConfigurationArn"
+       ]
+      },
+      {
+       "required": [
+        "ImageTestsConfiguration"
+       ]
+      },
+      {
+       "required": [
+        "ImageScanningConfiguration"
+       ]
+      },
+      {
+       "required": [
+        "EnhancedImageMetadataEnabled"
+       ]
+      },
+      {
+       "required": [
+        "ImportDiskImageSettings"
+       ]
+      }
+     ]
+    }
+   }
   },
   "ImageRecipeArn": {
    "pattern": "^arn:aws[^:]*:imagebuilder:[^:]+:(?:[0-9]{12}|aws):image-recipe/[a-z0-9-_]+/[0-9]+\\.[0-9]+\\.[0-9]+$",
@@ -280,5 +340,9 @@
   "tagUpdatable": true,
   "taggable": true
  },
- "typeName": "AWS::ImageBuilder::Image"
+ "typeName": "AWS::ImageBuilder::Image",
+ "writeOnlyProperties": [
+  "/properties/DeletionSettings",
+  "/properties/ImagePipelineExecutionSettings"
+ ]
 }

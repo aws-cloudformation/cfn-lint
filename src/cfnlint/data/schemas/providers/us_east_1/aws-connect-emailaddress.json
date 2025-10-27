@@ -4,6 +4,19 @@
   "/properties/EmailAddress"
  ],
  "definitions": {
+  "AliasConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EmailAddressArn": {
+     "pattern": "^arn:(aws|aws-us-gov):connect:[a-z]{2}-[a-z]+-[0-9]{1}:[0-9]{1,20}:instance/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/email-address/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "EmailAddressArn"
+   ],
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -28,6 +41,14 @@
   "/properties/EmailAddressArn"
  ],
  "properties": {
+  "AliasConfigurations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AliasConfiguration"
+   },
+   "maxItems": 1,
+   "type": "array"
+  },
   "Description": {
    "maxLength": 250,
    "minLength": 1,

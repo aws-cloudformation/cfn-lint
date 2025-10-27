@@ -1,0 +1,206 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/GatewayId"
+  ]
+ ],
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/Description",
+  "/properties/VpcId",
+  "/properties/SubnetIds",
+  "/properties/SecurityGroupIds"
+ ],
+ "definitions": {
+  "ActiveLinksCount": {
+   "type": "integer"
+  },
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws:(rtbfabric|rtbfabric):[a-zA-Z0-9_-]+:[0-9]{12}:gateway/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "CreatedTimestamp": {
+   "type": "string"
+  },
+  "Description": {
+   "pattern": "^[A-Za-z0-9 ]+$",
+   "type": "string"
+  },
+  "DomainName": {
+   "pattern": "^(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)(?:\\.(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?))+$",
+   "type": "string"
+  },
+  "GatewayId": {
+   "pattern": "^(rtbapp-[a-z0-9-]{1,25}|rtb-gw-[a-z0-9-]{1,25})$",
+   "type": "string"
+  },
+  "RequesterGatewayStatus": {
+   "enum": [
+    "PENDING_CREATION",
+    "ACTIVE",
+    "PENDING_DELETION",
+    "DELETED",
+    "ERROR",
+    "PENDING_UPDATE",
+    "ISOLATED",
+    "PENDING_ISOLATION",
+    "PENDING_RESTORATION"
+   ],
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "insertionOrder": false,
+   "items": {
+    "anyOf": [
+     {
+      "relationshipRef": {
+       "propertyPath": "/properties/GroupId",
+       "typeName": "AWS::EC2::SecurityGroup"
+      }
+     },
+     {
+      "relationshipRef": {
+       "propertyPath": "/properties/Id",
+       "typeName": "AWS::EC2::SecurityGroup"
+      }
+     }
+    ],
+    "pattern": "sg-[0-9a-f]{8,40}",
+    "type": "string"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "subnet-\\w{8,17}",
+    "relationshipRef": {
+     "propertyPath": "/properties/SubnetId",
+     "typeName": "AWS::EC2::Subnet"
+    },
+    "type": "string"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(resourceArn|internalId|(?!aws:)[a-zA-Z0-9+\\-=._:/@]+)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 1600,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TotalLinksCount": {
+   "type": "integer"
+  },
+  "UpdatedTimestamp": {
+   "type": "string"
+  },
+  "VpcId": {
+   "maxLength": 50,
+   "minLength": 5,
+   "pattern": "vpc-[a-f0-9]{8,17}",
+   "relationshipRef": {
+    "propertyPath": "/properties/VpcId",
+    "typeName": "AWS::EC2::VPC"
+   },
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "ActiveLinksCount": {
+   "$ref": "#/definitions/ActiveLinksCount"
+  },
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "CreatedTimestamp": {
+   "$ref": "#/definitions/CreatedTimestamp"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "DomainName": {
+   "$ref": "#/definitions/DomainName"
+  },
+  "GatewayId": {
+   "$ref": "#/definitions/GatewayId"
+  },
+  "RequesterGatewayStatus": {
+   "$ref": "#/definitions/RequesterGatewayStatus"
+  },
+  "SecurityGroupIds": {
+   "$ref": "#/definitions/SecurityGroupIds"
+  },
+  "SubnetIds": {
+   "$ref": "#/definitions/SubnetIds"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "TotalLinksCount": {
+   "$ref": "#/definitions/TotalLinksCount"
+  },
+  "UpdatedTimestamp": {
+   "$ref": "#/definitions/UpdatedTimestamp"
+  },
+  "VpcId": {
+   "$ref": "#/definitions/VpcId"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/GatewayId",
+  "/properties/Arn",
+  "/properties/RequesterGatewayStatus",
+  "/properties/DomainName",
+  "/properties/CreatedTimestamp",
+  "/properties/UpdatedTimestamp",
+  "/properties/ActiveLinksCount",
+  "/properties/TotalLinksCount"
+ ],
+ "required": [
+  "VpcId",
+  "SubnetIds",
+  "SecurityGroupIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RTBFabric::RequesterGateway"
+}

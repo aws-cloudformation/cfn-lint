@@ -1,5 +1,8 @@
 {
  "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/ImagePipelineExecutionSettings"
+ ],
  "createOnlyProperties": [
   "/properties/ImageRecipeArn",
   "/properties/ContainerRecipeArn",
@@ -89,6 +92,24 @@
      "maximum": 1440,
      "minimum": 60,
      "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "LatestVersion": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "type": "string"
+    },
+    "Major": {
+     "type": "string"
+    },
+    "Minor": {
+     "type": "string"
+    },
+    "Patch": {
+     "type": "string"
     }
    },
    "type": "object"
@@ -200,6 +221,60 @@
    "format": "AWS::EC2::Image.Id",
    "type": "string"
   },
+  "ImagePipelineExecutionSettings": {
+   "$ref": "#/definitions/ImagePipelineExecutionSettings",
+   "dependencies": {
+    "ImagePipelineExecutionSettings": {
+     "oneOf": [
+      {
+       "required": [
+        "ImageRecipeArn"
+       ]
+      },
+      {
+       "required": [
+        "ContainerRecipeArn"
+       ]
+      },
+      {
+       "required": [
+        "InfrastructureConfigurationArn"
+       ]
+      },
+      {
+       "required": [
+        "Workflows"
+       ]
+      },
+      {
+       "required": [
+        "DistributionConfigurationArn"
+       ]
+      },
+      {
+       "required": [
+        "ImageTestsConfiguration"
+       ]
+      },
+      {
+       "required": [
+        "ImageScanningConfiguration"
+       ]
+      },
+      {
+       "required": [
+        "EnhancedImageMetadataEnabled"
+       ]
+      },
+      {
+       "required": [
+        "ImportDiskImageSettings"
+       ]
+      }
+     ]
+    }
+   }
+  },
   "ImageRecipeArn": {
    "pattern": "^arn:aws[^:]*:imagebuilder:[^:]+:(?:[0-9]{12}|aws):image-recipe/[a-z0-9-_]+/[0-9]+\\.[0-9]+\\.[0-9]+$",
    "type": "string"
@@ -216,6 +291,9 @@
   "InfrastructureConfigurationArn": {
    "pattern": "^arn:aws[^:]*:imagebuilder:[^:]+:(?:[0-9]{12}|aws):infrastructure-configuration/[a-z0-9-_]+$",
    "type": "string"
+  },
+  "LatestVersion": {
+   "$ref": "#/definitions/LatestVersion"
   },
   "LoggingConfiguration": {
    "$ref": "#/definitions/ImageLoggingConfiguration"
@@ -244,7 +322,12 @@
   "/properties/Arn",
   "/properties/Name",
   "/properties/ImageId",
-  "/properties/ImageUri"
+  "/properties/ImageUri",
+  "/properties/LatestVersion",
+  "/properties/LatestVersion/Arn",
+  "/properties/LatestVersion/Major",
+  "/properties/LatestVersion/Minor",
+  "/properties/LatestVersion/Patch"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder",
  "tagging": {
@@ -254,5 +337,8 @@
   "tagUpdatable": true,
   "taggable": true
  },
- "typeName": "AWS::ImageBuilder::Image"
+ "typeName": "AWS::ImageBuilder::Image",
+ "writeOnlyProperties": [
+  "/properties/ImagePipelineExecutionSettings"
+ ]
 }

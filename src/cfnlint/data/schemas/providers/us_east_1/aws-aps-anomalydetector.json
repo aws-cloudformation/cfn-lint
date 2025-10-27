@@ -1,0 +1,199 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Alias",
+  "/properties/Workspace"
+ ],
+ "definitions": {
+  "AnomalyDetectorConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "RandomCutForest": {
+     "$ref": "#/definitions/RandomCutForestConfiguration"
+    }
+   },
+   "required": [
+    "RandomCutForest"
+   ],
+   "type": "object"
+  },
+  "IgnoreNearExpected": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "Amount"
+     ]
+    },
+    {
+     "required": [
+      "Ratio"
+     ]
+    }
+   ],
+   "properties": {
+    "Amount": {
+     "type": "number"
+    },
+    "Ratio": {
+     "type": "number"
+    }
+   }
+  },
+  "Label": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "MissingDataAction": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "MarkAsAnomaly"
+     ]
+    },
+    {
+     "required": [
+      "Skip"
+     ]
+    }
+   ],
+   "properties": {
+    "MarkAsAnomaly": {
+     "type": "boolean"
+    },
+    "Skip": {
+     "type": "boolean"
+    }
+   }
+  },
+  "RandomCutForestConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IgnoreNearExpectedFromAbove": {
+     "$ref": "#/definitions/IgnoreNearExpected"
+    },
+    "IgnoreNearExpectedFromBelow": {
+     "$ref": "#/definitions/IgnoreNearExpected"
+    },
+    "Query": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "SampleSize": {
+     "default": 256,
+     "maximum": 1024,
+     "minimum": 256,
+     "type": "integer"
+    },
+    "ShingleSize": {
+     "default": 8,
+     "maximum": 1024,
+     "minimum": 2,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Query"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Alias": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Arn": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):aps:[a-z0-9-]+:[0-9]+:anomalydetector/[a-zA-Z0-9-]+/[0-9A-Za-z][-.0-9A-Z_a-z]*$",
+   "type": "string"
+  },
+  "Configuration": {
+   "$ref": "#/definitions/AnomalyDetectorConfiguration"
+  },
+  "EvaluationIntervalInSeconds": {
+   "default": 60,
+   "type": "integer"
+  },
+  "Labels": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Label"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "MissingDataAction": {
+   "$ref": "#/definitions/MissingDataAction"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Workspace": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):aps:[a-z0-9-]+:[0-9]+:workspace/[a-zA-Z0-9-]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Workspace",
+  "Configuration",
+  "Alias"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-aps",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::APS::AnomalyDetector"
+}

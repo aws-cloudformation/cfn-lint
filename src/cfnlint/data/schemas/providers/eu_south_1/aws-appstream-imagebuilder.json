@@ -1,0 +1,158 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AccessEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "EndpointType": {
+     "enum": [
+      "STREAMING"
+     ],
+     "type": "string"
+    },
+    "VpceId": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "EndpointType",
+    "VpceId"
+   ],
+   "type": "object"
+  },
+  "DomainJoinInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "DirectoryName": {
+     "type": "string"
+    },
+    "OrganizationalUnitDistinguishedName": {
+     "maxLength": 2000,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 5,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SubnetIds": {
+     "items": {
+      "minLength": 1,
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AccessEndpoints": {
+   "items": {
+    "$ref": "#/definitions/AccessEndpoint"
+   },
+   "maxItems": 4,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "AppstreamAgentVersion": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "DomainJoinInfo": {
+   "$ref": "#/definitions/DomainJoinInfo"
+  },
+  "EnableDefaultInternetAccess": {
+   "type": "boolean"
+  },
+  "IamRoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "pattern": "^arn:aws(?:\\-cn|\\-iso\\-b|\\-iso|\\-us\\-gov)?:[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.\\\\-]{0,1023}$",
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "ImageArn": {
+   "pattern": "^arn:aws(?:\\-cn|\\-iso\\-b|\\-iso|\\-us\\-gov)?:[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.\\\\-]{0,1023}$",
+   "type": "string"
+  },
+  "ImageName": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "InstanceType": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "StreamingUrl": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcConfig": {
+   "$ref": "#/definitions/VpcConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/StreamingUrl",
+  "/properties/Id"
+ ],
+ "required": [
+  "InstanceType",
+  "Name"
+ ],
+ "typeName": "AWS::AppStream::ImageBuilder"
+}
