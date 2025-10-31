@@ -83,12 +83,16 @@ def build_resource_type_patches(
         with open(os.path.join(boto_path, *service_path), "r") as f:
             boto_d = json.load(f)
             shape_type = boto_d.get("shapes", {}).get(patch.shape, {}).get("type")
+
             for field in ["enum", "pattern", "max", "min"]:
                 value = boto_d.get("shapes", {}).get(patch.shape, {}).get(field)
                 if not value:
                     continue
                 if field in ["enum", "pattern"]:
-                    if any(f in schema_data for f in ["enum", "pattern"]):
+                    if any(
+                        f in schema_data
+                        for f in ["enum", "pattern", "properties", "items"]
+                    ):
                         continue
                 elif field == "max":
                     if any(
