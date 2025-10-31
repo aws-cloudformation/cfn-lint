@@ -1,0 +1,105 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CoreNetworkId",
+  "/properties/TransitGatewayArn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PeeringId"
+ ],
+ "properties": {
+  "CoreNetworkArn": {
+   "type": "string"
+  },
+  "CoreNetworkId": {
+   "maxLength": 50,
+   "pattern": "^core-network-([0-9a-f]{8,17})$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "EdgeLocation": {
+   "type": "string"
+  },
+  "OwnerAccountId": {
+   "type": "string"
+  },
+  "PeeringId": {
+   "type": "string"
+  },
+  "PeeringType": {
+   "type": "string"
+  },
+  "ResourceArn": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TransitGatewayArn": {
+   "maxLength": 500,
+   "pattern": "[\\s\\S]*",
+   "type": "string"
+  },
+  "TransitGatewayPeeringAttachmentId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CoreNetworkArn",
+  "/properties/PeeringId",
+  "/properties/State",
+  "/properties/PeeringType",
+  "/properties/OwnerAccountId",
+  "/properties/EdgeLocation",
+  "/properties/ResourceArn",
+  "/properties/CreatedAt",
+  "/properties/TransitGatewayPeeringAttachmentId"
+ ],
+ "required": [
+  "CoreNetworkId",
+  "TransitGatewayArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-transitgatewaypeering",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::TransitGatewayPeering"
+}

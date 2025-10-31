@@ -1,6 +1,53 @@
 {
  "additionalProperties": false,
  "definitions": {
+  "ConnectorEgressConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "VpcLattice": {
+     "$ref": "#/definitions/ConnectorVpcLatticeEgressConfig"
+    }
+   },
+   "required": [
+    "VpcLattice"
+   ],
+   "type": "object"
+  },
+  "ConnectorEgressType": {
+   "enum": [
+    "SERVICE_MANAGED",
+    "VPC_LATTICE"
+   ],
+   "type": "string"
+  },
+  "ConnectorStatus": {
+   "enum": [
+    "ACTIVE",
+    "PENDING",
+    "ERRORED"
+   ],
+   "type": "string"
+  },
+  "ConnectorVpcLatticeEgressConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "PortNumber": {
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ResourceConfigurationArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:resourceconfiguration/rcfg-[0-9a-z]{17}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceConfigurationArn"
+   ],
+   "type": "object"
+  },
   "SftpConnectorTrustedHostKey": {
    "maxLength": 2048,
    "minLength": 1,
@@ -130,6 +177,12 @@
    "pattern": "^c-([0-9a-f]{17})$",
    "type": "string"
   },
+  "EgressConfig": {
+   "$ref": "#/definitions/ConnectorEgressConfig"
+  },
+  "EgressType": {
+   "$ref": "#/definitions/ConnectorEgressType"
+  },
   "LoggingRole": {
    "maxLength": 2048,
    "minLength": 20,
@@ -175,6 +228,9 @@
    },
    "type": "object"
   },
+  "Status": {
+   "$ref": "#/definitions/ConnectorStatus"
+  },
   "Tags": {
    "insertionOrder": false,
    "items": {
@@ -193,11 +249,11 @@
  "readOnlyProperties": [
   "/properties/Arn",
   "/properties/ConnectorId",
-  "/properties/ServiceManagedEgressIpAddresses"
+  "/properties/ServiceManagedEgressIpAddresses",
+  "/properties/Status"
  ],
  "required": [
-  "AccessRole",
-  "Url"
+  "AccessRole"
  ],
  "tagging": {
   "cloudFormationSystemTags": true,

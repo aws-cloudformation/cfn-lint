@@ -1,0 +1,174 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/CoreNetworkId",
+   "/properties/DirectConnectGatewayArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CoreNetworkId",
+  "/properties/DirectConnectGatewayArn"
+ ],
+ "definitions": {
+  "ProposedNetworkFunctionGroupChange": {
+   "additionalProperties": false,
+   "properties": {
+    "AttachmentPolicyRuleNumber": {
+     "type": "integer"
+    },
+    "NetworkFunctionGroupName": {
+     "type": "string"
+    },
+    "Tags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "ProposedSegmentChange": {
+   "additionalProperties": false,
+   "properties": {
+    "AttachmentPolicyRuleNumber": {
+     "type": "integer"
+    },
+    "SegmentName": {
+     "type": "string"
+    },
+    "Tags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 10000000,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 10000000,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AttachmentId"
+ ],
+ "properties": {
+  "AttachmentId": {
+   "type": "string"
+  },
+  "AttachmentPolicyRuleNumber": {
+   "type": "integer"
+  },
+  "AttachmentType": {
+   "type": "string"
+  },
+  "CoreNetworkArn": {
+   "type": "string"
+  },
+  "CoreNetworkId": {
+   "maxLength": 50,
+   "pattern": "^core-network-([0-9a-f]{8,17})$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "DirectConnectGatewayArn": {
+   "maxLength": 500,
+   "pattern": "^arn:[^:]{1,63}:directconnect::[^:]{0,63}:dx-gateway\\/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "EdgeLocations": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 63,
+    "minLength": 1,
+    "pattern": "[\\s\\S]*",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "NetworkFunctionGroupName": {
+   "type": "string"
+  },
+  "OwnerAccountId": {
+   "type": "string"
+  },
+  "ProposedNetworkFunctionGroupChange": {
+   "$ref": "#/definitions/ProposedNetworkFunctionGroupChange"
+  },
+  "ProposedSegmentChange": {
+   "$ref": "#/definitions/ProposedSegmentChange"
+  },
+  "ResourceArn": {
+   "type": "string"
+  },
+  "SegmentName": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CoreNetworkArn",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/AttachmentType",
+  "/properties/State",
+  "/properties/AttachmentId",
+  "/properties/OwnerAccountId",
+  "/properties/AttachmentPolicyRuleNumber",
+  "/properties/SegmentName",
+  "/properties/NetworkFunctionGroupName",
+  "/properties/ResourceArn"
+ ],
+ "required": [
+  "CoreNetworkId",
+  "DirectConnectGatewayArn",
+  "EdgeLocations"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-directconnectgatewayattachment",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::DirectConnectGatewayAttachment"
+}

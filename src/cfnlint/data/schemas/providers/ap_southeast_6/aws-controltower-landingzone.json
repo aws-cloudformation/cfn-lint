@@ -1,0 +1,112 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "LandingZoneDriftStatus": {
+   "enum": [
+    "DRIFTED",
+    "IN_SYNC"
+   ],
+   "type": "string"
+  },
+  "LandingZoneStatus": {
+   "enum": [
+    "ACTIVE",
+    "PROCESSING",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "RemediationTypes": {
+   "items": {
+    "enum": [
+     "INHERITANCE_DRIFT"
+    ],
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LandingZoneIdentifier"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[0-9a-zA-Z_\\-:\\/]+$",
+   "type": "string"
+  },
+  "DriftStatus": {
+   "$ref": "#/definitions/LandingZoneDriftStatus"
+  },
+  "LandingZoneIdentifier": {
+   "type": "string"
+  },
+  "LatestAvailableVersion": {
+   "maxLength": 10,
+   "minLength": 3,
+   "pattern": "\\d+.\\d+",
+   "type": "string"
+  },
+  "Manifest": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "RemediationTypes": {
+   "$ref": "#/definitions/RemediationTypes"
+  },
+  "Status": {
+   "$ref": "#/definitions/LandingZoneStatus"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "Version": {
+   "maxLength": 10,
+   "minLength": 3,
+   "pattern": "\\d+.\\d+",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LandingZoneIdentifier",
+  "/properties/Arn",
+  "/properties/Status",
+  "/properties/LatestAvailableVersion",
+  "/properties/DriftStatus"
+ ],
+ "required": [
+  "Manifest",
+  "Version"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ControlTower::LandingZone"
+}
