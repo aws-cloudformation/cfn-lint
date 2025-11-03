@@ -60,6 +60,7 @@ class TestGetAtts(BaseTestCase):
         getatts.add("Resource", Resource({"Type": "AWS::NetworkFirewall::Firewall"}))
         results = getatts.match("us-east-1", "Resource.EndpointIds")
         self.assertEqual(results, "/properties/EndpointIds")
+        self.maxDiff = None
         self.assertDictEqual(
             getatts.json_schema("us-east-1"),
             {
@@ -93,6 +94,7 @@ class TestGetAtts(BaseTestCase):
                                                 "enum": [
                                                     "FirewallArn",
                                                     "FirewallId",
+                                                    "TransitGatewayAttachmentId",
                                                     "EndpointIds",
                                                 ],
                                             },
@@ -121,6 +123,7 @@ class TestGetAtts(BaseTestCase):
                         "enum": [
                             "Resource.FirewallArn",
                             "Resource.FirewallId",
+                            "Resource.TransitGatewayAttachmentId",
                             "Resource.EndpointIds",
                         ],
                     },
