@@ -1,0 +1,182 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CoreNetworkId",
+  "/properties/EdgeLocation",
+  "/properties/TransportAttachmentId",
+  "/properties/Options"
+ ],
+ "definitions": {
+  "ConnectAttachmentOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Protocol": {
+     "enum": [
+      "GRE",
+      "NO_ENCAP"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ProposedNetworkFunctionGroupChange": {
+   "additionalProperties": false,
+   "properties": {
+    "AttachmentPolicyRuleNumber": {
+     "type": "integer"
+    },
+    "NetworkFunctionGroupName": {
+     "type": "string"
+    },
+    "Tags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "ProposedSegmentChange": {
+   "additionalProperties": false,
+   "properties": {
+    "AttachmentPolicyRuleNumber": {
+     "type": "integer"
+    },
+    "SegmentName": {
+     "type": "string"
+    },
+    "Tags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 10000000,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 10000000,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AttachmentId"
+ ],
+ "properties": {
+  "AttachmentId": {
+   "type": "string"
+  },
+  "AttachmentPolicyRuleNumber": {
+   "type": "integer"
+  },
+  "AttachmentType": {
+   "type": "string"
+  },
+  "CoreNetworkArn": {
+   "type": "string"
+  },
+  "CoreNetworkId": {
+   "maxLength": 50,
+   "pattern": "^core-network-([0-9a-f]{8,17})$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "EdgeLocation": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "[\\s\\S]*",
+   "type": "string"
+  },
+  "NetworkFunctionGroupName": {
+   "type": "string"
+  },
+  "Options": {
+   "$ref": "#/definitions/ConnectAttachmentOptions"
+  },
+  "OwnerAccountId": {
+   "type": "string"
+  },
+  "ProposedNetworkFunctionGroupChange": {
+   "$ref": "#/definitions/ProposedNetworkFunctionGroupChange"
+  },
+  "ProposedSegmentChange": {
+   "$ref": "#/definitions/ProposedSegmentChange"
+  },
+  "ResourceArn": {
+   "type": "string"
+  },
+  "SegmentName": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TransportAttachmentId": {
+   "maxLength": 50,
+   "pattern": "^attachment-([0-9a-f]{8,17})$",
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CoreNetworkArn",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/AttachmentType",
+  "/properties/State",
+  "/properties/ResourceArn",
+  "/properties/AttachmentId",
+  "/properties/OwnerAccountId",
+  "/properties/AttachmentPolicyRuleNumber",
+  "/properties/SegmentName"
+ ],
+ "required": [
+  "CoreNetworkId",
+  "EdgeLocation",
+  "TransportAttachmentId",
+  "Options"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-connectattachment",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::ConnectAttachment"
+}

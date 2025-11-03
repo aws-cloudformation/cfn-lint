@@ -4,6 +4,19 @@
   "/properties/ConnectInstanceId"
  ],
  "definitions": {
+  "AgentAction": {
+   "enum": [
+    "DISCARD"
+   ],
+   "type": "string"
+  },
+  "AgentActions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AgentAction"
+   },
+   "type": "array"
+  },
   "AgentlessConfig": {
    "additionalProperties": false,
    "required": [],
@@ -329,6 +342,25 @@
    ],
    "type": "object"
   },
+  "PreviewConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AgentActions": {
+     "$ref": "#/definitions/AgentActions"
+    },
+    "BandwidthAllocation": {
+     "$ref": "#/definitions/BandwidthAllocation"
+    },
+    "TimeoutConfig": {
+     "$ref": "#/definitions/TimeoutConfig"
+    }
+   },
+   "required": [
+    "BandwidthAllocation",
+    "TimeoutConfig"
+   ],
+   "type": "object"
+  },
   "ProgressiveConfig": {
    "additionalProperties": false,
    "properties": {
@@ -558,6 +590,11 @@
      "required": [
       "AgentlessConfig"
      ]
+    },
+    {
+     "required": [
+      "PreviewConfig"
+     ]
     }
    ],
    "properties": {
@@ -566,6 +603,9 @@
     },
     "PredictiveConfig": {
      "$ref": "#/definitions/PredictiveConfig"
+    },
+    "PreviewConfig": {
+     "$ref": "#/definitions/PreviewConfig"
     },
     "ProgressiveConfig": {
      "$ref": "#/definitions/ProgressiveConfig"
@@ -619,6 +659,19 @@
    "maxLength": 50,
    "pattern": "[a-zA-Z0-9_\\-/]*",
    "type": "string"
+  },
+  "TimeoutConfig": {
+   "properties": {
+    "DurationInSeconds": {
+     "$ref": "#/definitions/TimeoutDuration"
+    }
+   },
+   "type": "object"
+  },
+  "TimeoutDuration": {
+   "maximum": 300,
+   "minimum": 10,
+   "type": "integer"
   }
  },
  "primaryIdentifier": [

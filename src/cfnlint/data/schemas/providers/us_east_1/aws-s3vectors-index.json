@@ -1,0 +1,131 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/IndexName",
+   "/properties/VectorBucketName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DataType",
+  "/properties/Dimension",
+  "/properties/DistanceMetric",
+  "/properties/IndexName",
+  "/properties/MetadataConfiguration",
+  "/properties/VectorBucketArn",
+  "/properties/VectorBucketName"
+ ],
+ "definitions": {
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DataType": {
+   "enum": [
+    "float32"
+   ],
+   "type": "string"
+  },
+  "Dimension": {
+   "maximum": 4096,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "DistanceMetric": {
+   "enum": [
+    "cosine",
+    "euclidean"
+   ],
+   "type": "string"
+  },
+  "IndexArn": {
+   "examples": [
+    "arn:aws:s3vectors:us-east-1:123456789012:bucket/myvectorbucket/index/myindex"
+   ],
+   "type": "string"
+  },
+  "IndexName": {
+   "maxLength": 63,
+   "minLength": 3,
+   "type": "string"
+  },
+  "MetadataConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "NonFilterableMetadataKeys": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 63,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "VectorBucketArn": {
+   "examples": [
+    "arn:aws:s3vectors:us-east-1:123456789012:bucket/myvectorbucket"
+   ],
+   "type": "string"
+  },
+  "VectorBucketName": {
+   "maxLength": 63,
+   "minLength": 3,
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IndexArn"
+ ],
+ "properties": {
+  "CreationTime": {
+   "$ref": "#/definitions/CreationTime"
+  },
+  "DataType": {
+   "$ref": "#/definitions/DataType"
+  },
+  "Dimension": {
+   "$ref": "#/definitions/Dimension"
+  },
+  "DistanceMetric": {
+   "$ref": "#/definitions/DistanceMetric"
+  },
+  "IndexArn": {
+   "$ref": "#/definitions/IndexArn"
+  },
+  "IndexName": {
+   "$ref": "#/definitions/IndexName"
+  },
+  "MetadataConfiguration": {
+   "$ref": "#/definitions/MetadataConfiguration"
+  },
+  "VectorBucketArn": {
+   "$ref": "#/definitions/VectorBucketArn"
+  },
+  "VectorBucketName": {
+   "$ref": "#/definitions/VectorBucketName"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreationTime",
+  "/properties/IndexArn"
+ ],
+ "required": [
+  "DataType",
+  "Dimension",
+  "DistanceMetric"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::S3Vectors::Index"
+}

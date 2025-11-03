@@ -2,7 +2,9 @@
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/DomainIdentifier",
+  "/properties/EnableTrustedIdentityPropagation",
   "/properties/EnvironmentIdentifier",
+  "/properties/ProjectIdentifier",
   "/properties/Name"
  ],
  "definitions": {
@@ -74,7 +76,7 @@
    "properties": {
     "AccessRole": {
      "maxLength": 2048,
-     "pattern": "^arn:aws[^:]*:iam::\\d{12}:(role|role/service-role)/[\\w+=,.@-]*$",
+     "pattern": "^arn:aws[^:]*:iam::\\d{12}:role(/[a-zA-Z0-9+=,.@_-]+)*/[a-zA-Z0-9+=,.@_-]+$",
      "type": "string"
     },
     "AwsAccountId": {
@@ -214,6 +216,19 @@
       "SparkGlueProperties"
      ],
      "title": "SparkGlueProperties",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "S3Properties": {
+       "$ref": "#/definitions/S3PropertiesInput"
+      }
+     },
+     "required": [
+      "S3Properties"
+     ],
+     "title": "S3Properties",
      "type": "object"
     }
    ]
@@ -586,6 +601,27 @@
     }
    ]
   },
+  "S3PropertiesInput": {
+   "additionalProperties": false,
+   "properties": {
+    "S3AccessGrantLocationId": {
+     "maxLength": 64,
+     "minLength": 0,
+     "pattern": "[a-zA-Z0-9\\-]+",
+     "type": "string"
+    },
+    "S3Uri": {
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "s3://.+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3Uri"
+   ],
+   "type": "object"
+  },
   "SparkEmrPropertiesInput": {
    "additionalProperties": false,
    "properties": {
@@ -596,7 +632,7 @@
     },
     "InstanceProfileArn": {
      "maxLength": 2048,
-     "pattern": "^arn:aws[^:]*:iam::\\d{12}:(role|role/service-role)/[\\w+=,.@-]*$",
+     "pattern": "^arn:aws[^:]*:iam::\\d{12}:role(/[a-zA-Z0-9+=,.@_-]+)*/[a-zA-Z0-9+=,.@_-]+$",
      "type": "string"
     },
     "JavaVirtualEnv": {
@@ -616,7 +652,7 @@
     },
     "RuntimeRole": {
      "maxLength": 2048,
-     "pattern": "^arn:aws[^:]*:iam::\\d{12}:(role|role/service-role)/[\\w+=,.@-]*$",
+     "pattern": "^arn:aws[^:]*:iam::\\d{12}:role(/[a-zA-Z0-9+=,.@_-]+)*/[a-zA-Z0-9+=,.@_-]+$",
      "type": "string"
     },
     "TrustedCertificatesS3Uri": {
@@ -748,6 +784,9 @@
    "pattern": "^[a-z0-9_\\-]+$",
    "type": "string"
   },
+  "EnableTrustedIdentityPropagation": {
+   "type": "boolean"
+  },
   "EnvironmentId": {
    "pattern": "^[a-zA-Z0-9_-]{1,36}$",
    "type": "string"
@@ -768,6 +807,9 @@
    "pattern": "^[a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
+  "ProjectIdentifier": {
+   "type": "string"
+  },
   "Props": {
    "$ref": "#/definitions/ConnectionPropertiesInput"
   },
@@ -786,7 +828,6 @@
  ],
  "required": [
   "DomainIdentifier",
-  "EnvironmentIdentifier",
   "Name"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone",
@@ -800,7 +841,9 @@
  "writeOnlyProperties": [
   "/properties/AwsLocation",
   "/properties/DomainIdentifier",
+  "/properties/EnableTrustedIdentityPropagation",
   "/properties/EnvironmentIdentifier",
+  "/properties/ProjectIdentifier",
   "/properties/Props"
  ]
 }

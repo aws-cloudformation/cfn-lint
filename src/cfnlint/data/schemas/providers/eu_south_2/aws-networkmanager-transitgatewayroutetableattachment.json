@@ -1,0 +1,165 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PeeringId",
+  "/properties/TransitGatewayRouteTableArn"
+ ],
+ "definitions": {
+  "ProposedNetworkFunctionGroupChange": {
+   "additionalProperties": false,
+   "properties": {
+    "AttachmentPolicyRuleNumber": {
+     "type": "integer"
+    },
+    "NetworkFunctionGroupName": {
+     "type": "string"
+    },
+    "Tags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "ProposedSegmentChange": {
+   "additionalProperties": false,
+   "properties": {
+    "AttachmentPolicyRuleNumber": {
+     "type": "integer"
+    },
+    "SegmentName": {
+     "type": "string"
+    },
+    "Tags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "insertionOrder": false,
+   "properties": {
+    "Key": {
+     "maxLength": 10000000,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 10000000,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AttachmentId"
+ ],
+ "properties": {
+  "AttachmentId": {
+   "type": "string"
+  },
+  "AttachmentPolicyRuleNumber": {
+   "type": "integer"
+  },
+  "AttachmentType": {
+   "type": "string"
+  },
+  "CoreNetworkArn": {
+   "type": "string"
+  },
+  "CoreNetworkId": {
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "EdgeLocation": {
+   "type": "string"
+  },
+  "NetworkFunctionGroupName": {
+   "type": "string"
+  },
+  "OwnerAccountId": {
+   "type": "string"
+  },
+  "PeeringId": {
+   "maxLength": 50,
+   "pattern": "^peering-([0-9a-f]{8,17})$",
+   "type": "string"
+  },
+  "ProposedNetworkFunctionGroupChange": {
+   "$ref": "#/definitions/ProposedNetworkFunctionGroupChange"
+  },
+  "ProposedSegmentChange": {
+   "$ref": "#/definitions/ProposedSegmentChange"
+  },
+  "ResourceArn": {
+   "type": "string"
+  },
+  "SegmentName": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TransitGatewayRouteTableArn": {
+   "maxLength": 500,
+   "pattern": "[\\s\\S]*",
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CoreNetworkArn",
+  "/properties/CoreNetworkId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/AttachmentType",
+  "/properties/State",
+  "/properties/ResourceArn",
+  "/properties/AttachmentId",
+  "/properties/OwnerAccountId",
+  "/properties/EdgeLocation",
+  "/properties/AttachmentPolicyRuleNumber",
+  "/properties/SegmentName"
+ ],
+ "required": [
+  "PeeringId",
+  "TransitGatewayRouteTableArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-transitgatewayroutetableattachment",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::TransitGatewayRouteTableAttachment"
+}

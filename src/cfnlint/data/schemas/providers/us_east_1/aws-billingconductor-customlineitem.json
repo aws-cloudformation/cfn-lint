@@ -3,6 +3,8 @@
  "createOnlyProperties": [
   "/properties/BillingGroupArn",
   "/properties/AccountId",
+  "/properties/ComputationRule",
+  "/properties/PresentationDetails",
   "/properties/BillingPeriodRange/InclusiveStartBillingPeriod",
   "/properties/BillingPeriodRange/ExclusiveEndBillingPeriod",
   "/properties/CustomLineItemChargeDetails/Type"
@@ -181,6 +183,12 @@
   "BillingPeriodRange": {
    "$ref": "#/definitions/BillingPeriodRange"
   },
+  "ComputationRule": {
+   "enum": [
+    "CONSOLIDATED"
+   ],
+   "type": "string"
+  },
   "CreationTime": {
    "type": "integer"
   },
@@ -207,6 +215,21 @@
    "minLength": 1,
    "pattern": "[a-zA-Z0-9_\\+=\\.\\-@]+",
    "type": "string"
+  },
+  "PresentationDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "Service": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Service"
+   ],
+   "type": "object"
   },
   "ProductCode": {
    "maxLength": 29,

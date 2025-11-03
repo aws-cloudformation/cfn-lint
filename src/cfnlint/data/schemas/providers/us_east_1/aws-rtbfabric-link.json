@@ -22,9 +22,64 @@
   "CreatedTimestamp": {
    "type": "string"
   },
+  "Filter": {
+   "additionalProperties": false,
+   "properties": {
+    "Criteria": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/FilterCriterion"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Criteria"
+   ],
+   "type": "object"
+  },
+  "FilterCriterion": {
+   "additionalProperties": false,
+   "properties": {
+    "Path": {
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Path",
+    "Values"
+   ],
+   "type": "object"
+  },
   "GatewayId": {
    "pattern": "^rtb-gw-[a-z0-9-]{1,25}$",
    "type": "string"
+  },
+  "HeaderTagAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
   },
   "HttpResponderAllowed": {
    "type": "boolean"
@@ -115,6 +170,161 @@
     "UNKNOWN_TO_SDK_VERSION"
    ],
    "type": "string"
+  },
+  "ModuleConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DependsOn": {
+     "insertionOrder": false,
+     "items": {
+      "pattern": "^[A-Za-z0-9 -]+$",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ModuleParameters": {
+     "$ref": "#/definitions/ModuleParameters"
+    },
+    "Name": {
+     "pattern": "^[A-Za-z0-9 -]+$",
+     "type": "string"
+    },
+    "Version": {
+     "pattern": "^[a-z0-9]{1,25}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "ModuleConfigurationList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ModuleConfiguration"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ModuleParameters": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "NoBid": {
+       "$ref": "#/definitions/NoBidModuleParameters"
+      }
+     },
+     "required": [
+      "NoBid"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "OpenRtbAttribute": {
+       "$ref": "#/definitions/OpenRtbAttributeModuleParameters"
+      }
+     },
+     "required": [
+      "OpenRtbAttribute"
+     ]
+    }
+   ],
+   "type": "object"
+  },
+  "NoBidAction": {
+   "additionalProperties": false,
+   "properties": {
+    "NoBidReasonCode": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "NoBidModuleParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "PassThroughPercentage": {
+     "maximum": 100.0,
+     "minimum": 0.0,
+     "type": "number"
+    },
+    "Reason": {
+     "maxLength": 50,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9]*$",
+     "type": "string"
+    },
+    "ReasonCode": {
+     "maximum": 10,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "OpenRtbAttributeModuleParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "oneOf": [
+      {
+       "additionalProperties": false,
+       "properties": {
+        "NoBid": {
+         "$ref": "#/definitions/NoBidAction"
+        }
+       },
+       "required": [
+        "NoBid"
+       ]
+      },
+      {
+       "additionalProperties": false,
+       "properties": {
+        "HeaderTag": {
+         "$ref": "#/definitions/HeaderTagAction"
+        }
+       },
+       "required": [
+        "HeaderTag"
+       ]
+      }
+     ],
+     "type": "object"
+    },
+    "FilterConfiguration": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Filter"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "FilterType": {
+     "enum": [
+      "INCLUDE",
+      "EXCLUDE"
+     ],
+     "type": "string"
+    },
+    "HoldbackPercentage": {
+     "maximum": 100.0,
+     "minimum": 0.0,
+     "type": "number"
+    }
+   },
+   "required": [
+    "FilterType",
+    "FilterConfiguration",
+    "Action",
+    "HoldbackPercentage"
+   ],
+   "type": "object"
   },
   "ResponderErrorMaskingForHttpCode": {
    "additionalProperties": false,
@@ -227,6 +437,9 @@
   "LinkStatus": {
    "$ref": "#/definitions/LinkStatus"
   },
+  "ModuleConfigurationList": {
+   "$ref": "#/definitions/ModuleConfigurationList"
+  },
   "PeerGatewayId": {
    "$ref": "#/definitions/GatewayId"
   },
@@ -259,6 +472,7 @@
  },
  "typeName": "AWS::RTBFabric::Link",
  "writeOnlyProperties": [
-  "/properties/HttpResponderAllowed"
+  "/properties/HttpResponderAllowed",
+  "/properties/ModuleConfigurationList"
  ]
 }
