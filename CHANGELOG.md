@@ -1,3 +1,10 @@
+### v1.40.4
+## What's Changed
+* Patch boto process to cover shap mismatch boto to schema by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4275
+* Update CloudFormation schemas to `2025-10-31` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4270
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.40.3...v1.40.4
+
 ### v1.40.3
 ## What's Changed
 * Update CloudFormation schemas to `2025-10-27` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4261
