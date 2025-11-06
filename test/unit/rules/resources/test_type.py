@@ -104,3 +104,34 @@ class TestType(BaseRuleTestCase):
             ],
             errors,
         )
+
+    @patch("cfnlint.template.Template", autospec=True)
+    def test_types_bad_sam_types(self, cfn):
+        cfn = Mock()
+        cfn.conditions = Mock()
+        cfn.conditions.build_scenerios_on_region.return_value = [False]
+        validator = CfnTemplateValidator({}).evolve(cfn=cfn)
+        errors = list(
+            self.rule.validate(
+                validator,
+                "cfnResources",
+                {"Type": "AWS::Serverless::Foo"},
+                {},
+            )
+        )
+
+        self.assertListEqual(
+            errors,
+            [
+                ValidationError(
+                    (
+                        "Resource type 'AWS::Serverless::Foo' "
+                        "does not exist in 'us-east-1'"
+                    ),
+                    path=deque(["Type"]),
+                    schema_path=deque([]),
+                    rule=ResourceType(),
+                ),
+            ],
+            errors,
+        )

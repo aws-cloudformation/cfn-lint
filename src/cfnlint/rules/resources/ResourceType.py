@@ -46,9 +46,9 @@ class ResourceType(CfnLintKeyword):
                 region=region
             ):
                 continue
-            if not resource_type.startswith(
-                ("Custom::", "AWS::Serverless::")
-            ) and not resource_type.endswith("::MODULE"):
+            if not resource_type.startswith("Custom::") and not resource_type.endswith(
+                "::MODULE"
+            ):
                 yield ValidationError(
                     f"Resource type {resource_type!r} does not exist in {region!r}",
                     path=deque(["Type"]),
