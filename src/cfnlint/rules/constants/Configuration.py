@@ -15,7 +15,7 @@ from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, Schema
 class Configuration(CfnLintJsonSchema):
     """Check if Constants are configured correctly"""
 
-    id = "E9001"
+    id = "E1060"
     shortdesc = "Constants are appropriately configured"
     description = "Check if Constants are properly configured"
     # TODO: Update source_url once Constants documentation is published

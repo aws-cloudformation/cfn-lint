@@ -11,7 +11,7 @@ from cfnlint.template import Template
 class RequiresTransform(CloudFormationLintRule):
     """Check that Constants section requires AWS::LanguageExtensions transform"""
 
-    id = "E9002"
+    id = "E1061"
     shortdesc = "Constants requires AWS::LanguageExtensions transform"
     description = (
         "The Constants section can only be used when the template includes "

@@ -13,7 +13,7 @@ from cfnlint.template import Template
 class Used(CloudFormationLintRule):
     """Check if Constants are used"""
 
-    id = "W9003"
+    id = "W1062"
     shortdesc = "Check if Constants are Used"
     description = "Making sure the constants defined are used"
     source_url = "https://github.com/aws-cloudformation/cfn-lint"
