@@ -3,12 +3,11 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from collections import deque
 
 import pytest
 
 from cfnlint.context import create_context_for_template
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.constants.Configuration import Configuration
 from cfnlint.template import Template
 
