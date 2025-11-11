@@ -120,11 +120,11 @@ def rule():
 def test_requires_transform(name, template, expected_matches, rule):
     cfn = Template("", template, regions=["us-east-1"])
     matches = rule.match(cfn)
-    
+
     assert len(matches) == expected_matches, (
         f"Test {name!r} expected {expected_matches} matches, got {len(matches)}"
     )
-    
+
     if expected_matches > 0:
         assert matches[0].path == ["Constants"]
         assert "Transform: AWS::LanguageExtensions" in matches[0].message

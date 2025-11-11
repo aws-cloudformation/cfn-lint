@@ -34,12 +34,12 @@ class RequiresTransform(CloudFormationLintRule):
         # Check if AWS::LanguageExtensions transform is present
         transform = cfn.template.get("Transform")
         has_language_extensions = False
-        
+
         if isinstance(transform, str):
             has_language_extensions = transform == "AWS::LanguageExtensions"
         elif isinstance(transform, list):
             has_language_extensions = "AWS::LanguageExtensions" in transform
-        
+
         if not has_language_extensions:
             message = (
                 "Constants section requires "

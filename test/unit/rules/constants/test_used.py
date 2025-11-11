@@ -150,12 +150,12 @@ def rule():
 def test_used(name, template, expected_matches, rule):
     cfn = Template("", template, regions=["us-east-1"])
     matches = rule.match(cfn)
-    
+
     assert len(matches) == expected_matches, (
         f"Test {name!r} expected {expected_matches} matches, "
         f"got {len(matches)}: {matches}"
     )
-    
+
     if expected_matches > 0:
         for match in matches:
             assert match.path[0] == "Constants"

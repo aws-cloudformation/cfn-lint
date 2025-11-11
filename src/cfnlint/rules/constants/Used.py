@@ -21,7 +21,7 @@ class Used(CloudFormationLintRule):
 
     def match(self, cfn: Template) -> RuleMatches:
         matches: RuleMatches = []
-        
+
         # Constants only work with LanguageExtensions transform
         if not cfn.has_language_extensions_transform():
             return matches
