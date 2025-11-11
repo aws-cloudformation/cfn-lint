@@ -59,7 +59,7 @@ def rule():
                         "Type": "AWS::S3::Bucket",
                         "Properties": {
                             "BucketName": {"Fn::Sub": "${BucketPrefix}-bucket"}
-                        }
+                        },
                     }
                 },
             },
@@ -80,10 +80,10 @@ def rule():
                             "BucketName": {
                                 "Fn::Sub": [
                                     "${Prefix}-${Environment}",
-                                    {"Prefix": "my-bucket"}
+                                    {"Prefix": "my-bucket"},
                                 ]
                             }
-                        }
+                        },
                     }
                 },
             },
@@ -100,9 +100,7 @@ def rule():
                 "Resources": {
                     "MyBucket": {
                         "Type": "AWS::S3::Bucket",
-                        "Properties": {
-                            "BucketName": {"Ref": "BucketName"}
-                        }
+                        "Properties": {"BucketName": {"Ref": "BucketName"}},
                     }
                 },
             },
@@ -139,7 +137,7 @@ def rule():
                         "Type": "AWS::S3::Bucket",
                         "Properties": {
                             "BucketName": {"Fn::Sub": "${UsedConstant}-bucket"}
-                        }
+                        },
                     }
                 },
             },
