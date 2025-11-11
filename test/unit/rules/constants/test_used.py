@@ -152,7 +152,8 @@ def test_used(name, template, expected_matches, rule):
     matches = rule.match(cfn)
     
     assert len(matches) == expected_matches, (
-        f"Test {name!r} expected {expected_matches} matches, got {len(matches)}: {matches}"
+        f"Test {name!r} expected {expected_matches} matches, "
+        f"got {len(matches)}: {matches}"
     )
     
     if expected_matches > 0:

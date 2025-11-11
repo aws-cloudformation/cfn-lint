@@ -52,7 +52,11 @@ def context(cfn):
         ("Invalid constant name with dot", {"Invalid.Name": "value"}, 1),
         ("Invalid constant name with space", {"Invalid Name": "value"}, 1),
         ("Constant name too long", {"A" * 256: "value"}, 1),
-        ("Empty constant name", {"": "value"}, 2),  # Triggers both pattern and minLength errors
+        (
+            "Empty constant name",
+            {"": "value"},
+            2,
+        ),  # Triggers both pattern and minLength errors
     ],
 )
 def test_configuration(name, instance, expected_error_count, rule, context, cfn):

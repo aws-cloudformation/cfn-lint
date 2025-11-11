@@ -50,7 +50,10 @@ class Used(CloudFormationLintRule):
             if constant_name not in refs and constant_name not in subs:
                 message = "Constant {0} not used."
                 matches.append(
-                    RuleMatch(["Constants", constant_name], message.format(constant_name))
+                    RuleMatch(
+                        ["Constants", constant_name],
+                        message.format(constant_name),
+                    )
                 )
 
         return matches
