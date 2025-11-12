@@ -54,9 +54,8 @@ class TestForEach(TestCase):
         with self.assertRaises(_ValueError):
             _ForEach("key", [{"foo": "foo", "bar": "bar"}, "bar", {}], {})
 
-        # Invalid list identifiers
-        with self.assertRaises(_TypeError):
-            _ForEach("key", [["OnlyOne"], {"key": "value"}, {}], {})
+        # Valid: single identifier in list is allowed
+        _ForEach("key", [["OnlyOne"], [["value1"], ["value2"]], {}], {})
 
         # Valid: 3+ identifiers are now supported
         _ForEach("key", [["One", "Two", "Three"], [[1, 2, 3]], {}], {})
