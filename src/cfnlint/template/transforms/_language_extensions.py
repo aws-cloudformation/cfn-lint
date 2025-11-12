@@ -56,7 +56,9 @@ def language_extension(cfn: Any) -> TransformResult:
         LOGGER.debug(e, exc_info=True)
         # pylint: disable=import-outside-toplevel
         from cfnlint.match import Match  # pylint: disable=cyclic-import
-        from cfnlint.rules.errors.transform import TransformError  # pylint: disable=cyclic-import
+        from cfnlint.rules.errors.transform import (
+            TransformError,  # pylint: disable=cyclic-import
+        )
 
         message = "Error transforming template: {0}"
         if hasattr(e.key, "start_mark"):
@@ -87,7 +89,9 @@ def language_extension(cfn: Any) -> TransformResult:
         LOGGER.debug(e, exc_info=True)
         # pylint: disable=import-outside-toplevel
         from cfnlint.match import Match  # pylint: disable=cyclic-import
-        from cfnlint.rules.errors.transform import TransformError  # pylint: disable=cyclic-import
+        from cfnlint.rules.errors.transform import (
+            TransformError,  # pylint: disable=cyclic-import
+        )
 
         message = "Error transforming template: {0}"
         return [
@@ -307,9 +311,9 @@ class _ForEachValue:
             return _ForEachValue(_hash, obj)
         if isinstance(obj, list):
             # Lists can be:
-            # 1. Identifiers (strings or Ref, 2+) - for list of lists/map iteration
+            # 1. Identifiers (strings or Ref, 1+) - for list of lists/map iteration
             # 2. Collection values (any types) - for list of lists iteration
-            if len(obj) >= 2 and all(
+            if len(obj) >= 1 and all(
                 isinstance(item, str)
                 or (isinstance(item, dict) and len(item) == 1 and "Ref" in item)
                 for item in obj
@@ -718,10 +722,6 @@ class _ForEach:
 
         # Validate identifier list
         if isinstance(value[0], list):
-            if len(value[0]) < 2:
-                raise _TypeError(
-                    "Identifier list must have at least 2 elements", value[0]
-                )
             for i in value[0]:
                 if not isinstance(i, (str, dict)):
                     raise _TypeError(

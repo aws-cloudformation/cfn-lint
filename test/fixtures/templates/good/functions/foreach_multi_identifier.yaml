@@ -8,7 +8,7 @@ Resources:
   # List-of-lists iteration with 2 identifiers
   "Fn::ForEach::Instances":
     - [LogicalId, AmiId]
-    - 
+    -
       - [1, ami-12345678]
       - [2, ami-87654321]
       - [3, ami-11111111]
@@ -17,7 +17,7 @@ Resources:
         Properties:
           ImageId: !Ref AmiId
           InstanceType: t3.micro
-  
+
   # Map iteration with 2 identifiers
   "Fn::ForEach::SecurityGroups":
     - [Name, Port]
@@ -33,7 +33,7 @@ Resources:
               FromPort: !Ref Port
               ToPort: !Ref Port
               CidrIp: 0.0.0.0/0
-  
+
   # List-of-lists with 3 identifiers
   "Fn::ForEach::Alarms":
     - [Resource, Metric, Threshold]
@@ -52,7 +52,7 @@ Resources:
           Namespace: AWS/EC2
           Statistic: Average
           Period: 300
-  
+
   # List-of-lists with Ref in identifier
   "Fn::ForEach::DynamicInstances":
     - [!Ref IdentifierName, ImageId]
