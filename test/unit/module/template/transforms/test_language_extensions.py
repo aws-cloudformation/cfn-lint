@@ -148,6 +148,36 @@ class TestForEachMultiIdentifier(TestCase):
         self.assertIn("Resourceid1val1", result["Resources"])
         self.assertIn("Resourceid2val2", result["Resources"])
 
+    def test_ref_in_identifier_with_map_iteration(self):
+        """Test that Ref in identifier works with map iteration"""
+        cfn = Template(
+            "",
+            {
+                "Parameters": {
+                    "KeyParam": {
+                        "Type": "String",
+                        "Default": "Key",
+                    },
+                    "ValueParam": {
+                        "Type": "String",
+                        "Default": "Value",
+                    },
+                },
+                "Resources": {
+                    "Fn::ForEach::Test": [
+                        [{"Ref": "KeyParam"}, {"Ref": "ValueParam"}],
+                        {"Port443": "HTTPS", "Port22": "SSH"},
+                        {"SG${Key}${Value}": {"Type": "AWS::EC2::SecurityGroup"}},
+                    ]
+                },
+            },
+            regions=["us-west-2"],
+        )
+        matches, result = language_extension(cfn)
+        self.assertEqual(len(matches), 0)
+        self.assertIn("SGPort443HTTPS", result["Resources"])
+        self.assertIn("SGPort22SSH", result["Resources"])
+
     def test_ref_in_identifier_non_string_error(self):
         """Test that Ref in identifier must resolve to string"""
         cfn = Template(
