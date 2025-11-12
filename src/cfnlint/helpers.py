@@ -130,6 +130,7 @@ AVAILABILITY_ZONES = {
     "us-isof-east-1": ["us-isof-east-1a", "us-isof-east-1b", "us-isof-east-1c"],
     "us-isof-south-1": ["us-isof-south-1a", "us-isof-south-1b", "us-isof-south-1c"],
     "eu-isoe-west-1": ["eu-isoe-west-1a", "eu-isoe-west-1b", "eu-isoe-west-1c"],
+    "eusc-de-east-1": ["eusc-de-east-1a", "eusc-de-east-1b", "eusc-de-east-1c" ],
 }
 
 REGIONS = list(AVAILABILITY_ZONES.keys())
