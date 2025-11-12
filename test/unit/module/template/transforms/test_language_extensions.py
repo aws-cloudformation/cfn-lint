@@ -29,6 +29,8 @@ class TestForEach(TestCase):
             "key", [{"Ref": "Parameter"}, {"Ref": "AWS::NotificationArns"}, {}], {}
         )
         _ForEach("key", ["AccountId", {"Ref": "AccountIds"}, {}], {})
+        # Map iteration with two identifiers
+        _ForEach("key", [["KeyId", "ValueId"], {"Key1": "Value1"}, {}], {})
 
     def test_wrong_type(self):
         with self.assertRaises(_TypeError):
@@ -41,15 +43,26 @@ class TestForEach(TestCase):
         with self.assertRaises(_TypeError):
             _ForEach("key", ["foo", "bar", {}], {})
 
-        with self.assertRaises(_ValueError):
-            _ForEach("key", ["foo", {"foo": "foo", "bar": "bar"}, {}], {})
+        # Map collections with multiple keys are now valid for map iteration
+        _ForEach("key", [["KeyId", "ValueId"], {"foo": "foo", "bar": "bar"}, {}], {})
 
     def test_identifier_type(self):
         with self.assertRaises(_TypeError):
             _ForEach("key", [[], "bar", {}], {})
 
+        # Single-key dict is still invalid for single identifier
         with self.assertRaises(_ValueError):
             _ForEach("key", [{"foo": "foo", "bar": "bar"}, "bar", {}], {})
+
+        # Invalid list identifiers
+        with self.assertRaises(_TypeError):
+            _ForEach("key", [["OnlyOne"], {"key": "value"}, {}], {})
+
+        # Valid: 3+ identifiers are now supported
+        _ForEach("key", [["One", "Two", "Three"], [[1, 2, 3]], {}], {})
+
+        with self.assertRaises(_TypeError):
+            _ForEach("key", [[1, 2], {"key": "value"}, {}], {})
 
     def test_output_type(self):
         with self.assertRaises(_TypeError):
@@ -84,6 +97,14 @@ class TestForEachCollection(TestCase):
             list(fec.values(self.cfn, {}, {"AccountIds": ["A", "B"]})),
             ["A", "B"],
         )
+
+    def test_map_collection(self):
+        """Test map collection for map iteration"""
+        fec = _ForEachCollection({"Key1": "Value1", "Key2": "Value2"})
+        values = list(fec.values(self.cfn, {}, {}))
+        self.assertEqual(len(values), 2)
+        self.assertIn({"Key1": "Value1"}, values)
+        self.assertIn({"Key2": "Value2"}, values)
 
 
 class TestFnIf(TestCase):

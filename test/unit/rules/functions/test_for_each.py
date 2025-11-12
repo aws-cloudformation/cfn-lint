@@ -14,6 +14,7 @@ class TestForEach(BaseRuleTestCase):
         self.collection.register(ForEach())
         self.success_templates = [
             "test/fixtures/templates/good/functions/foreach.yaml",
+            "test/fixtures/templates/good/functions/foreach_multi_identifier.yaml",
         ]
 
     def test_file_positive(self):

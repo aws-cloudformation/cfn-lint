@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: "AWS::LanguageExtensions"
+Parameters:
+  IdentifierName:
+    Type: String
+    Default: "Instance"
+Resources:
+  # List-of-lists iteration with 2 identifiers
+  "Fn::ForEach::Instances":
+    - [LogicalId, AmiId]
+    - 
+      - [1, ami-12345678]
+      - [2, ami-87654321]
+      - [3, ami-11111111]
+    - "Instance${LogicalId}":
+        Type: "AWS::EC2::Instance"
+        Properties:
+          ImageId: !Ref AmiId
+          InstanceType: t3.micro
+  
+  # Map iteration with 2 identifiers
+  "Fn::ForEach::SecurityGroups":
+    - [Name, Port]
+    - Web: 443
+      SSH: 22
+      Custom: 8080
+    - "SecurityGroup${Name}":
+        Type: "AWS::EC2::SecurityGroup"
+        Properties:
+          GroupDescription: !Sub "Security group for ${Name}"
+          SecurityGroupIngress:
+            - IpProtocol: tcp
+              FromPort: !Ref Port
+              ToPort: !Ref Port
+              CidrIp: 0.0.0.0/0
+  
+  # List-of-lists with 3 identifiers
+  "Fn::ForEach::Alarms":
+    - [Resource, Metric, Threshold]
+    -
+      - [CPU, CPUUtilization, 80]
+      - [Memory, MemoryUtilization, 90]
+      - [Disk, DiskUtilization, 85]
+    - "Alarm${Resource}":
+        Type: "AWS::CloudWatch::Alarm"
+        Properties:
+          AlarmName: !Sub "${Resource}-alarm"
+          MetricName: !Ref Metric
+          Threshold: !Ref Threshold
+          ComparisonOperator: GreaterThanThreshold
+          EvaluationPeriods: 2
+          Namespace: AWS/EC2
+          Statistic: Average
+          Period: 300
+  
+  # List-of-lists with Ref in identifier
+  "Fn::ForEach::DynamicInstances":
+    - [!Ref IdentifierName, ImageId]
+    -
+      - [A, ami-aaaaaaaa]
+      - [B, ami-bbbbbbbb]
+    - "Dynamic${Instance}":
+        Type: "AWS::EC2::Instance"
+        Properties:
+          ImageId: !Ref ImageId
+          InstanceType: t3.nano
+
+Outputs:
+  # Map iteration in Outputs
+  "Fn::ForEach::InstanceOutputs":
+    - [Id, Ami]
+    - First: ami-12345678
+      Second: ami-87654321
+    - "Instance${Id}ImageId":
+        Value: !Ref Ami
+        Description: !Sub "AMI ID for ${Id}"
