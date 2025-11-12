@@ -123,6 +123,8 @@ AVAILABILITY_ZONES = {
     "us-gov-west-1": ["us-gov-west-1a", "us-gov-west-1b", "us-gov-west-1c"],
     "us-west-1": ["us-west-1a", "us-west-1c"],
     "us-west-2": ["us-west-2a", "us-west-2b", "us-west-2c", "us-west-2d"],
+    # Sovereign regions
+    "eusc-de-east-1": ["eusc-de-east-1a", "eusc-de-east-1b", "eusc-de-east-1c"],
     # Isolated regions
     "us-iso-east-1": ["us-iso-east-1a", "us-iso-east-1b", "us-iso-east-1c"],
     "us-iso-west-1": ["us-iso-west-1a", "us-iso-west-1b", "us-iso-west-1c"],
