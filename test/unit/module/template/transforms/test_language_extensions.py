@@ -106,6 +106,131 @@ class TestForEachCollection(TestCase):
         self.assertIn({"Key2": "Value2"}, values)
 
 
+class TestForEachMultiIdentifier(TestCase):
+    def setUp(self) -> None:
+        super().setUp()
+        self.cfn = Template(
+            "",
+            {
+                "Parameters": {
+                    "IdParam": {
+                        "Type": "String",
+                        "Default": "TestId",
+                    },
+                },
+            },
+            regions=["us-west-2"],
+        )
+
+    def test_ref_in_identifier_resolves_to_string(self):
+        """Test that Ref in identifier resolves to string"""
+        cfn = Template(
+            "",
+            {
+                "Parameters": {
+                    "IdParam": {
+                        "Type": "String",
+                        "Default": "TestId",
+                    },
+                },
+                "Resources": {
+                    "Fn::ForEach::Test": [
+                        [{"Ref": "IdParam"}, "Value"],
+                        [["id1", "val1"], ["id2", "val2"]],
+                        {"Resource${TestId}${Value}": {"Type": "AWS::S3::Bucket"}},
+                    ]
+                },
+            },
+            regions=["us-west-2"],
+        )
+        matches, result = language_extension(cfn)
+        self.assertEqual(len(matches), 0)
+        self.assertIn("Resourceid1val1", result["Resources"])
+        self.assertIn("Resourceid2val2", result["Resources"])
+
+    def test_ref_in_identifier_non_string_error(self):
+        """Test that Ref in identifier must resolve to string"""
+        cfn = Template(
+            "",
+            {
+                "Parameters": {
+                    "ListParam": {"Type": "CommaDelimitedList", "Default": "a,b"},
+                },
+                "Resources": {
+                    "Fn::ForEach::Test": [
+                        [{"Ref": "ListParam"}, "Value"],
+                        [["id1", "val1"]],
+                        {"Resource${ListParam}": {"Type": "AWS::S3::Bucket"}},
+                    ]
+                },
+            },
+            regions=["us-west-2"],
+        )
+        matches, result = language_extension(cfn)
+        self.assertEqual(len(matches), 1)
+        self.assertIn("Ref in identifier must resolve to string", matches[0].message)
+
+    def test_map_with_three_identifiers_error(self):
+        """Test that map iteration only supports 2 identifiers"""
+        cfn = Template(
+            "",
+            {
+                "Resources": {
+                    "Fn::ForEach::Test": [
+                        ["Id1", "Id2", "Id3"],
+                        {"Key1": "Value1"},
+                        {"Resource${Id1}": {"Type": "AWS::S3::Bucket"}},
+                    ]
+                }
+            },
+            regions=["us-west-2"],
+        )
+        matches, result = language_extension(cfn)
+        self.assertEqual(len(matches), 1)
+        self.assertIn("Map iteration only supports 2 identifiers", matches[0].message)
+
+    def test_list_length_mismatch_error(self):
+        """Test that list items must match identifier count"""
+        cfn = Template(
+            "",
+            {
+                "Resources": {
+                    "Fn::ForEach::Test": [
+                        ["Id1", "Id2", "Id3"],
+                        [["a", "b"], ["c", "d"]],
+                        {"Resource${Id1}": {"Type": "AWS::S3::Bucket"}},
+                    ]
+                }
+            },
+            regions=["us-west-2"],
+        )
+        matches, result = language_extension(cfn)
+        self.assertEqual(len(matches), 1)
+        self.assertIn("elements to match identifiers", matches[0].message)
+
+    def test_collection_value_not_dict_or_list_error(self):
+        """Test that collection values must be dicts or lists for multi-identifier"""
+        cfn = Template(
+            "",
+            {
+                "Resources": {
+                    "Fn::ForEach::Test": [
+                        ["Id1", "Id2"],
+                        ["string_value"],
+                        {"Resource${Id1}": {"Type": "AWS::S3::Bucket"}},
+                    ]
+                }
+            },
+            regions=["us-west-2"],
+        )
+        matches, result = language_extension(cfn)
+        self.assertEqual(len(matches), 1)
+        self.assertIn(
+            "Multiple identifiers require collection values to be dicts or lists",
+            matches[0].message,
+        )
+
+
 class TestFnIf(TestCase):
     def setUp(self) -> None:
         self.template_obj = convert_dict({})
