@@ -284,7 +284,7 @@ class ProviderSchemaManager:
 
         multiprocessing_logger.debug("Downloading template %s into %s", url, directory)
 
-        if "iso" in region or region.startswith('eusc'):
+        if "iso" in region or region.startswith("eusc"):
             all_types = ["AWS::CDK::Metadata", "Module"]
             cached = ["Module"]
             filenames = [
