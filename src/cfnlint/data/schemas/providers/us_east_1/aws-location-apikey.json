@@ -4,6 +4,28 @@
   "/properties/KeyName"
  ],
  "definitions": {
+  "AndroidApp": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateFingerprint": {
+     "maxLength": 59,
+     "minLength": 59,
+     "pattern": "^([A-Fa-f0-9]{2}:){19}[A-Fa-f0-9]{2}$",
+     "type": "string"
+    },
+    "Package": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^([A-Za-z][A-Za-z\\d_]*\\.)+[A-Za-z][A-Za-z\\d_]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "CertificateFingerprint",
+    "Package"
+   ],
+   "type": "object"
+  },
   "ApiKeyRestrictions": {
    "additionalProperties": false,
    "properties": {
@@ -19,15 +41,33 @@
      "minItems": 1,
      "type": "array"
     },
+    "AllowAndroidApps": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/AndroidApp"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array"
+    },
+    "AllowAppleApps": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/AppleApp"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array"
+    },
     "AllowReferers": {
      "insertionOrder": false,
      "items": {
       "maxLength": 253,
-      "pattern": "^([$\\-._+!*`(),;/?:@=&\\w]|%([0-9a-fA-F?]{2}|[0-9a-fA-F?]?[*]))+$",
+      "pattern": "^([\\w!$&()*+,./:;=?@\\x{60}-]|%([\\dA-Fa-f]{2}|[\\dA-Fa-f]?\\*))+$",
       "type": "string"
      },
      "maxItems": 5,
-     "minItems": 1,
+     "minItems": 0,
      "type": "array"
     },
     "AllowResources": {
@@ -45,6 +85,21 @@
    "required": [
     "AllowActions",
     "AllowResources"
+   ],
+   "type": "object"
+  },
+  "AppleApp": {
+   "additionalProperties": false,
+   "properties": {
+    "BundleId": {
+     "maxLength": 155,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9\\-]+(\\.[A-Za-z0-9\\-]+)+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BundleId"
    ],
    "type": "object"
   },

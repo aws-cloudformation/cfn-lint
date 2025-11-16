@@ -35,6 +35,25 @@
    "minLength": 3,
    "type": "string"
   },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
   "UnreferencedFileRemoval": {
    "additionalProperties": false,
    "properties": {
@@ -70,6 +89,14 @@
   "TableBucketName": {
    "$ref": "#/definitions/TableBucketName"
   },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
   "UnreferencedFileRemoval": {
    "$ref": "#/definitions/UnreferencedFileRemoval"
   }
@@ -82,9 +109,10 @@
  ],
  "tagging": {
   "cloudFormationSystemTags": false,
-  "tagOnCreate": false,
-  "tagUpdatable": false,
-  "taggable": false
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
  },
  "typeName": "AWS::S3Tables::TableBucket"
 }

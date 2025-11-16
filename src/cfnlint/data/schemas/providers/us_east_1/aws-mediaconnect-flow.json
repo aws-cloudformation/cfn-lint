@@ -15,6 +15,10 @@
    },
    "type": "object"
   },
+  "AutomaticEncryptionKeyConfiguration": {
+   "additionalProperties": false,
+   "type": "object"
+  },
   "BlackFrames": {
    "additionalProperties": false,
    "properties": {
@@ -113,6 +117,58 @@
     }
    },
    "type": "object"
+  },
+  "FlowTransitEncryption": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionKeyConfiguration": {
+     "$ref": "#/definitions/FlowTransitEncryptionKeyConfiguration"
+    },
+    "EncryptionKeyType": {
+     "$ref": "#/definitions/FlowTransitEncryptionKeyType"
+    }
+   },
+   "required": [
+    "EncryptionKeyConfiguration"
+   ],
+   "type": "object"
+  },
+  "FlowTransitEncryptionKeyConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "SecretsManager": {
+       "$ref": "#/definitions/SecretsManagerEncryptionKeyConfiguration"
+      }
+     },
+     "required": [
+      "SecretsManager"
+     ],
+     "title": "SecretsManager",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Automatic": {
+       "$ref": "#/definitions/AutomaticEncryptionKeyConfiguration"
+      }
+     },
+     "required": [
+      "Automatic"
+     ],
+     "title": "Automatic",
+     "type": "object"
+    }
+   ]
+  },
+  "FlowTransitEncryptionKeyType": {
+   "enum": [
+    "SECRETS_MANAGER",
+    "AUTOMATIC"
+   ],
+   "type": "string"
   },
   "Fmtp": {
    "additionalProperties": false,
@@ -385,6 +441,24 @@
    ],
    "type": "object"
   },
+  "SecretsManagerEncryptionKeyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "RoleArn": {
+     "pattern": "^arn:(aws[a-zA-Z-]*):iam::[0-9]{12}:role/[a-zA-Z0-9_+=,.@-]+$",
+     "type": "string"
+    },
+    "SecretArn": {
+     "pattern": "^arn:(aws[a-zA-Z-]*):secretsmanager:[a-z0-9-]+:[0-9]{12}:secret:[a-zA-Z0-9/_+=.@-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn",
+    "SecretArn"
+   ],
+   "type": "object"
+  },
   "SilentAudio": {
    "additionalProperties": false,
    "properties": {
@@ -457,6 +531,16 @@
       "cdi"
      ],
      "type": "string"
+    },
+    "RouterIntegrationState": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "RouterIntegrationTransitDecryption": {
+     "$ref": "#/definitions/FlowTransitEncryption"
     },
     "SenderControlPort": {
      "type": "integer"

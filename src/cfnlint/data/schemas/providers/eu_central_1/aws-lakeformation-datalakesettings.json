@@ -1,0 +1,100 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "DataLakePrincipal": {
+   "properties": {
+    "DataLakePrincipalIdentifier": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PrincipalPermissions": {
+   "properties": {
+    "Permissions": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Principal": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ReadOnlyAdmins": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Admins": {
+   "items": {
+    "$ref": "#/definitions/DataLakePrincipal"
+   },
+   "type": "array"
+  },
+  "AllowExternalDataFiltering": {
+   "type": "boolean"
+  },
+  "AllowFullTableExternalDataAccess": {
+   "type": "boolean"
+  },
+  "AuthorizedSessionTagValueList": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "CreateDatabaseDefaultPermissions": {
+   "items": {
+    "$ref": "#/definitions/PrincipalPermissions"
+   },
+   "type": "array"
+  },
+  "CreateTableDefaultPermissions": {
+   "items": {
+    "$ref": "#/definitions/PrincipalPermissions"
+   },
+   "type": "array"
+  },
+  "ExternalDataFilteringAllowList": {
+   "items": {
+    "$ref": "#/definitions/DataLakePrincipal"
+   },
+   "type": "array"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "MutationType": {
+   "type": "string"
+  },
+  "Parameters": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "ReadOnlyAdmins": {
+   "$ref": "#/definitions/ReadOnlyAdmins"
+  },
+  "TrustedResourceOwners": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "typeName": "AWS::LakeFormation::DataLakeSettings"
+}

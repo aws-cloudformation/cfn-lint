@@ -139,6 +139,19 @@
    ],
    "type": "object"
   },
+  "McpServerTargetConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Endpoint": {
+     "pattern": "^https://.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Endpoint"
+   ],
+   "type": "object"
+  },
   "McpTargetConfiguration": {
    "oneOf": [
     {
@@ -178,6 +191,19 @@
       "Lambda"
      ],
      "title": "Lambda",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "McpServer": {
+       "$ref": "#/definitions/McpServerTargetConfiguration"
+      }
+     },
+     "required": [
+      "McpServer"
+     ],
+     "title": "McpServer",
      "type": "object"
     }
    ]
@@ -306,7 +332,9 @@
     "UPDATE_UNSUCCESSFUL",
     "DELETING",
     "READY",
-    "FAILED"
+    "FAILED",
+    "SYNCHRONIZING",
+    "SYNCHRONIZE_UNSUCCESSFUL"
    ],
    "type": "string"
   },
@@ -397,6 +425,10 @@
    "pattern": "^([0-9a-z][-]?){1,100}-[0-9a-z]{10}$",
    "type": "string"
   },
+  "LastSynchronizedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
   "Name": {
    "pattern": "^([0-9a-zA-Z][-]?){1,100}$",
    "type": "string"
@@ -427,6 +459,7 @@
  "readOnlyProperties": [
   "/properties/CreatedAt",
   "/properties/GatewayArn",
+  "/properties/LastSynchronizedAt",
   "/properties/Status",
   "/properties/StatusReasons",
   "/properties/TargetId",

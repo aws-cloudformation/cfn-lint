@@ -1,0 +1,180 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceArn"
+ ],
+ "definitions": {
+  "Condition": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionCondition": {
+     "additionalProperties": false,
+     "properties": {
+      "Action": {
+       "enum": [
+        "ALLOW",
+        "BLOCK",
+        "COUNT",
+        "CAPTCHA",
+        "CHALLENGE",
+        "EXCLUDED_AS_COUNT"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "Action"
+     ],
+     "type": "object"
+    },
+    "LabelNameCondition": {
+     "additionalProperties": false,
+     "properties": {
+      "LabelName": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "LabelName"
+     ],
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "FieldToMatch": {
+   "additionalProperties": false,
+   "properties": {
+    "Method": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "QueryString": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "SingleHeader": {
+     "additionalProperties": false,
+     "properties": {
+      "Name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "Name"
+     ],
+     "type": "object"
+    },
+    "UriPath": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "Filter": {
+   "additionalProperties": false,
+   "properties": {
+    "Behavior": {
+     "enum": [
+      "KEEP",
+      "DROP"
+     ],
+     "type": "string"
+    },
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "Requirement": {
+     "enum": [
+      "MEETS_ALL",
+      "MEETS_ANY"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Behavior",
+    "Conditions",
+    "Requirement"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResourceArn"
+ ],
+ "properties": {
+  "LogDestinationConfigs": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "LoggingFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultBehavior": {
+     "enum": [
+      "KEEP",
+      "DROP"
+     ],
+     "type": "string"
+    },
+    "Filters": {
+     "items": {
+      "$ref": "#/definitions/Filter"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "DefaultBehavior",
+    "Filters"
+   ],
+   "type": "object"
+  },
+  "ManagedByFirewallManager": {
+   "type": "boolean"
+  },
+  "RedactedFields": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/FieldToMatch"
+   },
+   "type": "array"
+  },
+  "ResourceArn": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ManagedByFirewallManager"
+ ],
+ "required": [
+  "ResourceArn",
+  "LogDestinationConfigs"
+ ],
+ "sourceUrl": "https://github.com/advaj/aws-cloudformation-resource-providers-wafv2.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::WAFv2::LoggingConfiguration"
+}

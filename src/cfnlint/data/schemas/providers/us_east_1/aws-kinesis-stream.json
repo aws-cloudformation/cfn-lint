@@ -89,6 +89,18 @@
     "Value"
    ],
    "type": "object"
+  },
+  "WarmThroughputObject": {
+   "additionalProperties": false,
+   "properties": {
+    "CurrentMiBps": {
+     "type": "integer"
+    },
+    "TargetMiBps": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
   }
  },
  "primaryIdentifier": [
@@ -106,6 +118,11 @@
    "maxItems": 7,
    "type": "array",
    "uniqueItems": true
+  },
+  "MaxRecordSizeInKiB": {
+   "maximum": 10240,
+   "minimum": 1024,
+   "type": "integer"
   },
   "Name": {
    "maxLength": 128,
@@ -140,10 +157,17 @@
    "maxItems": 50,
    "type": "array",
    "uniqueItems": false
+  },
+  "WarmThroughputMiBps": {
+   "type": "integer"
+  },
+  "WarmThroughputObject": {
+   "$ref": "#/definitions/WarmThroughputObject"
   }
  },
  "readOnlyProperties": [
-  "/properties/Arn"
+  "/properties/Arn",
+  "/properties/WarmThroughputObject"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kinesis.git",
  "tagging": {
@@ -153,5 +177,8 @@
   "tagUpdatable": true,
   "taggable": true
  },
- "typeName": "AWS::Kinesis::Stream"
+ "typeName": "AWS::Kinesis::Stream",
+ "writeOnlyProperties": [
+  "/properties/WarmThroughputMiBps"
+ ]
 }
