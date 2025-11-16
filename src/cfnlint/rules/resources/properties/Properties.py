@@ -86,7 +86,24 @@ class Properties(CfnLintJsonSchema):
         if not validator.is_type(t, "string"):
             return
 
-        properties = instance.get("Properties", {})
+        if "Properties" not in instance:
+            # assume properties is an empty object
+            # this helps with validating if the resource
+            # has required properties
+            properties = {}
+        else:
+            # covers if Properties is null
+            properties = instance.get("Properties")
+        # Properties needs to be an object
+        if not validator.is_type(properties, "object"):
+            yield ValidationError(
+                # Expected an object
+                message=f"{properties!r} is not of type object",
+                path=deque(["Properties"]),
+                rule=self.child_rules.get(self.rule_set.get("type")),  # type: ignore
+                validator="type",
+            )
+            return
         fn_k, fn_v = is_function(properties)
         if fn_k == "Ref" and fn_v == "AWS::NoValue":
             yield ValidationError(

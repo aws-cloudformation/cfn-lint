@@ -66,6 +66,19 @@ def rule():
                 )
             ],
         ),
+        (
+            "Invalid with Null value",
+            {"Type": "AWS::S3::Bucket", "Properties": None},
+            [],
+            [
+                ValidationError(
+                    "None is not of type object",
+                    validator="type",
+                    path=deque(["Properties"]),
+                    rule=None,
+                )
+            ],
+        ),
     ],
 )
 def test_validate(name, instance, patches, expected, rule, validator):

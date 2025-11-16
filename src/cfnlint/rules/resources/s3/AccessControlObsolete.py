@@ -31,6 +31,8 @@ class AccessControlObsolete(CfnLintKeyword):
     def validate(
         self, validator: Validator, _, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
+        if not validator.is_type(instance, "object"):
+            return
         property_sets = validator.cfn.get_object_without_conditions(
             instance, ["AccessControl"]
         )
