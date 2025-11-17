@@ -19,6 +19,9 @@
     "ForwardConfig": {
      "$ref": "#/definitions/ForwardConfig"
     },
+    "JwtValidationConfig": {
+     "$ref": "#/definitions/JwtValidationConfig"
+    },
     "Order": {
      "maximum": 50000,
      "minimum": 1,
@@ -36,6 +39,7 @@
       "authenticate-oidc",
       "fixed-response",
       "forward",
+      "jwt-validation",
       "redirect"
      ],
      "type": "string"
@@ -234,6 +238,58 @@
      "uniqueItems": true
     }
    },
+   "type": "object"
+  },
+  "JwtValidationActionAdditionalClaim": {
+   "additionalProperties": false,
+   "properties": {
+    "Format": {
+     "enum": [
+      "single-string",
+      "space-separated-values",
+      "string-array"
+     ],
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Values": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Format",
+    "Name",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "JwtValidationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AdditionalClaims": {
+     "items": {
+      "$ref": "#/definitions/JwtValidationActionAdditionalClaim"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Issuer": {
+     "type": "string"
+    },
+    "JwksEndpoint": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "JwksEndpoint",
+    "Issuer"
+   ],
    "type": "object"
   },
   "ListenerAttribute": {

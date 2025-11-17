@@ -119,6 +119,42 @@
    ],
    "type": "object"
   },
+  "ApplicationAttribute": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "$ref": "#/definitions/AttributeName"
+    },
+    "Values": {
+     "$ref": "#/definitions/AttributeValues"
+    }
+   },
+   "required": [
+    "Name",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "ApplicationAttributes": {
+   "items": {
+    "$ref": "#/definitions/ApplicationAttribute"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
+  },
+  "ApplicationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "$ref": "#/definitions/ApplicationAttributes"
+    }
+   },
+   "required": [
+    "Attributes"
+   ],
+   "type": "object"
+  },
   "AsnMatchStatement": {
    "additionalProperties": false,
    "properties": {
@@ -146,6 +182,26 @@
     }
    },
    "type": "object"
+  },
+  "AttributeName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[\\w\\-]+$",
+   "type": "string"
+  },
+  "AttributeValue": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[\\w\\-]+$",
+   "type": "string"
+  },
+  "AttributeValues": {
+   "items": {
+    "$ref": "#/definitions/AttributeValue"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
   },
   "BlockAction": {
    "additionalProperties": false,
@@ -2400,6 +2456,9 @@
   "/properties/Scope"
  ],
  "properties": {
+  "ApplicationConfig": {
+   "$ref": "#/definitions/ApplicationConfig"
+  },
   "Arn": {
    "$ref": "#/definitions/ResourceArn"
   },

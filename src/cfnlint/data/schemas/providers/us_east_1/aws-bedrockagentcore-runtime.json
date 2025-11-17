@@ -4,6 +4,15 @@
   "/properties/AgentRuntimeName"
  ],
  "definitions": {
+  "AgentManagedRuntimeType": {
+   "enum": [
+    "PYTHON_3_10",
+    "PYTHON_3_11",
+    "PYTHON_3_12",
+    "PYTHON_3_13"
+   ],
+   "type": "string"
+  },
   "AgentRuntimeArn": {
    "maxLength": 2048,
    "pattern": "arn:(-[^:]+)?:bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:agent/[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}:([0-9]{0,4}[1-9][0-9]{0,4})",
@@ -12,6 +21,9 @@
   "AgentRuntimeArtifact": {
    "additionalProperties": false,
    "properties": {
+    "CodeConfiguration": {
+     "$ref": "#/definitions/CodeConfiguration"
+    },
     "ContainerConfiguration": {
      "$ref": "#/definitions/ContainerConfiguration"
     }
@@ -80,6 +92,35 @@
    "pattern": "^[a-zA-Z0-9-_]+$",
    "type": "string"
   },
+  "Code": {
+   "additionalProperties": false,
+   "properties": {
+    "S3": {
+     "$ref": "#/definitions/S3Location"
+    }
+   },
+   "type": "object"
+  },
+  "CodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Code": {
+     "$ref": "#/definitions/Code"
+    },
+    "EntryPoint": {
+     "$ref": "#/definitions/EntryPoints"
+    },
+    "Runtime": {
+     "$ref": "#/definitions/AgentManagedRuntimeType"
+    }
+   },
+   "required": [
+    "Code",
+    "Runtime",
+    "EntryPoint"
+   ],
+   "type": "object"
+  },
   "ContainerConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -122,6 +163,15 @@
    "pattern": "^.+/\\.well-known/openid-configuration$",
    "type": "string"
   },
+  "EntryPoints": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 2,
+   "minItems": 1,
+   "type": "array"
+  },
   "EnvironmentVariableKey": {
    "maxLength": 128,
    "minLength": 1,
@@ -143,8 +193,30 @@
    },
    "type": "object"
   },
+  "HeaderName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^(Authorization|X-Amzn-Bedrock-AgentCore-Runtime-Custom-[a-zA-Z0-9_-]+)$",
+   "type": "string"
+  },
   "LastUpdatedAt": {
    "type": "string"
+  },
+  "LifecycleConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IdleRuntimeSessionTimeout": {
+     "maximum": 28800,
+     "minimum": 60,
+     "type": "integer"
+    },
+    "MaxLifetime": {
+     "maximum": 28800,
+     "minimum": 60,
+     "type": "integer"
+    }
+   },
+   "type": "object"
   },
   "NetworkConfiguration": {
    "additionalProperties": false,
@@ -176,6 +248,25 @@
    ],
    "type": "string"
   },
+  "RequestHeaderAllowlist": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/HeaderName"
+   },
+   "maxItems": 20,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RequestHeaderConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "RequestHeaderAllowlist": {
+     "$ref": "#/definitions/RequestHeaderAllowlist"
+    }
+   },
+   "type": "object"
+  },
   "RoleArn": {
    "format": "AWS::IAM::Role.Arn",
    "pattern": "arn:aws(-[^:]+)?:iam::([0-9]{12})?:role/.+",
@@ -186,6 +277,30 @@
    "minLength": 1,
    "pattern": "^\\d{12}\\.dkr\\.ecr\\.([a-z0-9-]+)\\.amazonaws\\.com/((?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*)([:@]\\S+)$",
    "type": "string"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$",
+     "type": "string"
+    },
+    "Prefix": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "VersionId": {
+     "maxLength": 1024,
+     "minLength": 3,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Prefix"
+   ],
+   "type": "object"
   },
   "SecurityGroupId": {
    "pattern": "^sg-[0-9a-zA-Z]{8,17}$",
@@ -293,11 +408,17 @@
   "LastUpdatedAt": {
    "$ref": "#/definitions/LastUpdatedAt"
   },
+  "LifecycleConfiguration": {
+   "$ref": "#/definitions/LifecycleConfiguration"
+  },
   "NetworkConfiguration": {
    "$ref": "#/definitions/NetworkConfiguration"
   },
   "ProtocolConfiguration": {
    "$ref": "#/definitions/ProtocolConfiguration"
+  },
+  "RequestHeaderConfiguration": {
+   "$ref": "#/definitions/RequestHeaderConfiguration"
   },
   "RoleArn": {
    "$ref": "#/definitions/RoleArn"

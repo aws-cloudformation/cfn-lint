@@ -138,6 +138,24 @@
    },
    "type": "object"
   },
+  "LatestVersion": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "type": "string"
+    },
+    "Major": {
+     "type": "string"
+    },
+    "Minor": {
+     "type": "string"
+    },
+    "Patch": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "SystemsManagerAgent": {
    "additionalProperties": false,
    "properties": {
@@ -187,6 +205,9 @@
    "minLength": 1,
    "type": "string"
   },
+  "LatestVersion": {
+   "$ref": "#/definitions/LatestVersion"
+  },
   "Name": {
    "pattern": "^[-_A-Za-z-0-9][-_A-Za-z0-9 ]{1,126}[-_A-Za-z-0-9]$",
    "type": "string"
@@ -215,12 +236,16 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/Arn"
+  "/properties/Arn",
+  "/properties/LatestVersion",
+  "/properties/LatestVersion/Arn",
+  "/properties/LatestVersion/Major",
+  "/properties/LatestVersion/Minor",
+  "/properties/LatestVersion/Patch"
  ],
  "required": [
   "Name",
   "Version",
-  "Components",
   "ParentImage"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder.git",

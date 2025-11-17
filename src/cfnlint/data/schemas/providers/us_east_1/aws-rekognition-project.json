@@ -14,6 +14,26 @@
    "minLength": 1,
    "pattern": "[a-zA-Z0-9][a-zA-Z0-9_\\-]*",
    "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "pattern": "\\A(?!aws:)[a-zA-Z0-9+\\-=\\._\\:\\/@]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "\\A[a-zA-Z0-9+\\-=\\._\\:\\/@]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
   }
  },
  "primaryIdentifier": [
@@ -25,6 +45,16 @@
   },
   "ProjectName": {
    "$ref": "#/definitions/ProjectName"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
   }
  },
  "readOnlyProperties": [
@@ -34,5 +64,12 @@
   "ProjectName"
  ],
  "sourceUrl": "https://docs.aws.amazon.com/rekognition/latest/customlabels-dg/cp-manage-project.html",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::Rekognition::Project"
 }

@@ -1,5 +1,9 @@
 {
  "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyId",
+  "/properties/ForceDelete"
+ ],
  "definitions": {
   "CreatedAt": {
    "format": "date-time",
@@ -14,6 +18,22 @@
   "Description": {
    "maxLength": 1024,
    "pattern": "^[\\s\\S]+$",
+   "type": "string"
+  },
+  "ForceDelete": {
+   "default": false,
+   "type": "boolean"
+  },
+  "KmsKeyArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[^:]+)?:kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^(arn:aws(-[^:]+)?:kms:[a-zA-Z0-9-]*:[0-9]{12}:((key/[a-zA-Z0-9-]{36})|(alias/[a-zA-Z0-9-_/]+)))|([a-zA-Z0-9-]{36})|(alias/[a-zA-Z0-9-_/]+)$",
    "type": "string"
   },
   "Name": {
@@ -235,6 +255,15 @@
   "Description": {
    "$ref": "#/definitions/Description"
   },
+  "ForceDelete": {
+   "$ref": "#/definitions/ForceDelete"
+  },
+  "KmsKeyArn": {
+   "$ref": "#/definitions/KmsKeyArn"
+  },
+  "KmsKeyId": {
+   "$ref": "#/definitions/KmsKeyId"
+  },
   "Name": {
    "$ref": "#/definitions/Name"
   },
@@ -263,7 +292,8 @@
   "/properties/PolicyArn",
   "/properties/DefinitionHash",
   "/properties/CreatedAt",
-  "/properties/UpdatedAt"
+  "/properties/UpdatedAt",
+  "/properties/KmsKeyArn"
  ],
  "required": [
   "Name"
@@ -275,5 +305,9 @@
   "tagUpdatable": true,
   "taggable": true
  },
- "typeName": "AWS::Bedrock::AutomatedReasoningPolicy"
+ "typeName": "AWS::Bedrock::AutomatedReasoningPolicy",
+ "writeOnlyProperties": [
+  "/properties/KmsKeyId",
+  "/properties/ForceDelete"
+ ]
 }

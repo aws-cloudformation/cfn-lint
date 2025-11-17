@@ -1,0 +1,173 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CodeStarParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ArtifactPath": {
+     "type": "string"
+    },
+    "Branch": {
+     "type": "string"
+    },
+    "ConnectionArn": {
+     "type": "string"
+    },
+    "Repository": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ArtifactPath",
+    "Repository",
+    "Branch",
+    "ConnectionArn"
+   ],
+   "type": "object"
+  },
+  "ConnectionParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "CodeStar": {
+     "$ref": "#/definitions/CodeStarParameters"
+    }
+   },
+   "type": "object"
+  },
+  "ProvisioningArtifactProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "DisableTemplateValidation": {
+     "type": "boolean"
+    },
+    "Info": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Info"
+   ],
+   "type": "object"
+  },
+  "SourceConnection": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectionParameters": {
+     "$ref": "#/definitions/ConnectionParameters"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "ConnectionParameters"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AcceptLanguage": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Distributor": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Owner": {
+   "type": "string"
+  },
+  "ProductName": {
+   "type": "string"
+  },
+  "ProductType": {
+   "type": "string"
+  },
+  "ProvisioningArtifactIds": {
+   "type": "string"
+  },
+  "ProvisioningArtifactNames": {
+   "type": "string"
+  },
+  "ProvisioningArtifactParameters": {
+   "items": {
+    "$ref": "#/definitions/ProvisioningArtifactProperties"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ReplaceProvisioningArtifacts": {
+   "type": "boolean"
+  },
+  "SourceConnection": {
+   "$ref": "#/definitions/SourceConnection"
+  },
+  "SupportDescription": {
+   "type": "string"
+  },
+  "SupportEmail": {
+   "type": "string"
+  },
+  "SupportUrl": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ProvisioningArtifactIds",
+  "/properties/Id",
+  "/properties/ProvisioningArtifactNames",
+  "/properties/ProductName"
+ ],
+ "required": [
+  "Owner",
+  "Name"
+ ],
+ "typeName": "AWS::ServiceCatalog::CloudFormationProduct"
+}
