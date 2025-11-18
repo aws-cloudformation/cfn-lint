@@ -1,3 +1,19 @@
+### v1.41.0
+
+## What's Changed
+
+* Update rule [E3006](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3006) to fail on bad serverless resource types by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4278
+* Validate resource `Properties` type by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4279
+* Update github actions python version by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4288
+* Add upcoming Europe Sovereign Region by @valerena in https://github.com/aws-cloudformation/cfn-lint/pull/4286
+* Update CloudFormation schemas to `2025-11-18` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4290
+
+## New Contributors
+
+* @valerena made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4286
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.40.4...v1.41.0
+
 ### v1.40.4
 ## What's Changed
 * Patch boto process to cover shap mismatch boto to schema by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4275
