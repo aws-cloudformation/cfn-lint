@@ -121,7 +121,7 @@ class StateMachineDefinition(CfnLintJsonSchema):
         states = definition.get("States")
 
         # Check if StartAt is missing
-        if not isinstance(start_at, str) and not isinstance(states, dict):
+        if not isinstance(start_at, str) or not isinstance(states, dict):
             return  # Early return to avoid further checks
 
         # Check if StartAt state exists in States object
