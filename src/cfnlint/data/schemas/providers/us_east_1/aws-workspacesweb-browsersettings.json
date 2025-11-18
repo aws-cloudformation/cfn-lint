@@ -5,6 +5,38 @@
   "/properties/CustomerManagedKey"
  ],
  "definitions": {
+  "Category": {
+   "enum": [
+    "Cults",
+    "Gambling",
+    "Nudity",
+    "Pornography",
+    "SexEducation",
+    "Tasteless",
+    "Violence",
+    "DownloadSites",
+    "ImageSharing",
+    "PeerToPeer",
+    "StreamingMediaAndDownloads",
+    "GenerativeAI",
+    "CriminalActivity",
+    "Hacking",
+    "HateAndIntolerance",
+    "IllegalDrug",
+    "IllegalSoftware",
+    "SchoolCheating",
+    "SelfHarm",
+    "Weapons",
+    "Chat",
+    "Games",
+    "InstantMessaging",
+    "ProfessionalNetwork",
+    "SocialNetworking",
+    "WebBasedEmail",
+    "ParkedDomains"
+   ],
+   "type": "string"
+  },
   "EncryptionContextMap": {
    "additionalProperties": false,
    "patternProperties": {
@@ -38,6 +70,43 @@
     "Value"
    ],
    "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "WebContentFilteringPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedUrls": {
+     "items": {
+      "pattern": "^((([a-zA-Z][a-zA-Z0-9+.-]*):\\/\\/(\\*|[\\w%._\\-\\+~#=@]+)?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?)|(\\*|[\\w%._\\-\\+~#=@]+\\.[\\w%._\\-\\+~#=@]+)(?::(\\d{1,5}))?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?|(([a-zA-Z][a-zA-Z0-9+.-]*):(\\/\\/)?\\*))$",
+      "type": "string"
+     },
+     "maxItems": 1000,
+     "minItems": 1,
+     "type": "array"
+    },
+    "BlockedCategories": {
+     "items": {
+      "$ref": "#/definitions/Category"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "BlockedUrls": {
+     "items": {
+      "pattern": "^((([a-zA-Z][a-zA-Z0-9+.-]*):\\/\\/(\\*|[\\w%._\\-\\+~#=@]+)?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?)|(\\*|[\\w%._\\-\\+~#=@]+\\.[\\w%._\\-\\+~#=@]+)(?::(\\d{1,5}))?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?|(([a-zA-Z][a-zA-Z0-9+.-]*):(\\/\\/)?\\*))$",
+      "type": "string"
+     },
+     "maxItems": 1000,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
   }
  },
  "primaryIdentifier": [
@@ -60,7 +129,7 @@
   "BrowserPolicy": {
    "maxLength": 131072,
    "minLength": 2,
-   "pattern": "\\{[\\S\\s]*\\}\\s*",
+   "pattern": "^\\{[\\S\\s]*\\}\\s*$",
    "type": "string"
   },
   "BrowserSettingsArn": {
@@ -83,6 +152,9 @@
    "maxItems": 200,
    "minItems": 0,
    "type": "array"
+  },
+  "WebContentFilteringPolicy": {
+   "$ref": "#/definitions/WebContentFilteringPolicy"
   }
  },
  "readOnlyProperties": [

@@ -1,0 +1,198 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RegionName"
+ ],
+ "definitions": {
+  "PublicRouterNetworkInterfaceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowRules": {
+     "items": {
+      "$ref": "#/definitions/PublicRouterNetworkInterfaceRule"
+     },
+     "maxItems": 10,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "AllowRules"
+   ],
+   "type": "object"
+  },
+  "PublicRouterNetworkInterfaceRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Cidr": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Cidr"
+   ],
+   "type": "object"
+  },
+  "RouterNetworkInterfaceConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Public": {
+       "$ref": "#/definitions/PublicRouterNetworkInterfaceConfiguration"
+      }
+     },
+     "required": [
+      "Public"
+     ],
+     "title": "Public",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Vpc": {
+       "$ref": "#/definitions/VpcRouterNetworkInterfaceConfiguration"
+      }
+     },
+     "required": [
+      "Vpc"
+     ],
+     "title": "Vpc",
+     "type": "object"
+    }
+   ]
+  },
+  "RouterNetworkInterfaceState": {
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "UPDATING",
+    "DELETING",
+    "ERROR",
+    "RECOVERING"
+   ],
+   "type": "string"
+  },
+  "RouterNetworkInterfaceType": {
+   "enum": [
+    "PUBLIC",
+    "VPC"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "VpcRouterNetworkInterfaceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    },
+    "SubnetId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecurityGroupIds",
+    "SubnetId"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:(aws[a-zA-Z-]*):mediaconnect:[a-z0-9-]+:[0-9]{12}:routerNetworkInterface:[a-z0-9]{12}$",
+   "type": "string"
+  },
+  "AssociatedInputCount": {
+   "type": "integer"
+  },
+  "AssociatedOutputCount": {
+   "type": "integer"
+  },
+  "Configuration": {
+   "$ref": "#/definitions/RouterNetworkInterfaceConfiguration"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "NetworkInterfaceType": {
+   "$ref": "#/definitions/RouterNetworkInterfaceType"
+  },
+  "RegionName": {
+   "type": "string"
+  },
+  "State": {
+   "$ref": "#/definitions/RouterNetworkInterfaceState"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/AssociatedInputCount",
+  "/properties/AssociatedOutputCount",
+  "/properties/CreatedAt",
+  "/properties/Id",
+  "/properties/NetworkInterfaceType",
+  "/properties/State",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "Configuration",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaConnect::RouterNetworkInterface"
+}

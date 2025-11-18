@@ -4,6 +4,25 @@
   "/properties/IpamId"
  ],
  "definitions": {
+  "IpamScopeExternalAuthorityConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ExternalResourceIdentifier": {
+     "type": "string"
+    },
+    "IpamScopeExternalAuthorityType": {
+     "enum": [
+      "infoblox"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "IpamScopeExternalAuthorityType",
+    "ExternalResourceIdentifier"
+   ],
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -34,6 +53,9 @@
   },
   "Description": {
    "type": "string"
+  },
+  "ExternalAuthorityConfiguration": {
+   "$ref": "#/definitions/IpamScopeExternalAuthorityConfiguration"
   },
   "IpamArn": {
    "type": "string"

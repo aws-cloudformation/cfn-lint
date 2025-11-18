@@ -1,0 +1,160 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ConnectionFunctionArn"
+  ],
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/ConnectionFunctionConfig/Runtime"
+ ],
+ "definitions": {
+  "ConnectionFunctionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Comment": {
+     "type": "string"
+    },
+    "KeyValueStoreAssociations": {
+     "items": {
+      "$ref": "#/definitions/KeyValueStoreAssociation"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Runtime": {
+     "enum": [
+      "cloudfront-js-2.0"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Comment",
+    "Runtime"
+   ],
+   "type": "object"
+  },
+  "KeyValueStoreAssociation": {
+   "additionalProperties": false,
+   "properties": {
+    "KeyValueStoreARN": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "KeyValueStoreARN"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9 _.:/=+\\-@]{1,128}\\Z",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9 _.:/=+\\-@]{0,256}\\Z",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AutoPublish": {
+   "default": false,
+   "type": "boolean"
+  },
+  "ConnectionFunctionArn": {
+   "type": "string"
+  },
+  "ConnectionFunctionCode": {
+   "type": "string"
+  },
+  "ConnectionFunctionConfig": {
+   "$ref": "#/definitions/ConnectionFunctionConfig"
+  },
+  "CreatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "ETag": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Stage": {
+   "enum": [
+    "DEVELOPMENT",
+    "LIVE"
+   ],
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "UNPUBLISHED",
+    "DEPLOYED",
+    "UNASSOCIATED",
+    "PUBLISHING",
+    "IN_PROGRESS"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/ConnectionFunctionArn",
+  "/properties/Stage",
+  "/properties/Status",
+  "/properties/ETag",
+  "/properties/CreatedTime",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "Name",
+  "ConnectionFunctionCode",
+  "ConnectionFunctionConfig"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudFront::ConnectionFunction",
+ "writeOnlyProperties": [
+  "/properties/AutoPublish"
+ ]
+}
