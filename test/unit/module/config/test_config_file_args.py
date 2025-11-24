@@ -9,7 +9,7 @@ from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
 
 import cfnlint.config
-from cfnlint.jsonschema import ValidationError
+from cfnlint.exceptions import ConfigFileError
 
 LOGGER = logging.getLogger("cfnlint")
 
@@ -94,9 +94,9 @@ class TestConfigFileArgs(BaseTestCase):
     def test_config_parser_fail_on_bad_config(self, yaml_mock):
         """test the read call to the config parser is reading two files"""
 
-        yaml_mock.side_effect = [{"regions": True}, {}]
+        yaml_mock.side_effect = [{"regions": True}, {}, {}, {}]
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(ConfigFileError):
             cfnlint.config.ConfigFileArgs()
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
@@ -160,3 +160,27 @@ class TestConfigFileArgs(BaseTestCase):
         self.assertEqual(my_config._user_config_file.name, ".cfnlintrc.yml")
         self.assertEqual(my_config._project_config_file.name, ".cfnlintrc.yml")
         self.assertEqual(is_file_mock.call_count, len(calls))
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_config_parser_invalid_key_error_message(self, yaml_mock):
+        """test that invalid config keys produce user-friendly error messages"""
+
+        yaml_mock.side_effect = [{"invalid_key": "value"}, {}, {}, {}]
+
+        with self.assertRaises(ConfigFileError) as context:
+            cfnlint.config.ConfigFileArgs()
+
+        self.assertIn("Invalid configuration key 'invalid_key'", str(context.exception))
+        self.assertIn(".cfnlintrc", str(context.exception))
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_config_parser_type_error_message(self, yaml_mock):
+        """test that type errors produce user-friendly error messages"""
+
+        yaml_mock.side_effect = [{"regions": "not_an_array"}, {}, {}, {}]
+
+        with self.assertRaises(ConfigFileError) as context:
+            cfnlint.config.ConfigFileArgs()
+
+        self.assertIn("Invalid type for 'regions'", str(context.exception))
+        self.assertIn("Expected array", str(context.exception))

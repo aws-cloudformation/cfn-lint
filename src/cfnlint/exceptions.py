@@ -5,6 +5,11 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from cfnlint.config import ConfigMixIn
+
 
 class CfnLintExitException(Exception):
     """
@@ -71,3 +76,23 @@ class DuplicateRuleError(CfnLintExitException):
             rule_id (str): The rule ID that a duplicate was found for.
         """
         super().__init__(f"Rule already included: {rule_id}")
+
+
+class ConfigFileError(CfnLintExitException):
+    """
+    An exception that is raised when there is an error in the configuration file.
+
+    This exception is raised when the CloudFormation linter encounters an error
+    while parsing or validating the .cfnlintrc configuration file.
+    """
+
+    def __init__(self, msg: str, config: ConfigMixIn):
+        """
+        Initialize a new ConfigFileError instance.
+
+        Args:
+            msg (str): The error message
+            config (ConfigMixIn): A minimal config for formatting
+        """
+        super().__init__(msg)
+        self.config = config

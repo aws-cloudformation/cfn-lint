@@ -13,7 +13,11 @@ from typing import Any, Iterator
 import cfnlint.formatters
 import cfnlint.maintenance
 from cfnlint.config import ConfigMixIn, configure_logging
-from cfnlint.exceptions import CfnLintExitException, UnexpectedRuleException
+from cfnlint.exceptions import (
+    CfnLintExitException,
+    ConfigFileError,
+    UnexpectedRuleException,
+)
 from cfnlint.rules import Match, Rules
 from cfnlint.rules.errors import ConfigError
 from cfnlint.runner.deployment_file.runner import expand_deployment_files
@@ -331,6 +335,13 @@ class Runner:
 def main() -> None:
     try:
         config = ConfigMixIn(sys.argv[1:])
+    except ConfigFileError as e:
+        formatter = get_formatter(e.config)
+        match = Match(str(e), ConfigError(), None)
+        output = formatter.print_matches([match], Rules(), config=e.config)
+        if output:
+            print(output)
+        sys.exit(1)
     except Exception as e:
         print(e)
         sys.exit(1)
