@@ -20,6 +20,7 @@ from typing_extensions import Unpack
 
 import cfnlint.decode.cfn_yaml
 from cfnlint.context.parameters import ParameterSet
+from cfnlint.exceptions import ConfigFileError
 from cfnlint.helpers import REGIONS, format_json_string
 from cfnlint.jsonschema import StandardValidator
 from cfnlint.version import __version__
@@ -173,7 +174,7 @@ class ConfigFileArgs:
             JSONSchema to validate against
         Raises
         -------
-        jsonschema.exceptions.ValidationError
+        ConfigFileError
             Returned when cfnlintrc doesn't match schema provided
         """
         LOGGER.debug("Validating CFNLINTRC config with given JSONSchema")
@@ -181,8 +182,69 @@ class ConfigFileArgs:
         LOGGER.debug("Config used: %s", config)
 
         validator = StandardValidator(schema=schema)
-        validator.validate(config)
-        LOGGER.debug("CFNLINTRC looks valid!")
+        try:
+            validator.validate(config)
+            LOGGER.debug("CFNLINTRC looks valid!")
+        except Exception as e:
+            # Convert technical JSON schema validation errors to user-friendly messages
+            error_path = (
+                ".".join(str(p) for p in e.absolute_path)
+                if hasattr(e, "absolute_path") and e.absolute_path
+                else "root"
+            )
+
+            # Create a minimal config with just the format setting for error formatting
+            format_setting = config.get("format") if isinstance(config, dict) else None
+            minimal_config = ConfigMixIn(
+                [], **({"format": format_setting} if format_setting else {})
+            )
+
+            if hasattr(e, "validator") and e.validator == "additionalProperties":
+                invalid_key = (
+                    list(e.instance.keys() - e.schema.get("properties", {}).keys())[0]
+                    if hasattr(e, "instance") and isinstance(e.instance, dict)
+                    else "unknown"
+                )
+                raise ConfigFileError(
+                    (
+                        f"Invalid configuration key '{invalid_key}' "
+                        f"in .cfnlintrc at {error_path}"
+                    ),
+                    minimal_config,
+                )
+            elif hasattr(e, "validator") and e.validator == "type":
+                expected_type = (
+                    e.schema.get("type", "unknown")
+                    if hasattr(e, "schema")
+                    else "unknown"
+                )
+                raise ConfigFileError(
+                    (
+                        f"Invalid type for '{error_path}' "
+                        f"in .cfnlintrc. Expected {expected_type}"
+                    ),
+                    minimal_config,
+                )
+            elif hasattr(e, "validator") and e.validator == "required":
+                missing_prop = (
+                    e.message.split("'")[1] if "'" in str(e.message) else "unknown"
+                )
+                raise ConfigFileError(
+                    (
+                        f"Missing required property '{missing_prop}' "
+                        f"in .cfnlintrc at {error_path}"
+                    ),
+                    minimal_config,
+                )
+            else:
+                # Fallback for other validation errors
+                raise ConfigFileError(
+                    (
+                        f"Invalid configuration in .cfnlintrc at {error_path}: "
+                        f"{e.message if hasattr(e, 'message') else str(e)}"
+                    ),
+                    minimal_config,
+                )
 
     def merge_config(self, user_config, project_config):
         """Merge project and user configuration into a single dictionary
