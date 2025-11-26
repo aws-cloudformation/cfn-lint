@@ -133,6 +133,51 @@ def write_db_cluster(results):
     write_output("aws_rds_dbcluster", "engine_version", schema)
 
 
+def write_db_cluster_deprecated(deprecated_results):
+    schema = {"allOf": []}
+
+    engines = sorted(["aurora-mysql", "aurora-postgresql", "mysql", "postgres"])
+
+    for engine in engines:
+        if not deprecated_results.get(engine):
+            continue
+
+        engine_versions = sorted(deprecated_results.get(engine).keys())
+        if engine == "aurora-mysql":
+            for engine_version in engine_versions.copy():
+                sub_engine_version = ".".join(engine_version.split(".")[0:2])
+                if sub_engine_version not in engine_versions:
+                    engine_versions.append(sub_engine_version)
+            engine_versions = sorted(engine_versions)
+        if engine == "aurora-postgresql":
+            for engine_version in engine_versions.copy():
+                sub_engine_version = engine_version.split(".")[0]
+                if sub_engine_version not in engine_versions:
+                    engine_versions.append(sub_engine_version)
+            engine_versions = sorted(engine_versions)
+
+        if engine_versions:  # Only add if there are deprecated versions
+            schema["allOf"].append(
+                {
+                    "if": {
+                        "properties": {
+                            "Engine": {
+                                "const": engine,
+                            },
+                            "EngineVersion": {
+                                "type": ["string", "number"],
+                                "enum": engine_versions,
+                            },
+                        },
+                        "required": ["Engine", "EngineVersion"],
+                    },
+                    "then": False,  # This will trigger the warning rule
+                }
+            )
+
+    write_output("aws_rds_dbcluster", "engine_version_deprecated", schema)
+
+
 def write_db_instance(results):
     schema = {"allOf": []}
 
@@ -193,6 +238,51 @@ def write_db_instance(results):
         )
 
     write_output("aws_rds_dbinstance", "engine_version", schema)
+
+
+def write_db_instance_deprecated(deprecated_results):
+    schema = {"allOf": []}
+
+    engines = sorted(["aurora-mysql", "aurora-postgresql", "mysql", "postgres"])
+
+    for engine in engines:
+        if not deprecated_results.get(engine):
+            continue
+
+        engine_versions = sorted(list(deprecated_results.get(engine).keys()))
+        if engine == "postgres":
+            for engine_version in engine_versions.copy():
+                major_engine_version = ".".join(engine_version.split(".")[0:1])
+                if major_engine_version not in engine_versions:
+                    engine_versions.append(major_engine_version)
+            engine_versions = sorted(engine_versions)
+        if engine == "aurora-mysql":
+            for engine_version in engine_versions.copy():
+                sub_engine_version = ".".join(engine_version.split(".")[0:2])
+                if sub_engine_version not in engine_versions:
+                    engine_versions.append(sub_engine_version)
+            engine_versions = sorted(engine_versions)
+
+        if engine_versions:  # Only add if there are deprecated versions
+            schema["allOf"].append(
+                {
+                    "if": {
+                        "properties": {
+                            "Engine": {
+                                "const": engine,
+                            },
+                            "EngineVersion": {
+                                "type": ["string", "number"],
+                                "enum": engine_versions,
+                            },
+                        },
+                        "required": ["Engine", "EngineVersion"],
+                    },
+                    "then": False,  # This will trigger the warning rule
+                }
+            )
+
+    write_output("aws_rds_dbinstance", "engine_version_deprecated", schema)
 
 
 def write_db_instance_version_dbinstanceclass(results):
@@ -303,25 +393,44 @@ def write_elasticache_engines(results):
 
 def rds_api():
     results = {}
-    for page in rds_client.get_paginator("describe_db_engine_versions").paginate():
+    deprecated_results = {}
+    available_results = {}
+
+    # Get all versions including deprecated ones
+    for page in rds_client.get_paginator("describe_db_engine_versions").paginate(
+        IncludeAll=True
+    ):
         for version in page.get("DBEngineVersions"):
             engine = version.get("Engine")
             if engine not in _ENGINE_SUPPORTED:
                 continue
             engine_version = version.get("EngineVersion")
+            status = version.get("Status", "available")
+
             if engine not in results:
                 results[engine] = {}
             results[engine][engine_version] = {}
 
-    write_db_cluster(results)
-    write_db_instance(results)
+            # Track deprecated versions separately
+            if status == "deprecated":
+                if engine not in deprecated_results:
+                    deprecated_results[engine] = {}
+                deprecated_results[engine][engine_version] = {}
+            else:
+                # Track available versions for DB instance options
+                if engine not in available_results:
+                    available_results[engine] = {}
+                available_results[engine][engine_version] = {}
 
-    results_db_instance_class = dict.fromkeys(results.keys(), dict())
-    for engine, versions in results.items():
+    write_db_cluster(results)
+    write_db_cluster_deprecated(deprecated_results)
+    write_db_instance(results)
+    write_db_instance_deprecated(deprecated_results)
+
+    results_db_instance_class = dict.fromkeys(available_results.keys(), dict())
+    for engine, versions in available_results.items():
+        LOGGER.info(f"Starting RDS DB options collection for engine {engine!r}")
         for engine_version in versions.keys():
-            LOGGER.info(
-                f"Starting RDS DB options collection for {engine!r}:{engine_version!r}"
-            )
             minor_engine_verison = ".".join(engine_version.split(".")[:2])
             if minor_engine_verison in results_db_instance_class[engine]:
                 results_db_instance_class[engine][minor_engine_verison][
