@@ -40,7 +40,7 @@ _To get information about the [SAM Transformation](https://docs.aws.amazon.com/A
 
 ## Install
 
-Python 3.9+ is supported.
+Python 3.9 to 3.13 are supported.
 
 ### Pip
 
