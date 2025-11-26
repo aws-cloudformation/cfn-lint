@@ -1354,6 +1354,103 @@ def rule():
                 ),
             ],
         ),
+        (
+            "Missing StartAt target",
+            {
+                "Definition": {
+                    "StartAt": "FAIL",
+                    "States": {
+                        "Pass": {
+                            "Type": "Pass",
+                            "Next": "Success",
+                        },
+                        "Success": {
+                            "Type": "Succeed",
+                        },
+                    },
+                }
+            },
+            [
+                ValidationError(
+                    "Missing 'Next' target 'FAIL' at /StartAt",
+                    rule=StateMachineDefinition(),
+                    path=deque(["Definition", "StartAt"]),
+                ),
+            ],
+        ),
+        (
+            "Parallel state with missing StartAt target",
+            {
+                "Definition": {
+                    "StartAt": "ParallelState",
+                    "States": {
+                        "ParallelState": {
+                            "Type": "Parallel",
+                            "Branches": [
+                                {
+                                    "StartAt": "FAIL",
+                                    "States": {
+                                        "BranchState": {
+                                            "Type": "Pass",
+                                            "End": True,
+                                        },
+                                    },
+                                }
+                            ],
+                            "End": True,
+                        },
+                    },
+                }
+            },
+            [
+                ValidationError(
+                    "Missing 'Next' target 'FAIL' at /States/ParallelState/Branches/0/StartAt",
+                    rule=StateMachineDefinition(),
+                    path=deque(
+                        [
+                            "Definition",
+                            "States",
+                            "ParallelState",
+                            "Branches",
+                            0,
+                            "StartAt",
+                        ]
+                    ),
+                ),
+            ],
+        ),
+        (
+            "Map state with missing StartAt target in ItemProcessor",
+            {
+                "Definition": {
+                    "StartAt": "MapState",
+                    "States": {
+                        "MapState": {
+                            "Type": "Map",
+                            "ItemProcessor": {
+                                "StartAt": "FAIL",
+                                "States": {
+                                    "ProcessItem": {
+                                        "Type": "Pass",
+                                        "End": True,
+                                    },
+                                },
+                            },
+                            "End": True,
+                        },
+                    },
+                }
+            },
+            [
+                ValidationError(
+                    "Missing 'Next' target 'FAIL' at /States/MapState/ItemProcessor/StartAt",
+                    rule=StateMachineDefinition(),
+                    path=deque(
+                        ["Definition", "States", "MapState", "ItemProcessor", "StartAt"]
+                    ),
+                ),
+            ],
+        ),
     ],
 )
 def test_validate(

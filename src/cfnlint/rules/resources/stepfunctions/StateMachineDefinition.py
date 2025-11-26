@@ -103,6 +103,61 @@ class StateMachineDefinition(CfnLintJsonSchema):
             if ql == "JSONata":
                 yield self._convert_schema_to_jsonata(), ql_validator
 
+    def _validate_start_at(
+        self,
+        definition: Any,
+        k: str,
+        add_path_to_message: bool,
+        path: deque | None = None,
+    ) -> ValidationResult:
+        """
+        Per the Amazon States Language specification, 'StartAt must' reference
+        a valid state name that exists in the States object.
+
+        Reference: https://states-language.net/spec.html#toplevelfields
+        """
+
+        start_at = definition.get("StartAt")
+        states = definition.get("States")
+
+        # Check if StartAt is missing
+        if not isinstance(start_at, str) or not isinstance(states, dict):
+            return  # Early return to avoid further checks
+
+        # Check if StartAt state exists in States object
+        if start_at not in states:
+            if path is None:  # Top level StartAt
+                error_path = deque([k, "StartAt"])
+                display_path = "/StartAt"
+            else:  # Nested StartAt like Parallel or Map
+                error_path = deque([k] + list(path) + ["StartAt"])
+                display_path = f"/{'/'.join(str(item) for item in path)}/StartAt"
+
+            message = f"Missing 'Next' target '{start_at}' at {display_path}"
+
+            yield ValidationError(message, path=error_path, rule=self)
+
+        # Validate nested StartAt in Parallel and Map states
+        for state_name, state in states.items():
+            state_type = state.get("Type")
+
+            if state_type == "Parallel":
+                branches = state.get("Branches", [])
+                if not isinstance(branches, list):
+                    continue
+                for idx, branch in enumerate(branches):
+                    branch_path = deque(["States", state_name, "Branches", idx])
+                    yield from self._validate_start_at(
+                        branch, k, add_path_to_message, branch_path
+                    )
+
+            if state_type == "Map":
+                processor = state.get("ItemProcessor")
+                processor_path = deque(["States", state_name, "ItemProcessor"])
+                yield from self._validate_start_at(
+                    processor, k, add_path_to_message, processor_path
+                )
+
     def _validate_step(
         self,
         validator: Validator,
@@ -133,6 +188,9 @@ class StateMachineDefinition(CfnLintJsonSchema):
                 err.rule = self
 
             yield self._clean_error(err)
+
+        # Validate StartAt exists
+        yield from self._validate_start_at(value, k, add_path_to_message)
 
     def validate(
         self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
