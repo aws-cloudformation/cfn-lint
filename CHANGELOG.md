@@ -1,5 +1,19 @@
-### v1.41.0
+### v1.42.0
+## What's Changed
+* chore(deps): bump actions/checkout from 5 to 6 by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4299
+* .cfnlintrc config errors are returned as E0003 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4300
+* New rules for RDS EOL by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4302
+* Update supported Python versions by @meeuw in https://github.com/aws-cloudformation/cfn-lint/pull/4266
+* State Machine: Implement check & Unit Tests for "StartAt" by @r-heimann in https://github.com/aws-cloudformation/cfn-lint/pull/4264
+* Update CloudFormation schemas to 2025-11-30 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4295
+* chore(deps): bump pyinstaller from 6.16.0 to 6.17.0 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4301
 
+## New Contributors
+* @meeuw made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4266
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.41.0...v1.41.1
+
+### v1.41.0
 ## What's Changed
 
 * Update rule [E3006](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3006) to fail on bad serverless resource types by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4278
