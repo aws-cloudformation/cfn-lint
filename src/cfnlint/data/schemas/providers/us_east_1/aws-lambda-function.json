@@ -2,7 +2,8 @@
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/FunctionName",
-  "/properties/PackageType"
+  "/properties/PackageType",
+  "/properties/TenancyConfig"
  ],
  "definitions": {
   "Code": {
@@ -249,6 +250,21 @@
    ],
    "type": "object"
   },
+  "TenancyConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "TenantIsolationMode": {
+     "enum": [
+      "PER_TENANT"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "TenantIsolationMode"
+   ],
+   "type": "object"
+  },
   "TracingConfig": {
    "additionalProperties": false,
    "properties": {
@@ -459,6 +475,9 @@
    },
    "type": "array",
    "uniqueItems": true
+  },
+  "TenancyConfig": {
+   "$ref": "#/definitions/TenancyConfig"
   },
   "Timeout": {
    "maximum": 900,

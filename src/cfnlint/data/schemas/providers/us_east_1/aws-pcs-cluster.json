@@ -63,7 +63,8 @@
     "Type": {
      "enum": [
       "SLURMCTLD",
-      "SLURMDBD"
+      "SLURMDBD",
+      "SLURMRESTD"
      ],
      "type": "string"
     }
@@ -87,6 +88,31 @@
    },
    "type": "object"
   },
+  "JwtAuth": {
+   "additionalProperties": false,
+   "properties": {
+    "JwtKey": {
+     "$ref": "#/definitions/JwtKey"
+    }
+   },
+   "type": "object"
+  },
+  "JwtKey": {
+   "additionalProperties": false,
+   "properties": {
+    "SecretArn": {
+     "type": "string"
+    },
+    "SecretVersion": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretArn",
+    "SecretVersion"
+   ],
+   "type": "object"
+  },
   "SecurityGroupId": {
    "format": "AWS::EC2::SecurityGroup.Id",
    "pattern": "sg-\\w{8,17}",
@@ -105,6 +131,23 @@
    "required": [
     "ParameterName",
     "ParameterValue"
+   ],
+   "type": "object"
+  },
+  "SlurmRest": {
+   "additionalProperties": false,
+   "properties": {
+    "Mode": {
+     "default": "NONE",
+     "enum": [
+      "STANDARD",
+      "NONE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Mode"
    ],
    "type": "object"
   },
@@ -226,7 +269,11 @@
     "AuthKey": {
      "$ref": "#/definitions/AuthKey"
     },
+    "JwtAuth": {
+     "$ref": "#/definitions/JwtAuth"
+    },
     "ScaleDownIdleTimeInSeconds": {
+     "maximum": 10000000,
      "minimum": 1,
      "type": "integer"
     },
@@ -236,6 +283,9 @@
       "$ref": "#/definitions/SlurmCustomSetting"
      },
      "type": "array"
+    },
+    "SlurmRest": {
+     "$ref": "#/definitions/SlurmRest"
     }
    },
    "type": "object"

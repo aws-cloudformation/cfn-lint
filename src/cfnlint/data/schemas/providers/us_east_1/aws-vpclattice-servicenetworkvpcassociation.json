@@ -11,9 +11,40 @@
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/ServiceNetworkIdentifier",
-  "/properties/VpcIdentifier"
+  "/properties/VpcIdentifier",
+  "/properties/PrivateDnsEnabled",
+  "/properties/DnsOptions",
+  "/properties/DnsOptions/PrivateDnsPreference",
+  "/properties/DnsOptions/PrivateDnsSpecifiedDomains"
  ],
  "definitions": {
+  "DnsOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "PrivateDnsPreference": {
+     "enum": [
+      "VERIFIED_DOMAINS_ONLY",
+      "ALL_DOMAINS",
+      "VERIFIED_DOMAINS_AND_SPECIFIED_DOMAINS",
+      "SPECIFIED_DOMAINS_ONLY"
+     ],
+     "type": "string"
+    },
+    "PrivateDnsSpecifiedDomains": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -48,11 +79,17 @@
   "CreatedAt": {
    "type": "string"
   },
+  "DnsOptions": {
+   "$ref": "#/definitions/DnsOptions"
+  },
   "Id": {
    "maxLength": 22,
    "minLength": 22,
    "pattern": "^snva-[0-9a-z]{17}$",
    "type": "string"
+  },
+  "PrivateDnsEnabled": {
+   "type": "boolean"
   },
   "SecurityGroupIds": {
    "format": "AWS::EC2::SecurityGroup.Ids",

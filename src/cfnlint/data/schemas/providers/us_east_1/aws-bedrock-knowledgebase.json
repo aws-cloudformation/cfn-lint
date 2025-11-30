@@ -143,6 +143,7 @@
     "RDS",
     "MONGO_DB_ATLAS",
     "NEPTUNE_ANALYTICS",
+    "S3_VECTORS",
     "OPENSEARCH_MANAGED_CLUSTER"
    ],
    "type": "string"
@@ -859,6 +860,36 @@
    ],
    "type": "object"
   },
+  "S3VectorsConfiguration": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "IndexArn"
+     ]
+    },
+    {
+     "required": [
+      "VectorBucketArn",
+      "IndexName"
+     ]
+    }
+   ],
+   "properties": {
+    "IndexArn": {
+     "type": "string"
+    },
+    "IndexName": {
+     "maxLength": 63,
+     "minLength": 3,
+     "type": "string"
+    },
+    "VectorBucketArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "SecretArn": {
    "pattern": "^arn:aws(|-cn|-us-gov):secretsmanager:[a-z0-9-]{1,20}:([0-9]{12}|):secret:[a-zA-Z0-9!/_+=.@-]{1,512}$",
    "type": "string"
@@ -908,6 +939,11 @@
     },
     {
      "required": [
+      "S3VectorsConfiguration"
+     ]
+    },
+    {
+     "required": [
       "MongoDbAtlasConfiguration"
      ]
     },
@@ -935,6 +971,9 @@
     },
     "RdsConfiguration": {
      "$ref": "#/definitions/RdsConfiguration"
+    },
+    "S3VectorsConfiguration": {
+     "$ref": "#/definitions/S3VectorsConfiguration"
     },
     "Type": {
      "$ref": "#/definitions/KnowledgeBaseStorageType"

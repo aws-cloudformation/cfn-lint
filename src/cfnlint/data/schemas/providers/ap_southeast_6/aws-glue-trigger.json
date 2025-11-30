@@ -1,0 +1,202 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/WorkflowName",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "Action": {
+   "additionalProperties": false,
+   "properties": {
+    "Arguments": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "CrawlerName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "JobName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "NotificationProperty": {
+     "$ref": "#/definitions/NotificationProperty"
+    },
+    "SecurityConfiguration": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Timeout": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Condition": {
+   "additionalProperties": false,
+   "properties": {
+    "CrawlState": {
+     "enum": [
+      "CANCELLED",
+      "CANCELLING",
+      "ERROR",
+      "FAILED",
+      "RUNNING",
+      "SUCCEEDED"
+     ],
+     "type": "string"
+    },
+    "CrawlerName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "JobName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "LogicalOperator": {
+     "enum": [
+      "EQUALS"
+     ],
+     "type": "string"
+    },
+    "State": {
+     "enum": [
+      "SUCCEEDED",
+      "STOPPED",
+      "TIMEOUT",
+      "FAILED"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EventBatchingCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchSize": {
+     "maximum": 100,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "BatchWindow": {
+     "maximum": 900,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "BatchSize"
+   ],
+   "type": "object"
+  },
+  "NotificationProperty": {
+   "additionalProperties": false,
+   "properties": {
+    "NotifyDelayAfter": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Predicate": {
+   "additionalProperties": false,
+   "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "maxItems": 500,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Logical": {
+     "enum": [
+      "AND",
+      "ANY"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Actions": {
+   "items": {
+    "$ref": "#/definitions/Action"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Description": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "EventBatchingCondition": {
+   "$ref": "#/definitions/EventBatchingCondition"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Predicate": {
+   "$ref": "#/definitions/Predicate"
+  },
+  "Schedule": {
+   "type": "string"
+  },
+  "StartOnCreation": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Type": {
+   "enum": [
+    "CONDITIONAL",
+    "EVENT",
+    "ON_DEMAND",
+    "SCHEDULED"
+   ],
+   "type": "string"
+  },
+  "WorkflowName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Type",
+  "Actions"
+ ],
+ "typeName": "AWS::Glue::Trigger"
+}

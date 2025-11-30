@@ -86,6 +86,18 @@
    ],
    "type": "object"
   },
+  "ClusterCapacityRequirements": {
+   "additionalProperties": false,
+   "properties": {
+    "OnDemand": {
+     "$ref": "#/definitions/ClusterOnDemandOptions"
+    },
+    "Spot": {
+     "$ref": "#/definitions/ClusterSpotOptions"
+    }
+   },
+   "type": "object"
+  },
   "ClusterEbsVolumeConfig": {
    "additionalProperties": false,
    "properties": {
@@ -109,6 +121,9 @@
   "ClusterInstanceGroup": {
    "additionalProperties": false,
    "properties": {
+    "CapacityRequirements": {
+     "$ref": "#/definitions/ClusterCapacityRequirements"
+    },
     "CurrentCount": {
      "minimum": 0,
      "type": "integer"
@@ -132,6 +147,9 @@
     },
     "InstanceType": {
      "$ref": "#/definitions/InstanceType"
+    },
+    "KubernetesConfig": {
+     "$ref": "#/definitions/ClusterKubernetesConfig"
     },
     "LifeCycleConfig": {
      "$ref": "#/definitions/ClusterLifeCycleConfig"
@@ -197,6 +215,65 @@
    "maxItems": 1,
    "type": "array"
   },
+  "ClusterKubernetesConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Labels": {
+     "$ref": "#/definitions/ClusterKubernetesLabels"
+    },
+    "Taints": {
+     "$ref": "#/definitions/ClusterKubernetesTaints"
+    }
+   },
+   "type": "object"
+  },
+  "ClusterKubernetesLabels": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ClusterKubernetesTaint": {
+   "additionalProperties": false,
+   "properties": {
+    "Effect": {
+     "enum": [
+      "NoSchedule",
+      "PreferNoSchedule",
+      "NoExecute"
+     ],
+     "type": "string"
+    },
+    "Key": {
+     "maxLength": 317,
+     "minLength": 1,
+     "pattern": "([a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?[A-Za-z0-9]([-A-Za-z0-9_.]*[A-Za-z0-9])?",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 63,
+     "minLength": 1,
+     "pattern": "(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Effect"
+   ],
+   "type": "object"
+  },
+  "ClusterKubernetesTaints": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ClusterKubernetesTaint"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
   "ClusterLifeCycleConfig": {
    "additionalProperties": false,
    "properties": {
@@ -216,6 +293,10 @@
     "OnCreate",
     "SourceS3Uri"
    ],
+   "type": "object"
+  },
+  "ClusterOnDemandOptions": {
+   "additionalProperties": false,
    "type": "object"
   },
   "ClusterOrchestratorEksConfig": {
@@ -295,6 +376,10 @@
    "maxItems": 100,
    "minItems": 1,
    "type": "array"
+  },
+  "ClusterSpotOptions": {
+   "additionalProperties": false,
+   "type": "object"
   },
   "DeepHealthCheckType": {
    "enum": [

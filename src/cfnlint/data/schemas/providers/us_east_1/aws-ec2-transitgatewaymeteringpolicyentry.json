@@ -1,0 +1,100 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TransitGatewayMeteringPolicyId",
+  "/properties/PolicyRuleNumber",
+  "/properties/MeteredAccount",
+  "/properties/SourceTransitGatewayAttachmentId",
+  "/properties/SourceTransitGatewayAttachmentType",
+  "/properties/SourceCidrBlock",
+  "/properties/SourcePortRange",
+  "/properties/DestinationTransitGatewayAttachmentId",
+  "/properties/DestinationTransitGatewayAttachmentType",
+  "/properties/DestinationCidrBlock",
+  "/properties/DestinationPortRange",
+  "/properties/Protocol"
+ ],
+ "definitions": {
+  "TransitGatewayAttachmentResourceType": {
+   "enum": [
+    "vpc",
+    "vpn",
+    "direct-connect-gateway",
+    "peering",
+    "network-function",
+    "vpn-concentrator"
+   ],
+   "type": "string"
+  },
+  "TransitGatewayMeteringPayerType": {
+   "enum": [
+    "source-attachment-owner",
+    "destination-attachment-owner",
+    "transit-gateway-owner"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TransitGatewayMeteringPolicyId",
+  "/properties/PolicyRuleNumber"
+ ],
+ "properties": {
+  "DestinationCidrBlock": {
+   "type": "string"
+  },
+  "DestinationPortRange": {
+   "type": "string"
+  },
+  "DestinationTransitGatewayAttachmentId": {
+   "type": "string"
+  },
+  "DestinationTransitGatewayAttachmentType": {
+   "$ref": "#/definitions/TransitGatewayAttachmentResourceType"
+  },
+  "MeteredAccount": {
+   "$ref": "#/definitions/TransitGatewayMeteringPayerType"
+  },
+  "PolicyRuleNumber": {
+   "type": "integer"
+  },
+  "Protocol": {
+   "type": "string"
+  },
+  "SourceCidrBlock": {
+   "type": "string"
+  },
+  "SourcePortRange": {
+   "type": "string"
+  },
+  "SourceTransitGatewayAttachmentId": {
+   "type": "string"
+  },
+  "SourceTransitGatewayAttachmentType": {
+   "$ref": "#/definitions/TransitGatewayAttachmentResourceType"
+  },
+  "State": {
+   "type": "string"
+  },
+  "TransitGatewayMeteringPolicyId": {
+   "type": "string"
+  },
+  "UpdateEffectiveAt": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/UpdateEffectiveAt",
+  "/properties/State"
+ ],
+ "required": [
+  "TransitGatewayMeteringPolicyId",
+  "PolicyRuleNumber",
+  "MeteredAccount"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::TransitGatewayMeteringPolicyEntry"
+}

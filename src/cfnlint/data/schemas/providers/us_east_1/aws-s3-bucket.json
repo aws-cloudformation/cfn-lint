@@ -80,6 +80,27 @@
   "Arn": {
    "type": "string"
   },
+  "BlockedEncryptionTypeList": {
+   "insertionOrder": true,
+   "items": {
+    "enum": [
+     "NONE",
+     "SSE-C"
+    ],
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "BlockedEncryptionTypes": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionType": {
+     "$ref": "#/definitions/BlockedEncryptionTypeList"
+    }
+   },
+   "type": "object"
+  },
   "BucketEncryption": {
    "additionalProperties": false,
    "properties": {
@@ -1251,6 +1272,9 @@
   "ServerSideEncryptionRule": {
    "additionalProperties": false,
    "properties": {
+    "BlockedEncryptionTypes": {
+     "$ref": "#/definitions/BlockedEncryptionTypes"
+    },
     "BucketKeyEnabled": {
      "type": "boolean"
     },
@@ -1474,6 +1498,13 @@
   "/properties/BucketName"
  ],
  "properties": {
+  "AbacStatus": {
+   "enum": [
+    "Enabled",
+    "Disabled"
+   ],
+   "type": "string"
+  },
   "AccelerateConfiguration": {
    "$ref": "#/definitions/AccelerateConfiguration"
   },

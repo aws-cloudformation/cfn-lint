@@ -4,7 +4,8 @@
   "/properties/DomainName",
   "/properties/SegmentDefinitionName",
   "/properties/DisplayName",
-  "/properties/SegmentGroups"
+  "/properties/SegmentGroups",
+  "/properties/SegmentSqlQuery"
  ],
  "definitions": {
   "AddressDimension": {
@@ -471,7 +472,7 @@
    "type": "string"
   },
   "Description": {
-   "maxLength": 1000,
+   "maxLength": 4000,
    "minLength": 1,
    "type": "string"
   },
@@ -500,6 +501,18 @@
   "SegmentGroups": {
    "$ref": "#/definitions/SegmentGroup"
   },
+  "SegmentSqlQuery": {
+   "maxLength": 50000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SegmentType": {
+   "enum": [
+    "CLASSIC",
+    "ENHANCED"
+   ],
+   "type": "string"
+  },
   "Tags": {
    "insertionOrder": false,
    "items": {
@@ -513,13 +526,13 @@
  },
  "readOnlyProperties": [
   "/properties/CreatedAt",
-  "/properties/SegmentDefinitionArn"
+  "/properties/SegmentDefinitionArn",
+  "/properties/SegmentType"
  ],
  "required": [
   "DomainName",
   "DisplayName",
-  "SegmentDefinitionName",
-  "SegmentGroups"
+  "SegmentDefinitionName"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-customer-profiles",
  "tagging": {

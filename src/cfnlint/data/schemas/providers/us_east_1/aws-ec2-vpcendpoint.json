@@ -6,7 +6,9 @@
   "/properties/VpcId",
   "/properties/ServiceNetworkArn",
   "/properties/ResourceConfigurationArn",
-  "/properties/ServiceRegion"
+  "/properties/ServiceRegion",
+  "/properties/DnsOptions/PrivateDnsPreference",
+  "/properties/DnsOptions/PrivateDnsSpecifiedDomains"
  ],
  "definitions": {
   "DnsOptionsSpecification": {
@@ -29,6 +31,25 @@
       "NotSpecified"
      ],
      "type": "string"
+    },
+    "PrivateDnsPreference": {
+     "enum": [
+      "VERIFIED_DOMAINS_ONLY",
+      "ALL_DOMAINS",
+      "VERIFIED_DOMAINS_AND_SPECIFIED_DOMAINS",
+      "SPECIFIED_DOMAINS_ONLY"
+     ],
+     "type": "string"
+    },
+    "PrivateDnsSpecifiedDomains": {
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
     }
    },
    "type": "object"

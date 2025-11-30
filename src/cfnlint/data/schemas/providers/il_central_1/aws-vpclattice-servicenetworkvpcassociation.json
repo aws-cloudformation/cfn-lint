@@ -1,0 +1,152 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Id"
+  ],
+  [
+   "/properties/ServiceNetworkIdentifier",
+   "/properties/VpcIdentifier"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ServiceNetworkIdentifier",
+  "/properties/VpcIdentifier"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetworkvpcassociation/snva-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 22,
+   "minLength": 22,
+   "pattern": "^snva-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "maxLength": 200,
+    "minLength": 0,
+    "pattern": "^sg-(([0-9a-z]{8})|([0-9a-z]{17}))$",
+    "type": "string"
+   },
+   "maxItems": 5,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ServiceNetworkArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetwork/sn-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "ServiceNetworkId": {
+   "maxLength": 20,
+   "minLength": 20,
+   "pattern": "^sn-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "ServiceNetworkIdentifier": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^((sn-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetwork/sn-[0-9a-z]{17}))$",
+   "type": "string"
+  },
+  "ServiceNetworkName": {
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "^(?!servicenetwork-)(?![-])(?!.*[-]$)(?!.*[-]{2})[a-z0-9-]+$",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "CREATE_IN_PROGRESS",
+    "ACTIVE",
+    "UPDATE_IN_PROGRESS",
+    "DELETE_IN_PROGRESS",
+    "CREATE_FAILED",
+    "DELETE_FAILED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "maxLength": 2048,
+   "minLength": 5,
+   "pattern": "^vpc-(([0-9a-z]{8})|([0-9a-z]{17}))$",
+   "type": "string"
+  },
+  "VpcIdentifier": {
+   "maxLength": 2048,
+   "minLength": 5,
+   "pattern": "^vpc-(([0-9a-z]{8})|([0-9a-z]{17}))$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/Id",
+  "/properties/ServiceNetworkArn",
+  "/properties/ServiceNetworkId",
+  "/properties/ServiceNetworkName",
+  "/properties/Status",
+  "/properties/VpcId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::VpcLattice::ServiceNetworkVpcAssociation",
+ "writeOnlyProperties": [
+  "/properties/ServiceNetworkIdentifier",
+  "/properties/VpcIdentifier"
+ ]
+}

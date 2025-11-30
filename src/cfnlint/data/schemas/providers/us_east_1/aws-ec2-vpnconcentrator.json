@@ -1,0 +1,71 @@
+{
+ "$schema": "https://raw.githubusercontent.com/aws-cloudformation/cloudformation-resource-schema/blob/master/src/main/resources/schema/provider.definition.schema.v1.json",
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TransitGatewayId",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VpnConcentratorId"
+ ],
+ "properties": {
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TransitGatewayAttachmentId": {
+   "type": "string"
+  },
+  "TransitGatewayId": {
+   "type": "string"
+  },
+  "Type": {
+   "enum": [
+    "ipsec.1"
+   ],
+   "type": "string"
+  },
+  "VpnConcentratorId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VpnConcentratorId",
+  "/properties/TransitGatewayAttachmentId"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "TransitGatewayId",
+  "Type"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::VPNConcentrator"
+}
