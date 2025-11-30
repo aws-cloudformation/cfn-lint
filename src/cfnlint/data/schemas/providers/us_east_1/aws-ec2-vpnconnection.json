@@ -5,6 +5,7 @@
   "/properties/Type",
   "/properties/CustomerGatewayId",
   "/properties/VpnGatewayId",
+  "/properties/VpnConcentratorId",
   "/properties/TransitGatewayId",
   "/properties/EnableAcceleration",
   "/properties/LocalIpv4NetworkCidr",
@@ -16,12 +17,26 @@
   "/properties/TransportTransitGatewayAttachmentId",
   "/properties/TunnelInsideIpVersion",
   "/properties/PreSharedKeyStorage",
+  "/properties/TunnelBandwidth",
   "/properties/VpnTunnelOptionsSpecifications"
  ],
  "definitions": {
   "CloudwatchLogOptionsSpecification": {
    "additionalProperties": false,
    "properties": {
+    "BgpLogEnabled": {
+     "type": "boolean"
+    },
+    "BgpLogGroupArn": {
+     "type": "string"
+    },
+    "BgpLogOutputFormat": {
+     "enum": [
+      "json",
+      "text"
+     ],
+     "type": "string"
+    },
     "LogEnabled": {
      "type": "boolean"
     },
@@ -353,10 +368,21 @@
   "TransportTransitGatewayAttachmentId": {
    "type": "string"
   },
+  "TunnelBandwidth": {
+   "default": "standard",
+   "enum": [
+    "standard",
+    "large"
+   ],
+   "type": "string"
+  },
   "TunnelInsideIpVersion": {
    "type": "string"
   },
   "Type": {
+   "type": "string"
+  },
+  "VpnConcentratorId": {
    "type": "string"
   },
   "VpnConnectionId": {

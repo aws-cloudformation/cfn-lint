@@ -25,6 +25,51 @@
    "minimum": 10000000,
    "type": "integer"
   },
+  "Classification": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Properties": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^.+$": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "CloudWatchLoggingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "LogGroup": {
+     "type": "string"
+    },
+    "LogStreamNamePrefix": {
+     "type": "string"
+    },
+    "LogTypes": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^.+$": {
+       "items": {
+        "type": "string"
+       },
+       "type": "array"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
   "CustomerContentEncryptionConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -66,6 +111,45 @@
   "EnforceWorkGroupConfiguration": {
    "type": "boolean"
   },
+  "EngineConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdditionalConfigs": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^.+$": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Classifications": {
+     "items": {
+      "$ref": "#/definitions/Classification"
+     },
+     "type": "array"
+    },
+    "CoordinatorDpuSize": {
+     "type": "integer"
+    },
+    "DefaultExecutorDpuSize": {
+     "type": "integer"
+    },
+    "MaxConcurrentDpus": {
+     "type": "integer"
+    },
+    "SparkProperties": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^.+$": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
   "EngineVersion": {
    "additionalProperties": false,
    "properties": {
@@ -87,6 +171,18 @@
   "KmsKey": {
    "type": "string"
   },
+  "ManagedLoggingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "KmsKey": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "ManagedQueryResultsConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -104,6 +200,21 @@
    "properties": {
     "KmsKey": {
      "$ref": "#/definitions/KmsKey"
+    }
+   },
+   "type": "object"
+  },
+  "MonitoringConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLoggingConfiguration": {
+     "$ref": "#/definitions/CloudWatchLoggingConfiguration"
+    },
+    "ManagedLoggingConfiguration": {
+     "$ref": "#/definitions/ManagedLoggingConfiguration"
+    },
+    "S3LoggingConfiguration": {
+     "$ref": "#/definitions/S3LoggingConfiguration"
     }
    },
    "type": "object"
@@ -189,6 +300,21 @@
    ],
    "type": "string"
   },
+  "S3LoggingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "KmsKey": {
+     "type": "string"
+    },
+    "LogLocation": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "SelectedEngineVersion": {
    "type": "string"
   },
@@ -234,6 +360,9 @@
     "EnforceWorkGroupConfiguration": {
      "$ref": "#/definitions/EnforceWorkGroupConfiguration"
     },
+    "EngineConfiguration": {
+     "$ref": "#/definitions/EngineConfiguration"
+    },
     "EngineVersion": {
      "$ref": "#/definitions/EngineVersion"
     },
@@ -242,6 +371,9 @@
     },
     "ManagedQueryResultsConfiguration": {
      "$ref": "#/definitions/ManagedQueryResultsConfiguration"
+    },
+    "MonitoringConfiguration": {
+     "$ref": "#/definitions/MonitoringConfiguration"
     },
     "PublishCloudWatchMetricsEnabled": {
      "$ref": "#/definitions/PublishCloudWatchMetricsEnabled"
@@ -270,6 +402,9 @@
     "EnforceWorkGroupConfiguration": {
      "$ref": "#/definitions/EnforceWorkGroupConfiguration"
     },
+    "EngineConfiguration": {
+     "$ref": "#/definitions/EngineConfiguration"
+    },
     "EngineVersion": {
      "$ref": "#/definitions/EngineVersion"
     },
@@ -278,6 +413,9 @@
     },
     "ManagedQueryResultsConfiguration": {
      "$ref": "#/definitions/ManagedQueryResultsConfiguration"
+    },
+    "MonitoringConfiguration": {
+     "$ref": "#/definitions/MonitoringConfiguration"
     },
     "PublishCloudWatchMetricsEnabled": {
      "$ref": "#/definitions/PublishCloudWatchMetricsEnabled"

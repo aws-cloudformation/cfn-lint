@@ -104,6 +104,20 @@
    },
    "type": "object"
   },
+  "LoggingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SystemLogLevel": {
+     "enum": [
+      "DEBUG",
+      "INFO",
+      "WARN"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "MaximumConcurrency": {
    "maximum": 1000,
    "minimum": 2,
@@ -115,11 +129,13 @@
     "Metrics": {
      "items": {
       "enum": [
-       "EventCount"
+       "EventCount",
+       "ErrorCount",
+       "KafkaMetrics"
       ],
       "type": "string"
      },
-     "maxItems": 1,
+     "maxItems": 3,
      "minItems": 0,
      "type": "array",
      "uniqueItems": true
@@ -133,7 +149,7 @@
     "Destination": {
      "maxLength": 1024,
      "minLength": 12,
-     "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:((eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+     "pattern": "^$|kafka://([^.]([a-zA-Z0-9\\-_.]{0,248}))|arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:((eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
      "type": "string"
     }
    },
@@ -151,6 +167,12 @@
      "maximum": 200,
      "minimum": 1,
      "type": "integer"
+    },
+    "PollerGroupName": {
+     "maxLength": 128,
+     "minLength": 0,
+     "pattern": "[a-zA-Z0-9-_]*",
+     "type": "string"
     }
    },
    "type": "object"
@@ -367,6 +389,9 @@
    "minLength": 12,
    "pattern": "(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()",
    "type": "string"
+  },
+  "LoggingConfig": {
+   "$ref": "#/definitions/LoggingConfig"
   },
   "MaximumBatchingWindowInSeconds": {
    "maximum": 300,

@@ -43,9 +43,37 @@
    },
    "type": "object"
   },
+  "AudioGenerativeOutputLanguage": {
+   "enum": [
+    "DEFAULT",
+    "EN"
+   ],
+   "type": "string"
+  },
+  "AudioLanguageConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "GenerativeOutputLanguage": {
+     "$ref": "#/definitions/AudioGenerativeOutputLanguage"
+    },
+    "IdentifyMultipleLanguages": {
+     "type": "boolean"
+    },
+    "InputLanguages": {
+     "items": {
+      "$ref": "#/definitions/Language"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
   "AudioOverrideConfiguration": {
    "additionalProperties": false,
    "properties": {
+    "LanguageConfiguration": {
+     "$ref": "#/definitions/AudioLanguageConfiguration"
+    },
     "ModalityProcessing": {
      "$ref": "#/definitions/ModalityProcessingConfiguration"
     }
@@ -422,6 +450,22 @@
     }
    },
    "type": "object"
+  },
+  "Language": {
+   "enum": [
+    "EN",
+    "DE",
+    "ES",
+    "FR",
+    "IT",
+    "PT",
+    "JA",
+    "KO",
+    "CN",
+    "TW",
+    "HK"
+   ],
+   "type": "string"
   },
   "ModalityProcessingConfiguration": {
    "additionalProperties": false,

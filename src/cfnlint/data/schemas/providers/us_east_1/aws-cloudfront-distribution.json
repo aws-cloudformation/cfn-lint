@@ -118,6 +118,20 @@
    ],
    "type": "object"
   },
+  "ConnectionFunctionAssociation": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
   "ConnectionMode": {
    "enum": [
     "direct",
@@ -404,6 +418,9 @@
      "default": "",
      "type": "string"
     },
+    "ConnectionFunctionAssociation": {
+     "$ref": "#/definitions/ConnectionFunctionAssociation"
+    },
     "ConnectionMode": {
      "$ref": "#/definitions/ConnectionMode"
     },
@@ -498,6 +515,9 @@
      "default": {
       "CloudFrontDefaultCertificate": true
      }
+    },
+    "ViewerMtlsConfig": {
+     "$ref": "#/definitions/ViewerMtlsConfig"
     },
     "WebACLId": {
      "default": "",
@@ -1225,6 +1245,24 @@
    ],
    "type": "object"
   },
+  "TrustStoreConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AdvertiseTrustStoreCaNames": {
+     "type": "boolean"
+    },
+    "IgnoreCertificateExpiry": {
+     "type": "boolean"
+    },
+    "TrustStoreId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TrustStoreId"
+   ],
+   "type": "object"
+  },
   "ViewerCertificate": {
    "additionalProperties": false,
    "dependentRequired": {
@@ -1275,6 +1313,26 @@
     "IamCertificateId"
    ],
    "type": "object"
+  },
+  "ViewerMtlsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Mode": {
+     "$ref": "#/definitions/ViewerMtlsMode",
+     "default": "required"
+    },
+    "TrustStoreConfig": {
+     "$ref": "#/definitions/TrustStoreConfig"
+    }
+   },
+   "type": "object"
+  },
+  "ViewerMtlsMode": {
+   "enum": [
+    "required",
+    "optional"
+   ],
+   "type": "string"
   },
   "VpcOriginConfig": {
    "additionalProperties": false,

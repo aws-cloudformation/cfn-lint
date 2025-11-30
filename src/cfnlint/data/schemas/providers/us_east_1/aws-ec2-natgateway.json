@@ -5,9 +5,33 @@
   "/properties/SubnetId",
   "/properties/ConnectivityType",
   "/properties/AllocationId",
-  "/properties/PrivateIpAddress"
+  "/properties/PrivateIpAddress",
+  "/properties/AvailabilityMode"
  ],
  "definitions": {
+  "AvailabilityZoneAddress": {
+   "additionalProperties": false,
+   "properties": {
+    "AllocationIds": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "AvailabilityZone": {
+     "type": "string"
+    },
+    "AvailabilityZoneId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AllocationIds"
+   ],
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -32,6 +56,27 @@
   "AllocationId": {
    "type": "string"
   },
+  "AutoProvisionZones": {
+   "type": "string"
+  },
+  "AutoScalingIps": {
+   "type": "string"
+  },
+  "AvailabilityMode": {
+   "enum": [
+    "regional",
+    "zonal"
+   ],
+   "type": "string"
+  },
+  "AvailabilityZoneAddresses": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AvailabilityZoneAddress"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
   "ConnectivityType": {
    "enum": [
     "private",
@@ -49,6 +94,9 @@
    "type": "string"
   },
   "PrivateIpAddress": {
+   "type": "string"
+  },
+  "RouteTableId": {
    "type": "string"
   },
   "SecondaryAllocationIds": {
@@ -90,7 +138,10 @@
  },
  "readOnlyProperties": [
   "/properties/NatGatewayId",
-  "/properties/EniId"
+  "/properties/EniId",
+  "/properties/AutoProvisionZones",
+  "/properties/AutoScalingIps",
+  "/properties/RouteTableId"
  ],
  "tagging": {
   "cloudFormationSystemTags": true,

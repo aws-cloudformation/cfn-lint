@@ -111,6 +111,17 @@
    ],
    "type": "object"
   },
+  "DataStore": {
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "Readiness": {
+     "$ref": "#/definitions/Readiness"
+    }
+   },
+   "type": "object"
+  },
   "DomainStats": {
    "additionalProperties": false,
    "properties": {
@@ -219,6 +230,19 @@
    "minItems": 1,
    "type": "array"
   },
+  "Readiness": {
+   "properties": {
+    "Message": {
+     "type": "string"
+    },
+    "ProgressPercentage": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
   "RuleBasedMatching": {
    "additionalProperties": false,
    "properties": {
@@ -316,6 +340,9 @@
   "CreatedAt": {
    "type": "string"
   },
+  "DataStore": {
+   "$ref": "#/definitions/DataStore"
+  },
   "DeadLetterQueueUrl": {
    "maxLength": 255,
    "minLength": 0,
@@ -362,7 +389,8 @@
   "/properties/LastUpdatedAt",
   "/properties/CreatedAt",
   "/properties/RuleBasedMatching/Status",
-  "/properties/Stats"
+  "/properties/Stats",
+  "/properties/DataStore/Readiness"
  ],
  "required": [
   "DomainName",
