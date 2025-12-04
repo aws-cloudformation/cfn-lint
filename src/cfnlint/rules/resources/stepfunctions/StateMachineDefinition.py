@@ -152,11 +152,20 @@ class StateMachineDefinition(CfnLintJsonSchema):
                     )
 
             if state_type == "Map":
+                # ItemProcessor (distributed/inline mode)
                 processor = state.get("ItemProcessor")
-                processor_path = deque(["States", state_name, "ItemProcessor"])
-                yield from self._validate_start_at(
-                    processor, k, add_path_to_message, processor_path
-                )
+                if isinstance(processor, dict):
+                    processor_path = deque(["States", state_name, "ItemProcessor"])
+                    yield from self._validate_start_at(
+                        processor, k, add_path_to_message, processor_path
+                    )
+                # Iterator (classic map)
+                iterator = state.get("Iterator")
+                if isinstance(iterator, dict):
+                    iterator_path = deque(["States", state_name, "Iterator"])
+                    yield from self._validate_start_at(
+                        iterator, k, add_path_to_message, iterator_path
+                    )
 
     def _validate_step(
         self,
