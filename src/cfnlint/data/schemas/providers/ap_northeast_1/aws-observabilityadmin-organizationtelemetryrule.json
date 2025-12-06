@@ -1,0 +1,468 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RuleName"
+ ],
+ "definitions": {
+  "Action": {
+   "enum": [
+    "ALLOW",
+    "BLOCK",
+    "COUNT",
+    "CAPTCHA",
+    "CHALLENGE",
+    "EXCLUDED_AS_COUNT"
+   ],
+   "type": "string"
+  },
+  "ActionCondition": {
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/Action"
+    }
+   },
+   "type": "object"
+  },
+  "AdvancedEventSelector": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldSelectors": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/AdvancedFieldSelector"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "FieldSelectors"
+   ],
+   "type": "object"
+  },
+  "AdvancedFieldSelector": {
+   "properties": {
+    "EndsWith": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Equals": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Field": {
+     "maxLength": 1000,
+     "minLength": 1,
+     "type": "string"
+    },
+    "NotEndsWith": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "NotEquals": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "NotStartsWith": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "StartsWith": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "CloudtrailParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "AdvancedEventSelectors": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/AdvancedEventSelector"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "AdvancedEventSelectors"
+   ],
+   "type": "object"
+  },
+  "Condition": {
+   "properties": {
+    "ActionCondition": {
+     "$ref": "#/definitions/ActionCondition"
+    },
+    "LabelNameCondition": {
+     "$ref": "#/definitions/LabelNameCondition"
+    }
+   },
+   "type": "object"
+  },
+  "Conditions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Condition"
+   },
+   "minLength": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DestinationPattern": {
+   "type": "string"
+  },
+  "DestinationType": {
+   "enum": [
+    "cloud-watch-logs"
+   ],
+   "type": "string"
+  },
+  "ELBLoadBalancerLoggingParameters": {
+   "properties": {
+    "FieldDelimiter": {
+     "type": "string"
+    },
+    "OutputFormat": {
+     "enum": [
+      "plain",
+      "json"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FieldToMatch": {
+   "properties": {
+    "Method": {
+     "type": "string"
+    },
+    "QueryString": {
+     "type": "string"
+    },
+    "SingleHeader": {
+     "$ref": "#/definitions/SingleHeader"
+    },
+    "UriPath": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Filter": {
+   "properties": {
+    "Behavior": {
+     "$ref": "#/definitions/FilterBehavior"
+    },
+    "Conditions": {
+     "$ref": "#/definitions/Conditions"
+    },
+    "Requirement": {
+     "$ref": "#/definitions/FilterRequirement"
+    }
+   },
+   "type": "object"
+  },
+  "FilterBehavior": {
+   "enum": [
+    "KEEP",
+    "DROP"
+   ],
+   "type": "string"
+  },
+  "FilterRequirement": {
+   "enum": [
+    "MEETS_ALL",
+    "MEETS_ANY"
+   ],
+   "type": "string"
+  },
+  "Filters": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Filter"
+   },
+   "minLength": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "LabelNameCondition": {
+   "properties": {
+    "LabelName": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^[0-9A-Za-z_\\-:]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LoggingFilter": {
+   "properties": {
+    "DefaultBehavior": {
+     "$ref": "#/definitions/FilterBehavior"
+    },
+    "Filters": {
+     "$ref": "#/definitions/Filters"
+    }
+   },
+   "type": "object"
+  },
+  "RedactedFields": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/FieldToMatch"
+   },
+   "maxItems": 100,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ResourceType": {
+   "enum": [
+    "AWS::EC2::VPC",
+    "AWS::WAFv2::WebACL",
+    "AWS::CloudTrail",
+    "AWS::EKS::Cluster",
+    "AWS::ElasticLoadBalancingV2::LoadBalancer"
+   ],
+   "type": "string"
+  },
+  "RetentionInDays": {
+   "maximum": 3653,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Scope": {
+   "type": "string"
+  },
+  "SelectionCriteria": {
+   "type": "string"
+  },
+  "SingleHeader": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TelemetryDestinationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudtrailParameters": {
+     "$ref": "#/definitions/CloudtrailParameters"
+    },
+    "DestinationPattern": {
+     "$ref": "#/definitions/DestinationPattern"
+    },
+    "DestinationType": {
+     "$ref": "#/definitions/DestinationType"
+    },
+    "ELBLoadBalancerLoggingParameters": {
+     "$ref": "#/definitions/ELBLoadBalancerLoggingParameters"
+    },
+    "RetentionInDays": {
+     "$ref": "#/definitions/RetentionInDays"
+    },
+    "VPCFlowLogParameters": {
+     "$ref": "#/definitions/VPCFlowLogParameters"
+    },
+    "WAFLoggingParameters": {
+     "$ref": "#/definitions/WAFLoggingParameters"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "TelemetryRule": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationConfiguration": {
+     "$ref": "#/definitions/TelemetryDestinationConfiguration"
+    },
+    "ResourceType": {
+     "$ref": "#/definitions/ResourceType"
+    },
+    "Scope": {
+     "$ref": "#/definitions/Scope"
+    },
+    "SelectionCriteria": {
+     "$ref": "#/definitions/SelectionCriteria"
+    },
+    "TelemetrySourceTypes": {
+     "$ref": "#/definitions/TelemetrySourceTypes"
+    },
+    "TelemetryType": {
+     "$ref": "#/definitions/TelemetryType"
+    }
+   },
+   "required": [
+    "ResourceType",
+    "TelemetryType"
+   ],
+   "type": "object"
+  },
+  "TelemetrySourceType": {
+   "enum": [
+    "VPC_FLOW_LOGS",
+    "ROUTE53_RESOLVER_QUERY_LOGS",
+    "EKS_AUDIT_LOGS",
+    "EKS_AUTHENTICATOR_LOGS",
+    "EKS_CONTROLLER_MANAGER_LOGS",
+    "EKS_SCHEDULER_LOGS",
+    "EKS_API_LOGS"
+   ],
+   "type": "string"
+  },
+  "TelemetrySourceTypes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TelemetrySourceType"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TelemetryType": {
+   "enum": [
+    "Logs"
+   ],
+   "type": "string"
+  },
+  "VPCFlowLogParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "LogFormat": {
+     "type": "string"
+    },
+    "MaxAggregationInterval": {
+     "type": "integer"
+    },
+    "TrafficType": {
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "WAFLogType": {
+   "enum": [
+    "WAF_LOGS"
+   ],
+   "type": "string"
+  },
+  "WAFLoggingParameters": {
+   "properties": {
+    "LogType": {
+     "$ref": "#/definitions/WAFLogType"
+    },
+    "LoggingFilter": {
+     "$ref": "#/definitions/LoggingFilter"
+    },
+    "RedactedFields": {
+     "$ref": "#/definitions/RedactedFields"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RuleArn"
+ ],
+ "properties": {
+  "Rule": {
+   "$ref": "#/definitions/TelemetryRule"
+  },
+  "RuleArn": {
+   "maxLength": 1011,
+   "minLength": 1,
+   "pattern": "^arn:aws([a-z0-9\\-]+)?:([a-zA-Z0-9\\-]+):([a-z0-9\\-]+)?:([0-9]{12})?:(.+)$",
+   "type": "string"
+  },
+  "RuleName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[0-9A-Za-z-]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RuleArn"
+ ],
+ "required": [
+  "RuleName",
+  "Rule"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ObservabilityAdmin::OrganizationTelemetryRule"
+}
