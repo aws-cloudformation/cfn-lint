@@ -120,7 +120,6 @@ class StateMachineDefinition(CfnLintJsonSchema):
         start_at = definition.get("StartAt")
         states = definition.get("States")
 
-        # Check if StartAt is missing
         if not isinstance(start_at, str) or not isinstance(states, dict):
             return  # Early return to avoid further checks
 
@@ -134,11 +133,13 @@ class StateMachineDefinition(CfnLintJsonSchema):
                 display_path = f"/{'/'.join(str(item) for item in path)}/StartAt"
 
             message = f"Missing 'Next' target '{start_at}' at {display_path}"
-
             yield ValidationError(message, path=error_path, rule=self)
 
         # Validate nested StartAt in Parallel and Map states
+        base_path = deque() if path is None else deque(path)
         for state_name, state in states.items():
+            if not isinstance(state, dict):
+                continue
             state_type = state.get("Type")
 
             if state_type == "Parallel":
@@ -146,7 +147,8 @@ class StateMachineDefinition(CfnLintJsonSchema):
                 if not isinstance(branches, list):
                     continue
                 for idx, branch in enumerate(branches):
-                    branch_path = deque(["States", state_name, "Branches", idx])
+                    branch_path = deque(base_path)
+                    branch_path.extend(["States", state_name, "Branches", idx])
                     yield from self._validate_start_at(
                         branch, k, add_path_to_message, branch_path
                     )
@@ -155,14 +157,16 @@ class StateMachineDefinition(CfnLintJsonSchema):
                 # ItemProcessor (distributed/inline mode)
                 processor = state.get("ItemProcessor")
                 if isinstance(processor, dict):
-                    processor_path = deque(["States", state_name, "ItemProcessor"])
+                    processor_path = deque(base_path)
+                    processor_path.extend(["States", state_name, "ItemProcessor"])
                     yield from self._validate_start_at(
                         processor, k, add_path_to_message, processor_path
                     )
                 # Iterator (classic map)
                 iterator = state.get("Iterator")
                 if isinstance(iterator, dict):
-                    iterator_path = deque(["States", state_name, "Iterator"])
+                    iterator_path = deque(base_path)
+                    iterator_path.extend(["States", state_name, "Iterator"])
                     yield from self._validate_start_at(
                         iterator, k, add_path_to_message, iterator_path
                     )
