@@ -1,0 +1,135 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TableBucketName"
+ ],
+ "definitions": {
+  "EncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KMSKeyArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "(arn:aws[-a-z0-9]*:kms:[-a-z0-9]*:[0-9]{12}:key/.+)",
+     "type": "string"
+    },
+    "SSEAlgorithm": {
+     "enum": [
+      "AES256",
+      "aws:kms"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MetricsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "default": "Disabled",
+     "enum": [
+      "Enabled",
+      "Disabled"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TableBucketARN": {
+   "examples": [
+    "arn:aws:s3tables:us-west-2:123456789012:bucket/mytablebucket"
+   ],
+   "pattern": "(arn:aws[-a-z0-9]*:[a-z0-9]+:[-a-z0-9]*:[0-9]{12}:bucket/[a-z0-9_-]{3,63})",
+   "type": "string"
+  },
+  "TableBucketName": {
+   "maxLength": 63,
+   "minLength": 3,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UnreferencedFileRemoval": {
+   "additionalProperties": false,
+   "properties": {
+    "NoncurrentDays": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Status": {
+     "enum": [
+      "Enabled",
+      "Disabled"
+     ],
+     "type": "string"
+    },
+    "UnreferencedDays": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TableBucketARN"
+ ],
+ "properties": {
+  "EncryptionConfiguration": {
+   "$ref": "#/definitions/EncryptionConfiguration"
+  },
+  "MetricsConfiguration": {
+   "$ref": "#/definitions/MetricsConfiguration"
+  },
+  "TableBucketARN": {
+   "$ref": "#/definitions/TableBucketARN"
+  },
+  "TableBucketName": {
+   "$ref": "#/definitions/TableBucketName"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UnreferencedFileRemoval": {
+   "$ref": "#/definitions/UnreferencedFileRemoval"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TableBucketARN"
+ ],
+ "required": [
+  "TableBucketName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::S3Tables::TableBucket"
+}
