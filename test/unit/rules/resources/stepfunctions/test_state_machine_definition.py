@@ -1420,6 +1420,62 @@ def rule():
             ],
         ),
         (
+            "Parallel state with Map/ItemProcessor missing StartAt target",
+            {
+                "Definition": {
+                    "StartAt": "ParallelExecution",
+                    "States": {
+                        "ParallelExecution": {
+                            "Type": "Parallel",
+                            "Branches": [
+                                {
+                                    "StartAt": "Pass1",
+                                    "States": {"Pass1": {"Type": "Pass", "End": True}},
+                                },
+                                {
+                                    "StartAt": "TestMap",
+                                    "States": {
+                                        "TestMap": {
+                                            "Type": "Map",
+                                            "ItemsPath": "$",
+                                            "ItemProcessor": {
+                                                "ProcessorConfig": {"Mode": "INLINE"},
+                                                "StartAt": "FAIL",
+                                                "States": {
+                                                    "Pass2": {"Type": "Pass", "End": True}
+                                                },
+                                            },
+                                            "End": True,
+                                        }
+                                    },
+                                },
+                            ],
+                            "End": True,
+                        }
+                    },
+                }
+            },
+            [
+                ValidationError(
+                    "Missing 'Next' target 'FAIL' at /States/ParallelExecution/Branches/1/States/TestMap/ItemProcessor/StartAt",
+                    rule=StateMachineDefinition(),
+                    path=deque(
+                        [
+                            "Definition",
+                            "States",
+                            "ParallelExecution",
+                            "Branches",
+                            1,
+                            "States",
+                            "TestMap",
+                            "ItemProcessor",
+                            "StartAt",
+                        ]
+                    ),
+                ),
+            ],
+        ),
+        (
             "Map state with missing StartAt target in ItemProcessor",
             {
                 "Definition": {
@@ -1447,6 +1503,38 @@ def rule():
                     rule=StateMachineDefinition(),
                     path=deque(
                         ["Definition", "States", "MapState", "ItemProcessor", "StartAt"]
+                    ),
+                ),
+            ],
+        ),
+        (
+            "Map state with missing StartAt target in Iterator",
+            {
+                "Definition": {
+                    "StartAt": "MapState",
+                    "States": {
+                        "MapState": {
+                            "Type": "Map",
+                            "Iterator": {
+                                "StartAt": "FAIL",
+                                "States": {
+                                    "ProcessItem": {
+                                        "Type": "Pass",
+                                        "End": True,
+                                    },
+                                },
+                            },
+                            "End": True,
+                        },
+                    },
+                }
+            },
+            [
+                ValidationError(
+                    "Missing 'Next' target 'FAIL' at /States/MapState/Iterator/StartAt",
+                    rule=StateMachineDefinition(),
+                    path=deque(
+                        ["Definition", "States", "MapState", "Iterator", "StartAt"]
                     ),
                 ),
             ],
