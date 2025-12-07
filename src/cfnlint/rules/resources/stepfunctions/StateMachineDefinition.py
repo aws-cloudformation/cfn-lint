@@ -120,6 +120,7 @@ class StateMachineDefinition(CfnLintJsonSchema):
         start_at = definition.get("StartAt")
         states = definition.get("States")
 
+        # Check if StartAt is missing
         if not isinstance(start_at, str) or not isinstance(states, dict):
             return  # Early return to avoid further checks
 
@@ -133,6 +134,7 @@ class StateMachineDefinition(CfnLintJsonSchema):
                 display_path = f"/{'/'.join(str(item) for item in path)}/StartAt"
 
             message = f"Missing 'Next' target '{start_at}' at {display_path}"
+
             yield ValidationError(message, path=error_path, rule=self)
 
         # Validate nested StartAt in Parallel and Map states
