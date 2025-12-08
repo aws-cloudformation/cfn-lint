@@ -1451,6 +1451,38 @@ def rule():
                 ),
             ],
         ),
+        (
+            "Map state with missing StartAt target in Iterator",
+            {
+                "Definition": {
+                    "StartAt": "MapState",
+                    "States": {
+                        "MapState": {
+                            "Type": "Map",
+                            "Iterator": {
+                                "StartAt": "FAIL",
+                                "States": {
+                                    "ProcessItem": {
+                                        "Type": "Pass",
+                                        "End": True,
+                                    },
+                                },
+                            },
+                            "End": True,
+                        },
+                    },
+                }
+            },
+            [
+                ValidationError(
+                    "Missing 'Next' target 'FAIL' at /States/MapState/Iterator/StartAt",
+                    rule=StateMachineDefinition(),
+                    path=deque(
+                        ["Definition", "States", "MapState", "Iterator", "StartAt"]
+                    ),
+                ),
+            ],
+        ),
     ],
 )
 def test_validate(
