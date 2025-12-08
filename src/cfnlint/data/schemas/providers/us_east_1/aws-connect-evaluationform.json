@@ -168,6 +168,105 @@
    },
    "type": "object"
   },
+  "EvaluationFormLanguageConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "FormLanguage": {
+     "enum": [
+      "de-DE",
+      "en-US",
+      "es-ES",
+      "fr-FR",
+      "it-IT",
+      "pt-BR"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EvaluationFormMultiSelectQuestionAutomation": {
+   "additionalProperties": false,
+   "properties": {
+    "AnswerSource": {
+     "$ref": "#/definitions/EvaluationFormQuestionAutomationAnswerSource"
+    },
+    "DefaultOptionRefIds": {
+     "$ref": "#/definitions/ReferenceIdList"
+    },
+    "Options": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/EvaluationFormMultiSelectQuestionAutomationOption"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Options"
+   ],
+   "type": "object"
+  },
+  "EvaluationFormMultiSelectQuestionAutomationOption": {
+   "additionalProperties": false,
+   "properties": {
+    "RuleCategory": {
+     "$ref": "#/definitions/MultiSelectQuestionRuleCategoryAutomation"
+    }
+   },
+   "required": [
+    "RuleCategory"
+   ],
+   "type": "object"
+  },
+  "EvaluationFormMultiSelectQuestionOption": {
+   "additionalProperties": false,
+   "properties": {
+    "RefId": {
+     "$ref": "#/definitions/RefId"
+    },
+    "Text": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "RefId",
+    "Text"
+   ],
+   "type": "object"
+  },
+  "EvaluationFormMultiSelectQuestionProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Automation": {
+     "$ref": "#/definitions/EvaluationFormMultiSelectQuestionAutomation"
+    },
+    "DisplayAs": {
+     "enum": [
+      "DROPDOWN",
+      "CHECKBOX"
+     ],
+     "type": "string"
+    },
+    "Options": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/EvaluationFormMultiSelectQuestionOption"
+     },
+     "maxItems": 256,
+     "minItems": 2,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Options"
+   ],
+   "type": "object"
+  },
   "EvaluationFormNumericQuestionAutomation": {
    "additionalProperties": false,
    "properties": {
@@ -297,6 +396,9 @@
   "EvaluationFormQuestionTypeProperties": {
    "additionalProperties": false,
    "properties": {
+    "MultiSelect": {
+     "$ref": "#/definitions/EvaluationFormMultiSelectQuestionProperties"
+    },
     "Numeric": {
      "$ref": "#/definitions/EvaluationFormNumericQuestionProperties"
     },
@@ -434,6 +536,22 @@
    ],
    "type": "object"
   },
+  "EvaluationFormTargetConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ContactInteractionType": {
+     "enum": [
+      "AGENT",
+      "AUTOMATED"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ContactInteractionType"
+   ],
+   "type": "object"
+  },
   "EvaluationFormTextQuestionAutomation": {
    "additionalProperties": false,
    "properties": {
@@ -452,6 +570,32 @@
    },
    "type": "object"
   },
+  "MultiSelectQuestionRuleCategoryAutomation": {
+   "additionalProperties": false,
+   "properties": {
+    "Category": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Condition": {
+     "enum": [
+      "PRESENT",
+      "NOT_PRESENT"
+     ],
+     "type": "string"
+    },
+    "OptionRefIds": {
+     "$ref": "#/definitions/ReferenceIdList"
+    }
+   },
+   "required": [
+    "Category",
+    "Condition",
+    "OptionRefIds"
+   ],
+   "type": "object"
+  },
   "NumericQuestionPropertyValueAutomation": {
    "additionalProperties": false,
    "properties": {
@@ -468,7 +612,8 @@
       "LONGEST_HOLD_DURATION",
       "NUMBER_OF_HOLDS",
       "AGENT_INTERACTION_AND_HOLD_DURATION",
-      "CUSTOMER_SENTIMENT_SCORE_WITHOUT_AGENT"
+      "CUSTOMER_SENTIMENT_SCORE_WITHOUT_AGENT",
+      "CUSTOMER_SENTIMENT_SCORE_WITH_AGENT"
      ],
      "type": "string"
     }
@@ -481,6 +626,12 @@
   "RefId": {
    "pattern": "^[a-zA-Z0-9._-]{1,40}$",
    "type": "string"
+  },
+  "ReferenceIdList": {
+   "items": {
+    "$ref": "#/definitions/RefId"
+   },
+   "type": "array"
   },
   "Score": {
    "maximum": 10,
@@ -591,6 +742,9 @@
    "minItems": 1,
    "type": "array"
   },
+  "LanguageConfiguration": {
+   "$ref": "#/definitions/EvaluationFormLanguageConfiguration"
+  },
   "ScoringStrategy": {
    "$ref": "#/definitions/ScoringStrategy"
   },
@@ -610,6 +764,9 @@
    "maxItems": 50,
    "type": "array",
    "uniqueItems": true
+  },
+  "TargetConfiguration": {
+   "$ref": "#/definitions/EvaluationFormTargetConfiguration"
   },
   "Title": {
    "maxLength": 128,

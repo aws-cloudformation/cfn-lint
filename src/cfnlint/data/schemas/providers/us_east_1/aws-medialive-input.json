@@ -3,6 +3,7 @@
  "createOnlyProperties": [
   "/properties/Vpc",
   "/properties/Type",
+  "/properties/RouterSettings",
   "/properties/InputNetworkLocation"
  ],
  "definitions": {
@@ -128,6 +129,34 @@
      "type": "string"
     },
     "Url": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RouterDestinationSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZoneName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RouterSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "Destinations": {
+     "items": {
+      "$ref": "#/definitions/RouterDestinationSettings"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "EncryptionType": {
+     "type": "string"
+    },
+    "SecretArn": {
      "type": "string"
     }
    },
@@ -277,6 +306,9 @@
   "RoleArn": {
    "format": "AWS::IAM::Role.Arn",
    "type": "string"
+  },
+  "RouterSettings": {
+   "$ref": "#/definitions/RouterSettings"
   },
   "SdiSources": {
    "items": {

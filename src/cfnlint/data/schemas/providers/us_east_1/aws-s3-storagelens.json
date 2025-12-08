@@ -16,6 +16,9 @@
     "AdvancedDataProtectionMetrics": {
      "$ref": "#/definitions/AdvancedDataProtectionMetrics"
     },
+    "AdvancedPerformanceMetrics": {
+     "$ref": "#/definitions/AdvancedPerformanceMetrics"
+    },
     "BucketLevel": {
      "$ref": "#/definitions/BucketLevel"
     },
@@ -58,6 +61,15 @@
    },
    "type": "object"
   },
+  "AdvancedPerformanceMetrics": {
+   "additionalProperties": false,
+   "properties": {
+    "IsEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
   "Arn": {
    "type": "string"
   },
@@ -84,6 +96,9 @@
     },
     "AdvancedDataProtectionMetrics": {
      "$ref": "#/definitions/AdvancedDataProtectionMetrics"
+    },
+    "AdvancedPerformanceMetrics": {
+     "$ref": "#/definitions/AdvancedPerformanceMetrics"
     },
     "DetailedStatusCodesMetrics": {
      "$ref": "#/definitions/DetailedStatusCodesMetrics"
@@ -136,6 +151,9 @@
     },
     "S3BucketDestination": {
      "$ref": "#/definitions/S3BucketDestination"
+    },
+    "StorageLensTableDestination": {
+     "$ref": "#/definitions/StorageLensTableDestination"
     }
    },
    "type": "object"
@@ -286,6 +304,9 @@
     "Exclude": {
      "$ref": "#/definitions/BucketsAndRegions"
     },
+    "ExpandedPrefixesDataExport": {
+     "$ref": "#/definitions/StorageLensExpandedPrefixesDataExport"
+    },
     "Id": {
      "$ref": "#/definitions/Id"
     },
@@ -294,6 +315,9 @@
     },
     "IsEnabled": {
      "type": "boolean"
+    },
+    "PrefixDelimiter": {
+     "type": "string"
     },
     "StorageLensArn": {
      "type": "string"
@@ -304,6 +328,18 @@
     "AccountLevel",
     "IsEnabled"
    ],
+   "type": "object"
+  },
+  "StorageLensExpandedPrefixesDataExport": {
+   "additionalProperties": false,
+   "properties": {
+    "S3BucketDestination": {
+     "$ref": "#/definitions/S3BucketDestination"
+    },
+    "StorageLensTableDestination": {
+     "$ref": "#/definitions/StorageLensTableDestination"
+    }
+   },
    "type": "object"
   },
   "StorageLensGroupArn": {
@@ -338,6 +374,21 @@
      "uniqueItems": true
     }
    },
+   "type": "object"
+  },
+  "StorageLensTableDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "Encryption": {
+     "$ref": "#/definitions/Encryption"
+    },
+    "IsEnabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "IsEnabled"
+   ],
    "type": "object"
   },
   "Tag": {
