@@ -1,11 +1,26 @@
 {
  "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/DurableConfig"
+ ],
  "createOnlyProperties": [
   "/properties/FunctionName",
   "/properties/PackageType",
   "/properties/TenancyConfig"
  ],
  "definitions": {
+  "CapacityProviderConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaManagedInstancesCapacityProviderConfig": {
+     "$ref": "#/definitions/LambdaManagedInstancesCapacityProviderConfig"
+    }
+   },
+   "required": [
+    "LambdaManagedInstancesCapacityProviderConfig"
+   ],
+   "type": "object"
+  },
   "Code": {
    "additionalProperties": false,
    "properties": {
@@ -46,6 +61,26 @@
      "type": "string"
     }
    },
+   "type": "object"
+  },
+  "DurableConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ExecutionTimeout": {
+     "maximum": 31622400,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "RetentionPeriodInDays": {
+     "default": 14,
+     "maximum": 90,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ExecutionTimeout"
+   ],
    "type": "object"
   },
   "Environment": {
@@ -104,6 +139,22 @@
    ],
    "type": "object"
   },
+  "FunctionScalingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxExecutionEnvironments": {
+     "maximum": 15000,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MinExecutionEnvironments": {
+     "maximum": 15000,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
   "ImageConfig": {
    "additionalProperties": false,
    "properties": {
@@ -128,6 +179,31 @@
      "type": "string"
     }
    },
+   "type": "object"
+  },
+  "LambdaManagedInstancesCapacityProviderConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CapacityProviderArn": {
+     "maxLength": 140,
+     "minLength": 1,
+     "pattern": "^arn:aws[a-zA-Z-]*:lambda:(eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:\\d{12}:capacity-provider:[a-zA-Z0-9-_]+$",
+     "type": "string"
+    },
+    "ExecutionEnvironmentMemoryGiBPerVCpu": {
+     "maximum": 8,
+     "minimum": 2,
+     "type": "number"
+    },
+    "PerExecutionEnvironmentMaxConcurrency": {
+     "maximum": 1600,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "CapacityProviderArn"
+   ],
    "type": "object"
   },
   "LoggingConfig": {
@@ -326,6 +402,9 @@
   "Arn": {
    "type": "string"
   },
+  "CapacityProviderConfig": {
+   "$ref": "#/definitions/CapacityProviderConfig"
+  },
   "Code": {
    "$ref": "#/definitions/Code"
   },
@@ -341,6 +420,9 @@
    "maxLength": 256,
    "minLength": 1,
    "type": "string"
+  },
+  "DurableConfig": {
+   "$ref": "#/definitions/DurableConfig"
   },
   "Environment": {
    "$ref": "#/definitions/Environment"
@@ -360,6 +442,9 @@
    "minLength": 1,
    "pattern": "(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)",
    "type": "string"
+  },
+  "FunctionScalingConfig": {
+   "$ref": "#/definitions/FunctionScalingConfig"
   },
   "Handler": {
    "maxLength": 128,
@@ -398,6 +483,9 @@
     "Zip"
    ],
    "type": "string"
+  },
+  "PublishToLatestPublished": {
+   "type": "boolean"
   },
   "RecursiveLoop": {
    "$ref": "#/definitions/RecursiveLoop"
@@ -517,6 +605,7 @@
   "/properties/Code/S3Key",
   "/properties/Code/S3ObjectVersion",
   "/properties/Code/ZipFile",
-  "/properties/Code/SourceKMSKeyArn"
+  "/properties/Code/SourceKMSKeyArn",
+  "/properties/PublishToLatestPublished"
  ]
 }

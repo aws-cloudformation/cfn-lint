@@ -4,7 +4,8 @@
   "/properties/TableBucketARN",
   "/properties/OpenTableFormat",
   "/properties/IcebergMetadata",
-  "/properties/WithoutMetadata"
+  "/properties/WithoutMetadata",
+  "/properties/StorageClassConfiguration"
  ],
  "definitions": {
   "Compaction": {
@@ -107,6 +108,19 @@
    },
    "type": "object"
   },
+  "StorageClassConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "StorageClass": {
+     "enum": [
+      "STANDARD",
+      "INTELLIGENT_TIERING"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "TableARN": {
    "examples": [
     "arn:aws:s3tables:us-west-2:123456789012:bucket/mytablebucket/table/813aadd1-a378-4d0f-8467-e3247306f309"
@@ -173,6 +187,9 @@
   },
   "SnapshotManagement": {
    "$ref": "#/definitions/SnapshotManagement"
+  },
+  "StorageClassConfiguration": {
+   "$ref": "#/definitions/StorageClassConfiguration"
   },
   "TableARN": {
    "$ref": "#/definitions/TableARN"

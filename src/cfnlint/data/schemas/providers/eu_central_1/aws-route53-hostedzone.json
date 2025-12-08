@@ -1,0 +1,134 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "HostedZoneConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Comment": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HostedZoneFeatures": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableAcceleratedRecovery": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "HostedZoneTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "QueryLoggingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogsLogGroupArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "CloudWatchLogsLogGroupArn"
+   ],
+   "type": "object"
+  },
+  "VPC": {
+   "additionalProperties": false,
+   "properties": {
+    "VPCId": {
+     "format": "AWS::EC2::VPC.Id",
+     "type": "string"
+    },
+    "VPCRegion": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "VPCId",
+    "VPCRegion"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "HostedZoneConfig": {
+   "$ref": "#/definitions/HostedZoneConfig"
+  },
+  "HostedZoneFeatures": {
+   "$ref": "#/definitions/HostedZoneFeatures"
+  },
+  "HostedZoneTags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/HostedZoneTag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "NameServers": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "QueryLoggingConfig": {
+   "$ref": "#/definitions/QueryLoggingConfig"
+  },
+  "VPCs": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/VPC"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/Name": "Name $OR $join([Name, \".\"]) $OR $lowercase(Name) $OR $lowercase($join([Name, \".\"]))"
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/NameServers"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/HostedZoneTags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Route53::HostedZone"
+}
