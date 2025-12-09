@@ -1,3 +1,14 @@
+### v1.42.1
+## What's Changed
+* Fix rule [E3601](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3601) Step Functions StartAt path resolution in Parallel branches by @tyukei in https://github.com/aws-cloudformation/cfn-lint/pull/4313
+* Fix rule [E3601](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3601) Step Functions Map Iterator validation crash in StateMachineDefinition by @tyukei in https://github.com/aws-cloudformation/cfn-lint/pull/4308
+* Update CloudFormation schemas to `2025-12-08` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4305
+
+## New Contributors
+* @tyukei made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4308
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.42.0...v1.42.1
+
 ### v1.42.0
 ## What's Changed
 * chore(deps): bump actions/checkout from 5 to 6 by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4299
