@@ -15,7 +15,6 @@ import re
 import shutil
 import sys
 import zipfile
-from copy import copy
 from functools import lru_cache
 from typing import TYPE_CHECKING, Any, Dict, Iterator, Sequence
 
@@ -113,21 +112,41 @@ class ProviderSchemaManager:
             Iterator[tuple[list[str], Schema]]: the unique schemas with
               their associated regions
         """
-        cached_regions: list[str] = []
-        cached_schema: Schema | None = None
-        for region in regions:
-            try:
-                schema = self.get_resource_schema(region, resource_type)
-            except ResourceNotFoundError:
-                continue
-            if not schema.is_cached and region != REGION_PRIMARY:
-                yield [region], schema
-            else:
-                cached_regions.append(region)
-                cached_schema = schema
+        # Normalize resource type (Custom:: -> AWS::CloudFormation::CustomResource)
+        resource_type = self._normalize_resource_type(resource_type)
 
-        if cached_schema is not None:
-            yield cached_regions, cached_schema
+        # Group regions by schema hash to avoid duplicate validations
+        hash_to_regions: dict[str, list[str]] = {}
+        hash_to_schema: dict[str, Schema] = {}
+
+        for region in regions:
+            # Get the hash for this region's schema first
+            reg = ToPy(region)
+            if reg.name not in self._provider_schema_modules:
+                self._provider_schema_modules[reg.name] = __import__(
+                    f"{self._root.module}.{reg.py}", fromlist=[""]
+                )
+            schema_hash = self._provider_schema_modules[reg.name].types.get(
+                resource_type
+            )
+
+            if not schema_hash:
+                continue
+
+            # Only load schema if we haven't seen this hash before
+            if schema_hash not in hash_to_regions:
+                try:
+                    schema = self.get_resource_schema(region, resource_type)
+                    hash_to_regions[schema_hash] = []
+                    hash_to_schema[schema_hash] = schema
+                except ResourceNotFoundError:
+                    continue
+
+            hash_to_regions[schema_hash].append(region)
+
+        # Yield each unique schema with its regions
+        for schema_hash, region_list in hash_to_regions.items():
+            yield region_list, hash_to_schema[schema_hash]
 
     def _normalize_resource_type(self, resource_type: str) -> str:
         """
@@ -168,31 +187,33 @@ class ProviderSchemaManager:
         if schema is not None:
             return schema
 
-        # dynamically import the modules as needed
-        self._provider_schema_modules[reg.name] = __import__(
-            f"{self._root.module}.{reg.py}", fromlist=[""]
-        )
+        # dynamically import the region module as needed
+        if reg.name not in self._provider_schema_modules:
+            self._provider_schema_modules[reg.name] = __import__(
+                f"{self._root.module}.{reg.py}", fromlist=[""]
+            )
+
         # check cfn-lint provided schemas
         if rt.name in self._registry_schemas:
             self._schemas[reg.name][rt.name] = self._registry_schemas[rt.name]
             return self._schemas[reg.name][rt.name]
 
-        # load the schema
-        if f"{rt.provider}.json" in self._provider_schema_modules[reg.name].cached:
-            schema_cached = copy(
-                self.get_resource_schema(
-                    region=self._region_primary.name,
-                    resource_type=rt.name,
-                )
-            )
-            schema_cached.is_cached = True
-            self._schemas[reg.name][rt.name] = schema_cached
-            return self._schemas[reg.name][rt.name]
+        # load the schema from hash-based storage
+        region_module = self._provider_schema_modules[reg.name]
+        schema_hash = region_module.types.get(resource_type)
+
+        if not schema_hash:
+            raise ResourceNotFoundError(rt.name, region)
+
         try:
+            # Load from resources directory using hash
+            resources_module = __import__(
+                "cfnlint.data.schemas.resources", fromlist=[""]
+            )
             self._schemas[reg.name][rt.name] = Schema(
                 load_resource(
-                    self._provider_schema_modules[reg.name],
-                    filename=f"{rt.provider}.json",
+                    resources_module,
+                    filename=f"{schema_hash}.json",
                 )
             )
             return self._schemas[reg.name][rt.name]
@@ -210,40 +231,206 @@ class ProviderSchemaManager:
         """
         reg = ToPy(region)
 
-        if self._region_primary.name not in self._provider_schema_modules:
-            self._provider_schema_modules[self._region_primary.name] = __import__(
-                f"{self._root.module}.{self._region_primary.py}", fromlist=[""]
-            )
-        resource_types: list[str] = []
         if reg.name not in self._provider_schema_modules:
-            self._provider_schema_modules[region] = __import__(
+            self._provider_schema_modules[reg.name] = __import__(
                 f"{self._root.module}.{reg.py}", fromlist=[""]
             )
+
+        resource_types: list[str] = []
         resource_types.extend(
             rt
-            for rt in self._provider_schema_modules[reg.name].types
+            for rt in self._provider_schema_modules[reg.name].types.keys()
             if rt not in self._removed_types
         )
         resource_types.extend(list(self._registry_schemas.keys()))
 
         return resource_types
 
-    def update(self, force: bool) -> None:
+    def update(self, force: bool) -> int:
         """Update every regions provider schemas
 
         Args:
             force (bool): force the schemas to be downloaded
         Returns:
-            None: returns when complete
+            int: exit code (0=success, 1=partial failure, 2=complete failure)
         """
-        self._update_provider_schema(self._region_primary.name, force=force)
+        import hashlib
+        from pathlib import Path
+
+        # Download all regions in parallel
+        downloaded_regions = {}
+        failed_regions = []
+
         # pylint: disable=not-context-manager
         with multiprocessing.Pool() as pool:
-            # Patch from registry schema
-            provider_pool_tuple = [
-                (k, force) for k in REGIONS if k != self._region_primary.name
-            ]
-            pool.starmap(self._update_provider_schema, provider_pool_tuple)
+            results = pool.starmap(
+                self._download_region_schemas, [(region, force) for region in REGIONS]
+            )
+
+        for region, result in zip(REGIONS, results):
+            if result is None:
+                failed_regions.append(region)
+            else:
+                downloaded_regions[region] = result
+
+        if not downloaded_regions:
+            LOGGER.error("All regions failed to download")
+            return 2
+
+        # Build global hash map
+        hash_to_schema = {}
+        region_mappings: dict[str, dict[str, str]] = {}
+
+        for region, schemas in downloaded_regions.items():
+            region_mappings[region] = {}
+            for resource_type, schema_content in schemas.items():
+                schema_hash = hashlib.sha256(
+                    json.dumps(schema_content, sort_keys=True).encode()
+                ).hexdigest()[:16]
+
+                hash_to_schema[schema_hash] = schema_content
+                region_mappings[region][resource_type] = schema_hash
+
+        # Write unique schemas
+        resources_dir = Path(self._root.path_relative).parent / "resources"
+        resources_dir.mkdir(exist_ok=True)
+
+        for schema_hash, schema_content in hash_to_schema.items():
+            with open(
+                resources_dir / f"{schema_hash}.json", "w", encoding="utf-8"
+            ) as f:
+                json.dump(
+                    schema_content, f, indent=1, separators=(",", ": "), sort_keys=True
+                )
+                f.write("\n")
+
+        # Write region mapping files
+        for region, type_map in region_mappings.items():
+            self._write_region_file(region, type_map)
+
+        # Handle ISO regions by referencing us-east-1
+        if "us-east-1" in region_mappings:
+            iso_handled = []
+            for region in failed_regions:
+                if "iso" in region or region.startswith("eusc"):
+                    self._write_region_file(region, region_mappings["us-east-1"])
+                    iso_handled.append(region)
+            # Remove ISO regions from failed list since they're expected to fail
+            for region in iso_handled:
+                failed_regions.remove(region)
+
+        # Cleanup orphaned schemas
+        self._cleanup_orphaned_schemas(region_mappings, resources_dir)
+
+        if failed_regions:
+            LOGGER.warning(
+                f"Failed regions (kept existing): {', '.join(failed_regions)}"
+            )
+            return 1
+
+        return 0
+
+    def _download_region_schemas(
+        self, region: str, force: bool = False
+    ) -> dict[str, dict] | None:
+        """Download schemas for a single region
+
+        Args:
+            region: Region to download
+            force: Force download even if cached
+        Returns:
+            Dict mapping resource type to schema content, or None on failure
+        """
+
+        suffix = ".cn" if region in ["cn-north-1", "cn-northwest-1"] else ""
+        url = f"https://schema.cloudformation.{region}.amazonaws.com{suffix}/CloudformationSchema.zip"
+
+        multiprocessing_logger = multiprocessing.log_to_stderr()
+        multiprocessing_logger.debug(f"Downloading {url}")
+
+        # Check if update needed
+        if not (url_has_newer_version(url) or force):
+            return None
+
+        try:
+            filehandle = get_url_retrieve(url, caching=True)
+            schemas = {}
+
+            with zipfile.ZipFile(filehandle, "r") as zip_ref:
+                for filename in zip_ref.namelist():
+                    if filename.endswith(".json"):
+                        with zip_ref.open(filename) as f:
+                            spec = json.load(f)
+                            # Apply patches and cleanup
+                            if "handlers" in spec:
+                                del spec["handlers"]
+                            if "tagging" in spec and "permissions" in spec.get(
+                                "tagging", {}
+                            ):
+                                del spec["tagging"]["permissions"]
+                            spec = self._remove_descriptions(spec)
+                            spec = self._patch_provider_schema(spec, filename, "all")
+                            spec = self._patch_provider_schema(
+                                spec, filename, region=ToPy(region).py
+                            )
+
+                            schemas[spec["typeName"]] = spec
+
+            # Add synthetic types
+            schemas["AWS::CDK::Metadata"] = {"typeName": "AWS::CDK::Metadata"}
+            schemas["Module"] = {
+                "additionalProperties": True,
+                "type": "object",
+                "typeName": "Module",
+            }
+
+            return schemas
+
+        except Exception as e:
+            LOGGER.warning(f"Failed downloading {region}: {e}")
+            return None
+
+    def _write_region_file(self, region: str, type_map: dict[str, str]) -> None:
+        """Write region .py file with type to hash mapping
+
+        Args:
+            region: Region name
+            type_map: Dict mapping resource type to schema hash
+        """
+        from pathlib import Path
+
+        reg = ToPy(region)
+        region_file = Path(self._root.path_relative) / f"{reg.py}.py"
+
+        with open(region_file, "w", encoding="utf-8") as f:
+            f.write("# ruff: noqa: E501, PLR0915\n")
+            f.write("from __future__ import annotations\n\n")
+            f.write("types: dict[str, str] = {\n")
+            for resource_type in sorted(type_map.keys()):
+                schema_hash = type_map[resource_type]
+                f.write(f'    "{resource_type}": "{schema_hash}",\n')
+            f.write("}\n")
+
+    def _cleanup_orphaned_schemas(self, region_mappings: dict, resources_dir) -> None:
+        """Remove schema files no longer referenced by any region
+
+        Args:
+            region_mappings: Dict of region to type mappings
+            resources_dir: Path to resources directory
+        """
+        from pathlib import Path
+
+        # Collect all referenced hashes
+        referenced_hashes = set()
+        for type_map in region_mappings.values():
+            referenced_hashes.update(type_map.values())
+
+        # Remove unreferenced files
+        for schema_file in Path(resources_dir).glob("*.json"):
+            schema_hash = schema_file.stem
+            if schema_hash not in referenced_hashes:
+                LOGGER.info(f"Removing orphaned schema: {schema_hash}")
+                schema_file.unlink()
 
     def _remove_descriptions(self, spec: Any) -> Any:
         if isinstance(spec, dict):

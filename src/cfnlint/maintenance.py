@@ -20,13 +20,18 @@ REGISTRY_SCHEMA_ZIP = (
 )
 
 
-def update_resource_specs(force: bool = False):
+def update_resource_specs(force: bool = False) -> int:
+    """Update provider schemas
+
+    Returns:
+        int: exit code (0=success, 1=partial failure, 2=complete failure)
+    """
     # Pool() uses cpu count if no number of processors is specified
     # Pool() only implements the Context Manager protocol from Python3.3 onwards,
     # so it will fail Python2.7 style linting, as well as throw AttributeError
 
     # Update provider Schemas
-    PROVIDER_SCHEMA_MANAGER.update(force)
+    return PROVIDER_SCHEMA_MANAGER.update(force)
 
 
 def patch_resource_specs():

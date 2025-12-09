@@ -18,8 +18,7 @@ from cfnlint.schema.resolver import RefResolver
 
 
 class Schema:
-    def __init__(self, schema: dict[str, Any], is_cached: bool = False) -> None:
-        self.is_cached: bool = is_cached
+    def __init__(self, schema: dict[str, Any]) -> None:
         self._schema: dict[str, Any] = schema
         self._type_name: str = schema["typeName"]
         self.resolver: RefResolver = RefResolver.from_schema(schema)

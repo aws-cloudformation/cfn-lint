@@ -37,6 +37,7 @@ class TestCli(BaseTestCase):
 
     @patch("cfnlint.maintenance.update_resource_specs")
     def test_update_specs(self, mock_maintenance):
+        mock_maintenance.return_value = 0
         config = ConfigMixIn(["--update-specs"])
 
         runner = Runner(config)

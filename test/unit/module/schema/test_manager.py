@@ -256,10 +256,11 @@ class TestManagerGetResourceSchema(BaseTestCase):
     def test_getting_cached_schema(self):
         rt = "AWS::EC2::VPC"
 
-        self.manager.get_resource_schema("us-east-1", rt)
-        schema = self.manager.get_resource_schema("us-east-2", rt)
+        schema_east_1 = self.manager.get_resource_schema("us-east-1", rt)
+        schema_east_2 = self.manager.get_resource_schema("us-east-2", rt)
 
-        self.assertTrue(schema.is_cached)
+        # Schemas should be identical (same hash)
+        self.assertDictEqual(schema_east_1.schema, schema_east_2.schema)
 
     def test_removed_types(self):
         rt = "AWS::EC2::VPC"
@@ -275,8 +276,8 @@ class TestManagerGetResourceSchema(BaseTestCase):
         schema_us_east_1 = self.manager.get_resource_schema("us-east-1", rt)
         schema_iso = self.manager.get_resource_schema("us-iso-east-1", rt)
 
+        # ISO regions use us-east-1 schemas
         self.assertDictEqual(schema_us_east_1.schema, schema_iso.schema)
-        self.assertTrue(schema_iso.is_cached)
 
     def test_type_normalization(self):
         rt = "MyCompany::MODULE"

@@ -269,8 +269,8 @@ class Runner:
         configure_logging(self.config.debug, self.config.info)
 
         if self.config.update_specs:
-            cfnlint.maintenance.update_resource_specs(self.config.force)
-            sys.exit(0)
+            exit_code = cfnlint.maintenance.update_resource_specs(self.config.force)
+            sys.exit(exit_code)
 
         if self.config.patch_specs:
             cfnlint.maintenance.patch_resource_specs()
