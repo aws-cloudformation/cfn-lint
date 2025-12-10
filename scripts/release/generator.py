@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 """
 
 import logging
-import tarfile
+import zipfile
 from collections import deque
 from pathlib import Path
 
@@ -167,8 +167,14 @@ for resource_type, region in schemas.items():
         )
 
 logger.info("Create schema package")
-with tarfile.open(build_dir / "schemas-cfnlint.zip", "w:gz") as tar:
-    tar.add(schemas_cfnlint_dir, arcname="schemas")
+with zipfile.ZipFile(
+    build_dir / "schemas-cfnlint.zip", "w", zipfile.ZIP_DEFLATED
+) as zf:
+    for file_path in schemas_cfnlint_dir.rglob("*"):
+        if file_path.is_file():
+            zf.write(file_path, f"schemas/{file_path.relative_to(schemas_cfnlint_dir)}")
 
-with tarfile.open(build_dir / "schemas-draft7.zip", "w:gz") as tar:
-    tar.add(schemas_draft7_dir, arcname="schemas")
+with zipfile.ZipFile(build_dir / "schemas-draft7.zip", "w", zipfile.ZIP_DEFLATED) as zf:
+    for file_path in schemas_draft7_dir.rglob("*"):
+        if file_path.is_file():
+            zf.write(file_path, f"schemas/{file_path.relative_to(schemas_draft7_dir)}")

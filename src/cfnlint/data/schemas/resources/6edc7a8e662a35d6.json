@@ -1,0 +1,252 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CapacityProviderName",
+  "/properties/VpcConfig",
+  "/properties/InstanceRequirements",
+  "/properties/PermissionsConfig",
+  "/properties/KmsKeyArn"
+ ],
+ "definitions": {
+  "Architecture": {
+   "enum": [
+    "x86_64",
+    "arm64"
+   ],
+   "type": "string"
+  },
+  "CapacityProviderPermissionsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CapacityProviderOperatorRoleArn": {
+     "maxLength": 10000,
+     "minLength": 0,
+     "pattern": "^arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "CapacityProviderOperatorRoleArn"
+   ],
+   "type": "object"
+  },
+  "CapacityProviderPredefinedMetricType": {
+   "enum": [
+    "LambdaCapacityProviderAverageCPUUtilization"
+   ],
+   "type": "string"
+  },
+  "CapacityProviderScalingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxVCpuCount": {
+     "maximum": 15000,
+     "minimum": 2,
+     "type": "integer"
+    },
+    "ScalingMode": {
+     "$ref": "#/definitions/CapacityProviderScalingMode"
+    },
+    "ScalingPolicies": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/TargetTrackingScalingPolicy"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "CapacityProviderScalingMode": {
+   "enum": [
+    "Auto",
+    "Manual"
+   ],
+   "type": "string"
+  },
+  "CapacityProviderState": {
+   "enum": [
+    "Pending",
+    "Active",
+    "Failed",
+    "Deleting"
+   ],
+   "type": "string"
+  },
+  "CapacityProviderVpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "maxLength": 1024,
+      "minLength": 0,
+      "pattern": "^sg-[0-9a-zA-Z]*$",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array"
+    },
+    "SubnetIds": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 1024,
+      "minLength": 0,
+      "pattern": "^subnet-[0-9a-z]*$",
+      "type": "string"
+     },
+     "maxItems": 16,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "SubnetIds",
+    "SecurityGroupIds"
+   ],
+   "type": "object"
+  },
+  "InstanceRequirements": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedInstanceTypes": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 30,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9\\.\\-]+$",
+      "type": "string"
+     },
+     "maxItems": 400,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Architectures": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Architecture"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    },
+    "ExcludedInstanceTypes": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 30,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9\\.\\-]+$",
+      "type": "string"
+     },
+     "maxItems": 400,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TargetTrackingScalingPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "PredefinedMetricType": {
+     "$ref": "#/definitions/CapacityProviderPredefinedMetricType"
+    },
+    "TargetValue": {
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "required": [
+    "PredefinedMetricType",
+    "TargetValue"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CapacityProviderName"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 140,
+   "minLength": 1,
+   "pattern": "^arn:aws[a-zA-Z-]*:lambda:(eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:\\d{12}:capacity-provider:[a-zA-Z0-9-_]+$",
+   "type": "string"
+  },
+  "CapacityProviderName": {
+   "maxLength": 140,
+   "minLength": 1,
+   "pattern": "^(arn:aws[a-zA-Z-]*:lambda:(eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:\\d{12}:capacity-provider:[a-zA-Z0-9-_]+)|[a-zA-Z0-9-_]+$",
+   "type": "string"
+  },
+  "CapacityProviderScalingConfig": {
+   "$ref": "#/definitions/CapacityProviderScalingConfig"
+  },
+  "InstanceRequirements": {
+   "$ref": "#/definitions/InstanceRequirements"
+  },
+  "KmsKeyArn": {
+   "maxLength": 10000,
+   "minLength": 0,
+   "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
+   "type": "string"
+  },
+  "PermissionsConfig": {
+   "$ref": "#/definitions/CapacityProviderPermissionsConfig"
+  },
+  "State": {
+   "$ref": "#/definitions/CapacityProviderState"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VpcConfig": {
+   "$ref": "#/definitions/CapacityProviderVpcConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/State",
+  "/properties/Arn"
+ ],
+ "required": [
+  "PermissionsConfig",
+  "VpcConfig"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Lambda::CapacityProvider"
+}

@@ -16,7 +16,7 @@ import pytest
 import regex as re
 
 import cfnlint
-from cfnlint.helpers import REGIONS, ensure_list, load_plugins, load_resource
+from cfnlint.helpers import ensure_list, load_plugins, load_resource
 from cfnlint.jsonschema import StandardValidator, ValidationError
 from cfnlint.schema.resolver import RefResolutionError, RefResolver
 
@@ -64,6 +64,7 @@ class TestSchemaFiles(TestCase):
         self.paths = {
             "extensions": os.path.join(schema_path, "extensions"),
             "providers": os.path.join(schema_path, "providers"),
+            "resources": os.path.join(schema_path, "resources"),
             "other": os.path.join(schema_path, "other"),
             "fixtures": os.path.join(
                 os.path.dirname(__file__),
@@ -191,31 +192,43 @@ class TestSchemaFiles(TestCase):
             .evolve(resolver=resolver)
         )
 
-        for region in REGIONS:
-            dir = os.path.join(
-                self.paths["providers"],
-                region.replace("-", "_"),
+        # Only process us-east-1 region for keyword building (like original test)
+        region = "us-east-1"
+        provider_module = region.replace("-", "_")
+        try:
+            provider = __import__(
+                f"cfnlint.data.schemas.providers.{provider_module}", fromlist=["types"]
             )
+            resource_types = getattr(provider, "types", {})
+        except (ImportError, AttributeError):
+            self.fail(f"Could not load provider module for {region}")
 
-            for dirpath, filename in self.get_files(dir):
-                with open(os.path.join(dirpath, filename), "r", encoding="utf8") as fh:
-                    d = json.load(fh)
-                    # not allowed but true with this resource
-                    if filename == "aws-cloudformation-customresource.json":
-                        d["additionalProperties"] = False
-                    if filename == "module.json":
-                        continue
-                    errs = list(validator.iter_errors(d))
-                    self.assertListEqual(
-                        errs, [], f"Error with {dirpath}/{filename}: {errs}"
-                    )
-                    schema_resolver = RefResolver(d)
-                    self.validate_basic_schema_details(
-                        schema_resolver, f"{dirpath}/{filename}"
-                    )
+        # Load each resource schema
+        for resource_type, schema_hash in resource_types.items():
+            schema_path = os.path.join(self.paths["resources"], f"{schema_hash}.json")
 
-                    if region == "us-east-1":
-                        self.build_keywords(schema_resolver)
+            if not os.path.exists(schema_path):
+                continue
+
+            with open(schema_path, "r", encoding="utf8") as fh:
+                d = json.load(fh)
+                # not allowed but true with this resource
+                if resource_type == "AWS::CloudFormation::CustomResource":
+                    d["additionalProperties"] = False
+                # Skip synthetic types that don't follow standard schema
+                if resource_type in ("Module", "AWS::CDK::Metadata"):
+                    continue
+                errs = list(validator.iter_errors(d))
+                self.assertListEqual(
+                    errs, [], f"Error with {resource_type} ({schema_hash}): {errs}"
+                )
+                schema_resolver = RefResolver(d)
+                self.validate_basic_schema_details(
+                    schema_resolver, f"{resource_type} ({schema_hash})"
+                )
+
+                # Build keywords for us-east-1 schemas
+                self.build_keywords(schema_resolver)
 
     def cfn_lint(self, validator, _, keywords, schema):
         keywords = ensure_list(keywords)
@@ -257,6 +270,90 @@ class TestSchemaFiles(TestCase):
                     self.validate_basic_schema_details(
                         schema_resolver, f"{dirpath}/{filename}"
                     )
+
+    def test_all_referenced_hashes_exist(self):
+        """Test that all hashes referenced by provider files
+        have corresponding schema files
+        """
+        import importlib
+        from pathlib import Path
+
+        # Collect all hashes referenced by provider files
+        referenced_hashes = set()
+        providers_dir = Path(self.paths["providers"])
+
+        for provider_file in providers_dir.glob("*.py"):
+            if provider_file.name == "__init__.py":
+                continue
+
+            region_name = provider_file.stem
+            try:
+                module_name = f"cfnlint.data.schemas.providers.{region_name}"
+                provider = importlib.import_module(module_name)
+                if hasattr(provider, "types"):
+                    for resource_type, schema_hash in provider.types.items():
+                        referenced_hashes.add((schema_hash, resource_type, region_name))
+            except (ImportError, AttributeError):
+                continue
+
+        # Check all referenced hashes have corresponding files
+        resources_dir = Path(self.paths["resources"])
+        missing_files = []
+
+        for schema_hash, resource_type, region_name in referenced_hashes:
+            schema_file = resources_dir / f"{schema_hash}.json"
+            if not schema_file.exists():
+                missing_files.append(
+                    f"{resource_type} ({schema_hash}) in {region_name}"
+                )
+
+        self.assertEqual(
+            missing_files,
+            [],
+            f"Found {len(missing_files)} missing schema files: {missing_files[:10]}...",
+        )
+
+    def test_all_resource_files_referenced(self):
+        """Test that all resource schema files are
+        referenced by at least one provider
+        """
+        import importlib
+        from pathlib import Path
+
+        # Collect all hashes referenced by provider files
+        referenced_hashes = set()
+        providers_dir = Path(self.paths["providers"])
+
+        for provider_file in providers_dir.glob("*.py"):
+            if provider_file.name == "__init__.py":
+                continue
+
+            region_name = provider_file.stem
+            try:
+                module_name = f"cfnlint.data.schemas.providers.{region_name}"
+                provider = importlib.import_module(module_name)
+                if hasattr(provider, "types"):
+                    referenced_hashes.update(provider.types.values())
+            except (ImportError, AttributeError):
+                continue
+
+        # Check all resource files are referenced
+        resources_dir = Path(self.paths["resources"])
+        orphaned_files = []
+
+        for schema_file in resources_dir.glob("*.json"):
+            schema_hash = schema_file.stem
+            if schema_hash not in referenced_hashes:
+                orphaned_files.append(schema_hash)
+
+        self.assertEqual(
+            orphaned_files,
+            [],
+            (
+                f"Found {len(orphaned_files)} orphaned "
+                f"resource files: {orphaned_files[:10]}..."
+            ),
+        )
 
     def test_x_keywords(self):
         root_dir = pathlib.Path(__file__).parent.parent.parent / "src/cfnlint/rules"

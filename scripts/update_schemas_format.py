@@ -316,188 +316,182 @@ _manual_patches = {
 
 
 def main():
-    schema_dir = os.path.join("src/cfnlint/data/schemas/providers/us_east_1")
+    resources_dir = os.path.join("src/cfnlint/data/schemas/resources")
     patches = []
-    for root, dirs, files in os.walk(schema_dir, topdown=False):
-        for file in files:
-            if file in [".DS_Store"]:
-                continue
+    for file in os.listdir(resources_dir):
+        if not file.endswith(".json"):
+            continue
 
-            if file.startswith("__init__"):
-                continue
+        obj = json.load(open(os.path.join(resources_dir, file)))
 
-            obj = json.load(open(os.path.join(root, file)))
+        resolver = RefResolver.from_schema(obj)
+        resource_type = obj["typeName"]
 
-            resolver = RefResolver.from_schema(obj)
-            resource_type = obj["typeName"]
+        resource_patches = []
+        if resource_type in _manual_patches:
+            resource_patches.extend(_manual_patches[resource_type])
 
-            resource_patches = []
-            if resource_type in _manual_patches:
-                resource_patches.extend(_manual_patches[resource_type])
-
-            for path in _descend(obj, ["VpcId", "VPCId"]):
-                if path[-2] == "properties":
-                    resource_patches.append(
-                        _create_patch(
-                            value={"format": "AWS::EC2::VPC.Id"},
-                            ref="#/" + "/".join(path),
-                            resolver=resolver,
-                        )
-                    )
-
-            for path in _descend(
-                obj,
-                [
-                    "CidrIp",
-                    "CIDRIP",
-                    "Cidr",
-                    "Cidrs",
-                    "CidrBlock",
-                    "DestinationCidr",
-                    "DestinationCidrBlock",
-                    "SourceCidrBlock",
-                    "CidrList",
-                    "CidrAllowList",
-                ],
-            ):
-                if path[-2] == "properties":
-                    resource_patches.extend(
-                        _create_cidr_patch(
-                            resource_type,
-                            ref="#/" + "/".join(path),
-                            resolver=resolver,
-                            format="ipv4-network",
-                        )
-                    )
-
-            for path in _descend(obj, ["Ipv6CidrBlock", "Ipv6Cidrs", "CidrIpv6"]):
-                if path[-2] == "properties":
-                    resource_patches.extend(
-                        _create_cidr_patch(
-                            resource_type,
-                            ref="#/" + "/".join(path),
-                            resolver=resolver,
-                            format="ipv6-network",
-                        )
-                    )
-
-            for path in _descend(obj, ["ImageId", "AmiId"]):
-                if resource_type == "AWS::Cloud9::EnvironmentEC2" and path == deque(
-                    ["properties", "ImageId"]
-                ):
-                    continue
-                if path[-2] == "properties":
-                    resource_patches.append(
-                        _create_patch(
-                            value={"format": "AWS::EC2::Image.Id"},
-                            ref="#/" + "/".join(path),
-                            resolver=resolver,
-                        )
-                    )
-
-            for path in _descend(obj, ["Subnets"]):
-                if path[-2] == "properties":
-                    resource_patches.extend(
-                        _create_subnet_ids_patch(
-                            resource_type, "#/" + "/".join(path), resolver
-                        )
-                    )
-
-            for path in _descend(obj, ["SubnetId"]):
-                if path[-2] == "properties":
-                    resource_patches.append(
-                        _create_patch(
-                            value={"format": "AWS::EC2::Subnet.Id"},
-                            ref="#/" + "/".join(path),
-                            resolver=resolver,
-                        )
-                    )
-
-            for path in _descend(obj, ["LogGroupName"]):
-                if path[-2] == "properties":
-                    resource_patches.append(
-                        _create_patch(
-                            value={"format": "AWS::Logs::LogGroup.Name"},
-                            ref="#/" + "/".join(path),
-                            resolver=resolver,
-                        )
-                    )
-
-            for path in _descend(
-                obj, ["RoleArn", "RoleARN", "IAMRoleARN", "IamRoleArn"]
-            ):
-                if path[-2] == "properties":
-                    resource_patches.append(
-                        _create_patch(
-                            value={"format": "AWS::IAM::Role.Arn"},
-                            ref="#/" + "/".join(path),
-                            resolver=resolver,
-                        )
-                    )
-
-            for path in _descend(
-                obj,
-                [
-                    "CustomSecurityGroupIds",
-                    "Ec2SecurityGroupIds",
-                    "GroupSet",
-                    "InputSecurityGroups",
-                    "SecurityGroupIdList",
-                    "SecurityGroupIds",
-                    "SecurityGroups",
-                    "VpcSecurityGroupIds",
-                ],
-            ):
-                if path[-2] == "properties":
-                    resource_patches.extend(
-                        _create_security_group_ids_patch(
-                            resource_type, "#/" + "/".join(path), resolver
-                        )
-                    )
-
-            for path in _descend(
-                obj,
-                [
-                    "ClusterSecurityGroupId",
-                    "DefaultSecurityGroup",
-                    "DestinationSecurityGroupId",
-                    "EC2SecurityGroupId",
-                    "SecurityGroup",
-                    "SecurityGroupId",
-                    "SourceSecurityGroupId",
-                    "VpcSecurityGroupId",
-                ],
-            ):
-                if path[-2] == "properties":
-                    resource_patches.extend(
-                        _create_security_group_id(
-                            resource_type, "#/" + "/".join(path), resolver
-                        )
-                    )
-
-            for path in _descend(
-                obj,
-                [
-                    "CacheSecurityGroupName",
-                    "ClusterSecurityGroupName",
-                    "EC2SecurityGroupName",
-                    "SourceSecurityGroupName",
-                ],
-            ):
-                if path[-2] == "properties":
-                    resource_patches.extend(
-                        _create_security_group_name(
-                            resource_type, "#/" + "/".join(path), resolver
-                        )
-                    )
-
-            if resource_patches:
-                patches.append(
-                    ResourcePatch(
-                        resource_type=resource_type,
-                        patches=resource_patches,
+        for path in _descend(obj, ["VpcId", "VPCId"]):
+            if path[-2] == "properties":
+                resource_patches.append(
+                    _create_patch(
+                        value={"format": "AWS::EC2::VPC.Id"},
+                        ref="#/" + "/".join(path),
+                        resolver=resolver,
                     )
                 )
+
+        for path in _descend(
+            obj,
+            [
+                "CidrIp",
+                "CIDRIP",
+                "Cidr",
+                "Cidrs",
+                "CidrBlock",
+                "DestinationCidr",
+                "DestinationCidrBlock",
+                "SourceCidrBlock",
+                "CidrList",
+                "CidrAllowList",
+            ],
+        ):
+            if path[-2] == "properties":
+                resource_patches.extend(
+                    _create_cidr_patch(
+                        resource_type,
+                        ref="#/" + "/".join(path),
+                        resolver=resolver,
+                        format="ipv4-network",
+                    )
+                )
+
+        for path in _descend(obj, ["Ipv6CidrBlock", "Ipv6Cidrs", "CidrIpv6"]):
+            if path[-2] == "properties":
+                resource_patches.extend(
+                    _create_cidr_patch(
+                        resource_type,
+                        ref="#/" + "/".join(path),
+                        resolver=resolver,
+                        format="ipv6-network",
+                    )
+                )
+
+        for path in _descend(obj, ["ImageId", "AmiId"]):
+            if resource_type == "AWS::Cloud9::EnvironmentEC2" and path == deque(
+                ["properties", "ImageId"]
+            ):
+                continue
+            if path[-2] == "properties":
+                resource_patches.append(
+                    _create_patch(
+                        value={"format": "AWS::EC2::Image.Id"},
+                        ref="#/" + "/".join(path),
+                        resolver=resolver,
+                    )
+                )
+
+        for path in _descend(obj, ["Subnets"]):
+            if path[-2] == "properties":
+                resource_patches.extend(
+                    _create_subnet_ids_patch(
+                        resource_type, "#/" + "/".join(path), resolver
+                    )
+                )
+
+        for path in _descend(obj, ["SubnetId"]):
+            if path[-2] == "properties":
+                resource_patches.append(
+                    _create_patch(
+                        value={"format": "AWS::EC2::Subnet.Id"},
+                        ref="#/" + "/".join(path),
+                        resolver=resolver,
+                    )
+                )
+
+        for path in _descend(obj, ["LogGroupName"]):
+            if path[-2] == "properties":
+                resource_patches.append(
+                    _create_patch(
+                        value={"format": "AWS::Logs::LogGroup.Name"},
+                        ref="#/" + "/".join(path),
+                        resolver=resolver,
+                    )
+                )
+
+        for path in _descend(obj, ["RoleArn", "RoleARN", "IAMRoleARN", "IamRoleArn"]):
+            if path[-2] == "properties":
+                resource_patches.append(
+                    _create_patch(
+                        value={"format": "AWS::IAM::Role.Arn"},
+                        ref="#/" + "/".join(path),
+                        resolver=resolver,
+                    )
+                )
+
+        for path in _descend(
+            obj,
+            [
+                "CustomSecurityGroupIds",
+                "Ec2SecurityGroupIds",
+                "GroupSet",
+                "InputSecurityGroups",
+                "SecurityGroupIdList",
+                "SecurityGroupIds",
+                "SecurityGroups",
+                "VpcSecurityGroupIds",
+            ],
+        ):
+            if path[-2] == "properties":
+                resource_patches.extend(
+                    _create_security_group_ids_patch(
+                        resource_type, "#/" + "/".join(path), resolver
+                    )
+                )
+
+        for path in _descend(
+            obj,
+            [
+                "ClusterSecurityGroupId",
+                "DefaultSecurityGroup",
+                "DestinationSecurityGroupId",
+                "EC2SecurityGroupId",
+                "SecurityGroup",
+                "SecurityGroupId",
+                "SourceSecurityGroupId",
+                "VpcSecurityGroupId",
+            ],
+        ):
+            if path[-2] == "properties":
+                resource_patches.extend(
+                    _create_security_group_id(
+                        resource_type, "#/" + "/".join(path), resolver
+                    )
+                )
+
+        for path in _descend(
+            obj,
+            [
+                "CacheSecurityGroupName",
+                "ClusterSecurityGroupName",
+                "EC2SecurityGroupName",
+                "SourceSecurityGroupName",
+            ],
+        ):
+            if path[-2] == "properties":
+                resource_patches.extend(
+                    _create_security_group_name(
+                        resource_type, "#/" + "/".join(path), resolver
+                    )
+                )
+
+        if resource_patches:
+            patches.append(
+                ResourcePatch(
+                    resource_type=resource_type,
+                    patches=resource_patches,
+                )
+            )
 
     build_patches(patches, "format.json")
     # specs = read_specs()
