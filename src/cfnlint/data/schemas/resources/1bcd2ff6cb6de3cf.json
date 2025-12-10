@@ -1,0 +1,77 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/GraphIdentifier",
+   "/properties/VpcId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GraphIdentifier",
+  "/properties/SecurityGroupIds",
+  "/properties/SubnetIds",
+  "/properties/VpcId"
+ ],
+ "primaryIdentifier": [
+  "/properties/PrivateGraphEndpointIdentifier"
+ ],
+ "properties": {
+  "GraphIdentifier": {
+   "pattern": "g-[a-z0-9]{10}",
+   "type": "string"
+  },
+  "PrivateGraphEndpointIdentifier": {
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "SubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "subnet-[a-z0-9]+",
+    "type": "string"
+   },
+   "maxItems": 6,
+   "minItems": 1,
+   "type": "array"
+  },
+  "VpcEndpointId": {
+   "type": "string"
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "pattern": "vpc-[a-z0-9]+",
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/GraphIdentifier": "$lowercase(GraphIdentifier)"
+ },
+ "readOnlyProperties": [
+  "/properties/PrivateGraphEndpointIdentifier",
+  "/properties/VpcEndpointId"
+ ],
+ "required": [
+  "GraphIdentifier",
+  "VpcId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-neptunegraph",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::NeptuneGraph::PrivateGraphEndpoint",
+ "writeOnlyProperties": [
+  "/properties/GraphIdentifier",
+  "/properties/SecurityGroupIds"
+ ]
+}

@@ -1,0 +1,482 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/DataProviderName"
+  ]
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "Db2SslModeValue": {
+   "enum": [
+    "none",
+    "verify-ca"
+   ],
+   "type": "string"
+  },
+  "DmsSslModeValue": {
+   "enum": [
+    "none",
+    "require",
+    "verify-ca",
+    "verify-full"
+   ],
+   "type": "string"
+  },
+  "MongoDbAuthMechanism": {
+   "enum": [
+    "default",
+    "mongodb_cr",
+    "scram_sha_1"
+   ],
+   "type": "string"
+  },
+  "MongoDbAuthType": {
+   "enum": [
+    "no",
+    "password"
+   ],
+   "type": "string"
+  },
+  "MongoDbSslModeValue": {
+   "enum": [
+    "none",
+    "require",
+    "verify-full"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DataProviderArn"
+ ],
+ "properties": {
+  "DataProviderArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DataProviderCreationTime": {
+   "maxLength": 40,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DataProviderIdentifier": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DataProviderName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Engine": {
+   "enum": [
+    "aurora",
+    "aurora_postgresql",
+    "mysql",
+    "oracle",
+    "postgres",
+    "sqlserver",
+    "redshift",
+    "mariadb",
+    "mongodb",
+    "docdb",
+    "db2",
+    "db2_zos"
+   ],
+   "type": "string"
+  },
+  "ExactSettings": {
+   "default": false,
+   "type": "boolean"
+  },
+  "Settings": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "PostgreSqlSettings"
+     ]
+    },
+    {
+     "required": [
+      "MySqlSettings"
+     ]
+    },
+    {
+     "required": [
+      "OracleSettings"
+     ]
+    },
+    {
+     "required": [
+      "MicrosoftSqlServerSettings"
+     ]
+    },
+    {
+     "required": [
+      "RedshiftSettings"
+     ]
+    },
+    {
+     "required": [
+      "DocDbSettings"
+     ]
+    },
+    {
+     "required": [
+      "MariaDbSettings"
+     ]
+    },
+    {
+     "required": [
+      "MongoDbSettings"
+     ]
+    },
+    {
+     "required": [
+      "IbmDb2LuwSettings"
+     ]
+    },
+    {
+     "required": [
+      "IbmDb2zOsSettings"
+     ]
+    }
+   ],
+   "properties": {
+    "DocDbSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "CertificateArn": {
+       "type": "string"
+      },
+      "DatabaseName": {
+       "type": "string"
+      },
+      "Port": {
+       "type": "integer"
+      },
+      "ServerName": {
+       "type": "string"
+      },
+      "SslMode": {
+       "$ref": "#/definitions/MongoDbSslModeValue"
+      }
+     },
+     "required": [
+      "ServerName",
+      "Port",
+      "DatabaseName"
+     ],
+     "type": "object"
+    },
+    "IbmDb2LuwSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "CertificateArn": {
+       "type": "string"
+      },
+      "DatabaseName": {
+       "type": "string"
+      },
+      "Port": {
+       "type": "integer"
+      },
+      "ServerName": {
+       "type": "string"
+      },
+      "SslMode": {
+       "$ref": "#/definitions/Db2SslModeValue"
+      }
+     },
+     "required": [
+      "ServerName",
+      "Port",
+      "SslMode",
+      "DatabaseName"
+     ],
+     "type": "object"
+    },
+    "IbmDb2zOsSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "CertificateArn": {
+       "type": "string"
+      },
+      "DatabaseName": {
+       "type": "string"
+      },
+      "Port": {
+       "type": "integer"
+      },
+      "ServerName": {
+       "type": "string"
+      },
+      "SslMode": {
+       "$ref": "#/definitions/Db2SslModeValue"
+      }
+     },
+     "required": [
+      "ServerName",
+      "Port",
+      "SslMode",
+      "DatabaseName"
+     ],
+     "type": "object"
+    },
+    "MariaDbSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "CertificateArn": {
+       "type": "string"
+      },
+      "Port": {
+       "type": "integer"
+      },
+      "ServerName": {
+       "type": "string"
+      },
+      "SslMode": {
+       "$ref": "#/definitions/DmsSslModeValue"
+      }
+     },
+     "required": [
+      "ServerName",
+      "Port",
+      "SslMode"
+     ],
+     "type": "object"
+    },
+    "MicrosoftSqlServerSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "CertificateArn": {
+       "type": "string"
+      },
+      "DatabaseName": {
+       "type": "string"
+      },
+      "Port": {
+       "type": "integer"
+      },
+      "ServerName": {
+       "type": "string"
+      },
+      "SslMode": {
+       "$ref": "#/definitions/DmsSslModeValue"
+      }
+     },
+     "required": [
+      "ServerName",
+      "Port",
+      "SslMode",
+      "DatabaseName"
+     ],
+     "type": "object"
+    },
+    "MongoDbSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "AuthMechanism": {
+       "$ref": "#/definitions/MongoDbAuthMechanism"
+      },
+      "AuthSource": {
+       "type": "string"
+      },
+      "AuthType": {
+       "$ref": "#/definitions/MongoDbAuthType"
+      },
+      "CertificateArn": {
+       "type": "string"
+      },
+      "DatabaseName": {
+       "type": "string"
+      },
+      "Port": {
+       "type": "integer"
+      },
+      "ServerName": {
+       "type": "string"
+      },
+      "SslMode": {
+       "$ref": "#/definitions/MongoDbSslModeValue"
+      }
+     },
+     "required": [
+      "ServerName",
+      "Port"
+     ],
+     "type": "object"
+    },
+    "MySqlSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "CertificateArn": {
+       "type": "string"
+      },
+      "Port": {
+       "type": "integer"
+      },
+      "ServerName": {
+       "type": "string"
+      },
+      "SslMode": {
+       "$ref": "#/definitions/DmsSslModeValue"
+      }
+     },
+     "required": [
+      "ServerName",
+      "Port",
+      "SslMode"
+     ],
+     "type": "object"
+    },
+    "OracleSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "AsmServer": {
+       "type": "string"
+      },
+      "CertificateArn": {
+       "type": "string"
+      },
+      "DatabaseName": {
+       "type": "string"
+      },
+      "Port": {
+       "type": "integer"
+      },
+      "SecretsManagerOracleAsmAccessRoleArn": {
+       "type": "string"
+      },
+      "SecretsManagerOracleAsmSecretId": {
+       "type": "string"
+      },
+      "SecretsManagerSecurityDbEncryptionAccessRoleArn": {
+       "type": "string"
+      },
+      "SecretsManagerSecurityDbEncryptionSecretId": {
+       "type": "string"
+      },
+      "ServerName": {
+       "type": "string"
+      },
+      "SslMode": {
+       "$ref": "#/definitions/DmsSslModeValue"
+      }
+     },
+     "required": [
+      "ServerName",
+      "Port",
+      "SslMode",
+      "DatabaseName"
+     ],
+     "type": "object"
+    },
+    "PostgreSqlSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "CertificateArn": {
+       "type": "string"
+      },
+      "DatabaseName": {
+       "type": "string"
+      },
+      "Port": {
+       "type": "integer"
+      },
+      "ServerName": {
+       "type": "string"
+      },
+      "SslMode": {
+       "$ref": "#/definitions/DmsSslModeValue"
+      }
+     },
+     "required": [
+      "ServerName",
+      "Port",
+      "SslMode",
+      "DatabaseName"
+     ],
+     "type": "object"
+    },
+    "RedshiftSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "DatabaseName": {
+       "type": "string"
+      },
+      "Port": {
+       "type": "integer"
+      },
+      "ServerName": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "ServerName",
+      "Port",
+      "DatabaseName"
+     ],
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DataProviderArn",
+  "/properties/DataProviderCreationTime"
+ ],
+ "required": [
+  "Engine"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-dms.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DMS::DataProvider",
+ "writeOnlyProperties": [
+  "/properties/DataProviderIdentifier",
+  "/properties/ExactSettings"
+ ]
+}

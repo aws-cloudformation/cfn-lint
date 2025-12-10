@@ -1,0 +1,208 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ChannelName",
+  "/properties/Tier"
+ ],
+ "definitions": {
+  "AdMarkupType": {
+   "enum": [
+    "DATERANGE",
+    "SCTE35_ENHANCED"
+   ],
+   "type": "string"
+  },
+  "DashPlaylistSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "ManifestWindowSeconds": {
+     "type": "number"
+    },
+    "MinBufferTimeSeconds": {
+     "type": "number"
+    },
+    "MinUpdatePeriodSeconds": {
+     "type": "number"
+    },
+    "SuggestedPresentationDelaySeconds": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "HlsPlaylistSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "AdMarkupType": {
+     "items": {
+      "$ref": "#/definitions/AdMarkupType"
+     },
+     "type": "array"
+    },
+    "ManifestWindowSeconds": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "LogConfigurationForChannel": {
+   "additionalProperties": false,
+   "properties": {
+    "LogTypes": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/LogType"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "LogType": {
+   "enum": [
+    "AS_RUN"
+   ],
+   "type": "string"
+  },
+  "PlaybackMode": {
+   "enum": [
+    "LOOP",
+    "LINEAR"
+   ],
+   "type": "string"
+  },
+  "RequestOutputItem": {
+   "additionalProperties": false,
+   "properties": {
+    "DashPlaylistSettings": {
+     "$ref": "#/definitions/DashPlaylistSettings"
+    },
+    "HlsPlaylistSettings": {
+     "$ref": "#/definitions/HlsPlaylistSettings"
+    },
+    "ManifestName": {
+     "type": "string"
+    },
+    "SourceGroup": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ManifestName",
+    "SourceGroup"
+   ],
+   "type": "object"
+  },
+  "SlateSource": {
+   "additionalProperties": false,
+   "properties": {
+    "SourceLocationName": {
+     "type": "string"
+    },
+    "VodSourceName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tier": {
+   "enum": [
+    "BASIC",
+    "STANDARD"
+   ],
+   "type": "string"
+  },
+  "TimeShiftConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxTimeDelaySeconds": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "MaxTimeDelaySeconds"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ChannelName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Audiences": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ChannelName": {
+   "type": "string"
+  },
+  "FillerSlate": {
+   "$ref": "#/definitions/SlateSource"
+  },
+  "LogConfiguration": {
+   "$ref": "#/definitions/LogConfigurationForChannel"
+  },
+  "Outputs": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RequestOutputItem"
+   },
+   "type": "array"
+  },
+  "PlaybackMode": {
+   "$ref": "#/definitions/PlaybackMode"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tier": {
+   "$ref": "#/definitions/Tier"
+  },
+  "TimeShiftConfiguration": {
+   "$ref": "#/definitions/TimeShiftConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "ChannelName",
+  "Outputs",
+  "PlaybackMode"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediatailor.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaTailor::Channel"
+}

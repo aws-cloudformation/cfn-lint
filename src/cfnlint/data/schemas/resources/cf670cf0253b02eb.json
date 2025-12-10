@@ -1,0 +1,151 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Arn": {
+   "type": "string"
+  },
+  "CapacityAssignment": {
+   "additionalProperties": false,
+   "properties": {
+    "WorkgroupNames": {
+     "$ref": "#/definitions/WorkgroupNames"
+    }
+   },
+   "required": [
+    "WorkgroupNames"
+   ],
+   "type": "object"
+  },
+  "CapacityAssignmentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CapacityAssignments": {
+     "$ref": "#/definitions/CapacityAssignments"
+    }
+   },
+   "required": [
+    "CapacityAssignments"
+   ],
+   "type": "object"
+  },
+  "CapacityAssignments": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CapacityAssignment"
+   },
+   "type": "array"
+  },
+  "CapacityReservationStatus": {
+   "enum": [
+    "PENDING",
+    "ACTIVE",
+    "CANCELLING",
+    "CANCELLED",
+    "FAILED",
+    "UPDATE_PENDING"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "WorkgroupName": {
+   "pattern": "[a-zA-Z0-9._-]{1,128}",
+   "type": "string"
+  },
+  "WorkgroupNames": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/WorkgroupName"
+   },
+   "type": "array"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AllocatedDpus": {
+   "format": "int64",
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "CapacityAssignmentConfiguration": {
+   "$ref": "#/definitions/CapacityAssignmentConfiguration"
+  },
+  "CreationTime": {
+   "type": "string"
+  },
+  "LastSuccessfulAllocationTime": {
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "[a-zA-Z0-9._-]{1,128}",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/CapacityReservationStatus"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TargetDpus": {
+   "format": "int64",
+   "minimum": 1,
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Status",
+  "/properties/AllocatedDpus",
+  "/properties/CreationTime",
+  "/properties/LastSuccessfulAllocationTime"
+ ],
+ "required": [
+  "Name",
+  "TargetDpus"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-athena.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Athena::CapacityReservation"
+}

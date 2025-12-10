@@ -1,0 +1,202 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Policies",
+  "/properties/Policies/*/PolicyArn"
+ ],
+ "definitions": {
+  "ApprovalStrategy": {
+   "additionalProperties": false,
+   "properties": {
+    "MofN": {
+     "$ref": "#/definitions/MofNApprovalStrategy"
+    }
+   },
+   "required": [
+    "MofN"
+   ],
+   "type": "object"
+  },
+  "Approver": {
+   "additionalProperties": false,
+   "properties": {
+    "ApproverId": {
+     "type": "string"
+    },
+    "PrimaryIdentityId": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    },
+    "PrimaryIdentitySourceArn": {
+     "maxLength": 1000,
+     "type": "string"
+    },
+    "PrimaryIdentityStatus": {
+     "type": "string"
+    },
+    "ResponseTime": {
+     "$ref": "#/definitions/Timestamp"
+    }
+   },
+   "required": [
+    "PrimaryIdentityId",
+    "PrimaryIdentitySourceArn"
+   ],
+   "type": "object"
+  },
+  "MofNApprovalStrategy": {
+   "additionalProperties": false,
+   "properties": {
+    "MinApprovalsRequired": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MinApprovalsRequired"
+   ],
+   "type": "object"
+  },
+  "Policy": {
+   "additionalProperties": false,
+   "properties": {
+    "PolicyArn": {
+     "maxLength": 1224,
+     "pattern": "arn:.{1,63}:mpa:::aws:policy/[a-zA-Z0-9_\\.-]{1,1023}/[a-zA-Z0-9_\\.-]{1,1023}/(?:[\\d]+|\\$DEFAULT)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "PolicyArn"
+   ]
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Timestamp": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "ApprovalStrategy": {
+   "$ref": "#/definitions/ApprovalStrategy"
+  },
+  "Approvers": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Approver"
+   },
+   "maxItems": 20,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "CreationTime": {
+   "$ref": "#/definitions/Timestamp"
+  },
+  "Description": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LastUpdateTime": {
+   "$ref": "#/definitions/Timestamp"
+  },
+  "Name": {
+   "maxLength": 64,
+   "pattern": "[a-zA-Z0-9._-]+",
+   "type": "string"
+  },
+  "NumberOfApprovers": {
+   "type": "integer"
+  },
+  "Policies": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Policy"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Status": {
+   "type": "string"
+  },
+  "StatusCode": {
+   "type": "string"
+  },
+  "StatusMessage": {
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "UpdateSessionArn": {
+   "type": "string"
+  },
+  "VersionId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/VersionId",
+  "/properties/NumberOfApprovers",
+  "/properties/Approvers/*/ApproverId",
+  "/properties/Approvers/*/ResponseTime",
+  "/properties/Approvers/*/PrimaryIdentityStatus",
+  "/properties/UpdateSessionArn",
+  "/properties/CreationTime",
+  "/properties/LastUpdateTime",
+  "/properties/Status",
+  "/properties/StatusCode",
+  "/properties/StatusMessage"
+ ],
+ "required": [
+  "ApprovalStrategy",
+  "Approvers",
+  "Policies",
+  "Name",
+  "Description"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MPA::ApprovalTeam"
+}

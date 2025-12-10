@@ -1,0 +1,76 @@
+{
+ "additionalProperties": false,
+ "primaryIdentifier": [
+  "/properties/AnomalyDetectorArn"
+ ],
+ "properties": {
+  "AccountId": {
+   "type": "string"
+  },
+  "AnomalyDetectorArn": {
+   "type": "string"
+  },
+  "AnomalyDetectorStatus": {
+   "type": "string"
+  },
+  "AnomalyVisibilityTime": {
+   "type": "number"
+  },
+  "CreationTimeStamp": {
+   "type": "number"
+  },
+  "DetectorName": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "EvaluationFrequency": {
+   "enum": [
+    "FIVE_MIN",
+    "TEN_MIN",
+    "FIFTEEN_MIN",
+    "THIRTY_MIN",
+    "ONE_HOUR"
+   ],
+   "type": "string"
+  },
+  "FilterPattern": {
+   "maxLength": 1024,
+   "pattern": "",
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "maxLength": 256,
+   "pattern": "^arn:aws[a-z\\-]*:kms:[-a-z0-9]*:[0-9]*:key/[-a-z0-9]*$",
+   "type": "string"
+  },
+  "LastModifiedTimeStamp": {
+   "type": "number"
+  },
+  "LogGroupArnList": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "minLength": 20,
+    "pattern": "[\\w#+=/:,.@-]*",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AnomalyDetectorArn",
+  "/properties/CreationTimeStamp",
+  "/properties/LastModifiedTimeStamp",
+  "/properties/AnomalyDetectorStatus"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Logs::LogAnomalyDetector",
+ "writeOnlyProperties": [
+  "/properties/AccountId"
+ ]
+}

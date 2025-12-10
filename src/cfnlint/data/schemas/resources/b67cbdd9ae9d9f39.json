@@ -1,0 +1,63 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "IndexState": {
+   "enum": [
+    "ACTIVE",
+    "CREATING",
+    "DELETING",
+    "DELETED",
+    "UPDATING"
+   ],
+   "type": "string"
+  },
+  "IndexType": {
+   "enum": [
+    "LOCAL",
+    "AGGREGATOR"
+   ],
+   "type": "string"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "IndexState": {
+   "$ref": "#/definitions/IndexState"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  },
+  "Type": {
+   "$ref": "#/definitions/IndexType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/IndexState"
+ ],
+ "required": [
+  "Type"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ResourceExplorer2::Index"
+}

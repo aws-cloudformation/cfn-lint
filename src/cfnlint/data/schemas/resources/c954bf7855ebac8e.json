@@ -1,0 +1,157 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Scope",
+  "/properties/Service",
+  "/properties/BillingEntity",
+  "/properties/UsageType",
+  "/properties/Operation"
+ ],
+ "definitions": {
+  "FreeTier": {
+   "additionalProperties": false,
+   "properties": {
+    "Activated": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Activated"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "arn:aws(-cn)?:billingconductor::[0-9]{12}:pricingrule/[a-zA-Z0-9]{10}",
+   "type": "string"
+  },
+  "AssociatedPricingPlanCount": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "BillingEntity": {
+   "enum": [
+    "AWS",
+    "AWS Marketplace",
+    "AISPL"
+   ],
+   "type": "string"
+  },
+  "CreationTime": {
+   "type": "integer"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "type": "integer"
+  },
+  "ModifierPercentage": {
+   "minimum": 0,
+   "type": "number"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_\\+=\\.\\-@]+",
+   "type": "string"
+  },
+  "Operation": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^\\S+$",
+   "type": "string"
+  },
+  "Scope": {
+   "enum": [
+    "GLOBAL",
+    "SERVICE",
+    "BILLING_ENTITY",
+    "SKU"
+   ],
+   "type": "string"
+  },
+  "Service": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9\\.\\-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tiering": {
+   "additionalProperties": false,
+   "properties": {
+    "FreeTier": {
+     "$ref": "#/definitions/FreeTier"
+    }
+   },
+   "type": "object"
+  },
+  "Type": {
+   "enum": [
+    "MARKUP",
+    "DISCOUNT",
+    "TIERING"
+   ],
+   "type": "string"
+  },
+  "UsageType": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^\\S+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/AssociatedPricingPlanCount",
+  "/properties/CreationTime",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "Name",
+  "Scope",
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-billing-conductor.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BillingConductor::PricingRule"
+}

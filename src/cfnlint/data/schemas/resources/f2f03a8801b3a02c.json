@@ -1,0 +1,84 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InitialVersion"
+ ],
+ "definitions": {
+  "Subscription": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Source": {
+     "type": "string"
+    },
+    "Subject": {
+     "type": "string"
+    },
+    "Target": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Target",
+    "Id",
+    "Source",
+    "Subject"
+   ],
+   "type": "object"
+  },
+  "SubscriptionDefinitionVersion": {
+   "additionalProperties": false,
+   "properties": {
+    "Subscriptions": {
+     "items": {
+      "$ref": "#/definitions/Subscription"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Subscriptions"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InitialVersion": {
+   "$ref": "#/definitions/SubscriptionDefinitionVersion"
+  },
+  "LatestVersionArn": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Tags": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LatestVersionArn",
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "typeName": "AWS::Greengrass::SubscriptionDefinition"
+}

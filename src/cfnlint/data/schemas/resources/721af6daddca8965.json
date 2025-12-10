@@ -1,0 +1,577 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AgentSpaceId"
+ ],
+ "definitions": {
+  "AWSConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountId": {
+     "pattern": "\\d{12}",
+     "type": "string"
+    },
+    "AccountType": {
+     "enum": [
+      "monitor"
+     ],
+     "type": "string"
+    },
+    "AssumableRoleArn": {
+     "type": "string"
+    },
+    "Resources": {
+     "$ref": "#/definitions/AWSResourceList"
+    },
+    "Tags": {
+     "$ref": "#/definitions/AWSTagList"
+    }
+   },
+   "required": [
+    "AccountId",
+    "AccountType",
+    "AssumableRoleArn"
+   ],
+   "type": "object"
+  },
+  "AWSResource": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceArn": {
+     "type": "string"
+    },
+    "ResourceMetadata": {
+     "type": "object"
+    },
+    "ResourceType": {
+     "enum": [
+      "AWS::CloudFormation::Stack",
+      "AWS::ECR::Repository",
+      "AWS::S3::Bucket",
+      "AWS::S3::Object"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceArn"
+   ],
+   "type": "object"
+  },
+  "AWSResourceList": {
+   "items": {
+    "$ref": "#/definitions/AWSResource"
+   },
+   "type": "array"
+  },
+  "AWSTagList": {
+   "items": {
+    "$ref": "#/definitions/KeyValuePair"
+   },
+   "type": "array"
+  },
+  "AgentSpaceId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "AssociationId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DynatraceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableWebhookUpdates": {
+     "type": "boolean"
+    },
+    "EnvId": {
+     "type": "string"
+    },
+    "Resources": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "EnvId"
+   ],
+   "type": "object"
+  },
+  "EventChannelConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableWebhookUpdates": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "GitHubConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Owner": {
+     "type": "string"
+    },
+    "OwnerType": {
+     "enum": [
+      "organization",
+      "user"
+     ],
+     "type": "string"
+    },
+    "RepoId": {
+     "type": "string"
+    },
+    "RepoName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RepoName",
+    "RepoId",
+    "Owner",
+    "OwnerType"
+   ],
+   "type": "object"
+  },
+  "GitLabConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableWebhookUpdates": {
+     "type": "boolean"
+    },
+    "InstanceIdentifier": {
+     "type": "string"
+    },
+    "ProjectId": {
+     "type": "string"
+    },
+    "ProjectPath": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ProjectId",
+    "ProjectPath"
+   ],
+   "type": "object"
+  },
+  "KeyValuePair": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "MCPServerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "EnableWebhookUpdates": {
+     "type": "boolean"
+    },
+    "Endpoint": {
+     "pattern": "^https://[a-zA-Z0-9.-]+(?::[0-9]+)?(?:/.*)?$",
+     "type": "string"
+    },
+    "Name": {
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "Tools": {
+     "items": {
+      "pattern": "^[a-zA-Z0-9_-]+$",
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Name",
+    "Endpoint",
+    "Tools"
+   ],
+   "type": "object"
+  },
+  "MCPServerDatadogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "EnableWebhookUpdates": {
+     "type": "boolean"
+    },
+    "Endpoint": {
+     "pattern": "^https://[a-zA-Z0-9.-]+(?::[0-9]+)?(?:/.*)?$",
+     "type": "string"
+    },
+    "Name": {
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Endpoint"
+   ],
+   "type": "object"
+  },
+  "MCPServerNewRelicConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountId": {
+     "minLength": 6,
+     "pattern": "^[0-9]+$",
+     "type": "string"
+    },
+    "Endpoint": {
+     "pattern": "^https://[a-zA-Z0-9.-]+(?::[0-9]+)?(?:/.*)?$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AccountId",
+    "Endpoint"
+   ],
+   "type": "object"
+  },
+  "MCPServerSplunkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "EnableWebhookUpdates": {
+     "type": "boolean"
+    },
+    "Endpoint": {
+     "pattern": "^https://[a-zA-Z0-9.-]+(?::[0-9]+)?(?:/.*)?$",
+     "type": "string"
+    },
+    "Name": {
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Endpoint"
+   ],
+   "type": "object"
+  },
+  "ServiceConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "SourceAws": {
+       "$ref": "#/definitions/SourceAwsConfiguration"
+      }
+     },
+     "required": [
+      "SourceAws"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Aws": {
+       "$ref": "#/definitions/AWSConfiguration"
+      }
+     },
+     "required": [
+      "Aws"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "GitHub": {
+       "$ref": "#/definitions/GitHubConfiguration"
+      }
+     },
+     "required": [
+      "GitHub"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Slack": {
+       "$ref": "#/definitions/SlackConfiguration"
+      }
+     },
+     "required": [
+      "Slack"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Dynatrace": {
+       "$ref": "#/definitions/DynatraceConfiguration"
+      }
+     },
+     "required": [
+      "Dynatrace"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ServiceNow": {
+       "$ref": "#/definitions/ServiceNowConfiguration"
+      }
+     },
+     "required": [
+      "ServiceNow"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "MCPServer": {
+       "$ref": "#/definitions/MCPServerConfiguration"
+      }
+     },
+     "required": [
+      "MCPServer"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "GitLab": {
+       "$ref": "#/definitions/GitLabConfiguration"
+      }
+     },
+     "required": [
+      "GitLab"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "MCPServerDatadog": {
+       "$ref": "#/definitions/MCPServerDatadogConfiguration"
+      }
+     },
+     "required": [
+      "MCPServerDatadog"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "MCPServerSplunk": {
+       "$ref": "#/definitions/MCPServerSplunkConfiguration"
+      }
+     },
+     "required": [
+      "MCPServerSplunk"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "MCPServerNewRelic": {
+       "$ref": "#/definitions/MCPServerNewRelicConfiguration"
+      }
+     },
+     "required": [
+      "MCPServerNewRelic"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "EventChannel": {
+       "$ref": "#/definitions/EventChannelConfiguration"
+      }
+     },
+     "required": [
+      "EventChannel"
+     ]
+    }
+   ],
+   "type": "object"
+  },
+  "ServiceId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ServiceNowConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableWebhookUpdates": {
+     "type": "boolean"
+    },
+    "InstanceId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SlackChannel": {
+   "additionalProperties": false,
+   "properties": {
+    "ChannelId": {
+     "maxLength": 16,
+     "minLength": 8,
+     "pattern": "^[CGD][A-Z0-9]+$",
+     "type": "string"
+    },
+    "ChannelName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ChannelId"
+   ],
+   "type": "object"
+  },
+  "SlackConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "TransmissionTarget": {
+     "$ref": "#/definitions/SlackTransmissionTarget"
+    },
+    "WorkspaceId": {
+     "pattern": "^[TE][A-Z0-9]+$",
+     "type": "string"
+    },
+    "WorkspaceName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "WorkspaceId",
+    "WorkspaceName",
+    "TransmissionTarget"
+   ],
+   "type": "object"
+  },
+  "SlackTransmissionTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "IncidentResponseTarget": {
+     "$ref": "#/definitions/SlackChannel"
+    }
+   },
+   "required": [
+    "IncidentResponseTarget"
+   ],
+   "type": "object"
+  },
+  "SourceAwsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountId": {
+     "pattern": "\\d{12}",
+     "type": "string"
+    },
+    "AccountType": {
+     "enum": [
+      "source"
+     ],
+     "type": "string"
+    },
+    "AssumableRoleArn": {
+     "type": "string"
+    },
+    "Resources": {
+     "$ref": "#/definitions/AWSResourceList"
+    },
+    "Tags": {
+     "$ref": "#/definitions/AWSTagList"
+    }
+   },
+   "required": [
+    "AccountId",
+    "AccountType",
+    "AssumableRoleArn"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AgentSpaceId",
+  "/properties/AssociationId"
+ ],
+ "properties": {
+  "AgentSpaceId": {
+   "$ref": "#/definitions/AgentSpaceId"
+  },
+  "AssociationId": {
+   "$ref": "#/definitions/AssociationId"
+  },
+  "Configuration": {
+   "$ref": "#/definitions/ServiceConfiguration"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "LinkedAssociationIds": {
+   "items": {
+    "$ref": "#/definitions/AssociationId"
+   },
+   "type": "array"
+  },
+  "ServiceId": {
+   "$ref": "#/definitions/ServiceId"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssociationId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "AgentSpaceId",
+  "ServiceId",
+  "Configuration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::DevOpsAgent::Association",
+ "writeOnlyProperties": [
+  "/properties/Configuration/Dynatrace/EnableWebhookUpdates",
+  "/properties/Configuration/ServiceNow/EnableWebhookUpdates",
+  "/properties/Configuration/MCPServer/EnableWebhookUpdates",
+  "/properties/Configuration/MCPServerDatadog/EnableWebhookUpdates",
+  "/properties/Configuration/MCPServerSplunk/EnableWebhookUpdates",
+  "/properties/Configuration/GitLab/EnableWebhookUpdates",
+  "/properties/Configuration/EventChannel/EnableWebhookUpdates",
+  "/properties/LinkedAssociationIds"
+ ]
+}

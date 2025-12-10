@@ -1,0 +1,53 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/LicenseEndpointId",
+  "/properties/ProductId"
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:(aws[a-zA-Z-]*):deadline:[a-z0-9-]+:[0-9]{12}:license-endpoint/le-[0-9a-z]{32}/metered-product/[0-9a-z]{1,32}-[.0-9a-z]{1,32}",
+   "type": "string"
+  },
+  "Family": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LicenseEndpointId": {
+   "pattern": "^le-[0-9a-f]{32}$",
+   "type": "string"
+  },
+  "Port": {
+   "maximum": 65535,
+   "minimum": 1024,
+   "type": "integer"
+  },
+  "ProductId": {
+   "pattern": "^[0-9a-z]{1,32}-[.0-9a-z]{1,32}$",
+   "type": "string"
+  },
+  "Vendor": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Port",
+  "/properties/Family",
+  "/properties/Vendor"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-deadline",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Deadline::MeteredProduct"
+}

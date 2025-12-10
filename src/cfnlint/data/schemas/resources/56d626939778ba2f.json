@@ -1,0 +1,75 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConnectorLabel"
+ ],
+ "definitions": {
+  "ConnectorProvisioningConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Lambda": {
+     "$ref": "#/definitions/LambdaConnectorProvisioningConfig"
+    }
+   },
+   "type": "object"
+  },
+  "LambdaConnectorProvisioningConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaArn": {
+     "maxLength": 512,
+     "pattern": "arn:*:.*:.*:[0-9]+:.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "LambdaArn"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConnectorLabel"
+ ],
+ "properties": {
+  "ConnectorArn": {
+   "maxLength": 512,
+   "pattern": "arn:.*:appflow:.*:[0-9]+:.*",
+   "type": "string"
+  },
+  "ConnectorLabel": {
+   "maxLength": 512,
+   "pattern": "[a-zA-Z0-9][\\w!@#.-]+",
+   "type": "string"
+  },
+  "ConnectorProvisioningConfig": {
+   "$ref": "#/definitions/ConnectorProvisioningConfig"
+  },
+  "ConnectorProvisioningType": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9][\\w!@#.-]+",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 2048,
+   "pattern": "[\\s\\w/!@#+=.-]*",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConnectorArn"
+ ],
+ "required": [
+  "ConnectorProvisioningType",
+  "ConnectorProvisioningConfig"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/appflow/latest/userguide/what-is-appflow.html",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::AppFlow::Connector"
+}

@@ -1,0 +1,271 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ApiName": {
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "[A-Za-z0-9_\\-\\ ]+",
+   "type": "string"
+  },
+  "AuthMode": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthType": {
+     "$ref": "#/definitions/AuthenticationType"
+    }
+   },
+   "type": "object"
+  },
+  "AuthModes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AuthMode"
+   },
+   "type": "array"
+  },
+  "AuthProvider": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthType": {
+     "$ref": "#/definitions/AuthenticationType"
+    },
+    "CognitoConfig": {
+     "$ref": "#/definitions/CognitoConfig"
+    },
+    "LambdaAuthorizerConfig": {
+     "$ref": "#/definitions/LambdaAuthorizerConfig"
+    },
+    "OpenIDConnectConfig": {
+     "$ref": "#/definitions/OpenIDConnectConfig"
+    }
+   },
+   "required": [
+    "AuthType"
+   ],
+   "type": "object"
+  },
+  "AuthProviders": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AuthProvider"
+   },
+   "type": "array"
+  },
+  "AuthenticationType": {
+   "enum": [
+    "AMAZON_COGNITO_USER_POOLS",
+    "AWS_IAM",
+    "API_KEY",
+    "OPENID_CONNECT",
+    "AWS_LAMBDA"
+   ],
+   "type": "string"
+  },
+  "CognitoConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AppIdClientRegex": {
+     "type": "string"
+    },
+    "AwsRegion": {
+     "type": "string"
+    },
+    "UserPoolId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "UserPoolId",
+    "AwsRegion"
+   ],
+   "type": "object"
+  },
+  "DnsMap": {
+   "additionalProperties": false,
+   "properties": {
+    "Http": {
+     "type": "string"
+    },
+    "Realtime": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EventConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthProviders": {
+     "$ref": "#/definitions/AuthProviders"
+    },
+    "ConnectionAuthModes": {
+     "$ref": "#/definitions/AuthModes"
+    },
+    "DefaultPublishAuthModes": {
+     "$ref": "#/definitions/AuthModes"
+    },
+    "DefaultSubscribeAuthModes": {
+     "$ref": "#/definitions/AuthModes"
+    },
+    "LogConfig": {
+     "$ref": "#/definitions/EventLogConfig"
+    }
+   },
+   "required": [
+    "AuthProviders",
+    "ConnectionAuthModes",
+    "DefaultPublishAuthModes",
+    "DefaultSubscribeAuthModes"
+   ],
+   "type": "object"
+  },
+  "EventLogConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogsRoleArn": {
+     "type": "string"
+    },
+    "LogLevel": {
+     "$ref": "#/definitions/EventLogLevel"
+    }
+   },
+   "required": [
+    "LogLevel",
+    "CloudWatchLogsRoleArn"
+   ],
+   "type": "object"
+  },
+  "EventLogLevel": {
+   "enum": [
+    "NONE",
+    "ERROR",
+    "ALL",
+    "INFO",
+    "DEBUG"
+   ],
+   "type": "string"
+  },
+  "LambdaAuthorizerConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizerResultTtlInSeconds": {
+     "maximum": 3600,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "AuthorizerUri": {
+     "type": "string"
+    },
+    "IdentityValidationExpression": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AuthorizerUri"
+   ],
+   "type": "object"
+  },
+  "OpenIDConnectConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthTTL": {
+     "type": "number"
+    },
+    "ClientId": {
+     "type": "string"
+    },
+    "IatTTL": {
+     "type": "number"
+    },
+    "Issuer": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Issuer"
+   ],
+   "type": "object"
+  },
+  "OwnerContact": {
+   "maxLength": 250,
+   "minLength": 1,
+   "pattern": "[A-Za-z0-9_\\-\\ \\.]+",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[ a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[\\s\\w+-=\\.:/@]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApiArn"
+ ],
+ "properties": {
+  "ApiArn": {
+   "type": "string"
+  },
+  "ApiId": {
+   "type": "string"
+  },
+  "Dns": {
+   "$ref": "#/definitions/DnsMap"
+  },
+  "EventConfig": {
+   "$ref": "#/definitions/EventConfig"
+  },
+  "Name": {
+   "$ref": "#/definitions/ApiName"
+  },
+  "OwnerContact": {
+   "$ref": "#/definitions/OwnerContact"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ApiId",
+  "/properties/Dns",
+  "/properties/Dns/Realtime",
+  "/properties/Dns/Http",
+  "/properties/ApiArn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AppSync::Api"
+}

@@ -1,0 +1,327 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ReplicatorName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ReplicatorName",
+  "/properties/Description",
+  "/properties/KafkaClusters",
+  "/properties/ServiceExecutionRoleArn",
+  "/properties/ReplicationInfoList/*/SourceKafkaClusterArn",
+  "/properties/ReplicationInfoList/*/TargetKafkaClusterArn",
+  "/properties/ReplicationInfoList/*/TargetCompressionType",
+  "/properties/ReplicationInfoList/*/TopicReplication/StartingPosition",
+  "/properties/ReplicationInfoList/*/TopicReplication/TopicNameConfiguration"
+ ],
+ "definitions": {
+  "AmazonMskCluster": {
+   "additionalProperties": false,
+   "properties": {
+    "MskClusterArn": {
+     "pattern": "arn:(aws|aws-us-gov|aws-cn):kafka:.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "MskClusterArn"
+   ],
+   "type": "object"
+  },
+  "ConsumerGroupReplication": {
+   "additionalProperties": false,
+   "properties": {
+    "ConsumerGroupsToExclude": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 256,
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ConsumerGroupsToReplicate": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 256,
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "DetectAndCopyNewConsumerGroups": {
+     "type": "boolean"
+    },
+    "SynchroniseConsumerGroupOffsets": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "ConsumerGroupsToReplicate"
+   ],
+   "type": "object"
+  },
+  "KafkaCluster": {
+   "additionalProperties": false,
+   "properties": {
+    "AmazonMskCluster": {
+     "$ref": "#/definitions/AmazonMskCluster"
+    },
+    "VpcConfig": {
+     "$ref": "#/definitions/KafkaClusterClientVpcConfig"
+    }
+   },
+   "required": [
+    "AmazonMskCluster",
+    "VpcConfig"
+   ],
+   "type": "object"
+  },
+  "KafkaClusterClientVpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "type": "string"
+     },
+     "maxItems": 16,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SubnetIds": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 3,
+     "minItems": 2,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "SubnetIds"
+   ],
+   "type": "object"
+  },
+  "ReplicationInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "ConsumerGroupReplication": {
+     "$ref": "#/definitions/ConsumerGroupReplication"
+    },
+    "SourceKafkaClusterArn": {
+     "pattern": "arn:(aws|aws-us-gov|aws-cn):kafka:.*",
+     "type": "string"
+    },
+    "TargetCompressionType": {
+     "enum": [
+      "NONE",
+      "GZIP",
+      "SNAPPY",
+      "LZ4",
+      "ZSTD"
+     ],
+     "type": "string"
+    },
+    "TargetKafkaClusterArn": {
+     "pattern": "arn:(aws|aws-us-gov|aws-cn):kafka:.*",
+     "type": "string"
+    },
+    "TopicReplication": {
+     "$ref": "#/definitions/TopicReplication"
+    }
+   },
+   "required": [
+    "SourceKafkaClusterArn",
+    "TargetKafkaClusterArn",
+    "TopicReplication",
+    "ConsumerGroupReplication",
+    "TargetCompressionType"
+   ],
+   "type": "object"
+  },
+  "ReplicationStartingPosition": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "$ref": "#/definitions/ReplicationStartingPositionType"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "ReplicationStartingPositionType": {
+   "enum": [
+    "LATEST",
+    "EARLIEST"
+   ],
+   "type": "string"
+  },
+  "ReplicationTopicNameConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "$ref": "#/definitions/ReplicationTopicNameConfigurationType"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "ReplicationTopicNameConfigurationType": {
+   "enum": [
+    "PREFIXED_WITH_SOURCE_CLUSTER_ALIAS",
+    "IDENTICAL"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TopicReplication": {
+   "additionalProperties": false,
+   "properties": {
+    "CopyAccessControlListsForTopics": {
+     "type": "boolean"
+    },
+    "CopyTopicConfigurations": {
+     "type": "boolean"
+    },
+    "DetectAndCopyNewTopics": {
+     "type": "boolean"
+    },
+    "StartingPosition": {
+     "$ref": "#/definitions/ReplicationStartingPosition"
+    },
+    "TopicNameConfiguration": {
+     "$ref": "#/definitions/ReplicationTopicNameConfiguration"
+    },
+    "TopicsToExclude": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 249,
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "TopicsToReplicate": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 249,
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "TopicsToReplicate"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ReplicatorArn"
+ ],
+ "properties": {
+  "CurrentVersion": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "KafkaClusters": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/KafkaCluster"
+   },
+   "maxItems": 2,
+   "minItems": 2,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ReplicationInfoList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ReplicationInfo"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ReplicatorArn": {
+   "pattern": "arn:(aws|aws-us-gov|aws-cn):kafka:.*",
+   "type": "string"
+  },
+  "ReplicatorName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[0-9A-Za-z][0-9A-Za-z-]{0,}$",
+   "type": "string"
+  },
+  "ServiceExecutionRoleArn": {
+   "pattern": "arn:(aws|aws-us-gov|aws-cn):iam:.*",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ReplicatorArn",
+  "/properties/CurrentVersion"
+ ],
+ "required": [
+  "ReplicatorName",
+  "ReplicationInfoList",
+  "KafkaClusters",
+  "ServiceExecutionRoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-msk-replicator.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MSK::Replicator"
+}

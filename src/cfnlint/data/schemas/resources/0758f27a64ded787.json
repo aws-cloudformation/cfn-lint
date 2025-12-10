@@ -1,0 +1,94 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "SdiSourceMode": {
+   "enum": [
+    "QUADRANT",
+    "INTERLEAVE"
+   ],
+   "type": "string"
+  },
+  "SdiSourceState": {
+   "enum": [
+    "IDLE",
+    "IN_USE",
+    "DELETED"
+   ],
+   "type": "string"
+  },
+  "SdiSourceType": {
+   "enum": [
+    "SINGLE",
+    "QUAD"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Inputs": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Mode": {
+   "$ref": "#/definitions/SdiSourceMode"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "State": {
+   "$ref": "#/definitions/SdiSourceState"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tags"
+   },
+   "type": "array"
+  },
+  "Type": {
+   "$ref": "#/definitions/SdiSourceType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/State",
+  "/properties/Arn",
+  "/properties/Inputs"
+ ],
+ "required": [
+  "Name",
+  "Type"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaLive::SdiSource"
+}

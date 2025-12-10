@@ -1,0 +1,177 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Project"
+ ],
+ "definitions": {
+  "EntityOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "EntityId": {
+     "type": "string"
+    },
+    "Variation": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "[-a-zA-Z0-9._]*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VariationObject": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "VariationName",
+      "StringValue"
+     ]
+    },
+    {
+     "required": [
+      "VariationName",
+      "BooleanValue"
+     ]
+    },
+    {
+     "required": [
+      "VariationName",
+      "LongValue"
+     ]
+    },
+    {
+     "required": [
+      "VariationName",
+      "DoubleValue"
+     ]
+    }
+   ],
+   "properties": {
+    "BooleanValue": {
+     "type": "boolean"
+    },
+    "DoubleValue": {
+     "type": "number"
+    },
+    "LongValue": {
+     "type": "number"
+    },
+    "StringValue": {
+     "maxLength": 512,
+     "minLength": 0,
+     "type": "string"
+    },
+    "VariationName": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "[-a-zA-Z0-9._]*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "arn:[^:]*:[^:]*:[^:]*:[^:]*:project/[-a-zA-Z0-9._]*/feature/[-a-zA-Z0-9._]*",
+   "type": "string"
+  },
+  "DefaultVariation": {
+   "maxLength": 127,
+   "minLength": 1,
+   "pattern": "[-a-zA-Z0-9._]*",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 160,
+   "minLength": 0,
+   "type": "string"
+  },
+  "EntityOverrides": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EntityOverride"
+   },
+   "maxItems": 2500,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "EvaluationStrategy": {
+   "enum": [
+    "ALL_RULES",
+    "DEFAULT_VARIATION"
+   ],
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 127,
+   "minLength": 1,
+   "pattern": "[-a-zA-Z0-9._]*",
+   "type": "string"
+  },
+  "Project": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "([-a-zA-Z0-9._]*)|(arn:[^:]*:[^:]*:[^:]*:[^:]*:project/[-a-zA-Z0-9._]*)",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Variations": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/VariationObject"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "Project",
+  "Variations"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-evidently",
+ "taggable": true,
+ "typeName": "AWS::Evidently::Feature"
+}

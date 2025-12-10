@@ -1,0 +1,140 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "AppConfigResourceObject": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationId": {
+     "pattern": "[a-z0-9]{4,7}",
+     "type": "string"
+    },
+    "EnvironmentId": {
+     "pattern": "[a-z0-9]{4,7}",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ApplicationId",
+    "EnvironmentId"
+   ],
+   "type": "object"
+  },
+  "DataDeliveryObject": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "S3"
+     ]
+    },
+    {
+     "required": [
+      "LogGroup"
+     ]
+    }
+   ],
+   "properties": {
+    "LogGroup": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[-a-zA-Z0-9._/]+$",
+     "type": "string"
+    },
+    "S3": {
+     "$ref": "#/definitions/S3Destination"
+    }
+   },
+   "type": "object"
+  },
+  "S3Destination": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "^[a-z0-9][-a-z0-9]*[a-z0-9]$",
+     "type": "string"
+    },
+    "Prefix": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^[-a-zA-Z0-9!_.*'()/]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AppConfigResource": {
+   "$ref": "#/definitions/AppConfigResourceObject"
+  },
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "arn:[^:]*:[^:]*:[^:]*:[^:]*:project/[-a-zA-Z0-9._]*",
+   "type": "string"
+  },
+  "DataDelivery": {
+   "$ref": "#/definitions/DataDeliveryObject"
+  },
+  "Description": {
+   "maxLength": 160,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 127,
+   "minLength": 1,
+   "pattern": "[-a-zA-Z0-9._]*",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-evidently",
+ "taggable": true,
+ "typeName": "AWS::Evidently::Project"
+}

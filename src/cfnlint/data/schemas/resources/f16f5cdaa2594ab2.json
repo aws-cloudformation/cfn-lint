@@ -1,0 +1,58 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Filter"
+ ],
+ "definitions": {
+  "Filter": {
+   "additionalProperties": false,
+   "properties": {
+    "IpFilter": {
+     "$ref": "#/definitions/IpFilter"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "IpFilter"
+   ],
+   "type": "object"
+  },
+  "IpFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Cidr": {
+     "format": "ipv4-network",
+     "type": "string"
+    },
+    "Policy": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Policy",
+    "Cidr"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Filter": {
+   "$ref": "#/definitions/Filter"
+  },
+  "Id": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Filter"
+ ],
+ "typeName": "AWS::SES::ReceiptFilter"
+}

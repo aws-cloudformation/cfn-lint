@@ -1,0 +1,121 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SecurityGroupIds",
+  "/properties/SubnetIds",
+  "/properties/VpcId"
+ ],
+ "definitions": {
+  "LicenseEndpointStatus": {
+   "enum": [
+    "CREATE_IN_PROGRESS",
+    "DELETE_IN_PROGRESS",
+    "READY",
+    "NOT_READY"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:(aws[a-zA-Z-]*):deadline:[a-z0-9-]+:[0-9]{12}:license-endpoint/le-[0-9a-z]{32}",
+   "type": "string"
+  },
+  "DnsName": {
+   "type": "string"
+  },
+  "LicenseEndpointId": {
+   "pattern": "^le-[0-9a-f]{32}$",
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "pattern": "sg-[\\w]{1,120}",
+    "type": "string"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Status": {
+   "$ref": "#/definitions/LicenseEndpointStatus"
+  },
+  "StatusMessage": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "SubnetIds": {
+   "items": {
+    "maxLength": 32,
+    "minLength": 1,
+    "pattern": "subnet-[\\w]{1,120}",
+    "type": "string"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "vpc-[\\w]{1,120}",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DnsName",
+  "/properties/LicenseEndpointId",
+  "/properties/Status",
+  "/properties/StatusMessage",
+  "/properties/Arn"
+ ],
+ "required": [
+  "SecurityGroupIds",
+  "SubnetIds",
+  "VpcId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Deadline::LicenseEndpoint"
+}

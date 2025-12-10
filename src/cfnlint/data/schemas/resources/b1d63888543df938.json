@@ -1,0 +1,111 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PortalArn"
+ ],
+ "definitions": {
+  "IdentityProviderDetails": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[\\s\\S]*$": {
+     "maxLength": 131072,
+     "minLength": 0,
+     "pattern": "^[\\s\\S]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "IdentityProviderType": {
+   "enum": [
+    "SAML",
+    "Facebook",
+    "Google",
+    "LoginWithAmazon",
+    "SignInWithApple",
+    "OIDC"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IdentityProviderArn"
+ ],
+ "properties": {
+  "IdentityProviderArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36}){2,}$",
+   "type": "string"
+  },
+  "IdentityProviderDetails": {
+   "$ref": "#/definitions/IdentityProviderDetails"
+  },
+  "IdentityProviderName": {
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "^[^_][\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}][^_]+$",
+   "type": "string"
+  },
+  "IdentityProviderType": {
+   "$ref": "#/definitions/IdentityProviderType"
+  },
+  "PortalArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IdentityProviderArn"
+ ],
+ "required": [
+  "IdentityProviderDetails",
+  "IdentityProviderName",
+  "IdentityProviderType"
+ ],
+ "sourceUrl": "https://github.com/shivankgoel/aws-cloudformation-resource-providers-workspaces-web",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::WorkSpacesWeb::IdentityProvider",
+ "writeOnlyProperties": [
+  "/properties/PortalArn"
+ ]
+}

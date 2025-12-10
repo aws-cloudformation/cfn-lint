@@ -1,0 +1,97 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Description",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TrafficDistributionGroupArn"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 250,
+   "minLength": 1,
+   "pattern": "(^[\\S].*[\\S]$)|(^[\\S]$)",
+   "type": "string"
+  },
+  "InstanceArn": {
+   "maxLength": 250,
+   "minLength": 1,
+   "pattern": "^arn:(aws|aws-us-gov):connect:[a-z]{2}-[a-z]+-[0-9]{1}:[0-9]{1,20}:instance/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+   "type": "string"
+  },
+  "IsDefault": {
+   "type": "boolean"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "(^[\\S].*[\\S]$)|(^[\\S]$)",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "CREATION_IN_PROGRESS",
+    "ACTIVE",
+    "CREATION_FAILED",
+    "PENDING_DELETION",
+    "DELETION_FAILED",
+    "UPDATE_IN_PROGRESS"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TrafficDistributionGroupArn": {
+   "pattern": "^arn:(aws|aws-us-gov):connect:[a-z]{2}-[a-z]+-[0-9]{1}:[0-9]{1,20}:traffic-distribution-group/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TrafficDistributionGroupArn",
+  "/properties/Status",
+  "/properties/IsDefault"
+ ],
+ "required": [
+  "InstanceArn",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::TrafficDistributionGroup"
+}

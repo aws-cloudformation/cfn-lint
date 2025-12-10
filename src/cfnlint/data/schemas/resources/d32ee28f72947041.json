@@ -1,0 +1,1666 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FlowName",
+  "/properties/KMSArn"
+ ],
+ "definitions": {
+  "AggregationConfig": {
+   "properties": {
+    "AggregationType": {
+     "$ref": "#/definitions/AggregationType"
+    },
+    "TargetFileSize": {
+     "$ref": "#/definitions/TargetFileSize"
+    }
+   },
+   "type": "object"
+  },
+  "AggregationType": {
+   "enum": [
+    "None",
+    "SingleFile"
+   ],
+   "type": "string"
+  },
+  "AmplitudeConnectorOperator": {
+   "enum": [
+    "BETWEEN"
+   ],
+   "type": "string"
+  },
+  "AmplitudeSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "ApiVersion": {
+   "maxLength": 256,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "BucketName": {
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "BucketPrefix": {
+   "maxLength": 512,
+   "type": "string"
+  },
+  "ConnectorOperator": {
+   "properties": {
+    "Amplitude": {
+     "$ref": "#/definitions/AmplitudeConnectorOperator"
+    },
+    "CustomConnector": {
+     "$ref": "#/definitions/Operator"
+    },
+    "Datadog": {
+     "$ref": "#/definitions/DatadogConnectorOperator"
+    },
+    "Dynatrace": {
+     "$ref": "#/definitions/DynatraceConnectorOperator"
+    },
+    "GoogleAnalytics": {
+     "$ref": "#/definitions/GoogleAnalyticsConnectorOperator"
+    },
+    "InforNexus": {
+     "$ref": "#/definitions/InforNexusConnectorOperator"
+    },
+    "Marketo": {
+     "$ref": "#/definitions/MarketoConnectorOperator"
+    },
+    "Pardot": {
+     "$ref": "#/definitions/PardotConnectorOperator"
+    },
+    "S3": {
+     "$ref": "#/definitions/S3ConnectorOperator"
+    },
+    "SAPOData": {
+     "$ref": "#/definitions/SAPODataConnectorOperator"
+    },
+    "Salesforce": {
+     "$ref": "#/definitions/SalesforceConnectorOperator"
+    },
+    "ServiceNow": {
+     "$ref": "#/definitions/ServiceNowConnectorOperator"
+    },
+    "Singular": {
+     "$ref": "#/definitions/SingularConnectorOperator"
+    },
+    "Slack": {
+     "$ref": "#/definitions/SlackConnectorOperator"
+    },
+    "Trendmicro": {
+     "$ref": "#/definitions/TrendmicroConnectorOperator"
+    },
+    "Veeva": {
+     "$ref": "#/definitions/VeevaConnectorOperator"
+    },
+    "Zendesk": {
+     "$ref": "#/definitions/ZendeskConnectorOperator"
+    }
+   },
+   "type": "object"
+  },
+  "ConnectorProfileName": {
+   "maxLength": 256,
+   "pattern": "[\\w/!@#+=.-]+",
+   "type": "string"
+  },
+  "ConnectorType": {
+   "enum": [
+    "SAPOData",
+    "Salesforce",
+    "Pardot",
+    "Singular",
+    "Slack",
+    "Redshift",
+    "S3",
+    "Marketo",
+    "Googleanalytics",
+    "Zendesk",
+    "Servicenow",
+    "Datadog",
+    "Trendmicro",
+    "Snowflake",
+    "Dynatrace",
+    "Infornexus",
+    "Amplitude",
+    "Veeva",
+    "CustomConnector",
+    "EventBridge",
+    "Upsolver",
+    "LookoutMetrics"
+   ],
+   "type": "string"
+  },
+  "CustomConnectorDestinationProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomProperties": {
+     "$ref": "#/definitions/CustomProperties"
+    },
+    "EntityName": {
+     "$ref": "#/definitions/EntityName"
+    },
+    "ErrorHandlingConfig": {
+     "$ref": "#/definitions/ErrorHandlingConfig"
+    },
+    "IdFieldNames": {
+     "items": {
+      "maxLength": 128,
+      "pattern": "\\S+",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "WriteOperationType": {
+     "$ref": "#/definitions/WriteOperationType"
+    }
+   },
+   "required": [
+    "EntityName"
+   ],
+   "type": "object"
+  },
+  "CustomConnectorSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomProperties": {
+     "$ref": "#/definitions/CustomProperties"
+    },
+    "DataTransferApi": {
+     "additionalProperties": false,
+     "properties": {
+      "Name": {
+       "maxLength": 64,
+       "pattern": "[\\w/-]+",
+       "type": "string"
+      },
+      "Type": {
+       "enum": [
+        "SYNC",
+        "ASYNC",
+        "AUTOMATIC"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "Name",
+      "Type"
+     ],
+     "type": "object"
+    },
+    "EntityName": {
+     "$ref": "#/definitions/EntityName"
+    }
+   },
+   "required": [
+    "EntityName"
+   ],
+   "type": "object"
+  },
+  "CustomProperties": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[\\w]{1,2048}$": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "\\S+",
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "DataTransferApi": {
+   "enum": [
+    "AUTOMATIC",
+    "BULKV2",
+    "REST_SYNC"
+   ],
+   "type": "string"
+  },
+  "DatadogConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "BETWEEN",
+    "EQUAL_TO",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "DatadogSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "DatetimeTypeFieldName": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "DestinationConnectorProperties": {
+   "properties": {
+    "CustomConnector": {
+     "$ref": "#/definitions/CustomConnectorDestinationProperties"
+    },
+    "EventBridge": {
+     "$ref": "#/definitions/EventBridgeDestinationProperties"
+    },
+    "LookoutMetrics": {
+     "$ref": "#/definitions/LookoutMetricsDestinationProperties"
+    },
+    "Marketo": {
+     "$ref": "#/definitions/MarketoDestinationProperties"
+    },
+    "Redshift": {
+     "$ref": "#/definitions/RedshiftDestinationProperties"
+    },
+    "S3": {
+     "$ref": "#/definitions/S3DestinationProperties"
+    },
+    "SAPOData": {
+     "$ref": "#/definitions/SAPODataDestinationProperties"
+    },
+    "Salesforce": {
+     "$ref": "#/definitions/SalesforceDestinationProperties"
+    },
+    "Snowflake": {
+     "$ref": "#/definitions/SnowflakeDestinationProperties"
+    },
+    "Upsolver": {
+     "$ref": "#/definitions/UpsolverDestinationProperties"
+    },
+    "Zendesk": {
+     "$ref": "#/definitions/ZendeskDestinationProperties"
+    }
+   },
+   "type": "object"
+  },
+  "DestinationFlowConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ApiVersion": {
+     "$ref": "#/definitions/ApiVersion"
+    },
+    "ConnectorProfileName": {
+     "$ref": "#/definitions/ConnectorProfileName"
+    },
+    "ConnectorType": {
+     "$ref": "#/definitions/ConnectorType"
+    },
+    "DestinationConnectorProperties": {
+     "$ref": "#/definitions/DestinationConnectorProperties"
+    }
+   },
+   "required": [
+    "ConnectorType",
+    "DestinationConnectorProperties"
+   ],
+   "type": "object"
+  },
+  "DocumentType": {
+   "maxLength": 512,
+   "pattern": "[\\s\\w_-]+",
+   "type": "string"
+  },
+  "DynatraceConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "BETWEEN",
+    "EQUAL_TO",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "DynatraceSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "EnableDynamicFieldUpdate": {
+   "type": "boolean"
+  },
+  "EntityName": {
+   "maxLength": 1024,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "ErrorHandlingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "$ref": "#/definitions/BucketName"
+    },
+    "BucketPrefix": {
+     "$ref": "#/definitions/BucketPrefix"
+    },
+    "FailOnFirstError": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "EventBridgeDestinationProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "ErrorHandlingConfig": {
+     "$ref": "#/definitions/ErrorHandlingConfig"
+    },
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "FileType": {
+   "enum": [
+    "CSV",
+    "JSON",
+    "PARQUET"
+   ],
+   "type": "string"
+  },
+  "GlueDataCatalog": {
+   "additionalProperties": false,
+   "properties": {
+    "DatabaseName": {
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 512,
+     "minLength": 0,
+     "pattern": "arn:aws:iam:.*:[0-9]+:.*",
+     "type": "string"
+    },
+    "TablePrefix": {
+     "maxLength": 128,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn",
+    "DatabaseName",
+    "TablePrefix"
+   ],
+   "type": "object"
+  },
+  "GoogleAnalyticsConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "BETWEEN"
+   ],
+   "type": "string"
+  },
+  "GoogleAnalyticsSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "IncludeAllVersions": {
+   "type": "boolean"
+  },
+  "IncludeDeletedRecords": {
+   "type": "boolean"
+  },
+  "IncludeRenditions": {
+   "type": "boolean"
+  },
+  "IncludeSourceFiles": {
+   "type": "boolean"
+  },
+  "IncrementalPullConfig": {
+   "properties": {
+    "DatetimeTypeFieldName": {
+     "$ref": "#/definitions/DatetimeTypeFieldName"
+    }
+   },
+   "type": "object"
+  },
+  "InforNexusConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "BETWEEN",
+    "EQUAL_TO",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "InforNexusSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "LookoutMetricsDestinationProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "type": "object"
+  },
+  "MarketoConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "LESS_THAN",
+    "GREATER_THAN",
+    "BETWEEN",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "MarketoDestinationProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "ErrorHandlingConfig": {
+     "$ref": "#/definitions/ErrorHandlingConfig"
+    },
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "MarketoSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "MetadataCatalogConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "GlueDataCatalog": {
+     "$ref": "#/definitions/GlueDataCatalog"
+    }
+   },
+   "type": "object"
+  },
+  "Name": {
+   "maxLength": 128,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "Object": {
+   "maxLength": 512,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "Operator": {
+   "enum": [
+    "PROJECTION",
+    "LESS_THAN",
+    "GREATER_THAN",
+    "CONTAINS",
+    "BETWEEN",
+    "LESS_THAN_OR_EQUAL_TO",
+    "GREATER_THAN_OR_EQUAL_TO",
+    "EQUAL_TO",
+    "NOT_EQUAL_TO",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "OperatorPropertiesKeys": {
+   "enum": [
+    "VALUE",
+    "VALUES",
+    "DATA_TYPE",
+    "UPPER_BOUND",
+    "LOWER_BOUND",
+    "SOURCE_DATA_TYPE",
+    "DESTINATION_DATA_TYPE",
+    "VALIDATION_ACTION",
+    "MASK_VALUE",
+    "MASK_LENGTH",
+    "TRUNCATE_LENGTH",
+    "MATH_OPERATION_FIELDS_ORDER",
+    "CONCAT_FORMAT",
+    "SUBFIELD_CATEGORY_MAP",
+    "EXCLUDE_SOURCE_FIELDS_LIST",
+    "INCLUDE_NEW_FIELDS",
+    "ORDERED_PARTITION_KEYS_LIST"
+   ],
+   "type": "string"
+  },
+  "PardotConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "EQUAL_TO",
+    "NO_OP",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC"
+   ],
+   "type": "string"
+  },
+  "PardotSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "PathPrefix": {
+   "enum": [
+    "EXECUTION_ID",
+    "SCHEMA_VERSION"
+   ],
+   "type": "string"
+  },
+  "PathPrefixHierarchy": {
+   "items": {
+    "$ref": "#/definitions/PathPrefix"
+   },
+   "type": "array"
+  },
+  "PrefixConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "PathPrefixHierarchy": {
+     "$ref": "#/definitions/PathPrefixHierarchy"
+    },
+    "PrefixFormat": {
+     "$ref": "#/definitions/PrefixFormat"
+    },
+    "PrefixType": {
+     "$ref": "#/definitions/PrefixType"
+    }
+   },
+   "type": "object"
+  },
+  "PrefixFormat": {
+   "enum": [
+    "YEAR",
+    "MONTH",
+    "DAY",
+    "HOUR",
+    "MINUTE"
+   ],
+   "type": "string"
+  },
+  "PrefixType": {
+   "enum": [
+    "FILENAME",
+    "PATH",
+    "PATH_AND_FILENAME"
+   ],
+   "type": "string"
+  },
+  "PreserveSourceDataTyping": {
+   "type": "boolean"
+  },
+  "RedshiftDestinationProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketPrefix": {
+     "$ref": "#/definitions/BucketPrefix"
+    },
+    "ErrorHandlingConfig": {
+     "$ref": "#/definitions/ErrorHandlingConfig"
+    },
+    "IntermediateBucketName": {
+     "$ref": "#/definitions/BucketName"
+    },
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object",
+    "IntermediateBucketName"
+   ],
+   "type": "object"
+  },
+  "S3ConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "LESS_THAN",
+    "GREATER_THAN",
+    "BETWEEN",
+    "LESS_THAN_OR_EQUAL_TO",
+    "GREATER_THAN_OR_EQUAL_TO",
+    "EQUAL_TO",
+    "NOT_EQUAL_TO",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "S3DestinationProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "$ref": "#/definitions/BucketName"
+    },
+    "BucketPrefix": {
+     "$ref": "#/definitions/BucketPrefix"
+    },
+    "S3OutputFormatConfig": {
+     "$ref": "#/definitions/S3OutputFormatConfig"
+    }
+   },
+   "required": [
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "S3InputFormatConfig": {
+   "properties": {
+    "S3InputFileType": {
+     "enum": [
+      "CSV",
+      "JSON"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "S3OutputFormatConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AggregationConfig": {
+     "$ref": "#/definitions/AggregationConfig"
+    },
+    "FileType": {
+     "$ref": "#/definitions/FileType"
+    },
+    "PrefixConfig": {
+     "$ref": "#/definitions/PrefixConfig"
+    },
+    "PreserveSourceDataTyping": {
+     "$ref": "#/definitions/PreserveSourceDataTyping"
+    }
+   },
+   "type": "object"
+  },
+  "S3SourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "$ref": "#/definitions/BucketName"
+    },
+    "BucketPrefix": {
+     "$ref": "#/definitions/BucketPrefix"
+    },
+    "S3InputFormatConfig": {
+     "$ref": "#/definitions/S3InputFormatConfig"
+    }
+   },
+   "required": [
+    "BucketName",
+    "BucketPrefix"
+   ],
+   "type": "object"
+  },
+  "SAPODataConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "LESS_THAN",
+    "CONTAINS",
+    "GREATER_THAN",
+    "BETWEEN",
+    "LESS_THAN_OR_EQUAL_TO",
+    "GREATER_THAN_OR_EQUAL_TO",
+    "EQUAL_TO",
+    "NOT_EQUAL_TO",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "SAPODataDestinationProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "ErrorHandlingConfig": {
+     "$ref": "#/definitions/ErrorHandlingConfig"
+    },
+    "IdFieldNames": {
+     "items": {
+      "maxLength": 128,
+      "pattern": "\\S+",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ObjectPath": {
+     "$ref": "#/definitions/Object"
+    },
+    "SuccessResponseHandlingConfig": {
+     "$ref": "#/definitions/SuccessResponseHandlingConfig"
+    },
+    "WriteOperationType": {
+     "$ref": "#/definitions/WriteOperationType"
+    }
+   },
+   "required": [
+    "ObjectPath"
+   ],
+   "type": "object"
+  },
+  "SAPODataMaxPageSize": {
+   "maximum": 10000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "SAPODataMaxParallelism": {
+   "maximum": 10,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "SAPODataPaginationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "maxPageSize": {
+     "$ref": "#/definitions/SAPODataMaxPageSize"
+    }
+   },
+   "required": [
+    "maxPageSize"
+   ],
+   "type": "object"
+  },
+  "SAPODataParallelismConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "maxParallelism": {
+     "$ref": "#/definitions/SAPODataMaxParallelism"
+    }
+   },
+   "required": [
+    "maxParallelism"
+   ],
+   "type": "object"
+  },
+  "SAPODataSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "ObjectPath": {
+     "$ref": "#/definitions/Object"
+    },
+    "paginationConfig": {
+     "$ref": "#/definitions/SAPODataPaginationConfig"
+    },
+    "parallelismConfig": {
+     "$ref": "#/definitions/SAPODataParallelismConfig"
+    }
+   },
+   "required": [
+    "ObjectPath"
+   ],
+   "type": "object"
+  },
+  "SalesforceConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "LESS_THAN",
+    "CONTAINS",
+    "GREATER_THAN",
+    "BETWEEN",
+    "LESS_THAN_OR_EQUAL_TO",
+    "GREATER_THAN_OR_EQUAL_TO",
+    "EQUAL_TO",
+    "NOT_EQUAL_TO",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "SalesforceDestinationProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "DataTransferApi": {
+     "$ref": "#/definitions/DataTransferApi"
+    },
+    "ErrorHandlingConfig": {
+     "$ref": "#/definitions/ErrorHandlingConfig"
+    },
+    "IdFieldNames": {
+     "items": {
+      "maxLength": 128,
+      "pattern": "\\S+",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Object": {
+     "$ref": "#/definitions/Object"
+    },
+    "WriteOperationType": {
+     "$ref": "#/definitions/WriteOperationType"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "SalesforceSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "DataTransferApi": {
+     "$ref": "#/definitions/DataTransferApi"
+    },
+    "EnableDynamicFieldUpdate": {
+     "$ref": "#/definitions/EnableDynamicFieldUpdate"
+    },
+    "IncludeDeletedRecords": {
+     "$ref": "#/definitions/IncludeDeletedRecords"
+    },
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "ScheduledTriggerProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "DataPullMode": {
+     "enum": [
+      "Incremental",
+      "Complete"
+     ],
+     "type": "string"
+    },
+    "FirstExecutionFrom": {
+     "type": "number"
+    },
+    "FlowErrorDeactivationThreshold": {
+     "maximum": 100,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ScheduleEndTime": {
+     "type": "number"
+    },
+    "ScheduleExpression": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ScheduleOffset": {
+     "maximum": 36000,
+     "minimum": 0,
+     "type": "number"
+    },
+    "ScheduleStartTime": {
+     "type": "number"
+    },
+    "TimeZone": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ScheduleExpression"
+   ],
+   "type": "object"
+  },
+  "ServiceNowConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "LESS_THAN",
+    "CONTAINS",
+    "GREATER_THAN",
+    "BETWEEN",
+    "LESS_THAN_OR_EQUAL_TO",
+    "GREATER_THAN_OR_EQUAL_TO",
+    "EQUAL_TO",
+    "NOT_EQUAL_TO",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "ServiceNowSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "SingularConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "EQUAL_TO",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "SingularSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "SlackConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "BETWEEN",
+    "EQUAL_TO",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "SlackSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "SnowflakeDestinationProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketPrefix": {
+     "$ref": "#/definitions/BucketPrefix"
+    },
+    "ErrorHandlingConfig": {
+     "$ref": "#/definitions/ErrorHandlingConfig"
+    },
+    "IntermediateBucketName": {
+     "$ref": "#/definitions/BucketName"
+    },
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object",
+    "IntermediateBucketName"
+   ],
+   "type": "object"
+  },
+  "SourceConnectorProperties": {
+   "properties": {
+    "Amplitude": {
+     "$ref": "#/definitions/AmplitudeSourceProperties"
+    },
+    "CustomConnector": {
+     "$ref": "#/definitions/CustomConnectorSourceProperties"
+    },
+    "Datadog": {
+     "$ref": "#/definitions/DatadogSourceProperties"
+    },
+    "Dynatrace": {
+     "$ref": "#/definitions/DynatraceSourceProperties"
+    },
+    "GoogleAnalytics": {
+     "$ref": "#/definitions/GoogleAnalyticsSourceProperties"
+    },
+    "InforNexus": {
+     "$ref": "#/definitions/InforNexusSourceProperties"
+    },
+    "Marketo": {
+     "$ref": "#/definitions/MarketoSourceProperties"
+    },
+    "Pardot": {
+     "$ref": "#/definitions/PardotSourceProperties"
+    },
+    "S3": {
+     "$ref": "#/definitions/S3SourceProperties"
+    },
+    "SAPOData": {
+     "$ref": "#/definitions/SAPODataSourceProperties"
+    },
+    "Salesforce": {
+     "$ref": "#/definitions/SalesforceSourceProperties"
+    },
+    "ServiceNow": {
+     "$ref": "#/definitions/ServiceNowSourceProperties"
+    },
+    "Singular": {
+     "$ref": "#/definitions/SingularSourceProperties"
+    },
+    "Slack": {
+     "$ref": "#/definitions/SlackSourceProperties"
+    },
+    "Trendmicro": {
+     "$ref": "#/definitions/TrendmicroSourceProperties"
+    },
+    "Veeva": {
+     "$ref": "#/definitions/VeevaSourceProperties"
+    },
+    "Zendesk": {
+     "$ref": "#/definitions/ZendeskSourceProperties"
+    }
+   },
+   "type": "object"
+  },
+  "SourceFlowConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ApiVersion": {
+     "$ref": "#/definitions/ApiVersion"
+    },
+    "ConnectorProfileName": {
+     "$ref": "#/definitions/ConnectorProfileName"
+    },
+    "ConnectorType": {
+     "$ref": "#/definitions/ConnectorType"
+    },
+    "IncrementalPullConfig": {
+     "$ref": "#/definitions/IncrementalPullConfig"
+    },
+    "SourceConnectorProperties": {
+     "$ref": "#/definitions/SourceConnectorProperties"
+    }
+   },
+   "required": [
+    "ConnectorType",
+    "SourceConnectorProperties"
+   ],
+   "type": "object"
+  },
+  "Status": {
+   "enum": [
+    "Active",
+    "Draft",
+    "Errored",
+    "Suspended"
+   ],
+   "type": "string"
+  },
+  "SuccessResponseHandlingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "$ref": "#/definitions/BucketName"
+    },
+    "BucketPrefix": {
+     "$ref": "#/definitions/BucketPrefix"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TargetFileSize": {
+   "type": "integer"
+  },
+  "Task": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectorOperator": {
+     "$ref": "#/definitions/ConnectorOperator"
+    },
+    "DestinationField": {
+     "maxLength": 256,
+     "type": "string"
+    },
+    "SourceFields": {
+     "items": {
+      "maxLength": 2048,
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "TaskProperties": {
+     "items": {
+      "$ref": "#/definitions/TaskPropertiesObject"
+     },
+     "type": "array"
+    },
+    "TaskType": {
+     "$ref": "#/definitions/TaskType"
+    }
+   },
+   "required": [
+    "SourceFields",
+    "TaskType"
+   ],
+   "type": "object"
+  },
+  "TaskPropertiesObject": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "$ref": "#/definitions/OperatorPropertiesKeys"
+    },
+    "Value": {
+     "maxLength": 2048,
+     "pattern": ".+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TaskType": {
+   "enum": [
+    "Arithmetic",
+    "Filter",
+    "Map",
+    "Map_all",
+    "Mask",
+    "Merge",
+    "Passthrough",
+    "Truncate",
+    "Validate",
+    "Partition"
+   ],
+   "type": "string"
+  },
+  "TrendmicroConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "EQUAL_TO",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "TrendmicroSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "TriggerConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "TriggerProperties": {
+     "$ref": "#/definitions/ScheduledTriggerProperties"
+    },
+    "TriggerType": {
+     "$ref": "#/definitions/TriggerType"
+    }
+   },
+   "required": [
+    "TriggerType"
+   ],
+   "type": "object"
+  },
+  "TriggerType": {
+   "enum": [
+    "Scheduled",
+    "Event",
+    "OnDemand"
+   ],
+   "type": "string"
+  },
+  "UpsolverBucketName": {
+   "maxLength": 63,
+   "minLength": 16,
+   "pattern": "^(upsolver-appflow)\\S*",
+   "type": "string"
+  },
+  "UpsolverDestinationProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "$ref": "#/definitions/UpsolverBucketName"
+    },
+    "BucketPrefix": {
+     "$ref": "#/definitions/BucketPrefix"
+    },
+    "S3OutputFormatConfig": {
+     "$ref": "#/definitions/UpsolverS3OutputFormatConfig"
+    }
+   },
+   "required": [
+    "BucketName",
+    "S3OutputFormatConfig"
+   ],
+   "type": "object"
+  },
+  "UpsolverS3OutputFormatConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AggregationConfig": {
+     "$ref": "#/definitions/AggregationConfig"
+    },
+    "FileType": {
+     "$ref": "#/definitions/FileType"
+    },
+    "PrefixConfig": {
+     "$ref": "#/definitions/PrefixConfig"
+    }
+   },
+   "required": [
+    "PrefixConfig"
+   ],
+   "type": "object"
+  },
+  "VeevaConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "LESS_THAN",
+    "GREATER_THAN",
+    "BETWEEN",
+    "LESS_THAN_OR_EQUAL_TO",
+    "GREATER_THAN_OR_EQUAL_TO",
+    "EQUAL_TO",
+    "NOT_EQUAL_TO",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "VeevaSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "DocumentType": {
+     "$ref": "#/definitions/DocumentType"
+    },
+    "IncludeAllVersions": {
+     "$ref": "#/definitions/IncludeAllVersions"
+    },
+    "IncludeRenditions": {
+     "$ref": "#/definitions/IncludeRenditions"
+    },
+    "IncludeSourceFiles": {
+     "$ref": "#/definitions/IncludeSourceFiles"
+    },
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "WriteOperationType": {
+   "enum": [
+    "INSERT",
+    "UPSERT",
+    "UPDATE",
+    "DELETE"
+   ],
+   "type": "string"
+  },
+  "ZendeskConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "GREATER_THAN",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "ZendeskDestinationProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "ErrorHandlingConfig": {
+     "$ref": "#/definitions/ErrorHandlingConfig"
+    },
+    "IdFieldNames": {
+     "items": {
+      "maxLength": 128,
+      "pattern": "\\S+",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Object": {
+     "$ref": "#/definitions/Object"
+    },
+    "WriteOperationType": {
+     "$ref": "#/definitions/WriteOperationType"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "ZendeskSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FlowName"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 2048,
+   "pattern": "[\\w!@#\\-.?,\\s]*",
+   "type": "string"
+  },
+  "DestinationFlowConfigList": {
+   "items": {
+    "$ref": "#/definitions/DestinationFlowConfig"
+   },
+   "type": "array"
+  },
+  "FlowArn": {
+   "maxLength": 512,
+   "pattern": "arn:aws:appflow:.*:[0-9]+:.*",
+   "type": "string"
+  },
+  "FlowName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9][\\w!@#.-]+",
+   "type": "string"
+  },
+  "FlowStatus": {
+   "enum": [
+    "Active",
+    "Suspended",
+    "Draft"
+   ],
+   "type": "string"
+  },
+  "KMSArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:aws:kms:.*:[0-9]+:.*",
+   "type": "string"
+  },
+  "MetadataCatalogConfig": {
+   "$ref": "#/definitions/MetadataCatalogConfig"
+  },
+  "SourceFlowConfig": {
+   "$ref": "#/definitions/SourceFlowConfig"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "Tasks": {
+   "items": {
+    "$ref": "#/definitions/Task"
+   },
+   "type": "array"
+  },
+  "TriggerConfig": {
+   "$ref": "#/definitions/TriggerConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/FlowArn"
+ ],
+ "required": [
+  "FlowName",
+  "Tasks",
+  "SourceFlowConfig",
+  "DestinationFlowConfigList",
+  "TriggerConfig"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/appflow/latest/userguide/what-is-appflow.html",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::AppFlow::Flow"
+}

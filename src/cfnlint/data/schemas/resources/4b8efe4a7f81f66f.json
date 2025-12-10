@@ -1,0 +1,653 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/EventBusName"
+ ],
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "AppSyncParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "GraphQLOperation": {
+     "maxLength": 1048576,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "GraphQLOperation"
+   ],
+   "type": "object"
+  },
+  "AwsVpcConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AssignPublicIp": {
+     "enum": [
+      "DISABLED",
+      "ENABLED"
+     ],
+     "type": "string"
+    },
+    "SecurityGroups": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": true,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Subnets": {
+     "format": "AWS::EC2::Subnet.Ids",
+     "insertionOrder": true,
+     "items": {
+      "format": "AWS::EC2::Subnet.Id",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Subnets"
+   ],
+   "type": "object"
+  },
+  "BatchArrayProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Size": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "BatchParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ArrayProperties": {
+     "$ref": "#/definitions/BatchArrayProperties"
+    },
+    "JobDefinition": {
+     "type": "string"
+    },
+    "JobName": {
+     "type": "string"
+    },
+    "RetryStrategy": {
+     "$ref": "#/definitions/BatchRetryStrategy"
+    }
+   },
+   "required": [
+    "JobName",
+    "JobDefinition"
+   ],
+   "type": "object"
+  },
+  "BatchRetryStrategy": {
+   "additionalProperties": false,
+   "properties": {
+    "Attempts": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "CapacityProviderStrategyItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Base": {
+     "maximum": 100000,
+     "type": "integer"
+    },
+    "CapacityProvider": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Weight": {
+     "maximum": 1000,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "CapacityProvider"
+   ],
+   "type": "object"
+  },
+  "DeadLetterConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "maxLength": 1600,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EcsParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "CapacityProviderStrategy": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/CapacityProviderStrategyItem"
+     },
+     "maxItems": 6,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "EnableECSManagedTags": {
+     "type": "boolean"
+    },
+    "EnableExecuteCommand": {
+     "type": "boolean"
+    },
+    "Group": {
+     "type": "string"
+    },
+    "LaunchType": {
+     "enum": [
+      "EC2",
+      "EXTERNAL",
+      "FARGATE"
+     ],
+     "type": "string"
+    },
+    "NetworkConfiguration": {
+     "$ref": "#/definitions/NetworkConfiguration"
+    },
+    "PlacementConstraints": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/PlacementConstraint"
+     },
+     "maxItems": 10,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "PlacementStrategies": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/PlacementStrategy"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "PlatformVersion": {
+     "type": "string"
+    },
+    "PropagateTags": {
+     "enum": [
+      "TASK_DEFINITION"
+     ],
+     "type": "string"
+    },
+    "ReferenceId": {
+     "maxLength": 1024,
+     "type": "string"
+    },
+    "TagList": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "TaskCount": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "TaskDefinitionArn": {
+     "maxLength": 1600,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "TaskDefinitionArn"
+   ],
+   "type": "object"
+  },
+  "HttpParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "HeaderParameters": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "PathParameterValues": {
+     "insertionOrder": true,
+     "items": {
+      "pattern": "^(?!\\s*$).+",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "QueryStringParameters": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "InputTransformer": {
+   "additionalProperties": false,
+   "properties": {
+    "InputPathsMap": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "InputTemplate": {
+     "maxLength": 8192,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "InputTemplate"
+   ],
+   "type": "object"
+  },
+  "KinesisParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "PartitionKeyPath": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "PartitionKeyPath"
+   ],
+   "type": "object"
+  },
+  "NetworkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsVpcConfiguration": {
+     "$ref": "#/definitions/AwsVpcConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "PlacementConstraint": {
+   "additionalProperties": false,
+   "properties": {
+    "Expression": {
+     "maxLength": 2000,
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "distinctInstance",
+      "memberOf"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PlacementStrategy": {
+   "additionalProperties": false,
+   "properties": {
+    "Field": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RedshiftDataParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Database": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "DbUser": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SecretManagerArn": {
+     "maxLength": 1600,
+     "minLength": 1,
+     "pattern": "(^arn:aws([a-z]|\\-)*:secretsmanager:[a-z0-9-.]+:.*)|(\\$(\\.[\\w_-]+(\\[(\\d+|\\*)\\])*)*)",
+     "type": "string"
+    },
+    "Sql": {
+     "maxLength": 100000,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Sqls": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 100000,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 40,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "StatementName": {
+     "maxLength": 500,
+     "minLength": 1,
+     "type": "string"
+    },
+    "WithEvent": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Database"
+   ],
+   "type": "object"
+  },
+  "RetryPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "MaximumEventAgeInSeconds": {
+     "maximum": 86400,
+     "minimum": 60,
+     "type": "integer"
+    },
+    "MaximumRetryAttempts": {
+     "maximum": 185,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "RunCommandParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "RunCommandTargets": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/RunCommandTarget"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "RunCommandTargets"
+   ],
+   "type": "object"
+  },
+  "RunCommandTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*$",
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 256,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Values",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "SageMakerPipelineParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 1024,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "SageMakerPipelineParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "PipelineParameterList": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/SageMakerPipelineParameter"
+     },
+     "maxItems": 200,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "SqsParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "MessageGroupId": {
+     "maxLength": 100,
+     "type": "string"
+    }
+   },
+   "required": [
+    "MessageGroupId"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Target": {
+   "additionalProperties": false,
+   "properties": {
+    "AppSyncParameters": {
+     "$ref": "#/definitions/AppSyncParameters"
+    },
+    "Arn": {
+     "maxLength": 1600,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BatchParameters": {
+     "$ref": "#/definitions/BatchParameters"
+    },
+    "DeadLetterConfig": {
+     "$ref": "#/definitions/DeadLetterConfig"
+    },
+    "EcsParameters": {
+     "$ref": "#/definitions/EcsParameters"
+    },
+    "HttpParameters": {
+     "$ref": "#/definitions/HttpParameters"
+    },
+    "Id": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "[\\.\\-_A-Za-z0-9]+",
+     "type": "string"
+    },
+    "Input": {
+     "maxLength": 8192,
+     "type": "string"
+    },
+    "InputPath": {
+     "maxLength": 256,
+     "type": "string"
+    },
+    "InputTransformer": {
+     "$ref": "#/definitions/InputTransformer"
+    },
+    "KinesisParameters": {
+     "$ref": "#/definitions/KinesisParameters"
+    },
+    "RedshiftDataParameters": {
+     "$ref": "#/definitions/RedshiftDataParameters"
+    },
+    "RetryPolicy": {
+     "$ref": "#/definitions/RetryPolicy"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 1600,
+     "minLength": 1,
+     "type": "string"
+    },
+    "RunCommandParameters": {
+     "$ref": "#/definitions/RunCommandParameters"
+    },
+    "SageMakerPipelineParameters": {
+     "$ref": "#/definitions/SageMakerPipelineParameters"
+    },
+    "SqsParameters": {
+     "$ref": "#/definitions/SqsParameters"
+    }
+   },
+   "required": [
+    "Id",
+    "Arn"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 512,
+   "type": "string"
+  },
+  "EventBusName": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "pattern": "(arn:aws[\\w-]*:events:[a-z]+-[a-z]+-[\\w-]+:[0-9]{12}:event-bus\\/)?[/\\.\\-_A-Za-z0-9]+",
+   "type": "string"
+  },
+  "EventPattern": {
+   "maxLength": 4096,
+   "type": [
+    "string",
+    "object"
+   ]
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[\\.\\-_A-Za-z0-9]+",
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 1600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ScheduleExpression": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "State": {
+   "enum": [
+    "DISABLED",
+    "ENABLED",
+    "ENABLED_WITH_ALL_CLOUDTRAIL_MANAGEMENT_EVENTS"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Targets": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Target"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "requiredOr": [
+  "EventPattern",
+  "ScheduleExpression"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Events::Rule"
+}

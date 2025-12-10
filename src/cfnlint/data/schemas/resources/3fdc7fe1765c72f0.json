@@ -1,0 +1,153 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AppId",
+  "/properties/DomainName"
+ ],
+ "definitions": {
+  "Certificate": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateArn": {
+     "pattern": "\"^arn:aws:acm:[a-z0-9-]+:\\d{12}:certificate\\/.+$\"",
+     "type": "string"
+    },
+    "CertificateType": {
+     "enum": [
+      "AMPLIFY_MANAGED",
+      "CUSTOM"
+     ],
+     "type": "string"
+    },
+    "CertificateVerificationDNSRecord": {
+     "maxLength": 1000,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CertificateSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateType": {
+     "enum": [
+      "AMPLIFY_MANAGED",
+      "CUSTOM"
+     ],
+     "type": "string"
+    },
+    "CustomCertificateArn": {
+     "maxLength": 1000,
+     "pattern": "^arn:aws:acm:[a-z0-9-]+:\\d{12}:certificate\\/.+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SubDomainSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "BranchName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "(?s).+",
+     "type": "string"
+    },
+    "Prefix": {
+     "maxLength": 255,
+     "pattern": "(?s).*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Prefix",
+    "BranchName"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AppId": {
+   "maxLength": 20,
+   "minLength": 1,
+   "pattern": "d[a-z0-9]+",
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 1000,
+   "pattern": "(?s).*",
+   "type": "string"
+  },
+  "AutoSubDomainCreationPatterns": {
+   "items": {
+    "maxLength": 2048,
+    "minLength": 1,
+    "pattern": "(?s).+",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "AutoSubDomainIAMRole": {
+   "maxLength": 1000,
+   "pattern": "^$|^arn:.+:iam::\\d{12}:role.+",
+   "type": "string"
+  },
+  "Certificate": {
+   "$ref": "#/definitions/Certificate"
+  },
+  "CertificateRecord": {
+   "maxLength": 1000,
+   "type": "string"
+  },
+  "CertificateSettings": {
+   "$ref": "#/definitions/CertificateSettings"
+  },
+  "DomainName": {
+   "maxLength": 255,
+   "pattern": "^(((?!-)[A-Za-z0-9-]{0,62}[A-Za-z0-9])\\.)+((?!-)[A-Za-z0-9-]{1,62}[A-Za-z0-9])(\\.)?$",
+   "type": "string"
+  },
+  "DomainStatus": {
+   "type": "string"
+  },
+  "EnableAutoSubDomain": {
+   "type": "boolean"
+  },
+  "StatusReason": {
+   "maxLength": 1000,
+   "type": "string"
+  },
+  "SubDomainSettings": {
+   "items": {
+    "$ref": "#/definitions/SubDomainSetting"
+   },
+   "maxItems": 255,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "UpdateStatus": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/DomainStatus",
+  "/properties/StatusReason",
+  "/properties/CertificateRecord",
+  "/properties/Certificate",
+  "/properties/UpdateStatus"
+ ],
+ "required": [
+  "AppId",
+  "DomainName",
+  "SubDomainSettings"
+ ],
+ "typeName": "AWS::Amplify::Domain",
+ "writeOnlyProperties": [
+  "/properties/CertificateSettings"
+ ]
+}

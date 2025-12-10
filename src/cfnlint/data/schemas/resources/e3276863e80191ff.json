@@ -1,0 +1,114 @@
+{
+ "$schema": "https://raw.githubusercontent.com/aws-cloudformation/cloudformation-resource-schema/master/src/main/resources/schema/provider.definition.schema.v1.json",
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationName",
+  "/properties/EnvironmentId",
+  "/properties/PlatformArn",
+  "/properties/SolutionStackName",
+  "/properties/SourceConfiguration"
+ ],
+ "definitions": {
+  "ConfigurationOptionSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "Namespace": {
+     "type": "string"
+    },
+    "OptionName": {
+     "type": "string"
+    },
+    "ResourceName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Namespace",
+    "OptionName"
+   ],
+   "type": "object"
+  },
+  "SourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationName": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TemplateName": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "TemplateName",
+    "ApplicationName"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationName",
+  "/properties/TemplateName"
+ ],
+ "properties": {
+  "ApplicationName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 200,
+   "type": "string"
+  },
+  "EnvironmentId": {
+   "type": "string"
+  },
+  "OptionSettings": {
+   "arrayType": "AttributeList",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ConfigurationOptionSetting"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PlatformArn": {
+   "type": "string"
+  },
+  "SolutionStackName": {
+   "type": "string"
+  },
+  "SourceConfiguration": {
+   "$ref": "#/definitions/SourceConfiguration"
+  },
+  "TemplateName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TemplateName"
+ ],
+ "required": [
+  "ApplicationName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticbeanstalk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ElasticBeanstalk::ConfigurationTemplate",
+ "writeOnlyProperties": [
+  "/properties/EnvironmentId",
+  "/properties/SourceConfiguration/ApplicationName",
+  "/properties/SourceConfiguration/TemplateName"
+ ]
+}

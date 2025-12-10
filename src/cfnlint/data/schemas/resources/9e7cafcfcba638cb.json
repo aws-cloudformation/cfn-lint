@@ -1,0 +1,101 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/DatasetType",
+  "/properties/DatasetGroupArn",
+  "/properties/SchemaArn"
+ ],
+ "definitions": {
+  "DatasetImportJob": {
+   "additionalProperties": false,
+   "properties": {
+    "DataSource": {
+     "additionalProperties": false,
+     "properties": {
+      "DataLocation": {
+       "maxLength": 256,
+       "pattern": "(s3|http|https)://.+",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "DatasetArn": {
+     "maxLength": 256,
+     "pattern": "arn:([a-z\\d-]+):personalize:.*:.*:.+",
+     "type": "string"
+    },
+    "DatasetImportJobArn": {
+     "maxLength": 256,
+     "pattern": "arn:([a-z\\d-]+):personalize:.*:.*:.+",
+     "type": "string"
+    },
+    "JobName": {
+     "maxLength": 63,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\-_]*",
+     "type": "string"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 256,
+     "pattern": "arn:([a-z\\d-]+):iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DatasetArn"
+ ],
+ "properties": {
+  "DatasetArn": {
+   "maxLength": 256,
+   "pattern": "arn:([a-z\\d-]+):personalize:.*:.*:.+",
+   "type": "string"
+  },
+  "DatasetGroupArn": {
+   "maxLength": 256,
+   "pattern": "arn:([a-z\\d-]+):personalize:.*:.*:.+",
+   "type": "string"
+  },
+  "DatasetImportJob": {
+   "$ref": "#/definitions/DatasetImportJob"
+  },
+  "DatasetType": {
+   "enum": [
+    "Interactions",
+    "Items",
+    "Users"
+   ],
+   "maxLength": 256,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\-_]*",
+   "type": "string"
+  },
+  "SchemaArn": {
+   "maxLength": 256,
+   "pattern": "arn:([a-z\\d-]+):personalize:.*:.*:.+",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DatasetArn"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "Name",
+  "DatasetType",
+  "DatasetGroupArn",
+  "SchemaArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-personalize",
+ "taggable": false,
+ "typeName": "AWS::Personalize::Dataset"
+}

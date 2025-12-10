@@ -1,0 +1,180 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SchemaName"
+ ],
+ "definitions": {
+  "AttributeName": {
+   "maxLength": 255,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z_0-9- \\t]*$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 0,
+   "type": "string"
+  },
+  "EntityName": {
+   "maxLength": 255,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z_0-9-]*$",
+   "type": "string"
+  },
+  "HasWorkflows": {
+   "type": "boolean"
+  },
+  "Hashed": {
+   "type": "boolean"
+  },
+  "MappedInputFields": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SchemaInputAttribute"
+   },
+   "maxItems": 35,
+   "minItems": 2,
+   "type": "array"
+  },
+  "SchemaAttributeType": {
+   "enum": [
+    "NAME",
+    "NAME_FIRST",
+    "NAME_MIDDLE",
+    "NAME_LAST",
+    "ADDRESS",
+    "ADDRESS_STREET1",
+    "ADDRESS_STREET2",
+    "ADDRESS_STREET3",
+    "ADDRESS_CITY",
+    "ADDRESS_STATE",
+    "ADDRESS_COUNTRY",
+    "ADDRESS_POSTALCODE",
+    "PHONE",
+    "PHONE_NUMBER",
+    "PHONE_COUNTRYCODE",
+    "EMAIL_ADDRESS",
+    "UNIQUE_ID",
+    "DATE",
+    "STRING",
+    "PROVIDER_ID"
+   ],
+   "type": "string"
+  },
+  "SchemaInputAttribute": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldName": {
+     "$ref": "#/definitions/AttributeName"
+    },
+    "GroupName": {
+     "$ref": "#/definitions/AttributeName"
+    },
+    "Hashed": {
+     "$ref": "#/definitions/Hashed"
+    },
+    "MatchKey": {
+     "$ref": "#/definitions/AttributeName"
+    },
+    "SubType": {
+     "maxLength": 255,
+     "pattern": "[a-zA-Z_0-9- ]*",
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/SchemaAttributeType"
+    }
+   },
+   "required": [
+    "FieldName",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "SchemaMappingArn": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):entityresolution:.*:[0-9]+:(schemamapping/.*)$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SchemaName"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "$ref": "#/definitions/CreatedAt"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "HasWorkflows": {
+   "$ref": "#/definitions/HasWorkflows"
+  },
+  "MappedInputFields": {
+   "$ref": "#/definitions/MappedInputFields"
+  },
+  "SchemaArn": {
+   "$ref": "#/definitions/SchemaMappingArn"
+  },
+  "SchemaName": {
+   "$ref": "#/definitions/EntityName"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdatedAt": {
+   "$ref": "#/definitions/UpdatedAt"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SchemaArn",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/HasWorkflows"
+ ],
+ "required": [
+  "SchemaName",
+  "MappedInputFields"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-entity-resolution.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EntityResolution::SchemaMapping"
+}

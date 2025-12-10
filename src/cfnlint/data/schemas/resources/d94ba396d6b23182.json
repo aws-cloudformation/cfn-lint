@@ -1,0 +1,172 @@
+{
+ "$schema": "https://schema.cloudformation.us-east-1.amazonaws.com/provider.definition.schema.v1.json",
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "GameProperty": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 32,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 96,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "AcceptanceRequired": {
+   "type": "boolean"
+  },
+  "AcceptanceTimeoutSeconds": {
+   "maximum": 600,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "AdditionalPlayerCount": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Arn": {
+   "pattern": "^arn:.*:matchmakingconfiguration\\/[a-zA-Z0-9-\\.]*",
+   "type": "string"
+  },
+  "BackfillMode": {
+   "enum": [
+    "AUTOMATIC",
+    "MANUAL"
+   ],
+   "type": "string"
+  },
+  "CreationTime": {
+   "type": "string"
+  },
+  "CustomEventData": {
+   "maxLength": 256,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FlexMatchMode": {
+   "enum": [
+    "STANDALONE",
+    "WITH_QUEUE"
+   ],
+   "type": "string"
+  },
+  "GameProperties": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/GameProperty"
+   },
+   "maxItems": 16,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "GameSessionData": {
+   "maxLength": 4096,
+   "minLength": 1,
+   "type": "string"
+  },
+  "GameSessionQueueArns": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 256,
+    "minLength": 1,
+    "pattern": "[a-zA-Z0-9:/-]+",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "maxLength": 128,
+   "pattern": "[a-zA-Z0-9-\\.]*",
+   "type": "string"
+  },
+  "NotificationTarget": {
+   "maxLength": 300,
+   "minLength": 0,
+   "pattern": "[a-zA-Z0-9:_/-]*(.fifo)?",
+   "type": "string"
+  },
+  "RequestTimeoutSeconds": {
+   "maximum": 43200,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "RuleSetArn": {
+   "pattern": "^arn:.*:matchmakingruleset\\/[a-zA-Z0-9-\\.]*",
+   "type": "string"
+  },
+  "RuleSetName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9-\\.]*",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "AcceptanceRequired",
+  "Name",
+  "RequestTimeoutSeconds",
+  "RuleSetName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-gamelift.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GameLift::MatchmakingConfiguration"
+}

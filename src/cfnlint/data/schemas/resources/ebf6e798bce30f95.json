@@ -1,0 +1,259 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ServiceName"
+ ],
+ "definitions": {
+  "Container": {
+   "additionalProperties": false,
+   "properties": {
+    "Command": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ContainerName": {
+     "type": "string"
+    },
+    "Environment": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/EnvironmentVariable"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Image": {
+     "type": "string"
+    },
+    "Ports": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/PortInfo"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "ContainerServiceDeployment": {
+   "additionalProperties": false,
+   "properties": {
+    "Containers": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Container"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "PublicEndpoint": {
+     "$ref": "#/definitions/PublicEndpoint"
+    }
+   },
+   "type": "object"
+  },
+  "EnvironmentVariable": {
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Variable": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HealthCheckConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "HealthyThreshold": {
+     "type": "integer"
+    },
+    "IntervalSeconds": {
+     "type": "integer"
+    },
+    "Path": {
+     "type": "string"
+    },
+    "SuccessCodes": {
+     "type": "string"
+    },
+    "TimeoutSeconds": {
+     "type": "integer"
+    },
+    "UnhealthyThreshold": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "PortInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "Port": {
+     "type": "string"
+    },
+    "Protocol": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PrivateRegistryAccess": {
+   "additionalProperties": false,
+   "properties": {
+    "EcrImagePullerRole": {
+     "additionalProperties": false,
+     "properties": {
+      "IsActive": {
+       "type": "boolean"
+      },
+      "PrincipalArn": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "PublicDomainName": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateName": {
+     "type": "string"
+    },
+    "DomainNames": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "PublicEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerName": {
+     "type": "string"
+    },
+    "ContainerPort": {
+     "type": "integer"
+    },
+    "HealthCheckConfig": {
+     "$ref": "#/definitions/HealthCheckConfig"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ServiceName"
+ ],
+ "properties": {
+  "ContainerArn": {
+   "type": "string"
+  },
+  "ContainerServiceDeployment": {
+   "$ref": "#/definitions/ContainerServiceDeployment"
+  },
+  "IsDisabled": {
+   "type": "boolean"
+  },
+  "Power": {
+   "enum": [
+    "large",
+    "medium",
+    "micro",
+    "nano",
+    "small",
+    "xlarge"
+   ],
+   "type": "string"
+  },
+  "PrincipalArn": {
+   "type": "string"
+  },
+  "PrivateRegistryAccess": {
+   "$ref": "#/definitions/PrivateRegistryAccess"
+  },
+  "PublicDomainNames": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PublicDomainName"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Scale": {
+   "maximum": 20,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ServiceName": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-z0-9]{1,2}|[a-z0-9][a-z0-9-]+[a-z0-9]$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Url": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ContainerArn",
+  "/properties/Url",
+  "/properties/PrincipalArn",
+  "/properties/PrivateRegistryAccess/EcrImagePullerRole/PrincipalArn"
+ ],
+ "required": [
+  "ServiceName",
+  "Power",
+  "Scale"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Lightsail::Container"
+}

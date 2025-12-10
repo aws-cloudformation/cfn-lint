@@ -1,0 +1,79 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/EgressCidrBlocks",
+  "/properties/Networks"
+ ],
+ "definitions": {
+  "GatewayNetwork": {
+   "additionalProperties": false,
+   "properties": {
+    "CidrBlock": {
+     "format": "ipv4-network",
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "CidrBlock"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GatewayArn"
+ ],
+ "properties": {
+  "EgressCidrBlocks": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "GatewayArn": {
+   "type": "string"
+  },
+  "GatewayState": {
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "UPDATING",
+    "ERROR",
+    "DELETING",
+    "DELETED"
+   ],
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Networks": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/GatewayNetwork"
+   },
+   "maxItems": 4,
+   "minItems": 1,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/GatewayArn",
+  "/properties/GatewayState"
+ ],
+ "required": [
+  "Name",
+  "EgressCidrBlocks",
+  "Networks"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::MediaConnect::Gateway"
+}

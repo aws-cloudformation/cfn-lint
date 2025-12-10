@@ -1,0 +1,98 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SourceLocationName",
+  "/properties/VodSourceName"
+ ],
+ "definitions": {
+  "HttpPackageConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Path": {
+     "type": "string"
+    },
+    "SourceGroup": {
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/Type"
+    }
+   },
+   "required": [
+    "Path",
+    "SourceGroup",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Type": {
+   "enum": [
+    "DASH",
+    "HLS"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SourceLocationName",
+  "/properties/VodSourceName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "HttpPackageConfigurations": {
+   "items": {
+    "$ref": "#/definitions/HttpPackageConfiguration"
+   },
+   "type": "array"
+  },
+  "SourceLocationName": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VodSourceName": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "HttpPackageConfigurations",
+  "SourceLocationName",
+  "VodSourceName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediatailor",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaTailor::VodSource"
+}

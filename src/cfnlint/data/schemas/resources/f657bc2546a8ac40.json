@@ -1,0 +1,129 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PartnerAccountId"
+ ],
+ "definitions": {
+  "SidewalkAccountInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "AppServerPrivateKey": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "pattern": "[a-fA-F0-9]{64}",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AppServerPrivateKey"
+   ],
+   "type": "object"
+  },
+  "SidewalkAccountInfoWithFingerprint": {
+   "additionalProperties": false,
+   "properties": {
+    "AmazonId": {
+     "maxLength": 2048,
+     "type": "string"
+    },
+    "Arn": {
+     "type": "string"
+    },
+    "Fingerprint": {
+     "maxLength": 64,
+     "minLength": 64,
+     "pattern": "[a-fA-F0-9]{64}",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SidewalkUpdateAccount": {
+   "additionalProperties": false,
+   "properties": {
+    "AppServerPrivateKey": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "pattern": "[a-fA-F0-9]{64}",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PartnerAccountId"
+ ],
+ "properties": {
+  "AccountLinked": {
+   "type": "boolean"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "Fingerprint": {
+   "type": "string"
+  },
+  "PartnerAccountId": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "PartnerType": {
+   "enum": [
+    "Sidewalk"
+   ],
+   "type": "string"
+  },
+  "Sidewalk": {
+   "$ref": "#/definitions/SidewalkAccountInfo"
+  },
+  "SidewalkResponse": {
+   "$ref": "#/definitions/SidewalkAccountInfoWithFingerprint"
+  },
+  "SidewalkUpdate": {
+   "$ref": "#/definitions/SidewalkUpdateAccount"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Fingerprint"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTWireless::PartnerAccount",
+ "writeOnlyProperties": [
+  "/properties/SidewalkUpdate",
+  "/properties/Sidewalk"
+ ]
+}

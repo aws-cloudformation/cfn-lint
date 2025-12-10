@@ -1,0 +1,126 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/OutpostArn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CreationTime": {
+   "maxLength": 40,
+   "minLength": 20,
+   "type": "string"
+  },
+  "CreatorRequestId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InstanceCount": {
+   "maximum": 256,
+   "minimum": 4,
+   "type": "integer"
+  },
+  "ModificationTime": {
+   "maxLength": 40,
+   "minLength": 20,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OutpostArn": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^arn:aws([a-z-]+)?:outposts:[a-z\\d-]+:\\d{12}:outpost/op-[a-f0-9]{17}$",
+   "type": "string"
+  },
+  "PreferredInstanceType": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "CREATING",
+    "OPERATIONAL",
+    "DELETING",
+    "UPDATING",
+    "ACTION_NEEDED",
+    "FAILED_CREATION",
+    "FAILED_DELETION"
+   ],
+   "type": "string"
+  },
+  "StatusMessage": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/Status",
+  "/properties/StatusMessage",
+  "/properties/CreationTime",
+  "/properties/ModificationTime",
+  "/properties/CreatorRequestId"
+ ],
+ "required": [
+  "OutpostArn",
+  "PreferredInstanceType",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Route53Resolver::OutpostResolver"
+}

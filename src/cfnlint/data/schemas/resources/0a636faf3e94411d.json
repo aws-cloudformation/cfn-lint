@@ -1,0 +1,296 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ApplicationSource": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudFormationStackARN": {
+     "type": "string"
+    },
+    "TagFilters": {
+     "items": {
+      "$ref": "#/definitions/TagFilter"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "CustomizedLoadMetricSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Dimensions": {
+     "items": {
+      "$ref": "#/definitions/MetricDimension"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "MetricName": {
+     "type": "string"
+    },
+    "Namespace": {
+     "type": "string"
+    },
+    "Statistic": {
+     "type": "string"
+    },
+    "Unit": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "MetricName",
+    "Statistic",
+    "Namespace"
+   ],
+   "type": "object"
+  },
+  "CustomizedScalingMetricSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Dimensions": {
+     "items": {
+      "$ref": "#/definitions/MetricDimension"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "MetricName": {
+     "type": "string"
+    },
+    "Namespace": {
+     "type": "string"
+    },
+    "Statistic": {
+     "type": "string"
+    },
+    "Unit": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "MetricName",
+    "Statistic",
+    "Namespace"
+   ],
+   "type": "object"
+  },
+  "MetricDimension": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "PredefinedLoadMetricSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "PredefinedLoadMetricType": {
+     "type": "string"
+    },
+    "ResourceLabel": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PredefinedLoadMetricType"
+   ],
+   "type": "object"
+  },
+  "PredefinedScalingMetricSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "PredefinedScalingMetricType": {
+     "type": "string"
+    },
+    "ResourceLabel": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PredefinedScalingMetricType"
+   ],
+   "type": "object"
+  },
+  "ScalingInstruction": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomizedLoadMetricSpecification": {
+     "$ref": "#/definitions/CustomizedLoadMetricSpecification"
+    },
+    "DisableDynamicScaling": {
+     "type": "boolean"
+    },
+    "MaxCapacity": {
+     "type": "integer"
+    },
+    "MinCapacity": {
+     "type": "integer"
+    },
+    "PredefinedLoadMetricSpecification": {
+     "$ref": "#/definitions/PredefinedLoadMetricSpecification"
+    },
+    "PredictiveScalingMaxCapacityBehavior": {
+     "enum": [
+      "SetForecastCapacityToMaxCapacity",
+      "SetMaxCapacityAboveForecastCapacity",
+      "SetMaxCapacityToForecastCapacity"
+     ],
+     "type": "string"
+    },
+    "PredictiveScalingMaxCapacityBuffer": {
+     "type": "integer"
+    },
+    "PredictiveScalingMode": {
+     "enum": [
+      "ForecastAndScale",
+      "ForecastOnly"
+     ],
+     "type": "string"
+    },
+    "ResourceId": {
+     "type": "string"
+    },
+    "ScalableDimension": {
+     "enum": [
+      "autoscaling:autoScalingGroup:DesiredCapacity",
+      "dynamodb:index:ReadCapacityUnits",
+      "dynamodb:index:WriteCapacityUnits",
+      "dynamodb:table:ReadCapacityUnits",
+      "dynamodb:table:WriteCapacityUnits",
+      "ec2:spot-fleet-request:TargetCapacity",
+      "ecs:service:DesiredCount",
+      "rds:cluster:ReadReplicaCount"
+     ],
+     "type": "string"
+    },
+    "ScalingPolicyUpdateBehavior": {
+     "type": "string"
+    },
+    "ScheduledActionBufferTime": {
+     "type": "integer"
+    },
+    "ServiceNamespace": {
+     "enum": [
+      "autoscaling",
+      "dynamodb",
+      "ec2",
+      "ecs",
+      "rds"
+     ],
+     "type": "string"
+    },
+    "TargetTrackingConfigurations": {
+     "items": {
+      "$ref": "#/definitions/TargetTrackingConfiguration"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "ResourceId",
+    "ServiceNamespace",
+    "ScalableDimension",
+    "MinCapacity",
+    "TargetTrackingConfigurations",
+    "MaxCapacity"
+   ],
+   "type": "object"
+  },
+  "TagFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Values": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TargetTrackingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomizedScalingMetricSpecification": {
+     "$ref": "#/definitions/CustomizedScalingMetricSpecification"
+    },
+    "DisableScaleIn": {
+     "type": "boolean"
+    },
+    "EstimatedInstanceWarmup": {
+     "type": "integer"
+    },
+    "PredefinedScalingMetricSpecification": {
+     "$ref": "#/definitions/PredefinedScalingMetricSpecification"
+    },
+    "ScaleInCooldown": {
+     "type": "integer"
+    },
+    "ScaleOutCooldown": {
+     "type": "integer"
+    },
+    "TargetValue": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "TargetValue"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ApplicationSource": {
+   "$ref": "#/definitions/ApplicationSource"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "ScalingInstructions": {
+   "items": {
+    "$ref": "#/definitions/ScalingInstruction"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ScalingPlanName": {
+   "type": "string"
+  },
+  "ScalingPlanVersion": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/ScalingPlanVersion",
+  "/properties/ScalingPlanName"
+ ],
+ "required": [
+  "ApplicationSource",
+  "ScalingInstructions"
+ ],
+ "typeName": "AWS::AutoScalingPlans::ScalingPlan"
+}

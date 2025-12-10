@@ -1,0 +1,96 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "AccelerationSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "Mode": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Mode"
+   ],
+   "type": "object"
+  },
+  "HopDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "Priority": {
+     "type": "integer"
+    },
+    "Queue": {
+     "type": "string"
+    },
+    "WaitMinutes": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AccelerationSettings": {
+   "$ref": "#/definitions/AccelerationSettings"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "Category": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "HopDestinations": {
+   "items": {
+    "$ref": "#/definitions/HopDestination"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Priority": {
+   "type": "integer"
+  },
+  "Queue": {
+   "type": "string"
+  },
+  "SettingsJson": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "StatusUpdateInterval": {
+   "type": "string"
+  },
+  "Tags": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "SettingsJson"
+ ],
+ "typeName": "AWS::MediaConvert::JobTemplate"
+}

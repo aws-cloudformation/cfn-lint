@@ -1,0 +1,238 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainConfigurationName",
+  "/properties/DomainName",
+  "/properties/ServiceType",
+  "/properties/ValidationCertificateArn",
+  "/properties/ServerCertificateArns"
+ ],
+ "definitions": {
+  "AuthorizerConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowAuthorizerOverride": {
+     "type": "boolean"
+    },
+    "DefaultAuthorizerName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[\\w=,@-]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ClientCertificateConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientCertificateCallbackArn": {
+     "maxLength": 170,
+     "minLength": 1,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ServerCertificateConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableOCSPCheck": {
+     "type": "boolean"
+    },
+    "OcspAuthorizedResponderArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:aws(-cn|-us-gov|-iso-b|-iso)?:acm:[a-z]{2}-(gov-|iso-|isob-)?[a-z]{4,9}-\\d{1}:\\d{12}:certificate/[a-zA-Z0-9/-]+$",
+     "type": "string"
+    },
+    "OcspLambdaArn": {
+     "maxLength": 170,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ServerCertificateSummary": {
+   "additionalProperties": false,
+   "properties": {
+    "ServerCertificateArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:aws(-cn|-us-gov|-iso-b|-iso)?:acm:[a-z]{2}-(gov-|iso-|isob-)?[a-z]{4,9}-\\d{1}:\\d{12}:certificate/[a-zA-Z0-9/-]+$",
+     "type": "string"
+    },
+    "ServerCertificateStatus": {
+     "enum": [
+      "INVALID",
+      "VALID"
+     ],
+     "type": "string"
+    },
+    "ServerCertificateStatusDetail": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TlsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityPolicy": {
+     "maxLength": 128,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainConfigurationName"
+ ],
+ "properties": {
+  "ApplicationProtocol": {
+   "enum": [
+    "SECURE_MQTT",
+    "MQTT_WSS",
+    "HTTPS",
+    "DEFAULT"
+   ],
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "AuthenticationType": {
+   "enum": [
+    "AWS_X509",
+    "CUSTOM_AUTH",
+    "AWS_SIGV4",
+    "CUSTOM_AUTH_X509",
+    "DEFAULT"
+   ],
+   "type": "string"
+  },
+  "AuthorizerConfig": {
+   "$ref": "#/definitions/AuthorizerConfig"
+  },
+  "ClientCertificateConfig": {
+   "$ref": "#/definitions/ClientCertificateConfig"
+  },
+  "DomainConfigurationName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[\\w.-]+$",
+   "type": "string"
+  },
+  "DomainConfigurationStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "DomainName": {
+   "maxLength": 253,
+   "minLength": 1,
+   "pattern": "[\\s\\S]*",
+   "type": "string"
+  },
+  "DomainType": {
+   "enum": [
+    "ENDPOINT",
+    "AWS_MANAGED",
+    "CUSTOMER_MANAGED"
+   ],
+   "type": "string"
+  },
+  "ServerCertificateArns": {
+   "insertionOrder": true,
+   "items": {
+    "maxLength": 2048,
+    "minLength": 1,
+    "pattern": "^arn:aws(-cn|-us-gov|-iso-b|-iso)?:acm:[a-z]{2}-(gov-|iso-|isob-)?[a-z]{4,9}-\\d{1}:\\d{12}:certificate/[a-zA-Z0-9/-]+$",
+    "type": "string"
+   },
+   "maxItems": 1,
+   "minItems": 0,
+   "type": "array"
+  },
+  "ServerCertificateConfig": {
+   "$ref": "#/definitions/ServerCertificateConfig"
+  },
+  "ServerCertificates": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/ServerCertificateSummary"
+   },
+   "type": "array"
+  },
+  "ServiceType": {
+   "enum": [
+    "DATA",
+    "CREDENTIAL_PROVIDER",
+    "JOBS"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TlsConfig": {
+   "$ref": "#/definitions/TlsConfig"
+  },
+  "ValidationCertificateArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(-cn|-us-gov|-iso-b|-iso)?:acm:[a-z]{2}-(gov-|iso-|isob-)?[a-z]{4,9}-\\d{1}:\\d{12}:certificate/[a-zA-Z0-9/-]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/DomainType",
+  "/properties/ServerCertificates"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::DomainConfiguration",
+ "writeOnlyProperties": [
+  "/properties/ValidationCertificateArn",
+  "/properties/ServerCertificateArns"
+ ]
+}

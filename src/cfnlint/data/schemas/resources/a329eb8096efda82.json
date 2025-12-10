@@ -1,0 +1,181 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/FleetType"
+ ],
+ "definitions": {
+  "ComputeCapacity": {
+   "additionalProperties": false,
+   "properties": {
+    "DesiredInstances": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "DesiredInstances"
+   ],
+   "type": "object"
+  },
+  "DomainJoinInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "DirectoryName": {
+     "type": "string"
+    },
+    "OrganizationalUnitDistinguishedName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Bucket": {
+     "type": "string"
+    },
+    "S3Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3Bucket",
+    "S3Key"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SubnetIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ComputeCapacity": {
+   "$ref": "#/definitions/ComputeCapacity"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DisconnectTimeoutInSeconds": {
+   "maximum": 360000,
+   "minimum": 60,
+   "type": "integer"
+  },
+  "DisplayName": {
+   "type": "string"
+  },
+  "DomainJoinInfo": {
+   "$ref": "#/definitions/DomainJoinInfo"
+  },
+  "EnableDefaultInternetAccess": {
+   "type": "boolean"
+  },
+  "FleetType": {
+   "type": "string"
+  },
+  "IamRoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "IdleDisconnectTimeoutInSeconds": {
+   "maximum": 3600,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "ImageArn": {
+   "type": "string"
+  },
+  "ImageName": {
+   "type": "string"
+  },
+  "InstanceType": {
+   "type": "string"
+  },
+  "MaxConcurrentSessions": {
+   "type": "integer"
+  },
+  "MaxUserDurationInSeconds": {
+   "maximum": 360000,
+   "minimum": 600,
+   "type": "integer"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Platform": {
+   "type": "string"
+  },
+  "SessionScriptS3Location": {
+   "$ref": "#/definitions/S3Location"
+  },
+  "StreamView": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "UsbDeviceFilterStrings": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcConfig": {
+   "$ref": "#/definitions/VpcConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "InstanceType",
+  "Name"
+ ],
+ "typeName": "AWS::AppStream::Fleet"
+}

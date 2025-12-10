@@ -1,0 +1,119 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Logging"
+ ],
+ "definitions": {
+  "Logging": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ProfileId"
+ ],
+ "properties": {
+  "BusinessName": {
+   "maxLength": 254,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Email": {
+   "maxLength": 254,
+   "minLength": 5,
+   "pattern": "^[\\w\\.\\-]+@[\\w\\.\\-]+$",
+   "type": "string"
+  },
+  "LogGroupName": {
+   "format": "AWS::Logs::LogGroup.Name",
+   "maxLength": 512,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Logging": {
+   "$ref": "#/definitions/Logging"
+  },
+  "ModifiedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 254,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Phone": {
+   "maxLength": 22,
+   "minLength": 7,
+   "pattern": "^\\+?([0-9 \\t\\-()\\/]{7,})(?:\\s*(?:#|x\\.?|ext\\.?|extension) \\t*(\\d+))?$",
+   "type": "string"
+  },
+  "ProfileArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ProfileId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/LogGroupName",
+  "/properties/ModifiedAt",
+  "/properties/ProfileArn",
+  "/properties/ProfileId"
+ ],
+ "required": [
+  "BusinessName",
+  "Logging",
+  "Name",
+  "Phone"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::B2BI::Profile"
+}

@@ -1,0 +1,126 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyArn"
+ ],
+ "definitions": {
+  "ArchiveRetention": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "RetentionPeriod": {
+       "$ref": "#/definitions/RetentionPeriod"
+      }
+     },
+     "required": [
+      "RetentionPeriod"
+     ],
+     "title": "RetentionPeriod",
+     "type": "object"
+    }
+   ]
+  },
+  "ArchiveState": {
+   "enum": [
+    "ACTIVE",
+    "PENDING_DELETION"
+   ],
+   "type": "string"
+  },
+  "RetentionPeriod": {
+   "enum": [
+    "THREE_MONTHS",
+    "SIX_MONTHS",
+    "NINE_MONTHS",
+    "ONE_YEAR",
+    "EIGHTEEN_MONTHS",
+    "TWO_YEARS",
+    "THIRTY_MONTHS",
+    "THREE_YEARS",
+    "FOUR_YEARS",
+    "FIVE_YEARS",
+    "SIX_YEARS",
+    "SEVEN_YEARS",
+    "EIGHT_YEARS",
+    "NINE_YEARS",
+    "TEN_YEARS",
+    "PERMANENT"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9/_\\+=\\.:@\\-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9/_\\+=\\.:@\\-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ArchiveId"
+ ],
+ "properties": {
+  "ArchiveArn": {
+   "type": "string"
+  },
+  "ArchiveId": {
+   "maxLength": 66,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ArchiveName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*[a-zA-Z0-9]$",
+   "type": "string"
+  },
+  "ArchiveState": {
+   "$ref": "#/definitions/ArchiveState"
+  },
+  "KmsKeyArn": {
+   "pattern": "^arn:aws(|-cn|-us-gov):kms:[a-z0-9-]{1,20}:[0-9]{12}:(key|alias)/.+$",
+   "type": "string"
+  },
+  "Retention": {
+   "$ref": "#/definitions/ArchiveRetention"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ArchiveArn",
+  "/properties/ArchiveId",
+  "/properties/ArchiveState"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses-mailmanager",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SES::MailManagerArchive"
+}

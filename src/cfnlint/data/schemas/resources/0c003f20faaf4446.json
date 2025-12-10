@@ -1,0 +1,88 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TenantName"
+ ],
+ "definitions": {
+  "ResourceAssociation": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceArn": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TenantName"
+ ],
+ "properties": {
+  "Arn": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResourceAssociations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ResourceAssociation"
+   },
+   "minItems": 0,
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "TenantName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[\\w\\-_]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "TenantName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SES::Tenant"
+}

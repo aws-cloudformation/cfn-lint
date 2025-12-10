@@ -1,0 +1,142 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SourceLocationName"
+ ],
+ "definitions": {
+  "AccessConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessType": {
+     "$ref": "#/definitions/AccessType"
+    },
+    "SecretsManagerAccessTokenConfiguration": {
+     "$ref": "#/definitions/SecretsManagerAccessTokenConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "AccessType": {
+   "enum": [
+    "S3_SIGV4",
+    "SECRETS_MANAGER_ACCESS_TOKEN",
+    "AUTODETECT_SIGV4"
+   ],
+   "type": "string"
+  },
+  "DefaultSegmentDeliveryConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BaseUrl": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HttpConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BaseUrl": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "BaseUrl"
+   ],
+   "type": "object"
+  },
+  "SecretsManagerAccessTokenConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "HeaderName": {
+     "type": "string"
+    },
+    "SecretArn": {
+     "type": "string"
+    },
+    "SecretStringKey": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SegmentDeliveryConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BaseUrl": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SourceLocationName"
+ ],
+ "properties": {
+  "AccessConfiguration": {
+   "$ref": "#/definitions/AccessConfiguration"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "DefaultSegmentDeliveryConfiguration": {
+   "$ref": "#/definitions/DefaultSegmentDeliveryConfiguration"
+  },
+  "HttpConfiguration": {
+   "$ref": "#/definitions/HttpConfiguration"
+  },
+  "SegmentDeliveryConfigurations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SegmentDeliveryConfiguration"
+   },
+   "type": "array"
+  },
+  "SourceLocationName": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "HttpConfiguration",
+  "SourceLocationName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaTailor::SourceLocation"
+}

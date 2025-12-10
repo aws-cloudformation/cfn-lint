@@ -1,0 +1,467 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ConnectorName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConnectorDescription",
+  "/properties/ConnectorName",
+  "/properties/KafkaCluster",
+  "/properties/KafkaClusterClientAuthentication",
+  "/properties/KafkaClusterEncryptionInTransit",
+  "/properties/KafkaConnectVersion",
+  "/properties/LogDelivery",
+  "/properties/Plugins",
+  "/properties/ServiceExecutionRoleArn",
+  "/properties/WorkerConfiguration"
+ ],
+ "definitions": {
+  "ApacheKafkaCluster": {
+   "additionalProperties": false,
+   "properties": {
+    "BootstrapServers": {
+     "type": "string"
+    },
+    "Vpc": {
+     "$ref": "#/definitions/Vpc"
+    }
+   },
+   "required": [
+    "BootstrapServers",
+    "Vpc"
+   ],
+   "type": "object"
+  },
+  "AutoScaling": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxWorkerCount": {
+     "type": "integer"
+    },
+    "McuCount": {
+     "enum": [
+      1,
+      2,
+      4,
+      8
+     ],
+     "maximum": 8,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MinWorkerCount": {
+     "type": "integer"
+    },
+    "ScaleInPolicy": {
+     "$ref": "#/definitions/ScaleInPolicy"
+    },
+    "ScaleOutPolicy": {
+     "$ref": "#/definitions/ScaleOutPolicy"
+    }
+   },
+   "required": [
+    "MaxWorkerCount",
+    "MinWorkerCount",
+    "ScaleInPolicy",
+    "ScaleOutPolicy",
+    "McuCount"
+   ],
+   "type": "object"
+  },
+  "Capacity": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "AutoScaling"
+     ]
+    },
+    {
+     "required": [
+      "ProvisionedCapacity"
+     ]
+    }
+   ],
+   "properties": {
+    "AutoScaling": {
+     "$ref": "#/definitions/AutoScaling"
+    },
+    "ProvisionedCapacity": {
+     "$ref": "#/definitions/ProvisionedCapacity"
+    }
+   },
+   "type": "object"
+  },
+  "CloudWatchLogsLogDelivery": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "LogGroup": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "CustomPlugin": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomPluginArn": {
+     "pattern": "arn:(aws|aws-us-gov|aws-cn):kafkaconnect:.*",
+     "type": "string"
+    },
+    "Revision": {
+     "format": "int64",
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "CustomPluginArn",
+    "Revision"
+   ],
+   "type": "object"
+  },
+  "FirehoseLogDelivery": {
+   "additionalProperties": false,
+   "properties": {
+    "DeliveryStream": {
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "KafkaCluster": {
+   "additionalProperties": false,
+   "properties": {
+    "ApacheKafkaCluster": {
+     "$ref": "#/definitions/ApacheKafkaCluster"
+    }
+   },
+   "required": [
+    "ApacheKafkaCluster"
+   ],
+   "type": "object"
+  },
+  "KafkaClusterClientAuthentication": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthenticationType": {
+     "$ref": "#/definitions/KafkaClusterClientAuthenticationType"
+    }
+   },
+   "required": [
+    "AuthenticationType"
+   ],
+   "type": "object"
+  },
+  "KafkaClusterClientAuthenticationType": {
+   "enum": [
+    "NONE",
+    "IAM"
+   ],
+   "type": "string"
+  },
+  "KafkaClusterEncryptionInTransit": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionType": {
+     "$ref": "#/definitions/KafkaClusterEncryptionInTransitType"
+    }
+   },
+   "required": [
+    "EncryptionType"
+   ],
+   "type": "object"
+  },
+  "KafkaClusterEncryptionInTransitType": {
+   "enum": [
+    "PLAINTEXT",
+    "TLS"
+   ],
+   "type": "string"
+  },
+  "LogDelivery": {
+   "additionalProperties": false,
+   "properties": {
+    "WorkerLogDelivery": {
+     "$ref": "#/definitions/WorkerLogDelivery"
+    }
+   },
+   "required": [
+    "WorkerLogDelivery"
+   ],
+   "type": "object"
+  },
+  "Plugin": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomPlugin": {
+     "$ref": "#/definitions/CustomPlugin"
+    }
+   },
+   "required": [
+    "CustomPlugin"
+   ],
+   "type": "object"
+  },
+  "ProvisionedCapacity": {
+   "additionalProperties": false,
+   "properties": {
+    "McuCount": {
+     "enum": [
+      1,
+      2,
+      4,
+      8
+     ],
+     "maximum": 8,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "WorkerCount": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "WorkerCount"
+   ],
+   "type": "object"
+  },
+  "S3LogDelivery": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "Prefix": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "ScaleInPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "CpuUtilizationPercentage": {
+     "maximum": 100,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "CpuUtilizationPercentage"
+   ],
+   "type": "object"
+  },
+  "ScaleOutPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "CpuUtilizationPercentage": {
+     "maximum": 100,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "CpuUtilizationPercentage"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Vpc": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroups": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Subnets": {
+     "format": "AWS::EC2::Subnet.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::Subnet.Id",
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "SecurityGroups",
+    "Subnets"
+   ],
+   "type": "object"
+  },
+  "WorkerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Revision": {
+     "format": "int64",
+     "minimum": 1,
+     "type": "integer"
+    },
+    "WorkerConfigurationArn": {
+     "pattern": "arn:(aws|aws-us-gov|aws-cn):kafkaconnect:.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Revision",
+    "WorkerConfigurationArn"
+   ],
+   "type": "object"
+  },
+  "WorkerLogDelivery": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogs": {
+     "$ref": "#/definitions/CloudWatchLogsLogDelivery"
+    },
+    "Firehose": {
+     "$ref": "#/definitions/FirehoseLogDelivery"
+    },
+    "S3": {
+     "$ref": "#/definitions/S3LogDelivery"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConnectorArn"
+ ],
+ "properties": {
+  "Capacity": {
+   "$ref": "#/definitions/Capacity"
+  },
+  "ConnectorArn": {
+   "pattern": "arn:(aws|aws-us-gov|aws-cn):kafkaconnect:.*",
+   "type": "string"
+  },
+  "ConnectorConfiguration": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".*": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ConnectorDescription": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "ConnectorName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "KafkaCluster": {
+   "$ref": "#/definitions/KafkaCluster"
+  },
+  "KafkaClusterClientAuthentication": {
+   "$ref": "#/definitions/KafkaClusterClientAuthentication"
+  },
+  "KafkaClusterEncryptionInTransit": {
+   "$ref": "#/definitions/KafkaClusterEncryptionInTransit"
+  },
+  "KafkaConnectVersion": {
+   "type": "string"
+  },
+  "LogDelivery": {
+   "$ref": "#/definitions/LogDelivery"
+  },
+  "Plugins": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Plugin"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ServiceExecutionRoleArn": {
+   "pattern": "arn:(aws|aws-us-gov|aws-cn):iam:.*",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "WorkerConfiguration": {
+   "$ref": "#/definitions/WorkerConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConnectorArn"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "Capacity",
+  "ConnectorConfiguration",
+  "ConnectorName",
+  "KafkaConnectVersion",
+  "KafkaCluster",
+  "KafkaClusterClientAuthentication",
+  "KafkaClusterEncryptionInTransit",
+  "Plugins",
+  "ServiceExecutionRoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kafkaconnect.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::KafkaConnect::Connector"
+}

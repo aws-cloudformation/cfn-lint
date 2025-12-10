@@ -1,0 +1,123 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterName",
+  "/properties/VpcConfigs",
+  "/properties/ClientAuthentication",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "ClientAuthentication": {
+   "additionalProperties": false,
+   "properties": {
+    "Sasl": {
+     "$ref": "#/definitions/Sasl"
+    }
+   },
+   "required": [
+    "Sasl"
+   ],
+   "type": "object"
+  },
+  "Iam": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "Sasl": {
+   "additionalProperties": false,
+   "properties": {
+    "Iam": {
+     "$ref": "#/definitions/Iam"
+    }
+   },
+   "required": [
+    "Iam"
+   ],
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroups": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SubnetIds": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "SubnetIds"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ClientAuthentication": {
+   "$ref": "#/definitions/ClientAuthentication"
+  },
+  "ClusterName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VpcConfigs": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/VpcConfig"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "ClusterName",
+  "VpcConfigs",
+  "ClientAuthentication"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::MSK::ServerlessCluster"
+}

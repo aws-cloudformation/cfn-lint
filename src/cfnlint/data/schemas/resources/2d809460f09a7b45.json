@@ -1,0 +1,105 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Config"
+ ],
+ "definitions": {
+  "InsightSeveritiesFilterList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/InsightSeverity"
+   },
+   "maxItems": 3,
+   "minItems": 1,
+   "type": "array"
+  },
+  "InsightSeverity": {
+   "enum": [
+    "LOW",
+    "MEDIUM",
+    "HIGH"
+   ],
+   "type": "string"
+  },
+  "NotificationChannelConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Filters": {
+     "$ref": "#/definitions/NotificationFilterConfig"
+    },
+    "Sns": {
+     "$ref": "#/definitions/SnsChannelConfig"
+    }
+   },
+   "type": "object"
+  },
+  "NotificationFilterConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "MessageTypes": {
+     "$ref": "#/definitions/NotificationMessageTypesFilterList"
+    },
+    "Severities": {
+     "$ref": "#/definitions/InsightSeveritiesFilterList"
+    }
+   },
+   "type": "object"
+  },
+  "NotificationMessageType": {
+   "enum": [
+    "NEW_INSIGHT",
+    "CLOSED_INSIGHT",
+    "NEW_ASSOCIATION",
+    "SEVERITY_UPGRADED",
+    "NEW_RECOMMENDATION"
+   ],
+   "type": "string"
+  },
+  "NotificationMessageTypesFilterList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/NotificationMessageType"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array"
+  },
+  "SnsChannelConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "TopicArn": {
+     "maxLength": 1024,
+     "minLength": 36,
+     "pattern": "^arn:aws[a-z0-9-]*:sns:[a-z0-9-]+:\\d{12}:[^:]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Config": {
+   "$ref": "#/definitions/NotificationChannelConfig"
+  },
+  "Id": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Config"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-devops-guru",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::DevOpsGuru::NotificationChannel"
+}

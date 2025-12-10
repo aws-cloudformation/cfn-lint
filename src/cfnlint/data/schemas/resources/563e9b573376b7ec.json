@@ -1,0 +1,158 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ReplicationConfigIdentifier"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceIdentifier"
+ ],
+ "definitions": {
+  "ComputeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "type": "string"
+    },
+    "DnsNameServers": {
+     "type": "string"
+    },
+    "KmsKeyId": {
+     "type": "string"
+    },
+    "MaxCapacityUnits": {
+     "type": "integer"
+    },
+    "MinCapacityUnits": {
+     "type": "integer"
+    },
+    "MultiAZ": {
+     "type": "boolean"
+    },
+    "PreferredMaintenanceWindow": {
+     "type": "string"
+    },
+    "ReplicationSubnetGroupId": {
+     "type": "string"
+    },
+    "VpcSecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "MaxCapacityUnits"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ReplicationConfigArn"
+ ],
+ "properties": {
+  "ComputeConfig": {
+   "$ref": "#/definitions/ComputeConfig"
+  },
+  "ReplicationConfigArn": {
+   "type": "string"
+  },
+  "ReplicationConfigIdentifier": {
+   "type": "string"
+  },
+  "ReplicationSettings": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "ReplicationType": {
+   "enum": [
+    "full-load",
+    "full-load-and-cdc",
+    "cdc"
+   ],
+   "type": "string"
+  },
+  "ResourceIdentifier": {
+   "type": "string"
+  },
+  "SourceEndpointArn": {
+   "type": "string"
+  },
+  "SupplementalSettings": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "TableMappings": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 1,
+   "type": "array"
+  },
+  "TargetEndpointArn": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ReplicationConfigArn"
+ ],
+ "required": [
+  "ReplicationConfigIdentifier",
+  "SourceEndpointArn",
+  "TargetEndpointArn",
+  "ReplicationType",
+  "ComputeConfig",
+  "TableMappings"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-dms",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DMS::ReplicationConfig",
+ "writeOnlyProperties": [
+  "/properties/ResourceIdentifier"
+ ]
+}

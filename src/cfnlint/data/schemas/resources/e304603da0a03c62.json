@@ -1,0 +1,68 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "EmergencyContact": {
+   "additionalProperties": false,
+   "properties": {
+    "ContactNotes": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^[\\w\\s\\.\\-,:/()+@]*$",
+     "type": "string"
+    },
+    "EmailAddress": {
+     "maxLength": 150,
+     "minLength": 1,
+     "pattern": "^\\S+@\\S+\\.\\S+$",
+     "type": "string"
+    },
+    "PhoneNumber": {
+     "maxLength": 16,
+     "minLength": 1,
+     "pattern": "^\\+[1-9]\\d{1,14}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "EmailAddress"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccountId"
+ ],
+ "properties": {
+  "AccountId": {
+   "type": "string"
+  },
+  "EmergencyContactList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EmergencyContact"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
+  },
+  "ProactiveEngagementStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccountId"
+ ],
+ "required": [
+  "ProactiveEngagementStatus",
+  "EmergencyContactList"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-shield.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Shield::ProactiveEngagement"
+}

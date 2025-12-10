@@ -1,0 +1,117 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "IpPool": {
+   "additionalProperties": false,
+   "properties": {
+    "Cidr": {
+     "format": "ipv4-network",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "NetworkState": {
+   "enum": [
+    "CREATING",
+    "CREATE_FAILED",
+    "ACTIVE",
+    "DELETING",
+    "IDLE",
+    "IN_USE",
+    "UPDATING",
+    "DELETED",
+    "DELETE_FAILED"
+   ],
+   "type": "string"
+  },
+  "Route": {
+   "additionalProperties": false,
+   "properties": {
+    "Cidr": {
+     "format": "ipv4-network",
+     "type": "string"
+    },
+    "Gateway": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AssociatedClusterIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "IpPools": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IpPool"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Routes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Route"
+   },
+   "type": "array"
+  },
+  "State": {
+   "$ref": "#/definitions/NetworkState"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tags"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/State",
+  "/properties/AssociatedClusterIds"
+ ],
+ "required": [
+  "Name",
+  "IpPools"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaLive::Network"
+}

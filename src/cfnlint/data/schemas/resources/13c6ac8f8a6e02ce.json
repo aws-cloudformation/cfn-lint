@@ -1,0 +1,137 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ContactId"
+ ],
+ "definitions": {
+  "ChannelTargetInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "ChannelId": {
+     "type": "string"
+    },
+    "RetryIntervalInMinutes": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ChannelId",
+    "RetryIntervalInMinutes"
+   ],
+   "type": "object"
+  },
+  "ContactTargetInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "ContactId": {
+     "type": "string"
+    },
+    "IsEssential": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "ContactId",
+    "IsEssential"
+   ],
+   "type": "object"
+  },
+  "Stage": {
+   "additionalProperties": false,
+   "properties": {
+    "DurationInMinutes": {
+     "type": "integer"
+    },
+    "Targets": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Targets"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "DurationInMinutes"
+   ],
+   "type": "object"
+  },
+  "Targets": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "ChannelTargetInfo"
+     ]
+    },
+    {
+     "required": [
+      "ContactTargetInfo"
+     ]
+    }
+   ],
+   "properties": {
+    "ChannelTargetInfo": {
+     "$ref": "#/definitions/ChannelTargetInfo"
+    },
+    "ContactTargetInfo": {
+     "$ref": "#/definitions/ContactTargetInfo"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "ContactId",
+    "Stages"
+   ]
+  },
+  {
+   "required": [
+    "ContactId",
+    "RotationIds"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ContactId": {
+   "pattern": "arn:[-\\w+=\\/,.@]+:[-\\w+=\\/,.@]+:[-\\w+=\\/,.@]*:[0-9]+:([\\w+=\\/,.@:-]+)*",
+   "type": "string"
+  },
+  "RotationIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Stages": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Stage"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::SSMContacts::Plan",
+ "writeOnlyProperties": [
+  "/properties/RotationIds"
+ ]
+}

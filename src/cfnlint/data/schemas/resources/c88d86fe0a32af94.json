@@ -1,0 +1,305 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ServiceIdentifier",
+   "/properties/ListenerIdentifier",
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ListenerIdentifier",
+  "/properties/ServiceIdentifier",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Action": {
+   "additionalProperties": false,
+   "properties": {
+    "FixedResponse": {
+     "$ref": "#/definitions/FixedResponse"
+    },
+    "Forward": {
+     "$ref": "#/definitions/Forward"
+    }
+   },
+   "required": [],
+   "title": "Forward",
+   "type": "object"
+  },
+  "FixedResponse": {
+   "additionalProperties": false,
+   "properties": {
+    "StatusCode": {
+     "maximum": 599,
+     "minimum": 100,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "StatusCode"
+   ],
+   "type": "object"
+  },
+  "Forward": {
+   "additionalProperties": false,
+   "properties": {
+    "TargetGroups": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/WeightedTargetGroup"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "TargetGroups"
+   ],
+   "type": "object"
+  },
+  "HeaderMatch": {
+   "additionalProperties": false,
+   "properties": {
+    "CaseSensitive": {
+     "default": false,
+     "type": "boolean"
+    },
+    "Match": {
+     "$ref": "#/definitions/HeaderMatchType"
+    },
+    "Name": {
+     "maxLength": 40,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Match",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "HeaderMatchType": {
+   "additionalProperties": false,
+   "properties": {
+    "Contains": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Exact": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Prefix": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HttpMatch": {
+   "additionalProperties": false,
+   "properties": {
+    "HeaderMatches": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/HeaderMatch"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Method": {
+     "enum": [
+      "CONNECT",
+      "DELETE",
+      "GET",
+      "HEAD",
+      "OPTIONS",
+      "POST",
+      "PUT",
+      "TRACE"
+     ],
+     "maxLength": 16,
+     "type": "string"
+    },
+    "PathMatch": {
+     "$ref": "#/definitions/PathMatch"
+    }
+   },
+   "type": "object"
+  },
+  "Match": {
+   "additionalProperties": false,
+   "properties": {
+    "HttpMatch": {
+     "$ref": "#/definitions/HttpMatch"
+    }
+   },
+   "required": [
+    "HttpMatch"
+   ],
+   "title": "HttpMatch",
+   "type": "object"
+  },
+  "PathMatch": {
+   "additionalProperties": false,
+   "properties": {
+    "CaseSensitive": {
+     "default": false,
+     "type": "boolean"
+    },
+    "Match": {
+     "$ref": "#/definitions/PathMatchType"
+    }
+   },
+   "required": [
+    "Match"
+   ],
+   "type": "object"
+  },
+  "PathMatchType": {
+   "additionalProperties": false,
+   "properties": {
+    "Exact": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^\\/[a-zA-Z0-9@:%_+.~#?&\\/=-]*$",
+     "type": "string"
+    },
+    "Prefix": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^\\/[a-zA-Z0-9@:%_+.~#?&\\/=-]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "WeightedTargetGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "TargetGroupIdentifier": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^((tg-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:targetgroup/tg-[0-9a-z]{17}))$",
+     "type": "string"
+    },
+    "Weight": {
+     "maximum": 999,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "TargetGroupIdentifier"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Action": {
+   "$ref": "#/definitions/Action"
+  },
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:service/svc-[0-9a-z]{17}/listener/listener-[0-9a-z]{17}/rule/((rule-[0-9a-z]{17})|(default))$",
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 22,
+   "minLength": 7,
+   "pattern": "^((rule-[0-9a-z]{17})|(default))$",
+   "type": "string"
+  },
+  "ListenerIdentifier": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^((listener-[0-9a-z]{17})|(arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:service/svc-[0-9a-z]{17}/listener/listener-[0-9a-z]{17}))$",
+   "type": "string"
+  },
+  "Match": {
+   "$ref": "#/definitions/Match"
+  },
+  "Name": {
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "^(?!rule-)(?![-])(?!.*[-]$)(?!.*[-]{2})[a-z0-9-]+$",
+   "type": "string"
+  },
+  "Priority": {
+   "maximum": 100,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ServiceIdentifier": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^((svc-[0-9a-z]{17})|(arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:service/svc-[0-9a-z]{17}))$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/Action/Forward/TargetGroups/*/TargetGroupIdentifier": "$split(TargetGroupIdentifier, \"/\")[-1]"
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "Action",
+  "Match",
+  "Priority"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::VpcLattice::Rule",
+ "writeOnlyProperties": [
+  "/properties/ListenerIdentifier",
+  "/properties/ServiceIdentifier"
+ ]
+}

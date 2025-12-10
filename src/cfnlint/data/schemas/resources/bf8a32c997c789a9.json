@@ -1,0 +1,243 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/EventType",
+  "/properties/DatasetGroupArn",
+  "/properties/PerformAutoML",
+  "/properties/PerformHPO",
+  "/properties/RecipeArn",
+  "/properties/SolutionConfig"
+ ],
+ "definitions": {
+  "CategoricalHyperParameterRange": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 256,
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 1000,
+      "type": "string"
+     },
+     "maxItems": 100,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ContinuousHyperParameterRange": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxValue": {
+     "minimum": -1000000,
+     "type": "number"
+    },
+    "MinValue": {
+     "minimum": -1000000,
+     "type": "number"
+    },
+    "Name": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "IntegerHyperParameterRange": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxValue": {
+     "maximum": 1000000,
+     "type": "integer"
+    },
+    "MinValue": {
+     "minimum": -1000000,
+     "type": "integer"
+    },
+    "Name": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SolutionArn": {
+   "maxLength": 256,
+   "pattern": "arn:([a-z\\d-]+):personalize:.*:.*:.+",
+   "type": "string"
+  },
+  "SolutionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AlgorithmHyperParameters": {
+     "additionalProperties": false,
+     "maxProperties": 100,
+     "patternProperties": {
+      ".{1,}": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "AutoMLConfig": {
+     "additionalProperties": false,
+     "properties": {
+      "MetricName": {
+       "maxLength": 256,
+       "type": "string"
+      },
+      "RecipeList": {
+       "insertionOrder": true,
+       "items": {
+        "maxLength": 256,
+        "pattern": "arn:([a-z\\d-]+):personalize:.*:.*:.+",
+        "type": "string"
+       },
+       "maxItems": 100,
+       "type": "array"
+      }
+     },
+     "type": "object"
+    },
+    "EventValueThreshold": {
+     "maxLength": 256,
+     "type": "string"
+    },
+    "FeatureTransformationParameters": {
+     "additionalProperties": false,
+     "maxProperties": 100,
+     "patternProperties": {
+      ".{1,}": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "HpoConfig": {
+     "additionalProperties": false,
+     "properties": {
+      "AlgorithmHyperParameterRanges": {
+       "additionalProperties": false,
+       "properties": {
+        "CategoricalHyperParameterRanges": {
+         "insertionOrder": true,
+         "items": {
+          "$ref": "#/definitions/CategoricalHyperParameterRange"
+         },
+         "maxItems": 100,
+         "type": "array"
+        },
+        "ContinuousHyperParameterRanges": {
+         "insertionOrder": true,
+         "items": {
+          "$ref": "#/definitions/ContinuousHyperParameterRange"
+         },
+         "maxItems": 100,
+         "type": "array"
+        },
+        "IntegerHyperParameterRanges": {
+         "insertionOrder": true,
+         "items": {
+          "$ref": "#/definitions/IntegerHyperParameterRange"
+         },
+         "maxItems": 100,
+         "type": "array"
+        }
+       },
+       "type": "object"
+      },
+      "HpoObjective": {
+       "additionalProperties": false,
+       "properties": {
+        "MetricName": {
+         "maxLength": 256,
+         "type": "string"
+        },
+        "MetricRegex": {
+         "maxLength": 256,
+         "type": "string"
+        },
+        "Type": {
+         "enum": [
+          "Maximize",
+          "Minimize"
+         ],
+         "maxLength": 256,
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "HpoResourceConfig": {
+       "additionalProperties": false,
+       "properties": {
+        "MaxNumberOfTrainingJobs": {
+         "maxLength": 256,
+         "type": "string"
+        },
+        "MaxParallelTrainingJobs": {
+         "maxLength": 256,
+         "type": "string"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SolutionArn"
+ ],
+ "properties": {
+  "DatasetGroupArn": {
+   "maxLength": 256,
+   "pattern": "arn:([a-z\\d-]+):personalize:.*:.*:.+",
+   "type": "string"
+  },
+  "EventType": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\-_]*",
+   "type": "string"
+  },
+  "PerformAutoML": {
+   "type": "boolean"
+  },
+  "PerformHPO": {
+   "type": "boolean"
+  },
+  "RecipeArn": {
+   "maxLength": 256,
+   "pattern": "arn:([a-z\\d-]+):personalize:.*:.*:.+",
+   "type": "string"
+  },
+  "SolutionArn": {
+   "$ref": "#/definitions/SolutionArn"
+  },
+  "SolutionConfig": {
+   "$ref": "#/definitions/SolutionConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SolutionArn"
+ ],
+ "required": [
+  "Name",
+  "DatasetGroupArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-personalize",
+ "taggable": false,
+ "typeName": "AWS::Personalize::Solution"
+}

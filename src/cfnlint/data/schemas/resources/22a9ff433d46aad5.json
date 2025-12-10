@@ -1,0 +1,132 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProjectArn"
+ ],
+ "definitions": {
+  "Rule": {
+   "additionalProperties": false,
+   "properties": {
+    "Attribute": {
+     "enum": [
+      "ARN",
+      "PLATFORM",
+      "FORM_FACTOR",
+      "MANUFACTURER",
+      "REMOTE_ACCESS_ENABLED",
+      "REMOTE_DEBUG_ENABLED",
+      "APPIUM_VERSION",
+      "INSTANCE_ARN",
+      "INSTANCE_LABELS",
+      "FLEET_TYPE",
+      "OS_VERSION",
+      "MODEL",
+      "AVAILABILITY"
+     ],
+     "type": "string"
+    },
+    "Operator": {
+     "enum": [
+      "EQUALS",
+      "LESS_THAN",
+      "LESS_THAN_OR_EQUALS",
+      "GREATER_THAN",
+      "GREATER_THAN_OR_EQUALS",
+      "IN",
+      "NOT_IN",
+      "CONTAINS"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "insertionOrder": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1011,
+   "minLength": 32,
+   "pattern": "^arn:.+",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 16384,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MaxDevices": {
+   "type": "integer"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ProjectArn": {
+   "maxLength": 1011,
+   "minLength": 32,
+   "pattern": "^arn:.+",
+   "type": "string"
+  },
+  "Rules": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Rule"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "Rules",
+  "ProjectArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-device-farm",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DeviceFarm::DevicePool"
+}

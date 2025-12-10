@@ -1,0 +1,131 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName"
+ ],
+ "definitions": {
+  "DomainEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "IsAlias": {
+     "type": "boolean"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Target": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "A",
+      "AAAA",
+      "CNAME",
+      "MX",
+      "NS",
+      "SOA",
+      "SRV",
+      "TXT"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Type",
+    "Target"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainName"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:.+:lightsail:[a-z0-9-]+:[0-9]{12}:Domain/[a-zA-Z0-9][a-zA-Z0-9-_.]{0,253}[a-zA-Z0-9]$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "DomainEntries": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DomainEntry"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DomainName": {
+   "type": "string"
+  },
+  "Location": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "type": "string"
+    },
+    "RegionName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceType": {
+   "enum": [
+    "Domain"
+   ],
+   "type": "string"
+  },
+  "SupportCode": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/SupportCode",
+  "/properties/CreatedAt",
+  "/properties/Location",
+  "/properties/ResourceType",
+  "/properties/DomainEntries/*/Id"
+ ],
+ "required": [
+  "DomainName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Lightsail::Domain"
+}

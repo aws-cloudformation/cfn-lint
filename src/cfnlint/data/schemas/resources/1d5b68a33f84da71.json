@@ -1,0 +1,254 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Reference",
+  "/properties/SseConfig",
+  "/properties/StoreFormat",
+  "/properties/StoreOptions",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "AnnotationType": {
+   "enum": [
+    "GENERIC",
+    "CHR_POS",
+    "CHR_POS_REF_ALT",
+    "CHR_START_END_ONE_BASE",
+    "CHR_START_END_REF_ALT_ONE_BASE",
+    "CHR_START_END_ZERO_BASE",
+    "CHR_START_END_REF_ALT_ZERO_BASE"
+   ],
+   "type": "string"
+  },
+  "EncryptionType": {
+   "enum": [
+    "KMS"
+   ],
+   "type": "string"
+  },
+  "FormatToHeader": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "maxLength": 1000,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FormatToHeaderKey": {
+   "enum": [
+    "CHR",
+    "START",
+    "END",
+    "REF",
+    "ALT",
+    "POS"
+   ],
+   "type": "string"
+  },
+  "ReferenceItem": {
+   "additionalProperties": false,
+   "properties": {
+    "ReferenceArn": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "^arn:.+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ReferenceArn"
+   ],
+   "type": "object"
+  },
+  "SchemaItem": {
+   "additionalProperties": false,
+   "maxProperties": 1,
+   "minProperties": 1,
+   "patternProperties": {
+    "^[a-z0-9_]{1,255}$": {
+     "$ref": "#/definitions/SchemaValueType"
+    }
+   },
+   "type": "object"
+  },
+  "SchemaValueType": {
+   "enum": [
+    "LONG",
+    "INT",
+    "STRING",
+    "FLOAT",
+    "DOUBLE",
+    "BOOLEAN"
+   ],
+   "type": "string"
+  },
+  "SseConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "KeyArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "arn:([^:\n]*):([^:\n]*):([^:\n]*):([0-9]{12}):([^:\n]*)",
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/EncryptionType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "StoreFormat": {
+   "enum": [
+    "GFF",
+    "TSV",
+    "VCF"
+   ],
+   "type": "string"
+  },
+  "StoreOptions": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "TsvStoreOptions": {
+       "$ref": "#/definitions/TsvStoreOptions"
+      }
+     },
+     "required": [
+      "TsvStoreOptions"
+     ],
+     "title": "TsvStoreOptions",
+     "type": "object"
+    }
+   ]
+  },
+  "StoreStatus": {
+   "enum": [
+    "CREATING",
+    "UPDATING",
+    "DELETING",
+    "ACTIVE",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TsvStoreOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "AnnotationType": {
+     "$ref": "#/definitions/AnnotationType"
+    },
+    "FormatToHeader": {
+     "$ref": "#/definitions/FormatToHeader"
+    },
+    "Schema": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SchemaItem"
+     },
+     "maxItems": 5000,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 500,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Id": {
+   "pattern": "^[a-f0-9]{12}$",
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^([a-z]){1}([a-z0-9_]){2,254}",
+   "type": "string"
+  },
+  "Reference": {
+   "$ref": "#/definitions/ReferenceItem"
+  },
+  "SseConfig": {
+   "$ref": "#/definitions/SseConfig"
+  },
+  "Status": {
+   "$ref": "#/definitions/StoreStatus"
+  },
+  "StatusMessage": {
+   "maxLength": 1000,
+   "minLength": 0,
+   "type": "string"
+  },
+  "StoreArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:([^:\n]*):([^:\n]*):([^:\n]*):([0-9]{12}):([^:\n]*)$",
+   "type": "string"
+  },
+  "StoreFormat": {
+   "$ref": "#/definitions/StoreFormat"
+  },
+  "StoreOptions": {
+   "$ref": "#/definitions/StoreOptions"
+  },
+  "StoreSizeBytes": {
+   "type": "number"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  },
+  "UpdateTime": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreationTime",
+  "/properties/Id",
+  "/properties/Status",
+  "/properties/StatusMessage",
+  "/properties/StoreArn",
+  "/properties/StoreSizeBytes",
+  "/properties/UpdateTime"
+ ],
+ "required": [
+  "Name",
+  "StoreFormat"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Omics::AnnotationStore"
+}

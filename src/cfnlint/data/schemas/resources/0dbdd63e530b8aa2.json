@@ -1,0 +1,218 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FarmId"
+ ],
+ "definitions": {
+  "DefaultQueueBudgetAction": {
+   "default": "NONE",
+   "enum": [
+    "NONE",
+    "STOP_SCHEDULING_AND_COMPLETE_TASKS",
+    "STOP_SCHEDULING_AND_CANCEL_TASKS"
+   ],
+   "type": "string"
+  },
+  "JobAttachmentSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "RootPrefix": {
+     "maxLength": 63,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9-_/]+",
+     "type": "string"
+    },
+    "S3BucketName": {
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "(?!^(\\d+\\.)+\\d+$)(^(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\\.)*([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])$)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RootPrefix",
+    "S3BucketName"
+   ],
+   "type": "object"
+  },
+  "JobRunAsUser": {
+   "additionalProperties": false,
+   "properties": {
+    "Posix": {
+     "$ref": "#/definitions/PosixUser"
+    },
+    "RunAs": {
+     "$ref": "#/definitions/RunAs"
+    },
+    "Windows": {
+     "$ref": "#/definitions/WindowsUser"
+    }
+   },
+   "required": [
+    "RunAs"
+   ],
+   "type": "object"
+  },
+  "PosixUser": {
+   "additionalProperties": false,
+   "properties": {
+    "Group": {
+     "maxLength": 31,
+     "minLength": 0,
+     "pattern": "^(?:[a-z][a-z0-9-]{0,30})?$",
+     "type": "string"
+    },
+    "User": {
+     "maxLength": 31,
+     "minLength": 0,
+     "pattern": "^(?:[a-z][a-z0-9-]{0,30})?$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Group",
+    "User"
+   ],
+   "type": "object"
+  },
+  "RunAs": {
+   "enum": [
+    "QUEUE_CONFIGURED_USER",
+    "WORKER_AGENT_USER"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "WindowsUser": {
+   "additionalProperties": false,
+   "properties": {
+    "PasswordArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:(aws[a-zA-Z-]*):secretsmanager:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:\\d{12}:secret:[a-zA-Z0-9-/_+=.@]{1,2028}$",
+     "type": "string"
+    },
+    "User": {
+     "maxLength": 111,
+     "minLength": 0,
+     "pattern": "^[^\"'/\\[\\]:;|=,+*?<>\\s]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "PasswordArn",
+    "User"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AllowedStorageProfileIds": {
+   "items": {
+    "pattern": "^sp-[0-9a-f]{32}$",
+    "type": "string"
+   },
+   "maxItems": 20,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Arn": {
+   "pattern": "^arn:*",
+   "type": "string"
+  },
+  "DefaultBudgetAction": {
+   "$ref": "#/definitions/DefaultQueueBudgetAction"
+  },
+  "Description": {
+   "default": "",
+   "maxLength": 100,
+   "minLength": 0,
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FarmId": {
+   "pattern": "^farm-[0-9a-f]{32}$",
+   "type": "string"
+  },
+  "JobAttachmentSettings": {
+   "$ref": "#/definitions/JobAttachmentSettings"
+  },
+  "JobRunAsUser": {
+   "$ref": "#/definitions/JobRunAsUser"
+  },
+  "QueueId": {
+   "pattern": "^queue-[0-9a-f]{32}$",
+   "type": "string"
+  },
+  "RequiredFileSystemLocationNames": {
+   "items": {
+    "maxLength": 64,
+    "minLength": 1,
+    "pattern": "^[0-9A-Za-z ]*$",
+    "type": "string"
+   },
+   "maxItems": 20,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "pattern": "^arn:(aws[a-zA-Z-]*):iam::\\d{12}:role(/[!-.0-~]+)*/[\\w+=,.@-]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/QueueId",
+  "/properties/Arn"
+ ],
+ "required": [
+  "DisplayName",
+  "FarmId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-deadline",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Deadline::Queue"
+}

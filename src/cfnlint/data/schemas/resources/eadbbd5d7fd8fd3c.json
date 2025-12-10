@@ -1,0 +1,83 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/S3BucketName",
+  "/properties/S3BucketPrefix",
+  "/properties/OutputFormat",
+  "/properties/Schedule"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CapacityManagerDataExportId"
+ ],
+ "properties": {
+  "CapacityManagerDataExportId": {
+   "type": "string"
+  },
+  "OutputFormat": {
+   "enum": [
+    "csv",
+    "parquet"
+   ],
+   "type": "string"
+  },
+  "S3BucketName": {
+   "type": "string"
+  },
+  "S3BucketPrefix": {
+   "type": "string"
+  },
+  "Schedule": {
+   "enum": [
+    "hourly"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CapacityManagerDataExportId"
+ ],
+ "required": [
+  "S3BucketName",
+  "Schedule",
+  "OutputFormat"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-capacity-manager-data-export.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::CapacityManagerDataExport"
+}

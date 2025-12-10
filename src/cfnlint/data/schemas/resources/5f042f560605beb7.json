@@ -1,0 +1,99 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StudioName",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "StudioEncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KeyArn": {
+     "minLength": 4,
+     "pattern": "^arn:.*",
+     "type": "string"
+    },
+    "KeyType": {
+     "$ref": "#/definitions/StudioEncryptionConfigurationKeyType"
+    }
+   },
+   "required": [
+    "KeyType"
+   ],
+   "type": "object"
+  },
+  "StudioEncryptionConfigurationKeyType": {
+   "enum": [
+    "AWS_OWNED_KEY",
+    "CUSTOMER_MANAGED_KEY"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/StudioId"
+ ],
+ "properties": {
+  "AdminRoleArn": {
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 64,
+   "minLength": 0,
+   "type": "string"
+  },
+  "HomeRegion": {
+   "maxLength": 50,
+   "minLength": 0,
+   "pattern": "[a-z]{2}-?(iso|gov)?-{1}[a-z]*-{1}[0-9]",
+   "type": "string"
+  },
+  "SsoClientId": {
+   "type": "string"
+  },
+  "StudioEncryptionConfiguration": {
+   "$ref": "#/definitions/StudioEncryptionConfiguration"
+  },
+  "StudioId": {
+   "type": "string"
+  },
+  "StudioName": {
+   "maxLength": 64,
+   "minLength": 3,
+   "pattern": "^[a-z0-9]*$",
+   "type": "string"
+  },
+  "StudioUrl": {
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "UserRoleArn": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/HomeRegion",
+  "/properties/SsoClientId",
+  "/properties/StudioId",
+  "/properties/StudioUrl"
+ ],
+ "required": [
+  "DisplayName",
+  "UserRoleArn",
+  "AdminRoleArn",
+  "StudioName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-nimblestudio",
+ "typeName": "AWS::NimbleStudio::Studio"
+}

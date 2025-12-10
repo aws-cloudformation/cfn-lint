@@ -1,0 +1,191 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKey",
+  "/properties/ScheduleConfig",
+  "/properties/SourceURI"
+ ],
+ "definitions": {
+  "FileConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Filters": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^[A-Za-z]": {
+       "items": {
+        "maxLength": 255,
+        "minLength": 1,
+        "type": "string"
+       },
+       "maxItems": 2048,
+       "minItems": 1,
+       "type": "array"
+      }
+     },
+     "type": "object"
+    },
+    "Folders": {
+     "items": {
+      "maxLength": 200,
+      "minLength": 1,
+      "pattern": ".*\\S.*",
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Folders"
+   ],
+   "type": "object"
+  },
+  "ObjectConfiguration": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^[A-Za-z]": {
+       "items": {
+        "maxLength": 255,
+        "minLength": 1,
+        "type": "string"
+       },
+       "maxItems": 2048,
+       "minItems": 1,
+       "type": "array"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "ScheduleConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FirstExecutionFrom": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    },
+    "Object": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9/\\._\\-]+$",
+     "type": "string"
+    },
+    "ScheduleExpression": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ScheduleExpression"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "DataIntegrationArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z]*:[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FileConfiguration": {
+   "$ref": "#/definitions/FileConfiguration"
+  },
+  "Id": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
+   "type": "string"
+  },
+  "KmsKey": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9/\\._\\-]+$",
+   "type": "string"
+  },
+  "ObjectConfiguration": {
+   "$ref": "#/definitions/ObjectConfiguration"
+  },
+  "ScheduleConfig": {
+   "$ref": "#/definitions/ScheduleConfig"
+  },
+  "SourceURI": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "pattern": "^(\\w+\\:\\/\\/[\\w.-]+[\\w/!@#+=.-]+$)|(\\w+\\:\\/\\/[\\w.-]+[\\w/!@#+=.-]+[\\w/!@#+=.-]+[\\w/!@#+=.,-]+$)",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/DataIntegrationArn"
+ ],
+ "required": [
+  "Name",
+  "KmsKey",
+  "SourceURI"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AppIntegrations::DataIntegration"
+}

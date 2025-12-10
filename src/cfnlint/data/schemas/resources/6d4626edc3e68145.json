@@ -1,0 +1,62 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TeamId",
+  "/properties/ChannelId"
+ ],
+ "primaryIdentifier": [
+  "/properties/TeamId",
+  "/properties/ChannelId"
+ ],
+ "properties": {
+  "ChannelId": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^\\S+$",
+   "type": "string"
+  },
+  "ChannelName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^.+$",
+   "type": "string"
+  },
+  "ChannelRoleArn": {
+   "maxLength": 2048,
+   "minLength": 31,
+   "pattern": "^arn:aws[-a-z0-9]*:iam::[0-9]{12}:role\\/(.+)$",
+   "type": "string"
+  },
+  "NotifyOnAddCorrespondenceToCase": {
+   "type": "boolean"
+  },
+  "NotifyOnCaseSeverity": {
+   "enum": [
+    "none",
+    "all",
+    "high"
+   ],
+   "type": "string"
+  },
+  "NotifyOnCreateOrReopenCase": {
+   "type": "boolean"
+  },
+  "NotifyOnResolveCase": {
+   "type": "boolean"
+  },
+  "TeamId": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^\\S+$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "TeamId",
+  "ChannelId",
+  "NotifyOnCaseSeverity",
+  "ChannelRoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-supportapp.git",
+ "typeName": "AWS::SupportApp::SlackChannelConfiguration"
+}

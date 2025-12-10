@@ -1,0 +1,113 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Resource"
+ ],
+ "definitions": {
+  "Target": {
+   "additionalProperties": false,
+   "properties": {
+    "TargetAddress": {
+     "type": "string"
+    },
+    "TargetType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TargetType",
+    "TargetAddress"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:aws[^:\\s]*:codestar-notifications:[^:\\s]+:\\d{12}:notificationrule\\/(.*\\S)?$",
+   "type": "string"
+  },
+  "CreatedBy": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DetailType": {
+   "enum": [
+    "BASIC",
+    "FULL"
+   ],
+   "type": "string"
+  },
+  "EventTypeId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "EventTypeIds": {
+   "items": {
+    "maxLength": 200,
+    "minLength": 1,
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[A-Za-z0-9\\-_ ]+$",
+   "type": "string"
+  },
+  "Resource": {
+   "pattern": "^arn:aws[^:\\s]*:[^:\\s]*:[^:\\s]*:[0-9]{12}:[^\\s]+$",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".*": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TargetAddress": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Targets": {
+   "items": {
+    "$ref": "#/definitions/Target"
+   },
+   "maxItems": 10,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "EventTypeIds",
+  "Resource",
+  "DetailType",
+  "Targets",
+  "Name"
+ ],
+ "typeName": "AWS::CodeStarNotifications::NotificationRule",
+ "writeOnlyProperties": [
+  "/properties/EventTypeId",
+  "/properties/TargetAddress"
+ ]
+}

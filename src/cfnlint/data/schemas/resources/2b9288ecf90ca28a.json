@@ -1,0 +1,168 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Encryption": {
+   "additionalProperties": false,
+   "properties": {
+    "Algorithm": {
+     "enum": [
+      "aes128",
+      "aes192",
+      "aes256"
+     ],
+     "type": "string"
+    },
+    "ConstantInitializationVector": {
+     "type": "string"
+    },
+    "DeviceId": {
+     "type": "string"
+    },
+    "KeyType": {
+     "default": "static-key",
+     "enum": [
+      "speke",
+      "static-key",
+      "srt-password"
+     ],
+     "type": "string"
+    },
+    "Region": {
+     "type": "string"
+    },
+    "ResourceId": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "type": "string"
+    },
+    "SecretArn": {
+     "type": "string"
+    },
+    "Url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "GatewayBridgeSource": {
+   "additionalProperties": false,
+   "properties": {
+    "BridgeArn": {
+     "type": "string"
+    },
+    "VpcInterfaceAttachment": {
+     "$ref": "#/definitions/VpcInterfaceAttachment"
+    }
+   },
+   "required": [
+    "BridgeArn"
+   ],
+   "type": "object"
+  },
+  "VpcInterfaceAttachment": {
+   "additionalProperties": false,
+   "properties": {
+    "VpcInterfaceName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SourceArn"
+ ],
+ "properties": {
+  "Decryption": {
+   "$ref": "#/definitions/Encryption"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "EntitlementArn": {
+   "type": "string"
+  },
+  "FlowArn": {
+   "pattern": "arn:.+:mediaconnect.+:flow:.+",
+   "type": "string"
+  },
+  "GatewayBridgeSource": {
+   "$ref": "#/definitions/GatewayBridgeSource"
+  },
+  "IngestIp": {
+   "type": "string"
+  },
+  "IngestPort": {
+   "type": "integer"
+  },
+  "MaxBitrate": {
+   "type": "integer"
+  },
+  "MaxLatency": {
+   "type": "integer"
+  },
+  "MinLatency": {
+   "type": "integer"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Protocol": {
+   "enum": [
+    "zixi-push",
+    "rtp-fec",
+    "rtp",
+    "rist",
+    "srt-listener",
+    "srt-caller"
+   ],
+   "type": "string"
+  },
+  "SenderControlPort": {
+   "type": "integer"
+  },
+  "SenderIpAddress": {
+   "type": "string"
+  },
+  "SourceArn": {
+   "type": "string"
+  },
+  "SourceIngestPort": {
+   "type": "string"
+  },
+  "SourceListenerAddress": {
+   "type": "string"
+  },
+  "SourceListenerPort": {
+   "type": "integer"
+  },
+  "StreamId": {
+   "type": "string"
+  },
+  "VpcInterfaceName": {
+   "type": "string"
+  },
+  "WhitelistCidr": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IngestIp",
+  "/properties/SourceArn",
+  "/properties/SourceIngestPort"
+ ],
+ "required": [
+  "Name",
+  "Description"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+ "typeName": "AWS::MediaConnect::FlowSource"
+}

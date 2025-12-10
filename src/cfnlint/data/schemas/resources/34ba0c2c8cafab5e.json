@@ -1,0 +1,86 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AutoScalingConfigurationName",
+  "/properties/MaxConcurrency",
+  "/properties/MaxSize",
+  "/properties/MinSize",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:).+",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AutoScalingConfigurationArn"
+ ],
+ "properties": {
+  "AutoScalingConfigurationArn": {
+   "maxLength": 1011,
+   "minLength": 1,
+   "pattern": "arn:aws(-[\\w]+)*:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[0-9]{12}:(\\w|/|-){1,1011}",
+   "type": "string"
+  },
+  "AutoScalingConfigurationName": {
+   "maxLength": 32,
+   "minLength": 4,
+   "pattern": "[A-Za-z0-9][A-Za-z0-9\\-_]{3,31}",
+   "type": "string"
+  },
+  "AutoScalingConfigurationRevision": {
+   "type": "integer"
+  },
+  "Latest": {
+   "type": "boolean"
+  },
+  "MaxConcurrency": {
+   "maximum": 200,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "MaxSize": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "MinSize": {
+   "maximum": 25,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AutoScalingConfigurationArn",
+  "/properties/AutoScalingConfigurationRevision",
+  "/properties/Latest"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::AppRunner::AutoScalingConfiguration"
+}

@@ -1,0 +1,90 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CloudFormationCollectionFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "StackNames": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z*]+[a-zA-Z0-9-]*$",
+      "type": "string"
+     },
+     "maxItems": 1000,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceCollectionFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudFormation": {
+     "$ref": "#/definitions/CloudFormationCollectionFilter"
+    },
+    "Tags": {
+     "$ref": "#/definitions/TagCollections"
+    }
+   },
+   "type": "object"
+  },
+  "TagCollection": {
+   "additionalProperties": false,
+   "properties": {
+    "AppBoundaryKey": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TagValues": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 256,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 1000,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "TagCollections": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TagCollection"
+   },
+   "type": "array"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResourceCollectionType"
+ ],
+ "properties": {
+  "ResourceCollectionFilter": {
+   "$ref": "#/definitions/ResourceCollectionFilter"
+  },
+  "ResourceCollectionType": {
+   "enum": [
+    "AWS_CLOUD_FORMATION",
+    "AWS_TAGS"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ResourceCollectionType"
+ ],
+ "required": [
+  "ResourceCollectionFilter"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-devops-guru",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::DevOpsGuru::ResourceCollection"
+}

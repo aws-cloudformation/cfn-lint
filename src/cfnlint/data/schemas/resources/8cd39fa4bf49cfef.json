@@ -1,0 +1,296 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Action": {
+   "additionalProperties": false,
+   "properties": {
+    "IncludeResources": {
+     "$ref": "#/definitions/IncludeResources"
+    },
+    "Type": {
+     "enum": [
+      "DELETE",
+      "DEPRECATE",
+      "DISABLE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "AmiExclusionRules": {
+   "additionalProperties": false,
+   "properties": {
+    "IsPublic": {
+     "type": "boolean"
+    },
+    "LastLaunched": {
+     "$ref": "#/definitions/LastLaunched"
+    },
+    "Regions": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SharedAccounts": {
+     "insertionOrder": false,
+     "items": {
+      "pattern": "^[0-9]{12}$",
+      "type": "string"
+     },
+     "maxItems": 1536,
+     "minItems": 1,
+     "type": "array"
+    },
+    "TagMap": {
+     "additionalProperties": false,
+     "patternProperties": {
+      ".{1,}": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "ExclusionRules": {
+   "additionalProperties": false,
+   "properties": {
+    "Amis": {
+     "$ref": "#/definitions/AmiExclusionRules"
+    },
+    "TagMap": {
+     "additionalProperties": false,
+     "patternProperties": {
+      ".{1,}": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Filter": {
+   "additionalProperties": false,
+   "properties": {
+    "RetainAtLeast": {
+     "maximum": 10,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Type": {
+     "enum": [
+      "AGE",
+      "COUNT"
+     ],
+     "type": "string"
+    },
+    "Unit": {
+     "$ref": "#/definitions/TimeUnit"
+    },
+    "Value": {
+     "maximum": 1000,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Type",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "IncludeResources": {
+   "additionalProperties": false,
+   "properties": {
+    "Amis": {
+     "type": "boolean"
+    },
+    "Containers": {
+     "type": "boolean"
+    },
+    "Snapshots": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "LastLaunched": {
+   "additionalProperties": false,
+   "properties": {
+    "Unit": {
+     "$ref": "#/definitions/TimeUnit"
+    },
+    "Value": {
+     "maximum": 365,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Value",
+    "Unit"
+   ],
+   "type": "object"
+  },
+  "PolicyDetail": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/Action"
+    },
+    "ExclusionRules": {
+     "$ref": "#/definitions/ExclusionRules"
+    },
+    "Filter": {
+     "$ref": "#/definitions/Filter"
+    }
+   },
+   "required": [
+    "Action",
+    "Filter"
+   ],
+   "type": "object"
+  },
+  "RecipeSelection": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "pattern": "^[-_A-Za-z-0-9][-_A-Za-z0-9 ]{1,126}[-_A-Za-z-0-9]$",
+     "type": "string"
+    },
+    "SemanticVersion": {
+     "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "SemanticVersion"
+   ],
+   "type": "object"
+  },
+  "ResourceSelection": {
+   "additionalProperties": false,
+   "properties": {
+    "Recipes": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/RecipeSelection"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array"
+    },
+    "TagMap": {
+     "additionalProperties": false,
+     "patternProperties": {
+      ".{1,}": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "TimeUnit": {
+   "enum": [
+    "DAYS",
+    "WEEKS",
+    "MONTHS",
+    "YEARS"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ExecutionRole": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^(?:arn:aws(?:-[a-z]+)*:iam::[0-9]{12}:role/)?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[-_A-Za-z-0-9][-_A-Za-z0-9 ]{1,126}[-_A-Za-z-0-9]$",
+   "type": "string"
+  },
+  "PolicyDetails": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PolicyDetail"
+   },
+   "maxItems": 3,
+   "minItems": 1,
+   "type": "array"
+  },
+  "ResourceSelection": {
+   "$ref": "#/definitions/ResourceSelection"
+  },
+  "ResourceType": {
+   "enum": [
+    "AMI_IMAGE",
+    "CONTAINER_IMAGE"
+   ],
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "DISABLED",
+    "ENABLED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,}": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "ExecutionRole",
+  "ResourceType",
+  "PolicyDetails",
+  "ResourceSelection"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ImageBuilder::LifecyclePolicy"
+}

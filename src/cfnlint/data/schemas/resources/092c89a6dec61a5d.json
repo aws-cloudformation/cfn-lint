@@ -1,0 +1,107 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/NetworkSettingsArn"
+ ],
+ "properties": {
+  "AssociatedPortalArns": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "minLength": 20,
+    "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "NetworkSettingsArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "maxLength": 128,
+    "minLength": 1,
+    "pattern": "^[\\w+\\-]+$",
+    "type": "string"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array"
+  },
+  "SubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 32,
+    "minLength": 1,
+    "pattern": "^subnet-([0-9a-f]{8}|[0-9a-f]{17})$",
+    "type": "string"
+   },
+   "maxItems": 3,
+   "minItems": 2,
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^vpc-[0-9a-z]*$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssociatedPortalArns",
+  "/properties/NetworkSettingsArn"
+ ],
+ "required": [
+  "SecurityGroupIds",
+  "SubnetIds",
+  "VpcId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::WorkSpacesWeb::NetworkSettings"
+}

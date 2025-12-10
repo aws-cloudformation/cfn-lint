@@ -1,0 +1,136 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RepositoryName"
+ ],
+ "definitions": {
+  "AboutText": {
+   "maxLength": 10240,
+   "type": "string"
+  },
+  "Architecture": {
+   "maxLength": 50,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ArchitectureList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Architecture"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "OperatingSystem": {
+   "maxLength": 50,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OperatingSystemList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/OperatingSystem"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RegistryId": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "RepositoryDescription": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "UsageText": {
+   "maxLength": 10240,
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RepositoryName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "RepositoryCatalogData": {
+   "additionalProperties": false,
+   "properties": {
+    "AboutText": {
+     "$ref": "#/definitions/AboutText"
+    },
+    "Architectures": {
+     "$ref": "#/definitions/ArchitectureList"
+    },
+    "OperatingSystems": {
+     "$ref": "#/definitions/OperatingSystemList"
+    },
+    "RepositoryDescription": {
+     "$ref": "#/definitions/RepositoryDescription"
+    },
+    "UsageText": {
+     "$ref": "#/definitions/UsageText"
+    }
+   },
+   "type": "object"
+  },
+  "RepositoryName": {
+   "maxLength": 256,
+   "minLength": 2,
+   "pattern": "^(?=.{2,256}$)((?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*)$",
+   "type": "string"
+  },
+  "RepositoryPolicyText": {
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ecr.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ECR::PublicRepository"
+}

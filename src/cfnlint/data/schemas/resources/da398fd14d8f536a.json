@@ -1,0 +1,105 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AppId",
+  "/properties/EnvironmentName"
+ ],
+ "definitions": {
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^(?!aws:)[a-zA-Z+-=._:/]+$": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ThemeValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Children": {
+     "items": {
+      "$ref": "#/definitions/ThemeValues"
+     },
+     "type": "array"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ThemeValues": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "$ref": "#/definitions/ThemeValue"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AppId",
+  "/properties/EnvironmentName",
+  "/properties/Id"
+ ],
+ "properties": {
+  "AppId": {
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "EnvironmentName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "ModifiedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Overrides": {
+   "items": {
+    "$ref": "#/definitions/ThemeValues"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "Values": {
+   "items": {
+    "$ref": "#/definitions/ThemeValues"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/Id",
+  "/properties/ModifiedAt"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-amplifyuibuilder",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AmplifyUIBuilder::Theme"
+}

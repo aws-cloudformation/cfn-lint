@@ -1,0 +1,124 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ChannelName"
+ ],
+ "definitions": {
+  "ChannelStorage": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomerManagedS3": {
+     "$ref": "#/definitions/CustomerManagedS3"
+    },
+    "ServiceManagedS3": {
+     "$ref": "#/definitions/ServiceManagedS3"
+    }
+   },
+   "type": "object"
+  },
+  "CustomerManagedS3": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "maxLength": 255,
+     "minLength": 3,
+     "pattern": "^[a-zA-Z0-9.\\-_]*$",
+     "type": "string"
+    },
+    "KeyPrefix": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9!_.*'()/{}:-]*/$",
+     "type": "string"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "RetentionPeriod": {
+   "additionalProperties": false,
+   "properties": {
+    "NumberOfDays": {
+     "maximum": 2147483647,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Unlimited": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "ServiceManagedS3": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ChannelName"
+ ],
+ "properties": {
+  "ChannelName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "(^(?!_{2}))(^[a-zA-Z0-9_]+$)",
+   "type": "string"
+  },
+  "ChannelStorage": {
+   "$ref": "#/definitions/ChannelStorage"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "RetentionPeriod": {
+   "$ref": "#/definitions/RetentionPeriod"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "taggable": true,
+ "typeName": "AWS::IoTAnalytics::Channel"
+}

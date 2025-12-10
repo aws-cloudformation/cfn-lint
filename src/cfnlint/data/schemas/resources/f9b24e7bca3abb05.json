@@ -1,0 +1,94 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FarmId"
+ ],
+ "definitions": {
+  "FileSystemLocation": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[0-9A-Za-z ]*$",
+     "type": "string"
+    },
+    "Path": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/FileSystemLocationType"
+    }
+   },
+   "required": [
+    "Name",
+    "Path",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "FileSystemLocationType": {
+   "enum": [
+    "SHARED",
+    "LOCAL"
+   ],
+   "type": "string"
+  },
+  "StorageProfileOperatingSystemFamily": {
+   "enum": [
+    "WINDOWS",
+    "LINUX",
+    "MACOS"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FarmId",
+  "/properties/StorageProfileId"
+ ],
+ "properties": {
+  "DisplayName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FarmId": {
+   "pattern": "^farm-[0-9a-f]{32}$",
+   "type": "string"
+  },
+  "FileSystemLocations": {
+   "items": {
+    "$ref": "#/definitions/FileSystemLocation"
+   },
+   "maxItems": 20,
+   "minItems": 0,
+   "type": "array"
+  },
+  "OsFamily": {
+   "$ref": "#/definitions/StorageProfileOperatingSystemFamily"
+  },
+  "StorageProfileId": {
+   "pattern": "^sp-[0-9a-f]{32}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/StorageProfileId"
+ ],
+ "required": [
+  "DisplayName",
+  "FarmId",
+  "OsFamily"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-deadline",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Deadline::StorageProfile"
+}

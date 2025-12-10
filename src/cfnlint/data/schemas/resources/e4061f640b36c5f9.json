@@ -1,0 +1,107 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DatastoreName",
+  "/properties/Tags",
+  "/properties/KmsKeyArn"
+ ],
+ "definitions": {
+  "CreatedAt": {
+   "type": "string"
+  },
+  "DatastoreArn": {
+   "maxLength": 127,
+   "minLength": 1,
+   "pattern": "^arn:aws((-us-gov)|(-iso)|(-iso-b)|(-cn))?:medical-imaging:[a-z0-9-]+:[0-9]{12}:datastore/[0-9a-z]{32}(/imageset/[0-9a-z]{32})?$",
+   "type": "string"
+  },
+  "DatastoreId": {
+   "maxLength": 32,
+   "minLength": 0,
+   "pattern": "^[0-9a-z]{32}$",
+   "type": "string"
+  },
+  "DatastoreName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9._/#-]+$",
+   "type": "string"
+  },
+  "DatastoreStatus": {
+   "enum": [
+    "CREATING",
+    "CREATE_FAILED",
+    "ACTIVE",
+    "DELETING",
+    "DELETED"
+   ],
+   "maxLength": 127,
+   "minLength": 1,
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "maxLength": 512,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DatastoreId"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "$ref": "#/definitions/CreatedAt"
+  },
+  "DatastoreArn": {
+   "$ref": "#/definitions/DatastoreArn"
+  },
+  "DatastoreId": {
+   "$ref": "#/definitions/DatastoreId"
+  },
+  "DatastoreName": {
+   "$ref": "#/definitions/DatastoreName"
+  },
+  "DatastoreStatus": {
+   "$ref": "#/definitions/DatastoreStatus"
+  },
+  "KmsKeyArn": {
+   "$ref": "#/definitions/KmsKeyArn"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "UpdatedAt": {
+   "$ref": "#/definitions/UpdatedAt"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DatastoreArn",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/DatastoreId",
+  "/properties/DatastoreStatus"
+ ],
+ "required": [],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::HealthImaging::Datastore"
+}

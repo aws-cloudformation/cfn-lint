@@ -1,0 +1,136 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TeamId",
+  "/properties/TeamsTenantId",
+  "/properties/ConfigurationName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:(aws[a-zA-Z-]*)?:chatbot:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
+   "type": "string"
+  },
+  "ConfigurationName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9-_]+$",
+   "type": "string"
+  },
+  "CustomizationResourceArns": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^arn:aws:chatbot:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:custom-action/[a-zA-Z0-9_-]{1,64}$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "GuardrailPolicies": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^(^$|arn:aws:iam:[A-Za-z0-9_\\/.-]{0,63}:[A-Za-z0-9_\\/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_\\/+=,@.-]{0,1023})$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "IamRoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "pattern": "^arn:(aws[a-zA-Z-]*)?:[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
+   "type": "string"
+  },
+  "LoggingLevel": {
+   "default": "NONE",
+   "maxLength": 5,
+   "minLength": 4,
+   "pattern": "^(ERROR|INFO|NONE)$",
+   "type": "string"
+  },
+  "SnsTopicArns": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^arn:(aws[a-zA-Z-]*)?:[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TeamId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[0-9A-Fa-f]{8}(?:-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}$",
+   "type": "string"
+  },
+  "TeamsChannelId": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^([a-zA-Z0-9-_=+/.,])*%3[aA]([a-zA-Z0-9-_=+/.,])*%40([a-zA-Z0-9-_=+/.,])*$",
+   "type": "string"
+  },
+  "TeamsChannelName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^(.*)$",
+   "type": "string"
+  },
+  "TeamsTenantId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[0-9A-Fa-f]{8}(?:-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}$",
+   "type": "string"
+  },
+  "UserRoleRequired": {
+   "default": false,
+   "type": "boolean"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "TeamId",
+  "TeamsChannelId",
+  "TeamsTenantId",
+  "ConfigurationName",
+  "IamRoleArn"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-chatbot-microsoftteamschannelconfiguration.html",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Chatbot::MicrosoftTeamsChannelConfiguration"
+}

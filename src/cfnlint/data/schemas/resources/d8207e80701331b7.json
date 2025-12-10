@@ -1,0 +1,79 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "TagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^arn:.+$",
+   "type": "string"
+  },
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 18,
+   "minLength": 1,
+   "pattern": "^[0-9]+$",
+   "type": "string"
+  },
+  "MaxCpus": {
+   "maximum": 100000,
+   "minimum": 1,
+   "type": "number"
+  },
+  "MaxDuration": {
+   "maximum": 100000,
+   "minimum": 1,
+   "type": "number"
+  },
+  "MaxGpus": {
+   "maximum": 100000,
+   "minimum": 1,
+   "type": "number"
+  },
+  "MaxRuns": {
+   "maximum": 100000,
+   "minimum": 1,
+   "type": "number"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationTime",
+  "/properties/Id"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Omics::RunGroup"
+}

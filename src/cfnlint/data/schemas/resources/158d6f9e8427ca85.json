@@ -1,0 +1,228 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProgramName",
+  "/properties/MultiplexId"
+ ],
+ "definitions": {
+  "MultiplexProgramPacketIdentifiersMap": {
+   "additionalProperties": false,
+   "properties": {
+    "AudioPids": {
+     "insertionOrder": true,
+     "items": {
+      "type": "integer"
+     },
+     "type": "array"
+    },
+    "DvbSubPids": {
+     "insertionOrder": true,
+     "items": {
+      "type": "integer"
+     },
+     "type": "array"
+    },
+    "DvbTeletextPid": {
+     "type": "integer"
+    },
+    "EtvPlatformPid": {
+     "type": "integer"
+    },
+    "EtvSignalPid": {
+     "type": "integer"
+    },
+    "KlvDataPids": {
+     "insertionOrder": true,
+     "items": {
+      "type": "integer"
+     },
+     "type": "array"
+    },
+    "PcrPid": {
+     "type": "integer"
+    },
+    "PmtPid": {
+     "type": "integer"
+    },
+    "PrivateMetadataPid": {
+     "type": "integer"
+    },
+    "Scte27Pids": {
+     "insertionOrder": true,
+     "items": {
+      "type": "integer"
+     },
+     "type": "array"
+    },
+    "Scte35Pid": {
+     "type": "integer"
+    },
+    "TimedMetadataPid": {
+     "type": "integer"
+    },
+    "VideoPid": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "MultiplexProgramPipelineDetail": {
+   "additionalProperties": false,
+   "properties": {
+    "ActiveChannelPipeline": {
+     "type": "string"
+    },
+    "PipelineId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MultiplexProgramServiceDescriptor": {
+   "additionalProperties": false,
+   "properties": {
+    "ProviderName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ServiceName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ProviderName",
+    "ServiceName"
+   ],
+   "type": "object"
+  },
+  "MultiplexProgramSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "PreferredChannelPipeline": {
+     "$ref": "#/definitions/PreferredChannelPipeline",
+     "type": "string"
+    },
+    "ProgramNumber": {
+     "maximum": 65535,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "ServiceDescriptor": {
+     "$ref": "#/definitions/MultiplexProgramServiceDescriptor"
+    },
+    "VideoSettings": {
+     "$ref": "#/definitions/MultiplexVideoSettings"
+    }
+   },
+   "required": [
+    "ProgramNumber"
+   ],
+   "type": "object"
+  },
+  "MultiplexStatmuxVideoSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "MaximumBitrate": {
+     "maximum": 100000000,
+     "minimum": 100000,
+     "type": "integer"
+    },
+    "MinimumBitrate": {
+     "maximum": 100000000,
+     "minimum": 100000,
+     "type": "integer"
+    },
+    "Priority": {
+     "maximum": 5,
+     "minimum": -5,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "MultiplexVideoSettings": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ConstantBitrate": {
+       "maximum": 100000000,
+       "minimum": 100000,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "ConstantBitrate"
+     ],
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "StatmuxSettings": {
+       "$ref": "#/definitions/MultiplexStatmuxVideoSettings"
+      }
+     },
+     "required": [
+      "StatmuxSettings"
+     ],
+     "type": "object"
+    }
+   ],
+   "type": "object"
+  },
+  "PreferredChannelPipeline": {
+   "enum": [
+    "CURRENTLY_ACTIVE",
+    "PIPELINE_0",
+    "PIPELINE_1"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ProgramName",
+  "/properties/MultiplexId"
+ ],
+ "properties": {
+  "ChannelId": {
+   "type": "string"
+  },
+  "MultiplexId": {
+   "type": "string"
+  },
+  "MultiplexProgramSettings": {
+   "$ref": "#/definitions/MultiplexProgramSettings"
+  },
+  "PacketIdentifiersMap": {
+   "$ref": "#/definitions/MultiplexProgramPacketIdentifiersMap"
+  },
+  "PipelineDetails": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/MultiplexProgramPipelineDetail"
+   },
+   "type": "array"
+  },
+  "PreferredChannelPipeline": {
+   "$ref": "#/definitions/PreferredChannelPipeline"
+  },
+  "ProgramName": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ChannelId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-medialiveprogram.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::MediaLive::Multiplexprogram",
+ "writeOnlyProperties": [
+  "/properties/PreferredChannelPipeline"
+ ]
+}

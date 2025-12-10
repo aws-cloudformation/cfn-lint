@@ -1,0 +1,250 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FlywheelName",
+  "/properties/ModelType",
+  "/properties/DataLakeS3Uri",
+  "/properties/TaskConfig"
+ ],
+ "definitions": {
+  "DataSecurityConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DataLakeKmsKeyId": {
+     "$ref": "#/definitions/KmsKeyId"
+    },
+    "ModelKmsKeyId": {
+     "$ref": "#/definitions/KmsKeyId"
+    },
+    "VolumeKmsKeyId": {
+     "$ref": "#/definitions/KmsKeyId"
+    },
+    "VpcConfig": {
+     "$ref": "#/definitions/VpcConfig"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "DocumentClassificationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Labels": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 5000,
+      "pattern": "^\\P{C}*$",
+      "type": "string"
+     },
+     "maxItems": 1000,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Mode": {
+     "enum": [
+      "MULTI_CLASS",
+      "MULTI_LABEL"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Mode"
+   ],
+   "type": "object"
+  },
+  "EntityRecognitionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "EntityTypes": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/EntityTypesListItem"
+     },
+     "maxItems": 25,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "EntityTypesListItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^(?![^\\n\\r\\t,]*\\\\n|\\\\r|\\\\t)[^\\n\\r\\t,]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "KmsKeyId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^\\p{ASCII}+$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TaskConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DocumentClassificationConfig": {
+     "$ref": "#/definitions/DocumentClassificationConfig"
+    },
+    "EntityRecognitionConfig": {
+     "$ref": "#/definitions/EntityRecognitionConfig"
+    },
+    "LanguageCode": {
+     "enum": [
+      "en",
+      "es",
+      "fr",
+      "it",
+      "de",
+      "pt"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "LanguageCode"
+   ],
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "maxLength": 32,
+      "minLength": 1,
+      "pattern": "[-0-9a-zA-Z]+",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Subnets": {
+     "format": "AWS::EC2::Subnet.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::Subnet.Id",
+      "maxLength": 32,
+      "minLength": 1,
+      "pattern": "[-0-9a-zA-Z]+",
+      "type": "string"
+     },
+     "maxItems": 16,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "SecurityGroupIds",
+    "Subnets"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "ActiveModelArn": {
+   "maxLength": 256,
+   "pattern": "arn:aws(-[^:]+)?:comprehend:[a-zA-Z0-9-]*:[0-9]{12}:(document-classifier|entity-recognizer)/[a-zA-Z0-9](-*[a-zA-Z0-9])*(/version/[a-zA-Z0-9](-*[a-zA-Z0-9])*)?",
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "arn:aws(-[^:]+)?:comprehend:[a-zA-Z0-9-]*:[0-9]{12}:flywheel/[a-zA-Z0-9](-*[a-zA-Z0-9])*",
+   "type": "string"
+  },
+  "DataAccessRoleArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:aws(-[^:]+)?:iam::[0-9]{12}:role/.+",
+   "type": "string"
+  },
+  "DataLakeS3Uri": {
+   "maxLength": 512,
+   "pattern": "s3://[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9](/.*)?",
+   "type": "string"
+  },
+  "DataSecurityConfig": {
+   "$ref": "#/definitions/DataSecurityConfig"
+  },
+  "FlywheelName": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "ModelType": {
+   "enum": [
+    "DOCUMENT_CLASSIFIER",
+    "ENTITY_RECOGNIZER"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TaskConfig": {
+   "$ref": "#/definitions/TaskConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "FlywheelName",
+  "DataAccessRoleArn",
+  "DataLakeS3Uri"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Comprehend::Flywheel"
+}

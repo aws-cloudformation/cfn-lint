@@ -1,0 +1,234 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MonitorName"
+ ],
+ "definitions": {
+  "HealthEventsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityLocalHealthEventsConfig": {
+     "$ref": "#/definitions/LocalHealthEventsConfig"
+    },
+    "AvailabilityScoreThreshold": {
+     "maximum": 100.0,
+     "minimum": 0.0,
+     "type": "number"
+    },
+    "PerformanceLocalHealthEventsConfig": {
+     "$ref": "#/definitions/LocalHealthEventsConfig"
+    },
+    "PerformanceScoreThreshold": {
+     "maximum": 100.0,
+     "minimum": 0.0,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "InternetMeasurementsLogDelivery": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Config": {
+     "$ref": "#/definitions/S3Config"
+    }
+   },
+   "type": "object"
+  },
+  "LocalHealthEventsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "HealthScoreThreshold": {
+     "maximum": 100.0,
+     "minimum": 0.0,
+     "type": "number"
+    },
+    "MinTrafficImpact": {
+     "maximum": 100.0,
+     "minimum": 0.0,
+     "type": "number"
+    },
+    "Status": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MonitorConfigState": {
+   "enum": [
+    "PENDING",
+    "ACTIVE",
+    "INACTIVE",
+    "ERROR"
+   ],
+   "type": "string"
+  },
+  "MonitorProcessingStatusCode": {
+   "enum": [
+    "OK",
+    "INACTIVE",
+    "COLLECTING_DATA",
+    "INSUFFICIENT_DATA",
+    "FAULT_SERVICE",
+    "FAULT_ACCESS_CLOUDWATCH"
+   ],
+   "type": "string"
+  },
+  "S3Config": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "minLength": 3,
+     "type": "string"
+    },
+    "BucketPrefix": {
+     "type": "string"
+    },
+    "LogDeliveryStatus": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "iso8601UTC": {
+   "pattern": "^([0-2]\\d{3})-(0[0-9]|1[0-2])-([0-2]\\d|3[01])T([01]\\d|2[0-4]):([0-5]\\d):([0-6]\\d)((\\.\\d{3})?)Z$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MonitorName"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "$ref": "#/definitions/iso8601UTC"
+  },
+  "HealthEventsConfig": {
+   "$ref": "#/definitions/HealthEventsConfig"
+  },
+  "IncludeLinkedAccounts": {
+   "type": "boolean"
+  },
+  "InternetMeasurementsLogDelivery": {
+   "$ref": "#/definitions/InternetMeasurementsLogDelivery"
+  },
+  "LinkedAccountId": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^(\\d{12})$",
+   "type": "string"
+  },
+  "MaxCityNetworksToMonitor": {
+   "maximum": 500000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ModifiedAt": {
+   "$ref": "#/definitions/iso8601UTC"
+  },
+  "MonitorArn": {
+   "maxLength": 512,
+   "minLength": 20,
+   "pattern": "^arn:.*",
+   "type": "string"
+  },
+  "MonitorName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_.-]+$",
+   "type": "string"
+  },
+  "ProcessingStatus": {
+   "$ref": "#/definitions/MonitorProcessingStatusCode"
+  },
+  "ProcessingStatusInfo": {
+   "type": "string"
+  },
+  "Resources": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "minLength": 20,
+    "pattern": "^arn:.*",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ResourcesToAdd": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "minLength": 20,
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ResourcesToRemove": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "minLength": 20,
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Status": {
+   "$ref": "#/definitions/MonitorConfigState"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "TrafficPercentageToMonitor": {
+   "maximum": 100,
+   "minimum": 1,
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/ModifiedAt",
+  "/properties/MonitorArn",
+  "/properties/ProcessingStatus",
+  "/properties/ProcessingStatusInfo"
+ ],
+ "required": [
+  "MonitorName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::InternetMonitor::Monitor",
+ "writeOnlyProperties": [
+  "/properties/ResourcesToAdd",
+  "/properties/ResourcesToRemove",
+  "/properties/LinkedAccountId",
+  "/properties/IncludeLinkedAccounts"
+ ]
+}

@@ -1,0 +1,68 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainIdentifier",
+  "/properties/GroupIdentifier"
+ ],
+ "definitions": {
+  "GroupProfileStatus": {
+   "enum": [
+    "ASSIGNED",
+    "NOT_ASSIGNED"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainId",
+  "/properties/Id"
+ ],
+ "properties": {
+  "DomainId": {
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "DomainIdentifier": {
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "GroupIdentifier": {
+   "pattern": "(^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$|[\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}\\t\\n\\r  ]+)",
+   "type": "string"
+  },
+  "GroupName": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z_0-9+=,.@-]+$",
+   "type": "string"
+  },
+  "Id": {
+   "pattern": "^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/GroupProfileStatus"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DomainId",
+  "/properties/GroupName",
+  "/properties/Id"
+ ],
+ "required": [
+  "DomainIdentifier",
+  "GroupIdentifier"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::DataZone::GroupProfile",
+ "writeOnlyProperties": [
+  "/properties/DomainIdentifier",
+  "/properties/GroupIdentifier"
+ ]
+}

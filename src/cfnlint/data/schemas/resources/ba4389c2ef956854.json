@@ -1,0 +1,67 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MetricName",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Predicate": {
+   "additionalProperties": false,
+   "properties": {
+    "DataId": {
+     "type": "string"
+    },
+    "Negated": {
+     "type": "boolean"
+    },
+    "Type": {
+     "enum": [
+      "ByteMatch",
+      "GeoMatch",
+      "IPMatch",
+      "RegexMatch",
+      "SizeConstraint",
+      "SqlInjectionMatch",
+      "XssMatch"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Negated",
+    "DataId"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "MetricName": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Predicates": {
+   "items": {
+    "$ref": "#/definitions/Predicate"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "MetricName",
+  "Name"
+ ],
+ "typeName": "AWS::WAFRegional::Rule"
+}

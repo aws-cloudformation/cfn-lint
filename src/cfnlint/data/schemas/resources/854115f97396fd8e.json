@@ -1,0 +1,200 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InferenceSchedulerName",
+  "/properties/ModelName",
+  "/properties/ServerSideKmsKeyId"
+ ],
+ "definitions": {
+  "Bucket": {
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "^[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]$",
+   "type": "string"
+  },
+  "InputNameConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ComponentTimestampDelimiter": {
+     "maxLength": 1,
+     "minLength": 0,
+     "pattern": "^(\\-|\\_|\\s)?$",
+     "type": "string"
+    },
+    "TimestampFormat": {
+     "pattern": "^EPOCH|yyyy-MM-dd-HH-mm-ss|yyyyMMddHHmmss$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Prefix": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "pattern": "(^$)|([\\u0009\\u000A\\u000D\\u0020-\\u00FF]{1,1023}/$)",
+   "type": "string"
+  },
+  "S3InputConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "$ref": "#/definitions/Bucket"
+    },
+    "Prefix": {
+     "$ref": "#/definitions/Prefix"
+    }
+   },
+   "required": [
+    "Bucket"
+   ],
+   "type": "object"
+  },
+  "S3OutputConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "$ref": "#/definitions/Bucket"
+    },
+    "Prefix": {
+     "$ref": "#/definitions/Prefix"
+    }
+   },
+   "required": [
+    "Bucket"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "[\\s\\w+-=\\.:/@]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InferenceSchedulerName"
+ ],
+ "properties": {
+  "DataDelayOffsetInMinutes": {
+   "maximum": 60,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "DataInputConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InferenceInputNameConfiguration": {
+     "$ref": "#/definitions/InputNameConfiguration"
+    },
+    "InputTimeZoneOffset": {
+     "pattern": "^(\\+|\\-)[0-9]{2}\\:[0-9]{2}$",
+     "type": "string"
+    },
+    "S3InputConfiguration": {
+     "$ref": "#/definitions/S3InputConfiguration"
+    }
+   },
+   "required": [
+    "S3InputConfiguration"
+   ],
+   "type": "object"
+  },
+  "DataOutputConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,2048}$",
+     "type": "string"
+    },
+    "S3OutputConfiguration": {
+     "$ref": "#/definitions/S3OutputConfiguration"
+    }
+   },
+   "required": [
+    "S3OutputConfiguration"
+   ],
+   "type": "object"
+  },
+  "DataUploadFrequency": {
+   "enum": [
+    "PT5M",
+    "PT10M",
+    "PT15M",
+    "PT30M",
+    "PT1H"
+   ],
+   "type": "string"
+  },
+  "InferenceSchedulerArn": {
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "arn:aws(-[^:]+)?:lookoutequipment:[a-zA-Z0-9\\-]*:[0-9]{12}:inference-scheduler\\/.+",
+   "type": "string"
+  },
+  "InferenceSchedulerName": {
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^[0-9a-zA-Z_-]{1,200}$",
+   "type": "string"
+  },
+  "ModelName": {
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^[0-9a-zA-Z_-]{1,200}$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:aws(-[^:]+)?:iam::[0-9]{12}:role/.+",
+   "type": "string"
+  },
+  "ServerSideKmsKeyId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,2048}$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/InferenceSchedulerArn"
+ ],
+ "required": [
+  "DataInputConfiguration",
+  "DataOutputConfiguration",
+  "DataUploadFrequency",
+  "ModelName",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "taggable": true,
+ "typeName": "AWS::LookoutEquipment::InferenceScheduler"
+}

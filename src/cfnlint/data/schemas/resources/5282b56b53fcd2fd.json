@@ -1,0 +1,233 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationName"
+ ],
+ "definitions": {
+  "CSVMappingParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "RecordColumnDelimiter": {
+     "type": "string"
+    },
+    "RecordRowDelimiter": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RecordColumnDelimiter",
+    "RecordRowDelimiter"
+   ],
+   "type": "object"
+  },
+  "Input": {
+   "additionalProperties": false,
+   "properties": {
+    "InputParallelism": {
+     "$ref": "#/definitions/InputParallelism"
+    },
+    "InputProcessingConfiguration": {
+     "$ref": "#/definitions/InputProcessingConfiguration"
+    },
+    "InputSchema": {
+     "$ref": "#/definitions/InputSchema"
+    },
+    "KinesisFirehoseInput": {
+     "$ref": "#/definitions/KinesisFirehoseInput"
+    },
+    "KinesisStreamsInput": {
+     "$ref": "#/definitions/KinesisStreamsInput"
+    },
+    "NamePrefix": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "NamePrefix",
+    "InputSchema"
+   ],
+   "type": "object"
+  },
+  "InputLambdaProcessor": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceARN": {
+     "type": "string"
+    },
+    "RoleARN": {
+     "format": "AWS::IAM::Role.Arn",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceARN",
+    "RoleARN"
+   ],
+   "type": "object"
+  },
+  "InputParallelism": {
+   "additionalProperties": false,
+   "properties": {
+    "Count": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "InputProcessingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InputLambdaProcessor": {
+     "$ref": "#/definitions/InputLambdaProcessor"
+    }
+   },
+   "type": "object"
+  },
+  "InputSchema": {
+   "additionalProperties": false,
+   "properties": {
+    "RecordColumns": {
+     "items": {
+      "$ref": "#/definitions/RecordColumn"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "RecordEncoding": {
+     "type": "string"
+    },
+    "RecordFormat": {
+     "$ref": "#/definitions/RecordFormat"
+    }
+   },
+   "required": [
+    "RecordColumns",
+    "RecordFormat"
+   ],
+   "type": "object"
+  },
+  "JSONMappingParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "RecordRowPath": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RecordRowPath"
+   ],
+   "type": "object"
+  },
+  "KinesisFirehoseInput": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceARN": {
+     "type": "string"
+    },
+    "RoleARN": {
+     "format": "AWS::IAM::Role.Arn",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceARN",
+    "RoleARN"
+   ],
+   "type": "object"
+  },
+  "KinesisStreamsInput": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceARN": {
+     "type": "string"
+    },
+    "RoleARN": {
+     "format": "AWS::IAM::Role.Arn",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceARN",
+    "RoleARN"
+   ],
+   "type": "object"
+  },
+  "MappingParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "CSVMappingParameters": {
+     "$ref": "#/definitions/CSVMappingParameters"
+    },
+    "JSONMappingParameters": {
+     "$ref": "#/definitions/JSONMappingParameters"
+    }
+   },
+   "type": "object"
+  },
+  "RecordColumn": {
+   "additionalProperties": false,
+   "properties": {
+    "Mapping": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "SqlType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SqlType",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "RecordFormat": {
+   "additionalProperties": false,
+   "properties": {
+    "MappingParameters": {
+     "$ref": "#/definitions/MappingParameters"
+    },
+    "RecordFormatType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RecordFormatType"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ApplicationCode": {
+   "type": "string"
+  },
+  "ApplicationDescription": {
+   "type": "string"
+  },
+  "ApplicationName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Inputs": {
+   "items": {
+    "$ref": "#/definitions/Input"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Inputs"
+ ],
+ "typeName": "AWS::KinesisAnalytics::Application"
+}

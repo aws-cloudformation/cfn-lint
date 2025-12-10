@@ -1,0 +1,109 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/MlflowVersion",
+  "/properties/RoleArn"
+ ],
+ "createOnlyProperties": [
+  "/properties/TrackingServerName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TrackingServerName"
+ ],
+ "properties": {
+  "ArtifactStoreUri": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^s3:\\/\\/([^\\/]+)\\/?(.*)$",
+   "type": "string"
+  },
+  "AutomaticModelRegistration": {
+   "type": "boolean"
+  },
+  "MlflowVersion": {
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "^\\d+(\\.\\d+)+$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role\\/?[a-zA-Z_0-9+=,.@\\-_\\/]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array"
+  },
+  "TrackingServerArn": {
+   "maxLength": 2048,
+   "pattern": "^arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:mlflow-tracking-server/.*$",
+   "type": "string"
+  },
+  "TrackingServerName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,255}$",
+   "type": "string"
+  },
+  "TrackingServerSize": {
+   "enum": [
+    "Small",
+    "Medium",
+    "Large"
+   ],
+   "type": "string"
+  },
+  "WeeklyMaintenanceWindowStart": {
+   "maxLength": 9,
+   "pattern": "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun):([01]\\d|2[0-3]):([0-5]\\d)$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TrackingServerArn"
+ ],
+ "required": [
+  "TrackingServerName",
+  "ArtifactStoreUri",
+  "RoleArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::MlflowTrackingServer"
+}

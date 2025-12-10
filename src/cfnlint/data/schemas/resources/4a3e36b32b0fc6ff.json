@@ -1,0 +1,117 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/GraphName"
+  ]
+ ],
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/ProvisionedMemory"
+ ],
+ "createOnlyProperties": [
+  "/properties/GraphName",
+  "/properties/ReplicaCount",
+  "/properties/VectorSearchConfiguration"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VectorSearchConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "VectorSearchDimension": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "VectorSearchDimension"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GraphId"
+ ],
+ "properties": {
+  "DeletionProtection": {
+   "type": "boolean"
+  },
+  "Endpoint": {
+   "type": "string"
+  },
+  "GraphArn": {
+   "type": "string"
+  },
+  "GraphId": {
+   "type": "string"
+  },
+  "GraphName": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-z][a-zA-Z0-9]*(-[a-zA-Z0-9]+)*$",
+   "type": "string"
+  },
+  "ProvisionedMemory": {
+   "maximum": 24576,
+   "minimum": 16,
+   "type": "integer"
+  },
+  "PublicConnectivity": {
+   "type": "boolean"
+  },
+  "ReplicaCount": {
+   "maximum": 2,
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VectorSearchConfiguration": {
+   "$ref": "#/definitions/VectorSearchConfiguration"
+  }
+ },
+ "propertyTransform": {
+  "/properties/GraphId": "$lowercase(GraphId)",
+  "/properties/GraphName": "$lowercase(GraphName)"
+ },
+ "readOnlyProperties": [
+  "/properties/GraphArn",
+  "/properties/GraphId",
+  "/properties/Endpoint"
+ ],
+ "required": [
+  "ProvisionedMemory"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-neptunegraph",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NeptuneGraph::Graph"
+}

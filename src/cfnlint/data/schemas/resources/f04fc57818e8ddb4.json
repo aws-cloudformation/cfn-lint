@@ -1,0 +1,142 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Description",
+  "/properties/ContentType",
+  "/properties/Location"
+ ],
+ "definitions": {
+  "CustomPluginFileDescription": {
+   "additionalProperties": false,
+   "properties": {
+    "FileMd5": {
+     "type": "string"
+    },
+    "FileSize": {
+     "format": "int64",
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "CustomPluginLocation": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Location": {
+     "$ref": "#/definitions/S3Location"
+    }
+   },
+   "required": [
+    "S3Location"
+   ],
+   "type": "object"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketArn": {
+     "type": "string"
+    },
+    "FileKey": {
+     "type": "string"
+    },
+    "ObjectVersion": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketArn",
+    "FileKey"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CustomPluginArn"
+ ],
+ "properties": {
+  "ContentType": {
+   "enum": [
+    "JAR",
+    "ZIP"
+   ],
+   "type": "string"
+  },
+  "CustomPluginArn": {
+   "pattern": "arn:(aws|aws-us-gov|aws-cn):kafkaconnect:.*",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "FileDescription": {
+   "$ref": "#/definitions/CustomPluginFileDescription"
+  },
+  "Location": {
+   "$ref": "#/definitions/CustomPluginLocation"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Revision": {
+   "format": "int64",
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CustomPluginArn",
+  "/properties/Revision",
+  "/properties/FileDescription"
+ ],
+ "required": [
+  "Name",
+  "ContentType",
+  "Location"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::KafkaConnect::CustomPlugin"
+}

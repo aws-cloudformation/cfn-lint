@@ -1,0 +1,144 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AvailabilityZones"
+ ],
+ "definitions": {
+  "MultiplexOutputDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "MultiplexMediaConnectOutputDestinationSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "EntitlementArn": {
+       "minLength": 1,
+       "type": "string"
+      }
+     }
+    }
+   },
+   "type": "object"
+  },
+  "MultiplexSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "MaximumVideoBufferDelayMilliseconds": {
+     "maximum": 3000,
+     "minimum": 800,
+     "type": "integer"
+    },
+    "TransportStreamBitrate": {
+     "maximum": 100000000,
+     "minimum": 1000000,
+     "type": "integer"
+    },
+    "TransportStreamId": {
+     "maximum": 65535,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "TransportStreamReservedBitrate": {
+     "maximum": 100000000,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "TransportStreamBitrate",
+    "TransportStreamId"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AvailabilityZones": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Destinations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/MultiplexOutputDestination"
+   },
+   "type": "array"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "MultiplexSettings": {
+   "$ref": "#/definitions/MultiplexSettings"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "PipelinesRunningCount": {
+   "type": "integer"
+  },
+  "ProgramCount": {
+   "type": "integer"
+  },
+  "State": {
+   "enum": [
+    "CREATING",
+    "CREATE_FAILED",
+    "IDLE",
+    "STARTING",
+    "RUNNING",
+    "RECOVERING",
+    "STOPPING",
+    "DELETING",
+    "DELETED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tags"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/PipelinesRunningCount",
+  "/properties/ProgramCount",
+  "/properties/State"
+ ],
+ "required": [
+  "AvailabilityZones",
+  "MultiplexSettings",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-medialive.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaLive::Multiplex"
+}

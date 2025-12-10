@@ -1,0 +1,414 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PipelineName"
+ ],
+ "definitions": {
+  "Activity": {
+   "additionalProperties": false,
+   "properties": {
+    "AddAttributes": {
+     "$ref": "#/definitions/AddAttributes"
+    },
+    "Channel": {
+     "$ref": "#/definitions/Channel"
+    },
+    "Datastore": {
+     "$ref": "#/definitions/Datastore"
+    },
+    "DeviceRegistryEnrich": {
+     "$ref": "#/definitions/DeviceRegistryEnrich"
+    },
+    "DeviceShadowEnrich": {
+     "$ref": "#/definitions/DeviceShadowEnrich"
+    },
+    "Filter": {
+     "$ref": "#/definitions/Filter"
+    },
+    "Lambda": {
+     "$ref": "#/definitions/Lambda"
+    },
+    "Math": {
+     "$ref": "#/definitions/Math"
+    },
+    "RemoveAttributes": {
+     "$ref": "#/definitions/RemoveAttributes"
+    },
+    "SelectAttributes": {
+     "$ref": "#/definitions/SelectAttributes"
+    }
+   },
+   "type": "object"
+  },
+  "AddAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "additionalProperties": false,
+     "maxProperties": 50,
+     "minProperties": 1,
+     "patternProperties": {
+      "^.*$": {
+       "maxLength": 256,
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Next": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Attributes",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Channel": {
+   "additionalProperties": false,
+   "properties": {
+    "ChannelName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9_]+",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Next": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ChannelName",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Datastore": {
+   "additionalProperties": false,
+   "properties": {
+    "DatastoreName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9_]+",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "DatastoreName",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "DeviceRegistryEnrich": {
+   "additionalProperties": false,
+   "properties": {
+    "Attribute": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Next": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    },
+    "ThingName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Attribute",
+    "ThingName",
+    "RoleArn",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "DeviceShadowEnrich": {
+   "additionalProperties": false,
+   "properties": {
+    "Attribute": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Next": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    },
+    "ThingName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Attribute",
+    "ThingName",
+    "RoleArn",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Filter": {
+   "additionalProperties": false,
+   "properties": {
+    "Filter": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Next": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Filter",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Lambda": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchSize": {
+     "maximum": 1000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "LambdaName": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9_-]+",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Next": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "LambdaName",
+    "Name",
+    "BatchSize"
+   ],
+   "type": "object"
+  },
+  "Math": {
+   "additionalProperties": false,
+   "properties": {
+    "Attribute": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Math": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Next": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Attribute",
+    "Math",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "RemoveAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 256,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Next": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Attributes",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "SelectAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 256,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Next": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Attributes"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PipelineName"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "PipelineActivities": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Activity"
+   },
+   "maxItems": 25,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PipelineName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_]+",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "PipelineActivities"
+ ],
+ "taggable": true,
+ "typeName": "AWS::IoTAnalytics::Pipeline"
+}

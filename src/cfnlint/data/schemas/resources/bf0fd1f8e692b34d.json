@@ -1,0 +1,190 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ContinuousDeploymentPolicyConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "SingleHeaderPolicyConfig": {
+     "additionalProperties": false,
+     "properties": {
+      "Header": {
+       "maxLength": 256,
+       "minLength": 1,
+       "type": "string"
+      },
+      "Value": {
+       "maxLength": 1783,
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "required": [
+      "Header",
+      "Value"
+     ],
+     "type": "object"
+    },
+    "SingleWeightPolicyConfig": {
+     "additionalProperties": false,
+     "properties": {
+      "SessionStickinessConfig": {
+       "$ref": "#/definitions/SessionStickinessConfig"
+      },
+      "Weight": {
+       "maximum": 1,
+       "minimum": 0,
+       "multipleOf": 0.01,
+       "type": "number"
+      }
+     },
+     "required": [
+      "Weight"
+     ],
+     "type": "object"
+    },
+    "StagingDistributionDnsNames": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "TrafficConfig": {
+     "$ref": "#/definitions/TrafficConfig"
+    },
+    "Type": {
+     "enum": [
+      "SingleWeight",
+      "SingleHeader"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Enabled",
+    "StagingDistributionDnsNames"
+   ],
+   "type": "object"
+  },
+  "SessionStickinessConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "IdleTTL": {
+     "maximum": 3600,
+     "minimum": 300,
+     "multipleOf": 1,
+     "type": "integer"
+    },
+    "MaximumTTL": {
+     "maximum": 3600,
+     "minimum": 300,
+     "multipleOf": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "IdleTTL",
+    "MaximumTTL"
+   ],
+   "type": "object"
+  },
+  "SingleHeaderConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Header": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 1783,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Header",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "SingleWeightConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SessionStickinessConfig": {
+     "$ref": "#/definitions/SessionStickinessConfig"
+    },
+    "Weight": {
+     "maximum": 1,
+     "minimum": 0,
+     "multipleOf": 0.01,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Weight"
+   ],
+   "type": "object"
+  },
+  "TrafficConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SingleHeaderConfig": {
+     "$ref": "#/definitions/SingleHeaderConfig"
+    },
+    "SingleWeightConfig": {
+     "$ref": "#/definitions/SingleWeightConfig"
+    },
+    "Type": {
+     "enum": [
+      "SingleWeight",
+      "SingleHeader"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/ContinuousDeploymentPolicyConfig/Type",
+  "/properties/ContinuousDeploymentPolicyConfig/SingleHeaderPolicyConfig",
+  "/properties/ContinuousDeploymentPolicyConfig/SingleWeightPolicyConfig"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ContinuousDeploymentPolicyConfig": {
+   "$ref": "#/definitions/ContinuousDeploymentPolicyConfig"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "ContinuousDeploymentPolicyConfig"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::CloudFront::ContinuousDeploymentPolicy"
+}

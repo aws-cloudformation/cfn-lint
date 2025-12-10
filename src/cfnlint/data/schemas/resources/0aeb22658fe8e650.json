@@ -1,0 +1,133 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainIdentifier",
+  "/properties/EntityIdentifier",
+  "/properties/EntityType",
+  "/properties/Owner"
+ ],
+ "definitions": {
+  "OwnerGroupProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupIdentifier": {
+     "pattern": "(^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$|[\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}\\t\\n\\r ]+)",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OwnerGroupPropertiesOutput": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OwnerProperties": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Group": {
+       "$ref": "#/definitions/OwnerGroupProperties"
+      }
+     }
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "User": {
+       "$ref": "#/definitions/OwnerUserProperties"
+      }
+     }
+    }
+   ],
+   "type": "object"
+  },
+  "OwnerPropertiesOutput": {
+   "additionalProperties": false,
+   "properties": {
+    "Group": {
+     "$ref": "#/definitions/OwnerGroupPropertiesOutput"
+    },
+    "User": {
+     "$ref": "#/definitions/OwnerUserPropertiesOutput"
+    }
+   },
+   "type": "object"
+  },
+  "OwnerUserProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "UserIdentifier": {
+     "pattern": "(^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$|^[a-zA-Z_0-9+=,.@-]+$|^arn:aws:iam::\\d{12}:.+$)",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OwnerUserPropertiesOutput": {
+   "additionalProperties": false,
+   "properties": {
+    "UserId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainIdentifier",
+  "/properties/EntityType",
+  "/properties/EntityIdentifier",
+  "/properties/OwnerType",
+  "/properties/OwnerIdentifier"
+ ],
+ "properties": {
+  "DomainIdentifier": {
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "EntityIdentifier": {
+   "type": "string"
+  },
+  "EntityType": {
+   "enum": [
+    "DOMAIN_UNIT"
+   ],
+   "type": "string"
+  },
+  "Owner": {
+   "$ref": "#/definitions/OwnerProperties"
+  },
+  "OwnerIdentifier": {
+   "type": "string"
+  },
+  "OwnerType": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/OwnerIdentifier",
+  "/properties/OwnerType"
+ ],
+ "required": [
+  "DomainIdentifier",
+  "EntityIdentifier",
+  "EntityType",
+  "Owner"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::DataZone::Owner",
+ "writeOnlyProperties": [
+  "/properties/Owner"
+ ]
+}

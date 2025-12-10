@@ -1,0 +1,78 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AddonSubscriptionId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9/_\\+=\\.:@\\-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9/_\\+=\\.:@\\-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AddonInstanceId"
+ ],
+ "properties": {
+  "AddonInstanceArn": {
+   "type": "string"
+  },
+  "AddonInstanceId": {
+   "maxLength": 67,
+   "minLength": 4,
+   "pattern": "^ai-[a-zA-Z0-9]{1,64}$",
+   "type": "string"
+  },
+  "AddonName": {
+   "type": "string"
+  },
+  "AddonSubscriptionId": {
+   "maxLength": 67,
+   "minLength": 4,
+   "pattern": "^as-[a-zA-Z0-9]{1,64}$",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AddonInstanceArn",
+  "/properties/AddonInstanceId",
+  "/properties/AddonName"
+ ],
+ "required": [
+  "AddonSubscriptionId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses-mailmanager",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SES::MailManagerAddonInstance"
+}

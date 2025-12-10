@@ -1,0 +1,71 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/VectorBucketName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/VectorBucketArn",
+  "/properties/VectorBucketName"
+ ],
+ "definitions": {
+  "Policy": {
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "VectorBucketArn": {
+   "examples": [
+    "arn:aws:s3vectors:us-east-1:123456789012:bucket/myvectorbucket"
+   ],
+   "pattern": "arn:aws[-a-z0-9]*:s3vectors:[a-z0-9-]+:[0-9]{12}:bucket/[a-z0-9][a-z0-9-.]{1,61}[a-z0-9]",
+   "type": "string"
+  },
+  "VectorBucketName": {
+   "maxLength": 63,
+   "minLength": 3,
+   "type": "string"
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "VectorBucketName"
+   ]
+  },
+  {
+   "required": [
+    "VectorBucketArn"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/VectorBucketArn"
+ ],
+ "properties": {
+  "Policy": {
+   "$ref": "#/definitions/Policy"
+  },
+  "VectorBucketArn": {
+   "$ref": "#/definitions/VectorBucketArn"
+  },
+  "VectorBucketName": {
+   "$ref": "#/definitions/VectorBucketName"
+  }
+ },
+ "required": [
+  "Policy"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::S3Vectors::VectorBucketPolicy",
+ "writeOnlyProperties": [
+  "/properties/VectorBucketName"
+ ]
+}

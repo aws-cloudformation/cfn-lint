@@ -1,0 +1,671 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Batch": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchJobName": {
+     "pattern": "^\\S{1,1000}$",
+     "type": "string"
+    },
+    "BatchJobParameters": {
+     "$ref": "#/definitions/BatchJobParameters"
+    },
+    "ExportDataSetNames": {
+     "items": {
+      "pattern": "^\\S{1,100}$",
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "BatchJobName"
+   ],
+   "type": "object"
+  },
+  "BatchJobParameters": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CaptureTool": {
+   "enum": [
+    "Precisely",
+    "AWS DMS"
+   ],
+   "type": "string"
+  },
+  "CloudFormationAction": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionType": {
+     "$ref": "#/definitions/CloudFormationActionType"
+    },
+    "Resource": {
+     "pattern": "^\\S{1,1000}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Resource"
+   ],
+   "type": "object"
+  },
+  "CloudFormationActionType": {
+   "enum": [
+    "Create",
+    "Delete"
+   ],
+   "type": "string"
+  },
+  "CompareAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Input": {
+     "$ref": "#/definitions/Input"
+    },
+    "Output": {
+     "$ref": "#/definitions/Output"
+    }
+   },
+   "required": [
+    "Input"
+   ],
+   "type": "object"
+  },
+  "DataSet": {
+   "additionalProperties": false,
+   "properties": {
+    "Ccsid": {
+     "pattern": "^\\S{1,50}$",
+     "type": "string"
+    },
+    "Format": {
+     "$ref": "#/definitions/Format"
+    },
+    "Length": {
+     "type": "number"
+    },
+    "Name": {
+     "pattern": "^\\S{1,100}$",
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/DataSetType"
+    }
+   },
+   "required": [
+    "Ccsid",
+    "Format",
+    "Length",
+    "Name",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "DataSetType": {
+   "enum": [
+    "PS"
+   ],
+   "type": "string"
+  },
+  "DatabaseCDC": {
+   "additionalProperties": false,
+   "properties": {
+    "SourceMetadata": {
+     "$ref": "#/definitions/SourceDatabaseMetadata"
+    },
+    "TargetMetadata": {
+     "$ref": "#/definitions/TargetDatabaseMetadata"
+    }
+   },
+   "required": [
+    "SourceMetadata",
+    "TargetMetadata"
+   ],
+   "type": "object"
+  },
+  "FileMetadata": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "DataSets": {
+       "items": {
+        "$ref": "#/definitions/DataSet"
+       },
+       "type": "array"
+      }
+     },
+     "required": [
+      "DataSets"
+     ],
+     "title": "DataSets",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "DatabaseCDC": {
+       "$ref": "#/definitions/DatabaseCDC"
+      }
+     },
+     "required": [
+      "DatabaseCDC"
+     ],
+     "title": "DatabaseCDC",
+     "type": "object"
+    }
+   ]
+  },
+  "Format": {
+   "enum": [
+    "FIXED",
+    "VARIABLE",
+    "LINE_SEQUENTIAL"
+   ],
+   "type": "string"
+  },
+  "Input": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "File": {
+       "$ref": "#/definitions/InputFile"
+      }
+     },
+     "required": [
+      "File"
+     ],
+     "title": "File",
+     "type": "object"
+    }
+   ]
+  },
+  "InputFile": {
+   "additionalProperties": false,
+   "properties": {
+    "FileMetadata": {
+     "$ref": "#/definitions/FileMetadata"
+    },
+    "SourceLocation": {
+     "pattern": "^\\S{1,1000}$",
+     "type": "string"
+    },
+    "TargetLocation": {
+     "pattern": "^\\S{1,1000}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "FileMetadata",
+    "SourceLocation",
+    "TargetLocation"
+   ],
+   "type": "object"
+  },
+  "M2ManagedActionProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "ForceStop": {
+     "type": "boolean"
+    },
+    "ImportDataSetLocation": {
+     "pattern": "^\\S{1,1000}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "M2ManagedActionType": {
+   "enum": [
+    "Configure",
+    "Deconfigure"
+   ],
+   "type": "string"
+  },
+  "M2ManagedApplicationAction": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionType": {
+     "$ref": "#/definitions/M2ManagedActionType"
+    },
+    "Properties": {
+     "$ref": "#/definitions/M2ManagedActionProperties"
+    },
+    "Resource": {
+     "pattern": "^\\S{1,1000}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ActionType",
+    "Resource"
+   ],
+   "type": "object"
+  },
+  "M2NonManagedActionType": {
+   "enum": [
+    "Configure",
+    "Deconfigure"
+   ],
+   "type": "string"
+  },
+  "M2NonManagedApplicationAction": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionType": {
+     "$ref": "#/definitions/M2NonManagedActionType"
+    },
+    "Resource": {
+     "pattern": "^\\S{1,1000}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ActionType",
+    "Resource"
+   ],
+   "type": "object"
+  },
+  "MainframeAction": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionType": {
+     "$ref": "#/definitions/MainframeActionType"
+    },
+    "Properties": {
+     "$ref": "#/definitions/MainframeActionProperties"
+    },
+    "Resource": {
+     "pattern": "^\\S{1,1000}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ActionType",
+    "Resource"
+   ],
+   "type": "object"
+  },
+  "MainframeActionProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "DmsTaskArn": {
+     "pattern": "^\\S{1,1000}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MainframeActionType": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Batch": {
+       "$ref": "#/definitions/Batch"
+      }
+     },
+     "required": [
+      "Batch"
+     ],
+     "title": "Batch",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Tn3270": {
+       "$ref": "#/definitions/TN3270"
+      }
+     },
+     "required": [
+      "Tn3270"
+     ],
+     "title": "Tn3270",
+     "type": "object"
+    }
+   ]
+  },
+  "Output": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "File": {
+       "$ref": "#/definitions/OutputFile"
+      }
+     },
+     "required": [
+      "File"
+     ],
+     "title": "File",
+     "type": "object"
+    }
+   ]
+  },
+  "OutputFile": {
+   "additionalProperties": false,
+   "properties": {
+    "FileLocation": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceAction": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "M2ManagedApplicationAction": {
+       "$ref": "#/definitions/M2ManagedApplicationAction"
+      }
+     },
+     "required": [
+      "M2ManagedApplicationAction"
+     ],
+     "title": "M2ManagedApplicationAction",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "M2NonManagedApplicationAction": {
+       "$ref": "#/definitions/M2NonManagedApplicationAction"
+      }
+     },
+     "required": [
+      "M2NonManagedApplicationAction"
+     ],
+     "title": "M2NonManagedApplicationAction",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CloudFormationAction": {
+       "$ref": "#/definitions/CloudFormationAction"
+      }
+     },
+     "required": [
+      "CloudFormationAction"
+     ],
+     "title": "CloudFormationAction",
+     "type": "object"
+    }
+   ]
+  },
+  "Script": {
+   "additionalProperties": false,
+   "properties": {
+    "ScriptLocation": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/ScriptType"
+    }
+   },
+   "required": [
+    "ScriptLocation",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ScriptType": {
+   "enum": [
+    "Selenium"
+   ],
+   "type": "string"
+  },
+  "SourceDatabase": {
+   "enum": [
+    "z/OS-DB2"
+   ],
+   "type": "string"
+  },
+  "SourceDatabaseMetadata": {
+   "additionalProperties": false,
+   "properties": {
+    "CaptureTool": {
+     "$ref": "#/definitions/CaptureTool"
+    },
+    "Type": {
+     "$ref": "#/definitions/SourceDatabase"
+    }
+   },
+   "required": [
+    "CaptureTool",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Step": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/StepAction"
+    },
+    "Description": {
+     "maxLength": 1000,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Name": {
+     "pattern": "^[A-Za-z][A-Za-z0-9_\\-]{1,59}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Action",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "StepAction": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ResourceAction": {
+       "$ref": "#/definitions/ResourceAction"
+      }
+     },
+     "required": [
+      "ResourceAction"
+     ],
+     "title": "ResourceAction",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "MainframeAction": {
+       "$ref": "#/definitions/MainframeAction"
+      }
+     },
+     "required": [
+      "MainframeAction"
+     ],
+     "title": "MainframeAction",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CompareAction": {
+       "$ref": "#/definitions/CompareAction"
+      }
+     },
+     "required": [
+      "CompareAction"
+     ],
+     "title": "CompareAction",
+     "type": "object"
+    }
+   ]
+  },
+  "TN3270": {
+   "additionalProperties": false,
+   "properties": {
+    "ExportDataSetNames": {
+     "items": {
+      "pattern": "^\\S{1,100}$",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Script": {
+     "$ref": "#/definitions/Script"
+    }
+   },
+   "required": [
+    "Script"
+   ],
+   "type": "object"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "maxProperties": 200,
+   "minProperties": 0,
+   "patternProperties": {
+    "^(?!aws:).+$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TargetDatabase": {
+   "enum": [
+    "PostgreSQL"
+   ],
+   "type": "string"
+  },
+  "TargetDatabaseMetadata": {
+   "additionalProperties": false,
+   "properties": {
+    "CaptureTool": {
+     "$ref": "#/definitions/CaptureTool"
+    },
+    "Type": {
+     "$ref": "#/definitions/TargetDatabase"
+    }
+   },
+   "required": [
+    "CaptureTool",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "TestCaseLatestVersion": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "$ref": "#/definitions/TestCaseLifecycle"
+    },
+    "Version": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "Status",
+    "Version"
+   ],
+   "type": "object"
+  },
+  "TestCaseLifecycle": {
+   "enum": [
+    "Active",
+    "Deleting"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TestCaseId"
+ ],
+ "properties": {
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 0,
+   "type": "string"
+  },
+  "LastUpdateTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "LatestVersion": {
+   "$ref": "#/definitions/TestCaseLatestVersion"
+  },
+  "Name": {
+   "pattern": "^[A-Za-z][A-Za-z0-9_\\-]{1,59}$",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/TestCaseLifecycle"
+  },
+  "Steps": {
+   "items": {
+    "$ref": "#/definitions/Step"
+   },
+   "maxItems": 20,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  },
+  "TestCaseArn": {
+   "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9/][A-Za-z0-9:_/+=,@.-]{0,1023}$",
+   "type": "string"
+  },
+  "TestCaseId": {
+   "pattern": "^[A-Za-z0-9:/\\-]{1,100}$",
+   "type": "string"
+  },
+  "TestCaseVersion": {
+   "type": "number"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreationTime",
+  "/properties/LastUpdateTime",
+  "/properties/LatestVersion",
+  "/properties/Status",
+  "/properties/TestCaseArn",
+  "/properties/TestCaseId",
+  "/properties/TestCaseVersion"
+ ],
+ "required": [
+  "Name",
+  "Steps"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AppTest::TestCase"
+}

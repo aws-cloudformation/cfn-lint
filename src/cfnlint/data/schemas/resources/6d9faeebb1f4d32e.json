@@ -1,0 +1,111 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BucketName"
+ ],
+ "definitions": {
+  "AccessRules": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowPublicOverrides": {
+     "type": "boolean"
+    },
+    "GetObject": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BucketName"
+ ],
+ "properties": {
+  "AbleToUpdateBundle": {
+   "type": "boolean"
+  },
+  "AccessRules": {
+   "$ref": "#/definitions/AccessRules"
+  },
+  "BucketArn": {
+   "type": "string"
+  },
+  "BucketName": {
+   "maxLength": 54,
+   "minLength": 3,
+   "pattern": "^[a-z0-9][a-z0-9-]{1,52}[a-z0-9]$",
+   "type": "string"
+  },
+  "BundleId": {
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "ObjectVersioning": {
+   "type": "boolean"
+  },
+  "ReadOnlyAccessAccounts": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ResourcesReceivingAccess": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Url": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/BucketArn",
+  "/properties/Url",
+  "/properties/AbleToUpdateBundle"
+ ],
+ "required": [
+  "BucketName",
+  "BundleId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Lightsail::Bucket"
+}

@@ -1,0 +1,273 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "EntityType": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "type": "string"
+    },
+    "CreatedTime": {
+     "type": "string"
+    },
+    "Description": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Inline": {
+     "type": "boolean"
+    },
+    "LastUpdatedTime": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Tags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "maxItems": 200,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "EventVariable": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "type": "string"
+    },
+    "CreatedTime": {
+     "type": "string"
+    },
+    "DataSource": {
+     "enum": [
+      "EVENT"
+     ],
+     "type": "string"
+    },
+    "DataType": {
+     "enum": [
+      "STRING",
+      "INTEGER",
+      "FLOAT",
+      "BOOLEAN"
+     ],
+     "type": "string"
+    },
+    "DefaultValue": {
+     "type": "string"
+    },
+    "Description": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Inline": {
+     "type": "boolean"
+    },
+    "LastUpdatedTime": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Tags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "maxItems": 200,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "VariableType": {
+     "enum": [
+      "AUTH_CODE",
+      "AVS",
+      "BILLING_ADDRESS_L1",
+      "BILLING_ADDRESS_L2",
+      "BILLING_CITY",
+      "BILLING_COUNTRY",
+      "BILLING_NAME",
+      "BILLING_PHONE",
+      "BILLING_STATE",
+      "BILLING_ZIP",
+      "CARD_BIN",
+      "CATEGORICAL",
+      "CURRENCY_CODE",
+      "EMAIL_ADDRESS",
+      "FINGERPRINT",
+      "FRAUD_LABEL",
+      "FREE_FORM_TEXT",
+      "IP_ADDRESS",
+      "NUMERIC",
+      "ORDER_ID",
+      "PAYMENT_TYPE",
+      "PHONE_NUMBER",
+      "PRICE",
+      "PRODUCT_CATEGORY",
+      "SHIPPING_ADDRESS_L1",
+      "SHIPPING_ADDRESS_L2",
+      "SHIPPING_CITY",
+      "SHIPPING_COUNTRY",
+      "SHIPPING_NAME",
+      "SHIPPING_PHONE",
+      "SHIPPING_STATE",
+      "SHIPPING_ZIP",
+      "USERAGENT"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Label": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "type": "string"
+    },
+    "CreatedTime": {
+     "type": "string"
+    },
+    "Description": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Inline": {
+     "type": "boolean"
+    },
+    "LastUpdatedTime": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Tags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "maxItems": 200,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "CreatedTime": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "EntityTypes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EntityType"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "EventVariables": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EventVariable"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Labels": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Label"
+   },
+   "minItems": 2,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "LastUpdatedTime": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[0-9a-z_-]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedTime",
+  "/properties/LastUpdatedTime",
+  "/properties/EventVariables/*/Arn",
+  "/properties/EventVariables/*/CreatedTime",
+  "/properties/EventVariables/*/LastUpdatedTime",
+  "/properties/Labels/*/Arn",
+  "/properties/Labels/*/CreatedTime",
+  "/properties/Labels/*/LastUpdatedTime",
+  "/properties/EntityTypes/*/Arn",
+  "/properties/EntityTypes/*/CreatedTime",
+  "/properties/EntityTypes/*/LastUpdatedTime"
+ ],
+ "required": [
+  "EntityTypes",
+  "EventVariables",
+  "Labels",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::FraudDetector::EventType"
+}

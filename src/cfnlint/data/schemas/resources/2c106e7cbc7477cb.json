@@ -1,0 +1,136 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Id"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StreamClass",
+  "/properties/DefaultApplication/Id"
+ ],
+ "definitions": {
+  "DefaultApplication": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^arn:aws:gameliftstreams:([^:\n]*):([0-9]{12}):([^:\n]*)$",
+     "type": "string"
+    },
+    "Id": {
+     "maxLength": 32,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LocationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AlwaysOnCapacity": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "LocationName": {
+     "maxLength": 20,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-]+$",
+     "type": "string"
+    },
+    "OnDemandCapacity": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "LocationName"
+   ],
+   "type": "object"
+  },
+  "StreamClass": {
+   "maxLength": 20,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "minProperties": 1,
+   "patternProperties": {
+    ".+": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^(^[a-zA-Z0-9-]+$)|(^arn:aws:gameliftstreams:([^:\n]*):([0-9]{12}):([^:\n]*)$)$",
+   "type": "string"
+  },
+  "DefaultApplication": {
+   "$ref": "#/definitions/DefaultApplication"
+  },
+  "Description": {
+   "maxLength": 80,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_.!+@/][a-zA-Z0-9-_.!+@/ ]*$",
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "LocationConfigurations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LocationConfiguration"
+   },
+   "maxItems": 100,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "StreamClass": {
+   "$ref": "#/definitions/StreamClass"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "Description",
+  "LocationConfigurations",
+  "StreamClass"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GameLiftStreams::StreamGroup"
+}

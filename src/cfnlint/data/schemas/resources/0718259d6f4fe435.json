@@ -1,0 +1,124 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IdentitySourceParameters",
+  "/properties/IdentitySourceParameters/IamIdentityCenter",
+  "/properties/IdentitySourceParameters/IamIdentityCenter/InstanceArn",
+  "/properties/IdentitySourceParameters/IamIdentityCenter/Region"
+ ],
+ "definitions": {
+  "IamIdentityCenter": {
+   "additionalProperties": false,
+   "properties": {
+    "ApprovalPortalUrl": {
+     "type": "string"
+    },
+    "InstanceArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:.+:sso:::instance/(?:sso)?ins-[a-zA-Z0-9-.]{16}$",
+     "type": "string"
+    },
+    "Region": {
+     "maxLength": 1000,
+     "type": "string"
+    }
+   },
+   "required": [
+    "InstanceArn",
+    "Region"
+   ],
+   "type": "object"
+  },
+  "IdentitySourceArn": {
+   "type": "string"
+  },
+  "IdentitySourceParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "IamIdentityCenter": {
+     "$ref": "#/definitions/IamIdentityCenter"
+    }
+   },
+   "required": [
+    "IamIdentityCenter"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IdentitySourceArn"
+ ],
+ "properties": {
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "IdentitySourceArn": {
+   "$ref": "#/definitions/IdentitySourceArn"
+  },
+  "IdentitySourceParameters": {
+   "$ref": "#/definitions/IdentitySourceParameters"
+  },
+  "IdentitySourceType": {
+   "type": "string"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "StatusCode": {
+   "type": "string"
+  },
+  "StatusMessage": {
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IdentitySourceArn",
+  "/properties/IdentitySourceType",
+  "/properties/IdentitySourceParameters/IamIdentityCenter/ApprovalPortalUrl",
+  "/properties/CreationTime",
+  "/properties/Status",
+  "/properties/StatusCode",
+  "/properties/StatusMessage"
+ ],
+ "required": [
+  "IdentitySourceParameters"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MPA::IdentitySource"
+}

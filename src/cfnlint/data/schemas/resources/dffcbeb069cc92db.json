@@ -1,0 +1,245 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AvailabilityZone",
+  "/properties/AvailabilityZoneId",
+  "/properties/BackupSubnetCidr",
+  "/properties/ClientSubnetCidr",
+  "/properties/CustomDomainName",
+  "/properties/DefaultDnsPrefix"
+ ],
+ "definitions": {
+  "ManagedResourceStatus": {
+   "enum": [
+    "ENABLED",
+    "ENABLING",
+    "DISABLED",
+    "DISABLING"
+   ],
+   "type": "string"
+  },
+  "ManagedServices": {
+   "additionalProperties": false,
+   "properties": {
+    "ManagedS3BackupAccess": {
+     "additionalProperties": false,
+     "properties": {
+      "Ipv4Addresses": {
+       "insertionOrder": false,
+       "items": {
+        "type": "string"
+       },
+       "type": "array",
+       "uniqueItems": false
+      },
+      "Status": {
+       "$ref": "#/definitions/ManagedResourceStatus"
+      }
+     },
+     "type": "object"
+    },
+    "ManagedServicesIpv4Cidrs": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ResourceGatewayArn": {
+     "type": "string"
+    },
+    "S3Access": {
+     "additionalProperties": false,
+     "properties": {
+      "DomainName": {
+       "type": "string"
+      },
+      "Ipv4Addresses": {
+       "insertionOrder": false,
+       "items": {
+        "type": "string"
+       },
+       "type": "array",
+       "uniqueItems": false
+      },
+      "S3PolicyDocument": {
+       "type": "string"
+      },
+      "Status": {
+       "$ref": "#/definitions/ManagedResourceStatus"
+      }
+     },
+     "type": "object"
+    },
+    "ServiceNetworkArn": {
+     "type": "string"
+    },
+    "ServiceNetworkEndpoint": {
+     "additionalProperties": false,
+     "properties": {
+      "VpcEndpointId": {
+       "type": "string"
+      },
+      "VpcEndpointType": {
+       "enum": [
+        "SERVICENETWORK"
+       ],
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "ZeroEtlAccess": {
+     "additionalProperties": false,
+     "properties": {
+      "Cidr": {
+       "format": "ipv4-network",
+       "type": "string"
+      },
+      "Status": {
+       "$ref": "#/definitions/ManagedResourceStatus"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/OdbNetworkArn"
+ ],
+ "properties": {
+  "AvailabilityZone": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "AvailabilityZoneId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "BackupSubnetCidr": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ClientSubnetCidr": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CustomDomainName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DefaultDnsPrefix": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "[a-zA-Z][a-zA-Z0-9]*",
+   "type": "string"
+  },
+  "DeleteAssociatedResources": {
+   "type": "boolean"
+  },
+  "DisplayName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z_](?!.*--)[a-zA-Z0-9_-]*$",
+   "type": "string"
+  },
+  "ManagedServices": {
+   "$ref": "#/definitions/ManagedServices"
+  },
+  "OciNetworkAnchorId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OciResourceAnchorName": {
+   "type": "string"
+  },
+  "OciVcnUrl": {
+   "type": "string"
+  },
+  "OdbNetworkArn": {
+   "type": "string"
+  },
+  "OdbNetworkId": {
+   "type": "string"
+  },
+  "S3Access": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "S3PolicyDocument": {
+   "maxLength": 20480,
+   "minLength": 3,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ZeroEtlAccess": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ManagedServices",
+  "/properties/OciNetworkAnchorId",
+  "/properties/OciResourceAnchorName",
+  "/properties/OciVcnUrl",
+  "/properties/OdbNetworkArn",
+  "/properties/OdbNetworkId"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ODB::OdbNetwork",
+ "writeOnlyProperties": [
+  "/properties/DeleteAssociatedResources",
+  "/properties/DefaultDnsPrefix",
+  "/properties/S3Access",
+  "/properties/S3PolicyDocument",
+  "/properties/ZeroEtlAccess"
+ ]
+}

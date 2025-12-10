@@ -1,0 +1,83 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InitialVersion"
+ ],
+ "definitions": {
+  "Core": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateArn": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "SyncShadow": {
+     "type": "boolean"
+    },
+    "ThingArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ThingArn",
+    "Id",
+    "CertificateArn"
+   ],
+   "type": "object"
+  },
+  "CoreDefinitionVersion": {
+   "additionalProperties": false,
+   "properties": {
+    "Cores": {
+     "items": {
+      "$ref": "#/definitions/Core"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Cores"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InitialVersion": {
+   "$ref": "#/definitions/CoreDefinitionVersion"
+  },
+  "LatestVersionArn": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Tags": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LatestVersionArn",
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "typeName": "AWS::Greengrass::CoreDefinition"
+}

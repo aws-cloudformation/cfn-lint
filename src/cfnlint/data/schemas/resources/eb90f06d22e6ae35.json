@@ -1,0 +1,119 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EventType",
+  "/properties/NotificationConfigurationArn",
+  "/properties/Source"
+ ],
+ "definitions": {
+  "EventRuleStatus": {
+   "enum": [
+    "ACTIVE",
+    "INACTIVE",
+    "CREATING",
+    "UPDATING",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "EventRuleStatusSummary": {
+   "additionalProperties": false,
+   "properties": {
+    "Reason": {
+     "type": "string"
+    },
+    "Status": {
+     "$ref": "#/definitions/EventRuleStatus"
+    }
+   },
+   "required": [
+    "Reason",
+    "Status"
+   ],
+   "type": "object"
+  },
+  "StatusSummaryByRegion": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^([a-z]{1,2})-([a-z]{1,15}-)+([0-9])$": {
+     "$ref": "#/definitions/EventRuleStatusSummary"
+    }
+   },
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:aws:notifications::[0-9]{12}:configuration/[a-z0-9]{27}/rule/[a-z0-9]{27}$",
+   "type": "string"
+  },
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "EventPattern": {
+   "maxLength": 4096,
+   "minLength": 0,
+   "type": "string"
+  },
+  "EventType": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^([a-zA-Z0-9 \\-\\(\\)])+$",
+   "type": "string"
+  },
+  "ManagedRules": {
+   "items": {
+    "pattern": "^arn:aws:events:[a-z-\\d]{2,25}:\\d{12}:rule\\/[a-zA-Z-\\d]{1,1024}$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "NotificationConfigurationArn": {
+   "pattern": "^arn:aws:notifications::[0-9]{12}:configuration/[a-z0-9]{27}$",
+   "type": "string"
+  },
+  "Regions": {
+   "items": {
+    "maxLength": 25,
+    "minLength": 2,
+    "pattern": "^([a-z]{1,2})-([a-z]{1,15}-)+([0-9])$",
+    "type": "string"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "Source": {
+   "maxLength": 36,
+   "minLength": 1,
+   "pattern": "^aws.([a-z0-9\\-])+$",
+   "type": "string"
+  },
+  "StatusSummaryByRegion": {
+   "$ref": "#/definitions/StatusSummaryByRegion"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationTime",
+  "/properties/ManagedRules",
+  "/properties/StatusSummaryByRegion"
+ ],
+ "required": [
+  "EventType",
+  "NotificationConfigurationArn",
+  "Regions",
+  "Source"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Notifications::EventRule"
+}

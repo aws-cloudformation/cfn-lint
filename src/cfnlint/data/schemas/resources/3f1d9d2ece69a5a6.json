@@ -1,0 +1,125 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName",
+  "/properties/EventStreamName",
+  "/properties/Uri"
+ ],
+ "definitions": {
+  "Status": {
+   "enum": [
+    "HEALTHY",
+    "UNHEALTHY"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Uri": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainName",
+  "/properties/EventStreamName"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "type": "string"
+  },
+  "DestinationDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "$ref": "#/definitions/Status"
+    },
+    "Uri": {
+     "$ref": "#/definitions/Uri"
+    }
+   },
+   "required": [
+    "Uri",
+    "Status"
+   ],
+   "type": "object"
+  },
+  "DomainName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "EventStreamArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "EventStreamName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "State": {
+   "enum": [
+    "RUNNING",
+    "STOPPED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Uri": {
+   "$ref": "#/definitions/Uri"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DestinationDetails",
+  "/properties/CreatedAt",
+  "/properties/State",
+  "/properties/EventStreamArn"
+ ],
+ "required": [
+  "DomainName",
+  "EventStreamName",
+  "Uri"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-customer-profiles",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CustomerProfiles::EventStream"
+}

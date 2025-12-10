@@ -1,0 +1,377 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Action": {
+   "additionalProperties": false,
+   "properties": {
+    "SsmAutomation": {
+     "$ref": "#/definitions/SsmAutomation"
+    }
+   },
+   "type": "object"
+  },
+  "ChatChannel": {
+   "additionalProperties": false,
+   "properties": {
+    "ChatbotSns": {
+     "$ref": "#/definitions/ChatbotSns"
+    }
+   },
+   "type": "object"
+  },
+  "ChatbotSns": {
+   "default": [],
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/SnsArn"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DynamicSsmParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "$ref": "#/definitions/DynamicSsmParameterValue"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "DynamicSsmParameterValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Variable": {
+     "$ref": "#/definitions/VariableType"
+    }
+   },
+   "type": "object"
+  },
+  "IncidentTemplate": {
+   "additionalProperties": false,
+   "properties": {
+    "DedupeString": {
+     "maxLength": 1000,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Impact": {
+     "maximum": 5,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "IncidentTags": {
+     "default": [],
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "maxItems": 50,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "NotificationTargets": {
+     "default": [],
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/NotificationTargetItem"
+     },
+     "maxItems": 10,
+     "type": "array"
+    },
+    "Summary": {
+     "maxLength": 4000,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Title": {
+     "maxLength": 200,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Title",
+    "Impact"
+   ],
+   "type": "object"
+  },
+  "Integration": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "PagerDutyConfiguration"
+     ]
+    }
+   ],
+   "properties": {
+    "PagerDutyConfiguration": {
+     "$ref": "#/definitions/PagerDutyConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "NotificationTargetItem": {
+   "additionalProperties": false,
+   "properties": {
+    "SnsTopicArn": {
+     "$ref": "#/definitions/SnsArn"
+    }
+   },
+   "type": "object"
+  },
+  "PagerDutyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 200,
+     "minLength": 1,
+     "type": "string"
+    },
+    "PagerDutyIncidentConfiguration": {
+     "$ref": "#/definitions/PagerDutyIncidentConfiguration"
+    },
+    "SecretId": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "SecretId",
+    "PagerDutyIncidentConfiguration"
+   ],
+   "type": "object"
+  },
+  "PagerDutyIncidentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ServiceId": {
+     "maxLength": 200,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ServiceId"
+   ],
+   "type": "object"
+  },
+  "SSMContact": {
+   "maxLength": 1000,
+   "pattern": "^arn:aws(-(cn|us-gov))?:ssm-contacts:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
+   "type": "string"
+  },
+  "SnsArn": {
+   "maxLength": 1000,
+   "pattern": "^arn:aws(-(cn|us-gov))?:sns:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
+   "type": "string"
+  },
+  "SsmAutomation": {
+   "additionalProperties": false,
+   "properties": {
+    "DocumentName": {
+     "maxLength": 128,
+     "pattern": "^[a-zA-Z0-9_\\-.:/]{3,128}$",
+     "type": "string"
+    },
+    "DocumentVersion": {
+     "maxLength": 128,
+     "type": "string"
+    },
+    "DynamicParameters": {
+     "default": [],
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/DynamicSsmParameter"
+     },
+     "maxItems": 200,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Parameters": {
+     "default": [],
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SsmParameter"
+     },
+     "maxItems": 200,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 1000,
+     "pattern": "^arn:aws(-(cn|us-gov))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
+     "type": "string"
+    },
+    "TargetAccount": {
+     "enum": [
+      "IMPACTED_ACCOUNT",
+      "RESPONSE_PLAN_OWNER_ACCOUNT"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn",
+    "DocumentName"
+   ],
+   "type": "object"
+  },
+  "SsmParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/SsmParameterValue"
+     },
+     "maxItems": 10,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Values",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "SsmParameterValue": {
+   "maxLength": 10000,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VariableType": {
+   "enum": [
+    "INCIDENT_RECORD_ARN",
+    "INVOLVED_RESOURCES"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Actions": {
+   "default": [],
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Action"
+   },
+   "maxItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Arn": {
+   "maxLength": 1000,
+   "pattern": "^arn:aws(-(cn|us-gov))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
+   "type": "string"
+  },
+  "ChatChannel": {
+   "$ref": "#/definitions/ChatChannel"
+  },
+  "DisplayName": {
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Engagements": {
+   "default": [],
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SSMContact"
+   },
+   "maxItems": 5,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "IncidentTemplate": {
+   "$ref": "#/definitions/IncidentTemplate"
+  },
+  "Integrations": {
+   "default": [],
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Integration"
+   },
+   "maxItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Name": {
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "default": [],
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "IncidentTemplate"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ssm-incidents.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SSMIncidents::ResponsePlan"
+}

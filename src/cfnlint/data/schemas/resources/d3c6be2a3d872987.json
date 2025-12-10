@@ -1,0 +1,149 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Arn"
+  ],
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "Criterion": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "\\w": {
+     "$ref": "#/definitions/CriterionAdditionalProperties"
+    }
+   },
+   "type": "object"
+  },
+  "CriterionAdditionalProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "eq": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "gt": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "gte": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "lt": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "lte": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "neq": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "FindingCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "Criterion": {
+     "$ref": "#/definitions/Criterion"
+    }
+   },
+   "type": "object"
+  },
+  "FindingFilterAction": {
+   "enum": [
+    "ARCHIVE",
+    "NOOP"
+   ],
+   "type": "string"
+  },
+  "FindingsFilterListItem": {
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Action": {
+   "$ref": "#/definitions/FindingFilterAction"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "FindingCriteria": {
+   "$ref": "#/definitions/FindingCriteria"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Position": {
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "FindingCriteria"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-macie.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Macie::FindingsFilter"
+}

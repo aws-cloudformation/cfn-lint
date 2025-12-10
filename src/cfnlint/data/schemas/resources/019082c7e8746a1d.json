@@ -1,0 +1,335 @@
+{
+ "$comment": "We explicitly specify the replacement strategy to be delete_then_create because we cannot create a new SP resource with the same name or same KVS input before deleting the old one",
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/KmsKeyId",
+  "/properties/RoleArn",
+  "/properties/KinesisVideoStream",
+  "/properties/ConnectedHomeSettings",
+  "/properties/FaceSearchSettings",
+  "/properties/KinesisDataStream",
+  "/properties/S3Destination",
+  "/properties/NotificationChannel",
+  "/properties/BoundingBoxRegionsOfInterest",
+  "/properties/PolygonRegionsOfInterest",
+  "/properties/DataSharingPreference"
+ ],
+ "definitions": {
+  "Arn": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "BoundingBox": {
+   "additionalProperties": false,
+   "properties": {
+    "Height": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "number"
+    },
+    "Left": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "number"
+    },
+    "Top": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "number"
+    },
+    "Width": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Height",
+    "Width",
+    "Left",
+    "Top"
+   ],
+   "type": "object"
+  },
+  "ConnectedHomeSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "Labels": {
+     "$ref": "#/definitions/Labels"
+    },
+    "MinConfidence": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Labels"
+   ],
+   "type": "object"
+  },
+  "DataSharingPreference": {
+   "additionalProperties": false,
+   "properties": {
+    "OptIn": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "OptIn"
+   ],
+   "type": "object"
+  },
+  "FaceSearchSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "CollectionId": {
+     "maxLength": 255,
+     "pattern": "\\A[a-zA-Z0-9_\\.\\-]+$",
+     "type": "string"
+    },
+    "FaceMatchThreshold": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "required": [
+    "CollectionId"
+   ],
+   "type": "object"
+  },
+  "KinesisDataStream": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "maxLength": 2048,
+     "pattern": "(^arn:([a-z\\d-]+):kinesis:([a-z\\d-]+):\\d{12}:.+$)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Arn"
+   ],
+   "type": "object"
+  },
+  "KinesisVideoStream": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "maxLength": 2048,
+     "pattern": "(^arn:([a-z\\d-]+):kinesisvideo:([a-z\\d-]+):\\d{12}:.+$)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Arn"
+   ],
+   "type": "object"
+  },
+  "Labels": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 128,
+    "minLength": 1,
+    "type": "string"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "NotificationChannel": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "maxLength": 2048,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Arn"
+   ],
+   "type": "object"
+  },
+  "Point": {
+   "additionalProperties": false,
+   "properties": {
+    "X": {
+     "type": "number"
+    },
+    "Y": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "X",
+    "Y"
+   ],
+   "type": "object"
+  },
+  "Polygon": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Point"
+   },
+   "minItems": 3,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "S3Destination": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "maxLength": 63,
+     "type": "string"
+    },
+    "ObjectKeyPrefix": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "\\A(?!aws:)[a-zA-Z0-9+\\-=\\._\\:\\/@]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "\\A[a-zA-Z0-9+\\-=\\._\\:\\/@]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "ConnectedHomeSettings",
+    "S3Destination",
+    "NotificationChannel"
+   ]
+  },
+  {
+   "required": [
+    "FaceSearchSettings",
+    "KinesisDataStream"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "BoundingBoxRegionsOfInterest": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/BoundingBox"
+   },
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ConnectedHomeSettings": {
+   "$ref": "#/definitions/ConnectedHomeSettings"
+  },
+  "DataSharingPreference": {
+   "$ref": "#/definitions/DataSharingPreference"
+  },
+  "FaceSearchSettings": {
+   "$ref": "#/definitions/FaceSearchSettings"
+  },
+  "KinesisDataStream": {
+   "$ref": "#/definitions/KinesisDataStream"
+  },
+  "KinesisVideoStream": {
+   "$ref": "#/definitions/KinesisVideoStream"
+  },
+  "KmsKeyId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,2048}$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_.\\-]+",
+   "type": "string"
+  },
+  "NotificationChannel": {
+   "$ref": "#/definitions/NotificationChannel"
+  },
+  "PolygonRegionsOfInterest": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Polygon"
+   },
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "pattern": "arn:aws(-[\\w]+)*:iam::[0-9]{12}:role/.*",
+   "type": "string"
+  },
+  "S3Destination": {
+   "$ref": "#/definitions/S3Destination"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "StatusMessage": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Status",
+  "/properties/StatusMessage"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "RoleArn",
+  "KinesisVideoStream"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Rekognition::StreamProcessor"
+}

@@ -1,0 +1,172 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MembershipIdentifier",
+  "/properties/Name",
+  "/properties/InputReferenceConfig"
+ ],
+ "definitions": {
+  "IdMappingTableInputReferenceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "InputReferenceArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "arn:(aws|aws-us-gov|aws-cn):entityresolution:.*:[0-9]+:(idmappingworkflow/.*)",
+     "type": "string"
+    },
+    "ManageResourcePolicies": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "InputReferenceArn",
+    "ManageResourcePolicies"
+   ],
+   "type": "object"
+  },
+  "IdMappingTableInputReferenceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "IdMappingTableInputSource": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/IdMappingTableInputSource"
+     },
+     "maxItems": 2,
+     "minItems": 2,
+     "type": "array"
+    }
+   },
+   "required": [
+    "IdMappingTableInputSource"
+   ],
+   "type": "object"
+  },
+  "IdMappingTableInputSource": {
+   "additionalProperties": false,
+   "properties": {
+    "IdNamespaceAssociationId": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "SOURCE",
+      "TARGET"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "IdNamespaceAssociationId",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UUID": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IdMappingTableIdentifier",
+  "/properties/MembershipIdentifier"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 200,
+   "type": "string"
+  },
+  "CollaborationArn": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "CollaborationIdentifier": {
+   "$ref": "#/definitions/UUID"
+  },
+  "Description": {
+   "maxLength": 255,
+   "pattern": "^[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t\\r\\n]*$",
+   "type": "string"
+  },
+  "IdMappingTableIdentifier": {
+   "$ref": "#/definitions/UUID"
+  },
+  "InputReferenceConfig": {
+   "$ref": "#/definitions/IdMappingTableInputReferenceConfig"
+  },
+  "InputReferenceProperties": {
+   "$ref": "#/definitions/IdMappingTableInputReferenceProperties"
+  },
+  "KmsKeyArn": {
+   "maxLength": 2048,
+   "minLength": 4,
+   "pattern": "arn:aws:kms:[\\w]{2}-[\\w]{4,9}-[\\d]:[\\d]{12}:key/[a-zA-Z0-9-]+",
+   "type": "string"
+  },
+  "MembershipArn": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "MembershipIdentifier": {
+   "$ref": "#/definitions/UUID"
+  },
+  "Name": {
+   "maxLength": 128,
+   "pattern": "^[a-zA-Z0-9_](([a-zA-Z0-9_ ]+-)*([a-zA-Z0-9_ ]+))?$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IdMappingTableIdentifier",
+  "/properties/Arn",
+  "/properties/MembershipArn",
+  "/properties/CollaborationIdentifier",
+  "/properties/CollaborationArn",
+  "/properties/InputReferenceProperties"
+ ],
+ "required": [
+  "MembershipIdentifier",
+  "Name",
+  "InputReferenceConfig"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cleanrooms",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CleanRooms::IdMappingTable"
+}

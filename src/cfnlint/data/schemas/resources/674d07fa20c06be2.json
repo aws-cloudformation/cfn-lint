@@ -1,0 +1,72 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ImportSource": {
+   "additionalProperties": false,
+   "properties": {
+    "SourceArn": {
+     "type": "string"
+    },
+    "SourceType": {
+     "enum": [
+      "S3"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceType",
+    "SourceArn"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Comment": {
+   "maxLength": 128,
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "ImportSource": {
+   "$ref": "#/definitions/ImportSource"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9-_]{1,64}",
+   "type": "string"
+  },
+  "Status": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/Status"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::CloudFront::KeyValueStore",
+ "writeOnlyProperties": [
+  "/properties/ImportSource"
+ ]
+}

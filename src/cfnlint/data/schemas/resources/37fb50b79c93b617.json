@@ -1,0 +1,189 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationId",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "KendraIndexConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IndexId": {
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "IndexId"
+   ],
+   "type": "object"
+  },
+  "NativeIndexConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IndexId": {
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "IndexId"
+   ],
+   "type": "object"
+  },
+  "RetrieverConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "NativeIndexConfiguration": {
+       "$ref": "#/definitions/NativeIndexConfiguration"
+      }
+     },
+     "required": [
+      "NativeIndexConfiguration"
+     ],
+     "title": "NativeIndexConfiguration",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "KendraIndexConfiguration": {
+       "$ref": "#/definitions/KendraIndexConfiguration"
+      }
+     },
+     "required": [
+      "KendraIndexConfiguration"
+     ],
+     "title": "KendraIndexConfiguration",
+     "type": "object"
+    }
+   ]
+  },
+  "RetrieverStatus": {
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "RetrieverType": {
+   "enum": [
+    "NATIVE_INDEX",
+    "KENDRA_INDEX"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationId",
+  "/properties/RetrieverId"
+ ],
+ "properties": {
+  "ApplicationId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
+   "type": "string"
+  },
+  "Configuration": {
+   "$ref": "#/definitions/RetrieverConfiguration"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$",
+   "type": "string"
+  },
+  "RetrieverArn": {
+   "maxLength": 1284,
+   "minLength": 0,
+   "pattern": "^arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
+   "type": "string"
+  },
+  "RetrieverId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 1284,
+   "minLength": 0,
+   "pattern": "^arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/RetrieverStatus"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Type": {
+   "$ref": "#/definitions/RetrieverType"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/RetrieverArn",
+  "/properties/RetrieverId",
+  "/properties/Status",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "ApplicationId",
+  "Configuration",
+  "DisplayName",
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-qbusiness",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::QBusiness::Retriever"
+}

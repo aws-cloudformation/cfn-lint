@@ -1,0 +1,54 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FlowArn",
+  "/properties/Name"
+ ],
+ "primaryIdentifier": [
+  "/properties/FlowArn",
+  "/properties/Name"
+ ],
+ "properties": {
+  "FlowArn": {
+   "pattern": "arn:.+:mediaconnect.+:flow:.+",
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "NetworkInterfaceIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "SubnetId": {
+   "format": "AWS::EC2::Subnet.Id",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/NetworkInterfaceIds"
+ ],
+ "required": [
+  "FlowArn",
+  "Name",
+  "RoleArn",
+  "SubnetId",
+  "SecurityGroupIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+ "typeName": "AWS::MediaConnect::FlowVpcInterface"
+}

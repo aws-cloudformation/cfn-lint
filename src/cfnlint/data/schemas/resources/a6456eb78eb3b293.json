@@ -1,0 +1,207 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Description",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Field": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "RefValue": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "StringValue": {
+     "maxLength": 10240,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "ParameterAttribute": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "StringValue": {
+     "maxLength": 10240,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "StringValue"
+   ],
+   "type": "object"
+  },
+  "ParameterObject": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ParameterAttribute"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Id": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Attributes",
+    "Id"
+   ],
+   "type": "object"
+  },
+  "ParameterValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "StringValue": {
+     "maxLength": 10240,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Id",
+    "StringValue"
+   ],
+   "type": "object"
+  },
+  "PipelineObject": {
+   "additionalProperties": false,
+   "properties": {
+    "Fields": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Field"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Id": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Fields",
+    "Id",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "PipelineTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PipelineId"
+ ],
+ "properties": {
+  "Activate": {
+   "type": "boolean"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ParameterObjects": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ParameterObject"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ParameterValues": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ParameterValue"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PipelineId": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "PipelineObjects": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PipelineObject"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PipelineTags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PipelineTag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PipelineId"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datapipeline",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/PipelineTags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataPipeline::Pipeline"
+}

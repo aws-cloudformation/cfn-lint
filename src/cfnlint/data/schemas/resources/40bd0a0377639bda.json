@@ -1,0 +1,133 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Arn"
+  ]
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "Criteria": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Regex": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "Regex"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "S3WordsList": {
+       "$ref": "#/definitions/S3WordsList"
+      }
+     },
+     "required": [
+      "S3WordsList"
+     ]
+    }
+   ],
+   "type": "object"
+  },
+  "Regex": {
+   "type": "string"
+  },
+  "S3WordsList": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "type": "string"
+    },
+    "ObjectKey": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName",
+    "ObjectKey"
+   ],
+   "type": "object"
+  },
+  "Status": {
+   "enum": [
+    "OK",
+    "S3_OBJECT_NOT_FOUND",
+    "S3_USER_ACCESS_DENIED",
+    "S3_OBJECT_ACCESS_DENIED",
+    "S3_THROTTLED",
+    "S3_OBJECT_OVERSIZE",
+    "S3_OBJECT_EMPTY",
+    "UNKNOWN_ERROR"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Criteria": {
+   "$ref": "#/definitions/Criteria"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/Status"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/Status"
+ ],
+ "required": [
+  "Name",
+  "Criteria"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-macie.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Macie::AllowList"
+}

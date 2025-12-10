@@ -1,0 +1,135 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/SignalCatalogArn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DataExtraDimensions": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 150,
+    "minLength": 1,
+    "pattern": "^[a-zA-Z0-9_.]+$",
+    "type": "string"
+   },
+   "maxItems": 5,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Description": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 26,
+   "minLength": 26,
+   "pattern": "^[A-Z0-9]+$",
+   "type": "string"
+  },
+  "LastModificationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "MetadataExtraDimensions": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 150,
+    "minLength": 1,
+    "pattern": "^[a-zA-Z0-9_.]+$",
+    "type": "string"
+   },
+   "maxItems": 5,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z\\d\\-_:]+$",
+   "type": "string"
+  },
+  "SignalCatalogArn": {
+   "type": "string"
+  },
+  "StateTemplateProperties": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 150,
+    "minLength": 1,
+    "pattern": "^[a-zA-Z0-9_.]+$",
+    "type": "string"
+   },
+   "maxItems": 500,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/CreationTime",
+  "/properties/LastModificationTime"
+ ],
+ "required": [
+  "Name",
+  "SignalCatalogArn",
+  "StateTemplateProperties"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTFleetWise::StateTemplate"
+}

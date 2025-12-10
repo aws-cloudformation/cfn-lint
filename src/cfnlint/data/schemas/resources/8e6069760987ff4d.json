@@ -1,0 +1,289 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DistributionName",
+  "/properties/IpAddressType"
+ ],
+ "definitions": {
+  "CacheBehavior": {
+   "additionalProperties": false,
+   "properties": {
+    "Behavior": {
+     "enum": [
+      "cache",
+      "dont-cache"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CacheBehaviorPerPath": {
+   "additionalProperties": false,
+   "properties": {
+    "Behavior": {
+     "enum": [
+      "cache",
+      "dont-cache"
+     ],
+     "type": "string"
+    },
+    "Path": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CacheSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedHTTPMethods": {
+     "pattern": ".*\\S.*",
+     "type": "string"
+    },
+    "CachedHTTPMethods": {
+     "pattern": ".*\\S.*",
+     "type": "string"
+    },
+    "DefaultTTL": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "ForwardedCookies": {
+     "$ref": "#/definitions/CookieObject"
+    },
+    "ForwardedHeaders": {
+     "$ref": "#/definitions/HeaderObject"
+    },
+    "ForwardedQueryStrings": {
+     "$ref": "#/definitions/QueryStringObject"
+    },
+    "MaximumTTL": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "MinimumTTL": {
+     "format": "int64",
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "CookieObject": {
+   "additionalProperties": false,
+   "properties": {
+    "CookiesAllowList": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Option": {
+     "enum": [
+      "all",
+      "allow-list",
+      "none"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HeaderObject": {
+   "additionalProperties": false,
+   "properties": {
+    "HeadersAllowList": {
+     "insertionOrder": false,
+     "items": {
+      "enum": [
+       "Accept",
+       "Accept-Charset",
+       "Accept-Datetime",
+       "Accept-Encoding",
+       "Accept-Language",
+       "Authorization",
+       "CloudFront-Forwarded-Proto",
+       "CloudFront-Is-Desktop-Viewer",
+       "CloudFront-Is-Mobile-Viewer",
+       "CloudFront-Is-SmartTV-Viewer",
+       "CloudFront-Is-Tablet-Viewer",
+       "CloudFront-Viewer-Country",
+       "Host",
+       "Origin",
+       "Referer"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Option": {
+     "enum": [
+      "all",
+      "allow-list",
+      "none"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InputOrigin": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "pattern": "\\w[\\w\\-]*\\w",
+     "type": "string"
+    },
+    "ProtocolPolicy": {
+     "enum": [
+      "http-only",
+      "https-only"
+     ],
+     "type": "string"
+    },
+    "RegionName": {
+     "enum": [
+      "ap-northeast-1",
+      "ap-northeast-2",
+      "ap-south-1",
+      "ap-southeast-1",
+      "ap-southeast-2",
+      "ap-southeast-3",
+      "ca-central-1",
+      "eu-central-1",
+      "eu-north-1",
+      "eu-west-1",
+      "eu-west-2",
+      "eu-west-3",
+      "us-east-1",
+      "us-east-2",
+      "us-west-1",
+      "us-west-2"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "QueryStringObject": {
+   "additionalProperties": false,
+   "properties": {
+    "Option": {
+     "type": "boolean"
+    },
+    "QueryStringsAllowList": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DistributionName"
+ ],
+ "properties": {
+  "AbleToUpdateBundle": {
+   "type": "boolean"
+  },
+  "BundleId": {
+   "type": "string"
+  },
+  "CacheBehaviorSettings": {
+   "$ref": "#/definitions/CacheSettings"
+  },
+  "CacheBehaviors": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CacheBehaviorPerPath"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CertificateName": {
+   "pattern": "\\w[\\w\\-]*\\w",
+   "type": "string"
+  },
+  "DefaultCacheBehavior": {
+   "$ref": "#/definitions/CacheBehavior"
+  },
+  "DistributionArn": {
+   "type": "string"
+  },
+  "DistributionName": {
+   "pattern": "\\w[\\w\\-]*\\w",
+   "type": "string"
+  },
+  "IpAddressType": {
+   "enum": [
+    "dualstack",
+    "ipv4",
+    "ipv6"
+   ],
+   "type": "string"
+  },
+  "IsEnabled": {
+   "type": "boolean"
+  },
+  "Origin": {
+   "$ref": "#/definitions/InputOrigin"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DistributionArn",
+  "/properties/Status",
+  "/properties/AbleToUpdateBundle"
+ ],
+ "required": [
+  "DistributionName",
+  "BundleId",
+  "DefaultCacheBehavior",
+  "Origin"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Lightsail::Distribution"
+}

@@ -1,0 +1,201 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApiId",
+  "/properties/FieldName",
+  "/properties/TypeName"
+ ],
+ "definitions": {
+  "AppSyncRuntime": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "enum": [
+      "APPSYNC_JS"
+     ],
+     "type": "string"
+    },
+    "RuntimeVersion": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RuntimeVersion",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "CachingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CachingKeys": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Ttl": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "Ttl"
+   ],
+   "type": "object"
+  },
+  "LambdaConflictHandlerConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaConflictHandlerArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PipelineConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Functions": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "SyncConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ConflictDetection": {
+     "enum": [
+      "NONE",
+      "VERSION"
+     ],
+     "type": "string"
+    },
+    "ConflictHandler": {
+     "enum": [
+      "AUTOMERGE",
+      "LAMBDA",
+      "NONE",
+      "OPTIMISTIC_CONCURRENCY"
+     ],
+     "type": "string"
+    },
+    "LambdaConflictHandlerConfig": {
+     "$ref": "#/definitions/LambdaConflictHandlerConfig"
+    }
+   },
+   "required": [
+    "ConflictDetection"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResolverArn"
+ ],
+ "properties": {
+  "ApiId": {
+   "type": "string"
+  },
+  "CachingConfig": {
+   "$ref": "#/definitions/CachingConfig"
+  },
+  "Code": {
+   "maxLength": 32768,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CodeS3Location": {
+   "type": "string"
+  },
+  "DataSourceName": {
+   "maxLength": 65536,
+   "minLength": 1,
+   "pattern": "[_A-Za-z][_0-9A-Za-z]*",
+   "type": "string"
+  },
+  "FieldName": {
+   "maxLength": 65536,
+   "minLength": 1,
+   "pattern": "[_A-Za-z][_0-9A-Za-z]*",
+   "type": "string"
+  },
+  "Kind": {
+   "enum": [
+    "PIPELINE",
+    "UNIT"
+   ],
+   "type": "string"
+  },
+  "MaxBatchSize": {
+   "maximum": 2000,
+   "type": "integer"
+  },
+  "MetricsConfig": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "PipelineConfig": {
+   "$ref": "#/definitions/PipelineConfig"
+  },
+  "RequestMappingTemplate": {
+   "maxLength": 65536,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RequestMappingTemplateS3Location": {
+   "type": "string"
+  },
+  "ResolverArn": {
+   "type": "string"
+  },
+  "ResponseMappingTemplate": {
+   "maxLength": 65536,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResponseMappingTemplateS3Location": {
+   "type": "string"
+  },
+  "Runtime": {
+   "$ref": "#/definitions/AppSyncRuntime"
+  },
+  "SyncConfig": {
+   "$ref": "#/definitions/SyncConfig"
+  },
+  "TypeName": {
+   "maxLength": 65536,
+   "minLength": 1,
+   "pattern": "[_A-Za-z][_0-9A-Za-z]*",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ResolverArn"
+ ],
+ "required": [
+  "TypeName",
+  "ApiId",
+  "FieldName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appsync.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::AppSync::Resolver",
+ "writeOnlyProperties": [
+  "/properties/RequestMappingTemplateS3Location",
+  "/properties/ResponseMappingTemplateS3Location",
+  "/properties/CodeS3Location"
+ ]
+}

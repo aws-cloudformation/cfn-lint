@@ -1,0 +1,107 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "ClusterEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Endpoint": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Region": {
+     "maxLength": 32,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterArn"
+ ],
+ "properties": {
+  "ClusterArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9:\\/_-]*$",
+   "type": "string"
+  },
+  "ClusterEndpoints": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ClusterEndpoint"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "NetworkType": {
+   "enum": [
+    "IPV4",
+    "DUALSTACK"
+   ],
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "PENDING",
+    "DEPLOYED",
+    "PENDING_DELETION"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag",
+    "maxItems": 20
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ClusterArn",
+  "/properties/ClusterEndpoints",
+  "/properties/Status"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53-recovery-control.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::Route53RecoveryControl::Cluster"
+}

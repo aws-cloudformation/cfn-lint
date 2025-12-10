@@ -1,0 +1,124 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "GlobalReplicationGroupMember": {
+   "additionalProperties": false,
+   "properties": {
+    "ReplicationGroupId": {
+     "type": "string"
+    },
+    "ReplicationGroupRegion": {
+     "type": "string"
+    },
+    "Role": {
+     "enum": [
+      "PRIMARY",
+      "SECONDARY"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RegionalConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ReplicationGroupId": {
+     "type": "string"
+    },
+    "ReplicationGroupRegion": {
+     "type": "string"
+    },
+    "ReshardingConfigurations": {
+     "items": {
+      "$ref": "#/definitions/ReshardingConfiguration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "ReshardingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "NodeGroupId": {
+     "type": "string"
+    },
+    "PreferredAvailabilityZones": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GlobalReplicationGroupId"
+ ],
+ "properties": {
+  "AutomaticFailoverEnabled": {
+   "type": "boolean"
+  },
+  "CacheNodeType": {
+   "type": "string"
+  },
+  "CacheParameterGroupName": {
+   "type": "string"
+  },
+  "EngineVersion": {
+   "type": "string"
+  },
+  "GlobalNodeGroupCount": {
+   "type": "integer"
+  },
+  "GlobalReplicationGroupDescription": {
+   "type": "string"
+  },
+  "GlobalReplicationGroupId": {
+   "type": "string"
+  },
+  "GlobalReplicationGroupIdSuffix": {
+   "type": "string"
+  },
+  "Members": {
+   "items": {
+    "$ref": "#/definitions/GlobalReplicationGroupMember"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RegionalConfigurations": {
+   "items": {
+    "$ref": "#/definitions/RegionalConfiguration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Status": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/GlobalReplicationGroupId",
+  "/properties/Status"
+ ],
+ "required": [
+  "Members"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticache",
+ "typeName": "AWS::ElastiCache::GlobalReplicationGroup",
+ "writeOnlyProperties": [
+  "/properties/GlobalReplicationGroupIdSuffix",
+  "/properties/AutomaticFailoverEnabled",
+  "/properties/CacheNodeType",
+  "/properties/EngineVersion",
+  "/properties/GlobalNodeGroupCount",
+  "/properties/GlobalReplicationGroupDescription",
+  "/properties/RegionalConfigurations"
+ ]
+}

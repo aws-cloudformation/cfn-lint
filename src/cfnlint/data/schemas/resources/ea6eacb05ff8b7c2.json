@@ -1,0 +1,314 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AbpV10x": {
+   "additionalProperties": false,
+   "properties": {
+    "DevAddr": {
+     "pattern": "[a-fA-F0-9]{8}",
+     "type": "string"
+    },
+    "SessionKeys": {
+     "$ref": "#/definitions/SessionKeysAbpV10x"
+    }
+   },
+   "required": [
+    "DevAddr",
+    "SessionKeys"
+   ],
+   "type": "object"
+  },
+  "AbpV11": {
+   "additionalProperties": false,
+   "properties": {
+    "DevAddr": {
+     "pattern": "[a-fA-F0-9]{8}",
+     "type": "string"
+    },
+    "SessionKeys": {
+     "$ref": "#/definitions/SessionKeysAbpV11"
+    }
+   },
+   "required": [
+    "DevAddr",
+    "SessionKeys"
+   ],
+   "type": "object"
+  },
+  "Application": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationName": {
+     "maxLength": 128,
+     "pattern": "[a-zA-Z0-9-_]+",
+     "type": "string"
+    },
+    "FPort": {
+     "maximum": 223,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Type": {
+     "enum": [
+      "SemtechGeolocation",
+      "SemtechGNSS",
+      "SemtechGNSSNG",
+      "SemtechWiFi"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FPorts": {
+   "additionalProperties": false,
+   "properties": {
+    "Applications": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Application"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "LoRaWANDevice": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "OtaaV11"
+     ]
+    },
+    {
+     "required": [
+      "OtaaV10x"
+     ]
+    },
+    {
+     "required": [
+      "AbpV11"
+     ]
+    },
+    {
+     "required": [
+      "AbpV10x"
+     ]
+    }
+   ],
+   "properties": {
+    "AbpV10x": {
+     "$ref": "#/definitions/AbpV10x"
+    },
+    "AbpV11": {
+     "$ref": "#/definitions/AbpV11"
+    },
+    "DevEui": {
+     "pattern": "[a-f0-9]{16}",
+     "type": "string"
+    },
+    "DeviceProfileId": {
+     "maxLength": 256,
+     "type": "string"
+    },
+    "FPorts": {
+     "$ref": "#/definitions/FPorts"
+    },
+    "OtaaV10x": {
+     "$ref": "#/definitions/OtaaV10x"
+    },
+    "OtaaV11": {
+     "$ref": "#/definitions/OtaaV11"
+    },
+    "ServiceProfileId": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OtaaV10x": {
+   "additionalProperties": false,
+   "properties": {
+    "AppEui": {
+     "pattern": "[a-fA-F0-9]{16}",
+     "type": "string"
+    },
+    "AppKey": {
+     "pattern": "[a-fA-F0-9]{32}",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AppKey",
+    "AppEui"
+   ],
+   "type": "object"
+  },
+  "OtaaV11": {
+   "additionalProperties": false,
+   "properties": {
+    "AppKey": {
+     "pattern": "[a-fA-F0-9]{32}",
+     "type": "string"
+    },
+    "JoinEui": {
+     "pattern": "[a-fA-F0-9]{16}",
+     "type": "string"
+    },
+    "NwkKey": {
+     "pattern": "[a-fA-F0-9]{32}",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AppKey",
+    "NwkKey",
+    "JoinEui"
+   ],
+   "type": "object"
+  },
+  "SessionKeysAbpV10x": {
+   "additionalProperties": false,
+   "properties": {
+    "AppSKey": {
+     "pattern": "[a-fA-F0-9]{32}",
+     "type": "string"
+    },
+    "NwkSKey": {
+     "pattern": "[a-fA-F0-9]{32}",
+     "type": "string"
+    }
+   },
+   "required": [
+    "NwkSKey",
+    "AppSKey"
+   ],
+   "type": "object"
+  },
+  "SessionKeysAbpV11": {
+   "additionalProperties": false,
+   "properties": {
+    "AppSKey": {
+     "pattern": "[a-fA-F0-9]{32}",
+     "type": "string"
+    },
+    "FNwkSIntKey": {
+     "pattern": "[a-fA-F0-9]{32}",
+     "type": "string"
+    },
+    "NwkSEncKey": {
+     "pattern": "[a-fA-F0-9]{32}",
+     "type": "string"
+    },
+    "SNwkSIntKey": {
+     "pattern": "[a-fA-F0-9]{32}",
+     "type": "string"
+    }
+   },
+   "required": [
+    "FNwkSIntKey",
+    "SNwkSIntKey",
+    "NwkSEncKey",
+    "AppSKey"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "DestinationName": {
+   "maxLength": 128,
+   "pattern": "[a-zA-Z0-9-_]+",
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "LastUplinkReceivedAt": {
+   "type": "string"
+  },
+  "LoRaWAN": {
+   "$ref": "#/definitions/LoRaWANDevice"
+  },
+  "Name": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "Positioning": {
+   "enum": [
+    "Enabled",
+    "Disabled"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ThingArn": {
+   "type": "string"
+  },
+  "ThingName": {
+   "type": "string"
+  },
+  "Type": {
+   "enum": [
+    "Sidewalk",
+    "LoRaWAN"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ThingName",
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Type",
+  "DestinationName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTWireless::WirelessDevice"
+}

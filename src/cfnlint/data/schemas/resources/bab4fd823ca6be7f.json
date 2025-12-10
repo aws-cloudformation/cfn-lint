@@ -1,0 +1,87 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InitialVersion"
+ ],
+ "definitions": {
+  "Logger": {
+   "additionalProperties": false,
+   "properties": {
+    "Component": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Level": {
+     "type": "string"
+    },
+    "Space": {
+     "type": "integer"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Level",
+    "Id",
+    "Component"
+   ],
+   "type": "object"
+  },
+  "LoggerDefinitionVersion": {
+   "additionalProperties": false,
+   "properties": {
+    "Loggers": {
+     "items": {
+      "$ref": "#/definitions/Logger"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Loggers"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InitialVersion": {
+   "$ref": "#/definitions/LoggerDefinitionVersion"
+  },
+  "LatestVersionArn": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Tags": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LatestVersionArn",
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "typeName": "AWS::Greengrass::LoggerDefinition"
+}

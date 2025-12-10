@@ -1,0 +1,1129 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConnectorProfileName",
+  "/properties/ConnectorType",
+  "/properties/ConnectorLabel"
+ ],
+ "definitions": {
+  "AccessKeyId": {
+   "maxLength": 256,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "AccessToken": {
+   "maxLength": 4096,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "AccountName": {
+   "maxLength": 512,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "AmplitudeConnectorProfileCredentials": {
+   "properties": {
+    "ApiKey": {
+     "$ref": "#/definitions/ApiKey"
+    },
+    "SecretKey": {
+     "$ref": "#/definitions/SecretKey"
+    }
+   },
+   "required": [
+    "ApiKey",
+    "SecretKey"
+   ],
+   "type": "object"
+  },
+  "ApiKey": {
+   "maxLength": 256,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "ApiKeyCredentials": {
+   "additionalProperties": false,
+   "properties": {
+    "ApiKey": {
+     "$ref": "#/definitions/ApiKey"
+    },
+    "ApiSecretKey": {
+     "$ref": "#/definitions/ApiSecretKey"
+    }
+   },
+   "required": [
+    "ApiKey"
+   ],
+   "type": "object"
+  },
+  "ApiSecretKey": {
+   "maxLength": 256,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "ApiToken": {
+   "maxLength": 256,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "ApplicationHostUrl": {
+   "maxLength": 256,
+   "pattern": "^(https?)://[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]",
+   "type": "string"
+  },
+  "ApplicationKey": {
+   "maxLength": 512,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "ApplicationServicePath": {
+   "maxLength": 512,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "AuthCode": {
+   "maxLength": 4096,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "AuthenticationType": {
+   "enum": [
+    "OAUTH2",
+    "APIKEY",
+    "BASIC",
+    "CUSTOM"
+   ],
+   "type": "string"
+  },
+  "BasicAuthCredentials": {
+   "additionalProperties": false,
+   "properties": {
+    "Password": {
+     "$ref": "#/definitions/Password"
+    },
+    "Username": {
+     "$ref": "#/definitions/Username"
+    }
+   },
+   "required": [
+    "Username",
+    "Password"
+   ],
+   "type": "object"
+  },
+  "BucketName": {
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "BucketPrefix": {
+   "maxLength": 128,
+   "type": "string"
+  },
+  "BusinessUnitId": {
+   "maxLength": 18,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "ClientCredentialsArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:aws:secretsmanager:.*:[0-9]+:.*",
+   "type": "string"
+  },
+  "ClientId": {
+   "maxLength": 512,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "ClientNumber": {
+   "maxLength": 3,
+   "minLength": 3,
+   "pattern": "^\\d{3}$",
+   "type": "string"
+  },
+  "ClientSecret": {
+   "maxLength": 512,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "ClusterIdentifier": {
+   "maxLength": 512,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "ConnectorOAuthRequest": {
+   "properties": {
+    "AuthCode": {
+     "maxLength": 4096,
+     "pattern": "\\S+",
+     "type": "string"
+    },
+    "RedirectUri": {
+     "maxLength": 512,
+     "pattern": "\\S+",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ConnectorProfileConfig": {
+   "properties": {
+    "ConnectorProfileCredentials": {
+     "$ref": "#/definitions/ConnectorProfileCredentials"
+    },
+    "ConnectorProfileProperties": {
+     "$ref": "#/definitions/ConnectorProfileProperties"
+    }
+   },
+   "type": "object"
+  },
+  "ConnectorProfileCredentials": {
+   "properties": {
+    "Amplitude": {
+     "$ref": "#/definitions/AmplitudeConnectorProfileCredentials"
+    },
+    "CustomConnector": {
+     "$ref": "#/definitions/CustomConnectorProfileCredentials"
+    },
+    "Datadog": {
+     "$ref": "#/definitions/DatadogConnectorProfileCredentials"
+    },
+    "Dynatrace": {
+     "$ref": "#/definitions/DynatraceConnectorProfileCredentials"
+    },
+    "GoogleAnalytics": {
+     "$ref": "#/definitions/GoogleAnalyticsConnectorProfileCredentials"
+    },
+    "InforNexus": {
+     "$ref": "#/definitions/InforNexusConnectorProfileCredentials"
+    },
+    "Marketo": {
+     "$ref": "#/definitions/MarketoConnectorProfileCredentials"
+    },
+    "Pardot": {
+     "$ref": "#/definitions/PardotConnectorProfileCredentials"
+    },
+    "Redshift": {
+     "$ref": "#/definitions/RedshiftConnectorProfileCredentials"
+    },
+    "SAPOData": {
+     "$ref": "#/definitions/SAPODataConnectorProfileCredentials"
+    },
+    "Salesforce": {
+     "$ref": "#/definitions/SalesforceConnectorProfileCredentials"
+    },
+    "ServiceNow": {
+     "$ref": "#/definitions/ServiceNowConnectorProfileCredentials"
+    },
+    "Singular": {
+     "$ref": "#/definitions/SingularConnectorProfileCredentials"
+    },
+    "Slack": {
+     "$ref": "#/definitions/SlackConnectorProfileCredentials"
+    },
+    "Snowflake": {
+     "$ref": "#/definitions/SnowflakeConnectorProfileCredentials"
+    },
+    "Trendmicro": {
+     "$ref": "#/definitions/TrendmicroConnectorProfileCredentials"
+    },
+    "Veeva": {
+     "$ref": "#/definitions/VeevaConnectorProfileCredentials"
+    },
+    "Zendesk": {
+     "$ref": "#/definitions/ZendeskConnectorProfileCredentials"
+    }
+   },
+   "type": "object"
+  },
+  "ConnectorProfileProperties": {
+   "properties": {
+    "CustomConnector": {
+     "$ref": "#/definitions/CustomConnectorProfileProperties"
+    },
+    "Datadog": {
+     "$ref": "#/definitions/DatadogConnectorProfileProperties"
+    },
+    "Dynatrace": {
+     "$ref": "#/definitions/DynatraceConnectorProfileProperties"
+    },
+    "InforNexus": {
+     "$ref": "#/definitions/InforNexusConnectorProfileProperties"
+    },
+    "Marketo": {
+     "$ref": "#/definitions/MarketoConnectorProfileProperties"
+    },
+    "Pardot": {
+     "$ref": "#/definitions/PardotConnectorProfileProperties"
+    },
+    "Redshift": {
+     "$ref": "#/definitions/RedshiftConnectorProfileProperties"
+    },
+    "SAPOData": {
+     "$ref": "#/definitions/SAPODataConnectorProfileProperties"
+    },
+    "Salesforce": {
+     "$ref": "#/definitions/SalesforceConnectorProfileProperties"
+    },
+    "ServiceNow": {
+     "$ref": "#/definitions/ServiceNowConnectorProfileProperties"
+    },
+    "Slack": {
+     "$ref": "#/definitions/SlackConnectorProfileProperties"
+    },
+    "Snowflake": {
+     "$ref": "#/definitions/SnowflakeConnectorProfileProperties"
+    },
+    "Veeva": {
+     "$ref": "#/definitions/VeevaConnectorProfileProperties"
+    },
+    "Zendesk": {
+     "$ref": "#/definitions/ZendeskConnectorProfileProperties"
+    }
+   },
+   "type": "object"
+  },
+  "ConnectorType": {
+   "enum": [
+    "Salesforce",
+    "Pardot",
+    "Singular",
+    "Slack",
+    "Redshift",
+    "Marketo",
+    "Googleanalytics",
+    "Zendesk",
+    "Servicenow",
+    "SAPOData",
+    "Datadog",
+    "Trendmicro",
+    "Snowflake",
+    "Dynatrace",
+    "Infornexus",
+    "Amplitude",
+    "Veeva",
+    "CustomConnector"
+   ],
+   "type": "string"
+  },
+  "CredentialsMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[\\w]{1,128}$": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "\\S+",
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "CustomAuthCredentials": {
+   "additionalProperties": false,
+   "properties": {
+    "CredentialsMap": {
+     "$ref": "#/definitions/CredentialsMap"
+    },
+    "CustomAuthenticationType": {
+     "$ref": "#/definitions/CustomAuthenticationType"
+    }
+   },
+   "required": [
+    "CustomAuthenticationType"
+   ],
+   "type": "object"
+  },
+  "CustomAuthenticationType": {
+   "maxLength": 256,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "CustomConnectorProfileCredentials": {
+   "additionalProperties": false,
+   "properties": {
+    "ApiKey": {
+     "$ref": "#/definitions/ApiKeyCredentials"
+    },
+    "AuthenticationType": {
+     "$ref": "#/definitions/AuthenticationType"
+    },
+    "Basic": {
+     "$ref": "#/definitions/BasicAuthCredentials"
+    },
+    "Custom": {
+     "$ref": "#/definitions/CustomAuthCredentials"
+    },
+    "Oauth2": {
+     "$ref": "#/definitions/OAuth2Credentials"
+    }
+   },
+   "required": [
+    "AuthenticationType"
+   ],
+   "type": "object"
+  },
+  "CustomConnectorProfileProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "OAuth2Properties": {
+     "$ref": "#/definitions/OAuth2Properties"
+    },
+    "ProfileProperties": {
+     "$ref": "#/definitions/ProfileProperties"
+    }
+   },
+   "type": "object"
+  },
+  "DataApiRoleArn": {
+   "maxLength": 512,
+   "pattern": "arn:aws:iam:.*:[0-9]+:.*",
+   "type": "string"
+  },
+  "DatabaseName": {
+   "maxLength": 512,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "DatabaseUrl": {
+   "maxLength": 512,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "DatadogConnectorProfileCredentials": {
+   "properties": {
+    "ApiKey": {
+     "$ref": "#/definitions/ApiKey"
+    },
+    "ApplicationKey": {
+     "$ref": "#/definitions/ApplicationKey"
+    }
+   },
+   "required": [
+    "ApiKey",
+    "ApplicationKey"
+   ],
+   "type": "object"
+  },
+  "DatadogConnectorProfileProperties": {
+   "properties": {
+    "InstanceUrl": {
+     "$ref": "#/definitions/InstanceUrl"
+    }
+   },
+   "required": [
+    "InstanceUrl"
+   ],
+   "type": "object"
+  },
+  "DynatraceConnectorProfileCredentials": {
+   "properties": {
+    "ApiToken": {
+     "$ref": "#/definitions/ApiToken"
+    }
+   },
+   "required": [
+    "ApiToken"
+   ],
+   "type": "object"
+  },
+  "DynatraceConnectorProfileProperties": {
+   "properties": {
+    "InstanceUrl": {
+     "$ref": "#/definitions/InstanceUrl"
+    }
+   },
+   "required": [
+    "InstanceUrl"
+   ],
+   "type": "object"
+  },
+  "GoogleAnalyticsConnectorProfileCredentials": {
+   "properties": {
+    "AccessToken": {
+     "$ref": "#/definitions/AccessToken"
+    },
+    "ClientId": {
+     "$ref": "#/definitions/ClientId"
+    },
+    "ClientSecret": {
+     "$ref": "#/definitions/ClientSecret"
+    },
+    "ConnectorOAuthRequest": {
+     "$ref": "#/definitions/ConnectorOAuthRequest"
+    },
+    "RefreshToken": {
+     "$ref": "#/definitions/RefreshToken"
+    }
+   },
+   "required": [
+    "ClientId",
+    "ClientSecret"
+   ],
+   "type": "object"
+  },
+  "InforNexusConnectorProfileCredentials": {
+   "properties": {
+    "AccessKeyId": {
+     "$ref": "#/definitions/AccessKeyId"
+    },
+    "Datakey": {
+     "$ref": "#/definitions/Key"
+    },
+    "SecretAccessKey": {
+     "$ref": "#/definitions/Key"
+    },
+    "UserId": {
+     "$ref": "#/definitions/Username"
+    }
+   },
+   "required": [
+    "AccessKeyId",
+    "UserId",
+    "SecretAccessKey",
+    "Datakey"
+   ],
+   "type": "object"
+  },
+  "InforNexusConnectorProfileProperties": {
+   "properties": {
+    "InstanceUrl": {
+     "$ref": "#/definitions/InstanceUrl"
+    }
+   },
+   "required": [
+    "InstanceUrl"
+   ],
+   "type": "object"
+  },
+  "InstanceUrl": {
+   "maxLength": 256,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "JwtToken": {
+   "maxLength": 8000,
+   "pattern": "^[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_.+/=]*$",
+   "type": "string"
+  },
+  "Key": {
+   "maxLength": 512,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "LogonLanguage": {
+   "maxLength": 2,
+   "pattern": "^[a-zA-Z0-9_]*$",
+   "type": "string"
+  },
+  "MarketoConnectorProfileCredentials": {
+   "properties": {
+    "AccessToken": {
+     "$ref": "#/definitions/AccessToken"
+    },
+    "ClientId": {
+     "$ref": "#/definitions/ClientId"
+    },
+    "ClientSecret": {
+     "$ref": "#/definitions/ClientSecret"
+    },
+    "ConnectorOAuthRequest": {
+     "$ref": "#/definitions/ConnectorOAuthRequest"
+    }
+   },
+   "required": [
+    "ClientId",
+    "ClientSecret"
+   ],
+   "type": "object"
+  },
+  "MarketoConnectorProfileProperties": {
+   "properties": {
+    "InstanceUrl": {
+     "$ref": "#/definitions/InstanceUrl"
+    }
+   },
+   "required": [
+    "InstanceUrl"
+   ],
+   "type": "object"
+  },
+  "OAuth2Credentials": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessToken": {
+     "$ref": "#/definitions/AccessToken"
+    },
+    "ClientId": {
+     "$ref": "#/definitions/ClientId"
+    },
+    "ClientSecret": {
+     "$ref": "#/definitions/ClientSecret"
+    },
+    "OAuthRequest": {
+     "$ref": "#/definitions/ConnectorOAuthRequest"
+    },
+    "RefreshToken": {
+     "$ref": "#/definitions/RefreshToken"
+    }
+   },
+   "type": "object"
+  },
+  "OAuth2GrantType": {
+   "enum": [
+    "CLIENT_CREDENTIALS",
+    "AUTHORIZATION_CODE",
+    "JWT_BEARER"
+   ],
+   "type": "string"
+  },
+  "OAuth2Properties": {
+   "additionalProperties": false,
+   "properties": {
+    "OAuth2GrantType": {
+     "$ref": "#/definitions/OAuth2GrantType"
+    },
+    "TokenUrl": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^(https?)://[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]",
+     "type": "string"
+    },
+    "TokenUrlCustomProperties": {
+     "$ref": "#/definitions/TokenUrlCustomProperties"
+    }
+   },
+   "type": "object"
+  },
+  "OAuthProperties": {
+   "properties": {
+    "AuthCodeUrl": {
+     "maxLength": 256,
+     "pattern": "^(https?)://[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]",
+     "type": "string"
+    },
+    "OAuthScopes": {
+     "items": {
+      "maxLength": 128,
+      "pattern": "[/\\w]*",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "TokenUrl": {
+     "maxLength": 256,
+     "pattern": "^(https?)://[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PardotConnectorProfileCredentials": {
+   "properties": {
+    "AccessToken": {
+     "$ref": "#/definitions/AccessToken"
+    },
+    "ClientCredentialsArn": {
+     "$ref": "#/definitions/ClientCredentialsArn"
+    },
+    "ConnectorOAuthRequest": {
+     "$ref": "#/definitions/ConnectorOAuthRequest"
+    },
+    "RefreshToken": {
+     "$ref": "#/definitions/RefreshToken"
+    }
+   },
+   "type": "object"
+  },
+  "PardotConnectorProfileProperties": {
+   "properties": {
+    "BusinessUnitId": {
+     "$ref": "#/definitions/BusinessUnitId"
+    },
+    "InstanceUrl": {
+     "$ref": "#/definitions/InstanceUrl"
+    },
+    "IsSandboxEnvironment": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "BusinessUnitId"
+   ],
+   "type": "object"
+  },
+  "Password": {
+   "maxLength": 512,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "PortNumber": {
+   "maximum": 65535,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "PrivateLinkServiceName": {
+   "maxLength": 512,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "ProfileProperties": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[\\w]{1,256}$": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "\\S+",
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "RedshiftConnectorProfileCredentials": {
+   "properties": {
+    "Password": {
+     "$ref": "#/definitions/Password"
+    },
+    "Username": {
+     "$ref": "#/definitions/Username"
+    }
+   },
+   "type": "object"
+  },
+  "RedshiftConnectorProfileProperties": {
+   "properties": {
+    "BucketName": {
+     "$ref": "#/definitions/BucketName"
+    },
+    "BucketPrefix": {
+     "$ref": "#/definitions/BucketPrefix"
+    },
+    "ClusterIdentifier": {
+     "$ref": "#/definitions/ClusterIdentifier"
+    },
+    "DataApiRoleArn": {
+     "$ref": "#/definitions/DataApiRoleArn"
+    },
+    "DatabaseName": {
+     "$ref": "#/definitions/DatabaseName"
+    },
+    "DatabaseUrl": {
+     "$ref": "#/definitions/DatabaseUrl"
+    },
+    "IsRedshiftServerless": {
+     "type": "boolean"
+    },
+    "RoleArn": {
+     "$ref": "#/definitions/RoleArn"
+    },
+    "WorkgroupName": {
+     "$ref": "#/definitions/WorkgroupName"
+    }
+   },
+   "required": [
+    "BucketName",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "RefreshToken": {
+   "maxLength": 4096,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "Region": {
+   "maxLength": 64,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 512,
+   "pattern": "arn:aws:iam:.*:[0-9]+:.*",
+   "type": "string"
+  },
+  "SAPODataConnectorProfileCredentials": {
+   "properties": {
+    "BasicAuthCredentials": {
+     "$ref": "#/definitions/BasicAuthCredentials"
+    },
+    "OAuthCredentials": {
+     "properties": {
+      "AccessToken": {
+       "$ref": "#/definitions/AccessToken"
+      },
+      "ClientId": {
+       "$ref": "#/definitions/ClientId"
+      },
+      "ClientSecret": {
+       "$ref": "#/definitions/ClientSecret"
+      },
+      "ConnectorOAuthRequest": {
+       "$ref": "#/definitions/ConnectorOAuthRequest"
+      },
+      "RefreshToken": {
+       "$ref": "#/definitions/RefreshToken"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "SAPODataConnectorProfileProperties": {
+   "properties": {
+    "ApplicationHostUrl": {
+     "$ref": "#/definitions/ApplicationHostUrl"
+    },
+    "ApplicationServicePath": {
+     "$ref": "#/definitions/ApplicationServicePath"
+    },
+    "ClientNumber": {
+     "$ref": "#/definitions/ClientNumber"
+    },
+    "DisableSSO": {
+     "type": "boolean"
+    },
+    "LogonLanguage": {
+     "$ref": "#/definitions/LogonLanguage"
+    },
+    "OAuthProperties": {
+     "$ref": "#/definitions/OAuthProperties"
+    },
+    "PortNumber": {
+     "$ref": "#/definitions/PortNumber"
+    },
+    "PrivateLinkServiceName": {
+     "$ref": "#/definitions/PrivateLinkServiceName"
+    }
+   },
+   "type": "object"
+  },
+  "SalesforceConnectorProfileCredentials": {
+   "properties": {
+    "AccessToken": {
+     "$ref": "#/definitions/AccessToken"
+    },
+    "ClientCredentialsArn": {
+     "$ref": "#/definitions/ClientCredentialsArn"
+    },
+    "ConnectorOAuthRequest": {
+     "$ref": "#/definitions/ConnectorOAuthRequest"
+    },
+    "JwtToken": {
+     "$ref": "#/definitions/JwtToken"
+    },
+    "OAuth2GrantType": {
+     "$ref": "#/definitions/OAuth2GrantType"
+    },
+    "RefreshToken": {
+     "$ref": "#/definitions/RefreshToken"
+    }
+   },
+   "type": "object"
+  },
+  "SalesforceConnectorProfileProperties": {
+   "properties": {
+    "InstanceUrl": {
+     "$ref": "#/definitions/InstanceUrl"
+    },
+    "isSandboxEnvironment": {
+     "type": "boolean"
+    },
+    "usePrivateLinkForMetadataAndAuthorization": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "SecretKey": {
+   "maxLength": 256,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "ServiceNowConnectorProfileCredentials": {
+   "properties": {
+    "OAuth2Credentials": {
+     "$ref": "#/definitions/OAuth2Credentials"
+    },
+    "Password": {
+     "$ref": "#/definitions/Password"
+    },
+    "Username": {
+     "$ref": "#/definitions/Username"
+    }
+   },
+   "type": "object"
+  },
+  "ServiceNowConnectorProfileProperties": {
+   "properties": {
+    "InstanceUrl": {
+     "$ref": "#/definitions/InstanceUrl"
+    }
+   },
+   "required": [
+    "InstanceUrl"
+   ],
+   "type": "object"
+  },
+  "SingularConnectorProfileCredentials": {
+   "properties": {
+    "ApiKey": {
+     "$ref": "#/definitions/ApiKey"
+    }
+   },
+   "required": [
+    "ApiKey"
+   ],
+   "type": "object"
+  },
+  "SlackConnectorProfileCredentials": {
+   "properties": {
+    "AccessToken": {
+     "$ref": "#/definitions/AccessToken"
+    },
+    "ClientId": {
+     "$ref": "#/definitions/ClientId"
+    },
+    "ClientSecret": {
+     "$ref": "#/definitions/ClientSecret"
+    },
+    "ConnectorOAuthRequest": {
+     "$ref": "#/definitions/ConnectorOAuthRequest"
+    }
+   },
+   "required": [
+    "ClientId",
+    "ClientSecret"
+   ],
+   "type": "object"
+  },
+  "SlackConnectorProfileProperties": {
+   "properties": {
+    "InstanceUrl": {
+     "$ref": "#/definitions/InstanceUrl"
+    }
+   },
+   "required": [
+    "InstanceUrl"
+   ],
+   "type": "object"
+  },
+  "SnowflakeConnectorProfileCredentials": {
+   "properties": {
+    "Password": {
+     "$ref": "#/definitions/Password"
+    },
+    "Username": {
+     "$ref": "#/definitions/Username"
+    }
+   },
+   "required": [
+    "Username",
+    "Password"
+   ],
+   "type": "object"
+  },
+  "SnowflakeConnectorProfileProperties": {
+   "properties": {
+    "AccountName": {
+     "$ref": "#/definitions/AccountName"
+    },
+    "BucketName": {
+     "$ref": "#/definitions/BucketName"
+    },
+    "BucketPrefix": {
+     "$ref": "#/definitions/BucketPrefix"
+    },
+    "PrivateLinkServiceName": {
+     "$ref": "#/definitions/PrivateLinkServiceName"
+    },
+    "Region": {
+     "$ref": "#/definitions/Region"
+    },
+    "Stage": {
+     "$ref": "#/definitions/Stage"
+    },
+    "Warehouse": {
+     "$ref": "#/definitions/Warehouse"
+    }
+   },
+   "required": [
+    "Warehouse",
+    "Stage",
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "Stage": {
+   "maxLength": 512,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "TokenUrlCustomProperties": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[\\w]{1,128}$": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "\\S+",
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "TrendmicroConnectorProfileCredentials": {
+   "properties": {
+    "ApiSecretKey": {
+     "$ref": "#/definitions/ApiSecretKey"
+    }
+   },
+   "required": [
+    "ApiSecretKey"
+   ],
+   "type": "object"
+  },
+  "Username": {
+   "maxLength": 512,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "VeevaConnectorProfileCredentials": {
+   "properties": {
+    "Password": {
+     "$ref": "#/definitions/Password"
+    },
+    "Username": {
+     "$ref": "#/definitions/Username"
+    }
+   },
+   "required": [
+    "Username",
+    "Password"
+   ],
+   "type": "object"
+  },
+  "VeevaConnectorProfileProperties": {
+   "properties": {
+    "InstanceUrl": {
+     "$ref": "#/definitions/InstanceUrl"
+    }
+   },
+   "required": [
+    "InstanceUrl"
+   ],
+   "type": "object"
+  },
+  "Warehouse": {
+   "maxLength": 512,
+   "pattern": "[\\s\\w/!@#+=.-]*",
+   "type": "string"
+  },
+  "WorkgroupName": {
+   "maxLength": 512,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "ZendeskConnectorProfileCredentials": {
+   "properties": {
+    "AccessToken": {
+     "$ref": "#/definitions/AccessToken"
+    },
+    "ClientId": {
+     "$ref": "#/definitions/ClientId"
+    },
+    "ClientSecret": {
+     "$ref": "#/definitions/ClientSecret"
+    },
+    "ConnectorOAuthRequest": {
+     "$ref": "#/definitions/ConnectorOAuthRequest"
+    }
+   },
+   "required": [
+    "ClientId",
+    "ClientSecret"
+   ],
+   "type": "object"
+  },
+  "ZendeskConnectorProfileProperties": {
+   "properties": {
+    "InstanceUrl": {
+     "$ref": "#/definitions/InstanceUrl"
+    }
+   },
+   "required": [
+    "InstanceUrl"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConnectorProfileName"
+ ],
+ "properties": {
+  "ConnectionMode": {
+   "enum": [
+    "Public",
+    "Private"
+   ],
+   "type": "string"
+  },
+  "ConnectorLabel": {
+   "maxLength": 256,
+   "pattern": "[\\w!@#.-]+",
+   "type": "string"
+  },
+  "ConnectorProfileArn": {
+   "maxLength": 512,
+   "pattern": "arn:aws:appflow:.*:[0-9]+:.*",
+   "type": "string"
+  },
+  "ConnectorProfileConfig": {
+   "$ref": "#/definitions/ConnectorProfileConfig"
+  },
+  "ConnectorProfileName": {
+   "maxLength": 256,
+   "pattern": "[\\w/!@#+=.-]+",
+   "type": "string"
+  },
+  "ConnectorType": {
+   "$ref": "#/definitions/ConnectorType"
+  },
+  "CredentialsArn": {
+   "maxLength": 512,
+   "pattern": "arn:aws:.*:.*:[0-9]+:.*",
+   "type": "string"
+  },
+  "KMSArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:aws:kms:.*:[0-9]+:.*",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConnectorProfileArn",
+  "/properties/CredentialsArn"
+ ],
+ "required": [
+  "ConnectorProfileName",
+  "ConnectionMode",
+  "ConnectorType"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::AppFlow::ConnectorProfile",
+ "writeOnlyProperties": [
+  "/properties/ConnectorProfileConfig",
+  "/properties/KMSArn"
+ ]
+}

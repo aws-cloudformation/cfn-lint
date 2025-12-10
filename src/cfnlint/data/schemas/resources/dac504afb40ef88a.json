@@ -1,0 +1,305 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FeatureGroupName",
+  "/properties/RecordIdentifierFeatureName",
+  "/properties/EventTimeFeatureName",
+  "/properties/OnlineStoreConfig/SecurityConfig",
+  "/properties/OnlineStoreConfig/EnableOnlineStore",
+  "/properties/OnlineStoreConfig/StorageType",
+  "/properties/OfflineStoreConfig",
+  "/properties/RoleArn",
+  "/properties/Description",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "DataCatalogConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Catalog": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Database": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TableName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "TableName",
+    "Catalog",
+    "Database"
+   ],
+   "type": "object"
+  },
+  "FeatureDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "FeatureName": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,63}",
+     "type": "string"
+    },
+    "FeatureType": {
+     "enum": [
+      "Integral",
+      "Fractional",
+      "String"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "FeatureName",
+    "FeatureType"
+   ],
+   "type": "object"
+  },
+  "KmsKeyId": {
+   "maxLength": 2048,
+   "pattern": "[a-zA-Z0-9:/_-]*",
+   "type": "string"
+  },
+  "OnlineStoreSecurityConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "$ref": "#/definitions/KmsKeyId"
+    }
+   },
+   "type": "object"
+  },
+  "S3StorageConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "$ref": "#/definitions/KmsKeyId"
+    },
+    "S3Uri": {
+     "maxLength": 1024,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3Uri"
+   ],
+   "type": "object"
+  },
+  "StorageType": {
+   "enum": [
+    "Standard",
+    "InMemory"
+   ],
+   "type": "string"
+  },
+  "TableFormat": {
+   "enum": [
+    "Iceberg",
+    "Glue"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "ThroughputConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ProvisionedReadCapacityUnits": {
+     "maximum": 10000000,
+     "type": "integer"
+    },
+    "ProvisionedWriteCapacityUnits": {
+     "maximum": 10000000,
+     "type": "integer"
+    },
+    "ThroughputMode": {
+     "$ref": "#/definitions/ThroughputMode"
+    }
+   },
+   "required": [
+    "ThroughputMode"
+   ],
+   "type": "object"
+  },
+  "ThroughputMode": {
+   "enum": [
+    "OnDemand",
+    "Provisioned"
+   ],
+   "type": "string"
+  },
+  "TtlDuration": {
+   "additionalProperties": false,
+   "properties": {
+    "Unit": {
+     "$ref": "#/definitions/Unit"
+    },
+    "Value": {
+     "$ref": "#/definitions/Value"
+    }
+   },
+   "type": "object"
+  },
+  "Unit": {
+   "enum": [
+    "Seconds",
+    "Minutes",
+    "Hours",
+    "Days",
+    "Weeks"
+   ],
+   "type": "string"
+  },
+  "Value": {
+   "minimum": 1,
+   "type": "integer"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FeatureGroupName"
+ ],
+ "properties": {
+  "CreationTime": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 128,
+   "type": "string"
+  },
+  "EventTimeFeatureName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,63}",
+   "type": "string"
+  },
+  "FeatureDefinitions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/FeatureDefinition"
+   },
+   "maxItems": 2500,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "FeatureGroupName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,63}",
+   "type": "string"
+  },
+  "FeatureGroupStatus": {
+   "type": "string"
+  },
+  "OfflineStoreConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DataCatalogConfig": {
+     "$ref": "#/definitions/DataCatalogConfig"
+    },
+    "DisableGlueTableCreation": {
+     "type": "boolean"
+    },
+    "S3StorageConfig": {
+     "$ref": "#/definitions/S3StorageConfig"
+    },
+    "TableFormat": {
+     "$ref": "#/definitions/TableFormat"
+    }
+   },
+   "required": [
+    "S3StorageConfig"
+   ],
+   "type": "object"
+  },
+  "OnlineStoreConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableOnlineStore": {
+     "type": "boolean"
+    },
+    "SecurityConfig": {
+     "$ref": "#/definitions/OnlineStoreSecurityConfig"
+    },
+    "StorageType": {
+     "$ref": "#/definitions/StorageType"
+    },
+    "TtlDuration": {
+     "$ref": "#/definitions/TtlDuration"
+    }
+   },
+   "type": "object"
+  },
+  "RecordIdentifierFeatureName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,63}",
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ThroughputConfig": {
+   "$ref": "#/definitions/ThroughputConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreationTime",
+  "/properties/FeatureGroupStatus"
+ ],
+ "required": [
+  "FeatureGroupName",
+  "RecordIdentifierFeatureName",
+  "EventTimeFeatureName",
+  "FeatureDefinitions"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::FeatureGroup"
+}

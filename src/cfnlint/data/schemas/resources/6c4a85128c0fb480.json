@@ -1,0 +1,150 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ApprovalThresholdPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "ProposalDurationInHours": {
+     "type": "integer"
+    },
+    "ThresholdComparator": {
+     "type": "string"
+    },
+    "ThresholdPercentage": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "MemberConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "MemberFrameworkConfiguration": {
+     "$ref": "#/definitions/MemberFrameworkConfiguration"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "MemberFabricConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdminPassword": {
+     "type": "string"
+    },
+    "AdminUsername": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AdminUsername",
+    "AdminPassword"
+   ],
+   "type": "object"
+  },
+  "MemberFrameworkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MemberFabricConfiguration": {
+     "$ref": "#/definitions/MemberFabricConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "NetworkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "Framework": {
+     "type": "string"
+    },
+    "FrameworkVersion": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "NetworkFrameworkConfiguration": {
+     "$ref": "#/definitions/NetworkFrameworkConfiguration"
+    },
+    "VotingPolicy": {
+     "$ref": "#/definitions/VotingPolicy"
+    }
+   },
+   "required": [
+    "VotingPolicy",
+    "Framework",
+    "FrameworkVersion",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "NetworkFabricConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Edition": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Edition"
+   ],
+   "type": "object"
+  },
+  "NetworkFrameworkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "NetworkFabricConfiguration": {
+     "$ref": "#/definitions/NetworkFabricConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "VotingPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "ApprovalThresholdPolicy": {
+     "$ref": "#/definitions/ApprovalThresholdPolicy"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MemberId"
+ ],
+ "properties": {
+  "InvitationId": {
+   "type": "string"
+  },
+  "MemberConfiguration": {
+   "$ref": "#/definitions/MemberConfiguration"
+  },
+  "MemberId": {
+   "type": "string"
+  },
+  "NetworkConfiguration": {
+   "$ref": "#/definitions/NetworkConfiguration"
+  },
+  "NetworkId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/MemberId"
+ ],
+ "required": [
+  "MemberConfiguration"
+ ],
+ "typeName": "AWS::ManagedBlockchain::Member"
+}

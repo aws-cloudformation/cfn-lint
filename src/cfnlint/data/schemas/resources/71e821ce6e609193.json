@@ -1,0 +1,131 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterName",
+  "/properties/FargateProfileName",
+  "/properties/PodExecutionRoleArn",
+  "/properties/Subnets",
+  "/properties/Selectors"
+ ],
+ "definitions": {
+  "Label": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Selector": {
+   "additionalProperties": false,
+   "properties": {
+    "Labels": {
+     "items": {
+      "$ref": "#/definitions/Label"
+     },
+     "type": "array"
+    },
+    "Namespace": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Namespace"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterName",
+  "/properties/FargateProfileName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ClusterName": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "FargateProfileName": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "PodExecutionRoleArn": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "Selectors": {
+   "items": {
+    "$ref": "#/definitions/Selector"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "Subnets": {
+   "format": "AWS::EC2::Subnet.Ids",
+   "items": {
+    "format": "AWS::EC2::Subnet.Id",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "ClusterName",
+  "PodExecutionRoleArn",
+  "Selectors"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-eks.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EKS::FargateProfile"
+}

@@ -1,0 +1,107 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/SourceApiIdentifier",
+   "/properties/MergedApiIdentifier"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SourceApiIdentifier",
+  "/properties/MergedApiIdentifier"
+ ],
+ "definitions": {
+  "SourceApiAssociationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "MergeType": {
+     "enum": [
+      "AUTO_MERGE",
+      "MANUAL_MERGE"
+     ],
+     "type": "string"
+    }
+   }
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AssociationArn"
+ ],
+ "properties": {
+  "AssociationArn": {
+   "type": "string"
+  },
+  "AssociationId": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "LastSuccessfulMergeDate": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "MergedApiArn": {
+   "pattern": "^arn:aws(-(cn|us-gov))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
+   "type": "string"
+  },
+  "MergedApiId": {
+   "type": "string"
+  },
+  "MergedApiIdentifier": {
+   "type": "string"
+  },
+  "SourceApiArn": {
+   "pattern": "^arn:aws(-(cn|us-gov))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
+   "type": "string"
+  },
+  "SourceApiAssociationConfig": {
+   "$ref": "#/definitions/SourceApiAssociationConfig"
+  },
+  "SourceApiAssociationStatus": {
+   "enum": [
+    "MERGE_SCHEDULED",
+    "MERGE_FAILED",
+    "MERGE_SUCCESS",
+    "MERGE_IN_PROGRESS",
+    "AUTO_MERGE_SCHEDULE_FAILED",
+    "DELETION_SCHEDULED",
+    "DELETION_IN_PROGRESS",
+    "DELETION_FAILED"
+   ],
+   "type": "string"
+  },
+  "SourceApiAssociationStatusDetail": {
+   "type": "string"
+  },
+  "SourceApiId": {
+   "type": "string"
+  },
+  "SourceApiIdentifier": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssociationId",
+  "/properties/AssociationArn",
+  "/properties/SourceApiId",
+  "/properties/SourceApiArn",
+  "/properties/MergedApiId",
+  "/properties/MergedApiArn",
+  "/properties/SourceApiAssociationStatus",
+  "/properties/SourceApiAssociationStatusDetail",
+  "/properties/LastSuccessfulMergeDate"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appsync",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::AppSync::SourceApiAssociation",
+ "writeOnlyProperties": [
+  "/properties/SourceApiIdentifier",
+  "/properties/MergedApiIdentifier"
+ ]
+}

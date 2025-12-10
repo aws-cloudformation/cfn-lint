@@ -1,0 +1,169 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApiGatewayProxy",
+  "/properties/EnvironmentIdentifier",
+  "/properties/Name",
+  "/properties/ProxyType",
+  "/properties/VpcId"
+ ],
+ "definitions": {
+  "ApiGatewayEndpointType": {
+   "enum": [
+    "REGIONAL",
+    "PRIVATE"
+   ],
+   "type": "string"
+  },
+  "ApiGatewayProxyInput": {
+   "additionalProperties": false,
+   "properties": {
+    "EndpointType": {
+     "$ref": "#/definitions/ApiGatewayEndpointType"
+    },
+    "StageName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[-a-zA-Z0-9_]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ProxyType": {
+   "enum": [
+    "API_GATEWAY"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:).+",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EnvironmentIdentifier",
+  "/properties/ApplicationIdentifier"
+ ],
+ "properties": {
+  "ApiGatewayId": {
+   "maxLength": 10,
+   "minLength": 10,
+   "pattern": "^[a-z0-9]{10}$",
+   "type": "string"
+  },
+  "ApiGatewayProxy": {
+   "$ref": "#/definitions/ApiGatewayProxyInput"
+  },
+  "ApplicationIdentifier": {
+   "maxLength": 14,
+   "minLength": 14,
+   "pattern": "^app-([0-9A-Za-z]{10}$)",
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:(aws[a-zA-Z-]*)?:refactor-spaces:[a-zA-Z0-9\\-]+:\\w{12}:[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "EnvironmentIdentifier": {
+   "maxLength": 14,
+   "minLength": 14,
+   "pattern": "^env-([0-9A-Za-z]{10}$)",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "^(?!app-)[a-zA-Z0-9]+[a-zA-Z0-9-_ ]+$",
+   "type": "string"
+  },
+  "NlbArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:(aws[a-zA-Z-]*)?:elasticloadbalancing:[a-zA-Z0-9\\\\-]+:\\\\w{12}:[a-zA-Z_0-9+=,.@\\\\-_\\/]+$",
+   "type": "string"
+  },
+  "NlbName": {
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "^(?!internal-)[a-zA-Z0-9]+[a-zA-Z0-9-_ ]+.*[^-]$",
+   "type": "string"
+  },
+  "ProxyType": {
+   "$ref": "#/definitions/ProxyType"
+  },
+  "ProxyUrl": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^http://[-a-zA-Z0-9+\\x38@#/%?=~_|!:,.;]*[-a-zA-Z0-9+\\x38@#/%=~_|]$",
+   "type": "string"
+  },
+  "StageName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[-a-zA-Z0-9_]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "maxLength": 21,
+   "minLength": 12,
+   "pattern": "^vpc-[-a-f0-9]{8}([-a-f0-9]{9})?$",
+   "type": "string"
+  },
+  "VpcLinkId": {
+   "maxLength": 10,
+   "minLength": 10,
+   "pattern": "^[a-z0-9]{10}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ApplicationIdentifier",
+  "/properties/Arn",
+  "/properties/ApiGatewayId",
+  "/properties/VpcLinkId",
+  "/properties/NlbArn",
+  "/properties/NlbName",
+  "/properties/ProxyUrl",
+  "/properties/StageName"
+ ],
+ "required": [
+  "EnvironmentIdentifier",
+  "VpcId",
+  "Name",
+  "ProxyType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-refactor-spaces",
+ "taggable": true,
+ "typeName": "AWS::RefactorSpaces::Application",
+ "writeOnlyProperties": [
+  "/properties/ApiGatewayProxy"
+ ]
+}

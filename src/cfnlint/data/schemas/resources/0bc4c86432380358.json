@@ -1,0 +1,100 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IntegrationName",
+  "/properties/IntegrationType",
+  "/properties/ResourceConfig"
+ ],
+ "definitions": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "[\\w#+=/:,.@-]*\\*?",
+   "type": "string"
+  },
+  "OpenSearchResourceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationARN": {
+     "$ref": "#/definitions/Arn"
+    },
+    "DashboardViewerPrincipals": {
+     "items": {
+      "$ref": "#/definitions/Arn"
+     },
+     "type": "array"
+    },
+    "DataSourceRoleArn": {
+     "$ref": "#/definitions/Arn"
+    },
+    "KmsKeyArn": {
+     "$ref": "#/definitions/Arn"
+    },
+    "RetentionDays": {
+     "maximum": 3650,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "DataSourceRoleArn",
+    "DashboardViewerPrincipals"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IntegrationName"
+ ],
+ "properties": {
+  "IntegrationName": {
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "[\\.\\-_/#A-Za-z0-9]+",
+   "type": "string"
+  },
+  "IntegrationStatus": {
+   "enum": [
+    "PROVISIONING",
+    "ACTIVE",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "IntegrationType": {
+   "enum": [
+    "OPENSEARCH"
+   ],
+   "type": "string"
+  },
+  "ResourceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "OpenSearchResourceConfig": {
+     "$ref": "#/definitions/OpenSearchResourceConfig"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IntegrationStatus"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "IntegrationName",
+  "IntegrationType",
+  "ResourceConfig"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Logs::Integration",
+ "writeOnlyProperties": [
+  "/properties/ResourceConfig"
+ ]
+}

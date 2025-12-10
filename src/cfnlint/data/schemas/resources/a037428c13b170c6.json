@@ -1,0 +1,105 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DataTransferSubscriberFeePercent",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Encryption": {
+   "additionalProperties": false,
+   "properties": {
+    "Algorithm": {
+     "enum": [
+      "aes128",
+      "aes192",
+      "aes256"
+     ],
+     "type": "string"
+    },
+    "ConstantInitializationVector": {
+     "type": "string"
+    },
+    "DeviceId": {
+     "type": "string"
+    },
+    "KeyType": {
+     "default": "static-key",
+     "enum": [
+      "speke",
+      "static-key"
+     ],
+     "type": "string"
+    },
+    "Region": {
+     "type": "string"
+    },
+    "ResourceId": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "type": "string"
+    },
+    "SecretArn": {
+     "type": "string"
+    },
+    "Url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Algorithm",
+    "RoleArn"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EntitlementArn"
+ ],
+ "properties": {
+  "DataTransferSubscriberFeePercent": {
+   "default": 0,
+   "type": "integer"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Encryption": {
+   "$ref": "#/definitions/Encryption"
+  },
+  "EntitlementArn": {
+   "type": "string"
+  },
+  "EntitlementStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "FlowArn": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Subscribers": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/EntitlementArn"
+ ],
+ "required": [
+  "FlowArn",
+  "Name",
+  "Subscribers",
+  "Description"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+ "typeName": "AWS::MediaConnect::FlowEntitlement"
+}

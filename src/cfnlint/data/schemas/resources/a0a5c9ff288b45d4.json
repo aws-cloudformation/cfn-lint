@@ -1,0 +1,83 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InitialVersion"
+ ],
+ "definitions": {
+  "Connector": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectorArn": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Parameters": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    }
+   },
+   "required": [
+    "ConnectorArn",
+    "Id"
+   ],
+   "type": "object"
+  },
+  "ConnectorDefinitionVersion": {
+   "additionalProperties": false,
+   "properties": {
+    "Connectors": {
+     "items": {
+      "$ref": "#/definitions/Connector"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Connectors"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InitialVersion": {
+   "$ref": "#/definitions/ConnectorDefinitionVersion"
+  },
+  "LatestVersionArn": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Tags": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LatestVersionArn",
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "typeName": "AWS::Greengrass::ConnectorDefinition"
+}

@@ -1,0 +1,71 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BridgeArn",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "BridgeNetworkOutput": {
+   "additionalProperties": false,
+   "properties": {
+    "IpAddress": {
+     "type": "string"
+    },
+    "NetworkName": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "integer"
+    },
+    "Protocol": {
+     "enum": [
+      "rtp-fec",
+      "rtp",
+      "udp"
+     ],
+     "type": "string"
+    },
+    "Ttl": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Protocol",
+    "IpAddress",
+    "Port",
+    "NetworkName",
+    "Ttl"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BridgeArn",
+  "/properties/Name"
+ ],
+ "properties": {
+  "BridgeArn": {
+   "pattern": "arn:.+:mediaconnect.+:bridge:.+",
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "NetworkOutput": {
+   "$ref": "#/definitions/BridgeNetworkOutput"
+  }
+ },
+ "propertyTransform": {
+  "/properties/Name": "$join([\"Output:\",Name])"
+ },
+ "required": [
+  "BridgeArn",
+  "Name",
+  "NetworkOutput"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::MediaConnect::BridgeOutput"
+}

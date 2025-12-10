@@ -1,0 +1,96 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CertificateAuthorityArn",
+  "/properties/DirectoryId",
+  "/properties/VpcInformation"
+ ],
+ "definitions": {
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "VpcInformation": {
+   "additionalProperties": false,
+   "properties": {
+    "IpAddressType": {
+     "enum": [
+      "IPV4",
+      "DUALSTACK"
+     ],
+     "type": "string"
+    },
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "maxLength": 20,
+      "minLength": 11,
+      "pattern": "^(?:sg-[0-9a-f]{8}|sg-[0-9a-f]{17})$",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "SecurityGroupIds"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConnectorArn"
+ ],
+ "properties": {
+  "CertificateAuthorityArn": {
+   "maxLength": 200,
+   "minLength": 5,
+   "pattern": "^arn:[\\w-]+:acm-pca:[\\w-]+:[0-9]+:certificate-authority\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "ConnectorArn": {
+   "maxLength": 200,
+   "minLength": 5,
+   "pattern": "^arn:[\\w-]+:pca-connector-ad:[\\w-]+:[0-9]+:connector\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "DirectoryId": {
+   "pattern": "^d-[0-9a-f]{10}$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "VpcInformation": {
+   "$ref": "#/definitions/VpcInformation"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConnectorArn"
+ ],
+ "required": [
+  "CertificateAuthorityArn",
+  "DirectoryId",
+  "VpcInformation"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::PCAConnectorAD::Connector"
+}

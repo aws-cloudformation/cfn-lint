@@ -1,0 +1,122 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "NoAuthentication": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "RelayAuthentication": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "SecretArn": {
+       "pattern": "^arn:(aws|aws-cn|aws-us-gov):secretsmanager:[a-z0-9-]+:\\d{12}:secret:[a-zA-Z0-9/_+=,.@-]+$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "SecretArn"
+     ],
+     "title": "SecretArn",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "NoAuthentication": {
+       "$ref": "#/definitions/NoAuthentication"
+      }
+     },
+     "required": [
+      "NoAuthentication"
+     ],
+     "title": "NoAuthentication",
+     "type": "object"
+    }
+   ]
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9/_\\+=\\.:@\\-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9/_\\+=\\.:@\\-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RelayId"
+ ],
+ "properties": {
+  "Authentication": {
+   "$ref": "#/definitions/RelayAuthentication"
+  },
+  "RelayArn": {
+   "type": "string"
+  },
+  "RelayId": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "RelayName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_]+$",
+   "type": "string"
+  },
+  "ServerName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-\\.]+$",
+   "type": "string"
+  },
+  "ServerPort": {
+   "maximum": 65535,
+   "minimum": 1,
+   "type": "number"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RelayArn",
+  "/properties/RelayId"
+ ],
+ "required": [
+  "Authentication",
+  "ServerName",
+  "ServerPort"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses-mailmanager",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SES::MailManagerRelay"
+}

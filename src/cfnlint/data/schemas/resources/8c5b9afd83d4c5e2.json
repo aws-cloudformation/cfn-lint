@@ -1,0 +1,94 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Type",
+  "/properties/Tags",
+  "/properties/BucketName",
+  "/properties/Owner",
+  "/properties/ConnectionArn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AssociationArn"
+ ],
+ "properties": {
+  "AssociationArn": {
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "arn:aws(-[\\w]+)*:.+:.+:[0-9]{12}:.+",
+   "type": "string"
+  },
+  "BucketName": {
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "^\\S(.*\\S)?$",
+   "type": "string"
+  },
+  "ConnectionArn": {
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "arn:aws(-[\\w]+)*:.+:.+:[0-9]{12}:.+",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^\\S[\\w.-]*$",
+   "type": "string"
+  },
+  "Owner": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^\\S(.*\\S)?$",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Type": {
+   "enum": [
+    "CodeCommit",
+    "Bitbucket",
+    "GitHubEnterpriseServer",
+    "S3Bucket"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssociationArn"
+ ],
+ "required": [
+  "Name",
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codegurureviewer",
+ "typeName": "AWS::CodeGuruReviewer::RepositoryAssociation"
+}

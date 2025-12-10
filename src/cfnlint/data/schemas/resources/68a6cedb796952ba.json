@@ -1,0 +1,150 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName",
+  "/properties/Pattern"
+ ],
+ "definitions": {
+  "OriginConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Restrictions": {
+     "$ref": "#/definitions/Restrictions",
+     "type": "object"
+    }
+   },
+   "required": [
+    "Restrictions"
+   ],
+   "type": "object"
+  },
+  "RestrictionType": {
+   "additionalProperties": false,
+   "properties": {
+    "Repositories": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "RestrictionMode": {
+     "enum": [
+      "ALLOW",
+      "BLOCK",
+      "ALLOW_SPECIFIC_REPOSITORIES",
+      "INHERIT"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "RestrictionMode"
+   ],
+   "type": "object"
+  },
+  "Restrictions": {
+   "additionalProperties": false,
+   "properties": {
+    "ExternalUpstream": {
+     "$ref": "#/definitions/RestrictionType",
+     "type": "object"
+    },
+    "InternalUpstream": {
+     "$ref": "#/definitions/RestrictionType",
+     "type": "object"
+    },
+    "Publish": {
+     "$ref": "#/definitions/RestrictionType",
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "\\P{C}+",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "\\P{C}*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ContactInfo": {
+   "maxLength": 1000,
+   "pattern": "\\P{C}*",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "pattern": "\\P{C}*",
+   "type": "string"
+  },
+  "DomainName": {
+   "maxLength": 50,
+   "minLength": 2,
+   "pattern": "^([a-z][a-z0-9\\-]{0,48}[a-z0-9])$",
+   "type": "string"
+  },
+  "DomainOwner": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "[0-9]{12}",
+   "type": "string"
+  },
+  "OriginConfiguration": {
+   "$ref": "#/definitions/OriginConfiguration",
+   "type": "object"
+  },
+  "Pattern": {
+   "maxLength": 520,
+   "minLength": 2,
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Pattern",
+  "DomainName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codeartifact",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CodeArtifact::PackageGroup"
+}

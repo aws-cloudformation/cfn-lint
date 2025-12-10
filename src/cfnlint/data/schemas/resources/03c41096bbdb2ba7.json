@@ -1,0 +1,58 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AcceptTermsAndConditions",
+  "/properties/ConnectionArn"
+ ],
+ "primaryIdentifier": [
+  "/properties/PublisherId"
+ ],
+ "properties": {
+  "AcceptTermsAndConditions": {
+   "type": "boolean"
+  },
+  "ConnectionArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "arn:aws(-[w]+)*:.+:.+:[0-9]{12}:.+",
+   "type": "string"
+  },
+  "IdentityProvider": {
+   "enum": [
+    "AWS_Marketplace",
+    "GitHub",
+    "Bitbucket"
+   ],
+   "type": "string"
+  },
+  "PublisherId": {
+   "maxLength": 40,
+   "minLength": 1,
+   "pattern": "[0-9a-zA-Z-]{1,40}",
+   "type": "string"
+  },
+  "PublisherProfile": {
+   "maxLength": 1024,
+   "pattern": "(http:|https:)+[^s]+[w]",
+   "type": "string"
+  },
+  "PublisherStatus": {
+   "enum": [
+    "VERIFIED",
+    "UNVERIFIED"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PublisherId",
+  "/properties/PublisherStatus",
+  "/properties/PublisherProfile",
+  "/properties/IdentityProvider"
+ ],
+ "required": [
+  "AcceptTermsAndConditions"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudformation",
+ "typeName": "AWS::CloudFormation::Publisher"
+}

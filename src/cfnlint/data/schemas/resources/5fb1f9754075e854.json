@@ -1,0 +1,271 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Project"
+ ],
+ "definitions": {
+  "MetricGoalObject": {
+   "additionalProperties": false,
+   "properties": {
+    "DesiredChange": {
+     "enum": [
+      "INCREASE",
+      "DECREASE"
+     ],
+     "type": "string"
+    },
+    "EntityIdKey": {
+     "type": "string"
+    },
+    "EventPattern": {
+     "type": "string"
+    },
+    "MetricName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^[\\S]+$",
+     "type": "string"
+    },
+    "UnitLabel": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "ValueKey": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "MetricName",
+    "EntityIdKey",
+    "ValueKey",
+    "DesiredChange"
+   ],
+   "type": "object"
+  },
+  "OnlineAbConfigObject": {
+   "additionalProperties": false,
+   "properties": {
+    "ControlTreatmentName": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "[-a-zA-Z0-9._]*",
+     "type": "string"
+    },
+    "TreatmentWeights": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/TreatmentToWeight"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "RunningStatusObject": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "Status",
+      "AnalysisCompleteTime"
+     ]
+    },
+    {
+     "required": [
+      "Status",
+      "Reason",
+      "DesiredState"
+     ]
+    }
+   ],
+   "properties": {
+    "AnalysisCompleteTime": {
+     "type": "string"
+    },
+    "DesiredState": {
+     "pattern": "^(CANCELLED|COMPLETED)",
+     "type": "string"
+    },
+    "Reason": {
+     "type": "string"
+    },
+    "Status": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TreatmentObject": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "maxLength": 160,
+     "type": "string"
+    },
+    "Feature": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "([-a-zA-Z0-9._]*)|(arn:[^:]*:[^:]*:[^:]*:[^:]*:.*)",
+     "type": "string"
+    },
+    "TreatmentName": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "[-a-zA-Z0-9._]*",
+     "type": "string"
+    },
+    "Variation": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "[-a-zA-Z0-9._]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TreatmentName",
+    "Feature",
+    "Variation"
+   ],
+   "type": "object"
+  },
+  "TreatmentToWeight": {
+   "additionalProperties": false,
+   "properties": {
+    "SplitWeight": {
+     "maximum": 100000,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "Treatment": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "[-a-zA-Z0-9._]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Treatment",
+    "SplitWeight"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "arn:[^:]*:[^:]*:[^:]*:[^:]*:project/[-a-zA-Z0-9._]*/experiment/[-a-zA-Z0-9._]*",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 160,
+   "minLength": 0,
+   "type": "string"
+  },
+  "MetricGoals": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/MetricGoalObject"
+   },
+   "maxItems": 3,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Name": {
+   "maxLength": 127,
+   "minLength": 1,
+   "pattern": "[-a-zA-Z0-9._]*",
+   "type": "string"
+  },
+  "OnlineAbConfig": {
+   "$ref": "#/definitions/OnlineAbConfigObject"
+  },
+  "Project": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "([-a-zA-Z0-9._]*)|(arn:[^:]*:[^:]*:[^:]*:[^:]*:project/[-a-zA-Z0-9._]*)",
+   "type": "string"
+  },
+  "RandomizationSalt": {
+   "maxLength": 127,
+   "minLength": 0,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "RemoveSegment": {
+   "type": "boolean"
+  },
+  "RunningStatus": {
+   "$ref": "#/definitions/RunningStatusObject"
+  },
+  "SamplingRate": {
+   "maximum": 100000,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Segment": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "([-a-zA-Z0-9._]*)|(arn:[^:]*:[^:]*:[^:]*:[^:]*:segment/[-a-zA-Z0-9._]*)",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Treatments": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/TreatmentObject"
+   },
+   "maxItems": 5,
+   "minItems": 2,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "Project",
+  "Treatments",
+  "MetricGoals",
+  "OnlineAbConfig"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-evidently",
+ "taggable": true,
+ "typeName": "AWS::Evidently::Experiment"
+}

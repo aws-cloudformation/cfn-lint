@@ -1,0 +1,111 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "IpAddress": {
+   "pattern": "^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AcceleratorArn"
+ ],
+ "properties": {
+  "AcceleratorArn": {
+   "type": "string"
+  },
+  "DnsName": {
+   "type": "string"
+  },
+  "DualStackDnsName": {
+   "type": "string"
+  },
+  "Enabled": {
+   "default": true,
+   "type": "boolean"
+  },
+  "IpAddressType": {
+   "default": "IPV4",
+   "enum": [
+    "IPV4",
+    "DUAL_STACK"
+   ],
+   "type": "string"
+  },
+  "IpAddresses": {
+   "default": null,
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/IpAddress"
+   },
+   "maxItems": 2,
+   "type": "array"
+  },
+  "Ipv4Addresses": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Ipv6Addresses": {
+   "default": null,
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]{0,64}$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AcceleratorArn",
+  "/properties/DnsName",
+  "/properties/Ipv4Addresses",
+  "/properties/Ipv6Addresses",
+  "/properties/DualStackDnsName"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-globalaccelerator",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GlobalAccelerator::Accelerator"
+}

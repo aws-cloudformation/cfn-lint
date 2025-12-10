@@ -1,0 +1,91 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DeviceFleetName"
+ ],
+ "definitions": {
+  "EdgeOutputConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9:_-]+",
+     "type": "string"
+    },
+    "S3OutputLocation": {
+     "maxLength": 1024,
+     "pattern": "^s3://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3OutputLocation"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^((?!aws:)[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DeviceFleetName"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 800,
+   "minLength": 0,
+   "pattern": "[\\S\\s]+",
+   "type": "string"
+  },
+  "DeviceFleetName": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*_*[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "OutputConfig": {
+   "$ref": "#/definitions/EdgeOutputConfig"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  }
+ },
+ "required": [
+  "DeviceFleetName",
+  "OutputConfig",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sagemaker-edge.git",
+ "typeName": "AWS::SageMaker::DeviceFleet"
+}

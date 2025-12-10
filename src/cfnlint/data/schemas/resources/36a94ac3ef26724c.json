@@ -1,0 +1,290 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DatastoreName"
+ ],
+ "definitions": {
+  "Column": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^[A-Za-z_]([A-Za-z0-9]*|[A-Za-z0-9][A-Za-z0-9_]*)$",
+     "type": "string"
+    },
+    "Type": {
+     "maxLength": 131072,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "CustomerManagedS3": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "maxLength": 255,
+     "minLength": 3,
+     "pattern": "[a-zA-Z0-9.\\-_]*",
+     "type": "string"
+    },
+    "KeyPrefix": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9!_.*'()/{}:-]*/",
+     "type": "string"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "CustomerManagedS3Storage": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "maxLength": 255,
+     "minLength": 3,
+     "pattern": "[a-zA-Z0-9.\\-_]*",
+     "type": "string"
+    },
+    "KeyPrefix": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9!_.*'()/{}:-]*/",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket"
+   ],
+   "type": "object"
+  },
+  "DatastorePartition": {
+   "additionalProperties": false,
+   "properties": {
+    "Partition": {
+     "$ref": "#/definitions/Partition"
+    },
+    "TimestampPartition": {
+     "$ref": "#/definitions/TimestampPartition"
+    }
+   },
+   "type": "object"
+  },
+  "DatastorePartitions": {
+   "additionalProperties": false,
+   "properties": {
+    "Partitions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/DatastorePartition"
+     },
+     "maxItems": 25,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "DatastoreStorage": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomerManagedS3": {
+     "$ref": "#/definitions/CustomerManagedS3"
+    },
+    "IotSiteWiseMultiLayerStorage": {
+     "$ref": "#/definitions/IotSiteWiseMultiLayerStorage"
+    },
+    "ServiceManagedS3": {
+     "$ref": "#/definitions/ServiceManagedS3"
+    }
+   },
+   "type": "object"
+  },
+  "FileFormatConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "JsonConfiguration": {
+     "$ref": "#/definitions/JsonConfiguration"
+    },
+    "ParquetConfiguration": {
+     "$ref": "#/definitions/ParquetConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "IotSiteWiseMultiLayerStorage": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomerManagedS3Storage": {
+     "$ref": "#/definitions/CustomerManagedS3Storage"
+    }
+   },
+   "type": "object"
+  },
+  "JsonConfiguration": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "ParquetConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SchemaDefinition": {
+     "$ref": "#/definitions/SchemaDefinition"
+    }
+   },
+   "type": "object"
+  },
+  "Partition": {
+   "additionalProperties": false,
+   "properties": {
+    "AttributeName": {
+     "pattern": "[a-zA-Z0-9_]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AttributeName"
+   ],
+   "type": "object"
+  },
+  "RetentionPeriod": {
+   "additionalProperties": false,
+   "properties": {
+    "NumberOfDays": {
+     "maximum": 2147483647,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Unlimited": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "SchemaDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Columns": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Column"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "ServiceManagedS3": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TimestampPartition": {
+   "additionalProperties": false,
+   "properties": {
+    "AttributeName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9_]+",
+     "type": "string"
+    },
+    "TimestampFormat": {
+     "maxLength": 50,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9\\s\\[\\]_,.'/:-]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AttributeName"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DatastoreName"
+ ],
+ "properties": {
+  "DatastoreName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_]+",
+   "type": "string"
+  },
+  "DatastorePartitions": {
+   "$ref": "#/definitions/DatastorePartitions"
+  },
+  "DatastoreStorage": {
+   "$ref": "#/definitions/DatastoreStorage"
+  },
+  "FileFormatConfiguration": {
+   "$ref": "#/definitions/FileFormatConfiguration"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "RetentionPeriod": {
+   "$ref": "#/definitions/RetentionPeriod"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "taggable": true,
+ "typeName": "AWS::IoTAnalytics::Datastore"
+}

@@ -1,0 +1,78 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AcceleratorArn"
+ ],
+ "definitions": {
+  "Port": {
+   "maximum": 65535,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "PortRange": {
+   "additionalProperties": false,
+   "properties": {
+    "FromPort": {
+     "$ref": "#/definitions/Port"
+    },
+    "ToPort": {
+     "$ref": "#/definitions/Port"
+    }
+   },
+   "required": [
+    "FromPort",
+    "ToPort"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ListenerArn"
+ ],
+ "properties": {
+  "AcceleratorArn": {
+   "maxLength": 255,
+   "type": "string"
+  },
+  "ClientAffinity": {
+   "default": "NONE",
+   "enum": [
+    "NONE",
+    "SOURCE_IP"
+   ],
+   "type": "string"
+  },
+  "ListenerArn": {
+   "type": "string"
+  },
+  "PortRanges": {
+   "items": {
+    "$ref": "#/definitions/PortRange"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Protocol": {
+   "default": "TCP",
+   "enum": [
+    "TCP",
+    "UDP"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ListenerArn"
+ ],
+ "required": [
+  "AcceleratorArn",
+  "PortRanges",
+  "Protocol"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-globalaccelerator",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::GlobalAccelerator::Listener"
+}

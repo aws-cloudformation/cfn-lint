@@ -1,0 +1,164 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceSetName",
+  "/properties/ResourceSetType"
+ ],
+ "definitions": {
+  "DNSTargetResource": {
+   "additionalProperties": false,
+   "properties": {
+    "DomainName": {
+     "type": "string"
+    },
+    "HostedZoneArn": {
+     "type": "string"
+    },
+    "RecordSetId": {
+     "type": "string"
+    },
+    "RecordType": {
+     "type": "string"
+    },
+    "TargetResource": {
+     "$ref": "#/definitions/TargetResource"
+    }
+   },
+   "type": "object"
+  },
+  "NLBResource": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "R53ResourceRecord": {
+   "additionalProperties": false,
+   "properties": {
+    "DomainName": {
+     "type": "string"
+    },
+    "RecordSetId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Resource": {
+   "additionalProperties": false,
+   "properties": {
+    "ComponentId": {
+     "type": "string"
+    },
+    "DnsTargetResource": {
+     "$ref": "#/definitions/DNSTargetResource"
+    },
+    "ReadinessScopes": {
+     "insertionOrder": false,
+     "items": {
+      "maxItems": 5,
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ResourceArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TargetResource": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "NLBResource"
+     ]
+    },
+    {
+     "required": [
+      "R53Resource"
+     ]
+    }
+   ],
+   "properties": {
+    "NLBResource": {
+     "$ref": "#/definitions/NLBResource"
+    },
+    "R53Resource": {
+     "$ref": "#/definitions/R53ResourceRecord"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResourceSetName"
+ ],
+ "properties": {
+  "ResourceSetArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResourceSetName": {
+   "type": "string"
+  },
+  "ResourceSetType": {
+   "pattern": "AWS::[A-Za-z0-9]+::[A-Za-z0-9]+",
+   "type": "string"
+  },
+  "Resources": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Resource"
+   },
+   "maxItems": 6,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag",
+    "maxItems": 20
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ResourceSetArn"
+ ],
+ "required": [
+  "ResourceSetType",
+  "Resources"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53-recovery-readiness.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Route53RecoveryReadiness::ResourceSet"
+}

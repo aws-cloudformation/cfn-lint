@@ -1,0 +1,156 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DatasetName"
+ ],
+ "definitions": {
+  "Attributes": {
+   "insertionOrder": true,
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "AttributeName": {
+      "maxLength": 63,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z][a-zA-Z0-9_]*",
+      "type": "string"
+     },
+     "AttributeType": {
+      "enum": [
+       "string",
+       "integer",
+       "float",
+       "timestamp",
+       "geolocation"
+      ],
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "maxItems": 100,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Key": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "maxLength": 256,
+   "pattern": "arn:aws[-a-z]*:kms:.*:key/.*",
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 256,
+   "pattern": "^[a-zA-Z0-9\\-\\_\\.\\/\\:]+$",
+   "type": "string"
+  },
+  "Value": {
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 256,
+   "pattern": "^[a-zA-Z0-9\\-\\_\\.\\/\\:]+$",
+   "type": "string"
+  },
+  "DataFrequency": {
+   "maxLength": 5,
+   "minLength": 1,
+   "pattern": "^Y|M|W|D|H|30min|15min|10min|5min|1min$",
+   "type": "string"
+  },
+  "DatasetName": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z][a-zA-Z0-9_]*",
+   "type": "string"
+  },
+  "DatasetType": {
+   "enum": [
+    "TARGET_TIME_SERIES",
+    "RELATED_TIME_SERIES",
+    "ITEM_METADATA"
+   ],
+   "type": "string"
+  },
+  "Domain": {
+   "enum": [
+    "RETAIL",
+    "CUSTOM",
+    "INVENTORY_PLANNING",
+    "EC2_CAPACITY",
+    "WORK_FORCE",
+    "WEB_TRAFFIC",
+    "METRICS"
+   ],
+   "type": "string"
+  },
+  "EncryptionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyArn": {
+     "$ref": "#/definitions/KmsKeyArn"
+    },
+    "RoleArn": {
+     "$ref": "#/definitions/RoleArn"
+    }
+   },
+   "type": "object"
+  },
+  "Schema": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "$ref": "#/definitions/Attributes"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": true,
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "Key": {
+      "$ref": "#/definitions/Key"
+     },
+     "Value": {
+      "$ref": "#/definitions/Value"
+     }
+    },
+    "required": [
+     "Key",
+     "Value"
+    ],
+    "type": "object"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "DatasetName",
+  "DatasetType",
+  "Domain",
+  "Schema"
+ ],
+ "sourceUrl": "https://github.com/junlinzw/aws-cloudformation-resource-providers-forecast",
+ "taggable": false,
+ "typeName": "AWS::Forecast::Dataset"
+}

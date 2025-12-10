@@ -1,0 +1,70 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FarmId",
+  "/properties/QueueId"
+ ],
+ "definitions": {
+  "EnvironmentTemplateType": {
+   "enum": [
+    "JSON",
+    "YAML"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FarmId",
+  "/properties/QueueId",
+  "/properties/QueueEnvironmentId"
+ ],
+ "properties": {
+  "FarmId": {
+   "pattern": "^farm-[0-9a-f]{32}$",
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Priority": {
+   "maximum": 10000,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "QueueEnvironmentId": {
+   "pattern": "^queueenv-[0-9a-f]{32}$",
+   "type": "string"
+  },
+  "QueueId": {
+   "pattern": "^queue-[0-9a-f]{32}$",
+   "type": "string"
+  },
+  "Template": {
+   "maxLength": 15000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "TemplateType": {
+   "$ref": "#/definitions/EnvironmentTemplateType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Name",
+  "/properties/QueueEnvironmentId"
+ ],
+ "required": [
+  "FarmId",
+  "QueueId",
+  "Priority",
+  "Template",
+  "TemplateType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-deadline",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Deadline::QueueEnvironment"
+}

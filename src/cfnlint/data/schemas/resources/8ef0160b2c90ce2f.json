@@ -1,0 +1,58 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DirectoryName"
+ ],
+ "definitions": {
+  "ServiceAccountCredentials": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountName": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "AccountPassword": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "AccountName",
+    "AccountPassword"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "DirectoryName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "OrganizationalUnitDistinguishedNames": {
+   "items": {
+    "maxLength": 2000,
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ServiceAccountCredentials": {
+   "$ref": "#/definitions/ServiceAccountCredentials"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "OrganizationalUnitDistinguishedNames",
+  "ServiceAccountCredentials",
+  "DirectoryName"
+ ],
+ "typeName": "AWS::AppStream::DirectoryConfig"
+}

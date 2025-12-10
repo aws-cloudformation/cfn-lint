@@ -1,0 +1,141 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "DeviceCreationFileList": {
+   "items": {
+    "maxLength": 1024,
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Role": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 128,
+   "type": "string"
+  },
+  "CreationDate": {
+   "type": "string"
+  },
+  "DestinationName": {
+   "maxLength": 128,
+   "pattern": "[a-zA-Z0-9-_]+",
+   "type": "string"
+  },
+  "FailedImportedDevicesCount": {
+   "type": "integer"
+  },
+  "Id": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "InitializedImportedDevicesCount": {
+   "type": "integer"
+  },
+  "OnboardedImportedDevicesCount": {
+   "type": "integer"
+  },
+  "PendingImportedDevicesCount": {
+   "type": "integer"
+  },
+  "Sidewalk": {
+   "additionalProperties": false,
+   "properties": {
+    "DeviceCreationFile": {
+     "maxLength": 1024,
+     "type": "string"
+    },
+    "DeviceCreationFileList": {
+     "$ref": "#/definitions/DeviceCreationFileList"
+    },
+    "Role": {
+     "$ref": "#/definitions/Role"
+    },
+    "SidewalkManufacturingSn": {
+     "maxLength": 64,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Status": {
+   "enum": [
+    "INITIALIZING",
+    "INITIALIZED",
+    "PENDING",
+    "COMPLETE",
+    "FAILED",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "StatusReason": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/CreationDate",
+  "/properties/Status",
+  "/properties/StatusReason",
+  "/properties/InitializedImportedDevicesCount",
+  "/properties/PendingImportedDevicesCount",
+  "/properties/OnboardedImportedDevicesCount",
+  "/properties/FailedImportedDevicesCount",
+  "/properties/Sidewalk/DeviceCreationFileList"
+ ],
+ "required": [
+  "DestinationName",
+  "Sidewalk"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTWireless::WirelessDeviceImportTask",
+ "writeOnlyProperties": [
+  "/properties/Sidewalk/DeviceCreationFile",
+  "/properties/Sidewalk/SidewalkManufacturingSn"
+ ]
+}

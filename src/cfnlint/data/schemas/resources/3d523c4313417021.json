@@ -1,0 +1,275 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Project"
+ ],
+ "definitions": {
+  "ExecutionStatusObject": {
+   "additionalProperties": false,
+   "properties": {
+    "DesiredState": {
+     "type": "string"
+    },
+    "Reason": {
+     "type": "string"
+    },
+    "Status": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Status"
+   ],
+   "type": "object"
+  },
+  "GroupToWeight": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupName": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "[-a-zA-Z0-9._]*",
+     "type": "string"
+    },
+    "SplitWeight": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "GroupName",
+    "SplitWeight"
+   ],
+   "type": "object"
+  },
+  "LaunchGroupObject": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "maxLength": 160,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Feature": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "^[-a-zA-Z0-9._]*$",
+     "type": "string"
+    },
+    "GroupName": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "[-a-zA-Z0-9._]*",
+     "type": "string"
+    },
+    "Variation": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "^[-a-zA-Z0-9._]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "GroupName",
+    "Feature",
+    "Variation"
+   ],
+   "type": "object"
+  },
+  "MetricDefinitionObject": {
+   "additionalProperties": false,
+   "properties": {
+    "EntityIdKey": {
+     "type": "string"
+    },
+    "EventPattern": {
+     "type": "string"
+    },
+    "MetricName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^[\\S]+$",
+     "type": "string"
+    },
+    "UnitLabel": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "ValueKey": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "MetricName",
+    "EntityIdKey",
+    "ValueKey"
+   ],
+   "type": "object"
+  },
+  "SegmentOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "EvaluationOrder": {
+     "type": "integer"
+    },
+    "Segment": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "([-a-zA-Z0-9._]*)|(arn:[^:]*:[^:]*:[^:]*:[^:]*:segment/[-a-zA-Z0-9._]*)",
+     "type": "string"
+    },
+    "Weights": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/GroupToWeight"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Segment",
+    "EvaluationOrder",
+    "Weights"
+   ],
+   "type": "object"
+  },
+  "StepConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupWeights": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/GroupToWeight"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SegmentOverrides": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SegmentOverride"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "StartTime": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "StartTime",
+    "GroupWeights"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "arn:[^:]*:[^:]*:[^:]*:[^:]*:project/[-a-zA-Z0-9._]*/launch/[-a-zA-Z0-9._]*",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 160,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ExecutionStatus": {
+   "$ref": "#/definitions/ExecutionStatusObject"
+  },
+  "Groups": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/LaunchGroupObject"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "MetricMonitors": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/MetricDefinitionObject"
+   },
+   "maxItems": 3,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Name": {
+   "maxLength": 127,
+   "minLength": 1,
+   "pattern": "[-a-zA-Z0-9._]*",
+   "type": "string"
+  },
+  "Project": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "([-a-zA-Z0-9._]*)|(arn:[^:]*:[^:]*:[^:]*:[^:]*:project/[-a-zA-Z0-9._]*)",
+   "type": "string"
+  },
+  "RandomizationSalt": {
+   "maxLength": 127,
+   "minLength": 0,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "ScheduledSplitsConfig": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/StepConfig"
+   },
+   "maxItems": 6,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "Project",
+  "Groups",
+  "ScheduledSplitsConfig"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-evidently",
+ "taggable": true,
+ "typeName": "AWS::Evidently::Launch"
+}

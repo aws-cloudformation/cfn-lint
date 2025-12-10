@@ -1,0 +1,249 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationId"
+ ],
+ "definitions": {
+  "Behavior": {
+   "additionalProperties": false,
+   "properties": {
+    "Recency": {
+     "$ref": "#/definitions/Recency"
+    }
+   },
+   "type": "object"
+  },
+  "Coordinates": {
+   "additionalProperties": false,
+   "properties": {
+    "Latitude": {
+     "type": "number"
+    },
+    "Longitude": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "Longitude",
+    "Latitude"
+   ],
+   "type": "object"
+  },
+  "Demographic": {
+   "additionalProperties": false,
+   "properties": {
+    "AppVersion": {
+     "$ref": "#/definitions/SetDimension"
+    },
+    "Channel": {
+     "$ref": "#/definitions/SetDimension"
+    },
+    "DeviceType": {
+     "$ref": "#/definitions/SetDimension"
+    },
+    "Make": {
+     "$ref": "#/definitions/SetDimension"
+    },
+    "Model": {
+     "$ref": "#/definitions/SetDimension"
+    },
+    "Platform": {
+     "$ref": "#/definitions/SetDimension"
+    }
+   },
+   "type": "object"
+  },
+  "GPSPoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Coordinates": {
+     "$ref": "#/definitions/Coordinates"
+    },
+    "RangeInKilometers": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "RangeInKilometers",
+    "Coordinates"
+   ],
+   "type": "object"
+  },
+  "Groups": {
+   "additionalProperties": false,
+   "properties": {
+    "Dimensions": {
+     "items": {
+      "$ref": "#/definitions/SegmentDimensions"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SourceSegments": {
+     "items": {
+      "$ref": "#/definitions/SourceSegments"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SourceType": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Location": {
+   "additionalProperties": false,
+   "properties": {
+    "Country": {
+     "$ref": "#/definitions/SetDimension"
+    },
+    "GPSPoint": {
+     "$ref": "#/definitions/GPSPoint"
+    }
+   },
+   "type": "object"
+  },
+  "Recency": {
+   "additionalProperties": false,
+   "properties": {
+    "Duration": {
+     "type": "string"
+    },
+    "RecencyType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Duration",
+    "RecencyType"
+   ],
+   "type": "object"
+  },
+  "SegmentDimensions": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "Behavior": {
+     "$ref": "#/definitions/Behavior"
+    },
+    "Demographic": {
+     "$ref": "#/definitions/Demographic"
+    },
+    "Location": {
+     "$ref": "#/definitions/Location"
+    },
+    "Metrics": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "UserAttributes": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "SegmentGroups": {
+   "additionalProperties": false,
+   "properties": {
+    "Groups": {
+     "items": {
+      "$ref": "#/definitions/Groups"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Include": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SetDimension": {
+   "additionalProperties": false,
+   "properties": {
+    "DimensionType": {
+     "type": "string"
+    },
+    "Values": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "SourceSegments": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SegmentId"
+ ],
+ "properties": {
+  "ApplicationId": {
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "Dimensions": {
+   "$ref": "#/definitions/SegmentDimensions"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "SegmentGroups": {
+   "$ref": "#/definitions/SegmentGroups"
+  },
+  "SegmentId": {
+   "type": "string"
+  },
+  "Tags": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SegmentId",
+  "/properties/Arn"
+ ],
+ "required": [
+  "ApplicationId",
+  "Name"
+ ],
+ "typeName": "AWS::Pinpoint::Segment"
+}

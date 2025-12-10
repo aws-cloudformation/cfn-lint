@@ -1,0 +1,228 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ApiKeyAuthParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ApiKeyName": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ApiKeyValue": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ApiKeyName",
+    "ApiKeyValue"
+   ],
+   "type": "object"
+  },
+  "AuthParameters": {
+   "additionalProperties": false,
+   "maxProperties": 2,
+   "minProperties": 1,
+   "oneOf": [
+    {
+     "required": [
+      "BasicAuthParameters"
+     ]
+    },
+    {
+     "required": [
+      "OAuthParameters"
+     ]
+    },
+    {
+     "required": [
+      "ApiKeyAuthParameters"
+     ]
+    }
+   ],
+   "properties": {
+    "ApiKeyAuthParameters": {
+     "$ref": "#/definitions/ApiKeyAuthParameters"
+    },
+    "BasicAuthParameters": {
+     "$ref": "#/definitions/BasicAuthParameters"
+    },
+    "InvocationHttpParameters": {
+     "$ref": "#/definitions/ConnectionHttpParameters"
+    },
+    "OAuthParameters": {
+     "$ref": "#/definitions/OAuthParameters"
+    }
+   },
+   "type": "object"
+  },
+  "BasicAuthParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Password": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Username": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Username",
+    "Password"
+   ],
+   "type": "object"
+  },
+  "ClientParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientID": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecret": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClientID",
+    "ClientSecret"
+   ],
+   "type": "object"
+  },
+  "ConnectionHttpParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "BodyParameters": {
+     "items": {
+      "$ref": "#/definitions/Parameter"
+     },
+     "maxItems": 100,
+     "type": "array"
+    },
+    "HeaderParameters": {
+     "items": {
+      "$ref": "#/definitions/Parameter"
+     },
+     "maxItems": 100,
+     "type": "array"
+    },
+    "QueryStringParameters": {
+     "items": {
+      "$ref": "#/definitions/Parameter"
+     },
+     "maxItems": 100,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "OAuthParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationEndpoint": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientParameters": {
+     "$ref": "#/definitions/ClientParameters"
+    },
+    "HttpMethod": {
+     "enum": [
+      "GET",
+      "POST",
+      "PUT"
+     ],
+     "type": "string"
+    },
+    "OAuthHttpParameters": {
+     "$ref": "#/definitions/ConnectionHttpParameters"
+    }
+   },
+   "required": [
+    "ClientParameters",
+    "AuthorizationEndpoint",
+    "HttpMethod"
+   ],
+   "type": "object"
+  },
+  "Parameter": {
+   "additionalProperties": false,
+   "properties": {
+    "IsValueSecret": {
+     "default": true,
+     "type": "boolean"
+    },
+    "Key": {
+     "maxLength": 512,
+     "pattern": "^[!#$%&'*+-.^_`|~0-9a-zA-Z]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 512,
+     "pattern": "^[ \\t]*[\\x20-\\x7E]+([ \\t]+[\\x20-\\x7E]+)*[ \\t]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AuthParameters": {
+   "$ref": "#/definitions/AuthParameters"
+  },
+  "AuthorizationType": {
+   "enum": [
+    "API_KEY",
+    "BASIC",
+    "OAUTH_CLIENT_CREDENTIALS"
+   ],
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 512,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SecretArn": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/SecretArn"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Events::Connection",
+ "writeOnlyProperties": [
+  "/properties/AuthParameters"
+ ]
+}

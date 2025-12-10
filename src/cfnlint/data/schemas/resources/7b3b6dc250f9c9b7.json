@@ -1,0 +1,367 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceName",
+  "/properties/BlueprintId",
+  "/properties/BundleId",
+  "/properties/AvailabilityZone"
+ ],
+ "definitions": {
+  "AddOn": {
+   "additionalProperties": false,
+   "properties": {
+    "AddOnType": {
+     "enum": [
+      "AutoSnapshot",
+      "StopInstanceOnIdle"
+     ],
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AutoSnapshotAddOnRequest": {
+     "$ref": "#/definitions/AutoSnapshotAddOn"
+    },
+    "Status": {
+     "enum": [
+      "Enabling",
+      "Disabling",
+      "Enabled",
+      "Terminating",
+      "Terminated",
+      "Disabled",
+      "Failed"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "AddOnType"
+   ],
+   "type": "object"
+  },
+  "AutoSnapshotAddOn": {
+   "additionalProperties": false,
+   "properties": {
+    "SnapshotTimeOfDay": {
+     "pattern": "^[0-9]{2}:00$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Disk": {
+   "additionalProperties": false,
+   "properties": {
+    "AttachedTo": {
+     "type": "string"
+    },
+    "AttachmentState": {
+     "type": "string"
+    },
+    "DiskName": {
+     "maxLength": 254,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9][\\w\\-.]*[a-zA-Z0-9]$",
+     "type": "string"
+    },
+    "IOPS": {
+     "type": "integer"
+    },
+    "IsSystemDisk": {
+     "type": "boolean"
+    },
+    "Path": {
+     "type": "string"
+    },
+    "SizeInGb": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DiskName",
+    "Path"
+   ],
+   "type": "object"
+  },
+  "Hardware": {
+   "additionalProperties": false,
+   "properties": {
+    "CpuCount": {
+     "type": "integer"
+    },
+    "Disks": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Disk"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "RamSizeInGb": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Location": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "type": "string"
+    },
+    "RegionName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MonthlyTransfer": {
+   "additionalProperties": false,
+   "properties": {
+    "GbPerMonthAllocated": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Networking": {
+   "additionalProperties": false,
+   "properties": {
+    "MonthlyTransfer": {
+     "$ref": "#/definitions/MonthlyTransfer"
+    },
+    "Ports": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Port"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Ports"
+   ],
+   "type": "object"
+  },
+  "Port": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessDirection": {
+     "type": "string"
+    },
+    "AccessFrom": {
+     "type": "string"
+    },
+    "AccessType": {
+     "type": "string"
+    },
+    "CidrListAliases": {
+     "$ref": "#/definitions/cidrListAliases"
+    },
+    "Cidrs": {
+     "$ref": "#/definitions/cidrs"
+    },
+    "CommonName": {
+     "type": "string"
+    },
+    "FromPort": {
+     "type": "integer"
+    },
+    "Ipv6Cidrs": {
+     "$ref": "#/definitions/ipv6Cidrs"
+    },
+    "Protocol": {
+     "type": "string"
+    },
+    "ToPort": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "State": {
+   "additionalProperties": false,
+   "properties": {
+    "Code": {
+     "type": "integer"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "cidrListAliases": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "cidrs": {
+   "insertionOrder": false,
+   "items": {
+    "format": "ipv4-network",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ipv6Cidrs": {
+   "insertionOrder": false,
+   "items": {
+    "format": "ipv6-network",
+    "type": "string"
+   },
+   "type": "array"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InstanceName"
+ ],
+ "properties": {
+  "AddOns": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AddOn"
+   },
+   "type": "array"
+  },
+  "AvailabilityZone": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "BlueprintId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "BundleId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "Hardware": {
+   "$ref": "#/definitions/Hardware"
+  },
+  "InstanceArn": {
+   "type": "string"
+  },
+  "InstanceName": {
+   "maxLength": 254,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9][\\w\\-.]*[a-zA-Z0-9]$",
+   "type": "string"
+  },
+  "Ipv6Addresses": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "IsStaticIp": {
+   "type": "boolean"
+  },
+  "KeyPairName": {
+   "pattern": "\\w[\\w\\-]*\\w",
+   "type": "string"
+  },
+  "Location": {
+   "$ref": "#/definitions/Location"
+  },
+  "Networking": {
+   "$ref": "#/definitions/Networking"
+  },
+  "PrivateIpAddress": {
+   "type": "string"
+  },
+  "PublicIpAddress": {
+   "type": "string"
+  },
+  "ResourceType": {
+   "type": "string"
+  },
+  "SshKeyName": {
+   "type": "string"
+  },
+  "State": {
+   "$ref": "#/definitions/State"
+  },
+  "SupportCode": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UserData": {
+   "type": "string"
+  },
+  "UserName": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/InstanceArn",
+  "/properties/SshKeyName",
+  "/properties/SupportCode",
+  "/properties/ResourceType",
+  "/properties/IsStaticIp",
+  "/properties/PrivateIpAddress",
+  "/properties/PublicIpAddress",
+  "/properties/Ipv6Addresses",
+  "/properties/Location/AvailabilityZone",
+  "/properties/Location/RegionName",
+  "/properties/Hardware/CpuCount",
+  "/properties/Hardware/RamSizeInGb",
+  "/properties/State/Code",
+  "/properties/State/Name",
+  "/properties/UserName",
+  "/properties/Networking/MonthlyTransfer/GbPerMonthAllocated"
+ ],
+ "required": [
+  "InstanceName",
+  "BlueprintId",
+  "BundleId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Lightsail::Instance",
+ "writeOnlyProperties": [
+  "/properties/UserData"
+ ]
+}

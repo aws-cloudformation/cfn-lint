@@ -1,0 +1,95 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SyncType",
+  "/properties/ResourceName"
+ ],
+ "definitions": {},
+ "primaryIdentifier": [
+  "/properties/ResourceName",
+  "/properties/SyncType"
+ ],
+ "properties": {
+  "Branch": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ConfigFile": {
+   "type": "string"
+  },
+  "OwnerId": {
+   "pattern": "[a-za-z0-9_\\.-]+",
+   "type": "string"
+  },
+  "ProviderType": {
+   "enum": [
+    "GitHub",
+    "Bitbucket",
+    "GitHubEnterprise",
+    "GitLab",
+    "GitLabSelfManaged"
+   ],
+   "type": "string"
+  },
+  "PublishDeploymentStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "RepositoryLinkId": {
+   "pattern": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+   "type": "string"
+  },
+  "RepositoryName": {
+   "pattern": "[a-za-z0-9_\\.-]+",
+   "type": "string"
+  },
+  "ResourceName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "[a-za-z0-9_\\.-]+",
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "arn:aws(-[\\w]+)*:iam::\\d{12}:role/[a-zA-Z_0-9+=,.@\\-_/]+",
+   "type": "string"
+  },
+  "SyncType": {
+   "enum": [
+    "CFN_STACK_SYNC"
+   ],
+   "type": "string"
+  },
+  "TriggerResourceUpdateOn": {
+   "enum": [
+    "ANY_CHANGE",
+    "FILE_CHANGE"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ProviderType",
+  "/properties/OwnerId",
+  "/properties/RepositoryName"
+ ],
+ "required": [
+  "Branch",
+  "ConfigFile",
+  "RepositoryLinkId",
+  "ResourceName",
+  "SyncType",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codestarconnections.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::CodeStarConnections::SyncConfiguration"
+}

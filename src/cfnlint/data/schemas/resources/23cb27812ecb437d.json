@@ -1,0 +1,155 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/CoreNetworkArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GlobalNetworkId"
+ ],
+ "definitions": {
+  "CoreNetworkEdge": {
+   "additionalProperties": false,
+   "properties": {
+    "Asn": {
+     "type": "number"
+    },
+    "EdgeLocation": {
+     "type": "string"
+    },
+    "InsideCidrBlocks": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "CoreNetworkSegment": {
+   "additionalProperties": false,
+   "properties": {
+    "EdgeLocations": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "SharedSegments": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 10000000,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 10000000,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CoreNetworkId"
+ ],
+ "properties": {
+  "CoreNetworkArn": {
+   "type": "string"
+  },
+  "CoreNetworkId": {
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 256,
+   "pattern": "[\\s\\S]*",
+   "type": "string"
+  },
+  "Edges": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CoreNetworkEdge"
+   },
+   "type": "array"
+  },
+  "GlobalNetworkId": {
+   "maxLength": 50,
+   "pattern": "[\\s\\S]*",
+   "type": "string"
+  },
+  "OwnerAccount": {
+   "type": "string"
+  },
+  "PolicyDocument": {
+   "format": "json",
+   "maxLength": 10000000,
+   "pattern": "[\\s\\S]*",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Segments": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CoreNetworkSegment"
+   },
+   "type": "array"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/OwnerAccount",
+  "/properties/CoreNetworkId",
+  "/properties/CoreNetworkArn",
+  "/properties/CreatedAt",
+  "/properties/State",
+  "/properties/Segments",
+  "/properties/Edges"
+ ],
+ "required": [
+  "GlobalNetworkId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-corenetwork",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::CoreNetwork"
+}

@@ -1,0 +1,98 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/LoadBalancerName",
+  "/properties/InstancePort",
+  "/properties/IpAddressType"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LoadBalancerName"
+ ],
+ "properties": {
+  "AttachedInstances": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "HealthCheckPath": {
+   "type": "string"
+  },
+  "InstancePort": {
+   "maximum": 65535,
+   "minimum": -1,
+   "type": "integer"
+  },
+  "IpAddressType": {
+   "enum": [
+    "dualstack",
+    "ipv4",
+    "ipv6"
+   ],
+   "type": "string"
+  },
+  "LoadBalancerArn": {
+   "type": "string"
+  },
+  "LoadBalancerName": {
+   "pattern": "\\w[\\w\\-]*\\w",
+   "type": "string"
+  },
+  "SessionStickinessEnabled": {
+   "type": "boolean"
+  },
+  "SessionStickinessLBCookieDurationSeconds": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TlsPolicyName": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LoadBalancerArn"
+ ],
+ "required": [
+  "LoadBalancerName",
+  "InstancePort"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Lightsail::LoadBalancer"
+}

@@ -1,0 +1,210 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "OnChangeStateTemplateUpdateStrategy": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "PeriodicStateTemplateUpdateStrategy": {
+   "additionalProperties": false,
+   "properties": {
+    "StateTemplateUpdateRate": {
+     "$ref": "#/definitions/TimePeriod"
+    }
+   },
+   "required": [
+    "StateTemplateUpdateRate"
+   ],
+   "type": "object"
+  },
+  "StateTemplateAssociation": {
+   "additionalProperties": false,
+   "minProperties": 0,
+   "properties": {
+    "Identifier": {
+     "maxLength": 100,
+     "minLength": 1,
+     "pattern": "[a-zA-Z\\d\\-_:]+",
+     "type": "string"
+    },
+    "StateTemplateUpdateStrategy": {
+     "$ref": "#/definitions/StateTemplateUpdateStrategy"
+    }
+   },
+   "required": [
+    "Identifier",
+    "StateTemplateUpdateStrategy"
+   ],
+   "type": "object"
+  },
+  "StateTemplateUpdateStrategy": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Periodic": {
+       "$ref": "#/definitions/PeriodicStateTemplateUpdateStrategy"
+      }
+     },
+     "required": [
+      "Periodic"
+     ],
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "OnChange": {
+       "$ref": "#/definitions/OnChangeStateTemplateUpdateStrategy"
+      }
+     },
+     "required": [
+      "OnChange"
+     ],
+     "type": "object"
+    }
+   ]
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TimePeriod": {
+   "additionalProperties": false,
+   "properties": {
+    "Unit": {
+     "$ref": "#/definitions/TimeUnit"
+    },
+    "Value": {
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Unit",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TimeUnit": {
+   "enum": [
+    "MILLISECOND",
+    "SECOND",
+    "MINUTE",
+    "HOUR"
+   ],
+   "type": "string"
+  },
+  "VehicleAssociationBehavior": {
+   "enum": [
+    "CreateIotThing",
+    "ValidateIotThingExists"
+   ],
+   "type": "string"
+  },
+  "attributesMap": {
+   "additionalProperties": false,
+   "minProperties": 1,
+   "patternProperties": {
+    "^[a-zA-Z0-9_.-]+$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AssociationBehavior": {
+   "$ref": "#/definitions/VehicleAssociationBehavior"
+  },
+  "Attributes": {
+   "$ref": "#/definitions/attributesMap"
+  },
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DecoderManifestArn": {
+   "type": "string"
+  },
+  "LastModificationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "ModelManifestArn": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z\\d\\-_:]+$",
+   "type": "string"
+  },
+  "StateTemplates": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/StateTemplateAssociation"
+   },
+   "maxItems": 20,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationTime",
+  "/properties/LastModificationTime"
+ ],
+ "required": [
+  "Name",
+  "DecoderManifestArn",
+  "ModelManifestArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTFleetWise::Vehicle",
+ "writeOnlyProperties": [
+  "/properties/AssociationBehavior"
+ ]
+}

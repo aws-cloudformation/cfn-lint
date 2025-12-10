@@ -1,0 +1,91 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ObservabilityConfigurationName",
+  "/properties/TraceConfiguration",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:).+",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TraceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Vendor": {
+     "enum": [
+      "AWSXRAY"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Vendor"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ObservabilityConfigurationArn"
+ ],
+ "properties": {
+  "Latest": {
+   "type": "boolean"
+  },
+  "ObservabilityConfigurationArn": {
+   "maxLength": 1011,
+   "minLength": 1,
+   "pattern": "arn:aws(-[\\w]+)*:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[0-9]{12}:(\\w|/|-){1,1011}",
+   "type": "string"
+  },
+  "ObservabilityConfigurationName": {
+   "maxLength": 32,
+   "minLength": 4,
+   "pattern": "[A-Za-z0-9][A-Za-z0-9\\-_]{3,31}",
+   "type": "string"
+  },
+  "ObservabilityConfigurationRevision": {
+   "type": "integer"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "TraceConfiguration": {
+   "$ref": "#/definitions/TraceConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ObservabilityConfigurationArn",
+  "/properties/ObservabilityConfigurationRevision",
+  "/properties/Latest"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apprunner.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::AppRunner::ObservabilityConfiguration",
+ "writeOnlyProperties": [
+  "/properties/Tags"
+ ]
+}

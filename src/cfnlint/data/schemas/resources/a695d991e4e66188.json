@@ -1,0 +1,197 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AppId",
+  "/properties/BranchName"
+ ],
+ "definitions": {
+  "Backend": {
+   "additionalProperties": false,
+   "properties": {
+    "StackArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:aws:cloudformation:[a-z0-9-]+:\\d{12}:stack/.+/.+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "BasicAuthConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableBasicAuth": {
+     "type": "boolean"
+    },
+    "Password": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Username": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Username",
+    "Password"
+   ],
+   "type": "object"
+  },
+  "EnvironmentVariable": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 255,
+     "pattern": "(?s).*",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 5500,
+     "pattern": "(?s).*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "insertionOrder": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AppId": {
+   "maxLength": 20,
+   "minLength": 1,
+   "pattern": "d[a-z0-9]+",
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 1000,
+   "pattern": "(?s).*",
+   "type": "string"
+  },
+  "Backend": {
+   "$ref": "#/definitions/Backend"
+  },
+  "BasicAuthConfig": {
+   "$ref": "#/definitions/BasicAuthConfig"
+  },
+  "BranchName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "(?s).+",
+   "type": "string"
+  },
+  "BuildSpec": {
+   "maxLength": 25000,
+   "minLength": 1,
+   "pattern": "(?s).+",
+   "type": "string"
+  },
+  "ComputeRoleArn": {
+   "maxLength": 1000,
+   "minLength": 0,
+   "pattern": "(?s).*",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "pattern": "(?s).*",
+   "type": "string"
+  },
+  "EnableAutoBuild": {
+   "type": "boolean"
+  },
+  "EnablePerformanceMode": {
+   "type": "boolean"
+  },
+  "EnablePullRequestPreview": {
+   "type": "boolean"
+  },
+  "EnableSkewProtection": {
+   "type": "boolean"
+  },
+  "EnvironmentVariables": {
+   "items": {
+    "$ref": "#/definitions/EnvironmentVariable"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Framework": {
+   "maxLength": 255,
+   "pattern": "(?s).*",
+   "type": "string"
+  },
+  "PullRequestEnvironmentName": {
+   "maxLength": 20,
+   "pattern": "(?s).*",
+   "type": "string"
+  },
+  "Stage": {
+   "enum": [
+    "EXPERIMENTAL",
+    "BETA",
+    "PULL_REQUEST",
+    "PRODUCTION",
+    "DEVELOPMENT"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "AppId",
+  "BranchName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-amplify",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Amplify::Branch",
+ "writeOnlyProperties": [
+  "/properties/BasicAuthConfig"
+ ]
+}

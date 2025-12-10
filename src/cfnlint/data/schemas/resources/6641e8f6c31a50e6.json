@@ -1,0 +1,243 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RuleSetName"
+ ],
+ "definitions": {
+  "Action": {
+   "additionalProperties": false,
+   "properties": {
+    "AddHeaderAction": {
+     "$ref": "#/definitions/AddHeaderAction"
+    },
+    "BounceAction": {
+     "$ref": "#/definitions/BounceAction"
+    },
+    "ConnectAction": {
+     "$ref": "#/definitions/ConnectAction"
+    },
+    "LambdaAction": {
+     "$ref": "#/definitions/LambdaAction"
+    },
+    "S3Action": {
+     "$ref": "#/definitions/S3Action"
+    },
+    "SNSAction": {
+     "$ref": "#/definitions/SNSAction"
+    },
+    "StopAction": {
+     "$ref": "#/definitions/StopAction"
+    },
+    "WorkmailAction": {
+     "$ref": "#/definitions/WorkmailAction"
+    }
+   },
+   "type": "object"
+  },
+  "AddHeaderAction": {
+   "additionalProperties": false,
+   "properties": {
+    "HeaderName": {
+     "type": "string"
+    },
+    "HeaderValue": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "HeaderValue",
+    "HeaderName"
+   ],
+   "type": "object"
+  },
+  "BounceAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Message": {
+     "type": "string"
+    },
+    "Sender": {
+     "type": "string"
+    },
+    "SmtpReplyCode": {
+     "type": "string"
+    },
+    "StatusCode": {
+     "type": "string"
+    },
+    "TopicArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Sender",
+    "SmtpReplyCode",
+    "Message"
+   ],
+   "type": "object"
+  },
+  "ConnectAction": {
+   "additionalProperties": false,
+   "properties": {
+    "IAMRoleARN": {
+     "format": "AWS::IAM::Role.Arn",
+     "type": "string"
+    },
+    "InstanceARN": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "InstanceARN",
+    "IAMRoleARN"
+   ],
+   "type": "object"
+  },
+  "LambdaAction": {
+   "additionalProperties": false,
+   "properties": {
+    "FunctionArn": {
+     "type": "string"
+    },
+    "InvocationType": {
+     "type": "string"
+    },
+    "TopicArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "FunctionArn"
+   ],
+   "type": "object"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "properties": {
+    "Actions": {
+     "items": {
+      "$ref": "#/definitions/Action"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Recipients": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ScanEnabled": {
+     "type": "boolean"
+    },
+    "TlsPolicy": {
+     "enum": [
+      "Optional",
+      "Require"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "S3Action": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "type": "string"
+    },
+    "IamRoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "type": "string"
+    },
+    "KmsKeyArn": {
+     "type": "string"
+    },
+    "ObjectKeyPrefix": {
+     "type": "string"
+    },
+    "TopicArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "SNSAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Encoding": {
+     "type": "string"
+    },
+    "TopicArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "StopAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Scope": {
+     "type": "string"
+    },
+    "TopicArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Scope"
+   ],
+   "type": "object"
+  },
+  "WorkmailAction": {
+   "additionalProperties": false,
+   "properties": {
+    "OrganizationArn": {
+     "type": "string"
+    },
+    "TopicArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "OrganizationArn"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "After": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Rule": {
+   "$ref": "#/definitions/Rule"
+  },
+  "RuleSetName": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Rule",
+  "RuleSetName"
+ ],
+ "typeName": "AWS::SES::ReceiptRule"
+}

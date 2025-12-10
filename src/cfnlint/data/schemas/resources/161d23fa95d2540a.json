@@ -1,0 +1,188 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConfigRuleName"
+ ],
+ "definitions": {
+  "CustomPolicyDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableDebugLogDelivery": {
+     "type": "boolean"
+    },
+    "PolicyRuntime": {
+     "type": "string"
+    },
+    "PolicyText": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EvaluationModeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Mode": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Scope": {
+   "additionalProperties": false,
+   "properties": {
+    "ComplianceResourceId": {
+     "type": "string"
+    },
+    "ComplianceResourceTypes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "TagKey": {
+     "type": "string"
+    },
+    "TagValue": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Source": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomPolicyDetails": {
+     "$ref": "#/definitions/CustomPolicyDetails"
+    },
+    "Owner": {
+     "enum": [
+      "AWS",
+      "CUSTOM_LAMBDA",
+      "CUSTOM_POLICY"
+     ],
+     "type": "string"
+    },
+    "SourceDetails": {
+     "items": {
+      "$ref": "#/definitions/SourceDetail"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SourceIdentifier": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Owner"
+   ],
+   "type": "object"
+  },
+  "SourceDetail": {
+   "additionalProperties": false,
+   "properties": {
+    "EventSource": {
+     "enum": [
+      "aws.config"
+     ],
+     "type": "string"
+    },
+    "MaximumExecutionFrequency": {
+     "enum": [
+      "One_Hour",
+      "Six_Hours",
+      "Three_Hours",
+      "Twelve_Hours",
+      "TwentyFour_Hours"
+     ],
+     "type": "string"
+    },
+    "MessageType": {
+     "enum": [
+      "ConfigurationItemChangeNotification",
+      "ConfigurationSnapshotDeliveryCompleted",
+      "OversizedConfigurationItemChangeNotification",
+      "ScheduledNotification"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "EventSource",
+    "MessageType"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConfigRuleName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Compliance": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ConfigRuleId": {
+   "type": "string"
+  },
+  "ConfigRuleName": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "EvaluationModes": {
+   "items": {
+    "$ref": "#/definitions/EvaluationModeConfiguration"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "InputParameters": {
+   "type": [
+    "string",
+    "object"
+   ]
+  },
+  "MaximumExecutionFrequency": {
+   "type": "string"
+  },
+  "Scope": {
+   "$ref": "#/definitions/Scope"
+  },
+  "Source": {
+   "$ref": "#/definitions/Source"
+  }
+ },
+ "propertyTransform": {
+  "/properties/Source": "Source.Owner=\"CUSTOM_LAMBDA\" ? ($count(Source.SourceDetails[MessageType=\"ConfigurationItemChangeNotification\"]) > 0 and $count(Source.SourceDetails[MessageType=\"OversizedConfigurationItemChangeNotification\"]) = 0) ? $ ~> | $.Source | {\"SourceDetails\" : [SourceDetails, {\"EventSource\": \"aws.config\", \"MessageType\": \"OversizedConfigurationItemChangeNotification\"}]} | : ($count(Source.SourceDetails[MessageType=\"ConfigurationItemChangeNotification\"]) = 0 and $count(Source.SourceDetails[MessageType=\"OversizedConfigurationItemChangeNotification\"]) > 0) ? $ ~> | $.Source | {\"SourceDetails\" : [SourceDetails, {\"EventSource\": \"aws.config\", \"MessageType\": \"ConfigurationItemChangeNotification\" }]} | : $ : $"
+ },
+ "readOnlyProperties": [
+  "/properties/ConfigRuleId",
+  "/properties/Compliance/Type",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Source"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-config.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Config::ConfigRule",
+ "writeOnlyProperties": [
+  "/properties/Source/CustomPolicyDetails/PolicyText"
+ ]
+}

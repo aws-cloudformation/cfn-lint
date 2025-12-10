@@ -1,0 +1,226 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyId",
+  "/properties/SuperuserParameters",
+  "/properties/FederationParameters",
+  "/properties/DataBundles",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "DataBundleArn": {
+   "pattern": "^arn:aws:finspace:[A-Za-z0-9_/.-]{0,63}:\\d*:data-bundle/[0-9A-Za-z_-]{1,128}$",
+   "type": "string"
+  },
+  "FederationParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationCallBackURL": {
+     "pattern": "^https?://[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]{1,1000}",
+     "type": "string"
+    },
+    "AttributeMap": {
+     "insertionOrder": false,
+     "items": {
+      "additionalProperties": false,
+      "properties": {
+       "Key": {
+        "maxLength": 128,
+        "minLength": 1,
+        "type": "string"
+       },
+       "Value": {
+        "maxLength": 256,
+        "minLength": 0,
+        "type": "string"
+       }
+      },
+      "type": "object"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "FederationProviderName": {
+     "maxLength": 32,
+     "minLength": 1,
+     "pattern": "[^_\\p{Z}][\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}][^_\\p{Z}]+",
+     "type": "string"
+    },
+    "FederationURN": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9._\\-:\\/#\\+]+$",
+     "type": "string"
+    },
+    "SamlMetadataDocument": {
+     "maxLength": 10000000,
+     "minLength": 1000,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "SamlMetadataURL": {
+     "pattern": "^https?://[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]{1,1000}",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SuperuserParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "EmailAddress": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+[.]+[A-Za-z]+",
+     "type": "string"
+    },
+    "FirstName": {
+     "maxLength": 50,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9]{1,50}$",
+     "type": "string"
+    },
+    "LastName": {
+     "maxLength": 50,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9]{1,50}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/DataBundles"
+ ],
+ "primaryIdentifier": [
+  "/properties/EnvironmentId"
+ ],
+ "properties": {
+  "AwsAccountId": {
+   "pattern": "^[a-zA-Z0-9]{1,26}$",
+   "type": "string"
+  },
+  "DataBundles": {
+   "items": {
+    "$ref": "#/definitions/DataBundleArn"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "DedicatedServiceAccountId": {
+   "pattern": "^[a-zA-Z0-9]{1,26}$",
+   "type": "string"
+  },
+  "Description": {
+   "pattern": "^[a-zA-Z0-9. ]{1,1000}$",
+   "type": "string"
+  },
+  "EnvironmentArn": {
+   "pattern": "^arn:aws:finspace:[A-Za-z0-9_/.-]{0,63}:\\d+:environment/[0-9A-Za-z_-]{1,128}$",
+   "type": "string"
+  },
+  "EnvironmentId": {
+   "pattern": "^[a-zA-Z0-9]{1,26}$",
+   "type": "string"
+  },
+  "EnvironmentUrl": {
+   "pattern": "^[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]{1,1000}",
+   "type": "string"
+  },
+  "FederationMode": {
+   "enum": [
+    "LOCAL",
+    "FEDERATED"
+   ],
+   "type": "string"
+  },
+  "FederationParameters": {
+   "$ref": "#/definitions/FederationParameters"
+  },
+  "KmsKeyId": {
+   "pattern": "^[a-zA-Z-0-9-:\\/]{1,1000}$",
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-]*[a-zA-Z0-9]{1,255}$",
+   "type": "string"
+  },
+  "SageMakerStudioDomainUrl": {
+   "pattern": "^[a-zA-Z-0-9-:\\/.]{1,1000}$",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "CREATE_REQUESTED",
+    "CREATING",
+    "CREATED",
+    "DELETE_REQUESTED",
+    "DELETING",
+    "DELETED",
+    "FAILED_CREATION",
+    "FAILED_DELETION",
+    "RETRY_DELETION",
+    "SUSPENDED"
+   ],
+   "type": "string"
+  },
+  "SuperuserParameters": {
+   "$ref": "#/definitions/SuperuserParameters"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/EnvironmentId",
+  "/properties/Status",
+  "/properties/SageMakerStudioDomainUrl",
+  "/properties/EnvironmentArn",
+  "/properties/EnvironmentUrl",
+  "/properties/AwsAccountId",
+  "/properties/DedicatedServiceAccountId"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::FinSpace::Environment",
+ "writeOnlyProperties": [
+  "/properties/SuperuserParameters",
+  "/properties/FederationParameters/AttributeMap",
+  "/properties/Tags"
+ ]
+}

@@ -1,0 +1,88 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/StackId"
+ ],
+ "properties": {
+  "NotificationARNs": {
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 5,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Parameters": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": [
+      "string",
+      "number",
+      "integer",
+      "object",
+      "array",
+      "boolean"
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "StackId": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TemplateURL": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "TimeoutInMinutes": {
+   "minimum": 1,
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/StackId"
+ ],
+ "required": [
+  "TemplateURL"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudFormation::Stack",
+ "writeOnlyProperties": [
+  "/properties/TemplateURL"
+ ]
+}

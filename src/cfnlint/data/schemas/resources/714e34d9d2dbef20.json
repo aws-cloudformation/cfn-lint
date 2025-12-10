@@ -1,0 +1,93 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName",
+  "/properties/EncryptionKey"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "\\P{C}+",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "\\P{C}*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DomainName": {
+   "maxLength": 50,
+   "minLength": 2,
+   "pattern": "^([a-z][a-z0-9\\-]{0,48}[a-z0-9])$",
+   "type": "string"
+  },
+  "EncryptionKey": {
+   "maxLength": 1011,
+   "minLength": 1,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 50,
+   "minLength": 2,
+   "pattern": "^([a-z][a-z0-9\\-]{0,48}[a-z0-9])$",
+   "type": "string"
+  },
+  "Owner": {
+   "pattern": "[0-9]{12}",
+   "type": "string"
+  },
+  "PermissionsPolicyDocument": {
+   "maxLength": 5120,
+   "minLength": 2,
+   "type": "object"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Owner",
+  "/properties/Name",
+  "/properties/EncryptionKey",
+  "/properties/Arn"
+ ],
+ "required": [
+  "DomainName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codeartifact",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CodeArtifact::Domain"
+}

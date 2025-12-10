@@ -1,0 +1,1843 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Arn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Source",
+  "/properties/SourceParameters/DynamoDBStreamParameters/StartingPosition",
+  "/properties/SourceParameters/KinesisStreamParameters/StartingPosition",
+  "/properties/SourceParameters/KinesisStreamParameters/StartingPositionTimestamp",
+  "/properties/SourceParameters/ActiveMQBrokerParameters/QueueName",
+  "/properties/SourceParameters/RabbitMQBrokerParameters/QueueName",
+  "/properties/SourceParameters/RabbitMQBrokerParameters/VirtualHost",
+  "/properties/SourceParameters/ManagedStreamingKafkaParameters/TopicName",
+  "/properties/SourceParameters/ManagedStreamingKafkaParameters/StartingPosition",
+  "/properties/SourceParameters/ManagedStreamingKafkaParameters/ConsumerGroupID",
+  "/properties/SourceParameters/SelfManagedKafkaParameters/TopicName",
+  "/properties/SourceParameters/SelfManagedKafkaParameters/StartingPosition",
+  "/properties/SourceParameters/SelfManagedKafkaParameters/AdditionalBootstrapServers",
+  "/properties/SourceParameters/SelfManagedKafkaParameters/ConsumerGroupID"
+ ],
+ "definitions": {
+  "AssignPublicIp": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "AwsVpcConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AssignPublicIp": {
+     "$ref": "#/definitions/AssignPublicIp"
+    },
+    "SecurityGroups": {
+     "items": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "pattern": "^sg-[0-9a-zA-Z]*|(\\$(\\.[\\w/_-]+(\\[(\\d+|\\*)\\])*)*)$",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Subnets": {
+     "format": "AWS::EC2::Subnet.Ids",
+     "items": {
+      "format": "AWS::EC2::Subnet.Id",
+      "maxLength": 1024,
+      "minLength": 1,
+      "pattern": "^subnet-[0-9a-z]*|(\\$(\\.[\\w/_-]+(\\[(\\d+|\\*)\\])*)*)$",
+      "type": "string"
+     },
+     "maxItems": 16,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Subnets"
+   ],
+   "type": "object"
+  },
+  "BatchArrayProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Size": {
+     "default": 0,
+     "maximum": 10000,
+     "minimum": 2,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "BatchContainerOverrides": {
+   "additionalProperties": false,
+   "properties": {
+    "Command": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Environment": {
+     "items": {
+      "$ref": "#/definitions/BatchEnvironmentVariable"
+     },
+     "type": "array"
+    },
+    "InstanceType": {
+     "type": "string"
+    },
+    "ResourceRequirements": {
+     "items": {
+      "$ref": "#/definitions/BatchResourceRequirement"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "BatchEnvironmentVariable": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "BatchJobDependency": {
+   "additionalProperties": false,
+   "properties": {
+    "JobId": {
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/BatchJobDependencyType"
+    }
+   },
+   "type": "object"
+  },
+  "BatchJobDependencyType": {
+   "enum": [
+    "N_TO_N",
+    "SEQUENTIAL"
+   ],
+   "type": "string"
+  },
+  "BatchParametersMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "BatchResourceRequirement": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "$ref": "#/definitions/BatchResourceRequirementType"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "BatchResourceRequirementType": {
+   "enum": [
+    "GPU",
+    "MEMORY",
+    "VCPU"
+   ],
+   "type": "string"
+  },
+  "BatchRetryStrategy": {
+   "additionalProperties": false,
+   "properties": {
+    "Attempts": {
+     "default": 0,
+     "maximum": 10,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "CapacityProviderStrategyItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Base": {
+     "default": 0,
+     "maximum": 100000,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "CapacityProvider": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Weight": {
+     "default": 0,
+     "maximum": 1000,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "CapacityProvider"
+   ],
+   "type": "object"
+  },
+  "CloudwatchLogsLogDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroupArn": {
+     "maxLength": 1600,
+     "minLength": 1,
+     "pattern": "^(^arn:aws([a-z]|\\-)*:logs:([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}):(\\d{12}):log-group:.+)$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DeadLetterConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "maxLength": 1600,
+     "minLength": 1,
+     "pattern": "^arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-]+):([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.+)$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DimensionMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "DimensionName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "DimensionValue": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "DimensionValueType": {
+     "$ref": "#/definitions/DimensionValueType"
+    }
+   },
+   "required": [
+    "DimensionName",
+    "DimensionValue",
+    "DimensionValueType"
+   ],
+   "type": "object"
+  },
+  "DimensionValueType": {
+   "enum": [
+    "VARCHAR"
+   ],
+   "type": "string"
+  },
+  "DynamoDBStreamStartPosition": {
+   "enum": [
+    "TRIM_HORIZON",
+    "LATEST"
+   ],
+   "type": "string"
+  },
+  "EcsContainerOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "Command": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Cpu": {
+     "type": "integer"
+    },
+    "Environment": {
+     "items": {
+      "$ref": "#/definitions/EcsEnvironmentVariable"
+     },
+     "type": "array"
+    },
+    "EnvironmentFiles": {
+     "items": {
+      "$ref": "#/definitions/EcsEnvironmentFile"
+     },
+     "type": "array"
+    },
+    "Memory": {
+     "type": "integer"
+    },
+    "MemoryReservation": {
+     "type": "integer"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "ResourceRequirements": {
+     "items": {
+      "$ref": "#/definitions/EcsResourceRequirement"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "EcsEnvironmentFile": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "$ref": "#/definitions/EcsEnvironmentFileType"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "EcsEnvironmentFileType": {
+   "enum": [
+    "s3"
+   ],
+   "type": "string"
+  },
+  "EcsEnvironmentVariable": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EcsEphemeralStorage": {
+   "additionalProperties": false,
+   "properties": {
+    "SizeInGiB": {
+     "default": 0,
+     "maximum": 200,
+     "minimum": 21,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "SizeInGiB"
+   ],
+   "type": "object"
+  },
+  "EcsInferenceAcceleratorOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "DeviceName": {
+     "type": "string"
+    },
+    "DeviceType": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EcsResourceRequirement": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "$ref": "#/definitions/EcsResourceRequirementType"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "EcsResourceRequirementType": {
+   "enum": [
+    "GPU",
+    "InferenceAccelerator"
+   ],
+   "type": "string"
+  },
+  "EcsTaskOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerOverrides": {
+     "items": {
+      "$ref": "#/definitions/EcsContainerOverride"
+     },
+     "type": "array"
+    },
+    "Cpu": {
+     "type": "string"
+    },
+    "EphemeralStorage": {
+     "$ref": "#/definitions/EcsEphemeralStorage"
+    },
+    "ExecutionRoleArn": {
+     "maxLength": 1600,
+     "minLength": 1,
+     "pattern": "^arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-]+):([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.+)|(\\$(\\.[\\w/_-]+(\\[(\\d+|\\*)\\])*)*)$",
+     "type": "string"
+    },
+    "InferenceAcceleratorOverrides": {
+     "items": {
+      "$ref": "#/definitions/EcsInferenceAcceleratorOverride"
+     },
+     "type": "array"
+    },
+    "Memory": {
+     "type": "string"
+    },
+    "TaskRoleArn": {
+     "maxLength": 1600,
+     "minLength": 1,
+     "pattern": "^arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-]+):([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.+)|(\\$(\\.[\\w/_-]+(\\[(\\d+|\\*)\\])*)*)$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EpochTimeUnit": {
+   "enum": [
+    "MILLISECONDS",
+    "SECONDS",
+    "MICROSECONDS",
+    "NANOSECONDS"
+   ],
+   "type": "string"
+  },
+  "Filter": {
+   "additionalProperties": false,
+   "properties": {
+    "Pattern": {
+     "maxLength": 4096,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FilterCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "Filters": {
+     "items": {
+      "$ref": "#/definitions/Filter"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "FirehoseLogDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "DeliveryStreamArn": {
+     "maxLength": 1600,
+     "minLength": 1,
+     "pattern": "^(^arn:aws([a-z]|\\-)*:firehose:([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}):(\\d{12}):deliverystream/.+)$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HeaderParametersMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[!#$%&'*+-.^_`|~0-9a-zA-Z]+|(\\$(\\.[\\w/_-]+(\\[(\\d+|\\*)\\])*)*)$": {
+     "maxLength": 512,
+     "minLength": 0,
+     "pattern": "^[ \\t]*[\\x20-\\x7E]+([ \\t]+[\\x20-\\x7E]+)*[ \\t]*|(\\$(\\.[\\w/_-]+(\\[(\\d+|\\*)\\])*)*)$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "IncludeExecutionDataOption": {
+   "enum": [
+    "ALL"
+   ],
+   "type": "string"
+  },
+  "KinesisStreamStartPosition": {
+   "enum": [
+    "TRIM_HORIZON",
+    "LATEST",
+    "AT_TIMESTAMP"
+   ],
+   "type": "string"
+  },
+  "LaunchType": {
+   "enum": [
+    "EC2",
+    "FARGATE",
+    "EXTERNAL"
+   ],
+   "type": "string"
+  },
+  "LogLevel": {
+   "enum": [
+    "OFF",
+    "ERROR",
+    "INFO",
+    "TRACE"
+   ],
+   "type": "string"
+  },
+  "MQBrokerAccessCredentials": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "BasicAuth": {
+       "maxLength": 1600,
+       "minLength": 1,
+       "pattern": "^(^arn:aws([a-z]|\\-)*:secretsmanager:([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}):(\\d{12}):secret:.+)$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "BasicAuth"
+     ],
+     "title": "BasicAuth",
+     "type": "object"
+    }
+   ]
+  },
+  "MSKAccessCredentials": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "SaslScram512Auth": {
+       "maxLength": 1600,
+       "minLength": 1,
+       "pattern": "^(^arn:aws([a-z]|\\-)*:secretsmanager:([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}):(\\d{12}):secret:.+)$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "SaslScram512Auth"
+     ],
+     "title": "SaslScram512Auth",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ClientCertificateTlsAuth": {
+       "maxLength": 1600,
+       "minLength": 1,
+       "pattern": "^(^arn:aws([a-z]|\\-)*:secretsmanager:([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}):(\\d{12}):secret:.+)$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "ClientCertificateTlsAuth"
+     ],
+     "title": "ClientCertificateTlsAuth",
+     "type": "object"
+    }
+   ]
+  },
+  "MSKStartPosition": {
+   "enum": [
+    "TRIM_HORIZON",
+    "LATEST"
+   ],
+   "type": "string"
+  },
+  "MeasureValueType": {
+   "enum": [
+    "DOUBLE",
+    "BIGINT",
+    "VARCHAR",
+    "BOOLEAN",
+    "TIMESTAMP"
+   ],
+   "type": "string"
+  },
+  "MultiMeasureAttributeMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "MeasureValue": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MeasureValueType": {
+     "$ref": "#/definitions/MeasureValueType"
+    },
+    "MultiMeasureAttributeName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "MeasureValue",
+    "MeasureValueType",
+    "MultiMeasureAttributeName"
+   ],
+   "type": "object"
+  },
+  "MultiMeasureMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "MultiMeasureAttributeMappings": {
+     "items": {
+      "$ref": "#/definitions/MultiMeasureAttributeMapping"
+     },
+     "maxItems": 256,
+     "minItems": 1,
+     "type": "array"
+    },
+    "MultiMeasureName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "MultiMeasureAttributeMappings",
+    "MultiMeasureName"
+   ],
+   "type": "object"
+  },
+  "NetworkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsvpcConfiguration": {
+     "$ref": "#/definitions/AwsVpcConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "OnPartialBatchItemFailureStreams": {
+   "enum": [
+    "AUTOMATIC_BISECT"
+   ],
+   "type": "string"
+  },
+  "PipeEnrichmentHttpParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "HeaderParameters": {
+     "$ref": "#/definitions/HeaderParametersMap"
+    },
+    "PathParameterValues": {
+     "items": {
+      "pattern": "^(?!\\s*$).+|(\\$(\\.[\\w/_-]+(\\[(\\d+|\\*)\\])*)*)$",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "QueryStringParameters": {
+     "$ref": "#/definitions/QueryStringParametersMap"
+    }
+   },
+   "type": "object"
+  },
+  "PipeEnrichmentParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "HttpParameters": {
+     "$ref": "#/definitions/PipeEnrichmentHttpParameters"
+    },
+    "InputTemplate": {
+     "maxLength": 8192,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PipeLogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudwatchLogsLogDestination": {
+     "$ref": "#/definitions/CloudwatchLogsLogDestination"
+    },
+    "FirehoseLogDestination": {
+     "$ref": "#/definitions/FirehoseLogDestination"
+    },
+    "IncludeExecutionData": {
+     "items": {
+      "$ref": "#/definitions/IncludeExecutionDataOption"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Level": {
+     "$ref": "#/definitions/LogLevel"
+    },
+    "S3LogDestination": {
+     "$ref": "#/definitions/S3LogDestination"
+    }
+   },
+   "type": "object"
+  },
+  "PipeSourceActiveMQBrokerParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchSize": {
+     "maximum": 10000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Credentials": {
+     "$ref": "#/definitions/MQBrokerAccessCredentials"
+    },
+    "MaximumBatchingWindowInSeconds": {
+     "maximum": 300,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "QueueName": {
+     "maxLength": 1000,
+     "minLength": 1,
+     "pattern": "^[\\s\\S]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Credentials",
+    "QueueName"
+   ],
+   "type": "object"
+  },
+  "PipeSourceDynamoDBStreamParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchSize": {
+     "maximum": 10000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "DeadLetterConfig": {
+     "$ref": "#/definitions/DeadLetterConfig"
+    },
+    "MaximumBatchingWindowInSeconds": {
+     "maximum": 300,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MaximumRecordAgeInSeconds": {
+     "maximum": 604800,
+     "minimum": -1,
+     "type": "integer"
+    },
+    "MaximumRetryAttempts": {
+     "maximum": 10000,
+     "minimum": -1,
+     "type": "integer"
+    },
+    "OnPartialBatchItemFailure": {
+     "$ref": "#/definitions/OnPartialBatchItemFailureStreams"
+    },
+    "ParallelizationFactor": {
+     "maximum": 10,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "StartingPosition": {
+     "$ref": "#/definitions/DynamoDBStreamStartPosition"
+    }
+   },
+   "required": [
+    "StartingPosition"
+   ],
+   "type": "object"
+  },
+  "PipeSourceKinesisStreamParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchSize": {
+     "maximum": 10000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "DeadLetterConfig": {
+     "$ref": "#/definitions/DeadLetterConfig"
+    },
+    "MaximumBatchingWindowInSeconds": {
+     "maximum": 300,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MaximumRecordAgeInSeconds": {
+     "maximum": 604800,
+     "minimum": -1,
+     "type": "integer"
+    },
+    "MaximumRetryAttempts": {
+     "maximum": 10000,
+     "minimum": -1,
+     "type": "integer"
+    },
+    "OnPartialBatchItemFailure": {
+     "$ref": "#/definitions/OnPartialBatchItemFailureStreams"
+    },
+    "ParallelizationFactor": {
+     "maximum": 10,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "StartingPosition": {
+     "$ref": "#/definitions/KinesisStreamStartPosition"
+    },
+    "StartingPositionTimestamp": {
+     "format": "date-time",
+     "type": "string"
+    }
+   },
+   "required": [
+    "StartingPosition"
+   ],
+   "type": "object"
+  },
+  "PipeSourceManagedStreamingKafkaParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchSize": {
+     "maximum": 10000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ConsumerGroupID": {
+     "maxLength": 200,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-\\/*:_+=.@-]*$",
+     "type": "string"
+    },
+    "Credentials": {
+     "$ref": "#/definitions/MSKAccessCredentials"
+    },
+    "MaximumBatchingWindowInSeconds": {
+     "maximum": 300,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "StartingPosition": {
+     "$ref": "#/definitions/MSKStartPosition"
+    },
+    "TopicName": {
+     "maxLength": 249,
+     "minLength": 1,
+     "pattern": "^[^.]([a-zA-Z0-9\\-_.]+)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TopicName"
+   ],
+   "type": "object"
+  },
+  "PipeSourceParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ActiveMQBrokerParameters": {
+     "$ref": "#/definitions/PipeSourceActiveMQBrokerParameters"
+    },
+    "DynamoDBStreamParameters": {
+     "$ref": "#/definitions/PipeSourceDynamoDBStreamParameters"
+    },
+    "FilterCriteria": {
+     "$ref": "#/definitions/FilterCriteria"
+    },
+    "KinesisStreamParameters": {
+     "$ref": "#/definitions/PipeSourceKinesisStreamParameters"
+    },
+    "ManagedStreamingKafkaParameters": {
+     "$ref": "#/definitions/PipeSourceManagedStreamingKafkaParameters"
+    },
+    "RabbitMQBrokerParameters": {
+     "$ref": "#/definitions/PipeSourceRabbitMQBrokerParameters"
+    },
+    "SelfManagedKafkaParameters": {
+     "$ref": "#/definitions/PipeSourceSelfManagedKafkaParameters"
+    },
+    "SqsQueueParameters": {
+     "$ref": "#/definitions/PipeSourceSqsQueueParameters"
+    }
+   },
+   "type": "object"
+  },
+  "PipeSourceRabbitMQBrokerParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchSize": {
+     "maximum": 10000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Credentials": {
+     "$ref": "#/definitions/MQBrokerAccessCredentials"
+    },
+    "MaximumBatchingWindowInSeconds": {
+     "maximum": 300,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "QueueName": {
+     "maxLength": 1000,
+     "minLength": 1,
+     "pattern": "^[\\s\\S]*$",
+     "type": "string"
+    },
+    "VirtualHost": {
+     "maxLength": 200,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-\\/*:_+=.@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Credentials",
+    "QueueName"
+   ],
+   "type": "object"
+  },
+  "PipeSourceSelfManagedKafkaParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "AdditionalBootstrapServers": {
+     "items": {
+      "maxLength": 300,
+      "minLength": 1,
+      "pattern": "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9]):[0-9]{1,5}$",
+      "type": "string"
+     },
+     "maxItems": 2,
+     "minItems": 0,
+     "type": "array"
+    },
+    "BatchSize": {
+     "maximum": 10000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ConsumerGroupID": {
+     "maxLength": 200,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-\\/*:_+=.@-]*$",
+     "type": "string"
+    },
+    "Credentials": {
+     "$ref": "#/definitions/SelfManagedKafkaAccessConfigurationCredentials"
+    },
+    "MaximumBatchingWindowInSeconds": {
+     "maximum": 300,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "ServerRootCaCertificate": {
+     "maxLength": 1600,
+     "minLength": 1,
+     "pattern": "^(^arn:aws([a-z]|\\-)*:secretsmanager:([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}):(\\d{12}):secret:.+)$",
+     "type": "string"
+    },
+    "StartingPosition": {
+     "$ref": "#/definitions/SelfManagedKafkaStartPosition"
+    },
+    "TopicName": {
+     "maxLength": 249,
+     "minLength": 1,
+     "pattern": "^[^.]([a-zA-Z0-9\\-_.]+)$",
+     "type": "string"
+    },
+    "Vpc": {
+     "$ref": "#/definitions/SelfManagedKafkaAccessConfigurationVpc"
+    }
+   },
+   "required": [
+    "TopicName"
+   ],
+   "type": "object"
+  },
+  "PipeSourceSqsQueueParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchSize": {
+     "maximum": 10000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MaximumBatchingWindowInSeconds": {
+     "maximum": 300,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "PipeState": {
+   "enum": [
+    "RUNNING",
+    "STOPPED",
+    "CREATING",
+    "UPDATING",
+    "DELETING",
+    "STARTING",
+    "STOPPING",
+    "CREATE_FAILED",
+    "UPDATE_FAILED",
+    "START_FAILED",
+    "STOP_FAILED",
+    "DELETE_FAILED",
+    "CREATE_ROLLBACK_FAILED",
+    "DELETE_ROLLBACK_FAILED",
+    "UPDATE_ROLLBACK_FAILED"
+   ],
+   "type": "string"
+  },
+  "PipeTargetBatchJobParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ArrayProperties": {
+     "$ref": "#/definitions/BatchArrayProperties"
+    },
+    "ContainerOverrides": {
+     "$ref": "#/definitions/BatchContainerOverrides"
+    },
+    "DependsOn": {
+     "items": {
+      "$ref": "#/definitions/BatchJobDependency"
+     },
+     "maxItems": 20,
+     "minItems": 0,
+     "type": "array"
+    },
+    "JobDefinition": {
+     "type": "string"
+    },
+    "JobName": {
+     "type": "string"
+    },
+    "Parameters": {
+     "$ref": "#/definitions/BatchParametersMap"
+    },
+    "RetryStrategy": {
+     "$ref": "#/definitions/BatchRetryStrategy"
+    }
+   },
+   "required": [
+    "JobDefinition",
+    "JobName"
+   ],
+   "type": "object"
+  },
+  "PipeTargetCloudWatchLogsParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "LogStreamName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Timestamp": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^\\$(\\.[\\w_-]+(\\[(\\d+|\\*)\\])*)*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PipeTargetEcsTaskParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "CapacityProviderStrategy": {
+     "items": {
+      "$ref": "#/definitions/CapacityProviderStrategyItem"
+     },
+     "maxItems": 6,
+     "minItems": 0,
+     "type": "array"
+    },
+    "EnableECSManagedTags": {
+     "default": false,
+     "type": "boolean"
+    },
+    "EnableExecuteCommand": {
+     "default": false,
+     "type": "boolean"
+    },
+    "Group": {
+     "type": "string"
+    },
+    "LaunchType": {
+     "$ref": "#/definitions/LaunchType"
+    },
+    "NetworkConfiguration": {
+     "$ref": "#/definitions/NetworkConfiguration"
+    },
+    "Overrides": {
+     "$ref": "#/definitions/EcsTaskOverride"
+    },
+    "PlacementConstraints": {
+     "items": {
+      "$ref": "#/definitions/PlacementConstraint"
+     },
+     "maxItems": 10,
+     "minItems": 0,
+     "type": "array"
+    },
+    "PlacementStrategy": {
+     "items": {
+      "$ref": "#/definitions/PlacementStrategy"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array"
+    },
+    "PlatformVersion": {
+     "type": "string"
+    },
+    "PropagateTags": {
+     "$ref": "#/definitions/PropagateTags"
+    },
+    "ReferenceId": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Tags": {
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array"
+    },
+    "TaskCount": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "TaskDefinitionArn": {
+     "maxLength": 1600,
+     "minLength": 1,
+     "pattern": "^arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-]+):([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.+)|(\\$(\\.[\\w/_-]+(\\[(\\d+|\\*)\\])*)*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TaskDefinitionArn"
+   ],
+   "type": "object"
+  },
+  "PipeTargetEventBridgeEventBusParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "DetailType": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "EndpointId": {
+     "maxLength": 50,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9\\-]+[\\.][A-Za-z0-9\\-]+$",
+     "type": "string"
+    },
+    "Resources": {
+     "items": {
+      "maxLength": 1600,
+      "minLength": 1,
+      "pattern": "^arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-]+):([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.+)|(\\$(\\.[\\w/_-]+(\\[(\\d+|\\*)\\])*)*)$",
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Source": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "(?=[/\\.\\-_A-Za-z0-9]+)((?!aws\\.).*)|(\\$(\\.[\\w/_-]+(\\[(\\d+|\\*)\\])*)*)",
+     "type": "string"
+    },
+    "Time": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^\\$(\\.[\\w/_-]+(\\[(\\d+|\\*)\\])*)*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PipeTargetHttpParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "HeaderParameters": {
+     "$ref": "#/definitions/HeaderParametersMap"
+    },
+    "PathParameterValues": {
+     "items": {
+      "pattern": "^(?!\\s*$).+|(\\$(\\.[\\w/_-]+(\\[(\\d+|\\*)\\])*)*)$",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "QueryStringParameters": {
+     "$ref": "#/definitions/QueryStringParametersMap"
+    }
+   },
+   "type": "object"
+  },
+  "PipeTargetInvocationType": {
+   "enum": [
+    "REQUEST_RESPONSE",
+    "FIRE_AND_FORGET"
+   ],
+   "type": "string"
+  },
+  "PipeTargetKinesisStreamParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "PartitionKey": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "PartitionKey"
+   ],
+   "type": "object"
+  },
+  "PipeTargetLambdaFunctionParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "InvocationType": {
+     "$ref": "#/definitions/PipeTargetInvocationType"
+    }
+   },
+   "type": "object"
+  },
+  "PipeTargetParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchJobParameters": {
+     "$ref": "#/definitions/PipeTargetBatchJobParameters"
+    },
+    "CloudWatchLogsParameters": {
+     "$ref": "#/definitions/PipeTargetCloudWatchLogsParameters"
+    },
+    "EcsTaskParameters": {
+     "$ref": "#/definitions/PipeTargetEcsTaskParameters"
+    },
+    "EventBridgeEventBusParameters": {
+     "$ref": "#/definitions/PipeTargetEventBridgeEventBusParameters"
+    },
+    "HttpParameters": {
+     "$ref": "#/definitions/PipeTargetHttpParameters"
+    },
+    "InputTemplate": {
+     "maxLength": 8192,
+     "minLength": 0,
+     "type": "string"
+    },
+    "KinesisStreamParameters": {
+     "$ref": "#/definitions/PipeTargetKinesisStreamParameters"
+    },
+    "LambdaFunctionParameters": {
+     "$ref": "#/definitions/PipeTargetLambdaFunctionParameters"
+    },
+    "RedshiftDataParameters": {
+     "$ref": "#/definitions/PipeTargetRedshiftDataParameters"
+    },
+    "SageMakerPipelineParameters": {
+     "$ref": "#/definitions/PipeTargetSageMakerPipelineParameters"
+    },
+    "SqsQueueParameters": {
+     "$ref": "#/definitions/PipeTargetSqsQueueParameters"
+    },
+    "StepFunctionStateMachineParameters": {
+     "$ref": "#/definitions/PipeTargetStateMachineParameters"
+    },
+    "TimestreamParameters": {
+     "$ref": "#/definitions/PipeTargetTimestreamParameters"
+    }
+   },
+   "type": "object"
+  },
+  "PipeTargetRedshiftDataParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Database": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "DbUser": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SecretManagerArn": {
+     "maxLength": 1600,
+     "minLength": 1,
+     "pattern": "^(^arn:aws([a-z]|\\-)*:secretsmanager:([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}):(\\d{12}):secret:.+)|(\\$(\\.[\\w/_-]+(\\[(\\d+|\\*)\\])*)*)$",
+     "type": "string"
+    },
+    "Sqls": {
+     "items": {
+      "maxLength": 100000,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 40,
+     "minItems": 1,
+     "type": "array"
+    },
+    "StatementName": {
+     "maxLength": 500,
+     "minLength": 1,
+     "type": "string"
+    },
+    "WithEvent": {
+     "default": false,
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Database",
+    "Sqls"
+   ],
+   "type": "object"
+  },
+  "PipeTargetSageMakerPipelineParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "PipelineParameterList": {
+     "items": {
+      "$ref": "#/definitions/SageMakerPipelineParameter"
+     },
+     "maxItems": 200,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "PipeTargetSqsQueueParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "MessageDeduplicationId": {
+     "maxLength": 100,
+     "minLength": 0,
+     "type": "string"
+    },
+    "MessageGroupId": {
+     "maxLength": 100,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PipeTargetStateMachineParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "InvocationType": {
+     "$ref": "#/definitions/PipeTargetInvocationType"
+    }
+   },
+   "type": "object"
+  },
+  "PipeTargetTimestreamParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "DimensionMappings": {
+     "items": {
+      "$ref": "#/definitions/DimensionMapping"
+     },
+     "maxItems": 128,
+     "minItems": 1,
+     "type": "array"
+    },
+    "EpochTimeUnit": {
+     "$ref": "#/definitions/EpochTimeUnit"
+    },
+    "MultiMeasureMappings": {
+     "items": {
+      "$ref": "#/definitions/MultiMeasureMapping"
+     },
+     "maxItems": 1024,
+     "minItems": 0,
+     "type": "array"
+    },
+    "SingleMeasureMappings": {
+     "items": {
+      "$ref": "#/definitions/SingleMeasureMapping"
+     },
+     "maxItems": 8192,
+     "minItems": 0,
+     "type": "array"
+    },
+    "TimeFieldType": {
+     "$ref": "#/definitions/TimeFieldType"
+    },
+    "TimeValue": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TimestampFormat": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "VersionValue": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "DimensionMappings",
+    "TimeValue",
+    "VersionValue"
+   ],
+   "type": "object"
+  },
+  "PlacementConstraint": {
+   "additionalProperties": false,
+   "properties": {
+    "Expression": {
+     "maxLength": 2000,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/PlacementConstraintType"
+    }
+   },
+   "type": "object"
+  },
+  "PlacementConstraintType": {
+   "enum": [
+    "distinctInstance",
+    "memberOf"
+   ],
+   "type": "string"
+  },
+  "PlacementStrategy": {
+   "additionalProperties": false,
+   "properties": {
+    "Field": {
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/PlacementStrategyType"
+    }
+   },
+   "type": "object"
+  },
+  "PlacementStrategyType": {
+   "enum": [
+    "random",
+    "spread",
+    "binpack"
+   ],
+   "type": "string"
+  },
+  "PropagateTags": {
+   "enum": [
+    "TASK_DEFINITION"
+   ],
+   "type": "string"
+  },
+  "QueryStringParametersMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[^\\x00-\\x1F\\x7F]+|(\\$(\\.[\\w/_-]+(\\[(\\d+|\\*)\\])*)*)$": {
+     "maxLength": 512,
+     "minLength": 0,
+     "pattern": "^[^\\x00-\\x09\\x0B\\x0C\\x0E-\\x1F\\x7F]+|(\\$(\\.[\\w/_-]+(\\[(\\d+|\\*)\\])*)*)$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RequestedPipeState": {
+   "enum": [
+    "RUNNING",
+    "STOPPED"
+   ],
+   "type": "string"
+  },
+  "S3LogDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "maxLength": 63,
+     "minLength": 3,
+     "type": "string"
+    },
+    "BucketOwner": {
+     "pattern": "\\d{12}",
+     "type": "string"
+    },
+    "OutputFormat": {
+     "$ref": "#/definitions/S3OutputFormat"
+    },
+    "Prefix": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "S3OutputFormat": {
+   "enum": [
+    "json",
+    "plain",
+    "w3c"
+   ],
+   "type": "string"
+  },
+  "SageMakerPipelineParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*|(\\$(\\.[\\w/_-]+(\\[(\\d+|\\*)\\])*)*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "SelfManagedKafkaAccessConfigurationCredentials": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "BasicAuth": {
+       "maxLength": 1600,
+       "minLength": 1,
+       "pattern": "^(^arn:aws([a-z]|\\-)*:secretsmanager:([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}):(\\d{12}):secret:.+)$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "BasicAuth"
+     ],
+     "title": "BasicAuth",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "SaslScram512Auth": {
+       "maxLength": 1600,
+       "minLength": 1,
+       "pattern": "^(^arn:aws([a-z]|\\-)*:secretsmanager:([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}):(\\d{12}):secret:.+)$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "SaslScram512Auth"
+     ],
+     "title": "SaslScram512Auth",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "SaslScram256Auth": {
+       "maxLength": 1600,
+       "minLength": 1,
+       "pattern": "^(^arn:aws([a-z]|\\-)*:secretsmanager:([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}):(\\d{12}):secret:.+)$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "SaslScram256Auth"
+     ],
+     "title": "SaslScram256Auth",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ClientCertificateTlsAuth": {
+       "maxLength": 1600,
+       "minLength": 1,
+       "pattern": "^(^arn:aws([a-z]|\\-)*:secretsmanager:([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}):(\\d{12}):secret:.+)$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "ClientCertificateTlsAuth"
+     ],
+     "title": "ClientCertificateTlsAuth",
+     "type": "object"
+    }
+   ]
+  },
+  "SelfManagedKafkaAccessConfigurationVpc": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroup": {
+     "items": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "pattern": "^sg-[0-9a-zA-Z]*$",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Subnets": {
+     "format": "AWS::EC2::Subnet.Ids",
+     "items": {
+      "format": "AWS::EC2::Subnet.Id",
+      "maxLength": 1024,
+      "minLength": 1,
+      "pattern": "^subnet-[0-9a-z]*$",
+      "type": "string"
+     },
+     "maxItems": 16,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "SelfManagedKafkaStartPosition": {
+   "enum": [
+    "TRIM_HORIZON",
+    "LATEST"
+   ],
+   "type": "string"
+  },
+  "SingleMeasureMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "MeasureName": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MeasureValue": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MeasureValueType": {
+     "$ref": "#/definitions/MeasureValueType"
+    }
+   },
+   "required": [
+    "MeasureName",
+    "MeasureValue",
+    "MeasureValueType"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "minProperties": 1,
+   "patternProperties": {
+    ".+": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TimeFieldType": {
+   "enum": [
+    "EPOCH",
+    "TIMESTAMP_FORMAT"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "pattern": "^arn:aws([a-z]|\\-)*:([a-zA-Z0-9\\-]+):([a-z]|\\d|\\-)*:([0-9]{12})?:(.+)$",
+   "type": "string"
+  },
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "CurrentState": {
+   "$ref": "#/definitions/PipeState"
+  },
+  "Description": {
+   "maxLength": 512,
+   "minLength": 0,
+   "pattern": "^.*$",
+   "type": "string"
+  },
+  "DesiredState": {
+   "$ref": "#/definitions/RequestedPipeState"
+  },
+  "Enrichment": {
+   "maxLength": 1600,
+   "minLength": 0,
+   "pattern": "^$|arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-]+):([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.+)$",
+   "type": "string"
+  },
+  "EnrichmentParameters": {
+   "$ref": "#/definitions/PipeEnrichmentParameters"
+  },
+  "KmsKeyIdentifier": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "[a-zA-Z0-9_\\-/:]*",
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "LogConfiguration": {
+   "$ref": "#/definitions/PipeLogConfiguration"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[\\.\\-_A-Za-z0-9]+$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 1600,
+   "minLength": 1,
+   "pattern": "^arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/?[a-zA-Z0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "Source": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "pattern": "^smk://(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9]):[0-9]{1,5}|arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-]+):([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.+)$",
+   "type": "string"
+  },
+  "SourceParameters": {
+   "$ref": "#/definitions/PipeSourceParameters"
+  },
+  "StateReason": {
+   "maxLength": 512,
+   "minLength": 0,
+   "pattern": "^.*$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  },
+  "Target": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "pattern": "^arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-]+):([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.+)$",
+   "type": "string"
+  },
+  "TargetParameters": {
+   "$ref": "#/definitions/PipeTargetParameters"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationTime",
+  "/properties/CurrentState",
+  "/properties/LastModifiedTime",
+  "/properties/StateReason"
+ ],
+ "required": [
+  "RoleArn",
+  "Source",
+  "Target"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Pipes::Pipe",
+ "writeOnlyProperties": [
+  "/properties/TargetParameters",
+  "/properties/SourceParameters"
+ ]
+}

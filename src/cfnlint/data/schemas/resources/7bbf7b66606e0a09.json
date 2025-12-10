@@ -1,0 +1,235 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyArn",
+  "/properties/DesktopArn"
+ ],
+ "definitions": {
+  "DayOfWeek": {
+   "enum": [
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
+    "SUNDAY"
+   ],
+   "type": "string"
+  },
+  "Hour": {
+   "maximum": 23,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "MaintenanceWindow": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplyTimeOf": {
+     "enum": [
+      "UTC",
+      "DEVICE"
+     ],
+     "type": "string"
+    },
+    "DaysOfTheWeek": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/DayOfWeek"
+     },
+     "maxItems": 7,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "EndTimeHour": {
+     "$ref": "#/definitions/Hour"
+    },
+    "EndTimeMinute": {
+     "$ref": "#/definitions/Minute"
+    },
+    "StartTimeHour": {
+     "$ref": "#/definitions/Hour"
+    },
+    "StartTimeMinute": {
+     "$ref": "#/definitions/Minute"
+    },
+    "Type": {
+     "enum": [
+      "SYSTEM",
+      "CUSTOM"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Minute": {
+   "maximum": 59,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ActivationCode": {
+   "pattern": "^[a-z]{2}[a-z0-9]{6}$",
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[0-9]{0,12}:[a-zA-Z0-9\\-\\/\\._]+$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "DesiredSoftwareSetId": {
+   "pattern": "^[0-9]{1,9}$",
+   "type": "string"
+  },
+  "DesktopArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[0-9]{0,12}:[a-zA-Z0-9\\-\\/\\._]+$",
+   "type": "string"
+  },
+  "DesktopEndpoint": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^(https:\\/\\/)[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,32}(:[0-9]{1,5})?(\\/.*)?$",
+   "type": "string"
+  },
+  "DesktopType": {
+   "enum": [
+    "workspaces",
+    "appstream",
+    "workspaces-web"
+   ],
+   "type": "string"
+  },
+  "DeviceCreationTags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Id": {
+   "pattern": "^[a-z0-9]{9}$",
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:kms:[a-zA-Z0-9\\-]*:[0-9]{0,12}:key\\/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "MaintenanceWindow": {
+   "$ref": "#/definitions/MaintenanceWindow"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^.+$",
+   "type": "string"
+  },
+  "PendingSoftwareSetId": {
+   "pattern": "^[0-9]{1,9}$",
+   "type": "string"
+  },
+  "PendingSoftwareSetVersion": {
+   "type": "string"
+  },
+  "RegisteredDevicesCount": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "SoftwareSetComplianceStatus": {
+   "enum": [
+    "COMPLIANT",
+    "NOT_COMPLIANT",
+    "NO_REGISTERED_DEVICES"
+   ],
+   "type": "string"
+  },
+  "SoftwareSetUpdateMode": {
+   "enum": [
+    "USE_LATEST",
+    "USE_DESIRED"
+   ],
+   "type": "string"
+  },
+  "SoftwareSetUpdateSchedule": {
+   "enum": [
+    "USE_MAINTENANCE_WINDOW",
+    "APPLY_IMMEDIATELY"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/ActivationCode",
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/DesktopType",
+  "/properties/RegisteredDevicesCount",
+  "/properties/UpdatedAt",
+  "/properties/PendingSoftwareSetId",
+  "/properties/PendingSoftwareSetVersion",
+  "/properties/SoftwareSetComplianceStatus"
+ ],
+ "required": [
+  "DesktopArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::WorkSpacesThinClient::Environment"
+}

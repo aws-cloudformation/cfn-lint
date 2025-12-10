@@ -1,0 +1,153 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DatabaseName"
+ ],
+ "definitions": {
+  "DataLakePrincipal": {
+   "additionalProperties": false,
+   "properties": {
+    "DataLakePrincipalIdentifier": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DatabaseIdentifier": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "DatabaseName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Region": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DatabaseInput": {
+   "additionalProperties": false,
+   "properties": {
+    "CreateTableDefaultPermissions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/PrincipalPrivileges"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Description": {
+     "maxLength": 2048,
+     "type": "string"
+    },
+    "FederatedDatabase": {
+     "$ref": "#/definitions/FederatedDatabase"
+    },
+    "LocationUri": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Parameters": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "TargetDatabase": {
+     "$ref": "#/definitions/DatabaseIdentifier"
+    }
+   },
+   "type": "object"
+  },
+  "FederatedDatabase": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectionName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Identifier": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PrincipalPrivileges": {
+   "additionalProperties": false,
+   "properties": {
+    "Permissions": {
+     "insertionOrder": false,
+     "items": {
+      "enum": [
+       "ALL",
+       "ALTER",
+       "CREATE_DATABASE",
+       "CREATE_TABLE",
+       "DATA_LOCATION_ACCESS",
+       "DELETE",
+       "DROP",
+       "INSERT",
+       "SELECT"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Principal": {
+     "$ref": "#/definitions/DataLakePrincipal"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DatabaseName"
+ ],
+ "properties": {
+  "CatalogId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DatabaseInput": {
+   "$ref": "#/definitions/DatabaseInput"
+  },
+  "DatabaseName": {
+   "type": "string"
+  }
+ },
+ "required": [
+  "DatabaseInput",
+  "CatalogId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-glue.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Glue::Database"
+}

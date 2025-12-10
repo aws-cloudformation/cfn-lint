@@ -1,0 +1,181 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/DomainIdentifier"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainIdentifier",
+  "/properties/EnvironmentProfileIdentifier",
+  "/properties/ProjectIdentifier",
+  "/properties/UserParameters",
+  "/properties/EnvironmentAccountIdentifier",
+  "/properties/EnvironmentAccountRegion"
+ ],
+ "definitions": {
+  "EnvironmentParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EnvironmentStatus": {
+   "enum": [
+    "ACTIVE",
+    "CREATING",
+    "UPDATING",
+    "DELETING",
+    "CREATE_FAILED",
+    "UPDATE_FAILED",
+    "DELETE_FAILED",
+    "VALIDATION_FAILED",
+    "SUSPENDED",
+    "DISABLED",
+    "EXPIRED",
+    "DELETED",
+    "INACCESSIBLE"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainId",
+  "/properties/Id"
+ ],
+ "properties": {
+  "AwsAccountId": {
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "AwsAccountRegion": {
+   "pattern": "^[a-z]{2}-[a-z]{4,10}-\\d$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "CreatedBy": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "DomainId": {
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "DomainIdentifier": {
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "EnvironmentAccountIdentifier": {
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "EnvironmentAccountRegion": {
+   "pattern": "^[a-z]{2}-[a-z]{4,10}-\\d$",
+   "type": "string"
+  },
+  "EnvironmentBlueprintId": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "EnvironmentProfileId": {
+   "pattern": "^[a-zA-Z0-9_-]{0,36}$",
+   "type": "string"
+  },
+  "EnvironmentProfileIdentifier": {
+   "pattern": "^[a-zA-Z0-9_-]{0,36}$",
+   "type": "string"
+  },
+  "EnvironmentRoleArn": {
+   "type": "string"
+  },
+  "GlossaryTerms": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+    "type": "string"
+   },
+   "maxItems": 20,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Id": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[\\w -]+$",
+   "type": "string"
+  },
+  "ProjectId": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "ProjectIdentifier": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Provider": {
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/EnvironmentStatus"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "UserParameters": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EnvironmentParameter"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AwsAccountId",
+  "/properties/AwsAccountRegion",
+  "/properties/CreatedAt",
+  "/properties/CreatedBy",
+  "/properties/DomainId",
+  "/properties/EnvironmentBlueprintId",
+  "/properties/EnvironmentProfileId",
+  "/properties/Id",
+  "/properties/ProjectId",
+  "/properties/Provider",
+  "/properties/Status",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "Name",
+  "ProjectIdentifier",
+  "DomainIdentifier"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::DataZone::Environment",
+ "writeOnlyProperties": [
+  "/properties/EnvironmentProfileIdentifier",
+  "/properties/ProjectIdentifier",
+  "/properties/DomainIdentifier",
+  "/properties/EnvironmentAccountIdentifier",
+  "/properties/EnvironmentAccountRegion",
+  "/properties/EnvironmentRoleArn"
+ ]
+}

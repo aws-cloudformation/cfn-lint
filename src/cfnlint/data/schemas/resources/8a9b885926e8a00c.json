@@ -1,0 +1,84 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Description",
+  "/properties/PropertiesFileContent"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WorkerConfigurationArn"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "PropertiesFileContent": {
+   "type": "string"
+  },
+  "Revision": {
+   "format": "int64",
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "WorkerConfigurationArn": {
+   "pattern": "arn:(aws|aws-us-gov|aws-cn):kafkaconnect:.*",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/WorkerConfigurationArn",
+  "/properties/Revision"
+ ],
+ "required": [
+  "Name",
+  "PropertiesFileContent"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kafkaconnect.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::KafkaConnect::WorkerConfiguration"
+}

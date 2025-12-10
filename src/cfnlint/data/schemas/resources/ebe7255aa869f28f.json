@@ -1,0 +1,120 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Arn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AccessorType",
+  "/properties/NetworkType"
+ ],
+ "definitions": {
+  "AccessorStatus": {
+   "enum": [
+    "AVAILABLE",
+    "PENDING_DELETION",
+    "DELETED"
+   ],
+   "type": "string"
+  },
+  "AccessorType": {
+   "enum": [
+    "BILLING_TOKEN"
+   ],
+   "type": "string"
+  },
+  "NetworkAccessorType": {
+   "enum": [
+    "ETHEREUM_GOERLI",
+    "ETHEREUM_MAINNET",
+    "ETHEREUM_MAINNET_AND_GOERLI",
+    "POLYGON_MAINNET",
+    "POLYGON_MUMBAI"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AccessorType": {
+   "$ref": "#/definitions/AccessorType"
+  },
+  "Arn": {
+   "maxLength": 1011,
+   "minLength": 1,
+   "pattern": "^arn:.+:.+:.+:.+:.+$",
+   "type": "string"
+  },
+  "BillingToken": {
+   "maxLength": 42,
+   "minLength": 42,
+   "type": "string"
+  },
+  "CreationDate": {
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 32,
+   "minLength": 1,
+   "type": "string"
+  },
+  "NetworkType": {
+   "$ref": "#/definitions/NetworkAccessorType"
+  },
+  "Status": {
+   "$ref": "#/definitions/AccessorStatus"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/BillingToken",
+  "/properties/CreationDate",
+  "/properties/Status"
+ ],
+ "required": [
+  "AccessorType"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ManagedBlockchain::Accessor",
+ "writeOnlyProperties": [
+  "/properties/Tags"
+ ]
+}

@@ -1,0 +1,120 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProjectArn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "insertionOrder": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1011,
+   "minLength": 32,
+   "pattern": "^arn:.+",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 16384,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DownlinkBandwidthBits": {
+   "maximum": 104857600,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "DownlinkDelayMs": {
+   "maximum": 2000,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "DownlinkJitterMs": {
+   "maximum": 2000,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "DownlinkLossPercent": {
+   "maximum": 100,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ProjectArn": {
+   "maxLength": 1011,
+   "minLength": 32,
+   "pattern": "^arn:.+",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "UplinkBandwidthBits": {
+   "maximum": 104857600,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "UplinkDelayMs": {
+   "maximum": 2000,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "UplinkJitterMs": {
+   "maximum": 2000,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "UplinkLossPercent": {
+   "maximum": 100,
+   "minimum": 0,
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "ProjectArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-device-farm",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DeviceFarm::NetworkProfile"
+}

@@ -1,0 +1,164 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/LoRaWAN"
+ ],
+ "definitions": {
+  "FactoryPresetFreq": {
+   "maximum": 16700000,
+   "minimum": 1000000,
+   "type": "integer"
+  },
+  "LoRaWANDeviceProfile": {
+   "additionalProperties": false,
+   "properties": {
+    "ClassBTimeout": {
+     "maximum": 1000,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "ClassCTimeout": {
+     "maximum": 1000,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "FactoryPresetFreqsList": {
+     "items": {
+      "$ref": "#/definitions/FactoryPresetFreq"
+     },
+     "maxItems": 20,
+     "type": "array"
+    },
+    "MacVersion": {
+     "maxLength": 64,
+     "type": "string"
+    },
+    "MaxDutyCycle": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MaxEirp": {
+     "maximum": 15,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "PingSlotDr": {
+     "maximum": 15,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "PingSlotFreq": {
+     "maximum": 16700000,
+     "minimum": 1000000,
+     "type": "integer"
+    },
+    "PingSlotPeriod": {
+     "maximum": 4096,
+     "minimum": 128,
+     "type": "integer"
+    },
+    "RegParamsRevision": {
+     "maxLength": 64,
+     "type": "string"
+    },
+    "RfRegion": {
+     "maxLength": 64,
+     "type": "string"
+    },
+    "RxDataRate2": {
+     "maximum": 15,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "RxDelay1": {
+     "maximum": 15,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "RxDrOffset1": {
+     "maximum": 7,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "RxFreq2": {
+     "maximum": 16700000,
+     "minimum": 1000000,
+     "type": "integer"
+    },
+    "Supports32BitFCnt": {
+     "type": "boolean"
+    },
+    "SupportsClassB": {
+     "type": "boolean"
+    },
+    "SupportsClassC": {
+     "type": "boolean"
+    },
+    "SupportsJoin": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "LoRaWAN": {
+   "$ref": "#/definitions/LoRaWANDeviceProfile"
+  },
+  "Name": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTWireless::DeviceProfile"
+}

@@ -1,0 +1,59 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "OriginAccessControlConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "OriginAccessControlOriginType": {
+     "pattern": "^(s3|mediastore|lambda|mediapackagev2)$",
+     "type": "string"
+    },
+    "SigningBehavior": {
+     "pattern": "^(never|no-override|always)$",
+     "type": "string"
+    },
+    "SigningProtocol": {
+     "pattern": "^(sigv4)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "SigningProtocol",
+    "SigningBehavior",
+    "OriginAccessControlOriginType"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "OriginAccessControlConfig": {
+   "$ref": "#/definitions/OriginAccessControlConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "OriginAccessControlConfig"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::CloudFront::OriginAccessControl"
+}

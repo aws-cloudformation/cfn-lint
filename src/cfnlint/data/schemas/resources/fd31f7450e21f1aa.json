@@ -1,0 +1,99 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DatasetGroupName"
+ ],
+ "definitions": {
+  "Arn": {
+   "maxLength": 256,
+   "pattern": "^[a-zA-Z0-9\\-\\_\\.\\/\\:]+$",
+   "type": "string"
+  },
+  "MaxResults": {
+   "maximum": 100,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "NextToken": {
+   "maxLength": 3000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DatasetGroupArn"
+ ],
+ "properties": {
+  "DatasetArns": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Arn"
+   },
+   "type": "array"
+  },
+  "DatasetGroupArn": {
+   "maxLength": 256,
+   "pattern": "^[a-zA-Z0-9\\-\\_\\.\\/\\:]+$",
+   "type": "string"
+  },
+  "DatasetGroupName": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z][a-zA-Z0-9_]*",
+   "type": "string"
+  },
+  "Domain": {
+   "enum": [
+    "RETAIL",
+    "CUSTOM",
+    "INVENTORY_PLANNING",
+    "EC2_CAPACITY",
+    "WORK_FORCE",
+    "WEB_TRAFFIC",
+    "METRICS"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DatasetGroupArn"
+ ],
+ "required": [
+  "DatasetGroupName",
+  "Domain"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-forecast",
+ "taggable": true,
+ "typeName": "AWS::Forecast::DatasetGroup"
+}

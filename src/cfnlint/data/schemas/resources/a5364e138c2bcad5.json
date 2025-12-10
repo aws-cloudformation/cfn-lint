@@ -1,0 +1,219 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Description",
+  "/properties/Name",
+  "/properties/RoleArn",
+  "/properties/TrainingData"
+ ],
+ "definitions": {
+  "ColumnSchema": {
+   "additionalProperties": false,
+   "properties": {
+    "ColumnName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_](([a-zA-Z0-9_ ]+-)*([a-zA-Z0-9_ ]+))?$",
+     "type": "string"
+    },
+    "ColumnTypes": {
+     "items": {
+      "$ref": "#/definitions/ColumnType"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "ColumnName",
+    "ColumnTypes"
+   ],
+   "type": "object"
+  },
+  "ColumnType": {
+   "enum": [
+    "USER_ID",
+    "ITEM_ID",
+    "TIMESTAMP",
+    "CATEGORICAL_FEATURE",
+    "NUMERICAL_FEATURE"
+   ],
+   "type": "string"
+  },
+  "DataSource": {
+   "additionalProperties": false,
+   "properties": {
+    "GlueDataSource": {
+     "$ref": "#/definitions/GlueDataSource"
+    }
+   },
+   "required": [
+    "GlueDataSource"
+   ],
+   "type": "object"
+  },
+  "Dataset": {
+   "additionalProperties": false,
+   "properties": {
+    "InputConfig": {
+     "$ref": "#/definitions/DatasetInputConfig"
+    },
+    "Type": {
+     "$ref": "#/definitions/DatasetType"
+    }
+   },
+   "required": [
+    "InputConfig",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "DatasetInputConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DataSource": {
+     "$ref": "#/definitions/DataSource"
+    },
+    "Schema": {
+     "items": {
+      "$ref": "#/definitions/ColumnSchema"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "DataSource",
+    "Schema"
+   ],
+   "type": "object"
+  },
+  "DatasetType": {
+   "enum": [
+    "INTERACTIONS"
+   ],
+   "type": "string"
+  },
+  "GlueDataSource": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "maxLength": 12,
+     "minLength": 12,
+     "pattern": "^[0-9]{12}$",
+     "type": "string"
+    },
+    "DatabaseName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_](([a-zA-Z0-9_]+-)*([a-zA-Z0-9_]+))?$",
+     "type": "string"
+    },
+    "TableName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_](([a-zA-Z0-9_ ]+-)*([a-zA-Z0-9_ ]+))?$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "DatabaseName",
+    "TableName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TrainingDatasetStatus": {
+   "enum": [
+    "ACTIVE"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TrainingDatasetArn"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 255,
+   "pattern": "^[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t\\r\\n]*$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^(?!\\s*$)[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t]*$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[-a-z]*:iam::[0-9]{12}:role/.+$",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/TrainingDatasetStatus"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TrainingData": {
+   "items": {
+    "$ref": "#/definitions/Dataset"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
+  },
+  "TrainingDatasetArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[-a-z]*:cleanrooms-ml:[-a-z0-9]+:[0-9]{12}:training-dataset/[-a-zA-Z0-9_/.]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Status",
+  "/properties/TrainingDatasetArn"
+ ],
+ "required": [
+  "Name",
+  "RoleArn",
+  "TrainingData"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CleanRoomsML::TrainingDataset"
+}

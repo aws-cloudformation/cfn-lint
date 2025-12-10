@@ -1,0 +1,182 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/ControlPanelArn",
+  "/properties/RuleConfig",
+  "/properties/Tags",
+  "/properties/AssertionRule/AssertedControls",
+  "/properties/GatingRule/GatingControls",
+  "/properties/GatingRule/TargetControls"
+ ],
+ "definitions": {
+  "AssertionRule": {
+   "additionalProperties": false,
+   "properties": {
+    "AssertedControls": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "WaitPeriodMs": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "AssertedControls",
+    "WaitPeriodMs"
+   ],
+   "type": "object"
+  },
+  "GatingRule": {
+   "additionalProperties": false,
+   "properties": {
+    "GatingControls": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "TargetControls": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "WaitPeriodMs": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "WaitPeriodMs",
+    "TargetControls",
+    "GatingControls"
+   ],
+   "type": "object"
+  },
+  "RuleConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Inverted": {
+     "type": "boolean"
+    },
+    "Threshold": {
+     "type": "integer"
+    },
+    "Type": {
+     "$ref": "#/definitions/RuleType"
+    }
+   },
+   "required": [
+    "Type",
+    "Threshold",
+    "Inverted"
+   ],
+   "type": "object"
+  },
+  "RuleType": {
+   "enum": [
+    "AND",
+    "OR",
+    "ATLEAST"
+   ],
+   "type": "string"
+  },
+  "SafetyRuleName": {
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "AssertionRule",
+    "Name",
+    "ControlPanelArn",
+    "RuleConfig"
+   ]
+  },
+  {
+   "required": [
+    "GatingRule",
+    "Name",
+    "ControlPanelArn",
+    "RuleConfig"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/SafetyRuleArn"
+ ],
+ "properties": {
+  "AssertionRule": {
+   "$ref": "#/definitions/AssertionRule"
+  },
+  "ControlPanelArn": {
+   "type": "string"
+  },
+  "GatingRule": {
+   "$ref": "#/definitions/GatingRule"
+  },
+  "Name": {
+   "$ref": "#/definitions/SafetyRuleName"
+  },
+  "RuleConfig": {
+   "$ref": "#/definitions/RuleConfig"
+  },
+  "SafetyRuleArn": {
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "PENDING",
+    "DEPLOYED",
+    "PENDING_DELETION"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag",
+    "maxItems": 20
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SafetyRuleArn",
+  "/properties/Status"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53-recovery-control.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Route53RecoveryControl::SafetyRule"
+}

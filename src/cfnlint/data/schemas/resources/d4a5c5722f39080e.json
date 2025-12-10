@@ -1,0 +1,52 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/RoleArn",
+  "/properties/KmsKeyArn",
+  "/properties/Domain"
+ ],
+ "primaryIdentifier": [
+  "/properties/DatasetGroupArn"
+ ],
+ "properties": {
+  "DatasetGroupArn": {
+   "maxLength": 256,
+   "pattern": "arn:([a-z\\d-]+):personalize:.*:.*:.+",
+   "type": "string"
+  },
+  "Domain": {
+   "enum": [
+    "ECOMMERCE",
+    "VIDEO_ON_DEMAND"
+   ],
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "maxLength": 2048,
+   "pattern": "arn:aws.*:kms:.*:[0-9]{12}:key/.*",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\-_]*",
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "arn:([a-z\\d-]+):iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DatasetGroupArn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-personalize",
+ "typeName": "AWS::Personalize::DatasetGroup"
+}

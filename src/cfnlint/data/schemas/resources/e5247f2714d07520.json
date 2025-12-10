@@ -1,0 +1,126 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Id"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationSourceUri",
+  "/properties/RuntimeEnvironment",
+  "/properties/ExecutablePath"
+ ],
+ "definitions": {
+  "RuntimeEnvironment": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Version": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Version"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "minProperties": 1,
+   "patternProperties": {
+    ".+": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "ApplicationLogOutputUri": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "pattern": "^$|^s3://([a-zA-Z0-9][a-zA-Z0-9._-]{1,61}[a-zA-Z0-9])(/[a-zA-Z0-9._-]+)*/?$",
+   "type": "string"
+  },
+  "ApplicationLogPaths": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 1024,
+    "minLength": 0,
+    "type": "string"
+   },
+   "maxItems": 10,
+   "minItems": 0,
+   "type": "array"
+  },
+  "ApplicationSourceUri": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^(^[a-zA-Z0-9-]+$)|(^arn:aws:gameliftstreams:([^:\n]*):([0-9]{12}):([^:\n]*)$)$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 80,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_.!+@/][a-zA-Z0-9-_.!+@/ ]*$",
+   "type": "string"
+  },
+  "ExecutablePath": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "RuntimeEnvironment": {
+   "$ref": "#/definitions/RuntimeEnvironment"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "ApplicationSourceUri",
+  "Description",
+  "ExecutablePath",
+  "RuntimeEnvironment"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GameLiftStreams::Application"
+}

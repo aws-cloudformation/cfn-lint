@@ -1,0 +1,164 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RuleName"
+ ],
+ "definitions": {
+  "DestinationPattern": {
+   "type": "string"
+  },
+  "DestinationType": {
+   "enum": [
+    "cloud-watch-logs"
+   ],
+   "type": "string"
+  },
+  "ResourceType": {
+   "enum": [
+    "AWS::EC2::VPC"
+   ],
+   "type": "string"
+  },
+  "RetentionInDays": {
+   "maximum": 3653,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Scope": {
+   "type": "string"
+  },
+  "SelectionCriteria": {
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TelemetryDestinationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationPattern": {
+     "$ref": "#/definitions/DestinationPattern"
+    },
+    "DestinationType": {
+     "$ref": "#/definitions/DestinationType"
+    },
+    "RetentionInDays": {
+     "$ref": "#/definitions/RetentionInDays"
+    },
+    "VPCFlowLogParameters": {
+     "$ref": "#/definitions/VPCFlowLogParameters"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "TelemetryRule": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationConfiguration": {
+     "$ref": "#/definitions/TelemetryDestinationConfiguration"
+    },
+    "ResourceType": {
+     "$ref": "#/definitions/ResourceType"
+    },
+    "Scope": {
+     "$ref": "#/definitions/Scope"
+    },
+    "SelectionCriteria": {
+     "$ref": "#/definitions/SelectionCriteria"
+    },
+    "TelemetryType": {
+     "$ref": "#/definitions/TelemetryType"
+    }
+   },
+   "required": [
+    "ResourceType",
+    "TelemetryType"
+   ],
+   "type": "object"
+  },
+  "TelemetryType": {
+   "enum": [
+    "Logs"
+   ],
+   "type": "string"
+  },
+  "VPCFlowLogParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "LogFormat": {
+     "type": "string"
+    },
+    "MaxAggregationInterval": {
+     "type": "integer"
+    },
+    "TrafficType": {
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RuleArn"
+ ],
+ "properties": {
+  "Rule": {
+   "$ref": "#/definitions/TelemetryRule"
+  },
+  "RuleArn": {
+   "maxLength": 1011,
+   "minLength": 1,
+   "pattern": "^arn:aws([a-z0-9\\-]+)?:([a-zA-Z0-9\\-]+):([a-z0-9\\-]+)?:([0-9]{12})?:(.+)$",
+   "type": "string"
+  },
+  "RuleName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[0-9A-Za-z-]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RuleArn"
+ ],
+ "required": [
+  "RuleName",
+  "Rule"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ObservabilityAdmin::OrganizationTelemetryRule"
+}

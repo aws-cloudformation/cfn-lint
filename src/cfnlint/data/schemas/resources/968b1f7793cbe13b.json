@@ -1,0 +1,166 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Description",
+  "/properties/EndpointType",
+  "/properties/EnvironmentIdentifier",
+  "/properties/ApplicationIdentifier",
+  "/properties/LambdaEndpoint",
+  "/properties/Name",
+  "/properties/UrlEndpoint",
+  "/properties/VpcId"
+ ],
+ "definitions": {
+  "LambdaEndpointInput": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:(aws[a-zA-Z-]*)?:lambda:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:\\d{12}:function:[a-zA-Z0-9-_]+(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Arn"
+   ],
+   "type": "object"
+  },
+  "ServiceEndpointType": {
+   "enum": [
+    "LAMBDA",
+    "URL"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:).+",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UrlEndpointInput": {
+   "additionalProperties": false,
+   "properties": {
+    "HealthUrl": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^https?://[-a-zA-Z0-9+\\x38@#/%?=~_|!:,.;]*[-a-zA-Z0-9+\\x38@#/%=~_|]$",
+     "type": "string"
+    },
+    "Url": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^https?://[-a-zA-Z0-9+\\x38@#/%?=~_|!:,.;]*[-a-zA-Z0-9+\\x38@#/%=~_|]$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Url"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EnvironmentIdentifier",
+  "/properties/ApplicationIdentifier",
+  "/properties/ServiceIdentifier"
+ ],
+ "properties": {
+  "ApplicationIdentifier": {
+   "maxLength": 14,
+   "minLength": 14,
+   "pattern": "^app-([0-9A-Za-z]{10}$)",
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:(aws[a-zA-Z-]*)?:refactor-spaces:[a-zA-Z0-9\\-]+:\\w{12}:[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_\\s\\.\\!\\*\\#\\@\\']+$",
+   "type": "string"
+  },
+  "EndpointType": {
+   "$ref": "#/definitions/ServiceEndpointType"
+  },
+  "EnvironmentIdentifier": {
+   "maxLength": 14,
+   "minLength": 14,
+   "pattern": "^env-([0-9A-Za-z]{10}$)",
+   "type": "string"
+  },
+  "LambdaEndpoint": {
+   "$ref": "#/definitions/LambdaEndpointInput"
+  },
+  "Name": {
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "^(?!svc-)[a-zA-Z0-9]+[a-zA-Z0-9-_ ]+$",
+   "type": "string"
+  },
+  "ServiceIdentifier": {
+   "maxLength": 14,
+   "minLength": 14,
+   "pattern": "^svc-([0-9A-Za-z]{10}$)",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "UrlEndpoint": {
+   "$ref": "#/definitions/UrlEndpointInput"
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "maxLength": 21,
+   "minLength": 12,
+   "pattern": "^vpc-[-a-f0-9]{8}([-a-f0-9]{9})?$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ServiceIdentifier",
+  "/properties/Arn"
+ ],
+ "required": [
+  "EnvironmentIdentifier",
+  "ApplicationIdentifier",
+  "EndpointType",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-refactor-spaces",
+ "taggable": true,
+ "typeName": "AWS::RefactorSpaces::Service",
+ "writeOnlyProperties": [
+  "/properties/Description",
+  "/properties/EndpointType",
+  "/properties/LambdaEndpoint",
+  "/properties/Name",
+  "/properties/UrlEndpoint",
+  "/properties/VpcId"
+ ]
+}

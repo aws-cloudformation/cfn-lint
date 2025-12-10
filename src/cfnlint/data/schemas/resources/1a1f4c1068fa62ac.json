@@ -1,0 +1,136 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterType",
+  "/properties/InstanceRoleArn"
+ ],
+ "definitions": {
+  "ClusterNetworkSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultRoute": {
+     "type": "string"
+    },
+    "InterfaceMappings": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/InterfaceMapping"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ClusterState": {
+   "enum": [
+    "CREATING",
+    "CREATE_FAILED",
+    "ACTIVE",
+    "DELETING",
+    "DELETED"
+   ],
+   "type": "string"
+  },
+  "ClusterType": {
+   "enum": [
+    "ON_PREMISES",
+    "OUTPOSTS_RACK",
+    "OUTPOSTS_SERVER",
+    "EC2"
+   ],
+   "type": "string"
+  },
+  "InterfaceMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "LogicalInterfaceName": {
+     "type": "string"
+    },
+    "NetworkId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InterfaceNetworkMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "LogicalInterfaceName": {
+     "type": "string"
+    },
+    "NetworkId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:.+:medialive:.+:cluster:.+$",
+   "type": "string"
+  },
+  "ChannelIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ClusterType": {
+   "$ref": "#/definitions/ClusterType"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InstanceRoleArn": {
+   "pattern": "^arn:.+:iam:.+:role/.+$",
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "NetworkSettings": {
+   "$ref": "#/definitions/ClusterNetworkSettings"
+  },
+  "State": {
+   "$ref": "#/definitions/ClusterState"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tags"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ChannelIds",
+  "/properties/Id",
+  "/properties/State"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaLive::Cluster"
+}

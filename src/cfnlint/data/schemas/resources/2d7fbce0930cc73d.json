@@ -1,0 +1,254 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConfiguredTableIdentifier",
+  "/properties/Name",
+  "/properties/MembershipIdentifier"
+ ],
+ "definitions": {
+  "AllowedAdditionalAnalyses": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AllowedAdditionalAnalysis"
+   },
+   "maxItems": 25,
+   "minItems": 0,
+   "type": "array"
+  },
+  "AllowedAdditionalAnalysis": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "AllowedResultReceiver": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "\\d+",
+   "type": "string"
+  },
+  "AllowedResultReceivers": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AllowedResultReceiver"
+   },
+   "minItems": 0,
+   "type": "array"
+  },
+  "ConfiguredTableAssociationAnalysisRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Policy": {
+     "$ref": "#/definitions/ConfiguredTableAssociationAnalysisRulePolicy"
+    },
+    "Type": {
+     "$ref": "#/definitions/ConfiguredTableAssociationAnalysisRuleType"
+    }
+   },
+   "required": [
+    "Type",
+    "Policy"
+   ],
+   "type": "object"
+  },
+  "ConfiguredTableAssociationAnalysisRuleAggregation": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedAdditionalAnalyses": {
+     "$ref": "#/definitions/AllowedAdditionalAnalyses"
+    },
+    "AllowedResultReceivers": {
+     "$ref": "#/definitions/AllowedResultReceivers"
+    }
+   },
+   "type": "object"
+  },
+  "ConfiguredTableAssociationAnalysisRuleCustom": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedAdditionalAnalyses": {
+     "$ref": "#/definitions/AllowedAdditionalAnalyses"
+    },
+    "AllowedResultReceivers": {
+     "$ref": "#/definitions/AllowedResultReceivers"
+    }
+   },
+   "type": "object"
+  },
+  "ConfiguredTableAssociationAnalysisRuleList": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedAdditionalAnalyses": {
+     "$ref": "#/definitions/AllowedAdditionalAnalyses"
+    },
+    "AllowedResultReceivers": {
+     "$ref": "#/definitions/AllowedResultReceivers"
+    }
+   },
+   "type": "object"
+  },
+  "ConfiguredTableAssociationAnalysisRulePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "V1": {
+     "$ref": "#/definitions/ConfiguredTableAssociationAnalysisRulePolicyV1"
+    }
+   },
+   "required": [
+    "V1"
+   ],
+   "title": "V1",
+   "type": "object"
+  },
+  "ConfiguredTableAssociationAnalysisRulePolicyV1": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "List": {
+       "$ref": "#/definitions/ConfiguredTableAssociationAnalysisRuleList"
+      }
+     },
+     "required": [
+      "List"
+     ],
+     "title": "List",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Aggregation": {
+       "$ref": "#/definitions/ConfiguredTableAssociationAnalysisRuleAggregation"
+      }
+     },
+     "required": [
+      "Aggregation"
+     ],
+     "title": "Aggregation",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Custom": {
+       "$ref": "#/definitions/ConfiguredTableAssociationAnalysisRuleCustom"
+      }
+     },
+     "required": [
+      "Custom"
+     ],
+     "title": "Custom",
+     "type": "object"
+    }
+   ]
+  },
+  "ConfiguredTableAssociationAnalysisRuleType": {
+   "enum": [
+    "AGGREGATION",
+    "LIST",
+    "CUSTOM"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConfiguredTableAssociationIdentifier",
+  "/properties/MembershipIdentifier"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "ConfiguredTableAssociationAnalysisRules": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ConfiguredTableAssociationAnalysisRule"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
+  },
+  "ConfiguredTableAssociationIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "ConfiguredTableIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "pattern": "^[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t\\r\\n]*$",
+   "type": "string"
+  },
+  "MembershipIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "pattern": "^[a-zA-Z0-9_](([a-zA-Z0-9_ ]+-)*([a-zA-Z0-9_ ]+))?$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 512,
+   "minLength": 32,
+   "pattern": "arn:aws:iam::[\\w]+:role/[\\w+=./@-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConfiguredTableAssociationIdentifier",
+  "/properties/Arn"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "ConfiguredTableIdentifier",
+  "Name",
+  "RoleArn",
+  "MembershipIdentifier"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cleanrooms",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CleanRooms::ConfiguredTableAssociation"
+}

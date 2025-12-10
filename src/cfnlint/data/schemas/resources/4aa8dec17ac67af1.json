@@ -1,0 +1,151 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "LoRaWANGatewayVersion": {
+   "additionalProperties": false,
+   "properties": {
+    "Model": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "type": "string"
+    },
+    "PackageVersion": {
+     "maxLength": 32,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Station": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LoRaWANUpdateGatewayTaskCreate": {
+   "additionalProperties": false,
+   "properties": {
+    "CurrentVersion": {
+     "$ref": "#/definitions/LoRaWANGatewayVersion"
+    },
+    "SigKeyCrc": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "UpdateSignature": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "type": "string"
+    },
+    "UpdateVersion": {
+     "$ref": "#/definitions/LoRaWANGatewayVersion"
+    }
+   },
+   "type": "object"
+  },
+  "LoRaWANUpdateGatewayTaskEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "CurrentVersion": {
+     "$ref": "#/definitions/LoRaWANGatewayVersion"
+    },
+    "UpdateVersion": {
+     "$ref": "#/definitions/LoRaWANGatewayVersion"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "UpdateWirelessGatewayTaskCreate": {
+   "additionalProperties": false,
+   "properties": {
+    "LoRaWAN": {
+     "$ref": "#/definitions/LoRaWANUpdateGatewayTaskCreate"
+    },
+    "UpdateDataRole": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "UpdateDataSource": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AutoCreateTasks": {
+   "type": "boolean"
+  },
+  "Id": {
+   "pattern": "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+   "type": "string"
+  },
+  "LoRaWANUpdateGatewayTaskEntry": {
+   "$ref": "#/definitions/LoRaWANUpdateGatewayTaskEntry"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TaskDefinitionType": {
+   "enum": [
+    "UPDATE"
+   ],
+   "type": "string"
+  },
+  "Update": {
+   "$ref": "#/definitions/UpdateWirelessGatewayTaskCreate"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "AutoCreateTasks"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTWireless::TaskDefinition"
+}

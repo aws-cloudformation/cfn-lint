@@ -1,0 +1,109 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MultiRegionClusterNameSuffix",
+  "/properties/EngineVersion",
+  "/properties/MultiRegionParameterGroupName",
+  "/properties/TLSEnabled"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)(?!memorydb:)[a-zA-Z0-9 _\\.\\/=+:\\-@]{1,128}$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^(?!aws:)(?!memorydb:)[a-zA-Z0-9 _\\.\\/=+:\\-@]{1,256}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MultiRegionClusterName"
+ ],
+ "properties": {
+  "ARN": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Engine": {
+   "type": "string"
+  },
+  "EngineVersion": {
+   "type": "string"
+  },
+  "MultiRegionClusterName": {
+   "type": "string"
+  },
+  "MultiRegionClusterNameSuffix": {
+   "pattern": "[a-z][a-z0-9\\-]*",
+   "type": "string"
+  },
+  "MultiRegionParameterGroupName": {
+   "type": "string"
+  },
+  "NodeType": {
+   "type": "string"
+  },
+  "NumShards": {
+   "type": "integer"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "TLSEnabled": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdateStrategy": {
+   "enum": [
+    "COORDINATED",
+    "UNCOORDINATED"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/MultiRegionClusterName",
+  "/properties/Status",
+  "/properties/ARN"
+ ],
+ "required": [
+  "NodeType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-memorydb",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MemoryDB::MultiRegionCluster",
+ "writeOnlyProperties": [
+  "/properties/MultiRegionClusterNameSuffix",
+  "/properties/UpdateStrategy"
+ ]
+}

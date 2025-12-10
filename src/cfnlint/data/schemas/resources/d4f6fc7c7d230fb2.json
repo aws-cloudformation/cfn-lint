@@ -1,0 +1,105 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProtectedResourceType",
+  "/properties/RestoreTestingPlanName",
+  "/properties/RestoreTestingSelectionName"
+ ],
+ "definitions": {
+  "KeyValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "ProtectedResourceConditions": {
+   "additionalProperties": false,
+   "properties": {
+    "StringEquals": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/KeyValue"
+     },
+     "type": "array"
+    },
+    "StringNotEquals": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/KeyValue"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "SensitiveStringMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RestoreTestingPlanName",
+  "/properties/RestoreTestingSelectionName"
+ ],
+ "properties": {
+  "IamRoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "type": "string"
+  },
+  "ProtectedResourceArns": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ProtectedResourceConditions": {
+   "$ref": "#/definitions/ProtectedResourceConditions"
+  },
+  "ProtectedResourceType": {
+   "type": "string"
+  },
+  "RestoreMetadataOverrides": {
+   "$ref": "#/definitions/SensitiveStringMap"
+  },
+  "RestoreTestingPlanName": {
+   "type": "string"
+  },
+  "RestoreTestingSelectionName": {
+   "type": "string"
+  },
+  "ValidationWindowHours": {
+   "type": "integer"
+  }
+ },
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "IamRoleArn",
+  "ProtectedResourceType",
+  "RestoreTestingPlanName",
+  "RestoreTestingSelectionName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Backup::RestoreTestingSelection"
+}

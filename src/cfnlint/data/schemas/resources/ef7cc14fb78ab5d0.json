@@ -1,0 +1,100 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Id",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "Authorization": {
+   "additionalProperties": false,
+   "properties": {
+    "CdnIdentifierSecret": {
+     "type": "string"
+    },
+    "SecretsRoleArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "CdnIdentifierSecret",
+    "SecretsRoleArn"
+   ],
+   "type": "object"
+  },
+  "LogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroupName": {
+     "format": "AWS::Logs::LogGroup.Name",
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "\\A\\/aws\\/MediaPackage\\/[0-9a-zA-Z-_\\/\\.#]+\\Z",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Authorization": {
+   "$ref": "#/definitions/Authorization"
+  },
+  "DomainName": {
+   "type": "string"
+  },
+  "EgressAccessLogs": {
+   "$ref": "#/definitions/LogConfiguration"
+  },
+  "Id": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "\\A[0-9a-zA-Z-_]+\\Z",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/DomainName"
+ ],
+ "required": [
+  "Id"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediapackage.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaPackage::PackagingGroup"
+}

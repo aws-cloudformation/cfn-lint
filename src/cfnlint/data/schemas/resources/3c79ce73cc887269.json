@@ -1,0 +1,127 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AlarmName",
+  "/properties/MonitoredResourceName",
+  "/properties/MetricName"
+ ],
+ "primaryIdentifier": [
+  "/properties/AlarmName"
+ ],
+ "properties": {
+  "AlarmArn": {
+   "type": "string"
+  },
+  "AlarmName": {
+   "pattern": "\\w[\\w\\-]*\\w",
+   "type": "string"
+  },
+  "ComparisonOperator": {
+   "enum": [
+    "GreaterThanOrEqualToThreshold",
+    "GreaterThanThreshold",
+    "LessThanOrEqualToThreshold",
+    "LessThanThreshold"
+   ],
+   "type": "string"
+  },
+  "ContactProtocols": {
+   "insertionOrder": false,
+   "items": {
+    "enum": [
+     "Email",
+     "SMS"
+    ],
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DatapointsToAlarm": {
+   "type": "integer"
+  },
+  "EvaluationPeriods": {
+   "type": "integer"
+  },
+  "MetricName": {
+   "enum": [
+    "BurstCapacityPercentage",
+    "BurstCapacityTime",
+    "CPUUtilization",
+    "ClientTLSNegotiationErrorCount",
+    "DatabaseConnections",
+    "DiskQueueDepth",
+    "FreeStorageSpace",
+    "HTTPCode_Instance_2XX_Count",
+    "HTTPCode_Instance_3XX_Count",
+    "HTTPCode_Instance_4XX_Count",
+    "HTTPCode_Instance_5XX_Count",
+    "HTTPCode_LB_4XX_Count",
+    "HTTPCode_LB_5XX_Count",
+    "HealthyHostCount",
+    "InstanceResponseTime",
+    "NetworkIn",
+    "NetworkOut",
+    "NetworkReceiveThroughput",
+    "NetworkTransmitThroughput",
+    "RejectedConnectionCount",
+    "RequestCount",
+    "StatusCheckFailed",
+    "StatusCheckFailed_Instance",
+    "StatusCheckFailed_System",
+    "UnhealthyHostCount"
+   ],
+   "type": "string"
+  },
+  "MonitoredResourceName": {
+   "pattern": "\\w[\\w\\-]*\\w",
+   "type": "string"
+  },
+  "NotificationEnabled": {
+   "type": "boolean"
+  },
+  "NotificationTriggers": {
+   "insertionOrder": false,
+   "items": {
+    "enum": [
+     "ALARM",
+     "INSUFFICIENT_DATA",
+     "OK"
+    ],
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "State": {
+   "type": "string"
+  },
+  "Threshold": {
+   "type": "number"
+  },
+  "TreatMissingData": {
+   "enum": [
+    "breaching",
+    "ignore",
+    "missing",
+    "notBreaching"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AlarmArn",
+  "/properties/State"
+ ],
+ "required": [
+  "AlarmName",
+  "MonitoredResourceName",
+  "MetricName",
+  "ComparisonOperator",
+  "EvaluationPeriods",
+  "Threshold"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+ "taggable": true,
+ "typeName": "AWS::Lightsail::Alarm"
+}

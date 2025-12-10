@@ -1,0 +1,88 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "BucketName": {
+   "pattern": "(?=^.{3,63}$)(?!^(\\d+\\.)+\\d+$)(^(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\\.)*([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])$)",
+   "type": "string"
+  },
+  "BucketOwner": {
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "KMSKeyArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RecordingDestinations": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Buckets": {
+     "$ref": "#/definitions/S3Buckets"
+    }
+   },
+   "required": [
+    "S3Buckets"
+   ],
+   "type": "object"
+  },
+  "S3Bucket": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "$ref": "#/definitions/BucketName"
+    },
+    "BucketOwner": {
+     "$ref": "#/definitions/BucketOwner"
+    }
+   },
+   "required": [
+    "BucketOwner",
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "S3Buckets": {
+   "items": {
+    "$ref": "#/definitions/S3Bucket"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccountId"
+ ],
+ "properties": {
+  "AccountId": {
+   "pattern": "\\d{12}",
+   "type": "string"
+  },
+  "ConnectionRecordingPreferences": {
+   "additionalProperties": false,
+   "properties": {
+    "KMSKeyArn": {
+     "$ref": "#/definitions/KMSKeyArn"
+    },
+    "RecordingDestinations": {
+     "$ref": "#/definitions/RecordingDestinations"
+    }
+   },
+   "required": [
+    "RecordingDestinations",
+    "KMSKeyArn"
+   ],
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccountId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ssm-guiconnect.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::SSMGuiConnect::Preferences"
+}

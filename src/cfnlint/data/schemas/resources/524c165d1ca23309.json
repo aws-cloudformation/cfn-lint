@@ -1,0 +1,312 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "AutomaticEncryptionKeyConfiguration": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "DestinationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationIp": {
+     "type": "string"
+    },
+    "DestinationPort": {
+     "type": "integer"
+    },
+    "Interface": {
+     "$ref": "#/definitions/Interface"
+    }
+   },
+   "required": [
+    "DestinationIp",
+    "DestinationPort",
+    "Interface"
+   ],
+   "type": "object"
+  },
+  "EncodingParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "CompressionFactor": {
+     "type": "number"
+    },
+    "EncoderProfile": {
+     "enum": [
+      "main",
+      "high"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "CompressionFactor"
+   ],
+   "type": "object"
+  },
+  "Encryption": {
+   "additionalProperties": false,
+   "properties": {
+    "Algorithm": {
+     "enum": [
+      "aes128",
+      "aes192",
+      "aes256"
+     ],
+     "type": "string"
+    },
+    "KeyType": {
+     "default": "static-key",
+     "enum": [
+      "static-key",
+      "srt-password"
+     ],
+     "type": "string"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "type": "string"
+    },
+    "SecretArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn",
+    "SecretArn"
+   ],
+   "type": "object"
+  },
+  "FlowTransitEncryption": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionKeyConfiguration": {
+     "$ref": "#/definitions/FlowTransitEncryptionKeyConfiguration"
+    },
+    "EncryptionKeyType": {
+     "$ref": "#/definitions/FlowTransitEncryptionKeyType"
+    }
+   },
+   "required": [
+    "EncryptionKeyConfiguration"
+   ],
+   "type": "object"
+  },
+  "FlowTransitEncryptionKeyConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "SecretsManager": {
+       "$ref": "#/definitions/SecretsManagerEncryptionKeyConfiguration"
+      }
+     },
+     "required": [
+      "SecretsManager"
+     ],
+     "title": "SecretsManager",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Automatic": {
+       "$ref": "#/definitions/AutomaticEncryptionKeyConfiguration"
+      }
+     },
+     "required": [
+      "Automatic"
+     ],
+     "title": "Automatic",
+     "type": "object"
+    }
+   ]
+  },
+  "FlowTransitEncryptionKeyType": {
+   "enum": [
+    "SECRETS_MANAGER",
+    "AUTOMATIC"
+   ],
+   "type": "string"
+  },
+  "Interface": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "MediaStreamOutputConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationConfigurations": {
+     "items": {
+      "$ref": "#/definitions/DestinationConfiguration"
+     },
+     "type": "array"
+    },
+    "EncodingName": {
+     "enum": [
+      "jxsv",
+      "raw",
+      "smpte291",
+      "pcm"
+     ],
+     "type": "string"
+    },
+    "EncodingParameters": {
+     "$ref": "#/definitions/EncodingParameters"
+    },
+    "MediaStreamName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "EncodingName",
+    "MediaStreamName"
+   ],
+   "type": "object"
+  },
+  "SecretsManagerEncryptionKeyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "pattern": "^arn:(aws[a-zA-Z-]*):iam::[0-9]{12}:role/[a-zA-Z0-9_+=,.@-]+$",
+     "type": "string"
+    },
+    "SecretArn": {
+     "pattern": "^arn:(aws[a-zA-Z-]*):secretsmanager:[a-z0-9-]+:[0-9]{12}:secret:[a-zA-Z0-9/_+=.@-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn",
+    "SecretArn"
+   ],
+   "type": "object"
+  },
+  "VpcInterfaceAttachment": {
+   "additionalProperties": false,
+   "properties": {
+    "VpcInterfaceName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/OutputArn"
+ ],
+ "properties": {
+  "CidrAllowList": {
+   "items": {
+    "format": "ipv4-network",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Destination": {
+   "type": "string"
+  },
+  "Encryption": {
+   "$ref": "#/definitions/Encryption"
+  },
+  "FlowArn": {
+   "pattern": "arn:.+:mediaconnect.+:flow:.+",
+   "type": "string"
+  },
+  "MaxLatency": {
+   "type": "integer"
+  },
+  "MediaStreamOutputConfigurations": {
+   "items": {
+    "$ref": "#/definitions/MediaStreamOutputConfiguration"
+   },
+   "type": "array"
+  },
+  "MinLatency": {
+   "type": "integer"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "NdiProgramName": {
+   "type": "string"
+  },
+  "NdiSpeedHqQuality": {
+   "type": "integer"
+  },
+  "OutputArn": {
+   "type": "string"
+  },
+  "OutputStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Port": {
+   "type": "integer"
+  },
+  "Protocol": {
+   "enum": [
+    "zixi-push",
+    "rtp-fec",
+    "rtp",
+    "zixi-pull",
+    "rist",
+    "fujitsu-qos",
+    "srt-listener",
+    "srt-caller",
+    "st2110-jpegxs",
+    "cdi",
+    "ndi-speed-hq"
+   ],
+   "type": "string"
+  },
+  "RemoteId": {
+   "type": "string"
+  },
+  "RouterIntegrationState": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "RouterIntegrationTransitEncryption": {
+   "$ref": "#/definitions/FlowTransitEncryption"
+  },
+  "SmoothingLatency": {
+   "type": "integer"
+  },
+  "StreamId": {
+   "type": "string"
+  },
+  "VpcInterfaceAttachment": {
+   "$ref": "#/definitions/VpcInterfaceAttachment"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/OutputArn"
+ ],
+ "required": [
+  "FlowArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+ "typeName": "AWS::MediaConnect::FlowOutput"
+}

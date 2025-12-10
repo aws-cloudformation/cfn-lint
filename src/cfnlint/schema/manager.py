@@ -16,6 +16,7 @@ import shutil
 import sys
 import zipfile
 from functools import lru_cache
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, Iterator, Sequence
 
 import jsonpatch
@@ -415,15 +416,30 @@ class ProviderSchemaManager:
         """Remove schema files no longer referenced by any region
 
         Args:
-            region_mappings: Dict of region to type mappings
+            region_mappings: Dict of region to type mappings (newly downloaded)
             resources_dir: Path to resources directory
         """
         from pathlib import Path
 
-        # Collect all referenced hashes
+        # Collect all referenced hashes from newly downloaded regions
         referenced_hashes = set()
         for type_map in region_mappings.values():
             referenced_hashes.update(type_map.values())
+
+        # Also check existing provider files for regions that weren't updated
+        providers_dir = Path(self._root.path_relative)
+        for provider_file in providers_dir.glob("*.py"):
+            if provider_file.name == "__init__.py":
+                continue
+            try:
+                # Import the provider module to get its types dict
+                region_name = provider_file.stem
+                module_name = f"cfnlint.data.schemas.providers.{region_name}"
+                provider = __import__(module_name, fromlist=["types"])
+                if hasattr(provider, "types"):
+                    referenced_hashes.update(provider.types.values())
+            except (ImportError, AttributeError):
+                continue
 
         # Remove unreferenced files
         for schema_file in Path(resources_dir).glob("*.json"):
@@ -518,25 +534,24 @@ class ProviderSchemaManager:
             ]
             # There is no schema for CDK but its an allowable type
             all_types = ["AWS::CDK::Metadata", "Module"]
-            with open(f"{directory}module.json", "w", encoding="utf-8") as fh:
-                json.dump(
-                    {
-                        "additionalProperties": True,
-                        "type": "object",
-                        "typeName": "Module",
-                    },
-                    fh,
-                    indent=1,
-                    separators=(",", ": "),
-                    sort_keys=True,
-                )
-                fh.write("\n")
             for filename in filenames:
                 with open(f"{directory}{filename}", "r+", encoding="utf-8") as fh:
                     spec = json.load(fh)
                     all_types.append(spec["typeName"])
 
-            self._patch_region_schemas(region)
+                    # Apply patches to the schema
+                    spec = self._patch_provider_schema(spec, filename, "all")
+                    spec = self._patch_provider_schema(
+                        spec, filename, region=ToPy(region).py
+                    )
+
+                    # Write the patched schema back
+                    fh.seek(0)
+                    json.dump(
+                        spec, fh, indent=1, separators=(",", ": "), sort_keys=True
+                    )
+                    fh.write("\n")
+                    fh.truncate()
 
             # if the region is not us-east-1 compare the files to those in us-east-1
             # symlink if the files are the same
@@ -585,59 +600,57 @@ class ProviderSchemaManager:
             LOGGER.info("Issuing updating schemas for %s: %s", region, e)
 
     def patch_schemas(self) -> None:
-        self._patch_region_schemas(self._region_primary.name)
-        # pylint: disable=not-context-manager
-        with multiprocessing.Pool() as pool:
-            # Patch from registry schema
-            provider_pool_tuple = [
-                (k,) for k in REGIONS if k != self._region_primary.name
-            ]
-            pool.starmap(self._patch_region_schemas, provider_pool_tuple)
+        """Patch schemas in the hash-based storage system"""
+        resources_dir = Path(self._root.path_relative).parent / "resources"
+        if not resources_dir.exists():
+            LOGGER.info("Resources directory not found, skipping patching")
+            return
 
-    def _patch_region_schemas(self, region: str) -> None:
-        reg = ToPy(region)
-        directory = os.path.join(f"{self._root.path_relative}/{reg.py}/")
+        # Get all schema files
+        schema_files = list(resources_dir.glob("*.json"))
+        LOGGER.info("Patching %d schema files", len(schema_files))
 
-        filenames = [
-            f
-            for f in os.listdir(directory)
-            if os.path.isfile(os.path.join(directory, f)) and f != "__init__.py"
-        ]
+        patched_count = 0
+        for schema_file in schema_files:
+            try:
+                # Load the schema
+                with open(schema_file, "r", encoding="utf-8") as f:
+                    spec = json.load(f)
 
-        for filename in filenames:
-            with open(f"{directory}{filename}", "r+", encoding="utf-8") as fh:
-                spec = json.load(fh)
-                try:
-                    if "handlers" in spec:
-                        del spec["handlers"]
-                    if "tagging" in spec and "permissions" in spec.get("tagging", {}):
-                        del spec["tagging"]["permissions"]
-                        # tagging = spec.get("tagging", {})
-                        # if "permissions" in tagging:
-                        #    del tagging["permissions"]
-                        #    spec["tagging"] = tagging
-                    spec = self._remove_descriptions(spec)
+                original_spec = json.dumps(spec, sort_keys=True)
+
+                # Apply standard patches
+                if "handlers" in spec:
+                    del spec["handlers"]
+                if "tagging" in spec and "permissions" in spec.get("tagging", {}):
+                    del spec["tagging"]["permissions"]
+
+                spec = self._remove_descriptions(spec)
+
+                # Apply provider-specific patches based on typeName
+                if "typeName" in spec:
+                    type_name = spec["typeName"]
+                    filename = f"{type_name.lower().replace('::', '_')}.json"
                     spec = self._patch_provider_schema(spec, filename, "all")
-                    spec = self._patch_provider_schema(spec, filename, region=reg.py)
-                except Exception as e:  # pylint: disable=broad-except
-                    LOGGER.info(
-                        "Issuing patching schema for %s in %s: %s",
-                        filename,
-                        reg.name,
-                        e,
-                    )
-                # Back to zero to write spec
-                fh.seek(0)
-                json.dump(
-                    spec,
-                    fh,
-                    indent=1,
-                    separators=(",", ": "),
-                    sort_keys=True,
-                )
-                fh.write("\n")
-                # Resize doc as needed
-                fh.truncate()
+
+                # Check if the schema was modified
+                modified_spec = json.dumps(spec, sort_keys=True)
+                if original_spec != modified_spec:
+                    # Write the patched schema back to the same file
+                    with open(schema_file, "w", encoding="utf-8") as f:
+                        json.dump(
+                            spec, f, indent=1, separators=(",", ": "), sort_keys=True
+                        )
+                        f.write("\n")
+                    patched_count += 1
+                    LOGGER.debug("Patched schema: %s", schema_file.name)
+
+            except Exception as e:
+                LOGGER.info("Error patching %s: %s", schema_file.name, e)
+
+        LOGGER.info(
+            "Patched %d out of %d schema files", patched_count, len(schema_files)
+        )
 
     def _patch_provider_schema(
         self, content: Dict, source_filename: str, region: str

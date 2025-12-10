@@ -1,0 +1,175 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DiskName",
+  "/properties/AvailabilityZone",
+  "/properties/SizeInGb"
+ ],
+ "definitions": {
+  "AddOn": {
+   "additionalProperties": false,
+   "properties": {
+    "AddOnType": {
+     "enum": [
+      "AutoSnapshot",
+      "StopInstanceOnIdle"
+     ],
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AutoSnapshotAddOnRequest": {
+     "$ref": "#/definitions/AutoSnapshotAddOn"
+    },
+    "Status": {
+     "enum": [
+      "Enabling",
+      "Disabling",
+      "Enabled",
+      "Terminating",
+      "Terminated",
+      "Disabled",
+      "Failed"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "AddOnType"
+   ],
+   "type": "object"
+  },
+  "AutoSnapshotAddOn": {
+   "additionalProperties": false,
+   "properties": {
+    "SnapshotTimeOfDay": {
+     "pattern": "^[0-9]{2}:00$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Location": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "type": "string"
+    },
+    "RegionName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DiskName"
+ ],
+ "properties": {
+  "AddOns": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AddOn"
+   },
+   "type": "array"
+  },
+  "AttachedTo": {
+   "type": "string"
+  },
+  "AttachmentState": {
+   "type": "string"
+  },
+  "AvailabilityZone": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "DiskArn": {
+   "type": "string"
+  },
+  "DiskName": {
+   "maxLength": 254,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9][\\w\\-.]*[a-zA-Z0-9]$",
+   "type": "string"
+  },
+  "Iops": {
+   "type": "integer"
+  },
+  "IsAttached": {
+   "type": "boolean"
+  },
+  "Location": {
+   "$ref": "#/definitions/Location"
+  },
+  "Path": {
+   "type": "string"
+  },
+  "ResourceType": {
+   "type": "string"
+  },
+  "SizeInGb": {
+   "type": "integer"
+  },
+  "State": {
+   "type": "string"
+  },
+  "SupportCode": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AttachedTo",
+  "/properties/Path",
+  "/properties/IsAttached",
+  "/properties/Iops",
+  "/properties/AttachmentState",
+  "/properties/State",
+  "/properties/ResourceType",
+  "/properties/Location/AvailabilityZone",
+  "/properties/Location/RegionName",
+  "/properties/SupportCode",
+  "/properties/DiskArn"
+ ],
+ "required": [
+  "DiskName",
+  "SizeInGb"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Lightsail::Disk"
+}

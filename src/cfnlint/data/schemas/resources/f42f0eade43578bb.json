@@ -1,0 +1,280 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApiId",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "AuthorizationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationType": {
+     "enum": [
+      "AWS_IAM"
+     ],
+     "type": "string"
+    },
+    "AwsIamConfig": {
+     "$ref": "#/definitions/AwsIamConfig"
+    }
+   },
+   "required": [
+    "AuthorizationType"
+   ],
+   "type": "object"
+  },
+  "AwsIamConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SigningRegion": {
+     "type": "string"
+    },
+    "SigningServiceName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DeltaSyncConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "BaseTableTTL": {
+     "type": "string"
+    },
+    "DeltaSyncTableName": {
+     "type": "string"
+    },
+    "DeltaSyncTableTTL": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "BaseTableTTL",
+    "DeltaSyncTableTTL",
+    "DeltaSyncTableName"
+   ],
+   "type": "object"
+  },
+  "DynamoDBConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsRegion": {
+     "type": "string"
+    },
+    "DeltaSyncConfig": {
+     "$ref": "#/definitions/DeltaSyncConfig"
+    },
+    "TableName": {
+     "type": "string"
+    },
+    "UseCallerCredentials": {
+     "type": "boolean"
+    },
+    "Versioned": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "TableName",
+    "AwsRegion"
+   ],
+   "type": "object"
+  },
+  "ElasticsearchConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsRegion": {
+     "type": "string"
+    },
+    "Endpoint": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AwsRegion",
+    "Endpoint"
+   ],
+   "type": "object"
+  },
+  "EventBridgeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "EventBusArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "EventBusArn"
+   ],
+   "type": "object"
+  },
+  "HttpConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationConfig": {
+     "$ref": "#/definitions/AuthorizationConfig"
+    },
+    "Endpoint": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Endpoint"
+   ],
+   "type": "object"
+  },
+  "LambdaConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaFunctionArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "LambdaFunctionArn"
+   ],
+   "type": "object"
+  },
+  "OpenSearchServiceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsRegion": {
+     "type": "string"
+    },
+    "Endpoint": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AwsRegion",
+    "Endpoint"
+   ],
+   "type": "object"
+  },
+  "RdsHttpEndpointConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsRegion": {
+     "type": "string"
+    },
+    "AwsSecretStoreArn": {
+     "type": "string"
+    },
+    "DatabaseName": {
+     "type": "string"
+    },
+    "DbClusterIdentifier": {
+     "type": "string"
+    },
+    "Schema": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AwsRegion",
+    "DbClusterIdentifier",
+    "AwsSecretStoreArn"
+   ],
+   "type": "object"
+  },
+  "RelationalDatabaseConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "RdsHttpEndpointConfig": {
+     "$ref": "#/definitions/RdsHttpEndpointConfig"
+    },
+    "RelationalDatabaseSourceType": {
+     "enum": [
+      "RDS_HTTP_ENDPOINT"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "RelationalDatabaseSourceType"
+   ],
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/ElasticsearchConfig"
+ ],
+ "primaryIdentifier": [
+  "/properties/DataSourceArn"
+ ],
+ "properties": {
+  "ApiId": {
+   "type": "string"
+  },
+  "DataSourceArn": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DynamoDBConfig": {
+   "$ref": "#/definitions/DynamoDBConfig"
+  },
+  "ElasticsearchConfig": {
+   "$ref": "#/definitions/ElasticsearchConfig"
+  },
+  "EventBridgeConfig": {
+   "$ref": "#/definitions/EventBridgeConfig"
+  },
+  "HttpConfig": {
+   "$ref": "#/definitions/HttpConfig"
+  },
+  "LambdaConfig": {
+   "$ref": "#/definitions/LambdaConfig"
+  },
+  "MetricsConfig": {
+   "enum": [
+    "DISABLED",
+    "ENABLED"
+   ],
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 65536,
+   "minLength": 1,
+   "pattern": "[_A-Za-z][_0-9A-Za-z]*",
+   "type": "string"
+  },
+  "OpenSearchServiceConfig": {
+   "$ref": "#/definitions/OpenSearchServiceConfig"
+  },
+  "RelationalDatabaseConfig": {
+   "$ref": "#/definitions/RelationalDatabaseConfig"
+  },
+  "ServiceRoleArn": {
+   "type": "string"
+  },
+  "Type": {
+   "enum": [
+    "AMAZON_BEDROCK_RUNTIME",
+    "AMAZON_DYNAMODB",
+    "AMAZON_ELASTICSEARCH",
+    "AMAZON_EVENTBRIDGE",
+    "AMAZON_OPENSEARCH_SERVICE",
+    "AWS_LAMBDA",
+    "HTTP",
+    "NONE",
+    "RELATIONAL_DATABASE"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DataSourceArn"
+ ],
+ "required": [
+  "Type",
+  "ApiId",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appsync",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::AppSync::DataSource"
+}

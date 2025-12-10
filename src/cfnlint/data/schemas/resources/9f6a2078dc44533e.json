@@ -1,0 +1,93 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StatementId",
+  "/properties/Arn"
+ ],
+ "definitions": {
+  "StatementAction": {
+   "maxLength": 64,
+   "minLength": 3,
+   "pattern": "^(entityresolution:[a-zA-Z0-9]+)$",
+   "type": "string"
+  },
+  "StatementActionList": {
+   "items": {
+    "$ref": "#/definitions/StatementAction"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "StatementCondition": {
+   "maxLength": 40960,
+   "minLength": 1,
+   "type": "string"
+  },
+  "StatementEffect": {
+   "enum": [
+    "Allow",
+    "Deny"
+   ],
+   "type": "string"
+  },
+  "StatementId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[0-9A-Za-z]+$",
+   "type": "string"
+  },
+  "StatementPrincipal": {
+   "maxLength": 64,
+   "minLength": 12,
+   "pattern": "^(\\\\d{12})|([a-z0-9\\\\.]+)$",
+   "type": "string"
+  },
+  "StatementPrincipalList": {
+   "items": {
+    "$ref": "#/definitions/StatementPrincipal"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "VeniceGlobalArn": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):entityresolution:[a-z]{2}-[a-z]{1,10}-[0-9]:[0-9]{12}:((schemamapping|matchingworkflow|idmappingworkflow|idnamespace)/[a-zA-Z_0-9-]{1,255})$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn",
+  "/properties/StatementId"
+ ],
+ "properties": {
+  "Action": {
+   "$ref": "#/definitions/StatementActionList"
+  },
+  "Arn": {
+   "$ref": "#/definitions/VeniceGlobalArn"
+  },
+  "Condition": {
+   "$ref": "#/definitions/StatementCondition"
+  },
+  "Effect": {
+   "$ref": "#/definitions/StatementEffect"
+  },
+  "Principal": {
+   "$ref": "#/definitions/StatementPrincipalList"
+  },
+  "StatementId": {
+   "$ref": "#/definitions/StatementId"
+  }
+ },
+ "required": [
+  "Arn",
+  "StatementId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-entity-resolution.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::EntityResolution::PolicyStatement"
+}

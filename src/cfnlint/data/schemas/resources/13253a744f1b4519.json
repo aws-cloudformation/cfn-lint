@@ -1,0 +1,72 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "FieldToMatch": {
+   "additionalProperties": false,
+   "properties": {
+    "Data": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "SizeConstraint": {
+   "additionalProperties": false,
+   "properties": {
+    "ComparisonOperator": {
+     "type": "string"
+    },
+    "FieldToMatch": {
+     "$ref": "#/definitions/FieldToMatch"
+    },
+    "Size": {
+     "type": "integer"
+    },
+    "TextTransformation": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ComparisonOperator",
+    "TextTransformation",
+    "Size",
+    "FieldToMatch"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "SizeConstraints": {
+   "items": {
+    "$ref": "#/definitions/SizeConstraint"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Name"
+ ],
+ "typeName": "AWS::WAFRegional::SizeConstraintSet"
+}

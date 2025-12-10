@@ -1,0 +1,150 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CloudWatchLogsDestinationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroupName": {
+     "format": "AWS::Logs::LogGroup.Name",
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[\\.\\-_/#A-Za-z0-9]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "LogGroupName"
+   ],
+   "type": "object"
+  },
+  "DestinationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogs": {
+     "$ref": "#/definitions/CloudWatchLogsDestinationConfiguration"
+    },
+    "Firehose": {
+     "$ref": "#/definitions/FirehoseDestinationConfiguration"
+    },
+    "S3": {
+     "$ref": "#/definitions/S3DestinationConfiguration"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "FirehoseDestinationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DeliveryStreamName": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_.-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "DeliveryStreamName"
+   ],
+   "type": "object"
+  },
+  "S3DestinationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "^[a-z0-9-.]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^arn:aws:ivschat:[a-z0-9-]+:[0-9]+:logging-configuration/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "DestinationConfiguration": {
+   "$ref": "#/definitions/DestinationConfiguration"
+  },
+  "Id": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9-_]*$",
+   "type": "string"
+  },
+  "State": {
+   "enum": [
+    "CREATING",
+    "CREATE_FAILED",
+    "DELETING",
+    "DELETE_FAILED",
+    "UPDATING",
+    "UPDATING_FAILED",
+    "ACTIVE"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/State"
+ ],
+ "required": [
+  "DestinationConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ivschat.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IVSChat::LoggingConfiguration"
+}

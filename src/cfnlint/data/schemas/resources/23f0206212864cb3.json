@@ -1,0 +1,103 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EndpointName",
+  "/properties/Details"
+ ],
+ "definitions": {
+  "Details": {
+   "additionalProperties": false,
+   "properties": {
+    "RouteDetails": {
+     "$ref": "#/definitions/RouteDetails"
+    }
+   },
+   "required": [
+    "RouteDetails"
+   ],
+   "type": "object"
+  },
+  "Region": {
+   "type": "string"
+  },
+  "RouteDetails": {
+   "insertionOrder": false,
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "Region": {
+      "$ref": "#/definitions/Region"
+     }
+    },
+    "required": [
+     "Region"
+    ],
+    "type": "object"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EndpointName"
+ ],
+ "properties": {
+  "Details": {
+   "$ref": "#/definitions/Details"
+  },
+  "EndpointName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[\\w\\-_]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "required": [
+  "EndpointName",
+  "Details"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SES::MultiRegionEndpoint"
+}

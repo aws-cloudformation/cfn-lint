@@ -1,0 +1,231 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterName",
+  "/properties/CapabilityName",
+  "/properties/Type",
+  "/properties/Configuration/ArgoCd/Namespace",
+  "/properties/Configuration/ArgoCd/AwsIdc"
+ ],
+ "definitions": {
+  "ArgoCd": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsIdc": {
+     "$ref": "#/definitions/AwsIdc"
+    },
+    "Namespace": {
+     "type": "string"
+    },
+    "NetworkAccess": {
+     "$ref": "#/definitions/NetworkAccess"
+    },
+    "RbacRoleMappings": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ArgoCdRoleMapping"
+     },
+     "type": "array"
+    },
+    "ServerUrl": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AwsIdc"
+   ],
+   "type": "object"
+  },
+  "ArgoCdRoleMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "Identities": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SsoIdentity"
+     },
+     "type": "array"
+    },
+    "Role": {
+     "enum": [
+      "ADMIN",
+      "EDITOR",
+      "VIEWER"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Role",
+    "Identities"
+   ],
+   "type": "object"
+  },
+  "AwsIdc": {
+   "additionalProperties": false,
+   "properties": {
+    "IdcInstanceArn": {
+     "type": "string"
+    },
+    "IdcManagedApplicationArn": {
+     "type": "string"
+    },
+    "IdcRegion": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "IdcInstanceArn"
+   ],
+   "type": "object"
+  },
+  "CapabilityConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ArgoCd": {
+     "$ref": "#/definitions/ArgoCd"
+    }
+   },
+   "type": "object"
+  },
+  "NetworkAccess": {
+   "additionalProperties": false,
+   "properties": {
+    "VpceIds": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "SsoIdentity": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "SSO_USER",
+      "SSO_GROUP"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Id",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "CapabilityName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ClusterName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Configuration": {
+   "$ref": "#/definitions/CapabilityConfiguration"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "DeletePropagationPolicy": {
+   "enum": [
+    "RETAIN"
+   ],
+   "type": "string"
+  },
+  "ModifiedAt": {
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "pattern": "^arn:aws[a-z-]*:iam::[0-9]+:role/[a-zA-Z0-9+=,.@_-]+$",
+   "type": "string"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "enum": [
+    "ARGOCD",
+    "ACK",
+    "KRO"
+   ],
+   "type": "string"
+  },
+  "Version": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Status",
+  "/properties/CreatedAt",
+  "/properties/ModifiedAt",
+  "/properties/Version",
+  "/properties/Configuration/ArgoCd/ServerUrl",
+  "/properties/Configuration/ArgoCd/AwsIdc/IdcManagedApplicationArn"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "ClusterName",
+  "CapabilityName",
+  "Type",
+  "RoleArn",
+  "DeletePropagationPolicy"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-eks.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EKS::Capability"
+}

@@ -1,0 +1,317 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AntennaDownlinkConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SpectrumConfig": {
+     "$ref": "#/definitions/SpectrumConfig"
+    }
+   },
+   "type": "object"
+  },
+  "AntennaDownlinkDemodDecodeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DecodeConfig": {
+     "$ref": "#/definitions/DecodeConfig"
+    },
+    "DemodulationConfig": {
+     "$ref": "#/definitions/DemodulationConfig"
+    },
+    "SpectrumConfig": {
+     "$ref": "#/definitions/SpectrumConfig"
+    }
+   },
+   "type": "object"
+  },
+  "AntennaUplinkConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SpectrumConfig": {
+     "$ref": "#/definitions/UplinkSpectrumConfig"
+    },
+    "TargetEirp": {
+     "$ref": "#/definitions/Eirp"
+    },
+    "TransmitDisabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "BandwidthUnits": {
+   "enum": [
+    "GHz",
+    "MHz",
+    "kHz"
+   ],
+   "type": "string"
+  },
+  "BucketArn": {
+   "pattern": "^arn:aws[A-Za-z0-9-]{0,64}:s3:::[A-Za-z0-9-]{1,64}$",
+   "type": "string"
+  },
+  "ConfigData": {
+   "additionalProperties": false,
+   "maxProperties": 1,
+   "minProperties": 1,
+   "properties": {
+    "AntennaDownlinkConfig": {
+     "$ref": "#/definitions/AntennaDownlinkConfig"
+    },
+    "AntennaDownlinkDemodDecodeConfig": {
+     "$ref": "#/definitions/AntennaDownlinkDemodDecodeConfig"
+    },
+    "AntennaUplinkConfig": {
+     "$ref": "#/definitions/AntennaUplinkConfig"
+    },
+    "DataflowEndpointConfig": {
+     "$ref": "#/definitions/DataflowEndpointConfig"
+    },
+    "S3RecordingConfig": {
+     "$ref": "#/definitions/S3RecordingConfig"
+    },
+    "TrackingConfig": {
+     "$ref": "#/definitions/TrackingConfig"
+    },
+    "UplinkEchoConfig": {
+     "$ref": "#/definitions/UplinkEchoConfig"
+    }
+   },
+   "type": "object"
+  },
+  "DataflowEndpointConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DataflowEndpointName": {
+     "type": "string"
+    },
+    "DataflowEndpointRegion": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DecodeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "UnvalidatedJSON": {
+     "$ref": "#/definitions/JsonString"
+    }
+   },
+   "type": "object"
+  },
+  "DemodulationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "UnvalidatedJSON": {
+     "$ref": "#/definitions/JsonString"
+    }
+   },
+   "type": "object"
+  },
+  "Eirp": {
+   "additionalProperties": false,
+   "properties": {
+    "Units": {
+     "$ref": "#/definitions/EirpUnits"
+    },
+    "Value": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "EirpUnits": {
+   "enum": [
+    "dBW"
+   ],
+   "type": "string"
+  },
+  "Frequency": {
+   "additionalProperties": false,
+   "properties": {
+    "Units": {
+     "$ref": "#/definitions/FrequencyUnits"
+    },
+    "Value": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "FrequencyBandwidth": {
+   "additionalProperties": false,
+   "properties": {
+    "Units": {
+     "$ref": "#/definitions/BandwidthUnits"
+    },
+    "Value": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "FrequencyUnits": {
+   "enum": [
+    "GHz",
+    "MHz",
+    "kHz"
+   ],
+   "type": "string"
+  },
+  "JsonString": {
+   "pattern": "^[{}\\[\\]:.,\"0-9A-z\\-_\\s]{1,8192}$",
+   "type": "string"
+  },
+  "Polarization": {
+   "enum": [
+    "LEFT_HAND",
+    "RIGHT_HAND",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "pattern": "^arn:[^:\\n]+:iam::[^:\\n]+:role\\/.+$",
+   "type": "string"
+  },
+  "S3KeyPrefix": {
+   "pattern": "^([a-zA-Z0-9_\\-=/]|\\{satellite_id\\}|\\{config\\-name}|\\{s3\\-config-id}|\\{year\\}|\\{month\\}|\\{day\\}){1,900}$",
+   "type": "string"
+  },
+  "S3RecordingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketArn": {
+     "$ref": "#/definitions/BucketArn"
+    },
+    "Prefix": {
+     "$ref": "#/definitions/S3KeyPrefix"
+    },
+    "RoleArn": {
+     "$ref": "#/definitions/RoleArn"
+    }
+   },
+   "type": "object"
+  },
+  "SpectrumConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Bandwidth": {
+     "$ref": "#/definitions/FrequencyBandwidth"
+    },
+    "CenterFrequency": {
+     "$ref": "#/definitions/Frequency"
+    },
+    "Polarization": {
+     "$ref": "#/definitions/Polarization"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "pattern": "^[ a-zA-Z0-9\\+\\-=._:/@]{1,128}$",
+     "type": "string"
+    },
+    "Value": {
+     "pattern": "^[ a-zA-Z0-9\\+\\-=._:/@]{1,256}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TrackingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Autotrack": {
+     "enum": [
+      "REQUIRED",
+      "PREFERRED",
+      "REMOVED"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "UplinkEchoConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AntennaUplinkConfigArn": {
+     "maxLength": 424,
+     "minLength": 82,
+     "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "UplinkSpectrumConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CenterFrequency": {
+     "$ref": "#/definitions/Frequency"
+    },
+    "Polarization": {
+     "$ref": "#/definitions/Polarization"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
+   "type": "string"
+  },
+  "ConfigData": {
+   "$ref": "#/definitions/ConfigData"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[ a-zA-Z0-9_:-]{1,256}$",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "Type": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/Type"
+ ],
+ "required": [
+  "Name",
+  "ConfigData"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ground-station.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GroundStation::Config"
+}

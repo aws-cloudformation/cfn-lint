@@ -1,0 +1,141 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EndpointGroupRegion",
+  "/properties/ListenerArn"
+ ],
+ "definitions": {
+  "EndpointConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AttachmentArn": {
+     "maxLength": 255,
+     "type": "string"
+    },
+    "ClientIPPreservationEnabled": {
+     "default": true,
+     "type": "boolean"
+    },
+    "EndpointId": {
+     "maxLength": 255,
+     "type": "string"
+    },
+    "Weight": {
+     "default": 100,
+     "maximum": 255,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "EndpointId"
+   ],
+   "type": "object"
+  },
+  "Port": {
+   "maximum": 65535,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "PortOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "EndpointPort": {
+     "$ref": "#/definitions/Port"
+    },
+    "ListenerPort": {
+     "$ref": "#/definitions/Port"
+    }
+   },
+   "required": [
+    "ListenerPort",
+    "EndpointPort"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EndpointGroupArn"
+ ],
+ "properties": {
+  "EndpointConfigurations": {
+   "items": {
+    "$ref": "#/definitions/EndpointConfiguration"
+   },
+   "maxItems": 10,
+   "type": "array"
+  },
+  "EndpointGroupArn": {
+   "type": "string"
+  },
+  "EndpointGroupRegion": {
+   "maxLength": 255,
+   "type": "string"
+  },
+  "HealthCheckIntervalSeconds": {
+   "default": 30,
+   "maximum": 30,
+   "minimum": 10,
+   "type": "integer"
+  },
+  "HealthCheckPath": {
+   "default": "/",
+   "maxLength": 255,
+   "pattern": "^/[-a-zA-Z0-9@:%_\\\\+.~#?&/=]*$",
+   "type": "string"
+  },
+  "HealthCheckPort": {
+   "default": -1,
+   "maximum": 65535,
+   "minimum": -1,
+   "type": "integer"
+  },
+  "HealthCheckProtocol": {
+   "default": "TCP",
+   "enum": [
+    "TCP",
+    "HTTP",
+    "HTTPS"
+   ],
+   "type": "string"
+  },
+  "ListenerArn": {
+   "maxLength": 255,
+   "type": "string"
+  },
+  "PortOverrides": {
+   "items": {
+    "$ref": "#/definitions/PortOverride"
+   },
+   "maxItems": 10,
+   "type": "array"
+  },
+  "ThresholdCount": {
+   "default": 3,
+   "maximum": 10,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "TrafficDialPercentage": {
+   "default": 100,
+   "maximum": 100,
+   "minimum": 0,
+   "type": "number"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/EndpointGroupArn"
+ ],
+ "required": [
+  "ListenerArn",
+  "EndpointGroupRegion"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-globalaccelerator",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::GlobalAccelerator::EndpointGroup",
+ "writeOnlyProperties": [
+  "/properties/EndpointConfigurations/*/AttachmentArn"
+ ]
+}

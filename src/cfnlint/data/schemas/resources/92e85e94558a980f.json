@@ -1,0 +1,137 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "CaCertificatesBundleS3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    },
+    "Region": {
+     "maxLength": 32,
+     "minLength": 1,
+     "pattern": "[a-z]{2}-[a-z]+-\\d",
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key",
+    "Region"
+   ],
+   "type": "object"
+  },
+  "CaCertificatesBundleSource": {
+   "additionalProperties": false,
+   "properties": {
+    "CaCertificatesBundleS3Location": {
+     "$ref": "#/definitions/CaCertificatesBundleS3Location"
+    }
+   },
+   "required": [
+    "CaCertificatesBundleS3Location"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9 _.:/=+\\-@]{1,128}\\Z",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9 _.:/=+\\-@]{0,256}\\Z",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:aws:cloudfront::[0-9]{12}:trust-store/[A-Za-z0-9_]+$",
+   "type": "string"
+  },
+  "CaCertificatesBundleSource": {
+   "$ref": "#/definitions/CaCertificatesBundleSource"
+  },
+  "ETag": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "NumberOfCaCertificates": {
+   "type": "integer"
+  },
+  "Status": {
+   "enum": [
+    "PENDING",
+    "ACTIVE",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/Status",
+  "/properties/ETag",
+  "/properties/LastModifiedTime",
+  "/properties/NumberOfCaCertificates"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudFront::TrustStore",
+ "writeOnlyProperties": [
+  "/properties/CaCertificatesBundleSource"
+ ]
+}

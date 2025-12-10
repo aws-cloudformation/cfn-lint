@@ -1,0 +1,147 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainIdentifier",
+  "/properties/UserIdentifier",
+  "/properties/UserType"
+ ],
+ "definitions": {
+  "IamUserProfileDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SsoUserProfileDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "FirstName": {
+     "type": "string"
+    },
+    "LastName": {
+     "type": "string"
+    },
+    "Username": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z_0-9+=,.@-]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "UserProfileDetails": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Iam": {
+       "$ref": "#/definitions/IamUserProfileDetails"
+      }
+     },
+     "required": [
+      "Iam"
+     ],
+     "title": "Iam",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Sso": {
+       "$ref": "#/definitions/SsoUserProfileDetails"
+      }
+     },
+     "required": [
+      "Sso"
+     ],
+     "title": "Sso",
+     "type": "object"
+    }
+   ]
+  },
+  "UserProfileStatus": {
+   "enum": [
+    "ASSIGNED",
+    "NOT_ASSIGNED",
+    "ACTIVATED",
+    "DEACTIVATED"
+   ],
+   "type": "string"
+  },
+  "UserProfileType": {
+   "enum": [
+    "IAM",
+    "SSO"
+   ],
+   "type": "string"
+  },
+  "UserType": {
+   "enum": [
+    "IAM_USER",
+    "IAM_ROLE",
+    "SSO_USER"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainId",
+  "/properties/Id"
+ ],
+ "properties": {
+  "Details": {
+   "$ref": "#/definitions/UserProfileDetails"
+  },
+  "DomainId": {
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "DomainIdentifier": {
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/UserProfileStatus"
+  },
+  "Type": {
+   "$ref": "#/definitions/UserProfileType"
+  },
+  "UserIdentifier": {
+   "pattern": "(^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$|^[a-zA-Z_0-9+=,.@-]+$|^arn:aws:iam::\\d{12}:.+$)",
+   "type": "string"
+  },
+  "UserType": {
+   "$ref": "#/definitions/UserType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DomainId",
+  "/properties/Type",
+  "/properties/Id",
+  "/properties/Details"
+ ],
+ "required": [
+  "DomainIdentifier",
+  "UserIdentifier"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::DataZone::UserProfile",
+ "writeOnlyProperties": [
+  "/properties/DomainIdentifier",
+  "/properties/UserIdentifier",
+  "/properties/UserType"
+ ]
+}

@@ -1,0 +1,279 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "BridgeFlowSource": {
+   "additionalProperties": false,
+   "properties": {
+    "FlowArn": {
+     "pattern": "arn:.+:mediaconnect.+:flow:.+",
+     "type": "string"
+    },
+    "FlowVpcInterfaceAttachment": {
+     "$ref": "#/definitions/VpcInterfaceAttachment"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "FlowArn"
+   ],
+   "type": "object"
+  },
+  "BridgeNetworkOutput": {
+   "additionalProperties": false,
+   "properties": {
+    "IpAddress": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "NetworkName": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "integer"
+    },
+    "Protocol": {
+     "$ref": "#/definitions/ProtocolEnum"
+    },
+    "Ttl": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Name",
+    "Protocol",
+    "IpAddress",
+    "Port",
+    "NetworkName",
+    "Ttl"
+   ],
+   "type": "object"
+  },
+  "BridgeNetworkSource": {
+   "additionalProperties": false,
+   "properties": {
+    "MulticastIp": {
+     "type": "string"
+    },
+    "MulticastSourceSettings": {
+     "$ref": "#/definitions/MulticastSourceSettings"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "NetworkName": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "integer"
+    },
+    "Protocol": {
+     "$ref": "#/definitions/ProtocolEnum"
+    }
+   },
+   "required": [
+    "Name",
+    "Protocol",
+    "MulticastIp",
+    "Port",
+    "NetworkName"
+   ],
+   "type": "object"
+  },
+  "BridgeOutput": {
+   "additionalProperties": false,
+   "properties": {
+    "NetworkOutput": {
+     "$ref": "#/definitions/BridgeNetworkOutput"
+    }
+   },
+   "type": "object"
+  },
+  "BridgeSource": {
+   "additionalProperties": false,
+   "properties": {
+    "FlowSource": {
+     "$ref": "#/definitions/BridgeFlowSource"
+    },
+    "NetworkSource": {
+     "$ref": "#/definitions/BridgeNetworkSource"
+    }
+   },
+   "type": "object"
+  },
+  "BridgeStateEnum": {
+   "enum": [
+    "CREATING",
+    "STANDBY",
+    "STARTING",
+    "DEPLOYING",
+    "ACTIVE",
+    "STOPPING",
+    "DELETING",
+    "DELETED",
+    "START_FAILED",
+    "START_PENDING",
+    "UPDATING"
+   ],
+   "type": "string"
+  },
+  "EgressGatewayBridge": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxBitrate": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxBitrate"
+   ],
+   "type": "object"
+  },
+  "FailoverConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FailoverMode": {
+     "$ref": "#/definitions/FailoverModeEnum"
+    },
+    "SourcePriority": {
+     "$ref": "#/definitions/SourcePriority"
+    },
+    "State": {
+     "$ref": "#/definitions/FailoverConfigStateEnum"
+    }
+   },
+   "required": [
+    "FailoverMode"
+   ],
+   "type": "object"
+  },
+  "FailoverConfigStateEnum": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "FailoverModeEnum": {
+   "enum": [
+    "FAILOVER"
+   ],
+   "type": "string"
+  },
+  "IngressGatewayBridge": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxBitrate": {
+     "type": "integer"
+    },
+    "MaxOutputs": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxBitrate",
+    "MaxOutputs"
+   ],
+   "type": "object"
+  },
+  "MulticastSourceSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "MulticastSourceIp": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ProtocolEnum": {
+   "enum": [
+    "rtp-fec",
+    "rtp",
+    "udp"
+   ],
+   "type": "string"
+  },
+  "SourcePriority": {
+   "additionalProperties": false,
+   "properties": {
+    "PrimarySource": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VpcInterfaceAttachment": {
+   "additionalProperties": false,
+   "properties": {
+    "VpcInterfaceName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BridgeArn"
+ ],
+ "properties": {
+  "BridgeArn": {
+   "type": "string"
+  },
+  "BridgeState": {
+   "$ref": "#/definitions/BridgeStateEnum"
+  },
+  "EgressGatewayBridge": {
+   "$ref": "#/definitions/EgressGatewayBridge",
+   "type": "object"
+  },
+  "IngressGatewayBridge": {
+   "$ref": "#/definitions/IngressGatewayBridge",
+   "type": "object"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Outputs": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/BridgeOutput"
+   },
+   "maxItems": 2,
+   "minItems": 0,
+   "type": "array"
+  },
+  "PlacementArn": {
+   "type": "string"
+  },
+  "SourceFailoverConfig": {
+   "$ref": "#/definitions/FailoverConfig"
+  },
+  "Sources": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/BridgeSource"
+   },
+   "maxItems": 2,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/BridgeArn",
+  "/properties/BridgeState"
+ ],
+ "required": [
+  "Name",
+  "PlacementArn",
+  "Sources"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::MediaConnect::Bridge"
+}

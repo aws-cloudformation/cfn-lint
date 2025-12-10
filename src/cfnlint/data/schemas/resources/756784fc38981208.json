@@ -1,0 +1,71 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GroupSecurityIdentifier",
+  "/properties/TemplateArn"
+ ],
+ "definitions": {
+  "AccessRight": {
+   "enum": [
+    "ALLOW",
+    "DENY"
+   ],
+   "type": "string"
+  },
+  "AccessRights": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoEnroll": {
+     "$ref": "#/definitions/AccessRight"
+    },
+    "Enroll": {
+     "$ref": "#/definitions/AccessRight"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GroupSecurityIdentifier",
+  "/properties/TemplateArn"
+ ],
+ "properties": {
+  "AccessRights": {
+   "$ref": "#/definitions/AccessRights"
+  },
+  "GroupDisplayName": {
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "^[\\x20-\\x7E]+$",
+   "type": "string"
+  },
+  "GroupSecurityIdentifier": {
+   "maxLength": 256,
+   "minLength": 7,
+   "pattern": "^S-[0-9]-([0-9]+-){1,14}[0-9]+$",
+   "type": "string"
+  },
+  "TemplateArn": {
+   "maxLength": 200,
+   "minLength": 5,
+   "pattern": "^arn:[\\w-]+:pca-connector-ad:[\\w-]+:[0-9]+:connector(\\/[\\w-]+)\\/template(\\/[\\w-]+)$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "AccessRights",
+  "GroupDisplayName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-pcaconnectorad",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::PCAConnectorAD::TemplateGroupAccessControlEntry",
+ "writeOnlyProperties": [
+  "/properties/AccessRights",
+  "/properties/GroupDisplayName"
+ ]
+}

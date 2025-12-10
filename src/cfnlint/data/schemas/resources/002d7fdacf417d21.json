@@ -1,0 +1,152 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApiId"
+ ],
+ "definitions": {
+  "AppSyncRuntime": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "enum": [
+      "APPSYNC_JS"
+     ],
+     "type": "string"
+    },
+    "RuntimeVersion": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "RuntimeVersion"
+   ],
+   "type": "object"
+  },
+  "LambdaConflictHandlerConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaConflictHandlerArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SyncConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ConflictDetection": {
+     "enum": [
+      "NONE",
+      "VERSION"
+     ],
+     "type": "string"
+    },
+    "ConflictHandler": {
+     "enum": [
+      "AUTOMERGE",
+      "LAMBDA",
+      "NONE",
+      "OPTIMISTIC_CONCURRENCY"
+     ],
+     "type": "string"
+    },
+    "LambdaConflictHandlerConfig": {
+     "$ref": "#/definitions/LambdaConflictHandlerConfig"
+    }
+   },
+   "required": [
+    "ConflictDetection"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FunctionArn"
+ ],
+ "properties": {
+  "ApiId": {
+   "type": "string"
+  },
+  "Code": {
+   "maxLength": 32768,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CodeS3Location": {
+   "type": "string"
+  },
+  "DataSourceName": {
+   "maxLength": 65536,
+   "minLength": 1,
+   "pattern": "[_A-Za-z][_0-9A-Za-z]*",
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "FunctionArn": {
+   "type": "string"
+  },
+  "FunctionId": {
+   "type": "string"
+  },
+  "FunctionVersion": {
+   "type": "string"
+  },
+  "MaxBatchSize": {
+   "maximum": 2000,
+   "type": "integer"
+  },
+  "Name": {
+   "maxLength": 65536,
+   "minLength": 1,
+   "pattern": "[_A-Za-z][_0-9A-Za-z]*",
+   "type": "string"
+  },
+  "RequestMappingTemplate": {
+   "maxLength": 65536,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RequestMappingTemplateS3Location": {
+   "type": "string"
+  },
+  "ResponseMappingTemplate": {
+   "maxLength": 65536,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResponseMappingTemplateS3Location": {
+   "type": "string"
+  },
+  "Runtime": {
+   "$ref": "#/definitions/AppSyncRuntime"
+  },
+  "SyncConfig": {
+   "$ref": "#/definitions/SyncConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/FunctionArn",
+  "/properties/FunctionId"
+ ],
+ "required": [
+  "ApiId",
+  "DataSourceName",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::AppSync::FunctionConfiguration",
+ "writeOnlyProperties": [
+  "/properties/CodeS3Location",
+  "/properties/ResponseMappingTemplateS3Location",
+  "/properties/RequestMappingTemplateS3Location"
+ ]
+}

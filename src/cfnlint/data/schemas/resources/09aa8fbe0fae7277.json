@@ -1,0 +1,109 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/LedgerName",
+  "/properties/StreamName",
+  "/properties/RoleArn",
+  "/properties/KinesisConfiguration",
+  "/properties/InclusiveStartTime",
+  "/properties/ExclusiveEndTime"
+ ],
+ "definitions": {
+  "Arn": {
+   "pattern": "arn:[\\w+=/,.@-]+:[\\w+=/,.@-]+:[\\w+=/,.@-]*:[0-9]*:[\\w+=,.@-]+(/[\\w+=,.@-]+)*",
+   "type": "string"
+  },
+  "KinesisConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AggregationEnabled": {
+     "type": "boolean"
+    },
+    "StreamArn": {
+     "$ref": "#/definitions/Arn",
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LedgerName",
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "ExclusiveEndTime": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InclusiveStartTime": {
+   "type": "string"
+  },
+  "KinesisConfiguration": {
+   "$ref": "#/definitions/KinesisConfiguration"
+  },
+  "LedgerName": {
+   "type": "string"
+  },
+  "RoleArn": {
+   "$ref": "#/definitions/Arn",
+   "format": "AWS::IAM::Role.Arn"
+  },
+  "StreamName": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "LedgerName",
+  "StreamName",
+  "RoleArn",
+  "KinesisConfiguration",
+  "InclusiveStartTime"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::QLDB::Stream"
+}

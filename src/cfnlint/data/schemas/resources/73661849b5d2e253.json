@@ -1,0 +1,112 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IAMRoleARN",
+  "/properties/SSESpecification",
+  "/properties/ClusterEndpointEncryptionType",
+  "/properties/NetworkType",
+  "/properties/ClusterName",
+  "/properties/NodeType",
+  "/properties/SubnetGroupName"
+ ],
+ "definitions": {
+  "SSESpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "SSEEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AvailabilityZones": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ClusterDiscoveryEndpoint": {
+   "type": "string"
+  },
+  "ClusterDiscoveryEndpointURL": {
+   "type": "string"
+  },
+  "ClusterEndpointEncryptionType": {
+   "type": "string"
+  },
+  "ClusterName": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "IAMRoleARN": {
+   "format": "AWS::IAM::Role.Arn",
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "NetworkType": {
+   "type": "string"
+  },
+  "NodeType": {
+   "type": "string"
+  },
+  "NotificationTopicARN": {
+   "type": "string"
+  },
+  "ParameterGroupName": {
+   "type": "string"
+  },
+  "PreferredMaintenanceWindow": {
+   "type": "string"
+  },
+  "ReplicationFactor": {
+   "type": "integer"
+  },
+  "SSESpecification": {
+   "$ref": "#/definitions/SSESpecification"
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SubnetGroupName": {
+   "type": "string"
+  },
+  "Tags": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/ClusterDiscoveryEndpoint",
+  "/properties/Arn",
+  "/properties/ClusterDiscoveryEndpointURL"
+ ],
+ "required": [
+  "ReplicationFactor",
+  "IAMRoleARN",
+  "NodeType"
+ ],
+ "typeName": "AWS::DAX::Cluster"
+}

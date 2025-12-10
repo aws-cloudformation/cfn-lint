@@ -1,0 +1,625 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ActionDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionTypeId": {
+     "$ref": "#/definitions/ActionTypeId"
+    },
+    "Configuration": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "InputArtifacts": {
+     "items": {
+      "$ref": "#/definitions/InputArtifact"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "pattern": "^[A-Za-z0-9.@\\-_]{1,100}$",
+     "type": "string"
+    },
+    "Namespace": {
+     "type": "string"
+    },
+    "OutputArtifacts": {
+     "items": {
+      "$ref": "#/definitions/OutputArtifact"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Region": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "type": "string"
+    },
+    "RunOrder": {
+     "type": "integer"
+    },
+    "TimeoutInMinutes": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ActionTypeId",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "ActionTypeId": {
+   "additionalProperties": false,
+   "properties": {
+    "Category": {
+     "type": "string"
+    },
+    "Owner": {
+     "enum": [
+      "AWS",
+      "Custom",
+      "ThirdParty"
+     ],
+     "type": "string"
+    },
+    "Provider": {
+     "type": "string"
+    },
+    "Version": {
+     "pattern": "^[0-9A-Za-z_\\-]{1,9}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Owner",
+    "Category",
+    "Version",
+    "Provider"
+   ],
+   "type": "object"
+  },
+  "ArtifactStore": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionKey": {
+     "$ref": "#/definitions/EncryptionKey"
+    },
+    "Location": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Location"
+   ],
+   "type": "object"
+  },
+  "ArtifactStoreMap": {
+   "additionalProperties": false,
+   "properties": {
+    "ArtifactStore": {
+     "$ref": "#/definitions/ArtifactStore"
+    },
+    "Region": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ArtifactStore",
+    "Region"
+   ],
+   "type": "object"
+  },
+  "BeforeEntryConditions": {
+   "additionalProperties": false,
+   "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Conditions"
+   ],
+   "type": "object"
+  },
+  "BlockerDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Condition": {
+   "additionalProperties": false,
+   "properties": {
+    "Result": {
+     "type": "string"
+    },
+    "Rules": {
+     "items": {
+      "$ref": "#/definitions/RuleDeclaration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Rules",
+    "Result"
+   ],
+   "type": "object"
+  },
+  "EncryptionKey": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Id"
+   ],
+   "type": "object"
+  },
+  "FailureConditions": {
+   "additionalProperties": false,
+   "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Result": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "GitBranchFilterCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "Excludes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Includes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "GitConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "PullRequest": {
+     "items": {
+      "$ref": "#/definitions/GitPullRequestFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Push": {
+     "items": {
+      "$ref": "#/definitions/GitPushFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SourceActionName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceActionName"
+   ],
+   "type": "object"
+  },
+  "GitFilePathFilterCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "Excludes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Includes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "GitPullRequestFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Branches": {
+     "$ref": "#/definitions/GitBranchFilterCriteria"
+    },
+    "Events": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "FilePaths": {
+     "$ref": "#/definitions/GitFilePathFilterCriteria"
+    }
+   },
+   "type": "object"
+  },
+  "GitPushFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Branches": {
+     "$ref": "#/definitions/GitBranchFilterCriteria"
+    },
+    "FilePaths": {
+     "$ref": "#/definitions/GitFilePathFilterCriteria"
+    },
+    "Tags": {
+     "$ref": "#/definitions/GitTagFilterCriteria"
+    }
+   },
+   "type": "object"
+  },
+  "GitTagFilterCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "Excludes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Includes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "InputArtifact": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "OutputArtifact": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "PipelineTriggerDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "GitConfiguration": {
+     "$ref": "#/definitions/GitConfiguration"
+    },
+    "ProviderType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ProviderType"
+   ],
+   "type": "object"
+  },
+  "RuleDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "Configuration": {
+     "type": "object"
+    },
+    "InputArtifacts": {
+     "items": {
+      "$ref": "#/definitions/InputArtifact"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Region": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "type": "string"
+    },
+    "RuleTypeId": {
+     "$ref": "#/definitions/RuleTypeId"
+    },
+    "TimeoutInMinutes": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "RuleTypeId",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "RuleTypeId": {
+   "additionalProperties": false,
+   "properties": {
+    "Category": {
+     "type": "string"
+    },
+    "Owner": {
+     "type": "string"
+    },
+    "Provider": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Provider"
+   ],
+   "type": "object"
+  },
+  "StageDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "Actions": {
+     "items": {
+      "$ref": "#/definitions/ActionDeclaration"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true,
+     "uniqueKeys": [
+      "Name"
+     ]
+    },
+    "BeforeEntry": {
+     "$ref": "#/definitions/BeforeEntryConditions"
+    },
+    "Blockers": {
+     "items": {
+      "$ref": "#/definitions/BlockerDeclaration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "type": "string"
+    },
+    "OnFailure": {
+     "$ref": "#/definitions/FailureConditions"
+    },
+    "OnSuccess": {
+     "$ref": "#/definitions/SuccessConditions"
+    }
+   },
+   "required": [
+    "Actions",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "StageTransition": {
+   "additionalProperties": false,
+   "properties": {
+    "Reason": {
+     "type": "string"
+    },
+    "StageName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "StageName",
+    "Reason"
+   ],
+   "type": "object"
+  },
+  "SuccessConditions": {
+   "additionalProperties": false,
+   "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Conditions"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VariableDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultValue": {
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ArtifactStore": {
+   "$ref": "#/definitions/ArtifactStore"
+  },
+  "ArtifactStores": {
+   "items": {
+    "$ref": "#/definitions/ArtifactStoreMap"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DisableInboundStageTransitions": {
+   "items": {
+    "$ref": "#/definitions/StageTransition"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ExecutionMode": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "PipelineType": {
+   "type": "string"
+  },
+  "RestartExecutionOnUpdate": {
+   "type": "boolean"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "type": "string"
+  },
+  "Stages": {
+   "items": {
+    "$ref": "#/definitions/StageDeclaration"
+   },
+   "minItems": 2,
+   "type": "array",
+   "uniqueItems": true,
+   "uniqueKeys": [
+    "Name"
+   ]
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Triggers": {
+   "items": {
+    "$ref": "#/definitions/PipelineTriggerDeclaration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Variables": {
+   "items": {
+    "$ref": "#/definitions/VariableDeclaration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Version": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Version"
+ ],
+ "required": [
+  "Stages",
+  "RoleArn"
+ ],
+ "requiredXor": [
+  "ArtifactStore",
+  "ArtifactStores"
+ ],
+ "typeName": "AWS::CodePipeline::Pipeline"
+}

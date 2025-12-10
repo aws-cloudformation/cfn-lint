@@ -1,0 +1,640 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName",
+  "/properties/Uri"
+ ],
+ "definitions": {
+  "ConnectorOperator": {
+   "additionalProperties": false,
+   "properties": {
+    "Marketo": {
+     "$ref": "#/definitions/MarketoConnectorOperator"
+    },
+    "S3": {
+     "$ref": "#/definitions/S3ConnectorOperator"
+    },
+    "Salesforce": {
+     "$ref": "#/definitions/SalesforceConnectorOperator"
+    },
+    "ServiceNow": {
+     "$ref": "#/definitions/ServiceNowConnectorOperator"
+    },
+    "Zendesk": {
+     "$ref": "#/definitions/ZendeskConnectorOperator"
+    }
+   },
+   "type": "object"
+  },
+  "ConnectorType": {
+   "enum": [
+    "Salesforce",
+    "Marketo",
+    "ServiceNow",
+    "Zendesk",
+    "S3"
+   ],
+   "type": "string"
+  },
+  "Date": {
+   "type": "number"
+  },
+  "DestinationField": {
+   "maxLength": 256,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "FlowDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "maxLength": 2048,
+     "pattern": "[\\w!@#\\-.?,\\s]*",
+     "type": "string"
+    },
+    "FlowName": {
+     "maxLength": 256,
+     "pattern": "[a-zA-Z0-9][\\w!@#.-]+",
+     "type": "string"
+    },
+    "KmsArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "arn:aws:kms:.*:[0-9]+:.*",
+     "type": "string"
+    },
+    "SourceFlowConfig": {
+     "$ref": "#/definitions/SourceFlowConfig"
+    },
+    "Tasks": {
+     "items": {
+      "$ref": "#/definitions/Task"
+     },
+     "type": "array"
+    },
+    "TriggerConfig": {
+     "$ref": "#/definitions/TriggerConfig"
+    }
+   },
+   "required": [
+    "FlowName",
+    "KmsArn",
+    "Tasks",
+    "TriggerConfig",
+    "SourceFlowConfig"
+   ],
+   "type": "object"
+  },
+  "IncrementalPullConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DatetimeTypeFieldName": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MarketoConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "LESS_THAN",
+    "GREATER_THAN",
+    "BETWEEN",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "MarketoSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "Object": {
+   "additionalProperties": false,
+   "maxLength": 512,
+   "pattern": "\\S+",
+   "type": "string"
+  },
+  "ObjectTypeMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z_][a-zA-Z_0-9-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Operator": {
+   "enum": [
+    "PROJECTION",
+    "LESS_THAN",
+    "GREATER_THAN",
+    "CONTAINS",
+    "BETWEEN",
+    "LESS_THAN_OR_EQUAL_TO",
+    "GREATER_THAN_OR_EQUAL_TO",
+    "EQUAL_TO",
+    "NOT_EQUAL_TO",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "OperatorPropertiesKeys": {
+   "enum": [
+    "VALUE",
+    "VALUES",
+    "DATA_TYPE",
+    "UPPER_BOUND",
+    "LOWER_BOUND",
+    "SOURCE_DATA_TYPE",
+    "DESTINATION_DATA_TYPE",
+    "VALIDATION_ACTION",
+    "MASK_VALUE",
+    "MASK_LENGTH",
+    "TRUNCATE_LENGTH",
+    "MATH_OPERATION_FIELDS_ORDER",
+    "CONCAT_FORMAT",
+    "SUBFIELD_CATEGORY_MAP"
+   ],
+   "type": "string"
+  },
+  "S3ConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "LESS_THAN",
+    "GREATER_THAN",
+    "BETWEEN",
+    "LESS_THAN_OR_EQUAL_TO",
+    "GREATER_THAN_OR_EQUAL_TO",
+    "EQUAL_TO",
+    "NOT_EQUAL_TO",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "S3SourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "\\S+",
+     "type": "string"
+    },
+    "BucketPrefix": {
+     "maxLength": 512,
+     "pattern": ".*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "SalesforceConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "LESS_THAN",
+    "GREATER_THAN",
+    "CONTAINS",
+    "BETWEEN",
+    "LESS_THAN_OR_EQUAL_TO",
+    "GREATER_THAN_OR_EQUAL_TO",
+    "EQUAL_TO",
+    "NOT_EQUAL_TO",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "SalesforceSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableDynamicFieldUpdate": {
+     "type": "boolean"
+    },
+    "IncludeDeletedRecords": {
+     "type": "boolean"
+    },
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "ScheduledTriggerProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "DataPullMode": {
+     "enum": [
+      "Incremental",
+      "Complete"
+     ],
+     "type": "string"
+    },
+    "FirstExecutionFrom": {
+     "$ref": "#/definitions/Date"
+    },
+    "ScheduleEndTime": {
+     "$ref": "#/definitions/Date"
+    },
+    "ScheduleExpression": {
+     "maxLength": 256,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "ScheduleOffset": {
+     "maximum": 36000,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "ScheduleStartTime": {
+     "$ref": "#/definitions/Date"
+    },
+    "Timezone": {
+     "maxLength": 256,
+     "pattern": ".*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ScheduleExpression"
+   ],
+   "type": "object"
+  },
+  "ServiceNowConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "LESS_THAN",
+    "GREATER_THAN",
+    "CONTAINS",
+    "BETWEEN",
+    "LESS_THAN_OR_EQUAL_TO",
+    "GREATER_THAN_OR_EQUAL_TO",
+    "EQUAL_TO",
+    "NOT_EQUAL_TO",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "ServiceNowSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
+  "SourceConnectorProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Marketo": {
+     "$ref": "#/definitions/MarketoSourceProperties"
+    },
+    "S3": {
+     "$ref": "#/definitions/S3SourceProperties"
+    },
+    "Salesforce": {
+     "$ref": "#/definitions/SalesforceSourceProperties"
+    },
+    "ServiceNow": {
+     "$ref": "#/definitions/ServiceNowSourceProperties"
+    },
+    "Zendesk": {
+     "$ref": "#/definitions/ZendeskSourceProperties"
+    }
+   },
+   "type": "object"
+  },
+  "SourceFlowConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectorProfileName": {
+     "maxLength": 256,
+     "pattern": "[\\w/!@#+=.-]+",
+     "type": "string"
+    },
+    "ConnectorType": {
+     "$ref": "#/definitions/ConnectorType"
+    },
+    "IncrementalPullConfig": {
+     "$ref": "#/definitions/IncrementalPullConfig"
+    },
+    "SourceConnectorProperties": {
+     "$ref": "#/definitions/SourceConnectorProperties"
+    }
+   },
+   "required": [
+    "ConnectorType",
+    "SourceConnectorProperties"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Task": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectorOperator": {
+     "$ref": "#/definitions/ConnectorOperator"
+    },
+    "DestinationField": {
+     "$ref": "#/definitions/DestinationField"
+    },
+    "SourceFields": {
+     "items": {
+      "maxLength": 2048,
+      "pattern": ".*",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "TaskProperties": {
+     "items": {
+      "$ref": "#/definitions/TaskPropertiesMap"
+     },
+     "type": "array"
+    },
+    "TaskType": {
+     "$ref": "#/definitions/TaskType"
+    }
+   },
+   "required": [
+    "SourceFields",
+    "TaskType"
+   ],
+   "type": "object"
+  },
+  "TaskPropertiesMap": {
+   "additionalProperties": false,
+   "properties": {
+    "OperatorPropertyKey": {
+     "$ref": "#/definitions/OperatorPropertiesKeys"
+    },
+    "Property": {
+     "maxLength": 2048,
+     "pattern": ".+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "OperatorPropertyKey",
+    "Property"
+   ],
+   "type": "object"
+  },
+  "TaskType": {
+   "enum": [
+    "Arithmetic",
+    "Filter",
+    "Map",
+    "Mask",
+    "Merge",
+    "Truncate",
+    "Validate"
+   ],
+   "type": "string"
+  },
+  "TriggerConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "TriggerProperties": {
+     "$ref": "#/definitions/TriggerProperties"
+    },
+    "TriggerType": {
+     "$ref": "#/definitions/TriggerType"
+    }
+   },
+   "required": [
+    "TriggerType"
+   ],
+   "type": "object"
+  },
+  "TriggerProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Scheduled": {
+     "$ref": "#/definitions/ScheduledTriggerProperties"
+    }
+   },
+   "type": "object"
+  },
+  "TriggerType": {
+   "enum": [
+    "Scheduled",
+    "Event",
+    "OnDemand"
+   ],
+   "type": "string"
+  },
+  "ZendeskConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "GREATER_THAN",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC",
+    "NO_OP"
+   ],
+   "type": "string"
+  },
+  "ZendeskSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainName",
+  "/properties/Uri"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "type": "string"
+  },
+  "DomainName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "EventTriggerNames": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 64,
+    "minLength": 1,
+    "pattern": "^[a-zA-Z0-9_-]+$",
+    "type": "string"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
+  },
+  "FlowDefinition": {
+   "$ref": "#/definitions/FlowDefinition"
+  },
+  "LastUpdatedAt": {
+   "type": "string"
+  },
+  "ObjectTypeName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z_][a-zA-Z_0-9-]*$",
+   "type": "string"
+  },
+  "ObjectTypeNames": {
+   "items": {
+    "$ref": "#/definitions/ObjectTypeMapping"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Uri": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LastUpdatedAt",
+  "/properties/CreatedAt"
+ ],
+ "required": [
+  "DomainName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-customer-profiles.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CustomerProfiles::Integration",
+ "writeOnlyProperties": [
+  "/properties/FlowDefinition"
+ ]
+}

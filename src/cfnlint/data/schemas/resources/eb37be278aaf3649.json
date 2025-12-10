@@ -1,0 +1,751 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/MemoryId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/EncryptionKeyArn"
+ ],
+ "definitions": {
+  "Arn": {
+   "pattern": "^arn:aws:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
+   "type": "string"
+  },
+  "ConsolidationConfiguration": {
+   "oneOf": [
+    {
+     "$ref": "#/definitions/CustomConsolidationConfiguration"
+    }
+   ],
+   "type": "object"
+  },
+  "CustomConfigurationInput": {
+   "additionalProperties": false,
+   "maxProperties": 1,
+   "minProperties": 1,
+   "properties": {
+    "SelfManagedConfiguration": {
+     "$ref": "#/definitions/SelfManagedConfiguration"
+    },
+    "SemanticOverride": {
+     "$ref": "#/definitions/SemanticOverride"
+    },
+    "SummaryOverride": {
+     "$ref": "#/definitions/SummaryOverride"
+    },
+    "UserPreferenceOverride": {
+     "$ref": "#/definitions/UserPreferenceOverride"
+    }
+   },
+   "type": "object"
+  },
+  "CustomConsolidationConfiguration": {
+   "oneOf": [
+    {
+     "$ref": "#/definitions/SemanticConsolidationOverride"
+    },
+    {
+     "$ref": "#/definitions/SummaryConsolidationOverride"
+    },
+    {
+     "$ref": "#/definitions/UserPreferenceConsolidationOverride"
+    }
+   ],
+   "type": "object"
+  },
+  "CustomExtractionConfiguration": {
+   "oneOf": [
+    {
+     "$ref": "#/definitions/SemanticExtractionOverride"
+    },
+    {
+     "$ref": "#/definitions/UserPreferenceExtractionOverride"
+    }
+   ],
+   "type": "object"
+  },
+  "CustomMemoryStrategy": {
+   "additionalProperties": false,
+   "properties": {
+    "Configuration": {
+     "$ref": "#/definitions/CustomConfigurationInput"
+    },
+    "CreatedAt": {
+     "format": "date-time",
+     "type": "string"
+    },
+    "Description": {
+     "$ref": "#/definitions/Description"
+    },
+    "Name": {
+     "$ref": "#/definitions/Name"
+    },
+    "Namespaces": {
+     "$ref": "#/definitions/NamespacesList"
+    },
+    "Status": {
+     "enum": [
+      "CREATING",
+      "ACTIVE",
+      "DELETING",
+      "FAILED"
+     ],
+     "type": "string"
+    },
+    "StrategyId": {
+     "minLength": 12,
+     "pattern": "^[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "SEMANTIC",
+      "SUMMARIZATION",
+      "USER_PREFERENCE",
+      "CUSTOM"
+     ],
+     "type": "string"
+    },
+    "UpdatedAt": {
+     "format": "date-time",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "ExtractionConfiguration": {
+   "oneOf": [
+    {
+     "$ref": "#/definitions/CustomExtractionConfiguration"
+    }
+   ],
+   "type": "object"
+  },
+  "InvocationConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "PayloadDeliveryBucketName": {
+     "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$",
+     "type": "string"
+    },
+    "TopicArn": {
+     "$ref": "#/definitions/Arn"
+    }
+   },
+   "type": "object"
+  },
+  "MemoryArn": {
+   "pattern": "^arn:aws:bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:memory/[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+   "type": "string"
+  },
+  "MemoryId": {
+   "minLength": 12,
+   "pattern": "^[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+   "type": "string"
+  },
+  "MemoryStatus": {
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "FAILED",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "MemoryStrategies": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/MemoryStrategy"
+   },
+   "type": "array"
+  },
+  "MemoryStrategy": {
+   "additionalProperties": false,
+   "maxProperties": 1,
+   "minProperties": 1,
+   "properties": {
+    "CustomMemoryStrategy": {
+     "$ref": "#/definitions/CustomMemoryStrategy"
+    },
+    "SemanticMemoryStrategy": {
+     "$ref": "#/definitions/SemanticMemoryStrategy"
+    },
+    "SummaryMemoryStrategy": {
+     "$ref": "#/definitions/SummaryMemoryStrategy"
+    },
+    "UserPreferenceMemoryStrategy": {
+     "$ref": "#/definitions/UserPreferenceMemoryStrategy"
+    }
+   },
+   "type": "object"
+  },
+  "MessageBasedTriggerInput": {
+   "additionalProperties": false,
+   "properties": {
+    "MessageCount": {
+     "maximum": 50,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Name": {
+   "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,47}$",
+   "type": "string"
+  },
+  "Namespace": {
+   "pattern": "^[a-zA-Z0-9\\-_/]*(\\{(actorId|sessionId|memoryStrategyId)\\}[a-zA-Z0-9\\-_/]*)*$",
+   "type": "string"
+  },
+  "NamespacesList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Namespace"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "Prompt": {
+   "maxLength": 30000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SelfManagedConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "HistoricalContextWindowSize": {
+     "maximum": 50,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "InvocationConfiguration": {
+     "$ref": "#/definitions/InvocationConfigurationInput"
+    },
+    "TriggerConditions": {
+     "$ref": "#/definitions/TriggerConditionList"
+    }
+   },
+   "type": "object"
+  },
+  "SemanticConsolidationOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "AppendToPrompt": {
+     "$ref": "#/definitions/Prompt"
+    },
+    "ModelId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AppendToPrompt",
+    "ModelId"
+   ],
+   "type": "object"
+  },
+  "SemanticExtractionOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "AppendToPrompt": {
+     "$ref": "#/definitions/Prompt"
+    },
+    "ModelId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AppendToPrompt",
+    "ModelId"
+   ],
+   "type": "object"
+  },
+  "SemanticMemoryStrategy": {
+   "additionalProperties": false,
+   "properties": {
+    "CreatedAt": {
+     "format": "date-time",
+     "type": "string"
+    },
+    "Description": {
+     "$ref": "#/definitions/Description"
+    },
+    "Name": {
+     "$ref": "#/definitions/Name"
+    },
+    "Namespaces": {
+     "$ref": "#/definitions/NamespacesList"
+    },
+    "Status": {
+     "enum": [
+      "CREATING",
+      "ACTIVE",
+      "DELETING",
+      "FAILED"
+     ],
+     "type": "string"
+    },
+    "StrategyId": {
+     "minLength": 12,
+     "pattern": "^[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "SEMANTIC",
+      "SUMMARIZATION",
+      "USER_PREFERENCE",
+      "CUSTOM"
+     ],
+     "type": "string"
+    },
+    "UpdatedAt": {
+     "format": "date-time",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "SemanticOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "Consolidation": {
+     "$ref": "#/definitions/SemanticOverrideConsolidationConfigurationInput"
+    },
+    "Extraction": {
+     "$ref": "#/definitions/SemanticOverrideExtractionConfigurationInput"
+    }
+   },
+   "type": "object"
+  },
+  "SemanticOverrideConsolidationConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "AppendToPrompt": {
+     "$ref": "#/definitions/Prompt"
+    },
+    "ModelId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AppendToPrompt",
+    "ModelId"
+   ],
+   "type": "object"
+  },
+  "SemanticOverrideExtractionConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "AppendToPrompt": {
+     "$ref": "#/definitions/Prompt"
+    },
+    "ModelId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AppendToPrompt",
+    "ModelId"
+   ],
+   "type": "object"
+  },
+  "StrategyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Consolidation": {
+     "$ref": "#/definitions/ConsolidationConfiguration"
+    },
+    "Extraction": {
+     "$ref": "#/definitions/ExtractionConfiguration"
+    },
+    "Type": {
+     "enum": [
+      "SEMANTIC_OVERRIDE",
+      "SUMMARY_OVERRIDE",
+      "USER_PREFERENCE_OVERRIDE"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SummaryConsolidationOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "AppendToPrompt": {
+     "$ref": "#/definitions/Prompt"
+    },
+    "ModelId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AppendToPrompt",
+    "ModelId"
+   ],
+   "type": "object"
+  },
+  "SummaryMemoryStrategy": {
+   "additionalProperties": false,
+   "properties": {
+    "CreatedAt": {
+     "format": "date-time",
+     "type": "string"
+    },
+    "Description": {
+     "$ref": "#/definitions/Description"
+    },
+    "Name": {
+     "$ref": "#/definitions/Name"
+    },
+    "Namespaces": {
+     "$ref": "#/definitions/NamespacesList"
+    },
+    "Status": {
+     "enum": [
+      "CREATING",
+      "ACTIVE",
+      "DELETING",
+      "FAILED"
+     ],
+     "type": "string"
+    },
+    "StrategyId": {
+     "minLength": 12,
+     "pattern": "^[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "SEMANTIC",
+      "SUMMARIZATION",
+      "USER_PREFERENCE",
+      "CUSTOM"
+     ],
+     "type": "string"
+    },
+    "UpdatedAt": {
+     "format": "date-time",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "SummaryOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "Consolidation": {
+     "$ref": "#/definitions/SummaryOverrideConsolidationConfigurationInput"
+    }
+   },
+   "type": "object"
+  },
+  "SummaryOverrideConsolidationConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "AppendToPrompt": {
+     "$ref": "#/definitions/Prompt"
+    },
+    "ModelId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AppendToPrompt",
+    "ModelId"
+   ],
+   "type": "object"
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "minProperties": 0,
+   "patternProperties": {
+    "^[a-zA-Z0-9\\s._:/=+@-]{1,128}$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TimeBasedTriggerInput": {
+   "additionalProperties": false,
+   "properties": {
+    "IdleSessionTimeout": {
+     "maximum": 3000,
+     "minimum": 10,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "TokenBasedTriggerInput": {
+   "additionalProperties": false,
+   "properties": {
+    "TokenCount": {
+     "maximum": 500000,
+     "minimum": 100,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "TriggerConditionInput": {
+   "additionalProperties": false,
+   "maxProperties": 1,
+   "minProperties": 1,
+   "properties": {
+    "MessageBasedTrigger": {
+     "$ref": "#/definitions/MessageBasedTriggerInput"
+    },
+    "TimeBasedTrigger": {
+     "$ref": "#/definitions/TimeBasedTriggerInput"
+    },
+    "TokenBasedTrigger": {
+     "$ref": "#/definitions/TokenBasedTriggerInput"
+    }
+   },
+   "type": "object"
+  },
+  "TriggerConditionList": {
+   "additionalProperties": false,
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TriggerConditionInput"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "UserPreferenceConsolidationOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "AppendToPrompt": {
+     "$ref": "#/definitions/Prompt"
+    },
+    "ModelId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AppendToPrompt",
+    "ModelId"
+   ],
+   "type": "object"
+  },
+  "UserPreferenceExtractionOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "AppendToPrompt": {
+     "$ref": "#/definitions/Prompt"
+    },
+    "ModelId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AppendToPrompt",
+    "ModelId"
+   ],
+   "type": "object"
+  },
+  "UserPreferenceMemoryStrategy": {
+   "additionalProperties": false,
+   "properties": {
+    "CreatedAt": {
+     "format": "date-time",
+     "type": "string"
+    },
+    "Description": {
+     "$ref": "#/definitions/Description"
+    },
+    "Name": {
+     "$ref": "#/definitions/Name"
+    },
+    "Namespaces": {
+     "$ref": "#/definitions/NamespacesList"
+    },
+    "Status": {
+     "enum": [
+      "CREATING",
+      "ACTIVE",
+      "DELETING",
+      "FAILED"
+     ],
+     "type": "string"
+    },
+    "StrategyId": {
+     "minLength": 12,
+     "pattern": "^[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "SEMANTIC",
+      "SUMMARIZATION",
+      "USER_PREFERENCE",
+      "CUSTOM"
+     ],
+     "type": "string"
+    },
+    "UpdatedAt": {
+     "format": "date-time",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "UserPreferenceOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "Consolidation": {
+     "$ref": "#/definitions/UserPreferenceOverrideConsolidationConfigurationInput"
+    },
+    "Extraction": {
+     "$ref": "#/definitions/UserPreferenceOverrideExtractionConfigurationInput"
+    }
+   },
+   "type": "object"
+  },
+  "UserPreferenceOverrideConsolidationConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "AppendToPrompt": {
+     "$ref": "#/definitions/Prompt"
+    },
+    "ModelId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AppendToPrompt",
+    "ModelId"
+   ],
+   "type": "object"
+  },
+  "UserPreferenceOverrideExtractionConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "AppendToPrompt": {
+     "$ref": "#/definitions/Prompt"
+    },
+    "ModelId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AppendToPrompt",
+    "ModelId"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MemoryArn"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "EncryptionKeyArn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "EventExpiryDuration": {
+   "maximum": 365,
+   "minimum": 7,
+   "type": "integer"
+  },
+  "FailureReason": {
+   "type": "string"
+  },
+  "MemoryArn": {
+   "$ref": "#/definitions/MemoryArn"
+  },
+  "MemoryExecutionRoleArn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "MemoryId": {
+   "$ref": "#/definitions/MemoryId"
+  },
+  "MemoryStrategies": {
+   "$ref": "#/definitions/MemoryStrategies"
+  },
+  "Name": {
+   "$ref": "#/definitions/Name"
+  },
+  "Status": {
+   "$ref": "#/definitions/MemoryStatus"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/MemoryArn",
+  "/properties/MemoryId",
+  "/properties/Status",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/FailureReason",
+  "/properties/MemoryStrategies/*/SemanticMemoryStrategy/CreatedAt",
+  "/properties/MemoryStrategies/*/SemanticMemoryStrategy/UpdatedAt",
+  "/properties/MemoryStrategies/*/SemanticMemoryStrategy/StrategyId",
+  "/properties/MemoryStrategies/*/SemanticMemoryStrategy/Status",
+  "/properties/MemoryStrategies/*/SemanticMemoryStrategy/Type",
+  "/properties/MemoryStrategies/*/SummaryMemoryStrategy/CreatedAt",
+  "/properties/MemoryStrategies/*/SummaryMemoryStrategy/UpdatedAt",
+  "/properties/MemoryStrategies/*/SummaryMemoryStrategy/StrategyId",
+  "/properties/MemoryStrategies/*/SummaryMemoryStrategy/Status",
+  "/properties/MemoryStrategies/*/SummaryMemoryStrategy/Type",
+  "/properties/MemoryStrategies/*/UserPreferenceMemoryStrategy/CreatedAt",
+  "/properties/MemoryStrategies/*/UserPreferenceMemoryStrategy/UpdatedAt",
+  "/properties/MemoryStrategies/*/UserPreferenceMemoryStrategy/StrategyId",
+  "/properties/MemoryStrategies/*/UserPreferenceMemoryStrategy/Status",
+  "/properties/MemoryStrategies/*/UserPreferenceMemoryStrategy/Type",
+  "/properties/MemoryStrategies/*/CustomMemoryStrategy/CreatedAt",
+  "/properties/MemoryStrategies/*/CustomMemoryStrategy/UpdatedAt",
+  "/properties/MemoryStrategies/*/CustomMemoryStrategy/StrategyId",
+  "/properties/MemoryStrategies/*/CustomMemoryStrategy/Status",
+  "/properties/MemoryStrategies/*/CustomMemoryStrategy/Type"
+ ],
+ "required": [
+  "Name",
+  "EventExpiryDuration"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BedrockAgentCore::Memory"
+}

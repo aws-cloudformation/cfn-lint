@@ -1,0 +1,331 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Actuator": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedValues": {
+     "$ref": "#/definitions/AllowedValues"
+    },
+    "AssignedValue": {
+     "type": "string"
+    },
+    "DataType": {
+     "$ref": "#/definitions/NodeDataType"
+    },
+    "Description": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
+     "type": "string"
+    },
+    "FullyQualifiedName": {
+     "type": "string"
+    },
+    "Max": {
+     "type": "number"
+    },
+    "Min": {
+     "type": "number"
+    },
+    "Unit": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DataType",
+    "FullyQualifiedName"
+   ],
+   "type": "object"
+  },
+  "AllowedValues": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "Attribute": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedValues": {
+     "$ref": "#/definitions/AllowedValues"
+    },
+    "AssignedValue": {
+     "type": "string"
+    },
+    "DataType": {
+     "$ref": "#/definitions/NodeDataType"
+    },
+    "DefaultValue": {
+     "type": "string"
+    },
+    "Description": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
+     "type": "string"
+    },
+    "FullyQualifiedName": {
+     "type": "string"
+    },
+    "Max": {
+     "type": "number"
+    },
+    "Min": {
+     "type": "number"
+    },
+    "Unit": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DataType",
+    "FullyQualifiedName"
+   ],
+   "type": "object"
+  },
+  "Branch": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
+     "type": "string"
+    },
+    "FullyQualifiedName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "FullyQualifiedName"
+   ],
+   "type": "object"
+  },
+  "Node": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Branch": {
+       "$ref": "#/definitions/Branch"
+      }
+     },
+     "title": "Branch",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Sensor": {
+       "$ref": "#/definitions/Sensor"
+      }
+     },
+     "title": "Sensor",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Actuator": {
+       "$ref": "#/definitions/Actuator"
+      }
+     },
+     "title": "Actuator",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Attribute": {
+       "$ref": "#/definitions/Attribute"
+      }
+     },
+     "title": "Attribute",
+     "type": "object"
+    }
+   ]
+  },
+  "NodeCounts": {
+   "additionalProperties": false,
+   "properties": {
+    "TotalActuators": {
+     "type": "number"
+    },
+    "TotalAttributes": {
+     "type": "number"
+    },
+    "TotalBranches": {
+     "type": "number"
+    },
+    "TotalNodes": {
+     "type": "number"
+    },
+    "TotalSensors": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "NodeDataType": {
+   "enum": [
+    "INT8",
+    "UINT8",
+    "INT16",
+    "UINT16",
+    "INT32",
+    "UINT32",
+    "INT64",
+    "UINT64",
+    "BOOLEAN",
+    "FLOAT",
+    "DOUBLE",
+    "STRING",
+    "UNIX_TIMESTAMP",
+    "INT8_ARRAY",
+    "UINT8_ARRAY",
+    "INT16_ARRAY",
+    "UINT16_ARRAY",
+    "INT32_ARRAY",
+    "UINT32_ARRAY",
+    "INT64_ARRAY",
+    "UINT64_ARRAY",
+    "BOOLEAN_ARRAY",
+    "FLOAT_ARRAY",
+    "DOUBLE_ARRAY",
+    "STRING_ARRAY",
+    "UNIX_TIMESTAMP_ARRAY",
+    "UNKNOWN"
+   ],
+   "type": "string"
+  },
+  "Sensor": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedValues": {
+     "$ref": "#/definitions/AllowedValues"
+    },
+    "DataType": {
+     "$ref": "#/definitions/NodeDataType"
+    },
+    "Description": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
+     "type": "string"
+    },
+    "FullyQualifiedName": {
+     "type": "string"
+    },
+    "Max": {
+     "type": "number"
+    },
+    "Min": {
+     "type": "number"
+    },
+    "Unit": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DataType",
+    "FullyQualifiedName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
+   "type": "string"
+  },
+  "LastModificationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z\\d\\-_:]+$",
+   "type": "string"
+  },
+  "NodeCounts": {
+   "$ref": "#/definitions/NodeCounts"
+  },
+  "Nodes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Node"
+   },
+   "maxItems": 5000,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationTime",
+  "/properties/LastModificationTime",
+  "/properties/NodeCounts/TotalNodes",
+  "/properties/NodeCounts/TotalBranches",
+  "/properties/NodeCounts/TotalSensors",
+  "/properties/NodeCounts/TotalAttributes",
+  "/properties/NodeCounts/TotalActuators"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTFleetWise::SignalCatalog"
+}

@@ -1,0 +1,44 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Schema",
+  "/properties/Domain"
+ ],
+ "primaryIdentifier": [
+  "/properties/SchemaArn"
+ ],
+ "properties": {
+  "Domain": {
+   "enum": [
+    "ECOMMERCE",
+    "VIDEO_ON_DEMAND"
+   ],
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\-_]*",
+   "type": "string"
+  },
+  "Schema": {
+   "maxLength": 10000,
+   "type": "string"
+  },
+  "SchemaArn": {
+   "maxLength": 256,
+   "pattern": "arn:([a-z\\d-]+):personalize:.*:.*:.+",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SchemaArn"
+ ],
+ "required": [
+  "Name",
+  "Schema"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-personalize",
+ "typeName": "AWS::Personalize::Schema"
+}

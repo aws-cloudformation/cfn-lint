@@ -1,0 +1,126 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Id",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "HlsIngest": {
+   "additionalProperties": false,
+   "properties": {
+    "ingestEndpoints": {
+     "items": {
+      "$ref": "#/definitions/IngestEndpoint"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "IngestEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Password": {
+     "type": "string"
+    },
+    "Url": {
+     "type": "string"
+    },
+    "Username": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Id",
+    "Username",
+    "Password",
+    "Url"
+   ],
+   "type": "object"
+  },
+  "LogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroupName": {
+     "format": "AWS::Logs::LogGroup.Name",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "\\A^(\\/aws\\/MediaPackage\\/)[a-zA-Z0-9_-]+\\Z",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "EgressAccessLogs": {
+   "$ref": "#/definitions/LogConfiguration"
+  },
+  "HlsIngest": {
+   "$ref": "#/definitions/HlsIngest"
+  },
+  "Id": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "\\A[0-9a-zA-Z-_]+\\Z",
+   "type": "string"
+  },
+  "IngressAccessLogs": {
+   "$ref": "#/definitions/LogConfiguration"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/HlsIngest/ingestEndpoints/*/Id",
+  "/properties/HlsIngest/ingestEndpoints/*/Username",
+  "/properties/HlsIngest/ingestEndpoints/*/Password",
+  "/properties/HlsIngest/ingestEndpoints/*/Url"
+ ],
+ "required": [
+  "Id"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaPackage::Channel"
+}

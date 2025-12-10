@@ -1,0 +1,129 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AvailabilityZone",
+  "/properties/Encrypted",
+  "/properties/Iops",
+  "/properties/KmsKeyId",
+  "/properties/SizeInGB",
+  "/properties/SnapshotId",
+  "/properties/Throughput",
+  "/properties/VolumeType",
+  "/properties/TagSpecifications"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]+)",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TagSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceType": {
+     "enum": [
+      "instance",
+      "volume",
+      "spot-instances-request",
+      "network-interface"
+     ],
+     "type": "string"
+    },
+    "Tags": {
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "maxItems": 30,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VolumeId"
+ ],
+ "properties": {
+  "AvailabilityZone": {
+   "maxLength": 64,
+   "pattern": "^[a-z]{2}-[a-z]+-\\d[a-z](-[a-z0-9]+)?$",
+   "type": "string"
+  },
+  "Encrypted": {
+   "type": "boolean"
+  },
+  "Iops": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "KmsKeyId": {
+   "maxLength": 128,
+   "type": "string"
+  },
+  "SizeInGB": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "SnapshotId": {
+   "pattern": "^snap-[0-9a-zA-Z]{1,63}$",
+   "type": "string"
+  },
+  "TagSpecifications": {
+   "items": {
+    "$ref": "#/definitions/TagSpecification"
+   },
+   "maxItems": 30,
+   "type": "array"
+  },
+  "Throughput": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "VolumeId": {
+   "pattern": "^vol-[0-9a-zA-Z]{1,63}$",
+   "type": "string"
+  },
+  "VolumeType": {
+   "enum": [
+    "standard",
+    "io1",
+    "io2",
+    "gp2",
+    "sc1",
+    "st1",
+    "gp3"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VolumeId"
+ ],
+ "required": [
+  "AvailabilityZone"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-schema.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::WorkspacesInstances::Volume"
+}

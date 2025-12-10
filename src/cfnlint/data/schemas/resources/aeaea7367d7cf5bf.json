@@ -1,0 +1,107 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/RepositoryLinkId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RepositoryName",
+  "/properties/OwnerId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RepositoryLinkArn"
+ ],
+ "properties": {
+  "ConnectionArn": {
+   "maxLength": 256,
+   "pattern": "arn:(aws|aws-us-gov|aws-cn):.+:.+:[0-9]{12}:.+",
+   "type": "string"
+  },
+  "EncryptionKeyArn": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "arn:(aws|aws-us-gov|aws-cn):.+:.+:[0-9]{12}:.+",
+   "type": "string"
+  },
+  "OwnerId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "[a-za-z0-9_\\.-]+",
+   "type": "string"
+  },
+  "ProviderType": {
+   "enum": [
+    "GitHub",
+    "Bitbucket",
+    "GitHubEnterprise",
+    "GitLab",
+    "GitLabSelfManaged"
+   ],
+   "type": "string"
+  },
+  "RepositoryLinkArn": {
+   "pattern": "arn:(aws|aws-us-gov|aws-cn):.+:.+:[0-9]{12}:.+",
+   "type": "string"
+  },
+  "RepositoryLinkId": {
+   "pattern": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+   "type": "string"
+  },
+  "RepositoryName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-za-z0-9_\\.-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RepositoryLinkArn",
+  "/properties/RepositoryLinkId",
+  "/properties/ProviderType"
+ ],
+ "required": [
+  "RepositoryName",
+  "ConnectionArn",
+  "OwnerId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codestarconnections.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CodeStarConnections::RepositoryLink"
+}

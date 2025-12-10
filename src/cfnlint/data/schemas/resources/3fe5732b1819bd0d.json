@@ -1,0 +1,378 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClientToken"
+ ],
+ "definitions": {
+  "AccountAccessType": {
+   "enum": [
+    "CURRENT_ACCOUNT",
+    "ORGANIZATION"
+   ],
+   "type": "string"
+  },
+  "AssertionAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "Email": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Groups": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Login": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Org": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Role": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AuthenticationProviderTypes": {
+   "enum": [
+    "AWS_SSO",
+    "SAML"
+   ],
+   "type": "string"
+  },
+  "DataSourceType": {
+   "enum": [
+    "AMAZON_OPENSEARCH_SERVICE",
+    "CLOUDWATCH",
+    "PROMETHEUS",
+    "XRAY",
+    "TIMESTREAM",
+    "SITEWISE",
+    "ATHENA",
+    "REDSHIFT"
+   ],
+   "type": "string"
+  },
+  "IdpMetadata": {
+   "additionalProperties": false,
+   "properties": {
+    "Url": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Xml": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "NetworkAccessControl": {
+   "additionalProperties": false,
+   "properties": {
+    "PrefixListIds": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "VpceIds": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "NotificationDestinationType": {
+   "enum": [
+    "SNS"
+   ],
+   "type": "string"
+  },
+  "PermissionType": {
+   "enum": [
+    "CUSTOMER_MANAGED",
+    "SERVICE_MANAGED"
+   ],
+   "type": "string"
+  },
+  "RoleValues": {
+   "additionalProperties": false,
+   "properties": {
+    "Admin": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 256,
+      "minLength": 1,
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Editor": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 256,
+      "minLength": 1,
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "SamlConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedOrganizations": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 256,
+      "minLength": 1,
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "AssertionAttributes": {
+     "$ref": "#/definitions/AssertionAttributes"
+    },
+    "IdpMetadata": {
+     "$ref": "#/definitions/IdpMetadata"
+    },
+    "LoginValidityDuration": {
+     "type": "number"
+    },
+    "RoleValues": {
+     "$ref": "#/definitions/RoleValues"
+    }
+   },
+   "required": [
+    "IdpMetadata"
+   ],
+   "type": "object"
+  },
+  "SamlConfigurationStatus": {
+   "enum": [
+    "CONFIGURED",
+    "NOT_CONFIGURED"
+   ],
+   "type": "string"
+  },
+  "VpcConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SubnetIds": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 6,
+     "minItems": 2,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "SecurityGroupIds",
+    "SubnetIds"
+   ],
+   "type": "object"
+  },
+  "WorkspaceStatus": {
+   "enum": [
+    "ACTIVE",
+    "CREATING",
+    "DELETING",
+    "FAILED",
+    "UPDATING",
+    "UPGRADING",
+    "VERSION_UPDATING",
+    "DELETION_FAILED",
+    "CREATION_FAILED",
+    "UPDATE_FAILED",
+    "UPGRADE_FAILED",
+    "LICENSE_REMOVAL_FAILED",
+    "VERSION_UPDATE_FAILED"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AccountAccessType": {
+   "$ref": "#/definitions/AccountAccessType"
+  },
+  "AuthenticationProviders": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AuthenticationProviderTypes"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ClientToken": {
+   "pattern": "^[!-~]{1,64}$",
+   "type": "string"
+  },
+  "CreationTimestamp": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DataSources": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DataSourceType"
+   },
+   "type": "array"
+  },
+  "Description": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Endpoint": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "GrafanaVersion": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Id": {
+   "pattern": "^g-[0-9a-f]{10}$",
+   "type": "string"
+  },
+  "ModificationTimestamp": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[a-zA-Z0-9-._~]{1,255}$",
+   "type": "string"
+  },
+  "NetworkAccessControl": {
+   "$ref": "#/definitions/NetworkAccessControl"
+  },
+  "NotificationDestinations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/NotificationDestinationType"
+   },
+   "type": "array"
+  },
+  "OrganizationRoleName": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OrganizationalUnits": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "PermissionType": {
+   "$ref": "#/definitions/PermissionType"
+  },
+  "PluginAdminEnabled": {
+   "type": "boolean"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SamlConfiguration": {
+   "$ref": "#/definitions/SamlConfiguration"
+  },
+  "SamlConfigurationStatus": {
+   "$ref": "#/definitions/SamlConfigurationStatus"
+  },
+  "SsoClientId": {
+   "type": "string"
+  },
+  "StackSetName": {
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/WorkspaceStatus"
+  },
+  "VpcConfiguration": {
+   "$ref": "#/definitions/VpcConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/SsoClientId",
+  "/properties/SamlConfigurationStatus",
+  "/properties/Endpoint",
+  "/properties/Status",
+  "/properties/CreationTimestamp",
+  "/properties/ModificationTimestamp"
+ ],
+ "required": [
+  "AuthenticationProviders",
+  "PermissionType",
+  "AccountAccessType"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Grafana::Workspace",
+ "writeOnlyProperties": [
+  "/properties/ClientToken"
+ ]
+}
