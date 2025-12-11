@@ -411,6 +411,7 @@ types: dict[str, str] = {
     "AWS::FMS::ResourceSet": "6fb04db2dcf50bf8",
     "AWS::FSx::DataRepositoryAssociation": "2c944a4b33c2d639",
     "AWS::FSx::FileSystem": "9741d33840560c55",
+    "AWS::FSx::S3AccessPointAttachment": "2f1f4654a56cd64d",
     "AWS::FSx::Snapshot": "656a8874092132a7",
     "AWS::FSx::StorageVirtualMachine": "b62638ce430b0942",
     "AWS::FSx::Volume": "e2217632738abb7f",

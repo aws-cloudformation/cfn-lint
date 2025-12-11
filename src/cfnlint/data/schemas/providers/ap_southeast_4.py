@@ -733,7 +733,7 @@ types: dict[str, str] = {
     "AWS::SystemsManagerSAP::Application": "8196ab023743f75e",
     "AWS::Transfer::Agreement": "ed933cf6f3e7c136",
     "AWS::Transfer::Certificate": "f7478973edec7bd3",
-    "AWS::Transfer::Connector": "06cb0ab9b6f51299",
+    "AWS::Transfer::Connector": "5ff069df52b96462",
     "AWS::Transfer::Profile": "88c7478695f7c070",
     "AWS::Transfer::Server": "90b633961fce2a5f",
     "AWS::Transfer::User": "7dbec614b03c1346",

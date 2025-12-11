@@ -10,6 +10,12 @@
   "/properties/CustomLineItemChargeDetails/Type"
  ],
  "definitions": {
+  "AttributeValue": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9]+$",
+   "type": "string"
+  },
   "BillingPeriodRange": {
    "additionalProperties": false,
    "properties": {
@@ -93,13 +99,23 @@
    "properties": {
     "Attribute": {
      "enum": [
-      "LINE_ITEM_TYPE"
+      "LINE_ITEM_TYPE",
+      "SERVICE"
      ],
      "type": "string"
     },
+    "AttributeValues": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/AttributeValue"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
     "MatchOption": {
      "enum": [
-      "NOT_EQUAL"
+      "NOT_EQUAL",
+      "EQUAL"
      ],
      "type": "string"
     },
@@ -114,8 +130,7 @@
    },
    "required": [
     "Attribute",
-    "MatchOption",
-    "Values"
+    "MatchOption"
    ],
    "type": "object"
   },
@@ -185,7 +200,8 @@
   },
   "ComputationRule": {
    "enum": [
-    "CONSOLIDATED"
+    "CONSOLIDATED",
+    "ITEMIZED"
    ],
    "type": "string"
   },

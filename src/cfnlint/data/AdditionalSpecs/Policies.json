@@ -637,6 +637,12 @@
      "accountInOrganization"
     ]
    },
+   "getgovcloudaccountinformation": {
+    "Resources": [
+     "account",
+     "accountInOrganization"
+    ]
+   },
    "getprimaryemail": {
     "Resources": [
      "accountInOrganization"
@@ -6359,6 +6365,7 @@
    "listagreements": {},
    "listcustomeragreements": {},
    "listreports": {},
+   "listreportversions": {},
    "putaccountsettings": {},
    "terminateagreement": {
     "Resources": [
@@ -8723,6 +8730,7 @@
   "Actions": {
    "createexport": {
     "Resources": [
+     "billingview",
      "table"
     ]
    },
@@ -8770,12 +8778,21 @@
    },
    "updateexport": {
     "Resources": [
+     "billingview",
      "export",
      "table"
     ]
    }
   },
   "Resources": {
+   "billingview": {
+    "ARNFormats": [
+     "arn:${Partition}:billing::${Account}:billingview/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "export": {
     "ARNFormats": [
      "arn:${Partition}:bcm-data-exports:${Region}:${Account}:export/.*"
@@ -9200,6 +9217,7 @@
      "knowledge-base"
     ]
    },
+   "deleteenforcedguardrailconfiguration": {},
    "deleteflow": {
     "Resources": [
      "flow"
@@ -9266,7 +9284,9 @@
    },
    "deleteresourcepolicy": {
     "Resources": [
-     "custom-model"
+     "custom-model",
+     "guardrail",
+     "guardrail-profile"
     ]
    },
    "deletesession": {
@@ -9541,7 +9561,9 @@
    },
    "getresourcepolicy": {
     "Resources": [
-     "custom-model"
+     "custom-model",
+     "guardrail",
+     "guardrail-profile"
     ]
    },
    "getsession": {
@@ -9688,6 +9710,7 @@
      "knowledge-base"
     ]
    },
+   "listenforcedguardrailsconfiguration": {},
    "listevaluationjobs": {},
    "listflowaliases": {
     "Resources": [
@@ -9799,6 +9822,7 @@
      "flow"
     ]
    },
+   "putenforcedguardrailconfiguration": {},
    "putfoundationmodelentitlement": {},
    "putinvocationstep": {
     "Resources": [
@@ -9808,7 +9832,9 @@
    "putmodelinvocationloggingconfiguration": {},
    "putresourcepolicy": {
     "Resources": [
-     "custom-model"
+     "custom-model",
+     "guardrail",
+     "guardrail-profile"
     ]
    },
    "putusecaseformodelaccess": {},
@@ -12220,6 +12246,7 @@
    "listcostallocationtagbackfillhistory": {},
    "listcostallocationtags": {},
    "listcostcategorydefinitions": {},
+   "listcostcategoryresourceassociations": {},
    "listsavingsplanspurchaserecommendationgeneration": {},
    "listtagsforresource": {
     "Resources": [
@@ -66289,6 +66316,102 @@
    }
   }
  },
+ "nova-act": {
+  "Actions": {
+   "createact": {
+    "Resources": [
+     "workflow-definition",
+     "workflow-run"
+    ]
+   },
+   "createsession": {
+    "Resources": [
+     "workflow-definition",
+     "workflow-run"
+    ]
+   },
+   "createworkflowdefinition": {
+    "Resources": [
+     "workflow-definition"
+    ]
+   },
+   "createworkflowrun": {
+    "Resources": [
+     "workflow-definition"
+    ]
+   },
+   "deleteworkflowdefinition": {
+    "Resources": [
+     "workflow-definition"
+    ]
+   },
+   "deleteworkflowrun": {
+    "Resources": [
+     "workflow-definition",
+     "workflow-run"
+    ]
+   },
+   "getworkflowdefinition": {
+    "Resources": [
+     "workflow-definition"
+    ]
+   },
+   "getworkflowrun": {
+    "Resources": [
+     "workflow-definition",
+     "workflow-run"
+    ]
+   },
+   "invokeactstep": {
+    "Resources": [
+     "workflow-definition",
+     "workflow-run"
+    ]
+   },
+   "listacts": {
+    "Resources": [
+     "workflow-definition"
+    ]
+   },
+   "listmodels": {},
+   "listsessions": {
+    "Resources": [
+     "workflow-definition",
+     "workflow-run"
+    ]
+   },
+   "listworkflowdefinitions": {},
+   "listworkflowruns": {
+    "Resources": [
+     "workflow-definition"
+    ]
+   },
+   "updateact": {
+    "Resources": [
+     "workflow-definition",
+     "workflow-run"
+    ]
+   },
+   "updateworkflowrun": {
+    "Resources": [
+     "workflow-definition",
+     "workflow-run"
+    ]
+   }
+  },
+  "Resources": {
+   "workflow-definition": {
+    "ARNFormats": [
+     "arn:${Partition}:nova-act:${Region}:${Account}:workflow-definition/.*"
+    ]
+   },
+   "workflow-run": {
+    "ARNFormats": [
+     "arn:${Partition}:nova-act:${Region}:${Account}:workflow-definition/.*"
+    ]
+   }
+  }
+ },
  "oam": {
   "Actions": {
    "createlink": {
@@ -74663,8 +74786,10 @@
    },
    "addtagstoresource": {
     "Resources": [
+     "auto-backup",
      "cev",
      "cluster",
+     "cluster-auto-backup",
      "cluster-endpoint",
      "cluster-pg",
      "cluster-snapshot",
@@ -75198,8 +75323,10 @@
    },
    "listtagsforresource": {
     "Resources": [
+     "auto-backup",
      "cev",
      "cluster",
+     "cluster-auto-backup",
      "cluster-endpoint",
      "cluster-pg",
      "cluster-snapshot",
@@ -75396,8 +75523,10 @@
    },
    "removetagsfromresource": {
     "Resources": [
+     "auto-backup",
      "cev",
      "cluster",
+     "cluster-auto-backup",
      "cluster-endpoint",
      "cluster-pg",
      "cluster-snapshot",
@@ -75562,6 +75691,9 @@
    "auto-backup": {
     "ARNFormats": [
      "arn:${Partition}:rds:${Region}:${Account}:auto-backup:.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "cev": {
@@ -75584,6 +75716,9 @@
    "cluster-auto-backup": {
     "ARNFormats": [
      "arn:${Partition}:rds:${Region}:${Account}:cluster-auto-backup:.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "cluster-endpoint": {
@@ -95963,9 +96098,25 @@
  },
  "vpce": {
   "Actions": {
-   "allowmultiregion": {}
+   "allowmultiregion": {
+    "Resources": [
+     "vpc-endpoint",
+     "vpc-endpoint-service"
+    ]
+   }
   },
-  "Resources": {}
+  "Resources": {
+   "vpc-endpoint": {
+    "ARNFormats": [
+     "arn:${Partition}:ec2:${Region}:${Account}:vpc-endpoint/.*"
+    ]
+   },
+   "vpc-endpoint-service": {
+    "ARNFormats": [
+     "arn:${Partition}:ec2:${Region}:${Account}:vpc-endpoint-service/.*"
+    ]
+   }
+  }
  },
  "waf": {
   "Actions": {
