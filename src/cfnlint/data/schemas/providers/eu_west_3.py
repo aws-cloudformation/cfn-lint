@@ -191,7 +191,7 @@ types: dict[str, str] = {
     "AWS::CloudFormation::TypeActivation": "6e3bec3534fc9f42",
     "AWS::CloudFormation::WaitCondition": "e62c75075457f02f",
     "AWS::CloudFormation::WaitConditionHandle": "edba290fd70976a3",
-    "AWS::CloudFront::AnycastIpList": "18b526983f016580",
+    "AWS::CloudFront::AnycastIpList": "beb2df4a9b037d07",
     "AWS::CloudFront::CachePolicy": "53d9f632b7e1d5b7",
     "AWS::CloudFront::CloudFrontOriginAccessIdentity": "d2e8d397beac5797",
     "AWS::CloudFront::ConnectionFunction": "d78bd117dcdb2119",
