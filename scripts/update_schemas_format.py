@@ -260,11 +260,21 @@ _manual_patches = {
             path="/properties/SecurityGroups/items",
         ),
         Patch(
-            values={"format": "AWS::EC2::SecurityGroup.Ids"},
+            values={
+                "anyOf": [
+                    {"format": "AWS::EC2::SecurityGroup.Ids"},
+                    {"format": "AWS::EC2::SecurityGroup.Names"},
+                ]
+            },
             path="/properties/SecurityGroupIds",
         ),
         Patch(
-            values={"format": "AWS::EC2::SecurityGroup.Id"},
+            values={
+                "anyOf": [
+                    {"format": "AWS::EC2::SecurityGroup.Id"},
+                    {"format": "AWS::EC2::SecurityGroup.Name"},
+                ]
+            },
             path="/properties/SecurityGroupIds/items",
         ),
         Patch(

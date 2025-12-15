@@ -21,13 +21,27 @@
  },
  {
   "op": "add",
-  "path": "/properties/SecurityGroupIds/format",
-  "value": "AWS::EC2::SecurityGroup.Ids"
+  "path": "/properties/SecurityGroupIds/anyOf",
+  "value": [
+   {
+    "format": "AWS::EC2::SecurityGroup.Ids"
+   },
+   {
+    "format": "AWS::EC2::SecurityGroup.Names"
+   }
+  ]
  },
  {
   "op": "add",
-  "path": "/properties/SecurityGroupIds/items/format",
-  "value": "AWS::EC2::SecurityGroup.Id"
+  "path": "/properties/SecurityGroupIds/items/anyOf",
+  "value": [
+   {
+    "format": "AWS::EC2::SecurityGroup.Id"
+   },
+   {
+    "format": "AWS::EC2::SecurityGroup.Name"
+   }
+  ]
  },
  {
   "op": "add",
