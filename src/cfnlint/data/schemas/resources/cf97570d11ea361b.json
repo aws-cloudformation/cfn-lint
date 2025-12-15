@@ -13,6 +13,30 @@
   "CreatedAt": {
    "type": "string"
   },
+  "CustomerProfilesDomainArn": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):profile:[a-z]{2}-[a-z]{1,10}-[0-9]:[0-9]{12}:(domains/[a-zA-Z_0-9-]{1,255})$",
+   "type": "string"
+  },
+  "CustomerProfilesIntegrationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DomainArn": {
+     "$ref": "#/definitions/CustomerProfilesDomainArn"
+    },
+    "ObjectTypeArn": {
+     "$ref": "#/definitions/CustomerProfilesObjectTypeArn"
+    }
+   },
+   "required": [
+    "DomainArn",
+    "ObjectTypeArn"
+   ],
+   "type": "object"
+  },
+  "CustomerProfilesObjectTypeArn": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):profile:[a-z]{2}-[a-z]{1,10}-[0-9]:[0-9]{12}:(domains/[a-zA-Z_0-9-]{1,255}/object-types/[a-zA-Z_0-9-]{1,255})$",
+   "type": "string"
+  },
   "Description": {
    "maxLength": 255,
    "minLength": 0,
@@ -104,6 +128,9 @@
     "ApplyNormalization": {
      "type": "boolean"
     },
+    "CustomerProfilesIntegrationConfig": {
+     "$ref": "#/definitions/CustomerProfilesIntegrationConfig"
+    },
     "KMSArn": {
      "$ref": "#/definitions/KMSArn"
     },
@@ -124,8 +151,7 @@
     }
    },
    "required": [
-    "Output",
-    "OutputS3Path"
+    "Output"
    ],
    "type": "object"
   },
