@@ -1,0 +1,379 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Endpoints",
+  "/properties/ContactPrePassDurationSeconds",
+  "/properties/ContactPostPassDurationSeconds"
+ ],
+ "definitions": {
+  "AgentStatus": {
+   "enum": [
+    "SUCCESS",
+    "FAILED",
+    "ACTIVE",
+    "INACTIVE"
+   ],
+   "type": "string"
+  },
+  "AuditResults": {
+   "enum": [
+    "HEALTHY",
+    "UNHEALTHY"
+   ],
+   "type": "string"
+  },
+  "ConnectionDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "Mtu": {
+     "maximum": 1500,
+     "minimum": 1400,
+     "type": "integer"
+    },
+    "SocketAddress": {
+     "$ref": "#/definitions/SocketAddress"
+    }
+   },
+   "required": [
+    "SocketAddress"
+   ],
+   "type": "object"
+  },
+  "CreateEndpointDetails": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "UplinkAwsGroundStationAgentEndpoint"
+     ]
+    },
+    {
+     "required": [
+      "DownlinkAwsGroundStationAgentEndpoint"
+     ]
+    }
+   ],
+   "properties": {
+    "DownlinkAwsGroundStationAgentEndpoint": {
+     "$ref": "#/definitions/DownlinkAwsGroundStationAgentEndpoint"
+    },
+    "UplinkAwsGroundStationAgentEndpoint": {
+     "$ref": "#/definitions/UplinkAwsGroundStationAgentEndpoint"
+    }
+   },
+   "type": "object"
+  },
+  "DownlinkAwsGroundStationAgentEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "DataflowDetails": {
+     "$ref": "#/definitions/DownlinkDataflowDetails"
+    },
+    "Name": {
+     "pattern": "^[ a-zA-Z0-9_:-]{1,256}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "DataflowDetails"
+   ],
+   "type": "object"
+  },
+  "DownlinkAwsGroundStationAgentEndpointDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "AgentStatus": {
+     "$ref": "#/definitions/AgentStatus"
+    },
+    "AuditResults": {
+     "$ref": "#/definitions/AuditResults"
+    },
+    "DataflowDetails": {
+     "$ref": "#/definitions/DownlinkDataflowDetails"
+    },
+    "Name": {
+     "pattern": "^[ a-zA-Z0-9_:-]{1,256}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "DataflowDetails"
+   ],
+   "type": "object"
+  },
+  "DownlinkConnectionDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "AgentIpAndPortAddress": {
+     "$ref": "#/definitions/RangedConnectionDetails"
+    },
+    "EgressAddressAndPort": {
+     "$ref": "#/definitions/ConnectionDetails"
+    }
+   },
+   "required": [
+    "EgressAddressAndPort",
+    "AgentIpAndPortAddress"
+   ],
+   "type": "object"
+  },
+  "DownlinkDataflowDetails": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "AgentConnectionDetails"
+     ]
+    }
+   ],
+   "properties": {
+    "AgentConnectionDetails": {
+     "$ref": "#/definitions/DownlinkConnectionDetails"
+    }
+   },
+   "type": "object"
+  },
+  "EndpointDetails": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "UplinkAwsGroundStationAgentEndpoint"
+     ]
+    },
+    {
+     "required": [
+      "DownlinkAwsGroundStationAgentEndpoint"
+     ]
+    }
+   ],
+   "properties": {
+    "DownlinkAwsGroundStationAgentEndpoint": {
+     "$ref": "#/definitions/DownlinkAwsGroundStationAgentEndpointDetails"
+    },
+    "UplinkAwsGroundStationAgentEndpoint": {
+     "$ref": "#/definitions/UplinkAwsGroundStationAgentEndpointDetails"
+    }
+   },
+   "type": "object"
+  },
+  "IntegerRange": {
+   "additionalProperties": false,
+   "properties": {
+    "Maximum": {
+     "type": "integer"
+    },
+    "Minimum": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Minimum",
+    "Maximum"
+   ],
+   "type": "object"
+  },
+  "RangedConnectionDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "Mtu": {
+     "maximum": 1500,
+     "minimum": 1400,
+     "type": "integer"
+    },
+    "SocketAddress": {
+     "$ref": "#/definitions/RangedSocketAddress"
+    }
+   },
+   "required": [
+    "SocketAddress"
+   ],
+   "type": "object"
+  },
+  "RangedSocketAddress": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "pattern": "^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$",
+     "type": "string"
+    },
+    "PortRange": {
+     "$ref": "#/definitions/IntegerRange"
+    }
+   },
+   "required": [
+    "Name",
+    "PortRange"
+   ],
+   "type": "object"
+  },
+  "SocketAddress": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Name",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "pattern": "^[ a-zA-Z0-9\\+\\-=._:/@]{1,128}$",
+     "type": "string"
+    },
+    "Value": {
+     "pattern": "^[ a-zA-Z0-9\\+\\-=._:/@]{1,256}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UplinkAwsGroundStationAgentEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "DataflowDetails": {
+     "$ref": "#/definitions/UplinkDataflowDetails"
+    },
+    "Name": {
+     "pattern": "^[ a-zA-Z0-9_:-]{1,256}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "DataflowDetails"
+   ],
+   "type": "object"
+  },
+  "UplinkAwsGroundStationAgentEndpointDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "AgentStatus": {
+     "$ref": "#/definitions/AgentStatus"
+    },
+    "AuditResults": {
+     "$ref": "#/definitions/AuditResults"
+    },
+    "DataflowDetails": {
+     "$ref": "#/definitions/UplinkDataflowDetails"
+    },
+    "Name": {
+     "pattern": "^[ a-zA-Z0-9_:-]{1,256}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "DataflowDetails"
+   ],
+   "type": "object"
+  },
+  "UplinkConnectionDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "AgentIpAndPortAddress": {
+     "$ref": "#/definitions/RangedConnectionDetails"
+    },
+    "IngressAddressAndPort": {
+     "$ref": "#/definitions/ConnectionDetails"
+    }
+   },
+   "required": [
+    "IngressAddressAndPort",
+    "AgentIpAndPortAddress"
+   ],
+   "type": "object"
+  },
+  "UplinkDataflowDetails": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "AgentConnectionDetails"
+     ]
+    }
+   ],
+   "properties": {
+    "AgentConnectionDetails": {
+     "$ref": "#/definitions/UplinkConnectionDetails"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
+   "type": "string"
+  },
+  "ContactPostPassDurationSeconds": {
+   "maximum": 480,
+   "minimum": 30,
+   "type": "integer"
+  },
+  "ContactPrePassDurationSeconds": {
+   "maximum": 480,
+   "minimum": 30,
+   "type": "integer"
+  },
+  "EndpointDetails": {
+   "items": {
+    "$ref": "#/definitions/EndpointDetails"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "Endpoints": {
+   "items": {
+    "$ref": "#/definitions/CreateEndpointDetails"
+   },
+   "maxItems": 12,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/EndpointDetails",
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ground-station.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GroundStation::DataflowEndpointGroupV2",
+ "writeOnlyProperties": [
+  "/properties/Endpoints"
+ ]
+}

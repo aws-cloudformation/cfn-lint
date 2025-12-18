@@ -1,0 +1,298 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainId"
+ ],
+ "definitions": {
+  "BooleanCondition": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "EqualTo": {
+       "$ref": "#/definitions/BooleanOperands"
+      }
+     },
+     "required": [
+      "EqualTo"
+     ],
+     "title": "EqualTo",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "NotEqualTo": {
+       "$ref": "#/definitions/BooleanOperands"
+      }
+     },
+     "required": [
+      "NotEqualTo"
+     ],
+     "title": "NotEqualTo",
+     "type": "object"
+    }
+   ]
+  },
+  "BooleanOperands": {
+   "additionalProperties": false,
+   "properties": {
+    "OperandOne": {
+     "$ref": "#/definitions/OperandOne"
+    },
+    "OperandTwo": {
+     "$ref": "#/definitions/OperandTwo"
+    },
+    "Result": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "OperandOne",
+    "OperandTwo",
+    "Result"
+   ],
+   "type": "object"
+  },
+  "CaseRuleDetails": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Required": {
+       "$ref": "#/definitions/RequiredCaseRule"
+      }
+     },
+     "required": [
+      "Required"
+     ],
+     "title": "Required",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Hidden": {
+       "$ref": "#/definitions/HiddenCaseRule"
+      }
+     },
+     "required": [
+      "Hidden"
+     ],
+     "title": "Hidden",
+     "type": "object"
+    }
+   ]
+  },
+  "EmptyOperandValue": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "HiddenCaseRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/BooleanCondition"
+     },
+     "maxItems": 100,
+     "type": "array"
+    },
+    "DefaultValue": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Conditions",
+    "DefaultValue"
+   ],
+   "type": "object"
+  },
+  "OperandOne": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "FieldId": {
+       "maxLength": 500,
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "required": [
+      "FieldId"
+     ],
+     "title": "FieldId",
+     "type": "object"
+    }
+   ]
+  },
+  "OperandTwo": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "StringValue": {
+       "maxLength": 1500,
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "required": [
+      "StringValue"
+     ],
+     "title": "StringValue",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "BooleanValue": {
+       "type": "boolean"
+      }
+     },
+     "required": [
+      "BooleanValue"
+     ],
+     "title": "BooleanValue",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "DoubleValue": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "DoubleValue"
+     ],
+     "title": "DoubleValue",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "EmptyValue": {
+       "$ref": "#/definitions/EmptyOperandValue"
+      }
+     },
+     "required": [
+      "EmptyValue"
+     ],
+     "title": "EmptyValue",
+     "type": "object"
+    }
+   ]
+  },
+  "RequiredCaseRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/BooleanCondition"
+     },
+     "maxItems": 100,
+     "type": "array"
+    },
+    "DefaultValue": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Conditions",
+    "DefaultValue"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CaseRuleArn"
+ ],
+ "properties": {
+  "CaseRuleArn": {
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CaseRuleId": {
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CreatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "type": "string"
+  },
+  "DomainId": {
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^.*[\\S]$",
+   "type": "string"
+  },
+  "Rule": {
+   "$ref": "#/definitions/CaseRuleDetails"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CaseRuleId",
+  "/properties/CreatedTime",
+  "/properties/LastModifiedTime",
+  "/properties/CaseRuleArn"
+ ],
+ "required": [
+  "Name",
+  "Rule"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Cases::CaseRule"
+}

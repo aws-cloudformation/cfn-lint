@@ -1,0 +1,164 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainId"
+ ],
+ "definitions": {
+  "LayoutConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultLayout": {
+     "maxLength": 500,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RequiredField": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldId": {
+     "maxLength": 500,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "FieldId"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TemplateRule": {
+   "additionalProperties": false,
+   "properties": {
+    "CaseRuleId": {
+     "maxLength": 500,
+     "minLength": 1,
+     "type": "string"
+    },
+    "FieldId": {
+     "maxLength": 500,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "CaseRuleId"
+   ],
+   "type": "object"
+  },
+  "TemplateStatus": {
+   "enum": [
+    "Active",
+    "Inactive"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TemplateArn"
+ ],
+ "properties": {
+  "CreatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "type": "string"
+  },
+  "DomainId": {
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "LayoutConfiguration": {
+   "$ref": "#/definitions/LayoutConfiguration"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^.*[\\S]$",
+   "type": "string"
+  },
+  "RequiredFields": {
+   "items": {
+    "$ref": "#/definitions/RequiredField"
+   },
+   "maxItems": 100,
+   "type": "array"
+  },
+  "Rules": {
+   "items": {
+    "$ref": "#/definitions/TemplateRule"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "Status": {
+   "$ref": "#/definitions/TemplateStatus"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TemplateArn": {
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "TemplateId": {
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedTime",
+  "/properties/LastModifiedTime",
+  "/properties/TemplateArn",
+  "/properties/TemplateId"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Cases::Template"
+}

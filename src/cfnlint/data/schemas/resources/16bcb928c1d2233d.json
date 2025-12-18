@@ -1,0 +1,93 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/WindowId"
+ ],
+ "definitions": {
+  "Targets": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 163,
+     "minLength": 1,
+     "pattern": "^[\\p{L}\\p{Z}\\p{N}_.:/=\\-@]*$|resource-groups:ResourceTypeFilters|resource-groups:Name",
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 50,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Values",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WindowId",
+  "/properties/WindowTargetId"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 3,
+   "pattern": "^[a-zA-Z0-9_\\-.]{3,128}$",
+   "type": "string"
+  },
+  "OwnerInformation": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResourceType": {
+   "enum": [
+    "INSTANCE",
+    "RESOURCE_GROUP"
+   ],
+   "type": "string"
+  },
+  "Targets": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Targets"
+   },
+   "maxItems": 5,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "WindowId": {
+   "maxLength": 20,
+   "minLength": 20,
+   "pattern": "^mw-[0-9a-f]{17}$",
+   "type": "string"
+  },
+  "WindowTargetId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/WindowTargetId"
+ ],
+ "required": [
+  "WindowId",
+  "ResourceType",
+  "Targets"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ssm/tree/master/aws-ssm-maintenancewindowtask",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::SSM::MaintenanceWindowTarget"
+}

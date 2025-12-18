@@ -1,0 +1,189 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainId"
+ ],
+ "definitions": {
+  "BasicLayout": {
+   "additionalProperties": false,
+   "properties": {
+    "MoreInfo": {
+     "$ref": "#/definitions/LayoutSections"
+    },
+    "TopPanel": {
+     "$ref": "#/definitions/LayoutSections"
+    }
+   },
+   "type": "object"
+  },
+  "FieldGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "Fields": {
+     "items": {
+      "$ref": "#/definitions/FieldItem"
+     },
+     "maxItems": 220,
+     "type": "array"
+    },
+    "Name": {
+     "maxLength": 100,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Fields"
+   ],
+   "type": "object"
+  },
+  "FieldItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "maxLength": 500,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "LayoutContent": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Basic": {
+       "$ref": "#/definitions/BasicLayout"
+      }
+     },
+     "required": [
+      "Basic"
+     ],
+     "title": "Basic",
+     "type": "object"
+    }
+   ]
+  },
+  "LayoutSections": {
+   "additionalProperties": false,
+   "properties": {
+    "Sections": {
+     "items": {
+      "$ref": "#/definitions/Section"
+     },
+     "maxItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Section": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "FieldGroup": {
+       "$ref": "#/definitions/FieldGroup"
+      }
+     },
+     "required": [
+      "FieldGroup"
+     ],
+     "title": "FieldGroup",
+     "type": "object"
+    }
+   ]
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LayoutArn"
+ ],
+ "properties": {
+  "Content": {
+   "$ref": "#/definitions/LayoutContent"
+  },
+  "CreatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DomainId": {
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "LayoutArn": {
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LayoutId": {
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^.*[\\S]$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedTime",
+  "/properties/LastModifiedTime",
+  "/properties/LayoutArn",
+  "/properties/LayoutId"
+ ],
+ "required": [
+  "Content",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Cases::Layout"
+}
