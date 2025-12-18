@@ -73840,6 +73840,11 @@
     ]
    },
    "getgroupmapping": {},
+   "getidentitycontext": {
+    "Resources": [
+     "user"
+    ]
+   },
    "getsessionembedurl": {},
    "listactionconnectors": {},
    "listagents": {
@@ -76223,7 +76228,11 @@
      "parametergroup"
     ]
    },
-   "describeclusters": {},
+   "describeclusters": {
+    "Resources": [
+     "cluster"
+    ]
+   },
    "describeclustersecuritygroups": {},
    "describeclustersnapshots": {},
    "describeclustersubnetgroups": {},
@@ -87488,6 +87497,7 @@
    "getassociationforservicequotatemplate": {},
    "getautomanagementconfiguration": {},
    "getawsdefaultservicequota": {},
+   "getquotautilizationreport": {},
    "getrequestedservicequotachange": {},
    "getservicequota": {},
    "getservicequotaincreaserequestfromtemplate": {},
@@ -87509,6 +87519,7 @@
     ]
    },
    "startautomanagement": {},
+   "startquotautilizationreport": {},
    "stopautomanagement": {},
    "tagresource": {},
    "untagresource": {},
@@ -90559,12 +90570,14 @@
    "startautomationexecution": {
     "Resources": [
      "automation-definition",
+     "automation-execution",
      "document"
     ]
    },
    "startchangerequestexecution": {
     "Resources": [
      "automation-definition",
+     "automation-execution",
      "document"
     ]
    },
@@ -90696,6 +90709,9 @@
    "automation-definition": {
     "ARNFormats": [
      "arn:${Partition}:ssm:${Region}:${Account}:.*"
+    ],
+    "ConditionKeys": [
+     "ssm:DocumentType"
     ]
    },
    "automation-execution": {
@@ -93808,6 +93824,17 @@
      "db-parameter-group"
     ]
    },
+   "rebootdbcluster": {
+    "Resources": [
+     "db-cluster",
+     "db-instance"
+    ]
+   },
+   "rebootdbinstance": {
+    "Resources": [
+     "db-instance"
+    ]
+   },
    "tagresource": {
     "Resources": [
      "db-cluster",
@@ -94831,13 +94858,29 @@
      "package"
     ]
    },
-   "listcampaignrepositories": {},
+   "listcampaignrepositories": {
+    "Resources": [
+     "campaign"
+    ]
+   },
    "listcampaigns": {},
    "listknowledgeitems": {},
    "listtagsforresource": {},
    "listtransformationpackagemetadata": {},
-   "tagresource": {},
-   "untagresource": {},
+   "tagresource": {
+    "Resources": [
+     "campaign",
+     "knowledge-item",
+     "package"
+    ]
+   },
+   "untagresource": {
+    "Resources": [
+     "campaign",
+     "knowledge-item",
+     "package"
+    ]
+   },
    "updatecampaign": {
     "Resources": [
      "campaign"
@@ -94848,7 +94891,11 @@
      "campaign"
     ]
    },
-   "updateknowledgeitemconfiguration": {},
+   "updateknowledgeitemconfiguration": {
+    "Resources": [
+     "package"
+    ]
+   },
    "updateknowledgeitemstatus": {
     "Resources": [
      "knowledge-item"
@@ -94859,21 +94906,25 @@
    "campaign": {
     "ARNFormats": [
      "arn:${Partition}:transform-custom:${Region}:${Account}:campaign/.*"
-    ]
-   },
-   "conversation": {
-    "ARNFormats": [
-     "arn:${Partition}:transform-custom:${Region}:${Account}:conversation/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "knowledge-item": {
     "ARNFormats": [
      "arn:${Partition}:transform-custom:${Region}:${Account}:package/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "package": {
     "ARNFormats": [
      "arn:${Partition}:transform-custom:${Region}:${Account}:package/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    }
   }

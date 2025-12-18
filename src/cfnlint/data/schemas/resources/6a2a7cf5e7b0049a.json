@@ -1,0 +1,154 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "EnvironmentVariable": {
+   "additionalProperties": false,
+   "insertionOrder": false,
+   "properties": {
+    "Name": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "[a-zA-Z_][a-zA-Z_0-9]*",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "insertionOrder": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "maxLength": 4096,
+      "minLength": 1,
+      "pattern": "^sg-[0-9a-fA-F]{8,}$",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    },
+    "SubnetIds": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "pattern": "^subnet-[0-9a-fA-F]{8,}$",
+      "type": "string"
+     },
+     "maxItems": 8,
+     "minItems": 1,
+     "type": "array"
+    },
+    "VpcId": {
+     "format": "AWS::EC2::VPC.Id",
+     "maxLength": 4096,
+     "minLength": 1,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecurityGroupIds",
+    "SubnetIds",
+    "VpcId"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1011,
+   "minLength": 32,
+   "pattern": "^arn:.+",
+   "type": "string"
+  },
+  "DefaultJobTimeoutMinutes": {
+   "maximum": 150,
+   "minimum": 5,
+   "type": "integer"
+  },
+  "EnvironmentVariables": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EnvironmentVariable"
+   },
+   "maxItems": 32,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ExecutionRoleArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[^:]*:iam::[0-9]{12}:role/.+",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcConfig": {
+   "$ref": "#/definitions/VpcConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DeviceFarm::Project"
+}

@@ -1,0 +1,126 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/DomainId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainId",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "FieldType": {
+   "enum": [
+    "Text",
+    "Number",
+    "Boolean",
+    "DateTime",
+    "SingleSelect",
+    "Url",
+    "User"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FieldArn"
+ ],
+ "properties": {
+  "CreatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "type": "string"
+  },
+  "DomainId": {
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FieldArn": {
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FieldId": {
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^.*[\\S]$",
+   "type": "string"
+  },
+  "Namespace": {
+   "enum": [
+    "System",
+    "Custom"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "Type": {
+   "$ref": "#/definitions/FieldType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/FieldArn",
+  "/properties/FieldId",
+  "/properties/Namespace",
+  "/properties/CreatedTime",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "Name",
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Cases::Field"
+}
