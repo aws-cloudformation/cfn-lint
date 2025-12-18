@@ -1,3 +1,11 @@
+### v1.43.1
+## What's Changed
+* SecurityGroupIds can take a name from a default VPC by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4324
+* add permissions to github actions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4327
+* Update CloudFormation schemas to 2025-12-18 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4325
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.43.0...v1.43.1
+
 ### v1.43.0
 ## What's Changed
 * Add `us-isob-west-1` region by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4318
