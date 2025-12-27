@@ -17,37 +17,27 @@
    "pattern": "^(\\d\\d\\d\\d)-([0][1-9]|[1][0-2])-([0][1-9]|[1-2](\\d)|[3][0-1])[T](?:([0-1](\\d)|[2][0-3]):[0-5](\\d):[0-5](\\d)|23:59:60)(?:\\.(\\d)+)?([Z]|[+-](\\d\\d)(:?(\\d\\d))?)$",
    "type": "string"
   },
+  "JiraCloudProviderConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ProjectKey": {
+     "maxLength": 10,
+     "minLength": 2,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ProjectKey"
+   ],
+   "type": "object"
+  },
   "Provider": {
    "oneOf": [
     {
      "additionalProperties": false,
      "properties": {
       "JiraCloud": {
-       "additionalProperties": false,
-       "properties": {
-        "AuthStatus": {
-         "$ref": "#/definitions/AuthStatus"
-        },
-        "AuthUrl": {
-         "pattern": ".*\\S.*",
-         "type": "string"
-        },
-        "CloudId": {
-         "type": "string"
-        },
-        "Domain": {
-         "type": "string"
-        },
-        "ProjectKey": {
-         "maxLength": 10,
-         "minLength": 2,
-         "type": "string"
-        }
-       },
-       "required": [
-        "ProjectKey"
-       ],
-       "type": "object"
+       "$ref": "#/definitions/JiraCloudProviderConfiguration"
       }
      },
      "required": [
@@ -59,28 +49,7 @@
      "additionalProperties": false,
      "properties": {
       "ServiceNow": {
-       "additionalProperties": false,
-       "properties": {
-        "AuthStatus": {
-         "$ref": "#/definitions/AuthStatus"
-        },
-        "InstanceName": {
-         "maxLength": 128,
-         "minLength": 1,
-         "type": "string"
-        },
-        "SecretArn": {
-         "maxLength": 2048,
-         "minLength": 20,
-         "pattern": ".*\\S.*",
-         "type": "string"
-        }
-       },
-       "required": [
-        "InstanceName",
-        "SecretArn"
-       ],
-       "type": "object"
+       "$ref": "#/definitions/ServiceNowProviderConfiguration"
       }
      },
      "required": [
@@ -88,6 +57,27 @@
      ],
      "type": "object"
     }
+   ],
+   "type": "object"
+  },
+  "ServiceNowProviderConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SecretArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "InstanceName",
+    "SecretArn"
    ],
    "type": "object"
   },
@@ -168,12 +158,7 @@
   "/properties/ConnectorStatus",
   "/properties/LastUpdatedAt",
   "/properties/LastCheckedAt",
-  "/properties/CreatedAt",
-  "/properties/Provider/JiraCloud/Domain",
-  "/properties/Provider/JiraCloud/AuthUrl",
-  "/properties/Provider/JiraCloud/CloudId",
-  "/properties/Provider/JiraCloud/AuthStatus",
-  "/properties/Provider/ServiceNow/AuthStatus"
+  "/properties/CreatedAt"
  ],
  "required": [
   "Name",

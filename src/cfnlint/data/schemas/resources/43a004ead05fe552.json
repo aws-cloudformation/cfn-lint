@@ -414,6 +414,9 @@
     "DataLabels": {
      "$ref": "#/definitions/DataLabelOptions"
     },
+    "DefaultSeriesSettings": {
+     "$ref": "#/definitions/BarChartDefaultSeriesSettings"
+    },
     "FieldWells": {
      "$ref": "#/definitions/BarChartFieldWells"
     },
@@ -431,6 +434,14 @@
       "$ref": "#/definitions/ReferenceLine"
      },
      "maxItems": 20,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Series": {
+     "items": {
+      "$ref": "#/definitions/BarSeriesItem"
+     },
+     "maxItems": 2000,
      "minItems": 0,
      "type": "array"
     },
@@ -455,6 +466,18 @@
    },
    "type": "object"
   },
+  "BarChartDefaultSeriesSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "BorderSettings": {
+     "$ref": "#/definitions/BorderSettings"
+    },
+    "DecalSettings": {
+     "$ref": "#/definitions/DecalSettings"
+    }
+   },
+   "type": "object"
+  },
   "BarChartFieldWells": {
    "additionalProperties": false,
    "properties": {
@@ -470,6 +493,18 @@
     "VERTICAL"
    ],
    "type": "string"
+  },
+  "BarChartSeriesSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "BorderSettings": {
+     "$ref": "#/definitions/BorderSettings"
+    },
+    "DecalSettings": {
+     "$ref": "#/definitions/DecalSettings"
+    }
+   },
+   "type": "object"
   },
   "BarChartSortConfiguration": {
    "additionalProperties": false,
@@ -553,6 +588,11 @@
    "required": [
     "VisualId"
    ],
+   "type": "object"
+  },
+  "BarSeriesItem": {
+   "additionalProperties": false,
+   "properties": {},
    "type": "object"
   },
   "BarsArrangement": {
@@ -729,6 +769,22 @@
    "properties": {
     "After": {
      "$ref": "#/definitions/SectionAfterPageBreak"
+    }
+   },
+   "type": "object"
+  },
+  "BorderSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "BorderColor": {
+     "pattern": "^#[A-F0-9]{6}(?:[A-F0-9]{2})?$",
+     "type": "string"
+    },
+    "BorderVisibility": {
+     "$ref": "#/definitions/Visibility"
+    },
+    "BorderWidth": {
+     "type": "string"
     }
    },
    "type": "object"
@@ -1225,6 +1281,9 @@
     "Column": {
      "$ref": "#/definitions/ColumnIdentifier"
     },
+    "DecalSettingsConfiguration": {
+     "$ref": "#/definitions/DecalSettingsConfiguration"
+    },
     "FormatConfiguration": {
      "$ref": "#/definitions/FormatConfiguration"
     },
@@ -1378,6 +1437,9 @@
     "ColorLabelOptions": {
      "$ref": "#/definitions/ChartAxisLabelOptions"
     },
+    "DefaultSeriesSettings": {
+     "$ref": "#/definitions/ComboChartDefaultSeriesSettings"
+    },
     "FieldWells": {
      "$ref": "#/definitions/ComboChartFieldWells"
     },
@@ -1410,6 +1472,14 @@
     "SecondaryYAxisLabelOptions": {
      "$ref": "#/definitions/ChartAxisLabelOptions"
     },
+    "Series": {
+     "items": {
+      "$ref": "#/definitions/ComboSeriesItem"
+     },
+     "maxItems": 2000,
+     "minItems": 0,
+     "type": "array"
+    },
     "SingleAxisOptions": {
      "$ref": "#/definitions/SingleAxisOptions"
     },
@@ -1425,11 +1495,47 @@
    },
    "type": "object"
   },
+  "ComboChartDefaultSeriesSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "BorderSettings": {
+     "$ref": "#/definitions/BorderSettings"
+    },
+    "DecalSettings": {
+     "$ref": "#/definitions/DecalSettings"
+    },
+    "LineStyleSettings": {
+     "$ref": "#/definitions/LineChartLineStyleSettings"
+    },
+    "MarkerStyleSettings": {
+     "$ref": "#/definitions/LineChartMarkerStyleSettings"
+    }
+   },
+   "type": "object"
+  },
   "ComboChartFieldWells": {
    "additionalProperties": false,
    "properties": {
     "ComboChartAggregatedFieldWells": {
      "$ref": "#/definitions/ComboChartAggregatedFieldWells"
+    }
+   },
+   "type": "object"
+  },
+  "ComboChartSeriesSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "BorderSettings": {
+     "$ref": "#/definitions/BorderSettings"
+    },
+    "DecalSettings": {
+     "$ref": "#/definitions/DecalSettings"
+    },
+    "LineStyleSettings": {
+     "$ref": "#/definitions/LineChartLineStyleSettings"
+    },
+    "MarkerStyleSettings": {
+     "$ref": "#/definitions/LineChartMarkerStyleSettings"
     }
    },
    "type": "object"
@@ -1505,6 +1611,11 @@
    "required": [
     "VisualId"
    ],
+   "type": "object"
+  },
+  "ComboSeriesItem": {
+   "additionalProperties": false,
+   "properties": {},
    "type": "object"
   },
   "CommitMode": {
@@ -2162,6 +2273,9 @@
     "ExportWithHiddenFieldsOption": {
      "$ref": "#/definitions/ExportWithHiddenFieldsOption"
     },
+    "QuickSuiteActionsOption": {
+     "$ref": "#/definitions/QuickSuiteActionsOption"
+    },
     "SheetControlsOption": {
      "$ref": "#/definitions/SheetControlsOption"
     },
@@ -2315,7 +2429,7 @@
      "items": {
       "$ref": "#/definitions/ParameterDeclaration"
      },
-     "maxItems": 200,
+     "maxItems": 400,
      "minItems": 0,
      "type": "array"
     },
@@ -2384,6 +2498,46 @@
      "type": "number"
     }
    },
+   "type": "object"
+  },
+  "DataFieldBarSeriesItem": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldId": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "FieldValue": {
+     "type": "string"
+    },
+    "Settings": {
+     "$ref": "#/definitions/BarChartSeriesSettings"
+    }
+   },
+   "required": [
+    "FieldId"
+   ],
+   "type": "object"
+  },
+  "DataFieldComboSeriesItem": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldId": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "FieldValue": {
+     "type": "string"
+    },
+    "Settings": {
+     "$ref": "#/definitions/ComboChartSeriesSettings"
+    }
+   },
+   "required": [
+    "FieldId"
+   ],
    "type": "object"
   },
   "DataFieldSeriesItem": {
@@ -2895,6 +3049,78 @@
     "THURSDAY",
     "FRIDAY",
     "SATURDAY"
+   ],
+   "type": "string"
+  },
+  "DecalPatternType": {
+   "enum": [
+    "SOLID",
+    "DIAGONAL_MEDIUM",
+    "CIRCLE_MEDIUM",
+    "DIAMOND_GRID_MEDIUM",
+    "CHECKERBOARD_MEDIUM",
+    "TRIANGLE_MEDIUM",
+    "DIAGONAL_OPPOSITE_MEDIUM",
+    "DIAMOND_MEDIUM",
+    "DIAGONAL_LARGE",
+    "CIRCLE_LARGE",
+    "DIAMOND_GRID_LARGE",
+    "CHECKERBOARD_LARGE",
+    "TRIANGLE_LARGE",
+    "DIAGONAL_OPPOSITE_LARGE",
+    "DIAMOND_LARGE",
+    "DIAGONAL_SMALL",
+    "CIRCLE_SMALL",
+    "DIAMOND_GRID_SMALL",
+    "CHECKERBOARD_SMALL",
+    "TRIANGLE_SMALL",
+    "DIAGONAL_OPPOSITE_SMALL",
+    "DIAMOND_SMALL"
+   ],
+   "type": "string"
+  },
+  "DecalSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "DecalColor": {
+     "pattern": "^#[A-F0-9]{6}(?:[A-F0-9]{2})?$",
+     "type": "string"
+    },
+    "DecalPatternType": {
+     "$ref": "#/definitions/DecalPatternType"
+    },
+    "DecalStyleType": {
+     "$ref": "#/definitions/DecalStyleType"
+    },
+    "DecalVisibility": {
+     "$ref": "#/definitions/Visibility"
+    },
+    "ElementValue": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DecalSettingsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomDecalSettings": {
+     "items": {
+      "$ref": "#/definitions/DecalSettings"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "DecalStyleType": {
+   "enum": [
+    "Manual",
+    "Auto"
    ],
    "type": "string"
   },
@@ -3465,6 +3691,23 @@
    },
    "type": "object"
   },
+  "FieldBarSeriesItem": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldId": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Settings": {
+     "$ref": "#/definitions/BarChartSeriesSettings"
+    }
+   },
+   "required": [
+    "FieldId"
+   ],
+   "type": "object"
+  },
   "FieldBasedTooltip": {
    "additionalProperties": false,
    "properties": {
@@ -3483,6 +3726,23 @@
      "$ref": "#/definitions/TooltipTitleType"
     }
    },
+   "type": "object"
+  },
+  "FieldComboSeriesItem": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldId": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Settings": {
+     "$ref": "#/definitions/ComboChartSeriesSettings"
+    }
+   },
+   "required": [
+    "FieldId"
+   ],
    "type": "object"
   },
   "FieldLabelType": {
@@ -4438,6 +4698,11 @@
     "BackgroundStyle": {
      "$ref": "#/definitions/FreeFormLayoutElementBackgroundStyle"
     },
+    "BorderRadius": {
+     "maxLength": 50,
+     "minLength": 0,
+     "type": "string"
+    },
     "BorderStyle": {
      "$ref": "#/definitions/FreeFormLayoutElementBorderStyle"
     },
@@ -4455,6 +4720,11 @@
     },
     "LoadingAnimation": {
      "$ref": "#/definitions/LoadingAnimation"
+    },
+    "Padding": {
+     "maxLength": 200,
+     "minLength": 0,
+     "type": "string"
     },
     "RenderingRules": {
      "items": {
@@ -4512,6 +4782,11 @@
     },
     "Visibility": {
      "$ref": "#/definitions/Visibility"
+    },
+    "Width": {
+     "maxLength": 50,
+     "minLength": 0,
+     "type": "string"
     }
    },
    "type": "object"
@@ -5651,6 +5926,17 @@
   "GridLayoutElement": {
    "additionalProperties": false,
    "properties": {
+    "BackgroundStyle": {
+     "$ref": "#/definitions/GridLayoutElementBackgroundStyle"
+    },
+    "BorderRadius": {
+     "maxLength": 50,
+     "minLength": 0,
+     "type": "string"
+    },
+    "BorderStyle": {
+     "$ref": "#/definitions/GridLayoutElementBorderStyle"
+    },
     "ColumnIndex": {
      "maximum": 35,
      "minimum": 0,
@@ -5670,6 +5956,14 @@
     "ElementType": {
      "$ref": "#/definitions/LayoutElementType"
     },
+    "LoadingAnimation": {
+     "$ref": "#/definitions/LoadingAnimation"
+    },
+    "Padding": {
+     "maxLength": 200,
+     "minLength": 0,
+     "type": "string"
+    },
     "RowIndex": {
      "maximum": 9009,
      "minimum": 0,
@@ -5679,6 +5973,9 @@
      "maximum": 21,
      "minimum": 1,
      "type": "number"
+    },
+    "SelectedBorderStyle": {
+     "$ref": "#/definitions/GridLayoutElementBorderStyle"
     }
    },
    "required": [
@@ -5687,6 +5984,37 @@
     "ElementType",
     "RowSpan"
    ],
+   "type": "object"
+  },
+  "GridLayoutElementBackgroundStyle": {
+   "additionalProperties": false,
+   "properties": {
+    "Color": {
+     "pattern": "^#[A-F0-9]{6}(?:[A-F0-9]{2})?$",
+     "type": "string"
+    },
+    "Visibility": {
+     "$ref": "#/definitions/Visibility"
+    }
+   },
+   "type": "object"
+  },
+  "GridLayoutElementBorderStyle": {
+   "additionalProperties": false,
+   "properties": {
+    "Color": {
+     "pattern": "^#[A-F0-9]{6}(?:[A-F0-9]{2})?$",
+     "type": "string"
+    },
+    "Visibility": {
+     "$ref": "#/definitions/Visibility"
+    },
+    "Width": {
+     "maxLength": 50,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
    "type": "object"
   },
   "GridLayoutScreenCanvasSizeOptions": {
@@ -6916,6 +7244,9 @@
     "AxisBinding": {
      "$ref": "#/definitions/AxisBinding"
     },
+    "DecalSettings": {
+     "$ref": "#/definitions/DecalSettings"
+    },
     "LineStyleSettings": {
      "$ref": "#/definitions/LineChartLineStyleSettings"
     },
@@ -6992,6 +7323,9 @@
   "LineChartSeriesSettings": {
    "additionalProperties": false,
    "properties": {
+    "DecalSettings": {
+     "$ref": "#/definitions/DecalSettings"
+    },
     "LineStyleSettings": {
      "$ref": "#/definitions/LineChartLineStyleSettings"
     },
@@ -9111,6 +9445,15 @@
     "DISABLED"
    ],
    "type": "string"
+  },
+  "QuickSuiteActionsOption": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityStatus": {
+     "$ref": "#/definitions/DashboardBehavior"
+    }
+   },
+   "type": "object"
   },
   "RadarChartAggregatedFieldWells": {
    "additionalProperties": false,

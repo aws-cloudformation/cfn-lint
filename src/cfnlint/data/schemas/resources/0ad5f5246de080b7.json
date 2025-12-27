@@ -58,6 +58,12 @@
     },
     "OverrideName": {
      "$ref": "#/definitions/OverrideName"
+    },
+    "OverrideType": {
+     "$ref": "#/definitions/OverrideType"
+    },
+    "RecurrenceConfig": {
+     "$ref": "#/definitions/RecurrenceConfig"
     }
    },
    "required": [
@@ -121,6 +127,39 @@
    ],
    "type": "object"
   },
+  "HoursOfOperationsIdentifier": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "MonthDayList": {
+   "items": {
+    "maximum": 31,
+    "minimum": -1,
+    "type": "integer"
+   },
+   "type": "array"
+  },
+  "MonthList": {
+   "items": {
+    "maximum": 12,
+    "minimum": 1,
+    "type": "integer"
+   },
+   "type": "array"
+  },
   "OverrideConfig": {
    "insertionOrder": false,
    "items": {
@@ -160,6 +199,64 @@
    ],
    "type": "object"
   },
+  "OverrideType": {
+   "enum": [
+    "STANDARD",
+    "OPEN",
+    "CLOSED"
+   ],
+   "type": "string"
+  },
+  "RecurrenceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "RecurrencePattern": {
+     "$ref": "#/definitions/RecurrencePattern"
+    }
+   },
+   "required": [
+    "RecurrencePattern"
+   ],
+   "type": "object"
+  },
+  "RecurrenceFrequency": {
+   "enum": [
+    "WEEKLY",
+    "MONTHLY",
+    "YEARLY"
+   ],
+   "type": "string"
+  },
+  "RecurrencePattern": {
+   "additionalProperties": false,
+   "properties": {
+    "ByMonth": {
+     "$ref": "#/definitions/MonthList"
+    },
+    "ByMonthDay": {
+     "$ref": "#/definitions/MonthDayList"
+    },
+    "ByWeekdayOccurrence": {
+     "items": {
+      "maximum": 4,
+      "minimum": -1,
+      "type": "integer"
+     },
+     "maxItems": 1,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Frequency": {
+     "$ref": "#/definitions/RecurrenceFrequency"
+    },
+    "Interval": {
+     "maximum": 6,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -185,6 +282,13 @@
   "/properties/HoursOfOperationArn"
  ],
  "properties": {
+  "ChildHoursOfOperations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/HoursOfOperationsIdentifier"
+   },
+   "type": "array"
+  },
   "Config": {
    "insertionOrder": false,
    "items": {
@@ -221,6 +325,13 @@
    "minLength": 1,
    "pattern": "^[\\P{C}\\r\\n\\t]{1,127}$",
    "type": "string"
+  },
+  "ParentHoursOfOperations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/HoursOfOperationsIdentifier"
+   },
+   "type": "array"
   },
   "Tags": {
    "insertionOrder": false,
