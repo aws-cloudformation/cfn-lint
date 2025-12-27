@@ -1,0 +1,462 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ServiceName",
+  "/properties/Cluster",
+  "/properties/InfrastructureRoleArn",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "AccessType": {
+   "enum": [
+    "PUBLIC",
+    "PRIVATE"
+   ],
+   "type": "string"
+  },
+  "AutoScalingArns": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationAutoScalingPolicies": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ScalableTarget": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ECSManagedResourceArns": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoScaling": {
+     "$ref": "#/definitions/AutoScalingArns"
+    },
+    "IngressPath": {
+     "$ref": "#/definitions/IngressPathArns"
+    },
+    "LogGroups": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "MetricAlarms": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ServiceSecurityGroups": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ExpressGatewayContainer": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsLogsConfiguration": {
+     "$ref": "#/definitions/ExpressGatewayServiceAwsLogsConfiguration"
+    },
+    "Command": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ContainerPort": {
+     "default": 80,
+     "type": "integer"
+    },
+    "Environment": {
+     "items": {
+      "$ref": "#/definitions/KeyValuePair"
+     },
+     "type": "array"
+    },
+    "Image": {
+     "type": "string"
+    },
+    "RepositoryCredentials": {
+     "$ref": "#/definitions/ExpressGatewayRepositoryCredentials"
+    },
+    "Secrets": {
+     "items": {
+      "$ref": "#/definitions/Secret"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Image"
+   ],
+   "type": "object"
+  },
+  "ExpressGatewayRepositoryCredentials": {
+   "additionalProperties": false,
+   "properties": {
+    "CredentialsParameter": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "CredentialsParameter"
+   ],
+   "type": "object"
+  },
+  "ExpressGatewayScalingTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoScalingMetric": {
+     "$ref": "#/definitions/ExpressGatewayServiceScalingMetric"
+    },
+    "AutoScalingTargetValue": {
+     "default": 60,
+     "type": "integer"
+    },
+    "MaxTaskCount": {
+     "default": 1,
+     "type": "integer"
+    },
+    "MinTaskCount": {
+     "default": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "ExpressGatewayServiceAwsLogsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroup": {
+     "type": "string"
+    },
+    "LogStreamPrefix": {
+     "default": "ecs",
+     "type": "string"
+    }
+   },
+   "required": [
+    "LogGroup",
+    "LogStreamPrefix"
+   ],
+   "type": "object"
+  },
+  "ExpressGatewayServiceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Cpu": {
+     "type": "string"
+    },
+    "CreatedAt": {
+     "format": "date-time",
+     "type": "string"
+    },
+    "ExecutionRoleArn": {
+     "type": "string"
+    },
+    "HealthCheckPath": {
+     "type": "string"
+    },
+    "IngressPaths": {
+     "items": {
+      "$ref": "#/definitions/IngressPathSummary"
+     },
+     "type": "array"
+    },
+    "Memory": {
+     "type": "string"
+    },
+    "NetworkConfiguration": {
+     "$ref": "#/definitions/ExpressGatewayServiceNetworkConfiguration"
+    },
+    "PrimaryContainer": {
+     "$ref": "#/definitions/ExpressGatewayContainer"
+    },
+    "ScalingTarget": {
+     "$ref": "#/definitions/ExpressGatewayScalingTarget"
+    },
+    "ServiceRevisionArn": {
+     "type": "string"
+    },
+    "TaskRoleArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ExpressGatewayServiceNetworkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroups": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Subnets": {
+     "format": "AWS::EC2::Subnet.Ids",
+     "items": {
+      "format": "AWS::EC2::Subnet.Id",
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ExpressGatewayServiceScalingMetric": {
+   "default": "AVERAGE_CPU",
+   "enum": [
+    "AVERAGE_CPU",
+    "AVERAGE_MEMORY",
+    "REQUEST_COUNT_PER_TARGET"
+   ],
+   "type": "string"
+  },
+  "ExpressGatewayServiceStatus": {
+   "additionalProperties": false,
+   "properties": {
+    "StatusCode": {
+     "$ref": "#/definitions/ExpressGatewayServiceStatusCode"
+    }
+   },
+   "type": "object"
+  },
+  "ExpressGatewayServiceStatusCode": {
+   "enum": [
+    "ACTIVE",
+    "DRAINING",
+    "INACTIVE"
+   ],
+   "type": "string"
+  },
+  "IngressPathArns": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateArn": {
+     "type": "string"
+    },
+    "ListenerArn": {
+     "type": "string"
+    },
+    "ListenerRuleArn": {
+     "type": "string"
+    },
+    "LoadBalancerArn": {
+     "type": "string"
+    },
+    "LoadBalancerSecurityGroups": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "TargetGroupArns": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "IngressPathSummary": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessType": {
+     "$ref": "#/definitions/AccessType"
+    },
+    "Endpoint": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "KeyValuePair": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Secret": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "ValueFrom": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "ValueFrom"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ServiceArn"
+ ],
+ "properties": {
+  "ActiveConfigurations": {
+   "items": {
+    "$ref": "#/definitions/ExpressGatewayServiceConfiguration"
+   },
+   "type": "array"
+  },
+  "Cluster": {
+   "default": "default",
+   "type": "string"
+  },
+  "Cpu": {
+   "default": "256",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "ECSManagedResourceArns": {
+   "$ref": "#/definitions/ECSManagedResourceArns"
+  },
+  "Endpoint": {
+   "type": "string"
+  },
+  "ExecutionRoleArn": {
+   "type": "string"
+  },
+  "HealthCheckPath": {
+   "default": "HTTP:80/ping",
+   "type": "string"
+  },
+  "InfrastructureRoleArn": {
+   "type": "string"
+  },
+  "Memory": {
+   "default": "512",
+   "type": "string"
+  },
+  "NetworkConfiguration": {
+   "$ref": "#/definitions/ExpressGatewayServiceNetworkConfiguration"
+  },
+  "PrimaryContainer": {
+   "$ref": "#/definitions/ExpressGatewayContainer"
+  },
+  "ScalingTarget": {
+   "$ref": "#/definitions/ExpressGatewayScalingTarget"
+  },
+  "ServiceArn": {
+   "type": "string"
+  },
+  "ServiceName": {
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/ExpressGatewayServiceStatus"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "TaskRoleArn": {
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/Cluster": "Cluster $OR $join([\"arn:(aws)[-]{0,1}[a-z]{0,3}[-]{0,1}[a-z]{0,3}:ecs:[a-z0-9-]+:[0-9]{12}:cluster/{1}\", Cluster])"
+ },
+ "readOnlyProperties": [
+  "/properties/ServiceArn",
+  "/properties/ActiveConfigurations",
+  "/properties/Status",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/Endpoint",
+  "/properties/ECSManagedResourceArns",
+  "/properties/ECSManagedResourceArns/ServiceSecurityGroups",
+  "/properties/ECSManagedResourceArns/AutoScaling",
+  "/properties/ECSManagedResourceArns/AutoScaling/ScalableTarget",
+  "/properties/ECSManagedResourceArns/AutoScaling/ApplicationAutoScalingPolicies",
+  "/properties/ECSManagedResourceArns/LogGroups",
+  "/properties/ECSManagedResourceArns/MetricAlarms",
+  "/properties/ECSManagedResourceArns/IngressPath",
+  "/properties/ECSManagedResourceArns/IngressPath/CertificateArn",
+  "/properties/ECSManagedResourceArns/IngressPath/LoadBalancerSecurityGroups",
+  "/properties/ECSManagedResourceArns/IngressPath/ListenerRuleArn",
+  "/properties/ECSManagedResourceArns/IngressPath/ListenerArn",
+  "/properties/ECSManagedResourceArns/IngressPath/LoadBalancerArn",
+  "/properties/ECSManagedResourceArns/IngressPath/TargetGroupArns"
+ ],
+ "required": [
+  "ExecutionRoleArn",
+  "InfrastructureRoleArn",
+  "PrimaryContainer"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::ECS::ExpressGatewayService",
+ "writeOnlyProperties": [
+  "/properties/ExecutionRoleArn",
+  "/properties/TaskRoleArn",
+  "/properties/HealthCheckPath",
+  "/properties/PrimaryContainer",
+  "/properties/NetworkConfiguration",
+  "/properties/Cpu",
+  "/properties/Memory",
+  "/properties/ScalingTarget"
+ ]
+}

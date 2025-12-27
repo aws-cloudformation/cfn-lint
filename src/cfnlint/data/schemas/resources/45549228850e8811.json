@@ -16,6 +16,27 @@
    ],
    "type": "object"
   },
+  "AdDecisionServerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "HttpRequest": {
+     "$ref": "#/definitions/HttpRequest"
+    }
+   },
+   "required": [
+    "HttpRequest"
+   ],
+   "type": "object"
+  },
+  "AdDecisionServerConfigurationHttpHeaders": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".*": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "AdMarkerPassthrough": {
    "additionalProperties": false,
    "properties": {
@@ -131,6 +152,32 @@
    },
    "type": "object"
   },
+  "HttpRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Body": {
+     "type": "string"
+    },
+    "CompressRequest": {
+     "enum": [
+      "NONE",
+      "GZIP"
+     ],
+     "type": "string"
+    },
+    "Headers": {
+     "$ref": "#/definitions/AdDecisionServerConfigurationHttpHeaders"
+    },
+    "HttpMethod": {
+     "enum": [
+      "GET",
+      "POST"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "InsertionMode": {
    "enum": [
     "STITCHED_ONLY",
@@ -227,6 +274,9 @@
  "properties": {
   "AdConditioningConfiguration": {
    "$ref": "#/definitions/AdConditioningConfiguration"
+  },
+  "AdDecisionServerConfiguration": {
+   "$ref": "#/definitions/AdDecisionServerConfiguration"
   },
   "AdDecisionServerUrl": {
    "type": "string"
