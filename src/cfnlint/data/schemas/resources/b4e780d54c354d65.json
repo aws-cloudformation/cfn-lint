@@ -1,0 +1,176 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/KmsKeyArn",
+  "/properties/Provider/ServiceNow/InstanceName"
+ ],
+ "definitions": {
+  "AuthStatus": {
+   "enum": [
+    "ACTIVE",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "ISO8601DateString": {
+   "pattern": "^(\\d\\d\\d\\d)-([0][1-9]|[1][0-2])-([0][1-9]|[1-2](\\d)|[3][0-1])[T](?:([0-1](\\d)|[2][0-3]):[0-5](\\d):[0-5](\\d)|23:59:60)(?:\\.(\\d)+)?([Z]|[+-](\\d\\d)(:?(\\d\\d))?)$",
+   "type": "string"
+  },
+  "JiraCloudProviderConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ProjectKey": {
+     "maxLength": 10,
+     "minLength": 2,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ProjectKey"
+   ],
+   "type": "object"
+  },
+  "Provider": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "JiraCloud": {
+       "$ref": "#/definitions/JiraCloudProviderConfiguration"
+      }
+     },
+     "required": [
+      "JiraCloud"
+     ],
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ServiceNow": {
+       "$ref": "#/definitions/ServiceNowProviderConfiguration"
+      }
+     },
+     "required": [
+      "ServiceNow"
+     ],
+     "type": "object"
+    }
+   ],
+   "type": "object"
+  },
+  "ServiceNowProviderConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SecretArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "InstanceName",
+    "SecretArn"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^(?!aws:)[a-zA-Z+-=._:/]{1,128}$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConnectorArn"
+ ],
+ "properties": {
+  "ConnectorArn": {
+   "pattern": "^arn:aws\\S*:securityhub:[a-z0-9-]+:[0-9]{12}:connectorv2/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "ConnectorId": {
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "ConnectorStatus": {
+   "enum": [
+    "CONNECTED",
+    "FAILED_TO_CONNECT",
+    "PENDING_AUTHORIZATION",
+    "PENDING_CONFIGURATION"
+   ],
+   "type": "string"
+  },
+  "CreatedAt": {
+   "$ref": "#/definitions/ISO8601DateString"
+  },
+  "Description": {
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "LastCheckedAt": {
+   "$ref": "#/definitions/ISO8601DateString"
+  },
+  "LastUpdatedAt": {
+   "$ref": "#/definitions/ISO8601DateString"
+  },
+  "Message": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "Provider": {
+   "$ref": "#/definitions/Provider"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConnectorArn",
+  "/properties/ConnectorId",
+  "/properties/Message",
+  "/properties/ConnectorStatus",
+  "/properties/LastUpdatedAt",
+  "/properties/LastCheckedAt",
+  "/properties/CreatedAt"
+ ],
+ "required": [
+  "Name",
+  "Provider"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securityhub",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityHub::ConnectorV2"
+}
