@@ -1,3 +1,9 @@
+### v1.43.2
+## What's Changed
+* Update CloudFormation schemas to 2026-01-05 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4329
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.43.1...v1.43.2
+
 ### v1.43.1
 ## What's Changed
 * SecurityGroupIds can take a name from a default VPC by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4324
