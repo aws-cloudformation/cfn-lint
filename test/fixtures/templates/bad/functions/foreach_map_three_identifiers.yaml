@@ -1,0 +1,10 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: "AWS::LanguageExtensions"
+Resources:
+  # Error: Map iteration with 3 identifiers (only supports 2)
+  "Fn::ForEach::MapWith3Identifiers":
+    - [Id1, Id2, Id3]
+    - Web: 443
+      SSH: 22
+    - "Resource${Id1}":
+        Type: "AWS::S3::Bucket"
