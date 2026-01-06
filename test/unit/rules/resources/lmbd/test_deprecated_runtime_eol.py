@@ -42,8 +42,8 @@ def rule():
                 ValidationError(
                     "Runtime 'python3.7' was deprecated on "
                     "'2023-12-04'. Creation was disabled on "
-                    "'2024-01-09' and update on '2025-11-01'. "
-                    "Please consider updating to 'python3.13'",
+                    "'2024-01-09' and update on '2026-03-09'. "
+                    "Please consider updating to 'python3.14'",
                 )
             ],
         ),
