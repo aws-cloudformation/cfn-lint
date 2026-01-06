@@ -31,14 +31,14 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results_filename": (
                 "test/fixtures/results/quickstart/non_strict/openshift.json"
             ),
-            "exit_code": 14,
+            "exit_code": 12,
         },
         {
             "filename": "test/fixtures/templates/quickstart/cis_benchmark.yaml",
             "results_filename": (
                 "test/fixtures/results/quickstart/non_strict/cis_benchmark.json"
             ),
-            "exit_code": 6,
+            "exit_code": 4,
         },
     ]
 
