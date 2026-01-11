@@ -2626,10 +2626,8 @@
     "ConditionKeys": [
      "apigateway:Request/AuthorizerType",
      "apigateway:Request/AuthorizerUri",
-     "apigateway:Request/CognitoUserPoolProviderArn",
      "apigateway:Resource/AuthorizerType",
      "apigateway:Resource/AuthorizerUri",
-     "apigateway:Resource/CognitoUserPoolProviderArn",
      "aws:ResourceTag/${TagKey}"
     ]
    },
@@ -2641,7 +2639,6 @@
     "ConditionKeys": [
      "apigateway:Request/AuthorizerType",
      "apigateway:Request/AuthorizerUri",
-     "apigateway:Request/CognitoUserPoolProviderArn",
      "aws:ResourceTag/${TagKey}"
     ]
    },
@@ -3002,7 +2999,6 @@
      "apigateway:Request/ApiKeyRequired",
      "apigateway:Request/ApiName",
      "apigateway:Request/AuthorizerType",
-     "apigateway:Request/AuthorizerUri",
      "apigateway:Request/DisableExecuteApiEndpoint",
      "apigateway:Request/EndpointType",
      "apigateway:Request/RouteAuthorizationType",
@@ -3010,7 +3006,6 @@
      "apigateway:Resource/ApiKeyRequired",
      "apigateway:Resource/ApiName",
      "apigateway:Resource/AuthorizerType",
-     "apigateway:Resource/AuthorizerUri",
      "apigateway:Resource/DisableExecuteApiEndpoint",
      "apigateway:Resource/EndpointType",
      "apigateway:Resource/RouteAuthorizationType",
@@ -3026,7 +3021,6 @@
      "apigateway:Request/ApiKeyRequired",
      "apigateway:Request/ApiName",
      "apigateway:Request/AuthorizerType",
-     "apigateway:Request/AuthorizerUri",
      "apigateway:Request/DisableExecuteApiEndpoint",
      "apigateway:Request/EndpointType",
      "apigateway:Request/RouteAuthorizationType",
@@ -35421,6 +35415,13 @@
    }
   }
  },
+ "ecs-mcp": {
+  "Actions": {
+   "invokereadonlytools": {},
+   "usemcp": {}
+  },
+  "Resources": {}
+ },
  "eks": {
   "Actions": {
    "accesskubernetesapi": {
@@ -37097,6 +37098,7 @@
      "truststore"
     ]
    },
+   "createwebaclassociation": {},
    "deletelistener": {
     "Resources": [
      "listener/app",
@@ -37143,6 +37145,7 @@
      "truststore"
     ]
    },
+   "deletewebaclassociation": {},
    "deregisterinstancesfromloadbalancer": {
     "Resources": [
      "loadbalancer"
@@ -37172,6 +37175,7 @@
    "describetruststoreassociations": {},
    "describetruststorerevocations": {},
    "describetruststores": {},
+   "describewebaclassociation": {},
    "detachloadbalancerfromsubnets": {
     "Resources": [
      "loadbalancer"
@@ -37187,6 +37191,7 @@
      "loadbalancer"
     ]
    },
+   "getloadbalancerwebacl": {},
    "getresourcepolicy": {
     "Resources": [
      "truststore"
@@ -65830,6 +65835,11 @@
      "global-network"
     ]
    },
+   "createcorenetworkprefixlistassociation": {
+    "Resources": [
+     "core-network"
+    ]
+   },
    "createdevice": {
     "Resources": [
      "global-network"
@@ -65894,6 +65904,11 @@
     ]
    },
    "deletecorenetworkpolicyversion": {
+    "Resources": [
+     "core-network"
+    ]
+   },
+   "deletecorenetworkprefixlistassociation": {
     "Resources": [
      "core-network"
     ]
@@ -66124,6 +66139,16 @@
      "core-network"
     ]
    },
+   "listcorenetworkprefixlistassociations": {
+    "Resources": [
+     "core-network"
+    ]
+   },
+   "listcorenetworkroutinginformation": {
+    "Resources": [
+     "core-network"
+    ]
+   },
    "listcorenetworks": {},
    "listorganizationserviceaccessstatus": {},
    "listpeerings": {},
@@ -66138,6 +66163,12 @@
      "link",
      "peering",
      "site"
+    ]
+   },
+   "putattachmentroutingpolicylabel": {
+    "Resources": [
+     "attachment",
+     "core-network"
     ]
    },
    "putcorenetworkpolicy": {
@@ -66158,6 +66189,12 @@
    "rejectattachment": {
     "Resources": [
      "attachment"
+    ]
+   },
+   "removeattachmentroutingpolicylabel": {
+    "Resources": [
+     "attachment",
+     "core-network"
     ]
    },
    "restorecorenetworkpolicyversion": {
@@ -67374,6 +67411,7 @@
      "db-node"
     ]
    },
+   "creategrantshare": {},
    "createodbnetwork": {},
    "createodbpeeringconnection": {
     "Resources": [
@@ -67406,6 +67444,7 @@
      "db-node"
     ]
    },
+   "deletegrantshare": {},
    "deleteodbnetwork": {
     "Resources": [
      "odb-network"
@@ -67564,6 +67603,7 @@
      "cloud-exadata-infrastructure"
     ]
    },
+   "updategrantshare": {},
    "updateodbnetwork": {
     "Resources": [
      "odb-network"
@@ -80449,7 +80489,11 @@
      "resolver-endpoint"
     ]
    },
-   "createresolverquerylogconfig": {},
+   "createresolverquerylogconfig": {
+    "Resources": [
+     "resolver-query-log-config"
+    ]
+   },
    "createresolverrule": {
     "Resources": [
      "resolver-rule"

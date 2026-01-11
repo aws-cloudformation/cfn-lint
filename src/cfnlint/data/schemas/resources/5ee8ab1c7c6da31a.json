@@ -1,0 +1,798 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/AIAgentArn",
+   "/properties/AssistantArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AssistantId",
+  "/properties/Name",
+  "/properties/Tags",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "AIAgentAssociationConfigurationType": {
+   "enum": [
+    "KNOWLEDGE_BASE"
+   ],
+   "type": "string"
+  },
+  "AIAgentConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ManualSearchAIAgentConfiguration": {
+       "$ref": "#/definitions/ManualSearchAIAgentConfiguration"
+      }
+     },
+     "required": [
+      "ManualSearchAIAgentConfiguration"
+     ],
+     "title": "ManualSearchAIAgentConfiguration",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "AnswerRecommendationAIAgentConfiguration": {
+       "$ref": "#/definitions/AnswerRecommendationAIAgentConfiguration"
+      }
+     },
+     "required": [
+      "AnswerRecommendationAIAgentConfiguration"
+     ],
+     "title": "AnswerRecommendationAIAgentConfiguration",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "SelfServiceAIAgentConfiguration": {
+       "$ref": "#/definitions/SelfServiceAIAgentConfiguration"
+      }
+     },
+     "required": [
+      "SelfServiceAIAgentConfiguration"
+     ],
+     "title": "SelfServiceAIAgentConfiguration",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "EmailResponseAIAgentConfiguration": {
+       "$ref": "#/definitions/EmailResponseAIAgentConfiguration"
+      }
+     },
+     "required": [
+      "EmailResponseAIAgentConfiguration"
+     ],
+     "title": "EmailResponseAIAgentConfiguration",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "EmailOverviewAIAgentConfiguration": {
+       "$ref": "#/definitions/EmailOverviewAIAgentConfiguration"
+      }
+     },
+     "required": [
+      "EmailOverviewAIAgentConfiguration"
+     ],
+     "title": "EmailOverviewAIAgentConfiguration",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "EmailGenerativeAnswerAIAgentConfiguration": {
+       "$ref": "#/definitions/EmailGenerativeAnswerAIAgentConfiguration"
+      }
+     },
+     "required": [
+      "EmailGenerativeAnswerAIAgentConfiguration"
+     ],
+     "title": "EmailGenerativeAnswerAIAgentConfiguration",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "OrchestrationAIAgentConfiguration": {
+       "$ref": "#/definitions/OrchestrationAIAgentConfiguration"
+      }
+     },
+     "required": [
+      "OrchestrationAIAgentConfiguration"
+     ],
+     "title": "OrchestrationAIAgentConfiguration",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "NoteTakingAIAgentConfiguration": {
+       "$ref": "#/definitions/NoteTakingAIAgentConfiguration"
+      }
+     },
+     "required": [
+      "NoteTakingAIAgentConfiguration"
+     ],
+     "title": "NoteTakingAIAgentConfiguration",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CaseSummarizationAIAgentConfiguration": {
+       "$ref": "#/definitions/CaseSummarizationAIAgentConfiguration"
+      }
+     },
+     "required": [
+      "CaseSummarizationAIAgentConfiguration"
+     ],
+     "title": "CaseSummarizationAIAgentConfiguration",
+     "type": "object"
+    }
+   ]
+  },
+  "AIAgentType": {
+   "enum": [
+    "MANUAL_SEARCH",
+    "ANSWER_RECOMMENDATION",
+    "SELF_SERVICE",
+    "EMAIL_RESPONSE",
+    "EMAIL_OVERVIEW",
+    "EMAIL_GENERATIVE_ANSWER",
+    "ORCHESTRATION",
+    "NOTE_TAKING",
+    "CASE_SUMMARIZATION"
+   ],
+   "type": "string"
+  },
+  "Annotation": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "AnswerRecommendationAIAgentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AnswerGenerationAIGuardrailId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    },
+    "AnswerGenerationAIPromptId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    },
+    "AssociationConfigurations": {
+     "items": {
+      "$ref": "#/definitions/AssociationConfiguration"
+     },
+     "type": "array"
+    },
+    "IntentLabelingGenerationAIPromptId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    },
+    "Locale": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "QueryReformulationAIPromptId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AssociationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AssociationConfigurationData": {
+     "$ref": "#/definitions/AssociationConfigurationData"
+    },
+    "AssociationId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+     "type": "string"
+    },
+    "AssociationType": {
+     "$ref": "#/definitions/AIAgentAssociationConfigurationType"
+    }
+   },
+   "type": "object"
+  },
+  "AssociationConfigurationData": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "KnowledgeBaseAssociationConfigurationData": {
+       "$ref": "#/definitions/KnowledgeBaseAssociationConfigurationData"
+      }
+     },
+     "required": [
+      "KnowledgeBaseAssociationConfigurationData"
+     ],
+     "title": "KnowledgeBaseAssociationConfigurationData",
+     "type": "object"
+    }
+   ]
+  },
+  "CaseSummarizationAIAgentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CaseSummarizationAIGuardrailId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    },
+    "CaseSummarizationAIPromptId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    },
+    "Locale": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EmailGenerativeAnswerAIAgentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AssociationConfigurations": {
+     "items": {
+      "$ref": "#/definitions/AssociationConfiguration"
+     },
+     "type": "array"
+    },
+    "EmailGenerativeAnswerAIPromptId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    },
+    "EmailQueryReformulationAIPromptId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    },
+    "Locale": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EmailOverviewAIAgentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EmailOverviewAIPromptId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    },
+    "Locale": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EmailResponseAIAgentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AssociationConfigurations": {
+     "items": {
+      "$ref": "#/definitions/AssociationConfiguration"
+     },
+     "type": "array"
+    },
+    "EmailQueryReformulationAIPromptId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    },
+    "EmailResponseAIPromptId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    },
+    "Locale": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "KnowledgeBaseAssociationConfigurationData": {
+   "additionalProperties": false,
+   "properties": {
+    "ContentTagFilter": {
+     "$ref": "#/definitions/TagFilter"
+    },
+    "MaxResults": {
+     "maximum": 100,
+     "minimum": 1,
+     "type": "number"
+    },
+    "OverrideKnowledgeBaseSearchType": {
+     "$ref": "#/definitions/KnowledgeBaseSearchType"
+    }
+   },
+   "type": "object"
+  },
+  "KnowledgeBaseSearchType": {
+   "enum": [
+    "HYBRID",
+    "SEMANTIC"
+   ],
+   "type": "string"
+  },
+  "ManualSearchAIAgentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AnswerGenerationAIGuardrailId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    },
+    "AnswerGenerationAIPromptId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    },
+    "AssociationConfigurations": {
+     "items": {
+      "$ref": "#/definitions/AssociationConfiguration"
+     },
+     "type": "array"
+    },
+    "Locale": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "NoteTakingAIAgentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Locale": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "NoteTakingAIGuardrailId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    },
+    "NoteTakingAIPromptId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OrCondition": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "AndConditions": {
+       "items": {
+        "$ref": "#/definitions/TagCondition"
+       },
+       "type": "array"
+      }
+     },
+     "required": [
+      "AndConditions"
+     ],
+     "title": "AndConditions",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "TagCondition": {
+       "$ref": "#/definitions/TagCondition"
+      }
+     },
+     "required": [
+      "TagCondition"
+     ],
+     "title": "TagCondition",
+     "type": "object"
+    }
+   ]
+  },
+  "OrchestrationAIAgentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectInstanceArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:[a-z-]+?:[a-z-]+?:[a-z0-9-]*?:([0-9]{12})?:[a-zA-Z0-9-:/]+$",
+     "type": "string"
+    },
+    "Locale": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "OrchestrationAIGuardrailId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    },
+    "OrchestrationAIPromptId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    },
+    "ToolConfigurations": {
+     "$ref": "#/definitions/ToolConfigurationList"
+    }
+   },
+   "required": [
+    "OrchestrationAIPromptId"
+   ],
+   "type": "object"
+  },
+  "SelfServiceAIAgentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AssociationConfigurations": {
+     "items": {
+      "$ref": "#/definitions/AssociationConfiguration"
+     },
+     "type": "array"
+    },
+    "SelfServiceAIGuardrailId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    },
+    "SelfServiceAnswerGenerationAIPromptId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    },
+    "SelfServicePreProcessingAIPromptId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TagCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TagFilter": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "TagCondition": {
+       "$ref": "#/definitions/TagCondition"
+      }
+     },
+     "required": [
+      "TagCondition"
+     ],
+     "title": "TagCondition",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "AndConditions": {
+       "items": {
+        "$ref": "#/definitions/TagCondition"
+       },
+       "type": "array"
+      }
+     },
+     "required": [
+      "AndConditions"
+     ],
+     "title": "AndConditions",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "OrConditions": {
+       "items": {
+        "$ref": "#/definitions/OrCondition"
+       },
+       "type": "array"
+      }
+     },
+     "required": [
+      "OrConditions"
+     ],
+     "title": "OrConditions",
+     "type": "object"
+    }
+   ]
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^(?!aws:)[a-zA-Z+-=._:/]+$": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ToolConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Annotations": {
+     "$ref": "#/definitions/Annotation"
+    },
+    "Description": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "InputSchema": {
+     "type": "object"
+    },
+    "Instruction": {
+     "$ref": "#/definitions/ToolInstruction"
+    },
+    "OutputFilters": {
+     "$ref": "#/definitions/ToolOutputFilterList"
+    },
+    "OutputSchema": {
+     "type": "object"
+    },
+    "OverrideInputValues": {
+     "$ref": "#/definitions/ToolOverrideInputValueList"
+    },
+    "Title": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "ToolId": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "ToolName": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "ToolType": {
+     "$ref": "#/definitions/ToolType"
+    },
+    "UserInteractionConfiguration": {
+     "$ref": "#/definitions/UserInteractionConfiguration"
+    }
+   },
+   "required": [
+    "ToolName",
+    "ToolType"
+   ],
+   "type": "object"
+  },
+  "ToolConfigurationList": {
+   "items": {
+    "$ref": "#/definitions/ToolConfiguration"
+   },
+   "type": "array"
+  },
+  "ToolExampleList": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ToolInstruction": {
+   "additionalProperties": false,
+   "properties": {
+    "Examples": {
+     "$ref": "#/definitions/ToolExampleList"
+    },
+    "Instruction": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ToolOutputConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "OutputVariableNameOverride": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "SessionDataNamespace": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ToolOutputFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "JsonPath": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "OutputConfiguration": {
+     "$ref": "#/definitions/ToolOutputConfiguration"
+    }
+   },
+   "required": [
+    "JsonPath"
+   ],
+   "type": "object"
+  },
+  "ToolOutputFilterList": {
+   "items": {
+    "$ref": "#/definitions/ToolOutputFilter"
+   },
+   "type": "array"
+  },
+  "ToolOverrideConstantInputValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "$ref": "#/definitions/ToolOverrideInputValueType"
+    },
+    "Value": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "ToolOverrideInputValue": {
+   "additionalProperties": false,
+   "properties": {
+    "JsonPath": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "$ref": "#/definitions/ToolOverrideInputValueConfiguration"
+    }
+   },
+   "required": [
+    "JsonPath",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "ToolOverrideInputValueConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Constant": {
+       "$ref": "#/definitions/ToolOverrideConstantInputValue"
+      }
+     },
+     "required": [
+      "Constant"
+     ],
+     "title": "Constant",
+     "type": "object"
+    }
+   ]
+  },
+  "ToolOverrideInputValueList": {
+   "items": {
+    "$ref": "#/definitions/ToolOverrideInputValue"
+   },
+   "type": "array"
+  },
+  "ToolOverrideInputValueType": {
+   "enum": [
+    "STRING",
+    "NUMBER",
+    "JSON_STRING"
+   ],
+   "type": "string"
+  },
+  "ToolType": {
+   "enum": [
+    "MODEL_CONTEXT_PROTOCOL",
+    "RETURN_TO_CONTROL",
+    "CONSTANT"
+   ],
+   "type": "string"
+  },
+  "UserInteractionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IsUserConfirmationRequired": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AIAgentId",
+  "/properties/AssistantId"
+ ],
+ "properties": {
+  "AIAgentArn": {
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}){0,2}$",
+   "type": "string"
+  },
+  "AIAgentId": {
+   "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$|^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}){0,2}(:[A-Z0-9_$]+){0,1}$",
+   "type": "string"
+  },
+  "AssistantArn": {
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}){0,2}$",
+   "type": "string"
+  },
+  "AssistantId": {
+   "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}){0,2}$",
+   "type": "string"
+  },
+  "Configuration": {
+   "$ref": "#/definitions/AIAgentConfiguration"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s_.,-]+",
+   "type": "string"
+  },
+  "ModifiedTimeSeconds": {
+   "type": "number"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s_.,-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "Type": {
+   "$ref": "#/definitions/AIAgentType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AIAgentArn",
+  "/properties/AIAgentId",
+  "/properties/AssistantArn",
+  "/properties/ModifiedTimeSeconds"
+ ],
+ "required": [
+  "AssistantId",
+  "Configuration",
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::Wisdom::AIAgent"
+}
