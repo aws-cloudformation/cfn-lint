@@ -1,0 +1,118 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Engine",
+  "/properties/EngineVersion",
+  "/properties/GlobalClusterIdentifier",
+  "/properties/SourceDBClusterIdentifier",
+  "/properties/StorageEncrypted"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "Engine"
+   ]
+  },
+  {
+   "required": [
+    "SourceDBClusterIdentifier"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/GlobalClusterIdentifier"
+ ],
+ "properties": {
+  "DeletionProtection": {
+   "type": "boolean"
+  },
+  "Engine": {
+   "default": "docdb",
+   "enum": [
+    "docdb"
+   ],
+   "type": "string"
+  },
+  "EngineVersion": {
+   "type": "string"
+  },
+  "GlobalClusterArn": {
+   "type": "string"
+  },
+  "GlobalClusterIdentifier": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  },
+  "GlobalClusterResourceId": {
+   "type": "string"
+  },
+  "SourceDBClusterIdentifier": {
+   "oneOf": [
+    {
+     "pattern": "^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"
+    },
+    {
+     "pattern": "^(?=.{40,128}$)arn.*"
+    }
+   ],
+   "type": "string"
+  },
+  "StorageEncrypted": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/GlobalClusterIdentifier": "$lowercase(GlobalClusterIdentifier)"
+ },
+ "readOnlyProperties": [
+  "/properties/GlobalClusterArn",
+  "/properties/GlobalClusterResourceId"
+ ],
+ "required": [
+  "GlobalClusterIdentifier"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DocDB::GlobalCluster",
+ "writeOnlyProperties": [
+  "/properties/SourceDBClusterIdentifier"
+ ]
+}

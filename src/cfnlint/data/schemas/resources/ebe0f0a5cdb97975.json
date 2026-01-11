@@ -418,6 +418,11 @@
      "format": "date-time",
      "type": "string"
     },
+    "DrmSettings": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
     "End": {
      "format": "date-time",
      "type": "string"
@@ -614,6 +619,9 @@
      "maxItems": 100,
      "minItems": 0,
      "type": "array"
+    },
+    "ScteInSegments": {
+     "$ref": "#/definitions/ScteInSegments"
     }
    },
    "type": "object"
@@ -650,6 +658,13 @@
    },
    "type": "object"
   },
+  "ScteInSegments": {
+   "enum": [
+    "NONE",
+    "ALL"
+   ],
+   "type": "string"
+  },
   "Segment": {
    "additionalProperties": false,
    "properties": {
@@ -685,6 +700,12 @@
   "SpekeKeyProvider": {
    "additionalProperties": false,
    "properties": {
+    "CertificateArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:([^:\\n]+):acm:([^:\\n]+):([0-9]+):certificate/[a-zA-Z0-9-_]+$",
+     "type": "string"
+    },
     "DrmSystems": {
      "items": {
       "$ref": "#/definitions/DrmSystem"
