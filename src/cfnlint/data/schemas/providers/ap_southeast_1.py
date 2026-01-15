@@ -866,6 +866,7 @@ types: dict[str, str] = {
     "AWS::MSK::ServerlessCluster": "9eb8b6f85a407e2e",
     "AWS::MSK::VpcConnection": "6aeb07916b90c80a",
     "AWS::MWAA::Environment": "c28ab3624f1d638c",
+    "AWS::MWAAServerless::Workflow": "5281a04e576dc1cc",
     "AWS::Macie::AllowList": "40bd0a0377639bda",
     "AWS::Macie::CustomDataIdentifier": "c0c5ba901caafe31",
     "AWS::Macie::FindingsFilter": "d3c6be2a3d872987",
