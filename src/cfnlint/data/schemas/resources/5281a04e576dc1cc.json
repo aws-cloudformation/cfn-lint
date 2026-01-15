@@ -1,0 +1,222 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/EncryptionConfiguration"
+ ],
+ "definitions": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(?:-(?:cn|us-gov|iso|iso-b|iso-e|iso-f))?:airflow-serverless:([a-z]{2}-[a-z]+-[0-9]{1}):([0-9]{12}):workflow/([a-zA-Z0-9][a-zA-Z0-9\\.\\-_]{0,254}-[a-zA-z0-9]{10})$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^.+$",
+   "type": "string"
+  },
+  "EncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "AWS_MANAGED_KEY",
+      "CUSTOMER_MANAGED_KEY"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "LoggingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroupName": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "LogGroupName"
+   ],
+   "type": "object"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9]+[a-zA-Z0-9\\.\\-_]*$",
+   "type": "string"
+  },
+  "NetworkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SubnetIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "RoleArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(?:-(?:cn|us-gov|iso|iso-b|iso-e|iso-f))?:iam::[0-9]{12}:role(/[a-zA-Z0-9+=,.@_-]{1,512})*?/[a-zA-Z0-9+=,.@_-]{1,64}$",
+   "type": "string"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "ObjectKey": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "VersionId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "ObjectKey"
+   ],
+   "type": "object"
+  },
+  "ScheduleConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CronExpression": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "patternProperties": {
+    "^[\\w\\d+\\-\\.\\:/@]{1,128}$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Timestamp": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "TriggerMode": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "WorkflowStatus": {
+   "enum": [
+    "READY",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "WorkflowVersion": {
+   "maxLength": 32,
+   "minLength": 32,
+   "pattern": "^[a-z0-9]{32}$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WorkflowArn"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "$ref": "#/definitions/Timestamp"
+  },
+  "DefinitionS3Location": {
+   "$ref": "#/definitions/S3Location"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "EncryptionConfiguration": {
+   "$ref": "#/definitions/EncryptionConfiguration"
+  },
+  "LoggingConfiguration": {
+   "$ref": "#/definitions/LoggingConfiguration"
+  },
+  "ModifiedAt": {
+   "$ref": "#/definitions/Timestamp"
+  },
+  "Name": {
+   "$ref": "#/definitions/Name"
+  },
+  "NetworkConfiguration": {
+   "$ref": "#/definitions/NetworkConfiguration"
+  },
+  "RoleArn": {
+   "$ref": "#/definitions/RoleArn"
+  },
+  "ScheduleConfiguration": {
+   "$ref": "#/definitions/ScheduleConfiguration"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "TriggerMode": {
+   "$ref": "#/definitions/TriggerMode"
+  },
+  "WorkflowArn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "WorkflowStatus": {
+   "$ref": "#/definitions/WorkflowStatus"
+  },
+  "WorkflowVersion": {
+   "$ref": "#/definitions/WorkflowVersion"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/WorkflowArn",
+  "/properties/WorkflowVersion",
+  "/properties/CreatedAt",
+  "/properties/ModifiedAt",
+  "/properties/WorkflowStatus",
+  "/properties/ScheduleConfiguration"
+ ],
+ "required": [
+  "DefinitionS3Location",
+  "RoleArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MWAAServerless::Workflow"
+}
