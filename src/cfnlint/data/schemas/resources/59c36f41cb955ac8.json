@@ -1,0 +1,102 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ImportSource": {
+   "additionalProperties": false,
+   "properties": {
+    "SourceArn": {
+     "type": "string"
+    },
+    "SourceType": {
+     "enum": [
+      "S3"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceType",
+    "SourceArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Comment": {
+   "maxLength": 128,
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "ImportSource": {
+   "$ref": "#/definitions/ImportSource"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9-_]{1,64}",
+   "type": "string"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/Status"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudFront::KeyValueStore",
+ "writeOnlyProperties": [
+  "/properties/ImportSource"
+ ]
+}
