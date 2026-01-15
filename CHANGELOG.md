@@ -1,3 +1,11 @@
+### v1.43.3
+## What's Changed
+* Update Lambda runtime lifecycle data with latest AWS runtimes by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4335
+* chore(deps): bump pyinstaller from 6.17.0 to 6.18.0 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4336
+* Update CloudFormation schemas to 2026-01-15 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4333
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.43.2...v1.43.3
+
 ### v1.43.2
 ## What's Changed
 * Update CloudFormation schemas to 2026-01-05 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4329
