@@ -291,7 +291,7 @@ types: dict[str, str] = {
     "AWS::ECR::ReplicationConfiguration": "dc2a377f75525dd4",
     "AWS::ECR::Repository": "d569f41026af3be8",
     "AWS::ECR::RepositoryCreationTemplate": "38e9548ebe8ec1f5",
-    "AWS::ECS::CapacityProvider": "e838474b874da177",
+    "AWS::ECS::CapacityProvider": "e6ce2874de331fa0",
     "AWS::ECS::Cluster": "3990111074eac8be",
     "AWS::ECS::ClusterCapacityProviderAssociations": "4b512d1fe30ffdd3",
     "AWS::ECS::PrimaryTaskSet": "d8ea9e906cb85b80",

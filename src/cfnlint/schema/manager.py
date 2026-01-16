@@ -258,25 +258,42 @@ class ProviderSchemaManager:
         import hashlib
         from pathlib import Path
 
-        # Download all regions in parallel
-        downloaded_regions = {}
-        failed_regions = []
+        # Separate ISO regions (not publicly accessible) from regular regions
+        iso_regions = [r for r in REGIONS if "iso" in r or r.startswith("eusc")]
+        regular_regions = [r for r in REGIONS if r not in iso_regions]
+
+        # Download all regular regions in parallel
+        downloaded_regions: dict[str, dict[str, dict]] = {}
+        failed_regions: list[str] = []
 
         # pylint: disable=not-context-manager
         with multiprocessing.Pool() as pool:
             results = pool.starmap(
-                self._download_region_schemas, [(region, force) for region in REGIONS]
+                self._download_region_schemas,
+                [(region, force) for region in regular_regions],
             )
 
-        for region, result in zip(REGIONS, results):
+        for region, result in zip(regular_regions, results):
             if result is None:
+                # Actual failure
                 failed_regions.append(region)
-            else:
+            elif result is False:
+                # No update needed, skip
+                pass
+            elif isinstance(result, dict):
+                # Successfully downloaded
                 downloaded_regions[region] = result
 
         if not downloaded_regions:
-            LOGGER.error("All regions failed to download")
-            return 2
+            # No regions were updated
+            if failed_regions:
+                # All regular regions failed
+                LOGGER.error("All regions failed to download")
+                return 2
+            else:
+                # All regions are up to date
+                LOGGER.info("All schemas are up to date")
+                return 0
 
         # Build global hash map
         hash_to_schema = {}
@@ -309,16 +326,10 @@ class ProviderSchemaManager:
         for region, type_map in region_mappings.items():
             self._write_region_file(region, type_map)
 
-        # Handle ISO regions by referencing us-east-1
+        # Handle ISO regions by copying us-east-1 schemas
         if "us-east-1" in region_mappings:
-            iso_handled = []
-            for region in failed_regions:
-                if "iso" in region or region.startswith("eusc"):
-                    self._write_region_file(region, region_mappings["us-east-1"])
-                    iso_handled.append(region)
-            # Remove ISO regions from failed list since they're expected to fail
-            for region in iso_handled:
-                failed_regions.remove(region)
+            for region in iso_regions:
+                self._write_region_file(region, region_mappings["us-east-1"])
 
         # Cleanup orphaned schemas
         self._cleanup_orphaned_schemas(region_mappings, resources_dir)
@@ -333,14 +344,15 @@ class ProviderSchemaManager:
 
     def _download_region_schemas(
         self, region: str, force: bool = False
-    ) -> dict[str, dict] | None:
+    ) -> dict[str, dict] | None | bool:
         """Download schemas for a single region
 
         Args:
             region: Region to download
             force: Force download even if cached
         Returns:
-            Dict mapping resource type to schema content, or None on failure
+            Dict mapping resource type to schema content,
+                False if no update needed, or None on failure
         """
 
         suffix = ".cn" if region in ["cn-north-1", "cn-northwest-1"] else ""
@@ -351,7 +363,7 @@ class ProviderSchemaManager:
 
         # Check if update needed
         if not (url_has_newer_version(url) or force):
-            return None
+            return False
 
         try:
             filehandle = get_url_retrieve(url, caching=True)
