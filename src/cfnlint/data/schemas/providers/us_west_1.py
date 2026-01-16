@@ -402,7 +402,7 @@ types: dict[str, str] = {
     "AWS::ECR::Repository": "d569f41026af3be8",
     "AWS::ECR::RepositoryCreationTemplate": "38e9548ebe8ec1f5",
     "AWS::ECR::SigningConfiguration": "c502bcdb31b67cc1",
-    "AWS::ECS::CapacityProvider": "e838474b874da177",
+    "AWS::ECS::CapacityProvider": "e6ce2874de331fa0",
     "AWS::ECS::Cluster": "3990111074eac8be",
     "AWS::ECS::ClusterCapacityProviderAssociations": "4b512d1fe30ffdd3",
     "AWS::ECS::ExpressGatewayService": "a04769bd1a468834",
