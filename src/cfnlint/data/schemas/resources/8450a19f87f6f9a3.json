@@ -1,0 +1,301 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SecurityConfigurationData",
+  "/properties/Name",
+  "/properties/ContainerProvider"
+ ],
+ "definitions": {
+  "AtRestEncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LocalDiskEncryptionConfiguration": {
+     "$ref": "#/definitions/LocalDiskEncryptionConfiguration"
+    },
+    "S3EncryptionConfiguration": {
+     "$ref": "#/definitions/S3EncryptionConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "AuthenticationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IAMConfiguration": {
+     "$ref": "#/definitions/IAMConfiguration"
+    },
+    "IdentityCenterConfiguration": {
+     "$ref": "#/definitions/IdentityCenterConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "AuthorizationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LakeFormationConfiguration": {
+     "$ref": "#/definitions/LakeFormationConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "ContainerInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "EksInfo": {
+     "$ref": "#/definitions/EksInfo"
+    }
+   },
+   "type": "object"
+  },
+  "ContainerProvider": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Info": {
+     "$ref": "#/definitions/ContainerInfo"
+    },
+    "Type": {
+     "enum": [
+      "EKS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Id"
+   ],
+   "type": "object"
+  },
+  "EksInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "Namespace": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AtRestEncryptionConfiguration": {
+     "$ref": "#/definitions/AtRestEncryptionConfiguration"
+    },
+    "InTransitEncryptionConfiguration": {
+     "$ref": "#/definitions/InTransitEncryptionConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "IAMConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SystemRole": {
+     "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):iam::\\d{12}:role/.+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "IdentityCenterConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableIdentityCenter": {
+     "type": "boolean"
+    },
+    "IdentityCenterApplicationAssignmentRequired": {
+     "type": "boolean"
+    },
+    "IdentityCenterInstanceARN": {
+     "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InTransitEncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "TLSCertificateConfiguration": {
+     "$ref": "#/definitions/TLSCertificateConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "LakeFormationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizedSessionTagValue": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "QueryAccessControlEnabled": {
+     "type": "boolean"
+    },
+    "QueryEngineRoleArn": {
+     "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):iam::\\d{12}:role/.+$",
+     "type": "string"
+    },
+    "SecureNamespaceInfo": {
+     "$ref": "#/definitions/SecureNamespaceInfo"
+    }
+   },
+   "type": "object"
+  },
+  "LocalDiskEncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsKmsKeyId": {
+     "type": "string"
+    },
+    "EncryptionKeyProviderType": {
+     "enum": [
+      "AwsKms"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "S3EncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionOption": {
+     "enum": [
+      "SSE-S3",
+      "SSE-KMS",
+      "CSE-KMS"
+     ],
+     "type": "string"
+    },
+    "KMSKeyId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SecureNamespaceInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "ClusterId": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Namespace": {
+     "maxLength": 63,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SecurityConfigurationData": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthenticationConfiguration": {
+     "$ref": "#/definitions/AuthenticationConfiguration"
+    },
+    "AuthorizationConfiguration": {
+     "$ref": "#/definitions/AuthorizationConfiguration"
+    },
+    "EncryptionConfiguration": {
+     "$ref": "#/definitions/EncryptionConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "TLSCertificateConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateProviderType": {
+     "enum": [
+      "PEM"
+     ],
+     "type": "string"
+    },
+    "PrivateKeySecretArn": {
+     "type": "string"
+    },
+    "PublicKeySecretArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ContainerProvider": {
+   "$ref": "#/definitions/ContainerProvider"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-_]+$",
+   "type": "string"
+  },
+  "SecurityConfigurationData": {
+   "$ref": "#/definitions/SecurityConfigurationData"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "SecurityConfigurationData"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EMRContainers::SecurityConfiguration",
+ "writeOnlyProperties": [
+  "/properties/SecurityConfigurationData/AuthenticationConfiguration/IdentityCenterConfiguration/IdentityCenterApplicationAssignmentRequired",
+  "/properties/SecurityConfigurationData/AuthenticationConfiguration/IdentityCenterConfiguration/IdentityCenterInstanceARN",
+  "/properties/SecurityConfigurationData/AuthorizationConfiguration/LakeFormationConfiguration/QueryAccessControlEnabled",
+  "/properties/SecurityConfigurationData/EncryptionConfiguration/AtRestEncryptionConfiguration"
+ ]
+}

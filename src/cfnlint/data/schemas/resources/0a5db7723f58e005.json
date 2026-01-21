@@ -1,0 +1,251 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/VirtualClusterId",
+   "/properties/Id"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/VirtualClusterId",
+  "/properties/Type",
+  "/properties/ReleaseLabel",
+  "/properties/ExecutionRoleArn",
+  "/properties/ConfigurationOverrides"
+ ],
+ "definitions": {
+  "Certificate": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateArn": {
+     "type": "string"
+    },
+    "CertificateData": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CloudWatchMonitoringConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroupName": {
+     "type": "string"
+    },
+    "LogStreamNamePrefix": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "LogGroupName"
+   ],
+   "type": "object"
+  },
+  "ConfigurationOverrides": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationConfiguration": {
+     "items": {
+      "$ref": "#/definitions/EMREKSConfiguration"
+     },
+     "maxItems": 100,
+     "type": "array"
+    },
+    "MonitoringConfiguration": {
+     "$ref": "#/definitions/MonitoringConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "ContainerLogRotationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxFilesToKeep": {
+     "type": "integer"
+    },
+    "RotationSize": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RotationSize",
+    "MaxFilesToKeep"
+   ],
+   "type": "object"
+  },
+  "EMREKSConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Classification": {
+     "type": "string"
+    },
+    "Configurations": {
+     "items": {
+      "$ref": "#/definitions/EMREKSConfiguration"
+     },
+     "maxItems": 100,
+     "type": "array"
+    },
+    "Properties": {
+     "additionalProperties": false,
+     "patternProperties": {
+      ".*": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "Classification"
+   ],
+   "type": "object"
+  },
+  "MonitoringConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchMonitoringConfiguration": {
+     "$ref": "#/definitions/CloudWatchMonitoringConfiguration"
+    },
+    "ContainerLogRotationConfiguration": {
+     "$ref": "#/definitions/ContainerLogRotationConfiguration"
+    },
+    "PersistentAppUI": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "S3MonitoringConfiguration": {
+     "$ref": "#/definitions/S3MonitoringConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "S3MonitoringConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogUri": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "LogUri"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "CertificateAuthority": {
+   "$ref": "#/definitions/Certificate"
+  },
+  "ConfigurationOverrides": {
+   "$ref": "#/definitions/ConfigurationOverrides"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "ExecutionRoleArn": {
+   "type": "string"
+  },
+  "FailureReason": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[0-9A-Za-z][A-Za-z0-9\\-_]*",
+   "type": "string"
+  },
+  "ReleaseLabel": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[A-Za-z0-9._/-]+",
+   "type": "string"
+  },
+  "SecurityGroup": {
+   "type": "string"
+  },
+  "ServerUrl": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "StateDetails": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "type": "string"
+  },
+  "VirtualClusterId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/ServerUrl",
+  "/properties/State",
+  "/properties/StateDetails",
+  "/properties/FailureReason",
+  "/properties/CreatedAt",
+  "/properties/SecurityGroup",
+  "/properties/CertificateAuthority"
+ ],
+ "required": [
+  "VirtualClusterId",
+  "Type",
+  "ReleaseLabel",
+  "ExecutionRoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EMRContainers::Endpoint"
+}
