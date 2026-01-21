@@ -1,3 +1,12 @@
+### v1.43.4
+## What's Changed
+* Fix update specs in quick succession failing the command by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4339
+* Update CloudFormation schemas to 2026-01-21 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4338
+* Update [E3601](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3601) to support Seconds as JSONata in Wait by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4343
+* Update [E3601](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3601) to have Choices support Comment by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4344
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.43.3...v1.43.4
+
 ### v1.43.3
 ## What's Changed
 * Update Lambda runtime lifecycle data with latest AWS runtimes by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4335
