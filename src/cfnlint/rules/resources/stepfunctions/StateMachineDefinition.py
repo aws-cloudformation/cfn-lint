@@ -76,6 +76,7 @@ class StateMachineDefinition(CfnLintJsonSchema):
                     "Choices": {
                         "items": {
                             "properties": {
+                                "Comment": {"type": "string"},
                                 "Condition": {"type": "string"},
                                 "Next": {"pattern": "^.{1,128}$", "type": "string"},
                                 "Assign": {"type": "object"},
