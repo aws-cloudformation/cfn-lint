@@ -89,6 +89,12 @@ class StateMachineDefinition(CfnLintJsonSchema):
                 }
             }
         ]
+        schema["definitions"]["wait"]["properties"]["Seconds"] = {
+            "maximum": 99999999,
+            "minimum": 0,
+            # JSONata supports JSONata expressions for Seconds
+            "type": ["number", "string"],
+        }
         for k in ["ItemsPath", "MaxConcurrencyPath"]:
             schema["definitions"]["map"]["properties"][k] = False
         return schema
