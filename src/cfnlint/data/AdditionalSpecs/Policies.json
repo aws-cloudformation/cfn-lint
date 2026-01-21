@@ -2069,17 +2069,24 @@
  },
  "aoss": {
   "Actions": {
+   "addcollectiontocollectiongroup": {
+    "Resources": [
+     "CollectionGroup"
+    ]
+   },
    "apiaccessall": {
     "Resources": [
      "Collection"
     ]
    },
    "batchgetcollection": {},
+   "batchgetcollectiongroup": {},
    "batchgeteffectivelifecyclepolicy": {},
    "batchgetlifecyclepolicy": {},
    "batchgetvpcendpoint": {},
    "createaccesspolicy": {},
    "createcollection": {},
+   "createcollectiongroup": {},
    "createindex": {},
    "createlifecyclepolicy": {},
    "createsecurityconfig": {},
@@ -2096,6 +2103,11 @@
      "Collection"
     ]
    },
+   "deletecollectiongroup": {
+    "Resources": [
+     "CollectionGroup"
+    ]
+   },
    "deleteindex": {},
    "deletelifecyclepolicy": {},
    "deletesecurityconfig": {},
@@ -2108,6 +2120,7 @@
    "getsecurityconfig": {},
    "getsecuritypolicy": {},
    "listaccesspolicies": {},
+   "listcollectiongroups": {},
    "listcollections": {},
    "listlifecyclepolicies": {},
    "listsecurityconfigs": {},
@@ -2123,6 +2136,11 @@
      "Collection"
     ]
    },
+   "updatecollectiongroup": {
+    "Resources": [
+     "CollectionGroup"
+    ]
+   },
    "updateindex": {},
    "updatelifecyclepolicy": {},
    "updatesecurityconfig": {},
@@ -2133,6 +2151,14 @@
    "collection": {
     "ARNFormats": [
      "arn:${Partition}:aoss:${Region}:${Account}:collection/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "collectiongroup": {
+    "ARNFormats": [
+     "arn:${Partition}:aoss:${Region}:${Account}:collection-group/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -5522,6 +5548,12 @@
      "graphqlapi"
     ]
    },
+   "associatewebacl": {
+    "Resources": [
+     "api",
+     "graphqlapi"
+    ]
+   },
    "createapi": {},
    "createapicache": {},
    "createapikey": {},
@@ -5576,6 +5608,12 @@
    "disassociatesourcegraphqlapi": {
     "Resources": [
      "sourceApiAssociation"
+    ]
+   },
+   "disassociatewebacl": {
+    "Resources": [
+     "api",
+     "graphqlapi"
     ]
    },
    "evaluatecode": {},
@@ -5636,6 +5674,12 @@
     ]
    },
    "gettype": {},
+   "getwebaclforresource": {
+    "Resources": [
+     "api",
+     "graphqlapi"
+    ]
+   },
    "graphql": {
     "Resources": [
      "field",
@@ -5655,6 +5699,7 @@
    "listgraphqlapis": {},
    "listresolvers": {},
    "listresolversbyfunction": {},
+   "listresourcesforwebacl": {},
    "listsourceapiassociations": {},
    "listtagsforresource": {
     "Resources": [
@@ -10475,6 +10520,9 @@
    "prompt-router": {
     "ARNFormats": [
      "arn:${Partition}:bedrock:${Region}:${Account}:prompt-router/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "prompt-version": {
@@ -25899,6 +25947,7 @@
    },
    "listtagsforresource": {
     "Resources": [
+     "budget",
      "farm",
      "fleet",
      "license-endpoint",
@@ -25952,6 +26001,7 @@
    },
    "tagresource": {
     "Resources": [
+     "budget",
      "farm",
      "fleet",
      "license-endpoint",
@@ -25962,6 +26012,7 @@
    },
    "untagresource": {
     "Resources": [
+     "budget",
      "farm",
      "fleet",
      "license-endpoint",
@@ -26059,6 +26110,7 @@
      "arn:${Partition}:deadline:${Region}:${Account}:farm/.*"
     ],
     "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}",
      "deadline:FarmMembershipLevels"
     ]
    },
@@ -26125,264 +26177,6 @@
      "aws:ResourceTag/${TagKey}",
      "deadline:FarmMembershipLevels",
      "deadline:FleetMembershipLevels"
-    ]
-   }
-  }
- },
- "deepracer": {
-  "Actions": {
-   "addleaderboardaccesspermission": {
-    "Resources": [
-     "leaderboard"
-    ]
-   },
-   "admindescribeaccountkey": {},
-   "admingetaccountconfig": {},
-   "adminlistassociatedresources": {},
-   "adminlistassociatedusers": {},
-   "adminmanageuser": {},
-   "adminsetaccountconfig": {},
-   "adminupdateaccountkey": {},
-   "clonereinforcementlearningmodel": {
-    "Resources": [
-     "reinforcement_learning_model",
-     "track"
-    ]
-   },
-   "createcar": {},
-   "createleaderboard": {},
-   "createleaderboardaccesstoken": {
-    "Resources": [
-     "leaderboard"
-    ]
-   },
-   "createleaderboardsubmission": {
-    "Resources": [
-     "leaderboard",
-     "reinforcement_learning_model"
-    ]
-   },
-   "createreinforcementlearningmodel": {
-    "Resources": [
-     "track"
-    ]
-   },
-   "deleteleaderboard": {
-    "Resources": [
-     "leaderboard"
-    ]
-   },
-   "deletemodel": {
-    "Resources": [
-     "reinforcement_learning_model"
-    ]
-   },
-   "editleaderboard": {
-    "Resources": [
-     "leaderboard"
-    ]
-   },
-   "getaccountconfig": {},
-   "getalias": {},
-   "getasseturl": {
-    "Resources": [
-     "reinforcement_learning_model"
-    ]
-   },
-   "getcar": {
-    "Resources": [
-     "car"
-    ]
-   },
-   "getcars": {},
-   "getevaluation": {
-    "Resources": [
-     "evaluation_job"
-    ]
-   },
-   "getlatestusersubmission": {
-    "Resources": [
-     "leaderboard"
-    ]
-   },
-   "getleaderboard": {
-    "Resources": [
-     "leaderboard"
-    ]
-   },
-   "getmodel": {
-    "Resources": [
-     "reinforcement_learning_model"
-    ]
-   },
-   "getprivateleaderboard": {
-    "Resources": [
-     "leaderboard"
-    ]
-   },
-   "getrankedusersubmission": {
-    "Resources": [
-     "leaderboard"
-    ]
-   },
-   "gettrack": {
-    "Resources": [
-     "track"
-    ]
-   },
-   "gettrainingjob": {
-    "Resources": [
-     "training_job"
-    ]
-   },
-   "importmodel": {},
-   "listevaluations": {
-    "Resources": [
-     "reinforcement_learning_model"
-    ]
-   },
-   "listleaderboardevaluations": {
-    "Resources": [
-     "leaderboard"
-    ]
-   },
-   "listleaderboards": {},
-   "listleaderboardsubmissions": {
-    "Resources": [
-     "leaderboard"
-    ]
-   },
-   "listmodels": {},
-   "listprivateleaderboardparticipants": {
-    "Resources": [
-     "leaderboard"
-    ]
-   },
-   "listprivateleaderboards": {},
-   "listsubscribedprivateleaderboards": {},
-   "listtagsforresource": {
-    "Resources": [
-     "car",
-     "evaluation_job",
-     "leaderboard",
-     "leaderboard_evaluation_job",
-     "reinforcement_learning_model",
-     "training_job"
-    ]
-   },
-   "listtracks": {},
-   "listtrainingjobs": {
-    "Resources": [
-     "reinforcement_learning_model"
-    ]
-   },
-   "migratemodels": {},
-   "performleaderboardoperation": {
-    "Resources": [
-     "leaderboard"
-    ]
-   },
-   "removeleaderboardaccesspermission": {
-    "Resources": [
-     "leaderboard"
-    ]
-   },
-   "setalias": {},
-   "startevaluation": {
-    "Resources": [
-     "reinforcement_learning_model",
-     "track"
-    ]
-   },
-   "stopevaluation": {
-    "Resources": [
-     "evaluation_job"
-    ]
-   },
-   "stoptrainingreinforcementlearningmodel": {
-    "Resources": [
-     "reinforcement_learning_model"
-    ]
-   },
-   "tagresource": {
-    "Resources": [
-     "car",
-     "evaluation_job",
-     "leaderboard",
-     "leaderboard_evaluation_job",
-     "reinforcement_learning_model",
-     "training_job"
-    ]
-   },
-   "testrewardfunction": {},
-   "untagresource": {
-    "Resources": [
-     "car",
-     "evaluation_job",
-     "leaderboard",
-     "leaderboard_evaluation_job",
-     "reinforcement_learning_model",
-     "training_job"
-    ]
-   },
-   "updatecar": {
-    "Resources": [
-     "car"
-    ]
-   }
-  },
-  "Resources": {
-   "car": {
-    "ARNFormats": [
-     "arn:${Partition}:deepracer:${Region}:${Account}:car/.*"
-    ],
-    "ConditionKeys": [
-     "aws:ResourceTag/${TagKey}"
-    ]
-   },
-   "evaluation_job": {
-    "ARNFormats": [
-     "arn:${Partition}:deepracer:${Region}:${Account}:evaluation_job/.*"
-    ],
-    "ConditionKeys": [
-     "aws:ResourceTag/${TagKey}"
-    ]
-   },
-   "leaderboard": {
-    "ARNFormats": [
-     "arn:${Partition}:deepracer:${Region}::leaderboard/.*"
-    ],
-    "ConditionKeys": [
-     "aws:ResourceTag/${TagKey}"
-    ]
-   },
-   "leaderboard_evaluation_job": {
-    "ARNFormats": [
-     "arn:${Partition}:deepracer:${Region}:${Account}:leaderboard_evaluation_job/.*"
-    ],
-    "ConditionKeys": [
-     "aws:ResourceTag/${TagKey}"
-    ]
-   },
-   "reinforcement_learning_model": {
-    "ARNFormats": [
-     "arn:${Partition}:deepracer:${Region}:${Account}:model/reinforcement_learning/.*"
-    ],
-    "ConditionKeys": [
-     "aws:ResourceTag/${TagKey}"
-    ]
-   },
-   "track": {
-    "ARNFormats": [
-     "arn:${Partition}:deepracer:${Region}::track/.*"
-    ]
-   },
-   "training_job": {
-    "ARNFormats": [
-     "arn:${Partition}:deepracer:${Region}:${Account}:training_job/.*"
-    ],
-    "ConditionKeys": [
-     "aws:ResourceTag/${TagKey}"
     ]
    }
   }
@@ -39513,6 +39307,7 @@
      "environment"
     ]
    },
+   "getversions": {},
    "listenvironmenthosts": {
     "Resources": [
      "environment"
@@ -70474,7 +70269,11 @@
  },
  "pca-connector-scep": {
   "Actions": {
-   "createchallenge": {},
+   "createchallenge": {
+    "Resources": [
+     "Connector"
+    ]
+   },
    "createconnector": {},
    "deletechallenge": {
     "Resources": [

@@ -43,6 +43,14 @@
      },
      "type": "array",
      "uniqueItems": false
+    },
+    "ScanSettings": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ScanSettingResourceType"
+     },
+     "type": "array",
+     "uniqueItems": false
     }
    },
    "required": [
@@ -90,6 +98,14 @@
     },
     "RuleName": {
      "type": "string"
+    },
+    "ScanActions": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ScanActionResourceType"
+     },
+     "type": "array",
+     "uniqueItems": false
     },
     "ScheduleExpression": {
      "type": "string"
@@ -166,7 +182,14 @@
    },
    "type": "object"
   },
+  "MalwareScanner": {
+   "enum": [
+    "GUARDDUTY"
+   ],
+   "type": "string"
+  },
   "ResourceType": {
+   "pattern": "^[a-zA-Z0-9\\-\\_\\.]{1,50}$",
    "type": "string"
   },
   "ResourceTypes": {
@@ -176,6 +199,40 @@
    },
    "type": "array",
    "uniqueItems": true
+  },
+  "ScanActionResourceType": {
+   "additionalProperties": false,
+   "properties": {
+    "MalwareScanner": {
+     "$ref": "#/definitions/MalwareScanner"
+    },
+    "ScanMode": {
+     "$ref": "#/definitions/ScanMode"
+    }
+   },
+   "type": "object"
+  },
+  "ScanMode": {
+   "enum": [
+    "FULL_SCAN",
+    "INCREMENTAL_SCAN"
+   ],
+   "type": "string"
+  },
+  "ScanSettingResourceType": {
+   "additionalProperties": false,
+   "properties": {
+    "MalwareScanner": {
+     "$ref": "#/definitions/MalwareScanner"
+    },
+    "ResourceTypes": {
+     "$ref": "#/definitions/ResourceTypes"
+    },
+    "ScannerRoleArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
   }
  },
  "primaryIdentifier": [

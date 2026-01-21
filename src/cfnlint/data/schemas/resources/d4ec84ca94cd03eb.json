@@ -570,6 +570,57 @@
    },
    "type": "object"
   },
+  "EvaluationReviewConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EligibilityDays": {
+     "maximum": 90,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ReviewNotificationRecipients": {
+     "items": {
+      "$ref": "#/definitions/EvaluationReviewNotificationRecipient"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "ReviewNotificationRecipients"
+   ],
+   "type": "object"
+  },
+  "EvaluationReviewNotificationRecipient": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "enum": [
+      "USER_ID"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "$ref": "#/definitions/EvaluationReviewNotificationRecipientValue"
+    }
+   },
+   "required": [
+    "Type",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "EvaluationReviewNotificationRecipientValue": {
+   "additionalProperties": false,
+   "properties": {
+    "UserId": {
+     "maxLength": 500,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "MultiSelectQuestionRuleCategoryAutomation": {
    "additionalProperties": false,
    "properties": {
@@ -744,6 +795,9 @@
   },
   "LanguageConfiguration": {
    "$ref": "#/definitions/EvaluationFormLanguageConfiguration"
+  },
+  "ReviewConfiguration": {
+   "$ref": "#/definitions/EvaluationReviewConfiguration"
   },
   "ScoringStrategy": {
    "$ref": "#/definitions/ScoringStrategy"
