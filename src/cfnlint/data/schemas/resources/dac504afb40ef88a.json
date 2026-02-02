@@ -65,7 +65,8 @@
   },
   "KmsKeyId": {
    "maxLength": 2048,
-   "pattern": "[a-zA-Z0-9:/_-]*",
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9:/_-]*$",
    "type": "string"
   },
   "OnlineStoreSecurityConfig": {
@@ -85,6 +86,7 @@
     },
     "S3Uri": {
      "maxLength": 1024,
+     "minLength": 0,
      "pattern": "^(https|s3)://([^/]+)/?(.*)$",
      "type": "string"
     }
@@ -114,12 +116,13 @@
     "Key": {
      "maxLength": 128,
      "minLength": 1,
-     "pattern": "([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)",
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     },
     "Value": {
      "maxLength": 256,
-     "pattern": "([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)",
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     }
    },
@@ -134,10 +137,12 @@
    "properties": {
     "ProvisionedReadCapacityUnits": {
      "maximum": 10000000,
+     "minimum": 0,
      "type": "integer"
     },
     "ProvisionedWriteCapacityUnits": {
      "maximum": 10000000,
+     "minimum": 0,
      "type": "integer"
     },
     "ThroughputMode": {
@@ -192,6 +197,7 @@
   },
   "Description": {
    "maxLength": 128,
+   "minLength": 0,
    "type": "string"
   },
   "EventTimeFeatureName": {
@@ -277,6 +283,7 @@
     "$ref": "#/definitions/Tag"
    },
    "maxItems": 50,
+   "minItems": 0,
    "type": "array",
    "uniqueItems": false
   },

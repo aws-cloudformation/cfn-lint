@@ -10,7 +10,7 @@
     "AlarmName": {
      "maxLength": 255,
      "minLength": 1,
-     "pattern": "(?!\\s*$).+",
+     "pattern": "^(?!\\s*$).+$",
      "type": "string"
     }
    },
@@ -47,6 +47,7 @@
     },
     "TerminationWaitInSeconds": {
      "maximum": 3600,
+     "minimum": 0,
      "type": "integer"
     },
     "TrafficRoutingConfiguration": {
@@ -110,6 +111,7 @@
     },
     "WaitIntervalInSeconds": {
      "maximum": 3600,
+     "minimum": 0,
      "type": "integer"
     }
    },
@@ -125,12 +127,13 @@
     "Key": {
      "maxLength": 128,
      "minLength": 1,
-     "pattern": "([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)",
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     },
     "Value": {
      "maxLength": 256,
-     "pattern": "([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)",
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     }
    },
@@ -159,6 +162,7 @@
     },
     "WaitIntervalInSeconds": {
      "maximum": 3600,
+     "minimum": 0,
      "type": "integer"
     }
    },
@@ -189,12 +193,14 @@
   },
   "EndpointConfigName": {
    "maxLength": 63,
-   "pattern": "[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
    "type": "string"
   },
   "EndpointName": {
    "maxLength": 63,
-   "pattern": "[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
    "type": "string"
   },
   "ExcludeRetainedVariantProperties": {
@@ -215,6 +221,7 @@
     "$ref": "#/definitions/Tag"
    },
    "maxItems": 50,
+   "minItems": 0,
    "type": "array",
    "uniqueItems": false
   }

@@ -31,9 +31,15 @@
    "additionalProperties": false,
    "properties": {
     "LogGroupName": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[\\.\\-_/#A-Za-z0-9]+$",
      "type": "string"
     },
     "LogStreamNamePrefix": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "\\S",
      "type": "string"
     }
    },
@@ -50,6 +56,7 @@
       "$ref": "#/definitions/EMREKSConfiguration"
      },
      "maxItems": 100,
+     "minItems": 0,
      "type": "array"
     },
     "MonitoringConfiguration": {
@@ -62,9 +69,14 @@
    "additionalProperties": false,
    "properties": {
     "MaxFilesToKeep": {
+     "maximum": 50,
+     "minimum": 1,
      "type": "integer"
     },
     "RotationSize": {
+     "maxLength": 12,
+     "minLength": 3,
+     "pattern": "^\\d+(\\.\\d+)?[KMG][Bb]?$",
      "type": "string"
     }
    },
@@ -78,6 +90,9 @@
    "additionalProperties": false,
    "properties": {
     "Classification": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "\\S",
      "type": "string"
     },
     "Configurations": {
@@ -85,6 +100,7 @@
       "$ref": "#/definitions/EMREKSConfiguration"
      },
      "maxItems": 100,
+     "minItems": 0,
      "type": "array"
     },
     "Properties": {
@@ -128,6 +144,9 @@
    "additionalProperties": false,
    "properties": {
     "LogUri": {
+     "maxLength": 10280,
+     "minLength": 1,
+     "pattern": "^[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\r\\n\\t]*$",
      "type": "string"
     }
    },
@@ -174,6 +193,9 @@
    "type": "string"
   },
   "ExecutionRoleArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:(aws[a-zA-Z0-9-]*):iam::(\\d{12})?:(role((\\u002F)|(\\u002F[\\u0021-\\u007F]+\\u002F))[\\w+=,.@-]+)$",
    "type": "string"
   },
   "FailureReason": {
@@ -216,9 +238,15 @@
    "uniqueItems": true
   },
   "Type": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "\\S",
    "type": "string"
   },
   "VirtualClusterId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[0-9a-z]+$",
    "type": "string"
   }
  },

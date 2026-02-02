@@ -237,7 +237,7 @@
    "additionalProperties": false,
    "properties": {
     "Endpoint": {
-     "pattern": "https?://.*",
+     "pattern": "^https?://",
      "type": "string"
     },
     "Id": {
@@ -274,7 +274,7 @@
      "type": "string"
     },
     "Separator": {
-     "pattern": "([\\n\\t])|(\\r\\n)|(,)",
+     "pattern": "^([\\n\\t])|(\\r\\n)|(,)$",
      "type": "string"
     }
    },
@@ -292,6 +292,7 @@
     },
     "ConfirmationUrl": {
      "maxLength": 2000,
+     "minLength": 0,
      "type": "string"
     },
     "Headers": {
@@ -299,11 +300,13 @@
       "$ref": "#/definitions/HttpActionHeader"
      },
      "maxItems": 100,
+     "minItems": 0,
      "type": "array",
      "uniqueItems": true
     },
     "Url": {
      "maxLength": 2000,
+     "minLength": 0,
      "type": "string"
     }
    },
@@ -366,6 +369,7 @@
     },
     "MessageId": {
      "maxLength": 128,
+     "minLength": 0,
      "type": "string"
     },
     "RoleArn": {
@@ -477,6 +481,7 @@
    "properties": {
     "Qos": {
      "maximum": 1,
+     "minimum": 0,
      "type": "integer"
     },
     "RoleArn": {

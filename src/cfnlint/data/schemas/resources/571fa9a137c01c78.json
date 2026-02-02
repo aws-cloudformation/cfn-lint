@@ -44,12 +44,13 @@
     "Key": {
      "maxLength": 128,
      "minLength": 1,
-     "pattern": "[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]+",
+     "pattern": "^[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]+$",
      "type": "string"
     },
     "Value": {
      "maxLength": 256,
-     "pattern": "[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*",
+     "minLength": 0,
+     "pattern": "^[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*$",
      "type": "string"
     }
    },
@@ -94,7 +95,7 @@
   "Path": {
    "maxLength": 512,
    "minLength": 1,
-   "pattern": "^/(.+/)*$",
+   "pattern": "^(\\u002F)|(\\u002F[\\u0021-\\u007E]+\\u002F)$",
    "type": "string"
   },
   "PermissionsBoundary": {
@@ -116,13 +117,14 @@
     "$ref": "#/definitions/Tag"
    },
    "maxItems": 50,
+   "minItems": 0,
    "type": "array",
    "uniqueItems": false
   },
   "UserName": {
    "maxLength": 64,
    "minLength": 1,
-   "pattern": "[\\w+=,.@-]+",
+   "pattern": "^[\\w+=,.@-]+$",
    "type": "string"
   }
  },

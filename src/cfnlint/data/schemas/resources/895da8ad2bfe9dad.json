@@ -84,10 +84,11 @@
      "items": {
       "maxLength": 128,
       "minLength": 1,
-      "pattern": "[0-9a-zA-Z_\\-\\.]+",
+      "pattern": "^[0-9a-zA-Z_\\-\\.]+$",
       "type": "string"
      },
      "maxItems": 1,
+     "minItems": 0,
      "type": "array"
     },
     "Dependencies": {
@@ -95,10 +96,12 @@
       "$ref": "#/definitions/Dependency"
      },
      "maxItems": 1,
+     "minItems": 0,
      "type": "array"
     },
     "Handler": {
      "maxLength": 128,
+     "minLength": 0,
      "pattern": "^(([0-9a-zA-Z_-]+(\\/|\\.))*[0-9A-Za-z_\\\\-]+(\\.|::)[A-Za-z_][A-Za-z0-9_]*)?$",
      "type": "string"
     },
@@ -156,6 +159,7 @@
    "properties": {
     "MaxRetries": {
      "maximum": 2,
+     "minimum": 0,
      "type": "integer"
     }
    },
@@ -210,7 +214,7 @@
     "KmsKeyArn": {
      "maxLength": 2048,
      "minLength": 1,
-     "pattern": "arn:(aws[a-zA-Z-]*)?:kms:[a-z]{2,4}(-[a-z]{2,4})?-[a-z]+-\\d{1}:\\d{12}:key/[\\w\\-\\/]+",
+     "pattern": "^arn:(aws[a-zA-Z-]*)?:kms:[a-z]{2,4}(-[a-z]{2,4})?-[a-z]+-\\d{1}:\\d{12}:key/[\\w\\-\\/]+$",
      "type": "string"
     }
    },
@@ -220,6 +224,8 @@
    "additionalProperties": false,
    "properties": {
     "DurationInSeconds": {
+     "maximum": 31622400,
+     "minimum": 0,
      "type": "string"
     },
     "Expression": {
@@ -269,6 +275,7 @@
       "type": "string"
      },
      "maxItems": 5,
+     "minItems": 0,
      "type": "array"
     },
     "SubnetIds": {
@@ -276,6 +283,7 @@
       "type": "string"
      },
      "maxItems": 16,
+     "minItems": 0,
      "type": "array"
     },
     "VpcId": {
@@ -348,7 +356,7 @@
   "ExecutionRoleArn": {
    "maxLength": 2048,
    "minLength": 1,
-   "pattern": "arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+",
+   "pattern": "^arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
    "type": "string"
   },
   "FailureRetentionPeriod": {

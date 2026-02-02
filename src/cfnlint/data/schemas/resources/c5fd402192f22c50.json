@@ -218,6 +218,7 @@
     "$ref": "#/definitions/ClusterInstanceStorageConfig"
    },
    "maxItems": 1,
+   "minItems": 0,
    "type": "array"
   },
   "ClusterKubernetesConfig": {
@@ -255,13 +256,13 @@
     "Key": {
      "maxLength": 317,
      "minLength": 1,
-     "pattern": "([a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?[A-Za-z0-9]([-A-Za-z0-9_.]*[A-Za-z0-9])?",
+     "pattern": "^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?[A-Za-z0-9]([-A-Za-z0-9_.]*[A-Za-z0-9])?$",
      "type": "string"
     },
     "Value": {
      "maxLength": 63,
      "minLength": 1,
-     "pattern": "(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?",
+     "pattern": "^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$",
      "type": "string"
     }
    },
@@ -277,6 +278,7 @@
     "$ref": "#/definitions/ClusterKubernetesTaint"
    },
    "maxItems": 50,
+   "minItems": 0,
    "type": "array"
   },
   "ClusterLifeCycleConfig": {
@@ -290,6 +292,7 @@
     },
     "SourceS3Uri": {
      "maxLength": 1024,
+     "minLength": 0,
      "pattern": "^(https|s3)://([^/]+)/?(.*)$",
      "type": "string"
     }
@@ -310,7 +313,7 @@
     "ClusterArn": {
      "maxLength": 2048,
      "minLength": 20,
-     "pattern": "arn:aws[a-z\\-]*:eks:[a-z0-9\\-]*:[0-9]{12}:cluster\\/[0-9A-Za-z][A-Za-z0-9\\-_]{0,99}",
+     "pattern": "^arn:aws[a-z\\-]*:eks:[a-z0-9\\-]*:[0-9]{12}:cluster\\/[0-9A-Za-z][A-Za-z0-9\\-_]{0,99}$",
      "type": "string"
     }
    },
@@ -660,6 +663,7 @@
    "properties": {
     "InstanceMemoryAllocationPercentage": {
      "maximum": 100,
+     "minimum": 0,
      "type": "integer"
     },
     "Mode": {
@@ -684,6 +688,7 @@
      "items": {
       "format": "AWS::EC2::SecurityGroup.Id",
       "maxLength": 32,
+      "minLength": 0,
       "pattern": "[-0-9a-zA-Z]+",
       "type": "string"
      },
@@ -697,6 +702,7 @@
      "items": {
       "format": "AWS::EC2::Subnet.Id",
       "maxLength": 32,
+      "minLength": 0,
       "pattern": "[-0-9a-zA-Z]+",
       "type": "string"
      },
@@ -782,6 +788,7 @@
     "$ref": "#/definitions/Tag"
    },
    "maxItems": 50,
+   "minItems": 0,
    "type": "array",
    "uniqueItems": true
   },

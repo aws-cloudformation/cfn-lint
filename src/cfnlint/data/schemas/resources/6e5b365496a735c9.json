@@ -19,6 +19,7 @@
    "properties": {
     "IntervalInSeconds": {
      "maximum": 900,
+     "minimum": 0,
      "type": "integer"
     },
     "SizeInMBs": {
@@ -88,6 +89,7 @@
    "properties": {
     "DurationInSeconds": {
      "maximum": 7200,
+     "minimum": 0,
      "type": "integer"
     }
    },
@@ -98,6 +100,7 @@
    "properties": {
     "IntervalInSeconds": {
      "maximum": 900,
+     "minimum": 0,
      "type": "integer"
     },
     "SizeInMBs": {
@@ -191,6 +194,7 @@
    "properties": {
     "DurationInSeconds": {
      "maximum": 7200,
+     "minimum": 0,
      "type": "integer"
     }
    },
@@ -225,6 +229,7 @@
    "properties": {
     "IntervalInSeconds": {
      "maximum": 900,
+     "minimum": 0,
      "type": "integer"
     },
     "SizeInMBs": {
@@ -262,12 +267,14 @@
     "LogGroupName": {
      "format": "AWS::Logs::LogGroup.Name",
      "maxLength": 512,
-     "pattern": "[\\.\\-_/#A-Za-z0-9]*",
+     "minLength": 0,
+     "pattern": "^[\\.\\-_/#A-Za-z0-9]*$",
      "type": "string"
     },
     "LogStreamName": {
      "maxLength": 512,
-     "pattern": "[^:*]*",
+     "minLength": 0,
+     "pattern": "^[^:*]*$",
      "type": "string"
     }
    },
@@ -531,13 +538,13 @@
     "DestinationDatabaseName": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[a-zA-Z0-9\\.\\_]+",
+     "pattern": "^[a-zA-Z0-9\\.\\_]+$",
      "type": "string"
     },
     "DestinationTableName": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[a-zA-Z0-9\\.\\_]+",
+     "pattern": "^[a-zA-Z0-9\\.\\_]+$",
      "type": "string"
     },
     "PartitionSpec": {
@@ -622,6 +629,7 @@
    "properties": {
     "IntervalInSeconds": {
      "maximum": 900,
+     "minimum": 0,
      "type": "integer"
     },
     "SizeInMBs": {
@@ -729,6 +737,7 @@
    "properties": {
     "DurationInSeconds": {
      "maximum": 7200,
+     "minimum": 0,
      "type": "integer"
     }
    },
@@ -777,7 +786,7 @@
     "CustomTimeZone": {
      "maxLength": 50,
      "minLength": 0,
-     "pattern": "^$|[a-zA-Z/_]+",
+     "pattern": "^$|[a-zA-Z/_]+$",
      "type": "string"
     },
     "DataFormatConversionConfiguration": {
@@ -839,7 +848,7 @@
      "items": {
       "maxLength": 1024,
       "minLength": 1,
-      "pattern": "^(?!\\s*$).+",
+      "pattern": "^(?!\\s*$).+$",
       "type": "string"
      },
      "type": "array",
@@ -854,7 +863,7 @@
     "AttributeName": {
      "maxLength": 256,
      "minLength": 1,
-     "pattern": "^(?!\\s*$).+",
+     "pattern": "^(?!\\s*$).+$",
      "type": "string"
     },
     "AttributeValue": {
@@ -880,13 +889,13 @@
     "Name": {
      "maxLength": 256,
      "minLength": 1,
-     "pattern": "^(?!\\s*$).+",
+     "pattern": "^(?!\\s*$).+$",
      "type": "string"
     },
     "Url": {
      "maxLength": 1000,
      "minLength": 1,
-     "pattern": "https://.*",
+     "pattern": "^https://",
      "type": "string"
     }
    },
@@ -1035,7 +1044,7 @@
     "AWSKMSKeyARN": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "arn:.*:kms:[a-zA-Z0-9\\-]+:\\d{12}:(key|alias)/[a-zA-Z_0-9+=,.@\\-_/]+",
+     "pattern": "^arn:.*:kms:[a-zA-Z0-9\\-]+:\\d{12}:(key|alias)/[a-zA-Z_0-9+=,.@\\-_/]+$",
      "type": "string"
     }
    },
@@ -1135,6 +1144,8 @@
      "uniqueItems": true
     },
     "BloomFilterFalsePositiveProbability": {
+     "maximum": 1,
+     "minimum": 0,
      "type": "number"
     },
     "Compression": {
@@ -1146,6 +1157,8 @@
      "type": "string"
     },
     "DictionaryKeyThreshold": {
+     "maximum": 1,
+     "minimum": 0,
      "type": "number"
     },
     "EnablePadding": {
@@ -1159,6 +1172,8 @@
      "type": "string"
     },
     "PaddingTolerance": {
+     "maximum": 1,
+     "minimum": 0,
      "type": "number"
     },
     "RowIndexStride": {
@@ -1200,6 +1215,7 @@
      "type": "boolean"
     },
     "MaxPaddingBytes": {
+     "minimum": 0,
      "type": "integer"
     },
     "PageSizeBytes": {
@@ -1316,7 +1332,7 @@
      ],
      "maxLength": 5120,
      "minLength": 1,
-     "pattern": "^(?!\\s*$).+",
+     "pattern": "^(?!\\s*$).+$",
      "type": "string"
     }
    },
@@ -1335,7 +1351,7 @@
     "ClusterJDBCURL": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "jdbc:(redshift|postgresql)://((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+(redshift(-serverless)?)\\.([a-zA-Z0-9\\.\\-]+):\\d{1,5}/[a-zA-Z0-9_$-]+",
+     "pattern": "^jdbc:(redshift|postgresql)://((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+(redshift(-serverless)?)\\.([a-zA-Z0-9\\.\\-]+):\\d{1,5}/[a-zA-Z0-9_$-]+$",
      "type": "string"
     },
     "CopyCommand": {
@@ -1394,6 +1410,7 @@
    "properties": {
     "DurationInSeconds": {
      "maximum": 7200,
+     "minimum": 0,
      "type": "integer"
     }
    },
@@ -1404,6 +1421,7 @@
    "properties": {
     "DurationInSeconds": {
      "maximum": 7200,
+     "minimum": 0,
      "type": "integer"
     }
    },
@@ -1555,6 +1573,7 @@
    "properties": {
     "IntervalInSeconds": {
      "maximum": 900,
+     "minimum": 0,
      "type": "integer"
     },
     "SizeInMBs": {
@@ -1677,6 +1696,7 @@
    "properties": {
     "DurationInSeconds": {
      "maximum": 7200,
+     "minimum": 0,
      "type": "integer"
     }
    },
@@ -1716,6 +1736,7 @@
    "properties": {
     "IntervalInSeconds": {
      "maximum": 60,
+     "minimum": 0,
      "type": "integer"
     },
     "SizeInMBs": {
@@ -1789,6 +1810,7 @@
    "properties": {
     "DurationInSeconds": {
      "maximum": 7200,
+     "minimum": 0,
      "type": "integer"
     }
    },
