@@ -1,0 +1,31 @@
+{
+  "name": "rule-creator",
+  "description": "Specialized agent for creating new cfn-lint validation rules",
+  "tools": [
+    "code",
+    "fs_read",
+    "fs_write",
+    "grep",
+    "web_search",
+    "web_fetch",
+    "execute_bash"
+  ],
+  "allowedTools": [
+    "code",
+    "fs_read",
+    "grep",
+    "web_search",
+    "web_fetch"
+  ],
+  "toolsSettings": {
+    "execute_bash": {
+      "allowedCommands": ["gh issue list.*", "gh issue view.*"],
+      "autoAllowReadonly": true
+    }
+  },
+  "resources": [
+    "file://.kiro/steering/**/*.md",
+    "file://.kiro/context/architecture.md",
+    "file://.kiro/prompts/create-rule.md"
+  ]
+}
