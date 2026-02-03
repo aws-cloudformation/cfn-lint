@@ -20,21 +20,17 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
           check-latest: true
-      - name: Install Tox and any other packages
-        run: pip install tox
-      - name: Run Lint
-        run: |
-          pip install pre-commit
-          pre-commit run --all-files
+      - name: Install Tox
+        run: pip install tox tox-gh
       - name: Run Tox
-        run: |
-          tox -e py
-          mv coverage.xml coverage-${{ matrix.python }}.xml
+        run: tox
+        env:
+          TOX_GH_MAJOR_MINOR: ${{ matrix.python }}
       - uses: codecov/codecov-action@v5
         if: matrix.os == 'ubuntu-latest'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: coverage-${{ matrix.python }}.xml
+          file: coverage.xml
           name: py${{ matrix.python }}-${{ matrix.os }}
           flags: unittests
           fail_ci_if_error: true
