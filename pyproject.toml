@@ -128,6 +128,33 @@ exclude_lines = [
   "if TYPE_CHECKING:"
 ]
 
+[tool.tox]
+env_list = ["py39", "py310", "py311", "py312", "py313", "style"]
+
+[tool.tox.env_run_base]
+skip_install = true
+commands = [
+  ["pip", "install", "-e", ".[full]"],
+  ["pip", "install", "-r", "requirements/dev.txt"],
+  ["coverage", "run", "-m", "pytest", "{posargs:test}"],
+  ["coverage", "xml"],
+]
+set_env = { LANG = "en_US.UTF-8", AWS_DEFAULT_REGION = "us-east-1" }
+
+[tool.tox.env.style]
+skip_install = true
+commands = [
+  ["pip", "install", "pre-commit"],
+  ["pre-commit", "run", "--all-files"],
+]
+
+[tool.tox.gh.python]
+"3.9" = ["py39"]
+"3.10" = ["py310"]
+"3.11" = ["py311"]
+"3.12" = ["py312"]
+"3.13" = ["py313", "style"]
+
 [tool.mypy]
 python_version = "3.10"
 warn_return_any = true
