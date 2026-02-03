@@ -1,0 +1,127 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceArn",
+  "/properties/Status"
+ ],
+ "definitions": {
+  "Description": {
+   "maxLength": 250,
+   "minLength": 0,
+   "pattern": "^[\\P{C}\r\n\t]+$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Timestamp": {
+   "type": "number"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InstanceArn",
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CreatedTime": {
+   "$ref": "#/definitions/Timestamp"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "InstanceArn": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "LastModifiedRegion": {
+   "pattern": "[a-z]{2}(-[a-z]+){1,2}(-[0-9])?",
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "$ref": "#/definitions/Timestamp"
+  },
+  "LockVersion": {
+   "additionalProperties": false,
+   "properties": {
+    "DataTable": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[\\p{L}\\p{Z}\\p{N}\\-_.:=@'|]+$",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "PUBLISHED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TimeZone": {
+   "type": "string"
+  },
+  "ValueLockLevel": {
+   "enum": [
+    "NONE",
+    "DATA_TABLE",
+    "PRIMARY_VALUE",
+    "ATTRIBUTE",
+    "VALUE"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/LockVersion",
+  "/properties/CreatedTime",
+  "/properties/LastModifiedRegion",
+  "/properties/LastModifiedTime"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::DataTable"
+}

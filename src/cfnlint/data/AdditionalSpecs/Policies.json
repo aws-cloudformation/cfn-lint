@@ -6435,7 +6435,7 @@
   "Resources": {
    "plan": {
     "ARNFormats": [
-     "arn:${Partition}:arc-region-switch:${Region}:${Account}:plan/.*"
+     "arn:${Partition}:arc-region-switch::${Account}:plan/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -15707,11 +15707,7 @@
     ]
    },
    "createkeygroup": {},
-   "createkeyvaluestore": {
-    "Resources": [
-     "key-value-store"
-    ]
-   },
+   "createkeyvaluestore": {},
    "createmonitoringsubscription": {},
    "createoriginaccesscontrol": {},
    "createoriginrequestpolicy": {},
@@ -25148,6 +25144,7 @@
    "deletecell": {},
    "deletecellrun": {},
    "deleteconnection": {},
+   "deletedataexportconfiguration": {},
    "deletedataproduct": {},
    "deletedatasource": {},
    "deletedomain": {
@@ -25285,6 +25282,7 @@
    "putdataexportconfiguration": {},
    "putdomainsharingpolicy": {},
    "putenvironmentblueprintconfiguration": {},
+   "querygraph": {},
    "refreshtoken": {},
    "rejectpredictions": {},
    "rejectsubscriptionrequest": {},
@@ -29104,6 +29102,11 @@
  },
  "dynamodb": {
   "Actions": {
+   "associatetablereplica": {
+    "Resources": [
+     "table"
+    ]
+   },
    "batchgetitem": {
     "Resources": [
      "table"
@@ -29283,6 +29286,11 @@
      "table"
     ]
    },
+   "injecterror": {
+    "Resources": [
+     "table"
+    ]
+   },
    "listbackups": {},
    "listcontributorinsights": {},
    "listexports": {},
@@ -29331,6 +29339,16 @@
    "query": {
     "Resources": [
      "index",
+     "table"
+    ]
+   },
+   "readdataforreplication": {
+    "Resources": [
+     "table"
+    ]
+   },
+   "replicatesettings": {
+    "Resources": [
      "table"
     ]
    },
@@ -29422,6 +29440,11 @@
     ]
    },
    "updatetimetolive": {
+    "Resources": [
+     "table"
+    ]
+   },
+   "writedataforreplication": {
     "Resources": [
      "table"
     ]
@@ -32056,6 +32079,11 @@
     ]
    },
    "injectapierror": {},
+   "injectvolumeiolatency": {
+    "Resources": [
+     "volume"
+    ]
+   },
    "listimagesinrecyclebin": {},
    "listsnapshotsinrecyclebin": {},
    "listvolumesinrecyclebin": {},
@@ -47354,6 +47382,7 @@
  },
  "identitystore": {
   "Actions": {
+   "addregion": {},
    "creategroup": {
     "Resources": [
      "Identitystore"
@@ -47407,6 +47436,7 @@
      "User"
     ]
    },
+   "describeregion": {},
    "describeuser": {
     "Resources": [
      "Identitystore",
@@ -47461,12 +47491,14 @@
      "Identitystore"
     ]
    },
+   "listregions": {},
    "listusers": {
     "Resources": [
      "AllUsers",
      "Identitystore"
     ]
    },
+   "removeregion": {},
    "reserveuser": {
     "Resources": [
      "Identitystore"
@@ -55894,6 +55926,7 @@
      "deployment"
     ]
    },
+   "getdeploymentpatternversion": {},
    "getinfrastructuresuggestion": {},
    "getipaddress": {},
    "getresourcecostestimate": {},
@@ -55906,6 +55939,7 @@
    "listadditionalnodes": {},
    "listallowedresources": {},
    "listdeploymentevents": {},
+   "listdeploymentpatternversions": {},
    "listdeployments": {},
    "listprovisionedapps": {},
    "listresourcecostestimates": {},
@@ -55926,6 +55960,11 @@
     ]
    },
    "untagresource": {
+    "Resources": [
+     "deployment"
+    ]
+   },
+   "updatedeployment": {
     "Resources": [
      "deployment"
     ]
@@ -76916,6 +76955,11 @@
      "dbname"
     ]
    },
+   "getidentitycenterauthtoken": {
+    "Resources": [
+     "cluster"
+    ]
+   },
    "getreservednodeexchangeconfigurationoptions": {},
    "getreservednodeexchangeofferings": {},
    "getresourcepolicy": {
@@ -77406,6 +77450,11 @@
    "getendpointaccess": {
     "Resources": [
      "endpointAccess"
+    ]
+   },
+   "getidentitycenterauthtoken": {
+    "Resources": [
+     "workgroup"
     ]
    },
    "getmanagedworkgroup": {
@@ -81766,6 +81815,12 @@
    "updatejobstatus": {
     "Resources": [
      "job"
+    ]
+   },
+   "updateobjectencryption": {
+    "Resources": [
+     "accesspointobject",
+     "object"
     ]
    },
    "updatestoragelensgroup": {
@@ -86638,73 +86693,413 @@
  },
  "securityagent": {
   "Actions": {
-   "addartifact": {},
-   "addcontrol": {},
-   "batchdeletepentests": {},
-   "batchgetagentinstances": {},
-   "batchgetartifactmetadata": {},
-   "batchgetfindings": {},
-   "batchgetpentestjobs": {},
-   "batchgetpentests": {},
-   "batchgetsecuritytestcontentmetadata": {},
-   "batchgettasks": {},
-   "createagentinstance": {},
+   "addartifact": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "addcontrol": {
+    "Resources": [
+     "Application"
+    ]
+   },
+   "batchdeletepentests": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "batchgetagentinstances": {
+    "Resources": [
+     "AgentInstance"
+    ]
+   },
+   "batchgetagentspaces": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "batchgetartifactmetadata": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "batchgetfindings": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "batchgetpentestjobcontentmetadata": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "batchgetpentestjobs": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "batchgetpentestjobtasks": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "batchgetpentests": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "batchgetsecuritytestcontentmetadata": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "batchgettasks": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "createagentinstance": {
+    "Resources": [
+     "Application"
+    ]
+   },
+   "createagentspace": {
+    "Resources": [
+     "Application"
+    ]
+   },
    "createapplication": {},
-   "createdocumentreview": {},
-   "createintegration": {},
-   "createmembership": {},
-   "createonetimeloginsession": {},
-   "createpentest": {},
-   "deleteagentinstance": {},
-   "deleteapplication": {},
-   "deleteartifact": {},
-   "deletecontrol": {},
-   "deleteintegration": {},
-   "deletemembership": {},
-   "describefindings": {},
-   "getapplication": {},
-   "getartifact": {},
-   "getcodereviewtask": {},
-   "getcontrol": {},
-   "getdocreviewtask": {},
-   "getdocumentreview": {},
-   "getdocumentreviewartifact": {},
-   "getintegration": {},
-   "getloginsessioncredentials": {},
-   "handleonetimeloginsession": {},
-   "initiateproviderregistration": {},
+   "createdesignreview": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "createdocumentreview": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "createintegration": {
+    "Resources": [
+     "Application"
+    ]
+   },
+   "createmembership": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "createonetimeloginsession": {
+    "Resources": [
+     "Application"
+    ]
+   },
+   "createpentest": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "createsecurityrequirement": {
+    "Resources": [
+     "Application"
+    ]
+   },
+   "deleteagentinstance": {
+    "Resources": [
+     "AgentInstance"
+    ]
+   },
+   "deleteagentspace": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "deleteapplication": {
+    "Resources": [
+     "Application"
+    ]
+   },
+   "deleteartifact": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "deletecontrol": {
+    "Resources": [
+     "Control"
+    ]
+   },
+   "deletedesignreview": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "deletedocumentreview": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "deleteintegration": {
+    "Resources": [
+     "Integration"
+    ]
+   },
+   "deletemembership": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "deletesecurityrequirement": {
+    "Resources": [
+     "SecurityRequirement"
+    ]
+   },
+   "describefindings": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "getapplication": {
+    "Resources": [
+     "Application"
+    ]
+   },
+   "getartifact": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "getcodereviewtask": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "getcontrol": {
+    "Resources": [
+     "Control"
+    ]
+   },
+   "getdesignreview": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "getdesignreviewartifact": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "getdocreviewtask": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "getdocumentreview": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "getdocumentreviewartifact": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "getintegration": {
+    "Resources": [
+     "Integration"
+    ]
+   },
+   "getloginsessioncredentials": {
+    "Resources": [
+     "Application"
+    ]
+   },
+   "getsecurityrequirement": {
+    "Resources": [
+     "SecurityRequirement"
+    ]
+   },
+   "handleonetimeloginsession": {
+    "Resources": [
+     "Application"
+    ]
+   },
+   "initiateproviderregistration": {
+    "Resources": [
+     "Application"
+    ]
+   },
    "listagentinstances": {},
-   "listagentinstancetasks": {},
+   "listagentinstancetasks": {
+    "Resources": [
+     "AgentInstance"
+    ]
+   },
+   "listagentspaces": {},
    "listapplications": {},
-   "listartifacts": {},
+   "listartifacts": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
    "listcontrols": {},
-   "listdiscoveredendpoints": {},
-   "listdocumentreviewcomments": {},
-   "listdocumentreviews": {},
-   "listfindings": {},
-   "listintegratedresources": {},
+   "listdesignreviewcomments": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "listdesignreviews": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "listdiscoveredendpoints": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "listdocumentreviewcomments": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "listdocumentreviews": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "listfindings": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "listintegratedresources": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
    "listintegrations": {},
-   "listmemberships": {},
-   "listpentestjobsforpentest": {},
-   "listpentests": {},
-   "listresourcesfromintegration": {},
-   "listtasks": {},
-   "startcoderemediation": {},
-   "startpentestexecution": {},
-   "stoppentestexecution": {},
-   "togglemanagedcontrol": {},
-   "updateagentinstance": {},
-   "updateapplication": {},
-   "updatecontrol": {},
-   "updatefinding": {},
-   "updateintegratedresources": {},
-   "updatepentest": {},
-   "verifytargetdomain": {}
+   "listmemberships": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "listpentestjobsforpentest": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "listpentestjobtasks": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "listpentests": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "listresourcesfromintegration": {
+    "Resources": [
+     "Integration"
+    ]
+   },
+   "listsecurityrequirements": {},
+   "listtasks": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "startcoderemediation": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "startpentestexecution": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "startpentestjob": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "stoppentestexecution": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "stoppentestjob": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "togglemanagedcontrol": {
+    "Resources": [
+     "Control"
+    ]
+   },
+   "togglemanagedsecurityrequirement": {
+    "Resources": [
+     "SecurityRequirement"
+    ]
+   },
+   "updateagentinstance": {
+    "Resources": [
+     "AgentInstance"
+    ]
+   },
+   "updateagentspace": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "updateapplication": {
+    "Resources": [
+     "Application"
+    ]
+   },
+   "updatecontrol": {
+    "Resources": [
+     "Control"
+    ]
+   },
+   "updatefinding": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "updateintegratedresources": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "updatepentest": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "updatesecurityrequirement": {
+    "Resources": [
+     "SecurityRequirement"
+    ]
+   },
+   "verifytargetdomain": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   }
   },
   "Resources": {
    "agentinstance": {
     "ARNFormats": [
      "arn:${Partition}:securityagent:${Region}:${Account}:agent-instance/.*"
+    ]
+   },
+   "agentspace": {
+    "ARNFormats": [
+     "arn:${Partition}:securityagent:${Region}:${Account}:agent-space/.*"
     ]
    },
    "application": {
@@ -86714,7 +87109,7 @@
    },
    "artifact": {
     "ARNFormats": [
-     "arn:${Partition}:securityagent:${Region}:${Account}:agent-instance/.*"
+     "arn:${Partition}:securityagent:${Region}:${Account}:agent-space/.*"
     ]
    },
    "control": {
@@ -86724,7 +87119,7 @@
    },
    "finding": {
     "ARNFormats": [
-     "arn:${Partition}:securityagent:${Region}:${Account}:agent-instance/.*"
+     "arn:${Partition}:securityagent:${Region}:${Account}:agent-space/.*"
     ]
    },
    "integration": {
@@ -86734,17 +87129,22 @@
    },
    "pentest": {
     "ARNFormats": [
-     "arn:${Partition}:securityagent:${Region}:${Account}:agent-instance/.*"
+     "arn:${Partition}:securityagent:${Region}:${Account}:agent-space/.*"
     ]
    },
    "pentestjob": {
     "ARNFormats": [
-     "arn:${Partition}:securityagent:${Region}:${Account}:agent-instance/.*"
+     "arn:${Partition}:securityagent:${Region}:${Account}:agent-space/.*"
     ]
    },
    "pentesttask": {
     "ARNFormats": [
-     "arn:${Partition}:securityagent:${Region}:${Account}:agent-instance/.*"
+     "arn:${Partition}:securityagent:${Region}:${Account}:agent-space/.*"
+    ]
+   },
+   "securityrequirement": {
+    "ARNFormats": [
+     "arn:${Partition}:securityagent:${Region}:${Account}:security-requirement/.*"
     ]
    }
   }
@@ -88081,11 +88481,23 @@
    "getawsdefaultservicequota": {},
    "getquotautilizationreport": {},
    "getrequestedservicequotachange": {},
-   "getservicequota": {},
-   "getservicequotaincreaserequestfromtemplate": {},
+   "getservicequota": {
+    "Resources": [
+     "quota"
+    ]
+   },
+   "getservicequotaincreaserequestfromtemplate": {
+    "Resources": [
+     "quota"
+    ]
+   },
    "listawsdefaultservicequotas": {},
    "listrequestedservicequotachangehistory": {},
-   "listrequestedservicequotachangehistorybyquota": {},
+   "listrequestedservicequotachangehistorybyquota": {
+    "Resources": [
+     "quota"
+    ]
+   },
    "listservicequotaincreaserequestsintemplate": {},
    "listservicequotas": {},
    "listservices": {},
@@ -92054,6 +92466,11 @@
  },
  "sso": {
   "Actions": {
+   "addregion": {
+    "Resources": [
+     "Instance"
+    ]
+   },
    "associatedirectory": {},
    "associateprofile": {},
    "attachcustomermanagedpolicyreferencetopermissionset": {
@@ -92077,6 +92494,7 @@
    },
    "createapplication": {
     "Resources": [
+     "Application",
      "ApplicationProvider",
      "Instance"
     ]
@@ -92109,7 +92527,8 @@
    "createtrust": {},
    "createtrustedtokenissuer": {
     "Resources": [
-     "Instance"
+     "Instance",
+     "TrustedTokenIssuer"
     ]
    },
    "deleteaccountassignment": {
@@ -92223,6 +92642,11 @@
     ]
    },
    "describepermissionsetprovisioningstatus": {
+    "Resources": [
+     "Instance"
+    ]
+   },
+   "describeregion": {
     "Resources": [
      "Instance"
     ]
@@ -92389,6 +92813,11 @@
    },
    "listprofileassociations": {},
    "listprofiles": {},
+   "listregions": {
+    "Resources": [
+     "Instance"
+    ]
+   },
    "listtagsforresource": {
     "Resources": [
      "Application",
@@ -92448,6 +92877,11 @@
     ]
    },
    "putpermissionspolicy": {},
+   "removeregion": {
+    "Resources": [
+     "Instance"
+    ]
+   },
    "searchgroups": {},
    "searchusers": {},
    "startsso": {},
@@ -94940,7 +95374,11 @@
      "server"
     ]
    },
-   "createconnector": {},
+   "createconnector": {
+    "Resources": [
+     "profile"
+    ]
+   },
    "createprofile": {},
    "createserver": {},
    "createuser": {
@@ -95215,7 +95653,8 @@
    },
    "updateconnector": {
     "Resources": [
-     "connector"
+     "connector",
+     "profile"
     ]
    },
    "updatehostkey": {

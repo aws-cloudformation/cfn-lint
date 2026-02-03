@@ -1,0 +1,349 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CommandId",
+  "/properties/PayloadTemplate",
+  "/properties/Preprocessor"
+ ],
+ "definitions": {
+  "AwsJsonSubstitutionCommandPreprocessorConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "OutputFormat": {
+     "$ref": "#/definitions/OutputFormat"
+    }
+   },
+   "required": [
+    "OutputFormat"
+   ],
+   "type": "object"
+  },
+  "CommandParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultValue": {
+     "$ref": "#/definitions/CommandParameterValue"
+    },
+    "Description": {
+     "$ref": "#/definitions/CommandParameterDescription"
+    },
+    "Name": {
+     "$ref": "#/definitions/CommandParameterName"
+    },
+    "Type": {
+     "$ref": "#/definitions/CommandParameterType"
+    },
+    "Value": {
+     "$ref": "#/definitions/CommandParameterValue"
+    },
+    "ValueConditions": {
+     "$ref": "#/definitions/CommandParameterValueConditionList"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "CommandParameterDescription": {
+   "maxLength": 2028,
+   "minLength": 0,
+   "pattern": "^[^\\p{C}]*$",
+   "type": "string"
+  },
+  "CommandParameterList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CommandParameter"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "CommandParameterName": {
+   "maxLength": 192,
+   "minLength": 1,
+   "pattern": "^[.$a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "CommandParameterType": {
+   "enum": [
+    "STRING",
+    "INTEGER",
+    "DOUBLE",
+    "LONG",
+    "UNSIGNEDLONG",
+    "BOOLEAN",
+    "BINARY"
+   ],
+   "type": "string"
+  },
+  "CommandParameterValue": {
+   "additionalProperties": false,
+   "properties": {
+    "B": {
+     "type": "boolean"
+    },
+    "BIN": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "D": {
+     "type": "number"
+    },
+    "I": {
+     "type": "integer"
+    },
+    "L": {
+     "maxLength": 19,
+     "pattern": "^-?\\d+$",
+     "type": "string"
+    },
+    "S": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "UL": {
+     "maxLength": 20,
+     "minLength": 1,
+     "pattern": "^[0-9]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CommandParameterValueComparisonOperand": {
+   "additionalProperties": false,
+   "properties": {
+    "Number": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "NumberRange": {
+     "$ref": "#/definitions/CommandParameterValueNumberRange"
+    },
+    "Numbers": {
+     "$ref": "#/definitions/CommandParameterValueStringList"
+    },
+    "String": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "Strings": {
+     "$ref": "#/definitions/CommandParameterValueStringList"
+    }
+   },
+   "type": "object"
+  },
+  "CommandParameterValueComparisonOperator": {
+   "enum": [
+    "EQUALS",
+    "NOT_EQUALS",
+    "LESS_THAN",
+    "LESS_THAN_EQUALS",
+    "GREATER_THAN",
+    "GREATER_THAN_EQUALS",
+    "IN_SET",
+    "NOT_IN_SET",
+    "IN_RANGE",
+    "NOT_IN_RANGE"
+   ],
+   "type": "string"
+  },
+  "CommandParameterValueCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "ComparisonOperator": {
+     "$ref": "#/definitions/CommandParameterValueComparisonOperator"
+    },
+    "Operand": {
+     "$ref": "#/definitions/CommandParameterValueComparisonOperand"
+    }
+   },
+   "required": [
+    "ComparisonOperator",
+    "Operand"
+   ],
+   "type": "object"
+  },
+  "CommandParameterValueConditionList": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/CommandParameterValueCondition"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "CommandParameterValueNumberRange": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "Min": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Min",
+    "Max"
+   ],
+   "type": "object"
+  },
+  "CommandParameterValueStringList": {
+   "items": {
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
+  },
+  "CommandPayload": {
+   "additionalProperties": false,
+   "properties": {
+    "Content": {
+     "$ref": "#/definitions/CommandPayloadContent"
+    },
+    "ContentType": {
+     "$ref": "#/definitions/MimeType"
+    }
+   },
+   "type": "object"
+  },
+  "CommandPayloadContent": {
+   "type": "string"
+  },
+  "CommandPreprocessor": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsJsonSubstitution": {
+     "$ref": "#/definitions/AwsJsonSubstitutionCommandPreprocessorConfig"
+    }
+   },
+   "type": "object"
+  },
+  "MimeType": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "OutputFormat": {
+   "enum": [
+    "JSON",
+    "CBOR"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CommandId"
+ ],
+ "properties": {
+  "CommandArn": {
+   "type": "string"
+  },
+  "CommandId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Deprecated": {
+   "type": "boolean"
+  },
+  "Description": {
+   "maxLength": 2028,
+   "minLength": 0,
+   "pattern": "^[^\\p{C}]*$",
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 64,
+   "minLength": 0,
+   "pattern": "^[^\\p{C}]*$",
+   "type": "string"
+  },
+  "LastUpdatedAt": {
+   "type": "string"
+  },
+  "MandatoryParameters": {
+   "$ref": "#/definitions/CommandParameterList"
+  },
+  "Namespace": {
+   "enum": [
+    "AWS-IoT",
+    "AWS-IoT-FleetWise"
+   ],
+   "type": "string"
+  },
+  "Payload": {
+   "$ref": "#/definitions/CommandPayload"
+  },
+  "PayloadTemplate": {
+   "maxLength": 32768,
+   "minLength": 0,
+   "type": "string"
+  },
+  "PendingDeletion": {
+   "type": "boolean"
+  },
+  "Preprocessor": {
+   "$ref": "#/definitions/CommandPreprocessor"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2028,
+   "minLength": 20,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CommandArn"
+ ],
+ "required": [
+  "CommandId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::Command",
+ "writeOnlyProperties": [
+  "/properties/LastUpdatedAt"
+ ]
+}

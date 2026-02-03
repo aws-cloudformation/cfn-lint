@@ -1,0 +1,143 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RelationalDatabaseSnapshotName",
+  "/properties/RelationalDatabaseName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RelationalDatabaseSnapshotName"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Engine": {
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "EngineVersion": {
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "FromRelationalDatabaseArn": {
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "FromRelationalDatabaseBlueprintId": {
+   "type": "string"
+  },
+  "FromRelationalDatabaseBundleId": {
+   "type": "string"
+  },
+  "FromRelationalDatabaseName": {
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "Location": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "type": "string"
+    },
+    "RegionName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Name": {
+   "pattern": "^\\w[\\w\\-]*\\w$",
+   "type": "string"
+  },
+  "RelationalDatabaseName": {
+   "pattern": "^\\w[\\w\\-]*\\w$",
+   "type": "string"
+  },
+  "RelationalDatabaseSnapshotName": {
+   "maxLength": 255,
+   "minLength": 2,
+   "pattern": "^\\w[\\w\\-]*\\w$",
+   "type": "string"
+  },
+  "ResourceType": {
+   "enum": [
+    "RelationalDatabaseSnapshot"
+   ],
+   "type": "string"
+  },
+  "SizeInGb": {
+   "type": "integer"
+  },
+  "State": {
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "SupportCode": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/Engine",
+  "/properties/EngineVersion",
+  "/properties/FromRelationalDatabaseArn",
+  "/properties/FromRelationalDatabaseBlueprintId",
+  "/properties/FromRelationalDatabaseBundleId",
+  "/properties/FromRelationalDatabaseName",
+  "/properties/Location",
+  "/properties/Name",
+  "/properties/ResourceType",
+  "/properties/SizeInGb",
+  "/properties/State",
+  "/properties/SupportCode"
+ ],
+ "required": [
+  "RelationalDatabaseSnapshotName",
+  "RelationalDatabaseName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Lightsail::DatabaseSnapshot"
+}

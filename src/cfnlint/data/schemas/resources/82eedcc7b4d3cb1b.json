@@ -1,0 +1,274 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Id"
+  ],
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Type",
+  "/properties/Config/Port",
+  "/properties/Config/IpAddressType",
+  "/properties/Config/Protocol",
+  "/properties/Config/ProtocolVersion",
+  "/properties/Config/VpcIdentifier",
+  "/properties/Config/LambdaEventStructureVersion"
+ ],
+ "definitions": {
+  "HealthCheckConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "HealthCheckIntervalSeconds": {
+     "maximum": 300,
+     "minimum": 5,
+     "type": "integer"
+    },
+    "HealthCheckTimeoutSeconds": {
+     "maximum": 120,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "HealthyThresholdCount": {
+     "maximum": 10,
+     "minimum": 2,
+     "type": "integer"
+    },
+    "Matcher": {
+     "$ref": "#/definitions/Matcher"
+    },
+    "Path": {
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "(^/[a-zA-Z0-9@:%_+.~#?&/=-]*$|(^$))",
+     "type": "string"
+    },
+    "Port": {
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Protocol": {
+     "enum": [
+      "HTTP",
+      "HTTPS"
+     ],
+     "type": "string"
+    },
+    "ProtocolVersion": {
+     "enum": [
+      "HTTP1",
+      "HTTP2"
+     ],
+     "type": "string"
+    },
+    "UnhealthyThresholdCount": {
+     "maximum": 10,
+     "minimum": 2,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Matcher": {
+   "additionalProperties": false,
+   "properties": {
+    "HttpCode": {
+     "maxLength": 2000,
+     "minLength": 3,
+     "pattern": "^[0-9-,]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "HttpCode"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Target": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Port": {
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "TargetGroupConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "HealthCheck": {
+     "$ref": "#/definitions/HealthCheckConfig"
+    },
+    "IpAddressType": {
+     "default": "IPV4",
+     "enum": [
+      "IPV4",
+      "IPV6"
+     ],
+     "type": "string"
+    },
+    "LambdaEventStructureVersion": {
+     "enum": [
+      "V1",
+      "V2"
+     ],
+     "type": "string"
+    },
+    "Port": {
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Protocol": {
+     "enum": [
+      "HTTP",
+      "HTTPS",
+      "TCP"
+     ],
+     "type": "string"
+    },
+    "ProtocolVersion": {
+     "default": "HTTP1",
+     "enum": [
+      "HTTP1",
+      "HTTP2",
+      "GRPC"
+     ],
+     "type": "string"
+    },
+    "VpcIdentifier": {
+     "maxLength": 2048,
+     "minLength": 5,
+     "pattern": "^vpc-(([0-9a-z]{8})|([0-9a-z]{17}))$",
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:targetgroup/tg-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "Config": {
+   "$ref": "#/definitions/TargetGroupConfig"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 20,
+   "minLength": 20,
+   "pattern": "^tg-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "LastUpdatedAt": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 3,
+   "pattern": "^(?!tg-)(?![-])(?!.*[-]$)(?!.*[-]{2})[a-z0-9-]+$",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "CREATE_IN_PROGRESS",
+    "ACTIVE",
+    "DELETE_IN_PROGRESS",
+    "CREATE_FAILED",
+    "DELETE_FAILED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Targets": {
+   "default": [],
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Target"
+   },
+   "maxItems": 100,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Type": {
+   "enum": [
+    "IP",
+    "LAMBDA",
+    "INSTANCE",
+    "ALB"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/Id",
+  "/properties/LastUpdatedAt",
+  "/properties/Status"
+ ],
+ "required": [
+  "Type"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::VpcLattice::TargetGroup"
+}
