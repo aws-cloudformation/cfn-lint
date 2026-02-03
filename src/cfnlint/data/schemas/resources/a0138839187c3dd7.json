@@ -88,11 +88,13 @@
    "properties": {
     "Arn": {
      "maxLength": 200,
+     "minLength": 0,
      "pattern": "^arn:aws[a-zA-Z-]*:elasticfilesystem:(eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:\\d{12}:access-point/fsap-[a-f0-9]{17}$",
      "type": "string"
     },
     "LocalMountPath": {
      "maxLength": 160,
+     "minLength": 0,
      "pattern": "^/mnt/[a-zA-Z0-9-_.]+$",
      "type": "string"
     }
@@ -111,6 +113,7 @@
       "type": "string"
      },
      "maxItems": 1500,
+     "minItems": 0,
      "type": "array",
      "uniqueItems": true
     },
@@ -119,11 +122,13 @@
       "type": "string"
      },
      "maxItems": 1500,
+     "minItems": 0,
      "type": "array",
      "uniqueItems": true
     },
     "WorkingDirectory": {
      "maxLength": 1000,
+     "minLength": 0,
      "type": "string"
     }
    },
@@ -275,6 +280,7 @@
       "type": "string"
      },
      "maxItems": 5,
+     "minItems": 0,
      "type": "array",
      "uniqueItems": false
     },
@@ -283,6 +289,7 @@
       "type": "string"
      },
      "maxItems": 16,
+     "minItems": 0,
      "type": "array",
      "uniqueItems": false
     }
@@ -315,6 +322,7 @@
   },
   "CodeSigningConfigArn": {
    "maxLength": 200,
+   "minLength": 0,
    "pattern": "arn:(aws[a-zA-Z-]*)?:lambda:(eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:\\d{12}:code-signing-config:csc-[a-z0-9]{17}",
    "type": "string"
   },
@@ -323,7 +331,7 @@
   },
   "Description": {
    "maxLength": 256,
-   "minLength": 1,
+   "minLength": 0,
    "type": "string"
   },
   "Environment": {
@@ -337,17 +345,18 @@
     "$ref": "#/definitions/FileSystemConfig"
    },
    "maxItems": 1,
+   "minItems": 0,
    "type": "array"
   },
   "FunctionName": {
-   "maxLength": 64,
+   "maxLength": 140,
    "minLength": 1,
-   "pattern": "(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)",
+   "pattern": "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)$",
    "type": "string"
   },
   "Handler": {
    "maxLength": 128,
-   "minLength": 1,
+   "minLength": 0,
    "pattern": "^[^\\s]+$",
    "type": "string"
   },
@@ -362,7 +371,7 @@
    "items": {
     "maxLength": 140,
     "minLength": 1,
-    "pattern": "arn:[a-zA-Z0-9-]+:lambda:[a-zA-Z0-9-]+:\\d{12}:layer:[a-zA-Z0-9-_]+:[0-9]+",
+    "pattern": "^arn:[a-zA-Z0-9-]+:lambda:[a-zA-Z0-9-]+:\\d{12}:layer:[a-zA-Z0-9-_]+:[0-9]+$",
     "type": "string"
    },
    "type": "array",
@@ -372,7 +381,7 @@
    "$ref": "#/definitions/LoggingConfig"
   },
   "MemorySize": {
-   "maximum": 10240,
+   "maximum": 32768,
    "minimum": 128,
    "type": "integer"
   },

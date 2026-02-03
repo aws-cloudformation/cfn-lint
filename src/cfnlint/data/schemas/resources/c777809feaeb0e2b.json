@@ -9,6 +9,7 @@
     "$ref": "#/definitions/ConfigurationItem"
    },
    "maxItems": 2,
+   "minItems": 0,
    "type": "array"
   },
   "ConfigurationItem": {
@@ -22,7 +23,8 @@
     },
     "Type": {
      "maxLength": 40,
-     "pattern": "AWS::[a-zA-Z0-9]+::[a-zA-Z0-9]+",
+     "minLength": 0,
+     "pattern": "^AWS::[a-zA-Z0-9]+::[a-zA-Z0-9]+$",
      "type": "string"
     }
    },
@@ -34,14 +36,14 @@
     "Name": {
      "maxLength": 80,
      "minLength": 1,
-     "pattern": "[a-z-]+",
+     "pattern": "^[a-z-]+$",
      "type": "string"
     },
     "Values": {
      "items": {
       "maxLength": 256,
       "minLength": 1,
-      "pattern": "[a-zA-Z0-9:\\/\\._-]+",
+      "pattern": "^[a-zA-Z0-9:\\/\\._-]+$",
       "type": "string"
      },
      "type": "array"
@@ -52,6 +54,7 @@
   "Query": {
    "additionalProperties": false,
    "maxLength": 4096,
+   "minLength": 0,
    "properties": {
     "ResourceTypeFilters": {
      "items": {
@@ -130,13 +133,14 @@
   },
   "Description": {
    "maxLength": 512,
-   "pattern": "[\\sa-zA-Z0-9_\\.-]*",
+   "minLength": 0,
+   "pattern": "^[\\sa-zA-Z0-9_\\.-]*$",
    "type": "string"
   },
   "Name": {
    "maxLength": 128,
    "minLength": 1,
-   "pattern": "[a-zA-Z0-9_\\.-]+",
+   "pattern": "^[a-zA-Z0-9_\\.-]+$",
    "type": "string"
   },
   "ResourceQuery": {

@@ -31,12 +31,13 @@
     "Key": {
      "maxLength": 128,
      "minLength": 1,
-     "pattern": "[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]+",
+     "pattern": "^[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]+$",
      "type": "string"
     },
     "Value": {
      "maxLength": 256,
-     "pattern": "[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*",
+     "minLength": 0,
+     "pattern": "^[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*$",
      "type": "string"
     }
    },
@@ -56,9 +57,9 @@
    "type": "string"
   },
   "AssumeRolePolicyDocument": {
-   "maxLength": 2048,
+   "maxLength": 131072,
    "minLength": 1,
-   "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u00FF]+",
+   "pattern": "^[\\u0009\\u000A\\u000D\\u0020-\\u00FF]+$",
    "type": [
     "object",
     "string"
@@ -66,7 +67,8 @@
   },
   "Description": {
    "maxLength": 1000,
-   "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u007E\\u00A1-\\u00FF]*",
+   "minLength": 0,
+   "pattern": "^[\\u0009\\u000A\\u000D\\u0020-\\u007E\\u00A1-\\u00FF]*$",
    "type": "string"
   },
   "ManagedPolicyArns": {
@@ -89,7 +91,7 @@
    "default": "/",
    "maxLength": 512,
    "minLength": 1,
-   "pattern": "^/(.+/)*$",
+   "pattern": "^(\\u002F)|(\\u002F[\\u0021-\\u007E]+\\u002F)$",
    "type": "string"
   },
   "PermissionsBoundary": {
@@ -111,7 +113,7 @@
   "RoleName": {
    "maxLength": 64,
    "minLength": 1,
-   "pattern": "[\\w+=,.@-]+",
+   "pattern": "^[\\w+=,.@-]+$",
    "type": "string"
   },
   "Tags": {
@@ -120,6 +122,7 @@
     "$ref": "#/definitions/Tag"
    },
    "maxItems": 50,
+   "minItems": 0,
    "type": "array",
    "uniqueItems": false
   }

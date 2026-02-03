@@ -58,13 +58,13 @@
    "format": "AWS::IAM::Role.Arn",
    "maxLength": 2048,
    "minLength": 20,
-   "pattern": "arn:.*",
+   "pattern": "^arn:.*$",
    "type": "string"
   },
   "StringWithPatternAndLengthLimits": {
    "maxLength": 512,
    "minLength": 1,
-   "pattern": "[\\-_A-Za-z0-9\\[\\]\\(\\)\\{\\}\\.: ]+",
+   "pattern": "^[\\-_A-Za-z0-9\\[\\]\\(\\)\\{\\}\\.: ]+$",
    "type": "string"
   },
   "Tag": {
@@ -118,6 +118,7 @@
     "$ref": "#/definitions/CrossAccountConfiguration"
    },
    "maxItems": 25,
+   "minItems": 0,
    "type": "array",
    "uniqueItems": true
   },
@@ -140,6 +141,8 @@
    "$ref": "#/definitions/StringWithPatternAndLengthLimits"
   },
   "RetentionInDays": {
+   "maximum": 90,
+   "minimum": 7,
    "type": "integer"
   },
   "RoleArn": {
@@ -150,7 +153,7 @@
    "items": {
     "maxLength": 200,
     "minLength": 1,
-    "pattern": "([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]+)",
+    "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]+)$",
     "type": "string"
    },
    "type": "array",
