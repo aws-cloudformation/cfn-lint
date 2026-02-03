@@ -1,0 +1,221 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/WebAppId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/WebAppEndpointPolicy",
+  "/properties/IdentityProviderDetails/InstanceArn",
+  "/properties/EndpointDetails/Vpc/VpcId",
+  "/properties/EndpointDetails/Vpc/SecurityGroupIds"
+ ],
+ "definitions": {
+  "EndpointDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "Vpc": {
+     "$ref": "#/definitions/Vpc"
+    }
+   },
+   "type": "object"
+  },
+  "IdentityProviderDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationArn": {
+     "maxLength": 1224,
+     "minLength": 10,
+     "pattern": "^arn:[\\w-]+:sso::\\d{12}:application/(sso)?ins-[a-zA-Z0-9-.]{16}/apl-[a-zA-Z0-9]{16}$",
+     "type": "string"
+    },
+    "InstanceArn": {
+     "maxLength": 1224,
+     "minLength": 10,
+     "pattern": "^arn:[\\w-]+:sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}$",
+     "type": "string"
+    },
+    "Role": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:[a-z-]+:iam::[0-9]{12}:role[:/]\\S+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Vpc": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 20,
+      "minLength": 11,
+      "pattern": "^sg-[0-9a-f]{8,17}$",
+      "type": "string"
+     },
+     "maxItems": 10,
+     "type": "array"
+    },
+    "SubnetIds": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 24,
+      "minLength": 15,
+      "pattern": "^subnet-[0-9a-f]{8,17}$",
+      "type": "string"
+     },
+     "maxItems": 10,
+     "type": "array"
+    },
+    "VpcId": {
+     "maxLength": 21,
+     "minLength": 12,
+     "pattern": "^vpc-[0-9a-f]{8,17}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "WebAppCustomization": {
+   "additionalProperties": false,
+   "properties": {
+    "FaviconFile": {
+     "maxLength": 20960,
+     "minLength": 1,
+     "type": "string"
+    },
+    "LogoFile": {
+     "maxLength": 51200,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Title": {
+     "maxLength": 100,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "WebAppEndpointPolicy": {
+   "enum": [
+    "STANDARD",
+    "FIPS"
+   ],
+   "type": "string"
+  },
+  "WebAppUnits": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Provisioned": {
+       "minimum": 1,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "Provisioned"
+     ],
+     "title": "Provisioned",
+     "type": "object"
+    }
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AccessEndpoint": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 1600,
+   "minLength": 20,
+   "pattern": "arn:.*",
+   "type": "string"
+  },
+  "EndpointDetails": {
+   "$ref": "#/definitions/EndpointDetails"
+  },
+  "IdentityProviderDetails": {
+   "$ref": "#/definitions/IdentityProviderDetails"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array"
+  },
+  "VpcEndpointId": {
+   "maxLength": 22,
+   "minLength": 13,
+   "pattern": "^vpce-[0-9a-f]{8,17}$",
+   "type": "string"
+  },
+  "WebAppCustomization": {
+   "$ref": "#/definitions/WebAppCustomization"
+  },
+  "WebAppEndpointPolicy": {
+   "$ref": "#/definitions/WebAppEndpointPolicy"
+  },
+  "WebAppId": {
+   "maxLength": 24,
+   "minLength": 24,
+   "pattern": "^webapp-([0-9a-f]{17})$",
+   "type": "string"
+  },
+  "WebAppUnits": {
+   "$ref": "#/definitions/WebAppUnits"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/WebAppId",
+  "/properties/IdentityProviderDetails/ApplicationArn",
+  "/properties/VpcEndpointId"
+ ],
+ "required": [
+  "IdentityProviderDetails"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Transfer::WebApp",
+ "writeOnlyProperties": [
+  "/properties/EndpointDetails/Vpc/SecurityGroupIds"
+ ]
+}

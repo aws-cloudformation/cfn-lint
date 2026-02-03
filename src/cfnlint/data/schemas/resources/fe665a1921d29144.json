@@ -1,0 +1,197 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GenerateSecret",
+  "/properties/UserPoolId"
+ ],
+ "definitions": {
+  "AnalyticsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationArn": {
+     "type": "string"
+    },
+    "ApplicationId": {
+     "type": "string"
+    },
+    "ExternalId": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "type": "string"
+    },
+    "UserDataShared": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "RefreshTokenRotation": {
+   "properties": {
+    "Feature": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "RetryGracePeriodSeconds": {
+     "maximum": 60,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "TokenValidityUnits": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessToken": {
+     "type": "string"
+    },
+    "IdToken": {
+     "type": "string"
+    },
+    "RefreshToken": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/UserPoolId",
+  "/properties/ClientId"
+ ],
+ "properties": {
+  "AccessTokenValidity": {
+   "maximum": 86400,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "AllowedOAuthFlows": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "AllowedOAuthFlowsUserPoolClient": {
+   "type": "boolean"
+  },
+  "AllowedOAuthScopes": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "AnalyticsConfiguration": {
+   "$ref": "#/definitions/AnalyticsConfiguration"
+  },
+  "AuthSessionValidity": {
+   "maximum": 15,
+   "minimum": 3,
+   "type": "integer"
+  },
+  "CallbackURLs": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ClientId": {
+   "type": "string"
+  },
+  "ClientName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ClientSecret": {
+   "type": "string"
+  },
+  "DefaultRedirectURI": {
+   "type": "string"
+  },
+  "EnablePropagateAdditionalUserContextData": {
+   "type": "boolean"
+  },
+  "EnableTokenRevocation": {
+   "type": "boolean"
+  },
+  "ExplicitAuthFlows": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "GenerateSecret": {
+   "type": "boolean"
+  },
+  "IdTokenValidity": {
+   "maximum": 86400,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "LogoutURLs": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "PreventUserExistenceErrors": {
+   "type": "string"
+  },
+  "ReadAttributes": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "RefreshTokenRotation": {
+   "$ref": "#/definitions/RefreshTokenRotation"
+  },
+  "RefreshTokenValidity": {
+   "maximum": 315360000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "SupportedIdentityProviders": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "TokenValidityUnits": {
+   "$ref": "#/definitions/TokenValidityUnits"
+  },
+  "UserPoolId": {
+   "type": "string"
+  },
+  "WriteAttributes": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ClientSecret",
+  "/properties/Name",
+  "/properties/ClientId"
+ ],
+ "required": [
+  "UserPoolId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Cognito::UserPoolClient"
+}

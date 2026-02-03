@@ -1,0 +1,87 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Scope",
+  "/properties/ViewName"
+ ],
+ "definitions": {
+  "IncludedProperty": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 1011,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "SearchFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "FilterString": {
+     "maxLength": 2048,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "FilterString"
+   ],
+   "type": "object"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ViewArn"
+ ],
+ "properties": {
+  "Filters": {
+   "$ref": "#/definitions/SearchFilter"
+  },
+  "IncludedProperties": {
+   "items": {
+    "$ref": "#/definitions/IncludedProperty"
+   },
+   "type": "array"
+  },
+  "Scope": {
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  },
+  "ViewArn": {
+   "type": "string"
+  },
+  "ViewName": {
+   "pattern": "^[a-zA-Z0-9\\-]{1,64}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ViewArn"
+ ],
+ "required": [
+  "ViewName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ResourceExplorer2::View"
+}

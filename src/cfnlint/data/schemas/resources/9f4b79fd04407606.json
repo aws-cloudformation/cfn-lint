@@ -1,0 +1,570 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/ModelManifestArn"
+ ],
+ "definitions": {
+  "CanInterface": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ProtocolName": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ProtocolVersion": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "CanNetworkInterface": {
+   "additionalProperties": false,
+   "properties": {
+    "CanInterface": {
+     "$ref": "#/definitions/CanInterface"
+    },
+    "InterfaceId": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "CAN_INTERFACE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "InterfaceId",
+    "Type",
+    "CanInterface"
+   ],
+   "type": "object"
+  },
+  "CanSignal": {
+   "additionalProperties": false,
+   "properties": {
+    "Factor": {
+     "type": [
+      "number",
+      "string"
+     ]
+    },
+    "IsBigEndian": {
+     "type": [
+      "boolean",
+      "string"
+     ]
+    },
+    "IsSigned": {
+     "type": [
+      "boolean",
+      "string"
+     ]
+    },
+    "Length": {
+     "type": [
+      "integer",
+      "string"
+     ]
+    },
+    "MessageId": {
+     "type": [
+      "integer",
+      "string"
+     ]
+    },
+    "Name": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Offset": {
+     "type": [
+      "number",
+      "string"
+     ]
+    },
+    "SignalValueType": {
+     "$ref": "#/definitions/SignalValueType"
+    },
+    "StartBit": {
+     "type": [
+      "integer",
+      "string"
+     ]
+    }
+   },
+   "required": [
+    "Factor",
+    "IsBigEndian",
+    "IsSigned",
+    "Length",
+    "MessageId",
+    "Offset",
+    "StartBit"
+   ],
+   "type": "object"
+  },
+  "CanSignalDecoder": {
+   "additionalProperties": false,
+   "properties": {
+    "CanSignal": {
+     "$ref": "#/definitions/CanSignal"
+    },
+    "FullyQualifiedName": {
+     "maxLength": 150,
+     "minLength": 1,
+     "type": "string"
+    },
+    "InterfaceId": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "CAN_SIGNAL"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "FullyQualifiedName",
+    "InterfaceId",
+    "Type",
+    "CanSignal"
+   ],
+   "type": "object"
+  },
+  "CustomDecodingInterface": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 100,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z\\d\\-_:]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "CustomDecodingNetworkInterface": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomDecodingInterface": {
+     "$ref": "#/definitions/CustomDecodingInterface"
+    },
+    "InterfaceId": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "CUSTOM_DECODING_INTERFACE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "InterfaceId",
+    "Type",
+    "CustomDecodingInterface"
+   ],
+   "type": "object"
+  },
+  "CustomDecodingSignal": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "maxLength": 150,
+     "minLength": 1,
+     "pattern": "^(?!.*\\.\\.)[a-zA-Z0-9_\\-#:.]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "CustomDecodingSignalDecoder": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomDecodingSignal": {
+     "$ref": "#/definitions/CustomDecodingSignal"
+    },
+    "FullyQualifiedName": {
+     "maxLength": 150,
+     "minLength": 1,
+     "type": "string"
+    },
+    "InterfaceId": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "CUSTOM_DECODING_SIGNAL"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "FullyQualifiedName",
+    "InterfaceId",
+    "Type",
+    "CustomDecodingSignal"
+   ],
+   "type": "object"
+  },
+  "DefaultForUnmappedSignalsType": {
+   "enum": [
+    "CUSTOM_DECODING"
+   ],
+   "type": "string"
+  },
+  "ManifestStatus": {
+   "default": "DRAFT",
+   "enum": [
+    "ACTIVE",
+    "DRAFT"
+   ],
+   "type": "string"
+  },
+  "ObdInterface": {
+   "additionalProperties": false,
+   "properties": {
+    "DtcRequestIntervalSeconds": {
+     "type": [
+      "integer",
+      "string"
+     ]
+    },
+    "HasTransmissionEcu": {
+     "type": [
+      "boolean",
+      "string"
+     ]
+    },
+    "Name": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ObdStandard": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "PidRequestIntervalSeconds": {
+     "type": [
+      "integer",
+      "string"
+     ]
+    },
+    "RequestMessageId": {
+     "type": [
+      "integer",
+      "string"
+     ]
+    },
+    "UseExtendedIds": {
+     "type": [
+      "boolean",
+      "string"
+     ]
+    }
+   },
+   "required": [
+    "Name",
+    "RequestMessageId"
+   ],
+   "type": "object"
+  },
+  "ObdNetworkInterface": {
+   "additionalProperties": false,
+   "properties": {
+    "InterfaceId": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ObdInterface": {
+     "$ref": "#/definitions/ObdInterface"
+    },
+    "Type": {
+     "enum": [
+      "OBD_INTERFACE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "InterfaceId",
+    "Type",
+    "ObdInterface"
+   ],
+   "type": "object"
+  },
+  "ObdSignal": {
+   "additionalProperties": false,
+   "properties": {
+    "BitMaskLength": {
+     "type": [
+      "integer",
+      "string"
+     ]
+    },
+    "BitRightShift": {
+     "type": [
+      "integer",
+      "string"
+     ]
+    },
+    "ByteLength": {
+     "type": [
+      "integer",
+      "string"
+     ]
+    },
+    "IsSigned": {
+     "type": [
+      "boolean",
+      "string"
+     ]
+    },
+    "Offset": {
+     "type": [
+      "number",
+      "string"
+     ]
+    },
+    "Pid": {
+     "type": [
+      "integer",
+      "string"
+     ]
+    },
+    "PidResponseLength": {
+     "type": [
+      "integer",
+      "string"
+     ]
+    },
+    "Scaling": {
+     "type": [
+      "number",
+      "string"
+     ]
+    },
+    "ServiceMode": {
+     "type": [
+      "integer",
+      "string"
+     ]
+    },
+    "SignalValueType": {
+     "$ref": "#/definitions/SignalValueType"
+    },
+    "StartByte": {
+     "type": [
+      "integer",
+      "string"
+     ]
+    }
+   },
+   "required": [
+    "ByteLength",
+    "Offset",
+    "Pid",
+    "PidResponseLength",
+    "Scaling",
+    "ServiceMode",
+    "StartByte"
+   ],
+   "type": "object"
+  },
+  "ObdSignalDecoder": {
+   "additionalProperties": false,
+   "properties": {
+    "FullyQualifiedName": {
+     "maxLength": 150,
+     "minLength": 1,
+     "type": "string"
+    },
+    "InterfaceId": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ObdSignal": {
+     "$ref": "#/definitions/ObdSignal"
+    },
+    "Type": {
+     "enum": [
+      "OBD_SIGNAL"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "FullyQualifiedName",
+    "InterfaceId",
+    "Type",
+    "ObdSignal"
+   ],
+   "type": "object"
+  },
+  "SignalValueType": {
+   "enum": [
+    "INTEGER",
+    "FLOATING_POINT"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DefaultForUnmappedSignals": {
+   "$ref": "#/definitions/DefaultForUnmappedSignalsType"
+  },
+  "Description": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
+   "type": "string"
+  },
+  "LastModificationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "ModelManifestArn": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z\\d\\-_:]+$",
+   "type": "string"
+  },
+  "NetworkInterfaces": {
+   "insertionOrder": false,
+   "items": {
+    "oneOf": [
+     {
+      "$ref": "#/definitions/CanNetworkInterface"
+     },
+     {
+      "$ref": "#/definitions/ObdNetworkInterface"
+     },
+     {
+      "$ref": "#/definitions/CustomDecodingNetworkInterface"
+     }
+    ]
+   },
+   "maxItems": 5000,
+   "minItems": 1,
+   "type": "array"
+  },
+  "SignalDecoders": {
+   "insertionOrder": false,
+   "items": {
+    "oneOf": [
+     {
+      "$ref": "#/definitions/CanSignalDecoder"
+     },
+     {
+      "$ref": "#/definitions/ObdSignalDecoder"
+     },
+     {
+      "$ref": "#/definitions/CustomDecodingSignalDecoder"
+     }
+    ]
+   },
+   "maxItems": 5000,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Status": {
+   "$ref": "#/definitions/ManifestStatus"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationTime",
+  "/properties/LastModificationTime"
+ ],
+ "required": [
+  "Name",
+  "ModelManifestArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTFleetWise::DecoderManifest",
+ "writeOnlyProperties": [
+  "/properties/DefaultForUnmappedSignals"
+ ]
+}
