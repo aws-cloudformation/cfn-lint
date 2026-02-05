@@ -14,6 +14,7 @@ class TestForEach(BaseRuleTestCase):
         self.collection.register(ForEach())
         self.success_templates = [
             "test/fixtures/templates/good/functions/foreach.yaml",
+            "test/fixtures/templates/good/functions/foreach_multi_identifier.yaml",
         ]
 
     def test_file_positive(self):
@@ -22,4 +23,16 @@ class TestForEach(BaseRuleTestCase):
     def test_file_negative_missing_transform(self):
         self.helper_file_negative(
             "test/fixtures/templates/bad/functions/foreach_no_transform.yaml", 3
+        )
+
+    def test_file_negative_non_string_identifiers(self):
+        self.helper_file_negative(
+            "test/fixtures/templates/bad/functions/foreach_non_string_identifiers.yaml",
+            1,
+        )
+
+    def test_file_negative_map_three_identifiers(self):
+        self.helper_file_negative(
+            "test/fixtures/templates/bad/functions/foreach_map_three_identifiers.yaml",
+            1,
         )
