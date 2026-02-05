@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Template reprovado - possui DataSources e Features simultaneamente.
+Resources:
+  MyDetector:
+    Type: "AWS::GuardDuty::Detector"
+    Properties:
+      Enable: true
+      # Erro: Não se deve usar DataSources junto com Features
+      DataSources:
+        S3Logs:
+          Enable: true
+      Features:
+        - Name: S3_DATA_EVENTS
+          Status: ENABLED
+        - Name: EBS_MALWARE_PROTECTION
+          Status: ENABLED
