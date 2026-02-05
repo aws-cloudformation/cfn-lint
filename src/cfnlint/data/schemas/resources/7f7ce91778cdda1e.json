@@ -1,0 +1,574 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AgentRuntimeName"
+ ],
+ "definitions": {
+  "AgentManagedRuntimeType": {
+   "enum": [
+    "PYTHON_3_10",
+    "PYTHON_3_11",
+    "PYTHON_3_12",
+    "PYTHON_3_13"
+   ],
+   "type": "string"
+  },
+  "AgentRuntimeArn": {
+   "maxLength": 2048,
+   "pattern": "^arn:aws(-[^:]+)?:bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:runtime/[a-zA-Z][a-zA-Z0-9_]{0,99}-[a-zA-Z0-9]{10}$",
+   "type": "string"
+  },
+  "AgentRuntimeArtifact": {
+   "additionalProperties": false,
+   "properties": {
+    "CodeConfiguration": {
+     "$ref": "#/definitions/CodeConfiguration"
+    },
+    "ContainerConfiguration": {
+     "$ref": "#/definitions/ContainerConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "AgentRuntimeId": {
+   "pattern": "[a-zA-Z][a-zA-Z0-9_]{0,99}-[a-zA-Z0-9]{10}",
+   "type": "string"
+  },
+  "AgentRuntimeName": {
+   "pattern": "[a-zA-Z][a-zA-Z0-9_]{0,47}",
+   "type": "string"
+  },
+  "AgentRuntimeVersion": {
+   "maxLength": 5,
+   "minLength": 1,
+   "pattern": "([1-9][0-9]{0,4})",
+   "type": "string"
+  },
+  "AgentStatus": {
+   "enum": [
+    "CREATING",
+    "CREATE_FAILED",
+    "UPDATING",
+    "UPDATE_FAILED",
+    "READY",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "AllowedAudience": {
+   "type": "string"
+  },
+  "AllowedAudienceList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AllowedAudience"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "AllowedClient": {
+   "type": "string"
+  },
+  "AllowedClientsList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AllowedClient"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "AllowedScope": {
+   "pattern": "[\\x21\\x23-\\x5B\\x5D-\\x7E]+",
+   "type": "string"
+  },
+  "AllowedScopesList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AllowedScope"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "AuthorizerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomJWTAuthorizer": {
+     "$ref": "#/definitions/CustomJWTAuthorizerConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "AuthorizingClaimMatchValueType": {
+   "additionalProperties": false,
+   "properties": {
+    "ClaimMatchOperator": {
+     "$ref": "#/definitions/ClaimMatchOperator"
+    },
+    "ClaimMatchValue": {
+     "$ref": "#/definitions/ClaimMatchValueType"
+    }
+   },
+   "required": [
+    "ClaimMatchOperator",
+    "ClaimMatchValue"
+   ],
+   "type": "object"
+  },
+  "ClaimMatchOperator": {
+   "enum": [
+    "EQUALS",
+    "CONTAINS",
+    "CONTAINS_ANY"
+   ],
+   "type": "string"
+  },
+  "ClaimMatchValueType": {
+   "additionalProperties": false,
+   "properties": {
+    "MatchValueString": {
+     "$ref": "#/definitions/MatchValueString"
+    },
+    "MatchValueStringList": {
+     "$ref": "#/definitions/MatchValueStringList"
+    }
+   },
+   "type": "object"
+  },
+  "ClientToken": {
+   "maxLength": 256,
+   "minLength": 33,
+   "pattern": "^[a-zA-Z0-9-_]+$",
+   "type": "string"
+  },
+  "Code": {
+   "additionalProperties": false,
+   "properties": {
+    "S3": {
+     "$ref": "#/definitions/S3Location"
+    }
+   },
+   "type": "object"
+  },
+  "CodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Code": {
+     "$ref": "#/definitions/Code"
+    },
+    "EntryPoint": {
+     "$ref": "#/definitions/EntryPoints"
+    },
+    "Runtime": {
+     "$ref": "#/definitions/AgentManagedRuntimeType"
+    }
+   },
+   "required": [
+    "Code",
+    "Runtime",
+    "EntryPoint"
+   ],
+   "type": "object"
+  },
+  "ContainerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerUri": {
+     "$ref": "#/definitions/RuntimeContainerUri"
+    }
+   },
+   "required": [
+    "ContainerUri"
+   ],
+   "type": "object"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "CustomClaimValidationType": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizingClaimMatchValue": {
+     "$ref": "#/definitions/AuthorizingClaimMatchValueType"
+    },
+    "InboundTokenClaimName": {
+     "$ref": "#/definitions/InboundTokenClaimName"
+    },
+    "InboundTokenClaimValueType": {
+     "$ref": "#/definitions/InboundTokenClaimValueType"
+    }
+   },
+   "required": [
+    "AuthorizingClaimMatchValue",
+    "InboundTokenClaimName",
+    "InboundTokenClaimValueType"
+   ],
+   "type": "object"
+  },
+  "CustomClaimsList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CustomClaimValidationType"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "CustomJWTAuthorizerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedAudience": {
+     "$ref": "#/definitions/AllowedAudienceList"
+    },
+    "AllowedClients": {
+     "$ref": "#/definitions/AllowedClientsList"
+    },
+    "AllowedScopes": {
+     "$ref": "#/definitions/AllowedScopesList"
+    },
+    "CustomClaims": {
+     "$ref": "#/definitions/CustomClaimsList"
+    },
+    "DiscoveryUrl": {
+     "$ref": "#/definitions/DiscoveryUrl"
+    }
+   },
+   "required": [
+    "DiscoveryUrl"
+   ],
+   "type": "object"
+  },
+  "Description": {
+   "maxLength": 1200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DiscoveryUrl": {
+   "pattern": "^.+/\\.well-known/openid-configuration$",
+   "type": "string"
+  },
+  "EntryPoints": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 2,
+   "minItems": 1,
+   "type": "array"
+  },
+  "EnvironmentVariableKey": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
+   "type": "string"
+  },
+  "EnvironmentVariableValue": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "EnvironmentVariablesMap": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "patternProperties": {
+    "^[a-zA-Z_][a-zA-Z0-9_]*$": {
+     "maxLength": 2048,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HeaderName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^(Authorization|X-Amzn-Bedrock-AgentCore-Runtime-Custom-[a-zA-Z0-9_-]+)$",
+   "type": "string"
+  },
+  "InboundTokenClaimName": {
+   "pattern": "[A-Za-z0-9_.-:]+",
+   "type": "string"
+  },
+  "InboundTokenClaimValueType": {
+   "enum": [
+    "STRING",
+    "STRING_ARRAY"
+   ],
+   "type": "string"
+  },
+  "LastUpdatedAt": {
+   "type": "string"
+  },
+  "LifecycleConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IdleRuntimeSessionTimeout": {
+     "maximum": 28800,
+     "minimum": 60,
+     "type": "integer"
+    },
+    "MaxLifetime": {
+     "maximum": 28800,
+     "minimum": 60,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "MatchValueString": {
+   "pattern": "[A-Za-z0-9_.-]+",
+   "type": "string"
+  },
+  "MatchValueStringList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/MatchValueString"
+   },
+   "maxItems": 255,
+   "minItems": 1,
+   "type": "array"
+  },
+  "NetworkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "NetworkMode": {
+     "$ref": "#/definitions/NetworkMode"
+    },
+    "NetworkModeConfig": {
+     "$ref": "#/definitions/VpcConfig"
+    }
+   },
+   "required": [
+    "NetworkMode"
+   ],
+   "type": "object"
+  },
+  "NetworkMode": {
+   "enum": [
+    "PUBLIC",
+    "VPC"
+   ],
+   "type": "string"
+  },
+  "ProtocolConfiguration": {
+   "enum": [
+    "MCP",
+    "HTTP",
+    "A2A"
+   ],
+   "type": "string"
+  },
+  "RequestHeaderAllowlist": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/HeaderName"
+   },
+   "maxItems": 20,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RequestHeaderConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "RequestHeaderAllowlist": {
+     "$ref": "#/definitions/RequestHeaderAllowlist"
+    }
+   },
+   "type": "object"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "pattern": "arn:aws(-[^:]+)?:iam::([0-9]{12})?:role/.+",
+   "type": "string"
+  },
+  "RuntimeContainerUri": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^\\d{12}\\.dkr\\.ecr\\.([a-z0-9-]+)\\.amazonaws\\.com/((?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*)([:@]\\S+)$",
+   "type": "string"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$",
+     "type": "string"
+    },
+    "Prefix": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "VersionId": {
+     "maxLength": 1024,
+     "minLength": 3,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Prefix"
+   ],
+   "type": "object"
+  },
+  "SecurityGroupId": {
+   "format": "AWS::EC2::SecurityGroup.Id",
+   "pattern": "^sg-[0-9a-zA-Z]{8,17}$",
+   "type": "string"
+  },
+  "SecurityGroups": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SecurityGroupId"
+   },
+   "maxItems": 16,
+   "minItems": 1,
+   "type": "array"
+  },
+  "SubnetId": {
+   "format": "AWS::EC2::Subnet.Id",
+   "pattern": "^subnet-[0-9a-zA-Z]{8,17}$",
+   "type": "string"
+  },
+  "Subnets": {
+   "format": "AWS::EC2::Subnet.Ids",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SubnetId"
+   },
+   "maxItems": 16,
+   "minItems": 1,
+   "type": "array"
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z0-9\\s._:/=+@-]*$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroups": {
+     "$ref": "#/definitions/SecurityGroups"
+    },
+    "Subnets": {
+     "$ref": "#/definitions/Subnets"
+    }
+   },
+   "required": [
+    "SecurityGroups",
+    "Subnets"
+   ],
+   "type": "object"
+  },
+  "WorkloadIdentityArn": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "WorkloadIdentityDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "WorkloadIdentityArn": {
+     "$ref": "#/definitions/WorkloadIdentityArn"
+    }
+   },
+   "required": [
+    "WorkloadIdentityArn"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AgentRuntimeId"
+ ],
+ "properties": {
+  "AgentRuntimeArn": {
+   "$ref": "#/definitions/AgentRuntimeArn"
+  },
+  "AgentRuntimeArtifact": {
+   "$ref": "#/definitions/AgentRuntimeArtifact"
+  },
+  "AgentRuntimeId": {
+   "$ref": "#/definitions/AgentRuntimeId"
+  },
+  "AgentRuntimeName": {
+   "$ref": "#/definitions/AgentRuntimeName"
+  },
+  "AgentRuntimeVersion": {
+   "$ref": "#/definitions/AgentRuntimeVersion"
+  },
+  "AuthorizerConfiguration": {
+   "$ref": "#/definitions/AuthorizerConfiguration"
+  },
+  "CreatedAt": {
+   "$ref": "#/definitions/CreatedAt"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "EnvironmentVariables": {
+   "$ref": "#/definitions/EnvironmentVariablesMap"
+  },
+  "FailureReason": {
+   "type": "string"
+  },
+  "LastUpdatedAt": {
+   "$ref": "#/definitions/LastUpdatedAt"
+  },
+  "LifecycleConfiguration": {
+   "$ref": "#/definitions/LifecycleConfiguration"
+  },
+  "NetworkConfiguration": {
+   "$ref": "#/definitions/NetworkConfiguration"
+  },
+  "ProtocolConfiguration": {
+   "$ref": "#/definitions/ProtocolConfiguration"
+  },
+  "RequestHeaderConfiguration": {
+   "$ref": "#/definitions/RequestHeaderConfiguration"
+  },
+  "RoleArn": {
+   "$ref": "#/definitions/RoleArn"
+  },
+  "Status": {
+   "$ref": "#/definitions/AgentStatus"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  },
+  "WorkloadIdentityDetails": {
+   "$ref": "#/definitions/WorkloadIdentityDetails"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AgentRuntimeArn",
+  "/properties/AgentRuntimeId",
+  "/properties/AgentRuntimeVersion",
+  "/properties/Status",
+  "/properties/CreatedAt",
+  "/properties/LastUpdatedAt",
+  "/properties/WorkloadIdentityDetails",
+  "/properties/FailureReason"
+ ],
+ "replacementStrategy": "create_then_delete",
+ "required": [
+  "AgentRuntimeName",
+  "AgentRuntimeArtifact",
+  "RoleArn",
+  "NetworkConfiguration"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BedrockAgentCore::Runtime"
+}

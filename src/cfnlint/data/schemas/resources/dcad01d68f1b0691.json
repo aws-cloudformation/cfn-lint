@@ -29,10 +29,13 @@
    }
   }
  ],
- "createOnlyProperties": [
+ "conditionalCreateOnlyProperties": [
   "/properties/LocalSecondaryIndexes",
-  "/properties/TableName",
+  "/properties/GlobalTableSourceArn",
   "/properties/KeySchema"
+ ],
+ "createOnlyProperties": [
+  "/properties/TableName"
  ],
  "definitions": {
   "AttributeDefinition": {
@@ -103,6 +106,16 @@
    ],
    "type": "object"
   },
+  "GlobalReadProvisionedThroughputSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "ReadCapacityUnits": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
   "GlobalSecondaryIndex": {
    "additionalProperties": false,
    "properties": {
@@ -118,6 +131,12 @@
     },
     "Projection": {
      "$ref": "#/definitions/Projection"
+    },
+    "ReadOnDemandThroughputSettings": {
+     "$ref": "#/definitions/ReadOnDemandThroughputSettings"
+    },
+    "ReadProvisionedThroughputSettings": {
+     "$ref": "#/definitions/GlobalReadProvisionedThroughputSettings"
     },
     "WarmThroughput": {
      "$ref": "#/definitions/WarmThroughput"
@@ -375,6 +394,13 @@
      "type": "array",
      "uniqueItems": true
     },
+    "GlobalTableSettingsReplicationMode": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
     "KinesisStreamSpecification": {
      "$ref": "#/definitions/KinesisStreamSpecification"
     },
@@ -606,6 +632,9 @@
    "type": "array",
    "uniqueItems": true
   },
+  "GlobalTableSourceArn": {
+   "type": "string"
+  },
   "GlobalTableWitnesses": {
    "insertionOrder": false,
    "items": {
@@ -635,6 +664,12 @@
     "STRONG"
    ],
    "type": "string"
+  },
+  "ReadOnDemandThroughputSettings": {
+   "$ref": "#/definitions/ReadOnDemandThroughputSettings"
+  },
+  "ReadProvisionedThroughputSettings": {
+   "$ref": "#/definitions/GlobalReadProvisionedThroughputSettings"
   },
   "Replicas": {
    "insertionOrder": false,
@@ -684,8 +719,6 @@
   "/properties/TableId"
  ],
  "required": [
-  "KeySchema",
-  "AttributeDefinitions",
   "Replicas"
  ],
  "typeName": "AWS::DynamoDB::GlobalTable",
@@ -693,6 +726,7 @@
   "/properties/Replicas/*/ReadProvisionedThroughputSettings/ReadCapacityAutoScalingSettings/SeedCapacity",
   "/properties/Replicas/*/GlobalSecondaryIndexes/*/ReadProvisionedThroughputSettings/ReadCapacityAutoScalingSettings/SeedCapacity",
   "/properties/WriteProvisionedThroughputSettings/WriteCapacityAutoScalingSettings/SeedCapacity",
-  "/properties/GlobalSecondaryIndexes/*/WriteProvisionedThroughputSettings/WriteCapacityAutoScalingSettings/SeedCapacity"
+  "/properties/GlobalSecondaryIndexes/*/WriteProvisionedThroughputSettings/WriteCapacityAutoScalingSettings/SeedCapacity",
+  "/properties/GlobalTableSourceArn"
  ]
 }
