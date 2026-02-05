@@ -1,3 +1,16 @@
+### v1.44.0
+## What's Changed
+* Add [E3704](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3704): Enforce TransitEncryptionEnabled for Valkey ReplicationGroups by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4353
+* Add in more .kiro files for steering and agents by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4354
+* Migrate schema patches from botocore to AWS Smithy models by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4355
+* chore(deps): bump setuptools from 80.9.0 to 80.10.2 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4350
+* Update tox configurations and use tox in gha by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4356
+* update setuptools in pyproject.toml by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4357
+* Update CloudFormation schemas to 2026-02-03 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4347
+* Update CloudFormation schemas to 2026-02-05 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4358
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.43.4...v1.44.0
+
 ### v1.43.4
 ## What's Changed
 * Fix update specs in quick succession failing the command by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4339
