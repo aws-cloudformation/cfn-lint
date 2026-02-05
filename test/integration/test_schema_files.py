@@ -41,6 +41,7 @@ class TestSchemaFiles(TestCase):
         "Parameters",
         "Parameters/*",
         "Parameters/*/AllowedPattern",
+        "Parameters/*/Type",
         "Resources",
         "Resources/*",
         "Resources/*/Condition",
