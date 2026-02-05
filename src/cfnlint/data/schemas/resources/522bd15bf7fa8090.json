@@ -1,0 +1,105 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/VectorBucketName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/VectorBucketName",
+  "/properties/EncryptionConfiguration"
+ ],
+ "definitions": {
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "EncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^(arn:aws[-a-z0-9]*:kms:[-a-z0-9]*:[0-9]{12}:key/.+)$",
+     "type": "string"
+    },
+    "SseType": {
+     "default": "AES256",
+     "enum": [
+      "AES256",
+      "aws:kms"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VectorBucketArn": {
+   "examples": [
+    "arn:aws:s3vectors:us-east-1:123456789012:bucket/myvectorbucket"
+   ],
+   "type": "string"
+  },
+  "VectorBucketName": {
+   "maxLength": 63,
+   "minLength": 3,
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VectorBucketArn"
+ ],
+ "properties": {
+  "CreationTime": {
+   "$ref": "#/definitions/CreationTime"
+  },
+  "EncryptionConfiguration": {
+   "$ref": "#/definitions/EncryptionConfiguration"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VectorBucketArn": {
+   "$ref": "#/definitions/VectorBucketArn"
+  },
+  "VectorBucketName": {
+   "$ref": "#/definitions/VectorBucketName"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VectorBucketArn",
+  "/properties/CreationTime"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::S3Vectors::VectorBucket"
+}

@@ -1,0 +1,215 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FlowArn",
+  "/properties/Name",
+  "/properties/Protocol"
+ ],
+ "definitions": {
+  "Encryption": {
+   "additionalProperties": false,
+   "properties": {
+    "Algorithm": {
+     "enum": [
+      "aes128",
+      "aes192",
+      "aes256"
+     ],
+     "type": "string"
+    },
+    "ConstantInitializationVector": {
+     "type": "string"
+    },
+    "DeviceId": {
+     "type": "string"
+    },
+    "KeyType": {
+     "default": "static-key",
+     "enum": [
+      "speke",
+      "static-key",
+      "srt-password"
+     ],
+     "type": "string"
+    },
+    "Region": {
+     "type": "string"
+    },
+    "ResourceId": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "pattern": "^arn:(aws[a-zA-Z-]*):iam::[0-9]{12}:role/[a-zA-Z0-9_+=,.@-]+$",
+     "type": "string"
+    },
+    "SecretArn": {
+     "pattern": "^arn:(aws[a-zA-Z-]*):secretsmanager:[a-z0-9-]+:[0-9]{12}:secret:[a-zA-Z0-9/_+=.@-]+$",
+     "type": "string"
+    },
+    "Url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "GatewayBridgeSource": {
+   "additionalProperties": false,
+   "properties": {
+    "BridgeArn": {
+     "pattern": "^arn:(aws[a-zA-Z-]*):mediaconnect:[a-z0-9-]+:[0-9]{12}:bridge:[a-zA-Z0-9-]+:[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "VpcInterfaceAttachment": {
+     "$ref": "#/definitions/VpcInterfaceAttachment"
+    }
+   },
+   "required": [
+    "BridgeArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VpcInterfaceAttachment": {
+   "additionalProperties": false,
+   "properties": {
+    "VpcInterfaceName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/EntitlementArn",
+  "/properties/SenderIpAddress",
+  "/properties/SenderControlPort",
+  "/properties/Decryption/ResourceId",
+  "/properties/Decryption/ConstantInitializationVector",
+  "/properties/Decryption/DeviceId",
+  "/properties/Decryption/Region",
+  "/properties/Decryption/Url"
+ ],
+ "primaryIdentifier": [
+  "/properties/SourceArn"
+ ],
+ "properties": {
+  "Decryption": {
+   "$ref": "#/definitions/Encryption"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "EntitlementArn": {
+   "type": "string"
+  },
+  "FlowArn": {
+   "pattern": "^arn:(aws[a-zA-Z-]*):mediaconnect:[a-z0-9-]+:[0-9]{12}:flow:[a-zA-Z0-9-]+:[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "GatewayBridgeSource": {
+   "$ref": "#/definitions/GatewayBridgeSource"
+  },
+  "IngestIp": {
+   "type": "string"
+  },
+  "IngestPort": {
+   "type": "integer"
+  },
+  "MaxBitrate": {
+   "type": "integer"
+  },
+  "MaxLatency": {
+   "type": "integer"
+  },
+  "MinLatency": {
+   "type": "integer"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Protocol": {
+   "enum": [
+    "zixi-push",
+    "rtp-fec",
+    "rtp",
+    "rist",
+    "srt-listener",
+    "srt-caller"
+   ],
+   "type": "string"
+  },
+  "SenderControlPort": {
+   "type": "integer"
+  },
+  "SenderIpAddress": {
+   "type": "string"
+  },
+  "SourceArn": {
+   "pattern": "^arn:(aws[a-zA-Z-]*):mediaconnect:[a-z0-9-]+:[0-9]{12}:source:[a-zA-Z0-9-]+:[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "SourceIngestPort": {
+   "type": "string"
+  },
+  "SourceListenerAddress": {
+   "type": "string"
+  },
+  "SourceListenerPort": {
+   "type": "integer"
+  },
+  "StreamId": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "VpcInterfaceName": {
+   "type": "string"
+  },
+  "WhitelistCidr": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IngestIp",
+  "/properties/SourceArn",
+  "/properties/SourceIngestPort"
+ ],
+ "required": [
+  "FlowArn",
+  "Name",
+  "Description"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaConnect::FlowSource"
+}
