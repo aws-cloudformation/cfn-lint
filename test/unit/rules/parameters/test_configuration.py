@@ -175,6 +175,35 @@ def context(cfn):
                 )
             ],
         ),
+        (
+            "Unsupported SSM parameter type accepted",
+            {
+                "PrefixList": {
+                    "Type": "AWS::SSM::Parameter::Value<AWS::EC2::PrefixList::Id>",
+                }
+            },
+            [],
+        ),
+        (
+            "Arbitrary SSM parameter type accepted",
+            {
+                "Arbitrary": {
+                    "Type": (
+                        "AWS::SSM::Parameter::Value<AWS::FakeService::FakeResource>"
+                    ),
+                }
+            },
+            [],
+        ),
+        (
+            "Arbitrary List type accepted",
+            {
+                "ArbitraryList": {
+                    "Type": "List<AWS::FakeService::FakeResource>",
+                }
+            },
+            [],
+        ),
     ],
 )
 def test_validate(name, instance, expected, rule, context, cfn):
