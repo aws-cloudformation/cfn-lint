@@ -161,6 +161,7 @@ class Context:
     resources: dict[str, "Resource"] = field(init=True, default_factory=dict)
     conditions: Conditions = field(init=True, default_factory=Conditions)
     mappings: Mappings = field(init=True, default_factory=Mappings)
+    constants: dict[str, Any] = field(init=True, default_factory=dict)
 
     strict_types: bool = field(init=True, default=True)
 
@@ -291,6 +292,7 @@ class Context:
         return (
             list(self.parameters.keys())
             + list(self.resources.keys())
+            + list(self.constants.keys())
             + pseudo_params
             + list(self.ref_values.keys())
         )
@@ -590,12 +592,15 @@ def create_context_for_template(
 
     mappings = Mappings.create_from_dict(cfn.template.get("Mappings", {}))
 
+    constants = cfn.template.get("Constants", {})
+
     return Context(
         parameters=parameters,
         resources=resources,
         conditions=conditions,
         transforms=transforms,
         mappings=mappings,
+        constants=constants,
         regions=cfn.regions,
         path=Path(),
         functions=["Fn::Transform"],
