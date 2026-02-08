@@ -10607,6 +10607,7 @@
     ]
    },
    "createbrowser": {},
+   "createbrowserprofile": {},
    "createcodeinterpreter": {},
    "createevaluator": {},
    "createevent": {
@@ -10660,6 +10661,11 @@
    "deletebrowser": {
     "Resources": [
      "browser-custom"
+    ]
+   },
+   "deletebrowserprofile": {
+    "Resources": [
+     "browser-profile"
     ]
    },
    "deletecodeinterpreter": {
@@ -10763,6 +10769,11 @@
    "getbrowser": {
     "Resources": [
      "browser-custom"
+    ]
+   },
+   "getbrowserprofile": {
+    "Resources": [
+     "browser-profile"
     ]
    },
    "getbrowsersession": {
@@ -10941,6 +10952,7 @@
      "token-vault"
     ]
    },
+   "listbrowserprofiles": {},
    "listbrowsers": {},
    "listbrowsersessions": {},
    "listcodeinterpreters": {},
@@ -11006,10 +11018,13 @@
     "Resources": [
      "apikeycredentialprovider",
      "browser-custom",
+     "browser-profile",
      "code-interpreter-custom",
+     "evaluator",
      "gateway",
      "memory",
      "oauth2credentialprovider",
+     "online-evaluation-config",
      "runtime",
      "runtime-endpoint",
      "token-vault",
@@ -11047,6 +11062,13 @@
      "memory"
     ]
    },
+   "savebrowsersessionprofile": {
+    "Resources": [
+     "browser",
+     "browser-custom",
+     "browser-profile"
+    ]
+   },
    "settokenvaultcmk": {
     "Resources": [
      "token-vault"
@@ -11055,7 +11077,8 @@
    "startbrowsersession": {
     "Resources": [
      "browser",
-     "browser-custom"
+     "browser-custom",
+     "browser-profile"
     ]
    },
    "startcodeinterpretersession": {
@@ -11101,10 +11124,13 @@
     "Resources": [
      "apikeycredentialprovider",
      "browser-custom",
+     "browser-profile",
      "code-interpreter-custom",
+     "evaluator",
      "gateway",
      "memory",
      "oauth2credentialprovider",
+     "online-evaluation-config",
      "runtime",
      "runtime-endpoint",
      "token-vault",
@@ -11116,10 +11142,13 @@
     "Resources": [
      "apikeycredentialprovider",
      "browser-custom",
+     "browser-profile",
      "code-interpreter-custom",
+     "evaluator",
      "gateway",
      "memory",
      "oauth2credentialprovider",
+     "online-evaluation-config",
      "runtime",
      "runtime-endpoint",
      "token-vault",
@@ -11221,6 +11250,14 @@
      "aws:ResourceTag/${TagKey}"
     ]
    },
+   "browser-profile": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:aws:browser-profile/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "code-interpreter": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:aws:code-interpreter/.*"
@@ -11237,6 +11274,9 @@
    "evaluator": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:evaluator/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "gateway": {
@@ -11266,6 +11306,9 @@
    "online-evaluation-config": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:online-evaluation-config/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "policy": {
@@ -43344,6 +43387,7 @@
    },
    "createconnection": {
     "Resources": [
+     "connectionType",
      "rootcatalog"
     ]
    },
@@ -43500,6 +43544,11 @@
      "rootcatalog"
     ]
    },
+   "deleteconnectiontype": {
+    "Resources": [
+     "connectionType"
+    ]
+   },
    "deletecrawler": {
     "Resources": [
      "crawler"
@@ -43639,10 +43688,15 @@
     ]
    },
    "deregisterdatapreview": {},
-   "describeconnectiontype": {},
+   "describeconnectiontype": {
+    "Resources": [
+     "connectionType"
+    ]
+   },
    "describeentity": {
     "Resources": [
      "connection",
+     "connectionType",
      "rootcatalog"
     ]
    },
@@ -43803,7 +43857,8 @@
    "getentityrecords": {
     "Resources": [
      "catalog",
-     "connection"
+     "connection",
+     "connectionType"
     ]
    },
    "getenvironment": {},
@@ -44096,6 +44151,7 @@
    "listentities": {
     "Resources": [
      "connection",
+     "connectionType",
      "rootcatalog"
     ]
    },
@@ -44200,7 +44256,13 @@
    "refreshoauth2tokens": {
     "Resources": [
      "connection",
+     "connectionType",
      "rootcatalog"
+    ]
+   },
+   "registerconnectiontype": {
+    "Resources": [
+     "connectionType"
     ]
    },
    "registerschemaversion": {
@@ -44383,7 +44445,12 @@
     ]
    },
    "terminatenotebook": {},
-   "testconnection": {},
+   "testconnection": {
+    "Resources": [
+     "connection",
+     "connectionType"
+    ]
+   },
    "untagresource": {
     "Resources": [
      "blueprint",
@@ -44441,6 +44508,7 @@
    "updateconnection": {
     "Resources": [
      "connection",
+     "connectionType",
      "rootcatalog"
     ]
    },
@@ -44593,6 +44661,14 @@
    "connection": {
     "ARNFormats": [
      "arn:${Partition}:glue:${Region}:${Account}:connection/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "connectiontype": {
+    "ARNFormats": [
+     "arn:${Partition}:glue:${Region}:${Account}:connectionType:.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
