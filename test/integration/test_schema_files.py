@@ -28,6 +28,7 @@ class TestSchemaFiles(TestCase):
     _found_keywords: List[str] = [
         "*",
         "Conditions",
+        "Constants",
         "Description",
         "Mappings",
         "Metadata",
