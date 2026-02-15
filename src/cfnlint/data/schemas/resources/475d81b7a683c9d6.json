@@ -1,0 +1,198 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IpamId",
+  "/properties/AddressFamily"
+ ],
+ "definitions": {
+  "IpamPrefixListResolverRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/IpamPrefixListResolverRuleCondition"
+     },
+     "type": "array"
+    },
+    "IpamScopeId": {
+     "type": "string"
+    },
+    "ResourceType": {
+     "enum": [
+      "vpc",
+      "subnet",
+      "eip",
+      "public-ipv4-pool"
+     ],
+     "type": "string"
+    },
+    "RuleType": {
+     "enum": [
+      "static-cidr",
+      "ipam-resource-cidr",
+      "ipam-pool-cidr"
+     ],
+     "type": "string"
+    },
+    "StaticCidr": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RuleType"
+   ],
+   "type": "object"
+  },
+  "IpamPrefixListResolverRuleCondition": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "Operation",
+      "IpamPoolId"
+     ]
+    },
+    {
+     "required": [
+      "Operation",
+      "ResourceId"
+     ]
+    },
+    {
+     "required": [
+      "Operation",
+      "ResourceOwner"
+     ]
+    },
+    {
+     "required": [
+      "Operation",
+      "ResourceRegion"
+     ]
+    },
+    {
+     "required": [
+      "Operation",
+      "Cidr"
+     ]
+    },
+    {
+     "required": [
+      "Operation",
+      "ResourceTag"
+     ]
+    }
+   ],
+   "properties": {
+    "Cidr": {
+     "type": "string"
+    },
+    "IpamPoolId": {
+     "type": "string"
+    },
+    "Operation": {
+     "enum": [
+      "equals",
+      "not-equals",
+      "subnet-of"
+     ],
+     "type": "string"
+    },
+    "ResourceId": {
+     "type": "string"
+    },
+    "ResourceOwner": {
+     "type": "string"
+    },
+    "ResourceRegion": {
+     "type": "string"
+    },
+    "ResourceTag": {
+     "$ref": "#/definitions/Tag"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IpamPrefixListResolverId"
+ ],
+ "properties": {
+  "AddressFamily": {
+   "enum": [
+    "ipv4",
+    "ipv6"
+   ],
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "IpamArn": {
+   "type": "string"
+  },
+  "IpamId": {
+   "type": "string"
+  },
+  "IpamPrefixListResolverArn": {
+   "type": "string"
+  },
+  "IpamPrefixListResolverId": {
+   "type": "string"
+  },
+  "Rules": {
+   "items": {
+    "$ref": "#/definitions/IpamPrefixListResolverRule"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IpamArn",
+  "/properties/IpamPrefixListResolverId",
+  "/properties/IpamPrefixListResolverArn"
+ ],
+ "required": [
+  "AddressFamily"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ipam.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::IPAMPrefixListResolver",
+ "writeOnlyProperties": [
+  "/properties/IpamId"
+ ]
+}

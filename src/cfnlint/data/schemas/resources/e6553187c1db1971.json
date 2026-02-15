@@ -1,0 +1,185 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "DestinationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Configuration": {
+     "$ref": "#/definitions/S3Configuration"
+    }
+   },
+   "type": "object"
+  },
+  "S3Configuration": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationIdentifier": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^s3://[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9](/.*)?",
+     "type": "string"
+    },
+    "RoleArn": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "DestinationIdentifier",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "ScheduledQueryState": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ScheduledQueryArn"
+ ],
+ "properties": {
+  "CreationTime": {
+   "type": "number"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "DestinationConfiguration": {
+   "$ref": "#/definitions/DestinationConfiguration"
+  },
+  "ExecutionRoleArn": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "LastExecutionStatus": {
+   "enum": [
+    "InvalidQuery",
+    "Complete",
+    "Failed",
+    "Timeout"
+   ],
+   "type": "string"
+  },
+  "LastTriggeredTime": {
+   "type": "number"
+  },
+  "LastUpdatedTime": {
+   "type": "number"
+  },
+  "LogGroupIdentifiers": {
+   "items": {
+    "maxLength": 2048,
+    "minLength": 1,
+    "pattern": "^[\\w#+=/:,.@-]*$",
+    "type": "string"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_\\-/.#]+$",
+   "type": "string"
+  },
+  "QueryLanguage": {
+   "enum": [
+    "CWLI",
+    "PPL",
+    "SQL"
+   ],
+   "type": "string"
+  },
+  "QueryString": {
+   "maxLength": 10000,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ScheduleEndTime": {
+   "minimum": 0,
+   "type": "number"
+  },
+  "ScheduleExpression": {
+   "maxLength": 256,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ScheduleStartTime": {
+   "minimum": 0,
+   "type": "number"
+  },
+  "ScheduledQueryArn": {
+   "type": "string"
+  },
+  "StartTimeOffset": {
+   "type": "integer"
+  },
+  "State": {
+   "$ref": "#/definitions/ScheduledQueryState"
+  },
+  "Tags": {
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "Key": {
+      "maxLength": 128,
+      "minLength": 1,
+      "type": "string"
+     },
+     "Value": {
+      "maxLength": 256,
+      "minLength": 0,
+      "type": "string"
+     }
+    },
+    "required": [
+     "Key",
+     "Value"
+    ],
+    "type": "object"
+   },
+   "type": "array"
+  },
+  "Timezone": {
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ScheduledQueryArn",
+  "/properties/LastTriggeredTime",
+  "/properties/LastExecutionStatus",
+  "/properties/CreationTime",
+  "/properties/LastUpdatedTime"
+ ],
+ "required": [
+  "Name",
+  "QueryLanguage",
+  "QueryString",
+  "ScheduleExpression",
+  "ExecutionRoleArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Logs::ScheduledQuery"
+}

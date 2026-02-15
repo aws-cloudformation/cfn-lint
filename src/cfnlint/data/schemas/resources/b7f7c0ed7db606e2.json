@@ -1,0 +1,384 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/AuthToken",
+  "/properties/NodeGroupConfiguration"
+ ],
+ "createOnlyProperties": [
+  "/properties/AtRestEncryptionEnabled",
+  "/properties/CacheSubnetGroupName",
+  "/properties/DataTieringEnabled",
+  "/properties/GlobalReplicationGroupId",
+  "/properties/KmsKeyId",
+  "/properties/NetworkType",
+  "/properties/Port",
+  "/properties/PreferredCacheClusterAZs",
+  "/properties/ReplicasPerNodeGroup",
+  "/properties/ReplicationGroupId",
+  "/properties/SnapshotArns",
+  "/properties/SnapshotName"
+ ],
+ "definitions": {
+  "CloudWatchLogsDestinationDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroup": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "LogGroup"
+   ],
+   "type": "object"
+  },
+  "DestinationDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogsDetails": {
+     "$ref": "#/definitions/CloudWatchLogsDestinationDetails"
+    },
+    "KinesisFirehoseDetails": {
+     "$ref": "#/definitions/KinesisFirehoseDestinationDetails"
+    }
+   },
+   "type": "object"
+  },
+  "Endpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "KinesisFirehoseDestinationDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "DeliveryStream": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DeliveryStream"
+   ],
+   "type": "object"
+  },
+  "LogDeliveryConfigurationRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationDetails": {
+     "$ref": "#/definitions/DestinationDetails"
+    },
+    "DestinationType": {
+     "type": "string"
+    },
+    "LogFormat": {
+     "type": "string"
+    },
+    "LogType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DestinationDetails",
+    "DestinationType",
+    "LogFormat",
+    "LogType"
+   ],
+   "type": "object"
+  },
+  "NodeGroupConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "NodeGroupId": {
+     "type": "string"
+    },
+    "PrimaryAvailabilityZone": {
+     "type": "string"
+    },
+    "ReplicaAvailabilityZones": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ReplicaCount": {
+     "type": "integer"
+    },
+    "Slots": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/CacheSecurityGroupNames"
+ ],
+ "primaryIdentifier": [
+  "/properties/ReplicationGroupId"
+ ],
+ "properties": {
+  "AtRestEncryptionEnabled": {
+   "default": false,
+   "type": "boolean"
+  },
+  "AuthToken": {
+   "type": "string"
+  },
+  "AutoMinorVersionUpgrade": {
+   "type": "boolean"
+  },
+  "AutomaticFailoverEnabled": {
+   "default": false,
+   "type": "boolean"
+  },
+  "CacheNodeType": {
+   "type": "string"
+  },
+  "CacheParameterGroupName": {
+   "type": "string"
+  },
+  "CacheSecurityGroupNames": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CacheSubnetGroupName": {
+   "type": "string"
+  },
+  "ClusterMode": {
+   "type": "string"
+  },
+  "ConfigurationEndPoint": {
+   "$ref": "#/definitions/Endpoint"
+  },
+  "DataTieringEnabled": {
+   "type": "boolean"
+  },
+  "Engine": {
+   "type": "string"
+  },
+  "EngineVersion": {
+   "type": "string"
+  },
+  "GlobalReplicationGroupId": {
+   "type": "string"
+  },
+  "IpDiscovery": {
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "LogDeliveryConfigurations": {
+   "items": {
+    "$ref": "#/definitions/LogDeliveryConfigurationRequest"
+   },
+   "type": "array"
+  },
+  "MultiAZEnabled": {
+   "type": "boolean"
+  },
+  "NetworkType": {
+   "type": "string"
+  },
+  "NodeGroupConfiguration": {
+   "items": {
+    "$ref": "#/definitions/NodeGroupConfiguration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "NotificationTopicArn": {
+   "type": "string"
+  },
+  "NumCacheClusters": {
+   "maximum": 6,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "NumNodeGroups": {
+   "default": 1,
+   "type": "integer"
+  },
+  "Port": {
+   "type": "integer"
+  },
+  "PreferredCacheClusterAZs": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PreferredMaintenanceWindow": {
+   "type": "string"
+  },
+  "PrimaryClusterId": {
+   "type": "string"
+  },
+  "PrimaryEndPoint": {
+   "$ref": "#/definitions/Endpoint"
+  },
+  "ReadEndPoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Addresses": {
+     "type": "string"
+    },
+    "AddressesList": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Ports": {
+     "type": "string"
+    },
+    "PortsList": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "ReaderEndPoint": {
+   "$ref": "#/definitions/Endpoint"
+  },
+  "ReplicasPerNodeGroup": {
+   "maximum": 5,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "ReplicationGroupDescription": {
+   "type": "string"
+  },
+  "ReplicationGroupId": {
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SnapshotArns": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SnapshotName": {
+   "type": "string"
+  },
+  "SnapshotRetentionLimit": {
+   "default": 0,
+   "type": "integer"
+  },
+  "SnapshotWindow": {
+   "type": "string"
+  },
+  "SnapshottingClusterId": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TransitEncryptionEnabled": {
+   "default": false,
+   "type": "boolean"
+  },
+  "TransitEncryptionMode": {
+   "type": "string"
+  },
+  "UserGroupIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConfigurationEndPoint",
+  "/properties/ConfigurationEndPoint/Address",
+  "/properties/ConfigurationEndPoint/Port",
+  "/properties/PrimaryEndPoint",
+  "/properties/PrimaryEndPoint/Address",
+  "/properties/PrimaryEndPoint/Port",
+  "/properties/ReadEndPoint",
+  "/properties/ReadEndPoint/Addresses",
+  "/properties/ReadEndPoint/AddressesList",
+  "/properties/ReadEndPoint/Ports",
+  "/properties/ReadEndPoint/PortsList",
+  "/properties/ReaderEndPoint",
+  "/properties/ReaderEndPoint/Address",
+  "/properties/ReaderEndPoint/Port"
+ ],
+ "required": [
+  "ReplicationGroupDescription"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticache",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ElastiCache::ReplicationGroup",
+ "writeOnlyProperties": [
+  "/properties/AuthToken",
+  "/properties/CacheParameterGroupName",
+  "/properties/CacheSecurityGroupNames",
+  "/properties/CacheSubnetGroupName",
+  "/properties/EngineVersion",
+  "/properties/NotificationTopicArn",
+  "/properties/PreferredMaintenanceWindow",
+  "/properties/SecurityGroupIds",
+  "/properties/SnapshotArns",
+  "/properties/SnapshotName",
+  "/properties/NodeGroupConfiguration",
+  "/properties/NumNodeGroups",
+  "/properties/ReplicasPerNodeGroup",
+  "/properties/KmsKeyId",
+  "/properties/PrimaryClusterId",
+  "/properties/PreferredCacheClusterAZs"
+ ]
+}

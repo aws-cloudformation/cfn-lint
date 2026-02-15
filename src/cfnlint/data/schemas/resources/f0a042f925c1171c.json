@@ -1,0 +1,151 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "AlarmName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ExpireDate": {
+   "type": "string"
+  },
+  "LastUpdatedTimestamp": {
+   "type": "string"
+  },
+  "MuteTargets": {
+   "additionalProperties": false,
+   "properties": {
+    "AlarmNames": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/AlarmName"
+     },
+     "maxItems": 500,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "AlarmNames"
+   ],
+   "type": "object"
+  },
+  "MuteType": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "properties": {
+    "Schedule": {
+     "additionalProperties": false,
+     "properties": {
+      "Duration": {
+       "maxLength": 50,
+       "minLength": 1,
+       "type": "string"
+      },
+      "Expression": {
+       "maxLength": 256,
+       "minLength": 1,
+       "type": "string"
+      },
+      "Timezone": {
+       "maxLength": 50,
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "required": [
+      "Duration",
+      "Expression"
+     ],
+     "type": "object"
+    }
+   },
+   "required": [
+    "Schedule"
+   ],
+   "type": "object"
+  },
+  "StartDate": {
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "SCHEDULED",
+    "ACTIVE",
+    "EXPIRED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Status",
+  "/properties/LastUpdatedTimestamp",
+  "/properties/MuteType",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Rule"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudwatch.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudWatch::AlarmMuteRule"
+}
