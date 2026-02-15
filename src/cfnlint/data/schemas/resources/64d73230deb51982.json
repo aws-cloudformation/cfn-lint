@@ -1,0 +1,164 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Recipients",
+  "/properties/InstanceArn",
+  "/properties/ExpiresAt",
+  "/properties/Priority"
+ ],
+ "definitions": {
+  "Arn": {
+   "pattern": "^.{0,2048}$",
+   "type": "string"
+  },
+  "InstanceArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "LocalizedString": {
+   "pattern": "^.{0,500}$",
+   "type": "string"
+  },
+  "NotificationContent": {
+   "additionalProperties": false,
+   "properties": {
+    "DeDE": {
+     "$ref": "#/definitions/LocalizedString"
+    },
+    "EnUS": {
+     "$ref": "#/definitions/LocalizedString"
+    },
+    "EsES": {
+     "$ref": "#/definitions/LocalizedString"
+    },
+    "FrFR": {
+     "$ref": "#/definitions/LocalizedString"
+    },
+    "IdID": {
+     "$ref": "#/definitions/LocalizedString"
+    },
+    "ItIT": {
+     "$ref": "#/definitions/LocalizedString"
+    },
+    "JaJP": {
+     "$ref": "#/definitions/LocalizedString"
+    },
+    "KoKR": {
+     "$ref": "#/definitions/LocalizedString"
+    },
+    "PtBR": {
+     "$ref": "#/definitions/LocalizedString"
+    },
+    "ZhCN": {
+     "$ref": "#/definitions/LocalizedString"
+    },
+    "ZhTW": {
+     "$ref": "#/definitions/LocalizedString"
+    }
+   },
+   "type": "object"
+  },
+  "Priority": {
+   "enum": [
+    "HIGH",
+    "LOW"
+   ],
+   "type": "string"
+  },
+  "RecipientList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Arn"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UserArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/agent/[-a-zA-Z0-9]*$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/notification/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Content": {
+   "$ref": "#/definitions/NotificationContent"
+  },
+  "CreatedAt": {
+   "pattern": "^[0-9]+$",
+   "type": "string"
+  },
+  "ExpiresAt": {
+   "pattern": "^[0-9]+$",
+   "type": "string"
+  },
+  "Id": {
+   "pattern": "^.{0,256}$",
+   "type": "string"
+  },
+  "InstanceArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Priority": {
+   "$ref": "#/definitions/Priority"
+  },
+  "Recipients": {
+   "$ref": "#/definitions/RecipientList"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/CreatedAt"
+ ],
+ "required": [
+  "InstanceArn",
+  "Content"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::Notification"
+}

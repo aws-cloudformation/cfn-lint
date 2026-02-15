@@ -980,6 +980,7 @@
   "Actions": {
    "associateservice": {
     "Resources": [
+     "AgentSpaceResource",
      "AssociationResource"
     ]
    },
@@ -1014,6 +1015,7 @@
    },
    "disassociateservice": {
     "Resources": [
+     "AgentSpaceResource",
      "AssociationResource"
     ]
    },
@@ -1032,6 +1034,7 @@
    },
    "getassociation": {
     "Resources": [
+     "AgentSpaceResource",
      "AssociationResource"
     ]
    },
@@ -1052,7 +1055,11 @@
    "initiatechatforcase": {},
    "initiateserviceregistration": {},
    "listagentspaces": {},
-   "listassociations": {},
+   "listassociations": {
+    "Resources": [
+     "AgentSpaceResource"
+    ]
+   },
    "listbacklogtasks": {},
    "listexecutions": {},
    "listgoals": {},
@@ -1063,6 +1070,7 @@
    "listservices": {},
    "listwebhooks": {
     "Resources": [
+     "AgentSpaceResource",
      "AssociationResource"
     ]
    },
@@ -1080,6 +1088,7 @@
    },
    "updateassociation": {
     "Resources": [
+     "AgentSpaceResource",
      "AssociationResource"
     ]
    },
@@ -9138,8 +9147,18 @@
      "workload-estimate"
     ]
    },
-   "tagresource": {},
-   "untagresource": {},
+   "tagresource": {
+    "Resources": [
+     "bill-scenario",
+     "workload-estimate"
+    ]
+   },
+   "untagresource": {
+    "Resources": [
+     "bill-scenario",
+     "workload-estimate"
+    ]
+   },
    "updatebillestimate": {
     "Resources": [
      "bill-estimate"
@@ -9175,17 +9194,23 @@
   "Resources": {
    "bill-estimate": {
     "ARNFormats": [
-     "arn:${Partition}:bcm-pricing-calculator:${Region}:${Account}:bill-estimate/.*"
+     "arn:${Partition}:bcm-pricing-calculator::${Account}:bill-estimate/.*"
     ]
    },
    "bill-scenario": {
     "ARNFormats": [
-     "arn:${Partition}:bcm-pricing-calculator:${Region}:${Account}:bill-scenario/.*"
+     "arn:${Partition}:bcm-pricing-calculator::${Account}:bill-scenario/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "workload-estimate": {
     "ARNFormats": [
-     "arn:${Partition}:bcm-pricing-calculator:${Region}:${Account}:workload-estimate/.*"
+     "arn:${Partition}:bcm-pricing-calculator::${Account}:workload-estimate/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    }
   }
@@ -10607,6 +10632,7 @@
     ]
    },
    "createbrowser": {},
+   "createbrowserprofile": {},
    "createcodeinterpreter": {},
    "createevaluator": {},
    "createevent": {
@@ -10660,6 +10686,11 @@
    "deletebrowser": {
     "Resources": [
      "browser-custom"
+    ]
+   },
+   "deletebrowserprofile": {
+    "Resources": [
+     "browser-profile"
     ]
    },
    "deletecodeinterpreter": {
@@ -10763,6 +10794,11 @@
    "getbrowser": {
     "Resources": [
      "browser-custom"
+    ]
+   },
+   "getbrowserprofile": {
+    "Resources": [
+     "browser-profile"
     ]
    },
    "getbrowsersession": {
@@ -10941,6 +10977,7 @@
      "token-vault"
     ]
    },
+   "listbrowserprofiles": {},
    "listbrowsers": {},
    "listbrowsersessions": {},
    "listcodeinterpreters": {},
@@ -11006,10 +11043,13 @@
     "Resources": [
      "apikeycredentialprovider",
      "browser-custom",
+     "browser-profile",
      "code-interpreter-custom",
+     "evaluator",
      "gateway",
      "memory",
      "oauth2credentialprovider",
+     "online-evaluation-config",
      "runtime",
      "runtime-endpoint",
      "token-vault",
@@ -11047,6 +11087,13 @@
      "memory"
     ]
    },
+   "savebrowsersessionprofile": {
+    "Resources": [
+     "browser",
+     "browser-custom",
+     "browser-profile"
+    ]
+   },
    "settokenvaultcmk": {
     "Resources": [
      "token-vault"
@@ -11055,7 +11102,8 @@
    "startbrowsersession": {
     "Resources": [
      "browser",
-     "browser-custom"
+     "browser-custom",
+     "browser-profile"
     ]
    },
    "startcodeinterpretersession": {
@@ -11101,10 +11149,13 @@
     "Resources": [
      "apikeycredentialprovider",
      "browser-custom",
+     "browser-profile",
      "code-interpreter-custom",
+     "evaluator",
      "gateway",
      "memory",
      "oauth2credentialprovider",
+     "online-evaluation-config",
      "runtime",
      "runtime-endpoint",
      "token-vault",
@@ -11116,10 +11167,13 @@
     "Resources": [
      "apikeycredentialprovider",
      "browser-custom",
+     "browser-profile",
      "code-interpreter-custom",
+     "evaluator",
      "gateway",
      "memory",
      "oauth2credentialprovider",
+     "online-evaluation-config",
      "runtime",
      "runtime-endpoint",
      "token-vault",
@@ -11221,6 +11275,14 @@
      "aws:ResourceTag/${TagKey}"
     ]
    },
+   "browser-profile": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:browser-profile/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "code-interpreter": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:aws:code-interpreter/.*"
@@ -11237,6 +11299,9 @@
    "evaluator": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:evaluator/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "gateway": {
@@ -11266,6 +11331,9 @@
    "online-evaluation-config": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:online-evaluation-config/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "policy": {
@@ -25948,6 +26016,7 @@
      "budget",
      "farm",
      "fleet",
+     "job",
      "license-endpoint",
      "monitor",
      "queue",
@@ -25986,11 +26055,7 @@
      "queue"
     ]
    },
-   "searchworkers": {
-    "Resources": [
-     "fleet"
-    ]
-   },
+   "searchworkers": {},
    "startsessionsstatisticsaggregation": {
     "Resources": [
      "fleet",
@@ -26002,6 +26067,7 @@
      "budget",
      "farm",
      "fleet",
+     "job",
      "license-endpoint",
      "monitor",
      "queue",
@@ -26013,6 +26079,7 @@
      "budget",
      "farm",
      "fleet",
+     "job",
      "license-endpoint",
      "monitor",
      "queue",
@@ -26136,6 +26203,7 @@
      "arn:${Partition}:deadline:${Region}:${Account}:farm/.*"
     ],
     "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}",
      "deadline:FarmMembershipLevels",
      "deadline:JobMembershipLevels",
      "deadline:QueueMembershipLevels"
@@ -43344,6 +43412,7 @@
    },
    "createconnection": {
     "Resources": [
+     "connectionType",
      "rootcatalog"
     ]
    },
@@ -43500,6 +43569,11 @@
      "rootcatalog"
     ]
    },
+   "deleteconnectiontype": {
+    "Resources": [
+     "connectionType"
+    ]
+   },
    "deletecrawler": {
     "Resources": [
      "crawler"
@@ -43639,10 +43713,15 @@
     ]
    },
    "deregisterdatapreview": {},
-   "describeconnectiontype": {},
+   "describeconnectiontype": {
+    "Resources": [
+     "connectionType"
+    ]
+   },
    "describeentity": {
     "Resources": [
      "connection",
+     "connectionType",
      "rootcatalog"
     ]
    },
@@ -43803,7 +43882,8 @@
    "getentityrecords": {
     "Resources": [
      "catalog",
-     "connection"
+     "connection",
+     "connectionType"
     ]
    },
    "getenvironment": {},
@@ -44096,6 +44176,7 @@
    "listentities": {
     "Resources": [
      "connection",
+     "connectionType",
      "rootcatalog"
     ]
    },
@@ -44200,7 +44281,13 @@
    "refreshoauth2tokens": {
     "Resources": [
      "connection",
+     "connectionType",
      "rootcatalog"
+    ]
+   },
+   "registerconnectiontype": {
+    "Resources": [
+     "connectionType"
     ]
    },
    "registerschemaversion": {
@@ -44383,7 +44470,12 @@
     ]
    },
    "terminatenotebook": {},
-   "testconnection": {},
+   "testconnection": {
+    "Resources": [
+     "connection",
+     "connectionType"
+    ]
+   },
    "untagresource": {
     "Resources": [
      "blueprint",
@@ -44441,6 +44533,7 @@
    "updateconnection": {
     "Resources": [
      "connection",
+     "connectionType",
      "rootcatalog"
     ]
    },
@@ -44593,6 +44686,14 @@
    "connection": {
     "ARNFormats": [
      "arn:${Partition}:glue:${Region}:${Account}:connection/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "connectiontype": {
+    "ARNFormats": [
+     "arn:${Partition}:glue:${Region}:${Account}:connectionType:.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -48287,6 +48388,15 @@
     ]
    }
   }
+ },
+ "inspector2-telemetry": {
+  "Actions": {
+   "notifyheartbeat": {},
+   "sendtelemetry": {},
+   "startsession": {},
+   "stopsession": {}
+  },
+  "Resources": {}
  },
  "internetmonitor": {
   "Actions": {
@@ -53489,6 +53599,11 @@
      "replicator"
     ]
    },
+   "createtopic": {
+    "Resources": [
+     "topic"
+    ]
+   },
    "createvpcconnection": {
     "Resources": [
      "cluster",
@@ -53513,6 +53628,11 @@
    "deletereplicator": {
     "Resources": [
      "replicator"
+    ]
+   },
+   "deletetopic": {
+    "Resources": [
+     "topic"
     ]
    },
    "deletevpcconnection": {
@@ -53702,6 +53822,11 @@
    "updatestorage": {
     "Resources": [
      "cluster"
+    ]
+   },
+   "updatetopic": {
+    "Resources": [
+     "topic"
     ]
    }
   },
@@ -83671,6 +83796,7 @@
      "inference-component",
      "inference-recommendations-job",
      "labeling-job",
+     "mlflow-app",
      "mlflow-tracking-server",
      "model",
      "model-bias-job-definition",
@@ -84341,6 +84467,7 @@
      "inference-component",
      "inference-recommendations-job",
      "labeling-job",
+     "mlflow-app",
      "mlflow-tracking-server",
      "model",
      "model-bias-job-definition",
@@ -85138,6 +85265,10 @@
    "mlflow-app": {
     "ARNFormats": [
      "arn:${Partition}:sagemaker:${Region}:${Account}:mlflow-app/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}",
+     "sagemaker:ResourceTag/${TagKey}"
     ]
    },
    "mlflow-tracking-server": {
@@ -85264,6 +85395,10 @@
    "partner-app": {
     "ARNFormats": [
      "arn:${Partition}:sagemaker:${Region}:${Account}:partner-app/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}",
+     "sagemaker:ResourceTag/${TagKey}"
     ]
    },
    "pipeline": {
@@ -86759,11 +86894,7 @@
      "Application"
     ]
    },
-   "createagentspace": {
-    "Resources": [
-     "Application"
-    ]
-   },
+   "createagentspace": {},
    "createapplication": {},
    "createdesignreview": {
     "Resources": [
@@ -86787,7 +86918,7 @@
    },
    "createonetimeloginsession": {
     "Resources": [
-     "Application"
+     "AgentSpace"
     ]
    },
    "createpentest": {
@@ -86905,21 +87036,13 @@
      "Integration"
     ]
    },
-   "getloginsessioncredentials": {
-    "Resources": [
-     "Application"
-    ]
-   },
+   "getloginsessioncredentials": {},
    "getsecurityrequirement": {
     "Resources": [
      "SecurityRequirement"
     ]
    },
-   "handleonetimeloginsession": {
-    "Resources": [
-     "Application"
-    ]
-   },
+   "handleonetimeloginsession": {},
    "initiateproviderregistration": {
     "Resources": [
      "Application"
@@ -89685,12 +89808,33 @@
  },
  "signin": {
   "Actions": {
-   "authorizeoauth2access": {},
-   "createoauth2token": {},
+   "authorizeoauth2access": {
+    "Resources": [
+     "oauth2-public-client-localhost",
+     "oauth2-public-client-remote"
+    ]
+   },
+   "createoauth2token": {
+    "Resources": [
+     "oauth2-public-client-localhost",
+     "oauth2-public-client-remote"
+    ]
+   },
    "createtrustedidentitypropagationapplicationforconsole": {},
    "listtrustedidentitypropagationapplicationsforconsole": {}
   },
-  "Resources": {}
+  "Resources": {
+   "oauth2-public-client-localhost": {
+    "ARNFormats": [
+     "arn:${Partition}:signin:${Region}:${Account}:oauth2/public-client/localhost"
+    ]
+   },
+   "oauth2-public-client-remote": {
+    "ARNFormats": [
+     "arn:${Partition}:signin:${Region}:${Account}:oauth2/public-client/remote"
+    ]
+   }
+  }
  },
  "simspaceweaver": {
   "Actions": {

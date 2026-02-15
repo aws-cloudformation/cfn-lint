@@ -1,0 +1,110 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/BundleId",
+  "/properties/VolumeEncryptionKey",
+  "/properties/RootVolumeEncryptionEnabled",
+  "/properties/UserVolumeEncryptionEnabled"
+ ],
+ "createOnlyProperties": [
+  "/properties/UserName",
+  "/properties/DirectoryId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "WorkspaceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "ComputeTypeName": {
+     "type": "string"
+    },
+    "RootVolumeSizeGib": {
+     "type": "integer"
+    },
+    "RunningMode": {
+     "type": "string"
+    },
+    "RunningModeAutoStopTimeoutInMinutes": {
+     "type": "integer"
+    },
+    "UserVolumeSizeGib": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WorkspaceId"
+ ],
+ "properties": {
+  "BundleId": {
+   "type": "string"
+  },
+  "DirectoryId": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "RootVolumeEncryptionEnabled": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "UserName": {
+   "type": "string"
+  },
+  "UserVolumeEncryptionEnabled": {
+   "type": "boolean"
+  },
+  "VolumeEncryptionKey": {
+   "type": "string"
+  },
+  "WorkspaceId": {
+   "type": "string"
+  },
+  "WorkspaceProperties": {
+   "$ref": "#/definitions/WorkspaceProperties"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/WorkspaceId",
+  "/properties/Id"
+ ],
+ "required": [
+  "BundleId",
+  "DirectoryId",
+  "UserName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-workspaces-workspace",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::WorkSpaces::Workspace"
+}
