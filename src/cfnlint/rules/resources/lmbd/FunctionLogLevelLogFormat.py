@@ -15,7 +15,10 @@ from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, Schema
 class FunctionLogLevelLogFormat(CfnLintJsonSchema):
     id = "E3696"
     shortdesc = "LogLevel is not supported when LogFormat is set to Text"
-    description = "LogLevel is not supported when LogFormat is set to 'Text'. Remove LogLevel from your request or change the LogFormat to 'JSON'"
+    description = (
+        "LogLevel is not supported when LogFormat is set to 'Text'. "
+        "Remove LogLevel from your request or change the LogFormat to 'JSON'"
+    )
     tags = ["resources"]
 
     def __init__(self) -> None:
@@ -28,4 +31,7 @@ class FunctionLogLevelLogFormat(CfnLintJsonSchema):
         )
 
     def message(self, instance: Any, err: ValidationError) -> str:
-        return "LogLevel is not supported when LogFormat is set to 'Text'. Remove LogLevel from your request or change the LogFormat to 'JSON'"
+        return (
+            "LogLevel is not supported when LogFormat is set to 'Text'. "
+            "Remove LogLevel from your request or change the LogFormat to 'JSON'"
+        )

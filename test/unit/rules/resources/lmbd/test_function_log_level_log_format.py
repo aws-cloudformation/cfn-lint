@@ -3,11 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from collections import deque
-
 import pytest
 
-from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.lmbd.FunctionLogLevelLogFormat import (
     FunctionLogLevelLogFormat,
 )
@@ -54,13 +51,18 @@ def rule():
                 }
             },
             1,
-            "LogLevel is not supported when LogFormat is set to 'Text'. Remove LogLevel from your request or change the LogFormat to 'JSON'",
+            (
+                "LogLevel is not supported when LogFormat is set to 'Text'. "
+                "Remove LogLevel from your request or change the LogFormat to 'JSON'"
+            ),
         ),
     ],
 )
 def test_validate(instance, expected_count, expected_message, rule, validator):
     errs = list(rule.validate(validator, "", instance, {}))
 
-    assert len(errs) == expected_count, f"Expected {expected_count} errors got {len(errs)}"
+    assert len(errs) == expected_count, (
+        f"Expected {expected_count} errors got {len(errs)}"
+    )
     if expected_message:
         assert errs[0].message == expected_message

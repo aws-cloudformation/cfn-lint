@@ -3,11 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from collections import deque
-
 import pytest
 
-from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.lmbd.FunctionPackageTypeImageExclusions import (
     FunctionPackageTypeImageExclusions,
 )
@@ -51,7 +48,10 @@ def rule():
                 "Handler": "index.handler",
             },
             1,
-            "Container image functions cannot specify Handler, Runtime, or Layers properties",
+            (
+                "Container image functions cannot specify "
+                "Handler, Runtime, or Layers properties"
+            ),
         ),
         (
             {
@@ -59,7 +59,10 @@ def rule():
                 "Runtime": "python3.14",
             },
             1,
-            "Container image functions cannot specify Handler, Runtime, or Layers properties",
+            (
+                "Container image functions cannot specify "
+                "Handler, Runtime, or Layers properties"
+            ),
         ),
         (
             {
@@ -67,7 +70,10 @@ def rule():
                 "Layers": ["arn:aws:lambda:us-east-1:123456789012:layer:my-layer:1"],
             },
             1,
-            "Container image functions cannot specify Handler, Runtime, or Layers properties",
+            (
+                "Container image functions cannot specify "
+                "Handler, Runtime, or Layers properties"
+            ),
         ),
         (
             {
@@ -77,13 +83,18 @@ def rule():
                 "Layers": ["arn:aws:lambda:us-east-1:123456789012:layer:my-layer:1"],
             },
             1,
-            "Container image functions cannot specify Handler, Runtime, or Layers properties",
+            (
+                "Container image functions cannot specify "
+                "Handler, Runtime, or Layers properties"
+            ),
         ),
     ],
 )
 def test_validate(instance, expected_count, expected_message, rule, validator):
     errs = list(rule.validate(validator, "", instance, {}))
 
-    assert len(errs) == expected_count, f"Expected {expected_count} errors got {len(errs)}"
+    assert len(errs) == expected_count, (
+        f"Expected {expected_count} errors got {len(errs)}"
+    )
     if expected_message:
         assert errs[0].message == expected_message

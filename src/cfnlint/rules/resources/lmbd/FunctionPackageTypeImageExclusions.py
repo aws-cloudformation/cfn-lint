@@ -15,7 +15,10 @@ from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, Schema
 class FunctionPackageTypeImageExclusions(CfnLintJsonSchema):
     id = "E3685"
     shortdesc = "Container image functions cannot use Handler, Runtime, or Layers"
-    description = "Functions with PackageType 'Image' cannot specify Handler, Runtime, or Layers properties"
+    description = (
+        "Functions with PackageType 'Image' cannot specify "
+        "Handler, Runtime, or Layers properties"
+    )
     tags = ["resources"]
 
     def __init__(self) -> None:
@@ -28,4 +31,7 @@ class FunctionPackageTypeImageExclusions(CfnLintJsonSchema):
         )
 
     def message(self, instance: Any, err: ValidationError) -> str:
-        return "Container image functions cannot specify Handler, Runtime, or Layers properties"
+        return (
+            "Container image functions cannot specify "
+            "Handler, Runtime, or Layers properties"
+        )
