@@ -12,10 +12,10 @@ from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
-class FunctionPackageTypeLayers(CfnLintJsonSchema):
-    id = "E4013"
-    shortdesc = "Layers parameter is not supported for container images"
-    description = "Lambda layers are not supported for functions created with container images"
+class FunctionPackageTypeImageExclusions(CfnLintJsonSchema):
+    id = "E3685"
+    shortdesc = "Container image functions cannot use Handler, Runtime, or Layers"
+    description = "Functions with PackageType 'Image' cannot specify Handler, Runtime, or Layers properties"
     tags = ["resources"]
 
     def __init__(self) -> None:
@@ -23,9 +23,9 @@ class FunctionPackageTypeLayers(CfnLintJsonSchema):
             keywords=["Resources/AWS::Lambda::Function/Properties"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_lambda_function,
-                filename="packagetype_layers.json",
+                filename="packagetype_image_exclusions.json",
             ),
         )
 
     def message(self, instance: Any, err: ValidationError) -> str:
-        return "Lambda layers are not supported for functions created with container images"
+        return "Container image functions cannot specify Handler, Runtime, or Layers properties"

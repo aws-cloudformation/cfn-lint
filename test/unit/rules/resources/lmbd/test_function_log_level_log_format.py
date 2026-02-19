@@ -54,7 +54,7 @@ def rule():
                 }
             },
             1,
-            "False schema does not allow 'INFO'",
+            "LogLevel is not supported when LogFormat is set to 'Text'. Remove LogLevel from your request or change the LogFormat to 'JSON'",
         ),
     ],
 )

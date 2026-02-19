@@ -13,7 +13,7 @@ from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, Schema
 
 
 class FunctionLogLevelLogFormat(CfnLintJsonSchema):
-    id = "E4010"
+    id = "E3696"
     shortdesc = "LogLevel is not supported when LogFormat is set to Text"
     description = "LogLevel is not supported when LogFormat is set to 'Text'. Remove LogLevel from your request or change the LogFormat to 'JSON'"
     tags = ["resources"]
