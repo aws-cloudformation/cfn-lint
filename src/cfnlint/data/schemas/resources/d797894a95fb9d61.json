@@ -1,0 +1,268 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Default": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "DeletionMode": {
+   "default": "DISABLED",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "DeletionProtection": {
+   "additionalProperties": false,
+   "properties": {
+    "Mode": {
+     "$ref": "#/definitions/DeletionMode"
+    }
+   },
+   "required": [
+    "Mode"
+   ],
+   "type": "object"
+  },
+  "EncryptionContext": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EncryptionSettings": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "KmsEncryptionSettings": {
+       "$ref": "#/definitions/KmsEncryptionSettings"
+      }
+     },
+     "required": [
+      "KmsEncryptionSettings"
+     ],
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Default": {
+       "$ref": "#/definitions/Default"
+      }
+     },
+     "required": [
+      "Default"
+     ],
+     "type": "object"
+    }
+   ],
+   "type": "object"
+  },
+  "KmsEncryptionSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionContext": {
+     "$ref": "#/definitions/EncryptionContext"
+    },
+    "Key": {
+     "$ref": "#/definitions/KmsKey"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "KmsEncryptionState": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionContext": {
+     "$ref": "#/definitions/EncryptionContext"
+    },
+    "Key": {
+     "$ref": "#/definitions/KmsKey"
+    }
+   },
+   "required": [
+    "Key",
+    "EncryptionContext"
+   ],
+   "type": "object"
+  },
+  "KmsKey": {
+   "pattern": "^[a-zA-Z0-9:/_-]+$",
+   "type": "string"
+  },
+  "SchemaCedarFormat": {
+   "type": "string"
+  },
+  "SchemaDefinition": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CedarJson": {
+       "$ref": "#/definitions/SchemaJson"
+      }
+     },
+     "required": [
+      "CedarJson"
+     ],
+     "title": "CedarJson",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CedarFormat": {
+       "$ref": "#/definitions/SchemaCedarFormat"
+      }
+     },
+     "required": [
+      "CedarFormat"
+     ],
+     "title": "CedarFormat",
+     "type": "object"
+    }
+   ]
+  },
+  "SchemaJson": {
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "ValidationMode": {
+   "enum": [
+    "OFF",
+    "STRICT"
+   ],
+   "type": "string"
+  },
+  "ValidationSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "Mode": {
+     "$ref": "#/definitions/ValidationMode"
+    }
+   },
+   "required": [
+    "Mode"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PolicyStoreId"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2500,
+   "minLength": 1,
+   "pattern": "^arn:[^:]*:[^:]*:[^:]*:[^:]*:.*$",
+   "type": "string"
+  },
+  "DeletionProtection": {
+   "$ref": "#/definitions/DeletionProtection"
+  },
+  "Description": {
+   "maxLength": 150,
+   "minLength": 0,
+   "type": "string"
+  },
+  "EncryptionSettings": {
+   "$ref": "#/definitions/EncryptionSettings"
+  },
+  "EncryptionState": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "KmsEncryptionState": {
+       "$ref": "#/definitions/KmsEncryptionState"
+      }
+     },
+     "required": [
+      "KmsEncryptionState"
+     ],
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Default": {
+       "$ref": "#/definitions/Default"
+      }
+     },
+     "required": [
+      "Default"
+     ],
+     "type": "object"
+    }
+   ],
+   "type": "object"
+  },
+  "PolicyStoreId": {
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]*$",
+   "type": "string"
+  },
+  "Schema": {
+   "$ref": "#/definitions/SchemaDefinition"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ValidationSettings": {
+   "$ref": "#/definitions/ValidationSettings"
+  }
+ },
+ "propertyTransform": {
+  "/properties/Schema/CedarJson": "$join([CedarJson, \"{}\"])"
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/PolicyStoreId",
+  "/properties/EncryptionState"
+ ],
+ "required": [
+  "ValidationSettings"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-avp",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::VerifiedPermissions::PolicyStore",
+ "writeOnlyProperties": [
+  "/properties/EncryptionSettings"
+ ]
+}
