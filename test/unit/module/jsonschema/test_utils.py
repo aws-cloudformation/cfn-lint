@@ -5,7 +5,9 @@ SPDX-License-Identifier: MIT-0
 
 import unittest
 
-from cfnlint.jsonschema._utils import equal, uniq, uniq_keys
+import pytest
+
+from cfnlint.jsonschema._utils import equal, find_additional_properties, uniq, uniq_keys
 
 
 class TestUtils(unittest.TestCase):
@@ -48,3 +50,56 @@ class TestUtils(unittest.TestCase):
         self.assertFalse(
             uniq_keys([{"foo": "foo"}, {"bar": "bar"}, {"foo": "foo"}], ["foo"])
         )
+
+
+@pytest.mark.parametrize(
+    "instance,schema,functions,expected",
+    [
+        # No additional properties
+        (
+            {"foo": "bar"},
+            {"properties": {"foo": {}}},
+            [],
+            [],
+        ),
+        # Additional property found
+        (
+            {"foo": "bar", "baz": "qux"},
+            {"properties": {"foo": {}}},
+            [],
+            ["baz"],
+        ),
+        # Pattern property matches
+        (
+            {"foo": "bar", "test123": "value"},
+            {"properties": {"foo": {}}, "patternProperties": {"test[0-9]+": {}}},
+            [],
+            [],
+        ),
+        # Fn::Transform excluded when in functions
+        (
+            {"foo": "bar", "Fn::Transform": {"Name": "AWS::Include"}},
+            {"properties": {"foo": {}}},
+            ["Fn::Transform"],
+            [],
+        ),
+        # Fn::Transform not excluded when not in functions
+        (
+            {"foo": "bar", "Fn::Transform": {"Name": "AWS::Include"}},
+            {"properties": {"foo": {}}},
+            [],
+            ["Fn::Transform"],
+        ),
+        # Fn::Transform with other additional properties
+        (
+            {"foo": "bar", "Fn::Transform": {"Name": "AWS::Include"}, "extra": "val"},
+            {"properties": {"foo": {}}},
+            ["Fn::Transform"],
+            ["extra"],
+        ),
+    ],
+)
+def test_find_additional_properties(instance, schema, functions, expected, validator):
+    validator = validator.evolve(context=validator.context.evolve(functions=functions))
+    result = list(find_additional_properties(validator, instance, schema))
+    assert result == expected
