@@ -1,0 +1,652 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ServiceType",
+  "/properties/ServiceDetails"
+ ],
+ "definitions": {
+  "AdditionalServiceDetails": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "MCPServer": {
+       "$ref": "#/definitions/RegisteredMCPServerDetails"
+      }
+     },
+     "required": [
+      "MCPServer"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "GitLab": {
+       "$ref": "#/definitions/RegisteredGitLabServiceDetails"
+      }
+     },
+     "required": [
+      "GitLab"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "MCPServerSplunk": {
+       "$ref": "#/definitions/RegisteredMCPServerDetails"
+      }
+     },
+     "required": [
+      "MCPServerSplunk"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "MCPServerNewRelic": {
+       "$ref": "#/definitions/RegisteredNewRelicDetails"
+      }
+     },
+     "required": [
+      "MCPServerNewRelic"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Dynatrace": {
+       "$ref": "#/definitions/RegisteredDynatraceDetails"
+      }
+     },
+     "required": [
+      "Dynatrace"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ServiceNow": {
+       "$ref": "#/definitions/RegisteredServiceNowDetails"
+      }
+     },
+     "required": [
+      "ServiceNow"
+     ]
+    }
+   ],
+   "type": "object"
+  },
+  "ApiKeyDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "ApiKeyHeader": {
+     "pattern": "^[a-zA-Z0-9-]+$",
+     "type": "string"
+    },
+    "ApiKeyName": {
+     "pattern": "^[a-zA-Z0-9_\\s-]+$",
+     "type": "string"
+    },
+    "ApiKeyValue": {
+     "pattern": "^[a-zA-Z0-9+/=._-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ApiKeyName",
+    "ApiKeyValue",
+    "ApiKeyHeader"
+   ],
+   "type": "object"
+  },
+  "BearerTokenDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationHeader": {
+     "default": "Authorization",
+     "pattern": "^[a-zA-Z0-9-]+$",
+     "type": "string"
+    },
+    "TokenName": {
+     "pattern": "^[a-zA-Z0-9_\\s-]+$",
+     "type": "string"
+    },
+    "TokenValue": {
+     "pattern": "^[\\S]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TokenName",
+    "TokenValue"
+   ],
+   "type": "object"
+  },
+  "DynatraceAuthorizationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "OAuthClientCredentials": {
+     "$ref": "#/definitions/OAuthClientDetails"
+    }
+   },
+   "type": "object"
+  },
+  "DynatraceServiceDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountUrn": {
+     "type": "string"
+    },
+    "AuthorizationConfig": {
+     "$ref": "#/definitions/DynatraceAuthorizationConfig"
+    }
+   },
+   "required": [
+    "AccountUrn"
+   ],
+   "type": "object"
+  },
+  "GitLabDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupId": {
+     "type": "string"
+    },
+    "TargetUrl": {
+     "pattern": "^https://[a-zA-Z0-9]([a-zA-Z0-9.-]*[a-zA-Z0-9])?(?::[0-9]{1,5})?/?$",
+     "type": "string"
+    },
+    "TokenType": {
+     "enum": [
+      "personal",
+      "group"
+     ],
+     "type": "string"
+    },
+    "TokenValue": {
+     "pattern": "^glpat-[a-zA-Z0-9._-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TargetUrl",
+    "TokenType",
+    "TokenValue"
+   ],
+   "type": "object"
+  },
+  "MCPServerAuthorizationConfig": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "OAuthClientCredentials": {
+       "$ref": "#/definitions/MCPServerOAuthClientCredentialsConfig"
+      }
+     },
+     "required": [
+      "OAuthClientCredentials"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ApiKey": {
+       "$ref": "#/definitions/ApiKeyDetails"
+      }
+     },
+     "required": [
+      "ApiKey"
+     ]
+    }
+   ],
+   "type": "object"
+  },
+  "MCPServerDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationConfig": {
+     "$ref": "#/definitions/MCPServerAuthorizationConfig"
+    },
+    "Description": {
+     "maxLength": 500,
+     "type": "string"
+    },
+    "Endpoint": {
+     "pattern": "^https://[a-zA-Z0-9.-]+(?::[0-9]+)?(?:/.*)?$",
+     "type": "string"
+    },
+    "Name": {
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Endpoint",
+    "AuthorizationConfig"
+   ],
+   "type": "object"
+  },
+  "MCPServerOAuthClientCredentialsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientId": {
+     "type": "string"
+    },
+    "ClientName": {
+     "type": "string"
+    },
+    "ClientSecret": {
+     "type": "string"
+    },
+    "ExchangeParameters": {
+     "type": "object"
+    },
+    "ExchangeUrl": {
+     "pattern": "^https://[a-zA-Z0-9.-]+(?::[0-9]+)?(?:/.*)?$",
+     "type": "string"
+    },
+    "Scopes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "ClientId",
+    "ClientSecret",
+    "ExchangeUrl"
+   ],
+   "type": "object"
+  },
+  "MCPServerSplunkAuthorizationConfig": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "BearerToken": {
+       "$ref": "#/definitions/BearerTokenDetails"
+      }
+     },
+     "required": [
+      "BearerToken"
+     ]
+    }
+   ],
+   "type": "object"
+  },
+  "MCPServerSplunkDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationConfig": {
+     "$ref": "#/definitions/MCPServerSplunkAuthorizationConfig"
+    },
+    "Description": {
+     "maxLength": 500,
+     "type": "string"
+    },
+    "Endpoint": {
+     "pattern": "^https://[a-zA-Z0-9.-]+(?::[0-9]+)?(?:/.*)?$",
+     "type": "string"
+    },
+    "Name": {
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Endpoint",
+    "AuthorizationConfig"
+   ],
+   "type": "object"
+  },
+  "NewRelicApiKeyConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountId": {
+     "pattern": "^[0-9]+$",
+     "type": "string"
+    },
+    "AlertPolicyIds": {
+     "items": {
+      "pattern": "^[0-9]+$",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ApiKey": {
+     "pattern": "^NRAK-[A-Z0-9]+$",
+     "type": "string"
+    },
+    "ApplicationIds": {
+     "items": {
+      "pattern": "^[0-9]+$",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "EntityGuids": {
+     "items": {
+      "pattern": "^[a-zA-Z0-9_.-]+$",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Region": {
+     "enum": [
+      "US",
+      "EU"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ApiKey",
+    "AccountId",
+    "Region"
+   ],
+   "type": "object"
+  },
+  "NewRelicAuthorizationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ApiKey": {
+     "$ref": "#/definitions/NewRelicApiKeyConfig"
+    }
+   },
+   "required": [
+    "ApiKey"
+   ],
+   "type": "object"
+  },
+  "NewRelicServiceDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationConfig": {
+     "$ref": "#/definitions/NewRelicAuthorizationConfig"
+    }
+   },
+   "required": [
+    "AuthorizationConfig"
+   ],
+   "type": "object"
+  },
+  "OAuthClientDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientId": {
+     "type": "string"
+    },
+    "ClientName": {
+     "type": "string"
+    },
+    "ClientSecret": {
+     "type": "string"
+    },
+    "ExchangeParameters": {
+     "type": "object"
+    }
+   },
+   "required": [
+    "ClientId",
+    "ClientSecret"
+   ],
+   "type": "object"
+  },
+  "RegisteredDynatraceDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountUrn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AccountUrn"
+   ],
+   "type": "object"
+  },
+  "RegisteredGitLabServiceDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupId": {
+     "type": "string"
+    },
+    "TargetUrl": {
+     "type": "string"
+    },
+    "TokenType": {
+     "enum": [
+      "personal",
+      "group"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "TargetUrl",
+    "TokenType"
+   ],
+   "type": "object"
+  },
+  "RegisteredMCPServerDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "ApiKeyHeader": {
+     "type": "string"
+    },
+    "AuthorizationMethod": {
+     "enum": [
+      "oauth-client-credentials",
+      "api-key",
+      "bearer-token"
+     ],
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "Endpoint": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Endpoint",
+    "AuthorizationMethod"
+   ],
+   "type": "object"
+  },
+  "RegisteredNewRelicDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountId": {
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "Region": {
+     "enum": [
+      "US",
+      "EU"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "AccountId",
+    "Region"
+   ],
+   "type": "object"
+  },
+  "RegisteredServiceNowDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceUrl": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "InstanceUrl"
+   ],
+   "type": "object"
+  },
+  "ServiceDetails": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Dynatrace": {
+       "$ref": "#/definitions/DynatraceServiceDetails"
+      }
+     },
+     "required": [
+      "Dynatrace"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "MCPServer": {
+       "$ref": "#/definitions/MCPServerDetails"
+      }
+     },
+     "required": [
+      "MCPServer"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "MCPServerSplunk": {
+       "$ref": "#/definitions/MCPServerSplunkDetails"
+      }
+     },
+     "required": [
+      "MCPServerSplunk"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "MCPServerNewRelic": {
+       "$ref": "#/definitions/NewRelicServiceDetails"
+      }
+     },
+     "required": [
+      "MCPServerNewRelic"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "GitLab": {
+       "$ref": "#/definitions/GitLabDetails"
+      }
+     },
+     "required": [
+      "GitLab"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ServiceNow": {
+       "$ref": "#/definitions/ServiceNowServiceDetails"
+      }
+     },
+     "required": [
+      "ServiceNow"
+     ]
+    }
+   ],
+   "type": "object"
+  },
+  "ServiceId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ServiceNowAuthorizationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "OAuthClientCredentials": {
+     "$ref": "#/definitions/OAuthClientDetails"
+    }
+   },
+   "type": "object"
+  },
+  "ServiceNowServiceDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationConfig": {
+     "$ref": "#/definitions/ServiceNowAuthorizationConfig"
+    },
+    "InstanceUrl": {
+     "pattern": "^https://[a-zA-Z0-9-]+\\.service-now\\.com/?$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "InstanceUrl"
+   ],
+   "type": "object"
+  },
+  "ServiceType": {
+   "enum": [
+    "dynatrace",
+    "mcpserver",
+    "mcpserversplunk",
+    "mcpservernewrelic",
+    "gitlab",
+    "servicenow"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ServiceId"
+ ],
+ "properties": {
+  "AccessibleResources": {
+   "items": {
+    "type": "object"
+   },
+   "type": "array"
+  },
+  "AdditionalServiceDetails": {
+   "$ref": "#/definitions/AdditionalServiceDetails"
+  },
+  "ServiceDetails": {
+   "$ref": "#/definitions/ServiceDetails"
+  },
+  "ServiceId": {
+   "$ref": "#/definitions/ServiceId"
+  },
+  "ServiceType": {
+   "$ref": "#/definitions/ServiceType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ServiceId",
+  "/properties/AccessibleResources",
+  "/properties/AdditionalServiceDetails"
+ ],
+ "required": [
+  "ServiceType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::DevOpsAgent::Service",
+ "writeOnlyProperties": [
+  "/properties/ServiceDetails"
+ ]
+}

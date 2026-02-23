@@ -1,0 +1,79 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TemplateName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TemplateName"
+ ],
+ "properties": {
+  "FailureRedirectionURL": {
+   "type": "string"
+  },
+  "FromEmailAddress": {
+   "type": "string"
+  },
+  "SuccessRedirectionURL": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "TemplateContent": {
+   "type": "string"
+  },
+  "TemplateName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "TemplateSubject": {
+   "type": "string"
+  }
+ },
+ "required": [
+  "TemplateName",
+  "FromEmailAddress",
+  "TemplateSubject",
+  "TemplateContent",
+  "SuccessRedirectionURL",
+  "FailureRedirectionURL"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SES::CustomVerificationEmailTemplate"
+}
