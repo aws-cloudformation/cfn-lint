@@ -1,0 +1,117 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "IamAuthConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CreatedAt": {
+     "format": "date-time",
+     "type": "string"
+    },
+    "OperatorAppRoleArn": {
+     "type": "string"
+    },
+    "UpdatedAt": {
+     "format": "date-time",
+     "type": "string"
+    }
+   },
+   "required": [
+    "OperatorAppRoleArn"
+   ],
+   "type": "object"
+  },
+  "IdcAuthConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CreatedAt": {
+     "format": "date-time",
+     "type": "string"
+    },
+    "IdcApplicationArn": {
+     "type": "string"
+    },
+    "IdcInstanceArn": {
+     "type": "string"
+    },
+    "OperatorAppRoleArn": {
+     "type": "string"
+    },
+    "UpdatedAt": {
+     "format": "date-time",
+     "type": "string"
+    }
+   },
+   "required": [
+    "OperatorAppRoleArn",
+    "IdcInstanceArn"
+   ],
+   "type": "object"
+  },
+  "OperatorApp": {
+   "additionalProperties": false,
+   "properties": {
+    "Iam": {
+     "$ref": "#/definitions/IamAuthConfiguration"
+    },
+    "Idc": {
+     "$ref": "#/definitions/IdcAuthConfiguration"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AgentSpaceId"
+ ],
+ "properties": {
+  "AgentSpaceId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OperatorApp": {
+   "$ref": "#/definitions/OperatorApp"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AgentSpaceId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/Arn",
+  "/properties/OperatorApp/Iam/CreatedAt",
+  "/properties/OperatorApp/Iam/UpdatedAt",
+  "/properties/OperatorApp/Idc/IdcApplicationArn",
+  "/properties/OperatorApp/Idc/CreatedAt",
+  "/properties/OperatorApp/Idc/UpdatedAt"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::DevOpsAgent::AgentSpace"
+}

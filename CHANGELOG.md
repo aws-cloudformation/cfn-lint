@@ -1,3 +1,20 @@
+### v1.45.0
+## What's Changed
+* chore(deps): bump setuptools from `80.10.2` to `82.0.0` in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4366
+* Add rule [E3685](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3685) to validate container image functions cannot use `Handler`, `Runtime`, or `Layers` by @chrisqm-dev in https://github.com/aws-cloudformation/cfn-lint/pull/4372
+* Add rule [E3696](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3696) to validate `LogLevel` is not supported when `LogFormat` is set to `Text` by @chrisqm-dev in https://github.com/aws-cloudformation/cfn-lint/pull/4372
+* chore(deps): bump pyinstaller from `6.18.0` to `6.19.0` in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4370
+* Pin cfn-lint version to `1.44.0` in Dockerfile by @rchildress87 in https://github.com/aws-cloudformation/cfn-lint/pull/4365
+* Fix [E3009](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3009) false positive for `Fn::Transform` in additional properties by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4368
+* Accept any SSM parameter and List types with warning for undocumented types by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4361
+* Update CloudFormation schemas to `2026-02-23` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4362
+
+## New Contributors
+* @chrisqm-dev made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4372
+* @rchildress87 made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4365
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.44.0...v1.45.0
+
 ### v1.44.0
 ## What's Changed
 * Add [E3704](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3704): Enforce TransitEncryptionEnabled for Valkey ReplicationGroups by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4353

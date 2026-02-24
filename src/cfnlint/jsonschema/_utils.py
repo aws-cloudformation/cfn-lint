@@ -22,6 +22,8 @@ from collections.abc import Mapping, Sequence
 
 import regex as re
 
+from cfnlint.helpers import FUNCTION_TRANSFORM
+
 
 class Unset:
     """
@@ -45,6 +47,11 @@ def find_additional_properties(validator, instance, schema):
     properties = schema.get("properties", {})
     patterns = "|".join(schema.get("patternProperties", {}))
     for property in instance:
+        if (
+            property == FUNCTION_TRANSFORM
+            and FUNCTION_TRANSFORM in validator.context.functions
+        ):
+            continue
         if property not in properties:
             if validator.is_type(property, "string"):
                 if patterns and re.search(patterns, property):
