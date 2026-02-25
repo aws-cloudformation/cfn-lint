@@ -46,7 +46,7 @@ def rule():
         (
             {
                 "Enable": True,
-            },  # Neither provided (schema validation handles missing required properties)
+            },  # Neither provided (schema validation handles missing properties)
             0,
             None,
         ),
