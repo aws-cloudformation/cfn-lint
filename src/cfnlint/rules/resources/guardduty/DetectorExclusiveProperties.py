@@ -4,9 +4,12 @@ SPDX-License-Identifier: MIT-0
 """
 
 from __future__ import annotations
+
 from typing import Any
+
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
+
 
 class DetectorExclusiveProperties(CfnLintJsonSchema):
     id = "E3063"

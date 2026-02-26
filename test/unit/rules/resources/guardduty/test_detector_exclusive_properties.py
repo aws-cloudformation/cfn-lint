@@ -25,21 +25,14 @@ def rule():
                 "Enable": True,
                 "Features": [
                     {"Name": "S3_DATA_EVENTS", "Status": "ENABLED"},
-                    {"Name": "RUNTIME_MONITORING", "Status": "ENABLED"}
-                ]
-            }, 
+                    {"Name": "RUNTIME_MONITORING", "Status": "ENABLED"},
+                ],
+            },
             0,
             None,
         ),
         (
-            {
-                "Enable": True,
-                "DataSources": {
-                    "S3Logs": {
-                        "Enable": True
-                    }
-                }
-            },  
+            {"Enable": True, "DataSources": {"S3Logs": {"Enable": True}}},
             0,
             None,
         ),
@@ -59,16 +52,12 @@ def rule():
         (
             {
                 "Enable": True,
-                "DataSources": {
-                    "S3Logs": {
-                        "Enable": True
-                    }
-                },
+                "DataSources": {"S3Logs": {"Enable": True}},
                 "Features": [
                     {"Name": "S3_DATA_EVENTS", "Status": "ENABLED"},
-                    {"Name": "EBS_MALWARE_PROTECTION", "Status": "ENABLED"}
-                ]
-            },  
+                    {"Name": "EBS_MALWARE_PROTECTION", "Status": "ENABLED"},
+                ],
+            },
             1,
             (
                 "Both 'DataSources' and 'Features' were provided. "
