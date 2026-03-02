@@ -1,0 +1,127 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ConnectionId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Bandwidth",
+  "/properties/Location",
+  "/properties/ProviderName",
+  "/properties/RequestMACSec"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConnectionArn"
+ ],
+ "properties": {
+  "Bandwidth": {
+   "pattern": "^[1-9][0-9]*(M|G)bps$",
+   "type": "string"
+  },
+  "ConnectionArn": {
+   "pattern": "^arn:aws[a-z-]*:directconnect:[a-z0-9-]+:[0-9]{12}:dxcon/dxcon-[a-z0-9]{8,21}$",
+   "type": "string"
+  },
+  "ConnectionId": {
+   "pattern": "^dxcon-[a-z0-9]{8,21}$",
+   "type": "string"
+  },
+  "ConnectionName": {
+   "pattern": "^[\\w \\-_,\\/]{1,200}$",
+   "type": "string"
+  },
+  "ConnectionState": {
+   "pattern": "^(ordering|requested|pending|available|down|deleting|deleted|rejected|unknown)$",
+   "type": "string"
+  },
+  "LagId": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/LagId",
+      "typeName": "AWS::DirectConnect::Lag"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/LagArn",
+      "typeName": "AWS::DirectConnect::Lag"
+     }
+    }
+   ],
+   "pattern": "^(arn:aws[a-z-]*:directconnect:[a-z0-9-]+:[0-9]{12}:dxlag/)?dxlag-[a-zA-Z0-9]{8,21}$",
+   "type": "string"
+  },
+  "Location": {
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "ProviderName": {
+   "type": "string"
+  },
+  "RequestMACSec": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/LagId": "$lowercase($substringAfter(LagId, \"/\"))",
+  "/properties/Location": "\"^[a-zA-Z0-9-]+$\""
+ },
+ "readOnlyProperties": [
+  "/properties/ConnectionArn",
+  "/properties/ConnectionId",
+  "/properties/ConnectionState"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "Bandwidth",
+  "ConnectionName",
+  "Location"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DirectConnect::Connection",
+ "writeOnlyProperties": [
+  "/properties/RequestMACSec"
+ ]
+}

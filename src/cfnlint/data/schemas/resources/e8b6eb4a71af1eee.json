@@ -1,0 +1,92 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AcceptDirectConnectGatewayAssociationProposalRoleArn",
+  "/properties/AssociatedGatewayId",
+  "/properties/DirectConnectGatewayId"
+ ],
+ "primaryIdentifier": [
+  "/properties/AssociationId"
+ ],
+ "properties": {
+  "AcceptDirectConnectGatewayAssociationProposalRoleArn": {
+   "pattern": "^arn:aws[a-z-]*:iam::[0-9]{12}:role/.+$",
+   "type": "string"
+  },
+  "AllowedPrefixesToDirectConnectGateway": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^[0-9a-fA-F:.]+/[0-9]+$",
+    "type": "string"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "AssociatedGatewayId": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/VPNGatewayId",
+      "typeName": "AWS::EC2::VPNGateway"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/Id",
+      "typeName": "AWS::EC2::TransitGateway"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/TransitGatewayArn",
+      "typeName": "AWS::EC2::TransitGateway"
+     }
+    }
+   ],
+   "pattern": "^((arn:aws[a-z-]*:ec2:[a-z0-9-]+:[0-9]{12}:(vpn-gateway/vgw|transit-gateway/tgw))|(vgw|tgw))-[a-zA-Z0-9]{8,32}$",
+   "type": "string"
+  },
+  "AssociationId": {
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "DirectConnectGatewayId": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/DirectConnectGatewayId",
+      "typeName": "AWS::DirectConnect::DirectConnectGateway"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/DirectConnectGatewayArn",
+      "typeName": "AWS::DirectConnect::DirectConnectGateway"
+     }
+    }
+   ],
+   "pattern": "^(arn:aws[a-z-]*:directconnect::[0-9]{12}:dx-gateway/)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/AssociatedGatewayId": "$lowercase($substringAfter(AssociatedGatewayId, \"/\"))",
+  "/properties/DirectConnectGatewayId": "$substringAfter(DirectConnectGatewayId, \"/\")"
+ },
+ "readOnlyProperties": [
+  "/properties/AssociationId"
+ ],
+ "required": [
+  "DirectConnectGatewayId",
+  "AssociatedGatewayId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-directconnect",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::DirectConnect::DirectConnectGatewayAssociation",
+ "writeOnlyProperties": [
+  "/properties/AcceptDirectConnectGatewayAssociationProposalRoleArn"
+ ]
+}

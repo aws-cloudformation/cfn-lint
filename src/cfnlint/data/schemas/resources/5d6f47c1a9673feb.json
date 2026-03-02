@@ -1,0 +1,111 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/LagId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConnectionsBandwidth",
+  "/properties/Location",
+  "/properties/ProviderName",
+  "/properties/RequestMACSec"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LagArn"
+ ],
+ "properties": {
+  "ConnectionsBandwidth": {
+   "pattern": "^[1-9][0-9]*(M|G)bps$",
+   "type": "string"
+  },
+  "LagArn": {
+   "pattern": "^arn:aws[a-z-]*:directconnect:[a-z0-9-]+:[0-9]{12}:dxlag/dxlag-[a-z0-9]{8,21}$",
+   "type": "string"
+  },
+  "LagId": {
+   "pattern": "^dxlag-[a-z0-9]{8,21}$",
+   "type": "string"
+  },
+  "LagName": {
+   "pattern": "^[\\w \\-_,\\/]{1,200}$",
+   "type": "string"
+  },
+  "LagState": {
+   "pattern": "^(requested|pending|available|down|deleting|deleted|unknown)$",
+   "type": "string"
+  },
+  "Location": {
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "MinimumLinks": {
+   "type": "integer"
+  },
+  "ProviderName": {
+   "type": "string"
+  },
+  "RequestMACSec": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/Location": "\"^[a-zA-Z0-9-]+$\""
+ },
+ "readOnlyProperties": [
+  "/properties/LagArn",
+  "/properties/LagId",
+  "/properties/LagState"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "LagName",
+  "Location",
+  "ConnectionsBandwidth"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DirectConnect::Lag",
+ "writeOnlyProperties": [
+  "/properties/RequestMACSec"
+ ]
+}

@@ -978,6 +978,7 @@
  },
  "aidevops": {
   "Actions": {
+   "allowvendedlogdeliveryforresource": {},
    "associateservice": {
     "Resources": [
      "AgentSpaceResource",
@@ -990,6 +991,7 @@
     ]
    },
    "createbacklogtask": {},
+   "createchat": {},
    "createknowledgeitem": {},
    "createonetimeloginsession": {
     "Resources": [
@@ -1061,6 +1063,7 @@
     ]
    },
    "listbacklogtasks": {},
+   "listchats": {},
    "listexecutions": {},
    "listgoals": {},
    "listjournalrecords": {},
@@ -1081,6 +1084,7 @@
    },
    "searchserviceaccessibleresource": {},
    "sendchatmessage": {},
+   "streammessage": {},
    "updateagentspace": {
     "Resources": [
      "AgentSpaceResource"
@@ -1093,6 +1097,7 @@
     ]
    },
    "updatebacklogtask": {},
+   "updategoal": {},
    "updateknowledgeitem": {},
    "updateoperatorappteams": {
     "Resources": [
@@ -11423,6 +11428,11 @@
  },
  "bedrock-mantle": {
   "Actions": {
+   "archiveproject": {
+    "Resources": [
+     "project"
+    ]
+   },
    "callwithbearertoken": {},
    "cancelfinetuningjob": {
     "Resources": [
@@ -11445,6 +11455,11 @@
     ]
    },
    "createinference": {
+    "Resources": [
+     "project"
+    ]
+   },
+   "createproject": {
     "Resources": [
      "project"
     ]
@@ -11479,6 +11494,11 @@
      "project"
     ]
    },
+   "getproject": {
+    "Resources": [
+     "project"
+    ]
+   },
    "listfiles": {
     "Resources": [
      "project"
@@ -11493,12 +11513,40 @@
     "Resources": [
      "project"
     ]
+   },
+   "listprojects": {
+    "Resources": [
+     "project"
+    ]
+   },
+   "listtagsforresource": {
+    "Resources": [
+     "project"
+    ]
+   },
+   "tagresource": {
+    "Resources": [
+     "project"
+    ]
+   },
+   "untagresource": {
+    "Resources": [
+     "project"
+    ]
+   },
+   "updateproject": {
+    "Resources": [
+     "project"
+    ]
    }
   },
   "Resources": {
    "project": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-mantle:${Region}:${Account}:project/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    }
   }
@@ -17243,6 +17291,11 @@
     ]
    },
    "createservicelevelobjective": {},
+   "deletealarmmuterule": {
+    "Resources": [
+     "alarm-mute-rule"
+    ]
+   },
    "deletealarms": {
     "Resources": [
      "alarm"
@@ -17305,6 +17358,11 @@
    "enabletopologydiscovery": {},
    "generatequery": {},
    "generatequeryresultssummary": {},
+   "getalarmmuterule": {
+    "Resources": [
+     "alarm-mute-rule"
+    ]
+   },
    "getdashboard": {
     "Resources": [
      "dashboard"
@@ -17341,6 +17399,11 @@
    "gettopologydiscoverystatus": {},
    "gettopologymap": {},
    "link": {},
+   "listalarmmuterules": {
+    "Resources": [
+     "alarm-mute-rule"
+    ]
+   },
    "listdashboards": {},
    "listentitiesformetric": {},
    "listmanagedinsightrules": {},
@@ -17354,6 +17417,12 @@
      "alarm-mute-rule",
      "insight-rule",
      "slo"
+    ]
+   },
+   "putalarmmuterule": {
+    "Resources": [
+     "alarm",
+     "alarm-mute-rule"
     ]
    },
    "putanomalydetector": {},
@@ -17425,6 +17494,14 @@
    "alarm": {
     "ARNFormats": [
      "arn:${Partition}:cloudwatch:${Region}:${Account}:alarm:.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "alarm-mute-rule": {
+    "ARNFormats": [
+     "arn:${Partition}:cloudwatch:${Region}:${Account}:alarm-mute-rule:.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -29958,6 +30035,11 @@
      "network-interface"
     ]
    },
+   "attachresourcestoplacementgroup": {
+    "Resources": [
+     "placement-group"
+    ]
+   },
    "attachverifiedaccesstrustprovider": {
     "Resources": [
      "verified-access-instance",
@@ -30435,6 +30517,17 @@
      "vpc"
     ]
    },
+   "createsecondarynetwork": {
+    "Resources": [
+     "secondary-network"
+    ]
+   },
+   "createsecondarysubnet": {
+    "Resources": [
+     "secondary-network",
+     "secondary-subnet"
+    ]
+   },
    "createsecuritygroup": {
     "Resources": [
      "security-group",
@@ -30535,6 +30628,9 @@
      "route-server-endpoint",
      "route-server-peer",
      "route-table",
+     "secondary-interface",
+     "secondary-network",
+     "secondary-subnet",
      "security-group",
      "security-group-rule",
      "snapshot",
@@ -31064,6 +31160,16 @@
      "route-table"
     ]
    },
+   "deletesecondarynetwork": {
+    "Resources": [
+     "secondary-network"
+    ]
+   },
+   "deletesecondarysubnet": {
+    "Resources": [
+     "secondary-subnet"
+    ]
+   },
    "deletesecuritygroup": {
     "Resources": [
      "security-group"
@@ -31144,6 +31250,9 @@
      "route-server-endpoint",
      "route-server-peer",
      "route-table",
+     "secondary-interface",
+     "secondary-network",
+     "secondary-subnet",
      "security-group",
      "security-group-rule",
      "snapshot",
@@ -31548,6 +31657,9 @@
    "describeroutetables": {},
    "describescheduledinstanceavailability": {},
    "describescheduledinstances": {},
+   "describesecondaryinterfaces": {},
+   "describesecondarynetworks": {},
+   "describesecondarysubnets": {},
    "describesecuritygroupreferences": {
     "Resources": [
      "security-group"
@@ -31659,6 +31771,11 @@
     "Resources": [
      "instance",
      "network-interface"
+    ]
+   },
+   "detachresourcesfromplacementgroup": {
+    "Resources": [
+     "placement-group"
     ]
    },
    "detachverifiedaccesstrustprovider": {
@@ -32977,6 +33094,7 @@
      "license-configuration",
      "network-interface",
      "placement-group",
+     "secondary-subnet",
      "security-group",
      "snapshot",
      "subnet",
@@ -34035,6 +34153,46 @@
      "ec2:ResourceTag/${TagKey}",
      "ec2:RouteTableID",
      "ec2:Vpc"
+    ]
+   },
+   "secondary-interface": {
+    "ARNFormats": [
+     "arn:${Partition}:ec2:${Region}:${Account}:secondary-interface/.*"
+    ],
+    "ConditionKeys": [
+     "aws:RequestTag/${TagKey}",
+     "aws:ResourceTag/${TagKey}",
+     "aws:TagKeys",
+     "ec2:AvailabilityZone",
+     "ec2:AvailabilityZoneId",
+     "ec2:IsLaunchTemplateResource",
+     "ec2:LaunchTemplate",
+     "ec2:Region",
+     "ec2:ResourceTag/${TagKey}"
+    ]
+   },
+   "secondary-network": {
+    "ARNFormats": [
+     "arn:${Partition}:ec2:${Region}:${Account}:secondary-network/.*"
+    ],
+    "ConditionKeys": [
+     "aws:RequestTag/${TagKey}",
+     "aws:ResourceTag/${TagKey}",
+     "aws:TagKeys",
+     "ec2:Region",
+     "ec2:ResourceTag/${TagKey}"
+    ]
+   },
+   "secondary-subnet": {
+    "ARNFormats": [
+     "arn:${Partition}:ec2:${Region}:${Account}:secondary-subnet/.*"
+    ],
+    "ConditionKeys": [
+     "aws:RequestTag/${TagKey}",
+     "aws:ResourceTag/${TagKey}",
+     "aws:TagKeys",
+     "ec2:Region",
+     "ec2:ResourceTag/${TagKey}"
     ]
    },
    "security-group": {
@@ -37114,7 +37272,11 @@
      "truststore"
     ]
    },
-   "createwebaclassociation": {},
+   "createwebaclassociation": {
+    "Resources": [
+     "loadbalancer/app/"
+    ]
+   },
    "deletelistener": {
     "Resources": [
      "listener/app",
@@ -37161,7 +37323,11 @@
      "truststore"
     ]
    },
-   "deletewebaclassociation": {},
+   "deletewebaclassociation": {
+    "Resources": [
+     "loadbalancer/app/"
+    ]
+   },
    "deregisterinstancesfromloadbalancer": {
     "Resources": [
      "loadbalancer"
@@ -37207,7 +37373,11 @@
      "loadbalancer"
     ]
    },
-   "getloadbalancerwebacl": {},
+   "getloadbalancerwebacl": {
+    "Resources": [
+     "loadbalancer/app/"
+    ]
+   },
    "getresourcepolicy": {
     "Resources": [
      "truststore"
@@ -37963,6 +38133,68 @@
    "quote": {
     "ARNFormats": [
      "arn:${Partition}:elemental-appliances-software:${Region}:${Account}:quote/.*"
+    ]
+   }
+  }
+ },
+ "elemental-inference": {
+  "Actions": {
+   "associatefeed": {
+    "Resources": [
+     "feed"
+    ]
+   },
+   "createfeed": {},
+   "deletefeed": {
+    "Resources": [
+     "feed"
+    ]
+   },
+   "disassociatefeed": {
+    "Resources": [
+     "feed"
+    ]
+   },
+   "getfeed": {
+    "Resources": [
+     "feed"
+    ]
+   },
+   "getmetadata": {
+    "Resources": [
+     "feed"
+    ]
+   },
+   "listfeeds": {},
+   "listtagsforresource": {},
+   "putmedia": {
+    "Resources": [
+     "feed"
+    ]
+   },
+   "tagresource": {
+    "Resources": [
+     "feed"
+    ]
+   },
+   "untagresource": {
+    "Resources": [
+     "feed"
+    ]
+   },
+   "updatefeed": {
+    "Resources": [
+     "feed"
+    ]
+   }
+  },
+  "Resources": {
+   "feed": {
+    "ARNFormats": [
+     "arn:${Partition}:elemental-inference:${Region}:${Account}:feed/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    }
   }
@@ -44219,8 +44451,12 @@
    "gettags": {
     "Resources": [
      "blueprint",
+     "catalog",
+     "connection",
+     "connectionType",
      "crawler",
      "customEntityType",
+     "database",
      "devendpoint",
      "job",
      "trigger",
@@ -44601,10 +44837,13 @@
    "tagresource": {
     "Resources": [
      "blueprint",
+     "catalog",
      "connection",
+     "connectionType",
      "crawler",
      "customEntityType",
      "dataQualityRuleset",
+     "database",
      "devendpoint",
      "integration",
      "integrationResourceProperty",
@@ -44628,10 +44867,13 @@
    "untagresource": {
     "Resources": [
      "blueprint",
+     "catalog",
      "connection",
+     "connectionType",
      "crawler",
      "customEntityType",
      "dataQualityRuleset",
+     "database",
      "devendpoint",
      "integration",
      "integrationResourceProperty",
@@ -44827,6 +45069,9 @@
    "catalog": {
     "ARNFormats": [
      "arn:${Partition}:glue:${Region}:${Account}:catalog/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "completion": {
@@ -44869,6 +45114,9 @@
    "database": {
     "ARNFormats": [
      "arn:${Partition}:glue:${Region}:${Account}:database/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "dataqualityruleset": {
@@ -46444,6 +46692,11 @@
      "datastore"
     ]
    },
+   "inquirepreauthclaim": {
+    "Resources": [
+     "datastore"
+    ]
+   },
    "listfhirdatastores": {},
    "listfhirexportjobs": {
     "Resources": [
@@ -46495,6 +46748,11 @@
      "datastore"
     ]
    },
+   "questionnairepackage": {
+    "Resources": [
+     "datastore"
+    ]
+   },
    "readresource": {
     "Resources": [
      "datastore"
@@ -46541,6 +46799,11 @@
     ]
    },
    "startfhirimportjob": {
+    "Resources": [
+     "datastore"
+    ]
+   },
+   "submitpreauthclaim": {
     "Resources": [
      "datastore"
     ]
@@ -56383,6 +56646,11 @@
      "bot alias"
     ]
    },
+   "deletebotanalyzerrecommendation": {
+    "Resources": [
+     "bot"
+    ]
+   },
    "deletebotchannel": {
     "Resources": [
      "bot"
@@ -56490,6 +56758,11 @@
    "describebotalias": {
     "Resources": [
      "bot alias"
+    ]
+   },
+   "describebotanalyzerrecommendation": {
+    "Resources": [
+     "bot"
     ]
    },
    "describebotchannel": {
@@ -56682,6 +56955,11 @@
      "bot"
     ]
    },
+   "listbotanalyzerrecommendations": {
+    "Resources": [
+     "bot"
+    ]
+   },
    "listbotchannels": {
     "Resources": [
      "bot"
@@ -56845,6 +57123,11 @@
      "bot"
     ]
    },
+   "startbotanalyzer": {
+    "Resources": [
+     "bot"
+    ]
+   },
    "startbotrecommendation": {
     "Resources": [
      "bot"
@@ -56880,6 +57163,11 @@
    "starttestsetgeneration": {
     "Resources": [
      "test set"
+    ]
+   },
+   "stopbotanalyzer": {
+    "Resources": [
+     "bot"
     ]
    },
    "stopbotrecommendation": {
@@ -60023,7 +60311,8 @@
    },
    "addflowmediastreams": {
     "Resources": [
-     "Flow"
+     "Flow",
+     "MediaStream"
     ]
    },
    "addflowoutputs": {
@@ -60040,7 +60329,8 @@
    },
    "addflowvpcinterfaces": {
     "Resources": [
-     "Flow"
+     "Flow",
+     "VpcInterface"
     ]
    },
    "associaterouternetworkinterface": {},
@@ -60214,7 +60504,8 @@
    },
    "removeflowmediastream": {
     "Resources": [
-     "Flow"
+     "Flow",
+     "MediaStream"
     ]
    },
    "removeflowoutput": {
@@ -60231,7 +60522,8 @@
    },
    "removeflowvpcinterface": {
     "Resources": [
-     "Flow"
+     "Flow",
+     "VpcInterface"
     ]
    },
    "restartrouterinput": {
@@ -60285,11 +60577,13 @@
     "Resources": [
      "Entitlement",
      "Flow",
+     "MediaStream",
      "Output",
      "RouterInput",
      "RouterNetworkInterface",
      "RouterOutput",
-     "Source"
+     "Source",
+     "VpcInterface"
     ]
    },
    "takerouterinput": {
@@ -60301,11 +60595,13 @@
     "Resources": [
      "Entitlement",
      "Flow",
+     "MediaStream",
      "Output",
      "RouterInput",
      "RouterNetworkInterface",
      "RouterOutput",
-     "Source"
+     "Source",
+     "VpcInterface"
     ]
    },
    "updatebridge": {
@@ -60340,7 +60636,8 @@
    },
    "updateflowmediastream": {
     "Resources": [
-     "Flow"
+     "Flow",
+     "MediaStream"
     ]
    },
    "updateflowoutput": {
@@ -60408,6 +60705,14 @@
      "arn:${Partition}:mediaconnect:${Region}:${Account}:gateway:.*"
     ]
    },
+   "mediastream": {
+    "ARNFormats": [
+     "arn:${Partition}:mediaconnect:${Region}:${Account}:flow:.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "offering": {
     "ARNFormats": [
      "arn:${Partition}:mediaconnect:${Region}:offering:.*"
@@ -60453,6 +60758,14 @@
    "source": {
     "ARNFormats": [
      "arn:${Partition}:mediaconnect:${Region}:${Account}:source:.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "vpcinterface": {
+    "ARNFormats": [
+     "arn:${Partition}:mediaconnect:${Region}:${Account}:flow:.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -98480,6 +98793,11 @@
     ]
    },
    "getsampledrequests": {
+    "Resources": [
+     "webacl"
+    ]
+   },
+   "gettoppathstatisticsbytraffic": {
     "Resources": [
      "webacl"
     ]

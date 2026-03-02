@@ -1,0 +1,316 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/OnlineEvaluationConfigName"
+ ],
+ "definitions": {
+  "CloudWatchLogsInputConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroupNames": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 512,
+      "minLength": 1,
+      "pattern": "^[.\\-_/#A-Za-z0-9]+$",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    },
+    "ServiceNames": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9._-]+$",
+      "type": "string"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "LogGroupNames",
+    "ServiceNames"
+   ],
+   "type": "object"
+  },
+  "CloudWatchOutputConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroupName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DataSourceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogs": {
+     "$ref": "#/definitions/CloudWatchLogsInputConfig"
+    }
+   },
+   "required": [
+    "CloudWatchLogs"
+   ],
+   "type": "object"
+  },
+  "EvaluatorReference": {
+   "additionalProperties": false,
+   "properties": {
+    "EvaluatorId": {
+     "pattern": "^(Builtin\\.[a-zA-Z0-9_-]+|[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10})$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "EvaluatorId"
+   ],
+   "type": "object"
+  },
+  "ExecutionStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Filter": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9._-]+$",
+     "type": "string"
+    },
+    "Operator": {
+     "enum": [
+      "Equals",
+      "NotEquals",
+      "GreaterThan",
+      "LessThan",
+      "GreaterThanOrEqual",
+      "LessThanOrEqual",
+      "Contains",
+      "NotContains"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "$ref": "#/definitions/FilterValue"
+    }
+   },
+   "required": [
+    "Key",
+    "Operator",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "FilterValue": {
+   "additionalProperties": false,
+   "properties": {
+    "BooleanValue": {
+     "type": "boolean"
+    },
+    "DoubleValue": {
+     "type": "number"
+    },
+    "StringValue": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OnlineEvaluationConfigStatus": {
+   "enum": [
+    "ACTIVE",
+    "CREATING",
+    "CREATE_FAILED",
+    "UPDATING",
+    "UPDATE_FAILED",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "OutputConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchConfig": {
+     "$ref": "#/definitions/CloudWatchOutputConfig"
+    }
+   },
+   "type": "object"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "properties": {
+    "Filters": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Filter"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array"
+    },
+    "SamplingConfig": {
+     "$ref": "#/definitions/SamplingConfig"
+    },
+    "SessionConfig": {
+     "$ref": "#/definitions/SessionConfig"
+    }
+   },
+   "required": [
+    "SamplingConfig"
+   ],
+   "type": "object"
+  },
+  "SamplingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SamplingPercentage": {
+     "maximum": 100,
+     "minimum": 0.01,
+     "type": "number"
+    }
+   },
+   "required": [
+    "SamplingPercentage"
+   ],
+   "type": "object"
+  },
+  "SessionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SessionTimeoutMinutes": {
+     "maximum": 1440,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "SessionTimeoutMinutes"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/OnlineEvaluationConfigArn"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DataSourceConfig": {
+   "$ref": "#/definitions/DataSourceConfig"
+  },
+  "Description": {
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "EvaluationExecutionRoleArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[^:]+)?:iam::([0-9]{12})?:role/.+$",
+   "type": "string"
+  },
+  "Evaluators": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EvaluatorReference"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
+  },
+  "ExecutionStatus": {
+   "$ref": "#/definitions/ExecutionStatus"
+  },
+  "OnlineEvaluationConfigArn": {
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov):bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:online-evaluation-config/[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+   "type": "string"
+  },
+  "OnlineEvaluationConfigId": {
+   "pattern": "^[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+   "type": "string"
+  },
+  "OnlineEvaluationConfigName": {
+   "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,47}$",
+   "type": "string"
+  },
+  "OutputConfig": {
+   "$ref": "#/definitions/OutputConfig"
+  },
+  "Rule": {
+   "$ref": "#/definitions/Rule"
+  },
+  "Status": {
+   "$ref": "#/definitions/OnlineEvaluationConfigStatus"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/OnlineEvaluationConfigId",
+  "/properties/OnlineEvaluationConfigArn",
+  "/properties/Status",
+  "/properties/ExecutionStatus",
+  "/properties/OutputConfig",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "OnlineEvaluationConfigName",
+  "DataSourceConfig",
+  "EvaluationExecutionRoleArn",
+  "Evaluators",
+  "Rule"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BedrockAgentCore::OnlineEvaluationConfig"
+}
