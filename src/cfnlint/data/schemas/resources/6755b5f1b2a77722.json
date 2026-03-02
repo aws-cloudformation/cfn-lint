@@ -1,0 +1,364 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Criteria": {
+   "additionalProperties": false,
+   "properties": {
+    "EbsVolumeSizeInGib": {
+     "$ref": "#/definitions/IntegerCriteriaConditionList"
+    },
+    "EbsVolumeType": {
+     "$ref": "#/definitions/StringCriteriaConditionList"
+    },
+    "EstimatedMonthlySavings": {
+     "$ref": "#/definitions/DoubleCriteriaConditionList"
+    },
+    "LookBackPeriodInDays": {
+     "$ref": "#/definitions/IntegerCriteriaConditionList"
+    },
+    "Region": {
+     "$ref": "#/definitions/StringCriteriaConditionList"
+    },
+    "ResourceArn": {
+     "$ref": "#/definitions/StringCriteriaConditionList"
+    },
+    "ResourceTag": {
+     "$ref": "#/definitions/ResourceTagsCriteriaConditionList"
+    },
+    "RestartNeeded": {
+     "$ref": "#/definitions/StringCriteriaConditionList"
+    }
+   },
+   "type": "object"
+  },
+  "DoubleCriteriaCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "Comparison": {
+     "enum": [
+      "StringEquals",
+      "StringNotEquals",
+      "StringEqualsIgnoreCase",
+      "StringNotEqualsIgnoreCase",
+      "StringLike",
+      "StringNotLike",
+      "NumericEquals",
+      "NumericNotEquals",
+      "NumericLessThan",
+      "NumericLessThanEquals",
+      "NumericGreaterThan",
+      "NumericGreaterThanEquals"
+     ],
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "type": "number"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "DoubleCriteriaConditionList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DoubleCriteriaCondition"
+   },
+   "type": "array"
+  },
+  "IntegerCriteriaCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "Comparison": {
+     "enum": [
+      "StringEquals",
+      "StringNotEquals",
+      "StringEqualsIgnoreCase",
+      "StringNotEqualsIgnoreCase",
+      "StringLike",
+      "StringNotLike",
+      "NumericEquals",
+      "NumericNotEquals",
+      "NumericLessThan",
+      "NumericLessThanEquals",
+      "NumericGreaterThan",
+      "NumericGreaterThanEquals"
+     ],
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "type": "integer"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "IntegerCriteriaConditionList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IntegerCriteriaCondition"
+   },
+   "type": "array"
+  },
+  "OrganizationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountIds": {
+     "insertionOrder": false,
+     "items": {
+      "pattern": "^[0-9]{12}$",
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array"
+    },
+    "RuleApplyOrder": {
+     "enum": [
+      "BeforeAccountRules",
+      "AfterAccountRules"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceTagsCriteriaCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "Comparison": {
+     "enum": [
+      "StringEquals",
+      "StringNotEquals",
+      "StringEqualsIgnoreCase",
+      "StringNotEqualsIgnoreCase",
+      "StringLike",
+      "StringNotLike",
+      "NumericEquals",
+      "NumericNotEquals",
+      "NumericLessThan",
+      "NumericLessThanEquals",
+      "NumericGreaterThan",
+      "NumericGreaterThanEquals"
+     ],
+     "type": "string"
+    },
+    "Key": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[\\w\\s\\.\\-\\:\\/\\=\\+\\@\\*\\?]+$",
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 512,
+      "minLength": 1,
+      "pattern": "^[\\w\\s\\.\\-\\:\\/\\=\\+\\@\\*\\?]+$",
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceTagsCriteriaConditionList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ResourceTagsCriteriaCondition"
+   },
+   "type": "array"
+  },
+  "Schedule": {
+   "additionalProperties": false,
+   "properties": {
+    "ExecutionWindowInMinutes": {
+     "maximum": 1440,
+     "minimum": 60,
+     "type": "integer"
+    },
+    "ScheduleExpression": {
+     "type": "string"
+    },
+    "ScheduleExpressionTimezone": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "StringCriteriaCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "Comparison": {
+     "enum": [
+      "StringEquals",
+      "StringNotEquals",
+      "StringEqualsIgnoreCase",
+      "StringNotEqualsIgnoreCase",
+      "StringLike",
+      "StringNotLike",
+      "NumericEquals",
+      "NumericNotEquals",
+      "NumericLessThan",
+      "NumericLessThanEquals",
+      "NumericGreaterThan",
+      "NumericGreaterThanEquals"
+     ],
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 512,
+      "minLength": 1,
+      "pattern": "^[\\w\\s\\.\\-\\:\\/\\=\\+\\@\\*\\?]+$",
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "StringCriteriaConditionList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/StringCriteriaCondition"
+   },
+   "type": "array"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[\\w\\s\\.\\-\\:\\/\\=\\+\\@]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "^[\\w\\s\\.\\-\\:\\/\\=\\+\\@]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RuleArn"
+ ],
+ "properties": {
+  "AccountId": {
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "CreatedTimestamp": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Criteria": {
+   "$ref": "#/definitions/Criteria"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9_\\-\\s@\\.]*$",
+   "type": "string"
+  },
+  "LastUpdatedTimestamp": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9_-]*$",
+   "type": "string"
+  },
+  "OrganizationConfiguration": {
+   "$ref": "#/definitions/OrganizationConfiguration"
+  },
+  "Priority": {
+   "type": "string"
+  },
+  "RecommendedActionTypes": {
+   "insertionOrder": false,
+   "items": {
+    "enum": [
+     "SnapshotAndDeleteUnattachedEbsVolume",
+     "UpgradeEbsVolumeType"
+    ],
+    "type": "string"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "RuleArn": {
+   "type": "string"
+  },
+  "RuleId": {
+   "pattern": "^[0-9A-Za-z]{16}$",
+   "type": "string"
+  },
+  "RuleRevision": {
+   "type": "string"
+  },
+  "RuleType": {
+   "enum": [
+    "AccountRule",
+    "OrganizationRule"
+   ],
+   "type": "string"
+  },
+  "Schedule": {
+   "$ref": "#/definitions/Schedule"
+  },
+  "Status": {
+   "enum": [
+    "Active",
+    "Inactive"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RuleArn",
+  "/properties/RuleId",
+  "/properties/RuleRevision",
+  "/properties/AccountId",
+  "/properties/CreatedTimestamp",
+  "/properties/LastUpdatedTimestamp"
+ ],
+ "required": [
+  "Name",
+  "RuleType",
+  "RecommendedActionTypes",
+  "Schedule",
+  "Status"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ComputeOptimizer::AutomationRule"
+}

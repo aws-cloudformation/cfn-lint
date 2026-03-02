@@ -1,0 +1,106 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WindowId"
+ ],
+ "properties": {
+  "AllowUnassociatedTargets": {
+   "type": "boolean"
+  },
+  "Cutoff": {
+   "maximum": 23,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Description": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Duration": {
+   "maximum": 24,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "EndDate": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 3,
+   "pattern": "^[a-zA-Z0-9_\\-.]{3,128}$",
+   "type": "string"
+  },
+  "Schedule": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ScheduleOffset": {
+   "maximum": 6,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ScheduleTimezone": {
+   "type": "string"
+  },
+  "StartDate": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 1000,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "WindowId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/WindowId"
+ ],
+ "required": [
+  "AllowUnassociatedTargets",
+  "Cutoff",
+  "Schedule",
+  "Duration",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SSM::MaintenanceWindow"
+}

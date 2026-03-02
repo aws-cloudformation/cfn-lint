@@ -1,0 +1,391 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AlarmName"
+ ],
+ "definitions": {
+  "Dimension": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Metric": {
+   "additionalProperties": false,
+   "properties": {
+    "Dimensions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Dimension"
+     },
+     "maxItems": 30,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "MetricName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Namespace": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^[^:]",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MetricDataQuery": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountId": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Expression": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Id": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^([a-z])([A-Za-z0-9\\_]*)$",
+     "type": "string"
+    },
+    "Label": {
+     "type": "string"
+    },
+    "MetricStat": {
+     "$ref": "#/definitions/MetricStat"
+    },
+    "Period": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ReturnData": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "MetricStat": {
+   "additionalProperties": false,
+   "properties": {
+    "Metric": {
+     "$ref": "#/definitions/Metric"
+    },
+    "Period": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Stat": {
+     "type": "string"
+    },
+    "Unit": {
+     "enum": [
+      "Bits",
+      "Bits/Second",
+      "Bytes",
+      "Bytes/Second",
+      "Count",
+      "Count/Second",
+      "Gigabits",
+      "Gigabits/Second",
+      "Gigabytes",
+      "Gigabytes/Second",
+      "Kilobits",
+      "Kilobits/Second",
+      "Kilobytes",
+      "Kilobytes/Second",
+      "Megabits",
+      "Megabits/Second",
+      "Megabytes",
+      "Megabytes/Second",
+      "Microseconds",
+      "Milliseconds",
+      "None",
+      "Percent",
+      "Seconds",
+      "Terabits",
+      "Terabits/Second",
+      "Terabytes",
+      "Terabytes/Second"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Stat",
+    "Period",
+    "Metric"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "dependentExcluded": {
+  "ExtendedStatistic": [
+   "Statistic"
+  ],
+  "Metrics": [
+   "MetricName",
+   "Dimensions",
+   "Period",
+   "Namespace",
+   "Statistic",
+   "ExtendedStatistic",
+   "Unit"
+  ],
+  "Statistic": [
+   "ExtendedStatistic"
+  ],
+  "Threshold": [
+   "ThresholdMetricId"
+  ],
+  "ThresholdMetricId": [
+   "Threshold"
+  ]
+ },
+ "primaryIdentifier": [
+  "/properties/AlarmName"
+ ],
+ "properties": {
+  "ActionsEnabled": {
+   "default": true,
+   "type": "boolean"
+  },
+  "AlarmActions": {
+   "items": {
+    "maxLength": 1024,
+    "maximum": 1024,
+    "minLength": 1,
+    "minimum": 1,
+    "type": "string"
+   },
+   "maxItems": 5,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "AlarmDescription": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "AlarmName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "ComparisonOperator": {
+   "enum": [
+    "GreaterThanOrEqualToThreshold",
+    "GreaterThanThreshold",
+    "GreaterThanUpperThreshold",
+    "LessThanLowerOrGreaterThanUpperThreshold",
+    "LessThanLowerThreshold",
+    "LessThanOrEqualToThreshold",
+    "LessThanThreshold"
+   ],
+   "type": "string"
+  },
+  "DatapointsToAlarm": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Dimensions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Dimension"
+   },
+   "maxItems": 30,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "EvaluateLowSampleCountPercentile": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "EvaluationPeriods": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ExtendedStatistic": {
+   "type": "string"
+  },
+  "InsufficientDataActions": {
+   "items": {
+    "maxLength": 1024,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 5,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "MetricName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Metrics": {
+   "items": {
+    "$ref": "#/definitions/MetricDataQuery"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Namespace": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[^:]",
+   "type": "string"
+  },
+  "OKActions": {
+   "items": {
+    "maxLength": 1024,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 5,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Period": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Statistic": {
+   "enum": [
+    "Average",
+    "Maximum",
+    "Minimum",
+    "SampleCount",
+    "Sum"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Threshold": {
+   "type": "number"
+  },
+  "ThresholdMetricId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "TreatMissingData": {
+   "enum": [
+    "breaching",
+    "ignore",
+    "missing",
+    "notBreaching"
+   ],
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Unit": {
+   "enum": [
+    "Bits",
+    "Bits/Second",
+    "Bytes",
+    "Bytes/Second",
+    "Count",
+    "Count/Second",
+    "Gigabits",
+    "Gigabits/Second",
+    "Gigabytes",
+    "Gigabytes/Second",
+    "Kilobits",
+    "Kilobits/Second",
+    "Kilobytes",
+    "Kilobytes/Second",
+    "Megabits",
+    "Megabits/Second",
+    "Megabytes",
+    "Megabytes/Second",
+    "Microseconds",
+    "Milliseconds",
+    "None",
+    "Percent",
+    "Seconds",
+    "Terabits",
+    "Terabits/Second",
+    "Terabytes",
+    "Terabytes/Second"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "requiredXor": [
+  "Metrics",
+  "MetricName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudwatch.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudWatch::Alarm"
+}

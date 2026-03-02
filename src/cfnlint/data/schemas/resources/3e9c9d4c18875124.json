@@ -1,0 +1,274 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/EvaluatorId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EvaluatorName"
+ ],
+ "definitions": {
+  "BedrockEvaluatorModelConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AdditionalModelRequestFields": {
+     "type": "object"
+    },
+    "InferenceConfig": {
+     "$ref": "#/definitions/InferenceConfiguration"
+    },
+    "ModelId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ModelId"
+   ],
+   "type": "object"
+  },
+  "CategoricalScaleDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Definition": {
+     "type": "string"
+    },
+    "Label": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Label",
+    "Definition"
+   ],
+   "type": "object"
+  },
+  "EvaluatorConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "LlmAsAJudge": {
+     "$ref": "#/definitions/LlmAsAJudgeEvaluatorConfig"
+    }
+   },
+   "required": [
+    "LlmAsAJudge"
+   ],
+   "type": "object"
+  },
+  "EvaluatorLevel": {
+   "enum": [
+    "TOOL_CALL",
+    "TRACE",
+    "SESSION"
+   ],
+   "type": "string"
+  },
+  "EvaluatorModelConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "BedrockEvaluatorModelConfig": {
+     "$ref": "#/definitions/BedrockEvaluatorModelConfig"
+    }
+   },
+   "required": [
+    "BedrockEvaluatorModelConfig"
+   ],
+   "type": "object"
+  },
+  "EvaluatorStatus": {
+   "enum": [
+    "ACTIVE",
+    "CREATING",
+    "CREATE_FAILED",
+    "UPDATING",
+    "UPDATE_FAILED",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "InferenceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxTokens": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Temperature": {
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    },
+    "TopP": {
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "LlmAsAJudgeEvaluatorConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Instructions": {
+     "type": "string"
+    },
+    "ModelConfig": {
+     "$ref": "#/definitions/EvaluatorModelConfig"
+    },
+    "RatingScale": {
+     "$ref": "#/definitions/RatingScale"
+    }
+   },
+   "required": [
+    "Instructions",
+    "RatingScale",
+    "ModelConfig"
+   ],
+   "type": "object"
+  },
+  "NumericalScaleDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Definition": {
+     "type": "string"
+    },
+    "Label": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Value",
+    "Label",
+    "Definition"
+   ],
+   "type": "object"
+  },
+  "RatingScale": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "Numerical"
+     ]
+    },
+    {
+     "required": [
+      "Categorical"
+     ]
+    }
+   ],
+   "properties": {
+    "Categorical": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CategoricalScaleDefinition"
+     },
+     "type": "array"
+    },
+    "Numerical": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/NumericalScaleDefinition"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EvaluatorArn"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "EvaluatorArn": {
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov):bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:evaluator/[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+   "type": "string"
+  },
+  "EvaluatorConfig": {
+   "$ref": "#/definitions/EvaluatorConfig"
+  },
+  "EvaluatorId": {
+   "pattern": "^(Builtin.[a-zA-Z0-9_-]+|[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10})$",
+   "type": "string"
+  },
+  "EvaluatorName": {
+   "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,47}$",
+   "type": "string"
+  },
+  "Level": {
+   "$ref": "#/definitions/EvaluatorLevel"
+  },
+  "Status": {
+   "$ref": "#/definitions/EvaluatorStatus"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/EvaluatorId",
+  "/properties/EvaluatorArn",
+  "/properties/Status",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "EvaluatorName",
+  "EvaluatorConfig",
+  "Level"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BedrockAgentCore::Evaluator"
+}

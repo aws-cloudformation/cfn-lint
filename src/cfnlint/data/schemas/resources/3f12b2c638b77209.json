@@ -1,0 +1,76 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AcceptLanguage": {
+   "maxLength": 100,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 2000,
+   "minLength": 0,
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "PortfolioName": {
+   "type": "string"
+  },
+  "ProviderName": {
+   "maxLength": 50,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 20,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PortfolioName",
+  "/properties/Id"
+ ],
+ "required": [
+  "DisplayName",
+  "ProviderName"
+ ],
+ "typeName": "AWS::ServiceCatalog::Portfolio"
+}

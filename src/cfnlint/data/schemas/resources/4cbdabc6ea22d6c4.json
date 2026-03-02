@@ -1,0 +1,197 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/VirtualInterfaceId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AllocateTransitVirtualInterfaceRoleArn",
+  "/properties/DirectConnectGatewayId",
+  "/properties/Vlan"
+ ],
+ "definitions": {
+  "BgpPeer": {
+   "additionalProperties": false,
+   "properties": {
+    "AddressFamily": {
+     "pattern": "^(ipv4)|(ipv6)$",
+     "type": "string"
+    },
+    "AmazonAddress": {
+     "pattern": "^[0-9a-fA-F:.]+/[0-9]+$",
+     "type": "string"
+    },
+    "Asn": {
+     "pattern": "^[1-9][0-9]*$",
+     "type": "string"
+    },
+    "AuthKey": {
+     "pattern": "^[A-Za-z0-9\\\\!\"#$%&'()*+,\\-./:;<=>?@\\[\\]\\^_`{|}~]{6,80}$",
+     "type": "string"
+    },
+    "BgpPeerId": {
+     "pattern": "^dxpeer-[a-z0-9]{8}$",
+     "type": "string"
+    },
+    "CustomerAddress": {
+     "pattern": "^[0-9a-fA-F:.]+/[0-9]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AddressFamily",
+    "Asn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VirtualInterfaceArn"
+ ],
+ "properties": {
+  "AllocateTransitVirtualInterfaceRoleArn": {
+   "pattern": "^arn:aws[a-z-]*:iam::[0-9]{12}:role/.+$",
+   "type": "string"
+  },
+  "BgpPeers": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/BgpPeer"
+   },
+   "maxItems": 2,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ConnectionId": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/ConnectionId",
+      "typeName": "AWS::DirectConnect::Connection"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/ConnectionArn",
+      "typeName": "AWS::DirectConnect::Connection"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/LagId",
+      "typeName": "AWS::DirectConnect::Lag"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/LagArn",
+      "typeName": "AWS::DirectConnect::Lag"
+     }
+    }
+   ],
+   "pattern": "^((arn:aws[a-z-]*:directconnect:[a-z0-9-]+:[0-9]{12}:(dxcon/dxcon|dxlag/dxlag))|dx(con|lag))-[a-z0-9A-Z]{8,21}$",
+   "type": "string"
+  },
+  "DirectConnectGatewayId": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/DirectConnectGatewayId",
+      "typeName": "AWS::DirectConnect::DirectConnectGateway"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/DirectConnectGatewayArn",
+      "typeName": "AWS::DirectConnect::DirectConnectGateway"
+     }
+    }
+   ],
+   "pattern": "^(arn:aws[a-z-]*:directconnect::[0-9]{12}:dx-gateway/)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "EnableSiteLink": {
+   "type": "boolean"
+  },
+  "Mtu": {
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VirtualInterfaceArn": {
+   "pattern": "^arn:aws[a-z-]*:directconnect:[a-z0-9-]+:[0-9]{12}:dxvif/dxvif-[a-z0-9]{8}$",
+   "type": "string"
+  },
+  "VirtualInterfaceId": {
+   "pattern": "^dxvif-[a-z0-9]{8}$",
+   "type": "string"
+  },
+  "VirtualInterfaceName": {
+   "pattern": "^[\\w \\-_,\\/]{1,100}$",
+   "type": "string"
+  },
+  "Vlan": {
+   "maximum": 4095,
+   "minimum": 0,
+   "type": "integer"
+  }
+ },
+ "propertyTransform": {
+  "/properties/ConnectionId": "$lowercase($substringAfter(ConnectionId, \"/\"))",
+  "/properties/DirectConnectGatewayId": "$substringAfter(DirectConnectGatewayId, \"/\")"
+ },
+ "readOnlyProperties": [
+  "/properties/BgpPeers/*/BgpPeerId",
+  "/properties/VirtualInterfaceArn",
+  "/properties/VirtualInterfaceId"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "BgpPeers",
+  "ConnectionId",
+  "DirectConnectGatewayId",
+  "VirtualInterfaceName",
+  "Vlan"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DirectConnect::TransitVirtualInterface",
+ "writeOnlyProperties": [
+  "/properties/AllocateTransitVirtualInterfaceRoleArn"
+ ]
+}

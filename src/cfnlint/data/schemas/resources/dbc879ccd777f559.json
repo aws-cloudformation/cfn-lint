@@ -1,0 +1,180 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ProfileArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Description"
+ ],
+ "definitions": {
+  "BrowserProfileArn": {
+   "pattern": "^arn:(-[^:]+)?:bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:browser-profile/[a-zA-Z][a-zA-Z0-9_]{0,47}-[a-zA-Z0-9]{10}$",
+   "type": "string"
+  },
+  "BrowserProfileDescription": {
+   "type": "string"
+  },
+  "BrowserProfileId": {
+   "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,47}-[a-zA-Z0-9]{10}$",
+   "type": "string"
+  },
+  "BrowserProfileName": {
+   "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,47}$",
+   "type": "string"
+  },
+  "BrowserProfileStatus": {
+   "enum": [
+    "READY",
+    "DELETING",
+    "DELETED",
+    "SAVING"
+   ],
+   "type": "string"
+  },
+  "BrowserProfileSummaries": {
+   "items": {
+    "$ref": "#/definitions/BrowserProfileSummary"
+   },
+   "type": "array"
+  },
+  "BrowserProfileSummary": {
+   "additionalProperties": false,
+   "properties": {
+    "CreatedAt": {
+     "$ref": "#/definitions/CreatedAt"
+    },
+    "Description": {
+     "$ref": "#/definitions/BrowserProfileDescription"
+    },
+    "LastSavedAt": {
+     "$ref": "#/definitions/LastSavedAt"
+    },
+    "LastSavedBrowserId": {
+     "$ref": "#/definitions/LastSavedBrowserId"
+    },
+    "LastSavedBrowserSessionId": {
+     "$ref": "#/definitions/LastSavedBrowserSessionId"
+    },
+    "LastUpdatedAt": {
+     "$ref": "#/definitions/LastUpdatedAt"
+    },
+    "Name": {
+     "$ref": "#/definitions/BrowserProfileName"
+    },
+    "ProfileArn": {
+     "$ref": "#/definitions/BrowserProfileArn"
+    },
+    "ProfileId": {
+     "$ref": "#/definitions/BrowserProfileId"
+    },
+    "Status": {
+     "$ref": "#/definitions/BrowserProfileStatus"
+    }
+   },
+   "required": [
+    "ProfileId",
+    "ProfileArn",
+    "Name",
+    "Status",
+    "CreatedAt",
+    "LastUpdatedAt"
+   ],
+   "type": "object"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "LastSavedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "LastSavedBrowserId": {
+   "pattern": "^(aws\\.browser\\.v1|[a-zA-Z][a-zA-Z0-9_]{0,47}-[a-zA-Z0-9]{10})$",
+   "type": "string"
+  },
+  "LastSavedBrowserSessionId": {
+   "pattern": "^[0-9a-zA-Z]{1,40}$",
+   "type": "string"
+  },
+  "LastUpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z0-9\\s._:/=+@-]*$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ProfileId"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "$ref": "#/definitions/CreatedAt"
+  },
+  "Description": {
+   "$ref": "#/definitions/BrowserProfileDescription"
+  },
+  "LastSavedAt": {
+   "$ref": "#/definitions/LastSavedAt"
+  },
+  "LastSavedBrowserId": {
+   "$ref": "#/definitions/LastSavedBrowserId"
+  },
+  "LastSavedBrowserSessionId": {
+   "$ref": "#/definitions/LastSavedBrowserSessionId"
+  },
+  "LastUpdatedAt": {
+   "$ref": "#/definitions/LastUpdatedAt"
+  },
+  "Name": {
+   "$ref": "#/definitions/BrowserProfileName"
+  },
+  "ProfileArn": {
+   "$ref": "#/definitions/BrowserProfileArn"
+  },
+  "ProfileId": {
+   "$ref": "#/definitions/BrowserProfileId"
+  },
+  "Status": {
+   "$ref": "#/definitions/BrowserProfileStatus"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ProfileId",
+  "/properties/ProfileArn",
+  "/properties/Status",
+  "/properties/CreatedAt",
+  "/properties/LastUpdatedAt",
+  "/properties/LastSavedAt",
+  "/properties/LastSavedBrowserSessionId",
+  "/properties/LastSavedBrowserId"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BedrockAgentCore::BrowserProfile"
+}

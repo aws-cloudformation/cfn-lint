@@ -1,0 +1,179 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FsxFilesystemArn",
+  "/properties/SecurityGroupArns"
+ ],
+ "definitions": {
+  "CmkSecretConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyArn": {
+     "maxLength": 2048,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):kms:[a-z-0-9]+:[0-9]{12}:key/.*|)$",
+     "type": "string"
+    },
+    "SecretArn": {
+     "maxLength": 2048,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):secretsmanager:[a-z-0-9]+:[0-9]{12}:secret:.*|)$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CustomSecretConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecretAccessRoleArn": {
+     "maxLength": 2048,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):iam::[0-9]{12}:role/.*|)$",
+     "type": "string"
+    },
+    "SecretArn": {
+     "maxLength": 2048,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):secretsmanager:[a-z-0-9]+:[0-9]{12}:secret:.*|)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretArn",
+    "SecretAccessRoleArn"
+   ],
+   "type": "object"
+  },
+  "ManagedSecretConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecretArn": {
+     "maxLength": 2048,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):secretsmanager:[a-z-0-9]+:[0-9]{12}:secret:.*|)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:/-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LocationArn"
+ ],
+ "properties": {
+  "CmkSecretConfig": {
+   "$ref": "#/definitions/CmkSecretConfig"
+  },
+  "CustomSecretConfig": {
+   "$ref": "#/definitions/CustomSecretConfig"
+  },
+  "Domain": {
+   "maxLength": 253,
+   "minLength": 0,
+   "pattern": "^([A-Za-z0-9]+[A-Za-z0-9-.]*)*[A-Za-z0-9-]*[A-Za-z0-9]$",
+   "type": "string"
+  },
+  "FsxFilesystemArn": {
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):fsx:[a-z\\-0-9]*:[0-9]{12}:file-system/fs-.*$",
+   "type": "string"
+  },
+  "LocationArn": {
+   "maxLength": 128,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:location/loc-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "LocationUri": {
+   "maxLength": 4356,
+   "pattern": "^(efs|nfs|s3|smb|fsxw)://[a-zA-Z0-9./\\-]+$",
+   "type": "string"
+  },
+  "ManagedSecretConfig": {
+   "$ref": "#/definitions/ManagedSecretConfig"
+  },
+  "Password": {
+   "maxLength": 104,
+   "pattern": "^.{0,104}$",
+   "type": "string"
+  },
+  "SecurityGroupArns": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 128,
+    "minLength": 0,
+    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):ec2:[a-z\\-0-9]*:[0-9]{12}:security-group/.*$",
+    "type": "string"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Subdirectory": {
+   "maxLength": 4096,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9_\\-\\+\\./\\(\\)\\$\\p{Zs}]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "User": {
+   "maxLength": 104,
+   "pattern": "^[^\\x5B\\x5D\\\\/:;|=,+*?]{1,104}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LocationArn",
+  "/properties/LocationUri",
+  "/properties/ManagedSecretConfig",
+  "/properties/CmkSecretConfig/SecretArn"
+ ],
+ "required": [
+  "User",
+  "SecurityGroupArns"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datasync.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataSync::LocationFSxWindows",
+ "writeOnlyProperties": [
+  "/properties/Password",
+  "/properties/Subdirectory",
+  "/properties/FsxFilesystemArn"
+ ]
+}
