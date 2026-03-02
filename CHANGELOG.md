@@ -1,3 +1,13 @@
+### v1.46.0
+## What's Changed
+* Add rule [E3063](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3063) to validate GuardDuty Detector property exclusivity by @JuanHPassos in https://github.com/aws-cloudformation/cfn-lint/pull/4364
+* Update CloudFormation schemas to `2026-03-02` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4375
+
+## New Contributors
+* @JuanHPassos made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4364
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.45.0...v1.46.0
+
 ### v1.45.0
 ## What's Changed
 * chore(deps): bump setuptools from `80.10.2` to `82.0.0` in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4366
