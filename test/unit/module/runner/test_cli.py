@@ -46,7 +46,20 @@ class TestCli(BaseTestCase):
             runner.cli()
 
         self.assertEqual(e.exception.code, 0)
-        mock_maintenance.assert_called_once()
+        mock_maintenance.assert_called_once_with(False, None)
+
+    @patch("cfnlint.maintenance.update_resource_specs")
+    def test_update_specs_with_regions(self, mock_maintenance):
+        mock_maintenance.return_value = 0
+        config = ConfigMixIn(["--update-specs", "--regions", "us-east-1", "us-west-2"])
+
+        runner = Runner(config)
+
+        with self.assertRaises(SystemExit) as e:
+            runner.cli()
+
+        self.assertEqual(e.exception.code, 0)
+        mock_maintenance.assert_called_once_with(False, ["us-east-1", "us-west-2"])
 
     @patch("cfnlint.maintenance.patch_resource_specs")
     def test_patch_specs(self, mock_maintenance):

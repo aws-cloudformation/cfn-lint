@@ -247,20 +247,24 @@ class ProviderSchemaManager:
 
         return resource_types
 
-    def update(self, force: bool) -> int:
+    def update(self, force: bool, regions: list[str] | None = None) -> int:
         """Update every regions provider schemas
 
         Args:
             force (bool): force the schemas to be downloaded
+            regions (list[str] | None): list of regions to update, None for all regions
         Returns:
             int: exit code (0=success, 1=partial failure, 2=complete failure)
         """
         import hashlib
         from pathlib import Path
 
+        # Use all regions if none specified
+        target_regions = regions if regions else REGIONS
+
         # Separate ISO regions (not publicly accessible) from regular regions
-        iso_regions = [r for r in REGIONS if "iso" in r or r.startswith("eusc")]
-        regular_regions = [r for r in REGIONS if r not in iso_regions]
+        iso_regions = [r for r in target_regions if "iso" in r or r.startswith("eusc")]
+        regular_regions = [r for r in target_regions if r not in iso_regions]
 
         # Download all regular regions in parallel
         downloaded_regions: dict[str, dict[str, dict]] = {}
