@@ -51,13 +51,13 @@ $ pip install tox
 $ tox
 
 # Run a specific test suite
-$ tox -e py39 # Run all unit tests against Python 3.9
+$ tox -e py310 # Run all unit tests against Python 3.10
 ```
 Tox test suites available:
-* **py39**: Unit tests (Python 3.9)
 * **py310**: Unit tests (Python 3.10)
 * **py311**: Unit tests (Python 3.11)
 * **py312**: Unit tests (Python 3.12)
+* **py313**: Unit tests (Python 3.13)
 * **py313**: Unit tests (Python 3.13)
 * **style**: Python syntax check
 
