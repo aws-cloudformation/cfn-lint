@@ -269,7 +269,13 @@ class Runner:
         configure_logging(self.config.debug, self.config.info)
 
         if self.config.update_specs:
-            exit_code = cfnlint.maintenance.update_resource_specs(self.config.force)
+            # For update-specs, only use regions if explicitly specified
+            regions = None
+            if self.config._get_argument_value("regions", True, True):
+                regions = self.config.regions
+            exit_code = cfnlint.maintenance.update_resource_specs(
+                self.config.force, regions
+            )
             sys.exit(exit_code)
 
         if self.config.patch_specs:

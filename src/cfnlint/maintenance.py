@@ -20,8 +20,12 @@ REGISTRY_SCHEMA_ZIP = (
 )
 
 
-def update_resource_specs(force: bool = False) -> int:
+def update_resource_specs(force: bool = False, regions: list[str] | None = None) -> int:
     """Update provider schemas
+
+    Args:
+        force: force the schemas to be downloaded
+        regions: list of regions to update, None for all regions
 
     Returns:
         int: exit code (0=success, 1=partial failure, 2=complete failure)
@@ -31,7 +35,7 @@ def update_resource_specs(force: bool = False) -> int:
     # so it will fail Python2.7 style linting, as well as throw AttributeError
 
     # Update provider Schemas
-    return PROVIDER_SCHEMA_MANAGER.update(force)
+    return PROVIDER_SCHEMA_MANAGER.update(force, regions)
 
 
 def patch_resource_specs():
