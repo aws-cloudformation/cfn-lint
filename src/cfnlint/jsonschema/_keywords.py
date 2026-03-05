@@ -85,10 +85,33 @@ def allOf(
     validator = validator.evolve(
         function_filter=validator.function_filter.evolve(
             add_cfn_lint_keyword=False,
-        )
+        ),
+        context=validator.context.evolve(
+            unresolvable_function_mode=True,
+        ),
     )
+    has_unknown = False
+    known_errors = []
+
     for index, subschema in enumerate(allOf):
-        yield from validator.descend(instance, subschema, schema_path=index)
+        errs = list(validator.descend(instance, subschema, schema_path=index))
+
+        if any(getattr(err, "unknown", False) for err in errs):
+            has_unknown = True
+        else:
+            known_errors.extend(errs)
+
+    # If we have unknown branches, we can't determine if allOf is satisfied
+    if has_unknown:
+        yield ValidationError(
+            f"Cannot determine allOf for {instance!r}",
+            unknown=True,
+        )
+        return
+
+    # Yield all known errors
+    for err in known_errors:
+        yield err
 
 
 def anyOf(
@@ -97,10 +120,16 @@ def anyOf(
     validator = validator.evolve(
         function_filter=validator.function_filter.evolve(
             add_cfn_lint_keyword=False,
-        )
+        ),
+        context=validator.context.evolve(
+            unresolvable_function_mode=True,
+        ),
     )
     all_errors = []
     other_errors = []
+    has_valid = False
+    has_unknown = False
+
     for index, subschema in enumerate(anyOf):
         errs = []
         # warning and informational shouldn't count towards if anyOf is
@@ -110,14 +139,32 @@ def anyOf(
                 other_errors.append(err)
                 continue
             errs.append(err)
-        if not errs:
+
+        if any(getattr(err, "unknown", False) for err in errs):
+            has_unknown = True
+        elif not errs:
+            has_valid = True
             break
-        all_errors.extend(errs)
-    else:
+        else:
+            all_errors.extend(errs)
+
+    # If we found a valid branch, we're done
+    if has_valid:
+        return
+
+    # If we have unknown branches, we can't determine
+    if has_unknown:
         yield ValidationError(
-            f"{instance!r} is not valid under any of the given schemas",
-            context=all_errors + other_errors,
+            f"Cannot determine anyOf for {instance!r}",
+            unknown=True,
         )
+        return
+
+    # All known branches failed
+    yield ValidationError(
+        f"{instance!r} is not valid under any of the given schemas",
+        context=all_errors + other_errors,
+    )
 
 
 def const(
@@ -134,22 +181,39 @@ def contains(
         return
 
     matches = 0
+    unknown_count = 0
     min_contains = schema.get("minContains", 1)
     max_contains = schema.get("maxContains", len(instance))
 
     contains_validator = validator.evolve(schema=contains)
 
     for each in instance:
-        if contains_validator.is_valid(each):
-            matches += 1
-            if matches > max_contains:
-                yield ValidationError(
-                    "Too many items match the given schema "
-                    f"(expected at most {max_contains})",
-                    validator="maxContains",
-                    validator_value=max_contains,
-                )
-                return
+        errs = list(contains_validator.iter_errors(each))
+        # Filter unknown errors
+        non_unknown_errs = [err for err in errs if not err.unknown]
+
+        if not non_unknown_errs:
+            # If no non-unknown errors, it's either valid or unknown
+            if any(err.unknown for err in errs):
+                unknown_count += 1
+            else:
+                matches += 1
+                if matches > max_contains:
+                    yield ValidationError(
+                        "Too many items match the given schema "
+                        f"(expected at most {max_contains})",
+                        validator="maxContains",
+                        validator_value=max_contains,
+                    )
+                    return
+
+    # If we have unknown items, we can't determine if contains is satisfied
+    if unknown_count > 0 and matches < min_contains:
+        yield ValidationError(
+            "Cannot determine if contains constraint is satisfied",
+            unknown=True,
+        )
+        return
 
     if matches < min_contains:
         if not matches:
@@ -314,10 +378,22 @@ def if_(
     if_validator = validator.evolve(
         context=validator.context.evolve(
             allow_exceptions=False,
+            unresolvable_function_mode=True,
         )
     )
 
-    if if_validator.evolve(schema=if_schema).is_valid(instance):
+    if_errors = list(if_validator.evolve(schema=if_schema).iter_errors(instance))
+
+    # If any error is unknown, we can't determine the condition
+    if any(getattr(err, "unknown", False) for err in if_errors):
+        yield ValidationError(
+            f"Cannot determine if condition for {instance!r}",
+            unknown=True,
+        )
+        return
+
+    # Original logic
+    if not if_errors:
         if "then" in schema:
             then = schema["then"]
             yield from validator.descend(instance, then, schema_path="then")
@@ -477,9 +553,24 @@ def not_(
     validator = validator.evolve(
         function_filter=validator.function_filter.evolve(
             add_cfn_lint_keyword=False,
-        )
+        ),
+        context=validator.context.evolve(
+            unresolvable_function_mode=True,
+        ),
     )
-    if validator.evolve(schema=not_schema).is_valid(instance):
+
+    errs = list(validator.evolve(schema=not_schema).iter_errors(instance))
+
+    # If there are unknown errors, we can't determine if not is satisfied
+    if any(getattr(err, "unknown", False) for err in errs):
+        yield ValidationError(
+            f"Cannot determine not for {instance!r}",
+            unknown=True,
+        )
+        return
+
+    # If no errors, the schema is valid, so 'not' fails
+    if not errs:
         message = f"{instance!r} should not be valid under {not_schema!r}"
         yield ValidationError(message)
 
@@ -490,30 +581,48 @@ def oneOf(
     validator = validator.evolve(
         function_filter=validator.function_filter.evolve(
             add_cfn_lint_keyword=False,
-        )
+        ),
+        context=validator.context.evolve(
+            unresolvable_function_mode=True,
+        ),
     )
     subschemas = enumerate(oneOf)
     all_errors = []
+    valid_count = 0
+    has_unknown = False
+    valid_schemas = []
+
     for index, subschema in subschemas:
         errs = list(validator.descend(instance, subschema, schema_path=index))
-        if not errs:
-            first_valid = subschema
-            break
-        all_errors.extend(errs)
-    else:
+
+        if any(getattr(err, "unknown", False) for err in errs):
+            has_unknown = True
+        elif not errs:
+            valid_count += 1
+            valid_schemas.append(subschema)
+        else:
+            all_errors.extend(errs)
+
+    # If we can't determine, yield unknown error
+    if has_unknown and valid_count < 2:
+        yield ValidationError(
+            f"Cannot determine oneOf for {instance!r}",
+            unknown=True,
+        )
+        return
+
+    # Definitive results
+    if valid_count == 1:
+        return
+
+    if valid_count == 0:
         yield ValidationError(
             f"{instance!r} is not valid under any of the given schemas",
             context=all_errors,
         )
-
-    more_valid = [
-        each
-        for _, each in subschemas
-        if validator.evolve(schema=each).is_valid(instance)
-    ]
-    if more_valid:
-        more_valid.append(first_valid)
-        reprs = ", ".join(repr(schema) for schema in more_valid)
+    else:
+        # Multiple valid schemas
+        reprs = ", ".join(repr(schema) for schema in valid_schemas)
         yield ValidationError(f"{instance!r} is valid under each of {reprs}")
 
 

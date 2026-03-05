@@ -8,6 +8,8 @@ from unittest.mock import Mock
 
 import pytest
 
+from cfnlint.context import Context
+from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import ValidationError, _keywords
 from cfnlint.jsonschema.validators import CfnTemplateValidator
 from cfnlint.rules import CloudFormationLintRule
@@ -169,6 +171,7 @@ def test_if_validator_context_evolution():
     # Mock the final evolve call (for schema) and is_valid
     mock_final_validator = Mock()
     mock_final_validator.is_valid.return_value = True
+    mock_final_validator.iter_errors.return_value = iter([])
     mock_if_validator.evolve.return_value = mock_final_validator
 
     # Create a simple schema
@@ -178,7 +181,207 @@ def test_if_validator_context_evolution():
     list(_keywords.if_(mock_validator, schema, "test", schema))
 
     # Verify that context.evolve was called with allow_exceptions=False
-    mock_context.evolve.assert_called_once_with(allow_exceptions=False)
+    mock_context.evolve.assert_called_once_with(
+        allow_exceptions=False, unresolvable_function_mode=True
+    )
 
     # Verify that the evolved validator's evolve was called with the evolved context
     mock_evolved_validator.evolve.assert_called_once_with(context=mock_evolved_context)
+
+
+@pytest.fixture
+def validator_unresolvable():
+    context = Context(
+        regions=["us-east-1"], functions=FUNCTIONS, unresolvable_function_mode=True
+    )
+    return CfnTemplateValidator(schema={}, context=context)
+
+
+@pytest.mark.parametrize(
+    "name,validator_name,instance,schema,expected_unknown",
+    [
+        (
+            "anyOf one valid one unknown",
+            "anyOf",
+            {"Engine": "mysql", "Port": {"Ref": "PortParam"}},
+            [
+                {"properties": {"Engine": {"const": "mysql"}}},
+                {"properties": {"Port": {"const": 5432}}},
+            ],
+            False,
+        ),
+        (
+            "anyOf all unknown",
+            "anyOf",
+            {"Engine": {"Ref": "EngineParam"}, "Port": {"Ref": "PortParam"}},
+            [
+                {"properties": {"Engine": {"const": "mysql"}, "Port": {"const": 3306}}},
+                {
+                    "properties": {
+                        "Engine": {"const": "postgres"},
+                        "Port": {"const": 5432},
+                    }
+                },
+            ],
+            True,
+        ),
+        (
+            "anyOf one valid",
+            "anyOf",
+            {"Engine": "mysql", "Port": 3306},
+            [
+                {"properties": {"Engine": {"const": "mysql"}, "Port": {"const": 3306}}},
+                {
+                    "properties": {
+                        "Engine": {"const": "postgres"},
+                        "Port": {"const": 5432},
+                    }
+                },
+            ],
+            False,
+        ),
+        (
+            "oneOf one valid one unknown",
+            "oneOf",
+            {"Engine": "mysql", "Port": {"Ref": "PortParam"}},
+            [
+                {"properties": {"Engine": {"const": "mysql"}}},
+                {"properties": {"Port": {"const": 5432}}},
+            ],
+            True,
+        ),
+        (
+            "oneOf all unknown",
+            "oneOf",
+            {"Engine": {"Ref": "EngineParam"}, "Port": {"Ref": "PortParam"}},
+            [
+                {"properties": {"Engine": {"const": "mysql"}, "Port": {"const": 3306}}},
+                {
+                    "properties": {
+                        "Engine": {"const": "postgres"},
+                        "Port": {"const": 5432},
+                    }
+                },
+            ],
+            True,
+        ),
+        (
+            "oneOf one valid",
+            "oneOf",
+            {"Engine": "mysql", "Port": 3306},
+            [
+                {"properties": {"Engine": {"const": "mysql"}, "Port": {"const": 3306}}},
+                {
+                    "properties": {
+                        "Engine": {"const": "postgres"},
+                        "Port": {"const": 5432},
+                    }
+                },
+            ],
+            False,
+        ),
+        (
+            "allOf one unknown",
+            "allOf",
+            {"Engine": "mysql", "Port": {"Ref": "PortParam"}},
+            [
+                {"properties": {"Engine": {"const": "mysql"}}},
+                {"properties": {"Port": {"const": 3306}}},
+            ],
+            True,
+        ),
+        (
+            "allOf all valid",
+            "allOf",
+            {"Engine": "mysql", "Port": 3306},
+            [
+                {"properties": {"Engine": {"const": "mysql"}}},
+                {"properties": {"Port": {"const": 3306}}},
+            ],
+            False,
+        ),
+        (
+            "not unknown",
+            "not_",
+            {"Engine": {"Ref": "EngineParam"}},
+            {"properties": {"Engine": {"const": "mysql"}}},
+            True,
+        ),
+        (
+            "contains unknown",
+            "contains",
+            [{"Engine": {"Ref": "EngineParam"}}],
+            {"properties": {"Engine": {"const": "mysql"}}},
+            True,
+        ),
+        (
+            "contains one valid",
+            "contains",
+            [{"Engine": "mysql"}, {"Engine": {"Ref": "EngineParam"}}],
+            {"properties": {"Engine": {"const": "mysql"}}},
+            False,
+        ),
+    ],
+)
+def test_composite_unknown(
+    name, validator_name, instance, schema, expected_unknown, validator_unresolvable
+):
+    validator_fn = getattr(_keywords, validator_name)
+    errs = list(validator_fn(validator_unresolvable, schema, instance, {}))
+
+    if expected_unknown:
+        assert len(errs) == 1
+        assert errs[0].unknown is True
+    else:
+        assert len(errs) == 0
+
+
+@pytest.mark.parametrize(
+    "name,instance,schema,expected_unknown",
+    [
+        (
+            "if unknown skips then",
+            {"Engine": {"Ref": "EngineParam"}},
+            {
+                "if": {"properties": {"Engine": {"const": "mysql"}}},
+                "then": {"properties": {"Port": {"const": 3306}}},
+            },
+            True,
+        ),
+        (
+            "if valid then valid",
+            {"Engine": "mysql", "Port": 3306},
+            {
+                "if": {"properties": {"Engine": {"const": "mysql"}}},
+                "then": {"properties": {"Port": {"const": 3306}}},
+            },
+            False,
+        ),
+        (
+            "if valid then unknown",
+            {"Engine": "mysql", "Port": {"Ref": "PortParam"}},
+            {
+                "if": {"properties": {"Engine": {"const": "mysql"}}},
+                "then": {"properties": {"Port": {"const": 3306}}},
+            },
+            True,
+        ),
+        (
+            "if fails else unknown",
+            {"Engine": "postgres", "Port": {"Ref": "PortParam"}},
+            {
+                "if": {"properties": {"Engine": {"const": "mysql"}}},
+                "else": {"properties": {"Port": {"const": 5432}}},
+            },
+            True,
+        ),
+    ],
+)
+def test_if_unknown(name, instance, schema, expected_unknown, validator_unresolvable):
+    errs = list(_keywords.if_(validator_unresolvable, schema, instance, schema))
+
+    if expected_unknown:
+        assert len(errs) == 1, f"{name}: expected 1 error, got {len(errs)}"
+        assert errs[0].unknown is True, f"{name}: expected unknown=True"
+    else:
+        assert len(errs) == 0, f"{name}: expected 0 errors, got {len(errs)}"

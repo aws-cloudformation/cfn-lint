@@ -340,6 +340,23 @@ def rule():
             },
             [
                 ValidationError(
+                    "expected maximum item count: 1, found: 2",
+                    rule=RecordSet(),
+                    path=deque(["ResourceRecords"]),
+                    validator="maxItems",
+                    validator_value=1,
+                    schema_path=deque(
+                        [
+                            "allOf",
+                            3,
+                            "then",
+                            "properties",
+                            "ResourceRecords",
+                            "maxItems",
+                        ]
+                    ),
+                ),
+                ValidationError(
                     "'foo√bar' is not valid under any of the given schemas",
                     rule=RecordSet(),
                     path=deque(["ResourceRecords", 1]),
@@ -373,22 +390,6 @@ def rule():
                             "ResourceRecords",
                             "items",
                             "anyOf",
-                        ]
-                    ),
-                ),
-                ValidationError(
-                    "expected maximum item count: 1, found: 2",
-                    rule=RecordSet(),
-                    path=deque(["ResourceRecords"]),
-                    validator="maxItems",
-                    schema_path=deque(
-                        [
-                            "allOf",
-                            3,
-                            "then",
-                            "properties",
-                            "ResourceRecords",
-                            "maxItems",
                         ]
                     ),
                 ),

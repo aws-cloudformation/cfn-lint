@@ -115,11 +115,13 @@ class TestBaseJsonSchema(BaseRuleTestCase):
             )
             yield ValidationError("Failure4", path=deque(["A"]), validator="foobar")
             yield ValidationError("Failure5", path=deque(["A"]), validator="foo")
+            yield ValidationError("Failure6", path=deque(["A"]), unknown=True)
 
         validator.iter_errors = iter_errors
 
         errors = list(rule.json_schema_validate(validator, {}, []))
         # 5th error is ignored because the rule is None which means
+        # 6th error is ignored because unknown=True
         # the length is 4
         self.assertEqual(len(errors), 4)
 

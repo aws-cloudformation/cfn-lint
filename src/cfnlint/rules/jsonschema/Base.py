@@ -32,6 +32,10 @@ class BaseJsonSchema(CloudFormationLintRule):
         path: Sequence[str],
         e: ValidationError,
     ):
+        # Don't convert unknown errors to matches
+        if getattr(e, "unknown", False):
+            return []
+
         matches = []
         kwargs: dict[Any, Any] = {}
 
