@@ -45,7 +45,7 @@ class CfnLintJsonSchema(BaseJsonSchema):
         return self.shortdesc
 
     def _iter_errors(self, validator, instance):
-        errs = list(validator.iter_errors(instance))
+        errs = [err for err in validator.iter_errors(instance) if not err.unknown]
         if not self.all_matches:
             err = best_match(errs)
             if err is not None:
@@ -75,9 +75,10 @@ class CfnLintJsonSchema(BaseJsonSchema):
             ),
             schema=schema,
             context=validator.context.evolve(
-                functions=[],
-                strict_types=True,
+                unresolvable_function_mode=True,
             ),
         )
 
-        yield from self._iter_errors(cfn_validator, instance)
+        for err in self._iter_errors(cfn_validator, instance):
+            if not getattr(err, "unknown", False):
+                yield err

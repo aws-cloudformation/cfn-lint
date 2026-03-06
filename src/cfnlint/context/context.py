@@ -164,6 +164,11 @@ class Context:
 
     strict_types: bool = field(init=True, default=True)
 
+    # When True, function validators should return unknown errors
+    # instead of validating. Used in composite validators
+    # (if/then/else, oneOf, anyOf) to handle unresolvable functions
+    unresolvable_function_mode: bool = field(init=True, default=False)
+
     pseudo_parameters: Set[str] = field(
         init=True, default_factory=lambda: set(PSEUDOPARAMS)
     )

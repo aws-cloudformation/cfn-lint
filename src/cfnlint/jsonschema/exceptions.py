@@ -56,6 +56,7 @@ class _Error(Exception):
         extra_args=None,
         rule: CloudFormationLintRule | None = None,
         path_override: Deque | Tuple = (),
+        unknown: bool = False,
     ):
         super().__init__(
             message,
@@ -83,6 +84,7 @@ class _Error(Exception):
         self.extra_args = extra_args or {}
         self.rule = rule
         self.path_override = deque(path_override)
+        self.unknown = unknown
 
         for error in context:
             error.parent = self

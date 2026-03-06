@@ -223,9 +223,40 @@ def cfn_type(validator: Validator, tS: Any, instance: Any, schema: Any):
         yield ValidationError(f"{instance!r} is not of type {reprs}")
 
 
+def _function_unknown(
+    validator: Validator, s: Any, instance: Any, schema: dict[str, Any]
+) -> ValidationResult:
+    """Default validator for CloudFormation intrinsic functions.
+    Returns unknown error in unresolvable mode to prevent incorrect validation.
+    Overridden by function rules in full validation environments."""
+    if validator.context.unresolvable_function_mode:
+        yield ValidationError(
+            "Cannot resolve function in composite validation",
+            unknown=True,
+        )
+    # In normal mode, do nothing - let the function pass through
+    return
+
+
 cfn_validators: dict[str, V] = {
     "additionalProperties": additionalProperties,
     "cfnContext": cfnContext,
     "dynamicValidation": dynamicValidation,
     "type": cfn_type,
+    # CloudFormation intrinsic functions - default to unknown
+    "ref": _function_unknown,
+    "fn_base64": _function_unknown,
+    "fn_cidr": _function_unknown,
+    "fn_findinmap": _function_unknown,
+    "fn_getatt": _function_unknown,
+    "fn_getazs": _function_unknown,
+    "fn_importvalue": _function_unknown,
+    "fn_join": _function_unknown,
+    "fn_select": _function_unknown,
+    "fn_split": _function_unknown,
+    "fn_sub": _function_unknown,
+    "fn_transform": _function_unknown,
+    "fn_tojsonstring": _function_unknown,
+    "fn_length": _function_unknown,
+    "fn_if": _function_unknown,
 }

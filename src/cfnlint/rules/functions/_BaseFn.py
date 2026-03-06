@@ -174,6 +174,14 @@ class BaseFn(CfnLintJsonSchema):
         instance: Any,
         schema: Any,
     ) -> ValidationResult:
+        # If in unresolvable mode, return unknown error immediately
+        if validator.context.unresolvable_function_mode:
+            yield ValidationError(
+                f"Cannot resolve {self.fn.name} in composite validation",
+                unknown=True,
+            )
+            return
+
         # validate this function will return the correct type
         errs = list(
             self.fix_errors(self.validate_fn_output_types(validator, s, instance))
