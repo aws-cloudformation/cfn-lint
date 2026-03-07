@@ -777,7 +777,7 @@ types: dict[str, str] = {
     "AWS::SageMaker::InferenceComponent": "bf2b2e27111fb3a4",
     "AWS::SageMaker::MlflowTrackingServer": "82716f2317f73364",
     "AWS::SageMaker::ModelCard": "89534938581c1015",
-    "AWS::SageMaker::ModelPackage": "20d340cd288752de",
+    "AWS::SageMaker::ModelPackage": "6c77182c71f5c7c9",
     "AWS::SageMaker::ModelPackageGroup": "69804fe68f09f66e",
     "AWS::SageMaker::Pipeline": "d0698ac81fb18f57",
     "AWS::SageMaker::ProcessingJob": "e1994976600f5bae",

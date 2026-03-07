@@ -22,6 +22,28 @@
    ],
    "type": "object"
   },
+  "ContentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Level": {
+     "enum": [
+      "METADATA_ONLY",
+      "FULL_CONTENT"
+     ],
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "MEMORY_RECORDS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
   "CustomConfigurationInput": {
    "additionalProperties": false,
    "maxProperties": 1,
@@ -278,6 +300,28 @@
    },
    "type": "object"
   },
+  "KinesisResource": {
+   "additionalProperties": false,
+   "properties": {
+    "ContentConfigurations": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ContentConfiguration"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    },
+    "DataStreamArn": {
+     "$ref": "#/definitions/Arn"
+    }
+   },
+   "required": [
+    "DataStreamArn",
+    "ContentConfigurations"
+   ],
+   "type": "object"
+  },
   "MemoryArn": {
    "pattern": "^arn:aws:bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:memory/[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
    "type": "string"
@@ -520,6 +564,34 @@
      "type": "string"
     }
    },
+   "type": "object"
+  },
+  "StreamDeliveryResource": {
+   "additionalProperties": false,
+   "maxProperties": 1,
+   "minProperties": 1,
+   "properties": {
+    "Kinesis": {
+     "$ref": "#/definitions/KinesisResource"
+    }
+   },
+   "type": "object"
+  },
+  "StreamDeliveryResources": {
+   "additionalProperties": false,
+   "properties": {
+    "Resources": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/StreamDeliveryResource"
+     },
+     "maxItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Resources"
+   ],
    "type": "object"
   },
   "SummaryConsolidationOverride": {
@@ -841,6 +913,9 @@
   },
   "Status": {
    "$ref": "#/definitions/MemoryStatus"
+  },
+  "StreamDeliveryResources": {
+   "$ref": "#/definitions/StreamDeliveryResources"
   },
   "Tags": {
    "$ref": "#/definitions/TagsMap"
