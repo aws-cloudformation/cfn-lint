@@ -1,0 +1,132 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PolicyEngineId",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "CedarPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "Statement": {
+     "maxLength": 153600,
+     "minLength": 35,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Statement"
+   ],
+   "type": "object"
+  },
+  "PolicyDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Cedar": {
+     "$ref": "#/definitions/CedarPolicy"
+    }
+   },
+   "required": [
+    "Cedar"
+   ],
+   "type": "object"
+  },
+  "PolicyStatus": {
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "UPDATING",
+    "DELETING",
+    "CREATE_FAILED",
+    "UPDATE_FAILED",
+    "DELETE_FAILED"
+   ],
+   "type": "string"
+  },
+  "PolicyValidationMode": {
+   "enum": [
+    "FAIL_ON_ANY_FINDINGS",
+    "IGNORE_ALL_FINDINGS"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PolicyArn"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Definition": {
+   "$ref": "#/definitions/PolicyDefinition"
+  },
+  "Description": {
+   "maxLength": 4096,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 48,
+   "minLength": 1,
+   "pattern": "^[A-Za-z][A-Za-z0-9_]*$",
+   "type": "string"
+  },
+  "PolicyArn": {
+   "maxLength": 203,
+   "minLength": 96,
+   "pattern": "^arn:aws[-a-z]{0,7}:bedrock-agentcore:[a-z0-9-]{9,15}:[0-9]{12}:policy-engine/[a-zA-Z][a-zA-Z0-9-_]{0,47}-[a-zA-Z0-9_]{10}/policy/[a-zA-Z][a-zA-Z0-9-_]{0,47}-[a-zA-Z0-9_]{10}$",
+   "type": "string"
+  },
+  "PolicyEngineId": {
+   "maxLength": 59,
+   "minLength": 12,
+   "pattern": "^[A-Za-z][A-Za-z0-9_]*-[a-z0-9_]{10}$",
+   "type": "string"
+  },
+  "PolicyId": {
+   "maxLength": 59,
+   "minLength": 12,
+   "pattern": "^[A-Za-z][A-Za-z0-9_]*-[a-z0-9_]{10}$",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/PolicyStatus"
+  },
+  "StatusReasons": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "ValidationMode": {
+   "$ref": "#/definitions/PolicyValidationMode"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PolicyId",
+  "/properties/PolicyArn",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/Status",
+  "/properties/StatusReasons"
+ ],
+ "required": [
+  "PolicyEngineId",
+  "Name",
+  "Definition"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::BedrockAgentCore::Policy",
+ "writeOnlyProperties": [
+  "/properties/ValidationMode"
+ ]
+}

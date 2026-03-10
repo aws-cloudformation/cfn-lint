@@ -1,0 +1,174 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Arn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Regions",
+  "/properties/ClientToken"
+ ],
+ "definitions": {
+  "CRResourceStatus": {
+   "enum": [
+    "CREATING",
+    "OPERATIONAL",
+    "UPDATING",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "GlobalResolverIpAddressType": {
+   "enum": [
+    "IPV4",
+    "DUAL_STACK"
+   ],
+   "type": "string"
+  },
+  "IPv4Address": {
+   "maxLength": 15,
+   "minLength": 1,
+   "pattern": "((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}",
+   "type": "string"
+  },
+  "IPv6Address": {
+   "maxLength": 39,
+   "minLength": 1,
+   "pattern": "(?:[A-F0-9]{1,4}:){7}[A-F0-9]{1,4}",
+   "type": "string"
+  },
+  "Region": {
+   "maxLength": 32,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResourceDescription": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResourceName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "(?!^[0-9]+$)([a-zA-Z0-9-_' ']+)",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GlobalResolverId"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ClientToken": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "$ref": "#/definitions/ResourceDescription"
+  },
+  "DnsName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "GlobalResolverId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "IPv4Addresses": {
+   "items": {
+    "$ref": "#/definitions/IPv4Address"
+   },
+   "type": "array"
+  },
+  "IPv6Addresses": {
+   "items": {
+    "$ref": "#/definitions/IPv6Address"
+   },
+   "type": "array"
+  },
+  "IpAddressType": {
+   "$ref": "#/definitions/GlobalResolverIpAddressType"
+  },
+  "Name": {
+   "$ref": "#/definitions/ResourceName"
+  },
+  "ObservabilityRegion": {
+   "$ref": "#/definitions/Region"
+  },
+  "Regions": {
+   "items": {
+    "$ref": "#/definitions/Region"
+   },
+   "type": "array"
+  },
+  "Status": {
+   "$ref": "#/definitions/CRResourceStatus"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/GlobalResolverId",
+  "/properties/DnsName",
+  "/properties/IPv4Addresses",
+  "/properties/IPv6Addresses",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/Status"
+ ],
+ "required": [
+  "Name",
+  "Regions"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Route53GlobalResolver::GlobalResolver",
+ "writeOnlyProperties": [
+  "/properties/ClientToken"
+ ]
+}

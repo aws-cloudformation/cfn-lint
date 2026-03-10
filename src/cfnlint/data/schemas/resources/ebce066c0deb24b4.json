@@ -1,0 +1,133 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Arn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DnsViewId",
+  "/properties/ExpiresAt",
+  "/properties/ClientToken"
+ ],
+ "definitions": {
+  "AccessToken": {
+   "maxLength": 100,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ResourceName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "(?!^[0-9]+$)([a-zA-Z0-9-_' ']+)",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TokenStatus": {
+   "enum": [
+    "CREATING",
+    "OPERATIONAL",
+    "DELETING"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccessTokenId"
+ ],
+ "properties": {
+  "AccessTokenId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ClientToken": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "DnsViewId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[-.a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "ExpiresAt": {
+   "type": "string"
+  },
+  "GlobalResolverId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "$ref": "#/definitions/ResourceName"
+  },
+  "Status": {
+   "$ref": "#/definitions/TokenStatus"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  },
+  "Value": {
+   "$ref": "#/definitions/AccessToken"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/AccessTokenId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/Status",
+  "/properties/Value",
+  "/properties/GlobalResolverId"
+ ],
+ "required": [
+  "DnsViewId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Route53GlobalResolver::AccessToken",
+ "writeOnlyProperties": [
+  "/properties/ClientToken"
+ ]
+}

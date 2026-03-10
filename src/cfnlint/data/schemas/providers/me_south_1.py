@@ -809,7 +809,7 @@ types: dict[str, str] = {
     "AWS::SageMaker::ModelBiasJobDefinition": "1357485edb491230",
     "AWS::SageMaker::ModelCard": "89534938581c1015",
     "AWS::SageMaker::ModelExplainabilityJobDefinition": "46ebe5cb1dbf9346",
-    "AWS::SageMaker::ModelPackage": "20d340cd288752de",
+    "AWS::SageMaker::ModelPackage": "6c77182c71f5c7c9",
     "AWS::SageMaker::ModelPackageGroup": "69804fe68f09f66e",
     "AWS::SageMaker::ModelQualityJobDefinition": "f971dd8729ddb09a",
     "AWS::SageMaker::MonitoringSchedule": "741bf90cf6ce8312",

@@ -1,0 +1,146 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Arn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DnsViewId",
+  "/properties/ClientToken"
+ ],
+ "definitions": {
+  "CRResourceStatus": {
+   "enum": [
+    "CREATING",
+    "OPERATIONAL",
+    "UPDATING",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "Cidr": {
+   "maxLength": 42,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DnsProtocol": {
+   "enum": [
+    "DO53",
+    "DOH",
+    "DOT"
+   ],
+   "type": "string"
+  },
+  "IpAddressType": {
+   "enum": [
+    "IPV4",
+    "IPV6"
+   ],
+   "type": "string"
+  },
+  "ResourceName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "(?!^[0-9]+$)([a-zA-Z0-9-_' ']+)",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccessSourceId"
+ ],
+ "properties": {
+  "AccessSourceId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Cidr": {
+   "$ref": "#/definitions/Cidr"
+  },
+  "ClientToken": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "DnsViewId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[-.a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "IpAddressType": {
+   "$ref": "#/definitions/IpAddressType"
+  },
+  "Name": {
+   "$ref": "#/definitions/ResourceName"
+  },
+  "Protocol": {
+   "$ref": "#/definitions/DnsProtocol"
+  },
+  "Status": {
+   "$ref": "#/definitions/CRResourceStatus"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/AccessSourceId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/Status"
+ ],
+ "required": [
+  "Cidr",
+  "DnsViewId",
+  "Protocol"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Route53GlobalResolver::AccessSource",
+ "writeOnlyProperties": [
+  "/properties/ClientToken"
+ ]
+}

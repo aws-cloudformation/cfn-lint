@@ -1,0 +1,154 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Arn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GlobalResolverId",
+  "/properties/Name",
+  "/properties/Description",
+  "/properties/ClientToken"
+ ],
+ "definitions": {
+  "CRResourceStatus": {
+   "enum": [
+    "CREATING",
+    "OPERATIONAL",
+    "UPDATING",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "Domains": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 255,
+    "minLength": 1,
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ResourceDescription": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResourceName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "(?!^[0-9]+$)([a-zA-Z0-9-_' ']+)",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FirewallDomainListId"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ClientToken": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "$ref": "#/definitions/ResourceDescription"
+  },
+  "DomainCount": {
+   "type": "integer"
+  },
+  "DomainFileUrl": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Domains": {
+   "$ref": "#/definitions/Domains"
+  },
+  "FirewallDomainListId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "GlobalResolverId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[-.a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "Name": {
+   "$ref": "#/definitions/ResourceName"
+  },
+  "Status": {
+   "$ref": "#/definitions/CRResourceStatus"
+  },
+  "StatusMessage": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/FirewallDomainListId",
+  "/properties/DomainCount",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/Status",
+  "/properties/StatusMessage"
+ ],
+ "required": [
+  "GlobalResolverId",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Route53GlobalResolver::FirewallDomainList",
+ "writeOnlyProperties": [
+  "/properties/ClientToken",
+  "/properties/Domains",
+  "/properties/DomainFileUrl"
+ ]
+}
