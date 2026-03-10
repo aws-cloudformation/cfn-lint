@@ -1,0 +1,83 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/HostedZoneId",
+  "/properties/ResourceArn"
+ ],
+ "definitions": {
+  "HostedZoneAssociationStatus": {
+   "enum": [
+    "CREATING",
+    "OPERATIONAL",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "HostedZoneId": {
+   "maxLength": 32,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResourceArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "arn:[-.a-z0-9]{1,63}:[-.a-z0-9]{1,63}:[-.a-z0-9]{0,63}:[-.a-z0-9]{0,63}:[^/].{0,1023}",
+   "type": "string"
+  },
+  "ResourceName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "(?!^[0-9]+$)([a-zA-Z0-9-_' ']+)",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/HostedZoneAssociationId"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "type": "string"
+  },
+  "HostedZoneAssociationId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "HostedZoneId": {
+   "$ref": "#/definitions/HostedZoneId"
+  },
+  "HostedZoneName": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "$ref": "#/definitions/ResourceName"
+  },
+  "ResourceArn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "Status": {
+   "$ref": "#/definitions/HostedZoneAssociationStatus"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/HostedZoneAssociationId",
+  "/properties/HostedZoneName",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/Status"
+ ],
+ "required": [
+  "HostedZoneId",
+  "ResourceArn",
+  "Name"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Route53GlobalResolver::HostedZoneAssociation"
+}

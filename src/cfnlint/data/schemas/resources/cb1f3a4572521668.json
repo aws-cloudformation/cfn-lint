@@ -1,0 +1,175 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DnsViewId",
+  "/properties/ClientToken",
+  "/properties/FirewallDomainListId",
+  "/properties/QType"
+ ],
+ "definitions": {
+  "BlockOverrideDnsQueryType": {
+   "enum": [
+    "CNAME"
+   ],
+   "type": "string"
+  },
+  "CRResourceStatus": {
+   "enum": [
+    "CREATING",
+    "OPERATIONAL",
+    "UPDATING",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "ConfidenceThreshold": {
+   "enum": [
+    "LOW",
+    "MEDIUM",
+    "HIGH"
+   ],
+   "type": "string"
+  },
+  "DnsAdvancedProtection": {
+   "enum": [
+    "DGA",
+    "DNS_TUNNELING",
+    "DICTIONARY_DGA"
+   ],
+   "type": "string"
+  },
+  "Domain": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "\\*?[-a-zA-Z0-9.]+",
+   "type": "string"
+  },
+  "FirewallBlockResponse": {
+   "enum": [
+    "NODATA",
+    "NXDOMAIN",
+    "OVERRIDE"
+   ],
+   "type": "string"
+  },
+  "FirewallRuleAction": {
+   "enum": [
+    "ALLOW",
+    "ALERT",
+    "BLOCK"
+   ],
+   "type": "string"
+  },
+  "ResourceDescription": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResourceName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "(?!^[0-9]+$)([a-zA-Z0-9-_' ']+)",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FirewallRuleId"
+ ],
+ "properties": {
+  "Action": {
+   "$ref": "#/definitions/FirewallRuleAction"
+  },
+  "BlockOverrideDnsType": {
+   "$ref": "#/definitions/BlockOverrideDnsQueryType"
+  },
+  "BlockOverrideDomain": {
+   "$ref": "#/definitions/Domain"
+  },
+  "BlockOverrideTtl": {
+   "maximum": 604800,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "BlockResponse": {
+   "$ref": "#/definitions/FirewallBlockResponse"
+  },
+  "ClientToken": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ConfidenceThreshold": {
+   "$ref": "#/definitions/ConfidenceThreshold"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "$ref": "#/definitions/ResourceDescription"
+  },
+  "DnsAdvancedProtection": {
+   "$ref": "#/definitions/DnsAdvancedProtection"
+  },
+  "DnsViewId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[-.a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "FirewallDomainListId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[-.a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "FirewallRuleId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "$ref": "#/definitions/ResourceName"
+  },
+  "Priority": {
+   "maximum": 10000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "QType": {
+   "maxLength": 16,
+   "minLength": 0,
+   "type": "string"
+  },
+  "QueryType": {
+   "maxLength": 16,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/CRResourceStatus"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/FirewallRuleId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/Status",
+  "/properties/QueryType"
+ ],
+ "required": [
+  "Action",
+  "Name",
+  "DnsViewId"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Route53GlobalResolver::FirewallRule",
+ "writeOnlyProperties": [
+  "/properties/ClientToken",
+  "/properties/QType"
+ ]
+}

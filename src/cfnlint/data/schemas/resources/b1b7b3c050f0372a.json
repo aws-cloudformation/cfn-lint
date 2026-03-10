@@ -1,0 +1,157 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Arn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GlobalResolverId",
+  "/properties/ClientToken"
+ ],
+ "definitions": {
+  "DnsSecValidationType": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "EdnsClientSubnetType": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "FirewallRulesFailOpenType": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "ProfileResourceStatus": {
+   "enum": [
+    "CREATING",
+    "OPERATIONAL",
+    "UPDATING",
+    "ENABLING",
+    "DISABLING",
+    "DISABLED",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "ResourceDescription": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResourceName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "(?!^[0-9]+$)([a-zA-Z0-9-_' ']+)",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DnsViewId"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ClientToken": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "$ref": "#/definitions/ResourceDescription"
+  },
+  "DnsViewId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DnssecValidation": {
+   "$ref": "#/definitions/DnsSecValidationType"
+  },
+  "EdnsClientSubnet": {
+   "$ref": "#/definitions/EdnsClientSubnetType"
+  },
+  "FirewallRulesFailOpen": {
+   "$ref": "#/definitions/FirewallRulesFailOpenType"
+  },
+  "GlobalResolverId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[-.a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "Name": {
+   "$ref": "#/definitions/ResourceName"
+  },
+  "Status": {
+   "$ref": "#/definitions/ProfileResourceStatus"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/DnsViewId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/Status"
+ ],
+ "required": [
+  "GlobalResolverId",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Route53GlobalResolver::DnsView",
+ "writeOnlyProperties": [
+  "/properties/ClientToken"
+ ]
+}

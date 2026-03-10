@@ -1,0 +1,114 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "DataLakePrincipal": {
+   "additionalProperties": false,
+   "properties": {
+    "DataLakePrincipalIdentifier": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DataLakePrincipalIdentifier"
+   ],
+   "type": "object"
+  },
+  "PrincipalPermissions": {
+   "additionalProperties": false,
+   "properties": {
+    "Permissions": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Principal": {
+     "$ref": "#/definitions/DataLakePrincipal"
+    }
+   },
+   "required": [
+    "Permissions",
+    "Principal"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Admins": {
+   "items": {
+    "$ref": "#/definitions/DataLakePrincipal"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "AllowExternalDataFiltering": {
+   "type": "boolean"
+  },
+  "AllowFullTableExternalDataAccess": {
+   "type": "boolean"
+  },
+  "AuthorizedSessionTagValueList": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "CreateDatabaseDefaultPermissions": {
+   "items": {
+    "$ref": "#/definitions/PrincipalPermissions"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "CreateTableDefaultPermissions": {
+   "items": {
+    "$ref": "#/definitions/PrincipalPermissions"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ExternalDataFilteringAllowList": {
+   "items": {
+    "$ref": "#/definitions/DataLakePrincipal"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Id": {
+   "type": "string"
+  },
+  "MutationType": {
+   "type": "string"
+  },
+  "Parameters": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "ReadOnlyAdmins": {
+   "items": {
+    "$ref": "#/definitions/DataLakePrincipal"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TrustedResourceOwners": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "typeName": "AWS::LakeFormation::DataLakeSettings"
+}
