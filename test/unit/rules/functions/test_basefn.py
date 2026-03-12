@@ -11,10 +11,67 @@ from cfnlint.context.parameters import ParameterSet
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules.functions._BaseFn import BaseFn
+from cfnlint.rules.functions._BaseFn import _has_schema_constraints
 
 
 class _ChildRule(CloudFormationLintRule):
     id = "XXXXX"
+
+
+@pytest.mark.parametrize(
+    "name,schema,expected",
+    [
+        ("Empty schema", {}, False),
+        ("Type only", {"type": "string"}, False),
+        ("Type and cfnLint", {"type": "string", "cfnLint": []}, False),
+        ("Enum", {"enum": ["a"]}, True),
+        ("Pattern", {"type": "string", "pattern": "^a"}, True),
+        ("Const", {"const": "a"}, True),
+        ("Format", {"type": "string", "format": "uri"}, True),
+        ("MinLength", {"type": "string", "minLength": 1}, True),
+        ("AnyOf", {"anyOf": [{"type": "string"}]}, True),
+        ("AllOf", {"allOf": [{"type": "string"}]}, True),
+        ("If", {"if": {"type": "string"}}, True),
+        (
+            "Unconstrained items",
+            {"type": "array", "items": {"type": "string"}},
+            False,
+        ),
+        (
+            "Constrained items",
+            {"type": "array", "items": {"enum": ["a", "b"]}},
+            True,
+        ),
+        (
+            "Unconstrained patternProperties",
+            {"patternProperties": {".*": {"type": "string"}}},
+            False,
+        ),
+        (
+            "Constrained patternProperties",
+            {"patternProperties": {".*": {"pattern": "^arn:"}}},
+            True,
+        ),
+        (
+            "Unconstrained properties",
+            {"properties": {"Foo": {"type": "string"}}},
+            False,
+        ),
+        (
+            "Constrained properties",
+            {"properties": {"Foo": {"enum": ["a"]}}},
+            True,
+        ),
+        ("Not a dict", "string", False),
+        (
+            "$ref",
+            {"$ref": "#/definitions/Foo", "type": "string"},
+            True,
+        ),
+    ],
+)
+def test_has_schema_constraints(name, schema, expected):
+    assert _has_schema_constraints(schema) == expected, f"{name!r} failed"
 
 
 @pytest.fixture(scope="module")
@@ -34,6 +91,36 @@ def template():
 @pytest.mark.parametrize(
     "name,rule,instance,parameters,expected",
     [
+        (
+            "Skip resolution when schema has no constraints",
+            {
+                "schema": {"type": "string"},
+            },
+            {"Fn::Sub": "Bar"},
+            [],
+            [],
+        ),
+        (
+            "Skip resolution with type and cfnLint only",
+            {
+                "schema": {"type": "string", "cfnLint": []},
+            },
+            {"Fn::Sub": "Bar"},
+            [],
+            [],
+        ),
+        (
+            "Skip resolution with unconstrained items",
+            {
+                "schema": {
+                    "type": ["string", "array"],
+                    "items": {"type": "string"},
+                },
+            },
+            {"Fn::Sub": "Bar"},
+            [],
+            [],
+        ),
         (
             "Dynamic references are ignored",
             {
