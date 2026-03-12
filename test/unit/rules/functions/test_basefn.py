@@ -10,8 +10,7 @@ import pytest
 from cfnlint.context.parameters import ParameterSet
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules.functions._BaseFn import BaseFn
-from cfnlint.rules.functions._BaseFn import _has_schema_constraints
+from cfnlint.rules.functions._BaseFn import BaseFn, _has_schema_constraints
 
 
 class _ChildRule(CloudFormationLintRule):
