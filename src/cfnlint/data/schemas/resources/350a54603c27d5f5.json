@@ -52,6 +52,9 @@
     "TargetIdleCapacity": {
      "minimum": 0,
      "type": "integer"
+    },
+    "VpcTransitConfiguration": {
+     "$ref": "#/definitions/VpcTransitConfiguration"
     }
    },
    "required": [
@@ -79,6 +82,31 @@
   },
   "Unit": {
    "additionalProperties": false,
+   "type": "object"
+  },
+  "VpcTransitConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Ipv4CidrBlocks": {
+     "items": {
+      "pattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])/([0-9]|[1-2][0-9]|3[0-2])$",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "VpcId": {
+     "maxLength": 32,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Ipv4CidrBlocks",
+    "VpcId"
+   ],
    "type": "object"
   }
  },
