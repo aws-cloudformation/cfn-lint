@@ -56,7 +56,9 @@ def language_extension(cfn: Any) -> TransformResult:
         LOGGER.debug(e, exc_info=True)
         # pylint: disable=import-outside-toplevel
         from cfnlint.match import Match  # pylint: disable=cyclic-import
-        from cfnlint.rules.errors import TransformError  # pylint: disable=cyclic-import
+        from cfnlint.rules.errors.transform import (
+            TransformError,  # pylint: disable=cyclic-import
+        )
 
         message = "Error transforming template: {0}"
         if hasattr(e.key, "start_mark"):
@@ -87,7 +89,9 @@ def language_extension(cfn: Any) -> TransformResult:
         LOGGER.debug(e, exc_info=True)
         # pylint: disable=import-outside-toplevel
         from cfnlint.match import Match  # pylint: disable=cyclic-import
-        from cfnlint.rules.errors import TransformError  # pylint: disable=cyclic-import
+        from cfnlint.rules.errors.transform import (
+            TransformError,  # pylint: disable=cyclic-import
+        )
 
         message = "Error transforming template: {0}"
         return [
@@ -126,9 +130,71 @@ class _Transform:
                     foreach = _ForEach(k, v, self._collections)
                     # get the values will flatten the foreach
                     for collection_value in foreach.items(cfn, params):
-                        flattened = self._walk(
-                            v[2], {**params, **{v[0]: collection_value}}, cfn
-                        )
+                        # Handle multiple identifiers: [id1, id2, ...]
+                        if isinstance(v[0], list) and len(v[0]) >= 2:
+                            identifiers = v[0]
+                            # Resolve any Ref in identifiers
+                            resolved_identifiers = []
+                            for identifier in identifiers:
+                                if isinstance(identifier, dict) and "Ref" in identifier:
+                                    resolved = _ForEachValue.create(identifier).value(
+                                        cfn, params, False
+                                    )
+                                    if not isinstance(resolved, str):
+                                        raise _TypeError(
+                                            "Ref in identifier must resolve to string",
+                                            identifier,
+                                        )
+                                    resolved_identifiers.append(resolved)
+                                else:
+                                    resolved_identifiers.append(identifier)
+
+                            if isinstance(collection_value, dict):
+                                # Map iteration: {key: value} (only for 2 identifiers)
+                                if len(resolved_identifiers) == 2:
+                                    map_key = next(iter(collection_value.keys()))
+                                    map_value = collection_value[map_key]
+                                    iteration_params = {
+                                        **params,
+                                        resolved_identifiers[0]: map_key,
+                                        resolved_identifiers[1]: map_value,
+                                    }
+                                else:
+                                    raise _ValueError(
+                                        "Map iteration only supports 2 identifiers",
+                                        identifiers,
+                                    )
+                            elif isinstance(collection_value, list):
+                                # List of lists: [value1, value2, ...]
+                                if len(collection_value) == len(resolved_identifiers):
+                                    iteration_params = {**params}
+                                    for i, identifier in enumerate(
+                                        resolved_identifiers
+                                    ):
+                                        iteration_params[identifier] = collection_value[
+                                            i
+                                        ]
+                                else:
+                                    raise _ValueError(
+                                        (
+                                            f"List item must have {len(identifiers)} "
+                                            "elements to match identifiers"
+                                        ),
+                                        collection_value,
+                                    )
+                            else:
+                                raise _ValueError(
+                                    (
+                                        "Multiple identifiers require collection "
+                                        "values to be dicts or lists"
+                                    ),
+                                    collection_value,
+                                )
+                        else:
+                            # List iteration: single identifier
+                            iteration_params = {**params, **{v[0]: collection_value}}
+
+                        flattened = self._walk(v[2], iteration_params, cfn)
                         for f_k, f_v in flattened.items():
                             if f_k not in obj:
                                 obj[f_k] = f_v
@@ -214,6 +280,14 @@ class _Transform:
                     .digest()
                     .hex()[0:4]
                 )
+            elif isinstance(v, list):
+                v = (
+                    hashlib.md5(json.dumps(v).encode("utf-8"), usedforsecurity=False)
+                    .digest()
+                    .hex()[0:4]
+                )
+            elif not isinstance(v, str):
+                v = str(v)
             new_s = re.sub(rf"\$\{{{k}\}}", v, new_s)
             new_s = re.sub(rf"\&\{{{k}\}}", re.sub("[^0-9a-zA-Z]+", "", v), new_s)
 
@@ -234,6 +308,19 @@ class _ForEachValue:
     def create(obj: Any) -> _ForEachValue:
         _hash = get_hash(obj)
         if isinstance(obj, _SCALAR_TYPES):
+            return _ForEachValue(_hash, obj)
+        if isinstance(obj, list):
+            # Lists can be:
+            # 1. Identifiers (strings or Ref, 1+) - for list of lists/map iteration
+            # 2. Collection values (any types) - for list of lists iteration
+            if len(obj) >= 1 and all(
+                isinstance(item, str)
+                or (isinstance(item, dict) and len(item) == 1 and "Ref" in item)
+                for item in obj
+            ):
+                # List of identifiers for multiple identifier iteration
+                return _ForEachValue(_hash, obj)
+            # Otherwise it's a collection value list (e.g., [1, "ami-id"])
             return _ForEachValue(_hash, obj)
         if isinstance(obj, dict):
             if len(obj) != 1:
@@ -534,6 +621,7 @@ class _ForEachValueRef(_ForEachValue):
 class _ForEachCollection:
     def __init__(self, obj: Any) -> None:
         self._collection: list[_ForEachValue] | None = None
+        self._map_collection: dict[str, Any] | None = None
         self._obj = obj
         self._fn: _ForEachValue | None = None
         if isinstance(obj, list):
@@ -543,7 +631,14 @@ class _ForEachCollection:
                 self._collection.append(_ForEachValue.create(item))
             return
         if isinstance(obj, dict):
-            self._fn = _ForEachValue.create(obj)
+            # Check if it's a function (single key starting with Ref or Fn::)
+            if len(obj) == 1:
+                key = next(iter(obj.keys()))
+                if key == "Ref" or key.startswith("Fn::"):
+                    self._fn = _ForEachValue.create(obj)
+                    return
+            # Otherwise treat as a map collection for map iteration
+            self._map_collection = obj
             return
         raise _TypeError("Collection must be a list or an object", obj)
 
@@ -561,6 +656,11 @@ class _ForEachCollection:
                     v = "".join(random.choices(string.ascii_letters, k=_N))  # nosec
                     collection_cache[item.hash] = v
                     yield v
+            return
+        if self._map_collection:
+            # For map iteration, yield dict entries as {key: value}
+            for key, value in self._map_collection.items():
+                yield {key: value}
             return
         if self._fn:
             try:
@@ -619,6 +719,19 @@ class _ForEach:
         self._identifier = _ForEachValue.create(value[0])
         self._collection = _ForEachCollection(value[1])
         self._output = _ForEachOutput(value[2])
+
+        # Validate identifier list
+        if isinstance(value[0], list):
+            for i in value[0]:
+                if not isinstance(i, (str, dict)):
+                    raise _TypeError(
+                        "Identifier list items must be strings or Ref", value[0]
+                    )
+                if isinstance(i, dict):
+                    if len(i) != 1 or "Ref" not in i:
+                        raise _TypeError(
+                            "Identifier list dict items must be Ref", value[0]
+                        )
 
     def items(
         self, cfn: Any, params: MutableMapping[str, Any]
