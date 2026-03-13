@@ -1,0 +1,181 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Description",
+  "/properties/RoleArn",
+  "/properties/TrainingContainerConfig",
+  "/properties/InferenceContainerConfig",
+  "/properties/KmsKeyArn"
+ ],
+ "definitions": {
+  "ContainerConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Arguments": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^.*$",
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Entrypoint": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^.*$",
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array"
+    },
+    "ImageUri": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^.*$",
+     "type": "string"
+    },
+    "MetricDefinitions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/MetricDefinition"
+     },
+     "maxItems": 40,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "ImageUri"
+   ],
+   "type": "object"
+  },
+  "InferenceContainerConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ImageUri": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^.*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ImageUri"
+   ],
+   "type": "object"
+  },
+  "MetricDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^.+$",
+     "type": "string"
+    },
+    "Regex": {
+     "maxLength": 500,
+     "minLength": 1,
+     "pattern": "^.+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Regex"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConfiguredModelAlgorithmArn"
+ ],
+ "properties": {
+  "ConfiguredModelAlgorithmArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[-a-z]*:cleanrooms-ml:[-a-z0-9]+:[0-9]{12}:configured-model-algorithm/[-a-zA-Z0-9_/.]+$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "pattern": "^[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t\\r\\n]*$",
+   "type": "string"
+  },
+  "InferenceContainerConfig": {
+   "$ref": "#/definitions/InferenceContainerConfig"
+  },
+  "KmsKeyArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[-a-z]*:kms:[-a-z0-9]+:[0-9]{12}:key/.+$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^(?!\\s*$)[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t]*$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[-a-z]*:iam::[0-9]{12}:role/.+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TrainingContainerConfig": {
+   "$ref": "#/definitions/ContainerConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConfiguredModelAlgorithmArn"
+ ],
+ "required": [
+  "Name",
+  "RoleArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CleanRoomsML::ConfiguredModelAlgorithm"
+}
