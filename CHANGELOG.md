@@ -1,3 +1,15 @@
+### v1.47.0
+## What's Changed
+* Remove Python 3.9 support (EOL October 2025) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4383
+* feat: add region filtering to --update-specs by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4382
+* Add unknown validation state for intrinsic functions in composite validators by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4384
+* Update CloudFormation schemas to `2026-03-10` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4381
+* Fix/skip resolve unconstrained schema by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4388
+* chore(deps): bump setuptools from 82.0.0 to 82.0.1 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4385
+* Update CloudFormation schemas to `2026-03-13` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4386
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.46.0...v1.47.0
+
 ### v1.46.0
 ## What's Changed
 * Add rule [E3063](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3063) to validate GuardDuty Detector property exclusivity by @JuanHPassos in https://github.com/aws-cloudformation/cfn-lint/pull/4364
