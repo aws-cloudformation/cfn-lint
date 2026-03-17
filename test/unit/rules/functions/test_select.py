@@ -141,13 +141,21 @@ def template():
         (
             "Invalid Fn::Select with an invalid function",
             {"Fn::Select": [1, ["foo", {"foo": "bar"}]]},
-            {"type": "string"},
+            {"type": "string", "enum": ["foo"]},
             [
                 ValidationError(
                     "{'Fn::Select': [1, ['foo', {'foo': 'bar'}]]} is not of type "
                     "'string' when 'Fn::Select' is resolved",
                     path=deque(["Fn::Select"]),
                     schema_path=deque(["type"]),
+                    validator="fn_select",
+                    rule=SelectResolved(),
+                ),
+                ValidationError(
+                    "{'Fn::Select': [1, ['foo', {'foo': 'bar'}]]} is not one of "
+                    "['foo'] when 'Fn::Select' is resolved",
+                    path=deque(["Fn::Select"]),
+                    schema_path=deque(["enum"]),
                     validator="fn_select",
                     rule=SelectResolved(),
                 ),

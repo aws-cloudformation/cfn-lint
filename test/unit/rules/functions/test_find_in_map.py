@@ -214,7 +214,7 @@ def context(cfn):
         (
             "Invalid Fn::FindInMap with a bad map key",
             {"Fn::FindInMap": ["A", "C", "B"]},
-            {"type": "string"},
+            {"type": "string", "enum": ["Foo"]},
             {"transforms": Transforms(["AWS::LanguageExtensions"])},
             [ValidationError("Foo")],
             [
