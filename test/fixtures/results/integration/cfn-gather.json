@@ -1,0 +1,676 @@
+[
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "12d1ad1f-399b-13fd-cc24-be4d1ac659f2",
+        "Level": "Error",
+        "Location": {
+            "End": {
+                "ColumnNumber": 30,
+                "LineNumber": 8
+            },
+            "Path": [
+                "Resources",
+                "TaskDef",
+                "Properties",
+                "RequiresCompatibilities"
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 8
+            }
+        },
+        "Message": "['EC2'] does not contain items matching 'FARGATE'",
+        "ParentId": null,
+        "Rule": {
+            "Description": "When using an ECS service with 'LaunchType' of 'FARGATE' the associated task definition must have 'RequiresCompatibilities' specified with 'FARGATE' listed",
+            "Id": "E3054",
+            "ShortDescription": "Validate ECS service using Fargate uses TaskDefinition that allows Fargate",
+            "Source": ""
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "6a91d17b-fc37-91bb-e56c-14d1a635901c",
+        "Level": "Error",
+        "Location": {
+            "End": {
+                "ColumnNumber": 15,
+                "LineNumber": 34
+            },
+            "Path": [
+                "Resources",
+                "ServiceNoNetConfig",
+                "Properties"
+            ],
+            "Start": {
+                "ColumnNumber": 5,
+                "LineNumber": 34
+            }
+        },
+        "Message": "'NetworkConfiguration' is a required property",
+        "ParentId": null,
+        "Rule": {
+            "Description": "When using an ECS task definition has NetworkMode set to 'awsvpc' then 'NetworkConfiguration' is required",
+            "Id": "E3052",
+            "ShortDescription": "Validate ECS service requires NetworkConfiguration",
+            "Source": ""
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "541d0348-cd61-062c-dd42-5276873d4edd",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 12,
+                "LineNumber": 37
+            },
+            "Path": [
+                "Resources",
+                "FifoQueue"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 37
+            }
+        },
+        "Message": "'DeletionPolicy' is a required property (The default action when replacing/removing a resource is to delete it. Set explicit values for stateful resource)",
+        "ParentId": null,
+        "Rule": {
+            "Description": "The default action when replacing/removing a resource is to delete it. This check requires you to explicitly set policies",
+            "Id": "I3011",
+            "ShortDescription": "Check stateful resources have a set UpdateReplacePolicy/DeletionPolicy",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "15a9797a-c221-c826-a465-aa52f07479b7",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 12,
+                "LineNumber": 37
+            },
+            "Path": [
+                "Resources",
+                "FifoQueue"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 37
+            }
+        },
+        "Message": "'UpdateReplacePolicy' is a required property (The default action when replacing/removing a resource is to delete it. Set explicit values for stateful resource)",
+        "ParentId": null,
+        "Rule": {
+            "Description": "The default action when replacing/removing a resource is to delete it. This check requires you to explicitly set policies",
+            "Id": "I3011",
+            "ShortDescription": "Check stateful resources have a set UpdateReplacePolicy/DeletionPolicy",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "1bdf482c-870b-ce00-88de-98b0cecd160c",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 15,
+                "LineNumber": 39
+            },
+            "Path": [
+                "Resources",
+                "FifoQueue",
+                "Properties"
+            ],
+            "Start": {
+                "ColumnNumber": 5,
+                "LineNumber": 39
+            }
+        },
+        "Message": "'MessageRetentionPeriod' is a required property (The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource)",
+        "ParentId": null,
+        "Rule": {
+            "Description": "The behaviour for data retention is different across AWS Services.If no retention period is specified the default for some services is to delete the data after a period of time.This check requires you to explicitly set the retention period for those resources to avoid unexpected data losses",
+            "Id": "I3013",
+            "ShortDescription": "Check resources with auto expiring content have explicit retention period",
+            "Source": "https://github.com/aws-cloudformation/cfn-lint"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "89c6a4cd-c937-e764-f482-169b47993fdc",
+        "Level": "Error",
+        "Location": {
+            "End": {
+                "ColumnNumber": 16,
+                "LineNumber": 40
+            },
+            "Path": [
+                "Resources",
+                "FifoQueue",
+                "Properties",
+                "FifoQueue"
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 40
+            }
+        },
+        "Message": "Source queue type 'FIFO' does not match destination queue type 'standard'",
+        "ParentId": null,
+        "Rule": {
+            "Description": "SQS queues using DLQ have to have the destination queue as the same type (FIFO or standard)",
+            "Id": "E3502",
+            "ShortDescription": "Validate SQS DLQ queues are the same type",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sqs-queue.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "297b8961-2ac1-e904-c4e1-f25017092b15",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 14,
+                "LineNumber": 45
+            },
+            "Path": [
+                "Resources",
+                "StandardDLQ"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 45
+            }
+        },
+        "Message": "'DeletionPolicy' is a required property (The default action when replacing/removing a resource is to delete it. Set explicit values for stateful resource)",
+        "ParentId": null,
+        "Rule": {
+            "Description": "The default action when replacing/removing a resource is to delete it. This check requires you to explicitly set policies",
+            "Id": "I3011",
+            "ShortDescription": "Check stateful resources have a set UpdateReplacePolicy/DeletionPolicy",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "0bad820d-056a-1fdd-81f9-83d133059f33",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 14,
+                "LineNumber": 45
+            },
+            "Path": [
+                "Resources",
+                "StandardDLQ"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 45
+            }
+        },
+        "Message": "'UpdateReplacePolicy' is a required property (The default action when replacing/removing a resource is to delete it. Set explicit values for stateful resource)",
+        "ParentId": null,
+        "Rule": {
+            "Description": "The default action when replacing/removing a resource is to delete it. This check requires you to explicitly set policies",
+            "Id": "I3011",
+            "ShortDescription": "Check stateful resources have a set UpdateReplacePolicy/DeletionPolicy",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "a2fdb62a-dbf5-14eb-059e-a7b7c292017c",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 15,
+                "LineNumber": 47
+            },
+            "Path": [
+                "Resources",
+                "StandardDLQ",
+                "Properties"
+            ],
+            "Start": {
+                "ColumnNumber": 5,
+                "LineNumber": 47
+            }
+        },
+        "Message": "'MessageRetentionPeriod' is a required property (The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource)",
+        "ParentId": null,
+        "Rule": {
+            "Description": "The behaviour for data retention is different across AWS Services.If no retention period is specified the default for some services is to delete the data after a period of time.This check requires you to explicitly set the retention period for those resources to avoid unexpected data losses",
+            "Id": "I3013",
+            "ShortDescription": "Check resources with auto expiring content have explicit retention period",
+            "Source": "https://github.com/aws-cloudformation/cfn-lint"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "48cbc7b1-1642-f557-b78c-694eb200a71b",
+        "Level": "Error",
+        "Location": {
+            "End": {
+                "ColumnNumber": 11,
+                "LineNumber": 58
+            },
+            "Path": [
+                "Resources",
+                "CognitoAuthorizer",
+                "Properties",
+                "Type"
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 58
+            }
+        },
+        "Message": "'COGNITO_USER_POOLS' is not one of ['TOKEN', 'REQUEST']",
+        "ParentId": null,
+        "Rule": {
+            "Description": "When using AuthorizationType 'CUSTOM', the referenced Authorizer must have Type 'TOKEN' or 'REQUEST'. When using AuthorizationType 'COGNITO_USER_POOLS', the Authorizer must have Type 'COGNITO_USER_POOLS'.",
+            "Id": "E3708",
+            "ShortDescription": "API Gateway Method AuthorizationType must match Authorizer Type",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-method.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "f2ebd31a-f7d5-01d8-7124-ea0a3d2b939d",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 19,
+                "LineNumber": 60
+            },
+            "Path": [
+                "Resources",
+                "CognitoAuthorizer",
+                "Properties",
+                "ProviderARNs",
+                0,
+                "Fn::Sub"
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 60
+            }
+        },
+        "Message": "ARN in Resource CognitoAuthorizer contains hardcoded Partition in ARN or incorrectly placed Pseudo Parameters",
+        "ParentId": null,
+        "Rule": {
+            "Description": "Checks Resources if ARNs use correctly placed Pseudo Parameters instead of hardcoded Partition, Region, and Account Number",
+            "Id": "I3042",
+            "ShortDescription": "ARNs should use correctly placed Pseudo Parameters",
+            "Source": ""
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "40ab872a-ad90-73b0-3f0a-8e84180659b6",
+        "Level": "Error",
+        "Location": {
+            "End": {
+                "ColumnNumber": 16,
+                "LineNumber": 78
+            },
+            "Path": [
+                "Resources",
+                "Deployment",
+                "Properties",
+                "RestApiId"
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 78
+            }
+        },
+        "Message": "{'Ref': 'RestApi2'} was expected",
+        "ParentId": null,
+        "Rule": {
+            "Description": "When an API Gateway Stage references a Deployment, both must reference the same RestApi. A mismatch causes a deployment failure.",
+            "Id": "E3698",
+            "ShortDescription": "API Gateway Stage and Deployment must use the same RestApi",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-stage.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "23b08998-f8de-2717-14f0-4158537d2eb5",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 15,
+                "LineNumber": 86
+            },
+            "Path": [
+                "Resources",
+                "SqsFifoQueue"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 86
+            }
+        },
+        "Message": "'DeletionPolicy' is a required property (The default action when replacing/removing a resource is to delete it. Set explicit values for stateful resource)",
+        "ParentId": null,
+        "Rule": {
+            "Description": "The default action when replacing/removing a resource is to delete it. This check requires you to explicitly set policies",
+            "Id": "I3011",
+            "ShortDescription": "Check stateful resources have a set UpdateReplacePolicy/DeletionPolicy",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "b5ed6194-f2a9-2ebb-fafe-f61cce68367e",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 15,
+                "LineNumber": 86
+            },
+            "Path": [
+                "Resources",
+                "SqsFifoQueue"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 86
+            }
+        },
+        "Message": "'UpdateReplacePolicy' is a required property (The default action when replacing/removing a resource is to delete it. Set explicit values for stateful resource)",
+        "ParentId": null,
+        "Rule": {
+            "Description": "The default action when replacing/removing a resource is to delete it. This check requires you to explicitly set policies",
+            "Id": "I3011",
+            "ShortDescription": "Check stateful resources have a set UpdateReplacePolicy/DeletionPolicy",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "a822299a-7e19-5eb1-c9c2-03f807c96448",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 15,
+                "LineNumber": 88
+            },
+            "Path": [
+                "Resources",
+                "SqsFifoQueue",
+                "Properties"
+            ],
+            "Start": {
+                "ColumnNumber": 5,
+                "LineNumber": 88
+            }
+        },
+        "Message": "'MessageRetentionPeriod' is a required property (The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource)",
+        "ParentId": null,
+        "Rule": {
+            "Description": "The behaviour for data retention is different across AWS Services.If no retention period is specified the default for some services is to delete the data after a period of time.This check requires you to explicitly set the retention period for those resources to avoid unexpected data losses",
+            "Id": "I3013",
+            "ShortDescription": "Check resources with auto expiring content have explicit retention period",
+            "Source": "https://github.com/aws-cloudformation/cfn-lint"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "cfce90b8-e45a-6acc-9a92-b6c90704a98a",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 11,
+                "LineNumber": 97
+            },
+            "Path": [
+                "Resources",
+                "FifoProcessor",
+                "Properties",
+                "Role",
+                "Fn::Sub"
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 97
+            }
+        },
+        "Message": "ARN in Resource FifoProcessor contains hardcoded Partition in ARN or incorrectly placed Pseudo Parameters",
+        "ParentId": null,
+        "Rule": {
+            "Description": "Checks Resources if ARNs use correctly placed Pseudo Parameters instead of hardcoded Partition, Region, and Account Number",
+            "Id": "I3042",
+            "ShortDescription": "ARNs should use correctly placed Pseudo Parameters",
+            "Source": ""
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "1d33dd89-7cd8-1c7e-4b45-0412f7a5bb8e",
+        "Level": "Error",
+        "Location": {
+            "End": {
+                "ColumnNumber": 16,
+                "LineNumber": 107
+            },
+            "Path": [
+                "Resources",
+                "FifoMapping",
+                "Properties",
+                "BatchSize"
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 107
+            }
+        },
+        "Message": "15 is greater than the maximum of 10",
+        "ParentId": null,
+        "Rule": {
+            "Description": "When an EventSourceMapping references a FIFO SQS queue, the BatchSize must be at most 10",
+            "Id": "E3705",
+            "ShortDescription": "Validate SQS FIFO queue EventSourceMapping BatchSize is at most 10",
+            "Source": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "4efbd946-f86d-bb23-b6ff-7af196332ac3",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 16,
+                "LineNumber": 109
+            },
+            "Path": [
+                "Resources",
+                "AuroraCluster"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 109
+            }
+        },
+        "Message": "'DeletionPolicy' is a required property (The default action when replacing/removing a resource is to delete it. Set explicit values for stateful resource)",
+        "ParentId": null,
+        "Rule": {
+            "Description": "The default action when replacing/removing a resource is to delete it. This check requires you to explicitly set policies",
+            "Id": "I3011",
+            "ShortDescription": "Check stateful resources have a set UpdateReplacePolicy/DeletionPolicy",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "fb7138ef-2fa2-64e4-3707-e6189ebe1bef",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 16,
+                "LineNumber": 109
+            },
+            "Path": [
+                "Resources",
+                "AuroraCluster"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 109
+            }
+        },
+        "Message": "'UpdateReplacePolicy' is a required property (The default action when replacing/removing a resource is to delete it. Set explicit values for stateful resource)",
+        "ParentId": null,
+        "Rule": {
+            "Description": "The default action when replacing/removing a resource is to delete it. This check requires you to explicitly set policies",
+            "Id": "I3011",
+            "ShortDescription": "Check stateful resources have a set UpdateReplacePolicy/DeletionPolicy",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "f78e7724-7e4c-3b6b-8093-8484913a9faf",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 15,
+                "LineNumber": 111
+            },
+            "Path": [
+                "Resources",
+                "AuroraCluster",
+                "Properties"
+            ],
+            "Start": {
+                "ColumnNumber": 5,
+                "LineNumber": 111
+            }
+        },
+        "Message": "'BackupRetentionPeriod' is a required property (The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource)",
+        "ParentId": null,
+        "Rule": {
+            "Description": "The behaviour for data retention is different across AWS Services.If no retention period is specified the default for some services is to delete the data after a period of time.This check requires you to explicitly set the retention period for those resources to avoid unexpected data losses",
+            "Id": "I3013",
+            "ShortDescription": "Check resources with auto expiring content have explicit retention period",
+            "Source": "https://github.com/aws-cloudformation/cfn-lint"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "2a9a71e3-8dee-8a1e-5105-7973b751a2b4",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 25,
+                "LineNumber": 114
+            },
+            "Path": [
+                "Resources",
+                "AuroraCluster",
+                "Properties",
+                "MasterUserPassword"
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 114
+            }
+        },
+        "Message": "Password shouldn't be hardcoded for Resources/AuroraCluster/Properties/MasterUserPassword",
+        "ParentId": null,
+        "Rule": {
+            "Description": "Password properties should not be strings and if parameter using NoEcho",
+            "Id": "W2501",
+            "ShortDescription": "Check if Password Properties are correctly configured",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#creds"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "efdfefc7-48df-ccbc-a6eb-7d44b97d0770",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 20,
+                "LineNumber": 115
+            },
+            "Path": [
+                "Resources",
+                "BadEngineInstance"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 115
+            }
+        },
+        "Message": "'DeletionPolicy' is a required property (The default action when replacing/removing a resource is to delete it. Set explicit values for stateful resource)",
+        "ParentId": null,
+        "Rule": {
+            "Description": "The default action when replacing/removing a resource is to delete it. This check requires you to explicitly set policies",
+            "Id": "I3011",
+            "ShortDescription": "Check stateful resources have a set UpdateReplacePolicy/DeletionPolicy",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "e253bc0e-37e9-7a80-7bf2-e59cadbcd736",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 20,
+                "LineNumber": 115
+            },
+            "Path": [
+                "Resources",
+                "BadEngineInstance"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 115
+            }
+        },
+        "Message": "'UpdateReplacePolicy' is a required property (The default action when replacing/removing a resource is to delete it. Set explicit values for stateful resource)",
+        "ParentId": null,
+        "Rule": {
+            "Description": "The default action when replacing/removing a resource is to delete it. This check requires you to explicitly set policies",
+            "Id": "I3011",
+            "ShortDescription": "Check stateful resources have a set UpdateReplacePolicy/DeletionPolicy",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "83fbfd34-0096-e3b0-8098-f73da3515d18",
+        "Level": "Error",
+        "Location": {
+            "End": {
+                "ColumnNumber": 13,
+                "LineNumber": 120
+            },
+            "Path": [
+                "Resources",
+                "BadEngineInstance",
+                "Properties",
+                "Engine"
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 120
+            }
+        },
+        "Message": "'aurora-mysql' was expected",
+        "ParentId": null,
+        "Rule": {
+            "Description": "When a DBInstance references a DBCluster via DBClusterIdentifier, the Engine property must match between the two resources",
+            "Id": "E3707",
+            "ShortDescription": "Validate RDS DBInstance Engine matches DBCluster Engine",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html"
+        }
+    }
+]

@@ -1,0 +1,49 @@
+{
+ "cfnGather": {
+  "gather": {
+   "permission": {
+    "properties": {
+     "principal": "/Principal"
+    }
+   },
+   "target": {
+    "properties": {
+     "resourceType": "$type"
+    },
+    "reference": "/SourceArn"
+   }
+  },
+  "schema": {
+   "if": {
+    "required": [
+     "target"
+    ]
+   },
+   "then": {
+    "properties": {
+     "permission": {
+      "properties": {
+       "principal": {
+        "const": {
+         "$lookup": {
+          "key": {
+           "$data": "/target/resourceType"
+          },
+          "map": {
+           "AWS::ApiGateway::RestApi": "apigateway.amazonaws.com",
+           "AWS::ApiGatewayV2::Api": "apigateway.amazonaws.com",
+           "AWS::ElasticLoadBalancingV2::TargetGroup": "elasticloadbalancing.amazonaws.com",
+           "AWS::Events::Rule": "events.amazonaws.com",
+           "AWS::S3::Bucket": "s3.amazonaws.com",
+           "AWS::SNS::Topic": "sns.amazonaws.com"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

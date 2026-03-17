@@ -1,0 +1,38 @@
+{
+ "cfnGather": {
+  "gather": {
+   "cluster": {
+    "filter": {
+     "type": "AWS::RDS::DBCluster"
+    },
+    "properties": {
+     "StorageEncrypted": {
+      "default": false,
+      "path": "/StorageEncrypted"
+     }
+    },
+    "reference": "/DBClusterIdentifier"
+   },
+   "local": {
+    "properties": {
+     "StorageEncrypted": {
+      "path": "/StorageEncrypted"
+     }
+    }
+   }
+  },
+  "schema": {
+   "properties": {
+    "local": {
+     "properties": {
+      "StorageEncrypted": {
+       "const": {
+        "$data": "/cluster/StorageEncrypted"
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

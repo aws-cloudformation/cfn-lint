@@ -104,6 +104,11 @@ class TestQuickStartTemplates(BaseCliTestCase):
             ),
             "exit_code": 0,
         },
+        {
+            "filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+            "results_filename": ("test/fixtures/results/integration/cfn-gather.json"),
+            "exit_code": 14,
+        },
     ]
 
     def test_templates(self):

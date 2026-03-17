@@ -108,6 +108,16 @@ _service = {
                     validator="required",
                     rule=ServiceFargate(),
                     path_override=deque(["Resources", "TaskDefinition", "Properties"]),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "then",
+                            "properties",
+                            "taskDef",
+                            "required",
+                        ]
+                    ),
                 )
             ],
         ),
@@ -188,6 +198,16 @@ _service = {
                     validator="required",
                     rule=ServiceFargate(),
                     path_override=deque(["Resources", "TaskDefinition", "Properties"]),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "then",
+                            "properties",
+                            "taskDef",
+                            "required",
+                        ]
+                    ),
                 )
             ],
         ),
@@ -271,6 +291,19 @@ _service = {
                             "TaskDefinition",
                             "Properties",
                             "RequiresCompatibilities",
+                        ]
+                    ),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "then",
+                            "properties",
+                            "taskDef",
+                            "properties",
+                            "RequiresCompatibilities",
+                            "then",
+                            "contains",
                         ]
                     ),
                 )
@@ -389,6 +422,16 @@ _service = {
                     validator="required",
                     rule=ServiceFargate(),
                     path_override=deque(["Resources", "TaskDefinition", "Properties"]),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "then",
+                            "properties",
+                            "taskDef",
+                            "required",
+                        ]
+                    ),
                 )
             ],
         ),

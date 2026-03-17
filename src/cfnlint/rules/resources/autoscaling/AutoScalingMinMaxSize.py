@@ -5,15 +5,14 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from collections import deque
 from typing import Any
 
-from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
-from cfnlint.rules.helpers import get_value_from_path
-from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
+import cfnlint.data.schemas.extensions.aws_autoscaling_autoscalinggroup
+from cfnlint.jsonschema import ValidationError
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
-class AutoScalingMinMaxSize(CfnLintKeyword):
+class AutoScalingMinMaxSize(CfnLintJsonSchema):
     id = "E3706"
     shortdesc = "MaxSize must be greater than or equal to MinSize"
     description = (
@@ -27,35 +26,11 @@ class AutoScalingMinMaxSize(CfnLintKeyword):
             keywords=[
                 "Resources/AWS::AutoScaling::AutoScalingGroup/Properties",
             ],
+            schema_details=SchemaDetails(
+                module=cfnlint.data.schemas.extensions.aws_autoscaling_autoscalinggroup,
+                filename="min_max_size.json",
+            ),
         )
 
-    def validate(
-        self,
-        validator: Validator,
-        keywords: Any,
-        instance: Any,
-        schema: dict[str, Any],
-    ) -> ValidationResult:
-        for min_value, min_validator in get_value_from_path(
-            validator, instance, deque(["MinSize"])
-        ):
-            if not isinstance(min_value, (str, int, float)):
-                continue
-            for max_value, _ in get_value_from_path(
-                min_validator, instance, deque(["MaxSize"])
-            ):
-                if not isinstance(max_value, (str, int, float)):
-                    continue
-                try:
-                    min_int = int(min_value)
-                    max_int = int(max_value)
-                except (ValueError, TypeError):
-                    continue
-
-                if max_int < min_int:
-                    yield ValidationError(
-                        f"MaxSize ({max_int}) must be greater than "
-                        f"or equal to MinSize ({min_int})",
-                        path=deque(["MaxSize"]),
-                        rule=self,
-                    )
+    def message(self, instance: Any, err: ValidationError) -> str:
+        return err.message

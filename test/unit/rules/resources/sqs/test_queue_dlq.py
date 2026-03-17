@@ -125,8 +125,20 @@ def template():
                 ValidationError(
                     "Source queue type 'FIFO' does not match "
                     "destination queue type 'standard'",
+                    validator="const",
                     rule=QueueDLQ(),
-                    path=deque(["RedrivePolicy", "deadLetterTargetArn"]),
+                    path=deque(["FifoQueue"]),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "properties",
+                            "sourceQueue",
+                            "properties",
+                            "fifo",
+                            "const",
+                        ]
+                    ),
                 )
             ],
         ),
@@ -141,8 +153,20 @@ def template():
                 ValidationError(
                     "Source queue type 'FIFO' does not match "
                     "destination queue type 'standard'",
+                    validator="const",
                     rule=QueueDLQ(),
-                    path=deque(["RedrivePolicy", "deadLetterTargetArn"]),
+                    path=deque(["FifoQueue"]),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "properties",
+                            "sourceQueue",
+                            "properties",
+                            "fifo",
+                            "const",
+                        ]
+                    ),
                 )
             ],
         ),
@@ -157,8 +181,20 @@ def template():
                 ValidationError(
                     "Source queue type 'standard' does not "
                     "match destination queue type 'FIFO'",
+                    validator="const",
                     rule=QueueDLQ(),
-                    path=deque(["RedrivePolicy", "deadLetterTargetArn"]),
+                    path=deque(["FifoQueue"]),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "properties",
+                            "sourceQueue",
+                            "properties",
+                            "fifo",
+                            "const",
+                        ]
+                    ),
                 )
             ],
         ),
@@ -185,14 +221,38 @@ def template():
                 ValidationError(
                     "Source queue type 'FIFO' does not match "
                     "destination queue type 'standard'",
+                    validator="const",
                     rule=QueueDLQ(),
-                    path=deque(["RedrivePolicy", "deadLetterTargetArn", "Fn::If", 1]),
+                    path=deque(["FifoQueue"]),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "properties",
+                            "sourceQueue",
+                            "properties",
+                            "fifo",
+                            "const",
+                        ]
+                    ),
                 ),
                 ValidationError(
                     "Source queue type 'standard' does "
                     "not match destination queue type 'FIFO'",
+                    validator="const",
                     rule=QueueDLQ(),
-                    path=deque(["RedrivePolicy", "deadLetterTargetArn", "Fn::If", 2]),
+                    path=deque(["FifoQueue"]),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "properties",
+                            "sourceQueue",
+                            "properties",
+                            "fifo",
+                            "const",
+                        ]
+                    ),
                 ),
             ],
         ),
@@ -200,5 +260,4 @@ def template():
 )
 def test_validate(instance, expected, rule, validator):
     errs = list(rule.validate(validator, "", instance, {}))
-
     assert errs == expected, f"Expected {expected} got {errs}"

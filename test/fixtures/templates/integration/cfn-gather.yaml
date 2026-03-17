@@ -1,0 +1,120 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  # E3054: Fargate service but TaskDef missing FARGATE in RequiresCompatibilities
+  TaskDef:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      NetworkMode: bridge
+      RequiresCompatibilities:
+        - EC2
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          Memory: 256
+  FargateService:
+    Type: AWS::ECS::Service
+    Properties:
+      LaunchType: FARGATE
+      TaskDefinition: !Ref TaskDef
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          Subnets:
+            - subnet-12345678
+  # E3052: awsvpc TaskDef but service has no NetworkConfiguration
+  AwsvpcTaskDef:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      NetworkMode: awsvpc
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          Memory: 256
+  ServiceNoNetConfig:
+    Type: AWS::ECS::Service
+    Properties:
+      TaskDefinition: !Ref AwsvpcTaskDef
+  # E3502: FIFO queue with standard DLQ
+  FifoQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: true
+      QueueName: source.fifo
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt StandardDLQ.Arn
+        maxReceiveCount: 3
+  StandardDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: false
+  # E3708: Method AuthorizationType doesn't match Authorizer Type
+  RestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: TestApi
+  CognitoAuthorizer:
+    Type: AWS::ApiGateway::Authorizer
+    Properties:
+      RestApiId: !Ref RestApi
+      Type: COGNITO_USER_POOLS
+      Name: CognitoAuth
+      ProviderARNs:
+        - !Sub "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/pool"
+  MethodBadAuth:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestApi
+      ResourceId: !GetAtt RestApi.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref CognitoAuthorizer
+  # E3698: Stage references deployment from different RestApi
+  RestApi2:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: TestApi2
+  Deployment:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId: !Ref RestApi
+  StageBadApi:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: !Ref RestApi2
+      DeploymentId: !Ref Deployment
+      StageName: prod
+  # E3705: SQS FIFO EventSourceMapping with BatchSize > 10
+  SqsFifoQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: true
+      QueueName: events.fifo
+  FifoProcessor:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: fifo-processor
+      Runtime: python3.12
+      Handler: index.handler
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/role"
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            pass
+  FifoMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn: !GetAtt SqsFifoQueue.Arn
+      FunctionName: !Ref FifoProcessor
+      BatchSize: 15
+  # E3707: DBInstance engine doesn't match DBCluster engine
+  AuroraCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-mysql
+      MasterUsername: admin
+      MasterUserPassword: password123
+  BadEngineInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBClusterIdentifier: !Ref AuroraCluster
+      DBInstanceClass: db.r5.large
+      Engine: aurora-postgresql

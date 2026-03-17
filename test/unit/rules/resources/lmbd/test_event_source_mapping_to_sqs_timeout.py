@@ -9,6 +9,7 @@ import jsonpatch
 import pytest
 
 from cfnlint.jsonschema import ValidationError
+from cfnlint.rules.helpers import get_value_from_path
 from cfnlint.rules.resources.lmbd.EventSourceMappingToSqsTimeout import (
     EventSourceMappingToSqsTimeout,
 )
@@ -21,129 +22,176 @@ def rule():
 
 
 _template = {
-    "Parameters": {
-        "BatchSize": {"Type": "String"},
-    },
     "Resources": {
-        "MyFifoQueue": {
+        "Queue": {
             "Type": "AWS::SQS::Queue",
             "Properties": {
                 "VisibilityTimeout": 300,
-                "MessageRetentionPeriod": 7200,
-            },
-        },
-        "SQSBatch": {
-            "Type": "AWS::Lambda::EventSourceMapping",
-            "Properties": {
-                "BatchSize": {"Ref": "BatchSize"},
-                "Enabled": True,
-                "EventSourceArn": {"Fn::GetAtt": "MyFifoQueue.Arn"},
-                "FunctionName": {"Ref": "Lambda"},
             },
         },
         "Lambda": {
             "Type": "AWS::Lambda::Function",
-            "Properties": {"Role": {"Fn::GetAtt": "Role.Arn"}},
+            "Properties": {
+                "Timeout": 100,
+                "Role": {"Fn::GetAtt": "Role.Arn"},
+            },
         },
-        "CustomResource": {
-            "Type": "AWS::CloudFormation::CustomResource",
-            "Properties": {"Key": {"Fn::GetAtt": "Lambda.Arn"}},
+        "Mapping": {
+            "Type": "AWS::Lambda::EventSourceMapping",
+            "Properties": {
+                "EventSourceArn": {"Fn::GetAtt": "Queue.Arn"},
+                "FunctionName": {"Ref": "Lambda"},
+            },
         },
-    },
-    "Outputs": {
-        "LambdaArn": {"Value": {"Fn::GetAtt": "Lambda.Arn"}},
-        "SourceMapping": {"Value": {"Ref": "SQSBatch"}},
     },
 }
 
 
 @pytest.mark.parametrize(
-    "instance,template,path,expected",
+    "template,start_path,expected",
     [
         (
-            "100",
             _template,
-            {"path": deque(["Resources", "Lambda", "Properties", "Timeout"])},
+            deque(["Resources", "Mapping", "Properties"]),
             [],
         ),
         (
-            "a",
-            _template,
-            {"path": deque(["Resources", "Lambda", "Properties", "Timeout"])},
-            [],
-        ),
-        (
-            {"Ref": "AWS::Region"},
-            _template,
-            {"path": deque(["Resources", "Lambda", "Properties", "Timeout"])},
-            [],
-        ),
-        (
-            "100",
             jsonpatch.apply_patch(
                 _template,
                 [
                     {
-                        "op": "add",
-                        "path": "/Resources/MyFifoQueue/Properties/VisibilityTimeout",
-                        "value": "300",
+                        "op": "replace",
+                        "path": "/Resources/Lambda/Properties/Timeout",
+                        "value": 600,
                     },
                 ],
             ),
-            {"path": deque(["Resources", "Lambda", "Properties", "Timeout"])},
-            [],
-        ),
-        (
-            "600",
-            jsonpatch.apply_patch(
-                _template,
-                [
-                    {
-                        "op": "add",
-                        "path": "/Resources/MyFifoQueue/Properties/VisibilityTimeout",
-                        "value": {"Ref": "AWS::Region"},
-                    },
-                ],
-            ),
-            {"path": deque(["Resources", "Lambda", "Properties", "Timeout"])},
-            [],
-        ),
-        (
-            "600",
-            jsonpatch.apply_patch(
-                _template,
-                [
-                    {
-                        "op": "add",
-                        "path": "/Resources/MyFifoQueue/Properties/VisibilityTimeout",
-                        "value": "a",
-                    },
-                ],
-            ),
-            {"path": deque(["Resources", "Lambda", "Properties", "Timeout"])},
-            [],
-        ),
-        (
-            "600",
-            _template,
-            {"path": deque(["Resources"])},
-            [],
-        ),
-        (
-            "600",
-            _template,
-            {"path": deque(["Resources", "Lambda", "Properties", "Timeout"])},
+            deque(["Resources", "Mapping", "Properties"]),
             [
                 ValidationError(
                     "Queue visibility timeout (300) is less "
                     "than Function timeout (600) seconds",
+                    validator="minimum",
                     rule=EventSourceMappingToSqsTimeout(),
-                )
+                    path_override=deque(
+                        ["Resources", "Queue", "Properties", "VisibilityTimeout"]
+                    ),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "then",
+                            "properties",
+                            "queue",
+                            "properties",
+                            "VisibilityTimeout",
+                            "minimum",
+                        ]
+                    ),
+                ),
+            ],
+        ),
+        (
+            jsonpatch.apply_patch(
+                _template,
+                [
+                    {
+                        "op": "replace",
+                        "path": "/Resources/Lambda/Properties/Timeout",
+                        "value": "600",
+                    },
+                ],
+            ),
+            deque(["Resources", "Mapping", "Properties"]),
+            [],
+        ),
+        (
+            jsonpatch.apply_patch(
+                _template,
+                [
+                    {
+                        "op": "replace",
+                        "path": "/Resources/Queue/Properties/VisibilityTimeout",
+                        "value": {"Ref": "AWS::Region"},
+                    },
+                ],
+            ),
+            deque(["Resources", "Mapping", "Properties"]),
+            [],
+        ),
+        (
+            jsonpatch.apply_patch(
+                _template,
+                [
+                    {
+                        "op": "replace",
+                        "path": "/Resources/Mapping/Properties/EventSourceArn",
+                        "value": {"Fn::GetAtt": "Lambda.Arn"},
+                    },
+                ],
+            ),
+            deque(["Resources", "Mapping", "Properties"]),
+            [],
+        ),
+        (
+            jsonpatch.apply_patch(
+                _template,
+                [
+                    {
+                        "op": "remove",
+                        "path": "/Resources/Lambda/Properties/Timeout",
+                    },
+                ],
+            ),
+            deque(["Resources", "Mapping", "Properties"]),
+            [],
+        ),
+        (
+            jsonpatch.apply_patch(
+                _template,
+                [
+                    {
+                        "op": "remove",
+                        "path": "/Resources/Queue/Properties/VisibilityTimeout",
+                    },
+                ],
+            ),
+            deque(["Resources", "Mapping", "Properties"]),
+            [
+                ValidationError(
+                    "Queue visibility timeout (30) is less "
+                    "than Function timeout (100) seconds",
+                    validator="minimum",
+                    rule=EventSourceMappingToSqsTimeout(),
+                    path_override=deque(
+                        [
+                            "Resources",
+                            "Queue",
+                            "Properties",
+                            "VisibilityTimeout",
+                        ]
+                    ),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "then",
+                            "properties",
+                            "queue",
+                            "properties",
+                            "VisibilityTimeout",
+                            "minimum",
+                        ]
+                    ),
+                ),
             ],
         ),
     ],
-    indirect=["template", "path"],
+    indirect=["template"],
 )
-def test_lambda_runtime(instance, template, path, expected, rule, validator):
-    errs = list(rule.validate(validator, "", instance, {}))
-    assert errs == expected, f"Expected {expected} got {errs}"
+def test_validate(template, start_path, expected, rule, validator):
+    for instance, instance_validator in get_value_from_path(
+        validator, template, start_path
+    ):
+        errs = list(rule.validate(instance_validator, "", instance, {}))
+        assert errs == expected, f"Expected {expected} got {errs}"
