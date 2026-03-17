@@ -25505,6 +25505,7 @@
    "getmetadatagenerationrun": {},
    "getnotebook": {},
    "getnotebookcompute": {},
+   "getnotebookexport": {},
    "getproject": {},
    "getprojectprofile": {},
    "getrule": {},
@@ -25593,6 +25594,8 @@
    "startdatasourcerun": {},
    "startmetadatagenerationrun": {},
    "startnotebookcompute": {},
+   "startnotebookexport": {},
+   "startnotebookimport": {},
    "stopmetadatagenerationrun": {},
    "stopnotebookcompute": {},
    "tagresource": {
@@ -46871,6 +46874,9 @@
    "agent": {
     "ARNFormats": [
      "arn:${Partition}:health-agent:${Region}:${Account}:domain/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "domain": {
@@ -46884,21 +46890,33 @@
    "integration": {
     "ARNFormats": [
      "arn:${Partition}:health-agent:${Region}:${Account}:domain/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "patientinsightsjob": {
     "ARNFormats": [
      "arn:${Partition}:health-agent:${Region}:${Account}:domain/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "session": {
     "ARNFormats": [
      "arn:${Partition}:health-agent:${Region}:${Account}:domain/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "subscription": {
     "ARNFormats": [
      "arn:${Partition}:health-agent:${Region}:${Account}:domain/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    }
   }
@@ -70679,7 +70697,8 @@
     "Resources": [
      "Relationship"
     ]
-   }
+   },
+   "usesession": {}
   },
   "Resources": {
    "benefit": {
@@ -87333,7 +87352,17 @@
      "domain"
     ]
    },
+   "getexport": {
+    "Resources": [
+     "export"
+    ]
+   },
    "listdomains": {},
+   "listexports": {
+    "Resources": [
+     "domain"
+    ]
+   },
    "putattributes": {
     "Resources": [
      "domain"
@@ -87343,10 +87372,20 @@
     "Resources": [
      "domain"
     ]
+   },
+   "startdomainexport": {
+    "Resources": [
+     "domain"
+    ]
    }
   },
   "Resources": {
    "domain": {
+    "ARNFormats": [
+     "arn:${Partition}:sdb:${Region}:${Account}:domain/.*"
+    ]
+   },
+   "export": {
     "ARNFormats": [
      "arn:${Partition}:sdb:${Region}:${Account}:domain/.*"
     ]

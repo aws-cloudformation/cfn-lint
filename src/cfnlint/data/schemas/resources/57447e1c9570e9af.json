@@ -1,0 +1,379 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MembershipIdentifier",
+  "/properties/ConfiguredModelAlgorithmArn",
+  "/properties/Name",
+  "/properties/Description",
+  "/properties/PrivacyConfiguration"
+ ],
+ "definitions": {
+  "CustomEntityConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomDataIdentifiers": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 200,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9\\_\\#\\=\\@\\/\\;\\,\\-\\ \\^\\$\\?\\[\\]\\{\\}\\|\\\\\\*\\+\\.\\(\\)]+$",
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "CustomDataIdentifiers"
+   ],
+   "type": "object"
+  },
+  "EntityType": {
+   "enum": [
+    "ALL_PERSONALLY_IDENTIFIABLE_INFORMATION",
+    "NUMBERS",
+    "CUSTOM"
+   ],
+   "type": "string"
+  },
+  "LogRedactionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomEntityConfig": {
+     "$ref": "#/definitions/CustomEntityConfig"
+    },
+    "EntitiesToRedact": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/EntityType"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "EntitiesToRedact"
+   ],
+   "type": "object"
+  },
+  "LogType": {
+   "enum": [
+    "ALL",
+    "ERROR_SUMMARY"
+   ],
+   "type": "string"
+  },
+  "LogsConfigurationPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedAccountIds": {
+     "insertionOrder": false,
+     "items": {
+      "pattern": "^[0-9]{12}$",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    },
+    "FilterPattern": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "LogRedactionConfiguration": {
+     "$ref": "#/definitions/LogRedactionConfiguration"
+    },
+    "LogType": {
+     "$ref": "#/definitions/LogType"
+    }
+   },
+   "required": [
+    "AllowedAccountIds"
+   ],
+   "type": "object"
+  },
+  "MetricsConfigurationPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "NoiseLevel": {
+     "$ref": "#/definitions/NoiseLevelType"
+    }
+   },
+   "required": [
+    "NoiseLevel"
+   ],
+   "type": "object"
+  },
+  "NoiseLevelType": {
+   "enum": [
+    "HIGH",
+    "MEDIUM",
+    "LOW",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "PrivacyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Policies": {
+     "$ref": "#/definitions/PrivacyConfigurationPolicies"
+    }
+   },
+   "required": [
+    "Policies"
+   ],
+   "type": "object"
+  },
+  "PrivacyConfigurationPolicies": {
+   "additionalProperties": false,
+   "properties": {
+    "TrainedModelExports": {
+     "$ref": "#/definitions/TrainedModelExportsConfigurationPolicy"
+    },
+    "TrainedModelInferenceJobs": {
+     "$ref": "#/definitions/TrainedModelInferenceJobsConfigurationPolicy"
+    },
+    "TrainedModels": {
+     "$ref": "#/definitions/TrainedModelsConfigurationPolicy"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TrainedModelArtifactMaxSize": {
+   "additionalProperties": false,
+   "properties": {
+    "Unit": {
+     "$ref": "#/definitions/TrainedModelArtifactMaxSizeUnitType"
+    },
+    "Value": {
+     "maximum": 10.0,
+     "minimum": 0.01,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Unit",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TrainedModelArtifactMaxSizeUnitType": {
+   "enum": [
+    "GB"
+   ],
+   "type": "string"
+  },
+  "TrainedModelExportFileType": {
+   "enum": [
+    "MODEL",
+    "OUTPUT"
+   ],
+   "type": "string"
+  },
+  "TrainedModelExportsConfigurationPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "FilesToExport": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/TrainedModelExportFileType"
+     },
+     "maxItems": 2,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "MaxSize": {
+     "$ref": "#/definitions/TrainedModelExportsMaxSize"
+    }
+   },
+   "required": [
+    "MaxSize",
+    "FilesToExport"
+   ],
+   "type": "object"
+  },
+  "TrainedModelExportsMaxSize": {
+   "additionalProperties": false,
+   "properties": {
+    "Unit": {
+     "$ref": "#/definitions/TrainedModelExportsMaxSizeUnitType"
+    },
+    "Value": {
+     "maximum": 10.0,
+     "minimum": 0.01,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Unit",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TrainedModelExportsMaxSizeUnitType": {
+   "enum": [
+    "GB"
+   ],
+   "type": "string"
+  },
+  "TrainedModelInferenceJobsConfigurationPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerLogs": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/LogsConfigurationPolicy"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "MaxOutputSize": {
+     "$ref": "#/definitions/TrainedModelInferenceMaxOutputSize"
+    }
+   },
+   "type": "object"
+  },
+  "TrainedModelInferenceMaxOutputSize": {
+   "additionalProperties": false,
+   "properties": {
+    "Unit": {
+     "$ref": "#/definitions/TrainedModelInferenceMaxOutputSizeUnitType"
+    },
+    "Value": {
+     "maximum": 50.0,
+     "minimum": 0.01,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Unit",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TrainedModelInferenceMaxOutputSizeUnitType": {
+   "enum": [
+    "GB"
+   ],
+   "type": "string"
+  },
+  "TrainedModelsConfigurationPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerLogs": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/LogsConfigurationPolicy"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ContainerMetrics": {
+     "$ref": "#/definitions/MetricsConfigurationPolicy"
+    },
+    "MaxArtifactSize": {
+     "$ref": "#/definitions/TrainedModelArtifactMaxSize"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConfiguredModelAlgorithmAssociationArn"
+ ],
+ "properties": {
+  "CollaborationIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "ConfiguredModelAlgorithmArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[-a-z]*:cleanrooms-ml:[-a-z0-9]+:[0-9]{12}:configured-model-algorithm/[-a-zA-Z0-9_/.]+$",
+   "type": "string"
+  },
+  "ConfiguredModelAlgorithmAssociationArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[-a-z]*:cleanrooms-ml:[-a-z0-9]+:[0-9]{12}:membership/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/configured-model-algorithm-association/[-a-zA-Z0-9_/.]+$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "pattern": "^[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t\\r\\n]*$",
+   "type": "string"
+  },
+  "MembershipIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^(?!\\s*$)[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t]*$",
+   "type": "string"
+  },
+  "PrivacyConfiguration": {
+   "$ref": "#/definitions/PrivacyConfiguration"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConfiguredModelAlgorithmAssociationArn",
+  "/properties/CollaborationIdentifier"
+ ],
+ "required": [
+  "MembershipIdentifier",
+  "ConfiguredModelAlgorithmArn",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CleanRoomsML::ConfiguredModelAlgorithmAssociation"
+}

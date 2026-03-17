@@ -9,6 +9,26 @@
   "/properties/DefaultDnsPrefix"
  ],
  "definitions": {
+  "CrossRegionS3RestoreSourcesAccess": {
+   "additionalProperties": false,
+   "properties": {
+    "Ipv4Addresses": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Region": {
+     "type": "string"
+    },
+    "Status": {
+     "$ref": "#/definitions/ManagedResourceStatus"
+    }
+   },
+   "type": "object"
+  },
   "ManagedResourceStatus": {
    "enum": [
     "ENABLED",
@@ -21,6 +41,37 @@
   "ManagedServices": {
    "additionalProperties": false,
    "properties": {
+    "CrossRegionS3RestoreSourcesAccess": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CrossRegionS3RestoreSourcesAccess"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "KmsAccess": {
+     "additionalProperties": false,
+     "properties": {
+      "DomainName": {
+       "type": "string"
+      },
+      "Ipv4Addresses": {
+       "insertionOrder": false,
+       "items": {
+        "type": "string"
+       },
+       "type": "array",
+       "uniqueItems": false
+      },
+      "KmsPolicyDocument": {
+       "type": "string"
+      },
+      "Status": {
+       "$ref": "#/definitions/ManagedResourceStatus"
+      }
+     },
+     "type": "object"
+    },
     "ManagedS3BackupAccess": {
      "additionalProperties": false,
      "properties": {
@@ -90,6 +141,29 @@
      },
      "type": "object"
     },
+    "StsAccess": {
+     "additionalProperties": false,
+     "properties": {
+      "DomainName": {
+       "type": "string"
+      },
+      "Ipv4Addresses": {
+       "insertionOrder": false,
+       "items": {
+        "type": "string"
+       },
+       "type": "array",
+       "uniqueItems": false
+      },
+      "Status": {
+       "$ref": "#/definitions/ManagedResourceStatus"
+      },
+      "StsPolicyDocument": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
     "ZeroEtlAccess": {
      "additionalProperties": false,
      "properties": {
@@ -150,6 +224,14 @@
    "minLength": 1,
    "type": "string"
   },
+  "CrossRegionS3RestoreSources": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
   "CustomDomainName": {
    "maxLength": 255,
    "minLength": 1,
@@ -168,6 +250,18 @@
    "maxLength": 255,
    "minLength": 1,
    "pattern": "^[a-zA-Z_](?!.*--)[a-zA-Z0-9_-]*$",
+   "type": "string"
+  },
+  "KmsAccess": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "KmsPolicyDocument": {
+   "maxLength": 20480,
+   "minLength": 3,
    "type": "string"
   },
   "ManagedServices": {
@@ -198,6 +292,18 @@
    "type": "string"
   },
   "S3PolicyDocument": {
+   "maxLength": 20480,
+   "minLength": 3,
+   "type": "string"
+  },
+  "StsAccess": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "StsPolicyDocument": {
    "maxLength": 20480,
    "minLength": 3,
    "type": "string"
@@ -240,6 +346,11 @@
   "/properties/DefaultDnsPrefix",
   "/properties/S3Access",
   "/properties/S3PolicyDocument",
+  "/properties/KmsAccess",
+  "/properties/KmsPolicyDocument",
+  "/properties/StsAccess",
+  "/properties/StsPolicyDocument",
+  "/properties/CrossRegionS3RestoreSources",
   "/properties/ZeroEtlAccess"
  ]
 }

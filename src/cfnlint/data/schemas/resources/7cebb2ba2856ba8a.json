@@ -1,0 +1,145 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ClippingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CallbackMetadata": {
+     "maxLength": 1024,
+     "pattern": "^[\\w \\-\\.',@:;]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CroppingConfig": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "GetOutput": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "maxLength": 1024,
+     "pattern": "^[\\w \\-\\.',@:;]*$",
+     "type": "string"
+    },
+    "Name": {
+     "pattern": "^[a-zA-Z0-9]([a-zA-Z0-9-_]{0,126}[a-zA-Z0-9])?$",
+     "type": "string"
+    },
+    "OutputConfig": {
+     "$ref": "#/definitions/OutputConfig"
+    },
+    "Status": {
+     "$ref": "#/definitions/OutputStatus"
+    }
+   },
+   "required": [
+    "Name",
+    "OutputConfig",
+    "Status"
+   ],
+   "type": "object"
+  },
+  "OutputConfig": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Cropping": {
+       "$ref": "#/definitions/CroppingConfig"
+      }
+     },
+     "required": [
+      "Cropping"
+     ],
+     "title": "Cropping",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Clipping": {
+       "$ref": "#/definitions/ClippingConfig"
+      }
+     },
+     "required": [
+      "Clipping"
+     ],
+     "title": "Clipping",
+     "type": "object"
+    }
+   ]
+  },
+  "OutputStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "DataEndpoints": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Id": {
+   "pattern": "^[a-z0-9]{19}$",
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[a-zA-Z0-9]([a-zA-Z0-9-_]{0,126}[a-zA-Z0-9])?$",
+   "type": "string"
+  },
+  "Outputs": {
+   "items": {
+    "$ref": "#/definitions/GetOutput"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/DataEndpoints",
+  "/properties/Id"
+ ],
+ "required": [
+  "Name",
+  "Outputs"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ElementalInference::Feed"
+}
