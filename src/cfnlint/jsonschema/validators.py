@@ -166,9 +166,12 @@ def create(
                         fn_resolved_err,
                     )
 
+        _RESOLVE_MAX_YIELDS: int = 512
+
         def resolve_value(self, instance: Any) -> ResolutionResult:
             key, value = is_function(instance)
             if key in self.fn_resolvers:
+                count = 0
                 # There is no None in self.fn_resolvers
                 for r_value, r_validator, r_errs in self._resolve_fn(key, value):  # type: ignore
                     if not r_errs:
@@ -185,6 +188,9 @@ def create(
                                     region_context.conditions.status,
                                     region_context.ref_values,
                                 ):
+                                    count += 1
+                                    if count > self._RESOLVE_MAX_YIELDS:
+                                        return
                                     yield (
                                         r_value,
                                         r_validator.evolve(
