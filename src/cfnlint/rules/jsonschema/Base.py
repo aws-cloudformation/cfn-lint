@@ -137,11 +137,16 @@ class BaseJsonSchema(CloudFormationLintRule):
         return validators
 
     def extend_validator(
-        self, validator: Validator, schema: Any, context: Context
+        self,
+        validator: Validator,
+        schema: Any,
+        context: Context,
+        validators: dict[str, V] | None = None,
     ) -> Validator:
-        return validator.extend(validators=self._get_validators())(
-            schema=schema
-        ).evolve(
+        all_validators = self._get_validators()
+        if validators:
+            all_validators.update(validators)
+        return validator.extend(validators=all_validators)(schema=schema).evolve(
             cfn=validator.cfn,
             context=context,
             resolver=RefResolver.from_schema(
