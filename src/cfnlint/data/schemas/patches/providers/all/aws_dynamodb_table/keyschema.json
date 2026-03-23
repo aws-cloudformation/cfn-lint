@@ -28,9 +28,28 @@
   "op": "replace",
   "path": "/definitions/GlobalSecondaryIndex/properties/KeySchema",
   "value": {
-   "$ref": "#/definitions/KeySchema",
-   "maxItems": 2,
-   "minItems": 1
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "AttributeName": {
+      "type": "string"
+     },
+     "KeyType": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "KeyType",
+     "AttributeName"
+    ],
+    "type": "object"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true,
+   "uniqueKeys": [
+    "AttributeName"
+   ]
   }
  },
  {
