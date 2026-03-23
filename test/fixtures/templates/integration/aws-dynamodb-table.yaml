@@ -42,3 +42,31 @@ Resources:
         KMSMasterKeyId: !GetAtt KMS.Arn
         SSEEnabled: true
         SSEType: AES256
+  Table3:
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: table3
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+        - AttributeName: sk1
+          AttributeType: S
+        - AttributeName: sk2
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: compositeIndex
+          KeySchema:
+            - AttributeName: pk
+              KeyType: HASH
+            - AttributeName: sk1
+              KeyType: HASH
+            - AttributeName: sk2
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL

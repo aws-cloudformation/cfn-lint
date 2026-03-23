@@ -28,9 +28,34 @@
   "op": "replace",
   "path": "/definitions/GlobalSecondaryIndex/properties/KeySchema",
   "value": {
-   "$ref": "#/definitions/KeySchema",
-   "maxItems": 2,
-   "minItems": 1
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "AttributeName": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "KeyType": {
+      "enum": [
+       "HASH",
+       "RANGE"
+      ],
+      "type": "string"
+     }
+    },
+    "required": [
+     "KeyType",
+     "AttributeName"
+    ],
+    "type": "object"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true,
+   "uniqueKeys": [
+    "AttributeName"
+   ]
   }
  },
  {
