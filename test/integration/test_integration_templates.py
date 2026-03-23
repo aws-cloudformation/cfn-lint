@@ -97,6 +97,13 @@ class TestQuickStartTemplates(BaseCliTestCase):
             ),
             "exit_code": 2,
         },
+        {
+            "filename": "test/fixtures/templates/integration/aws-lambda-function.yaml",
+            "results_filename": (
+                "test/fixtures/results/integration/aws-lambda-function.json"
+            ),
+            "exit_code": 0,
+        },
     ]
 
     def test_templates(self):

@@ -383,7 +383,6 @@ def if_(
     )
 
     if_errors = list(if_validator.evolve(schema=if_schema).iter_errors(instance))
-
     # If any error is unknown, we can't determine the condition
     if any(getattr(err, "unknown", False) for err in if_errors):
         yield ValidationError(

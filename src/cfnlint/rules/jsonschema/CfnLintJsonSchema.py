@@ -10,6 +10,7 @@ from typing import Any, Sequence
 
 from cfnlint.helpers import load_resource
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
+from cfnlint.jsonschema._keywords_cfn import cfn_type
 from cfnlint.jsonschema.exceptions import best_match
 from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
@@ -77,6 +78,7 @@ class CfnLintJsonSchema(BaseJsonSchema):
             context=validator.context.evolve(
                 unresolvable_function_mode=True,
             ),
+            validators={"type": cfn_type},
         )
 
         for err in self._iter_errors(cfn_validator, instance):
