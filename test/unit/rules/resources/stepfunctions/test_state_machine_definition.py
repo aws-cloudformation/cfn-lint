@@ -1542,6 +1542,24 @@ def rule():
                 ),
             ],
         ),
+        (
+            "JSONata string Arguments in task",
+            {
+                "Definition": {
+                    "QueryLanguage": "JSONata",
+                    "StartAt": "MyTask",
+                    "States": {
+                        "MyTask": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::aws-sdk:s3:listObjectsV2",
+                            "Arguments": '{% $merge([{"Bucket": "my-bucket"}]) %}',
+                            "End": True,
+                        },
+                    },
+                }
+            },
+            [],
+        ),
     ],
 )
 def test_validate(
