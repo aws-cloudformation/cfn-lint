@@ -1,0 +1,68 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceId"
+ ],
+ "definitions": {
+  "HaStatus": {
+   "enum": [
+    "processing",
+    "active",
+    "standby",
+    "invalid"
+   ],
+   "type": "string"
+  },
+  "InstanceId": {
+   "pattern": "^i-[0-9a-f]{8,17}$",
+   "type": "string"
+  },
+  "LastUpdatedTime": {
+   "type": "string"
+  },
+  "SqlServerCredentials": {
+   "pattern": "^(?=.{20,2048}$)arn:aws[a-z-]*:secretsmanager:[a-z0-9-]+:\\d{12}:secret:[a-zA-Z0-9/_+=.@-]+$",
+   "type": "string"
+  },
+  "SqlServerLicenseUsage": {
+   "enum": [
+    "full",
+    "waived"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InstanceId"
+ ],
+ "properties": {
+  "HaStatus": {
+   "$ref": "#/definitions/HaStatus"
+  },
+  "InstanceId": {
+   "$ref": "#/definitions/InstanceId"
+  },
+  "LastUpdatedTime": {
+   "$ref": "#/definitions/LastUpdatedTime"
+  },
+  "SqlServerCredentials": {
+   "$ref": "#/definitions/SqlServerCredentials"
+  },
+  "SqlServerLicenseUsage": {
+   "$ref": "#/definitions/SqlServerLicenseUsage"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/HaStatus",
+  "/properties/SqlServerLicenseUsage",
+  "/properties/LastUpdatedTime"
+ ],
+ "required": [
+  "InstanceId"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/sql-server-ec2/latest/userguide/sql-high-availability.html",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::SqlHaStandbyDetectedInstance"
+}

@@ -1,0 +1,165 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ConnectionId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AttachPoint",
+  "/properties/EnvironmentId",
+  "/properties/ActivationKey"
+ ],
+ "definitions": {
+  "AttachPoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "type": "string"
+    },
+    "DirectConnectGateway": {
+     "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Provider": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudServiceProvider": {
+     "maxLength": 32,
+     "type": "string"
+    },
+    "LastMileProvider": {
+     "maxLength": 32,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "ActivationKey": {
+   "type": "string"
+  },
+  "Arn": {
+   "pattern": "^arn:aws[a-z-]*:interconnect:[^:]+:[0-9]{12}:connection/mcc-[a-z0-9]{8}$",
+   "type": "string"
+  },
+  "AttachPoint": {
+   "$ref": "#/definitions/AttachPoint"
+  },
+  "Bandwidth": {
+   "pattern": "^\\d+[MG]bps$",
+   "type": "string"
+  },
+  "BillingTier": {
+   "maximum": 8,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "ConnectionId": {
+   "pattern": "^mcc-[a-z0-9]{8}$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "pattern": "^[-a-zA-Z0-9_ ]+$",
+   "type": "string"
+  },
+  "EnvironmentId": {
+   "maxLength": 32,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OwnerAccount": {
+   "type": "string"
+  },
+  "Provider": {
+   "$ref": "#/definitions/Provider"
+  },
+  "RemoteOwnerAccount": {
+   "maxLength": 255,
+   "pattern": "^[-a-zA-Z0-9_@\\.]+$",
+   "type": "string"
+  },
+  "SharedId": {
+   "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+   "type": "string"
+  },
+  "State": {
+   "enum": [
+    "available",
+    "requested",
+    "pending",
+    "down",
+    "deleting",
+    "deleted",
+    "failed"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "maxLength": 32,
+   "minLength": 5,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConnectionId",
+  "/properties/Arn",
+  "/properties/Provider",
+  "/properties/Type",
+  "/properties/State",
+  "/properties/SharedId",
+  "/properties/OwnerAccount",
+  "/properties/BillingTier"
+ ],
+ "required": [
+  "AttachPoint"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Interconnect::Connection",
+ "writeOnlyProperties": [
+  "/properties/RemoteOwnerAccount"
+ ]
+}

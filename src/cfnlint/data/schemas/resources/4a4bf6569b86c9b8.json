@@ -235,6 +235,22 @@
    },
    "type": "object"
   },
+  "InstanceMarketOptionsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "MarketType": {
+     "enum": [
+      "spot",
+      "capacity-block"
+     ],
+     "type": "string"
+    },
+    "SpotOptions": {
+     "$ref": "#/definitions/SpotMarketOptions"
+    }
+   },
+   "type": "object"
+  },
   "InstanceMetadataOptionsRequest": {
    "additionalProperties": false,
    "properties": {
@@ -279,6 +295,7 @@
    "properties": {
     "Description": {
      "maxLength": 1000,
+     "minLength": 0,
      "pattern": "^[\\S\\s]*$",
      "type": "string"
     },
@@ -339,6 +356,8 @@
    "additionalProperties": false,
    "properties": {
     "LicenseConfigurationArn": {
+     "maxLength": 2048,
+     "minLength": 0,
      "pattern": "^arn:.*",
      "type": "string"
     }
@@ -358,9 +377,11 @@
     },
     "GroupName": {
      "maxLength": 255,
+     "minLength": 0,
      "type": "string"
     },
     "PartitionNumber": {
+     "minimum": 0,
      "type": "integer"
     },
     "Tenancy": {
@@ -415,6 +436,34 @@
    },
    "type": "object"
   },
+  "SpotMarketOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceInterruptionBehavior": {
+     "enum": [
+      "hibernate",
+      "stop"
+     ],
+     "type": "string"
+    },
+    "MaxPrice": {
+     "maxLength": 64,
+     "type": "string"
+    },
+    "SpotInstanceType": {
+     "enum": [
+      "one-time",
+      "persistent"
+     ],
+     "type": "string"
+    },
+    "ValidUntilUtc": {
+     "maxLength": 64,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -453,6 +502,7 @@
       "$ref": "#/definitions/Tag"
      },
      "maxItems": 30,
+     "minItems": 0,
      "type": "array"
     }
    },
@@ -507,6 +557,9 @@
      "pattern": "^ami-[0-9a-zA-Z]{1,63}$",
      "type": "string"
     },
+    "InstanceMarketOptions": {
+     "$ref": "#/definitions/InstanceMarketOptionsRequest"
+    },
     "InstanceType": {
      "pattern": "^([a-z0-9-]+)\\.([a-z0-9]+)$",
      "type": "string"
@@ -517,6 +570,7 @@
     },
     "KeyName": {
      "maxLength": 64,
+     "minLength": 0,
      "type": "string"
     },
     "LicenseSpecifications": {
@@ -563,6 +617,7 @@
     },
     "UserData": {
      "maxLength": 16000,
+     "minLength": 0,
      "type": "string"
     }
    },

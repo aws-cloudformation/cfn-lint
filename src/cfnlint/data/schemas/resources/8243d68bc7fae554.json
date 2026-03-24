@@ -1,0 +1,137 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/QuotaShareName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/QuotaShareName",
+  "/properties/JobQueue"
+ ],
+ "definitions": {
+  "QuotaShareCapacityLimit": {
+   "additionalProperties": false,
+   "properties": {
+    "CapacityUnit": {
+     "type": "string"
+    },
+    "MaxCapacity": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxCapacity",
+    "CapacityUnit"
+   ],
+   "type": "object"
+  },
+  "QuotaSharePreemptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InSharePreemption": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "InSharePreemption"
+   ],
+   "type": "object"
+  },
+  "QuotaShareResourceSharingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BorrowLimit": {
+     "minimum": -1,
+     "type": "integer"
+    },
+    "Strategy": {
+     "enum": [
+      "RESERVE",
+      "LEND",
+      "LEND_AND_BORROW"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Strategy"
+   ],
+   "type": "object"
+  },
+  "ResourceArn": {
+   "pattern": "^arn:aws[a-z\\-]*:batch:[a-z0-9\\-]+:[0-9]{12}:job-queue/[a-zA-Z0-9_\\-]{1,128}/quota-share/[a-zA-Z0-9_\\-]{1,128}$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/QuotaShareArn"
+ ],
+ "properties": {
+  "CapacityLimits": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/QuotaShareCapacityLimit"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "JobQueue": {
+   "type": "string"
+  },
+  "PreemptionConfiguration": {
+   "$ref": "#/definitions/QuotaSharePreemptionConfiguration"
+  },
+  "QuotaShareArn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "QuotaShareName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResourceSharingConfiguration": {
+   "$ref": "#/definitions/QuotaShareResourceSharingConfiguration"
+  },
+  "State": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".*": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/QuotaShareArn"
+ ],
+ "required": [
+  "QuotaShareName",
+  "JobQueue",
+  "CapacityLimits",
+  "ResourceSharingConfiguration",
+  "PreemptionConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-batch",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Batch::QuotaShare"
+}
