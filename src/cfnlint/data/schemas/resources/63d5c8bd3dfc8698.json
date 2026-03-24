@@ -1,0 +1,252 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "CatalogProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomProperties": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^.+$": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "DataLakeAccessProperties": {
+     "$ref": "#/definitions/DataLakeAccessProperties"
+    }
+   },
+   "type": "object"
+  },
+  "DataLakeAccessProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowFullTableExternalDataAccess": {
+     "enum": [
+      "True",
+      "False"
+     ],
+     "type": "string"
+    },
+    "CatalogType": {
+     "type": "string"
+    },
+    "DataLakeAccess": {
+     "type": "boolean"
+    },
+    "DataTransferRole": {
+     "type": "string"
+    },
+    "KmsKey": {
+     "type": "string"
+    },
+    "ManagedWorkgroupName": {
+     "type": "string"
+    },
+    "ManagedWorkgroupStatus": {
+     "type": "string"
+    },
+    "RedshiftDatabaseName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DataLakePrincipal": {
+   "additionalProperties": false,
+   "properties": {
+    "DataLakePrincipalIdentifier": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FederatedCatalog": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectionName": {
+     "type": "string"
+    },
+    "Identifier": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PrincipalPermissions": {
+   "additionalProperties": false,
+   "properties": {
+    "Permissions": {
+     "items": {
+      "enum": [
+       "ALL",
+       "SELECT",
+       "ALTER",
+       "DROP",
+       "DELETE",
+       "INSERT",
+       "CREATE_DATABASE",
+       "CREATE_TABLE",
+       "DATA_LOCATION_ACCESS"
+      ],
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Principal": {
+     "$ref": "#/definitions/DataLakePrincipal"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TargetRedshiftCatalog": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "CatalogArn"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResourceArn"
+ ],
+ "properties": {
+  "AllowFullTableExternalDataAccess": {
+   "enum": [
+    "True",
+    "False"
+   ],
+   "type": "string"
+  },
+  "CatalogId": {
+   "type": "string"
+  },
+  "CatalogProperties": {
+   "$ref": "#/definitions/CatalogProperties"
+  },
+  "CreateDatabaseDefaultPermissions": {
+   "items": {
+    "$ref": "#/definitions/PrincipalPermissions"
+   },
+   "type": "array"
+  },
+  "CreateTableDefaultPermissions": {
+   "items": {
+    "$ref": "#/definitions/PrincipalPermissions"
+   },
+   "type": "array"
+  },
+  "CreateTime": {
+   "type": "integer"
+  },
+  "Description": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "FederatedCatalog": {
+   "$ref": "#/definitions/FederatedCatalog"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^(?!(.*[.\\/\\\\]|aws:)).*$",
+   "type": "string"
+  },
+  "OverwriteChildResourcePermissionsWithDefault": {
+   "enum": [
+    "Accept",
+    "Deny"
+   ],
+   "type": "string"
+  },
+  "Parameters": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceArn": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TargetRedshiftCatalog": {
+   "$ref": "#/definitions/TargetRedshiftCatalog"
+  },
+  "UpdateTime": {
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CatalogId",
+  "/properties/ResourceArn",
+  "/properties/CreateTime",
+  "/properties/UpdateTime",
+  "/properties/CatalogProperties/DataLakeAccessProperties/ManagedWorkgroupName",
+  "/properties/CatalogProperties/DataLakeAccessProperties/ManagedWorkgroupStatus",
+  "/properties/CatalogProperties/DataLakeAccessProperties/RedshiftDatabaseName",
+  "/properties/CatalogProperties/CustomProperties",
+  "/properties/CreateDatabaseDefaultPermissions/*/Principal",
+  "/properties/CreateDatabaseDefaultPermissions/*/Principal/DataLakePrincipalIdentifier",
+  "/properties/CreateDatabaseDefaultPermissions/*/Permissions",
+  "/properties/CreateTableDefaultPermissions/*/Principal",
+  "/properties/CreateTableDefaultPermissions/*/Principal/DataLakePrincipalIdentifier",
+  "/properties/CreateTableDefaultPermissions/*/Permissions"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-glue",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Glue::Catalog",
+ "writeOnlyProperties": [
+  "/properties/CatalogProperties/DataLakeAccessProperties/AllowFullTableExternalDataAccess",
+  "/properties/OverwriteChildResourcePermissionsWithDefault"
+ ]
+}

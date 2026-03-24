@@ -1,20 +1,22 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/KmsKeyArn"
+  "/properties/IpamPrefixListResolverId",
+  "/properties/PrefixListId",
+  "/properties/PrefixListRegion"
  ],
  "definitions": {
   "Tag": {
    "additionalProperties": false,
    "properties": {
     "Key": {
-     "maxLength": 127,
+     "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "maxLength": 255,
-     "minLength": 1,
+     "maxLength": 256,
+     "minLength": 0,
      "type": "string"
     }
    },
@@ -26,30 +28,26 @@
   }
  },
  "primaryIdentifier": [
-  "/properties/Arn"
+  "/properties/IpamPrefixListResolverTargetId"
  ],
  "properties": {
-  "Arn": {
-   "pattern": "^arn:(aws[a-zA-Z-]*):deadline:[a-z0-9-]+:[0-9]+:farm/farm-[0-9a-z]{32}$",
+  "DesiredVersion": {
+   "format": "int64",
+   "type": "integer"
+  },
+  "IpamPrefixListResolverId": {
    "type": "string"
   },
-  "Description": {
-   "default": "",
-   "maxLength": 100,
-   "minLength": 0,
+  "IpamPrefixListResolverTargetArn": {
    "type": "string"
   },
-  "DisplayName": {
-   "maxLength": 100,
-   "minLength": 1,
+  "IpamPrefixListResolverTargetId": {
    "type": "string"
   },
-  "FarmId": {
-   "pattern": "^farm-[0-9a-f]{32}$",
+  "PrefixListId": {
    "type": "string"
   },
-  "KmsKeyArn": {
-   "pattern": "^arn:aws[-a-z]*:kms:.*:key/.*",
+  "PrefixListRegion": {
    "type": "string"
   },
   "Tags": {
@@ -57,18 +55,24 @@
    "items": {
     "$ref": "#/definitions/Tag"
    },
-   "maxItems": 50,
    "type": "array",
    "uniqueItems": true
+  },
+  "TrackLatestVersion": {
+   "type": "boolean"
   }
  },
  "readOnlyProperties": [
-  "/properties/FarmId",
-  "/properties/Arn"
+  "/properties/IpamPrefixListResolverTargetId",
+  "/properties/IpamPrefixListResolverTargetArn"
  ],
  "required": [
-  "DisplayName"
+  "IpamPrefixListResolverId",
+  "PrefixListId",
+  "PrefixListRegion",
+  "TrackLatestVersion"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ipam.git",
  "tagging": {
   "cloudFormationSystemTags": true,
   "tagOnCreate": true,
@@ -76,5 +80,5 @@
   "tagUpdatable": true,
   "taggable": true
  },
- "typeName": "AWS::Deadline::Farm"
+ "typeName": "AWS::EC2::IPAMPrefixListResolverTarget"
 }

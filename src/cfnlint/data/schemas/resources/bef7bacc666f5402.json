@@ -1,0 +1,170 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SubnetId",
+  "/properties/ClientToken",
+  "/properties/PreserveClientIp",
+  "/properties/SecurityGroupIds"
+ ],
+ "definitions": {
+  "InstanceConnectEndpointDnsNames": {
+   "additionalProperties": false,
+   "properties": {
+    "DnsName": {
+     "type": "string"
+    },
+    "FipsDnsName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceConnectEndpointPublicDnsNames": {
+   "additionalProperties": false,
+   "properties": {
+    "Dualstack": {
+     "$ref": "#/definitions/InstanceConnectEndpointDnsNames",
+     "type": "object"
+    },
+    "Ipv4": {
+     "$ref": "#/definitions/InstanceConnectEndpointDnsNames",
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "NetworkInterfaceId": {
+   "type": "string"
+  },
+  "SecurityGroupId": {
+   "format": "AWS::EC2::SecurityGroup.Id",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AvailabilityZone": {
+   "type": "string"
+  },
+  "AvailabilityZoneId": {
+   "type": "string"
+  },
+  "ClientToken": {
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InstanceConnectEndpointArn": {
+   "type": "string"
+  },
+  "NetworkInterfaceIds": {
+   "items": {
+    "$ref": "#/definitions/NetworkInterfaceId"
+   },
+   "type": "array"
+  },
+  "OwnerId": {
+   "type": "string"
+  },
+  "PreserveClientIp": {
+   "type": "boolean"
+  },
+  "PublicDnsNames": {
+   "$ref": "#/definitions/InstanceConnectEndpointPublicDnsNames",
+   "type": "object"
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SecurityGroupId"
+   },
+   "maxItems": 16,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "State": {
+   "enum": [
+    "create-in-progress",
+    "create-complete",
+    "create-failed",
+    "delete-in-progress",
+    "delete-complete",
+    "delete-failed",
+    "update-in-progress",
+    "update-complete",
+    "update-failed"
+   ],
+   "type": "string"
+  },
+  "StateMessage": {
+   "type": "string"
+  },
+  "SubnetId": {
+   "format": "AWS::EC2::Subnet.Id",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/AvailabilityZone",
+  "/properties/AvailabilityZoneId",
+  "/properties/CreatedAt",
+  "/properties/InstanceConnectEndpointArn",
+  "/properties/NetworkInterfaceIds",
+  "/properties/OwnerId",
+  "/properties/PublicDnsNames",
+  "/properties/State",
+  "/properties/StateMessage",
+  "/properties/VpcId"
+ ],
+ "required": [
+  "SubnetId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::InstanceConnectEndpoint",
+ "writeOnlyProperties": [
+  "/properties/ClientToken"
+ ]
+}

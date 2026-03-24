@@ -1,0 +1,62 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Schema",
+  "/properties/SchemaDefinition"
+ ],
+ "definitions": {
+  "Schema": {
+   "additionalProperties": false,
+   "properties": {
+    "RegistryName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SchemaArn": {
+     "pattern": "arn:(aws|aws-us-gov|aws-cn):glue:.*",
+     "type": "string"
+    },
+    "SchemaName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VersionId"
+ ],
+ "properties": {
+  "Schema": {
+   "$ref": "#/definitions/Schema"
+  },
+  "SchemaDefinition": {
+   "maxLength": 170000,
+   "minLength": 1,
+   "pattern": "\\S",
+   "type": "string"
+  },
+  "VersionId": {
+   "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VersionId"
+ ],
+ "required": [
+  "Schema",
+  "SchemaDefinition"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-glue.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Glue::SchemaVersion"
+}

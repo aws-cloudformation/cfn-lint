@@ -14,7 +14,9 @@
   "/properties/Type",
   "/properties/StandbyReplicas",
   "/properties/CollectionGroupName",
-  "/properties/EncryptionConfig"
+  "/properties/EncryptionConfig",
+  "/properties/VectorOptions",
+  "/properties/VectorOptions/ServerlessVectorAcceleration"
  ],
  "definitions": {
   "CollectionType": {
@@ -36,6 +38,14 @@
     }
    },
    "type": "object"
+  },
+  "ServerlessVectorAcceleration": {
+   "enum": [
+    "ENABLED",
+    "DISABLED",
+    "ALLOWED"
+   ],
+   "type": "string"
   },
   "StandbyReplicas": {
    "enum": [
@@ -62,6 +72,15 @@
     "Key",
     "Value"
    ],
+   "type": "object"
+  },
+  "VectorOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "ServerlessVectorAcceleration": {
+     "$ref": "#/definitions/ServerlessVectorAcceleration"
+    }
+   },
    "type": "object"
   }
  },
@@ -119,6 +138,9 @@
   },
   "Type": {
    "$ref": "#/definitions/CollectionType"
+  },
+  "VectorOptions": {
+   "$ref": "#/definitions/VectorOptions"
   }
  },
  "readOnlyProperties": [
