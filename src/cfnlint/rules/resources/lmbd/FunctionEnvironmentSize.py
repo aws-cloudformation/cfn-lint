@@ -30,9 +30,7 @@ class FunctionEnvironmentSize(CfnLintKeyword):
     def __init__(self):
         """Init"""
         super().__init__(
-            [
-                "Resources/AWS::Lambda::Function/Properties/Environment/Variables"
-            ]
+            ["Resources/AWS::Lambda::Function/Properties/Environment/Variables"]
         )
 
     def validate(

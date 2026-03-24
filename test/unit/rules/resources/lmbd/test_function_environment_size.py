@@ -6,9 +6,7 @@ SPDX-License-Identifier: MIT-0
 import pytest
 
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules.resources.lmbd.FunctionEnvironmentSize import (
-    FunctionEnvironmentSize,
-)
+from cfnlint.rules.resources.lmbd.FunctionEnvironmentSize import FunctionEnvironmentSize
 
 
 @pytest.fixture(scope="module")
@@ -52,6 +50,18 @@ def rule():
                     rule=FunctionEnvironmentSize(),
                 ),
             ],
+        ),
+        (
+            "not-an-object",
+            [],
+        ),
+        (
+            {"KEY": 12345},
+            [],
+        ),
+        (
+            {"KEY": ["a", "b"]},
+            [],
         ),
     ],
 )
