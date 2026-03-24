@@ -98,6 +98,10 @@ class StateMachineDefinition(CfnLintJsonSchema):
         }
         for k in ["ItemsPath", "MaxConcurrencyPath"]:
             schema["definitions"]["map"]["properties"][k] = False
+        for state_type in ["choice", "fail", "map", "parallel", "pass", "task", "wait"]:
+            schema["definitions"][state_type]["properties"]["Arguments"] = {
+                "type": ["string", "object"],
+            }
         return schema
 
     def _clean_schema(self, validator: Validator, instance: Any):
