@@ -1,3 +1,15 @@
+### v1.47.1
+## What's Changed
+* Fix [E3063](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3677) false positive when Code is a string (aws-cli pattern) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4399
+* Cap resolve_value permutations to prevent exponential blowup by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4394
+* Fix: maintenance guardduty policy by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4400
+* Add `EngineVersion` of `8.0.0` to DocDB Cluster by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4401
+* Support multi-attribute composite keys in DynamoDB GSI KeySchema by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4402
+* Allow JSONata string expressions for Arguments in Step Functions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4403
+* Update CloudFormation schemas to `2026-03-24` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4404
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.47.0...v1.47.1
+
 ### v1.47.0
 ## What's Changed
 * Remove Python 3.9 support (EOL October 2025) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4383
