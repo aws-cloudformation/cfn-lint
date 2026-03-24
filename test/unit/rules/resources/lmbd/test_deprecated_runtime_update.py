@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 
 from datetime import datetime
+from unittest.mock import patch
 
 import pytest
 
@@ -63,6 +64,10 @@ def rule():
     ],
 )
 def test_lambda_runtime(instance, date, expected, rule, validator):
-    rule.current_date = date
-    errs = list(rule.validate(validator, "LambdaRuntime", instance, {}))
+    with patch(
+        "cfnlint.rules.resources.lmbd.DeprecatedRuntimeUpdate.datetime"
+    ) as mock_dt:
+        mock_dt.today.return_value = date
+        mock_dt.strptime = datetime.strptime
+        errs = list(rule.validate(validator, "LambdaRuntime", instance, {}))
     assert errs == expected, f"Expected {expected} got {errs}"

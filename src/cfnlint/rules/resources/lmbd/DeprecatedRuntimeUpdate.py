@@ -28,7 +28,6 @@ class DeprecatedRuntimeUpdate(CfnLintKeyword):
     def __init__(self):
         """Init"""
         super().__init__(["Resources/AWS::Lambda::Function/Properties/Runtime"])
-        self.current_date = datetime.today()
         self.deprecated_runtimes = load_resource(
             AdditionalSpecs, "LmbdRuntimeLifecycle.json"
         )
@@ -41,10 +40,8 @@ class DeprecatedRuntimeUpdate(CfnLintKeyword):
         runtime_data = self.deprecated_runtimes.get(runtime)
         if not runtime_data:
             return
-        if (
-            datetime.strptime(runtime_data["update-block"], "%Y-%m-%d")
-            <= self.current_date
-        ):
+        current_date = datetime.today()
+        if datetime.strptime(runtime_data["update-block"], "%Y-%m-%d") <= current_date:
             yield ValidationError(
                 f"Runtime {runtime!r} was deprecated on "
                 f"{runtime_data['deprecated']!r}. Creation was disabled on "
