@@ -303,3 +303,16 @@ class TestCli(BaseTestCase):
             runner.cli()
 
         self.assertEqual(e.exception.code, 2)
+
+    @patch("cfnlint.runner.cli.ConfigMixIn")
+    def test_main_config_file_error_none_config(self, mock_config):
+        from cfnlint.exceptions import ConfigFileError
+        from cfnlint.runner.cli import main
+
+        mock_config.side_effect = ConfigFileError("Invalid key 'bad'", None)
+
+        with patch("sys.exit", side_effect=SystemExit(1)):
+            with patch("builtins.print") as mock_print:
+                with self.assertRaises(SystemExit):
+                    main()
+                mock_print.assert_called_once_with("Invalid key 'bad'")

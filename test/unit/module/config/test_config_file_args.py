@@ -184,3 +184,40 @@ class TestConfigFileArgs(BaseTestCase):
 
         self.assertIn("Invalid type for 'regions'", str(context.exception))
         self.assertIn("Expected array", str(context.exception))
+
+    def test_config_parser_non_zero_exit_code(self):
+        """test that non_zero_exit_code is accepted in config file"""
+        config = cfnlint.config.ConfigFileArgs(
+            config_file=Path("test/fixtures/configs/non_zero_exit_code.yaml")
+        )
+        self.assertEqual(
+            config.file_args,
+            {"non_zero_exit_code": "error"},
+        )
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_config_parser_non_zero_exit_code_invalid(self, yaml_mock):
+        """test that invalid non_zero_exit_code value is rejected"""
+
+        yaml_mock.side_effect = [{"non_zero_exit_code": "invalid"}, {}, {}, {}]
+
+        with self.assertRaises(ConfigFileError):
+            cfnlint.config.ConfigFileArgs()
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_config_parser_format(self, yaml_mock):
+        """test that format is accepted in config file"""
+
+        yaml_mock.side_effect = [{"format": "json"}, {}]
+
+        results = cfnlint.config.ConfigFileArgs()
+        self.assertEqual(results.file_args, {"format": "json"})
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_config_parser_include_experimental(self, yaml_mock):
+        """test that include_experimental is accepted in config file"""
+
+        yaml_mock.side_effect = [{"include_experimental": True}, {}]
+
+        results = cfnlint.config.ConfigFileArgs()
+        self.assertEqual(results.file_args, {"include_experimental": True})

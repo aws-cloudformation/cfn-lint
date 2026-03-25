@@ -193,12 +193,6 @@ class ConfigFileArgs:
                 else "root"
             )
 
-            # Create a minimal config with just the format setting for error formatting
-            format_setting = config.get("format") if isinstance(config, dict) else None
-            minimal_config = ConfigMixIn(
-                [], **({"format": format_setting} if format_setting else {})
-            )
-
             if hasattr(e, "validator") and e.validator == "additionalProperties":
                 invalid_key = (
                     list(e.instance.keys() - e.schema.get("properties", {}).keys())[0]
@@ -210,7 +204,7 @@ class ConfigFileArgs:
                         f"Invalid configuration key '{invalid_key}' "
                         f"in .cfnlintrc at {error_path}"
                     ),
-                    minimal_config,
+                    None,
                 )
             elif hasattr(e, "validator") and e.validator == "type":
                 expected_type = (
@@ -223,7 +217,7 @@ class ConfigFileArgs:
                         f"Invalid type for '{error_path}' "
                         f"in .cfnlintrc. Expected {expected_type}"
                     ),
-                    minimal_config,
+                    None,
                 )
             elif hasattr(e, "validator") and e.validator == "required":
                 missing_prop = (
@@ -234,7 +228,7 @@ class ConfigFileArgs:
                         f"Missing required property '{missing_prop}' "
                         f"in .cfnlintrc at {error_path}"
                     ),
-                    minimal_config,
+                    None,
                 )
             else:
                 # Fallback for other validation errors
@@ -243,7 +237,7 @@ class ConfigFileArgs:
                         f"Invalid configuration in .cfnlintrc at {error_path}: "
                         f"{e.message if hasattr(e, 'message') else str(e)}"
                     ),
-                    minimal_config,
+                    None,
                 )
 
     def merge_config(self, user_config, project_config):

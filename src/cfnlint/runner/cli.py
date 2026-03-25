@@ -342,11 +342,14 @@ def main() -> None:
     try:
         config = ConfigMixIn(sys.argv[1:])
     except ConfigFileError as e:
-        formatter = get_formatter(e.config)
-        match = Match(str(e), ConfigError(), None)
-        output = formatter.print_matches([match], Rules(), config=e.config)
-        if output:
-            print(output)
+        if e.config is not None:
+            formatter = get_formatter(e.config)
+            match = Match(str(e), ConfigError(), None)
+            output = formatter.print_matches([match], Rules(), config=e.config)
+            if output:
+                print(output)
+        else:
+            print(str(e))
         sys.exit(1)
     except Exception as e:
         print(e)
