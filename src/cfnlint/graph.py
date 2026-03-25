@@ -322,3 +322,25 @@ class Graph:
                     networkx.drawing.nx_pydot.write_dot(view, path)
             except ImportError as e:
                 raise e
+
+    def to_dot_string(self) -> str:
+        """Export the graph to a DOT format string"""
+        from io import StringIO
+
+        graph = deepcopy(self.graph)
+        view = self.settings.subgraph_view(graph)
+        try:
+            buf = StringIO()
+            networkx.drawing.nx_agraph.write_dot(view, buf)
+            return buf.getvalue()
+        except ImportError:
+            try:
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore", category=PendingDeprecationWarning)
+                    warnings.simplefilter("ignore", category=DeprecationWarning)
+
+                    buf = StringIO()
+                    networkx.drawing.nx_pydot.write_dot(view, buf)
+                    return buf.getvalue()
+            except ImportError as e:
+                raise e
