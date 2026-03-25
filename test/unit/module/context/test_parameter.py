@@ -136,3 +136,17 @@ def test_errors(name, instance):
 def test_parameters():
     with pytest.raises(ValueError):
         _init_parameters([])
+
+
+def test_ref_value_allowed_values_sets_resolved_from_parameters():
+    """Test that resolving AllowedValues sets is_resolved_from_parameters"""
+    context = Context(
+        ["us-east-1"],
+        parameters={
+            "Runtime": Parameter({"Type": "String", "AllowedValues": ["a", "b"]})
+        },
+    )
+    results = list(context.ref_value("Runtime"))
+    assert len(results) == 2
+    for _, ctx in results:
+        assert ctx.is_resolved_from_parameters is True
