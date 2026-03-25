@@ -81,7 +81,7 @@ def expand_deployment_files(
 
         try:
             template_path = (
-                (Path(deployment_file).parent / deployment_data.template_file_path)
+                Path(deployment_data.template_file_path)
                 .resolve()
                 .relative_to(Path.cwd())
             )
@@ -90,9 +90,7 @@ def expand_deployment_files(
                 f"Template file path {deployment_data.template_file_path!r} "
                 "is not relative to the current working directory"
             )
-            template_path = (
-                Path(deployment_file).parent / deployment_data.template_file_path
-            )
+            template_path = Path(deployment_data.template_file_path)
 
         if str(template_path) in deployments:
             deployments[str(template_path)].append(
