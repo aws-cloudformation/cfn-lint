@@ -29,3 +29,10 @@ Resources:
         AutoMinorVersionUpgrade: true
         BrokerName: test
         PubliclyAccessible: false
+  SESEventSourceMappingSpaces:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      BatchSize: 10
+      Enabled: true
+      EventSourceArn: '{{ resolve:ssm:/SQS_Queue/SQS_ARN }}'
+      FunctionName: MyFunctionNameHere

@@ -8,7 +8,13 @@ from __future__ import annotations
 from dataclasses import dataclass, field, fields
 from typing import TYPE_CHECKING, Any, Iterator, Sequence, Tuple
 
-from cfnlint.helpers import FUNCTIONS, REGEX_DYN_REF, ToPy, ensure_list
+from cfnlint.helpers import (
+    FUNCTIONS,
+    REGEX_DYN_REF,
+    REGEX_DYN_REF_SPACES,
+    ToPy,
+    ensure_list,
+)
 
 if TYPE_CHECKING:
     from cfnlint.jsonschema.protocols import Validator
@@ -127,6 +133,9 @@ class FunctionFilter:
                 ):
                     yield (instance, {"dynamicReference": schema}, validator)
                     return
+                return
+            elif REGEX_DYN_REF_SPACES.search(instance):
+                yield (instance, {"dynamicReferenceSpaces": schema}, validator)
                 return
 
         # if there are no functions then we don't need to worry

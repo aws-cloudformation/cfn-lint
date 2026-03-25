@@ -26,7 +26,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results_filename": (
                 "test/fixtures/results/integration/dynamic-references.json"
             ),
-            "exit_code": 2,
+            "exit_code": 6,
         },
         {
             "filename": "test/fixtures/templates/integration/ref-no-value.yaml",
