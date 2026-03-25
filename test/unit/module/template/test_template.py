@@ -1521,3 +1521,67 @@ ElasticLoadBalancer -> MyEC2Instance [key=0, source_paths="[\\"Properties\\", \\
                     },
                     self.template.get_valid_getatts().json_schema("us-east-1"),
                 )
+
+    def test_get_object_without_conditions_non_string_condition(self):
+        """Test that non-string condition names in Fn::If don't crash"""
+        template = convert_dict(
+            {
+                "Conditions": {"myCondition": {"Fn::Equals": [{"Ref": "Env"}, "prod"]}},
+                "Resources": {
+                    "myInstance": {
+                        "Type": "AWS::EC2::Instance",
+                        "Properties": {
+                            "ImageId": {
+                                "Fn::If": [
+                                    {"Fn::Sub": "myCondition"},
+                                    "ami-prod",
+                                    "ami-dev",
+                                ]
+                            },
+                        },
+                    }
+                },
+            }
+        )
+        template = Template("test.yaml", template)
+
+        results = template.get_object_without_conditions(
+            template.template.get("Resources", {})
+            .get("myInstance", {})
+            .get("Properties", {})
+        )
+        # Should not crash, and should return the object with the Fn::If unresolved
+        self.assertEqual(len(results), 1)
+        self.assertIn("ImageId", results[0]["Object"])
+
+    def test_get_object_without_nested_conditions_non_string_condition(self):
+        """Test that non-string condition names in Fn::If don't crash"""
+        template = convert_dict(
+            {
+                "Conditions": {"myCondition": {"Fn::Equals": [{"Ref": "Env"}, "prod"]}},
+                "Resources": {
+                    "myInstance": {
+                        "Type": "AWS::EC2::Instance",
+                        "Properties": {
+                            "ImageId": {
+                                "Fn::If": [
+                                    {"Fn::Sub": "myCondition"},
+                                    "ami-prod",
+                                    "ami-dev",
+                                ]
+                            },
+                        },
+                    }
+                },
+            }
+        )
+        template = Template("test.yaml", template)
+
+        results = template.get_object_without_nested_conditions(
+            template.template.get("Resources", {})
+            .get("myInstance", {})
+            .get("Properties", {}),
+            ["Resources", "AWS::EC2::Instance", "Properties"],
+        )
+        self.assertEqual(len(results), 1)
+        self.assertIn("ImageId", results[0]["Object"])

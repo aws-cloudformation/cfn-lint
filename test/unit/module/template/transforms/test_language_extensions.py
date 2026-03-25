@@ -1303,3 +1303,122 @@ class TestTransformValueIsStringInMap(TestCase):
                 self.result,
                 template,
             )
+
+
+class TestTransformFnIfWithFunctionCondition(TestCase):
+    """Test that Fn::If with a function in the condition position is not resolved"""
+
+    def setUp(self) -> None:
+        self.template_obj = convert_dict(
+            {
+                "Transform": ["AWS::LanguageExtensions"],
+                "Conditions": {
+                    "Fn::ForEach::CondLoop": [
+                        "Identifier",
+                        ["1"],
+                        {
+                            "Condition${Identifier}": {
+                                "Fn::Not": [{"Fn::Equals": ["-", "-"]}]
+                            }
+                        },
+                    ]
+                },
+                "Resources": {
+                    "Fn::ForEach::ResLoop": [
+                        "Identifier",
+                        ["1"],
+                        {
+                            "Resource${Identifier}": {
+                                "Type": "AWS::SSM::Parameter",
+                                "Properties": {
+                                    "Type": "String",
+                                    "Value": {
+                                        "Fn::If": [
+                                            {"Fn::Sub": "Condition${Identifier}"},
+                                            1,
+                                            2,
+                                        ]
+                                    },
+                                },
+                            }
+                        },
+                    ]
+                },
+            }
+        )
+
+    def test_transform(self):
+        with mock.patch(
+            "cfnlint.template.transforms._language_extensions._ACCOUNT_ID", None
+        ):
+            cfn = Template(
+                filename="", template=self.template_obj, regions=["us-east-1"]
+            )
+            matches, template = language_extension(cfn)
+            self.assertListEqual(matches, [])
+            # The Fn::Sub in the condition position should NOT be resolved
+            fn_if = template["Resources"]["Resource1"]["Properties"]["Value"]["Fn::If"]
+            self.assertIsInstance(fn_if[0], dict)
+            self.assertIn("Fn::Sub", fn_if[0])
+            # But the true/false branches should still be walked
+            self.assertEqual(fn_if[1], 1)
+            self.assertEqual(fn_if[2], 2)
+
+
+class TestTransformFnIfWithStringCondition(TestCase):
+    """Test Fn::If with a string condition name is resolved"""
+
+    def setUp(self) -> None:
+        self.template_obj = convert_dict(
+            {
+                "Transform": ["AWS::LanguageExtensions"],
+                "Conditions": {
+                    "Fn::ForEach::CondLoop": [
+                        "Identifier",
+                        ["1"],
+                        {
+                            "Condition${Identifier}": {
+                                "Fn::Not": [{"Fn::Equals": ["-", "-"]}]
+                            }
+                        },
+                    ]
+                },
+                "Resources": {
+                    "Fn::ForEach::ResLoop": [
+                        "Identifier",
+                        ["1"],
+                        {
+                            "Resource${Identifier}": {
+                                "Type": "AWS::SSM::Parameter",
+                                "Properties": {
+                                    "Type": "String",
+                                    "Value": {
+                                        "Fn::If": [
+                                            "Condition${Identifier}",
+                                            1,
+                                            2,
+                                        ]
+                                    },
+                                },
+                            }
+                        },
+                    ]
+                },
+            }
+        )
+
+    def test_transform(self):
+        with mock.patch(
+            "cfnlint.template.transforms._language_extensions._ACCOUNT_ID", None
+        ):
+            cfn = Template(
+                filename="", template=self.template_obj, regions=["us-east-1"]
+            )
+            matches, template = language_extension(cfn)
+            self.assertListEqual(matches, [])
+            fn_if = template["Resources"]["Resource1"]["Properties"]["Value"]["Fn::If"]
+            # String condition name should NOT be resolved — CloudFormation
+            # does not support variable substitution in Fn::If condition names
+            self.assertEqual(fn_if[0], "Condition${Identifier}")
+            self.assertEqual(fn_if[1], 1)
+            self.assertEqual(fn_if[2], 2)
