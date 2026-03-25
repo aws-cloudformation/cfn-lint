@@ -934,7 +934,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 if len(value) == 1:
                     if "Fn::If" in value:
                         if_values = value.get("Fn::If")
-                        if len(if_values) == 3:
+                        if len(if_values) == 3 and isinstance(if_values[0], str):
                             if_path = scenario.get(if_values[0], None)
                             if if_path is not None:
                                 if if_path:
@@ -995,7 +995,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 if len(value) == 1:
                     if "Fn::If" in value:
                         if_values = value.get("Fn::If")
-                        if len(if_values) == 3:
+                        if len(if_values) == 3 and isinstance(if_values[0], str):
                             if_path = scenario.get(if_values[0], None)
                             if if_path is not None:
                                 if if_path:

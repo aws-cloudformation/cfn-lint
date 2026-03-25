@@ -182,6 +182,13 @@ class _Transform:
                             if r in params:
                                 return params[r]
                         obj[k] = r
+                elif k == "Fn::If":
+                    if isinstance(v, list) and len(v) == 3:
+                        # CloudFormation does not resolve the condition name
+                        # (index 0) inside Fn::ForEach, so we leave it as-is
+                        # and only walk the true/false branches.
+                        obj[k][1] = self._walk(v[1], params, cfn)
+                        obj[k][2] = self._walk(v[2], params, cfn)
                 else:
                     sub_value = self._walk(v, params, cfn)
                     # a sub object may be none or we have returned
