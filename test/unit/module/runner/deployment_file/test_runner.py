@@ -169,6 +169,39 @@ def mock_glob(value, recursive):
             ],
         ),
         (
+            "Git sync file in subdirectory resolves template path from CWD",
+            {
+                "syncs/dev.yml": (
+                    {
+                        "template-file-path": "cloudformation/template.yml",
+                        "parameters": {
+                            "Env": "dev",
+                        },
+                        "tags": {},
+                    },
+                    [],
+                ),
+            },
+            [
+                (
+                    ConfigMixIn(
+                        [],
+                        deployment_files=["syncs/dev.yml"],
+                        parameters=[
+                            ParameterSet(
+                                source="syncs/dev.yml",
+                                parameters={"Env": "dev"},
+                            )
+                        ],
+                        templates=[
+                            "cloudformation/template.yml",
+                        ],
+                    ),
+                    [],
+                )
+            ],
+        ),
+        (
             "Bad template-file-path type",
             {
                 _filename_dev: (
