@@ -56,6 +56,7 @@ class Properties(CfnLintJsonSchema):
             "oneOf": "E3018",
             "cfnLint": "E1101",
             "tagging": "E3024",
+            "lifecycle": "E3710",
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
 

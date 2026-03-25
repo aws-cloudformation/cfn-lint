@@ -53,7 +53,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
         {
             "filename": "test/fixtures/templates/integration/ref-types.yaml",
             "results_filename": "test/fixtures/results/integration/ref-types.json",
-            "exit_code": 2,
+            "exit_code": 6,
         },
         {
             "filename": "test/fixtures/templates/integration/formats.yaml",
