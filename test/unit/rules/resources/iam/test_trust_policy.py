@@ -173,7 +173,9 @@ class TestTrustPolicy(TestCase):
         self.assertTrue(len(errs) > 0, "Expected errors for malformed ARN")
         err_messages = [e.message for e in errs]
         self.assertTrue(
-            any("is not valid under any of the given schemas" in m for m in err_messages),
+            any(
+                "is not valid under any of the given schemas" in m for m in err_messages
+            ),
             f"Expected anyOf validation error, got: {err_messages}",
         )
 
@@ -263,7 +265,7 @@ class TestTrustPolicy(TestCase):
                     "Effect": "Allow",
                     "Action": "sts:AssumeRole",
                     "Principal": {
-                        "AWS": "arn:aws:sts::123456789012:assumed-role/rolename/session",
+                        "AWS": "arn:aws:sts::123456789012:assumed-role/rolename/session",  # noqa: E501
                     },
                 }
             ],
