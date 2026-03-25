@@ -286,6 +286,7 @@ class Context:
                             value_path=deque(["Parameters", instance]) + path
                         ),
                         ref_values={instance: v},
+                        is_resolved_from_parameters=True,
                     ),
                 )
 
