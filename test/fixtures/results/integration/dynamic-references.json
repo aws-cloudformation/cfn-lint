@@ -27,5 +27,34 @@
             "ShortDescription": "Check if property values adhere to a specific pattern",
             "Source": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#pattern"
         }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/dynamic-references.yaml",
+        "Id": "477ff95e-7c8c-ed10-6221-7bce06ffb0bc",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 21,
+                "LineNumber": 37
+            },
+            "Path": [
+                "Resources",
+                "SESEventSourceMappingSpaces",
+                "Properties",
+                "EventSourceArn"
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 37
+            }
+        },
+        "Message": "'{{ resolve:ssm:/SQS_Queue/SQS_ARN }}' has spaces and will not be resolved as a dynamic reference. Remove spaces from '{{resolve:...}}'",
+        "ParentId": null,
+        "Rule": {
+            "Description": "Dynamic references with spaces between '{{' and 'resolve' will not be resolved by CloudFormation and will be treated as a literal string",
+            "Id": "W1053",
+            "ShortDescription": "Dynamic references should not contain spaces",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html"
+        }
     }
 ]

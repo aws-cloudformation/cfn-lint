@@ -55,6 +55,19 @@ def template():
             ],
         ),
         (
+            "Validate dynamic references with spaces",
+            "{{ resolve:ssm:secret }}",
+            {"enum": "Foo"},
+            deque(["Foo", "Test"]),
+            [],
+            [
+                (
+                    "{{ resolve:ssm:secret }}",
+                    {"dynamicReferenceSpaces": {"enum": "Foo"}},
+                ),
+            ],
+        ),
+        (
             "Lack of functions returns the schema and instance",
             {
                 "Foo": {"Ref": "AWS::NoValue"},
