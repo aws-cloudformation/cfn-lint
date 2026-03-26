@@ -1,5 +1,44 @@
 {
  "additionalProperties": false,
+ "allOf": [
+  {
+   "properties": {
+    "MasterUsername": {
+     "not": {
+      "enum": [
+       "rdsadmin"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "Engine": {
+      "enum": [
+       "aurora-postgresql",
+       "postgresql"
+      ]
+     }
+    },
+    "required": [
+     "Engine"
+    ]
+   },
+   "then": {
+    "properties": {
+     "MasterUsername": {
+      "not": {
+       "enum": [
+        "admin"
+       ]
+      }
+     }
+    }
+   }
+  }
+ ],
  "conditionalCreateOnlyProperties": [
   "/properties/Engine",
   "/properties/GlobalClusterIdentifier",
@@ -132,6 +171,11 @@
    ],
    "type": "object"
   }
+ },
+ "dependentRequired": {
+  "MasterUserPassword": [
+   "MasterUsername"
+  ]
  },
  "primaryIdentifier": [
   "/properties/DBClusterIdentifier"
