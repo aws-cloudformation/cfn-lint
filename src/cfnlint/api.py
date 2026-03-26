@@ -161,3 +161,29 @@ def lint_by_config(config: ManualArgs) -> list[Match]:
 
     runner = Runner(config_mixin)
     return list(runner.run())
+
+
+def graph(s: str) -> str | None:
+    """Generate a DOT graph from a template string.
+
+    Parameters
+    ----------
+    s : str
+        the template string
+
+    Returns
+    -------
+    str or None
+        the DOT format string, or None if the graph could not be built
+    """
+    template, errors = decode_str(s)
+    if errors or template is None:
+        return None
+
+    from cfnlint.template import Template
+
+    cfn = Template("", template)
+    if cfn.graph is None:
+        return None
+
+    return cfn.graph.to_dot_string()

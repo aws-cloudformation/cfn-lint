@@ -371,3 +371,31 @@ Resources:
         finally:
             # Clean up the temporary file
             os.unlink(temp_file)
+
+    def test_graph(self):
+        from cfnlint.api import graph
+
+        template = """
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+  Subnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.1.0/24
+"""
+        result = graph(template)
+        self.assertIsNotNone(result)
+        self.assertIn("VPC", result)
+        self.assertIn("Subnet", result)
+        self.assertIn("Ref", result)
+
+    def test_graph_invalid_template(self):
+        from cfnlint.api import graph
+
+        result = graph("not: [valid: yaml: {")
+        self.assertIsNone(result)
