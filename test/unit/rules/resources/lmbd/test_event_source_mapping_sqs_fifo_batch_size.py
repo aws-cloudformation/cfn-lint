@@ -123,6 +123,26 @@ _template = {
             deque(["Resources", "Mapping", "Properties"]),
             [],
         ),
+        # Hardcoded DynamoDB stream ARN with BatchSize 100 — valid (not SQS)
+        (
+            {
+                "Resources": {
+                    "Mapping": {
+                        "Type": "AWS::Lambda::EventSourceMapping",
+                        "Properties": {
+                            "EventSourceArn": (
+                                "arn:aws:dynamodb:us-east-1:"
+                                "123456789012:table/T/stream/2024"
+                            ),
+                            "FunctionName": "my-func",
+                            "BatchSize": 100,
+                        },
+                    },
+                },
+            },
+            deque(["Resources", "Mapping", "Properties"]),
+            [],
+        ),
     ],
     indirect=["template"],
 )

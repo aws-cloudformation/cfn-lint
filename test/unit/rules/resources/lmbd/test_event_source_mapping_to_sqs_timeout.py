@@ -186,6 +186,35 @@ _template = {
                 ),
             ],
         ),
+        # Hardcoded EventSourceArn — no error
+        (
+            {
+                "Resources": {
+                    "Function": {
+                        "Type": "AWS::Lambda::Function",
+                        "Properties": {
+                            "Runtime": "python3.12",
+                            "Handler": "index.handler",
+                            "Code": {"ZipFile": "def handler(e, c): pass"},
+                            "Role": "arn:aws:iam::123456789012:role/role",
+                            "Timeout": 900,
+                        },
+                    },
+                    "Mapping": {
+                        "Type": "AWS::Lambda::EventSourceMapping",
+                        "Properties": {
+                            "EventSourceArn": (
+                                "arn:aws:sqs:us-east-1:123456789012:my-queue"
+                            ),
+                            "FunctionName": {"Ref": "Function"},
+                            "BatchSize": 10,
+                        },
+                    },
+                },
+            },
+            deque(["Resources", "Mapping", "Properties"]),
+            [],
+        ),
     ],
     indirect=["template"],
 )

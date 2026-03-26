@@ -242,6 +242,27 @@ _template = {
             deque(["Resources", "Method", "Properties"]),
             [],
         ),
+        # Hardcoded AuthorizerId string — no error
+        (
+            {
+                "Resources": {
+                    "RestApi": _template["Resources"]["RestApi"],
+                    "Method": {
+                        "Type": "AWS::ApiGateway::Method",
+                        "Properties": {
+                            "RestApiId": {"Ref": "RestApi"},
+                            "ResourceId": "resource-id",
+                            "HttpMethod": "GET",
+                            "AuthorizationType": "CUSTOM",
+                            "AuthorizerId": "abc123",
+                            "Integration": {"Type": "MOCK"},
+                        },
+                    },
+                },
+            },
+            deque(["Resources", "Method", "Properties"]),
+            [],
+        ),
     ],
     indirect=["template"],
 )
