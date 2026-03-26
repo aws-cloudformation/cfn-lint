@@ -317,3 +317,141 @@ _dynamicValidation_ can also validate based on the current path in the template:
 This checks if the current path in the template matches the specified pattern.
 
 These context-aware validation features allow for more precise validation of CloudFormation templates, ensuring that references are valid and that template elements are used in the appropriate contexts.
+
+#### cfnGather
+
+_cfnGather_ enables cross-resource validation by gathering properties from related resources and validating them together. This replaces complex Python rule logic with declarative JSON Schema.
+
+A cfnGather schema has two parts: `gather` defines what data to collect, and `schema` defines the validation to run against the collected data.
+
+##### Gathering local properties
+
+Local entries collect properties from the current resource:
+
+```json
+{
+  "cfnGather": {
+    "gather": {
+      "service": {
+        "properties": {
+          "LaunchType": "/LaunchType"
+        }
+      }
+    },
+    "schema": {
+      "properties": {
+        "service": {
+          "properties": {
+            "LaunchType": {
+              "const": "FARGATE"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+##### Gathering remote properties via references
+
+Remote entries follow a `Ref` or `GetAtt` to another resource and collect its properties. Use `reference` to specify which property contains the reference, and optionally `filter` to restrict by resource type:
+
+```json
+{
+  "cfnGather": {
+    "gather": {
+      "taskDef": {
+        "reference": "/TaskDefinition",
+        "filter": {
+          "type": "AWS::ECS::TaskDefinition"
+        },
+        "properties": {
+          "NetworkMode": {
+            "path": "/NetworkMode",
+            "default": null
+          },
+          "RequiresCompatibilities": "/RequiresCompatibilities"
+        }
+      }
+    },
+    "schema": {
+      "properties": {
+        "taskDef": {
+          "properties": {
+            "NetworkMode": {
+              "const": "awsvpc"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+Property specifications can be a simple string (the path) or an object with `path` and `default` keys. The `default` value is used when the property doesn't exist on the remote resource.
+
+##### Using $data references
+
+The `schema` section supports `$data` references to compare gathered values against each other. A `$data` reference is an absolute JSON pointer into the gathered object:
+
+```json
+{
+  "cfnGather": {
+    "gather": {
+      "stage": {
+        "properties": {
+          "RestApiId": "/RestApiId"
+        }
+      },
+      "deployment": {
+        "reference": "/DeploymentId",
+        "filter": {
+          "type": "AWS::ApiGateway::Deployment"
+        },
+        "properties": {
+          "RestApiId": "/RestApiId"
+        }
+      }
+    },
+    "schema": {
+      "properties": {
+        "deployment": {
+          "properties": {
+            "RestApiId": {
+              "const": {
+                "$data": "/stage/RestApiId"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+##### Using $lookup references
+
+`$lookup` resolves a `$data` reference and maps it through a lookup table:
+
+```json
+{
+  "const": {
+    "$lookup": {
+      "key": {
+        "$data": "/target/resourceType"
+      },
+      "map": {
+        "AWS::S3::Bucket": "s3.amazonaws.com",
+        "AWS::SNS::Topic": "sns.amazonaws.com"
+      }
+    }
+  }
+}
+```
+
+##### Error path remapping
+
+Errors from the `schema` validation are automatically remapped to point at the original resource properties in the template, so users see errors at the correct location.

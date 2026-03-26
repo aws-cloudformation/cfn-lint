@@ -1,0 +1,38 @@
+{
+ "cfnGather": {
+  "gather": {
+   "deployment": {
+    "filter": {
+     "type": "AWS::ApiGateway::Deployment"
+    },
+    "properties": {
+     "RestApiId": "/RestApiId"
+    },
+    "reference": "/DeploymentId"
+   },
+   "stage": {
+    "properties": {
+     "RestApiId": "/RestApiId"
+    }
+   }
+  },
+  "schema": {
+   "cfnContext": {
+    "functions": [],
+    "schema": {
+     "properties": {
+      "deployment": {
+       "properties": {
+        "RestApiId": {
+         "const": {
+          "$data": "/stage/RestApiId"
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

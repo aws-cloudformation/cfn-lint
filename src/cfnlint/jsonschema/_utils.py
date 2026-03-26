@@ -22,7 +22,7 @@ from collections.abc import Mapping, Sequence
 
 import regex as re
 
-from cfnlint.helpers import FUNCTION_TRANSFORM
+from cfnlint.helpers import FUNCTION_TRANSFORM, bool_compare
 
 
 class Unset:
@@ -97,6 +97,17 @@ def equal(one, two):
     Specifically in JSON Schema, evade `bool` inheriting from `int`,
     recursing into sequences to do the same.
     """
+    # Handle boolean string comparisons (CloudFormation accepts "true"/"false" strings)
+    if isinstance(one, (bool, str)) and isinstance(two, (bool, str)):
+        # Check if either is a boolean string
+        if (
+            (isinstance(one, str) and one.lower() in ["true", "false"])
+            or (isinstance(two, str) and two.lower() in ["true", "false"])
+            or isinstance(one, bool)
+            or isinstance(two, bool)
+        ):
+            return bool_compare(one, two)
+
     if isinstance(one, str) or isinstance(two, str):
         try:
             return str(one) == str(two)

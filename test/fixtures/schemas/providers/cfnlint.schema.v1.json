@@ -1,6 +1,7 @@
 {
  "$id": "cfnlint.schema.v1.json",
  "$schema": "http://json-schema.org/draft-07/schema#",
+ "additionalProperties": false,
  "default": true,
  "definitions": {
   "nonNegativeInteger": {
@@ -84,6 +85,46 @@
   "anyOf": {
    "$ref": "#/definitions/schemaArray"
   },
+  "cfnContext": {
+   "additionalProperties": false,
+   "properties": {
+    "functions": {
+     "items": {
+      "type": "string"
+     },
+     "properties": {
+      "$ref": {
+       "format": "uri-reference",
+       "type": "string"
+      }
+     },
+     "type": [
+      "array",
+      "object"
+     ]
+    },
+    "pseudoParameters": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "schema": {
+     "$ref": "#"
+    }
+   },
+   "type": "object"
+  },
+  "cfnGather": {
+   "additionalProperties": false,
+   "properties": {
+    "gather": true,
+    "schema": {
+     "$ref": "#"
+    }
+   },
+   "type": "object"
+  },
   "cfnLint": {
    "cfnLint": "true",
    "items": {
@@ -126,19 +167,39 @@
    "type": "object"
   },
   "dependentExcluded": {
-    "type": "object",
-    "patternProperties": {
-      "^[A-Za-z0-9]{1,64}$": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      }
-    },
-    "additionalProperties": false
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[A-Za-z0-9]{1,64}$": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
   },
   "description": {
    "type": "string"
+  },
+  "dynamicValidation": {
+   "additionalProperties": false,
+   "properties": {
+    "context": {
+     "enum": [
+      "conditions",
+      "mappings",
+      "refs"
+     ],
+     "type": "string"
+    },
+    "pathCheck": {
+     "type": "string"
+    },
+    "transformCheck": {
+     "type": "string"
+    }
+   },
+   "type": "object"
   },
   "else": {
    "$ref": "#"
@@ -152,10 +213,42 @@
    "type": "array"
   },
   "exclusiveMaximum": {
-   "type": "number"
+   "anyOf": [
+    {
+     "type": "number"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "$data": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "$data"
+     ],
+     "type": "object"
+    }
+   ]
   },
   "exclusiveMinimum": {
-   "type": "number"
+   "anyOf": [
+    {
+     "type": "number"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "$data": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "$data"
+     ],
+     "type": "object"
+    }
+   ]
   },
   "format": {
    "type": "string"
@@ -184,7 +277,23 @@
    "$ref": "#/definitions/nonNegativeInteger"
   },
   "maximum": {
-   "type": "number"
+   "anyOf": [
+    {
+     "type": "number"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "$data": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "$data"
+     ],
+     "type": "object"
+    }
+   ]
   },
   "minItems": {
    "$ref": "#/definitions/nonNegativeIntegerDefault0"
@@ -196,7 +305,23 @@
    "$ref": "#/definitions/nonNegativeIntegerDefault0"
   },
   "minimum": {
-   "type": "number"
+   "anyOf": [
+    {
+     "type": "number"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "$data": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "$data"
+     ],
+     "type": "object"
+    }
+   ]
   },
   "multipleOf": {
    "exclusiveMinimum": 0,
@@ -222,6 +347,12 @@
    },
    "type": "object"
   },
+  "prefixItems": {
+   "items": {
+    "$ref": "#"
+   },
+   "type": "array"
+  },
   "properties": {
    "additionalProperties": {
     "$ref": "#"
@@ -238,6 +369,12 @@
   },
   "required": {
    "$ref": "#/definitions/stringArray"
+  },
+  "requiredXor": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
   },
   "then": {
    "$ref": "#"
@@ -265,75 +402,12 @@
    "type": "boolean"
   },
   "uniqueKeys": {
-   "type": "array",
    "items": {
     "type": "string"
-   }
-  },
-  "requiredXor": {
-   "type": "array",
-   "items": {
-    "type": "string"
-   }
-  },
-  "cfnContext": {
-   "type": "object",
-   "properties": {
-    "schema": {
-     "$ref": "#"
-    },
-    "functions": {
-     "type": [
-      "array",
-      "object"
-     ],
-     "items": {
-      "type": "string"
-     },
-     "properties": {
-      "$ref": {
-       "format": "uri-reference",
-       "type": "string"
-      }
-     }
-    },
-    "pseudoParameters": {
-     "type": "array",
-     "items": {
-      "type": "string"
-     }
-    }
    },
-   "additionalProperties": false
-  },
-  "prefixItems": {
-   "type": "array",
-   "items": {
-    "$ref": "#"
-   }
-  },
-  "dynamicValidation": {
-   "type": "object",
-   "properties": {
-    "pathCheck": {
-     "type": "string"
-    },
-    "context": {
-     "type": "string",
-     "enum": [
-      "conditions",
-      "mappings",
-      "refs"
-     ]
-    },
-    "transformCheck": {
-     "type": "string"
-    }
-   },
-   "additionalProperties": false
+   "type": "array"
   }
  },
- "additionalProperties": false,
  "title": "cfn-lint schema for schema extensions",
  "type": [
   "object",

@@ -155,6 +155,16 @@ _service = {
                     "'NetworkConfiguration' is a required property",
                     validator="required",
                     rule=ServiceNetworkConfiguration(),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "then",
+                            "properties",
+                            "service",
+                            "required",
+                        ]
+                    ),
                 )
             ],
         ),
@@ -184,6 +194,16 @@ _service = {
                     "'NetworkConfiguration' is a required property",
                     validator="required",
                     rule=ServiceNetworkConfiguration(),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "then",
+                            "properties",
+                            "service",
+                            "required",
+                        ]
+                    ),
                 )
             ],
         ),

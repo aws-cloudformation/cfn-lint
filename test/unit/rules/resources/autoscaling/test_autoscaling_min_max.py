@@ -48,9 +48,21 @@ def context(cfn):
             {"MinSize": "5", "MaxSize": "2"},
             [
                 ValidationError(
-                    ("MaxSize (2) must be greater than or equal to MinSize (5)"),
+                    "'2' is less than the minimum of 5",
                     path=deque(["MaxSize"]),
                     rule=AutoScalingMinMaxSize(),
+                    validator="minimum",
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "properties",
+                            "this",
+                            "properties",
+                            "MaxSize",
+                            "minimum",
+                        ]
+                    ),
                 ),
             ],
         ),

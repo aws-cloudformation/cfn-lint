@@ -5,13 +5,11 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from collections import deque
-from typing import Any, Iterator
+from typing import Any
 
 import cfnlint.data.schemas.extensions.aws_sqs_queue
-from cfnlint.helpers import bool_compare, is_function
-from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
-from cfnlint.rules.helpers import get_value_from_path
+from cfnlint.helpers import bool_compare
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
@@ -32,70 +30,34 @@ class QueueDLQ(CfnLintJsonSchema):
             ],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_sqs_queue,
-                filename="properties.json",
+                filename="queue_dlq.json",
             ),
             all_matches=True,
         )
 
-    def _is_fifo_queue(
-        self, validator: Validator, instance: Any
-    ) -> Iterator[tuple[str, Validator]]:
-        standard = "standard"
-        fifo = "FIFO"
-
-        if "FifoQueue" not in instance:
-            yield standard, validator
-            return
-
-        for queue_type, queue_type_validator in get_value_from_path(
-            validator=validator, instance=instance, path=deque(["FifoQueue"])
-        ):
-            yield (
-                (fifo if bool_compare(queue_type, True) else standard),
-                queue_type_validator,
-            )
-
-    def validate(
-        self, validator: Validator, _: Any, instance: Any, schema: dict[str, Any]
-    ) -> ValidationResult:
-        for queue_type, queue_type_validator in self._is_fifo_queue(
-            validator=validator,
-            instance=instance,
-        ):
-            queue_type_validator = queue_type_validator.evolve(
-                context=queue_type_validator.context.evolve(
-                    path=validator.context.path.evolve()
+    def message(self, instance: Any, err: ValidationError) -> str:
+        # Extract the gathered object from the error path
+        # The error is on the gathered object, not the original instance
+        # Check the expected value from the schema to determine the message
+        if err.validator == "const" and "const" in err.schema:
+            expected = err.schema["const"]
+            # Normalize to boolean for comparison
+            if bool_compare(expected, True):
+                return (
+                    "Source queue type 'standard' does not "
+                    "match destination queue type 'FIFO'"
                 )
-            )
+            elif bool_compare(expected, False):
+                return (
+                    "Source queue type 'FIFO' does not match "
+                    "destination queue type 'standard'"
+                )
+        return self.shortdesc
 
-            for target, target_validator in get_value_from_path(
-                queue_type_validator,
-                instance,
-                path=deque(["RedrivePolicy", "deadLetterTargetArn"]),
-            ):
-                k, v = is_function(target)
-                if k != "Fn::GetAtt":
-                    return
-
-                if target_validator.is_type(v, "string"):
-                    v = v.split(".")
-
-                if len(v) < 1:
-                    return
-
-                dest_queue = validator.cfn.template.get("Resources", {}).get(v[0], {})
-
-                if dest_queue.get("Type") != "AWS::SQS::Queue":
-                    return
-
-                for dest_queue_type, _ in self._is_fifo_queue(
-                    target_validator,
-                    instance=dest_queue.get("Properties", {}),
-                ):
-                    if queue_type != dest_queue_type:
-                        yield ValidationError(
-                            f"Source queue type {queue_type!r} does not "
-                            f"match destination queue type {dest_queue_type!r}",
-                            rule=self,
-                            path=target_validator.context.path.path,
-                        )
+    def _iter_errors(self, validator, instance):
+        """Override to apply custom messages to all errors"""
+        errs = list(validator.iter_errors(instance))
+        for err in errs:
+            err = self._clean_error(err)
+            err.message = self.message(instance, err)
+            yield err

@@ -1,0 +1,37 @@
+{
+ "cfnGather": {
+  "gather": {
+   "cluster": {
+    "filter": {
+     "type": "AWS::RDS::DBCluster"
+    },
+    "properties": {
+     "Engine": {
+      "path": "/Engine"
+     }
+    },
+    "reference": "/DBClusterIdentifier"
+   },
+   "local": {
+    "properties": {
+     "Engine": {
+      "path": "/Engine"
+     }
+    }
+   }
+  },
+  "schema": {
+   "properties": {
+    "local": {
+     "properties": {
+      "Engine": {
+       "const": {
+        "$data": "/cluster/Engine"
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

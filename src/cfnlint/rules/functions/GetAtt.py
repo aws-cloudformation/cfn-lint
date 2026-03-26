@@ -132,19 +132,38 @@ class GetAtt(BaseFn):
                             schema_path=deque(["type"]),
                         )
 
+    def _run_format_rule(
+        self, validator: Validator, s: Any, value: Any
+    ) -> ValidationResult:
+        rule = self.child_rules.get("E1040")
+        if rule is None:
+            return
+        keyword = validator.context.path.cfn_path_string
+        if keyword in rule.keywords or "*" in rule.keywords:  # type: ignore
+            yield from rule.validate(validator, s, value, s)  # type: ignore
+
     def fn_getatt(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
         errs = list(super().validate(validator, s, instance, schema))
-        if errs:
-            yield from iter(errs)
-            return
 
         key, value = self.key_value(instance)
         paths: list[int | None] = [0, 1]
         if validator.is_type(value, "string"):
             paths = [None, None]
             value = value.split(".", 1)
+
+        if errs:
+            if any(getattr(e, "unknown", False) for e in errs):
+                format_errs = list(self._run_format_rule(validator, s, value))
+                if format_errs:
+                    yield from iter(format_errs)
+                else:
+                    for e in errs:
+                        yield e
+            else:
+                yield from iter(errs)
+            return
 
         errs = list(
             self._resolve_getatt(

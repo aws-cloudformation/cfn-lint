@@ -1,0 +1,56 @@
+{
+ "cfnGather": {
+  "gather": {
+   "bucket": {
+    "filter": {
+     "type": "AWS::S3::Bucket"
+    },
+    "properties": {},
+    "reference": "/SourceArn"
+   },
+   "permission": {
+    "properties": {
+     "sourceAccount": "/SourceAccount",
+     "sourceArn": "/SourceArn"
+    }
+   }
+  },
+  "schema": {
+   "if": {
+    "anyOf": [
+     {
+      "required": [
+       "bucket"
+      ]
+     },
+     {
+      "properties": {
+       "permission": {
+        "properties": {
+         "sourceArn": {
+          "not": {
+           "pattern": ":\\d{12}:"
+          },
+          "type": "string"
+         }
+        },
+        "required": [
+         "sourceArn"
+        ]
+       }
+      }
+     }
+    ]
+   },
+   "then": {
+    "properties": {
+     "permission": {
+      "required": [
+       "sourceAccount"
+      ]
+     }
+    }
+   }
+  }
+ }
+}
