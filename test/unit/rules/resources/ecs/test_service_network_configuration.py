@@ -277,6 +277,29 @@ _service = {
             deque(["Resources", "Service", "Properties"]),
             [],
         ),
+        # Hardcoded TaskDefinition ARN — no error
+        (
+            {
+                "Resources": {
+                    "Service": jsonpatch.apply_patch(
+                        dict(_service),
+                        [
+                            {
+                                "op": "remove",
+                                "path": "/Properties/NetworkConfiguration",
+                            },
+                            {
+                                "op": "replace",
+                                "path": "/Properties/TaskDefinition",
+                                "value": "arn:aws:ecs:us-east-1:0:task/t:1",
+                            },
+                        ],
+                    ),
+                },
+            },
+            deque(["Resources", "Service", "Properties"]),
+            [],
+        ),
     ],
     indirect=["template"],
 )
