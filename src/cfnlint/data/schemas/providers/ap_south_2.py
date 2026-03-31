@@ -494,7 +494,7 @@ types: dict[str, str] = {
     "AWS::Kinesis::ResourcePolicy": "39996915810e234a",
     "AWS::Kinesis::Stream": "8ebde19042fda1b6",
     "AWS::Kinesis::StreamConsumer": "7ce125c877a406e0",
-    "AWS::KinesisAnalyticsV2::Application": "b62bfa34fbb059a5",
+    "AWS::KinesisAnalyticsV2::Application": "09427c8594d9a4e2",
     "AWS::KinesisFirehose::DeliveryStream": "9c8f3215b7dfb3ab",
     "AWS::LakeFormation::DataCellsFilter": "6ac217ac96918929",
     "AWS::LakeFormation::DataLakeSettings": "82b950110e995bdf",

@@ -1,0 +1,326 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AgentSpaceId"
+ ],
+ "definitions": {
+  "Actor": {
+   "additionalProperties": false,
+   "properties": {
+    "Authentication": {
+     "$ref": "#/definitions/Authentication"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "Identifier": {
+     "type": "string"
+    },
+    "Uris": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Assets": {
+   "additionalProperties": false,
+   "properties": {
+    "Actors": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Actor"
+     },
+     "type": "array"
+    },
+    "Documents": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/DocumentInfo"
+     },
+     "type": "array"
+    },
+    "Endpoints": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Endpoint"
+     },
+     "type": "array"
+    },
+    "IntegratedRepositories": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/IntegratedRepository"
+     },
+     "type": "array"
+    },
+    "SourceCode": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SourceCodeRepository"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Authentication": {
+   "additionalProperties": false,
+   "properties": {
+    "ProviderType": {
+     "enum": [
+      "SECRETS_MANAGER",
+      "AWS_LAMBDA",
+      "AWS_IAM_ROLE",
+      "AWS_INTERNAL"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CloudWatchLog": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroup": {
+     "type": "string"
+    },
+    "LogStream": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CodeRemediationStrategy": {
+   "enum": [
+    "AUTOMATIC",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "CustomHeader": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DocumentInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "ArtifactId": {
+     "type": "string"
+    },
+    "S3Location": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Endpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Uri": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "IntegratedRepository": {
+   "additionalProperties": false,
+   "properties": {
+    "IntegrationId": {
+     "type": "string"
+    },
+    "ProviderResourceId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "IntegrationId",
+    "ProviderResourceId"
+   ],
+   "type": "object"
+  },
+  "NetworkTrafficConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomHeaders": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/CustomHeader"
+     },
+     "type": "array"
+    },
+    "Rules": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/NetworkTrafficRule"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "NetworkTrafficRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Effect": {
+     "enum": [
+      "ALLOW",
+      "DENY"
+     ],
+     "type": "string"
+    },
+    "NetworkTrafficRuleType": {
+     "enum": [
+      "URL"
+     ],
+     "type": "string"
+    },
+    "Pattern": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RiskType": {
+   "enum": [
+    "CROSS_SITE_SCRIPTING",
+    "DEFAULT_CREDENTIALS",
+    "INSECURE_DIRECT_OBJECT_REFERENCE",
+    "PRIVILEGE_ESCALATION",
+    "SERVER_SIDE_TEMPLATE_INJECTION",
+    "COMMAND_INJECTION",
+    "CODE_INJECTION",
+    "SQL_INJECTION",
+    "ARBITRARY_FILE_UPLOAD",
+    "INSECURE_DESERIALIZATION",
+    "LOCAL_FILE_INCLUSION",
+    "INFORMATION_DISCLOSURE",
+    "PATH_TRAVERSAL",
+    "SERVER_SIDE_REQUEST_FORGERY",
+    "JSON_WEB_TOKEN_VULNERABILITIES",
+    "XML_EXTERNAL_ENTITY",
+    "FILE_DELETION",
+    "OTHER",
+    "GRAPHQL_VULNERABILITIES",
+    "BUSINESS_LOGIC_VULNERABILITIES",
+    "CRYPTOGRAPHIC_VULNERABILITIES",
+    "DENIAL_OF_SERVICE",
+    "FILE_ACCESS",
+    "FILE_CREATION",
+    "DATABASE_MODIFICATION",
+    "DATABASE_ACCESS",
+    "OUTBOUND_SERVICE_REQUEST",
+    "UNKNOWN"
+   ],
+   "type": "string"
+  },
+  "SourceCodeRepository": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Location": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupArns": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SubnetArns": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "VpcArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PentestId",
+  "/properties/AgentSpaceId"
+ ],
+ "properties": {
+  "AgentSpaceId": {
+   "type": "string"
+  },
+  "Assets": {
+   "$ref": "#/definitions/Assets"
+  },
+  "CodeRemediationStrategy": {
+   "$ref": "#/definitions/CodeRemediationStrategy"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "ExcludeRiskTypes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RiskType"
+   },
+   "type": "array"
+  },
+  "LogConfig": {
+   "$ref": "#/definitions/CloudWatchLog"
+  },
+  "NetworkTrafficConfig": {
+   "$ref": "#/definitions/NetworkTrafficConfig"
+  },
+  "PentestId": {
+   "type": "string"
+  },
+  "ServiceRole": {
+   "type": "string"
+  },
+  "Title": {
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "VpcConfig": {
+   "$ref": "#/definitions/VpcConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PentestId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "AgentSpaceId",
+  "ServiceRole",
+  "Assets"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::SecurityAgent::Pentest"
+}
