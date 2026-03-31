@@ -1,0 +1,244 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "AccessEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "EndpointType": {
+     "enum": [
+      "STREAMING"
+     ],
+     "type": "string"
+    },
+    "VpceId": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "EndpointType",
+    "VpceId"
+   ],
+   "type": "object"
+  },
+  "ApplicationSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "SettingsGroup": {
+     "maxLength": 100,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "StorageConnector": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectorType": {
+     "enum": [
+      "GOOGLE_DRIVE",
+      "HOMEFOLDERS",
+      "ONE_DRIVE"
+     ],
+     "type": "string"
+    },
+    "Domains": {
+     "items": {
+      "maxLength": 64,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ResourceIdentifier": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ConnectorType"
+   ],
+   "type": "object"
+  },
+  "StreamingExperienceSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "PreferredProtocol": {
+     "enum": [
+      "TCP",
+      "UDP"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "UserSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "enum": [
+      "AUTO_TIME_ZONE_REDIRECTION",
+      "CLIPBOARD_COPY_FROM_LOCAL_DEVICE",
+      "CLIPBOARD_COPY_TO_LOCAL_DEVICE",
+      "DOMAIN_PASSWORD_SIGNIN",
+      "DOMAIN_SMART_CARD_SIGNIN",
+      "FILE_DOWNLOAD",
+      "FILE_UPLOAD",
+      "PRINTING_TO_LOCAL_DEVICE"
+     ],
+     "type": "string"
+    },
+    "MaximumLength": {
+     "type": "integer"
+    },
+    "Permission": {
+     "enum": [
+      "DISABLED",
+      "ENABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Action",
+    "Permission"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "AccessEndpoints": {
+   "items": {
+    "$ref": "#/definitions/AccessEndpoint"
+   },
+   "maxItems": 4,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ApplicationSettings": {
+   "$ref": "#/definitions/ApplicationSettings"
+  },
+  "AttributesToDelete": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "DeleteStorageConnectors": {
+   "type": "boolean"
+  },
+  "Description": {
+   "maxLength": 256,
+   "minLength": 0,
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 100,
+   "minLength": 0,
+   "type": "string"
+  },
+  "EmbedHostDomains": {
+   "items": {
+    "maxLength": 128,
+    "minLength": 0,
+    "pattern": "^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$",
+    "type": "string"
+   },
+   "maxItems": 20,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "FeedbackURL": {
+   "maxLength": 1000,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,100}$",
+   "type": "string"
+  },
+  "RedirectURL": {
+   "maxLength": 1000,
+   "minLength": 0,
+   "type": "string"
+  },
+  "StorageConnectors": {
+   "items": {
+    "$ref": "#/definitions/StorageConnector"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "StreamingExperienceSettings": {
+   "$ref": "#/definitions/StreamingExperienceSettings"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "UserSettings": {
+   "items": {
+    "$ref": "#/definitions/UserSetting"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/StorageConnectors/*/ResourceIdentifier"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appstream.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AppStream::Stack",
+ "writeOnlyProperties": [
+  "/properties/AttributesToDelete",
+  "/properties/DeleteStorageConnectors"
+ ]
+}

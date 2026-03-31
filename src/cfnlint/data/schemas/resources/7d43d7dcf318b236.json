@@ -1,0 +1,251 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName",
+  "/properties/RecommenderName",
+  "/properties/RecommenderRecipeName"
+ ],
+ "definitions": {
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DomainName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "EventParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "EventType": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "EventValueThreshold": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "EventType"
+   ],
+   "type": "object"
+  },
+  "EventsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "EventParametersList": {
+     "items": {
+      "$ref": "#/definitions/EventParameters"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "EventParametersList"
+   ],
+   "type": "object"
+  },
+  "RecommenderConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "EventsConfig": {
+     "$ref": "#/definitions/EventsConfig"
+    }
+   },
+   "type": "object"
+  },
+  "RecommenderName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "RecommenderRecipeName": {
+   "enum": [
+    "frequently-paired-items",
+    "personalized-ranking",
+    "popular-items",
+    "recommended-for-you",
+    "similar-items",
+    "trending-now"
+   ],
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RecommenderStatus": {
+   "enum": [
+    "PENDING",
+    "IN_PROGRESS",
+    "STOPPING",
+    "STARTING",
+    "ACTIVE",
+    "INACTIVE",
+    "FAILED",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "RecommenderUpdate": {
+   "additionalProperties": false,
+   "properties": {
+    "CreationDateTime": {
+     "type": "string"
+    },
+    "FailureReason": {
+     "type": "string"
+    },
+    "LastUpdatedDateTime": {
+     "type": "string"
+    },
+    "RecommenderConfig": {
+     "$ref": "#/definitions/RecommenderConfig"
+    },
+    "Status": {
+     "$ref": "#/definitions/RecommenderStatus"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TrainingMetrics": {
+   "additionalProperties": false,
+   "properties": {
+    "Metrics": {
+     "additionalProperties": false,
+     "properties": {
+      "coverage": {
+       "type": "number"
+      },
+      "freshness": {
+       "type": "number"
+      },
+      "hit": {
+       "type": "number"
+      },
+      "popularity": {
+       "type": "number"
+      },
+      "recall": {
+       "type": "number"
+      },
+      "similarity": {
+       "type": "number"
+      }
+     },
+     "type": "object"
+    },
+    "Time": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainName",
+  "/properties/RecommenderName"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "DomainName": {
+   "$ref": "#/definitions/DomainName"
+  },
+  "FailureReason": {
+   "type": "string"
+  },
+  "LastUpdatedAt": {
+   "type": "string"
+  },
+  "LatestRecommenderUpdate": {
+   "$ref": "#/definitions/RecommenderUpdate"
+  },
+  "RecommenderArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^arn:([a-z\\d-]+):profile:.*:.*:.+$",
+   "type": "string"
+  },
+  "RecommenderConfig": {
+   "$ref": "#/definitions/RecommenderConfig"
+  },
+  "RecommenderName": {
+   "$ref": "#/definitions/RecommenderName"
+  },
+  "RecommenderRecipeName": {
+   "$ref": "#/definitions/RecommenderRecipeName"
+  },
+  "Status": {
+   "$ref": "#/definitions/RecommenderStatus"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "TrainingMetrics": {
+   "items": {
+    "$ref": "#/definitions/TrainingMetrics"
+   },
+   "maxItems": 5,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RecommenderArn",
+  "/properties/Status",
+  "/properties/CreatedAt",
+  "/properties/LastUpdatedAt",
+  "/properties/FailureReason",
+  "/properties/LatestRecommenderUpdate",
+  "/properties/TrainingMetrics"
+ ],
+ "required": [
+  "DomainName",
+  "RecommenderName",
+  "RecommenderRecipeName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-customer-profiles.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CustomerProfiles::Recommender"
+}

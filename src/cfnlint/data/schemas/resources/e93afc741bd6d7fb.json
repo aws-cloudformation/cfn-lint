@@ -1,0 +1,265 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AWSResources": {
+   "additionalProperties": false,
+   "properties": {
+    "IamRoles": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "LambdaFunctionArns": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "LogGroups": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "S3Buckets": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SecretArns": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Vpcs": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/VpcConfig"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "CodeReviewSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "ControlsScanning": {
+     "type": "boolean"
+    },
+    "GeneralPurposeScanning": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "ControlsScanning",
+    "GeneralPurposeScanning"
+   ],
+   "type": "object"
+  },
+  "GitHubCapabilitiesResource": {
+   "additionalProperties": false,
+   "properties": {
+    "LeaveComments": {
+     "type": "boolean"
+    },
+    "RemediateCode": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "LeaveComments",
+    "RemediateCode"
+   ],
+   "type": "object"
+  },
+  "GitHubRepositoryResource": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Owner": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Owner"
+   ],
+   "type": "object"
+  },
+  "IntegratedResource": {
+   "additionalProperties": false,
+   "properties": {
+    "Integration": {
+     "type": "string"
+    },
+    "ProviderResources": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ProviderResource"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Integration",
+    "ProviderResources"
+   ],
+   "type": "object"
+  },
+  "IntegratedResources": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IntegratedResource"
+   },
+   "type": "array"
+  },
+  "ProviderResource": {
+   "additionalProperties": false,
+   "allOf": [
+    {
+     "oneOf": [
+      {
+       "required": [
+        "GitHubRepository"
+       ]
+      }
+     ]
+    },
+    {
+     "oneOf": [
+      {
+       "required": [
+        "GitHubCapabilities"
+       ]
+      }
+     ]
+    }
+   ],
+   "properties": {
+    "GitHubCapabilities": {
+     "$ref": "#/definitions/GitHubCapabilitiesResource"
+    },
+    "GitHubRepository": {
+     "$ref": "#/definitions/GitHubRepositoryResource"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupArns": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SubnetArns": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "VpcArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AgentSpaceId"
+ ],
+ "properties": {
+  "AgentSpaceId": {
+   "type": "string"
+  },
+  "AwsResources": {
+   "$ref": "#/definitions/AWSResources"
+  },
+  "CodeReviewSettings": {
+   "$ref": "#/definitions/CodeReviewSettings"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "IntegratedResources": {
+   "$ref": "#/definitions/IntegratedResources"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TargetDomainIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AgentSpaceId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityAgent::AgentSpace"
+}
