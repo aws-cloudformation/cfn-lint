@@ -1,0 +1,288 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ExecutionRoleArn",
+  "/properties/EnableNetworkIsolation",
+  "/properties/InferenceExecutionConfig",
+  "/properties/PrimaryContainer",
+  "/properties/ModelName",
+  "/properties/VpcConfig",
+  "/properties/Containers"
+ ],
+ "definitions": {
+  "ContainerDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerHostname": {
+     "type": "string"
+    },
+    "Environment": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "Image": {
+     "type": "string"
+    },
+    "ImageConfig": {
+     "$ref": "#/definitions/ImageConfig"
+    },
+    "InferenceSpecificationName": {
+     "type": "string"
+    },
+    "Mode": {
+     "enum": [
+      "SingleModel",
+      "MultiModel"
+     ],
+     "type": "string"
+    },
+    "ModelDataSource": {
+     "$ref": "#/definitions/ModelDataSource"
+    },
+    "ModelDataUrl": {
+     "type": "string"
+    },
+    "ModelPackageName": {
+     "type": "string"
+    },
+    "MultiModelConfig": {
+     "$ref": "#/definitions/MultiModelConfig"
+    }
+   },
+   "type": "object"
+  },
+  "HubAccessConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "HubContentArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "HubContentArn"
+   ],
+   "type": "object"
+  },
+  "ImageConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "RepositoryAccessMode": {
+     "enum": [
+      "Platform",
+      "Vpc"
+     ],
+     "type": "string"
+    },
+    "RepositoryAuthConfig": {
+     "$ref": "#/definitions/RepositoryAuthConfig"
+    }
+   },
+   "required": [
+    "RepositoryAccessMode"
+   ],
+   "type": "object"
+  },
+  "InferenceExecutionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Mode": {
+     "enum": [
+      "Serial",
+      "Direct"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Mode"
+   ],
+   "type": "object"
+  },
+  "ModelAccessConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AcceptEula": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "AcceptEula"
+   ],
+   "type": "object"
+  },
+  "ModelDataSource": {
+   "additionalProperties": false,
+   "properties": {
+    "S3DataSource": {
+     "$ref": "#/definitions/S3DataSource"
+    }
+   },
+   "required": [
+    "S3DataSource"
+   ],
+   "type": "object"
+  },
+  "MultiModelConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ModelCacheSetting": {
+     "enum": [
+      "Enabled",
+      "Disabled"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RepositoryAuthConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "RepositoryCredentialsProviderArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RepositoryCredentialsProviderArn"
+   ],
+   "type": "object"
+  },
+  "S3DataSource": {
+   "additionalProperties": false,
+   "properties": {
+    "CompressionType": {
+     "enum": [
+      "None",
+      "Gzip"
+     ],
+     "type": "string"
+    },
+    "HubAccessConfig": {
+     "$ref": "#/definitions/HubAccessConfig"
+    },
+    "ModelAccessConfig": {
+     "$ref": "#/definitions/ModelAccessConfig"
+    },
+    "S3DataType": {
+     "enum": [
+      "S3Prefix",
+      "S3Object"
+     ],
+     "type": "string"
+    },
+    "S3Uri": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "CompressionType",
+    "S3DataType",
+    "S3Uri"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Subnets": {
+     "format": "AWS::EC2::Subnet.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::Subnet.Id",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Subnets",
+    "SecurityGroupIds"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ModelArn"
+ ],
+ "properties": {
+  "Containers": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ContainerDefinition"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "EnableNetworkIsolation": {
+   "type": "boolean"
+  },
+  "ExecutionRoleArn": {
+   "type": "string"
+  },
+  "InferenceExecutionConfig": {
+   "$ref": "#/definitions/InferenceExecutionConfig"
+  },
+  "ModelArn": {
+   "type": "string"
+  },
+  "ModelName": {
+   "type": "string"
+  },
+  "PrimaryContainer": {
+   "$ref": "#/definitions/ContainerDefinition"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcConfig": {
+   "$ref": "#/definitions/VpcConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ModelArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sagemaker",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::Model"
+}

@@ -1005,6 +1005,11 @@
      "agentspace"
     ]
    },
+   "createonetimeloginsession": {
+    "Resources": [
+     "agentspace"
+    ]
+   },
    "deleteagentspace": {
     "Resources": [
      "agentspace"
@@ -39105,6 +39110,11 @@
    "describeelasticsearchinstancetypelimits": {},
    "describeinboundconnections": {},
    "describeinboundcrossclustersearchconnections": {},
+   "describeinsightdetails": {
+    "Resources": [
+     "domain"
+    ]
+   },
    "describeinstancetypelimits": {},
    "describeoutboundconnections": {},
    "describeoutboundcrossclustersearchconnections": {},
@@ -39235,6 +39245,11 @@
    "listelasticsearchinstancetypedetails": {},
    "listelasticsearchinstancetypes": {},
    "listelasticsearchversions": {},
+   "listinsights": {
+    "Resources": [
+     "domain"
+    ]
+   },
    "listinstancetypedetails": {},
    "listpackagesfordomain": {
     "Resources": [
@@ -58716,6 +58731,7 @@
     "Resources": [
      "Bucket",
      "Certificate",
+     "ContactMethod",
      "ContainerService",
      "Disk",
      "DiskSnapshot",
@@ -58740,6 +58756,7 @@
     "Resources": [
      "Bucket",
      "Certificate",
+     "ContactMethod",
      "ContainerService",
      "Disk",
      "DiskSnapshot",
@@ -58835,6 +58852,9 @@
    "contactmethod": {
     "ARNFormats": [
      "arn:${Partition}:lightsail:${Region}:${Account}:ContactMethod/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "containerservice": {
@@ -68710,6 +68730,7 @@
      "AnnotationStore"
     ]
    },
+   "createconfiguration": {},
    "createmultipartreadsetupload": {
     "Resources": [
      "sequenceStore"
@@ -68736,6 +68757,11 @@
     "Resources": [
      "AnnotationStore",
      "AnnotationStoreVersion"
+    ]
+   },
+   "deleteconfiguration": {
+    "Resources": [
+     "configuration"
     ]
    },
    "deletereference": {
@@ -68800,6 +68826,11 @@
    "getannotationstoreversion": {
     "Resources": [
      "AnnotationStoreVersion"
+    ]
+   },
+   "getconfiguration": {
+    "Resources": [
+     "configuration"
     ]
    },
    "getreadset": {
@@ -68907,6 +68938,7 @@
      "AnnotationStore"
     ]
    },
+   "listconfigurations": {},
    "listmultipartreadsetuploads": {
     "Resources": [
      "sequenceStore"
@@ -69000,6 +69032,7 @@
    },
    "startrun": {
     "Resources": [
+     "configuration",
      "run",
      "runCache",
      "runGroup",
@@ -69017,6 +69050,7 @@
      "AnnotationStoreVersion",
      "VariantStore",
      "WorkflowVersion",
+     "configuration",
      "readSet",
      "reference",
      "referenceStore",
@@ -69033,6 +69067,7 @@
      "AnnotationStoreVersion",
      "VariantStore",
      "WorkflowVersion",
+     "configuration",
      "readSet",
      "reference",
      "referenceStore",
@@ -69102,6 +69137,14 @@
    "annotationstoreversion": {
     "ARNFormats": [
      "arn:${Partition}:omics:${Region}:${Account}:annotationStore/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "configuration": {
+    "ARNFormats": [
+     "arn:${Partition}:omics:${Region}:${Account}:configuration/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -78183,7 +78226,11 @@
      "cluster"
     ]
    },
-   "modifyclustermaintenance": {},
+   "modifyclustermaintenance": {
+    "Resources": [
+     "cluster"
+    ]
+   },
    "modifyclusterparametergroup": {
     "Resources": [
      "parametergroup"
@@ -87914,19 +87961,9 @@
      "AgentSpace"
     ]
    },
-   "addcontrol": {
-    "Resources": [
-     "Application"
-    ]
-   },
    "batchdeletepentests": {
     "Resources": [
      "AgentSpace"
-    ]
-   },
-   "batchgetagentinstances": {
-    "Resources": [
-     "AgentInstance"
     ]
    },
    "batchgetagentspaces": {
@@ -87964,24 +88001,9 @@
      "AgentSpace"
     ]
    },
-   "batchgetsecuritytestcontentmetadata": {
-    "Resources": [
-     "AgentSpace"
-    ]
-   },
    "batchgettargetdomains": {
     "Resources": [
      "TargetDomain"
-    ]
-   },
-   "batchgettasks": {
-    "Resources": [
-     "AgentSpace"
-    ]
-   },
-   "createagentinstance": {
-    "Resources": [
-     "Application"
     ]
    },
    "createagentspace": {},
@@ -87991,16 +88013,7 @@
      "AgentSpace"
     ]
    },
-   "createdocumentreview": {
-    "Resources": [
-     "AgentSpace"
-    ]
-   },
-   "createintegration": {
-    "Resources": [
-     "Application"
-    ]
-   },
+   "createintegration": {},
    "createmembership": {
     "Resources": [
      "AgentSpace"
@@ -88018,15 +88031,10 @@
    },
    "createsecurityrequirement": {
     "Resources": [
-     "Application"
+     "SecurityRequirementPack"
     ]
    },
    "createtargetdomain": {},
-   "deleteagentinstance": {
-    "Resources": [
-     "AgentInstance"
-    ]
-   },
    "deleteagentspace": {
     "Resources": [
      "AgentSpace"
@@ -88042,17 +88050,7 @@
      "AgentSpace"
     ]
    },
-   "deletecontrol": {
-    "Resources": [
-     "Control"
-    ]
-   },
    "deletedesignreview": {
-    "Resources": [
-     "AgentSpace"
-    ]
-   },
-   "deletedocumentreview": {
     "Resources": [
      "AgentSpace"
     ]
@@ -88069,17 +88067,12 @@
    },
    "deletesecurityrequirement": {
     "Resources": [
-     "SecurityRequirement"
+     "SecurityRequirementPack"
     ]
    },
    "deletetargetdomain": {
     "Resources": [
      "TargetDomain"
-    ]
-   },
-   "describefindings": {
-    "Resources": [
-     "AgentSpace"
     ]
    },
    "getapplication": {
@@ -88090,16 +88083,6 @@
    "getartifact": {
     "Resources": [
      "AgentSpace"
-    ]
-   },
-   "getcodereviewtask": {
-    "Resources": [
-     "AgentSpace"
-    ]
-   },
-   "getcontrol": {
-    "Resources": [
-     "Control"
     ]
    },
    "getdesignreview": {
@@ -88117,44 +88100,17 @@
      "AgentSpace"
     ]
    },
-   "getdocreviewtask": {
-    "Resources": [
-     "AgentSpace"
-    ]
-   },
-   "getdocumentreview": {
-    "Resources": [
-     "AgentSpace"
-    ]
-   },
-   "getdocumentreviewartifact": {
-    "Resources": [
-     "AgentSpace"
-    ]
-   },
    "getintegration": {
     "Resources": [
      "Integration"
     ]
    },
-   "getloginsessioncredentials": {},
    "getsecurityrequirement": {
     "Resources": [
-     "SecurityRequirement"
+     "SecurityRequirementPack"
     ]
    },
-   "handleonetimeloginsession": {},
-   "initiateproviderregistration": {
-    "Resources": [
-     "Application"
-    ]
-   },
-   "listagentinstances": {},
-   "listagentinstancetasks": {
-    "Resources": [
-     "AgentInstance"
-    ]
-   },
+   "initiateproviderregistration": {},
    "listagentspaces": {},
    "listapplications": {},
    "listartifacts": {
@@ -88162,7 +88118,6 @@
      "AgentSpace"
     ]
    },
-   "listcontrols": {},
    "listdesignreviewcomments": {
     "Resources": [
      "AgentSpace"
@@ -88174,16 +88129,6 @@
     ]
    },
    "listdiscoveredendpoints": {
-    "Resources": [
-     "AgentSpace"
-    ]
-   },
-   "listdocumentreviewcomments": {
-    "Resources": [
-     "AgentSpace"
-    ]
-   },
-   "listdocumentreviews": {
     "Resources": [
      "AgentSpace"
     ]
@@ -88224,13 +88169,21 @@
      "Integration"
     ]
    },
-   "listsecurityrequirements": {},
-   "listtargetdomains": {},
-   "listtasks": {
+   "listsecurityrequirements": {
     "Resources": [
-     "AgentSpace"
+     "SecurityRequirementPack"
     ]
    },
+   "listtagsforresource": {
+    "Resources": [
+     "AgentSpace",
+     "Application",
+     "Integration",
+     "SecurityRequirementPack",
+     "TargetDomain"
+    ]
+   },
+   "listtargetdomains": {},
    "putdesignreviewfeedback": {
     "Resources": [
      "AgentSpace"
@@ -88241,17 +88194,7 @@
      "AgentSpace"
     ]
    },
-   "startpentestexecution": {
-    "Resources": [
-     "AgentSpace"
-    ]
-   },
    "startpentestjob": {
-    "Resources": [
-     "AgentSpace"
-    ]
-   },
-   "stoppentestexecution": {
     "Resources": [
      "AgentSpace"
     ]
@@ -88261,19 +88204,27 @@
      "AgentSpace"
     ]
    },
-   "togglemanagedcontrol": {
+   "tagresource": {
     "Resources": [
-     "Control"
+     "AgentSpace",
+     "Application",
+     "Integration",
+     "SecurityRequirementPack",
+     "TargetDomain"
     ]
    },
    "togglemanagedsecurityrequirement": {
     "Resources": [
-     "SecurityRequirement"
+     "SecurityRequirementPack"
     ]
    },
-   "updateagentinstance": {
+   "untagresource": {
     "Resources": [
-     "AgentInstance"
+     "AgentSpace",
+     "Application",
+     "Integration",
+     "SecurityRequirementPack",
+     "TargetDomain"
     ]
    },
    "updateagentspace": {
@@ -88284,11 +88235,6 @@
    "updateapplication": {
     "Resources": [
      "Application"
-    ]
-   },
-   "updatecontrol": {
-    "Resources": [
-     "Control"
     ]
    },
    "updatefinding": {
@@ -88308,7 +88254,7 @@
    },
    "updatesecurityrequirement": {
     "Resources": [
-     "SecurityRequirement"
+     "SecurityRequirementPack"
     ]
    },
    "updatetargetdomain": {
@@ -88323,64 +88269,44 @@
    }
   },
   "Resources": {
-   "agentinstance": {
-    "ARNFormats": [
-     "arn:${Partition}:securityagent:${Region}:${Account}:agent-instance/.*"
-    ]
-   },
    "agentspace": {
     "ARNFormats": [
      "arn:${Partition}:securityagent:${Region}:${Account}:agent-space/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "application": {
     "ARNFormats": [
      "arn:${Partition}:securityagent:${Region}:${Account}:application/.*"
-    ]
-   },
-   "artifact": {
-    "ARNFormats": [
-     "arn:${Partition}:securityagent:${Region}:${Account}:agent-space/.*"
-    ]
-   },
-   "control": {
-    "ARNFormats": [
-     "arn:${Partition}:securityagent:${Region}:${Account}:control/.*"
-    ]
-   },
-   "finding": {
-    "ARNFormats": [
-     "arn:${Partition}:securityagent:${Region}:${Account}:agent-space/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "integration": {
     "ARNFormats": [
      "arn:${Partition}:securityagent:${Region}:${Account}:integration/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
-   "pentest": {
+   "securityrequirementpack": {
     "ARNFormats": [
-     "arn:${Partition}:securityagent:${Region}:${Account}:agent-space/.*"
-    ]
-   },
-   "pentestjob": {
-    "ARNFormats": [
-     "arn:${Partition}:securityagent:${Region}:${Account}:agent-space/.*"
-    ]
-   },
-   "pentesttask": {
-    "ARNFormats": [
-     "arn:${Partition}:securityagent:${Region}:${Account}:agent-space/.*"
-    ]
-   },
-   "securityrequirement": {
-    "ARNFormats": [
-     "arn:${Partition}:securityagent:${Region}:${Account}:security-requirement/.*"
+     "arn:${Partition}:securityagent:${Region}:${Account}:security-requirement-pack/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "targetdomain": {
     "ARNFormats": [
      "arn:${Partition}:securityagent:${Region}:${Account}:target-domain/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    }
   }
@@ -94214,7 +94140,8 @@
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}",
-     "sso:ApplicationAccount"
+     "sso:ApplicationAccount",
+     "sso:PrimaryRegion"
     ]
    },
    "applicationprovider": {
@@ -94227,7 +94154,8 @@
      "arn:${Partition}:sso:::instance/.*"
     ],
     "ConditionKeys": [
-     "aws:ResourceTag/${TagKey}"
+     "aws:ResourceTag/${TagKey}",
+     "sso:PrimaryRegion"
     ]
    },
    "permissionset": {
@@ -94235,7 +94163,8 @@
      "arn:${Partition}:sso:::permissionSet/.*"
     ],
     "ConditionKeys": [
-     "aws:ResourceTag/${TagKey}"
+     "aws:ResourceTag/${TagKey}",
+     "sso:PrimaryRegion"
     ]
    },
    "trustedtokenissuer": {
@@ -94243,7 +94172,8 @@
      "arn:${Partition}:sso::${AccountId}:trustedTokenIssuer/.*"
     ],
     "ConditionKeys": [
-     "aws:ResourceTag/${TagKey}"
+     "aws:ResourceTag/${TagKey}",
+     "sso:PrimaryRegion"
     ]
    }
   }

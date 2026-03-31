@@ -1,0 +1,142 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TargetDomainName"
+ ],
+ "definitions": {
+  "DnsVerification": {
+   "additionalProperties": false,
+   "properties": {
+    "DnsRecordName": {
+     "type": "string"
+    },
+    "DnsRecordType": {
+     "enum": [
+      "TXT"
+     ],
+     "type": "string"
+    },
+    "Token": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HttpVerification": {
+   "additionalProperties": false,
+   "properties": {
+    "RoutePath": {
+     "type": "string"
+    },
+    "Token": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VerificationDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "DnsTxt": {
+     "$ref": "#/definitions/DnsVerification"
+    },
+    "HttpRoute": {
+     "$ref": "#/definitions/HttpVerification"
+    },
+    "Method": {
+     "enum": [
+      "DNS_TXT",
+      "HTTP_ROUTE"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TargetDomainId"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TargetDomainId": {
+   "type": "string"
+  },
+  "TargetDomainName": {
+   "type": "string"
+  },
+  "VerificationDetails": {
+   "$ref": "#/definitions/VerificationDetails"
+  },
+  "VerificationMethod": {
+   "enum": [
+    "DNS_TXT",
+    "HTTP_ROUTE"
+   ],
+   "type": "string"
+  },
+  "VerificationStatus": {
+   "enum": [
+    "PENDING",
+    "VERIFIED",
+    "FAILED",
+    "UNREACHABLE"
+   ],
+   "type": "string"
+  },
+  "VerifiedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TargetDomainId",
+  "/properties/VerificationStatus",
+  "/properties/VerificationDetails",
+  "/properties/CreatedAt",
+  "/properties/VerifiedAt"
+ ],
+ "required": [
+  "TargetDomainName",
+  "VerificationMethod"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityAgent::TargetDomain"
+}

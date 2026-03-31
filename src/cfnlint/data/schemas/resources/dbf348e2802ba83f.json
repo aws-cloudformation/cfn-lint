@@ -1,0 +1,102 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SigningDisabled",
+  "/properties/AuthorizerName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AuthorizerName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AuthorizerFunctionArn": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "^[\\s\\S]*$",
+   "type": "string"
+  },
+  "AuthorizerName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[\\w=,@-]+",
+   "type": "string"
+  },
+  "EnableCachingForHttp": {
+   "type": "boolean"
+  },
+  "SigningDisabled": {
+   "type": "boolean"
+  },
+  "Status": {
+   "enum": [
+    "ACTIVE",
+    "INACTIVE"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TokenKeyName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "TokenSigningPublicKeys": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "[a-zA-Z0-9:_-]+": {
+     "maxLength": 5120,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "AuthorizerFunctionArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::Authorizer"
+}
