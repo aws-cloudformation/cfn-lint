@@ -1,3 +1,58 @@
+### v1.48.0
+## What's Changed
+* feat: add rule [E3697](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3697) to validate Lambda env var 4KB size limit by @raajheshkannaa in https://github.com/aws-cloudformation/cfn-lint/pull/4405
+* Require `VpcConfig` when `FileSystemConfigs` is specified on Lambda Function by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4408
+* Freeze date in tests for deterministic runtime deprecation results by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4409
+* feat: add rule [E3530](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3530) to validate `AssumeRolePolicyDocument` principal ARNs by @raajheshkannaa in https://github.com/aws-cloudformation/cfn-lint/pull/4410
+* Add [W1053](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W1053): Warn on dynamic references with spaces by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4412
+* Fix max recursion crash when `cfnlintrc` has `non_zero_exit_code` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4414
+* Fix deployment file template path resolution from CWD by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4415
+* Fix maintenance workflow to update requirements/base.txt by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4416
+* Add `enum` validation for predictive scaling predefined metric types by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4417
+* Add JSONPath pattern validation for Step Functions state machine by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4419
+* Fix ForEach transform resolving functions in `Fn::If` condition name by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4418
+* Fix [E2533](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2533) not reporting deprecated runtimes from `AllowedValues` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4421
+* Add `graph()` function to `cfnlint.api` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4422
+* feat: add rule [E3706](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3706) to validate AutoScaling MaxSize is greater than or equal to
+MinSize by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4424
+* feat: add schema patch to enforce Lambda Layers maxItems of 5 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4424
+* feat: add schema patch to validate CloudWatch `AlarmName` has no leading/trailing whitespace by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4424
+* feat: add schema patch for `uniqueKeys` on AutoScaling LaunchTemplate Overrides to prevent duplicate instance types by @kddejong in https://github.com/aws-cloudformation/cfn-lint
+/pull/4424
+* feat: add cfnGather JSON Schema keyword for cross-resource property validation by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4393
+* feat: add rule [E3699](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3699) to validate API Gateway Method and Authorizer use the same RestApi
+by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4393
+* feat: add rule [E3708](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3708) to validate API Gateway Method AuthorizationType matches Authorizer
+Type by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4393
+* feat: add rule [E3698](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3698) to validate API Gateway Stage and Deployment use the same RestApi by
+@kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4393
+* feat: add rule [E3705](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3705) to validate SQS FIFO queue EventSourceMapping BatchSize is at most
+10 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4393
+* feat: add rule [W3664](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3664) to validate Lambda Permission Principal matches SourceArn resource
+type by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4393
+* feat: add rule [E3707](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3707) to validate RDS DBInstance Engine matches DBCluster Engine by @
+kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4393
+* feat: add rule [E3709](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3709) to validate RDS DBInstance StorageEncrypted matches DBCluster by @
+kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4393
+* feat: add rule [W3694](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3694) to validate SNS Subscription Endpoint matches Protocol by @kddejong
+in https://github.com/aws-cloudformation/cfn-lint/pull/4393
+* Add RDS DBCluster `MasterUsername` validation by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4425
+* feat: add rule [E3710](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3710) to error on resource types from fully shut down AWS services by @
+kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4423
+* feat: add rule [W3696](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3696) to warn on resource types from sunsetting AWS services by @kddejong
+in https://github.com/aws-cloudformation/cfn-lint/pull/4423
+* feat: add rule [W3697](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3697) to warn on resource types from AWS services in maintenance mode by @
+kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4423
+* fix: add required to `cfnGather` if/then schemas to prevent vacuous matches by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4426
+* chore(deps): bump codecov/codecov-action from 5 to 6 by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4432
+* Remove PyPI API token by @meeuw in https://github.com/aws-cloudformation/cfn-lint/pull/4431
+* Update CloudFormation schemas to `2026-03-31` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4411
+
+## New Contributors
+* @raajheshkannaa made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4405
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.47.1...v1.48.0
+
 ### v1.47.1
 ## What's Changed
 * Fix [E3063](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3677) false positive when Code is a string (aws-cli pattern) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4399
