@@ -14,6 +14,9 @@
    "additionalProperties": false,
    "properties": {
     "ContainerHostname": {
+     "maxLength": 63,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
      "type": "string"
     },
     "Environment": {
@@ -24,12 +27,18 @@
      ]
     },
     "Image": {
+     "maxLength": 255,
+     "minLength": 0,
+     "pattern": "^[\\S]+$",
      "type": "string"
     },
     "ImageConfig": {
      "$ref": "#/definitions/ImageConfig"
     },
     "InferenceSpecificationName": {
+     "maxLength": 63,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
      "type": "string"
     },
     "Mode": {
@@ -43,9 +52,15 @@
      "$ref": "#/definitions/ModelDataSource"
     },
     "ModelDataUrl": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
      "type": "string"
     },
     "ModelPackageName": {
+     "maxLength": 176,
+     "minLength": 1,
+     "pattern": "^(arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:[a-z\\-]*\\/)?([a-zA-Z0-9]([a-zA-Z0-9-]){0,62})(?<!-)(\\/[0-9]{1,9})?$",
      "type": "string"
     },
     "MultiModelConfig": {
@@ -58,6 +73,8 @@
    "additionalProperties": false,
    "properties": {
     "HubContentArn": {
+     "maxLength": 255,
+     "minLength": 0,
      "type": "string"
     }
    },
@@ -142,6 +159,8 @@
    "additionalProperties": false,
    "properties": {
     "RepositoryCredentialsProviderArn": {
+     "maxLength": 2048,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -174,6 +193,9 @@
      "type": "string"
     },
     "S3Uri": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
      "type": "string"
     }
    },
@@ -188,9 +210,15 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     },
     "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     }
    },
@@ -208,8 +236,13 @@
      "insertionOrder": false,
      "items": {
       "format": "AWS::EC2::SecurityGroup.Id",
+      "maxLength": 32,
+      "minLength": 0,
+      "pattern": "^[-0-9a-zA-Z]+$",
       "type": "string"
      },
+     "maxItems": 5,
+     "minItems": 1,
      "type": "array",
      "uniqueItems": false
     },
@@ -218,8 +251,13 @@
      "insertionOrder": false,
      "items": {
       "format": "AWS::EC2::Subnet.Id",
+      "maxLength": 32,
+      "minLength": 0,
+      "pattern": "^[-0-9a-zA-Z]+$",
       "type": "string"
      },
+     "maxItems": 16,
+     "minItems": 1,
      "type": "array",
      "uniqueItems": false
     }
@@ -240,6 +278,8 @@
    "items": {
     "$ref": "#/definitions/ContainerDefinition"
    },
+   "maxItems": 15,
+   "minItems": 0,
    "type": "array",
    "uniqueItems": false
   },
@@ -247,6 +287,9 @@
    "type": "boolean"
   },
   "ExecutionRoleArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
    "type": "string"
   },
   "InferenceExecutionConfig": {
@@ -256,6 +299,9 @@
    "type": "string"
   },
   "ModelName": {
+   "maxLength": 63,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9]([\\-a-zA-Z0-9]*[a-zA-Z0-9])?$",
    "type": "string"
   },
   "PrimaryContainer": {
@@ -266,6 +312,8 @@
    "items": {
     "$ref": "#/definitions/Tag"
    },
+   "maxItems": 50,
+   "minItems": 0,
    "type": "array",
    "uniqueItems": false
   },
