@@ -48,7 +48,9 @@ MAINTENANCE = [
     ("AWS::Cloud9", "2024-07-25"),
     ("AWS::CodeGuruReviewer", "2025-10-07"),
     ("AWS::Forecast", "2024-07-29"),
-    ("AWS::Timestream", "2025-06-20"),
+    ("AWS::Timestream::Database", "2025-06-20"),
+    ("AWS::Timestream::ScheduledQuery", "2025-06-20"),
+    ("AWS::Timestream::Table", "2025-06-20"),
     ("AWS::AutoScaling::LaunchConfiguration", "2024-10-01"),
 ]
 
