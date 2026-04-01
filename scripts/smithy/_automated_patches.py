@@ -161,7 +161,16 @@ def get_shapes(
 def get_schema_create_operations(schema_data: dict[str, Any]) -> list[str]:
     """Extract create operation names from CloudFormation schema"""
     results = []
-    action_prefixes = ["Put", "Add", "Create", "Register", "Allocate", "Start", "Run"]
+    action_prefixes = [
+        "Put",
+        "Add",
+        "Create",
+        "Publish",
+        "Register",
+        "Allocate",
+        "Start",
+        "Run",
+    ]
 
     for api in schema_data.get("handlers", {}).get("create", {}).get("permissions", []):
         if ":" not in api:
