@@ -1,3 +1,11 @@
+### v1.48.1
+## What's Changed
+* fix: Timestream lifecycle patches to exclude InfluxDB resources by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4437
+* Add `Publish` to smithy action prefixes for LayerVersion validation by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4438
+* Update CloudFormation schemas to `2026-03-31` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4434
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.48.0...v1.48.1
+
 ### v1.48.0
 ## What's Changed
 * feat: add rule [E3697](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3697) to validate Lambda env var 4KB size limit by @raajheshkannaa in https://github.com/aws-cloudformation/cfn-lint/pull/4405
