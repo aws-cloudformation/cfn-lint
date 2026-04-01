@@ -1735,12 +1735,18 @@ def build_resource_type_patches(resource_patches: ResourcePatch, filename: str):
 
     d = []
     with open(output_file, "w+") as fh:
+        seen = set()
         for patch in sorted(resource_patches.patches, key=lambda x: x.path):
             for k, v in patch.values.items():
+                path = f"{patch.path if not patch.path == '/' else ''}/{k}"
+                key = (path, json.dumps(v, sort_keys=True))
+                if key in seen:
+                    continue
+                seen.add(key)
                 d.append(
                     {
                         "op": "add",
-                        "path": f"{patch.path if not patch.path == '/' else ''}/{k}",
+                        "path": path,
                         "value": v,
                     }
                 )
@@ -1755,8 +1761,25 @@ def build_resource_type_patches(resource_patches: ResourcePatch, filename: str):
 
 
 def build_patches(patches, filename):
+    written = set()
     for patch in patches:
         build_resource_type_patches(resource_patches=patch, filename=filename)
+        resource_name = patch.resource_type.lower().replace("::", "_")
+        written.add(
+            os.path.join(
+                "src/cfnlint/data/schemas/patches/extensions/all/",
+                resource_name,
+                filename,
+            )
+        )
+
+    # Clean up stale files not written in this run
+    extensions_dir = "src/cfnlint/data/schemas/patches/extensions/all/"
+    for resource_dir in os.listdir(extensions_dir):
+        stale = os.path.join(extensions_dir, resource_dir, filename)
+        if os.path.isfile(stale) and stale not in written:
+            LOGGER.info(f"Removing stale {stale}")
+            os.remove(stale)
 
 
 def main():

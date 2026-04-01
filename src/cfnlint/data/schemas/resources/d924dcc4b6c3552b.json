@@ -18,6 +18,7 @@
    "type": "string"
   },
   "BucketName": {
+   "format": "AWS::S3::Bucket.Name",
    "maxLength": 63,
    "minLength": 3,
    "pattern": "[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]",
@@ -88,6 +89,17 @@
    "type": "string"
   },
   "KmsKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
    "maxLength": 2048,
    "minLength": 1,
    "type": "string"
@@ -260,6 +272,7 @@
    "type": "string"
   },
   "ScheduledQueryExecutionRoleArn": {
+   "format": "AWS::IAM::Role.Arn",
    "maxLength": 2048,
    "minLength": 1,
    "type": "string"
@@ -364,6 +377,7 @@
    "type": "object"
   },
   "TopicArn": {
+   "format": "AWS::SNS::Topic.Arn",
    "maxLength": 2048,
    "minLength": 1,
    "type": "string"
@@ -419,6 +433,7 @@
    "type": "string"
   },
   "SQScheduledQueryExecutionRoleArn": {
+   "format": "AWS::IAM::Role.Arn",
    "type": "string"
   },
   "SQTargetConfiguration": {

@@ -213,6 +213,7 @@
    "type": "boolean"
   },
   "FederationRoleArn": {
+   "format": "AWS::IAM::Role.Arn",
    "type": "string"
   },
   "IngestionEnabled": {
@@ -233,6 +234,17 @@
    "type": "string"
   },
   "KmsKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
    "maxLength": 350,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9._/\\-:]+$",

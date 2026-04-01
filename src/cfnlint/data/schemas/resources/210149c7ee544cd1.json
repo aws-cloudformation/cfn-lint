@@ -9,6 +9,7 @@
    "additionalProperties": false,
    "properties": {
     "FailureFeedbackRoleArn": {
+     "format": "AWS::IAM::Role.Arn",
      "type": "string"
     },
     "Protocol": {
@@ -22,6 +23,7 @@
      "type": "string"
     },
     "SuccessFeedbackRoleArn": {
+     "format": "AWS::IAM::Role.Arn",
      "type": "string"
     },
     "SuccessFeedbackSampleRate": {
@@ -109,6 +111,17 @@
    "type": "boolean"
   },
   "KmsMasterKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
    "type": "string"
   },
   "SignatureVersion": {
@@ -131,6 +144,7 @@
    "uniqueItems": false
   },
   "TopicArn": {
+   "format": "AWS::SNS::Topic.Arn",
    "type": "string"
   },
   "TopicName": {

@@ -128,12 +128,24 @@
    "type": "boolean"
   },
   "ExecutionRoleArn": {
+   "format": "AWS::IAM::Role.Arn",
    "maxLength": 2048,
    "minLength": 20,
    "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
    "type": "string"
   },
   "KmsKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
    "maxLength": 2048,
    "minLength": 0,
    "pattern": ".*",

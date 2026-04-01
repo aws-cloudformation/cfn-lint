@@ -96,12 +96,24 @@
        "additionalProperties": false,
        "properties": {
         "BucketName": {
+         "format": "AWS::S3::Bucket.Name",
          "type": "string"
         },
         "EncryptionOption": {
          "type": "string"
         },
         "KmsKeyId": {
+         "anyOf": [
+          {
+           "format": "AWS::KMS::Key.Arn"
+          },
+          {
+           "format": "AWS::KMS::Key.Id"
+          },
+          {
+           "format": "AWS::KMS::Alias.AliasName"
+          }
+         ],
          "type": "string"
         },
         "ObjectKeyPrefix": {

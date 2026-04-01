@@ -66,6 +66,47 @@ from cfnlint.rules.formats._schema_comparer import compare_schemas
                 "'foo' format is incompatible with formats ['bar', 'foobar']",
             ),
         ),
+        (
+            "KMS key ARN matches anyOf with Key.Arn, Key.Id, and Alias",
+            {"format": "AWS::KMS::Key.Arn"},
+            {
+                "anyOf": [
+                    {"format": "AWS::KMS::Key.Arn"},
+                    {"format": "AWS::KMS::Key.Id"},
+                    {"format": "AWS::KMS::Alias.AliasName"},
+                ]
+            },
+            None,
+        ),
+        (
+            "KMS alias matches anyOf with Key.Arn, Key.Id, and Alias",
+            {"format": "AWS::KMS::Alias.AliasName"},
+            {
+                "anyOf": [
+                    {"format": "AWS::KMS::Key.Arn"},
+                    {"format": "AWS::KMS::Key.Id"},
+                    {"format": "AWS::KMS::Alias.AliasName"},
+                ]
+            },
+            None,
+        ),
+        (
+            "IAM role ARN does not match KMS anyOf",
+            {"format": "AWS::IAM::Role.Arn"},
+            {
+                "anyOf": [
+                    {"format": "AWS::KMS::Key.Arn"},
+                    {"format": "AWS::KMS::Key.Id"},
+                    {"format": "AWS::KMS::Alias.AliasName"},
+                ]
+            },
+            ValidationError(
+                "'AWS::IAM::Role.Arn' format is incompatible "
+                "with formats "
+                "['AWS::KMS::Key.Arn', 'AWS::KMS::Key.Id', "
+                "'AWS::KMS::Alias.AliasName']",
+            ),
+        ),
     ],
 )
 def test_schema_comparer(name, source, destination, expected):

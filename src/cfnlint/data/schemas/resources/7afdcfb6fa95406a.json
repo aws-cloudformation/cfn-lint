@@ -286,6 +286,7 @@
    "type": "string"
   },
   "CloudWatchLogsRoleArn": {
+   "format": "AWS::IAM::Role.Arn",
    "type": "string"
   },
   "EnableLogFileValidation": {
@@ -321,9 +322,21 @@
    "type": "boolean"
   },
   "KMSKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
    "type": "string"
   },
   "S3BucketName": {
+   "format": "AWS::S3::Bucket.Name",
    "type": "string"
   },
   "S3KeyPrefix": {
@@ -331,6 +344,7 @@
    "type": "string"
   },
   "SnsTopicArn": {
+   "format": "AWS::SNS::Topic.Arn",
    "type": "string"
   },
   "SnsTopicName": {

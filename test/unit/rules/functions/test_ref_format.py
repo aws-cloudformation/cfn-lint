@@ -60,7 +60,8 @@ def template():
             {"format": "AWS::EC2::Image.Id"},
             [
                 ValidationError(
-                    "{'Ref': 'MyBucket'} does not match "
+                    "{'Ref': 'MyBucket'} with formats "
+                    "['AWS::S3::Bucket.Name'] does not match "
                     "destination format of 'AWS::EC2::Image.Id'",
                     rule=RefFormat(),
                 )
