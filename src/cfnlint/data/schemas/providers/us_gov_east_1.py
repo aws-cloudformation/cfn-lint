@@ -519,7 +519,7 @@ types: dict[str, str] = {
     "AWS::KinesisAnalytics::Application": "50ae263f846c3862",
     "AWS::KinesisAnalytics::ApplicationOutput": "639fc1050aa8a059",
     "AWS::KinesisAnalytics::ApplicationReferenceDataSource": "8cda34a806d77b86",
-    "AWS::KinesisAnalyticsV2::Application": "b62bfa34fbb059a5",
+    "AWS::KinesisAnalyticsV2::Application": "09427c8594d9a4e2",
     "AWS::KinesisAnalyticsV2::ApplicationCloudWatchLoggingOption": "e07193f9ce1d04dc",
     "AWS::KinesisAnalyticsV2::ApplicationOutput": "14bce3d20b063bd9",
     "AWS::KinesisAnalyticsV2::ApplicationReferenceDataSource": "f9ca29a27845c82d",
