@@ -24,14 +24,18 @@ class PermissionPrincipal(CfnLintJsonSchema):
     tags = ["resources", "lambda", "permission"]
 
     _type_to_principal: dict[str, str] = {
-        "AWS::S3::Bucket": "s3.amazonaws.com",
-        "AWS::SNS::Topic": "sns.amazonaws.com",
-        "AWS::Events::Rule": "events.amazonaws.com",
         "AWS::ApiGateway::RestApi": "apigateway.amazonaws.com",
         "AWS::ApiGatewayV2::Api": "apigateway.amazonaws.com",
+        "AWS::Cognito::UserPool": "cognito-idp.amazonaws.com",
+        "AWS::Config::ConfigRule": "config.amazonaws.com",
         "AWS::ElasticLoadBalancingV2::TargetGroup": (
             "elasticloadbalancing.amazonaws.com"
         ),
+        "AWS::Events::Rule": "events.amazonaws.com",
+        "AWS::IoT::TopicRule": "iot.amazonaws.com",
+        "AWS::Logs::LogGroup": "logs.amazonaws.com",
+        "AWS::S3::Bucket": "s3.amazonaws.com",
+        "AWS::SNS::Topic": "sns.amazonaws.com",
     }
 
     def __init__(self) -> None:
