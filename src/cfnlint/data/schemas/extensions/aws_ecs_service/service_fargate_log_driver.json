@@ -1,0 +1,87 @@
+{
+ "cfnGather": {
+  "gather": {
+   "service": {
+    "properties": {
+     "LaunchType": "/LaunchType"
+    }
+   },
+   "taskDef": {
+    "filter": {
+     "type": "AWS::ECS::TaskDefinition"
+    },
+    "properties": {
+     "ContainerDefinitions": "/ContainerDefinitions"
+    },
+    "reference": "/TaskDefinition"
+   }
+  },
+  "schema": {
+   "if": {
+    "properties": {
+     "service": {
+      "properties": {
+       "LaunchType": {
+        "const": "FARGATE"
+       }
+      },
+      "required": [
+       "LaunchType"
+      ]
+     },
+     "taskDef": {
+      "properties": {
+       "ContainerDefinitions": {
+        "type": "array"
+       }
+      },
+      "required": [
+       "ContainerDefinitions"
+      ]
+     }
+    },
+    "required": [
+     "service",
+     "taskDef"
+    ]
+   },
+   "then": {
+    "properties": {
+     "taskDef": {
+      "properties": {
+       "ContainerDefinitions": {
+        "items": {
+         "properties": {
+          "LogConfiguration": {
+           "if": {
+            "properties": {
+             "LogDriver": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "LogDriver"
+            ]
+           },
+           "then": {
+            "properties": {
+             "LogDriver": {
+              "enum": [
+               "awslogs",
+               "splunk",
+               "awsfirelens"
+              ]
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

@@ -79,7 +79,25 @@ class MyRule(CfnLintJsonSchema):
 ]
 ```
 
-**4. Custom Python Rule**
+**4. Cross-Resource Rule (cfnGather)**
+- Declarative cross-resource property validation using JSON Schema
+- **REQUIRES both a Python rule (CfnLintJsonSchema) AND a JSON schema file with cfnGather**
+- Use for: validating properties across related resources connected by Ref/GetAtt
+- Full documentation in `docs/cfn-schema-specification.md` under the cfnGather section
+- Examples:
+  - `aws_sqs_queue/queue_dlq.json`: DLQ FIFO matches source queue FIFO
+  - `aws_ecs_service/service_fargate.json`: Fargate requires awsvpc network mode on task def
+  - `aws_lambda_permission/permission_principal.json`: Principal matches source resource type via $lookup
+  - `aws_apigateway_stage/stage_deployment_rest_api.json`: Stage and deployment share same RestApiId via $data
+- Schema Location: `src/cfnlint/data/schemas/extensions/<resource_type>/<filename>.json`
+- Key concepts:
+  - `gather` section: local entries (current resource) and remote entries (follow `reference` to another resource)
+  - `schema` section: validates gathered data, supports `$data` (cross-reference) and `$lookup` (map values)
+  - `filter.type`: restrict remote entries to specific resource types
+  - `default`: fallback value when remote property doesn't exist
+  - `$type`: special property that resolves to the remote resource's type name
+
+**5. Custom Python Rule**
 - Full custom validation logic for complex checks
 - Location: `src/cfnlint/rules/resources/<service>/<RuleName>.py`
 - Extends: `CloudFormationLintRule`

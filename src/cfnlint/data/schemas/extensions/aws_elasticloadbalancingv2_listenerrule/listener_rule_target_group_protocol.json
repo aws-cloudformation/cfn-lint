@@ -1,0 +1,31 @@
+{
+ "cfnGather": {
+  "gather": {
+   "targetGroup": {
+    "filter": {
+     "type": "AWS::ElasticLoadBalancingV2::TargetGroup"
+    },
+    "properties": {
+     "Protocol": {
+      "default": null,
+      "path": "/Protocol"
+     }
+    },
+    "reference": "/Actions/*/TargetGroupArn"
+   }
+  },
+  "schema": {
+   "properties": {
+    "targetGroup": {
+     "properties": {
+      "Protocol": {
+       "not": {
+        "const": "GENEVE"
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

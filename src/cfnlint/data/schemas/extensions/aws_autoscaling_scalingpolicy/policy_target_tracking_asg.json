@@ -1,0 +1,54 @@
+{
+ "cfnGather": {
+  "gather": {
+   "asg": {
+    "filter": {
+     "type": "AWS::AutoScaling::AutoScalingGroup"
+    },
+    "properties": {
+     "MaxSize": "/MaxSize",
+     "MinSize": "/MinSize"
+    },
+    "reference": "/AutoScalingGroupName"
+   },
+   "policy": {
+    "properties": {
+     "PolicyType": "/PolicyType"
+    }
+   }
+  },
+  "schema": {
+   "if": {
+    "properties": {
+     "policy": {
+      "properties": {
+       "PolicyType": {
+        "const": "TargetTrackingScaling"
+       }
+      },
+      "required": [
+       "PolicyType"
+      ]
+     }
+    },
+    "required": [
+     "policy",
+     "asg"
+    ]
+   },
+   "then": {
+    "properties": {
+     "asg": {
+      "properties": {
+       "MaxSize": {
+        "exclusiveMinimum": {
+         "$data": "/asg/MinSize"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

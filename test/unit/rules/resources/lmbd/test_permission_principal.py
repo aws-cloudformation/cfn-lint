@@ -25,6 +25,10 @@ _template = {
         "Topic": {"Type": "AWS::SNS::Topic"},
         "Rule": {"Type": "AWS::Events::Rule"},
         "Api": {"Type": "AWS::ApiGateway::RestApi"},
+        "LogGroup": {"Type": "AWS::Logs::LogGroup"},
+        "ConfigRule": {"Type": "AWS::Config::ConfigRule"},
+        "UserPool": {"Type": "AWS::Cognito::UserPool"},
+        "TopicRule": {"Type": "AWS::IoT::TopicRule"},
         "Permission": {
             "Type": "AWS::Lambda::Permission",
             "Properties": {
@@ -168,6 +172,142 @@ _schema_path = deque(
             ),
             deque(["Resources", "Permission", "Properties"]),
             [],
+        ),
+        # CloudWatch Logs LogGroup with correct principal — valid
+        (
+            jsonpatch.apply_patch(
+                _template,
+                [
+                    {
+                        "op": "replace",
+                        "path": "/Resources/Permission/Properties/SourceArn",
+                        "value": {"Fn::GetAtt": ["LogGroup", "Arn"]},
+                    },
+                    {
+                        "op": "replace",
+                        "path": "/Resources/Permission/Properties/Principal",
+                        "value": "logs.amazonaws.com",
+                    },
+                ],
+            ),
+            deque(["Resources", "Permission", "Properties"]),
+            [],
+        ),
+        # CloudWatch Logs LogGroup with wrong principal — error
+        (
+            jsonpatch.apply_patch(
+                _template,
+                [
+                    {
+                        "op": "replace",
+                        "path": "/Resources/Permission/Properties/SourceArn",
+                        "value": {"Fn::GetAtt": ["LogGroup", "Arn"]},
+                    },
+                    {
+                        "op": "replace",
+                        "path": "/Resources/Permission/Properties/Principal",
+                        "value": "s3.amazonaws.com",
+                    },
+                ],
+            ),
+            deque(["Resources", "Permission", "Properties"]),
+            [
+                ValidationError(
+                    "'logs.amazonaws.com' was expected",
+                    validator="const",
+                    rule=PermissionPrincipal(),
+                    path=deque(["Principal"]),
+                    schema_path=_schema_path,
+                ),
+            ],
+        ),
+        # Config ConfigRule with correct principal — valid
+        (
+            jsonpatch.apply_patch(
+                _template,
+                [
+                    {
+                        "op": "replace",
+                        "path": "/Resources/Permission/Properties/SourceArn",
+                        "value": {"Fn::GetAtt": ["ConfigRule", "Arn"]},
+                    },
+                    {
+                        "op": "replace",
+                        "path": "/Resources/Permission/Properties/Principal",
+                        "value": "config.amazonaws.com",
+                    },
+                ],
+            ),
+            deque(["Resources", "Permission", "Properties"]),
+            [],
+        ),
+        # Cognito UserPool with correct principal — valid
+        (
+            jsonpatch.apply_patch(
+                _template,
+                [
+                    {
+                        "op": "replace",
+                        "path": "/Resources/Permission/Properties/SourceArn",
+                        "value": {"Fn::GetAtt": ["UserPool", "Arn"]},
+                    },
+                    {
+                        "op": "replace",
+                        "path": "/Resources/Permission/Properties/Principal",
+                        "value": "cognito-idp.amazonaws.com",
+                    },
+                ],
+            ),
+            deque(["Resources", "Permission", "Properties"]),
+            [],
+        ),
+        # IoT TopicRule with correct principal — valid
+        (
+            jsonpatch.apply_patch(
+                _template,
+                [
+                    {
+                        "op": "replace",
+                        "path": "/Resources/Permission/Properties/SourceArn",
+                        "value": {"Fn::GetAtt": ["TopicRule", "Arn"]},
+                    },
+                    {
+                        "op": "replace",
+                        "path": "/Resources/Permission/Properties/Principal",
+                        "value": "iot.amazonaws.com",
+                    },
+                ],
+            ),
+            deque(["Resources", "Permission", "Properties"]),
+            [],
+        ),
+        # IoT TopicRule with wrong principal — error
+        (
+            jsonpatch.apply_patch(
+                _template,
+                [
+                    {
+                        "op": "replace",
+                        "path": "/Resources/Permission/Properties/SourceArn",
+                        "value": {"Fn::GetAtt": ["TopicRule", "Arn"]},
+                    },
+                    {
+                        "op": "replace",
+                        "path": "/Resources/Permission/Properties/Principal",
+                        "value": "s3.amazonaws.com",
+                    },
+                ],
+            ),
+            deque(["Resources", "Permission", "Properties"]),
+            [
+                ValidationError(
+                    "'iot.amazonaws.com' was expected",
+                    validator="const",
+                    rule=PermissionPrincipal(),
+                    path=deque(["Principal"]),
+                    schema_path=_schema_path,
+                ),
+            ],
         ),
         # String SourceArn (no resource reference) — valid (skip)
         (

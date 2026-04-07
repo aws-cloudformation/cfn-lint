@@ -1,0 +1,62 @@
+{
+ "cfnGather": {
+  "gather": {
+   "securityGroup": {
+    "filter": {
+     "type": "AWS::EC2::SecurityGroup"
+    },
+    "properties": {
+     "VpcId": "/VpcId"
+    },
+    "reference": "/LaunchTemplateData/SecurityGroupIds/*"
+   },
+   "subnet": {
+    "filter": {
+     "type": "AWS::EC2::Subnet"
+    },
+    "properties": {
+     "VpcId": "/VpcId"
+    },
+    "reference": "/LaunchTemplateData/NetworkInterfaces/*/SubnetId"
+   }
+  },
+  "schema": {
+   "cfnContext": {
+    "functions": [],
+    "schema": {
+     "if": {
+      "properties": {
+       "securityGroup": {
+        "required": [
+         "VpcId"
+        ]
+       },
+       "subnet": {
+        "required": [
+         "VpcId"
+        ]
+       }
+      },
+      "required": [
+       "securityGroup",
+       "subnet"
+      ]
+     },
+     "then": {
+      "properties": {
+       "securityGroup": {
+        "properties": {
+         "VpcId": {
+          "const": {
+           "$data": "/subnet/VpcId"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
