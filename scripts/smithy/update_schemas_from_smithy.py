@@ -34,6 +34,7 @@ case_insensitive_services = [
 exceptions = {
     "ses": ["/definitions/EventDestination/properties/MatchingEventTypes/items"],
     "ecs": ["/definitions/LogConfiguration/properties/LogDriver"],
+    "lambda": ["/properties/FunctionName"],
 }
 
 
