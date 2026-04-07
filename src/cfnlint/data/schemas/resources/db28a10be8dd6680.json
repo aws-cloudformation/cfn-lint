@@ -159,6 +159,17 @@
    "type": "object"
   },
   "KmsKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
    "maxLength": 2048,
    "minLength": 1,
    "pattern": "^\\p{ASCII}+$",
@@ -242,6 +253,7 @@
    "type": "string"
   },
   "DataAccessRoleArn": {
+   "format": "AWS::IAM::Role.Arn",
    "maxLength": 2048,
    "minLength": 20,
    "pattern": "arn:aws(-[^:]+)?:iam::[0-9]{12}:role/.+",

@@ -322,6 +322,30 @@ _manual_patches = {
             path="/definitions/Entry/properties/Cidr",
         ),
     ],
+    "AWS::Lambda::Function": [
+        Patch(
+            values={"format": "AWS::Lambda::Function.Name"},
+            path="/properties/FunctionName",
+        ),
+    ],
+    "AWS::KMS::Key": [
+        Patch(
+            values={"format": "AWS::KMS::Key.Id"},
+            path="/properties/KeyId",
+        ),
+    ],
+    "AWS::KMS::Alias": [
+        Patch(
+            values={"format": "AWS::KMS::Alias.AliasName"},
+            path="/properties/AliasName",
+        ),
+    ],
+    "AWS::CertificateManager::Certificate": [
+        Patch(
+            values={"format": "AWS::ACM::Certificate.Arn"},
+            path="/properties/Id",
+        ),
+    ],
 }
 
 
@@ -429,11 +453,182 @@ def main():
                     )
                 )
 
-        for path in _descend(obj, ["RoleArn", "RoleARN", "IAMRoleARN", "IamRoleArn"]):
+        for path in _descend(
+            obj,
+            [
+                "RoleArn",
+                "RoleARN",
+                "IAMRoleARN",
+                "IamRoleArn",
+            ],
+        ):
             if path[-2] == "properties":
+                if resource_type in [
+                    "AWS::Kendra::Index",
+                ]:
+                    continue
                 resource_patches.append(
                     _create_patch(
                         value={"format": "AWS::IAM::Role.Arn"},
+                        ref="#/" + "/".join(path),
+                        resolver=resolver,
+                    )
+                )
+
+        # Suffix match for *RoleArn/*RoleARN not caught by exact match above
+        for def_name, def_value in obj.get("definitions", {}).items():
+            for prop_name in def_value.get("properties", {}):
+                if prop_name.endswith(("RoleArn", "RoleARN")) and prop_name not in (
+                    "RoleArn",
+                    "RoleARN",
+                ):
+                    resource_patches.append(
+                        _create_patch(
+                            value={"format": "AWS::IAM::Role.Arn"},
+                            ref=f"#/definitions/{def_name}/properties/{prop_name}",
+                            resolver=resolver,
+                        )
+                    )
+        for prop_name in obj.get("properties", {}):
+            if prop_name.endswith(("RoleArn", "RoleARN")) and prop_name not in (
+                "RoleArn",
+                "RoleARN",
+            ):
+                resource_patches.append(
+                    _create_patch(
+                        value={"format": "AWS::IAM::Role.Arn"},
+                        ref=f"#/properties/{prop_name}",
+                        resolver=resolver,
+                    )
+                )
+
+        for path in _descend(
+            obj,
+            [
+                "KmsKeyArn",
+                "KMSKeyArn",
+                "KmsArn",
+                "KMSArn",
+            ],
+        ):
+            if path[-2] == "properties":
+                resource_patches.append(
+                    _create_patch(
+                        value={"format": "AWS::KMS::Key.Arn"},
+                        ref="#/" + "/".join(path),
+                        resolver=resolver,
+                    )
+                )
+
+        for path in _descend(
+            obj,
+            [
+                "KmsKeyId",
+                "KMSKeyId",
+                "KmsMasterKeyId",
+                "KMSMasterKeyID",
+            ],
+        ):
+            if path[-2] == "properties":
+                resource_patches.append(
+                    _create_patch(
+                        value={
+                            "anyOf": [
+                                {"format": "AWS::KMS::Key.Arn"},
+                                {"format": "AWS::KMS::Key.Id"},
+                                {"format": "AWS::KMS::Alias.AliasName"},
+                            ]
+                        },
+                        ref="#/" + "/".join(path),
+                        resolver=resolver,
+                    )
+                )
+
+        for path in _descend(
+            obj,
+            [
+                "TopicArn",
+                "TopicARN",
+                "SnsTopicArn",
+                "SNSTopicArn",
+                "SnsTopicARN",
+            ],
+        ):
+            if path[-2] == "properties":
+                if resource_type.startswith(("AWS::MSK::", "AWS::FMS::")):
+                    continue
+                resource_patches.append(
+                    _create_patch(
+                        value={"format": "AWS::SNS::Topic.Arn"},
+                        ref="#/" + "/".join(path),
+                        resolver=resolver,
+                    )
+                )
+
+        for path in _descend(
+            obj,
+            [
+                "CertificateArn",
+                "CertificateARN",
+                "AcmCertificateArn",
+            ],
+        ):
+            if path[-2] == "properties":
+                if resource_type in [
+                    "AWS::EC2::CustomerGateway",
+                    "AWS::EMRContainers::Endpoint",
+                    "AWS::MediaPackage::OriginEndpoint",
+                    "AWS::MediaPackageV2::OriginEndpoint",
+                ] or resource_type.startswith(
+                    (
+                        "AWS::DMS::",
+                        "AWS::Greengrass::",
+                        "AWS::IoT",
+                    )
+                ):
+                    continue
+                resource_patches.append(
+                    _create_patch(
+                        value={"format": "AWS::ACM::Certificate.Arn"},
+                        ref="#/" + "/".join(path),
+                        resolver=resolver,
+                    )
+                )
+
+        for path in _descend(
+            obj,
+            [
+                "FunctionArn",
+                "FunctionARN",
+                "LambdaArn",
+                "LambdaFunctionArn",
+            ],
+        ):
+            if path[-2] == "properties":
+                if resource_type.startswith(("AWS::CloudFront::", "AWS::AppSync::")):
+                    continue
+                resource_patches.append(
+                    _create_patch(
+                        value={"format": "AWS::Lambda::Function.Arn"},
+                        ref="#/" + "/".join(path),
+                        resolver=resolver,
+                    )
+                )
+
+        for path in _descend(
+            obj,
+            [
+                "BucketName",
+                "S3BucketName",
+                "S3Bucket",
+            ],
+        ):
+            if path[-2] == "properties":
+                if resource_type.startswith(("AWS::Lightsail::", "AWS::S3Outposts::")):
+                    continue
+                resource_patches.append(
+                    _create_patch(
+                        value={"format": "AWS::S3::Bucket.Name"},
                         ref="#/" + "/".join(path),
                         resolver=resolver,
                     )

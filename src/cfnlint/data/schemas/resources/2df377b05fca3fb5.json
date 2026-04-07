@@ -26,6 +26,17 @@
    "additionalProperties": false,
    "properties": {
     "KmsKeyId": {
+     "anyOf": [
+      {
+       "format": "AWS::KMS::Key.Arn"
+      },
+      {
+       "format": "AWS::KMS::Key.Id"
+      },
+      {
+       "format": "AWS::KMS::Alias.AliasName"
+      }
+     ],
      "type": "string"
     },
     "Type": {
@@ -45,6 +56,7 @@
    "additionalProperties": false,
    "properties": {
     "LogGroupName": {
+     "format": "AWS::Logs::LogGroup.Name",
      "minLength": 1,
      "type": "string"
     }
@@ -64,7 +76,9 @@
    "additionalProperties": false,
    "properties": {
     "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
      "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
       "maxLength": 255,
       "minLength": 1,
       "pattern": "^sg-[a-z0-9]*$",
@@ -85,6 +99,7 @@
    "type": "object"
   },
   "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
    "maxLength": 2048,
    "minLength": 1,
    "pattern": "^arn:aws(?:-(?:cn|us-gov|iso|iso-b|iso-e|iso-f))?:iam::[0-9]{12}:role(/[a-zA-Z0-9+=,.@_-]{1,512})*?/[a-zA-Z0-9+=,.@_-]{1,64}$",

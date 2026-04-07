@@ -101,16 +101,13 @@
     "KMSMasterKeyID": {
      "anyOf": [
       {
-       "relationshipRef": {
-        "propertyPath": "/properties/KeyId",
-        "typeName": "AWS::KMS::Key"
-       }
+       "format": "AWS::KMS::Key.Arn"
       },
       {
-       "relationshipRef": {
-        "propertyPath": "/properties/Arn",
-        "typeName": "AWS::KMS::Key"
-       }
+       "format": "AWS::KMS::Key.Id"
+      },
+      {
+       "format": "AWS::KMS::Alias.AliasName"
       }
      ],
      "type": "string"
@@ -183,6 +180,7 @@
    "$ref": "#/definitions/BucketEncryption"
   },
   "BucketName": {
+   "format": "AWS::S3::Bucket.Name",
    "maxLength": 63,
    "pattern": "^[a-z0-9][a-z0-9//.//-]*[a-z0-9]$",
    "type": "string"

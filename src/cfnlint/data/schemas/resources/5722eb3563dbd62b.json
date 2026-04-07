@@ -577,6 +577,7 @@
    "additionalProperties": false,
    "properties": {
     "KmsKeyArn": {
+     "format": "AWS::KMS::Key.Arn",
      "type": "string"
     },
     "SseAlgorithm": {
@@ -1255,6 +1256,17 @@
    "additionalProperties": false,
    "properties": {
     "KMSMasterKeyID": {
+     "anyOf": [
+      {
+       "format": "AWS::KMS::Key.Arn"
+      },
+      {
+       "format": "AWS::KMS::Key.Id"
+      },
+      {
+       "format": "AWS::KMS::Alias.AliasName"
+      }
+     ],
      "type": "string"
     },
     "SSEAlgorithm": {
@@ -1541,6 +1553,7 @@
    "$ref": "#/definitions/BucketEncryption"
   },
   "BucketName": {
+   "format": "AWS::S3::Bucket.Name",
    "maxLength": 63,
    "minLength": 3,
    "pattern": "^[a-z0-9][a-z0-9.-]*[a-z0-9]$",

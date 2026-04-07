@@ -142,6 +142,7 @@
      "type": "boolean"
     },
     "QueryEngineRoleArn": {
+     "format": "AWS::IAM::Role.Arn",
      "maxLength": 2048,
      "minLength": 20,
      "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):iam::\\d{12}:role/.+$",
@@ -180,6 +181,17 @@
      "type": "string"
     },
     "KMSKeyId": {
+     "anyOf": [
+      {
+       "format": "AWS::KMS::Key.Arn"
+      },
+      {
+       "format": "AWS::KMS::Key.Id"
+      },
+      {
+       "format": "AWS::KMS::Alias.AliasName"
+      }
+     ],
      "type": "string"
     }
    },

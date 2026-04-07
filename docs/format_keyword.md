@@ -34,7 +34,39 @@ This format validates that the value is a valid Amazon Machine Image (AMI), whic
 
 ### AWS::IAM::Role.Arn
 
-This format validates that the value is a valid IAM Role ARN, which is a string of the pattern `^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):iam::\d{12}:role/.*$`.  More info in [docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html)
+This format validates that the value is a valid IAM Role ARN, which is a string of the pattern `^arn:aws[a-zA-Z-]*:iam::\d{12}:role/.+$`.  More info in [docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html)
+
+### AWS::KMS::Key.Arn
+
+This format validates that the value is a valid KMS key ARN (key or alias), which is a string of the pattern `^arn:aws[a-zA-Z-]*:kms:[a-z0-9-]+:\d{12}:(key|alias)/.+$`.  More info in [docs](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id)
+
+### AWS::KMS::Key.Id
+
+This format validates that the value is a valid KMS key identifier (UUID, multi-region key ID, or alias name). Matches patterns: `^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`, `^mrk-[0-9a-f]{32}$`, or `^alias/[a-zA-Z0-9/_-]+$`.  More info in [docs](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id)
+
+### AWS::KMS::Alias.AliasName
+
+This format validates that the value is a valid KMS alias name, which is a string of the pattern `^alias/[a-zA-Z0-9:/_-]+$`.  More info in [docs](https://docs.aws.amazon.com/kms/latest/developerguide/kms-alias.html)
+
+### AWS::SNS::Topic.Arn
+
+This format validates that the value is a valid SNS topic ARN, which is a string of the pattern `^arn:aws[a-zA-Z-]*:sns:[a-z0-9-]+:\d{12}:.+$`.  More info in [docs](https://docs.aws.amazon.com/sns/latest/dg/sns-create-topic.html)
+
+### AWS::ACM::Certificate.Arn
+
+This format validates that the value is a valid ACM certificate ARN, which is a string of the pattern `^arn:aws[a-zA-Z-]*:acm:[a-z0-9-]+:\d{12}:certificate/.+$`.  More info in [docs](https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html)
+
+### AWS::Lambda::Function.Arn
+
+This format validates that the value is a valid Lambda function ARN with optional version or alias qualifier, which is a string of the pattern `^arn:aws[a-zA-Z-]*:lambda:[a-z0-9-]+:\d{12}:function:.+(:.+)?$`.  More info in [docs](https://docs.aws.amazon.com/lambda/latest/dg/lambda-api-permissions-ref.html)
+
+### AWS::Lambda::Function.Name
+
+This format validates that the value is a valid Lambda function name (not an ARN), which is a string of the pattern `^[a-zA-Z0-9_-]{1,140}$`.  More info in [docs](https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html)
+
+### AWS::S3::Bucket.Name
+
+This format validates that the value is a valid S3 bucket name, which must be 3-63 characters, lowercase letters, numbers, dots, and hyphens.  More info in [docs](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html)
 
 ### AWS::Logs::LogGroup.Name
 

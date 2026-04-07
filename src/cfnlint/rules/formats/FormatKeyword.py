@@ -14,6 +14,8 @@ from cfnlint.rules import CloudFormationLintRule
 
 
 class FormatKeyword(CloudFormationLintRule):
+    ARN_PREFIX = r"^arn:aws[a-zA-Z-]*:"
+
     def __init__(self, format: str | None = None, pattern: str | None = None) -> None:
         super().__init__()
         self.format_keyword = format

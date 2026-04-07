@@ -18,5 +18,5 @@ class IamRoleArn(FormatKeyword):
     def __init__(self):
         super().__init__(
             format="AWS::IAM::Role.Arn",
-            pattern=r"^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):iam::\d{12}:role/.*$",
+            pattern=self.ARN_PREFIX + r"iam::\d{12}:role/.+$",
         )

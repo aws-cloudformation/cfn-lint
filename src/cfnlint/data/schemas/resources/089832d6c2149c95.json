@@ -96,6 +96,17 @@
    "additionalProperties": false,
    "properties": {
     "KmsKeyId": {
+     "anyOf": [
+      {
+       "format": "AWS::KMS::Key.Arn"
+      },
+      {
+       "format": "AWS::KMS::Key.Id"
+      },
+      {
+       "format": "AWS::KMS::Alias.AliasName"
+      }
+     ],
      "type": "string"
     },
     "SecretArn": {
@@ -314,6 +325,17 @@
    "type": "integer"
   },
   "KmsKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
    "type": "string"
   },
   "ManageMasterUserPassword": {
@@ -341,6 +363,7 @@
    "type": "integer"
   },
   "MonitoringRoleArn": {
+   "format": "AWS::IAM::Role.Arn",
    "type": "string"
   },
   "NetworkType": {

@@ -26,6 +26,7 @@
    "additionalProperties": false,
    "properties": {
     "BucketName": {
+     "format": "AWS::S3::Bucket.Name",
      "type": "string"
     },
     "LogDestinationType": {
@@ -214,16 +215,13 @@
   "KmsKeyId": {
    "anyOf": [
     {
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::KMS::Key"
-     }
+     "format": "AWS::KMS::Key.Arn"
     },
     {
-     "relationshipRef": {
-      "propertyPath": "/properties/KeyId",
-      "typeName": "AWS::KMS::Key"
-     }
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
     }
    ],
    "maxLength": 2147483647,
