@@ -264,7 +264,11 @@ class ProviderSchemaManager:
 
         # Separate ISO regions (not publicly accessible) from regular regions
         iso_regions = [r for r in target_regions if "iso" in r or r.startswith("eusc")]
-        regular_regions = [r for r in target_regions if r not in iso_regions]
+        # Regions to skip due to endpoint availability issues
+        skip_regions = {"me-south-1"}
+        regular_regions = [
+            r for r in target_regions if r not in iso_regions and r not in skip_regions
+        ]
 
         # Download all regular regions in parallel
         downloaded_regions: dict[str, dict[str, dict]] = {}
