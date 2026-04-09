@@ -628,8 +628,11 @@ def oneOf(
 def pattern(
     validator: Validator, patrn: Any, instance: Any, schema: dict[str, Any]
 ) -> ValidationResult:
-    if not validator.is_type(instance, "string"):
+    if not isinstance(instance, (str, int, float, bool)):
         return
+
+    if not isinstance(instance, str):
+        instance = str(instance)
 
     if not re.search(patrn, instance):
         yield ValidationError(f"{instance!r} does not match {patrn!r}")
