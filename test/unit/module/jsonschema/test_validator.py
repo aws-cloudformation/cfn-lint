@@ -641,6 +641,34 @@ def test_validator(name, schema, instance, expected, validator):
             [],
         ),
         (
+            "pattern with float converts to string and matches",
+            {"pattern": "^17\\.6$"},
+            17.6,
+            [],
+        ),
+        (
+            "pattern with float converts to string and does not match",
+            {"pattern": "^18\\.0$"},
+            17.6,
+            [
+                ValidationError(
+                    "'17.6' does not match '^18\\\\.0$'",
+                )
+            ],
+        ),
+        (
+            "pattern with int converts to string and matches",
+            {"pattern": "^17$"},
+            17,
+            [],
+        ),
+        (
+            "pattern with bool converts to string",
+            {"pattern": "^True$"},
+            True,
+            [],
+        ),
+        (
             "pattern",
             {"pattern": "^a*$"},
             "bbb",

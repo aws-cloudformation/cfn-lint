@@ -101,6 +101,15 @@ def schema():
                 )
             ],
         ),
+        (
+            "Valid with float EngineVersion",
+            {
+                "Engine": "mysql",
+                "EngineVersion": 8.0,
+                "DBInstanceClass": "db.t3.small",
+            },
+            [],
+        ),
     ],
 )
 def test_validate(name, instance, expected, rule, schema, validator):

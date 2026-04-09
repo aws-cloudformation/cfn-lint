@@ -301,7 +301,7 @@ def write_db_instance_version_dbinstanceclass(results):
                         "const": engine,
                     },
                     "EngineVersion": {
-                        "type": "string",
+                        "type": ["string", "number"],
                         "pattern": engine_pattern,
                     },
                     "DBInstanceClass": {
