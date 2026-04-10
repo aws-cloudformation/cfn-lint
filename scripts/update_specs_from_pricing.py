@@ -186,7 +186,9 @@ def get_rds_pricing():
                         continue
                     if not results.get(location):
                         results[location] = set(["db.serverless"])
-                    results[location].add(product.get("attributes").get("instanceType"))
+                    instance_type = product.get("attributes").get("instanceType")
+                    if instance_type:
+                        results[location].add(instance_type)
                     # Rds Instance Size spec
                     product_names = product_map.get(
                         product.get("attributes").get("engineCode"), []
@@ -361,7 +363,9 @@ def get_results(service, product_families, default=None):
                         continue
                     if not results.get(location):
                         results[location] = default
-                    results[location].add(product.get("attributes").get("instanceType"))
+                    instance_type = product.get("attributes").get("instanceType")
+                    if instance_type:
+                        results[location].add(instance_type)
     return results
 
 
