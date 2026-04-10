@@ -187,6 +187,31 @@ class Conditions:
                     if prop is not None:
                         cnf.add_prop(Not(prop))
 
+        # Create a Symbol per condition name and add implication constraints
+        # so that build_true_cnf/build_false_cnf can use the simple Symbol
+        # instead of the full boolean expression (avoids CNF explosion).
+        # We add condition symbols to equal_vars FIRST so that when
+        # build_cnf is called, nested !Condition references resolve to
+        # the simple Symbol instead of expanding the full expression.
+        cond_symbols: dict[str, Symbol] = {}
+        for condition_name in condition_names:
+            cond_symbols[condition_name] = Symbol(f"__cond_{condition_name}")
+
+        # Build equivalences using cond_symbols for nested condition refs
+        # but NOT for the condition being defined (to avoid circularity)
+        for condition_name in condition_names:
+            cond_sym = cond_symbols[condition_name]
+            # Merge equal_vars with other condition symbols (excluding self)
+            build_params = dict(equal_vars)
+            for other_name, other_sym in cond_symbols.items():
+                if other_name != condition_name:
+                    build_params[other_name] = other_sym
+            cond_expr = self._conditions[condition_name].build_cnf(build_params)
+            cnf.add_prop(Implies(cond_sym, cond_expr))
+            cnf.add_prop(Implies(cond_expr, cond_sym))
+
+        equal_vars.update(cond_symbols)
+
         for rule in self._rules:
             cnf.add_prop(rule.build_cnf(equal_vars))
 

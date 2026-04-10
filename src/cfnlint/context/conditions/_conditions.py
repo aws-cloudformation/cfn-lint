@@ -6,12 +6,11 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 import itertools
-from collections import OrderedDict
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Iterator
 
-from sympy import Not, Or
-from sympy.logic.boolalg import BooleanFunction
+from sympy import Equivalent, Not, Or, Symbol
+from sympy.assumptions.cnf import EncodedCNF
 from sympy.logic.inference import satisfiable
 
 from cfnlint.conditions._utils import get_hash
@@ -26,39 +25,21 @@ if TYPE_CHECKING:
     from cfnlint.context.context import Context, Parameter
 
 
-# Use OrderedDict for LRU-like behavior
-_satisfiable_cache: OrderedDict[str, bool] = OrderedDict()
-_MAX_CACHE_SIZE = 10000  # Limit cache size to prevent memory issues
-
-
-def _get_from_satisfiable_cache(cnf_hash: str) -> bool | None:
-    """Get result from cache with LRU behavior"""
-    if cnf_hash in _satisfiable_cache:
-        # Move to end (most recently used)
-        value = _satisfiable_cache.pop(cnf_hash)
-        _satisfiable_cache[cnf_hash] = value
-        return value
-    return None
-
-
-def _add_to_satisfiable_cache(cnf_hash: str, result: bool) -> None:
-    """Add result to cache with size management"""
-    if len(_satisfiable_cache) >= _MAX_CACHE_SIZE:
-        # Remove oldest item (first in OrderedDict)
-        _satisfiable_cache.popitem(last=False)
-    _satisfiable_cache[cnf_hash] = result
-
-
 @dataclass(frozen=True)
 class Conditions:
-    # Template level condition management
     conditions: dict[str, Condition] = field(init=True, default_factory=dict)
-    cnf: BooleanFunction | None = field(init=True, default=None)
+    cnf: EncodedCNF = field(init=True, default_factory=EncodedCNF, compare=False)
+    _condition_symbols: dict[str, Symbol] = field(
+        init=True, default_factory=dict, compare=False
+    )
     _max_scenarios: int = field(init=False, default=128)
 
     @classmethod
     def create_from_instance(
-        cls, conditions: Any, rules: dict[str, dict], parameters: dict[str, "Parameter"]
+        cls,
+        conditions: Any,
+        rules: dict[str, dict],
+        parameters: dict[str, "Parameter"],
     ) -> "Conditions":
         obj: dict[str, Condition] = {}
         if not isinstance(conditions, dict):
@@ -69,13 +50,20 @@ class Conditions:
                 del other_conditions[k]
                 obj[k] = Condition.create_from_instance(v, other_conditions)
             except ValueError:
-                # this is a default condition so we can keep the name but it will
-                # not associate with another condition and will always be true/false
                 obj[k] = Condition.create_from_instance(
                     {"Fn::Equals": [None, None]}, conditions
                 )
 
-        cnf = None
+        # Build EncodedCNF with a Symbol per condition name
+        cnf = EncodedCNF()
+        condition_symbols: dict[str, Symbol] = {}
+        for name, cond in obj.items():
+            sym = Symbol(name)
+            condition_symbols[name] = sym
+            # Add equivalence: Symbol(name) <-> condition's boolean expression
+            cnf.add_prop(Equivalent(sym, cond.cnf))
+
+        # Add parameter AllowedValues constraints
         for p_k, p_v in parameters.items():
             if not p_v.allowed_values:
                 continue
@@ -90,13 +78,10 @@ class Conditions:
                         if i.left.instance in allowed_values:
                             allowed_values.remove(i.left.instance)
 
-            if not allowed_values:
-                if cnf is None:
-                    cnf = Or(*equals_cnfs)
-                else:
-                    cnf = cnf & Or(*equals_cnfs)
+            if not allowed_values and equals_cnfs:
+                cnf.add_prop(Or(*equals_cnfs))
 
-        return cls(conditions=obj, cnf=cnf)
+        return cls(conditions=obj, cnf=cnf, _condition_symbols=condition_symbols)
 
     def evolve(self, status: dict[str, bool]) -> "Conditions":
         cls = self.__class__
@@ -104,7 +89,6 @@ class Conditions:
         if not status:
             return self
 
-        # Check if we're trying to set the same status
         all_same = True
         for condition, condition_status in status.items():
             if (
@@ -117,50 +101,30 @@ class Conditions:
             return self
 
         conditions: dict[str, Condition] = {}
-        cnf = self.cnf
+        cnf = self.cnf.copy()
         for condition, value in self.conditions.items():
             s = status.get(condition, value.status)
             try:
                 conditions[condition] = value.evolve(status=s)
-                if s is not None:
-                    if cnf:
-                        cnf = (
-                            cnf & conditions[condition].cnf
-                            if s
-                            else cnf & Not(conditions[condition].cnf)
-                        )
-                    else:
-                        cnf = (
-                            conditions[condition].cnf
-                            if s
-                            else Not(conditions[condition].cnf)
-                        )
+                if s is not None and condition in self._condition_symbols:
+                    sym = self._condition_symbols[condition]
+                    cnf.add_prop(sym if s else Not(sym))
             except ValueError as e:
                 raise Unsatisfiable(
                     new_status=status,
                     current_status=self.status,
                 ) from e
 
-        cnf_hash = get_hash(str(cnf))
-        cached_result = _get_from_satisfiable_cache(cnf_hash)
-        if cached_result is not None:
-            if not cached_result:
-                raise Unsatisfiable(
-                    new_status=status,
-                    current_status=self.status,
-                )
-        else:
-            is_sat = satisfiable(cnf)
-            _add_to_satisfiable_cache(cnf_hash, bool(is_sat))
-            if not is_sat:
-                raise Unsatisfiable(
-                    new_status=status,
-                    current_status=self.status,
-                )
+        if not satisfiable(cnf):
+            raise Unsatisfiable(
+                new_status=status,
+                current_status=self.status,
+            )
 
         return cls(
             conditions=conditions,
             cnf=cnf,
+            _condition_symbols=self._condition_symbols,
         )
 
     def _build_conditions(self, conditions: set[str]) -> Iterator["Conditions"]:

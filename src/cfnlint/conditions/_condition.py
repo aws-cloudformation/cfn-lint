@@ -233,7 +233,14 @@ class ConditionNamed(Condition):
         Returns:
             Any: A SymPy CNF clause
         """
-        return self.build_cnf(params)
+        if self._name in params:
+            return params[self._name]
+        return super().build_cnf(params)
+
+    def build_cnf(self, params: dict[str, Symbol]) -> Any:
+        if self._name in params:
+            return params[self._name]
+        return super().build_cnf(params)
 
     def build_false_cnf(self, params: dict[str, Symbol]) -> Any:
         """Build a SymPy CNF for a False based scenario
