@@ -8,7 +8,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from sympy import And, Not, Or
+from sympy import And, Not, Or, Symbol
 from sympy.logic.boolalg import BooleanFunction
 
 from cfnlint.conditions._utils import get_hash
@@ -20,19 +20,16 @@ from cfnlint.helpers import FUNCTION_CONDITIONS, is_function
 class Condition:
     instance: Any = field(init=True)
     status: bool | None = field(init=True, default=None)
-    hash: str = field(init=True, default="")  # Changed to init=True with default
+    hash: str = field(init=True, default="")
 
     fn_equals: Equal | None = field(init=True, default=None)
     condition: list["Condition"] | "Condition" | None = field(init=True, default=None)
     cnf: BooleanFunction = field(init=True, default_factory=BooleanFunction)
 
-    # Removed __post_init__ since hash is now passed in
-
     @classmethod
     def create_from_instance(
         cls, instance: Any, all_conditions: dict[str, Any]
     ) -> "Condition":
-        # Calculate hash here once
         instance_hash = get_hash(instance)
 
         fn_k, fn_v = is_function(instance)
@@ -73,6 +70,7 @@ class Condition:
         if fn_k == "Condition":
             if not isinstance(fn_v, str):
                 raise ValueError(f"Condition value {fn_v!r} must be a string")
+            # Build the sub-condition for is_region/equals traversal
             sub_condition = all_conditions.get(fn_v)
             try:
                 sub_all_conditions = all_conditions.copy()
@@ -82,7 +80,14 @@ class Condition:
                 c = Condition.create_from_instance(
                     {"Fn::Equals": [None, None]}, all_conditions
                 )
-            return cls(instance=instance, condition=c, cnf=c.cnf, hash=instance_hash)
+            # Use a Symbol for the condition name instead of the expanded CNF
+            # The equivalence constraint is added in Conditions.create_from_instance
+            return cls(
+                instance=instance,
+                condition=c,
+                cnf=Symbol(fn_v),
+                hash=instance_hash,
+            )
 
         raise ValueError(f"Unknown key {fn_k!r} in condition")
 
