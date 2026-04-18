@@ -718,10 +718,6 @@ patches.extend(
                     path="/definitions/BlockDeviceMapping",
                 ),
                 Patch(
-                    values={"pattern": "^ephemeral([0-9]|[1][0-9]|[2][0-3])$"},
-                    path="/definitions/BlockDeviceMapping/properties/VirtualName",
-                ),
-                Patch(
                     values={
                         "dependentExcluded": {
                             "NetworkInterfaces": ["SubnetId"],
@@ -751,10 +747,6 @@ patches.extend(
                 Patch(
                     values=common_patches.get("BlockDeviceMapping"),
                     path="/definitions/BlockDeviceMapping",
-                ),
-                Patch(
-                    values={"pattern": "^ephemeral([0-9]|[1][0-9]|[2][0-3])$"},
-                    path="/definitions/BlockDeviceMapping/properties/VirtualName",
                 ),
                 Patch(
                     values={
@@ -908,10 +900,6 @@ patches.extend(
                     values=common_patches.get("BlockDeviceMapping"),
                 ),
                 Patch(
-                    values={"pattern": "^ephemeral([0-9]|[1][0-9]|[2][0-3])$"},
-                    path="/definitions/BlockDeviceMapping/properties/VirtualName",
-                ),
-                Patch(
                     path="/definitions/SpotFleetRequestConfigData",
                     values={
                         "requiredXor": ["LaunchSpecifications", "LaunchTemplateConfigs"]
@@ -1030,7 +1018,7 @@ patches.extend(
             resource_type="AWS::Glue::Job",
             patches=[
                 Patch(
-                    values={"maximum": 299, "minimum": 0},
+                    values={"minimum": 0},
                     path="/properties/NumberOfWorkers",
                 ),
             ],
@@ -1393,10 +1381,6 @@ patches.extend(
             resource_type="AWS::OpsWorks::Instance",
             patches=[
                 Patch(
-                    values={"pattern": "^ephemeral([0-9]|[1][0-9]|[2][0-3])$"},
-                    path="/definitions/BlockDeviceMapping/properties/VirtualName",
-                ),
-                Patch(
                     values=common_patches.get("BlockDeviceMapping"),
                     path="/definitions/BlockDeviceMapping",
                 ),
@@ -1695,6 +1679,72 @@ patches.extend(
                         },
                     },
                     path="/",
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::AmazonMQ::Broker",
+            patches=[
+                Patch(
+                    values={"enumCaseInsensitive": ["EBS", "EFS"]},
+                    path="/properties/StorageType",
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::Backup::BackupSelection",
+            patches=[
+                Patch(
+                    values={"pattern": r"^[a-zA-Z0-9\-\_\.]+$"},
+                    path="/definitions/BackupSelectionResourceType/properties/SelectionName",
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::Bedrock::Guardrail",
+            patches=[
+                Patch(
+                    values={"maxItems": 30},
+                    path="/definitions/SensitiveInformationPolicyConfig/properties/RegexesConfig",
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::CloudFormation::StackSet",
+            patches=[
+                Patch(
+                    values={"pattern": r"^[a-zA-Z_0-9+=,.@/-]+$"},
+                    path="/properties/ExecutionRoleName",
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::Lambda::Function",
+            patches=[
+                Patch(
+                    values={
+                        "minLength": 1,
+                        "pattern": r"^arn:[a-zA-Z0-9-]+:lambda:[a-zA-Z0-9-]+:\d{12}:layer:[a-zA-Z0-9-_]+:[0-9]+$",
+                    },
+                    path="/properties/Layers/items",
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::Logs::LogAnomalyDetector",
+            patches=[
+                Patch(
+                    values={"pattern": r"^[\w#+=/:,.@*-]*$"},
+                    path="/properties/LogGroupArnList/items",
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::MSK::Cluster",
+            patches=[
+                Patch(
+                    values={"minimum": 1},
+                    path="/properties/NumberOfBrokerNodes",
                 ),
             ],
         ),

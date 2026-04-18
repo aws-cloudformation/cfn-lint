@@ -39,6 +39,20 @@ skip = [
 
 skip_resource_types = ["AWS::CloudFormation::Stack"]
 skip_property_names = ["State"]
+skip_resource_property_paths = {
+    "AWS::AmazonMQ::Broker": ["/properties/StorageType"],
+    "AWS::CloudFormation::StackSet": ["/properties/ExecutionRoleName"],
+    "AWS::Bedrock::Guardrail": [
+        "/definitions/SensitiveInformationPolicyConfig/properties/RegexesConfig"
+    ],
+    "AWS::MSK::Cluster": ["/properties/NumberOfBrokerNodes"],
+    "AWS::Lambda::Function": ["/properties/Layers/items"],
+    "AWS::Logs::LogAnomalyDetector": ["/properties/LogGroupArnList/items"],
+    "AWS::EC2::NetworkInterface": ["/properties/InterfaceType"],
+    "AWS::Backup::BackupSelection": [
+        "/definitions/BackupSelectionResourceType/properties/SelectionName"
+    ],
+}
 _visited_paths = []
 
 
@@ -415,9 +429,13 @@ def get_resource_patches(
             results[resource_type] = {}
 
         results[resource_type].update(
-            _per_resource_patch(
-                ref_resolver, smithy_data, [service_dir.name, latest_version]
-            )
+            {
+                path: patch
+                for path, patch in _per_resource_patch(
+                    ref_resolver, smithy_data, [service_dir.name, latest_version]
+                ).items()
+                if path not in skip_resource_property_paths.get(resource_type, [])
+            }
         )
 
     return results
