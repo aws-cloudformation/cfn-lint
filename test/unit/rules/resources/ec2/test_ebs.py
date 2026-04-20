@@ -67,17 +67,45 @@ def rule():
                 "VolumeType": "standard",
                 "Iops": 3000,
             },
+            [],
+        ),
+        (
+            {
+                "VolumeType": "gp3",
+                "Iops": 64000,
+            },
             [
                 ValidationError(
-                    "Additional properties are not allowed (Iops) was "
-                    "unexpected when 'VolumeType' has a value of 'standard'",
+                    "64000 is greater than the maximum of 16000",
                     rule=Ebs(),
                     path=deque(["Iops"]),
-                    validator=None,
-                    validator_value=False,
-                    instance=3000,
-                    schema=False,
-                    schema_path=deque(["allOf", 1, "then", "properties", "Iops"]),
+                    validator="maximum",
+                    validator_value=16000,
+                    instance=64000,
+                    schema={"minimum": 3000, "maximum": 16000},
+                    schema_path=deque(
+                        ["allOf", 2, "then", "properties", "Iops", "maximum"]
+                    ),
+                )
+            ],
+        ),
+        (
+            {
+                "VolumeType": "io1",
+                "Iops": 50,
+            },
+            [
+                ValidationError(
+                    "50 is less than the minimum of 100",
+                    rule=Ebs(),
+                    path=deque(["Iops"]),
+                    validator="minimum",
+                    validator_value=100,
+                    instance=50,
+                    schema={"minimum": 100, "maximum": 64000},
+                    schema_path=deque(
+                        ["allOf", 0, "then", "properties", "Iops", "minimum"]
+                    ),
                 )
             ],
         ),

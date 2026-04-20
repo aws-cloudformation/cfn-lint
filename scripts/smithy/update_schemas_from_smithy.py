@@ -13,6 +13,7 @@ import os
 import tempfile
 import zipfile
 from pathlib import Path
+from typing import Any
 
 import regex as re
 import requests
@@ -27,8 +28,15 @@ SCHEMA_URL = (
     "https://schema.cloudformation.us-east-1.amazonaws.com/CloudformationSchema.zip"
 )
 
-case_insensitive_services = [
-    "batch",
+case_insensitive_resources = [
+    "AWS::AmazonMQ::",
+    "AWS::Batch::",
+    "AWS::EC2::EIP",
+    "AWS::EC2::IPAMPool",
+    "AWS::EC2::NetworkAcl",
+    "AWS::EC2::SecurityGroup",
+    "AWS::EC2::Volume",
+    "AWS::Route53Resolver::",
 ]
 
 exceptions = {
@@ -120,7 +128,7 @@ def build_resource_type_patches(
 
     output_file = resource_path / "smithy.json"
 
-    d = []
+    d: list[dict[str, Any]] = []
     smithy_d = {}
 
     for path, patch in resource_patches.items():
@@ -154,15 +162,30 @@ def build_resource_type_patches(
             # Extract enum values
             enum_values = extract_smithy_enum(shape_data)
             if enum_values:
+                is_case_insensitive = any(
+                    resource_name.startswith(r) for r in case_insensitive_resources
+                )
+
                 if any(
                     f in schema_data for f in ["enum", "pattern", "properties", "items"]
                 ):
+                    if is_case_insensitive and "enum" in schema_data:
+                        d.append({"op": "remove", "path": f"{path}/enum"})
+                        d.append(
+                            {
+                                "op": "add",
+                                "path": f"{path}/enumCaseInsensitive",
+                                "value": sorted(
+                                    [v.lower() for v in schema_data["enum"]]
+                                ),
+                            }
+                        )
                     continue
 
                 # Check for case insensitive services
                 field = "enum"
                 value = enum_values
-                if patch.source[0] in case_insensitive_services:
+                if is_case_insensitive:
                     field = "enumCaseInsensitive"
                     value = [v.lower() for v in value]
 
