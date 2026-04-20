@@ -1,0 +1,236 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyArn"
+ ],
+ "definitions": {
+  "CloudWatchLogDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroupArn": {
+     "maxLength": 512,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "LogGroupArn"
+   ],
+   "type": "object"
+  },
+  "Label": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "minLength": 1,
+     "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
+     "type": "string"
+    },
+    "Value": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "LimitsPerLabelSet": {
+   "additionalProperties": false,
+   "properties": {
+    "LabelSet": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Label"
+     },
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Limits": {
+     "$ref": "#/definitions/LimitsPerLabelSetEntry"
+    }
+   },
+   "required": [
+    "Limits",
+    "LabelSet"
+   ],
+   "type": "object"
+  },
+  "LimitsPerLabelSetEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxSeries": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "LoggingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroupArn": {
+     "maxLength": 512,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LoggingDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogs": {
+     "$ref": "#/definitions/CloudWatchLogDestination"
+    },
+    "Filters": {
+     "$ref": "#/definitions/LoggingFilter"
+    }
+   },
+   "required": [
+    "CloudWatchLogs",
+    "Filters"
+   ],
+   "type": "object"
+  },
+  "LoggingFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "QspThreshold": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "QspThreshold"
+   ],
+   "type": "object"
+  },
+  "QueryLoggingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Destinations": {
+     "items": {
+      "$ref": "#/definitions/LoggingDestination"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Destinations"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "WorkspaceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LimitsPerLabelSets": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/LimitsPerLabelSet"
+     },
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "RetentionPeriodInDays": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AlertManagerDefinition": {
+   "type": "string"
+  },
+  "Alias": {
+   "maxLength": 100,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):aps:[a-z0-9-]+:[0-9]+:workspace/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "format": "AWS::KMS::Key.Arn",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[-a-z]*:kms:[-a-z0-9]+:[0-9]{12}:key/.+$",
+   "type": "string"
+  },
+  "LoggingConfiguration": {
+   "$ref": "#/definitions/LoggingConfiguration"
+  },
+  "PrometheusEndpoint": {
+   "type": "string"
+  },
+  "QueryLoggingConfiguration": {
+   "$ref": "#/definitions/QueryLoggingConfiguration"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "WorkspaceConfiguration": {
+   "$ref": "#/definitions/WorkspaceConfiguration"
+  },
+  "WorkspaceId": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{1,99}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/WorkspaceId",
+  "/properties/Arn",
+  "/properties/PrometheusEndpoint"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::APS::Workspace"
+}

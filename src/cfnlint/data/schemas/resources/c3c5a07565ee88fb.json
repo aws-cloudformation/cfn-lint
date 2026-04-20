@@ -1,0 +1,301 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ExecutionRoleArn",
+  "/properties/EnableNetworkIsolation",
+  "/properties/InferenceExecutionConfig",
+  "/properties/PrimaryContainer",
+  "/properties/ModelName",
+  "/properties/VpcConfig",
+  "/properties/Containers"
+ ],
+ "definitions": {
+  "ContainerDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerHostname": {
+     "maxLength": 63,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+     "type": "string"
+    },
+    "Environment": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "Image": {
+     "maxLength": 255,
+     "minLength": 0,
+     "pattern": "^[\\S]+$",
+     "type": "string"
+    },
+    "ImageConfig": {
+     "$ref": "#/definitions/ImageConfig"
+    },
+    "InferenceSpecificationName": {
+     "maxLength": 63,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+     "type": "string"
+    },
+    "Mode": {
+     "type": "string"
+    },
+    "ModelDataSource": {
+     "$ref": "#/definitions/ModelDataSource"
+    },
+    "ModelDataUrl": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    },
+    "ModelPackageName": {
+     "maxLength": 176,
+     "minLength": 1,
+     "pattern": "^(arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:[a-z\\-]*\\/)?([a-zA-Z0-9]([a-zA-Z0-9-]){0,62})(?<!-)(\\/[0-9]{1,9})?$",
+     "type": "string"
+    },
+    "MultiModelConfig": {
+     "$ref": "#/definitions/MultiModelConfig"
+    }
+   },
+   "type": "object"
+  },
+  "HubAccessConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "HubContentArn": {
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "HubContentArn"
+   ],
+   "type": "object"
+  },
+  "ImageConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "RepositoryAccessMode": {
+     "type": "string"
+    },
+    "RepositoryAuthConfig": {
+     "$ref": "#/definitions/RepositoryAuthConfig"
+    }
+   },
+   "required": [
+    "RepositoryAccessMode"
+   ],
+   "type": "object"
+  },
+  "InferenceExecutionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Mode": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Mode"
+   ],
+   "type": "object"
+  },
+  "ModelAccessConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AcceptEula": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "AcceptEula"
+   ],
+   "type": "object"
+  },
+  "ModelDataSource": {
+   "additionalProperties": false,
+   "properties": {
+    "S3DataSource": {
+     "$ref": "#/definitions/S3DataSource"
+    }
+   },
+   "required": [
+    "S3DataSource"
+   ],
+   "type": "object"
+  },
+  "MultiModelConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ModelCacheSetting": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RepositoryAuthConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "RepositoryCredentialsProviderArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "RepositoryCredentialsProviderArn"
+   ],
+   "type": "object"
+  },
+  "S3DataSource": {
+   "additionalProperties": false,
+   "properties": {
+    "CompressionType": {
+     "type": "string"
+    },
+    "HubAccessConfig": {
+     "$ref": "#/definitions/HubAccessConfig"
+    },
+    "ModelAccessConfig": {
+     "$ref": "#/definitions/ModelAccessConfig"
+    },
+    "S3DataType": {
+     "type": "string"
+    },
+    "S3Uri": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3Uri",
+    "S3DataType",
+    "CompressionType"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "maxLength": 32,
+      "minLength": 0,
+      "pattern": "^[-0-9a-zA-Z]+$",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Subnets": {
+     "format": "AWS::EC2::Subnet.Ids",
+     "items": {
+      "format": "AWS::EC2::Subnet.Id",
+      "maxLength": 32,
+      "minLength": 0,
+      "pattern": "^[-0-9a-zA-Z]+$",
+      "type": "string"
+     },
+     "maxItems": 16,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Subnets",
+    "SecurityGroupIds"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Containers": {
+   "items": {
+    "$ref": "#/definitions/ContainerDefinition"
+   },
+   "maxItems": 15,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "EnableNetworkIsolation": {
+   "type": "boolean"
+  },
+  "ExecutionRoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InferenceExecutionConfig": {
+   "$ref": "#/definitions/InferenceExecutionConfig"
+  },
+  "ModelName": {
+   "maxLength": 63,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9]([\\-a-zA-Z0-9]*[a-zA-Z0-9])?$",
+   "type": "string"
+  },
+  "PrimaryContainer": {
+   "$ref": "#/definitions/ContainerDefinition"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcConfig": {
+   "$ref": "#/definitions/VpcConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "typeName": "AWS::SageMaker::Model"
+}

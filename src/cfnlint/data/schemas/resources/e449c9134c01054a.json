@@ -1,0 +1,121 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Arn": {
+   "pattern": "arn:[\\w+=/,.@-]+:[\\w+=/,.@-]+:[\\w+=/,.@-]*:[0-9]*:[\\w+=,.@-]+(/[\\w+=,.@-]+)*",
+   "type": "string"
+  },
+  "RobotSoftwareSuite": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "enum": [
+      "ROS",
+      "ROS2",
+      "General"
+     ],
+     "type": "string"
+    },
+    "Version": {
+     "enum": [
+      "Kinetic",
+      "Melodic",
+      "Dashing"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "SourceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Architecture": {
+     "enum": [
+      "X86_64",
+      "ARM64",
+      "ARMHF"
+     ],
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "S3Bucket": {
+     "type": "string"
+    },
+    "S3Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3Bucket",
+    "S3Key",
+    "Architecture"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z0-9-]{1,128}$": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "CurrentRevisionId": {
+   "maxLength": 40,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Environment": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RobotSoftwareSuite": {
+   "$ref": "#/definitions/RobotSoftwareSuite"
+  },
+  "Sources": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SourceConfig"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "RobotSoftwareSuite"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::RoboMaker::RobotApplication",
+ "writeOnlyProperties": [
+  "/properties/RobotSoftwareSuite/Version",
+  "/properties/Sources"
+ ]
+}

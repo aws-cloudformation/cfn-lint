@@ -1,0 +1,159 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DaemonName",
+  "/properties/ClusterArn"
+ ],
+ "definitions": {
+  "DaemonAlarmConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AlarmNames": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Enable": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "DaemonDeploymentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Alarms": {
+     "$ref": "#/definitions/DaemonAlarmConfiguration"
+    },
+    "BakeTimeInMinutes": {
+     "maximum": 1440,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "DrainPercent": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "DaemonStatus": {
+   "enum": [
+    "ACTIVE",
+    "DELETE_IN_PROGRESS"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DaemonArn"
+ ],
+ "properties": {
+  "CapacityProviderArns": {
+   "items": {
+    "type": "string"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "ClusterArn": {
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DaemonArn": {
+   "type": "string"
+  },
+  "DaemonName": {
+   "type": "string"
+  },
+  "DaemonStatus": {
+   "$ref": "#/definitions/DaemonStatus"
+  },
+  "DaemonTaskDefinitionArn": {
+   "type": "string"
+  },
+  "DeploymentArn": {
+   "type": "string"
+  },
+  "DeploymentConfiguration": {
+   "$ref": "#/definitions/DaemonDeploymentConfiguration"
+  },
+  "EnableECSManagedTags": {
+   "type": "boolean"
+  },
+  "EnableExecuteCommand": {
+   "type": "boolean"
+  },
+  "PropagateTags": {
+   "enum": [
+    "DAEMON",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DaemonArn",
+  "/properties/DeploymentArn",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/DaemonStatus"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ECS::Daemon",
+ "writeOnlyProperties": [
+  "/properties/CapacityProviderArns",
+  "/properties/DaemonName",
+  "/properties/DaemonTaskDefinitionArn",
+  "/properties/DeploymentConfiguration",
+  "/properties/EnableECSManagedTags",
+  "/properties/EnableExecuteCommand",
+  "/properties/PropagateTags"
+ ]
+}

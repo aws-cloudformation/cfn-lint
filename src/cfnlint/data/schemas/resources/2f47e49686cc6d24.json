@@ -1,0 +1,138 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyId",
+  "/properties/NotebookInstanceName",
+  "/properties/SecurityGroupIds",
+  "/properties/SubnetId",
+  "/properties/DirectInternetAccess",
+  "/properties/PlatformIdentifier"
+ ],
+ "definitions": {
+  "InstanceMetadataServiceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MinimumInstanceMetadataServiceVersion": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "MinimumInstanceMetadataServiceVersion"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AcceleratorTypes": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "AdditionalCodeRepositories": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "DefaultCodeRepository": {
+   "type": "string"
+  },
+  "DirectInternetAccess": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InstanceMetadataServiceConfiguration": {
+   "$ref": "#/definitions/InstanceMetadataServiceConfiguration"
+  },
+  "InstanceType": {
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
+   "type": "string"
+  },
+  "LifecycleConfigName": {
+   "type": "string"
+  },
+  "NotebookInstanceName": {
+   "type": "string"
+  },
+  "PlatformIdentifier": {
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "type": "string"
+  },
+  "RootAccess": {
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SubnetId": {
+   "format": "AWS::EC2::Subnet.Id",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VolumeSizeInGB": {
+   "maximum": 16384,
+   "minimum": 5,
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "InstanceType",
+  "RoleArn"
+ ],
+ "typeName": "AWS::SageMaker::NotebookInstance"
+}

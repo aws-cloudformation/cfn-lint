@@ -1,0 +1,92 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CertificateProviderName"
+ ],
+ "definitions": {
+  "CertificateProviderOperation": {
+   "enum": [
+    "CreateCertificateFromCsr"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CertificateProviderName"
+ ],
+ "properties": {
+  "AccountDefaultForOperations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CertificateProviderOperation"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "CertificateProviderName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[\\w=,@-]+",
+   "type": "string"
+  },
+  "LambdaFunctionArn": {
+   "format": "AWS::Lambda::Function.Arn",
+   "maxLength": 170,
+   "minLength": 1,
+   "pattern": "^[\\s\\S]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "LambdaFunctionArn",
+  "AccountDefaultForOperations"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::CertificateProvider"
+}

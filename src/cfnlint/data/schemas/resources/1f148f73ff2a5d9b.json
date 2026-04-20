@@ -1,0 +1,77 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConfigRuleName"
+ ],
+ "definitions": {
+  "ExecutionControls": {
+   "additionalProperties": false,
+   "properties": {
+    "SsmControls": {
+     "$ref": "#/definitions/SsmControls"
+    }
+   },
+   "type": "object"
+  },
+  "SsmControls": {
+   "additionalProperties": false,
+   "properties": {
+    "ConcurrentExecutionRatePercentage": {
+     "type": "integer"
+    },
+    "ErrorPercentage": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConfigRuleName"
+ ],
+ "properties": {
+  "Automatic": {
+   "type": "boolean"
+  },
+  "ConfigRuleName": {
+   "type": "string"
+  },
+  "ExecutionControls": {
+   "$ref": "#/definitions/ExecutionControls"
+  },
+  "MaximumAutomaticAttempts": {
+   "type": "integer"
+  },
+  "Parameters": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "ResourceType": {
+   "type": "string"
+  },
+  "RetryAttemptSeconds": {
+   "type": "integer"
+  },
+  "TargetId": {
+   "type": "string"
+  },
+  "TargetType": {
+   "type": "string"
+  },
+  "TargetVersion": {
+   "type": "string"
+  }
+ },
+ "required": [
+  "TargetType",
+  "ConfigRuleName",
+  "TargetId"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Config::RemediationConfiguration"
+}

@@ -1,0 +1,69 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GreengrassGroupId",
+  "/properties/Name",
+  "/properties/Architecture",
+  "/properties/Fleet"
+ ],
+ "definitions": {
+  "Arn": {
+   "pattern": "arn:[\\w+=/,.@-]+:[\\w+=/,.@-]+:[\\w+=/,.@-]*:[0-9]*:[\\w+=,.@-]+(/[\\w+=,.@-]+)*",
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z0-9-]{1,128}$": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Architecture": {
+   "enum": [
+    "X86_64",
+    "ARM64",
+    "ARMHF"
+   ],
+   "type": "string"
+  },
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "Fleet": {
+   "maxLength": 1224,
+   "minLength": 1,
+   "type": "string"
+  },
+  "GreengrassGroupId": {
+   "maxLength": 1224,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "GreengrassGroupId",
+  "Architecture"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-robomaker.git",
+ "typeName": "AWS::RoboMaker::Robot"
+}
