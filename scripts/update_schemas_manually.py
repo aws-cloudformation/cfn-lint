@@ -1412,10 +1412,6 @@ patches.extend(
                     path="/properties/PromotionTier",
                 ),
                 Patch(
-                    values={"maximum": 35},
-                    path="/properties/BackupRetentionPeriod",
-                ),
-                Patch(
                     values={
                         "enum": [
                             7,
