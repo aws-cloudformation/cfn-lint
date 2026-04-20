@@ -954,15 +954,6 @@ patches.extend(
             ],
         ),
         ResourcePatch(
-            resource_type="AWS::ElasticLoadBalancingV2::LoadBalancer",
-            patches=[
-                Patch(
-                    values={"requiredXor": ["SubnetMappings", "Subnets"]},
-                    path="/",
-                ),
-            ],
-        ),
-        ResourcePatch(
             resource_type="AWS::ElasticLoadBalancingV2::TargetGroup",
             patches=[
                 Patch(
@@ -1334,6 +1325,17 @@ patches.extend(
                 Patch(
                     values={"maximum": 900, "minimum": 1},
                     path="/properties/Timeout",
+                ),
+                Patch(
+                    values={"maxItems": 5},
+                    path="/properties/Layers",
+                ),
+                Patch(
+                    values={
+                        "minLength": 1,
+                        "pattern": r"^arn:[a-zA-Z0-9-]+:lambda:[a-zA-Z0-9-]+:\d{12}:layer:[a-zA-Z0-9-_]+:[0-9]+$",
+                    },
+                    path="/properties/Layers/items",
                 ),
             ],
         ),
@@ -1710,18 +1712,6 @@ patches.extend(
                 Patch(
                     values={"pattern": r"^[a-zA-Z_0-9+=,.@/-]+$"},
                     path="/properties/ExecutionRoleName",
-                ),
-            ],
-        ),
-        ResourcePatch(
-            resource_type="AWS::Lambda::Function",
-            patches=[
-                Patch(
-                    values={
-                        "minLength": 1,
-                        "pattern": r"^arn:[a-zA-Z0-9-]+:lambda:[a-zA-Z0-9-]+:\d{12}:layer:[a-zA-Z0-9-_]+:[0-9]+$",
-                    },
-                    path="/properties/Layers/items",
                 ),
             ],
         ),
