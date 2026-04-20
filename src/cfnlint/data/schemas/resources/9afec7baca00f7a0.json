@@ -140,6 +140,17 @@
    "type": "string"
   },
   "KmsKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
    "maxLength": 2048,
    "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|mrk-[0-9a-f]{32}|alias/[a-zA-Z0-9/_-]+|(arn:aws[-a-z]*:kms:[a-z0-9-]+:\\d{12}:((key/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})|(key/mrk-[0-9a-f]{32})|(alias/[a-zA-Z0-9/_-]+))))$",
    "type": "string"
@@ -153,6 +164,7 @@
    "type": "string"
   },
   "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
    "maxLength": 2048,
    "pattern": "^arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
    "type": "string"

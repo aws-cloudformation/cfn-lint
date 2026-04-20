@@ -322,6 +322,12 @@ _manual_patches = {
             path="/definitions/Entry/properties/Cidr",
         ),
     ],
+    "AWS::SQS::Queue": [
+        Patch(
+            values={"format": "AWS::SQS::Queue.Arn"},
+            path="/properties/Arn",
+        ),
+    ],
     "AWS::Lambda::Function": [
         Patch(
             values={"format": "AWS::Lambda::Function.Name"},
