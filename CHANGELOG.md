@@ -1,3 +1,28 @@
+### v1.49.0
+## What's Changed
+* feat: add rule [E3712](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3712) to validate `TargetTrackingScaling` policy requires ASG `MaxSize` greater than `MinSize` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4444
+* feat: add rule [E3713](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3713) to validate Fargate ECS services use supported log drivers by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4444
+* feat: add rule [E3714](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3714) to validate LaunchTemplate SecurityGroup and Subnet are in the same VPC by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4444
+* feat: add rule [E3711](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3711) to validate `ListenerRule` target group protocol is not `GENEVE` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4444
+* feat: add rule [E3715](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3715) to validate `VirtualName` uses ephemeral device format when Ebs is absent by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4456
+* feat: add rule [W3698](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3698) to warn `VirtualName` is ignored when Ebs is specified by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4456
+* feat: add rule [E3716](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3716) to validate Lambda layer ARN length based on region by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4444
+* Expand format keyword coverage for additional AWS services by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4442
+* Add missing resource types to `_all_property_types` for GetAtt by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4443
+* Fix Lambda `FunctionName` maxLength from 140 to 64 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4448
+* Fix false positive [E3062](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3062) when `EngineVersion` is unquoted float by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4454
+* fix: condition CNF explosion for templates with nested condition references by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4455
+* Fix smithy script to check exceptions for pattern constraints by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4451
+* Skip `me-south-1` during schema update due to endpoint timeout by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4449
+* chore(deps): restrict to Python 3.13 by @adrianmace in https://github.com/aws-cloudformation/cfn-lint/pull/4452
+* chore(deps): bump softprops/action-gh-release from 2 to 3 by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4457
+* Update CloudFormation schemas to `2026-04-20` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4450
+
+## New Contributors
+* @adrianmace made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4452
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.48.1...v1.49.0
+
 ### v1.48.1
 ## What's Changed
 * fix: Timestream lifecycle patches to exclude InfluxDB resources by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4437
