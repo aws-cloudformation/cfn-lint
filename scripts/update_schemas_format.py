@@ -322,13 +322,27 @@ _manual_patches = {
             path="/definitions/Entry/properties/Cidr",
         ),
     ],
+    "AWS::SQS::Queue": [
+        Patch(
+            values={"format": "AWS::SQS::Queue.Arn"},
+            path="/properties/Arn",
+        ),
+    ],
     "AWS::Lambda::Function": [
+        Patch(
+            values={"format": "AWS::Lambda::Function.Arn"},
+            path="/properties/Arn",
+        ),
         Patch(
             values={"format": "AWS::Lambda::Function.Name"},
             path="/properties/FunctionName",
         ),
     ],
     "AWS::KMS::Key": [
+        Patch(
+            values={"format": "AWS::KMS::Key.Arn"},
+            path="/properties/Arn",
+        ),
         Patch(
             values={"format": "AWS::KMS::Key.Id"},
             path="/properties/KeyId",

@@ -1,0 +1,116 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TemplateName",
+  "/properties/TemplateType"
+ ],
+ "definitions": {
+  "ProvisioningHook": {
+   "additionalProperties": false,
+   "properties": {
+    "PayloadVersion": {
+     "maxLength": 32,
+     "minLength": 10,
+     "pattern": "^[0-9-]+$",
+     "type": "string"
+    },
+    "TargetArn": {
+     "maxLength": 2048,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TemplateName"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 500,
+   "minLength": 0,
+   "pattern": "^[^\\p{C}]*$",
+   "type": "string"
+  },
+  "Enabled": {
+   "type": "boolean"
+  },
+  "PreProvisioningHook": {
+   "$ref": "#/definitions/ProvisioningHook"
+  },
+  "ProvisioningRoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TemplateArn": {
+   "type": "string"
+  },
+  "TemplateBody": {
+   "maxLength": 10240,
+   "minLength": 0,
+   "pattern": "^[\\s\\S]*$",
+   "type": "string"
+  },
+  "TemplateName": {
+   "maxLength": 36,
+   "minLength": 1,
+   "pattern": "^[0-9A-Za-z_-]+$",
+   "type": "string"
+  },
+  "TemplateType": {
+   "enum": [
+    "FLEET_PROVISIONING",
+    "JITP"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TemplateArn"
+ ],
+ "required": [
+  "ProvisioningRoleArn",
+  "TemplateBody"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::ProvisioningTemplate"
+}

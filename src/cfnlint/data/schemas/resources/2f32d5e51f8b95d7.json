@@ -1,0 +1,334 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Version",
+  "/properties/ContainerType",
+  "/properties/TargetRepository",
+  "/properties/InstanceConfiguration",
+  "/properties/ParentImage",
+  "/properties/Description",
+  "/properties/DockerfileTemplateUri",
+  "/properties/DockerfileTemplateData",
+  "/properties/ImageOsVersionOverride",
+  "/properties/KmsKeyId",
+  "/properties/PlatformOverride",
+  "/properties/WorkingDirectory",
+  "/properties/Components"
+ ],
+ "definitions": {
+  "ComponentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ComponentArn": {
+     "pattern": "^arn:aws[^:]*:imagebuilder:[^:]+:(?:[0-9]{12}|aws(?:-[a-z-]+)?):component/[a-z0-9-_]+/(?:(?:([0-9]+|x)\\.([0-9]+|x)\\.([0-9]+|x))|(?:[0-9]+\\.[0-9]+\\.[0-9]+/[0-9]+))$",
+     "type": "string"
+    },
+    "Parameters": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ComponentParameter"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ComponentParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[^\\x00]+$",
+     "type": "string"
+    },
+    "Value": {
+     "insertionOrder": true,
+     "items": {
+      "minLength": 0,
+      "pattern": "^[^\\x00]*$",
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "EbsInstanceBlockDeviceSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "DeleteOnTermination": {
+     "type": "boolean"
+    },
+    "Encrypted": {
+     "type": "boolean"
+    },
+    "Iops": {
+     "maximum": 64000,
+     "minimum": 100,
+     "type": "integer"
+    },
+    "KmsKeyId": {
+     "anyOf": [
+      {
+       "format": "AWS::KMS::Key.Arn"
+      },
+      {
+       "format": "AWS::KMS::Key.Id"
+      },
+      {
+       "format": "AWS::KMS::Alias.AliasName"
+      }
+     ],
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SnapshotId": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Throughput": {
+     "maximum": 1000,
+     "minimum": 125,
+     "type": "integer"
+    },
+    "VolumeSize": {
+     "maximum": 16000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "VolumeType": {
+     "enum": [
+      "standard",
+      "io1",
+      "io2",
+      "gp2",
+      "gp3",
+      "sc1",
+      "st1"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceBlockDeviceMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "DeviceName": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Ebs": {
+     "$ref": "#/definitions/EbsInstanceBlockDeviceSpecification"
+    },
+    "NoDevice": {
+     "maxLength": 0,
+     "minLength": 0,
+     "type": "string"
+    },
+    "VirtualName": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BlockDeviceMappings": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/InstanceBlockDeviceMapping"
+     },
+     "type": "array"
+    },
+    "Image": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LatestVersion": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "type": "string"
+    },
+    "Major": {
+     "type": "string"
+    },
+    "Minor": {
+     "type": "string"
+    },
+    "Patch": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TargetContainerRepository": {
+   "additionalProperties": false,
+   "properties": {
+    "RepositoryName": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Service": {
+     "enum": [
+      "ECR"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "Name",
+    "Version",
+    "ParentImage",
+    "TargetRepository",
+    "ContainerType"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Components": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/ComponentConfiguration"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "ContainerType": {
+   "enum": [
+    "DOCKER"
+   ],
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DockerfileTemplateData": {
+   "maxLength": 16000,
+   "minLength": 1,
+   "pattern": "^[^\\x00]+$",
+   "type": "string"
+  },
+  "DockerfileTemplateUri": {
+   "type": "string"
+  },
+  "ImageOsVersionOverride": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InstanceConfiguration": {
+   "$ref": "#/definitions/InstanceConfiguration"
+  },
+  "KmsKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LatestVersion": {
+   "$ref": "#/definitions/LatestVersion"
+  },
+  "Name": {
+   "pattern": "^[-_A-Za-z-0-9][-_A-Za-z0-9 ]{1,126}[-_A-Za-z-0-9]$",
+   "type": "string"
+  },
+  "ParentImage": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "PlatformOverride": {
+   "enum": [
+    "Windows",
+    "Linux"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,}": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TargetRepository": {
+   "$ref": "#/definitions/TargetContainerRepository"
+  },
+  "Version": {
+   "type": "string"
+  },
+  "WorkingDirectory": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/LatestVersion",
+  "/properties/LatestVersion/Arn",
+  "/properties/LatestVersion/Major",
+  "/properties/LatestVersion/Minor",
+  "/properties/LatestVersion/Patch"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ImageBuilder::ContainerRecipe",
+ "writeOnlyProperties": [
+  "/properties/DockerfileTemplateData",
+  "/properties/DockerfileTemplateUri",
+  "/properties/ImageOsVersionOverride",
+  "/properties/PlatformOverride"
+ ]
+}

@@ -1,0 +1,571 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Family",
+  "/properties/ContainerDefinitions",
+  "/properties/Cpu",
+  "/properties/Memory",
+  "/properties/ExecutionRoleArn",
+  "/properties/TaskRoleArn",
+  "/properties/Volumes"
+ ],
+ "definitions": {
+  "ContainerDependency": {
+   "additionalProperties": false,
+   "properties": {
+    "Condition": {
+     "enum": [
+      "COMPLETE",
+      "HEALTHY",
+      "START",
+      "SUCCESS"
+     ],
+     "type": "string"
+    },
+    "ContainerName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DaemonContainerDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Command": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Cpu": {
+     "type": "integer"
+    },
+    "DependsOn": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ContainerDependency"
+     },
+     "type": "array"
+    },
+    "EntryPoint": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Environment": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/KeyValuePair"
+     },
+     "type": "array"
+    },
+    "EnvironmentFiles": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/EnvironmentFile"
+     },
+     "type": "array"
+    },
+    "Essential": {
+     "type": "boolean"
+    },
+    "FirelensConfiguration": {
+     "$ref": "#/definitions/FirelensConfiguration"
+    },
+    "HealthCheck": {
+     "$ref": "#/definitions/HealthCheck"
+    },
+    "Image": {
+     "type": "string"
+    },
+    "Interactive": {
+     "type": "boolean"
+    },
+    "LinuxParameters": {
+     "$ref": "#/definitions/LinuxParameters"
+    },
+    "LogConfiguration": {
+     "$ref": "#/definitions/LogConfiguration"
+    },
+    "Memory": {
+     "type": "integer"
+    },
+    "MemoryReservation": {
+     "type": "integer"
+    },
+    "MountPoints": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/MountPoint"
+     },
+     "type": "array"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Privileged": {
+     "type": "boolean"
+    },
+    "PseudoTerminal": {
+     "type": "boolean"
+    },
+    "ReadonlyRootFilesystem": {
+     "type": "boolean"
+    },
+    "RepositoryCredentials": {
+     "$ref": "#/definitions/RepositoryCredentials"
+    },
+    "RestartPolicy": {
+     "$ref": "#/definitions/RestartPolicy"
+    },
+    "Secrets": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Secret"
+     },
+     "type": "array"
+    },
+    "StartTimeout": {
+     "type": "integer"
+    },
+    "StopTimeout": {
+     "type": "integer"
+    },
+    "SystemControls": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SystemControl"
+     },
+     "type": "array"
+    },
+    "Ulimits": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Ulimit"
+     },
+     "type": "array"
+    },
+    "User": {
+     "type": "string"
+    },
+    "WorkingDirectory": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Image"
+   ],
+   "type": "object"
+  },
+  "Device": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerPath": {
+     "type": "string"
+    },
+    "HostPath": {
+     "type": "string"
+    },
+    "Permissions": {
+     "insertionOrder": false,
+     "items": {
+      "enum": [
+       "mknod",
+       "read",
+       "write"
+      ],
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "EnvironmentFile": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "enum": [
+      "s3"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FirelensConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Options": {
+     "additionalProperties": false,
+     "patternProperties": {
+      ".{1,}": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Type": {
+     "enum": [
+      "fluentbit",
+      "fluentd"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HealthCheck": {
+   "additionalProperties": false,
+   "properties": {
+    "Command": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Interval": {
+     "type": "integer"
+    },
+    "Retries": {
+     "type": "integer"
+    },
+    "StartPeriod": {
+     "type": "integer"
+    },
+    "Timeout": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "HostVolumeProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "SourcePath": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "KernelCapabilities": {
+   "additionalProperties": false,
+   "properties": {
+    "Add": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Drop": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "KeyValuePair": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LinuxParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Capabilities": {
+     "$ref": "#/definitions/KernelCapabilities"
+    },
+    "Devices": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Device"
+     },
+     "type": "array"
+    },
+    "InitProcessEnabled": {
+     "type": "boolean"
+    },
+    "Tmpfs": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tmpfs"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "LogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogDriver": {
+     "type": "string"
+    },
+    "Options": {
+     "additionalProperties": false,
+     "patternProperties": {
+      ".{1,}": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "SecretOptions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Secret"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "LogDriver"
+   ],
+   "type": "object"
+  },
+  "MountPoint": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerPath": {
+     "type": "string"
+    },
+    "ReadOnly": {
+     "type": "boolean"
+    },
+    "SourceVolume": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RepositoryCredentials": {
+   "additionalProperties": false,
+   "properties": {
+    "CredentialsParameter": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RestartPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "IgnoredExitCodes": {
+     "insertionOrder": false,
+     "items": {
+      "type": "integer"
+     },
+     "type": "array"
+    },
+    "RestartAttemptPeriod": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Secret": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "ValueFrom": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "ValueFrom"
+   ],
+   "type": "object"
+  },
+  "SystemControl": {
+   "additionalProperties": false,
+   "properties": {
+    "Namespace": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tmpfs": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerPath": {
+     "type": "string"
+    },
+    "MountOptions": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Size": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Size"
+   ],
+   "type": "object"
+  },
+  "Ulimit": {
+   "additionalProperties": false,
+   "properties": {
+    "HardLimit": {
+     "type": "integer"
+    },
+    "Name": {
+     "enum": [
+      "core",
+      "cpu",
+      "data",
+      "fsize",
+      "locks",
+      "memlock",
+      "msgqueue",
+      "nice",
+      "nofile",
+      "nproc",
+      "rss",
+      "rtprio",
+      "rttime",
+      "sigpending",
+      "stack"
+     ],
+     "type": "string"
+    },
+    "SoftLimit": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "HardLimit",
+    "Name",
+    "SoftLimit"
+   ],
+   "type": "object"
+  },
+  "Volume": {
+   "additionalProperties": false,
+   "properties": {
+    "Host": {
+     "$ref": "#/definitions/HostVolumeProperties"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DaemonTaskDefinitionArn"
+ ],
+ "properties": {
+  "ContainerDefinitions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DaemonContainerDefinition"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Cpu": {
+   "type": "string"
+  },
+  "DaemonTaskDefinitionArn": {
+   "type": "string"
+  },
+  "ExecutionRoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "type": "string"
+  },
+  "Family": {
+   "type": "string"
+  },
+  "Memory": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "TaskRoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "type": "string"
+  },
+  "Volumes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Volume"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/ExecutionRoleArn": "ExecutionRoleArn $OR $join([\"arn:(aws)[-]{0,1}[a-z]{0,3}[-]{0,1}[a-z]{0,3}:iam::[0-9]{12}[:]role/\", ExecutionRoleArn])",
+  "/properties/TaskRoleArn": "TaskRoleArn $OR $split(TaskRoleArn, \"role/\")[-1] $OR $join([\"arn:(aws)[-]{0,1}[a-z]{0,3}[-]{0,1}[a-z]{0,3}:iam::[0-9]{12}[:]role/\", TaskRoleArn])"
+ },
+ "readOnlyProperties": [
+  "/properties/DaemonTaskDefinitionArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ECS::DaemonTaskDefinition"
+}

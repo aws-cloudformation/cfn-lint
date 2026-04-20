@@ -1,0 +1,341 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "AmiDistributionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AmiTags": {
+     "additionalProperties": false,
+     "patternProperties": {
+      ".{1,}": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Description": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "KmsKeyId": {
+     "anyOf": [
+      {
+       "format": "AWS::KMS::Key.Arn"
+      },
+      {
+       "format": "AWS::KMS::Key.Id"
+      },
+      {
+       "format": "AWS::KMS::Alias.AliasName"
+      }
+     ],
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "LaunchPermissionConfiguration": {
+     "$ref": "#/definitions/LaunchPermissionConfiguration"
+    },
+    "Name": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "^[-_A-Za-z0-9{][-_A-Za-z0-9\\s:{}\\.]+[-_A-Za-z0-9}]$",
+     "type": "string"
+    },
+    "TargetAccountIds": {
+     "insertionOrder": true,
+     "items": {
+      "pattern": "^[0-9]{12}$",
+      "type": "string"
+     },
+     "maxItems": 1536,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ContainerDistributionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerTags": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Description": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TargetRepository": {
+     "$ref": "#/definitions/TargetContainerRepository"
+    }
+   },
+   "type": "object"
+  },
+  "Distribution": {
+   "additionalProperties": false,
+   "properties": {
+    "AmiDistributionConfiguration": {
+     "$ref": "#/definitions/AmiDistributionConfiguration"
+    },
+    "ContainerDistributionConfiguration": {
+     "$ref": "#/definitions/ContainerDistributionConfiguration"
+    },
+    "FastLaunchConfigurations": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/FastLaunchConfiguration"
+     },
+     "maxItems": 1000,
+     "minItems": 1,
+     "type": "array"
+    },
+    "LaunchTemplateConfigurations": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/LaunchTemplateConfiguration"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array"
+    },
+    "LicenseConfigurationArns": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/LicenseConfigurationArn"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Region": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SsmParameterConfigurations": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/SsmParameterConfiguration"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Region"
+   ],
+   "type": "object"
+  },
+  "FastLaunchConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountId": {
+     "pattern": "^[0-9]{12}$",
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "LaunchTemplate": {
+     "$ref": "#/definitions/FastLaunchLaunchTemplateSpecification"
+    },
+    "MaxParallelLaunches": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "SnapshotConfiguration": {
+     "$ref": "#/definitions/FastLaunchSnapshotConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "FastLaunchLaunchTemplateSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "LaunchTemplateId": {
+     "pattern": "^lt-[a-z0-9-_]{17}$",
+     "type": "string"
+    },
+    "LaunchTemplateName": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "LaunchTemplateVersion": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FastLaunchSnapshotConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "TargetResourceCount": {
+     "maximum": 10000,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "LaunchPermissionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "OrganizationArns": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "OrganizationalUnitArns": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "UserGroups": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "UserIds": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "LaunchTemplateConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountId": {
+     "pattern": "^[0-9]{12}$",
+     "type": "string"
+    },
+    "LaunchTemplateId": {
+     "pattern": "^lt-[a-z0-9-_]{17}$",
+     "type": "string"
+    },
+    "SetDefaultVersion": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "LicenseConfigurationArn": {
+   "pattern": "^arn:aws[^:]*:license-manager:[^:]+:[0-9]{12}:license-configuration:lic-[a-z0-9-_]{32}$",
+   "type": "string"
+  },
+  "SsmParameterConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AmiAccountId": {
+     "pattern": "^[0-9]{12}$",
+     "type": "string"
+    },
+    "DataType": {
+     "enum": [
+      "text",
+      "aws:ec2:image"
+     ],
+     "type": "string"
+    },
+    "ParameterName": {
+     "maxLength": 1011,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_.\\-\\/]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ParameterName"
+   ],
+   "type": "object"
+  },
+  "TargetContainerRepository": {
+   "additionalProperties": false,
+   "properties": {
+    "RepositoryName": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Service": {
+     "enum": [
+      "ECR"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Distributions": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Distribution"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "pattern": "^[-_A-Za-z-0-9][-_A-Za-z0-9 ]{1,126}[-_A-Za-z-0-9]$",
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,}": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "Distributions"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ImageBuilder::DistributionConfiguration"
+}

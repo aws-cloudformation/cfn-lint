@@ -1,0 +1,140 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CFNActions": {
+   "additionalProperties": false,
+   "properties": {
+    "Tagging": {
+     "$ref": "#/definitions/CFNTagging"
+    }
+   },
+   "type": "object"
+  },
+  "CFNProtectedResource": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Bucket": {
+     "additionalProperties": false,
+     "format": "AWS::S3::Bucket.Name",
+     "properties": {
+      "BucketName": {
+       "format": "AWS::S3::Bucket.Name",
+       "type": "string"
+      },
+      "ObjectPrefixes": {
+       "items": {
+        "type": "string"
+       },
+       "maxItems": 5,
+       "minItems": 0,
+       "type": "array"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "S3Bucket"
+   ],
+   "type": "object"
+  },
+  "CFNStatusReasons": {
+   "additionalProperties": false,
+   "properties": {
+    "Code": {
+     "type": "string"
+    },
+    "Message": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CFNTagging": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "enum": [
+      "DISABLED",
+      "ENABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TagItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MalwareProtectionPlanId"
+ ],
+ "properties": {
+  "Actions": {
+   "$ref": "#/definitions/CFNActions"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "MalwareProtectionPlanId": {
+   "type": "string"
+  },
+  "ProtectedResource": {
+   "$ref": "#/definitions/CFNProtectedResource"
+  },
+  "Role": {
+   "type": "string"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "StatusReasons": {
+   "items": {
+    "$ref": "#/definitions/CFNStatusReasons"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/TagItem"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/MalwareProtectionPlanId",
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/Status",
+  "/properties/StatusReasons"
+ ],
+ "required": [
+  "Role",
+  "ProtectedResource"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GuardDuty::MalwareProtectionPlan"
+}
