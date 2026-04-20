@@ -23,9 +23,10 @@ jobs:
       - name: Install Tox
         run: pip install tox tox-gh
       - name: Run Tox
-        run: tox -- -m "data or (not data)"
+        run: tox
         env:
           TOX_GH_MAJOR_MINOR: ${{ matrix.python }}
+          PYTEST_ADDOPTS: '-m "data or (not data)"'
       - uses: codecov/codecov-action@v6
         if: matrix.os == 'ubuntu-latest'
         with:
