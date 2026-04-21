@@ -1,3 +1,9 @@
+### v1.49.2
+## What's Changed
+* Fix [E1041](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1041) false positive: add Lambda::Function.Arn format to Lambda Alias by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4469
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.49.1...v1.49.2
+
 ### v1.49.1
 ## What's Changed
 * Add rule [E3718](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3718) to validate `AuthorizerResultTtlInSeconds` maximum of 3600 only applies to `TOKEN` and `REQUEST` authorizers by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4444
