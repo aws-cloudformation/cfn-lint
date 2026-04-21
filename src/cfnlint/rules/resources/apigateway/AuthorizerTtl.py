@@ -36,7 +36,9 @@ class AuthorizerTtl(CfnLintJsonSchema):
         )
 
     def message(self, instance: Any, err: ValidationError) -> str:
+        ttl = instance.get("AuthorizerResultTtlInSeconds")
+        auth_type = instance.get("Type")
         return (
-            f"AuthorizerResultTtlInSeconds {instance.get('AuthorizerResultTtlInSeconds')} "
-            f"exceeds maximum of 3600 for {instance.get('Type')!r} authorizers"
+            f"AuthorizerResultTtlInSeconds {ttl} "
+            f"exceeds maximum of 3600 for {auth_type!r} authorizers"
         )
