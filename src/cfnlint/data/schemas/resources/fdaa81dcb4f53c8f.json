@@ -15,7 +15,6 @@
   "/properties/ComputeResources/InstanceTypes",
   "/properties/ComputeResources/LaunchTemplate",
   "/properties/ComputeResources/PlacementGroup",
-  "/properties/ComputeResources/ScalingPolicy",
   "/properties/ComputeResources/SecurityGroupIds",
   "/properties/ComputeResources/Subnets",
   "/properties/ComputeResources/Tags",
@@ -85,9 +84,6 @@
     "PlacementGroup": {
      "type": "string"
     },
-    "ScalingPolicy": {
-     "$ref": "#/definitions/ComputeScalingPolicy"
-    },
     "SecurityGroupIds": {
      "format": "AWS::EC2::SecurityGroup.Ids",
      "insertionOrder": false,
@@ -139,15 +135,6 @@
     "Type",
     "MaxvCpus"
    ],
-   "type": "object"
-  },
-  "ComputeScalingPolicy": {
-   "additionalProperties": false,
-   "properties": {
-    "MinScaleDownDelayMinutes": {
-     "type": "integer"
-    }
-   },
    "type": "object"
   },
   "Ec2ConfigurationObject": {
@@ -210,9 +197,9 @@
      "uniqueItems": false
     },
     "UserdataType": {
-     "enum": [
-      "EKS_BOOTSTRAP_SH",
-      "EKS_NODEADM"
+     "enumCaseInsensitive": [
+      "eks_bootstrap_sh",
+      "eks_nodeadm"
      ],
      "type": "string"
     },
@@ -240,9 +227,9 @@
      "uniqueItems": false
     },
     "UserdataType": {
-     "enum": [
-      "EKS_BOOTSTRAP_SH",
-      "EKS_NODEADM"
+     "enumCaseInsensitive": [
+      "eks_bootstrap_sh",
+      "eks_nodeadm"
      ],
      "type": "string"
     },
