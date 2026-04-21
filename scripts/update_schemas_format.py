@@ -354,6 +354,12 @@ _manual_patches = {
             path="/properties/AliasName",
         ),
     ],
+    "AWS::Lambda::Alias": [
+        Patch(
+            values={"format": "AWS::Lambda::Function.Arn"},
+            path="/properties/AliasArn",
+        ),
+    ],
     "AWS::CertificateManager::Certificate": [
         Patch(
             values={"format": "AWS::ACM::Certificate.Arn"},
