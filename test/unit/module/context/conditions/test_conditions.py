@@ -276,6 +276,19 @@ def test_condition_status(current_status, new_status, expected):
                 ),
             ],
         ),
+        (
+            {},
+            [
+                "a",
+                "b",
+                {"Fn::If": ["IsDev", "c", {"Ref": "AWS::NoValue"}]},
+                {"Fn::If": ["IsProd", "d", {"Ref": "AWS::NoValue"}]},
+            ],
+            [
+                (["a", "b", "c"], {"IsDev": True, "IsProd": False}),
+                (["a", "b", "d"], {"IsDev": False, "IsProd": True}),
+            ],
+        ),
     ],
 )
 def test_evolve_from_instance(current_status, instance, expected):
@@ -289,9 +302,9 @@ def test_evolve_from_instance(current_status, instance, expected):
 
     results = list(context.conditions.evolve_from_instance(instance, context))
     assert len(results) == len(expected)
-    for result, expected_result in zip(results, expected):
-        assert result[0] == expected_result[0]
-        assert result[1].status == expected_result[1]
+    result_set = {(str(r[0]), tuple(sorted(r[1].status.items()))) for r in results}
+    expected_set = {(str(e[0]), tuple(sorted(e[1].items()))) for e in expected}
+    assert result_set == expected_set
 
 
 def test_condition_failures():

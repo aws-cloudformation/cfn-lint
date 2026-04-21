@@ -68,18 +68,23 @@ class Conditions:
             if not p_v.allowed_values:
                 continue
             allowed_values = p_v.allowed_values.copy()
-            equals_cnfs = []
+            equals_cnfs: list[tuple[Symbol, str]] = []
             for _, c_v in obj.items():
                 for i in c_v.equals:
                     if i.right.hash == get_hash({"Ref": p_k}):
                         if not isinstance(i.left.instance, str):
                             continue
-                        equals_cnfs.append(i.cnf)
+                        # NAND: two equals comparing the same param to
+                        # different static values can't both be true
+                        for prev_cnf, prev_val in equals_cnfs:
+                            if prev_val != i.left.instance:
+                                cnf.add_prop(~(i.cnf & prev_cnf))
+                        equals_cnfs.append((i.cnf, i.left.instance))
                         if i.left.instance in allowed_values:
                             allowed_values.remove(i.left.instance)
 
             if not allowed_values and equals_cnfs:
-                cnf.add_prop(Or(*equals_cnfs))
+                cnf.add_prop(Or(*[c for c, _ in equals_cnfs]))
 
         return cls(conditions=obj, cnf=cnf, _condition_symbols=condition_symbols)
 

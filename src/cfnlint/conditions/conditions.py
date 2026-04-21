@@ -34,7 +34,6 @@ class Conditions:
         self._conditions: dict[str, ConditionNamed] = {}
         self._parameters: dict[str, list[str]] = {}
         self._rules: list[Rule] = []
-        self._satisfiable_cache: dict[tuple[Any, ...], bool] = {}
         self._init_conditions(cfn=cfn)
         self._init_parameters(cfn=cfn)
         self._init_rules(cfn=cfn)
@@ -146,7 +145,7 @@ class Conditions:
             _build_equal_vars(self._conditions[condition_name].equals)
 
         # Determine if a set of conditions can never be all false
-        allowed_values = self._parameters.copy()
+        allowed_values = {k: list(v) for k, v in self._parameters.items()}
         if allowed_values:
             # iteration 1 cleans up all the hash values
             # from allowed_values to know if we
@@ -421,27 +420,6 @@ class Conditions:
         Raises:
             UnknownSatisfisfaction: If we don't know how to satisfy a condition
         """
-        try:
-            cache_key: tuple[Any, ...] | None = (
-                frozenset(conditions.items()),
-                frozenset(parameter_values.items()),
-            )
-        except TypeError:
-            cache_key = None
-
-        if cache_key is not None and cache_key in self._satisfiable_cache:
-            return self._satisfiable_cache[cache_key]
-
-        result = self._satisfiable(conditions, parameter_values)
-
-        if cache_key is not None:
-            self._satisfiable_cache[cache_key] = result
-
-        return result
-
-    def _satisfiable(
-        self, conditions: dict[str, bool], parameter_values: dict[str, str]
-    ) -> bool:
         if not conditions:
             if self._rules:
                 satisfied = satisfiable(self._cnf, all_models=False)
