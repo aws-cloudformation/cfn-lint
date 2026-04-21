@@ -45,7 +45,12 @@ skip_resource_property_paths = {
     "AWS::Bedrock::Guardrail": [
         "/definitions/SensitiveInformationPolicyConfig/properties/RegexesConfig"
     ],
+    "AWS::Connect::RoutingProfile": ["/properties/QueueConfigs"],
+    "AWS::Connect::User": ["/definitions/DeskPhoneNumber"],
+    "AWS::ElasticLoadBalancingV2::LoadBalancer": ["/properties/Tags"],
+    "AWS::ElasticLoadBalancingV2::TargetGroup": ["/properties/Tags"],
     "AWS::MSK::Cluster": ["/properties/NumberOfBrokerNodes"],
+    "AWS::SNS::Topic": ["/properties/TopicName"],
     "AWS::Lambda::Function": ["/properties/Layers/items"],
     "AWS::Logs::LogAnomalyDetector": ["/properties/LogGroupArnList/items"],
     "AWS::EC2::NetworkInterface": ["/properties/InterfaceType"],

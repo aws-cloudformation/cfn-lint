@@ -4,10 +4,7 @@
    "if": {
     "properties": {
      "VolumeType": {
-      "enum": [
-       "io1",
-       "io2"
-      ],
+      "const": "io1",
       "type": "string"
      }
     },
@@ -16,6 +13,12 @@
     ]
    },
    "then": {
+    "properties": {
+     "Iops": {
+      "maximum": 64000,
+      "minimum": 100
+     }
+    },
     "required": [
      "Iops"
     ]
@@ -25,12 +28,7 @@
    "if": {
     "properties": {
      "VolumeType": {
-      "enum": [
-       "gp2",
-       "st1",
-       "sc1",
-       "standard"
-      ],
+      "const": "io2",
       "type": "string"
      }
     },
@@ -40,7 +38,34 @@
    },
    "then": {
     "properties": {
-     "Iops": false
+     "Iops": {
+      "maximum": 256000,
+      "minimum": 100
+     }
+    },
+    "required": [
+     "Iops"
+    ]
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "VolumeType": {
+      "const": "gp3",
+      "type": "string"
+     }
+    },
+    "required": [
+     "VolumeType"
+    ]
+   },
+   "then": {
+    "properties": {
+     "Iops": {
+      "maximum": 16000,
+      "minimum": 3000
+     }
     }
    }
   }

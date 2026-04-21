@@ -35,13 +35,8 @@ class Ebs(CfnLintJsonSchema):
         )
 
     def message(self, instance: Any, err: ValidationError) -> str:
-        if err.schema_path[0] == "allOf":
-            if err.schema_path[1] == 1:
-                return (
-                    "Additional properties are not allowed (Iops) "
-                    "was unexpected when 'VolumeType' has a value "
-                    f"of {instance.get('VolumeType')!r}"
-                )
+        if err.validator in ("minimum", "maximum"):
+            return err.message
 
         return (
             "'Iops' is a required property when 'VolumeType' has a value "

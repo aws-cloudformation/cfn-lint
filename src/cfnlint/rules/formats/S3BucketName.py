@@ -5,6 +5,11 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+from typing import Any
+
+import regex as re
+
+from cfnlint.jsonschema import Validator
 from cfnlint.rules.formats.FormatKeyword import FormatKeyword
 
 
@@ -20,3 +25,19 @@ class S3BucketName(FormatKeyword):
             format="AWS::S3::Bucket.Name",
             pattern=r"^(?![.\-])(?!.*\.\.)(?!.*\-\.)(?!.*\.\-)[a-z0-9.\-]{3,63}(?<![.\-])$",
         )
+
+    def format(self, validator: Validator, instance: Any) -> bool:
+        if not isinstance(instance, str):
+            return True
+
+        if (
+            instance == ""
+            and validator.context.path.cfn_path_string
+            == "Resources/AWS::S3::Bucket/Properties/BucketName"
+        ):
+            return True
+
+        if re.match(self.pattern, instance):
+            return True
+
+        return False

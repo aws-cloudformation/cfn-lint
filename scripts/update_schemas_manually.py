@@ -1412,10 +1412,6 @@ patches.extend(
                     path="/properties/PromotionTier",
                 ),
                 Patch(
-                    values={"maximum": 35},
-                    path="/properties/BackupRetentionPeriod",
-                ),
-                Patch(
                     values={
                         "enum": [
                             7,
@@ -1512,8 +1508,7 @@ patches.extend(
                 Patch(
                     values={
                         "maxLength": 63,
-                        "minLength": 3,
-                        "pattern": "^[a-z0-9][a-z0-9.-]*[a-z0-9]$",
+                        "pattern": "^([a-z0-9][a-z0-9.-]*[a-z0-9])?$",
                     },
                     path="/properties/BucketName",
                 ),
@@ -1576,7 +1571,7 @@ patches.extend(
             resource_type="AWS::SNS::Topic",
             patches=[
                 Patch(
-                    values={"maxLength": 256, "minLength": 1},
+                    values={"maxLength": 256},
                     path="/properties/TopicName",
                 ),
             ],
