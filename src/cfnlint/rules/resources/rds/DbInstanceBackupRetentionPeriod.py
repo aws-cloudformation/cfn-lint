@@ -30,7 +30,7 @@ class DbInstanceBackupRetentionPeriod(CfnLintJsonSchema):
             ],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_rds_dbinstance,
-                filename="backupretentionperiod.json",
+                filename="backupretentionperiod_maximum.json",
             ),
         )
 
