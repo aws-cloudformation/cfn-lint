@@ -1,22 +1,40 @@
 {
- "if": {
-  "properties": {
-   "Engine": {
-    "pattern": "^(?!aurora).*$",
-    "type": "string"
+ "allOf": [
+  {
+   "if": {
+    "required": [
+     "DBClusterIdentifier"
+    ],
+    "type": "object"
    },
-   "SourceDBInstanceIdentifier": false
+   "then": {
+    "properties": {
+     "BackupRetentionPeriod": false
+    }
+   }
   },
-  "required": [
-   "Engine"
-  ],
-  "type": "object"
- },
- "then": {
-  "properties": {
-   "BackupRetentionPeriod": {
-    "maximum": 35
+  {
+   "if": {
+    "properties": {
+     "DBClusterIdentifier": false,
+     "Engine": {
+      "pattern": "^(?!aurora).*$",
+      "type": "string"
+     },
+     "SourceDBInstanceIdentifier": false
+    },
+    "required": [
+     "Engine"
+    ],
+    "type": "object"
+   },
+   "then": {
+    "properties": {
+     "BackupRetentionPeriod": {
+      "maximum": 35
+     }
+    }
    }
   }
- }
+ ]
 }

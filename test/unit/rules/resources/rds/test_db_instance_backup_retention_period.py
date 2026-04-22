@@ -47,19 +47,89 @@ def rule():
             [],
         ),
         (
+            {"Engine": "aurora-mysql", "DBClusterIdentifier": "my-cluster"},
+            [],
+        ),
+        (
             {"Engine": "postgres", "BackupRetentionPeriod": 36},
             [
                 ValidationError(
+                    "36 is greater than the maximum of 35",
+                    rule=DbInstanceBackupRetentionPeriod(),
+                    path=deque(["BackupRetentionPeriod"]),
+                    schema_path=deque(
+                        [
+                            "allOf",
+                            1,
+                            "then",
+                            "properties",
+                            "BackupRetentionPeriod",
+                            "maximum",
+                        ]
+                    ),
+                    validator="maximum",
+                    schema={"maximum": 35},
+                    instance=36,
+                ),
+            ],
+        ),
+        (
+            {
+                "Engine": "aurora-mysql",
+                "DBClusterIdentifier": "my-cluster",
+                "BackupRetentionPeriod": 14,
+            },
+            [
+                ValidationError(
                     (
-                        "BackupRetentionPeriod 36 exceeds maximum of 35"
-                        " for non-Aurora standalone instances"
+                        "'BackupRetentionPeriod' is not allowed when "
+                        "'DBClusterIdentifier' is specified. Set backup "
+                        "retention period on the DB cluster instead."
                     ),
                     rule=DbInstanceBackupRetentionPeriod(),
                     path=deque(["BackupRetentionPeriod"]),
-                    validator="maximum",
                     schema_path=deque(
-                        ["then", "properties", "BackupRetentionPeriod", "maximum"]
+                        [
+                            "allOf",
+                            0,
+                            "then",
+                            "properties",
+                            "BackupRetentionPeriod",
+                        ]
                     ),
+                    validator=None,
+                    schema=False,
+                    instance=14,
+                ),
+            ],
+        ),
+        (
+            {
+                "Engine": "mysql",
+                "DBClusterIdentifier": "my-maz-cluster",
+                "BackupRetentionPeriod": 7,
+            },
+            [
+                ValidationError(
+                    (
+                        "'BackupRetentionPeriod' is not allowed when "
+                        "'DBClusterIdentifier' is specified. Set backup "
+                        "retention period on the DB cluster instead."
+                    ),
+                    rule=DbInstanceBackupRetentionPeriod(),
+                    path=deque(["BackupRetentionPeriod"]),
+                    schema_path=deque(
+                        [
+                            "allOf",
+                            0,
+                            "then",
+                            "properties",
+                            "BackupRetentionPeriod",
+                        ]
+                    ),
+                    validator=None,
+                    schema=False,
+                    instance=7,
                 ),
             ],
         ),
