@@ -7867,6 +7867,11 @@
     ]
    },
    "getentitlements": {},
+   "getinvoicesubmissiontask": {
+    "Resources": [
+     "InvoiceSubmissionTask"
+    ]
+   },
    "getlisting": {
     "Resources": [
      "Listing"
@@ -7919,6 +7924,8 @@
      "Product"
     ]
    },
+   "listinvoicesubmissiontasks": {},
+   "listpayables": {},
    "listprivatelistings": {},
    "listprivatemarketplacerequests": {},
    "listpurchaseoptions": {
@@ -7930,7 +7937,8 @@
     "Resources": [
      "ChangeSet",
      "DeploymentParameter",
-     "Entity"
+     "Entity",
+     "InvoiceSubmissionTask"
     ]
    },
    "meterusage": {},
@@ -7969,12 +7977,18 @@
      "Entity"
     ]
    },
+   "startinvoicesubmissiontask": {
+    "Resources": [
+     "InvoiceSubmissionTask"
+    ]
+   },
    "subscribe": {},
    "tagresource": {
     "Resources": [
      "ChangeSet",
      "DeploymentParameter",
-     "Entity"
+     "Entity",
+     "InvoiceSubmissionTask"
     ]
    },
    "unsubscribe": {},
@@ -7982,7 +7996,8 @@
     "Resources": [
      "ChangeSet",
      "DeploymentParameter",
-     "Entity"
+     "Entity",
+     "InvoiceSubmissionTask"
     ]
    },
    "updateagreementapprovalrequest": {},
@@ -8026,6 +8041,14 @@
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}",
      "catalog:ChangeType"
+    ]
+   },
+   "invoicesubmissiontask": {
+    "ARNFormats": [
+     "arn:${Partition}:aws-marketplace:${Region}:${Account}:catalog/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "listing": {
@@ -43866,6 +43889,7 @@
     "Resources": [
      "api-key",
      "geofence-collection",
+     "job",
      "map",
      "place-index",
      "route-calculator",
@@ -43906,6 +43930,7 @@
     "Resources": [
      "api-key",
      "geofence-collection",
+     "job",
      "map",
      "place-index",
      "route-calculator",
@@ -43916,6 +43941,7 @@
     "Resources": [
      "api-key",
      "geofence-collection",
+     "job",
      "map",
      "place-index",
      "route-calculator",
@@ -43974,6 +44000,14 @@
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}",
      "geo:GeofenceIds"
+    ]
+   },
+   "job": {
+    "ARNFormats": [
+     "arn:${Partition}:geo:${Region}:${Account}:job/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "map": {
@@ -85285,6 +85319,9 @@
    "addtags": {
     "Resources": [
      "action",
+     "ai-benchmark-job",
+     "ai-recommendation-job",
+     "ai-workload-config",
      "algorithm",
      "app",
      "app-image-config",
@@ -85400,6 +85437,21 @@
    "createaction": {
     "Resources": [
      "action"
+    ]
+   },
+   "createaibenchmarkjob": {
+    "Resources": [
+     "ai-benchmark-job"
+    ]
+   },
+   "createairecommendationjob": {
+    "Resources": [
+     "ai-recommendation-job"
+    ]
+   },
+   "createaiworkloadconfig": {
+    "Resources": [
+     "ai-workload-config"
     ]
    },
    "createalgorithm": {
@@ -85765,6 +85817,21 @@
      "action"
     ]
    },
+   "deleteaibenchmarkjob": {
+    "Resources": [
+     "ai-benchmark-job"
+    ]
+   },
+   "deleteairecommendationjob": {
+    "Resources": [
+     "ai-recommendation-job"
+    ]
+   },
+   "deleteaiworkloadconfig": {
+    "Resources": [
+     "ai-workload-config"
+    ]
+   },
    "deletealgorithm": {
     "Resources": [
      "algorithm"
@@ -86036,6 +86103,9 @@
    "deletetags": {
     "Resources": [
      "action",
+     "ai-benchmark-job",
+     "ai-recommendation-job",
+     "ai-workload-config",
      "algorithm",
      "app",
      "app-image-config",
@@ -86139,6 +86209,21 @@
    "describeaction": {
     "Resources": [
      "action"
+    ]
+   },
+   "describeaibenchmarkjob": {
+    "Resources": [
+     "ai-benchmark-job"
+    ]
+   },
+   "describeairecommendationjob": {
+    "Resources": [
+     "ai-recommendation-job"
+    ]
+   },
+   "describeaiworkloadconfig": {
+    "Resources": [
+     "ai-workload-config"
     ]
    },
    "describealgorithm": {
@@ -86570,6 +86655,9 @@
     ]
    },
    "listactions": {},
+   "listaibenchmarkjobs": {},
+   "listairecommendationjobs": {},
+   "listaiworkloadconfigs": {},
    "listalgorithms": {},
    "listaliases": {
     "Resources": [
@@ -86712,6 +86800,9 @@
    "listtags": {
     "Resources": [
      "action",
+     "ai-benchmark-job",
+     "ai-recommendation-job",
+     "ai-workload-config",
      "algorithm",
      "app",
      "app-image-config",
@@ -86879,6 +86970,16 @@
    "startsession": {
     "Resources": [
      "space"
+    ]
+   },
+   "stopaibenchmarkjob": {
+    "Resources": [
+     "ai-benchmark-job"
+    ]
+   },
+   "stopairecommendationjob": {
+    "Resources": [
+     "ai-recommendation-job"
     ]
    },
    "stopautomljob": {
@@ -87218,6 +87319,33 @@
    "action": {
     "ARNFormats": [
      "arn:${Partition}:sagemaker:${Region}:${Account}:action/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}",
+     "sagemaker:ResourceTag/${TagKey}"
+    ]
+   },
+   "ai-benchmark-job": {
+    "ARNFormats": [
+     "arn:${Partition}:sagemaker:${Region}:${Account}:ai-benchmark-job/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}",
+     "sagemaker:ResourceTag/${TagKey}"
+    ]
+   },
+   "ai-recommendation-job": {
+    "ARNFormats": [
+     "arn:${Partition}:sagemaker:${Region}:${Account}:ai-recommendation-job/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}",
+     "sagemaker:ResourceTag/${TagKey}"
+    ]
+   },
+   "ai-workload-config": {
+    "ARNFormats": [
+     "arn:${Partition}:sagemaker:${Region}:${Account}:ai-workload-config/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}",
