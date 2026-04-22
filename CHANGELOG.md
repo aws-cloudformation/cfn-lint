@@ -1,3 +1,11 @@
+### v1.49.3
+## What's Changed
+* chore(deps): update `sympy` requirement from >=1.0.0 to >=1.14.0 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4473
+* Fix [E3719](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3719) false positive when `BackupRetentionPeriod` is omitted by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4475
+* Update CloudFormation schemas to `2026-04-22` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4467
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.49.2...v1.49.3
+
 ### v1.49.2
 ## What's Changed
 * Fix [E1041](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1041) false positive: add Lambda::Function.Arn format to Lambda Alias by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4469
