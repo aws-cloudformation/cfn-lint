@@ -73,6 +73,16 @@ _exclusiveMinimum_ and _exclusiveMaximum_ is used to define the exlusive range f
 
 _minItems_ and _maxItems_ is used to provide the inclusive length of an array.
 
+##### maxUniqueItems
+
+_maxUniqueItems_ validates the maximum number of unique items in an array. Unlike _maxItems_ which counts all items including duplicates, _maxUniqueItems_ counts only distinct values. This is used when the API deduplicates array entries (e.g. CloudWatch Alarm actions).
+
+```json
+{
+  "maxUniqueItems": 5
+}
+```
+
 ##### prefixItems
 
 _prefixItems_ is similar to the definition of [prefixItems](https://json-schema.org/understanding-json-schema/reference/array#tupleValidation) but doesn't actually do the prefix. The current resource schema doesn't support [items](https://json-schema.org/understanding-json-schema/reference/array#items) being an array. We use `prefixItems` to validate array items where ordering matters.
