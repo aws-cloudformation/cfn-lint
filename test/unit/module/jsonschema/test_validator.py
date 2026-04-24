@@ -569,6 +569,36 @@ def test_validator(name, schema, instance, expected, validator):
             [ValidationError("expected maximum item count: 0, found: 1")],
         ),
         (
+            "valid maxUniqueItems",
+            {"maxUniqueItems": 2},
+            ["foo", "bar"],
+            [],
+        ),
+        (
+            "valid maxUniqueItems with duplicates under limit",
+            {"maxUniqueItems": 2},
+            ["foo", "foo", "bar", "bar"],
+            [],
+        ),
+        (
+            "valid maxUniqueItems with wrong type",
+            {"maxUniqueItems": 2},
+            {},
+            [],
+        ),
+        (
+            "maxUniqueItems exceeded",
+            {"maxUniqueItems": 1},
+            ["foo", "bar"],
+            [ValidationError("expected maximum unique item count: 1, found: 2")],
+        ),
+        (
+            "maxUniqueItems with duplicates over limit",
+            {"maxUniqueItems": 1},
+            ["foo", "bar", "foo"],
+            [ValidationError("expected maximum unique item count: 1, found: 2")],
+        ),
+        (
             "valid minLength",
             {"minLength": 1},
             "foo",

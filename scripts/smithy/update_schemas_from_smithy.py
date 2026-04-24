@@ -40,9 +40,33 @@ case_insensitive_resources = [
 ]
 
 exceptions = {
-    "ses": ["/definitions/EventDestination/properties/MatchingEventTypes/items"],
+    "ses": [
+        "/definitions/EventDestination/properties/MatchingEventTypes/items",
+        "/definitions/DimensionConfiguration/properties/DimensionValueSource",
+    ],
     "ecs": ["/definitions/LogConfiguration/properties/LogDriver"],
     "lambda": ["/properties/FunctionName"],
+    "cloudwatch": [
+        "/properties/AlarmActions",
+        "/properties/OKActions",
+        "/properties/InsufficientDataActions",
+    ],
+    "connect": [
+        "/properties/QueueConfigs",
+    ],
+    "batch": [
+        "/definitions/Ec2ConfigurationObject/properties/ImageIdOverride",
+    ],
+    "securityhub": [
+        "/definitions/MapFilter/properties/Value",
+    ],
+    "rds": [
+        "/properties/ReplicaMode",
+    ],
+    "ec2": [
+        "/properties/Domain",
+        "/properties/Type",
+    ],
 }
 
 
@@ -253,6 +277,8 @@ def build_resource_type_patches(
                     )
 
     if not d:
+        if output_file.exists():
+            output_file.unlink()
         return
 
     with open(output_file, "w+") as fh:

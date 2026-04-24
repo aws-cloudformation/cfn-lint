@@ -438,6 +438,18 @@ def maxItems(
         )
 
 
+def maxUniqueItems(
+    validator: Validator, mI: Any, instance: Any, schema: dict[str, Any]
+) -> ValidationResult:
+    if not validator.is_type(instance, "array"):
+        return
+    unique_count = len(set(str(unbool(i)) for i in instance))
+    if unique_count > mI:
+        yield ValidationError(
+            f"expected maximum unique item count: {mI}, found: {unique_count}"
+        )
+
+
 def maxLength(
     validator: Validator, mL: Any, instance: Any, schema: dict[str, Any]
 ) -> ValidationResult:  # pylint: disable=arguments-renamed
