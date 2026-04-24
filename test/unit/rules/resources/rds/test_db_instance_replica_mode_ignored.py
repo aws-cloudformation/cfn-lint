@@ -43,6 +43,18 @@ def rule():
             [],
         ),
         (
+            "not a dict",
+            [],
+        ),
+        (
+            {"ReplicaMode": "mounted"},
+            [],
+        ),
+        (
+            {"Engine": ["postgres"], "ReplicaMode": "mounted"},
+            [],
+        ),
+        (
             {"Engine": "postgres", "ReplicaMode": "open-read-only"},
             [
                 ValidationError(
