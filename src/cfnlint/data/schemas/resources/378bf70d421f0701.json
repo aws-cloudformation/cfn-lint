@@ -1,0 +1,63 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AmazonSideAsn",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VPNGatewayId"
+ ],
+ "properties": {
+  "AmazonSideAsn": {
+   "format": "int64",
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Type": {
+   "type": "string"
+  },
+  "VPNGatewayId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VPNGatewayId"
+ ],
+ "required": [
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::VPNGateway"
+}

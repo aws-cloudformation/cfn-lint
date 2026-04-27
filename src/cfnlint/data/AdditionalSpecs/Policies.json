@@ -10364,7 +10364,8 @@
      "imported-model",
      "inference-profile",
      "prompt-router",
-     "provisioned-model"
+     "provisioned-model",
+     "system-tool"
     ]
    },
    "invokemodelwithresponsestream": {
@@ -10377,7 +10378,8 @@
      "imported-model",
      "inference-profile",
      "prompt-router",
-     "provisioned-model"
+     "provisioned-model",
+     "system-tool"
     ]
    },
    "invoketool": {
@@ -11194,6 +11196,7 @@
      "gateway"
     ]
    },
+   "createharness": {},
    "creatememory": {},
    "createoauth2credentialprovider": {
     "Resources": [
@@ -11270,6 +11273,11 @@
    "deletegatewaytarget": {
     "Resources": [
      "gateway"
+    ]
+   },
+   "deleteharness": {
+    "Resources": [
+     "harness"
     ]
    },
    "deletememory": {
@@ -11400,6 +11408,11 @@
    "getgatewaytarget": {
     "Resources": [
      "gateway"
+    ]
+   },
+   "getharness": {
+    "Resources": [
+     "harness"
     ]
    },
    "getmemory": {
@@ -11543,6 +11556,11 @@
      "gateway"
     ]
    },
+   "invokeharness": {
+    "Resources": [
+     "harness"
+    ]
+   },
    "invokeregistrymcp": {
     "Resources": [
      "registry"
@@ -11584,6 +11602,7 @@
      "gateway"
     ]
    },
+   "listharnesses": {},
    "listmemories": {},
    "listmemoryextractionjobs": {
     "Resources": [
@@ -11638,6 +11657,7 @@
      "code-interpreter-custom",
      "evaluator",
      "gateway",
+     "harness",
      "memory",
      "oauth2credentialprovider",
      "online-evaluation-config",
@@ -11754,6 +11774,7 @@
      "code-interpreter-custom",
      "evaluator",
      "gateway",
+     "harness",
      "memory",
      "oauth2credentialprovider",
      "online-evaluation-config",
@@ -11772,6 +11793,7 @@
      "code-interpreter-custom",
      "evaluator",
      "gateway",
+     "harness",
      "memory",
      "oauth2credentialprovider",
      "online-evaluation-config",
@@ -11818,6 +11840,11 @@
    "updategatewaytarget": {
     "Resources": [
      "gateway"
+    ]
+   },
+   "updateharness": {
+    "Resources": [
+     "harness"
     ]
    },
    "updatememory": {
@@ -11923,6 +11950,14 @@
    "gateway": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:gateway/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "harness": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:harness/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -39332,6 +39367,21 @@
      "jobRun"
     ]
    },
+   "getresourcedashboard": {
+    "Resources": [
+     "session"
+    ]
+   },
+   "getsession": {
+    "Resources": [
+     "session"
+    ]
+   },
+   "getsessionendpoint": {
+    "Resources": [
+     "session"
+    ]
+   },
    "listapplications": {},
    "listjobrunattempts": {
     "Resources": [
@@ -39343,10 +39393,16 @@
      "application"
     ]
    },
+   "listsessions": {
+    "Resources": [
+     "application"
+    ]
+   },
    "listtagsforresource": {
     "Resources": [
      "application",
-     "jobRun"
+     "jobRun",
+     "session"
     ]
    },
    "startapplication": {
@@ -39359,6 +39415,11 @@
      "application"
     ]
    },
+   "startsession": {
+    "Resources": [
+     "application"
+    ]
+   },
    "stopapplication": {
     "Resources": [
      "application"
@@ -39367,13 +39428,20 @@
    "tagresource": {
     "Resources": [
      "application",
-     "jobRun"
+     "jobRun",
+     "session"
+    ]
+   },
+   "terminatesession": {
+    "Resources": [
+     "session"
     ]
    },
    "untagresource": {
     "Resources": [
      "application",
-     "jobRun"
+     "jobRun",
+     "session"
     ]
    },
    "updateapplication": {
@@ -39392,6 +39460,14 @@
     ]
    },
    "jobrun": {
+    "ARNFormats": [
+     "arn:${Partition}:emr-serverless:${Region}:${Account}:/applications/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "session": {
     "ARNFormats": [
      "arn:${Partition}:emr-serverless:${Region}:${Account}:/applications/.*"
     ],
@@ -43710,6 +43786,11 @@
      "route-calculator"
     ]
    },
+   "canceljob": {
+    "Resources": [
+     "job"
+    ]
+   },
    "creategeofencecollection": {
     "Resources": [
      "geofence-collection"
@@ -43825,6 +43906,11 @@
      "geofence-collection"
     ]
    },
+   "getjob": {
+    "Resources": [
+     "job"
+    ]
+   },
    "getmapglyphs": {
     "Resources": [
      "map"
@@ -43863,6 +43949,11 @@
    "listgeofences": {
     "Resources": [
      "geofence-collection"
+    ]
+   },
+   "listjobs": {
+    "Resources": [
+     "job"
     ]
    },
    "listkeys": {
@@ -43924,6 +44015,11 @@
    "searchplaceindexfortext": {
     "Resources": [
      "place-index"
+    ]
+   },
+   "startjob": {
+    "Resources": [
+     "job"
     ]
    },
    "tagresource": {
@@ -54758,6 +54854,11 @@
      "Channel"
     ]
    },
+   "createadconfiguration": {
+    "Resources": [
+     "Ad-Configuration"
+    ]
+   },
    "createchannel": {
     "Resources": [
      "Channel",
@@ -54802,6 +54903,11 @@
    "createstreamkey": {
     "Resources": [
      "Stream-Key"
+    ]
+   },
+   "deleteadconfiguration": {
+    "Resources": [
+     "Ad-Configuration"
     ]
    },
    "deletechannel": {
@@ -54858,6 +54964,11 @@
    "disconnectparticipant": {
     "Resources": [
      "Stage"
+    ]
+   },
+   "getadconfiguration": {
+    "Resources": [
+     "Ad-Configuration"
     ]
    },
    "getchannel": {
@@ -54945,6 +55056,12 @@
      "Public-Key"
     ]
    },
+   "insertadbreak": {
+    "Resources": [
+     "Channel"
+    ]
+   },
+   "listadconfigurations": {},
    "listchannels": {
     "Resources": [
      "Channel"
@@ -55014,6 +55131,7 @@
    },
    "listtagsforresource": {
     "Resources": [
+     "Ad-Configuration",
      "Channel",
      "Composition",
      "Encoder-Configuration",
@@ -55067,6 +55185,7 @@
    },
    "tagresource": {
     "Resources": [
+     "Ad-Configuration",
      "Channel",
      "Composition",
      "Encoder-Configuration",
@@ -55082,6 +55201,7 @@
    },
    "untagresource": {
     "Resources": [
+     "Ad-Configuration",
      "Channel",
      "Composition",
      "Encoder-Configuration",
@@ -55117,6 +55237,14 @@
    }
   },
   "Resources": {
+   "ad-configuration": {
+    "ARNFormats": [
+     "arn:${Partition}:ivs:${Region}:${Account}:ad-configuration/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "channel": {
     "ARNFormats": [
      "arn:${Partition}:ivs:${Region}:${Account}:channel/.*"
@@ -56531,6 +56659,9 @@
    "kmskey": {
     "ARNFormats": [
      "arn:${Partition}:kms:${Region}:${Account}:key/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "stream": {
@@ -73523,6 +73654,18 @@
      "recommenders"
     ]
    },
+   "createrecommenderfilter": {
+    "Resources": [
+     "domains",
+     "recommender-filters"
+    ]
+   },
+   "createrecommenderschema": {
+    "Resources": [
+     "domains",
+     "recommender-schemas"
+    ]
+   },
    "createsegmentdefinition": {
     "Resources": [
      "domains",
@@ -73617,6 +73760,18 @@
     "Resources": [
      "domains",
      "recommenders"
+    ]
+   },
+   "deleterecommenderfilter": {
+    "Resources": [
+     "domains",
+     "recommender-filters"
+    ]
+   },
+   "deleterecommenderschema": {
+    "Resources": [
+     "domains",
+     "recommender-schemas"
     ]
    },
    "deletesegmentdefinition": {
@@ -73730,6 +73885,18 @@
     "Resources": [
      "domains",
      "recommenders"
+    ]
+   },
+   "getrecommenderfilter": {
+    "Resources": [
+     "domains",
+     "recommender-filters"
+    ]
+   },
+   "getrecommenderschema": {
+    "Resources": [
+     "domains",
+     "recommender-schemas"
     ]
    },
    "getsegmentdefinition": {
@@ -73867,8 +74034,18 @@
     ]
    },
    "listprofileobjecttypetemplates": {},
+   "listrecommenderfilters": {
+    "Resources": [
+     "domains"
+    ]
+   },
    "listrecommenderrecipes": {},
    "listrecommenders": {
+    "Resources": [
+     "domains"
+    ]
+   },
+   "listrecommenderschemas": {
     "Resources": [
      "domains"
     ]
@@ -73893,6 +74070,8 @@
      "integrations",
      "layouts",
      "object-types",
+     "recommender-filters",
+     "recommender-schemas",
      "recommenders",
      "segment-definitions"
     ]
@@ -73973,6 +74152,8 @@
      "integrations",
      "layouts",
      "object-types",
+     "recommender-filters",
+     "recommender-schemas",
      "recommenders",
      "segment-definitions"
     ]
@@ -73987,6 +74168,8 @@
      "integrations",
      "layouts",
      "object-types",
+     "recommender-filters",
+     "recommender-schemas",
      "recommenders",
      "segment-definitions"
     ]
@@ -74084,6 +74267,22 @@
     ]
    },
    "object-types": {
+    "ARNFormats": [
+     "arn:${Partition}:profile:${Region}:${Account}:domains/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "recommender-filters": {
+    "ARNFormats": [
+     "arn:${Partition}:profile:${Region}:${Account}:domains/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "recommender-schemas": {
     "ARNFormats": [
      "arn:${Partition}:profile:${Region}:${Account}:domains/.*"
     ],
@@ -89259,6 +89458,11 @@
      "AgentSpace"
     ]
    },
+   "batchdeletecodereviews": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
    "batchdeletepentests": {
     "Resources": [
      "AgentSpace"
@@ -89270,6 +89474,21 @@
     ]
    },
    "batchgetartifactmetadata": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "batchgetcodereviewjobs": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "batchgetcodereviewjobtasks": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "batchgetcodereviews": {
     "Resources": [
      "AgentSpace"
     ]
@@ -89306,6 +89525,11 @@
    },
    "createagentspace": {},
    "createapplication": {},
+   "createcodereview": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
    "createdesignreview": {
     "Resources": [
      "AgentSpace"
@@ -89416,6 +89640,21 @@
      "AgentSpace"
     ]
    },
+   "listcodereviewjobsforcodereview": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "listcodereviewjobtasks": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "listcodereviews": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
    "listdesignreviewcomments": {
     "Resources": [
      "AgentSpace"
@@ -89492,7 +89731,17 @@
      "AgentSpace"
     ]
    },
+   "startcodereviewjob": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
    "startpentestjob": {
+    "Resources": [
+     "AgentSpace"
+    ]
+   },
+   "stopcodereviewjob": {
     "Resources": [
      "AgentSpace"
     ]
@@ -89533,6 +89782,11 @@
    "updateapplication": {
     "Resources": [
      "Application"
+    ]
+   },
+   "updatecodereview": {
+    "Resources": [
+     "AgentSpace"
     ]
    },
    "updatefinding": {
@@ -98911,7 +99165,8 @@
    "createpolicystore": {},
    "createpolicystorealias": {
     "Resources": [
-     "policy-store"
+     "policy-store",
+     "policy-store-alias"
     ]
    },
    "createpolicytemplate": {
@@ -99049,6 +99304,11 @@
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "policy-store-alias": {
+    "ARNFormats": [
+     "arn:${Partition}:verifiedpermissions:${Region}:${Account}:policy-store-alias/.*"
     ]
    }
   }
