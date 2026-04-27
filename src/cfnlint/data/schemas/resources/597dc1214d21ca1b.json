@@ -1,0 +1,185 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Direction",
+  "/properties/OutpostArn",
+  "/properties/PreferredInstanceType",
+  "/properties/SecurityGroupIds"
+ ],
+ "definitions": {
+  "IpAddressRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Ip": {
+     "maxLength": 36,
+     "minLength": 7,
+     "type": "string"
+    },
+    "Ipv6": {
+     "maxLength": 39,
+     "minLength": 7,
+     "type": "string"
+    },
+    "SubnetId": {
+     "format": "AWS::EC2::Subnet.Id",
+     "maxLength": 32,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "SubnetId"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResolverEndpointId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Direction": {
+   "enumCaseInsensitive": [
+    "inbound",
+    "inbound_delegation",
+    "outbound"
+   ],
+   "type": "string"
+  },
+  "Dns64Enabled": {
+   "type": "boolean"
+  },
+  "HostVPCId": {
+   "type": "string"
+  },
+  "IpAddressCount": {
+   "type": "string"
+  },
+  "IpAddresses": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IpAddressRequest"
+   },
+   "maxItems": 20,
+   "minItems": 2,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Ipv6InternetAccessEnabled": {
+   "type": "boolean"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 0,
+   "pattern": "^(?!^[0-9]+$)([a-zA-Z0-9\\-_' ']+)$",
+   "type": "string"
+  },
+  "OutpostArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^arn:aws([a-z-]+)?:outposts:[a-z\\d-]+:\\d{12}:outpost/op-[a-f0-9]{17}$",
+   "type": "string"
+  },
+  "PreferredInstanceType": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Protocols": {
+   "insertionOrder": false,
+   "items": {
+    "enumCaseInsensitive": [
+     "do53",
+     "doh",
+     "doh-fips"
+    ],
+    "type": "string"
+   },
+   "maxItems": 2,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ResolverEndpointId": {
+   "type": "string"
+  },
+  "ResolverEndpointType": {
+   "enumCaseInsensitive": [
+    "dualstack",
+    "ipv4",
+    "ipv6"
+   ],
+   "type": "string"
+  },
+  "RniEnhancedMetricsEnabled": {
+   "type": "boolean"
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "maxLength": 64,
+    "minLength": 1,
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TargetNameServerMetricsEnabled": {
+   "type": "boolean"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/HostVPCId",
+  "/properties/IpAddressCount",
+  "/properties/ResolverEndpointId"
+ ],
+ "required": [
+  "Direction",
+  "IpAddresses",
+  "SecurityGroupIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53resolver",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Route53Resolver::ResolverEndpoint"
+}

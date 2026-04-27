@@ -1,0 +1,124 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AlarmName"
+ ],
+ "definitions": {
+  "AlarmActionARN": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AlarmName"
+ ],
+ "properties": {
+  "ActionsEnabled": {
+   "type": "boolean"
+  },
+  "ActionsSuppressor": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ActionsSuppressorExtensionPeriod": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "ActionsSuppressorWaitPeriod": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "AlarmActions": {
+   "items": {
+    "maxLength": 1024,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 5,
+   "type": "array"
+  },
+  "AlarmDescription": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "AlarmName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "AlarmRule": {
+   "maxLength": 10240,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InsufficientDataActions": {
+   "items": {
+    "maxLength": 1024,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 5,
+   "type": "array"
+  },
+  "OKActions": {
+   "items": {
+    "maxLength": 1024,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 5,
+   "type": "array"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "AlarmRule"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudwatch.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudWatch::CompositeAlarm"
+}
