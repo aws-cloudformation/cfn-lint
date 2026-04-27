@@ -1,3 +1,16 @@
+### v1.50.0
+## What's Changed
+* feat: add rule [E3720](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3720) to validate `StorageEncrypted` is set when `KmsKeyId` is specified for non-custom engine RDS DBInstances by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4480
+* feat: add rule [E3721](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3721) to validate `ReplicaMode` enum values for Oracle and Db2 engines by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4480
+* feat: add rule [W3699](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3699) to warn when `ReplicaMode` is specified for non-Oracle/Db2 engines (silently ignored) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4480
+* feat: add rule [W3700](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3700) to warn when EIP `Domain` has non-standard values (silently converted to `vpc`) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4480
+* Add `maxUniqueItems` JSON Schema keyword for arrays where duplicates are allowed but unique count is limited by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4480
+* Fix schema validation false positives for CloudWatch Alarm actions, Lambda Layers, Connect RoutingProfile, and stale smithy enums by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4480
+* Update CI badge in README.md by @ScottBrenner in https://github.com/aws-cloudformation/cfn-lint/pull/4478
+* Update CloudFormation schemas to `2026-04-27` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4477
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.49.3...v1.50.0
+
 ### v1.49.3
 ## What's Changed
 * chore(deps): update `sympy` requirement from >=1.0.0 to >=1.14.0 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4473
