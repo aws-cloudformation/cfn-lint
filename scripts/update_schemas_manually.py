@@ -535,12 +535,16 @@ patches.extend(
                     path="/",
                 ),
                 Patch(
-                    values={"maximum": 1024, "minimum": 1},
-                    path="/properties/AlarmActions/items",
+                    values={"maxUniqueItems": 5, "minItems": 0},
+                    path="/properties/AlarmActions",
                 ),
                 Patch(
-                    values={"maxItems": 5, "minItems": 0},
-                    path="/properties/AlarmActions",
+                    values={"maxUniqueItems": 5, "minItems": 0},
+                    path="/properties/OKActions",
+                ),
+                Patch(
+                    values={"maxUniqueItems": 5, "minItems": 0},
+                    path="/properties/InsufficientDataActions",
                 ),
                 Patch(
                     values={"pattern": "^([a-z])([A-Za-z0-9\\_]*)$"},
@@ -1455,14 +1459,6 @@ patches.extend(
                                 "StorageEncrypted",
                             ]
                         },
-                        "dependencies": {
-                            "KmsKeyId": {
-                                "properties": {
-                                    "StorageEncrypted": {"enum": ["true", "True", True]}
-                                },
-                                "required": ["StorageEncrypted"],
-                            },
-                        },
                     },
                     path="/",
                 ),
@@ -1566,6 +1562,24 @@ patches.extend(
                         }
                     },
                     path="/",
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::SES::ConfigurationSetEventDestination",
+            patches=[
+                Patch(
+                    values={
+                        "enum": [
+                            "EMAIL_HEADER",
+                            "LINK_TAG",
+                            "MESSAGE_TAG",
+                            "emailHeader",
+                            "linkTag",
+                            "messageTag",
+                        ]
+                    },
+                    path="/definitions/DimensionConfiguration/properties/DimensionValueSource",
                 ),
             ],
         ),

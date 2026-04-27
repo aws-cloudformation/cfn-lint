@@ -397,6 +397,7 @@ _standard_validators: dict[str, V] = {
     "if": _keywords.if_,
     "items": _keywords.items,
     "maxItems": _keywords.maxItems,
+    "maxUniqueItems": _keywords.maxUniqueItems,
     "maxLength": _keywords.maxLength,
     "maxProperties": _keywords.maxProperties,
     "maximum": _keywords.maximum,
