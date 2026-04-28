@@ -19,6 +19,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import json
 from copy import deepcopy
 from difflib import SequenceMatcher
 from typing import Any, Sequence
@@ -644,7 +645,7 @@ def pattern(
         return
 
     if not isinstance(instance, str):
-        instance = str(instance)
+        instance = json.dumps(instance)
 
     if not re.search(patrn, instance):
         yield ValidationError(f"{instance!r} does not match {patrn!r}")

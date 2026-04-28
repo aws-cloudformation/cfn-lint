@@ -48,6 +48,14 @@ def test_validate(rule, validator):
     assert len(errs) == 0
 
 
+def test_validate_boolean(rule, validator):
+    # Boolean True stringifies to "true" via json.dumps, matching "true|false"
+    assert len(list(rule.pattern(validator, "true|false", True, {}))) == 0
+    assert len(list(rule.pattern(validator, "true|false", False, {}))) == 0
+    # Boolean should not match an unrelated pattern
+    assert len(list(rule.pattern(validator, "^foo$", True, {}))) == 1
+
+
 def test_pattern_exceptions(rule, validator):
     rule.configure({"exceptions": ["AWS::"]})
 
