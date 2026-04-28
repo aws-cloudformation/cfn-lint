@@ -694,7 +694,7 @@ def test_validator(name, schema, instance, expected, validator):
         ),
         (
             "pattern with bool converts to string",
-            {"pattern": "^True$"},
+            {"pattern": "^true$"},
             True,
             [],
         ),
