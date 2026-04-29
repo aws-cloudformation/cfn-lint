@@ -1284,7 +1284,7 @@ types: dict[str, str] = {
     "AWS::SecurityHub::SecurityControl": "062ab72de4bbcd1d",
     "AWS::SecurityHub::Standard": "a9a57a7527f5aff5",
     "AWS::SecurityLake::AwsLogSource": "672032192713ac3c",
-    "AWS::SecurityLake::DataLake": "1d55491b40250396",
+    "AWS::SecurityLake::DataLake": "3b4f02ea01647d04",
     "AWS::SecurityLake::Subscriber": "82ec23f1319b9a9e",
     "AWS::SecurityLake::SubscriberNotification": "ef5a3a84d2557a3e",
     "AWS::ServiceCatalog::AcceptedPortfolioShare": "aabf5162cee03316",

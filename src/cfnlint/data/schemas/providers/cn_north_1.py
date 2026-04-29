@@ -211,7 +211,7 @@ types: dict[str, str] = {
     "AWS::EC2::CapacityReservationFleet": "66f529dd9ae70683",
     "AWS::EC2::CustomerGateway": "97cfe350c5082da5",
     "AWS::EC2::DHCPOptions": "59211052b59ce6ff",
-    "AWS::EC2::EC2Fleet": "8944548d99c1ed13",
+    "AWS::EC2::EC2Fleet": "cf76f7f14b40480b",
     "AWS::EC2::EIP": "0737d9f93d1e9d13",
     "AWS::EC2::EIPAssociation": "a267820d6250f189",
     "AWS::EC2::EgressOnlyInternetGateway": "922c59e19b698eac",
