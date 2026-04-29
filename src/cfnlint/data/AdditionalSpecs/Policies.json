@@ -1011,6 +1011,11 @@
      "agentspace"
     ]
    },
+   "createprivateconnection": {
+    "Resources": [
+     "private-connection"
+    ]
+   },
    "deleteagentspace": {
     "Resources": [
      "agentspace"
@@ -1021,9 +1026,19 @@
      "agentspace"
     ]
    },
+   "deleteprivateconnection": {
+    "Resources": [
+     "private-connection"
+    ]
+   },
    "deregisterservice": {
     "Resources": [
      "service"
+    ]
+   },
+   "describeprivateconnection": {
+    "Resources": [
+     "private-connection"
     ]
    },
    "describesupportlevel": {
@@ -1145,6 +1160,7 @@
      "agentspace"
     ]
    },
+   "listprivateconnections": {},
    "listrecommendations": {
     "Resources": [
      "agentspace"
@@ -1154,6 +1170,7 @@
    "listtagsforresource": {
     "Resources": [
      "agentspace",
+     "private-connection",
      "service"
     ]
    },
@@ -1177,12 +1194,14 @@
    "tagresource": {
     "Resources": [
      "agentspace",
+     "private-connection",
      "service"
     ]
    },
    "untagresource": {
     "Resources": [
      "agentspace",
+     "private-connection",
      "service"
     ]
    },
@@ -1217,6 +1236,11 @@
      "agentspace"
     ]
    },
+   "updateprivateconnectioncertificate": {
+    "Resources": [
+     "private-connection"
+    ]
+   },
    "updaterecommendation": {
     "Resources": [
      "agentspace"
@@ -1240,6 +1264,14 @@
    "associations": {
     "ARNFormats": [
      "arn:${Partition}:aidevops:${Region}:${Account}:agentspace/.*"
+    ]
+   },
+   "private-connection": {
+    "ARNFormats": [
+     "arn:${Partition}:aidevops:${Region}:${Account}:private-connection/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "service": {
@@ -7930,7 +7962,7 @@
    "listprivatemarketplacerequests": {},
    "listpurchaseoptions": {
     "Resources": [
-     "PurchaseOption"
+     "AllPurchaseOptions"
     ]
    },
    "listtagsforresource": {
@@ -7961,12 +7993,12 @@
    "searchagreements": {},
    "searchfacets": {
     "Resources": [
-     "Listing"
+     "AllListings"
     ]
    },
    "searchlistings": {
     "Resources": [
-     "Listing"
+     "AllListings"
     ]
    },
    "sendagreementcancellationrequest": {},
@@ -8005,6 +8037,16 @@
    "viewsubscriptions": {}
   },
   "Resources": {
+   "alllistings": {
+    "ARNFormats": [
+     "arn:${Partition}:aws-marketplace:::catalog/.*"
+    ]
+   },
+   "allpurchaseoptions": {
+    "ARNFormats": [
+     "arn:${Partition}:aws-marketplace:::catalog/.*"
+    ]
+   },
    "assessment": {
     "ARNFormats": [
      "arn:${Partition}:aws-marketplace:${Region}::.*"
@@ -57190,6 +57232,11 @@
     ]
    },
    "generaterandom": {},
+   "getkeylastusage": {
+    "Resources": [
+     "key"
+    ]
+   },
    "getkeypolicy": {
     "Resources": [
      "key"
@@ -98856,9 +98903,6 @@
  "trustedadvisor": {
   "Actions": {
    "batchupdaterecommendationresourceexclusion": {},
-   "createengagement": {},
-   "createengagementattachment": {},
-   "createengagementcommunication": {},
    "deletenotificationconfigurationfordelegatedadmin": {},
    "describeaccount": {},
    "describeaccountaccess": {},
@@ -98899,9 +98943,6 @@
     ]
    },
    "generatereport": {},
-   "getengagement": {},
-   "getengagementattachment": {},
-   "getengagementtype": {},
    "getorganizationrecommendation": {},
    "getrecommendation": {},
    "includecheckitems": {
@@ -98911,9 +98952,6 @@
    },
    "listaccountsforparent": {},
    "listchecks": {},
-   "listengagementcommunications": {},
-   "listengagements": {},
-   "listengagementtypes": {},
    "listorganizationalunitsforparent": {},
    "listorganizationrecommendationaccounts": {},
    "listorganizationrecommendationresources": {},
@@ -98928,8 +98966,6 @@
    },
    "setaccountaccess": {},
    "setorganizationaccess": {},
-   "updateengagement": {},
-   "updateengagementstatus": {},
    "updatenotificationconfigurations": {},
    "updatenotificationpreferences": {},
    "updateorganizationrecommendationlifecycle": {},
