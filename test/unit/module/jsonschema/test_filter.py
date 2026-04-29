@@ -68,6 +68,45 @@ def template():
             ],
         ),
         (
+            "Detect raw pseudo-parameter string",
+            "AWS::NoValue",
+            {"type": "string"},
+            deque(["Resources", "MyResource", "Properties", "Foo"]),
+            [],
+            [
+                (
+                    "AWS::NoValue",
+                    {"rawPseudoParameter": {"type": "string"}},
+                ),
+            ],
+        ),
+        (
+            "Skip pseudo-parameter when used inside Ref",
+            "AWS::NoValue",
+            {"type": "string"},
+            deque(["Resources", "MyResource", "Properties", "Foo", "Ref"]),
+            [],
+            [
+                (
+                    "AWS::NoValue",
+                    {"type": "string"},
+                ),
+            ],
+        ),
+        (
+            "Skip non pseudo-parameter AWS:: string",
+            "AWS::EC2::Instance",
+            {"type": "string"},
+            deque(["Resources", "MyResource", "Type"]),
+            [],
+            [
+                (
+                    "AWS::EC2::Instance",
+                    {"type": "string"},
+                ),
+            ],
+        ),
+        (
             "Lack of functions returns the schema and instance",
             {
                 "Foo": {"Ref": "AWS::NoValue"},
@@ -171,3 +210,31 @@ def test_filter(
     for result, (exp_instance, exp_schema) in zip(results, expected):
         assert result[0] == exp_instance, f"For test {name} got {result[0]!r}"
         assert result[1] == exp_schema, f"For test {name} got {result[1]!r}"
+
+
+def test_raw_pseudo_parameter_with_dynamic_references_disabled(template):
+    """
+    Pseudo-parameter detection must run even when the filter has
+    validate_dynamic_references=False (e.g. CfnLintJsonSchema rules).
+    """
+    filter = FunctionFilter(validate_dynamic_references=False)
+
+    context = create_context_for_template(template)
+    schema = {"type": "string"}
+    validator = CfnTemplateValidator(
+        context=context,
+        cfn=template,
+        schema=schema,
+    )
+    validator = validator.evolve(
+        context=validator.context.evolve(
+            path=Path(deque(["Resources", "MyResource", "Properties", "Foo"])),
+            functions=[],
+        )
+    )
+
+    results = list(filter.filter(validator, "AWS::NoValue", schema))
+
+    assert len(results) == 1
+    assert results[0][0] == "AWS::NoValue"
+    assert results[0][1] == {"rawPseudoParameter": schema}
