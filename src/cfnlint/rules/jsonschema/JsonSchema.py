@@ -32,6 +32,7 @@ class JsonSchema(BaseJsonSchema):
             "condition": "E8007",
             "dynamicReference": "E1050",
             "dynamicReferenceSpaces": "W1053",
+            "rawPseudoParameter": "W1054",
             "fn_and": "E8004",
             "fn_base64": "E1021",
             "fn_cidr": "E1024",

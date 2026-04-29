@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Any, Iterator, Sequence, Tuple
 
 from cfnlint.helpers import (
     FUNCTIONS,
+    PSEUDOPARAMS,
     REGEX_DYN_REF,
     REGEX_DYN_REF_SPACES,
     ToPy,
@@ -136,6 +137,9 @@ class FunctionFilter:
                 return
             elif REGEX_DYN_REF_SPACES.search(instance):
                 yield (instance, {"dynamicReferenceSpaces": schema}, validator)
+                return
+            elif instance in PSEUDOPARAMS and "Ref" not in validator.context.path.path:
+                yield (instance, {"rawPseudoParameter": schema}, validator)
                 return
 
         # if there are no functions then we don't need to worry
