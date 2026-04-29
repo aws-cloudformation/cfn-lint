@@ -23,27 +23,29 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       CidrBlock: 10.0.0.0/24
-      VpcId: vpc-123456
+      VpcId: vpc-12345678
   myInstance1:
     Type: AWS::EC2::Instance
     Properties:
-      SubnetId: !If [ isDevelopment, !Ref mySubnet, 'abc-123456']
-      ImageId: ami-123456
+      SubnetId: !If [ isDevelopment, !Ref mySubnet, 'subnet-12345678']
+      ImageId: ami-12345678
   myInstance2:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-123456
+      ImageId: ami-12345678
       BlockDeviceMappings:
         Fn::If:
         - isPrimaryAndProduction
-        - - VirtualName:
+        - - DeviceName: /dev/sdb
+            VirtualName:
               Fn::If:
                 - isPrimary
-                - /dev/hda
-                - /dev/hdb
+                - ephemeral0
+                - ephemeral1
         - - Fn::If:
             - isDevelopment
-            - VirtualName: /dev/hda
+            - DeviceName: /dev/sdc
+              VirtualName: ephemeral0
               Ebs: {}
             - !Ref AWS::NoValue
   myInstance3:
@@ -51,18 +53,18 @@ Resources:
     Properties:
       Fn::If:
       - isPrimaryAndProduction
-      - ImageId: ami-1234567
+      - ImageId: ami-1234567a
         InstanceType: t2.medium
       - Fn::If:
         - isDevelopment
-        - ImageId: ami-abcdefg
+        - ImageId: ami-abcdef01
           InstanceType: t2.xlarge
-        - ImageId: ami-123abcd
+        - ImageId: ami-123abcde
           InstanceType: m3.medium
   myInstance4:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: !If [isProduction, 'ami-123456', 'ami-abcdef']
+      ImageId: !If [isProduction, 'ami-12345678', 'ami-abcdef01']
       InstanceType:
         Fn::If:
         - isPrimaryAndProduction
@@ -106,7 +108,7 @@ Resources:
       Code:
         S3Bucket: lambda-functions
         S3Key: amilookup.zip
-      Runtime: nodejs4.3
+      Runtime: nodejs18.x
       Timeout: 25
       TracingConfig:
         Mode: Active
