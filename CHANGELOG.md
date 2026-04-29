@@ -1,3 +1,12 @@
+### v1.50.1
+## What's Changed
+* fix: Rule [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3031) false positive for boolean values with pattern by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4485
+* Add python `3.14` support by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4487
+* Update CloudFormation schemas to `2026-04-29` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4483
+* fix: use TOML-native posargs syntax for multi-arg expansion by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4488
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.50.0...v1.50.1
+
 ### v1.50.0
 ## What's Changed
 * feat: add rule [E3720](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3720) to validate `StorageEncrypted` is set when `KmsKeyId` is specified for non-custom engine RDS DBInstances by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4480
