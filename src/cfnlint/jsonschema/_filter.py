@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Any, Iterator, Sequence, Tuple
 
 from cfnlint.helpers import (
     FUNCTIONS,
+    PSEUDOPARAMS,
     REGEX_DYN_REF,
     REGEX_DYN_REF_SPACES,
     ToPy,
@@ -137,6 +138,18 @@ class FunctionFilter:
             elif REGEX_DYN_REF_SPACES.search(instance):
                 yield (instance, {"dynamicReferenceSpaces": schema}, validator)
                 return
+
+        # Check for pseudo-parameters used as raw strings (without Ref).
+        # This is independent of dynamic reference validation so that it
+        # also runs for rules that set validate_dynamic_references=False
+        # (e.g. CfnLintJsonSchema rules like Step Functions definitions).
+        if (
+            validator.is_type(instance, "string")
+            and instance in PSEUDOPARAMS
+            and "Ref" not in validator.context.path.path
+        ):
+            yield (instance, {"rawPseudoParameter": schema}, validator)
+            return
 
         # if there are no functions then we don't need to worry
         # about ref AWS::NoValue or If conditions
