@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  Env:
+    Type: String
+    Default: prod
+Conditions:
+  IsProd:
+    Fn::Equals:
+      - !Ref Env
+      - "prod"
+Resources:
+  # Valid - direct property value
+  ValidTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::GetStackOutput:
+          StackName: producer-stack
+          OutputName: TopicName
+  # Valid - inside Fn::Join
+  ValidJoin:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::Join:
+          - "-"
+          - - "prefix"
+            - Fn::GetStackOutput:
+                StackName: producer-stack
+                OutputName: TopicName
+  # Valid - inside Fn::If
+  ValidIf:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::If:
+          - IsProd
+          - Fn::GetStackOutput:
+              StackName: producer-stack
+              OutputName: ProdName
+          - "dev-topic"
+  # Invalid - missing OutputName
+  InvalidMissing:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::GetStackOutput:
+          StackName: producer-stack
+  # Invalid - wrong type
+  InvalidType:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::GetStackOutput: "not-an-object"

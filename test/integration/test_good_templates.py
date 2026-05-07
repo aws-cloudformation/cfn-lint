@@ -260,6 +260,13 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results": [],
             "exit_code": 0,
         },
+        {
+            "filename": (
+                "test/fixtures/templates/good/functions/get_stack_output.yaml"
+            ),
+            "results": [],
+            "exit_code": 0,
+        },
     ]
 
     def test_templates(self):

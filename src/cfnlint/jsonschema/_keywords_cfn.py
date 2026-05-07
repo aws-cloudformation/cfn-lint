@@ -649,4 +649,5 @@ cfn_validators: dict[str, V] = {
     "fn_tojsonstring": _function_unknown,
     "fn_length": _function_unknown,
     "fn_if": _function_unknown,
+    "fn_getstackoutput": _function_unknown,
 }

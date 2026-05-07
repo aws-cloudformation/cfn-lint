@@ -171,6 +171,7 @@ FUNCTIONS = frozenset(
         "Fn::ForEach::[a-zA-Z0-9]+",
         "Fn::GetAtt",
         "Fn::GetAZs",
+        "Fn::GetStackOutput",
         "Fn::If",
         "Fn::ImportValue",
         "Fn::Join",
