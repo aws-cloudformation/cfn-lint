@@ -1,0 +1,91 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  Env:
+    Type: String
+    Default: prod
+Conditions:
+  IsProd:
+    Fn::Equals:
+      - !Ref Env
+      - "prod"
+Resources:
+  # Direct property value
+  Topic1:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::GetStackOutput:
+          StackName: producer-stack
+          OutputName: TopicName
+  # With all optional fields
+  Topic2:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::GetStackOutput:
+          StackName: producer-stack
+          OutputName: TopicName
+          Region: us-west-2
+          RoleArn: arn:aws:iam::123456789012:role/cross-account
+  # Inside Fn::Join
+  Topic3:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::Join:
+          - "-"
+          - - "prefix"
+            - Fn::GetStackOutput:
+                StackName: producer-stack
+                OutputName: TopicName
+  # Inside Fn::If
+  Topic4:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::If:
+          - IsProd
+          - Fn::GetStackOutput:
+              StackName: producer-stack
+              OutputName: ProdName
+          - "dev-topic"
+  # Inside Fn::Select
+  Topic5:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::Select:
+          - 0
+          - - Fn::GetStackOutput:
+                StackName: producer-stack
+                OutputName: TopicName
+  # With Ref inside StackName
+  Topic6:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::GetStackOutput:
+          StackName: !Ref AWS::StackName
+          OutputName: TopicName
+          Region: !Ref AWS::Region
+  # With Fn::Sub inside StackName
+  Topic7:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::GetStackOutput:
+          StackName:
+            Fn::Sub: "my-stack-${AWS::Region}"
+          OutputName: TopicName
+  # With Fn::Join inside StackName
+  Topic8:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::GetStackOutput:
+          StackName:
+            Fn::Join:
+              - "-"
+              - - "my"
+                - "stack"
+          OutputName: TopicName

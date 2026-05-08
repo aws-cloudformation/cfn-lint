@@ -41,6 +41,7 @@ class JsonSchema(BaseJsonSchema):
             "fn_foreach": "E1032",
             "fn_getatt": "E1010",
             "fn_getazs": "E1015",
+            "fn_getstackoutput": "E1033",
             "fn_if": "E1028",
             "fn_importvalue": "E1016",
             "fn_join": "E1022",

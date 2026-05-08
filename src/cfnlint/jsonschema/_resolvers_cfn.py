@@ -531,6 +531,7 @@ fn_resolvers: dict[str, Any] = {
     "Fn::ForEach": unresolvable,
     "Fn::GetAtt": unresolvable,
     "Fn::GetAZs": get_azs,
+    "Fn::GetStackOutput": unresolvable,
     "Fn::ImportValue": unresolvable,
     "Fn::If": if_,
     "Fn::Join": join,

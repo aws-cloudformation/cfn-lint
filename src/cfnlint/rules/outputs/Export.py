@@ -31,7 +31,7 @@ class Export(CfnLintJsonSchema):
         validator = validator.evolve(
             context=validator.context.evolve(
                 resources={},
-                functions=list(FUNCTIONS),
+                functions=[f for f in FUNCTIONS if f != "Fn::GetStackOutput"],
             ),
             schema={"type": "string"},
         )

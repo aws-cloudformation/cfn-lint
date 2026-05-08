@@ -40,7 +40,7 @@ class Value(CfnLintJsonSchema):
 
         validator = validator.evolve(
             context=validator.context.evolve(
-                functions=list(FUNCTIONS),
+                functions=[f for f in FUNCTIONS if f != "Fn::GetStackOutput"],
                 conditions=validator.context.conditions.evolve(
                     conditions,
                 ),

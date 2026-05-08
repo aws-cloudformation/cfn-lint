@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  # Missing required OutputName
+  Topic1:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::GetStackOutput:
+          StackName: producer-stack
+  # Missing required StackName
+  Topic2:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::GetStackOutput:
+          OutputName: TopicName
+  # Wrong type - string instead of object
+  Topic3:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::GetStackOutput: "invalid"
+  # Additional property
+  Topic4:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::GetStackOutput:
+          StackName: producer-stack
+          OutputName: TopicName
+          BadKey: value
+  # Used where integer is expected (wrong return type)
+  Topic5:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds:
+        Fn::GetStackOutput:
+          StackName: producer-stack
+          OutputName: Delay
