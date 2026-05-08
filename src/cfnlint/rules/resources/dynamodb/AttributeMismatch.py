@@ -55,25 +55,30 @@ class AttributeMismatch(CloudFormationLintRule):
         matches = []
         properties = property_set.get("Object")
 
+        attribute_definitions = properties.get("AttributeDefinitions", [])
+        key_schema = properties.get("KeySchema", [])
+        gsi = properties.get("GlobalSecondaryIndexes", [])
+        lsi = properties.get("LocalSecondaryIndexes", [])
+
+        if not all(
+            isinstance(p, list) for p in [attribute_definitions, key_schema, gsi, lsi]
+        ):
+            return matches
+
         keys = set()
         attributes = set()
 
-        for attribute in properties.get("AttributeDefinitions", []):
+        for attribute in attribute_definitions:
             attribute_name = attribute.get("AttributeName")
             if isinstance(attribute_name, str):
-                attributes.add(attribute.get("AttributeName"))
+                attributes.add(attribute_name)
             else:
                 self.logger.info("attribute definitions is not using just strings")
                 return matches
-        keys = keys.union(
-            self._get_key_schema_attributes(properties.get("KeySchema", []))
-        )
-        keys = keys.union(
-            self._get_attribute_secondary(properties.get("GlobalSecondaryIndexes", []))
-        )
-        keys = keys.union(
-            self._get_attribute_secondary(properties.get("LocalSecondaryIndexes", []))
-        )
+
+        keys = keys.union(self._get_key_schema_attributes(key_schema))
+        keys = keys.union(self._get_attribute_secondary(gsi))
+        keys = keys.union(self._get_attribute_secondary(lsi))
 
         if attributes != keys:
             message = (

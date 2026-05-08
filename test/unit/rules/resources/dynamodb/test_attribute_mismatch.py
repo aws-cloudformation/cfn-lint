@@ -45,3 +45,9 @@ class TestAttributeMismatch(BaseRuleTestCase):
             "test/fixtures/templates/bad/resources/dynamodb/undefined_attribute_definition.yaml",
             1,
         )
+
+    def test_file_positive_transform(self):
+        """Test no crash when Fn::Transform is used at list property positions"""
+        self.helper_file_positive_template(
+            "test/fixtures/templates/good/resources/dynamodb/attributes_transform.yaml"
+        )
