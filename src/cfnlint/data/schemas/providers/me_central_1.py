@@ -374,7 +374,7 @@ types: dict[str, str] = {
     "AWS::EMR::StudioSessionMapping": "1176f2aa157a948c",
     "AWS::EMRContainers::VirtualCluster": "d56c1799bc259539",
     "AWS::EMRServerless::Application": "837c6a91e430d0fd",
-    "AWS::ElastiCache::CacheCluster": "1220b6bbd633ae68",
+    "AWS::ElastiCache::CacheCluster": "d7a59dcba93923c0",
     "AWS::ElastiCache::GlobalReplicationGroup": "2af3062bf5b2cf7f",
     "AWS::ElastiCache::ParameterGroup": "b0e1dec3cd05f739",
     "AWS::ElastiCache::ReplicationGroup": "f3f377360bb5aa92",
