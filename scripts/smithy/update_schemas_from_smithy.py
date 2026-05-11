@@ -67,6 +67,9 @@ exceptions = {
         "/properties/Domain",
         "/properties/Type",
     ],
+    "iam": [
+        "/properties/InstanceProfileName",
+    ],
 }
 
 
