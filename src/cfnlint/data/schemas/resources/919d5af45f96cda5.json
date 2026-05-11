@@ -1,0 +1,215 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CodeStarParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ArtifactPath": {
+     "type": "string"
+    },
+    "Branch": {
+     "type": "string"
+    },
+    "ConnectionArn": {
+     "type": "string"
+    },
+    "Repository": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ArtifactPath",
+    "Repository",
+    "Branch",
+    "ConnectionArn"
+   ],
+   "type": "object"
+  },
+  "ConnectionParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "CodeStar": {
+     "$ref": "#/definitions/CodeStarParameters"
+    }
+   },
+   "type": "object"
+  },
+  "ProvisioningArtifactProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "DisableTemplateValidation": {
+     "type": "boolean"
+    },
+    "Info": {
+     "additionalProperties": false,
+     "properties": {
+      "ImportFromPhysicalId": {
+       "type": "string"
+      },
+      "LoadTemplateFromURL": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "CLOUD_FORMATION_TEMPLATE",
+      "MARKETPLACE_AMI",
+      "MARKETPLACE_CAR",
+      "TERRAFORM_OPEN_SOURCE",
+      "TERRAFORM_CLOUD",
+      "EXTERNAL"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Info"
+   ],
+   "type": "object"
+  },
+  "SourceConnection": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectionParameters": {
+     "additionalProperties": false,
+     "properties": {
+      "CodeStar": {
+       "$ref": "#/definitions/CodeStarParameters"
+      }
+     },
+     "type": "object"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ConnectionParameters",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AcceptLanguage": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Distributor": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Owner": {
+   "type": "string"
+  },
+  "ProductName": {
+   "type": "string"
+  },
+  "ProductType": {
+   "enum": [
+    "CLOUD_FORMATION_TEMPLATE",
+    "MARKETPLACE_AMI",
+    "MARKETPLACE_CAR",
+    "TERRAFORM_OPEN_SOURCE",
+    "TERRAFORM_CLOUD",
+    "EXTERNAL"
+   ],
+   "type": "string"
+  },
+  "ProvisioningArtifactIds": {
+   "type": "string"
+  },
+  "ProvisioningArtifactNames": {
+   "type": "string"
+  },
+  "ProvisioningArtifactParameters": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ProvisioningArtifactProperties"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ReplaceProvisioningArtifacts": {
+   "type": "boolean"
+  },
+  "SourceConnection": {
+   "$ref": "#/definitions/SourceConnection"
+  },
+  "SupportDescription": {
+   "type": "string"
+  },
+  "SupportEmail": {
+   "type": "string"
+  },
+  "SupportUrl": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/ProvisioningArtifactIds",
+  "/properties/ProvisioningArtifactNames",
+  "/properties/ProductName"
+ ],
+ "required": [
+  "Owner",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ServiceCatalog::CloudFormationProduct",
+ "writeOnlyProperties": [
+  "/properties/AcceptLanguage",
+  "/properties/ReplaceProvisioningArtifacts",
+  "/properties/ProvisioningArtifactParameters/*/DisableTemplateValidation"
+ ]
+}
