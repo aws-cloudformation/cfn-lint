@@ -496,3 +496,24 @@ def test_cfn_type_function(instance, type_value, strict_types, expected, validat
     )
     errs = list(cfn_type(validator, type_value, instance, {}))
     assert errs == expected
+
+
+def test_resolve_data_in_schema_pattern_non_string():
+    """Test that pattern is skipped when resolved value is not a string."""
+    from cfnlint.jsonschema._keywords_cfn import resolve_data_in_schema
+
+    schema = {
+        "pattern": {
+            "$data": "/target/value",
+        }
+    }
+
+    # When $data resolves to a non-string, pattern should be skipped
+    instance = {"target": {"value": 123}}
+    result = resolve_data_in_schema(schema, instance)
+    assert "pattern" not in result
+
+    # When $data resolves to a string, pattern is kept
+    instance = {"target": {"value": "^s3\\.amazonaws\\.com$"}}
+    result = resolve_data_in_schema(schema, instance)
+    assert result["pattern"] == "^s3\\.amazonaws\\.com$"

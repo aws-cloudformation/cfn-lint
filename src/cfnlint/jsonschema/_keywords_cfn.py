@@ -131,6 +131,8 @@ def resolve_data_in_schema(schema: Any, root_instance: Any) -> Any:
                         resolved = int(resolved)
                     except (ValueError, TypeError):
                         continue
+                if k == "pattern" and not isinstance(resolved, str):
+                    continue
                 result[k] = resolved
             else:
                 result[k] = resolve_data_in_schema(v, root_instance)

@@ -47,5 +47,29 @@ class PermissionPrincipal(CfnLintJsonSchema):
             ),
         )
 
+    # Map from pattern back to friendly service name for error messages
+    _pattern_to_friendly: dict[str, str] = {
+        "^apigateway\\.amazonaws\\.com$": "apigateway.amazonaws.com",
+        "^cognito-idp\\.amazonaws\\.com$": "cognito-idp.amazonaws.com",
+        "^config\\.amazonaws\\.com$": "config.amazonaws.com",
+        "^elasticloadbalancing\\.amazonaws\\.com$": (
+            "elasticloadbalancing.amazonaws.com"
+        ),
+        "^events\\.amazonaws\\.com$": "events.amazonaws.com",
+        "^iot\\.amazonaws\\.com$": "iot.amazonaws.com",
+        "^logs(\\.[a-z]{2}(-gov|-iso[a-z]?)?-[a-z]+-[0-9]+)?\\.amazonaws\\.com$": (
+            "logs.amazonaws.com or logs.<region>.amazonaws.com"
+        ),
+        "^s3\\.amazonaws\\.com$": "s3.amazonaws.com",
+        "^sns\\.amazonaws\\.com$": "sns.amazonaws.com",
+    }
+
     def message(self, instance: Any, err: ValidationError) -> str:
+        pattern = err.validator_value if err.validator == "pattern" else ""
+        friendly = self._pattern_to_friendly.get(pattern, "")
+        if friendly:
+            return (
+                f"Principal {err.instance!r} does not match expected "
+                f"service principal {friendly!r}"
+            )
         return err.message
