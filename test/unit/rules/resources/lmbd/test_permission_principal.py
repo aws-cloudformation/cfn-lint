@@ -48,7 +48,7 @@ _schema_path = deque(
         "permission",
         "properties",
         "principal",
-        "const",
+        "pattern",
     ]
 )
 
@@ -77,8 +77,9 @@ _schema_path = deque(
             deque(["Resources", "Permission", "Properties"]),
             [
                 ValidationError(
-                    "'s3.amazonaws.com' was expected",
-                    validator="const",
+                    "Principal 'sns.amazonaws.com' does not match expected "
+                    "service principal 's3.amazonaws.com'",
+                    validator="pattern",
                     rule=PermissionPrincipal(),
                     path=deque(["Principal"]),
                     schema_path=_schema_path,
@@ -125,8 +126,9 @@ _schema_path = deque(
             deque(["Resources", "Permission", "Properties"]),
             [
                 ValidationError(
-                    "'sns.amazonaws.com' was expected",
-                    validator="const",
+                    "Principal 's3.amazonaws.com' does not match expected "
+                    "service principal 'sns.amazonaws.com'",
+                    validator="pattern",
                     rule=PermissionPrincipal(),
                     path=deque(["Principal"]),
                     schema_path=_schema_path,
@@ -193,6 +195,26 @@ _schema_path = deque(
             deque(["Resources", "Permission", "Properties"]),
             [],
         ),
+        # CloudWatch Logs LogGroup with regional principal — valid
+        (
+            jsonpatch.apply_patch(
+                _template,
+                [
+                    {
+                        "op": "replace",
+                        "path": "/Resources/Permission/Properties/SourceArn",
+                        "value": {"Fn::GetAtt": ["LogGroup", "Arn"]},
+                    },
+                    {
+                        "op": "replace",
+                        "path": "/Resources/Permission/Properties/Principal",
+                        "value": "logs.eu-west-1.amazonaws.com",
+                    },
+                ],
+            ),
+            deque(["Resources", "Permission", "Properties"]),
+            [],
+        ),
         # CloudWatch Logs LogGroup with wrong principal — error
         (
             jsonpatch.apply_patch(
@@ -213,8 +235,10 @@ _schema_path = deque(
             deque(["Resources", "Permission", "Properties"]),
             [
                 ValidationError(
-                    "'logs.amazonaws.com' was expected",
-                    validator="const",
+                    "Principal 's3.amazonaws.com' does not match expected "
+                    "service principal "
+                    "'logs.amazonaws.com or logs.<region>.amazonaws.com'",
+                    validator="pattern",
                     rule=PermissionPrincipal(),
                     path=deque(["Principal"]),
                     schema_path=_schema_path,
@@ -301,8 +325,9 @@ _schema_path = deque(
             deque(["Resources", "Permission", "Properties"]),
             [
                 ValidationError(
-                    "'iot.amazonaws.com' was expected",
-                    validator="const",
+                    "Principal 's3.amazonaws.com' does not match expected "
+                    "service principal 'iot.amazonaws.com'",
+                    validator="pattern",
                     rule=PermissionPrincipal(),
                     path=deque(["Principal"]),
                     schema_path=_schema_path,
@@ -369,3 +394,14 @@ def test_validate(template, start_path, expected, rule, validator):
     ):
         errs = list(rule.validate(instance_validator, "", instance, {}))
         assert errs == expected, f"Expected {expected} got {errs}"
+
+
+def test_message_fallback(rule):
+    """Test message method falls back to err.message for non-pattern validators."""
+    err = ValidationError(
+        "some other error",
+        validator="const",
+        validator_value="something",
+        instance="test",
+    )
+    assert rule.message({}, err) == "some other error"

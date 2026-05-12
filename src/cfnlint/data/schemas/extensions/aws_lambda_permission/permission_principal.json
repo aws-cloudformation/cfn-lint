@@ -24,22 +24,22 @@
      "permission": {
       "properties": {
        "principal": {
-        "const": {
+        "pattern": {
          "$lookup": {
           "key": {
            "$data": "/target/resourceType"
           },
           "map": {
-           "AWS::ApiGateway::RestApi": "apigateway.amazonaws.com",
-           "AWS::ApiGatewayV2::Api": "apigateway.amazonaws.com",
-           "AWS::Cognito::UserPool": "cognito-idp.amazonaws.com",
-           "AWS::Config::ConfigRule": "config.amazonaws.com",
-           "AWS::ElasticLoadBalancingV2::TargetGroup": "elasticloadbalancing.amazonaws.com",
-           "AWS::Events::Rule": "events.amazonaws.com",
-           "AWS::IoT::TopicRule": "iot.amazonaws.com",
-           "AWS::Logs::LogGroup": "logs.amazonaws.com",
-           "AWS::S3::Bucket": "s3.amazonaws.com",
-           "AWS::SNS::Topic": "sns.amazonaws.com"
+           "AWS::ApiGateway::RestApi": "^apigateway\\.amazonaws\\.com$",
+           "AWS::ApiGatewayV2::Api": "^apigateway\\.amazonaws\\.com$",
+           "AWS::Cognito::UserPool": "^cognito-idp\\.amazonaws\\.com$",
+           "AWS::Config::ConfigRule": "^config\\.amazonaws\\.com$",
+           "AWS::ElasticLoadBalancingV2::TargetGroup": "^elasticloadbalancing\\.amazonaws\\.com$",
+           "AWS::Events::Rule": "^events\\.amazonaws\\.com$",
+           "AWS::IoT::TopicRule": "^iot\\.amazonaws\\.com$",
+           "AWS::Logs::LogGroup": "^logs(\\.[a-z]{2}(-gov|-iso[a-z]?)?-[a-z]+-[0-9]+)?\\.amazonaws\\.com$",
+           "AWS::S3::Bucket": "^s3\\.amazonaws\\.com$",
+           "AWS::SNS::Topic": "^sns\\.amazonaws\\.com$"
           }
          }
         }
