@@ -1,7 +1,8 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/RuleName"
+  "/properties/RuleName",
+  "/properties/Rule/AllRegions"
  ],
  "definitions": {
   "Action": {
@@ -100,6 +101,10 @@
     }
    },
    "type": "object"
+  },
+  "AllowFieldUpdates": {
+   "default": false,
+   "type": "boolean"
   },
   "CloudtrailParameters": {
    "additionalProperties": false,
@@ -249,6 +254,21 @@
    "type": "array",
    "uniqueItems": true
   },
+  "RegionStatus": {
+   "additionalProperties": false,
+   "properties": {
+    "Region": {
+     "type": "string"
+    },
+    "RuleArn": {
+     "type": "string"
+    },
+    "Status": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "ResourceType": {
    "enum": [
     "AWS::EC2::VPC",
@@ -336,8 +356,24 @@
   "TelemetryRule": {
    "additionalProperties": false,
    "properties": {
+    "AllRegions": {
+     "type": "boolean"
+    },
+    "AllowFieldUpdates": {
+     "$ref": "#/definitions/AllowFieldUpdates"
+    },
     "DestinationConfiguration": {
      "$ref": "#/definitions/TelemetryDestinationConfiguration"
+    },
+    "Regions": {
+     "insertionOrder": false,
+     "items": {
+      "minLength": 1,
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
     },
     "ResourceType": {
      "$ref": "#/definitions/ResourceType"
@@ -429,6 +465,13 @@
   "/properties/RuleArn"
  ],
  "properties": {
+  "RegionStatuses": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RegionStatus"
+   },
+   "type": "array"
+  },
   "Rule": {
    "$ref": "#/definitions/TelemetryRule"
   },
@@ -454,7 +497,8 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/RuleArn"
+  "/properties/RuleArn",
+  "/properties/RegionStatuses"
  ],
  "required": [
   "RuleName",
