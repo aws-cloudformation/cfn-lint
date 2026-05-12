@@ -115,7 +115,13 @@ class BaseFn(CfnLintJsonSchema):
         if len(err.path) > 1:
             err.path = deque([err.path[0]])
         err.message = err.message.replace(f"{value!r}", f"{instance!r}")
-        err.message = f"{err.message} when {self.fn.name!r} is resolved"
+        if err.path_override and len(err.path_override) > 0:
+            usage_path = "/".join(str(p) for p in validator.context.path.path)
+            err.message = (
+                f"{err.message} when {self.fn.name!r} is resolved at {usage_path!r}"
+            )
+        else:
+            err.message = f"{err.message} when {self.fn.name!r} is resolved"
         if validator.context.parameter_sets:
             k, v = is_function(instance)
             if k == "Ref":
