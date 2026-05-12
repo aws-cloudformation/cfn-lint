@@ -1,3 +1,25 @@
+### v1.51.0
+## What's Changed
+* Update snapshots script and conditions yaml by @satyakigh in https://github.com/aws-cloudformation/cfn-lint/pull/4479
+* feat: add rule [W1054](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W1054) to warn on raw pseudo-parameter strings without Ref by @cv-dote in https://github.com/aws-cloudformation/cfn-lint/pull/4453
+* feat: add rule [E3064](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3064) to validate duplicate Interface VPC Endpoint with PrivateDnsEnabled by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4492
+* feat: Add support for `Fn::GetStackOutput` intrinsic function by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4495
+* Fix [E3039](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3039) crash when `Fn::Transform` used at list properties by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4498
+* Fix `ResultWriter` schema of step functions by @szbartnik in https://github.com/aws-cloudformation/cfn-lint/pull/4497
+* Update CloudFormation schemas to `2026-05-11` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4490
+* Move SSM Parameter Name prefix check from error to warning by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4501
+* Fix [W3664](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3664) false positive for regional CWL principal by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4506
+* Fix schema validation issues and add warning rules by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4502
+* Update CloudFormation schemas to `2026-05-12` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4503
+* Include usage path in [W3034](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3034) parameter range error by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4507
+
+## New Contributors
+* @satyakigh made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4479
+* @cv-dote made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4453
+* @szbartnik made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4497
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.50.1...v1.51.0
+
 ### v1.50.1
 ## What's Changed
 * fix: Rule [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3031) false positive for boolean values with pattern by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4485
