@@ -255,3 +255,52 @@ def template():
 def test_resolve(name, instance, parameters, rule, expected, validator):
     errs = list(rule.resolve(validator, rule._schema, instance, {}))
     assert errs == expected, f"{name!r} failed and got errors {errs!r}"
+
+
+def test_clean_resolve_errors_with_path_override():
+    """Test that usage path is included in message when path_override is set."""
+    from unittest.mock import MagicMock
+
+    rule = BaseFn("Ref", resolved_rule="XXXXX")
+    rule.child_rules["XXXXX"] = _ChildRule()
+
+    err = ValidationError(
+        message="0 is less than the minimum of 1",
+        path=deque(["Ref"]),
+        validator="minimum",
+    )
+    err.path_override = deque(["Parameters", "MyParam", "MinValue"])
+
+    validator = MagicMock()
+    validator.context.path.path = deque(
+        ["Resources", "MyResource", "Properties", "Count"]
+    )
+    validator.context.parameter_sets = None
+
+    result = rule._clean_resolve_errors(err, 0, {"Ref": "MyParam"}, validator)
+    assert "at 'Resources/MyResource/Properties/Count'" in result.message
+    assert "when 'Ref' is resolved" in result.message
+
+
+def test_clean_resolve_errors_without_path_override():
+    """Test that usage path is NOT included when path_override is not set."""
+    from unittest.mock import MagicMock
+
+    rule = BaseFn("Ref", resolved_rule="XXXXX")
+    rule.child_rules["XXXXX"] = _ChildRule()
+
+    err = ValidationError(
+        message="0 is less than the minimum of 1",
+        path=deque(["Ref"]),
+        validator="minimum",
+    )
+
+    validator = MagicMock()
+    validator.context.path.path = deque(
+        ["Resources", "MyResource", "Properties", "Count"]
+    )
+    validator.context.parameter_sets = None
+
+    result = rule._clean_resolve_errors(err, 0, {"Ref": "MyParam"}, validator)
+    assert "at '" not in result.message
+    assert "when 'Ref' is resolved" in result.message
