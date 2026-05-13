@@ -116,6 +116,15 @@ class TestQuickStartTemplates(BaseCliTestCase):
             ),
             "exit_code": 2,
         },
+        {
+            "filename": (
+                "test/fixtures/templates/integration/module-sub-resources.yaml"
+            ),
+            "results_filename": (
+                "test/fixtures/results/integration/module-sub-resources.json"
+            ),
+            "exit_code": 0,
+        },
     ]
 
     def test_templates(self):

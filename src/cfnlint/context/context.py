@@ -191,6 +191,20 @@ class Context:
     # exceptions will affect the results.
     allow_exceptions: bool = field(init=True, default=True)
 
+    # Cached: logical IDs of MODULE-type resources
+    module_names: tuple[str, ...] = field(init=False, default=())
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self,
+            "module_names",
+            tuple(
+                name
+                for name, resource in self.resources.items()
+                if resource.type.endswith("::MODULE")
+            ),
+        )
+
     def evolve(self, **kwargs) -> "Context":
         """
         Create a new context without merging together attributes

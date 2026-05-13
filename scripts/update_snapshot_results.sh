@@ -70,6 +70,7 @@ run_lint "$TEMPLATES_DIR/integration/aws-dynamodb-table.yaml" "$RESULTS_DIR/inte
 run_lint "$TEMPLATES_DIR/integration/custom-resources.yaml" "$RESULTS_DIR/integration/custom-resources.json"
 run_lint "$TEMPLATES_DIR/integration/cfn-gather.yaml" "$RESULTS_DIR/integration/cfn-gather.json"
 run_lint "$TEMPLATES_DIR/integration/aws-lambda-function.yaml" "$RESULTS_DIR/integration/aws-lambda-function.json"
+run_lint "$TEMPLATES_DIR/integration/module-sub-resources.yaml" "$RESULTS_DIR/integration/module-sub-resources.json"
 
 # integration/ special name mapping (template has typo: metdata)
 run_lint "$TEMPLATES_DIR/integration/metdata.yaml" "$RESULTS_DIR/integration/metadata.json"
