@@ -46,6 +46,14 @@ class GetAtt(BaseFn):
         for resource_name, resource_name_validator, _ in validator.resolve_value(
             value[0]
         ):
+            # Module sub-resources (e.g. MyModuleBucket for MyModule of
+            # type ::MODULE) can't be validated — skip them.
+            if any(
+                resource_name.startswith(m) and resource_name != m
+                for m in validator.context.module_names
+            ):
+                continue
+
             for err in self.fix_errors(
                 resource_name_validator.descend(
                     resource_name,
