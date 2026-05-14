@@ -147,18 +147,24 @@ class PipelineArtifactCounts(CfnLintKeyword):
             for owner, owner_validator in get_value_from_path(
                 action_validator, action, path=deque(["Owner"])
             ):
+                if not owner_validator.is_type(owner, "string"):
+                    continue
                 owner_artifact_counts = self._artifact_counts.get(owner)
                 if not owner_artifact_counts:
                     continue
                 for category, categor_validator in get_value_from_path(
                     owner_validator, action, path=deque(["Category"])
                 ):
+                    if not categor_validator.is_type(category, "string"):
+                        continue
                     category_artifact_counts = owner_artifact_counts.get(category)
                     if not category_artifact_counts:
                         continue
                     for provider, provider_provider in get_value_from_path(
                         categor_validator, action, deque(["Provider"])
                     ):
+                        if not provider_provider.is_type(provider, "string"):
+                            continue
                         count_schema: dict[str, Any] = {
                             "properties": category_artifact_counts.get(provider),
                             "required": [],
