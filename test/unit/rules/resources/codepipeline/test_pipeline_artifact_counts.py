@@ -77,6 +77,45 @@ def rule():
         ),
         (
             {
+                "Name": "Source",
+                "ActionTypeId": {
+                    "Category": "Source",
+                    "Owner": "AWS",
+                    "Provider": {"Ref": "SourceCodeProvider"},
+                    "Version": "1",
+                },
+                "OutputArtifacts": [{"Name": "SourceCode"}],
+            },
+            [],
+        ),
+        (
+            {
+                "Name": "Source",
+                "ActionTypeId": {
+                    "Category": "Source",
+                    "Owner": {"Ref": "Owner"},
+                    "Provider": "CodeCommit",
+                    "Version": "1",
+                },
+                "OutputArtifacts": [{"Name": "SourceCode"}],
+            },
+            [],
+        ),
+        (
+            {
+                "Name": "Source",
+                "ActionTypeId": {
+                    "Category": {"Ref": "Category"},
+                    "Owner": "AWS",
+                    "Provider": "CodeCommit",
+                    "Version": "1",
+                },
+                "OutputArtifacts": [{"Name": "SourceCode"}],
+            },
+            [],
+        ),
+        (
+            {
                 "Name": "Github",
                 "ActionTypeId": {
                     "Category": "Source",
