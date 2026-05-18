@@ -11862,10 +11862,27 @@
      "policy-engine"
     ]
    },
+   "getpolicyenginesummary": {
+    "Resources": [
+     "policy-engine"
+    ]
+   },
    "getpolicygeneration": {
     "Resources": [
      "policy-engine",
      "policy-generation"
+    ]
+   },
+   "getpolicygenerationsummary": {
+    "Resources": [
+     "policy-engine",
+     "policy-generation"
+    ]
+   },
+   "getpolicysummary": {
+    "Resources": [
+     "policy",
+     "policy-engine"
     ]
    },
    "getrecommendation": {
@@ -12090,6 +12107,7 @@
     ]
    },
    "listpolicyengines": {},
+   "listpolicyenginesummaries": {},
    "listpolicygenerationassets": {
     "Resources": [
      "policy-engine",
@@ -12097,6 +12115,16 @@
     ]
    },
    "listpolicygenerations": {
+    "Resources": [
+     "policy-engine"
+    ]
+   },
+   "listpolicygenerationsummaries": {
+    "Resources": [
+     "policy-engine"
+    ]
+   },
+   "listpolicysummaries": {
     "Resources": [
      "policy-engine"
     ]
@@ -12127,6 +12155,7 @@
      "online-evaluation-config",
      "payment-manager",
      "paymentcredentialprovider",
+     "policy-engine",
      "runtime",
      "runtime-endpoint",
      "token-vault",
@@ -12258,6 +12287,7 @@
      "online-evaluation-config",
      "payment-manager",
      "paymentcredentialprovider",
+     "policy-engine",
      "runtime",
      "runtime-endpoint",
      "token-vault",
@@ -12279,6 +12309,7 @@
      "online-evaluation-config",
      "payment-manager",
      "paymentcredentialprovider",
+     "policy-engine",
      "runtime",
      "runtime-endpoint",
      "token-vault",
@@ -12539,6 +12570,9 @@
    "policy-engine": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:policy-engine/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "policy-generation": {
@@ -17588,6 +17622,8 @@
      "connection-group",
      "distribution",
      "distribution-tenant",
+     "function",
+     "key-value-store",
      "trust-store",
      "vpcorigin"
     ]
@@ -17617,6 +17653,8 @@
      "connection-group",
      "distribution",
      "distribution-tenant",
+     "function",
+     "key-value-store",
      "streaming-distribution",
      "trust-store",
      "vpcorigin"
@@ -17639,6 +17677,8 @@
      "connection-group",
      "distribution",
      "distribution-tenant",
+     "function",
+     "key-value-store",
      "streaming-distribution",
      "trust-store",
      "vpcorigin"
@@ -17819,11 +17859,17 @@
    "function": {
     "ARNFormats": [
      "arn:${Partition}:cloudfront::${Account}:function/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "key-value-store": {
     "ARNFormats": [
      "arn:${Partition}:cloudfront::${Account}:key-value-store/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "origin-access-control": {
@@ -30626,6 +30672,11 @@
      "Cluster"
     ]
    },
+   "createstream": {
+    "Resources": [
+     "Cluster"
+    ]
+   },
    "dbconnect": {
     "Resources": [
      "Cluster"
@@ -30644,6 +30695,11 @@
    "deleteclusterpolicy": {
     "Resources": [
      "Cluster"
+    ]
+   },
+   "deletestream": {
+    "Resources": [
+     "Stream"
     ]
    },
    "getbackupjob": {
@@ -30666,6 +30722,11 @@
      "Cluster"
     ]
    },
+   "getstream": {
+    "Resources": [
+     "Stream"
+    ]
+   },
    "getvpcendpointservicename": {
     "Resources": [
      "Cluster"
@@ -30673,9 +30734,15 @@
    },
    "injecterror": {},
    "listclusters": {},
-   "listtagsforresource": {
+   "liststreams": {
     "Resources": [
      "Cluster"
+    ]
+   },
+   "listtagsforresource": {
+    "Resources": [
+     "Cluster",
+     "Stream"
     ]
    },
    "putclusterpolicy": {
@@ -30720,22 +30787,37 @@
    },
    "tagresource": {
     "Resources": [
-     "Cluster"
+     "Cluster",
+     "Stream"
     ]
    },
    "untagresource": {
     "Resources": [
-     "Cluster"
+     "Cluster",
+     "Stream"
     ]
    },
    "updatecluster": {
     "Resources": [
      "Cluster"
     ]
+   },
+   "updatestream": {
+    "Resources": [
+     "Stream"
+    ]
    }
   },
   "Resources": {
    "cluster": {
+    "ARNFormats": [
+     "arn:${Partition}:dsql:${Region}:${Account}:cluster/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "stream": {
     "ARNFormats": [
      "arn:${Partition}:dsql:${Region}:${Account}:cluster/.*"
     ],
@@ -50776,6 +50858,7 @@
   "Actions": {
    "notifyheartbeat": {},
    "sendtelemetry": {},
+   "sendtelemetryevent": {},
    "startsession": {},
    "stopsession": {}
   },
@@ -69941,6 +70024,12 @@
  "odb": {
   "Actions": {
    "acceptmarketplaceregistration": {},
+   "associateiamroletoresource": {
+    "Resources": [
+     "cloud-autonomous-vm-cluster",
+     "cloud-vm-cluster"
+    ]
+   },
    "createcloudautonomousvmcluster": {
     "Resources": [
      "cloud-exadata-infrastructure",
@@ -70007,6 +70096,12 @@
     "Resources": [
      "cloud-exadata-infrastructure",
      "odb-network"
+    ]
+   },
+   "disassociateiamrolefromresource": {
+    "Resources": [
+     "cloud-autonomous-vm-cluster",
+     "cloud-vm-cluster"
     ]
    },
    "getcloudautonomousvmcluster": {
@@ -83908,12 +84003,22 @@
      "Link"
     ]
    },
+   "associatecertificate": {
+    "Resources": [
+     "ResponderGateway"
+    ]
+   },
    "createinboundexternallink": {
     "Resources": [
      "ResponderGateway"
     ]
    },
    "createlink": {},
+   "createlinkroutingrule": {
+    "Resources": [
+     "Link"
+    ]
+   },
    "createoutboundexternallink": {
     "Resources": [
      "RequesterGateway"
@@ -83932,6 +84037,12 @@
      "Link"
     ]
    },
+   "deletelinkroutingrule": {
+    "Resources": [
+     "Link",
+     "LinkRoutingRule"
+    ]
+   },
    "deleteoutboundexternallink": {
     "Resources": [
      "OutboundExternalLink",
@@ -83948,6 +84059,16 @@
      "ResponderGateway"
     ]
    },
+   "disassociatecertificate": {
+    "Resources": [
+     "ResponderGateway"
+    ]
+   },
+   "getcertificateassociation": {
+    "Resources": [
+     "ResponderGateway"
+    ]
+   },
    "getinboundexternallink": {
     "Resources": [
      "InboundExternalLink",
@@ -83957,6 +84078,12 @@
    "getlink": {
     "Resources": [
      "Link"
+    ]
+   },
+   "getlinkroutingrule": {
+    "Resources": [
+     "Link",
+     "LinkRoutingRule"
     ]
    },
    "getoutboundexternallink": {
@@ -83975,6 +84102,16 @@
      "ResponderGateway"
     ]
    },
+   "listcertificateassociations": {
+    "Resources": [
+     "ResponderGateway"
+    ]
+   },
+   "listlinkroutingrules": {
+    "Resources": [
+     "Link"
+    ]
+   },
    "listlinks": {},
    "listrequestergateways": {},
    "listrespondergateways": {},
@@ -83982,6 +84119,7 @@
     "Resources": [
      "InboundExternalLink",
      "Link",
+     "LinkRoutingRule",
      "OutboundExternalLink",
      "RequesterGateway",
      "ResponderGateway"
@@ -83996,6 +84134,7 @@
     "Resources": [
      "InboundExternalLink",
      "Link",
+     "LinkRoutingRule",
      "OutboundExternalLink",
      "RequesterGateway",
      "ResponderGateway"
@@ -84005,6 +84144,7 @@
     "Resources": [
      "InboundExternalLink",
      "Link",
+     "LinkRoutingRule",
      "OutboundExternalLink",
      "RequesterGateway",
      "ResponderGateway"
@@ -84018,6 +84158,12 @@
    "updatelinkmoduleflow": {
     "Resources": [
      "Link"
+    ]
+   },
+   "updatelinkroutingrule": {
+    "Resources": [
+     "Link",
+     "LinkRoutingRule"
     ]
    },
    "updaterequestergateway": {
@@ -84051,6 +84197,16 @@
      "rtbfabric:LinkLinkId",
      "rtbfabric:RequesterGatewayGatewayId",
      "rtbfabric:ResponderGatewayGatewayId"
+    ]
+   },
+   "linkroutingrule": {
+    "ARNFormats": [
+     "arn:${Partition}:rtbfabric:${Region}:${Account}:gateway/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}",
+     "rtbfabric:LinkLinkId",
+     "rtbfabric:LinkRoutingRuleRuleId"
     ]
    },
    "outboundexternallink": {
@@ -86237,6 +86393,11 @@
  },
  "sagemaker": {
   "Actions": {
+   "accessmodelpackage": {
+    "Resources": [
+     "model-package"
+    ]
+   },
    "addassociation": {
     "Resources": [
      "action",
@@ -97407,8 +97568,7 @@
    "getdelegatedaccesstoken": {},
    "getfederationtoken": {
     "Resources": [
-     "federated-user",
-     "user"
+     "federated-user"
     ]
    },
    "getservicebearertoken": {},
@@ -97422,15 +97582,13 @@
    },
    "setsourceidentity": {
     "Resources": [
-     "role",
-     "user"
+     "role"
     ]
    },
    "taggetwebidentitytoken": {},
    "tagsession": {
     "Resources": [
-     "role",
-     "user"
+     "role"
     ]
    }
   },
@@ -97462,11 +97620,6 @@
    "self-session": {
     "ARNFormats": [
      "arn:${Partition}:sts::${Account}:self"
-    ]
-   },
-   "user": {
-    "ARNFormats": [
-     "arn:${Partition}:iam::${Account}:user/.*"
     ]
    }
   }
