@@ -312,6 +312,25 @@
    },
    "type": "object"
   },
+  "InstancePools": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceType": {
+     "type": "string"
+    },
+    "ModelNameOverride": {
+     "type": "string"
+    },
+    "Priority": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Priority",
+    "InstanceType"
+   ],
+   "type": "object"
+  },
   "ManagedInstanceScaling": {
    "additionalProperties": false,
    "properties": {
@@ -348,6 +367,13 @@
     "InitialVariantWeight": {
      "type": "number"
     },
+    "InstancePools": {
+     "items": {
+      "$ref": "#/definitions/InstancePools"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
     "InstanceType": {
      "type": "string"
     },
@@ -365,6 +391,9 @@
     },
     "ServerlessConfig": {
      "$ref": "#/definitions/ServerlessConfig"
+    },
+    "VariantInstanceProvisionTimeoutInSeconds": {
+     "type": "integer"
     },
     "VariantName": {
      "type": "string"

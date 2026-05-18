@@ -221,8 +221,6 @@
     }
    },
    "required": [
-    "Name",
-    "Endpoint",
     "Tools"
    ],
    "type": "object"
@@ -245,8 +243,47 @@
      "type": "string"
     }
    },
+   "type": "object"
+  },
+  "MCPServerGrafanaConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableWebhookUpdates": {
+     "type": "boolean"
+    },
+    "Endpoint": {
+     "pattern": "^https://[a-zA-Z0-9.-]+(?::[0-9]+)?(?:/.*)?$",
+     "type": "string"
+    },
+    "Tools": {
+     "items": {
+      "enum": [
+       "alerting",
+       "annotations",
+       "asserts",
+       "cloudwatch",
+       "dashboard",
+       "datasource",
+       "elasticsearch",
+       "examples",
+       "incident",
+       "loki",
+       "navigation",
+       "oncall",
+       "prometheus",
+       "pyroscope",
+       "rendering",
+       "runpanelquery",
+       "search",
+       "searchlogs",
+       "sift"
+      ],
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
    "required": [
-    "Name",
     "Endpoint"
    ],
    "type": "object"
@@ -304,10 +341,6 @@
      "type": "string"
     }
    },
-   "required": [
-    "Name",
-    "Endpoint"
-   ],
    "type": "object"
   },
   "PagerDutyConfiguration": {
@@ -453,6 +486,17 @@
      },
      "required": [
       "MCPServerNewRelic"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "MCPServerGrafana": {
+       "$ref": "#/definitions/MCPServerGrafanaConfiguration"
+      }
+     },
+     "required": [
+      "MCPServerGrafana"
      ]
     },
     {
@@ -655,6 +699,7 @@
   "/properties/Configuration/MCPServer/EnableWebhookUpdates",
   "/properties/Configuration/MCPServerDatadog/EnableWebhookUpdates",
   "/properties/Configuration/MCPServerSplunk/EnableWebhookUpdates",
+  "/properties/Configuration/MCPServerGrafana/EnableWebhookUpdates",
   "/properties/Configuration/GitLab/EnableWebhookUpdates",
   "/properties/Configuration/PagerDuty/EnableWebhookUpdates",
   "/properties/Configuration/EventChannel/EnableWebhookUpdates",
