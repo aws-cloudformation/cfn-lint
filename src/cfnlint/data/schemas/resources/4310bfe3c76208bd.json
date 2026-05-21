@@ -1,0 +1,241 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "CoinbaseCdpConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "ApiKeyId": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ApiKeySecret": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "WalletSecret": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ApiKeyId",
+    "ApiKeySecret"
+   ],
+   "type": "object"
+  },
+  "CoinbaseCdpConfigurationOutput": {
+   "additionalProperties": false,
+   "properties": {
+    "ApiKeyId": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ApiKeySecretArn": {
+     "$ref": "#/definitions/SecretInfo"
+    },
+    "WalletSecretArn": {
+     "$ref": "#/definitions/SecretInfo"
+    }
+   },
+   "required": [
+    "ApiKeyId",
+    "ApiKeySecretArn"
+   ],
+   "type": "object"
+  },
+  "PaymentCredentialProviderVendorType": {
+   "enum": [
+    "CoinbaseCDP",
+    "StripePrivy"
+   ],
+   "type": "string"
+  },
+  "PaymentProviderConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "CoinbaseCdpConfiguration": {
+     "$ref": "#/definitions/CoinbaseCdpConfigurationInput"
+    },
+    "StripePrivyConfiguration": {
+     "$ref": "#/definitions/StripePrivyConfigurationInput"
+    }
+   },
+   "type": "object"
+  },
+  "PaymentProviderConfigurationOutput": {
+   "additionalProperties": false,
+   "properties": {
+    "CoinbaseCdpConfiguration": {
+     "$ref": "#/definitions/CoinbaseCdpConfigurationOutput"
+    },
+    "StripePrivyConfiguration": {
+     "$ref": "#/definitions/StripePrivyConfigurationOutput"
+    }
+   },
+   "type": "object"
+  },
+  "SecretInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "SecretArn": {
+     "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b|aws-iso-e|aws-iso-f|aws-eusc):secretsmanager:[A-Za-z0-9-]{1,64}:[0-9]{12}:secret:[a-zA-Z0-9-_/+=.@!]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretArn"
+   ],
+   "type": "object"
+  },
+  "StripePrivyConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "AppId": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AppSecret": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AuthorizationId": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AuthorizationPrivateKey": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "AppId",
+    "AppSecret",
+    "AuthorizationPrivateKey",
+    "AuthorizationId"
+   ],
+   "type": "object"
+  },
+  "StripePrivyConfigurationOutput": {
+   "additionalProperties": false,
+   "properties": {
+    "AppId": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AppSecretArn": {
+     "$ref": "#/definitions/SecretInfo"
+    },
+    "AuthorizationId": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AuthorizationPrivateKeyArn": {
+     "$ref": "#/definitions/SecretInfo"
+    }
+   },
+   "required": [
+    "AppId",
+    "AppSecretArn",
+    "AuthorizationPrivateKeyArn",
+    "AuthorizationId"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CredentialProviderArn"
+ ],
+ "properties": {
+  "CreatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "CredentialProviderArn": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b|aws-iso-e|aws-iso-f|aws-eusc):(acps|bedrock-agentcore):[A-Za-z0-9-]{1,64}:[0-9]{12}:token-vault/[a-zA-Z0-9-.]+/paymentcredentialprovider/[a-zA-Z0-9_.-]+$",
+   "type": "string"
+  },
+  "CredentialProviderVendor": {
+   "$ref": "#/definitions/PaymentCredentialProviderVendorType"
+  },
+  "LastUpdatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-_]+$",
+   "type": "string"
+  },
+  "ProviderConfigurationInput": {
+   "$ref": "#/definitions/PaymentProviderConfigurationInput"
+  },
+  "ProviderConfigurationOutput": {
+   "$ref": "#/definitions/PaymentProviderConfigurationOutput"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CredentialProviderArn",
+  "/properties/ProviderConfigurationOutput",
+  "/properties/CreatedTime",
+  "/properties/LastUpdatedTime"
+ ],
+ "required": [
+  "Name",
+  "CredentialProviderVendor"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BedrockAgentCore::PaymentCredentialProvider",
+ "writeOnlyProperties": [
+  "/properties/ProviderConfigurationInput"
+ ]
+}
