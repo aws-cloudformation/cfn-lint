@@ -1,3 +1,16 @@
+### v1.51.1
+## What's Changed
+* Fix Ref and GetAtt validation for MODULE sub-resources by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4510
+* Fix TypeError in PipelineArtifactCounts when Provider is a Ref by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4512
+* Update CloudFormation schemas to `2026-05-18` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4509
+* chore(deps): bump pyinstaller from 6.19.0 to 6.20.0 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4500
+* chore(deps): update pyyaml requirement from >5.4 to >=6.0.3 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4471
+* chore(deps): update aws-sam-translator requirement from >=1.109.0 to >=1.110.0 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4515
+* Update CloudFormation schemas to `2026-05-21` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4513
+* Allow uppercase S3 bucket names, warn instead of error by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4516
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.51.0...v1.51.1
+
 ### v1.51.0
 ## What's Changed
 * Update snapshots script and conditions yaml by @satyakigh in https://github.com/aws-cloudformation/cfn-lint/pull/4479
