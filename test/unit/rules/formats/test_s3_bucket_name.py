@@ -33,9 +33,9 @@ def rule():
             True,
         ),
         (
-            "Invalid uppercase",
+            "Valid uppercase pre-2018",
             "My-Bucket",
-            False,
+            True,
         ),
         (
             "Invalid too short",
