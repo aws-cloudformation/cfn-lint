@@ -89,3 +89,30 @@ Resources:
               - - "my"
                 - "stack"
           OutputName: TopicName
+  # Inside Fn::Sub map
+  Topic9:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::Sub:
+          - "prefix-${Value}"
+          - Value:
+              Fn::GetStackOutput:
+                StackName: producer-stack
+                OutputName: TopicName
+  # Inside Fn::Base64
+  Topic10:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::Base64:
+          Fn::GetStackOutput:
+            StackName: producer-stack
+            OutputName: TopicName
+Outputs:
+  # Direct Output Value
+  DirectOutput:
+    Value:
+      Fn::GetStackOutput:
+        StackName: producer-stack
+        OutputName: TopicName
