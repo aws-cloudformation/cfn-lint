@@ -50,6 +50,7 @@ class Properties(CfnLintJsonSchema):
             "exclusiveMaximum": "E3034",
             "exclusiveMinimum": "E3034",
             "maxItems": "E3032",
+            "maxUniqueItems": "E3065",
             "minItems": "E3032",
             "pattern": "E3031",
             "prefixItems": "E3008",
