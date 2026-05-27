@@ -81,7 +81,7 @@ class BaseFn(CfnLintJsonSchema):
         self.functions = functions or tuple([])
         self.resolved_rule = resolved_rule
         self.child_rules[self.resolved_rule] = None
-        if name and name != "Fn::GetAZs":
+        if name:
             self._schema = OTHER_SCHEMA_MANAGER.get_schema(
                 f"other.functions.{name.replace('Fn::', '').lower()}"
             )

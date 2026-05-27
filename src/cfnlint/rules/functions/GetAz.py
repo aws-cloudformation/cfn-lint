@@ -26,7 +26,12 @@ class GetAz(BaseFn):
         self.fn_getazs = self.validate
 
     def schema(self, validator: Validator, instance: Any) -> dict[str, Any]:
-        return {
-            "type": ["string"],
-            "enum": [""] + REGIONS,
+        schema = self._schema.copy()
+        schema["cfnContext"] = {
+            **schema["cfnContext"],
+            "schema": {
+                "type": ["string"],
+                "enum": [""] + REGIONS,
+            },
         }
+        return schema
