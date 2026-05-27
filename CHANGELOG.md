@@ -1,3 +1,12 @@
+### v1.51.2
+## What's Changed
+* fix: Allow `Fn::GetStackOutput` in Output Values, `Fn::Sub`, and `Fn::Base64` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4519
+* feat: Add rule [E3065](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3065) for `maxUniqueItems` validation by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4520
+* Update CloudFormation schemas to `2026-05-27` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4518
+* fix: Support additional functions inside `Fn::GetAZs` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4521
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.51.1...v1.51.2
+
 ### v1.51.1
 ## What's Changed
 * Fix Ref and GetAtt validation for MODULE sub-resources by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4510
