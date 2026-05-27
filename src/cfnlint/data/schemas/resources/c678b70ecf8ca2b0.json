@@ -10,6 +10,7 @@
   "/properties/ServiceDetails/ServiceNow",
   "/properties/ServiceDetails/PagerDuty",
   "/properties/ServiceDetails/AzureIdentity",
+  "/properties/ServiceDetails/MCPServerGrafana",
   "/properties/KmsKeyArn"
  ],
  "definitions": {
@@ -112,6 +113,17 @@
      },
      "required": [
       "MCPServerSigV4"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "MCPServerGrafana": {
+       "$ref": "#/definitions/RegisteredMCPServerGrafanaDetails"
+      }
+     },
+     "required": [
+      "MCPServerGrafana"
      ]
     }
    ],
@@ -279,6 +291,48 @@
    "properties": {
     "AuthorizationConfig": {
      "$ref": "#/definitions/MCPServerAuthorizationConfig"
+    },
+    "Description": {
+     "maxLength": 500,
+     "type": "string"
+    },
+    "Endpoint": {
+     "pattern": "^https://[a-zA-Z0-9.-]+(?::[0-9]+)?(?:/.*)?$",
+     "type": "string"
+    },
+    "Name": {
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Endpoint",
+    "AuthorizationConfig"
+   ],
+   "type": "object"
+  },
+  "MCPServerGrafanaAuthorizationConfig": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "BearerToken": {
+       "$ref": "#/definitions/BearerTokenDetails"
+      }
+     },
+     "required": [
+      "BearerToken"
+     ]
+    }
+   ],
+   "type": "object"
+  },
+  "MCPServerGrafanaDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationConfig": {
+     "$ref": "#/definitions/MCPServerGrafanaAuthorizationConfig"
     },
     "Description": {
      "maxLength": 500,
@@ -652,6 +706,31 @@
    ],
    "type": "object"
   },
+  "RegisteredMCPServerGrafanaDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationMethod": {
+     "enum": [
+      "bearer-token"
+     ],
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "Endpoint": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Endpoint",
+    "AuthorizationMethod"
+   ],
+   "type": "object"
+  },
   "RegisteredMCPServerSigV4Details": {
    "additionalProperties": false,
    "properties": {
@@ -842,6 +921,17 @@
      "required": [
       "MCPServerSigV4"
      ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "MCPServerGrafana": {
+       "$ref": "#/definitions/MCPServerGrafanaDetails"
+      }
+     },
+     "required": [
+      "MCPServerGrafana"
+     ]
     }
    ],
    "type": "object"
@@ -886,7 +976,8 @@
     "servicenow",
     "pagerduty",
     "azureidentity",
-    "mcpserversigv4"
+    "mcpserversigv4",
+    "mcpservergrafana"
    ],
    "type": "string"
   },
@@ -917,6 +1008,11 @@
  "properties": {
   "AccessibleResources": {
    "items": {
+    "patternProperties": {
+     ".*": {
+      "type": "string"
+     }
+    },
     "type": "object"
    },
    "type": "array"
