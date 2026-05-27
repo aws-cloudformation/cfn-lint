@@ -54,13 +54,13 @@ def rule():
                 ValidationError(
                     "['foo'] is not of type 'string'",
                     path=deque(["Fn::GetAZs"]),
-                    schema_path=deque(["type"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
                     validator="fn_getazs",
                 ),
                 ValidationError(
                     f"['foo'] is not one of {[''] + REGIONS!r}",
                     path=deque(["Fn::GetAZs"]),
-                    schema_path=deque(["enum"]),
+                    schema_path=deque(["cfnContext", "schema", "enum"]),
                     validator="fn_getazs",
                 ),
             ],
