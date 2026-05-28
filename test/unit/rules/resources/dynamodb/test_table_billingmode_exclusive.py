@@ -45,16 +45,38 @@ def rule():
         (
             {
                 "BillingMode": "PAY_PER_REQUEST",
-                "ProvisionedThroughput": "FOO",
+                "ProvisionedThroughput": {
+                    "WriteCapacityUnits": 0,
+                    "ReadCapacityUnits": 0,
+                },
+            },
+            [],
+        ),
+        (
+            {
+                "BillingMode": "PAY_PER_REQUEST",
+                "ProvisionedThroughput": {
+                    "WriteCapacityUnits": 5,
+                    "ReadCapacityUnits": 5,
+                },
             },
             [
                 ValidationError(
-                    "Additional properties are not allowed ('ProvisionedThroughput')",
+                    "0 was expected",
                     rule=TableBillingModeExclusive(),
-                    path=deque(["ProvisionedThroughput"]),
-                    validator=None,
-                    schema_path=deque(["then", "properties", "ProvisionedThroughput"]),
-                )
+                    path=deque(["ProvisionedThroughput", "ReadCapacityUnits"]),
+                    validator="const",
+                    schema_path=deque(
+                        [
+                            "then",
+                            "properties",
+                            "ProvisionedThroughput",
+                            "properties",
+                            "ReadCapacityUnits",
+                            "const",
+                        ]
+                    ),
+                ),
             ],
         ),
     ],
