@@ -48,6 +48,7 @@ skip_resource_property_paths = {
     "AWS::Connect::RoutingProfile": ["/properties/QueueConfigs"],
     "AWS::Connect::User": ["/definitions/DeskPhoneNumber"],
     "AWS::DynamoDB::Table": [
+        "/definitions/Projection/properties/NonKeyAttributes",
         "/definitions/ProvisionedThroughput/properties/ReadCapacityUnits",
         "/definitions/ProvisionedThroughput/properties/WriteCapacityUnits",
     ],
