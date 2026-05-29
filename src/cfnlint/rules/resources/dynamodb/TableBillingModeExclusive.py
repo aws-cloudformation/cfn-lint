@@ -16,7 +16,8 @@ class TableBillingModeExclusive(CfnLintJsonSchema):
     id = "E3638"
     shortdesc = "Validate DynamoDB BillingMode pay per request configuration"
     description = (
-        "When 'BillingMode' is 'PAY_PER_REQUEST' don't specify 'ProvisionedThroughput'"
+        "When 'BillingMode' is 'PAY_PER_REQUEST' "
+        "'ProvisionedThroughput' values must be 0"
     )
     tags = ["resources"]
 
@@ -30,4 +31,4 @@ class TableBillingModeExclusive(CfnLintJsonSchema):
         )
 
     def message(self, instance: Any, err: ValidationError) -> str:
-        return "Additional properties are not allowed ('ProvisionedThroughput')"
+        return err.message

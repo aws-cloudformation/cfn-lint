@@ -30,4 +30,4 @@ class TableBillingModeProvisioned(CfnLintJsonSchema):
         )
 
     def message(self, instance: Any, err: ValidationError) -> str:
-        return "'ProvisionedThroughput' is a required property"
+        return err.message

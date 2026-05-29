@@ -1,5 +1,5 @@
 {
- "description": "When 'BillingMode' is 'PAY_PER_REQUEST' don't specify 'ProvisionedThroughput'",
+ "description": "When 'BillingMode' is 'PAY_PER_REQUEST' 'ProvisionedThroughput' values must be 0",
  "if": {
   "properties": {
    "BillingMode": {
@@ -13,7 +13,16 @@
  },
  "then": {
   "properties": {
-   "ProvisionedThroughput": false
+   "ProvisionedThroughput": {
+    "properties": {
+     "ReadCapacityUnits": {
+      "const": 0
+     },
+     "WriteCapacityUnits": {
+      "const": 0
+     }
+    }
+   }
   }
  }
 }

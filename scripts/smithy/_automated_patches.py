@@ -47,6 +47,11 @@ skip_resource_property_paths = {
     ],
     "AWS::Connect::RoutingProfile": ["/properties/QueueConfigs"],
     "AWS::Connect::User": ["/definitions/DeskPhoneNumber"],
+    "AWS::DynamoDB::Table": [
+        "/definitions/Projection/properties/NonKeyAttributes",
+        "/definitions/ProvisionedThroughput/properties/ReadCapacityUnits",
+        "/definitions/ProvisionedThroughput/properties/WriteCapacityUnits",
+    ],
     "AWS::ElasticLoadBalancingV2::LoadBalancer": ["/properties/Tags"],
     "AWS::ElasticLoadBalancingV2::TargetGroup": ["/properties/Tags"],
     "AWS::MSK::Cluster": ["/properties/NumberOfBrokerNodes"],
