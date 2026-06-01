@@ -23,7 +23,7 @@ class S3BucketName(FormatKeyword):
     def __init__(self):
         super().__init__(
             format="AWS::S3::Bucket.Name",
-            pattern=r"^(?![.\-])(?!.*\.\.)(?!.*\-\.)(?!.*\.\-)[a-zA-Z0-9.\-]{3,63}(?<![.\-])$",
+            pattern=r"^(?![.\-])(?!.*\.\.)(?!.*\-\.)(?!.*\.\-)[a-z0-9.\-]{3,63}(?<![.\-])$",
         )
 
     def format(self, validator: Validator, instance: Any) -> bool:
