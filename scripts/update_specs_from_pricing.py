@@ -416,10 +416,18 @@ def main():
         "cachenodetype_enum",
         get_results("AmazonElastiCache", ["Cache Instance"]),
     )
+    _opensearch_results = get_results(
+        "AmazonES", ["Amazon OpenSearch Service Instance"]
+    )
     write_output(
         "aws_elasticsearch_domain",
         "elasticsearchclusterconfig_instancetype_enum",
-        get_results("AmazonES", ["Elastic Search Instance"]),
+        _opensearch_results,
+    )
+    write_output(
+        "aws_opensearchservice_domain",
+        "clusterconfig_instancetype_enum",
+        _opensearch_results,
     )
     write_output(
         "aws_emr_cluster",
