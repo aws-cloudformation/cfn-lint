@@ -1,6 +1,58 @@
 [
  {
   "op": "add",
+  "path": "/dependentRequired",
+  "value": {
+   "MasterUserPassword": [
+    "MasterUsername"
+   ]
+  }
+ },
+ {
+  "op": "add",
+  "path": "/allOf",
+  "value": [
+   {
+    "properties": {
+     "MasterUsername": {
+      "not": {
+       "enum": [
+        "rdsadmin"
+       ]
+      }
+     }
+    }
+   },
+   {
+    "if": {
+     "properties": {
+      "Engine": {
+       "enum": [
+        "aurora-postgresql",
+        "postgresql"
+       ]
+      }
+     },
+     "required": [
+      "Engine"
+     ]
+    },
+    "then": {
+     "properties": {
+      "MasterUsername": {
+       "not": {
+        "enum": [
+         "admin"
+        ]
+       }
+      }
+     }
+    }
+   }
+  ]
+ },
+ {
+  "op": "add",
   "path": "/properties/BackupRetentionPeriod/maximum",
   "value": 35
  }

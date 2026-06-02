@@ -48,6 +48,54 @@ patches.extend(
                         },
                     },
                 ),
+                Patch(
+                    path="/definitions/PredictiveScalingPredefinedLoadMetric/properties/PredefinedMetricType",
+                    values={
+                        "enum": [
+                            "ALBRequestCount",
+                            "ALBRequestCountPerTarget",
+                            "ECSServiceAverageCPUUtilization",
+                            "ECSServiceAverageMemoryUtilization",
+                            "ECSServiceCPUUtilization",
+                            "ECSServiceMemoryUtilization",
+                            "ECSServiceTotalCPUUtilization",
+                            "ECSServiceTotalMemoryUtilization",
+                            "TotalALBRequestCount",
+                        ]
+                    },
+                ),
+                Patch(
+                    path="/definitions/PredictiveScalingPredefinedMetricPair/properties/PredefinedMetricType",
+                    values={
+                        "enum": [
+                            "ALBRequestCount",
+                            "ALBRequestCountPerTarget",
+                            "ECSServiceAverageCPUUtilization",
+                            "ECSServiceAverageMemoryUtilization",
+                            "ECSServiceCPUUtilization",
+                            "ECSServiceMemoryUtilization",
+                            "ECSServiceTotalCPUUtilization",
+                            "ECSServiceTotalMemoryUtilization",
+                            "TotalALBRequestCount",
+                        ]
+                    },
+                ),
+                Patch(
+                    path="/definitions/PredictiveScalingPredefinedScalingMetric/properties/PredefinedMetricType",
+                    values={
+                        "enum": [
+                            "ALBRequestCount",
+                            "ALBRequestCountPerTarget",
+                            "ECSServiceAverageCPUUtilization",
+                            "ECSServiceAverageMemoryUtilization",
+                            "ECSServiceCPUUtilization",
+                            "ECSServiceMemoryUtilization",
+                            "ECSServiceTotalCPUUtilization",
+                            "ECSServiceTotalMemoryUtilization",
+                            "TotalALBRequestCount",
+                        ]
+                    },
+                ),
             ],
         ),
         ResourcePatch(
@@ -622,7 +670,7 @@ patches.extend(
             resource_type="AWS::DocDB::DBCluster",
             patches=[
                 Patch(
-                    values={"enum": ["3.6.0", "4.0", "4.0.0", "5.0.0"]},
+                    values={"enum": ["3.6.0", "4.0", "4.0.0", "5.0.0", "8.0.0"]},
                     path="/properties/EngineVersion",
                 ),
                 Patch(
@@ -1353,12 +1401,7 @@ patches.extend(
         ),
         ResourcePatch(
             resource_type="AWS::Lambda::LayerVersion",
-            patches=[
-                Patch(
-                    values={"maxLength": 140, "minLength": 1},
-                    path="/properties/LayerName",
-                ),
-            ],
+            patches=[],
         ),
         ResourcePatch(
             resource_type="AWS::Logs::LogGroup",
@@ -1415,6 +1458,44 @@ patches.extend(
                 Patch(
                     values={"maximum": 35},
                     path="/properties/BackupRetentionPeriod",
+                ),
+                Patch(
+                    values={
+                        "dependentRequired": {
+                            "MasterUserPassword": ["MasterUsername"],
+                        }
+                    },
+                    path="/",
+                ),
+                Patch(
+                    values={
+                        "allOf": [
+                            {
+                                "properties": {
+                                    "MasterUsername": {"not": {"enum": ["rdsadmin"]}}
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "Engine": {
+                                            "enum": [
+                                                "aurora-postgresql",
+                                                "postgresql",
+                                            ]
+                                        }
+                                    },
+                                    "required": ["Engine"],
+                                },
+                                "then": {
+                                    "properties": {
+                                        "MasterUsername": {"not": {"enum": ["admin"]}}
+                                    }
+                                },
+                            },
+                        ]
+                    },
+                    path="/",
                 ),
             ],
         ),
