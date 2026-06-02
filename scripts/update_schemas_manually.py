@@ -71,7 +71,9 @@ patches.extend(
             resource_type="AWS::AutoScaling::AutoScalingGroup",
             patches=[
                 Patch(
-                    values={"enum": ["EBS", "EC2", "ELB", "VPC_LATTICE"]},
+                    values={
+                        "pattern": "^(EBS|EC2|ELB|VPC_LATTICE)(,(EBS|EC2|ELB|VPC_LATTICE))*$"
+                    },
                     path="/properties/HealthCheckType",
                 ),
                 Patch(
@@ -709,7 +711,7 @@ patches.extend(
             resource_type="AWS::EC2::DHCPOptions",
             patches=[
                 Patch(
-                    values={"enum": ["1", "2", "4", "8"]},
+                    values={"enum": [1, 2, 4, 8]},
                     path="/properties/NetbiosNodeType",
                 ),
             ],
@@ -974,10 +976,6 @@ patches.extend(
             resource_type="AWS::Events::EventBusPolicy",
             patches=[
                 Patch(
-                    values={"enum": ["aws:PrincipalOrgID"]},
-                    path="/definitions/Condition/properties/Key",
-                ),
-                Patch(
                     values={"enum": ["StringEquals"]},
                     path="/definitions/Condition/properties/Type",
                 ),
@@ -1093,6 +1091,14 @@ patches.extend(
                 Patch(
                     values={"pattern": "[a-zA-Z0-9+=,.@\\-_]+"},
                     path="/properties/Roles/items",
+                ),
+                Patch(
+                    values={"minLength": 0, "maxLength": 128},
+                    path="/properties/InstanceProfileName",
+                ),
+                Patch(
+                    values={"pattern": r"^([\w+=,.@-]+)?$"},
+                    path="/properties/InstanceProfileName",
                 ),
             ],
         ),
@@ -1315,7 +1321,9 @@ patches.extend(
                     path="/properties/Description",
                 ),
                 Patch(
-                    values={"maxLength": 64, "minLength": 1},
+                    values={
+                        "pattern": "^([a-zA-Z0-9_-]{1,64}|arn:[a-zA-Z0-9-]+:lambda:[a-zA-Z0-9-]+:\\d{12}:function:[a-zA-Z0-9_-]{1,64})$"
+                    },
                     path="/properties/FunctionName",
                 ),
                 Patch(
@@ -1337,7 +1345,7 @@ patches.extend(
                 Patch(
                     values={
                         "minLength": 1,
-                        "pattern": r"^arn:[a-zA-Z0-9-]+:lambda:[a-zA-Z0-9-]+:\d{12}:layer:[a-zA-Z0-9-_]+:[0-9]+$",
+                        "pattern": r"^(arn:[a-zA-Z0-9-]+:lambda:[a-zA-Z0-9-]+:\d{12}:layer:[a-zA-Z0-9-_]+:[0-9]+|arn:[a-zA-Z0-9-]+:lambda:::awslayer:[a-zA-Z0-9-_]+)$",
                     },
                     path="/properties/Layers/items",
                 ),
@@ -1616,7 +1624,7 @@ patches.extend(
                     path="/properties/VisibilityTimeout",
                 ),
                 Patch(
-                    values={"maximum": 262144, "minimum": 1024},
+                    values={"maximum": 1048576, "minimum": 1024},
                     path="/properties/MaximumMessageSize",
                 ),
             ],
@@ -1636,14 +1644,7 @@ patches.extend(
         ),
         ResourcePatch(
             resource_type="AWS::SSM::Parameter",
-            patches=[
-                Patch(
-                    values={
-                        "pattern": "^(?i)((?!aws|ssm)[\w.-]+|\/(?!aws|ssm)[\w.-]+(\/[\w.-]+)*)$"
-                    },
-                    path="/properties/Name",
-                ),
-            ],
+            patches=[],
         ),
         ResourcePatch(
             resource_type="AWS::WAFRegional::RegexPatternSet",
@@ -1706,7 +1707,7 @@ patches.extend(
             resource_type="AWS::Backup::BackupSelection",
             patches=[
                 Patch(
-                    values={"pattern": r"^[a-zA-Z0-9\-\_\.]+$"},
+                    values={"pattern": r"^[a-zA-Z0-9\-\_\.\:]+$"},
                     path="/definitions/BackupSelectionResourceType/properties/SelectionName",
                 ),
             ],
