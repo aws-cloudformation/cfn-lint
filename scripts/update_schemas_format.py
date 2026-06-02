@@ -333,10 +333,6 @@ _manual_patches = {
             values={"format": "AWS::Lambda::Function.Arn"},
             path="/properties/Arn",
         ),
-        Patch(
-            values={"format": "AWS::Lambda::Function.Name"},
-            path="/properties/FunctionName",
-        ),
     ],
     "AWS::KMS::Key": [
         Patch(
