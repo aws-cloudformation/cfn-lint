@@ -1,3 +1,15 @@
+### v1.51.3
+## What's Changed
+* fix: Allow `ProvisionedThroughput` with 0 values when `BillingMode` is `PAY_PER_REQUEST` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4524
+* Revert: S3 bucket names with uppercase should remain an error by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4528
+* fix: Allow ARN format for Lambda FunctionName property by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4529
+* feat: Add OpenSearch instance type validation from pricing API by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4525
+* fix: Sync update_schemas_manually.py with committed manual.json files by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4530
+* Update CloudFormation schemas to `2026-06-02` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4523
+* fix: Update Lambda runtime lifecycle dates from AWS docs by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4532
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.51.2...v1.51.3
+
 ### v1.51.2
 ## What's Changed
 * fix: Allow `Fn::GetStackOutput` in Output Values, `Fn::Sub`, and `Fn::Base64` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4519
