@@ -1,0 +1,176 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/KmsKeyId"
+ ],
+ "definitions": {
+  "AvailabilitySlo": {
+   "additionalProperties": false,
+   "properties": {
+    "Target": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "DataRecoveryTargets": {
+   "additionalProperties": false,
+   "properties": {
+    "TimeBetweenBackupsInMinutes": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "MultiAzTargets": {
+   "additionalProperties": false,
+   "properties": {
+    "DisasterRecoveryApproach": {
+     "enum": [
+      "ACTIVE_ACTIVE",
+      "HOT_STANDBY",
+      "WARM_STANDBY",
+      "PILOT_LIGHT",
+      "BACKUP_AND_RESTORE"
+     ],
+     "type": "string"
+    },
+    "RpoInMinutes": {
+     "maximum": 2147483647,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "RtoInMinutes": {
+     "maximum": 2147483647,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "MultiRegionTargets": {
+   "additionalProperties": false,
+   "properties": {
+    "DisasterRecoveryApproach": {
+     "enum": [
+      "ACTIVE_ACTIVE",
+      "HOT_STANDBY",
+      "WARM_STANDBY",
+      "PILOT_LIGHT",
+      "BACKUP_AND_RESTORE"
+     ],
+     "type": "string"
+    },
+    "RpoInMinutes": {
+     "maximum": 2147483647,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "RtoInMinutes": {
+     "maximum": 2147483647,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PolicyArn"
+ ],
+ "properties": {
+  "AssociatedServiceCount": {
+   "type": "integer"
+  },
+  "AvailabilitySlo": {
+   "$ref": "#/definitions/AvailabilitySlo"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DataRecovery": {
+   "$ref": "#/definitions/DataRecoveryTargets"
+  },
+  "Description": {
+   "maxLength": 615,
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^((arn:aws(-[^:]+)?:kms:[a-zA-Z0-9-]*:[0-9]{12}:((key/[a-zA-Z0-9-]{36})|(alias/[a-zA-Z0-9-_/]+)))|([a-zA-Z0-9-]{36})|(alias/[a-zA-Z0-9-_/]+))$",
+   "type": "string"
+  },
+  "MultiAz": {
+   "$ref": "#/definitions/MultiAzTargets"
+  },
+  "MultiRegion": {
+   "$ref": "#/definitions/MultiRegionTargets"
+  },
+  "Name": {
+   "pattern": "^[A-Za-z0-9][A-Za-z0-9_\\-]{1,59}$",
+   "type": "string"
+  },
+  "PolicyArn": {
+   "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9/][A-Za-z0-9:_/+.-]{0,1023}$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PolicyArn",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/AssociatedServiceCount"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ResilienceHubV2::Policy",
+ "writeOnlyProperties": [
+  "/properties/KmsKeyId"
+ ]
+}
