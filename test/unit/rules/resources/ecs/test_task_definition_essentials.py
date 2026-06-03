@@ -19,6 +19,11 @@ def rule():
     yield rule
 
 
+# Scenarios validated against CloudFormation/ECS on 2026-06-03:
+# - 1 container, no Essential: succeeds (defaults to true)
+# - 2 containers, no Essential: succeeds (both default to true)
+# - 1 Essential:false + 1 no Essential: succeeds (second defaults to true)
+# - All containers Essential:false: fails ("doesn't have any essential container")
 @pytest.mark.parametrize(
     "instance,expected",
     [
@@ -39,7 +44,31 @@ def rule():
             [],
         ),
         (
+            [{"Name": "container"}],  # validated
+            [],
+        ),
+        (
+            [{"Name": "container-one"}, {"Name": "container-two"}],  # validated
+            [],
+        ),
+        (
+            [{"Essential": False}, {"Name": "main"}],  # validated
+            [],
+        ),
+        (
             [{"Essential": False}],
+            [
+                ValidationError(
+                    "At least one essential container is required",
+                    rule=TaskDefinitionEssentialContainer(),
+                    path=deque([]),
+                    validator="contains",
+                    schema_path=deque(["contains"]),
+                )
+            ],
+        ),
+        (
+            [{"Essential": False}, {"Essential": False}],
             [
                 ValidationError(
                     "At least one essential container is required",
