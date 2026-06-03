@@ -335,7 +335,7 @@ types: dict[str, str] = {
     "AWS::ElastiCache::CacheCluster": "6f430146838518c8",
     "AWS::ElastiCache::GlobalReplicationGroup": "2af3062bf5b2cf7f",
     "AWS::ElastiCache::ParameterGroup": "b0e1dec3cd05f739",
-    "AWS::ElastiCache::ReplicationGroup": "47f5bdd0bf1be1b7",
+    "AWS::ElastiCache::ReplicationGroup": "d609c5f32953fcfd",
     "AWS::ElastiCache::SecurityGroup": "075dfa59da275723",
     "AWS::ElastiCache::SecurityGroupIngress": "96d1b4a5bd438d25",
     "AWS::ElastiCache::ServerlessCache": "8c18d0fa5fe28cb2",

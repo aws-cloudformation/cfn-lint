@@ -591,7 +591,7 @@ types: dict[str, str] = {
     "AWS::LakeFormation::Tag": "e6965562c3f7e5bb",
     "AWS::LakeFormation::TagAssociation": "22d7f7ee98ca2b17",
     "AWS::Lambda::Alias": "9c55b8fdda504271",
-    "AWS::Lambda::CapacityProvider": "538eaeb7bcbd86eb",
+    "AWS::Lambda::CapacityProvider": "2fa079aeb96aa291",
     "AWS::Lambda::EventInvokeConfig": "c92ee73f58db6eaa",
     "AWS::Lambda::EventSourceMapping": "219d21653259058c",
     "AWS::Lambda::Function": "1414adb55d096804",

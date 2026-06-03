@@ -1,0 +1,234 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/GatewayId",
+   "/properties/LinkId",
+   "/properties/RuleId"
+  ]
+ ],
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/GatewayId",
+  "/properties/LinkId"
+ ],
+ "definitions": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws:rtbfabric:[a-zA-Z0-9_-]+:[0-9]{12}:gateway/[a-zA-Z0-9-]+/link/[a-zA-Z0-9-]+/routing-rule/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "CreatedTimestamp": {
+   "type": "string"
+  },
+  "GatewayId": {
+   "pattern": "^rtb-gw-[a-z0-9-]{1,25}$",
+   "type": "string"
+  },
+  "LinkId": {
+   "pattern": "^link-[a-z0-9-]{1,25}$",
+   "type": "string"
+  },
+  "QueryStringKeyValuePair": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9._~-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9._~-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "RuleCondition": {
+   "additionalProperties": false,
+   "dependencies": {
+    "HostHeader": {
+     "oneOf": [
+      {
+       "required": [
+        "HostHeaderWildcard"
+       ]
+      },
+      {}
+     ]
+    },
+    "PathPrefix": {
+     "oneOf": [
+      {
+       "required": [
+        "PathExact"
+       ]
+      },
+      {}
+     ]
+    },
+    "QueryStringEquals": {
+     "oneOf": [
+      {
+       "required": [
+        "QueryStringExists"
+       ]
+      },
+      {}
+     ]
+    }
+   },
+   "properties": {
+    "HostHeader": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9._~-]+$",
+     "type": "string"
+    },
+    "HostHeaderWildcard": {
+     "maxLength": 255,
+     "minLength": 3,
+     "pattern": "^[A-Za-z0-9._~*-]+$",
+     "type": "string"
+    },
+    "PathExact": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^/[A-Za-z0-9._~/-]*$",
+     "type": "string"
+    },
+    "PathPrefix": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^/[A-Za-z0-9._~/-]*$",
+     "type": "string"
+    },
+    "QueryStringEquals": {
+     "$ref": "#/definitions/QueryStringKeyValuePair"
+    },
+    "QueryStringExists": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9._~-]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RuleId": {
+   "pattern": "^rule-[a-z0-9-]{1,25}$",
+   "type": "string"
+  },
+  "RulePriority": {
+   "maximum": 1000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "RuleStatus": {
+   "enum": [
+    "CREATION_IN_PROGRESS",
+    "ACTIVE",
+    "UPDATE_IN_PROGRESS",
+    "DELETION_IN_PROGRESS",
+    "DELETED",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdatedTimestamp": {
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "Conditions": {
+   "$ref": "#/definitions/RuleCondition"
+  },
+  "CreatedTimestamp": {
+   "$ref": "#/definitions/CreatedTimestamp"
+  },
+  "GatewayId": {
+   "$ref": "#/definitions/GatewayId"
+  },
+  "LinkId": {
+   "$ref": "#/definitions/LinkId"
+  },
+  "Priority": {
+   "$ref": "#/definitions/RulePriority"
+  },
+  "RuleId": {
+   "$ref": "#/definitions/RuleId"
+  },
+  "Status": {
+   "$ref": "#/definitions/RuleStatus"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "UpdatedTimestamp": {
+   "$ref": "#/definitions/UpdatedTimestamp"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RuleId",
+  "/properties/Arn",
+  "/properties/Status",
+  "/properties/CreatedTimestamp",
+  "/properties/UpdatedTimestamp"
+ ],
+ "required": [
+  "GatewayId",
+  "LinkId",
+  "Priority",
+  "Conditions"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RTBFabric::LinkRoutingRule"
+}
