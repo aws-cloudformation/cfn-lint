@@ -1,3 +1,10 @@
+### v1.51.4
+## What's Changed
+* fix: E3042 false positive when Essential is omitted from ECS containers by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4536
+* Update CloudFormation schemas to `2026-06-03` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4534
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.51.3...v1.51.4
+
 ### v1.51.3
 ## What's Changed
 * fix: Allow `ProvisionedThroughput` with 0 values when `BillingMode` is `PAY_PER_REQUEST` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4524
