@@ -532,7 +532,7 @@ types: dict[str, str] = {
     "AWS::RedshiftServerless::Workgroup": "20492b7e2170a5a9",
     "AWS::ResourceExplorer2::DefaultViewAssociation": "a7cd7349891d3ea3",
     "AWS::ResourceExplorer2::Index": "595710b4d05cc3ad",
-    "AWS::ResourceExplorer2::View": "f8b36a72ee1a6bd3",
+    "AWS::ResourceExplorer2::View": "fb825e8da4077464",
     "AWS::ResourceGroups::Group": "5b538aeee34989f3",
     "AWS::RolesAnywhere::CRL": "f52a01aa06e590f5",
     "AWS::RolesAnywhere::Profile": "33bc5e56e046953d",

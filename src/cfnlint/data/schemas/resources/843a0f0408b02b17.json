@@ -1,0 +1,125 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/PaymentManagerId",
+   "/properties/PaymentConnectorId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PaymentManagerId",
+  "/properties/ConnectorName"
+ ],
+ "definitions": {
+  "CredentialsProviderConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CoinbaseCDP": {
+     "$ref": "#/definitions/PaymentCredentialProviderConfiguration"
+    },
+    "StripePrivy": {
+     "$ref": "#/definitions/PaymentCredentialProviderConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "PaymentConnectorStatus": {
+   "enum": [
+    "CREATING",
+    "UPDATING",
+    "DELETING",
+    "READY",
+    "CREATE_FAILED",
+    "UPDATE_FAILED",
+    "DELETE_FAILED"
+   ],
+   "type": "string"
+  },
+  "PaymentConnectorType": {
+   "enum": [
+    "CoinbaseCDP",
+    "StripePrivy"
+   ],
+   "type": "string"
+  },
+  "PaymentCredentialProviderConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CredentialProviderArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "CredentialProviderArn"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PaymentConnectorArn"
+ ],
+ "properties": {
+  "ConnectorCreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "ConnectorLastUpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "ConnectorName": {
+   "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,47}$",
+   "type": "string"
+  },
+  "ConnectorStatus": {
+   "$ref": "#/definitions/PaymentConnectorStatus"
+  },
+  "ConnectorType": {
+   "$ref": "#/definitions/PaymentConnectorType"
+  },
+  "CredentialProviderConfigurations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CredentialsProviderConfiguration"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Description": {
+   "maxLength": 4096,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s]+$",
+   "type": "string"
+  },
+  "PaymentConnectorArn": {
+   "pattern": "^arn:aws[-a-z]{0,7}:bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:payment-manager/[a-z0-9-]+/connector/[a-z0-9-]+$",
+   "type": "string"
+  },
+  "PaymentConnectorId": {
+   "pattern": "^([0-9a-z][-]?){1,100}-[0-9a-z]{10}$",
+   "type": "string"
+  },
+  "PaymentManagerId": {
+   "pattern": "^([0-9a-z][-]?){1,100}-[0-9a-z]{10}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PaymentConnectorId",
+  "/properties/PaymentConnectorArn",
+  "/properties/ConnectorStatus",
+  "/properties/ConnectorCreatedAt",
+  "/properties/ConnectorLastUpdatedAt"
+ ],
+ "required": [
+  "PaymentManagerId",
+  "ConnectorName",
+  "ConnectorType",
+  "CredentialProviderConfigurations"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::BedrockAgentCore::PaymentConnector"
+}

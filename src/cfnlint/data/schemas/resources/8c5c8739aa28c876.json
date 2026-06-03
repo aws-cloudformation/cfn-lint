@@ -17,15 +17,26 @@
      "minLength": 1,
      "type": "string"
     },
+    "ApiKeySecretConfig": {
+     "$ref": "#/definitions/SecretReference"
+    },
+    "ApiKeySecretSource": {
+     "$ref": "#/definitions/SecretSourceType"
+    },
     "WalletSecret": {
      "maxLength": 2048,
      "minLength": 1,
      "type": "string"
+    },
+    "WalletSecretConfig": {
+     "$ref": "#/definitions/SecretReference"
+    },
+    "WalletSecretSource": {
+     "$ref": "#/definitions/SecretSourceType"
     }
    },
    "required": [
-    "ApiKeyId",
-    "ApiKeySecret"
+    "ApiKeyId"
    ],
    "type": "object"
   },
@@ -40,8 +51,24 @@
     "ApiKeySecretArn": {
      "$ref": "#/definitions/SecretInfo"
     },
+    "ApiKeySecretJsonKey": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ApiKeySecretSource": {
+     "$ref": "#/definitions/SecretSourceType"
+    },
     "WalletSecretArn": {
      "$ref": "#/definitions/SecretInfo"
+    },
+    "WalletSecretJsonKey": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "WalletSecretSource": {
+     "$ref": "#/definitions/SecretSourceType"
     }
    },
    "required": [
@@ -94,6 +121,33 @@
    ],
    "type": "object"
   },
+  "SecretReference": {
+   "additionalProperties": false,
+   "properties": {
+    "JsonKey": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SecretId": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretId",
+    "JsonKey"
+   ],
+   "type": "object"
+  },
+  "SecretSourceType": {
+   "enum": [
+    "MANAGED",
+    "EXTERNAL"
+   ],
+   "type": "string"
+  },
   "StripePrivyConfigurationInput": {
    "additionalProperties": false,
    "properties": {
@@ -107,6 +161,12 @@
      "minLength": 1,
      "type": "string"
     },
+    "AppSecretConfig": {
+     "$ref": "#/definitions/SecretReference"
+    },
+    "AppSecretSource": {
+     "$ref": "#/definitions/SecretSourceType"
+    },
     "AuthorizationId": {
      "maxLength": 512,
      "minLength": 1,
@@ -116,12 +176,16 @@
      "maxLength": 4096,
      "minLength": 1,
      "type": "string"
+    },
+    "AuthorizationPrivateKeyConfig": {
+     "$ref": "#/definitions/SecretReference"
+    },
+    "AuthorizationPrivateKeySource": {
+     "$ref": "#/definitions/SecretSourceType"
     }
    },
    "required": [
     "AppId",
-    "AppSecret",
-    "AuthorizationPrivateKey",
     "AuthorizationId"
    ],
    "type": "object"
@@ -137,6 +201,14 @@
     "AppSecretArn": {
      "$ref": "#/definitions/SecretInfo"
     },
+    "AppSecretJsonKey": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AppSecretSource": {
+     "$ref": "#/definitions/SecretSourceType"
+    },
     "AuthorizationId": {
      "maxLength": 512,
      "minLength": 1,
@@ -144,6 +216,14 @@
     },
     "AuthorizationPrivateKeyArn": {
      "$ref": "#/definitions/SecretInfo"
+    },
+    "AuthorizationPrivateKeyJsonKey": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AuthorizationPrivateKeySource": {
+     "$ref": "#/definitions/SecretSourceType"
     }
    },
    "required": [

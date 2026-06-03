@@ -1175,7 +1175,7 @@ types: dict[str, str] = {
     "AWS::SSO::PermissionSet": "1e149467b0a3916c",
     "AWS::SageMaker::App": "48a84d4277803da3",
     "AWS::SageMaker::AppImageConfig": "0500a25b2fd80213",
-    "AWS::SageMaker::Cluster": "d925fcd4200eee28",
+    "AWS::SageMaker::Cluster": "f057fd8928879b9b",
     "AWS::SageMaker::CodeRepository": "d59f5cf4521ff1c2",
     "AWS::SageMaker::DataQualityJobDefinition": "2ae238fa94b0d1b4",
     "AWS::SageMaker::Domain": "90665c22ddb52821",
