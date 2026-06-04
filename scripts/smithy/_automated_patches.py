@@ -52,6 +52,9 @@ skip_resource_property_paths = {
         "/definitions/ProvisionedThroughput/properties/ReadCapacityUnits",
         "/definitions/ProvisionedThroughput/properties/WriteCapacityUnits",
     ],
+    "AWS::ElastiCache::ReplicationGroup": [
+        "/properties/UserGroupIds",
+    ],
     "AWS::ElasticLoadBalancingV2::LoadBalancer": ["/properties/Tags"],
     "AWS::ElasticLoadBalancingV2::TargetGroup": ["/properties/Tags"],
     "AWS::MSK::Cluster": ["/properties/NumberOfBrokerNodes"],
