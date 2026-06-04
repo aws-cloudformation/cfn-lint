@@ -20,8 +20,12 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
           check-latest: true
-      - name: Install Tox
-        run: pip install tox tox-gh
+      - name: Install dependencies
+        run: |
+          pip install tox tox-gh
+          pip install -e .
+      - name: Download schemas
+        run: cfn-lint --update-specs --force
       - name: Run Tox
         run: tox
         env:
@@ -50,6 +54,8 @@ jobs:
       - name: Install cfn-lint
         run: |
           pip3 install -e .
+      - name: Download schemas
+        run: cfn-lint --update-specs --force
       - name: Run cfn-lint
         run: |
           cfn-lint test/fixtures/templates/good/generic.yaml

@@ -15,36 +15,17 @@ from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 
 LOGGER = logging.getLogger(__name__)
 
-REGISTRY_SCHEMA_ZIP = (
-    "https://schema.cloudformation.us-east-1.amazonaws.com/CloudformationSchema.zip"
-)
 
-
-def update_resource_specs(force: bool = False, regions: list[str] | None = None) -> int:
-    """Update provider schemas
+def update_resource_specs(force: bool = False) -> int:
+    """Update provider schemas from the enhanced schemas repository.
 
     Args:
         force: force the schemas to be downloaded
-        regions: list of regions to update, None for all regions
 
     Returns:
-        int: exit code (0=success, 1=partial failure, 2=complete failure)
+        int: exit code (0=success, 2=failure)
     """
-    # Pool() uses cpu count if no number of processors is specified
-    # Pool() only implements the Context Manager protocol from Python3.3 onwards,
-    # so it will fail Python2.7 style linting, as well as throw AttributeError
-
-    # Update provider Schemas
-    return PROVIDER_SCHEMA_MANAGER.update(force, regions)
-
-
-def patch_resource_specs():
-    # Pool() uses cpu count if no number of processors is specified
-    # Pool() only implements the Context Manager protocol from Python3.3 onwards,
-    # so it will fail Python2.7 style linting, as well as throw AttributeError
-
-    # Update provider Schemas
-    PROVIDER_SCHEMA_MANAGER.patch_schemas()
+    return PROVIDER_SCHEMA_MANAGER.update(force)
 
 
 def update_documentation(rules):

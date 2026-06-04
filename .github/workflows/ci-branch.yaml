@@ -20,8 +20,12 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
-      - name: Install Tox
-        run: pip install tox tox-gh
+      - name: Install dependencies
+        run: |
+          pip install tox tox-gh
+          pip install -e .
+      - name: Download schemas
+        run: cfn-lint --update-specs --force
       - name: Run Tox
         run: tox
         env:
@@ -31,10 +35,10 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.xml # optional
+          file: ./coverage.xml
           name: py${{ matrix.python }}-${{ matrix.os }}
-          flags: unittests # optional
-          fail_ci_if_error: true # optional (default = false)
+          flags: unittests
+          fail_ci_if_error: true
   integration:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -50,6 +54,8 @@ jobs:
       - name: Install cfn-lint
         run: |
           pip3 install -e .
+      - name: Download schemas
+        run: cfn-lint --update-specs --force
       - name: Run cfn-lint
         run: |
           cfn-lint test/fixtures/templates/good/generic.yaml

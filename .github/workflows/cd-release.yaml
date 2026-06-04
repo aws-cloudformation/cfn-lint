@@ -21,6 +21,7 @@ jobs:
       - name: Build
         run: |
           pip install -e .
+          cfn-lint --update-specs --force
           scripts/release/generator.py
           scripts/release/changelog.py --version ${{ github.ref_name }}
       - name: Release

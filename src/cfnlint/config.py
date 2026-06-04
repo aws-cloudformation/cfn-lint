@@ -673,12 +673,6 @@ class CliArgs:
             action="store_true",
         )
         advanced.add_argument(
-            "-p",
-            "--patch-specs",
-            help="Patch the CloudFormation Specs in place",
-            action="store_true",
-        )
-        advanced.add_argument(
             "--update-documentation", help=argparse.SUPPRESS, action="store_true"
         )
         advanced.add_argument(
@@ -825,7 +819,6 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
                 "override_spec": self.override_spec,
                 "parameter_files": self.parameter_files,
                 "parameters": self.parameters,
-                "patch_specs": self.patch_specs,
                 "regions": self.regions,
                 "registry_schemas": self.registry_schemas,
                 "templates": self.templates,
@@ -1109,10 +1102,6 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
     @property
     def update_specs(self):
         return self._get_argument_value("update_specs", False, False)
-
-    @property
-    def patch_specs(self):
-        return self._get_argument_value("patch_specs", False, False)
 
     @property
     def update_documentation(self):
