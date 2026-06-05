@@ -507,15 +507,6 @@ def main():
         for region, prefixes in _sagemaker_results.items()
         if prefixes.get("Cluster")
     }
-    _sagemaker_training = {
-        region: prefixes.get("Train", set())
-        | prefixes.get("TrSpt", set())
-        | prefixes.get("TrainWarmPool", set())
-        for region, prefixes in _sagemaker_results.items()
-        if prefixes.get("Train")
-        or prefixes.get("TrSpt")
-        or prefixes.get("TrainWarmPool")
-    }
     write_output(
         "aws_sagemaker_cluster",
         "instancetype_enum",
@@ -536,12 +527,6 @@ def main():
         "instancetype_enum",
         _sagemaker_hosting,
     )
-    write_output(
-        "aws_sagemaker_training",
-        "instancetype_enum",
-        _sagemaker_training,
-    )
-
     for region in _UNSUPPORTED_REGIONS:
         LOGGER.warning(f"Region {region!r} is not supported")
 
