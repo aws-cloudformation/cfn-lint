@@ -52,8 +52,46 @@ skip_resource_property_paths = {
         "/definitions/ProvisionedThroughput/properties/ReadCapacityUnits",
         "/definitions/ProvisionedThroughput/properties/WriteCapacityUnits",
     ],
+    "AWS::EC2::Instance": ["/properties/InstanceType"],
+    "AWS::EC2::LaunchTemplate": [
+        "/definitions/LaunchTemplateData/properties/InstanceType",
+    ],
+    "AWS::EC2::EC2Fleet": [
+        "/definitions/FleetLaunchTemplateOverridesRequest/properties/InstanceType",
+    ],
+    "AWS::EC2::CapacityReservationFleet": [
+        "/definitions/InstanceTypeSpecification/properties/InstanceType",
+    ],
+    "AWS::ElastiCache::ReplicationGroup": [
+        "/properties/UserGroupIds",
+    ],
     "AWS::ElasticLoadBalancingV2::LoadBalancer": ["/properties/Tags"],
     "AWS::ElasticLoadBalancingV2::TargetGroup": ["/properties/Tags"],
+    "AWS::GameLift::GameServerGroup": ["/definitions/InstanceType"],
+    "AWS::SageMaker::Cluster": ["/definitions/InstanceType"],
+    "AWS::SageMaker::DataQualityJobDefinition": [
+        "/definitions/ClusterConfig/properties/InstanceType",
+    ],
+    "AWS::SageMaker::InferenceExperiment": [
+        "/definitions/RealTimeInferenceConfig/properties/InstanceType",
+    ],
+    "AWS::SageMaker::ModelBiasJobDefinition": [
+        "/definitions/ClusterConfig/properties/InstanceType",
+    ],
+    "AWS::SageMaker::ModelExplainabilityJobDefinition": [
+        "/definitions/ClusterConfig/properties/InstanceType",
+    ],
+    "AWS::SageMaker::ModelPackage": [
+        "/definitions/InferenceInstanceType",
+        "/definitions/TransformInstanceType",
+        "/definitions/TransformResources/properties/InstanceType",
+    ],
+    "AWS::SageMaker::ModelQualityJobDefinition": [
+        "/definitions/ClusterConfig/properties/InstanceType",
+    ],
+    "AWS::SageMaker::MonitoringSchedule": [
+        "/definitions/ClusterConfig/properties/InstanceType",
+    ],
     "AWS::MSK::Cluster": ["/properties/NumberOfBrokerNodes"],
     "AWS::SNS::Topic": ["/properties/TopicName"],
     "AWS::Lambda::Function": ["/properties/Layers/items"],

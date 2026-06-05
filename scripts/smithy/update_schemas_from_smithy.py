@@ -36,6 +36,7 @@ case_insensitive_resources = [
     "AWS::EC2::NetworkAcl",
     "AWS::EC2::SecurityGroup",
     "AWS::EC2::Volume",
+    "AWS::ElastiCache::",
     "AWS::Route53Resolver::",
 ]
 

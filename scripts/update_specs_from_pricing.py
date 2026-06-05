@@ -342,6 +342,42 @@ def get_rds_pricing():
         f.write("\n")
 
 
+def get_sagemaker_pricing():
+    results = {}
+    for page in get_paginator("AmazonSageMaker"):
+        for price_item in page.get("PriceList", []):
+            products = json.loads(price_item)
+            product = products.get("product", {})
+            if not product:
+                continue
+            if product.get("productFamily") != "ML Instance":
+                continue
+            attrs = product.get("attributes", {})
+            if attrs.get("locationType") != "AWS Region":
+                continue
+            location = region_map.get(attrs.get("location"))
+            if not location:
+                _UNSUPPORTED_REGIONS.add(attrs.get("location"))
+                continue
+            instance_name = attrs.get("instanceName", "")
+            if not instance_name:
+                continue
+            usagetype = attrs.get("usagetype", "")
+            if ":" not in usagetype:
+                continue
+            prefix = usagetype.split(":")[0]
+            if "-" in prefix:
+                prefix = prefix.split("-", 1)[-1]
+
+            if location not in results:
+                results[location] = {}
+            if prefix not in results[location]:
+                results[location][prefix] = set()
+            results[location][prefix].add(instance_name)
+
+    return results
+
+
 def get_results(service, product_families, default=None):
     if default is None:
         default = set()
@@ -450,6 +486,47 @@ def main():
         get_results("AmazonAppStream", ["Streaming Instance"]),
     )
 
+    _sagemaker_results = get_sagemaker_pricing()
+    _sagemaker_processing = {
+        region: prefixes.get("Processing", set())
+        for region, prefixes in _sagemaker_results.items()
+        if prefixes.get("Processing")
+    }
+    _sagemaker_transform = {
+        region: prefixes.get("Tsform", set())
+        for region, prefixes in _sagemaker_results.items()
+        if prefixes.get("Tsform")
+    }
+    _sagemaker_hosting = {
+        region: prefixes.get("Host", set()) | prefixes.get("AsyncInf", set())
+        for region, prefixes in _sagemaker_results.items()
+        if prefixes.get("Host") or prefixes.get("AsyncInf")
+    }
+    _sagemaker_cluster = {
+        region: prefixes.get("Cluster", set())
+        for region, prefixes in _sagemaker_results.items()
+        if prefixes.get("Cluster")
+    }
+    write_output(
+        "aws_sagemaker_cluster",
+        "instancetype_enum",
+        _sagemaker_cluster,
+    )
+    write_output(
+        "aws_sagemaker_processing",
+        "instancetype_enum",
+        _sagemaker_processing,
+    )
+    write_output(
+        "aws_sagemaker_transform",
+        "instancetype_enum",
+        _sagemaker_transform,
+    )
+    write_output(
+        "aws_sagemaker_hosting",
+        "instancetype_enum",
+        _sagemaker_hosting,
+    )
     for region in _UNSUPPORTED_REGIONS:
         LOGGER.warning(f"Region {region!r} is not supported")
 
