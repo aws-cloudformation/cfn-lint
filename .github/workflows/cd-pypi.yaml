@@ -13,17 +13,21 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'aws-cloudformation/cfn-lint'
     steps:
-      - uses: actions/checkout@v6
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.13"
-      - name: Install dependencies
+      - name: Get version
+        id: getversion
         run: |
-          pip install --upgrade pip
-          pip install --upgrade setuptools build wheel twine
-      - name: Build and publish
+          echo -n "version=" >> "$GITHUB_OUTPUT"
+          echo ${{ github.ref_name }}|cut -c2- >> "$GITHUB_OUTPUT"
+      - name: Download release
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          python -m build
+          gh release download ${{ github.ref_name }} -p 'cfn_lint-*' -R ${{ github.repository }}
+          mkdir -p dist
+          cp cfn_lint-${{ steps.getversion.outputs.version }}.tar.gz cfn_lint-${{ steps.getversion.outputs.version }}-py3-none-any.whl dist/
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1

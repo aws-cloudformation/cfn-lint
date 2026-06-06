@@ -18,11 +18,22 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.13"
+      - name: Get version
+        id: getversion
+        run: |
+          echo -n "version=" >> "$GITHUB_OUTPUT"
+          echo ${{ github.ref_name }}|cut -c2- >> "$GITHUB_OUTPUT"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
       - name: Build
         run: |
+          pip install --upgrade pip
+          pip install --upgrade setuptools build wheel twine
+          python -m build
           pip install -e .
           scripts/release/generator.py
           scripts/release/changelog.py --version ${{ github.ref_name }}
+          scripts/release/pipcompile.py ${{ steps.getversion.outputs.version }}
       - name: Release
         uses: softprops/action-gh-release@v3
         if: startsWith(github.ref, 'refs/tags/v1')
@@ -33,3 +44,6 @@ jobs:
           files: |
             build/schemas-cfnlint.zip
             build/schemas-draft7.zip
+            dist/cfn_lint-${{ steps.getversion.outputs.version }}.tar.gz
+            dist/cfn_lint-${{ steps.getversion.outputs.version }}-py3-none-any.whl
+            requirements.txt
