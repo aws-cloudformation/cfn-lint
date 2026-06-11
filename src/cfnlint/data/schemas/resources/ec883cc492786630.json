@@ -1,0 +1,58 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SystemIdentifier",
+  "/properties/Name"
+ ],
+ "primaryIdentifier": [
+  "/properties/SystemIdentifier",
+  "/properties/UserJourneyId"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 500,
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[A-Za-z0-9][A-Za-z0-9 _\\-]{1,59}$",
+   "type": "string"
+  },
+  "PolicyArn": {
+   "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9/][A-Za-z0-9:_/+.-]{0,1023}$",
+   "type": "string"
+  },
+  "SystemIdentifier": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "UserJourneyId": {
+   "pattern": "^\\S{1,255}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/UserJourneyId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "SystemIdentifier",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ResilienceHubV2::UserJourney"
+}

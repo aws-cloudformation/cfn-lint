@@ -1,0 +1,140 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ApiKeySecretArn": {
+   "additionalProperties": false,
+   "properties": {
+    "SecretArn": {
+     "pattern": "^arn:(aws|aws-us-gov):secretsmanager:[A-Za-z0-9-]{1,64}:[0-9]{12}:secret:[a-zA-Z0-9-_/+=.@!]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretArn"
+   ],
+   "type": "object"
+  },
+  "SecretReference": {
+   "additionalProperties": false,
+   "properties": {
+    "JsonKey": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SecretId": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretId",
+    "JsonKey"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CredentialProviderArn"
+ ],
+ "properties": {
+  "ApiKey": {
+   "maxLength": 65536,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ApiKeySecretArn": {
+   "$ref": "#/definitions/ApiKeySecretArn"
+  },
+  "ApiKeySecretConfig": {
+   "$ref": "#/definitions/SecretReference"
+  },
+  "ApiKeySecretJsonKey": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ApiKeySecretSource": {
+   "enum": [
+    "MANAGED",
+    "EXTERNAL"
+   ],
+   "type": "string"
+  },
+  "CreatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "CredentialProviderArn": {
+   "pattern": "^arn:(aws|aws-us-gov):bedrock-agentcore:[A-Za-z0-9-]{1,64}:[0-9]{12}:token-vault/[a-zA-Z0-9-.]+/apikeycredentialprovider/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "LastUpdatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-_]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CredentialProviderArn",
+  "/properties/ApiKeySecretArn",
+  "/properties/ApiKeySecretJsonKey",
+  "/properties/CreatedTime",
+  "/properties/LastUpdatedTime"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BedrockAgentCore::ApiKeyCredentialProvider",
+ "writeOnlyProperties": [
+  "/properties/ApiKey",
+  "/properties/ApiKeySecretConfig",
+  "/properties/ApiKeySecretSource"
+ ]
+}
