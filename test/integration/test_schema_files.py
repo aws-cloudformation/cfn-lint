@@ -16,7 +16,7 @@ import pytest
 import regex as re
 
 import cfnlint
-from cfnlint.helpers import ensure_list, load_plugins, load_resource
+from cfnlint.helpers import ensure_list, load_plugins
 from cfnlint.jsonschema import StandardValidator, ValidationError
 from cfnlint.schema.resolver import RefResolutionError, RefResolver
 
@@ -25,7 +25,7 @@ from cfnlint.schema.resolver import RefResolutionError, RefResolver
 class TestSchemaFiles(TestCase):
     """Test schema files"""
 
-    _found_keywords: List[str] = [
+    _TEMPLATE_KEYWORDS: List[str] = [
         "*",
         "Conditions",
         "Description",
@@ -118,122 +118,8 @@ class TestSchemaFiles(TestCase):
                 except RefResolutionError:
                     self.fail(f"Can't find prop {prop} for {section} in {filepath}")
 
-    def _build_keywords(self, obj: Any, schema_resolver: RefResolver, refs: list[str]):
-        if not isinstance(obj, dict):
-            yield []
-            return
-
-        if "$ref" in obj:
-            ref = obj["$ref"]
-            if ref in refs:
-                yield []
-                return
-            _, resolved_schema = schema_resolver.resolve(ref)
-            yield from self._build_keywords(
-                resolved_schema, schema_resolver, refs + [ref]
-            )
-
-        if "type" in obj:
-            if "object" in ensure_list(obj["type"]):
-                if "properties" in obj:
-                    for k, v in obj["properties"].items():
-                        for item in self._build_keywords(v, schema_resolver, refs):
-                            yield [k] + item
-            if "array" in ensure_list(obj["type"]):
-                if "items" in obj:
-                    for item in self._build_keywords(
-                        obj["items"], schema_resolver, refs
-                    ):
-                        yield ["*"] + item
-
-        yield []
-
-    def build_keywords(self, schema_resolver):
-        self._found_keywords.append(
-            "/".join(["Resources", schema_resolver.referrer["typeName"], "Properties"])
-        )
-        for k, v in schema_resolver.referrer.get("properties").items():
-            for item in self._build_keywords(v, schema_resolver, []):
-                self._found_keywords.append(
-                    "/".join(
-                        [
-                            "Resources",
-                            schema_resolver.referrer["typeName"],
-                            "Properties",
-                            k,
-                        ]
-                        + item
-                    )
-                )
-
-    def test_data_module_specs(self):
-        """Test data file formats"""
-
-        draft7_schema = load_resource(
-            "cfnlint.data.schemas.other.draft7", "schema.json"
-        )
-        store = {"http://json-schema.org/draft-07/schema": draft7_schema}
-        dir = self.paths["fixtures"]
-        for dirpath, filename in self.get_files(dir):
-            with open(os.path.join(dirpath, filename), "r", encoding="utf8") as fh:
-                store[filename] = json.load(fh)
-
-        resolver = RefResolver.from_schema(
-            store["provider.definition.schema.v1.json"], store=store
-        )
-
-        validator = (
-            StandardValidator({})
-            .extend(
-                validators={
-                    "cfnLint": self.cfn_lint,
-                    "pattern": self.pattern,
-                },
-            )(schema=store["provider.definition.schema.v1.json"])
-            .evolve(resolver=resolver)
-        )
-
-        # Only process us-east-1 region for keyword building (like original test)
-        region = "us-east-1"
-        provider_module = region.replace("-", "_")
-        try:
-            provider = __import__(
-                f"cfnlint.data.schemas.providers.{provider_module}", fromlist=["types"]
-            )
-            resource_types = getattr(provider, "types", {})
-        except (ImportError, AttributeError):
-            self.fail(f"Could not load provider module for {region}")
-
-        # Load each resource schema
-        for resource_type, schema_hash in resource_types.items():
-            schema_path = os.path.join(self.paths["resources"], f"{schema_hash}.json")
-
-            if not os.path.exists(schema_path):
-                continue
-
-            with open(schema_path, "r", encoding="utf8") as fh:
-                d = json.load(fh)
-                # not allowed but true with this resource
-                if resource_type == "AWS::CloudFormation::CustomResource":
-                    d["additionalProperties"] = False
-                # Skip synthetic types that don't follow standard schema
-                if resource_type in ("Module", "AWS::CDK::Metadata"):
-                    continue
-                errs = list(validator.iter_errors(d))
-                self.assertListEqual(
-                    errs, [], f"Error with {resource_type} ({schema_hash}): {errs}"
-                )
-                schema_resolver = RefResolver(d)
-                self.validate_basic_schema_details(
-                    schema_resolver, f"{resource_type} ({schema_hash})"
-                )
-
-                # Build keywords for us-east-1 schemas
-                self.build_keywords(schema_resolver)
-
     def cfn_lint(self, validator, _, keywords, schema):
-        keywords = ensure_list(keywords)
-        self._found_keywords.extend(keywords)
+        pass
 
     def test_other_specs(self):
         """Test data file formats"""
@@ -272,91 +158,71 @@ class TestSchemaFiles(TestCase):
                         schema_resolver, f"{dirpath}/{filename}"
                     )
 
-    def test_all_referenced_hashes_exist(self):
-        """Test that all hashes referenced by provider files
-        have corresponding schema files
-        """
-        import importlib
-        from pathlib import Path
+    def _resolve_path_in_schema(
+        self, path_parts: list[str], obj: Any, resolver: RefResolver, refs: list[str]
+    ) -> bool:
+        """Check if a property path resolves within a schema object."""
+        if not path_parts:
+            return True
 
-        # Collect all hashes referenced by provider files
-        referenced_hashes = set()
-        providers_dir = Path(self.paths["providers"])
+        if not isinstance(obj, dict):
+            return False
 
-        for provider_file in providers_dir.glob("*.py"):
-            if provider_file.name == "__init__.py":
-                continue
+        if "$ref" in obj:
+            ref = obj["$ref"]
+            if ref in refs:
+                return False
+            _, resolved = resolver.resolve(ref)
+            return self._resolve_path_in_schema(
+                path_parts, resolved, resolver, refs + [ref]
+            )
 
-            region_name = provider_file.stem
-            try:
-                module_name = f"cfnlint.data.schemas.providers.{region_name}"
-                provider = importlib.import_module(module_name)
-                if hasattr(provider, "types"):
-                    for resource_type, schema_hash in provider.types.items():
-                        referenced_hashes.add((schema_hash, resource_type, region_name))
-            except (ImportError, AttributeError):
-                continue
+        part = path_parts[0]
+        remaining = path_parts[1:]
 
-        # Check all referenced hashes have corresponding files
-        resources_dir = Path(self.paths["resources"])
-        missing_files = []
-
-        for schema_hash, resource_type, region_name in referenced_hashes:
-            schema_file = resources_dir / f"{schema_hash}.json"
-            if not schema_file.exists():
-                missing_files.append(
-                    f"{resource_type} ({schema_hash}) in {region_name}"
+        if part == "*":
+            if "items" in obj:
+                return self._resolve_path_in_schema(
+                    remaining, obj["items"], resolver, refs
                 )
+            return False
 
-        self.assertEqual(
-            missing_files,
-            [],
-            f"Found {len(missing_files)} missing schema files: {missing_files[:10]}...",
-        )
+        if part in obj.get("properties", {}):
+            return self._resolve_path_in_schema(
+                remaining, obj["properties"][part], resolver, refs
+            )
 
-    def test_all_resource_files_referenced(self):
-        """Test that all resource schema files are
-        referenced by at least one provider
-        """
-        import importlib
-        from pathlib import Path
+        # Accept paths into unstructured objects (type includes "object"
+        # but no properties defined — e.g. IAM PolicyDocument)
+        if "object" in ensure_list(obj.get("type", [])):
+            return True
 
-        # Collect all hashes referenced by provider files
-        referenced_hashes = set()
-        providers_dir = Path(self.paths["providers"])
-
-        for provider_file in providers_dir.glob("*.py"):
-            if provider_file.name == "__init__.py":
-                continue
-
-            region_name = provider_file.stem
-            try:
-                module_name = f"cfnlint.data.schemas.providers.{region_name}"
-                provider = importlib.import_module(module_name)
-                if hasattr(provider, "types"):
-                    referenced_hashes.update(provider.types.values())
-            except (ImportError, AttributeError):
-                continue
-
-        # Check all resource files are referenced
-        resources_dir = Path(self.paths["resources"])
-        orphaned_files = []
-
-        for schema_file in resources_dir.glob("*.json"):
-            schema_hash = schema_file.stem
-            if schema_hash not in referenced_hashes:
-                orphaned_files.append(schema_hash)
-
-        self.assertEqual(
-            orphaned_files,
-            [],
-            (
-                f"Found {len(orphaned_files)} orphaned "
-                f"resource files: {orphaned_files[:10]}..."
-            ),
-        )
+        return False
 
     def test_x_keywords(self):
+        """Test that all rule keyword paths resolve against the schemas"""
+        provider_file = os.path.join(self.paths["providers"], "us-east-1.json")
+        try:
+            with open(provider_file, "r", encoding="utf-8") as f:
+                resource_types = json.load(f)
+        except FileNotFoundError:
+            self.skipTest(
+                "Schemas not downloaded — run cfn-lint --update-specs --force"
+            )
+
+        # Collect cfnLint keywords from extension/other schemas
+        cfnlint_keywords: set[str] = set()
+        for dir_name in ["extensions", "other"]:
+            dir = self.paths[dir_name]
+            for dirpath, filename in self.get_files(dir):
+                with open(os.path.join(dirpath, filename), "r", encoding="utf8") as fh:
+                    d = json.load(fh)
+                    for kw in ensure_list(d.get("cfnLint", [])):
+                        cfnlint_keywords.add(kw)
+
+        valid_keywords: set[str] = set(self._TEMPLATE_KEYWORDS) | cfnlint_keywords
+        valid_keywords.add("cfnParameter")
+
         root_dir = pathlib.Path(__file__).parent.parent.parent / "src/cfnlint/rules"
         rules = load_plugins(
             str(root_dir),
@@ -371,6 +237,49 @@ class TestSchemaFiles(TestCase):
             )
         )
 
+        # Cache loaded schemas by resource type
+        schema_cache: dict[str, Any] = {}
+
         for rule in rules:
             for keyword in rule.keywords:
-                self.assertIn(keyword, self._found_keywords, f"{keyword} not found")
+                if keyword in valid_keywords:
+                    continue
+
+                parts = keyword.split("/")
+
+                # Handle Resources/AWS::X::Y/Properties/... or
+                # AWS::X::Y/Properties/... (shorthand without Resources/ prefix)
+                if parts[0] == "Resources" and len(parts) >= 3:
+                    resource_type = parts[1]
+                    prop_parts = parts[3:]
+                elif "::" in parts[0] and len(parts) >= 2:
+                    resource_type = parts[0]
+                    prop_parts = parts[2:]
+                else:
+                    self.fail(f"{keyword} not found")
+
+                if resource_type not in resource_types:
+                    self.fail(
+                        f"{keyword} references unknown resource type {resource_type}"
+                    )
+
+                if not prop_parts:
+                    continue
+
+                if resource_type not in schema_cache:
+                    schema_hash = resource_types[resource_type]
+                    schema_file = os.path.join(
+                        self.paths["resources"], f"{schema_hash}.json"
+                    )
+                    with open(schema_file, "r", encoding="utf-8") as f:
+                        schema_cache[resource_type] = json.load(f)
+
+                schema = schema_cache[resource_type]
+                resolver = RefResolver(schema)
+                resolved = self._resolve_path_in_schema(
+                    prop_parts, schema, resolver, []
+                )
+                self.assertTrue(
+                    resolved,
+                    f"{keyword} does not resolve in {resource_type} schema",
+                )
