@@ -128,6 +128,21 @@ def _props(hosted_zone_id):
             {"HostedZoneId": {"Ref": "MyHostedZone"}, "Name": "foo", "Type": "A"},
             False,
         ),
+        (
+            "Ref with non-string value is not flagged",
+            _props({"Ref": ["MyHostedZone"]}),
+            False,
+        ),
+        (
+            "GetAtt with malformed parts is not flagged",
+            _props({"Fn::GetAtt": [123, 456]}),
+            False,
+        ),
+        (
+            "GetAtt single string without dot is not flagged",
+            _props({"Fn::GetAtt": "MyAlb"}),
+            False,
+        ),
     ],
 )
 def test_validate(name, instance, expect_error, rule, validator):
