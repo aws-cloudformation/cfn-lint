@@ -71,6 +71,25 @@ def template():
             "invalid",
             0,
         ),
+        (
+            "Non-dict entries in ParameterGroups are skipped",
+            {
+                "ParameterGroups": [
+                    "not-a-dict",
+                    {"Parameters": ["VpcId", "SubnetId"]},
+                ]
+            },
+            0,
+        ),
+        (
+            "Non-string entries in Parameters are skipped",
+            {
+                "ParameterGroups": [
+                    {"Parameters": [{"Ref": "VpcId"}, "SubnetId"]},
+                ]
+            },
+            1,
+        ),
     ],
 )
 def test_validate(name, instance, expected_count, rule, validator):
