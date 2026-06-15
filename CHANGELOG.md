@@ -1,3 +1,14 @@
+### v1.51.5
+## What's Changed
+* fix: Correct schema false positives for ElastiCache and IAM by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4540
+* chore(deps): bump codecov/codecov-action from 6 to 7 by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4541
+* fix: Allow decimal values in Logs MetricFilter MetricValue pattern by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4542
+* Update CloudFormation schemas to 2026-06-12 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4538
+* fix: Make EC2::TrafficMirrorFilterRule TrafficDirection case-insensitive by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4543
+* Update CloudFormation schemas to 2026-06-15 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4544
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.51.4...v1.51.5
+
 ### v1.51.4
 ## What's Changed
 * fix: E3042 false positive when Essential is omitted from ECS containers by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4536
