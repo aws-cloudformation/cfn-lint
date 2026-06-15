@@ -53,6 +53,32 @@
    },
    "type": "object"
   },
+  "ClusteringConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Frequencies": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ClusteringFrequency"
+     },
+     "maxItems": 3,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Frequencies"
+   ],
+   "type": "object"
+  },
+  "ClusteringFrequency": {
+   "enum": [
+    "DAILY",
+    "WEEKLY",
+    "MONTHLY"
+   ],
+   "type": "string"
+  },
   "DataSourceConfig": {
    "additionalProperties": false,
    "properties": {
@@ -133,6 +159,21 @@
      "type": "string"
     }
    },
+   "type": "object"
+  },
+  "Insight": {
+   "additionalProperties": false,
+   "properties": {
+    "InsightId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z][a-zA-Z0-9._]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "InsightId"
+   ],
    "type": "object"
   },
   "OnlineEvaluationConfigStatus": {
@@ -233,6 +274,9 @@
   "/properties/OnlineEvaluationConfigArn"
  ],
  "properties": {
+  "ClusteringConfig": {
+   "$ref": "#/definitions/ClusteringConfig"
+  },
   "CreatedAt": {
    "format": "date-time",
    "type": "string"
@@ -258,11 +302,20 @@
     "$ref": "#/definitions/EvaluatorReference"
    },
    "maxItems": 10,
-   "minItems": 1,
+   "minItems": 0,
    "type": "array"
   },
   "ExecutionStatus": {
    "$ref": "#/definitions/ExecutionStatus"
+  },
+  "Insights": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Insight"
+   },
+   "maxItems": 10,
+   "minItems": 0,
+   "type": "array"
   },
   "OnlineEvaluationConfigArn": {
    "pattern": "^arn:(aws|aws-cn|aws-us-gov):bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:online-evaluation-config/[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
@@ -308,7 +361,6 @@
   "OnlineEvaluationConfigName",
   "DataSourceConfig",
   "EvaluationExecutionRoleArn",
-  "Evaluators",
   "Rule"
  ],
  "tagging": {
