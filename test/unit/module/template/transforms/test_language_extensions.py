@@ -1422,3 +1422,42 @@ class TestTransformFnIfWithStringCondition(TestCase):
             self.assertEqual(fn_if[0], "Condition${Identifier}")
             self.assertEqual(fn_if[1], 1)
             self.assertEqual(fn_if[2], 2)
+
+
+class TestTransformSubWithUnderscoreVariable(TestCase):
+    def setUp(self) -> None:
+        self.template_obj = convert_dict(
+            {
+                "Transforms": ["AWS::LanguageExtensions"],
+                "Resources": {
+                    "Bucket": {
+                        "Type": "AWS::S3::Bucket",
+                        "Properties": {
+                            "BucketName": {
+                                "Fn::Sub": [
+                                    "${Bucket_Arn}/*",
+                                    {
+                                        "Bucket_Arn": {
+                                            "Fn::GetAtt": [
+                                                "Bucket",
+                                                "Arn",
+                                            ]
+                                        }
+                                    },
+                                ]
+                            },
+                        },
+                    },
+                },
+            }
+        )
+        return super().setUp()
+
+    def test_transform(self):
+        cfn = Template(filename="", template=self.template_obj, regions=["us-east-1"])
+        matches, template = language_extension(cfn)
+        self.assertListEqual(matches, [])
+        bucket_name = template["Resources"]["Bucket"]["Properties"]["BucketName"]
+        self.assertIn("Fn::Sub", bucket_name)
+        self.assertEqual(bucket_name["Fn::Sub"][0], "${Bucket_Arn}/*")
+        self.assertIn("Bucket_Arn", bucket_name["Fn::Sub"][1])
