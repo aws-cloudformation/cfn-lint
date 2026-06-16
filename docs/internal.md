@@ -15,44 +15,39 @@ This documentation is meant for the maintainers and contributors of this project
 
 ## Property data
 
-The precision of the linter depends on having up-to-date resource specifications that model the properties accurately. The rules use this property data for all the validations.
+The precision of the linter depends on having up-to-date resource schemas that model the properties accurately. The rules use this property data for all the validations.
 
-### Updating it
+### Schema source
 
-The official resource specification is updated on a weekly basis (every Friday), so every week we update the property data by:
+Schemas are sourced from the [resource-provider-enhanced-schemas](https://github.com/aws-cloudformation/resource-provider-enhanced-schemas) repository. That repository takes the raw CloudFormation resource provider schemas, applies patches (smithy-derived constraints, manual fixes, extensions), and publishes a release artifact (`schemas-cfn-lint.zip`).
+
+### Updating schemas
+
+Schemas are downloaded at runtime via:
 
 ```shell
-pip3 install -e .
-scripts/update_specs_from_pricing.py # requires Boto3 and Credentials
-scripts/update_specs_services_from_ssm.py # requires Boto3 and Credentials
 cfn-lint --update-specs
-cfn-lint --update-iam-policies
-cfn-lint --update-documentation
+```
+
+This downloads the latest `schemas-cfn-lint.zip` from the enhanced-schemas release and extracts it into `src/cfnlint/data/schemas/providers/` (region JSON files) and `src/cfnlint/data/schemas/resources/` (schema JSON files by hash). These directories are gitignored.
+
+Use `--force` to re-download even if the local copy is current:
+
+```shell
+cfn-lint --update-specs --force
 ```
 
 ### Folder structure
 
-The official resource specifications are one source of data, the other two are the "extended specs" which are "patches" to the spec that enforce more constraints, and the "additional specs" which are rules written in JSON format that are then picked up by their respective Python class.
-
 #### Schemas
-
-The command `cfn-lint --update-specs` pulls down the official resource specifications into folder `schemas` and patches the JSON files with the contents of the files in `patches` folder. The merged results are stored in `providers`.
 
 ##### Extensions
 
-Extensions are used to extend the provider schemas. We use these schemas for specific tests where it can be hard to nest it in the resource provider schema. Using extensions allow us to create separate rule IDs for each extension which allows the customer to ignore the error or for us to change the rule level (example: warning)
+Extensions are used to extend the provider schemas. We use these schemas for specific tests where it can be hard to nest it in the resource provider schema. Using extensions allow us to create separate rule IDs for each extension which allows the customer to ignore the error or for us to change the rule level (example: warning).
 
 ##### Other
 
 The other folder has any schema used for validation that isn't under a resources properties. This includes schemas for the overall template structure of a CloudFormation template, IAM policy schemas, CFN Init schemas, and more.
-
-##### Patches
-
-Patches contain all the patches we apply to the provider schemas when they are downloaded. There are two folders inside patches. _providers_ patch issues in the provider schema itself and _extensions_ apply additions to the provider schema to create better linting results.
-
-##### Providers
-
-Providers stores all the regional resource provider schemas after they are patched. Files are deduplicated so that we are storing as little as possible. If you look at the `__init__.py` file you will see what resources are cached.
 
 #### AdditionalSpecs
 

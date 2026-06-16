@@ -268,6 +268,13 @@ class Runner:
         # Add our logging configuration when running CLI
         configure_logging(self.config.debug, self.config.info)
 
+        if self.config.patch_specs:
+            LOGGER.warning(
+                "--patch-specs is deprecated and no longer has any effect. "
+                "Schemas are now sourced from the enhanced-schemas repository."
+            )
+            sys.exit(0)
+
         if self.config.update_specs:
             exit_code = cfnlint.maintenance.update_resource_specs(self.config.force)
             sys.exit(exit_code)
