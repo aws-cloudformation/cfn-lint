@@ -554,7 +554,7 @@ types: dict[str, str] = {
     "AWS::Logs::AccountPolicy": "02fea54f4157dda9",
     "AWS::Logs::Delivery": "c87395bbed1a6b98",
     "AWS::Logs::DeliveryDestination": "30b61a3515971eda",
-    "AWS::Logs::DeliverySource": "67b64320b397d6cd",
+    "AWS::Logs::DeliverySource": "45258d11775895d3",
     "AWS::Logs::Destination": "ff1e6b020f2cf8e7",
     "AWS::Logs::LogGroup": "c0ece63f58ef831f",
     "AWS::Logs::LogStream": "91035e555c3110ac",

@@ -693,7 +693,7 @@ types: dict[str, str] = {
     "AWS::ServiceCatalog::CloudFormationProduct": "662186534ff8e643",
     "AWS::ServiceCatalog::CloudFormationProvisionedProduct": "448a377417beb2e5",
     "AWS::ServiceCatalog::LaunchNotificationConstraint": "b7978856af5cccf2",
-    "AWS::ServiceCatalog::LaunchRoleConstraint": "e953e967aeda94a8",
+    "AWS::ServiceCatalog::LaunchRoleConstraint": "645835eeed030de3",
     "AWS::ServiceCatalog::LaunchTemplateConstraint": "e457535596ed60a2",
     "AWS::ServiceCatalog::Portfolio": "546acc3272366c1a",
     "AWS::ServiceCatalog::PortfolioPrincipalAssociation": "c1655e6cd9e94bc0",
