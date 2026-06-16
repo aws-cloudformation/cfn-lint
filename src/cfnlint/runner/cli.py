@@ -268,19 +268,16 @@ class Runner:
         # Add our logging configuration when running CLI
         configure_logging(self.config.debug, self.config.info)
 
-        if self.config.update_specs:
-            # For update-specs, only use regions if explicitly specified
-            regions = None
-            if self.config._get_argument_value("regions", True, True):
-                regions = self.config.regions
-            exit_code = cfnlint.maintenance.update_resource_specs(
-                self.config.force, regions
-            )
-            sys.exit(exit_code)
-
         if self.config.patch_specs:
-            cfnlint.maintenance.patch_resource_specs()
+            LOGGER.warning(
+                "--patch-specs is deprecated and no longer has any effect. "
+                "Schemas are now sourced from the enhanced-schemas repository."
+            )
             sys.exit(0)
+
+        if self.config.update_specs:
+            exit_code = cfnlint.maintenance.update_resource_specs(self.config.force)
+            sys.exit(exit_code)
 
         if self.config.update_iam_policies:
             cfnlint.maintenance.update_iam_policies()

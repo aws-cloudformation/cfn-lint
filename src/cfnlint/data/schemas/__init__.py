@@ -1,3 +1,3 @@
 """
-Storage of all JSON schema files and their patches
+Storage of all JSON schema files
 """

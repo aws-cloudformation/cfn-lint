@@ -3,10 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import io
 import json
 import logging
+import zipfile
 from test.testlib.testcase import BaseTestCase
-from unittest.mock import MagicMock, call, mock_open, patch
+from unittest.mock import MagicMock, patch
 
 from cfnlint.schema._patch import SchemaPatch
 from cfnlint.schema.manager import ProviderSchemaManager, ResourceNotFoundError
@@ -20,257 +22,174 @@ class TestUpdateResourceSchemas(BaseTestCase):
 
     def setUp(self) -> None:
         super().setUp()
-
-        self.schema_zip = "test/fixtures/registry/schema.zip"
         self.manager = ProviderSchemaManager()
-        self.schemas = dict.fromkeys(["aws-lambda-codesigningconfig"])
-        for resource in self.schemas:
-            with open(f"test/fixtures/registry/schemas/{resource}.json") as fh:
-                self.schemas[resource] = fh.read()
-
-        self.schema_patch = [{"op": "add", "path": "/cfnSchema", "value": ["test"]}]
 
     @patch("cfnlint.schema.manager.url_has_newer_version")
-    @patch("cfnlint.schema.manager.json.dump")
-    @patch("cfnlint.schema.manager.REGIONS", ["us-east-1"])
-    @patch("cfnlint.schema.manager.get_url_retrieve")
-    @patch("cfnlint.schema.manager.zipfile.ZipFile")
-    @patch("cfnlint.schema.manager.os.listdir")
-    @patch("cfnlint.schema.manager.os.path.isfile")
-    @patch("cfnlint.schema.manager.os.remove")
-    @patch("cfnlint.schema.manager.os.walk")
-    @patch("cfnlint.schema.manager.filecmp.cmp")
-    @patch("cfnlint.schema.manager.load_resource")
-    @patch("cfnlint.schema.manager.shutil.rmtree")
-    def test_update_resource_spec(
-        self,
-        mock_shutil_rmtree,
-        mock_load_resource,
-        mock_filecmp_cmp,
-        mock_os_walk,
-        mock_os_remove,
-        mock_os_path_isfile,
-        mock_os_listdir,
-        mock_zipfile,
-        mock_get_url_retrieve,
-        mock_json_dump,
-        mock_url_newer_version,
-    ):
-        schema = self.schemas["aws-lambda-codesigningconfig"]
-        schema_json = json.loads(schema)
-
-        """Success update resource spec"""
-        mock_url_newer_version.return_value = True
-        mock_get_url_retrieve.return_value = self.schema_zip
-        mock_zipfile.return_value = MagicMock()
-        mock_os_listdir.return_value = [
-            "aws_lambda_codesigningconfig.json",
-            "__init__.py",
-        ]
-        mock_os_path_isfile.side_effect = [True, True, True, True]
-        mock_load_resource.return_value = self.schema_patch
-        mock_os_walk.return_value = iter(
-            [("all", [], ["aws_lambda_codesigningconfig.json"])]
-        )
-        builtin_module_name = "builtins"
-
-        with patch(
-            "{}.open".format(builtin_module_name), mock_open(read_data=schema)
-        ) as mock_builtin_open:
-            self.manager._update_provider_schema("us-east-1", False)
-            schema_patched = {**schema_json, **{"cfnSchema": ["test"]}}
-            mock_json_dump.assert_called_with(
-                schema_patched,
-                mock_builtin_open.return_value.__enter__.return_value,
-                indent=1,
-                separators=(",", ": "),
-                sort_keys=True,
-            )
-            mock_os_listdir.assert_has_calls(
-                [
-                    call(f"{self.manager._root.path_relative}/us_east_1/"),
-                ]
-            )
-            mock_zipfile.assert_has_calls([call(self.schema_zip, "r")])
-            mock_filecmp_cmp.assert_not_called()
-            mock_os_remove.assert_not_called()
-
-    @patch("cfnlint.schema.manager.url_has_newer_version")
-    @patch("cfnlint.schema.manager.get_url_retrieve")
-    @patch("cfnlint.schema.manager.json.dump")
-    @patch("cfnlint.schema.manager.REGIONS", ["us-east-1"])
-    @patch("cfnlint.schema.manager.load_resource")
-    @patch("cfnlint.schema.manager.zipfile.ZipFile")
-    @patch("cfnlint.schema.manager.os.listdir")
-    @patch("cfnlint.schema.manager.os.path.isfile")
-    @patch("cfnlint.schema.manager.os.remove")
-    @patch("cfnlint.schema.manager.os.walk")
-    @patch("cfnlint.schema.manager.filecmp.cmp")
-    @patch("cfnlint.schema.manager.shutil.rmtree")
-    def test_update_resource_spec_cache(
-        self,
-        mock_shutil_rmtree,
-        mock_filecmp_cmp,
-        mock_os_walk,
-        mock_os_remove,
-        mock_os_path_isfile,
-        mock_os_listdir,
-        mock_zipfile,
-        mock_load_resource,
-        mock_json_dump,
-        mock_get_url_retrieve,
-        mock_url_newer_version,
-    ):
-        """Success update resource spec with cache"""
-        schema = self.schemas["aws-lambda-codesigningconfig"]
-        schema_json = json.loads(schema)
-
-        mock_url_newer_version.return_value = True
-        mock_get_url_retrieve.return_value = self.schema_zip
-        mock_zipfile.return_value = MagicMock()
-        mock_os_listdir.return_value = [
-            "aws-lambda-codesigningconfig.json",
-            "__init__.py",
-        ]
-        mock_os_path_isfile.side_effect = [True, True, True, True]
-        mock_filecmp_cmp.side_effect = [True]
-        mock_load_resource.return_value = self.schema_patch
-        mock_os_walk.return_value = iter(
-            [("all", [], ["aws_lambda_codesigningconfig.json"])]
-        )
-        builtin_module_name = "builtins"
-
-        with patch(
-            "{}.open".format(builtin_module_name), mock_open(read_data=schema)
-        ) as mock_builtin_open:
-            self.manager._update_provider_schema("us-west-2", False)
-            schema_patched = {**schema_json, **{"cfnSchema": ["test"]}}
-            mock_json_dump.assert_called_with(
-                schema_patched,
-                mock_builtin_open.return_value.__enter__.return_value,
-                indent=1,
-                separators=(",", ": "),
-                sort_keys=True,
-            )
-            mock_os_listdir.assert_has_calls(
-                [
-                    call(f"{self.manager._root.path_relative}/us_west_2/"),
-                    call(f"{self.manager._root.path_relative}/us_west_2/"),
-                ]
-            )
-            mock_zipfile.assert_has_calls([call(self.schema_zip, "r")])
-            mock_filecmp_cmp.assert_called_once()
-            mock_os_remove.assert_called_once()
-
-    @patch("cfnlint.schema.manager.json.dump")
-    @patch("cfnlint.schema.manager.REGIONS", ["us-east-1"])
-    @patch("cfnlint.schema.manager.os.listdir")
-    @patch("cfnlint.schema.manager.os.path.isfile")
-    def test_update_resource_for_iso_region(
-        self,
-        mock_os_path_isfile,
-        mock_os_listdir,
-        mock_json_dump,
-    ):
-        """Success update resource spec with cache"""
-        schema = self.schemas["aws-lambda-codesigningconfig"]
-
-        mock_os_listdir.return_value = [
-            "aws_lambda_codesigningconfig.json",
-            "__init__.py",
-        ]
-        mock_os_path_isfile.side_effect = [True, True, True, True]
-        builtin_module_name = "builtins"
-
-        with patch(
-            "{}.open".format(builtin_module_name), mock_open(read_data=schema)
-        ) as mock_builtin_open:
-            self.manager._update_provider_schema("us-iso-west-1", False)
-            mock_json_dump.assert_not_called()
-            mock_os_listdir.assert_has_calls(
-                [
-                    call(f"{self.manager._root.path_relative}/us_east_1/"),
-                ]
-            )
-            mock_builtin_open.assert_has_calls(
-                [
-                    call().__enter__(),
-                    call().write("from __future__ import annotations\n\n"),
-                    call().write(
-                        "# pylint: disable=too-many-lines\ntypes: list[str] = [\n"
-                    ),
-                    call().write('    "AWS::CDK::Metadata",\n'),
-                    call().write('    "AWS::Lambda::CodeSigningConfig",\n'),
-                    call().write('    "Module",\n'),
-                    call().write(
-                        "]\n\n# pylint: disable=too-many-lines\ncached: list[str] = [\n"
-                    ),
-                    call().write('    "Module",\n'),
-                    call().write('    "aws_lambda_codesigningconfig.json",\n'),
-                    call().write("]\n"),
-                ]
-            )
-
-    @patch("cfnlint.schema.manager.url_has_newer_version")
-    @patch("cfnlint.schema.manager.get_url_retrieve")
-    @patch("cfnlint.schema.manager.json.dump")
-    @patch("cfnlint.schema.manager.ProviderSchemaManager._patch_provider_schema")
-    @patch("cfnlint.schema.manager.REGIONS", {"us-east-1": []})
-    def test_do_not_update_resource_spec(
-        self,
-        mock_provider_schema,
-        mock_json_dump,
-        mock_get_url_retrieve,
-        mock_url_newer_version,
-    ):
-        """Success update resource spec"""
-
-        mock_url_newer_version.return_value = False
-
-        result = self.manager._update_provider_schema("us-east-1", False)
-        self.assertIsNone(result)
-        mock_get_url_retrieve.assert_not_called()
-        mock_provider_schema.assert_not_called()
-        mock_json_dump.assert_not_called()
-
-    @patch("cfnlint.schema.manager.multiprocessing.Pool")
-    @patch("cfnlint.schema.manager.ProviderSchemaManager._update_provider_schema")
-    @patch("cfnlint.schema.manager.REGIONS", {"us-east-1": []})
-    def test_update_resource_specs_python(self, mock_update_resource_spec, mock_pool):
-        fake_pool = MagicMock()
-        mock_pool.return_value.__enter__.return_value = fake_pool
-
-        self.manager.update(True)
-
-        fake_pool.starmap.assert_called_once()
-
-    @patch("cfnlint.schema.manager.multiprocessing.Pool")
-    @patch("cfnlint.schema.manager.REGIONS", ["us-east-1", "us-west-2"])
-    def test_update_when_no_updates_needed(self, mock_pool):
-        """Test that update returns 0 when all regions are up to date"""
-        fake_pool = MagicMock()
-        mock_pool.return_value.__enter__.return_value = fake_pool
-        # All regions return False (no update needed)
-        fake_pool.starmap.return_value = [False, False]
-
+    def test_no_update_when_cached(self, mock_url_newer):
+        """When ETag matches, skip download"""
+        mock_url_newer.return_value = False
         result = self.manager.update(force=False)
-
         self.assertEqual(result, 0)
-        fake_pool.starmap.assert_called_once()
 
-    @patch("cfnlint.schema.manager.multiprocessing.Pool")
-    @patch("cfnlint.schema.manager.REGIONS", ["us-east-1", "us-west-2"])
-    def test_update_when_all_regions_fail(self, mock_pool):
-        """Test that update returns 2 when all regions fail to download"""
-        fake_pool = MagicMock()
-        mock_pool.return_value.__enter__.return_value = fake_pool
-        # All regions return None (failed)
-        fake_pool.starmap.return_value = [None, None]
+    @patch("cfnlint.schema.manager.url_has_newer_version")
+    @patch("cfnlint.schema.manager.get_url_retrieve")
+    def test_update_force(self, mock_get_url, mock_url_newer):
+        """Force download even if cached"""
+        import tempfile
+        from pathlib import Path
+
+        mock_url_newer.return_value = False
+
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, "w") as zf:
+            zf.writestr(
+                "providers/us-east-1.json",
+                json.dumps({"AWS::S3::Bucket": "abc123"}),
+            )
+            zf.writestr(
+                "resources/abc123.json",
+                json.dumps({"typeName": "AWS::S3::Bucket", "properties": {}}),
+            )
+        zip_buffer.seek(0)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            providers_dir = Path(tmpdir) / "providers"
+            resources_dir = Path(tmpdir) / "resources"
+            providers_dir.mkdir()
+            resources_dir.mkdir()
+
+            self.manager._providers_dir = providers_dir
+            self.manager._resources_dir = resources_dir
+
+            with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as tmp:
+                tmp.write(zip_buffer.getvalue())
+                tmp.flush()
+                mock_get_url.return_value = tmp.name
+
+                result = self.manager.update(force=True)
+
+            self.assertEqual(result, 0)
+            mock_get_url.assert_called_once()
+            self.assertTrue((providers_dir / "us-east-1.json").exists())
+            self.assertTrue((resources_dir / "abc123.json").exists())
+
+    @patch("cfnlint.schema.manager.url_has_newer_version")
+    @patch("cfnlint.schema.manager.get_url_retrieve")
+    def test_update_download_failure(self, mock_get_url, mock_url_newer):
+        """Returns 2 on download failure"""
+        mock_url_newer.return_value = True
+        mock_get_url.side_effect = Exception("Network error")
 
         result = self.manager.update(force=False)
-
         self.assertEqual(result, 2)
-        fake_pool.starmap.assert_called_once()
+
+
+class TestSamModuleLoading(BaseTestCase):
+    """Test SAM schema module loading"""
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.manager = ProviderSchemaManager()
+
+    def test_sam_module_missing_file(self):
+        """Returns empty dict when sam.json doesn't exist"""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            self.manager._providers_dir = Path(tmpdir)
+            result = self.manager._load_sam_module()
+            self.assertEqual(result, {})
+
+    def test_sam_module_loads(self):
+        """Loads SAM types from sam.json"""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            providers_dir = Path(tmpdir)
+            sam_data = {"AWS::Serverless::Function": "sam123"}
+            (providers_dir / "sam.json").write_text(json.dumps(sam_data))
+
+            self.manager._providers_dir = providers_dir
+            self.manager._sam_schema_module = None
+            result = self.manager._load_sam_module()
+            self.assertEqual(result, sam_data)
+
+    def test_sam_types_merged_into_provider(self):
+        """SAM types are merged into region provider modules"""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            providers_dir = Path(tmpdir)
+            resources_dir = Path(tmpdir) / "resources"
+            resources_dir.mkdir()
+
+            region_data = {"AWS::S3::Bucket": "abc123"}
+            sam_data = {"AWS::Serverless::Function": "sam123"}
+            (providers_dir / "us-east-1.json").write_text(json.dumps(region_data))
+            (providers_dir / "sam.json").write_text(json.dumps(sam_data))
+
+            self.manager._providers_dir = providers_dir
+            self.manager._resources_dir = resources_dir
+            self.manager._sam_schema_module = None
+            self.manager._provider_schema_modules = {}
+
+            result = self.manager._load_provider_module("us-east-1")
+            self.assertIn("AWS::S3::Bucket", result)
+            self.assertIn("AWS::Serverless::Function", result)
+            self.assertEqual(result["AWS::S3::Bucket"], "abc123")
+            self.assertEqual(result["AWS::Serverless::Function"], "sam123")
+
+    @patch("cfnlint.schema.manager.url_has_newer_version")
+    @patch("cfnlint.schema.manager.get_url_retrieve")
+    def test_update_extracts_sam_json(self, mock_get_url, mock_url_newer):
+        """Update extracts sam.json from zip into providers dir"""
+        import tempfile
+        from pathlib import Path
+
+        mock_url_newer.return_value = False
+
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, "w") as zf:
+            zf.writestr(
+                "providers/us-east-1.json",
+                json.dumps({"AWS::S3::Bucket": "abc123"}),
+            )
+            zf.writestr(
+                "providers/sam.json",
+                json.dumps({"AWS::Serverless::Function": "sam123"}),
+            )
+            zf.writestr(
+                "resources/abc123.json",
+                json.dumps({"typeName": "AWS::S3::Bucket", "properties": {}}),
+            )
+            zf.writestr(
+                "resources/sam123.json",
+                json.dumps({"typeName": "AWS::Serverless::Function", "properties": {}}),
+            )
+        zip_buffer.seek(0)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            providers_dir = Path(tmpdir) / "providers"
+            resources_dir = Path(tmpdir) / "resources"
+            providers_dir.mkdir()
+            resources_dir.mkdir()
+
+            self.manager._providers_dir = providers_dir
+            self.manager._resources_dir = resources_dir
+
+            with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as tmp:
+                tmp.write(zip_buffer.getvalue())
+                tmp.flush()
+                mock_get_url.return_value = tmp.name
+
+                result = self.manager.update(force=True)
+
+            self.assertEqual(result, 0)
+            self.assertTrue((providers_dir / "sam.json").exists())
+            self.assertTrue((resources_dir / "sam123.json").exists())
 
 
 class TestManagerGetResourceSchema(BaseTestCase):
@@ -331,25 +250,19 @@ class TestManagerPatch(BaseTestCase):
     @patch("cfnlint.schema.manager.sys.exit")
     def test_patch_failure(self, mock_exit, mock_print):
         """Test when patching a schema fails"""
-        # Create a mock schema that will raise an exception when patch is called
         mock_schema = MagicMock()
         mock_schema.patch.side_effect = Exception("Invalid patch operation")
 
-        # Mock get_resource_schema to return our mocked schema
         self.manager.get_resource_schema = MagicMock(return_value=mock_schema)
 
-        # Create a patch
         resource_type = "AWS::EC2::Instance"
         patch = SchemaPatch([], [], {resource_type: self.schema_patch})
 
-        # Apply the patch
         self.manager.patch(patch, "us-east-1")
 
-        # Verify that print was called with the error message
         mock_print.assert_called_with(
             f"Error applying patch {self.schema_patch} for "
             f"{resource_type}: Invalid patch operation"
         )
 
-        # Verify that sys.exit was called with exit code 1
         mock_exit.assert_called_with(1)

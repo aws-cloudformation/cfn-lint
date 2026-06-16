@@ -19,7 +19,7 @@ from cfnlint.schema import AttributeDict
         (
             "Valid resource",
             {"Type": "AWS::EC2::VPC"},
-            {"format": "AWS::EC2::VPC.Id", "type": "string"},
+            {"description": "", "format": "AWS::EC2::VPC.Id", "type": "string"},
         ),
     ],
 )

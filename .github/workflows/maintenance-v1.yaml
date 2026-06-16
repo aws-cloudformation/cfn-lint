@@ -2,7 +2,7 @@ name: Automated Maintenance v1
 on:
   schedule:
     - cron: "0 8,20 * * *"
-  workflow_dispatch: # Enables on-demand/manual triggering: https://docs.github.com/en/free-pro-team@latest/actions/managing-workflow-runs/manually-running-a-workflow
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -24,15 +24,10 @@ jobs:
           latest=`curl "https://pypi.org/pypi/aws-sam-cli/$latest_sam_cli/json" -s | jq -r '.info.requires_dist[] | select(contains("aws-sam-translator"))' | cut -c 21-`
           sed -i -E "s/aws-sam-translator>=[0-9.]+/aws-sam-translator>=$latest/" requirements/base.txt
           pip install -e .
-          pip install requests
-          rm -rf src/cfnlint/data/DownloadsMetadata/*
           cfn-lint --update-iam-policies
+          cfn-lint --update-specs --force
           cfn-lint --update-documentation
-          scripts/update_specs_from_pricing.py
           scripts/update_serverless_aws_policies.py
-          scripts/smithy/update_schemas_from_smithy.py
-          scripts/update_schemas_from_aws_api.py
-          cfn-lint --update-specs
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -44,7 +39,6 @@ jobs:
             Update CloudFormation schemas to ${{ steps.maintenance.outputs.date }}
           body: |
             - Update CloudFormation schemas to ${{ steps.maintenance.outputs.date }}
-            - Update Specs from pricing data as of ${{ steps.maintenance.outputs.date }}
 
             Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action
           delete-branch: true

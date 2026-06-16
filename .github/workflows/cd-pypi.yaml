@@ -22,6 +22,9 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install --upgrade setuptools build wheel twine
+          pip install -e .
+      - name: Download schemas
+        run: cfn-lint --update-specs --force
       - name: Build and publish
         run: |
           python -m build
