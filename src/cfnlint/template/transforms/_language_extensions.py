@@ -17,7 +17,7 @@ import regex as re
 
 from cfnlint.conditions._utils import get_hash
 from cfnlint.decode.node import str_node
-from cfnlint.helpers import FUNCTION_FOR_EACH
+from cfnlint.helpers import FUNCTION_FOR_EACH, REGEX_SUB_PARAMETERS
 from cfnlint.template.transforms._types import TransformResult
 
 LOGGER = logging.getLogger("cfnlint")
@@ -209,8 +209,14 @@ class _Transform:
         s: str,
         params: Mapping[str, Any],
     ) -> Tuple[bool, str]:
-        pattern = r"(\$|&){[a-zA-Z0-9\.:]+}"
-        if not re.search(pattern, s):
+        _ampersand_pattern = re.compile(r"&{\s*[^!\s].*?\s*}")
+
+        def _has_variables(value: str) -> bool:
+            return bool(
+                REGEX_SUB_PARAMETERS.search(value) or _ampersand_pattern.search(value)
+            )
+
+        if not _has_variables(s):
             return (True, s)
 
         new_s = deepcopy(s)
@@ -227,7 +233,7 @@ class _Transform:
         if isinstance(s, str_node):
             new_s = str_node(new_s, s.start_mark, s.end_mark)
 
-        return (not (bool(re.search(pattern, new_s))), new_s)
+        return (not _has_variables(new_s), new_s)
 
 
 class _ForEachValue:
