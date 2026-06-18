@@ -1,0 +1,35 @@
+# --- cfn-lint-test ---
+# rule: E3063
+# description: GuardDuty Detector cannot have both DataSources and Features
+# expect:
+#   - rule: E3063
+#     path: /Resources/BadDetector/Properties
+#     message_contains: "DataSources"
+# ---
+Resources:
+  GoodDetectorFeatures:
+    Type: AWS::GuardDuty::Detector
+    Properties:
+      Enable: true
+      Features:
+        - Name: S3_DATA_EVENTS
+          Status: ENABLED
+
+  GoodDetectorDataSources:
+    Type: AWS::GuardDuty::Detector
+    Properties:
+      Enable: true
+      DataSources:
+        S3Logs:
+          Enable: true
+
+  BadDetector:
+    Type: AWS::GuardDuty::Detector
+    Properties:
+      Enable: true
+      DataSources:
+        S3Logs:
+          Enable: true
+      Features:
+        - Name: S3_DATA_EVENTS
+          Status: ENABLED

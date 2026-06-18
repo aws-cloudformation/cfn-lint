@@ -1,0 +1,304 @@
+{
+ "if": {
+  "properties": {
+   "Cpu": {
+    "type": [
+     "string",
+     "integer"
+    ]
+   },
+   "Memory": {
+    "type": [
+     "string",
+     "integer"
+    ]
+   },
+   "RequiresCompatibilities": {
+    "contains": {
+     "enum": [
+      "FARGATE"
+     ],
+     "type": "string"
+    },
+    "type": "array"
+   }
+  },
+  "required": [
+   "RequiresCompatibilities",
+   "Cpu",
+   "Memory"
+  ]
+ },
+ "then": {
+  "anyOf": [
+   {
+    "properties": {
+     "Cpu": {
+      "else": {
+       "pattern": "^\\.25\\s*(?i)vCpu$"
+      },
+      "if": {
+       "pattern": "^\\d+$",
+       "type": [
+        "integer",
+        "string"
+       ]
+      },
+      "then": {
+       "enum": [
+        "256"
+       ]
+      }
+     },
+     "Memory": {
+      "else": {
+       "pattern": "^(0.5|1|2)\\s*(?i)GB$"
+      },
+      "if": {
+       "pattern": "^\\d+$",
+       "type": [
+        "integer",
+        "string"
+       ]
+      },
+      "then": {
+       "enum": [
+        512,
+        1024,
+        2048
+       ]
+      }
+     }
+    }
+   },
+   {
+    "properties": {
+     "Cpu": {
+      "else": {
+       "pattern": "^\\.5\\s*(?i)vCpu$"
+      },
+      "if": {
+       "pattern": "^\\d+$",
+       "type": [
+        "integer",
+        "string"
+       ]
+      },
+      "then": {
+       "enum": [
+        "512"
+       ]
+      }
+     },
+     "Memory": {
+      "else": {
+       "pattern": "^(1|2|3|4)\\s*(?i)GB$"
+      },
+      "if": {
+       "pattern": "^\\d+$",
+       "type": [
+        "integer",
+        "string"
+       ]
+      },
+      "then": {
+       "maximum": 4096,
+       "minimum": 1024,
+       "multipleOf": 1024
+      }
+     }
+    }
+   },
+   {
+    "properties": {
+     "Cpu": {
+      "else": {
+       "pattern": "^1\\s*(?i)vCpu$"
+      },
+      "if": {
+       "pattern": "^\\d+$",
+       "type": [
+        "integer",
+        "string"
+       ]
+      },
+      "then": {
+       "enum": [
+        "1024"
+       ]
+      }
+     },
+     "Memory": {
+      "else": {
+       "pattern": "^(2|3|4|5|6|7|8)\\s*(?i)GB$"
+      },
+      "if": {
+       "pattern": "^\\d+$",
+       "type": [
+        "integer",
+        "string"
+       ]
+      },
+      "then": {
+       "maximum": 8192,
+       "minimum": 2048,
+       "multipleOf": 1024
+      }
+     }
+    }
+   },
+   {
+    "properties": {
+     "Cpu": {
+      "else": {
+       "pattern": "^2\\s*(?i)vCpu$"
+      },
+      "if": {
+       "pattern": "^\\d+$",
+       "type": [
+        "integer",
+        "string"
+       ]
+      },
+      "then": {
+       "enum": [
+        "2048"
+       ]
+      }
+     },
+     "Memory": {
+      "else": {
+       "pattern": "^(4|5|6|7|8|9|10|11|12|13|14|15|16)\\s*(?i)GB$"
+      },
+      "if": {
+       "pattern": "^\\d+$",
+       "type": [
+        "integer",
+        "string"
+       ]
+      },
+      "then": {
+       "maximum": 16384,
+       "minimum": 4096,
+       "multipleOf": 1024
+      }
+     }
+    }
+   },
+   {
+    "properties": {
+     "Cpu": {
+      "else": {
+       "pattern": "^4\\s*(?i)vCpu$"
+      },
+      "if": {
+       "pattern": "^\\d+$",
+       "type": [
+        "integer",
+        "string"
+       ]
+      },
+      "then": {
+       "enum": [
+        "4096"
+       ]
+      }
+     },
+     "Memory": {
+      "else": {
+       "pattern": "^(8|9|1[0-9]|2[0-9]|30)\\s*(?i)GB$"
+      },
+      "if": {
+       "pattern": "^\\d+$",
+       "type": [
+        "integer",
+        "string"
+       ]
+      },
+      "then": {
+       "maximum": 30720,
+       "minimum": 8192,
+       "multipleOf": 1024
+      }
+     }
+    }
+   },
+   {
+    "properties": {
+     "Cpu": {
+      "else": {
+       "pattern": "^8\\s*(?i)vCpu$"
+      },
+      "if": {
+       "pattern": "^\\d+$",
+       "type": [
+        "integer",
+        "string"
+       ]
+      },
+      "then": {
+       "enum": [
+        "8192"
+       ]
+      }
+     },
+     "Memory": {
+      "else": {
+       "pattern": "^(16|20|24|28|32|36|40|44|48|52|56|60)\\s*(?i)GB$"
+      },
+      "if": {
+       "pattern": "^\\d+$",
+       "type": [
+        "integer",
+        "string"
+       ]
+      },
+      "then": {
+       "maximum": 61440,
+       "minimum": 16384,
+       "multipleOf": 4096
+      }
+     }
+    }
+   },
+   {
+    "properties": {
+     "Cpu": {
+      "else": {
+       "pattern": "^16\\s*(?i)vCpu$"
+      },
+      "if": {
+       "pattern": "^\\d+$",
+       "type": [
+        "integer",
+        "string"
+       ]
+      },
+      "then": {
+       "enum": [
+        "16384"
+       ]
+      }
+     },
+     "Memory": {
+      "else": {
+       "pattern": "^(32|40|48|56|64|72|80|88|96|104|112|120)\\s*(?i)GB$"
+      },
+      "if": {
+       "pattern": "^\\d+$",
+       "type": [
+        "integer",
+        "string"
+       ]
+      },
+      "then": {
+       "maximum": 122880,
+       "minimum": 32768,
+       "multipleOf": 8192
+      }
+     }
+    }
+   }
+  ]
+ }
+}

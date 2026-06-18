@@ -1,0 +1,35 @@
+# --- cfn-lint-test ---
+# rule: E1020
+# description: Ref inside FindInMap is validated by E1020
+# expect:
+#   - rule: E1020
+#     path: /
+#     message_contains: "NonExistentParam"
+# ---
+Parameters:
+  Env:
+    Type: String
+Mappings:
+  RegionMap:
+    us-east-1:
+      AMI: ami-12345678
+    us-west-2:
+      AMI: ami-87654321
+Resources:
+  GoodFindInMapWithRef:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !FindInMap
+        - RegionMap
+        - !Ref AWS::Region
+        - AMI
+      InstanceType: t2.micro
+
+  BadRefInsideFindInMap:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !FindInMap
+        - RegionMap
+        - !Ref NonExistentParam
+        - AMI
+      InstanceType: t2.micro

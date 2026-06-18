@@ -1,0 +1,45 @@
+# --- cfn-lint-test ---
+# rule: E3001
+# description: Resource keys validation (Type required, valid top-level keys)
+# expect:
+#   - rule: E3001
+#     path: /Resources/BadExtraKey
+#     message_contains: "Additional properties are not allowed"
+#     message_contains_value: "Bogus"
+#   - rule: E3001
+#     path: /Resources/MissingType
+#     message_contains: "is a required property"
+#     message_contains_value: "Type"
+# ---
+Resources:
+  GoodBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: good-bucket
+
+  GoodWithAllValidKeys:
+    Type: AWS::S3::Bucket
+    Condition: MyCondition
+    DependsOn: GoodBucket
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Retain
+    Metadata:
+      Key: Value
+    Properties:
+      BucketName: all-keys-bucket
+
+  BadExtraKey:
+    Type: AWS::S3::Bucket
+    Bogus: not-a-valid-key
+    Properties:
+      BucketName: bad-bucket
+
+  MissingType:
+    Properties:
+      BucketName: no-type-bucket
+
+Conditions:
+  MyCondition: !Equals
+    - !Ref "AWS::Region"
+    - us-east-1

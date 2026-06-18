@@ -1,0 +1,75 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  DocDBInstance:
+    Type: AWS::DocDB::DBInstance
+    Properties:
+      DBClusterIdentifier: my-cluster
+      DBInstanceClass: db.invalid.type
+
+  NeptuneInstance:
+    Type: AWS::Neptune::DBInstance
+    Properties:
+      DBClusterIdentifier: my-cluster
+      DBInstanceClass: db.invalid.type
+
+  GameLiftFleet:
+    Type: AWS::GameLift::Fleet
+    Properties:
+      Name: my-fleet
+      EC2InstanceType: invalid.type
+      BuildId: build-123
+
+  RedshiftCluster:
+    Type: AWS::Redshift::Cluster
+    Properties:
+      ClusterType: single-node
+      DBName: mydb
+      MasterUsername: admin
+      MasterUserPassword: Password123!
+      NodeType: invalid.type
+
+  AmazonMQBroker:
+    Type: AWS::AmazonMQ::Broker
+    Properties:
+      BrokerName: my-broker
+      DeploymentMode: SINGLE_INSTANCE
+      EngineType: ACTIVEMQ
+      EngineVersion: '5.17'
+      HostInstanceType: mq.invalid.type
+      PubliclyAccessible: false
+      Users:
+        - ConsoleAccess: true
+          Username: admin
+          Password: Password123!
+
+  DAXCluster:
+    Type: AWS::DAX::Cluster
+    Properties:
+      ClusterName: my-dax
+      IAMRoleARN: arn:aws:iam::123456789012:role/DAXRole
+      NodeType: dax.invalid.type
+      ReplicationFactor: 1
+
+  AppStreamFleet:
+    Type: AWS::AppStream::Fleet
+    Properties:
+      Name: my-fleet
+      InstanceType: stream.invalid.type
+      ComputeCapacity:
+        DesiredInstances: 1
+
+  ManagedBlockchainNode:
+    Type: AWS::ManagedBlockchain::Node
+    Properties:
+      MemberId: m-ABC123
+      NetworkId: n-ABC123
+      NodeConfiguration:
+        InstanceType: bc.invalid.type
+        AvailabilityZone: us-east-1a
+
+  ElasticsearchDomain:
+    Type: AWS::Elasticsearch::Domain
+    Properties:
+      DomainName: my-es-domain
+      ElasticsearchClusterConfig:
+        InstanceType: invalid.elasticsearch

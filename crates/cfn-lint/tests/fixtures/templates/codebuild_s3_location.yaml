@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  ValidProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      ServiceRole: arn:aws:iam::123456789012:role/CodeBuildRole
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:7.0
+      Source:
+        Type: S3
+        Location: my-bucket/source.zip
+  BadProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      ServiceRole: arn:aws:iam::123456789012:role/CodeBuildRole
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:7.0
+      Source:
+        Type: S3

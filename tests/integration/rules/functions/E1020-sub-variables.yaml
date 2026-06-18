@@ -1,0 +1,27 @@
+# --- cfn-lint-test ---
+# rule: E1020
+# description: Ref inside Fn::Sub array form still validates against E1020
+# expect:
+#   - rule: E1020
+#     path: /
+#     message_contains: "NonExistentParam"
+# ---
+Parameters:
+  MyParam:
+    Type: String
+Resources:
+  GoodSubArrayFormRef:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName:
+        Fn::Sub:
+          - "${LocalVar}-queue"
+          - LocalVar: !Ref MyParam
+
+  BadSubArrayFormRef:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName:
+        Fn::Sub:
+          - "${LocalVar}-queue"
+          - LocalVar: !Ref NonExistentParam

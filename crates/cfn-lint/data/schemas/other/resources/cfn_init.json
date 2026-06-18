@@ -1,0 +1,262 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "commands": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "additionalProperties": false,
+     "properties": {
+      "command": {
+       "type": "string"
+      },
+      "cwd": {
+       "type": "string"
+      },
+      "env": {
+       "additionalProperties": {
+        "type": "string"
+       },
+       "type": "object"
+      },
+      "ignoreErrors": {
+       "type": "string"
+      },
+      "test": {
+       "type": "string"
+      },
+      "waitAfterCompletion": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "files": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "additionalProperties": false,
+     "properties": {
+      "authentication": true,
+      "content": {
+       "type": [
+        "string",
+        "object"
+       ]
+      },
+      "context": true,
+      "encoding": {
+       "enum": [
+        "plain",
+        "base64"
+       ],
+       "type": "string"
+      },
+      "group": {
+       "type": "string"
+      },
+      "mode": {
+       "maxLength": 6,
+       "minLength": 6,
+       "type": "string"
+      },
+      "owner": {
+       "type": "string"
+      },
+      "source": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "groups": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "additionalProperties": false,
+     "properties": {
+      "gid": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "package": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "type": [
+      "array",
+      "string"
+     ]
+    }
+   },
+   "type": [
+    "object"
+   ]
+  },
+  "packages": {
+   "additionalProperties": false,
+   "properties": {
+    "apt": {
+     "$ref": "#/definitions/package"
+    },
+    "msi": {
+     "$ref": "#/definitions/package"
+    },
+    "python": {
+     "$ref": "#/definitions/package"
+    },
+    "rpm": {
+     "$ref": "#/definitions/package"
+    },
+    "rubygems": {
+     "$ref": "#/definitions/package"
+    },
+    "yum": {
+     "$ref": "#/definitions/package"
+    },
+    "zypper": {
+     "$ref": "#/definitions/package"
+    }
+   },
+   "type": "object"
+  },
+  "service": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "additionalProperties": false,
+     "properties": {
+      "commands": {
+       "items": {
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "enabled": {
+       "type": "boolean"
+      },
+      "ensureRunning": {
+       "type": "boolean"
+      },
+      "files": {
+       "items": {
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "packages": {
+       "additionalProperties": {
+        "items": {
+         "type": "string"
+        },
+        "type": "array"
+       },
+       "type": "object"
+      },
+      "sources": {
+       "items": {
+        "type": "string"
+       },
+       "type": "array"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "services": {
+   "additionalProperties": false,
+   "properties": {
+    "systemd": {
+     "$ref": "#/definitions/service"
+    },
+    "sysvinit": {
+     "$ref": "#/definitions/service"
+    },
+    "windows": {
+     "$ref": "#/definitions/service"
+    }
+   },
+   "type": "object"
+  },
+  "sources": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "users": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "additionalProperties": false,
+     "properties": {
+      "groups": {
+       "items": {
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "homeDir": {
+       "type": "string"
+      },
+      "uid": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "patternProperties": {
+  "^.+$": {
+   "properties": {
+    "commands": {
+     "$ref": "#/definitions/commands"
+    },
+    "files": {
+     "$ref": "#/definitions/files"
+    },
+    "groups": {
+     "$ref": "#/definitions/groups"
+    },
+    "packages": {
+     "$ref": "#/definitions/packages"
+    },
+    "services": {
+     "$ref": "#/definitions/services"
+    },
+    "sources": {
+     "$ref": "#/definitions/sources"
+    },
+    "users": {
+     "$ref": "#/definitions/users"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "properties": {
+  "configSets": {
+   "type": "object"
+  }
+ },
+ "type": "object"
+}

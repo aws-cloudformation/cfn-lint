@@ -1,0 +1,27 @@
+# --- cfn-lint-test ---
+# rule: W1020
+# description: Fn::Sub array form without variables is unnecessary
+# expect:
+#   - rule: W1020
+#     path: /Resources/BadSubArrayNoVar/Properties/QueueName
+#     message_contains: "isn't needed"
+# ---
+Parameters:
+  MyParam:
+    Type: String
+Resources:
+  GoodSubArrayForm:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName:
+        Fn::Sub:
+          - "${Prefix}-queue"
+          - Prefix: !Ref MyParam
+
+  BadSubArrayNoVar:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName:
+        Fn::Sub:
+          - "static-queue-name"
+          - {}

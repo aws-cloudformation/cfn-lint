@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  RestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: MyApi
+
+  Authorizer:
+    Type: AWS::ApiGateway::Authorizer
+    Properties:
+      Name: MyAuthorizer
+      RestApiId: !Ref RestApi
+      Type: COGNITO_USER_POOLS
+
+  MethodWrongAuthorizerType:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: GET
+      ResourceId: !GetAtt RestApi.RootResourceId
+      RestApiId: !Ref RestApi
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref Authorizer

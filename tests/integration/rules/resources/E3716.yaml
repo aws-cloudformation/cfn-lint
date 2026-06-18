@@ -1,0 +1,36 @@
+# --- cfn-lint-test ---
+# rule: E3716
+# description: Lambda layer ARN length validation based on region
+# expect:
+#   - rule: E3716
+#     path: /Resources/BadFunction/Properties/Layers/0
+#     message_contains: "longer than"
+# ---
+Resources:
+  GoodFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: good-function
+      Runtime: python3.9
+      Handler: index.handler
+      Role: arn:aws:iam::123456789012:role/LambdaRole
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "hello"
+      Layers:
+        - arn:aws:lambda:us-east-1:123456789012:layer:my-layer:1
+
+  BadFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: bad-function
+      Runtime: python3.9
+      Handler: index.handler
+      Role: arn:aws:iam::123456789012:role/LambdaRole
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "hello"
+      Layers:
+        - arn:aws:lambda:us-east-1:123456789012:layer:this-is-a-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-long-layer-name-that-exceeds-the-maximum-allowed-length:1

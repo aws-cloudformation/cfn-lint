@@ -1,0 +1,41 @@
+# --- cfn-lint-test ---
+# rule: E3053
+# description: ECS TaskDefinition HostPort must equal ContainerPort in awsvpc mode
+# expect:
+#   - rule: E3053
+#     path: /Resources/BadTask/Properties/ContainerDefinitions
+#     message_contains: "does not equal ContainerPort"
+# ---
+Resources:
+  GoodTask:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      NetworkMode: awsvpc
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          PortMappings:
+            - ContainerPort: 80
+              HostPort: 80
+
+  GoodBridgeTask:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      NetworkMode: bridge
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          PortMappings:
+            - ContainerPort: 80
+              HostPort: 0
+
+  BadTask:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      NetworkMode: awsvpc
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          PortMappings:
+            - ContainerPort: 80
+              HostPort: 8080

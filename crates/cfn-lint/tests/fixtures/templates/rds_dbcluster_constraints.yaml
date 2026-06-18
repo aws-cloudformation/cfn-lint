@@ -1,0 +1,116 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  # E3686: serverless EngineMode should not have ServerlessV2ScalingConfiguration
+  ServerlessWithV2Scaling:
+    Type: AWS::RDS::DBCluster
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Engine: aurora-mysql
+      EngineMode: serverless
+      MasterUsername: admin
+      MasterUserPassword: password123
+      ServerlessV2ScalingConfiguration:
+        MinCapacity: 0.5
+        MaxCapacity: 8
+
+  # E3686: provisioned EngineMode should not have ScalingConfiguration
+  ProvisionedWithScaling:
+    Type: AWS::RDS::DBCluster
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Engine: aurora-mysql
+      EngineMode: provisioned
+      MasterUsername: admin
+      MasterUserPassword: password123
+      ScalingConfiguration:
+        AutoPause: true
+        MinCapacity: 1
+        MaxCapacity: 4
+
+  # E3689: MonitoringRoleArn specified without MonitoringInterval > 0
+  ClusterBadMonitoring:
+    Type: AWS::RDS::DBCluster
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Engine: aurora-mysql
+      MasterUsername: admin
+      MasterUserPassword: password123
+      MonitoringRoleArn: arn:aws:iam::123456789012:role/monitoring
+      MonitoringInterval: 0
+
+  # E3690: Invalid engine version for aurora-mysql cluster
+  ClusterBadEngineVersion:
+    Type: AWS::RDS::DBCluster
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Engine: aurora-mysql
+      EngineVersion: "99.99.99"
+      MasterUsername: admin
+      MasterUserPassword: password123
+
+  # E3692: multi-AZ cluster (mysql/postgres) missing required properties
+  MultiAzMissingProps:
+    Type: AWS::RDS::DBCluster
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Engine: mysql
+      EngineVersion: "8.0.35"
+      MasterUsername: admin
+      MasterUserPassword: password123
+      AvailabilityZones:
+        - us-east-1a
+
+  # E3693: Aurora cluster should not specify AllocatedStorage, DBClusterInstanceClass, Iops
+  AuroraWithMultiAzProps:
+    Type: AWS::RDS::DBCluster
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Engine: aurora-mysql
+      MasterUsername: admin
+      MasterUserPassword: password123
+      AllocatedStorage: 100
+      DBClusterInstanceClass: db.r5d.large
+      Iops: 3000
+
+  # E3693: Aurora cluster with invalid StorageType
+  AuroraWithBadStorageType:
+    Type: AWS::RDS::DBCluster
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Engine: aurora-postgresql
+      EngineVersion: "16.4"
+      MasterUsername: admin
+      MasterUserPassword: password123
+      StorageType: io1
+
+  # E3694: Invalid DBClusterInstanceClass (not in regional enum for us-east-1)
+  MultiAzBadInstanceClass:
+    Type: AWS::RDS::DBCluster
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Engine: mysql
+      EngineVersion: "8.0.35"
+      MasterUsername: admin
+      MasterUserPassword: password123
+      AllocatedStorage: 100
+      DBClusterInstanceClass: db.t1.fake
+      Iops: 3000
+      StorageType: io1
+
+  # E3690: Invalid engine type
+  ClusterBadEngine:
+    Type: AWS::RDS::DBCluster
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Engine: invalid-engine
+      MasterUsername: admin
+      MasterUserPassword: password123

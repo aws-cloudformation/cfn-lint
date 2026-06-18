@@ -1,0 +1,53 @@
+# --- cfn-lint-test ---
+# rule: E3712
+# description: TargetTrackingScaling policy requires ASG MaxSize > MinSize
+# expect: []
+# ---
+# NOTE: Rule E3712 cross-resource ASG/ScalingPolicy validation not yet resolving Ref targets in v2 engine
+Resources:
+  GoodAsg:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      MinSize: "1"
+      MaxSize: "5"
+      LaunchTemplate:
+        LaunchTemplateId: lt-12345
+        Version: "1"
+
+  GoodPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AutoScalingGroupName: !Ref GoodAsg
+      PolicyType: TargetTrackingScaling
+      TargetTrackingConfiguration:
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ASGAverageCPUUtilization
+        TargetValue: 50.0
+
+  BadAsg:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      MinSize: "1"
+      MaxSize: "1"
+      LaunchTemplate:
+        LaunchTemplateId: lt-12345
+        Version: "1"
+
+  BadPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AutoScalingGroupName: !Ref BadAsg
+      PolicyType: TargetTrackingScaling
+      TargetTrackingConfiguration:
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ASGAverageCPUUtilization
+        TargetValue: 50.0
+
+  GoodStepScalingEqualMinMax:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AutoScalingGroupName: !Ref BadAsg
+      PolicyType: StepScaling
+      StepAdjustments:
+        - MetricIntervalLowerBound: 0
+          ScalingAdjustment: 1

@@ -1,0 +1,47 @@
+# --- cfn-lint-test ---
+# rule: W3687
+# description: Validate that ports are not specified for protocol -1
+# expect:
+#   - rule: W3687
+#     path: /Resources/BadAllTrafficWithPorts/Properties/SecurityGroupIngress/0/FromPort
+#     message_contains: "not allowed"
+#   - rule: W3687
+#     path: /Resources/BadAllTrafficWithPorts/Properties/SecurityGroupIngress/0/ToPort
+#     message_contains: "not allowed"
+# ---
+Resources:
+  GoodAllTrafficNoPorts:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: All traffic no ports
+      SecurityGroupIngress:
+        - IpProtocol: "-1"
+          CidrIp: 0.0.0.0/0
+
+  GoodNonStandardProtocol:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Protocol 9
+      SecurityGroupIngress:
+        - IpProtocol: "9"
+          CidrIp: 0.0.0.0/0
+
+  GoodTcpWithPorts:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: TCP with ports
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  BadAllTrafficWithPorts:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: All traffic with ports specified
+      SecurityGroupIngress:
+        - IpProtocol: "-1"
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0

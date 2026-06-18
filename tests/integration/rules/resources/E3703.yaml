@@ -1,0 +1,74 @@
+# --- cfn-lint-test ---
+# rule: E3703
+# description: CodePipeline action configuration TemplatePath must reference InputArtifact
+# expect:
+#   - rule: E3703
+#     path: /Resources/BadPipeline/Properties/Stages/1/Actions/0/Configuration/TemplatePath
+#     message_contains: "not one of"
+# ---
+Resources:
+  GoodPipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: arn:aws:iam::123456789012:role/PipelineRole
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: S3Source
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Provider: S3
+                Version: "1"
+              OutputArtifacts:
+                - Name: SourceOutput
+              Configuration:
+                S3Bucket: my-bucket
+                S3ObjectKey: source.zip
+        - Name: Deploy
+          Actions:
+            - Name: CfnDeploy
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: "1"
+              InputArtifacts:
+                - Name: SourceOutput
+              Configuration:
+                TemplatePath: SourceOutput::template.yaml
+                ActionMode: CREATE_UPDATE
+                StackName: my-stack
+
+  BadPipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: arn:aws:iam::123456789012:role/PipelineRole
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: S3Source
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Provider: S3
+                Version: "1"
+              OutputArtifacts:
+                - Name: SourceOutput
+              Configuration:
+                S3Bucket: my-bucket
+                S3ObjectKey: source.zip
+        - Name: Deploy
+          Actions:
+            - Name: CfnDeploy
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: "1"
+              InputArtifacts:
+                - Name: SourceOutput
+              Configuration:
+                TemplatePath: WrongArtifact::template.yaml
+                ActionMode: CREATE_UPDATE
+                StackName: my-stack

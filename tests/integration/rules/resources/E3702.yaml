@@ -1,0 +1,68 @@
+# --- cfn-lint-test ---
+# rule: E3702
+# description: CodePipeline artifact count constraints per action type
+# expect:
+#   - rule: E3702
+#     path: /Resources/BadPipeline/Properties/Stages/0/Actions/0/InputArtifacts
+#     message_contains: "maximum is 0"
+#   - rule: E3702
+#     path: /Resources/BadPipelineMissingOutput/Properties/Stages/0/Actions/0/OutputArtifacts
+#     message_contains: "minimum is 1"
+# ---
+Resources:
+  GoodPipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: arn:aws:iam::123456789012:role/PipelineRole
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: S3Source
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Provider: S3
+                Version: "1"
+              OutputArtifacts:
+                - Name: SourceOutput
+              Configuration:
+                S3Bucket: my-bucket
+                S3ObjectKey: source.zip
+
+  BadPipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: arn:aws:iam::123456789012:role/PipelineRole
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: S3Source
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Provider: S3
+                Version: "1"
+              InputArtifacts:
+                - Name: ShouldNotBeHere
+              OutputArtifacts:
+                - Name: SourceOutput
+              Configuration:
+                S3Bucket: my-bucket
+                S3ObjectKey: source.zip
+
+  BadPipelineMissingOutput:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: arn:aws:iam::123456789012:role/PipelineRole
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: S3Source
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Provider: S3
+                Version: "1"
+              Configuration:
+                S3Bucket: my-bucket
+                S3ObjectKey: source.zip

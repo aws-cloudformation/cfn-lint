@@ -1,0 +1,24 @@
+# --- cfn-lint-test ---
+# rule: E3030
+# description: Enum value validation
+# expect:
+#   - rule: E3030
+#     path: /Resources/BadAccessControl/Properties/AccessControl
+#     message_contains: "is not one of"
+#     message_contains_value: "InvalidAccess"
+# ---
+Resources:
+  GoodBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: Private
+
+  GoodBucketRef:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: !Ref "AWS::NoValue"
+
+  BadAccessControl:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: InvalidAccess

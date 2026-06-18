@@ -1,0 +1,65 @@
+# --- cfn-lint-test ---
+# rule: E3705
+# description: SQS FIFO queue EventSourceMapping BatchSize must be at most 10
+# expect:
+#   - rule: E3705
+#     path: /Resources/BadFifoBatchSize/Properties/local/BatchSize
+#     message_contains: "maximum"
+# ---
+Resources:
+  FifoQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: true
+
+  StandardQueue:
+    Type: AWS::SQS::Queue
+
+  GoodFifoBatchSize:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn: !GetAtt FifoQueue.Arn
+      FunctionName: !Ref MyFunction
+      BatchSize: 10
+
+  GoodStandardBatchSize:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn: !GetAtt StandardQueue.Arn
+      FunctionName: !Ref MyFunction
+      BatchSize: 100
+
+  GoodFifoNoBatchSize:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn: !GetAtt FifoQueue.Arn
+      FunctionName: !Ref MyFunction
+
+  BadFifoBatchSize:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn: !GetAtt FifoQueue.Arn
+      FunctionName: !Ref MyFunction
+      BatchSize: 100
+
+  MyFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "Hello"
+      Role: !GetAtt Role.Arn
+
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole

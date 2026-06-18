@@ -1,0 +1,50 @@
+# --- cfn-lint-test ---
+# rule: W3011
+# description: Check resources with UpdateReplacePolicy/DeletionPolicy have both
+# expect:
+#   - rule: W3011
+#     path: /Resources/BadOnlyDeletion
+#     message_contains: "UpdateReplacePolicy"
+#   - rule: W3011
+#     path: /Resources/BadOnlyUpdate
+#     message_contains: "DeletionPolicy"
+# ---
+Resources:
+  GoodBothPolicies:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+
+  GoodNeitherPolicy:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: no-policies-bucket
+
+  GoodDeleteOnly:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+
+  GoodLambdaVersionExcluded:
+    Type: AWS::Lambda::Version
+    DeletionPolicy: Retain
+    Properties:
+      FunctionName: !Ref GoodBothPolicies
+
+  BadOnlyDeletion:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Retain
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+
+  BadOnlyUpdate:
+    Type: AWS::DynamoDB::Table
+    UpdateReplacePolicy: Retain
+    Properties:
+      TableName: my-table
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH

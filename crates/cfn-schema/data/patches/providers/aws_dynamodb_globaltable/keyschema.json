@@ -1,0 +1,95 @@
+[
+ {
+  "op": "test",
+  "path": "/properties/KeySchema/items",
+  "value": {
+   "$ref": "#/definitions/KeySchema"
+  }
+ },
+ {
+  "op": "replace",
+  "path": "/properties/KeySchema",
+  "value": {
+   "$ref": "#/definitions/KeySchema",
+   "maxItems": 2,
+   "minItems": 1
+  }
+ },
+ {
+  "op": "replace",
+  "path": "/definitions/LocalSecondaryIndex/properties/KeySchema",
+  "value": {
+   "$ref": "#/definitions/KeySchema",
+   "maxItems": 2,
+   "minItems": 2
+  }
+ },
+ {
+  "op": "replace",
+  "path": "/definitions/GlobalSecondaryIndex/properties/KeySchema",
+  "value": {
+   "$ref": "#/definitions/KeySchema",
+   "maxItems": 2,
+   "minItems": 1
+  }
+ },
+ {
+  "op": "replace",
+  "path": "/definitions/KeySchema",
+  "value": {
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "AttributeName": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "KeyType": {
+      "enum": [
+       "HASH",
+       "RANGE"
+      ],
+      "type": "string"
+     }
+    },
+    "required": [
+     "KeyType",
+     "AttributeName"
+    ],
+    "type": "object"
+   },
+   "prefixItems": [
+    {
+     "properties": {
+      "KeyType": {
+       "const": "HASH",
+       "type": "string"
+      }
+     },
+     "required": [
+      "KeyType"
+     ],
+     "type": "object"
+    },
+    {
+     "properties": {
+      "KeyType": {
+       "const": "RANGE",
+       "type": "string"
+      }
+     },
+     "required": [
+      "KeyType"
+     ],
+     "type": "object"
+    }
+   ],
+   "type": "array",
+   "uniqueItems": true,
+   "uniqueKeys": [
+    "AttributeName"
+   ]
+  }
+ }
+]

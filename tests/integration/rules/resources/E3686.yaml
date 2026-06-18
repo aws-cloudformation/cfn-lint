@@ -1,0 +1,67 @@
+# --- cfn-lint-test ---
+# rule: E3686
+# description: RDS DB Cluster serverless exclusive properties
+# expect:
+#   - rule: E3686
+#     path: /Resources/BadServerlessWithV2Scaling/Properties/ServerlessV2ScalingConfiguration
+#     message_contains: "not allowed"
+#   - rule: E3686
+#     path: /Resources/BadProvisionedWithScalingConfig/Properties/ScalingConfiguration
+#     message_contains: "not allowed"
+#   - rule: E3686
+#     path: /Resources/BadNoEngineModeWithScaling/Properties/ScalingConfiguration
+#     message_contains: "not allowed"
+# ---
+Resources:
+  GoodServerless:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-mysql
+      EngineMode: serverless
+      MasterUsername: admin
+      MasterUserPassword: secret123
+      ScalingConfiguration:
+        MinCapacity: 2
+        MaxCapacity: 8
+
+  GoodProvisionedWithV2:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-mysql
+      MasterUsername: admin
+      MasterUserPassword: secret123
+      ServerlessV2ScalingConfiguration:
+        MinCapacity: 0.5
+        MaxCapacity: 8
+
+  BadServerlessWithV2Scaling:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-mysql
+      EngineMode: serverless
+      MasterUsername: admin
+      MasterUserPassword: secret123
+      ServerlessV2ScalingConfiguration:
+        MinCapacity: 0.5
+        MaxCapacity: 8
+
+  BadProvisionedWithScalingConfig:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-mysql
+      EngineMode: provisioned
+      MasterUsername: admin
+      MasterUserPassword: secret123
+      ScalingConfiguration:
+        MinCapacity: 2
+        MaxCapacity: 8
+
+  BadNoEngineModeWithScaling:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-mysql
+      MasterUsername: admin
+      MasterUserPassword: secret123
+      ScalingConfiguration:
+        MinCapacity: 2
+        MaxCapacity: 8

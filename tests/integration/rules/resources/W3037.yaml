@@ -1,0 +1,55 @@
+# --- cfn-lint-test ---
+# rule: W3037
+# description: Check IAM Permission configuration
+# expect:
+#   - rule: W3037
+#     path: /Resources/BadPolicy/Properties/PolicyDocument/Statement/0/Action
+#     message_contains: "not a valid action"
+#   - rule: W3037
+#     path: /Resources/BadPolicy/Properties/PolicyDocument/Statement/1/Action
+#     message_contains: "not a valid IAM service"
+# ---
+Resources:
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+
+  GoodPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: GoodPolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:GetObject
+              - s3:PutObject
+            Resource: "*"
+      Roles:
+        - !Ref Role
+
+  BadPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: BadPolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:NotARealAction
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - notaservice:GetSomething
+            Resource: "*"
+      Roles:
+        - !Ref Role

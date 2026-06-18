@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  # E3681: Lambda target type with properties that should be excluded
+  LambdaTargetGroupWithPort:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      TargetType: lambda
+      Port: 80
+      Protocol: HTTP
+      VpcId: vpc-12345678
+
+  # E3683: GENEVE protocol with wrong port (must be 6081)
+  GeneveTargetGroupWrongPort:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      TargetType: instance
+      Protocol: GENEVE
+      Port: 8080
+      VpcId: vpc-12345678
+
+  # E3684: TCP health check protocol with Matcher (not allowed for non-HTTP)
+  TcpHealthCheckWithMatcher:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      TargetType: instance
+      Protocol: TCP
+      Port: 80
+      VpcId: vpc-12345678
+      HealthCheckProtocol: TCP
+      Matcher:
+        HttpCode: "200"

@@ -1,0 +1,77 @@
+{
+ "cfnGather": {
+  "gather": {
+   "authorizer": {
+    "filter": {
+     "type": "AWS::ApiGateway::Authorizer"
+    },
+    "properties": {
+     "Type": "/Type"
+    },
+    "reference": "/AuthorizerId"
+   },
+   "method": {
+    "properties": {
+     "AuthorizationType": "/AuthorizationType"
+    }
+   }
+  },
+  "schema": {
+   "else": {
+    "if": {
+     "properties": {
+      "method": {
+       "properties": {
+        "AuthorizationType": {
+         "const": "COGNITO_USER_POOLS"
+        }
+       }
+      }
+     }
+    },
+    "then": {
+     "properties": {
+      "authorizer": {
+       "properties": {
+        "Type": {
+         "const": "COGNITO_USER_POOLS"
+        }
+       }
+      }
+     }
+    }
+   },
+   "if": {
+    "properties": {
+     "method": {
+      "properties": {
+       "AuthorizationType": {
+        "const": "CUSTOM"
+       }
+      },
+      "required": [
+       "AuthorizationType"
+      ]
+     }
+    },
+    "required": [
+     "method"
+    ]
+   },
+   "then": {
+    "properties": {
+     "authorizer": {
+      "properties": {
+       "Type": {
+        "enum": [
+         "TOKEN",
+         "REQUEST"
+        ]
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

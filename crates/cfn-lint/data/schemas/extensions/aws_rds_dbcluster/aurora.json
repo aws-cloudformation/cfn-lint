@@ -1,0 +1,35 @@
+{
+ "if": {
+  "properties": {
+   "Engine": {
+    "enum": [
+     "aurora-mysql",
+     "aurora-postgresql"
+    ],
+    "type": "string"
+   }
+  },
+  "required": [
+   "Engine"
+  ]
+ },
+ "then": {
+  "properties": {
+   "AllocatedStorage": false,
+   "DBClusterInstanceClass": false,
+   "Iops": false,
+   "PubliclyAccessible": false,
+   "StorageType": {
+    "if": {
+     "type": "string"
+    },
+    "then": {
+     "enum": [
+      "aurora",
+      "aurora-iopt1"
+     ]
+    }
+   }
+  }
+ }
+}

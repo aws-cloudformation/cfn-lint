@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  RestApi1:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: Api1
+
+  RestApi2:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: Api2
+
+  Deployment:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId: !Ref RestApi1
+
+  StageMismatchedRestApi:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: prod
+      RestApiId: !Ref RestApi2
+      DeploymentId: !Ref Deployment

@@ -1,0 +1,31 @@
+name: Integration Tests
+
+on:
+  push:
+    branches: [v2]
+  pull_request:
+    branches: [v2]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Download schemas
+        run: |
+          curl -sL https://github.com/aws-cloudformation/resource-provider-enhanced-schemas/releases/download/latest/schemas-cfn-lint.zip -o /tmp/schemas.zip
+          cd crates/cfn-lint/data/schemas
+          unzip -qo /tmp/schemas.zip
+          cd providers
+          for f in *-*.json; do mv "$f" "$(echo $f | tr '-' '_')" 2>/dev/null; done
+
+      - name: Run integration tests
+        run: cargo test --test integration

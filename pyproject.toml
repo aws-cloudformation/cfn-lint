@@ -1,0 +1,28 @@
+[build-system]
+requires = ["maturin>=1.5,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "cfn-lint"
+version = "2.0.0a1"
+description = "CloudFormation Linter"
+readme = "README.md"
+license = { text = "MIT-0" }
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT No Attribution License (MIT-0)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Rust",
+    "Topic :: Software Development :: Quality Assurance",
+]
+
+[project.scripts]
+cfn-lint = "cfn_lint:main"
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+module-name = "cfn_lint._cfn_lint_rs"
+manifest-path = "crates/cfn-lint-py/Cargo.toml"
+python-source = "python"

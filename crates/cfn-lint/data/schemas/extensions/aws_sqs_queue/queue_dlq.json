@@ -1,0 +1,39 @@
+{
+ "cfnGather": {
+  "gather": {
+   "dlq": {
+    "filter": {
+     "type": "AWS::SQS::Queue"
+    },
+    "properties": {
+     "fifo": {
+      "default": false,
+      "path": "/FifoQueue"
+     }
+    },
+    "reference": "/RedrivePolicy/deadLetterTargetArn"
+   },
+   "sourceQueue": {
+    "properties": {
+     "fifo": {
+      "default": false,
+      "path": "/FifoQueue"
+     }
+    }
+   }
+  },
+  "schema": {
+   "properties": {
+    "sourceQueue": {
+     "properties": {
+      "fifo": {
+       "const": {
+        "$data": "/dlq/fifo"
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

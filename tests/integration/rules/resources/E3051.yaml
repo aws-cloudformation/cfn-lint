@@ -1,0 +1,41 @@
+# --- cfn-lint-test ---
+# rule: E3051
+# description: Validate SSM document Content structure
+# expect:
+#   - rule: E3051
+#     path: /Resources/BadDocument/Properties/Content
+#     message_contains: "schemaVersion"
+# ---
+Resources:
+  GoodDocument:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        schemaVersion: "2.2"
+        description: A valid SSM document
+        mainSteps:
+          - action: aws:runShellScript
+            name: runScript
+            inputs:
+              runCommand:
+                - echo hello
+
+  GoodDocumentWithSub:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content: !Sub '{"schemaVersion":"2.2","description":"test"}'
+
+  BadDocument:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        description: Missing schemaVersion
+        mainSteps:
+          - action: aws:runShellScript
+            name: runScript
+            inputs:
+              runCommand:
+                - echo hello

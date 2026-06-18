@@ -1,0 +1,75 @@
+# --- cfn-lint-test ---
+# rule: E3688
+# description: Validate that to and from ports are both -1 when one is -1
+# expect:
+#   - rule: E3688
+#     path: /Resources/BadToPortMinusOneFromPortMissing/Properties/SecurityGroupIngress/0
+#     message_contains: "is a required property"
+#   - rule: E3688
+#     path: /Resources/BadFromPortMinusOneToPortMissing/Properties/SecurityGroupIngress/0
+#     message_contains: "is a required property"
+#   - rule: E3688
+#     path: /Resources/BadToPortMinusOneFromPortFive/Properties/SecurityGroupIngress/0/FromPort
+#     message_contains: "is not one of"
+#   - rule: E3688
+#     path: /Resources/BadFromPortMinusOneToPortFive/Properties/SecurityGroupIngress/0/ToPort
+#     message_contains: "is not one of"
+# ---
+Resources:
+  GoodBothMinusOne:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Both ports -1
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+
+  GoodIcmpFromMinusOne:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: ICMP protocol number with ports
+      SecurityGroupIngress:
+        - IpProtocol: "1"
+          FromPort: 8
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+
+  BadToPortMinusOneFromPortMissing:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: ToPort is -1 but FromPort missing
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+
+  BadFromPortMinusOneToPortMissing:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: FromPort is -1 but ToPort missing
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: -1
+          CidrIp: 0.0.0.0/0
+
+  BadToPortMinusOneFromPortFive:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: ToPort is -1 but FromPort is 5
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 5
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+
+  BadFromPortMinusOneToPortFive:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: FromPort is -1 but ToPort is 5
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: -1
+          ToPort: 5
+          CidrIp: 0.0.0.0/0

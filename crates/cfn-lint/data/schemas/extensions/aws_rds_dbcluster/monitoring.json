@@ -1,0 +1,41 @@
+{
+ "additionalProperties": true,
+ "description": "If MonitoringRoleArn is specified, also set MonitoringInterval to a value other than 0",
+ "else": {
+  "if": {
+   "properties": {
+    "MonitoringInterval": {
+     "exclusiveMinimum": 0
+    }
+   },
+   "required": [
+    "MonitoringInterval"
+   ],
+   "type": "object"
+  },
+  "then": {
+   "required": [
+    "MonitoringRoleArn"
+   ]
+  }
+ },
+ "if": {
+  "properties": {
+   "MonitoringRoleArn": true
+  },
+  "required": [
+   "MonitoringRoleArn"
+  ],
+  "type": "object"
+ },
+ "then": {
+  "properties": {
+   "MonitoringInterval": {
+    "exclusiveMinimum": 0
+   }
+  },
+  "required": [
+   "MonitoringInterval"
+  ]
+ }
+}

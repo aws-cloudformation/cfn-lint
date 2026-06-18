@@ -1,0 +1,24 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  IsProd:
+    Fn::Equals:
+      - !Ref AWS::Region
+      - us-east-1
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+Outputs:
+  ValidOutput:
+    Value: !Ref Bucket
+    Description: A valid output
+  MissingValue:
+    Description: This output is missing Value
+  OutputWithBadCondition:
+    Condition: NonExistentCondition
+    Value: !Ref Bucket
+  OutputWithInvalidProperty:
+    Value: !Ref Bucket
+    SomeBadProperty: invalid
+  OutputWithValidCondition:
+    Condition: IsProd
+    Value: !Ref Bucket

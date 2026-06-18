@@ -1,0 +1,1309 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "choice": {
+   "$ref": "#/definitions/common",
+   "additionalProperties": false,
+   "allOf": [
+    {
+     "if": {
+      "properties": {
+       "QueryLanguage": {
+        "const": "JSONata"
+       }
+      },
+      "required": [
+       "QueryLanguage"
+      ]
+     },
+     "then": {
+      "properties": {
+       "Choices": {
+        "items": {
+         "$ref": "#/definitions/choice/definitions/JSONataChoice"
+        },
+        "type": "array"
+       }
+      }
+     }
+    },
+    {
+     "if": {
+      "oneOf": [
+       {
+        "properties": {
+         "QueryLanguage": {
+          "const": "JSONPath"
+         }
+        },
+        "required": [
+         "QueryLanguage"
+        ]
+       },
+       {
+        "not": {
+         "required": [
+          "QueryLanguage"
+         ]
+        }
+       }
+      ]
+     },
+     "then": {
+      "properties": {
+       "Choices": {
+        "items": {
+         "$ref": "#/definitions/choice/definitions/Operator",
+         "required": [
+          "Next"
+         ]
+        },
+        "type": "array"
+       }
+      }
+     }
+    }
+   ],
+   "definitions": {
+    "Assign": {
+     "type": "object"
+    },
+    "Condition": {
+     "type": "string"
+    },
+    "JSONataChoice": {
+     "properties": {
+      "Condition": {
+       "type": "string"
+      },
+      "Next": {
+       "pattern": "^.{1,128}$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "Condition",
+      "Next"
+     ],
+     "type": "object"
+    },
+    "Operator": {
+     "properties": {
+      "And": {
+       "items": {
+        "$ref": "#/definitions/choice/definitions/Operator"
+       },
+       "type": "array"
+      },
+      "BooleanEquals": {
+       "type": "boolean"
+      },
+      "BooleanEqualsPath": {
+       "type": "string"
+      },
+      "IsBoolean": {
+       "type": "boolean"
+      },
+      "IsNull": {
+       "type": "boolean"
+      },
+      "IsNumeric": {
+       "type": "boolean"
+      },
+      "IsPresent": {
+       "type": "boolean"
+      },
+      "IsString": {
+       "type": "boolean"
+      },
+      "IsTimestamp": {
+       "type": "boolean"
+      },
+      "Next": {
+       "pattern": "^.{1,128}$",
+       "type": "string"
+      },
+      "Not": {
+       "$ref": "#/definitions/choice/definitions/Operator"
+      },
+      "NumericEquals": {
+       "type": "number"
+      },
+      "NumericEqualsPath": {
+       "type": "string"
+      },
+      "NumericGreaterThan": {
+       "type": "number"
+      },
+      "NumericGreaterThanEquals": {
+       "type": "number"
+      },
+      "NumericGreaterThanEqualsPath": {
+       "type": "string"
+      },
+      "NumericGreaterThanPath": {
+       "type": "string"
+      },
+      "NumericLessThan": {
+       "type": "number"
+      },
+      "NumericLessThanEquals": {
+       "type": "number"
+      },
+      "NumericLessThanEqualsPath": {
+       "type": "string"
+      },
+      "NumericLessThanPath": {
+       "type": "string"
+      },
+      "Or": {
+       "items": {
+        "$ref": "#/definitions/choice/definitions/Operator"
+       },
+       "type": "array"
+      },
+      "StringEquals": {
+       "type": "string"
+      },
+      "StringEqualsPath": {
+       "type": "string"
+      },
+      "StringGreaterThan": {
+       "type": "string"
+      },
+      "StringGreaterThanEquals": {
+       "type": "string"
+      },
+      "StringGreaterThanEqualsPath": {
+       "type": "string"
+      },
+      "StringGreaterThanPath": {
+       "type": "string"
+      },
+      "StringLessThan": {
+       "type": "string"
+      },
+      "StringLessThanEquals": {
+       "type": "string"
+      },
+      "StringLessThanEqualsPath": {
+       "type": "string"
+      },
+      "StringLessThanPath": {
+       "type": "string"
+      },
+      "StringMatches": {
+       "type": "string"
+      },
+      "TimestampEquals": {
+       "type": "string"
+      },
+      "TimestampEqualsPath": {
+       "type": "string"
+      },
+      "TimestampGreaterThan": {
+       "type": "string"
+      },
+      "TimestampGreaterThanEquals": {
+       "type": "string"
+      },
+      "TimestampGreaterThanEqualsPath": {
+       "type": "string"
+      },
+      "TimestampGreaterThanPath": {
+       "type": "string"
+      },
+      "TimestampLessThan": {
+       "type": "string"
+      },
+      "TimestampLessThanEquals": {
+       "type": "string"
+      },
+      "TimestampLessThanEqualsPath": {
+       "type": "string"
+      },
+      "TimestampLessThanPath": {
+       "type": "string"
+      },
+      "Variable": {
+       "pattern": "^\\$",
+       "type": "string"
+      }
+     },
+     "requiredXor": [
+      "And",
+      "BooleanEquals",
+      "BooleanEqualsPath",
+      "IsBoolean",
+      "IsNull",
+      "IsNumeric",
+      "IsPresent",
+      "IsString",
+      "IsTimestamp",
+      "Not",
+      "NumericEquals",
+      "NumericEqualsPath",
+      "NumericGreaterThan",
+      "NumericGreaterThanPath",
+      "NumericGreaterThanEquals",
+      "NumericGreaterThanEqualsPath",
+      "NumericLessThan",
+      "NumericLessThanPath",
+      "NumericLessThanEquals",
+      "NumericLessThanEqualsPath",
+      "Or",
+      "StringEquals",
+      "StringEqualsPath",
+      "StringGreaterThan",
+      "StringGreaterThanPath",
+      "StringGreaterThanEquals",
+      "StringGreaterThanEqualsPath",
+      "StringLessThan",
+      "StringLessThanPath",
+      "StringLessThanEquals",
+      "StringLessThanEqualsPath",
+      "StringMatches",
+      "TimestampEquals",
+      "TimestampEqualsPath",
+      "TimestampGreaterThan",
+      "TimestampGreaterThanPath",
+      "TimestampGreaterThanEquals",
+      "TimestampGreaterThanEqualsPath",
+      "TimestampLessThan",
+      "TimestampLessThanPath",
+      "TimestampLessThanEquals",
+      "TimestampLessThanEqualsPath"
+     ],
+     "type": "object"
+    }
+   },
+   "properties": {
+    "Arguments": {
+     "type": "object"
+    },
+    "Assign": {
+     "type": "object"
+    },
+    "Choices": {
+     "type": "array"
+    },
+    "Comment": {
+     "type": "string"
+    },
+    "Default": {
+     "type": "string"
+    },
+    "End": {
+     "enum": [
+      true
+     ]
+    },
+    "InputPath": {
+     "pattern": "^\\$",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "Next": {
+     "pattern": "^.{1,128}$",
+     "type": "string"
+    },
+    "Output": {
+     "type": [
+      "string",
+      "object"
+     ]
+    },
+    "OutputPath": {
+     "pattern": "^\\$",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "QueryLanguage": {
+     "$ref": "#/definitions/queryLanguage"
+    },
+    "Type": {
+     "enum": [
+      "Choice"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Choices"
+   ],
+   "type": "object"
+  },
+  "common": {
+   "allOf": [
+    {
+     "if": {
+      "properties": {
+       "QueryLanguage": {
+        "const": "JSONata"
+       }
+      },
+      "required": [
+       "QueryLanguage"
+      ]
+     },
+     "then": {
+      "properties": {
+       "InputPath": false,
+       "OutputPath": false,
+       "Parameters": false,
+       "ResultPath": false,
+       "ResultSelector": false
+      }
+     }
+    },
+    {
+     "if": {
+      "oneOf": [
+       {
+        "properties": {
+         "QueryLanguage": {
+          "const": "JSONPath"
+         }
+        },
+        "required": [
+         "QueryLanguage"
+        ]
+       },
+       {
+        "not": {
+         "required": [
+          "QueryLanguage"
+         ]
+        }
+       }
+      ]
+     },
+     "then": {
+      "properties": {
+       "Arguments": false,
+       "Output": false
+      }
+     }
+    }
+   ]
+  },
+  "fail": {
+   "$ref": "#/definitions/common",
+   "additionalProperties": false,
+   "properties": {
+    "Arguments": {
+     "type": "object"
+    },
+    "Cause": {
+     "type": "string"
+    },
+    "CausePath": {
+     "type": "string"
+    },
+    "Comment": {
+     "type": "string"
+    },
+    "Error": {
+     "type": "string"
+    },
+    "ErrorPath": {
+     "type": "string"
+    },
+    "InputPath": {
+     "pattern": "^\\$",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "Output": {
+     "type": [
+      "string",
+      "object"
+     ]
+    },
+    "OutputPath": {
+     "pattern": "^\\$",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "QueryLanguage": {
+     "$ref": "#/definitions/queryLanguage"
+    },
+    "Type": {
+     "enum": [
+      "Fail"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "map": {
+   "$ref": "#/definitions/common",
+   "additionalProperties": false,
+   "allOf": [
+    {
+     "requiredXor": [
+      "Next",
+      "End"
+     ]
+    },
+    {
+     "requiredXor": [
+      "ItemProcessor",
+      "Iterator"
+     ]
+    }
+   ],
+   "properties": {
+    "Arguments": {
+     "type": "object"
+    },
+    "Assign": {
+     "type": "object"
+    },
+    "Catch": {
+     "items": {
+      "properties": {
+       "ErrorEquals": {
+        "items": {
+         "type": "string"
+        },
+        "type": "array"
+       },
+       "Next": {
+        "pattern": "^.{1,128}$",
+        "type": "string"
+       }
+      },
+      "required": [
+       "ErrorEquals",
+       "Next"
+      ],
+      "type": "object"
+     },
+     "type": "array"
+    },
+    "Comment": {
+     "type": "string"
+    },
+    "End": {
+     "enum": [
+      true
+     ]
+    },
+    "InputPath": {
+     "pattern": "^\\$",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "ItemBatcher": {
+     "type": "object"
+    },
+    "ItemProcessor": {
+     "properties": {
+      "Comment": {
+       "type": "string"
+      },
+      "ProcessorConfig": {
+       "properties": {
+        "Mode": {
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "StartAt": {
+       "type": "string"
+      },
+      "States": {
+       "additionalProperties": false,
+       "patternProperties": {
+        "^.{1,128}$": {
+         "$ref": "#/definitions/state"
+        }
+       },
+       "type": "object"
+      },
+      "TimeoutSeconds": {
+       "minimum": 0,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "StartAt",
+      "States"
+     ],
+     "type": "object"
+    },
+    "ItemReader": {
+     "additionalProperties": true,
+     "type": "object"
+    },
+    "ItemSelector": {
+     "additionalProperties": true,
+     "type": "object"
+    },
+    "Items": {
+     "type": [
+      "string",
+      "array"
+     ]
+    },
+    "ItemsPath": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "Iterator": {},
+    "Label": {
+     "type": "string"
+    },
+    "MaxConcurrency": {
+     "minimum": 0,
+     "type": "number"
+    },
+    "MaxConcurrencyPath": {
+     "type": "string"
+    },
+    "Next": {
+     "pattern": "^.{1,128}$",
+     "type": "string"
+    },
+    "Output": {
+     "type": [
+      "string",
+      "object"
+     ]
+    },
+    "OutputPath": {
+     "pattern": "^\\$",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "Parameters": {
+     "type": "object"
+    },
+    "QueryLanguage": {
+     "$ref": "#/definitions/queryLanguage"
+    },
+    "ResultPath": {
+     "pattern": "^\\$",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "ResultSelector": {
+     "type": "object"
+    },
+    "ResultWriter": {
+     "type": "string"
+    },
+    "Retry": {
+     "items": {
+      "properties": {
+       "BackoffRate": {
+        "minimum": 0,
+        "type": "number"
+       },
+       "ErrorEquals": {
+        "items": {
+         "type": "string"
+        },
+        "type": "array"
+       },
+       "IntervalSeconds": {
+        "minimum": 0,
+        "type": "number"
+       },
+       "MaxAttempts": {
+        "minimum": 0,
+        "type": "number"
+       }
+      },
+      "required": [
+       "ErrorEquals"
+      ],
+      "type": "object"
+     },
+     "type": "array"
+    },
+    "ToleratedFailureCount": {
+     "type": "integer"
+    },
+    "ToleratedFailureCountPath": {
+     "type": "string"
+    },
+    "ToleratedFailurePercentage": {
+     "type": "integer"
+    },
+    "ToleratedFailurePercentagePath": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "Map"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "parallel": {
+   "$ref": "#/definitions/common",
+   "additionalProperties": false,
+   "properties": {
+    "Arguments": {
+     "type": "object"
+    },
+    "Assign": {
+     "type": "object"
+    },
+    "Branches": {
+     "items": {
+      "$ref": "#/"
+     },
+     "type": "array"
+    },
+    "Catch": {
+     "items": {
+      "properties": {
+       "ErrorEquals": {
+        "items": {
+         "type": "string"
+        },
+        "type": "array"
+       },
+       "Next": {
+        "pattern": "^.{1,128}$",
+        "type": "string"
+       }
+      },
+      "required": [
+       "ErrorEquals",
+       "Next"
+      ],
+      "type": "object"
+     },
+     "type": "array"
+    },
+    "Comment": {
+     "type": "string"
+    },
+    "End": {
+     "enum": [
+      true
+     ]
+    },
+    "InputPath": {
+     "pattern": "^\\$",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "Next": {
+     "pattern": "^.{1,128}$",
+     "type": "string"
+    },
+    "Output": {
+     "type": [
+      "string",
+      "object"
+     ]
+    },
+    "OutputPath": {
+     "pattern": "^\\$",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "QueryLanguage": {
+     "$ref": "#/definitions/queryLanguage"
+    },
+    "ResultPath": {
+     "pattern": "^\\$",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "ResultSelector": {
+     "type": "object"
+    },
+    "Retry": {
+     "items": {
+      "properties": {
+       "BackoffRate": {
+        "minimum": 0,
+        "type": "number"
+       },
+       "ErrorEquals": {
+        "items": {
+         "type": "string"
+        },
+        "type": "array"
+       },
+       "IntervalSeconds": {
+        "minimum": 0,
+        "type": "number"
+       },
+       "MaxAttempts": {
+        "minimum": 0,
+        "type": "number"
+       }
+      },
+      "required": [
+       "ErrorEquals"
+      ],
+      "type": "object"
+     },
+     "type": "array"
+    },
+    "Type": {
+     "enum": [
+      "Parallel"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Branches"
+   ],
+   "requiredXor": [
+    "Next",
+    "End"
+   ],
+   "type": "object"
+  },
+  "pass": {
+   "$ref": "#/definitions/common",
+   "additionalProperties": false,
+   "properties": {
+    "Arguments": {
+     "type": "object"
+    },
+    "Assign": {
+     "type": "object"
+    },
+    "Comment": {
+     "type": "string"
+    },
+    "End": {
+     "enum": [
+      true
+     ]
+    },
+    "InputPath": {
+     "pattern": "^\\$",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "Next": {
+     "pattern": "^.{1,128}$",
+     "type": "string"
+    },
+    "Output": {
+     "type": [
+      "string",
+      "object"
+     ]
+    },
+    "OutputPath": {
+     "pattern": "^\\$",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "Parameters": {
+     "type": "object"
+    },
+    "QueryLanguage": {
+     "$ref": "#/definitions/queryLanguage"
+    },
+    "Result": {},
+    "ResultPath": {
+     "pattern": "^\\$",
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "Pass"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "requiredXor": [
+    "Next",
+    "End"
+   ],
+   "type": "object"
+  },
+  "queryLanguage": {
+   "default": "JSONPath",
+   "enum": [
+    "JSONPath",
+    "JSONata"
+   ],
+   "type": "string"
+  },
+  "state": {
+   "allOf": [
+    {
+     "if": {
+      "properties": {
+       "Type": {
+        "const": "Choice"
+       }
+      },
+      "required": [
+       "Type"
+      ]
+     },
+     "then": {
+      "$ref": "#/definitions/choice"
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "Type": {
+        "const": "Fail"
+       }
+      },
+      "required": [
+       "Type"
+      ]
+     },
+     "then": {
+      "$ref": "#/definitions/fail"
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "Type": {
+        "const": "Parallel"
+       }
+      },
+      "required": [
+       "Type"
+      ]
+     },
+     "then": {
+      "$ref": "#/definitions/parallel"
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "Type": {
+        "const": "Pass"
+       }
+      },
+      "required": [
+       "Type"
+      ]
+     },
+     "then": {
+      "$ref": "#/definitions/pass"
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "Type": {
+        "const": "Succeed"
+       }
+      },
+      "required": [
+       "Type"
+      ]
+     },
+     "then": {
+      "$ref": "#/definitions/succeed"
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "Type": {
+        "const": "Task"
+       }
+      },
+      "required": [
+       "Type"
+      ]
+     },
+     "then": {
+      "$ref": "#/definitions/task"
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "Type": {
+        "const": "Wait"
+       }
+      },
+      "required": [
+       "Type"
+      ]
+     },
+     "then": {
+      "$ref": "#/definitions/wait"
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "Type": {
+        "const": "Map"
+       }
+      },
+      "required": [
+       "Type"
+      ]
+     },
+     "then": {
+      "$ref": "#/definitions/map"
+     }
+    }
+   ],
+   "properties": {
+    "Comment": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "Pass",
+      "Task",
+      "Wait",
+      "Choice",
+      "Succeed",
+      "Fail",
+      "Parallel",
+      "Map"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "succeed": {
+   "additionalProperties": false,
+   "properties": {
+    "Comment": {
+     "type": "string"
+    },
+    "Output": {},
+    "Type": {
+     "enum": [
+      "Succeed"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "task": {
+   "$ref": "#/definitions/common",
+   "additionalProperties": false,
+   "properties": {
+    "Arguments": {
+     "type": "object"
+    },
+    "Assign": {
+     "type": "object"
+    },
+    "Catch": {
+     "items": {
+      "properties": {
+       "ErrorEquals": {
+        "items": {
+         "type": "string"
+        },
+        "type": "array"
+       },
+       "Next": {
+        "pattern": "^.{1,128}$",
+        "type": "string"
+       }
+      },
+      "required": [
+       "ErrorEquals",
+       "Next"
+      ],
+      "type": "object"
+     },
+     "type": "array"
+    },
+    "Comment": {
+     "type": "string"
+    },
+    "Credentials": {
+     "type": [
+      "string",
+      "object"
+     ]
+    },
+    "End": {
+     "enum": [
+      true
+     ]
+    },
+    "HeartbeatSeconds": {
+     "minimum": 1,
+     "type": "number"
+    },
+    "HeartbeatSecondsPath": {
+     "type": "string"
+    },
+    "InputPath": {
+     "pattern": "^\\$",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "Next": {
+     "pattern": "^.{1,128}$",
+     "type": "string"
+    },
+    "Output": {
+     "type": [
+      "string",
+      "object"
+     ]
+    },
+    "OutputPath": {
+     "pattern": "^\\$",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "Parameters": {
+     "type": "object"
+    },
+    "QueryLanguage": {
+     "$ref": "#/definitions/queryLanguage"
+    },
+    "Resource": {
+     "pattern": "^arn:aws:([a-z]|-)+:([a-z]|[0-9]|-)*:[0-9]*:([a-z]|-)+:[a-zA-Z0-9-_.]+(:(\\$LATEST|[a-zA-Z0-9-_\\.]+))?$",
+     "type": [
+      "string"
+     ]
+    },
+    "ResultPath": {
+     "pattern": "^\\$",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "ResultSelector": {
+     "type": "object"
+    },
+    "Retry": {
+     "items": {
+      "properties": {
+       "BackoffRate": {
+        "minimum": 0,
+        "type": "number"
+       },
+       "ErrorEquals": {
+        "items": {
+         "type": "string"
+        },
+        "type": "array"
+       },
+       "IntervalSeconds": {
+        "minimum": 0,
+        "type": "number"
+       },
+       "MaxAttempts": {
+        "minimum": 0,
+        "type": "number"
+       }
+      },
+      "required": [
+       "ErrorEquals"
+      ],
+      "type": "object"
+     },
+     "type": "array"
+    },
+    "TimeoutSeconds": {
+     "minimum": 1,
+     "type": "number"
+    },
+    "TimeoutSecondsPath": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "Task"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Resource"
+   ],
+   "requiredXor": [
+    "Next",
+    "End"
+   ],
+   "type": "object"
+  },
+  "wait": {
+   "$ref": "#/definitions/common",
+   "additionalProperties": false,
+   "properties": {
+    "Arguments": {
+     "type": "object"
+    },
+    "Assign": {
+     "type": "object"
+    },
+    "Comment": {
+     "type": "string"
+    },
+    "End": {
+     "enum": [
+      true
+     ]
+    },
+    "InputPath": {
+     "pattern": "^\\$",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "Next": {
+     "pattern": "^.{1,128}$",
+     "type": "string"
+    },
+    "Output": {
+     "type": [
+      "string",
+      "object"
+     ]
+    },
+    "OutputPath": {
+     "pattern": "^\\$",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "QueryLanguage": {
+     "$ref": "#/definitions/queryLanguage"
+    },
+    "Seconds": {
+     "maximum": 99999999,
+     "minimum": 0,
+     "type": "number"
+    },
+    "SecondsPath": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "Timestamp": {
+     "type": "string"
+    },
+    "TimestampPath": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "Type": {
+     "enum": [
+      "Wait"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "requiredXor": [
+    "Next",
+    "End"
+   ],
+   "type": "object"
+  }
+ },
+ "properties": {
+  "Comment": {
+   "type": "string"
+  },
+  "QueryLanguage": {
+   "$ref": "#/definitions/queryLanguage"
+  },
+  "StartAt": {
+   "type": "string"
+  },
+  "States": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.{1,80}$": {
+     "$ref": "#/definitions/state"
+    }
+   },
+   "type": "object"
+  },
+  "TimeoutSeconds": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Version": {
+   "type": "string"
+  }
+ },
+ "required": [
+  "StartAt",
+  "States"
+ ],
+ "type": "object"
+}

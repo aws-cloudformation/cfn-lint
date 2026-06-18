@@ -1,0 +1,15 @@
+# --- cfn-lint-test ---
+# rule: E1029
+# description: Escaped variable patterns with ${! } should not trigger E1029
+# expect: []
+# ---
+Resources:
+  GoodEscapedVariable:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "${!literal}"
+
+  GoodSubWithEscape:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "${AWS::Region}-${!literal}-queue"

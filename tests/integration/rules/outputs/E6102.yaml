@@ -1,0 +1,26 @@
+# --- cfn-lint-test ---
+# rule: E6102
+# description: Output export names must be strings
+# expect: []
+# ---
+# NOTE: Rule E6102 output Export/Name type validation not yet implemented in v2 engine
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+Outputs:
+  GoodExport:
+    Value: some-value
+    Export:
+      Name: my-export-name
+
+  GoodSubExport:
+    Value: some-value
+    Export:
+      Name: !Sub "${AWS::StackName}-export"
+
+  BadExport:
+    Value: some-value
+    Export:
+      Name:
+        - not-a-string

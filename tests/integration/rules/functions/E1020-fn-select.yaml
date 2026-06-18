@@ -1,0 +1,27 @@
+# --- cfn-lint-test ---
+# rule: E1020
+# description: Ref inside Fn::Select is validated by E1020
+# expect:
+#   - rule: E1020
+#     path: /
+#     message_contains: "MissingParam"
+# ---
+Parameters:
+  Index:
+    Type: Number
+Resources:
+  GoodSelectWithRef:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Select
+        - 0
+        - - queue-a
+          - queue-b
+
+  BadRefInsideSelect:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Select
+        - 0
+        - - !Ref MissingParam
+          - fallback

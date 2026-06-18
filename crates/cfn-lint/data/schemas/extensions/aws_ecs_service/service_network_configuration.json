@@ -1,0 +1,49 @@
+{
+ "cfnGather": {
+  "gather": {
+   "service": {
+    "properties": {
+     "NetworkConfiguration": "/NetworkConfiguration"
+    }
+   },
+   "taskDef": {
+    "filter": {
+     "type": "AWS::ECS::TaskDefinition"
+    },
+    "properties": {
+     "NetworkMode": "/NetworkMode"
+    },
+    "reference": "/TaskDefinition"
+   }
+  },
+  "schema": {
+   "if": {
+    "properties": {
+     "taskDef": {
+      "properties": {
+       "NetworkMode": {
+        "const": "awsvpc",
+        "type": "string"
+       }
+      },
+      "required": [
+       "NetworkMode"
+      ]
+     }
+    },
+    "required": [
+     "taskDef"
+    ]
+   },
+   "then": {
+    "properties": {
+     "service": {
+      "required": [
+       "NetworkConfiguration"
+      ]
+     }
+    }
+   }
+  }
+ }
+}

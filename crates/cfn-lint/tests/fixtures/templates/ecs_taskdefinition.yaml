@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  # E3047: Fargate task with invalid CPU/Memory combination
+  # CPU 256 only allows Memory of 512, 1024, or 2048
+  BadCpuMemoryTask:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      NetworkMode: awsvpc
+      Cpu: "256"
+      Memory: "4096"
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          Essential: true

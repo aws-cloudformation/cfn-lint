@@ -1,0 +1,26 @@
+# --- cfn-lint-test ---
+# rule: W1028
+# description: Fn::If where one branch can never be reached due to resource-level condition
+# expect:
+#   - rule: W1028
+#     path: /
+#     message_contains: "not reachable"
+# ---
+Parameters:
+  Env:
+    Type: String
+Conditions:
+  IsProd:
+    Fn::Equals:
+      - !Ref Env
+      - prod
+Resources:
+  UnreachableBranch:
+    Type: AWS::SQS::Queue
+    Condition: IsProd
+    Properties:
+      QueueName:
+        Fn::If:
+          - IsProd
+          - prod-queue
+          - this-branch-is-unreachable

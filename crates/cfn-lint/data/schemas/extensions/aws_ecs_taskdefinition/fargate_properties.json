@@ -1,0 +1,134 @@
+{
+ "if": {
+  "properties": {
+   "RequiresCompatibilities": {
+    "contains": {
+     "enum": [
+      "FARGATE"
+     ],
+     "type": "string"
+    },
+    "type": "array"
+   }
+  },
+  "required": [
+   "RequiresCompatibilities"
+  ]
+ },
+ "then": {
+  "allOf": [
+   {
+    "if": {
+     "properties": {
+      "NetworkMode": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "NetworkMode"
+     ]
+    },
+    "required": [
+     "NetworkMode"
+    ],
+    "then": {
+     "properties": {
+      "NetworkMode": {
+       "enum": [
+        "awsvpc"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "NetworkMode"
+     ]
+    }
+   },
+   {
+    "properties": {
+     "ContainerDefinitions": {
+      "items": {
+       "properties": {
+        "LogConfiguration": {
+         "if": {
+          "properties": {
+           "LogDriver": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "LogDriver"
+          ]
+         },
+         "then": {
+          "properties": {
+           "LogDriver": {
+            "enum": [
+             "awslogs",
+             "splunk",
+             "awsfirelens"
+            ]
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   {
+    "if": {
+     "properties": {
+      "Cpu": {
+       "type": [
+        "string",
+        "integer"
+       ]
+      }
+     },
+     "required": [
+      "Cpu"
+     ]
+    },
+    "not": {
+     "required": [
+      "PlacementConstraints"
+     ]
+    },
+    "required": [
+     "Cpu",
+     "Memory"
+    ],
+    "then": {
+     "properties": {
+      "Cpu": {
+       "else": {
+        "pattern": "^(\\.25|\\.5|1|2|4|8|16)\\s*(?i)vCpu$"
+       },
+       "if": {
+        "pattern": "^\\d+$",
+        "type": [
+         "integer",
+         "string"
+        ]
+       },
+       "then": {
+        "enum": [
+         "256",
+         "512",
+         "1024",
+         "2048",
+         "4096",
+         "8192",
+         "16384"
+        ]
+       }
+      }
+     }
+    }
+   }
+  ]
+ }
+}

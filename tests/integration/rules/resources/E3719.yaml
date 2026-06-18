@@ -1,0 +1,61 @@
+# --- cfn-lint-test ---
+# rule: E3719
+# description: RDS BackupRetentionPeriod validation
+# expect:
+#   - rule: E3719
+#     path: /Resources/BadExceedsMax/Properties/BackupRetentionPeriod
+#     message_contains: "35"
+#   - rule: E3719
+#     path: /Resources/BadWithClusterIdentifier/Properties/BackupRetentionPeriod
+#     message_contains: "not allowed"
+# ---
+Resources:
+  GoodInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: postgres
+      DBInstanceClass: db.t3.micro
+      MasterUsername: admin
+      MasterUserPassword: secret123
+      BackupRetentionPeriod: 7
+
+  GoodInstanceMax:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: postgres
+      DBInstanceClass: db.t3.micro
+      MasterUsername: admin
+      MasterUserPassword: secret123
+      BackupRetentionPeriod: 35
+
+  GoodReplica:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: postgres
+      DBInstanceClass: db.t3.micro
+      SourceDBInstanceIdentifier: source-db
+
+  GoodNoBackup:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: postgres
+      DBInstanceClass: db.t3.micro
+      MasterUsername: admin
+      MasterUserPassword: secret123
+
+  BadExceedsMax:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: postgres
+      DBInstanceClass: db.t3.micro
+      MasterUsername: admin
+      MasterUserPassword: secret123
+      BackupRetentionPeriod: 36
+
+  BadWithClusterIdentifier:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: aurora-mysql
+      DBInstanceClass: db.r5.large
+      DBClusterIdentifier: my-cluster
+      BackupRetentionPeriod: 14

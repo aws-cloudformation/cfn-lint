@@ -1,0 +1,22 @@
+# --- cfn-lint-test ---
+# rule: W8001
+# description: Condition used in Fn::If should not trigger W8001
+# expect: []
+# ---
+Parameters:
+  Env:
+    Type: String
+Conditions:
+  IsProd:
+    Fn::Equals:
+      - !Ref Env
+      - prod
+Resources:
+  MyQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName:
+        Fn::If:
+          - IsProd
+          - prod-queue
+          - dev-queue

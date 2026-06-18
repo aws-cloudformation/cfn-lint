@@ -1,0 +1,56 @@
+# --- cfn-lint-test ---
+# rule: W1011
+# description: Use dynamic references over parameters for secrets
+# expect:
+#   - rule: W1011
+#     path: /Resources/BadRdsPassword/Properties/MasterUserPassword
+#     message_contains: "dynamic references"
+#   - rule: W1011
+#     path: /Resources/BadRedshiftPassword/Properties/MasterUserPassword
+#     message_contains: "dynamic references"
+#   - rule: W1011
+#     path: /Resources/BadElastiCacheAuth/Properties/AuthToken
+#     message_contains: "dynamic references"
+# ---
+Parameters:
+  MyPassword:
+    Type: String
+    NoEcho: true
+
+Resources:
+  GoodDynamicReference:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      MasterUsername: admin
+      MasterUserPassword: "{{resolve:secretsmanager:my-secret:SecretString:password}}"
+
+  GoodNoRef:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-mysql
+      MasterUsername: admin
+      MasterUserPassword: "{{resolve:secretsmanager:cluster-secret}}"
+
+  BadRdsPassword:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      MasterUsername: admin
+      MasterUserPassword: !Ref MyPassword
+
+  BadRedshiftPassword:
+    Type: AWS::Redshift::Cluster
+    Properties:
+      NodeType: dc2.large
+      ClusterType: single-node
+      MasterUsername: admin
+      MasterUserPassword: !Ref MyPassword
+
+  BadElastiCacheAuth:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: test
+      AuthToken: !Ref MyPassword

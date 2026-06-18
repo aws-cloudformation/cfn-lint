@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  MyFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: my-function
+      Runtime: java21
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Handler: com.example.Handler
+      Code:
+        ZipFile: |
+          public class Handler {
+            public String handleRequest() {
+              return "Hello";
+            }
+          }

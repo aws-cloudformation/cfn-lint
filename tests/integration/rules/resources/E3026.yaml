@@ -1,0 +1,74 @@
+# --- cfn-lint-test ---
+# rule: E3026
+# description: ElastiCache Redis cluster failover settings
+# expect:
+#   - rule: E3026
+#     path: /Resources/BadRedis/Properties/AutomaticFailoverEnabled
+#     message_contains: "AutomaticFailoverEnabled"
+#   - rule: E3026
+#     path: /Resources/BadRedisNoClusters/Properties/NumCacheClusters
+#     message_contains: "NumCacheClusters"
+# ---
+Resources:
+  GoodParamGroup:
+    Type: AWS::ElastiCache::ParameterGroup
+    Properties:
+      Description: Good cluster PG
+      CacheParameterGroupFamily: redis3.2
+      Properties:
+        cluster-enabled: "yes"
+
+  GoodRedis:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: Good cluster
+      CacheParameterGroupName: !Ref GoodParamGroup
+      AutomaticFailoverEnabled: true
+      NumCacheClusters: 2
+
+  NonClusterPG:
+    Type: AWS::ElastiCache::ParameterGroup
+    Properties:
+      Description: Non-cluster PG
+      CacheParameterGroupFamily: redis3.2
+      Properties:
+        cluster-enabled: "no"
+
+  GoodNonCluster:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: Non-cluster ok
+      CacheParameterGroupName: !Ref NonClusterPG
+      AutomaticFailoverEnabled: false
+
+  BadClusterPG:
+    Type: AWS::ElastiCache::ParameterGroup
+    Properties:
+      Description: Bad cluster PG
+      CacheParameterGroupFamily: redis3.2
+      Properties:
+        cluster-enabled: "yes"
+
+  BadRedis:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: Bad cluster failover
+      CacheParameterGroupName: !Ref BadClusterPG
+      AutomaticFailoverEnabled: false
+      NumCacheClusters: 2
+
+  BadClusterPG2:
+    Type: AWS::ElastiCache::ParameterGroup
+    Properties:
+      Description: Bad cluster PG2
+      CacheParameterGroupFamily: redis3.2
+      Properties:
+        cluster-enabled: "yes"
+
+  BadRedisNoClusters:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: Bad cluster no nodes
+      CacheParameterGroupName: !Ref BadClusterPG2
+      AutomaticFailoverEnabled: true
+      NumCacheClusters: 1

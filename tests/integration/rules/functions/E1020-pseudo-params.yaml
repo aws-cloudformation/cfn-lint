@@ -1,0 +1,35 @@
+# --- cfn-lint-test ---
+# rule: E1020
+# description: All pseudo-parameters are valid Ref targets
+# expect: []
+# ---
+Resources:
+  AccountId:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Ref AWS::AccountId
+
+  Partition:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Ref AWS::Partition
+
+  Region:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Ref AWS::Region
+
+  StackId:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Ref AWS::StackId
+
+  StackName:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Ref AWS::StackName
+
+  URLSuffix:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Ref AWS::URLSuffix

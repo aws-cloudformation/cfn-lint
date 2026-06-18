@@ -1,0 +1,25 @@
+# --- cfn-lint-test ---
+# rule: E3058
+# description: At least one required property must exist
+# expect:
+#   - rule: E3058
+#     path: /Resources/BadNoProperties/Properties
+#     message_contains: "is a required property"
+# ---
+Resources:
+  GoodWithProperties:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "rate(1 hour)"
+      State: ENABLED
+
+  GoodWithOtherRequired:
+    Type: AWS::Events::Rule
+    Properties:
+      EventPattern:
+        source:
+          - aws.ec2
+      State: ENABLED
+
+  BadNoProperties:
+    Type: AWS::Events::Rule

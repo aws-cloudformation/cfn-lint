@@ -1,0 +1,24 @@
+# --- cfn-lint-test ---
+# rule: E3722
+# description: Globals section requires SAM transform
+# expect:
+#   - rule: E3722
+#     path: /Globals
+#     message_contains: "serverless transform"
+# ---
+Globals:
+  Function:
+    Timeout: 30
+
+Resources:
+  MyFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: my-function
+      Runtime: python3.9
+      Handler: index.handler
+      Role: arn:aws:iam::123456789012:role/LambdaRole
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "hello"

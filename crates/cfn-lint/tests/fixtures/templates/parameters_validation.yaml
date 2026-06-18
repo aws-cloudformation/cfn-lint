@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  UsedParam:
+    Type: String
+    Default: hello
+  UnusedParam:
+    Type: String
+    Default: unused
+  BadDefaultAllowedValues:
+    Type: String
+    Default: invalid
+    AllowedValues:
+      - prod
+      - staging
+      - dev
+  BadDefaultPattern:
+    Type: String
+    Default: UPPER123
+    AllowedPattern: "[a-z]+"
+  BadDefaultMinValue:
+    Type: Number
+    Default: 0
+    MinValue: 5
+  BadDefaultMaxValue:
+    Type: Number
+    Default: 100
+    MaxValue: 50
+  BadDefaultMinLength:
+    Type: String
+    Default: ab
+    MinLength: 5
+  BadDefaultMaxLength:
+    Type: String
+    Default: this-is-a-very-long-string
+    MaxLength: 5
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref UsedParam

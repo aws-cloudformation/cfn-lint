@@ -1,0 +1,36 @@
+# --- cfn-lint-test ---
+# rule: E5001
+# description: Module resources cannot use CreationPolicy, UpdatePolicy, or Tags
+# expect:
+#   - rule: E5001
+#     path: /Resources/BadModule/CreationPolicy
+#     message_contains: "CreationPolicy"
+#   - rule: E5001
+#     path: /Resources/BadModule/UpdatePolicy
+#     message_contains: "UpdatePolicy"
+#   - rule: E5001
+#     path: /Resources/ModuleWithTags/Properties/Tags
+#     message_contains: "Tags"
+# ---
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  GoodModule:
+    Type: My::Testing::MODULE
+    Properties:
+      Param1: value1
+
+  BadModule:
+    Type: My::Testing::MODULE
+    CreationPolicy:
+      ResourceSignal:
+        Count: 1
+    UpdatePolicy:
+      AutoScalingRollingUpdate:
+        MinInstancesInService: 1
+
+  ModuleWithTags:
+    Type: Another::Test::MODULE
+    Properties:
+      Tags:
+        - Key: Name
+          Value: test

@@ -1,0 +1,51 @@
+# --- cfn-lint-test ---
+# rule: W3699
+# description: ReplicaMode is ignored for non-Oracle/Db2 engines
+# expect:
+#   - rule: W3699
+#     path: /Resources/BadMysqlReplica/Properties
+#     message_contains: "ReplicaMode"
+#   - rule: W3699
+#     path: /Resources/BadPostgresReplica/Properties
+#     message_contains: "ReplicaMode"
+# ---
+Resources:
+  GoodOracleReplica:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.m5.large
+      Engine: oracle-ee
+      ReplicaMode: open-read-only
+      SourceDBInstanceIdentifier: my-primary
+
+  GoodDb2Replica:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.m5.large
+      Engine: db2-ae
+      ReplicaMode: open-read-only
+      SourceDBInstanceIdentifier: my-primary
+
+  GoodNoReplicaMode:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      MasterUsername: admin
+      MasterUserPassword: "{{resolve:secretsmanager:my-secret}}"
+
+  BadMysqlReplica:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      ReplicaMode: open-read-only
+      SourceDBInstanceIdentifier: my-primary
+
+  BadPostgresReplica:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: postgres
+      ReplicaMode: open-read-only
+      SourceDBInstanceIdentifier: my-primary

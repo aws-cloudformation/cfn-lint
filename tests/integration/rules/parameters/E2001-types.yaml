@@ -1,0 +1,24 @@
+# --- cfn-lint-test ---
+# rule: E2001
+# description: Parameter Type must be valid
+# expect:
+#   - rule: E2001
+#     path: /Parameters/MissingType
+#     message_contains: "required"
+# ---
+Parameters:
+  GoodString:
+    Type: String
+
+  GoodNumber:
+    Type: Number
+
+  GoodAWSType:
+    Type: AWS::EC2::VPC::Id
+
+  MissingType:
+    Default: no-type-specified
+
+Resources:
+  Placeholder:
+    Type: AWS::CloudFormation::WaitConditionHandle

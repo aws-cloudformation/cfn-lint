@@ -1,0 +1,33 @@
+# --- cfn-lint-test ---
+# rule: W1054
+# description: Pseudo-parameter string found without Ref
+# expect:
+#   - rule: W1054
+#     path: /Resources/BadRawRegion/Properties/BucketName
+#     message_contains: "AWS::Region"
+#   - rule: W1054
+#     path: /Resources/BadRawAccountId/Properties/Tags/0/Value
+#     message_contains: "AWS::AccountId"
+# ---
+Resources:
+  GoodRefRegion:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref AWS::Region
+
+  GoodSubRegion:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${AWS::Region}-bucket"
+
+  BadRawRegion:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: AWS::Region
+
+  BadRawAccountId:
+    Type: AWS::S3::Bucket
+    Properties:
+      Tags:
+        - Key: Account
+          Value: AWS::AccountId

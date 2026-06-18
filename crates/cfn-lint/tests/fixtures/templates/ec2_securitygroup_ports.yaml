@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  ValidSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Valid security group with proper port configuration
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  InvalidMissingPorts:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Invalid - tcp without FromPort/ToPort
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+
+  InvalidAllTrafficWithPorts:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Invalid - protocol -1 with port numbers
+      SecurityGroupIngress:
+        - IpProtocol: "-1"
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0

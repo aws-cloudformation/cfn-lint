@@ -1,0 +1,147 @@
+# --- cfn-lint-test ---
+# rule: W3664
+# description: Lambda permission Principal should match SourceArn resource type
+# expect:
+#   - rule: W3664
+#     path: /Resources/BadS3BucketWithSnsPrincipal/Properties/permission/principal
+#     message_contains: "does not match const"
+# ---
+# NOTE: Rule W3664 in v2 only detects the S3 Bucket/SNS mismatch case via cross-resource
+# resolution. LogGroup and IoT cases are not yet resolved.
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+
+  Topic:
+    Type: AWS::SNS::Topic
+
+  Rule:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "rate(1 hour)"
+
+  Api:
+    Type: AWS::ApiGateway::RestApi
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+
+  ConfigRule:
+    Type: AWS::Config::ConfigRule
+    Properties:
+      Source:
+        Owner: AWS
+        SourceIdentifier: S3_BUCKET_VERSIONING_ENABLED
+
+  UserPool:
+    Type: AWS::Cognito::UserPool
+
+  TopicRule:
+    Type: AWS::IoT::TopicRule
+    Properties:
+      TopicRulePayload:
+        Sql: "SELECT * FROM 'topic'"
+        Actions:
+          - Lambda:
+              FunctionArn: !GetAtt MyFunction.Arn
+
+  GoodS3BucketWithS3Principal:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+      SourceArn: !GetAtt Bucket.Arn
+
+  GoodSnsTopicWithSnsPrincipal:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: sns.amazonaws.com
+      SourceArn: !Ref Topic
+
+  GoodEventsRuleWithEventsPrincipal:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt Rule.Arn
+
+  GoodApiGatewayWithApiPrincipal:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Ref Api
+
+  GoodLogGroupWithLogsPrincipal:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: logs.amazonaws.com
+      SourceArn: !GetAtt LogGroup.Arn
+
+  GoodLogGroupWithRegionalLogsPrincipal:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: logs.eu-west-1.amazonaws.com
+      SourceArn: !GetAtt LogGroup.Arn
+
+  GoodNoSourceArn:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+
+  BadS3BucketWithSnsPrincipal:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: sns.amazonaws.com
+      SourceArn: !GetAtt Bucket.Arn
+
+  BadLogGroupWithS3Principal:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+      SourceArn: !GetAtt LogGroup.Arn
+
+  BadIotWithS3Principal:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+      SourceArn: !GetAtt TopicRule.Arn
+
+  MyFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "Hello"
+      Role: !GetAtt Role.Arn
+
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole

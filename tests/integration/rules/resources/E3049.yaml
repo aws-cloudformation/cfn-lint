@@ -1,0 +1,58 @@
+# --- cfn-lint-test ---
+# rule: E3049
+# description: ECS awsvpc HostPort must equal ContainerPort (cross-resource)
+# expect:
+#   - rule: E3049
+#     path: /Resources/BadTaskDef/Properties/ContainerDefinitions/0/PortMappings/0/HostPort
+#     message_contains: "HostPort"
+# ---
+Resources:
+  GoodTaskDef:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      NetworkMode: awsvpc
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          PortMappings:
+            - ContainerPort: 8080
+              HostPort: 8080
+
+  GoodService:
+    Type: AWS::ECS::Service
+    Properties:
+      TaskDefinition: !Ref GoodTaskDef
+      LaunchType: FARGATE
+
+  BadTaskDef:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      NetworkMode: awsvpc
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          PortMappings:
+            - ContainerPort: 8080
+              HostPort: 0
+
+  BadService:
+    Type: AWS::ECS::Service
+    Properties:
+      TaskDefinition: !Ref BadTaskDef
+      LaunchType: FARGATE
+
+  BridgeTaskDef:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      NetworkMode: bridge
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          PortMappings:
+            - ContainerPort: 8080
+              HostPort: 0
+
+  BridgeService:
+    Type: AWS::ECS::Service
+    Properties:
+      TaskDefinition: !Ref BridgeTaskDef

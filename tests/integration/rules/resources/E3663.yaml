@@ -1,0 +1,71 @@
+# --- cfn-lint-test ---
+# rule: E3663
+# description: Lambda environment variable names must not use reserved names
+# expect:
+#   - rule: E3663
+#     path: /Resources/BadReservedAwsRegion/Properties/Environment/Variables/AWS_REGION
+#     message_contains: "not match the schema"
+#   - rule: E3663
+#     path: /Resources/BadMultipleReserved/Properties/Environment/Variables/AWS_REGION
+#     message_contains: "not match the schema"
+#   - rule: E3663
+#     path: /Resources/BadMultipleReserved/Properties/Environment/Variables/AWS_ACCESS_KEY
+#     message_contains: "not match the schema"
+# ---
+Resources:
+  GoodFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "Hello"
+      Role: !GetAtt Role.Arn
+      Environment:
+        Variables:
+          MY_VAR: "value"
+          ANOTHER_VAR: "value2"
+
+  BadReservedAwsRegion:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "Hello"
+      Role: !GetAtt Role.Arn
+      Environment:
+        Variables:
+          AWS_REGION: "us-east-1"
+
+  BadMultipleReserved:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "Hello"
+      Role: !GetAtt Role.Arn
+      Environment:
+        Variables:
+          MY_VAR: "value"
+          AWS_REGION: "us-east-1"
+          OTHER_VAR: "value2"
+          AWS_ACCESS_KEY: "key"
+
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole

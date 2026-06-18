@@ -1,0 +1,26 @@
+# --- cfn-lint-test ---
+# rule: W8001
+# description: Conditions that are defined but never referenced should produce a warning
+# expect:
+#   - rule: W8001
+#     path: /Conditions/UnusedCondition
+#     message_contains: "not used"
+# ---
+Parameters:
+  Env:
+    Type: String
+Conditions:
+  IsProd:
+    Fn::Equals:
+      - !Ref Env
+      - prod
+  UnusedCondition:
+    Fn::Equals:
+      - !Ref Env
+      - staging
+Resources:
+  ProdBucket:
+    Type: AWS::S3::Bucket
+    Condition: IsProd
+    Properties:
+      BucketName: prod-bucket

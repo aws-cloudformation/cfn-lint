@@ -1,0 +1,34 @@
+# --- cfn-lint-test ---
+# rule: E3028
+# description: Resource Metadata section must be an object or array with no null values
+# expect: []
+# ---
+# NOTE: Rule E3028 resource metadata null validation not yet implemented in v2 engine
+Resources:
+  GoodMetadata:
+    Type: AWS::S3::Bucket
+    Metadata:
+      CustomKey: some-value
+      NestedObject:
+        Key: value
+    Properties:
+      BucketName: good-metadata
+
+  GoodMetadataInit:
+    Type: AWS::EC2::Instance
+    Metadata:
+      AWS::CloudFormation::Init:
+        config:
+          packages:
+            yum:
+              httpd: []
+    Properties:
+      ImageId: ami-12345678
+      InstanceType: t2.micro
+
+  BadMetadataNull:
+    Type: AWS::S3::Bucket
+    Metadata:
+      NullValue: null
+    Properties:
+      BucketName: bad-metadata

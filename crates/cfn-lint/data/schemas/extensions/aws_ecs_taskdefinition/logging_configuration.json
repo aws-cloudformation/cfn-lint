@@ -1,0 +1,46 @@
+{
+ "description": "When 'awslogs' the options 'awslogs-group' and 'awslogs-region' are required",
+ "if": {
+  "properties": {
+   "LogDriver": {
+    "const": "awslogs"
+   }
+  },
+  "required": [
+   "LogDriver"
+  ],
+  "type": "object"
+ },
+ "then": {
+  "properties": {
+   "Options": {
+    "properties": {
+     "awslogs-group": {
+      "format": "AWS::Logs::LogGroup.Name",
+      "type": "string"
+     }
+    },
+    "propertyNames": {
+     "enum": [
+      "awslogs-create-group",
+      "awslogs-datetime-format",
+      "awslogs-group",
+      "awslogs-multiline-pattern",
+      "awslogs-region",
+      "awslogs-stream-prefix",
+      "max-buffer-size",
+      "mode"
+     ]
+    },
+    "required": [
+     "awslogs-group",
+     "awslogs-region"
+    ],
+    "type": "object"
+   }
+  },
+  "required": [
+   "Options"
+  ]
+ }
+}

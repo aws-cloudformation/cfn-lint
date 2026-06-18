@@ -1,0 +1,104 @@
+{
+ "$id": "resource",
+ "additionalProperties": false,
+ "definitions": {
+  "Resource": {
+   "cfnLint": [
+    "AWS::IAM::Policy/Properties/PolicyDocument/Statement/Resource"
+   ],
+   "items": {
+    "cfnLint": [
+     "AWS::IAM::Policy/Properties/PolicyDocument/Statement/Resource"
+    ],
+    "type": "string"
+   },
+   "type": [
+    "string",
+    "array"
+   ]
+  },
+  "Statement": {
+   "additionalProperties": false,
+   "allOf": [
+    {
+     "requiredXor": [
+      "Action",
+      "NotAction"
+     ]
+    },
+    {
+     "requiredXor": [
+      "Resource",
+      "NotResource"
+     ]
+    },
+    {
+     "requiredXor": [
+      "Principal",
+      "NotPrincipal"
+     ]
+    },
+    {
+     "required": [
+      "Effect"
+     ]
+    }
+   ],
+   "properties": {
+    "Action": {
+     "$ref": "policy#/definitions/Action"
+    },
+    "Condition": {
+     "$ref": "policy#/definitions/Condition"
+    },
+    "Effect": {
+     "$ref": "policy#/definitions/Statement/properties/Effect"
+    },
+    "NotAction": {
+     "$ref": "policy#/definitions/Action"
+    },
+    "NotPrincipal": {
+     "$ref": "policy#/definitions/Principal"
+    },
+    "NotResource": {
+     "$ref": "policy#/definitions/Resource"
+    },
+    "Principal": {
+     "$ref": "policy#/definitions/Principal"
+    },
+    "Resource": {
+     "$ref": "#/definitions/Resource"
+    },
+    "Sid": {
+     "$ref": "policy#/definitions/Statement/properties/Sid"
+    }
+   }
+  }
+ },
+ "properties": {
+  "Id": {
+   "$ref": "policy#/properties/Id"
+  },
+  "Statement": {
+   "$ref": "#/definitions/Statement",
+   "items": {
+    "$ref": "#/definitions/Statement",
+    "type": "object"
+   },
+   "type": [
+    "object",
+    "array"
+   ],
+   "uniqueKeys": [
+    "Sid"
+   ]
+  },
+  "Version": {
+   "$ref": "policy#/properties/Version"
+  }
+ },
+ "required": [
+  "Statement"
+ ],
+ "type": "object"
+}

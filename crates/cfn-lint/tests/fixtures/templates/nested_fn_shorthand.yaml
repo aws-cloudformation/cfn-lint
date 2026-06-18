@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  Env:
+    Type: String
+    Default: dev
+Conditions:
+  IsProd:
+    !Equals
+      - !Ref Env
+      - prod
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${Env}-bucket'
+      Tags:
+        - Key: Environment
+          Value: !If
+            - IsProd
+            - production
+            - development

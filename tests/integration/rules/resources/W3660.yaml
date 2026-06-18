@@ -1,0 +1,39 @@
+# --- cfn-lint-test ---
+# rule: W3660
+# description: Validate if multiple resources are modifying a Rest API definition
+# expect:
+#   - rule: W3660
+#     path: /Resources/BadApiWithBody/Properties/Body
+#     message_contains: "drift"
+# ---
+Resources:
+  GoodApiNoBody:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: GoodApi
+
+  GoodMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref GoodApiNoBody
+      HttpMethod: GET
+      AuthorizationType: NONE
+      ResourceId: !GetAtt GoodApiNoBody.RootResourceId
+
+  BadApiWithBody:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: BadApi
+      Body:
+        swagger: "2.0"
+        info:
+          title: BadApi
+        paths: {}
+
+  BadChildMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref BadApiWithBody
+      HttpMethod: POST
+      AuthorizationType: NONE
+      ResourceId: !GetAtt BadApiWithBody.RootResourceId

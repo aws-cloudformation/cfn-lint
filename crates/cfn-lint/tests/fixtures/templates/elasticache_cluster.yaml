@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  # E3647: Invalid CacheNodeType (not in regional enum)
+  # E3695: Invalid Engine and EngineVersion combination
+  CacheClusterBadNodeAndVersion:
+    Type: AWS::ElastiCache::CacheCluster
+    Properties:
+      Engine: redis
+      EngineVersion: "99.99"
+      CacheNodeType: cache.t1.fake
+      NumCacheNodes: 1
+
+  # E3695: Invalid engine value
+  CacheClusterBadEngine:
+    Type: AWS::ElastiCache::CacheCluster
+    Properties:
+      Engine: invalid-engine
+      CacheNodeType: cache.m5.large
+      NumCacheNodes: 1
+
+  # E3704: Valkey engine requires TransitEncryptionEnabled
+  ReplicationGroupValkeyNoTransit:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: Valkey without transit encryption
+      Engine: valkey
+      EngineVersion: "7.2"
+      CacheNodeType: cache.m5.large

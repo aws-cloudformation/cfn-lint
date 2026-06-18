@@ -1,0 +1,31 @@
+# --- cfn-lint-test ---
+# rule: E6004
+# description: Outputs do not allow additional properties
+# expect:
+#   - rule: E6004
+#     path: /Outputs/BadOutput
+#     message_contains: "Additional properties are not allowed"
+#     message_contains_value: "ExtraProperty"
+# ---
+Parameters:
+  Env:
+    Type: String
+    Default: prod
+
+Outputs:
+  GoodOutput:
+    Value: !Ref Env
+    Description: A good output
+
+  GoodExport:
+    Value: !Ref Env
+    Export:
+      Name: my-export
+
+  BadOutput:
+    Value: !Ref Env
+    ExtraProperty: not-allowed
+
+Resources:
+  Placeholder:
+    Type: AWS::CloudFormation::WaitConditionHandle

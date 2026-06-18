@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  # W3664: Principal doesn't match the SourceArn resource type
+  # S3 bucket SourceArn should use s3.amazonaws.com as principal
+  PermissionWrongPrincipal:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt MyBucket.Arn
+
+  # W3663: S3 bucket SourceArn without SourceAccount
+  PermissionNoSourceAccount:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+      SourceArn: !GetAtt MyBucket.Arn
+
+  MyFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: my-function
+      Runtime: python3.12
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "Hello"
+
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-bucket

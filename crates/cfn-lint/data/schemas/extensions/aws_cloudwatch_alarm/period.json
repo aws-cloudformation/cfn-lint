@@ -1,0 +1,37 @@
+{
+ "additionalProperties": true,
+ "description": "The period, in seconds, over which the statistic is applied. This is required for an alarm based on a metric. Valid values are 10, 30, 60, and any multiple of 60.",
+ "if": {
+  "properties": {
+   "Period": {
+    "type": [
+     "integer",
+     "string"
+    ]
+   }
+  },
+  "required": [
+   "Period"
+  ],
+  "type": "object"
+ },
+ "then": {
+  "properties": {
+   "Period": {
+    "else": {
+     "multipleOf": 60
+    },
+    "if": {
+     "maximum": 60
+    },
+    "then": {
+     "enum": [
+      10,
+      30,
+      60
+     ]
+    }
+   }
+  }
+ }
+}

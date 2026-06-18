@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  # E3044: FARGATE launch type with DAEMON scheduling (should be REPLICA)
+  FargateServiceBadScheduling:
+    Type: AWS::ECS::Service
+    Properties:
+      LaunchType: FARGATE
+      SchedulingStrategy: DAEMON
+      TaskDefinition: !Ref FargateTaskDef
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          Subnets:
+            - subnet-12345
+
+  # E3044: CODE_DEPLOY deployment controller with DAEMON scheduling
+  CodeDeployServiceBadScheduling:
+    Type: AWS::ECS::Service
+    Properties:
+      DeploymentController:
+        Type: CODE_DEPLOY
+      SchedulingStrategy: DAEMON
+      TaskDefinition: !Ref FargateTaskDef
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          Subnets:
+            - subnet-12345
+
+  # E3052: Task def uses awsvpc but service missing NetworkConfiguration
+  ServiceMissingNetworkConfig:
+    Type: AWS::ECS::Service
+    Properties:
+      TaskDefinition: !Ref AwsvpcTaskDef
+
+  # E3054: FARGATE service with task def that doesn't have FARGATE compatibility
+  FargateServiceNoCompat:
+    Type: AWS::ECS::Service
+    Properties:
+      LaunchType: FARGATE
+      TaskDefinition: !Ref Ec2OnlyTaskDef
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          Subnets:
+            - subnet-12345
+
+  # Task definition with awsvpc mode (referenced by ServiceMissingNetworkConfig)
+  AwsvpcTaskDef:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      NetworkMode: awsvpc
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          Essential: true
+
+  # Task definition for Fargate (referenced by FargateServiceBadScheduling)
+  FargateTaskDef:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      NetworkMode: awsvpc
+      Cpu: "256"
+      Memory: "512"
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          Essential: true
+
+  # Task definition that is EC2-only (referenced by FargateServiceNoCompat)
+  Ec2OnlyTaskDef:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - EC2
+      NetworkMode: bridge
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          Essential: true

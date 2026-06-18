@@ -1,0 +1,18 @@
+# --- cfn-lint-test ---
+# rule: W3696
+# description: Resource type from sunsetting service
+# expect:
+#   - rule: W3696
+#     path: /Resources/BadSunsetResource/Type
+#     message_contains: "sunsetting"
+# ---
+Resources:
+  GoodCurrentService:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-bucket
+
+  BadSunsetResource:
+    Type: AWS::WAFRegional::IPSet
+    Properties:
+      Name: my-ip-set

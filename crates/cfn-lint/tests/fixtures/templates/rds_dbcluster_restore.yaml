@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  # W3688: When restoring from snapshot, MasterUsername is ignored
+  ClusterFromSnapshot:
+    Type: AWS::RDS::DBCluster
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Engine: aurora-mysql
+      SnapshotIdentifier: arn:aws:rds:us-east-1:123456789012:cluster-snapshot:my-snapshot
+      MasterUsername: admin
+      BackupRetentionPeriod: 7
+
+  # W3689: When using source DB, MasterUserPassword/MasterUsername/StorageEncrypted are ignored
+  ClusterFromSource:
+    Type: AWS::RDS::DBCluster
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Engine: aurora-mysql
+      SourceDBClusterIdentifier: arn:aws:rds:us-east-1:123456789012:cluster:source-cluster
+      MasterUsername: admin
+      MasterUserPassword: !Ref AWS::NoValue
+      StorageEncrypted: true
+      BackupRetentionPeriod: 7
+
+  # W3693: Aurora serverless should not have PerformanceInsights properties
+  AuroraServerlessWithPerfInsights:
+    Type: AWS::RDS::DBCluster
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Engine: aurora-mysql
+      EngineMode: serverless
+      MasterUsername: admin
+      MasterUserPassword: !Ref AWS::NoValue
+      BackupRetentionPeriod: 7
+      PerformanceInsightsEnabled: true
+      PerformanceInsightsKmsKeyId: arn:aws:kms:us-east-1:123456789012:key/my-key
+      PerformanceInsightsRetentionPeriod: 7

@@ -1,0 +1,28 @@
+[package]
+name = "cfn-schema"
+version = "0.1.0"
+edition = "2021"
+license = "MIT-0"
+
+[dependencies]
+dirs = { workspace = true }
+indexmap = { workspace = true }
+json_patch = { package = "json-patch", version = "4" }
+regex = "1"
+serde_json = { workspace = true }
+ureq = { version = "3", optional = true }
+zip = { version = "2", default-features = false, features = ["deflate"], optional = true }
+flate2 = { version = "1", optional = true }
+tar = { version = "0.4", optional = true }
+
+[features]
+default = []
+fetch = ["ureq", "zip"]
+bundled = ["flate2", "tar"]
+
+[dev-dependencies]
+tempfile = { workspace = true }
+
+[[bin]]
+name = "patch-schemas"
+path = "src/bin/patch_schemas.rs"

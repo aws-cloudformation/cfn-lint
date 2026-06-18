@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  Environment:
+    Type: String
+    Default: prod
+    AllowedValues:
+      - prod
+      - dev
+Mappings:
+  RegionMap:
+    us-east-1:
+      AMI: ami-12345678
+      Size: t2.micro
+    us-west-2:
+      AMI: ami-87654321
+      Size: t2.small
+  EnvMap:
+    prod:
+      LogLevel: ERROR
+    dev:
+      LogLevel: DEBUG
+Resources:
+  ValidInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !FindInMap
+        - RegionMap
+        - us-east-1
+        - AMI
+      InstanceType: !FindInMap
+        - RegionMap
+        - us-east-1
+        - Size
+  BadMapName:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !FindInMap
+        - NonExistentMap
+        - us-east-1
+        - AMI
+  BadFirstKey:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !FindInMap
+        - RegionMap
+        - ap-southeast-1
+        - AMI
+  BadSecondKey:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !FindInMap
+        - RegionMap
+        - us-east-1
+        - BadAttr

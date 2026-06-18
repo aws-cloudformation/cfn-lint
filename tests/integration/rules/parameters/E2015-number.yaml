@@ -1,0 +1,31 @@
+# --- cfn-lint-test ---
+# rule: E2015
+# description: Number parameter Default must satisfy MinValue and MaxValue constraints
+# expect:
+#   - rule: E2015
+#     path: /Parameters/BadMinValue/Default
+#     message_contains: "equal to or higher than MinValue"
+#   - rule: E2015
+#     path: /Parameters/BadMaxValue/Default
+#     message_contains: "less than or equal to MaxValue"
+# ---
+Parameters:
+  GoodNumber:
+    Type: Number
+    Default: 50
+    MinValue: 0
+    MaxValue: 100
+
+  BadMinValue:
+    Type: Number
+    Default: -5
+    MinValue: 0
+
+  BadMaxValue:
+    Type: Number
+    Default: 200
+    MaxValue: 100
+
+Resources:
+  Placeholder:
+    Type: AWS::CloudFormation::WaitConditionHandle

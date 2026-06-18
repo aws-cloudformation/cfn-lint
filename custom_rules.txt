@@ -1,0 +1,8 @@
+# Example DSL custom rules for cfn-lint v2
+# Format: <ResourceType> <PropertyPath> <Operator> [Value] [WARN|ERROR] ["message"]
+
+# All EC2 instances must use t3 family
+AWS::EC2::Instance InstanceType REGEX_MATCH ^t3\. ERROR "Instance type must be t3 family"
+
+# S3 buckets must have encryption
+AWS::S3::Bucket BucketEncryption IS_DEFINED WARN "S3 bucket should have encryption enabled"

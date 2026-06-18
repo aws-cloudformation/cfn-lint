@@ -1,0 +1,69 @@
+# --- cfn-lint-test ---
+# rule: E3044
+# description: ECS Fargate/External services can only use REPLICA scheduling strategy
+# expect:
+#   - rule: E3044
+#     path: /Resources/BadFargateDaemon/Properties/SchedulingStrategy
+#     message_contains: "does not match const"
+#   - rule: E3044
+#     path: /Resources/BadExternalCodeDeployDaemon/Properties/SchedulingStrategy
+#     message_contains: "does not match const"
+# ---
+Resources:
+  GoodFargateDefault:
+    Type: AWS::ECS::Service
+    Properties:
+      LaunchType: FARGATE
+      TaskDefinition: !Ref TaskDef
+
+  GoodFargateReplica:
+    Type: AWS::ECS::Service
+    Properties:
+      LaunchType: FARGATE
+      SchedulingStrategy: REPLICA
+      TaskDefinition: !Ref TaskDef
+
+  GoodExternalDaemon:
+    Type: AWS::ECS::Service
+    Properties:
+      LaunchType: EXTERNAL
+      SchedulingStrategy: DAEMON
+      TaskDefinition: !Ref TaskDef
+
+  GoodExternalDaemonEcs:
+    Type: AWS::ECS::Service
+    Properties:
+      LaunchType: EXTERNAL
+      SchedulingStrategy: DAEMON
+      DeploymentController:
+        Type: ECS
+      TaskDefinition: !Ref TaskDef
+
+  BadFargateDaemon:
+    Type: AWS::ECS::Service
+    Properties:
+      LaunchType: FARGATE
+      SchedulingStrategy: DAEMON
+      TaskDefinition: !Ref TaskDef
+
+  BadExternalCodeDeployDaemon:
+    Type: AWS::ECS::Service
+    Properties:
+      LaunchType: EXTERNAL
+      SchedulingStrategy: DAEMON
+      DeploymentController:
+        Type: CODE_DEPLOY
+      TaskDefinition: !Ref TaskDef
+
+  TaskDef:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "256"
+      Memory: "512"
+      NetworkMode: awsvpc
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          Essential: true

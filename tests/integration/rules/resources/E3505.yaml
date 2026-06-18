@@ -1,0 +1,96 @@
+# --- cfn-lint-test ---
+# rule: E3505
+# description: SQS VisibilityTimeout must be >= Lambda function Timeout
+# expect:
+#   - rule: E3505
+#     path: /Resources/BadMapping/Properties/queue/VisibilityTimeout
+#     message_contains: "less than the minimum"
+#   - rule: E3505
+#     path: /Resources/BadDefaultMapping/Properties/queue/VisibilityTimeout
+#     message_contains: "less than the minimum"
+# ---
+Resources:
+  GoodQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 300
+
+  GoodFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "Hello"
+      Role: !GetAtt Role.Arn
+      Timeout: 100
+
+  GoodMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn: !GetAtt GoodQueue.Arn
+      FunctionName: !Ref GoodFunction
+
+  BadQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 300
+
+  BadFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "Hello"
+      Role: !GetAtt Role.Arn
+      Timeout: 600
+
+  BadMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn: !GetAtt BadQueue.Arn
+      FunctionName: !Ref BadFunction
+
+  BadDefaultQueue:
+    Type: AWS::SQS::Queue
+
+  BadDefaultFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "Hello"
+      Role: !GetAtt Role.Arn
+      Timeout: 100
+
+  BadDefaultMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn: !GetAtt BadDefaultQueue.Arn
+      FunctionName: !Ref BadDefaultFunction
+
+  GoodHardcodedArnMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn: "arn:aws:sqs:us-east-1:123456789012:my-queue"
+      FunctionName: !Ref BadFunction
+      BatchSize: 10
+
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole

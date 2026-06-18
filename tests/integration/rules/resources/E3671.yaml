@@ -1,0 +1,72 @@
+# --- cfn-lint-test ---
+# rule: E3671
+# description: Validate EBS block device mapping Iops requirements
+# expect:
+#   - rule: E3671
+#     path: /Resources/BadIo1WithoutIops/Properties/BlockDeviceMappings/0/Ebs
+#     message_contains: "is a required property"
+#   - rule: E3671
+#     path: /Resources/BadGp3IopsTooHigh/Properties/BlockDeviceMappings/0/Ebs/Iops
+#     message_contains: "greater than the maximum"
+#   - rule: E3671
+#     path: /Resources/BadIo1IopsTooLow/Properties/BlockDeviceMappings/0/Ebs/Iops
+#     message_contains: "less than the minimum"
+# ---
+Resources:
+  GoodGp3WithIops:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeType: gp3
+            Iops: 3000
+
+  GoodIo1WithIops:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeType: io1
+            Iops: 3000
+
+  GoodStandardNoIops:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeType: standard
+
+  BadIo1WithoutIops:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeType: io1
+
+  BadGp3IopsTooHigh:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeType: gp3
+            Iops: 64000
+
+  BadIo1IopsTooLow:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeType: io1
+            Iops: 50

@@ -1,0 +1,49 @@
+[
+ {
+  "op": "add",
+  "path": "/allOf",
+  "value": [
+   {
+    "if": {
+     "properties": {
+      "LocalSecondaryIndexes": {
+       "minItems": 1,
+       "type": "array"
+      }
+     },
+     "required": [
+      "LocalSecondaryIndexes"
+     ],
+     "type": "object"
+    },
+    "then": {
+     "properties": {
+      "AttributeDefinitions": {
+       "minItems": 2
+      },
+      "KeySchema": {
+       "minItems": 2
+      }
+     },
+     "type": "object"
+    }
+   }
+  ]
+ },
+ {
+  "op": "add",
+  "path": "/definitions/SSESpecification/dependentRequired",
+  "value": {
+   "KMSMasterKeyId": [
+    "SSEType"
+   ]
+  }
+ },
+ {
+  "op": "add",
+  "path": "/definitions/SSESpecification/properties/SSEType/enum",
+  "value": [
+   "KMS"
+  ]
+ }
+]

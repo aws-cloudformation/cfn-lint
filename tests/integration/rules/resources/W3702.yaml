@@ -1,0 +1,32 @@
+# --- cfn-lint-test ---
+# rule: W3702
+# description: awslayer ARN format may not be available
+# expect:
+#   - rule: W3702
+#     path: /Resources/BadAwsLayer/Properties/Layers/0
+#     message_contains: "awslayer"
+# ---
+Resources:
+  GoodNormalLayer:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: good-func
+      Runtime: python3.12
+      Handler: index.handler
+      Code:
+        S3Bucket: my-bucket
+        S3Key: code.zip
+      Layers:
+        - arn:aws:lambda:us-east-1:123456789012:layer:my-layer:1
+
+  BadAwsLayer:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: bad-func
+      Runtime: python3.12
+      Handler: index.handler
+      Code:
+        S3Bucket: my-bucket
+        S3Key: code.zip
+      Layers:
+        - arn:aws:lambda:::awslayer:AWSLambda-Python312

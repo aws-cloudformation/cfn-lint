@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  UsedCondition:
+    Fn::Equals:
+      - !Ref AWS::Region
+      - us-east-1
+  UnusedCondition:
+    Fn::Equals:
+      - a
+      - b
+  ConditionBadEquals:
+    Fn::Equals:
+      - a
+      - b
+      - c
+  ConditionBadNot:
+    Fn::Not:
+      - Fn::Equals:
+          - a
+          - b
+      - Fn::Equals:
+          - c
+          - d
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+    Condition: UsedCondition

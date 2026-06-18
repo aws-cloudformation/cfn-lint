@@ -1,0 +1,21 @@
+# --- cfn-lint-test ---
+# rule: E1050
+# description: Validate dynamic reference structure
+# expect:
+#   - rule: E1050
+#     path: /Resources/BadService/Properties/Name
+#     message_contains: "not one of"
+# ---
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  GoodResource:
+    Type: AWS::CloudFormation::WaitConditionHandle
+    Metadata:
+      Password: "{{resolve:ssm-secure:/my/secret}}"
+      Param: "{{resolve:ssm:/my/param:1}}"
+      Secret: "{{resolve:secretsmanager:my-secret}}"
+
+  BadService:
+    Type: AWS::CloudFormation::WaitConditionHandle
+    Properties:
+      Name: "{{resolve:invalid-service:something}}"

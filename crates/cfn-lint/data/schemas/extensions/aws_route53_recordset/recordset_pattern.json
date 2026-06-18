@@ -1,0 +1,281 @@
+{
+ "allOf": [
+  {
+   "if": {
+    "properties": {
+     "Type": {
+      "const": "A"
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "ResourceRecords": {
+      "items": {
+       "$ref": "#/definitions/ARecord"
+      }
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "Type": {
+      "const": "AAAA"
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "ResourceRecords": {
+      "items": {
+       "$ref": "#/definitions/AAAARecord"
+      }
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "Type": {
+      "const": "CAA"
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "ResourceRecords": {
+      "items": {
+       "$ref": "#/definitions/CAARecord"
+      }
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "Type": {
+      "const": "CNAME"
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "ResourceRecords": {
+      "items": {
+       "$ref": "#/definitions/CNAMERecord"
+      },
+      "maxItems": 1
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "Type": {
+      "const": "DS"
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "ResourceRecords": {
+      "items": {
+       "$ref": "#/definitions/DSRecord"
+      }
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "Type": {
+      "const": "MX"
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "ResourceRecords": {
+      "items": {
+       "$ref": "#/definitions/MXRecord"
+      }
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "Type": {
+      "const": "NAPTR"
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "ResourceRecords": {
+      "items": {
+       "$ref": "#/definitions/NAPTRRecord"
+      }
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "Type": {
+      "const": "NS"
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "ResourceRecords": {
+      "items": {
+       "$ref": "#/definitions/NSRecord"
+      }
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "Type": {
+      "const": "PTR"
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "ResourceRecords": {
+      "items": {
+       "$ref": "#/definitions/PTRRecord"
+      }
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "Type": {
+      "const": "SOA"
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "ResourceRecords": {
+      "items": {
+       "$ref": "#/definitions/SOARecord"
+      },
+      "maxItems": 1
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "Type": {
+      "const": "SPF"
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "ResourceRecords": {
+      "items": {
+       "$ref": "#/definitions/SPFRecord"
+      }
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "Type": {
+      "const": "SRV"
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "ResourceRecords": {
+      "items": {
+       "$ref": "#/definitions/SRVRecord"
+      }
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "Type": {
+      "const": "TXT"
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "ResourceRecords": {
+      "items": {
+       "$ref": "#/definitions/TXTRecord"
+      }
+     }
+    }
+   }
+  }
+ ],
+ "definitions": {
+  "AAAARecord": {
+   "format": "ipv6"
+  },
+  "ARecord": {
+   "format": "ipv4"
+  },
+  "CAARecord": {
+   "pattern": "^(0|128)\\s([a-zA-Z0-9]+)\\s(\".+\")$"
+  },
+  "CNAMERecord": {
+   "anyOf": [
+    {
+     "$ref": "#/definitions/DomainName"
+    },
+    {
+     "pattern": "^.*\\.acm-validations\\.aws\\.?$"
+    }
+   ]
+  },
+  "DSRecord": {},
+  "DomainName": {
+   "pattern": "^[a-zA-Z0-9\\!\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,-\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~\\.]+$"
+  },
+  "MXRecord": {
+   "pattern": "^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{1-3}|65[0-4][0-9]{1-2}|655[0-2][0-9]|6553[0-5])\\s[a-zA-Z0-9\\!\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,-\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~\\.]+$"
+  },
+  "NAPTRRecord": {},
+  "NSRecord": {
+   "$ref": "#/definitions/DomainName"
+  },
+  "PTRRecord": {
+   "$ref": "#/definitions/DomainName"
+  },
+  "SOARecord": {},
+  "SPFRecord": {},
+  "SRVRecord": {},
+  "TXTRecord": {
+   "pattern": "^(\"[^\"]{1,255}\" *)*\"[^\"]{1,255}\"$"
+  }
+ }
+}

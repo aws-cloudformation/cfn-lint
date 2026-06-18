@@ -1,0 +1,33 @@
+# --- cfn-lint-test ---
+# rule: E3009
+# description: CloudFormation Init configuration validation
+# expect: []
+# ---
+# NOTE: Rule E3009 CloudFormation::Init validation not yet implemented in v2 engine
+Resources:
+  GoodInit:
+    Type: AWS::EC2::Instance
+    Metadata:
+      AWS::CloudFormation::Init:
+        config:
+          packages:
+            yum:
+              httpd: []
+          files:
+            /tmp/test.txt:
+              content: hello
+              mode: "000644"
+              owner: root
+              group: root
+    Properties:
+      ImageId: ami-12345678
+      InstanceType: t2.micro
+
+  BadInitInvalidKey:
+    Type: AWS::EC2::Instance
+    Metadata:
+      AWS::CloudFormation::Init:
+        invalid_section: this-is-wrong
+    Properties:
+      ImageId: ami-12345678
+      InstanceType: t2.micro

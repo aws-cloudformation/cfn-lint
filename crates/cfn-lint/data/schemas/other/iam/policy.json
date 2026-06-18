@@ -1,0 +1,318 @@
+{
+ "$id": "policy",
+ "additionalProperties": false,
+ "definitions": {
+  "Action": {
+   "cfnLint": [
+    "AWS::IAM::Policy/Properties/PolicyDocument/Statement/Action"
+   ],
+   "items": {
+    "type": "string"
+   },
+   "minItems": 1,
+   "type": [
+    "string",
+    "array"
+   ]
+  },
+  "AwsArn": {
+   "pattern": "^(arn:(aws[A-Za-z\\-]*?|\\*):[^:]+:[^:]*(:(?:\\d{12}|\\*|aws)?:.+|)|\\*)$"
+  },
+  "AwsPrincipalArn": {
+   "anyOf": [
+    {
+     "const": "*"
+    },
+    {
+     "pattern": "^\\d{12}$"
+    },
+    {
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov):iam::\\d{12}:(?:root|user|group|role)"
+    },
+    {
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov):sts::\\d{12}:assumed-role"
+    },
+    {
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov):iam::cloudfront:user/.+$"
+    }
+   ]
+  },
+  "Boolean": {
+   "enum": [
+    "true",
+    "false",
+    true,
+    false
+   ]
+  },
+  "Booleans": {
+   "if": {
+    "type": [
+     "string",
+     "boolean"
+    ]
+   },
+   "items": {
+    "$ref": "#/definitions/Boolean",
+    "type": [
+     "string",
+     "boolean"
+    ]
+   },
+   "then": {
+    "$ref": "#/definitions/Boolean"
+   },
+   "type": [
+    "string",
+    "array",
+    "boolean"
+   ]
+  },
+  "Condition": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^(ForAnyValue:|ForAllValues:)?(Not)?IpAddress(Exists)?(IfExists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "^(ForAnyValue:|ForAllValues:)?Arn(Not)?Equals(Exists)?(IfExists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "^(ForAnyValue:|ForAllValues:)?Arn(Not)?Like(Exists)?(IfExists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "^(ForAnyValue:|ForAllValues:)?Bool(IfExists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "^(ForAnyValue:|ForAllValues:)?Date(Less|Greater)Than(Equals)?(IfExists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "^(ForAnyValue:|ForAllValues:)?Date(Not)?Equals(IfExists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "^(ForAnyValue:|ForAllValues:)?Null(IfExists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "^(ForAnyValue:|ForAllValues:)?Numeric(Less|Greater)Than(Equals)?(Exists)?(IfExists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "^(ForAnyValue:|ForAllValues:)?Numeric(Not)?Equals(Exists)?(IfExists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "^(ForAnyValue:|ForAllValues:)?String(Not)?Equals(IgnoreCase)?(Exists)?(IfExists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "^(ForAnyValue:|ForAllValues:)?String(Not)?Like(Exists)?(IfExists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    }
+   },
+   "properties": {
+    "BinaryEquals": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "Bool": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "Null": {
+     "additionalProperties": {
+      "$ref": "#/definitions/Booleans"
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "ConditionSetValue": {
+   "additionalProperties": {
+    "items": {
+     "type": "string"
+    },
+    "type": "array"
+   },
+   "type": "object"
+  },
+  "ConditionValue": {
+   "additionalProperties": {
+    "items": {
+     "type": "string"
+    },
+    "type": [
+     "boolean",
+     "number",
+     "string",
+     "array"
+    ]
+   },
+   "type": "object"
+  },
+  "Principal": {
+   "if": {
+    "type": "string"
+   },
+   "properties": {
+    "AWS": {
+     "$ref": "#/definitions/AwsPrincipalArn",
+     "items": {
+      "$ref": "#/definitions/AwsPrincipalArn",
+      "type": "string"
+     },
+     "type": [
+      "string",
+      "array"
+     ]
+    },
+    "CanonicalUser": {
+     "items": {
+      "type": "string"
+     },
+     "type": [
+      "string",
+      "array"
+     ]
+    },
+    "Federated": {
+     "items": {
+      "type": "string"
+     },
+     "type": [
+      "string",
+      "array"
+     ]
+    },
+    "Service": {
+     "items": {
+      "type": "string"
+     },
+     "type": [
+      "string",
+      "array"
+     ]
+    }
+   },
+   "then": {
+    "$ref": "#/definitions/Wildcard"
+   },
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Resource": {
+   "$ref": "#/definitions/AwsArn",
+   "items": {
+    "$ref": "#/definitions/AwsArn",
+    "type": "string"
+   },
+   "type": [
+    "string",
+    "array"
+   ]
+  },
+  "Statement": {
+   "additionalProperties": false,
+   "allOf": [
+    {
+     "oneOf": [
+      {
+       "required": [
+        "Action"
+       ]
+      },
+      {
+       "required": [
+        "NotAction"
+       ]
+      }
+     ]
+    },
+    {
+     "oneOf": [
+      {
+       "required": [
+        "Resource"
+       ]
+      },
+      {
+       "required": [
+        "NotResource"
+       ]
+      }
+     ]
+    }
+   ],
+   "cfnLint": [
+    "AWS::IAM::Policy/Properties/PolicyDocument/Statement"
+   ],
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/Action"
+    },
+    "Condition": {
+     "$ref": "#/definitions/Condition"
+    },
+    "Effect": {
+     "enum": [
+      "Allow",
+      "Deny"
+     ],
+     "type": "string"
+    },
+    "NotAction": {
+     "$ref": "#/definitions/Action"
+    },
+    "NotPrincipal": {
+     "$ref": "#/definitions/Principal"
+    },
+    "NotResource": {
+     "$ref": "#/definitions/Resource"
+    },
+    "Principal": {
+     "$ref": "#/definitions/Principal"
+    },
+    "Resource": {
+     "$ref": "#/definitions/Resource"
+    },
+    "Sid": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Effect"
+   ]
+  },
+  "Wildcard": {
+   "const": "*"
+  }
+ },
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "Statement": {
+   "$ref": "#/definitions/Statement",
+   "items": {
+    "$ref": "#/definitions/Statement",
+    "type": "object"
+   },
+   "type": [
+    "object",
+    "array"
+   ]
+  },
+  "Version": {
+   "cfnLint": [
+    "AWS::IAM::Policy/Properties/PolicyDocument/Version"
+   ],
+   "enum": [
+    "2008-10-17",
+    "2012-10-17"
+   ],
+   "type": [
+    "string"
+   ]
+  }
+ },
+ "required": [
+  "Statement"
+ ],
+ "type": "object"
+}

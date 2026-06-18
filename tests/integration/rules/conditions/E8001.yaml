@@ -1,0 +1,18 @@
+# --- cfn-lint-test ---
+# rule: E8001
+# description: Conditions must use valid condition functions
+# expect:
+#   - rule: E8001
+#     path: /Conditions/BadConditionString
+#     message_contains: "type"
+# ---
+Conditions:
+  GoodCondition:
+    Fn::Equals:
+      - !Ref AWS::Region
+      - us-east-1
+  BadConditionString: "this-is-not-valid"
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+    Condition: GoodCondition

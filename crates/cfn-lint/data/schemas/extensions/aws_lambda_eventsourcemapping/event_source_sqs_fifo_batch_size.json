@@ -1,0 +1,55 @@
+{
+ "cfnGather": {
+  "gather": {
+   "local": {
+    "properties": {
+     "BatchSize": {
+      "path": "/BatchSize"
+     }
+    }
+   },
+   "queue": {
+    "filter": {
+     "type": "AWS::SQS::Queue"
+    },
+    "properties": {
+     "FifoQueue": {
+      "default": false,
+      "path": "/FifoQueue"
+     }
+    },
+    "reference": "/EventSourceArn"
+   }
+  },
+  "schema": {
+   "if": {
+    "properties": {
+     "queue": {
+      "properties": {
+       "FifoQueue": {
+        "const": true
+       }
+      },
+      "required": [
+       "FifoQueue"
+      ]
+     }
+    },
+    "required": [
+     "queue"
+    ]
+   },
+   "then": {
+    "properties": {
+     "local": {
+      "properties": {
+       "BatchSize": {
+        "maximum": 10
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,28 @@
+# --- cfn-lint-test ---
+# rule: W2531
+# description: Check if EOL Lambda Function Runtimes are used
+# expect:
+#   - rule: W2531
+#     path: /Resources/BadEolRuntime/Properties/Runtime
+#     message_contains: "deprecated"
+# ---
+Resources:
+  GoodCurrentRuntime:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: good-func
+      Runtime: python3.13
+      Handler: index.handler
+      Code:
+        S3Bucket: my-bucket
+        S3Key: code.zip
+
+  BadEolRuntime:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: bad-func
+      Runtime: python3.9
+      Handler: index.handler
+      Code:
+        S3Bucket: my-bucket
+        S3Key: code.zip

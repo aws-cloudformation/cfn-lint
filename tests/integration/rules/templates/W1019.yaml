@@ -1,0 +1,22 @@
+# --- cfn-lint-test ---
+# rule: W1019
+# description: Fn::Sub parameters should be used
+# expect: []
+# ---
+# NOTE: Rule W1019 Fn::Sub unused parameter check not yet implemented in v2 engine
+Resources:
+  GoodSubWithAllUsed:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub
+        - "${Domain}-${Env}-bucket"
+        - Domain: example.com
+          Env: prod
+
+  BadUnusedParam:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub
+        - "${Domain}-bucket"
+        - Domain: example.com
+          UnusedKey: this-is-never-referenced

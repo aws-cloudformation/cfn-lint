@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  Environment:
+    Type: String
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${Environment}-bucket"
+  BucketWithVarOutsideSub:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "${AWS::Region}-my-bucket"
+  BucketWithResourceRefOutsideSub:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "${MyBucket}-secondary"
+  BucketWithParamRefOutsideSub:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "${Environment}-without-sub"
+  BucketWithUnknownVarNotFlagged:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "${unknownVar}-bucket"
+  BucketWithStageVarsNotFlagged:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "${stageVariables.stage}-api"

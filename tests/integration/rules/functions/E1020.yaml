@@ -1,0 +1,39 @@
+# --- cfn-lint-test ---
+# rule: E1020
+# description: Ref must point to a valid parameter, resource, or pseudo-parameter
+# expect:
+#   - rule: E1020
+#     path: /
+#     message_contains: "DoesNotExist"
+#   - rule: E1020
+#     path: /
+#     message_contains: "AlsoMissing"
+# ---
+Parameters:
+  MyParam:
+    Type: String
+Resources:
+  GoodRefToParam:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Ref MyParam
+
+  GoodRefToResource:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Ref GoodRefToParam
+
+  GoodRefToPseudo:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Ref AWS::Region
+
+  BadRefNotDefined:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Ref DoesNotExist
+
+  BadRefAlsoMissing:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Ref AlsoMissing

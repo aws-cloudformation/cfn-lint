@@ -1,0 +1,42 @@
+# --- cfn-lint-test ---
+# rule: E3679
+# description: ELB HTTPS/SSL listeners require SSLCertificateId
+# expect:
+#   - rule: E3679
+#     path: /Resources/BadSslNoCertificate/Properties/Listeners/0
+#     message_contains: "is a required property"
+# ---
+Resources:
+  GoodHttpListener:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      AvailabilityZones:
+        - us-east-1a
+      Listeners:
+        - Protocol: HTTP
+          LoadBalancerPort: "80"
+          InstancePort: "80"
+          InstanceProtocol: HTTP
+
+  GoodHttpsWithCertificate:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      AvailabilityZones:
+        - us-east-1a
+      Listeners:
+        - Protocol: HTTPS
+          LoadBalancerPort: "443"
+          InstancePort: "443"
+          InstanceProtocol: HTTPS
+          SSLCertificateId: arn:aws:acm:us-east-1:123456789012:certificate/abc
+
+  BadSslNoCertificate:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      AvailabilityZones:
+        - us-east-1a
+      Listeners:
+        - Protocol: SSL
+          LoadBalancerPort: "443"
+          InstancePort: "443"
+          InstanceProtocol: TCP

@@ -1,0 +1,45 @@
+# --- cfn-lint-test ---
+# rule: W2511
+# description: IAM Policy Version should be 2012-10-17
+# expect:
+#   - rule: W2511
+#     path: /Resources/BadOldVersion/Properties/PolicyDocument/Version
+#     message_contains: "2012-10-17"
+# ---
+Resources:
+  GoodPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: GoodPolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: s3:GetObject
+            Resource: "*"
+      Roles:
+        - !Ref Role
+
+  BadOldVersion:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: BadPolicy
+      PolicyDocument:
+        Version: "2008-10-17"
+        Statement:
+          - Effect: Allow
+            Action: s3:GetObject
+            Resource: "*"
+      Roles:
+        - !Ref Role
+
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole

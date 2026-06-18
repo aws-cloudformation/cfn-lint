@@ -1,0 +1,49 @@
+# --- cfn-lint-test ---
+# rule: E3678
+# description: Lambda function using ZipFile requires Runtime to be specified
+# expect:
+#   - rule: E3678
+#     path: /Resources/BadNoRuntime/Properties
+#     message_contains: "Runtime"
+# ---
+Resources:
+  GoodWithRuntime:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "Hello"
+      Role: !GetAtt Role.Arn
+
+  GoodWithS3Code:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Code:
+        S3Bucket: my-bucket
+        S3Key: my-code.zip
+      Role: !GetAtt Role.Arn
+
+  BadNoRuntime:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "Hello"
+      Role: !GetAtt Role.Arn
+
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole

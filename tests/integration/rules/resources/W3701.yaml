@@ -1,0 +1,39 @@
+# --- cfn-lint-test ---
+# rule: W3701
+# description: SSM Parameter Name should not use /aws/ or /ssm/ prefix
+# expect:
+#   - rule: W3701
+#     path: /Resources/BadAwsPrefix/Properties/Name
+#     message_contains: "reserved"
+#   - rule: W3701
+#     path: /Resources/BadSsmPrefix/Properties/Name
+#     message_contains: "reserved"
+# ---
+Resources:
+  GoodValidName:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /my-app/config/database-url
+      Type: String
+      Value: my-value
+
+  GoodSimpleName:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: my-parameter
+      Type: String
+      Value: my-value
+
+  BadAwsPrefix:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /aws/my-param
+      Type: String
+      Value: my-value
+
+  BadSsmPrefix:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /ssm/my-param
+      Type: String
+      Value: my-value

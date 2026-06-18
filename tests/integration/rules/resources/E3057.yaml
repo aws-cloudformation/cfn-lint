@@ -1,0 +1,40 @@
+# --- cfn-lint-test ---
+# rule: E3057
+# description: CloudFront TargetOriginId must reference a defined Origin
+# expect:
+#   - rule: E3057
+#     path: /Resources/BadDistribution/Properties/DistributionConfig/DefaultCacheBehavior/TargetOriginId
+#     message_contains: "nonExistentOrigin"
+# ---
+Resources:
+  GoodDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Origins:
+          - Id: myS3Origin
+            DomainName: mybucket.s3.amazonaws.com
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        DefaultCacheBehavior:
+          TargetOriginId: myS3Origin
+          ViewerProtocolPolicy: allow-all
+          ForwardedValues:
+            QueryString: false
+        Enabled: true
+
+  BadDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Origins:
+          - Id: myS3Origin
+            DomainName: mybucket.s3.amazonaws.com
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        DefaultCacheBehavior:
+          TargetOriginId: nonExistentOrigin
+          ViewerProtocolPolicy: allow-all
+          ForwardedValues:
+            QueryString: false
+        Enabled: true

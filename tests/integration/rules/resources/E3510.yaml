@@ -1,0 +1,77 @@
+# --- cfn-lint-test ---
+# rule: E3510
+# description: Validate IAM identity policy structure
+# expect:
+#   - rule: E3510
+#     path: /Resources/BadMissingStatement/Properties/PolicyDocument
+#     message_contains: "Statement"
+#   - rule: E3510
+#     path: /Resources/BadInvalidEffect/Properties/PolicyDocument/Statement/0/Effect
+#     message_contains: "Allow"
+#   - rule: E3510
+#     path: /Resources/BadDuplicateSid/Properties/PolicyDocument/Statement
+#     message_contains: "unique"
+#   - rule: E3510
+#     path: /Resources/BadBothActionAndNotAction/Properties/PolicyDocument/Statement/0/NotAction
+#     message_contains: "Action"
+#   - rule: E3510
+#     path: /Resources/BadBothActionAndNotAction/Properties/PolicyDocument/Statement/0/Action
+#     message_contains: "Action"
+# ---
+Resources:
+  GoodPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowS3
+            Effect: Allow
+            Action:
+              - s3:GetObject
+              - s3:ListBucket
+            Resource: "*"
+
+  BadMissingStatement:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+
+  BadInvalidEffect:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: NotAllow
+            Action:
+              - s3:GetObject
+            Resource: "*"
+
+  BadDuplicateSid:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: Duplicate
+            Effect: Allow
+            Action: "*"
+            Resource: "*"
+          - Sid: Duplicate
+            Effect: Allow
+            Action: "*"
+            Resource: "*"
+
+  BadBothActionAndNotAction:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:GetObject
+            NotAction: "*"
+            Resource: "*"

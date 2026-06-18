@@ -1,0 +1,50 @@
+[
+ {
+  "op": "test",
+  "path": "/readOnlyProperties",
+  "value": [
+   "/properties/Id",
+   "/properties/CanonicalHostedZoneName",
+   "/properties/CanonicalHostedZoneNameID",
+   "/properties/SourceSecurityGroup.GroupName",
+   "/properties/DNSName",
+   "/properties/SourceSecurityGroup.OwnerAlias"
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/readOnlyProperties",
+  "value": [
+   "/properties/Id",
+   "/properties/CanonicalHostedZoneName",
+   "/properties/CanonicalHostedZoneNameID",
+   "/properties/SourceSecurityGroup/GroupName",
+   "/properties/DNSName",
+   "/properties/SourceSecurityGroup/OwnerAlias"
+  ]
+ },
+ {
+  "op": "remove",
+  "path": "/properties/SourceSecurityGroupGroupName"
+ },
+ {
+  "op": "remove",
+  "path": "/properties/SourceSecurityGroupOwnerAlias"
+ },
+ {
+  "op": "add",
+  "path": "/properties/SourceSecurityGroup",
+  "value": {
+   "properties": {
+    "GroupName": {
+     "format": "AWS::EC2::SecurityGroup.Name",
+     "type": "string"
+    },
+    "OwnerAlias": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ }
+]

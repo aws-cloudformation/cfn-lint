@@ -1,0 +1,121 @@
+# --- cfn-lint-test ---
+# rule: E3048
+# description: Validate ECS Fargate task required properties and values
+# expect:
+#   - rule: E3048
+#     path: /Resources/BadMissingMemory/Properties
+#     message_contains: "'Memory' is a required property"
+#   - rule: E3048
+#     path: /Resources/BadMissingCpu/Properties
+#     message_contains: "'Cpu' is a required property"
+#   - rule: E3048
+#     path: /Resources/BadPlacementConstraints/Properties/PlacementConstraints
+#     message_contains: "PlacementConstraints"
+#   - rule: E3048
+#     path: /Resources/BadInvalidCpu/Properties/Cpu
+#     message_contains: "invalid Cpu"
+#   - rule: E3048
+#     path: /Resources/BadMissingNetworkMode/Properties
+#     message_contains: "'NetworkMode' is a required property"
+#   - rule: E3048
+#     path: /Resources/BadMissingMemory/Properties/Cpu
+#     message_contains: "invalid Cpu"
+# ---
+Resources:
+  GoodFargateTask:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      NetworkMode: awsvpc
+      Cpu: "256"
+      Memory: "512"
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          Essential: true
+
+  GoodFargateWithLogs:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      NetworkMode: awsvpc
+      Cpu: "256"
+      Memory: "512"
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          Essential: true
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: log-group
+              awslogs-region: us-east-1
+              awslogs-stream-prefix: ecs
+
+  BadMissingMemory:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      NetworkMode: awsvpc
+      Cpu: "16384"
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          Essential: true
+
+  BadMissingCpu:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      NetworkMode: awsvpc
+      Memory: "512"
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          Essential: true
+
+  BadPlacementConstraints:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      NetworkMode: awsvpc
+      Cpu: "256"
+      Memory: "512"
+      PlacementConstraints:
+        - Type: memberOf
+          Expression: "attribute:ecs.instance-type == t2.micro"
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          Essential: true
+
+  BadInvalidCpu:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      NetworkMode: awsvpc
+      Cpu: "128"
+      Memory: "512"
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          Essential: true
+
+  BadMissingNetworkMode:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "256"
+      Memory: "512"
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          Essential: true
+

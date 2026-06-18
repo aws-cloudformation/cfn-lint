@@ -1,0 +1,74 @@
+# --- cfn-lint-test ---
+# rule: E3720
+# description: RDS StorageEncrypted required when KmsKeyId is specified
+# expect:
+#   - rule: E3720
+#     path: /Resources/BadPostgresKmsNoEncrypted/Properties
+#     message_contains: "StorageEncrypted"
+#   - rule: E3720
+#     path: /Resources/BadMysqlKmsNoEncrypted/Properties
+#     message_contains: "StorageEncrypted"
+# ---
+Resources:
+  GoodEncrypted:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: postgres
+      DBInstanceClass: db.t3.micro
+      MasterUsername: admin
+      MasterUserPassword: secret123
+      KmsKeyId: "arn:aws:kms:us-east-1:123456789012:key/1234"
+      StorageEncrypted: true
+
+  GoodNoKms:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: postgres
+      DBInstanceClass: db.t3.micro
+      MasterUsername: admin
+      MasterUserPassword: secret123
+      StorageEncrypted: true
+
+  GoodNoKmsNoEncrypted:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: postgres
+      DBInstanceClass: db.t3.micro
+      MasterUsername: admin
+      MasterUserPassword: secret123
+
+  GoodCustomEngineKms:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: custom-sqlserver-se
+      DBInstanceClass: db.t3.micro
+      MasterUsername: admin
+      MasterUserPassword: secret123
+      KmsKeyId: "arn:aws:kms:us-east-1:123456789012:key/1234"
+
+  GoodCustomOracleEngineKms:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: custom-oracle-ee
+      DBInstanceClass: db.t3.micro
+      MasterUsername: admin
+      MasterUserPassword: secret123
+      KmsKeyId: "arn:aws:kms:us-east-1:123456789012:key/1234"
+
+  BadPostgresKmsNoEncrypted:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: postgres
+      DBInstanceClass: db.t3.micro
+      MasterUsername: admin
+      MasterUserPassword: secret123
+      KmsKeyId: "arn:aws:kms:us-east-1:123456789012:key/1234"
+
+  BadMysqlKmsNoEncrypted:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: mysql
+      DBInstanceClass: db.t3.micro
+      MasterUsername: admin
+      MasterUserPassword: secret123
+      KmsKeyId: "arn:aws:kms:us-east-1:123456789012:key/1234"

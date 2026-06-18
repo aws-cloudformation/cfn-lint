@@ -1,0 +1,36 @@
+{
+ "allOf": [
+  {
+   "if": {
+    "properties": {
+     "Protocol": {
+      "const": "sqs"
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "Endpoint": {
+      "format": "AWS::SQS::Queue.Arn"
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "Protocol": {
+      "const": "lambda"
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "Endpoint": {
+      "format": "AWS::Lambda::Function.Arn"
+     }
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  AliasWithTTL:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: Z1234567890
+      Name: example.com.
+      Type: A
+      TTL: '300'
+      AliasTarget:
+        DNSName: d123456.cloudfront.net
+        HostedZoneId: Z2FDTNDATAQYW2
+
+  InvalidARecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: Z1234567890
+      Name: bad-a.example.com.
+      Type: A
+      TTL: '300'
+      ResourceRecords:
+        - not-an-ip-address

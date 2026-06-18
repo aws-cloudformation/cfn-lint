@@ -1,0 +1,35 @@
+# --- cfn-lint-test ---
+# rule: W1053
+# description: Dynamic references should not contain spaces
+# expect:
+#   - rule: W1053
+#     path: /Resources/BadSpaceBefore/Properties/MasterUserPassword
+#     message_contains: "spaces"
+#   - rule: W1053
+#     path: /Resources/BadSpaceAfter/Properties/MasterUserPassword
+#     message_contains: "spaces"
+# ---
+Resources:
+  GoodDynamicRef:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      MasterUsername: admin
+      MasterUserPassword: "{{resolve:secretsmanager:my-secret}}"
+
+  BadSpaceBefore:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      MasterUsername: admin
+      MasterUserPassword: "{{ resolve:secretsmanager:my-secret}}"
+
+  BadSpaceAfter:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      MasterUsername: admin
+      MasterUserPassword: "{{resolve :secretsmanager:my-secret}}"

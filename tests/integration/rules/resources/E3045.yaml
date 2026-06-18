@@ -1,0 +1,48 @@
+# --- cfn-lint-test ---
+# rule: E3045
+# description: S3 Bucket AccessControl requires OwnershipControls
+# expect:
+#   - rule: E3045
+#     path: /Resources/BadNoOwnership/Properties
+#     message_contains: "OwnershipControl"
+#   - rule: E3045
+#     path: /Resources/BadEmptyOwnership/Properties/OwnershipControls
+#     message_contains: "is a required property"
+#   - rule: E3045
+#     path: /Resources/BadEmptyRules/Properties/OwnershipControls/Rules
+#     message_contains: "expected minimum item count"
+# ---
+Resources:
+  GoodPrivateAccessControl:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: Private
+
+  GoodWithOwnership:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: AuthenticatedRead
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerPreferred
+
+  GoodNoAccessControl:
+    Type: AWS::S3::Bucket
+
+  BadNoOwnership:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: AuthenticatedRead
+
+  BadEmptyOwnership:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: AuthenticatedRead
+      OwnershipControls: {}
+
+  BadEmptyRules:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: AuthenticatedRead
+      OwnershipControls:
+        Rules: []

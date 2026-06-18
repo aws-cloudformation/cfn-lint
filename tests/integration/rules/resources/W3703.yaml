@@ -1,0 +1,18 @@
+# --- cfn-lint-test ---
+# rule: W3703
+# description: VPN Gateway Type should be ipsec.1
+# expect:
+#   - rule: W3703
+#     path: /Resources/BadOtherValue/Properties/Type
+#     message_contains: "ipsec.1"
+# ---
+Resources:
+  GoodIpsec:
+    Type: AWS::EC2::VPNGateway
+    Properties:
+      Type: ipsec.1
+
+  BadOtherValue:
+    Type: AWS::EC2::VPNGateway
+    Properties:
+      Type: other-value

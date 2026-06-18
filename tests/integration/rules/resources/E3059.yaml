@@ -1,0 +1,34 @@
+# --- cfn-lint-test ---
+# rule: E3059
+# description: Validate subnet CIDRs are within the VPC CIDR
+# expect:
+#   - rule: E3059
+#     path: /Resources/BadSubnet/Properties/CidrBlock
+#     message_contains: "not within VPC CIDR"
+# ---
+Resources:
+  MyVpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: "10.0.0.0/16"
+
+  GoodSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MyVpc
+      CidrBlock: "10.0.1.0/24"
+      AvailabilityZone: us-east-1a
+
+  GoodSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MyVpc
+      CidrBlock: "10.0.2.0/24"
+      AvailabilityZone: us-east-1b
+
+  BadSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MyVpc
+      CidrBlock: "192.168.1.0/24"
+      AvailabilityZone: us-east-1a

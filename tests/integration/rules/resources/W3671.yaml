@@ -1,0 +1,84 @@
+# --- cfn-lint-test ---
+# rule: W3671
+# description: Iops is ignored for certain EBS volume types
+# expect:
+#   - rule: W3671
+#     path: /Resources/BadGp2WithIops/Properties/BlockDeviceMappings/0/Ebs/Iops
+#     message_contains: "'Iops' is ignored"
+#   - rule: W3671
+#     path: /Resources/BadStandardWithIops/Properties/BlockDeviceMappings/0/Ebs/Iops
+#     message_contains: "'Iops' is ignored"
+#   - rule: W3671
+#     path: /Resources/BadSt1WithIops/Properties/BlockDeviceMappings/0/Ebs/Iops
+#     message_contains: "'Iops' is ignored"
+# ---
+Resources:
+  GoodGp3WithIops:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeType: gp3
+            Iops: 3000
+
+  GoodIo1WithIops:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeType: io1
+            Iops: 3000
+
+  GoodIo2WithIops:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeType: io2
+            Iops: 3000
+
+  GoodGp2NoIops:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeType: gp2
+            VolumeSize: 100
+
+  BadGp2WithIops:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeType: gp2
+            Iops: 3000
+
+  BadStandardWithIops:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeType: standard
+            Iops: 100
+
+  BadSt1WithIops:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeType: st1
+            Iops: 100

@@ -1,0 +1,34 @@
+# --- cfn-lint-test ---
+# rule: E1020
+# description: Ref inside Fn::If with valid condition does not suppress E1020
+# expect:
+#   - rule: E1020
+#     path: /
+#     message_contains: "NonExistentRef"
+# ---
+Parameters:
+  Env:
+    Type: String
+Conditions:
+  IsProd:
+    Fn::Equals:
+      - !Ref Env
+      - prod
+Resources:
+  GoodRefInsideIf:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName:
+        Fn::If:
+          - IsProd
+          - !Ref Env
+          - default-queue
+
+  BadRefInsideIf:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName:
+        Fn::If:
+          - IsProd
+          - !Ref NonExistentRef
+          - fallback

@@ -1,0 +1,57 @@
+{
+ "allOf": [
+  {
+   "if": {
+    "properties": {
+     "FifoQueue": {
+      "enum": [
+       true,
+       "true"
+      ]
+     }
+    },
+    "required": [
+     "FifoQueue"
+    ]
+   },
+   "then": {
+    "if": {
+     "properties": {
+      "QueueName": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "QueueName"
+     ]
+    },
+    "then": {
+     "properties": {
+      "QueueName": {
+       "pattern": "^.*\\.fifo$"
+      }
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "FifoQueue": {
+      "enum": [
+       false,
+       "false"
+      ]
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "ContentBasedDeduplication": false,
+     "DeduplicationScope": false,
+     "FifoThroughputLimit": false
+    }
+   }
+  }
+ ]
+}

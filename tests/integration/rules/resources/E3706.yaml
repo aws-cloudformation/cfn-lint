@@ -1,0 +1,42 @@
+# --- cfn-lint-test ---
+# rule: E3706
+# description: AutoScaling MaxSize must be >= MinSize
+# expect: []
+# ---
+# NOTE: Rule E3706 cross-resource comparison not yet implemented in v2 engine
+Resources:
+  GoodMaxGreaterThanMin:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      MinSize: "1"
+      MaxSize: "10"
+      LaunchTemplate:
+        LaunchTemplateId: lt-12345
+        Version: "1"
+
+  GoodMaxEqualsMin:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      MinSize: "5"
+      MaxSize: "5"
+      LaunchTemplate:
+        LaunchTemplateId: lt-12345
+        Version: "1"
+
+  GoodRefParameter:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      MinSize: !Ref MinParam
+      MaxSize: "10"
+      LaunchTemplate:
+        LaunchTemplateId: lt-12345
+        Version: "1"
+
+  BadMaxLessThanMin:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      MinSize: "5"
+      MaxSize: "2"
+      LaunchTemplate:
+        LaunchTemplateId: lt-12345
+        Version: "1"

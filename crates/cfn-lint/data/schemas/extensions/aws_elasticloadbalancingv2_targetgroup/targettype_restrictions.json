@@ -1,0 +1,43 @@
+{
+ "if": {
+  "properties": {
+   "TargetType": {
+    "type": "string"
+   }
+  },
+  "required": [
+   "TargetType"
+  ]
+ },
+ "then": {
+  "else": {
+   "required": [
+    "Port",
+    "Protocol",
+    "VpcId"
+   ]
+  },
+  "if": {
+   "properties": {
+    "TargetType": {
+     "enum": [
+      "lambda"
+     ]
+    }
+   },
+   "required": [
+    "TargetType"
+   ]
+  },
+  "then": {
+   "properties": {
+    "HealthCheckPort": false,
+    "HealthCheckProtocol": false,
+    "Port": false,
+    "Protocol": false,
+    "ProtocolVersion": false,
+    "VpcId": false
+   }
+  }
+ }
+}

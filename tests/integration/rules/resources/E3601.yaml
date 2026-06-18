@@ -1,0 +1,37 @@
+# --- cfn-lint-test ---
+# rule: E3601
+# description: Validate StepFunctions StateMachine definition structure
+# expect:
+#   - rule: E3601
+#     path: /Resources/BadStateMachine/Properties/DefinitionString
+#     message_contains: "StartAt"
+# ---
+Resources:
+  GoodStateMachine:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      RoleArn: arn:aws:iam::123456789012:role/StepFunctionsRole
+      DefinitionString: '{"StartAt":"Hello","States":{"Hello":{"Type":"Pass","End":true}}}'
+
+  GoodStateMachineObject:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      RoleArn: arn:aws:iam::123456789012:role/StepFunctionsRole
+      Definition:
+        StartAt: Hello
+        States:
+          Hello:
+            Type: Pass
+            End: true
+
+  GoodStateMachineWithSub:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      RoleArn: arn:aws:iam::123456789012:role/StepFunctionsRole
+      DefinitionString: !Sub '{"StartAt":"Hello","States":{"Hello":{"Type":"Pass","End":true}}}'
+
+  BadStateMachine:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      RoleArn: arn:aws:iam::123456789012:role/StepFunctionsRole
+      DefinitionString: '{"States":{"Hello":{"Type":"Pass","End":true}}}'

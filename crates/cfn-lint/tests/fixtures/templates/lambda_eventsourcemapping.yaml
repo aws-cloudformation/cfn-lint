@@ -1,0 +1,77 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  # E3634: SQS event source with StartingPosition (not allowed for SQS)
+  SqsMappingWithStartingPosition:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName: !Ref MyFunction
+      EventSourceArn: arn:aws:sqs:us-east-1:123456789012:my-queue
+      StartingPosition: LATEST
+
+  # E3633: Kinesis event source without StartingPosition (required for streams)
+  KinesisMappingNoStartingPosition:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName: !Ref MyFunction
+      EventSourceArn: arn:aws:kinesis:us-east-1:123456789012:stream/my-stream
+
+  # E3633: DynamoDB event source without StartingPosition (required for streams)
+  DynamoDBMappingNoStartingPosition:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName: !Ref MyFunction
+      EventSourceArn: arn:aws:dynamodb:us-east-1:123456789012:table/my-table/stream/2024-01-01
+
+  # E3705: SQS FIFO queue with BatchSize > 10
+  FifoQueueMappingBatchTooLarge:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName: !Ref MyFunction
+      EventSourceArn: !GetAtt FifoQueue.Arn
+      BatchSize: 50
+
+  # E3505: SQS queue VisibilityTimeout < Lambda function Timeout
+  SqsMappingTimeoutMismatch:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName: !Ref SlowFunction
+      EventSourceArn: !GetAtt ShortVisibilityQueue.Arn
+
+  FifoQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: true
+      QueueName: my-queue.fifo
+
+  ShortVisibilityQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 10
+      QueueName: short-visibility-queue
+
+  MyFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: my-function
+      Runtime: python3.12
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "Hello"
+
+  SlowFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: slow-function
+      Runtime: python3.12
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Handler: index.handler
+      Timeout: 60
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            import time
+            time.sleep(30)
+            return "Done"

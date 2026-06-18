@@ -1,0 +1,42 @@
+# --- cfn-lint-test ---
+# rule: E3036
+# description: UpdateReplacePolicy valid values
+# expect:
+#   - rule: E3036
+#     path: /Resources/BadPolicy/UpdateReplacePolicy
+#     message_contains: "is not one of"
+#   - rule: E3036
+#     path: /Resources/BadSnapshotNotSupported/UpdateReplacePolicy
+#     message_contains: "is not one of"
+# ---
+Resources:
+  GoodRetain:
+    Type: AWS::S3::Bucket
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: good-retain
+
+  GoodDelete:
+    Type: AWS::S3::Bucket
+    UpdateReplacePolicy: Delete
+    Properties:
+      BucketName: good-delete
+
+  GoodSnapshot:
+    Type: AWS::RDS::DBInstance
+    UpdateReplacePolicy: Snapshot
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+
+  BadPolicy:
+    Type: AWS::S3::Bucket
+    UpdateReplacePolicy: Invalid
+    Properties:
+      BucketName: bad-policy
+
+  BadSnapshotNotSupported:
+    Type: AWS::S3::Bucket
+    UpdateReplacePolicy: Snapshot
+    Properties:
+      BucketName: bad-snapshot

@@ -1,0 +1,55 @@
+# --- cfn-lint-test ---
+# rule: E3061
+# description: S3 IntelligentTieringConfigurations tiering Days range validation
+# expect:
+#   - rule: E3061
+#     path: /Resources/BadBucket/Properties/IntelligentTieringConfigurations/0/Tierings/0/Days
+#     message_contains: "between 90 and 730"
+#   - rule: E3061
+#     path: /Resources/BadBucketDeep/Properties/IntelligentTieringConfigurations/0/Tierings/0/Days
+#     message_contains: "between 180 and 730"
+# ---
+Resources:
+  GoodBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: good-bucket
+      IntelligentTieringConfigurations:
+        - Id: archive-config
+          Status: Enabled
+          Tierings:
+            - AccessTier: ARCHIVE_ACCESS
+              Days: 90
+
+  GoodBucketDeep:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: good-bucket-deep
+      IntelligentTieringConfigurations:
+        - Id: deep-archive-config
+          Status: Enabled
+          Tierings:
+            - AccessTier: DEEP_ARCHIVE_ACCESS
+              Days: 180
+
+  BadBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: bad-bucket
+      IntelligentTieringConfigurations:
+        - Id: archive-config
+          Status: Enabled
+          Tierings:
+            - AccessTier: ARCHIVE_ACCESS
+              Days: 30
+
+  BadBucketDeep:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: bad-bucket-deep
+      IntelligentTieringConfigurations:
+        - Id: deep-archive-config
+          Status: Enabled
+          Tierings:
+            - AccessTier: DEEP_ARCHIVE_ACCESS
+              Days: 90

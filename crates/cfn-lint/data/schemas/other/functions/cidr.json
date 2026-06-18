@@ -1,0 +1,61 @@
+{
+ "cfnContext": {
+  "functions": [],
+  "schema": {
+   "maxItems": 3,
+   "minItems": 2,
+   "prefixItems": [
+    {
+     "cfnContext": {
+      "functions": [
+       "Fn::FindInMap",
+       "Fn::GetAtt",
+       "Fn::If",
+       "Fn::ImportValue",
+       "Fn::Select",
+       "Fn::Sub",
+       "Ref"
+      ],
+      "schema": {
+       "pattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
+       "type": [
+        "string"
+       ]
+      }
+     }
+    },
+    {
+     "cfnContext": {
+      "functions": {
+       "$ref": "#/cfnContext/schema/prefixItems/0/cfnContext/functions"
+      },
+      "schema": {
+       "maximum": 256,
+       "minimum": 1,
+       "type": [
+        "integer"
+       ]
+      }
+     }
+    },
+    {
+     "cfnContext": {
+      "functions": {
+       "$ref": "#/cfnContext/schema/prefixItems/0/cfnContext/functions"
+      },
+      "schema": {
+       "maximum": 128,
+       "minimum": 1,
+       "type": [
+        "integer"
+       ]
+      }
+     }
+    }
+   ],
+   "type": [
+    "array"
+   ]
+  }
+ }
+}

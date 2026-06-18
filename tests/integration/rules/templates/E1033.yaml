@@ -1,0 +1,24 @@
+# --- cfn-lint-test ---
+# rule: E1033
+# description: Fn::GetStackOutput requires StackName and OutputName
+# expect:
+#   - rule: E1033
+#     path: /Resources/Bad/Properties/BucketName
+#     message_contains: "required"
+# ---
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  Good:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName:
+        Fn::GetStackOutput:
+          StackName: other-stack
+          OutputName: BucketName
+
+  Bad:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName:
+        Fn::GetStackOutput:
+          StackName: other-stack

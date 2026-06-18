@@ -1,0 +1,46 @@
+# --- cfn-lint-test ---
+# rule: I3100
+# description: Checks for legacy instance type generations
+# expect:
+#   - rule: I3100
+#     path: /Resources/BadOldM1/Properties/InstanceType
+#     message_contains: "m1.large"
+#   - rule: I3100
+#     path: /Resources/BadOldT1/Properties/InstanceType
+#     message_contains: "t1.micro"
+#   - rule: I3100
+#     path: /Resources/BadOldC1/Properties/DBInstanceClass
+#     message_contains: "db.m2.xlarge"
+# ---
+Resources:
+  GoodCurrentGen:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      InstanceType: m5.large
+
+  GoodCurrentT3:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      InstanceType: t3.micro
+
+  BadOldM1:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      InstanceType: m1.large
+
+  BadOldT1:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      InstanceType: t1.micro
+
+  BadOldC1:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.m2.xlarge
+      Engine: mysql
+      MasterUsername: admin
+      MasterUserPassword: "{{resolve:secretsmanager:my-secret}}"

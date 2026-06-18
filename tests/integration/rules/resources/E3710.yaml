@@ -1,0 +1,28 @@
+# --- cfn-lint-test ---
+# rule: E3710
+# description: Resource type from shut down service
+# expect:
+#   - rule: E3710
+#     path: /Resources/BadOpsWorks/Type
+#     message_contains: "shut down"
+#   - rule: E3710
+#     path: /Resources/BadCloud9/Type
+#     message_contains: "shut down"
+# ---
+Resources:
+  GoodBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: valid-service
+
+  BadOpsWorks:
+    Type: AWS::OpsWorks::Stack
+    Properties:
+      Name: my-stack
+      ServiceRoleArn: arn:aws:iam::123456789012:role/OpsWorksRole
+      DefaultInstanceProfileArn: arn:aws:iam::123456789012:instance-profile/OpsWorks
+
+  BadCloud9:
+    Type: AWS::Cloud9::EnvironmentEC2
+    Properties:
+      InstanceType: t2.micro

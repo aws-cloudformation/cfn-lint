@@ -1,0 +1,71 @@
+# --- cfn-lint-test ---
+# rule: E3636
+# description: CodeBuild S3 source/artifacts requires Location
+# expect:
+#   - rule: E3636
+#     path: /Resources/BadSourceProject/Properties/Source
+#     message_contains: "Location"
+#   - rule: E3636
+#     path: /Resources/BadArtifactsProject/Properties/Artifacts
+#     message_contains: "Location"
+# ---
+Resources:
+  GoodProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: GoodProject
+      ServiceRole: arn:aws:iam::123456789012:role/CodeBuildRole
+      Source:
+        Type: S3
+        Location: my-bucket/source.zip
+      Artifacts:
+        Type: S3
+        Location: my-output-bucket
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:5.0
+        Type: LINUX_CONTAINER
+
+  GoodCodeCommitProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: GoodCodeCommitProject
+      ServiceRole: arn:aws:iam::123456789012:role/CodeBuildRole
+      Source:
+        Type: CODECOMMIT
+        Location: https://git-codecommit.us-east-1.amazonaws.com/v1/repos/my-repo
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:5.0
+        Type: LINUX_CONTAINER
+
+  BadSourceProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: BadSourceProject
+      ServiceRole: arn:aws:iam::123456789012:role/CodeBuildRole
+      Source:
+        Type: S3
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:5.0
+        Type: LINUX_CONTAINER
+
+  BadArtifactsProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: BadArtifactsProject
+      ServiceRole: arn:aws:iam::123456789012:role/CodeBuildRole
+      Source:
+        Type: CODECOMMIT
+        Location: https://git-codecommit.us-east-1.amazonaws.com/v1/repos/my-repo
+      Artifacts:
+        Type: S3
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:5.0
+        Type: LINUX_CONTAINER

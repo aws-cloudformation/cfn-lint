@@ -1,0 +1,52 @@
+# --- cfn-lint-test ---
+# rule: E3023
+# description: Validate Route53 RecordSet record values match their type
+# expect:
+#   - rule: E3023
+#     path: /Resources/BadARecord/Properties/ResourceRecords/0
+#     message_contains: "ipv4"
+#   - rule: E3023
+#     path: /Resources/BadCnameMultiple/Properties/ResourceRecords
+#     message_contains: "expected maximum item count"
+# ---
+Resources:
+  GoodARecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName: example.com.
+      Name: www.example.com.
+      Type: A
+      TTL: "300"
+      ResourceRecords:
+        - "192.0.2.1"
+
+  GoodCnameRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName: example.com.
+      Name: alias.example.com.
+      Type: CNAME
+      TTL: "300"
+      ResourceRecords:
+        - www.example.com.
+
+  BadARecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName: example.com.
+      Name: bad.example.com.
+      Type: A
+      TTL: "300"
+      ResourceRecords:
+        - not-an-ip-address
+
+  BadCnameMultiple:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName: example.com.
+      Name: cname.example.com.
+      Type: CNAME
+      TTL: "300"
+      ResourceRecords:
+        - one.example.com.
+        - two.example.com.

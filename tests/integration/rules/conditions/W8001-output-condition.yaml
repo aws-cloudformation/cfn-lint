@@ -1,0 +1,20 @@
+# --- cfn-lint-test ---
+# rule: W8001
+# description: Condition used in Output section should not trigger W8001
+# expect: []
+# ---
+Parameters:
+  Env:
+    Type: String
+Conditions:
+  IsProd:
+    Fn::Equals:
+      - !Ref Env
+      - prod
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+Outputs:
+  ProdBucketArn:
+    Condition: IsProd
+    Value: !GetAtt Bucket.Arn

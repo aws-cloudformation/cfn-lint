@@ -1,0 +1,71 @@
+# --- cfn-lint-test ---
+# rule: E3056
+# description: EC2 health check type cannot be combined with other types
+# expect:
+#   - rule: E3056
+#     path: /Resources/BadEc2CombinedWithElb/Properties/HealthCheckType
+#     message_contains: "EC2 cannot be combined"
+#   - rule: E3056
+#     path: /Resources/BadEc2CombinedMultiple/Properties/HealthCheckType
+#     message_contains: "EC2 cannot be combined"
+# ---
+Resources:
+  GoodEc2Only:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      MinSize: "1"
+      MaxSize: "5"
+      HealthCheckType: EC2
+      LaunchTemplate:
+        LaunchTemplateId: lt-12345
+        Version: "1"
+
+  GoodElbOnly:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      MinSize: "1"
+      MaxSize: "5"
+      HealthCheckType: ELB
+      LaunchTemplate:
+        LaunchTemplateId: lt-12345
+        Version: "1"
+
+  GoodElbAndEbs:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      MinSize: "1"
+      MaxSize: "5"
+      HealthCheckType: "ELB,EBS"
+      LaunchTemplate:
+        LaunchTemplateId: lt-12345
+        Version: "1"
+
+  GoodMultipleNonEc2:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      MinSize: "1"
+      MaxSize: "5"
+      HealthCheckType: "ELB,EBS,VPC_LATTICE"
+      LaunchTemplate:
+        LaunchTemplateId: lt-12345
+        Version: "1"
+
+  BadEc2CombinedWithElb:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      MinSize: "1"
+      MaxSize: "5"
+      HealthCheckType: "EC2,ELB"
+      LaunchTemplate:
+        LaunchTemplateId: lt-12345
+        Version: "1"
+
+  BadEc2CombinedMultiple:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      MinSize: "1"
+      MaxSize: "5"
+      HealthCheckType: "ELB,EC2,EBS"
+      LaunchTemplate:
+        LaunchTemplateId: lt-12345
+        Version: "1"

@@ -1,0 +1,46 @@
+{
+ "if": {
+  "properties": {
+   "Protocol": {
+    "type": "string"
+   }
+  },
+  "required": [
+   "Protocol"
+  ]
+ },
+ "then": {
+  "allOf": [
+   {
+    "if": {
+     "properties": {
+      "Port": {
+       "type": [
+        "string",
+        "integer"
+       ]
+      },
+      "Protocol": {
+       "enum": [
+        "GENEVE"
+       ]
+      }
+     },
+     "required": [
+      "Protocol"
+     ]
+    },
+    "then": {
+     "properties": {
+      "Port": {
+       "enum": [
+        6081,
+        "6081"
+       ]
+      }
+     }
+    }
+   }
+  ]
+ }
+}

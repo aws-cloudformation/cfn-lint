@@ -1,0 +1,28 @@
+# --- cfn-lint-test ---
+# rule: W6001
+# description: Check Outputs using ImportValue
+# expect:
+#   - rule: W6001
+#     path: /Outputs/BadReExport/Value
+#     message_contains: "import from another output"
+# ---
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+
+Outputs:
+  GoodDirectValue:
+    Description: Direct bucket reference
+    Value: !Ref Bucket
+    Export:
+      Name: my-bucket-name
+
+  GoodGetAtt:
+    Description: GetAtt output
+    Value: !GetAtt Bucket.Arn
+
+  BadReExport:
+    Description: Re-exporting an import from another stack
+    Value: !ImportValue SharedVpcId
+    Export:
+      Name: re-exported-vpc-id

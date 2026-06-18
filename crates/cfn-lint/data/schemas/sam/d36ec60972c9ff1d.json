@@ -1,0 +1,804 @@
+{
+  "typeName": "AWS::Serverless::GraphQLApi",
+  "description": "",
+  "properties": {
+    "Auth": {
+      "title": "Auth",
+      "markdownDescription": "Configure authentication for your GraphQL API.  \n*Type*: [Auth](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-graphqlapi-auth.html)  \n*Required*: Yes  \n*CloudFormation compatibility*: This property is unique to AWS SAM and doesn\u2019t have an CloudFormation equivalent.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Auth"
+        }
+      ]
+    },
+    "Tags": {
+      "title": "Tags",
+      "markdownDescription": "Tags (key-value pairs) for this GraphQL API. Use tags to identify and categorize resources.  \n*Type*: List of [Tag](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html)  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`Tag`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-graphqlapi.html#cfn-appsync-graphqlapi-tags) property of an `AWS::AppSync::GraphQLApi` resource.",
+      "type": "object"
+    },
+    "Name": {
+      "title": "Name",
+      "markdownDescription": "The name of your GraphQL API. Specify this property to override the `LogicalId` value.  \n*Type*: String  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`Name`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-graphqlapi.html#cfn-appsync-graphqlapi-name) property of an `AWS::AppSync::GraphQLApi` resource.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PassThroughProp"
+        }
+      ]
+    },
+    "XrayEnabled": {
+      "title": "XrayEnabled",
+      "markdownDescription": "Indicate whether to use [AWS X-Ray tracing](https://docs.aws.amazon.com/xray/latest/devguide/aws-xray.html) for this resource.  \n*Type*: Boolean  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`XrayEnabled`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-graphqlapi.html#cfn-appsync-graphqlapi-xrayenabled) property of an `AWS::AppSync::GraphQLApi` resource.",
+      "type": "boolean"
+    },
+    "SchemaInline": {
+      "title": "SchemaInline",
+      "markdownDescription": "The text representation of a GraphQL schema in SDL format.  \n*Type*: String  \n*Required*: Conditional. You must specify `SchemaInline` or `SchemaUri`.  \n*CloudFormation compatibility*: This property is passed directly to the [`Definition`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-graphqlschema.html#cfn-appsync-graphqlschema-definition) property of an `AWS::AppSync::GraphQLSchema` resource.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PassThroughProp"
+        }
+      ]
+    },
+    "SchemaUri": {
+      "title": "SchemaUri",
+      "markdownDescription": "The schema\u2019s Amazon Simple Storage Service (Amazon S3) bucket URI or path to a local folder.  \nIf you specify a path to a local folder, CloudFormation requires that the file is first uploaded to Amazon S3 before deployment. You can use the AWS SAM\u00a0CLI to facilitate this process. For more information, see [How AWS SAM uploads local files at deployment](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/deploy-upload-local-files.html).  \n*Type*: String  \n*Required*: Conditional. You must specify `SchemaInline` or `SchemaUri`.  \n*CloudFormation compatibility*: This property is passed directly to the [`DefinitionS3Location`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-graphqlschema.html#cfn-appsync-graphqlschema-definitions3location) property of an `AWS::AppSync::GraphQLSchema` resource.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PassThroughProp"
+        }
+      ]
+    },
+    "Logging": {
+      "title": "Logging",
+      "markdownDescription": "Configures Amazon CloudWatch logging for your GraphQL API.  \nIf you don\u2019t specify this property, AWS SAM will generate `CloudWatchLogsRoleArn` and set the following values:  \n+ `ExcludeVerboseContent: true`\n+ `FieldLogLevel: ALL`\nTo opt out of logging, specify the following:",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Logging"
+        },
+        {
+          "type": "boolean"
+        }
+      ]
+    },
+    "DataSources": {
+      "title": "DataSources",
+      "markdownDescription": "Create data sources for functions in AWS AppSync to connect to. AWS SAM supports Amazon DynamoDB and AWS Lambda data sources.  \n*Type*: [DataSource](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-graphqlapi-datasource.html)  \n*Required*: Yes  \n*CloudFormation compatibility*: This property is unique to AWS SAM and doesn\u2019t have an CloudFormation equivalent.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DataSources"
+        }
+      ]
+    },
+    "Functions": {
+      "title": "Functions",
+      "markdownDescription": "Configure functions in GraphQL APIs to perform certain operations.  \n*Type*: [Function](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-graphqlapi-function.html)  \n*Required*: Yes  \n*CloudFormation compatibility*: This property is unique to AWS SAM and doesn\u2019t have an CloudFormation equivalent.",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/Function"
+      }
+    },
+    "Resolvers": {
+      "title": "Resolvers",
+      "markdownDescription": "Configure resolvers for the fields of your GraphQL API. AWS SAM supports [JavaScript pipeline resolvers](https://docs.aws.amazon.com/appsync/latest/devguide/resolver-reference-overview-js.html#anatomy-of-a-pipeline-resolver-js).  \n*Type*: [Resolver](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-graphqlapi-resolver.html)  \n*Required*: Yes  \n*CloudFormation compatibility*: This property is unique to AWS SAM and doesn\u2019t have an CloudFormation equivalent.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/definitions/Resolver"
+        }
+      }
+    },
+    "ApiKeys": {
+      "title": "ApiKeys",
+      "markdownDescription": "Create a unique key that can be used to perform GraphQL operations requiring an API key.  \n*Type*: [ApiKeys](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-graphqlapi-apikeys.html)  \n*Required*: No  \n*CloudFormation compatibility*: This property is unique to AWS SAM and doesn\u2019t have an CloudFormation equivalent.",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ApiKey"
+      }
+    },
+    "DomainName": {
+      "title": "DomainName",
+      "markdownDescription": "Custom domain name for your GraphQL API.  \n*Type*: [AWS::AppSync::DomainName](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-domainname.html)  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [AWS::AppSync::DomainName](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-domainname.html) resource. AWS SAM automatically generates the [AWS::AppSync::DomainNameApiAssociation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-domainnameapiassociation.html) resource.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DomainName"
+        }
+      ]
+    },
+    "Cache": {
+      "title": "Cache",
+      "markdownDescription": "The input of a `CreateApiCache` operation.  \n*Type*: [AWS::AppSync::ApiCache](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-apicache.html)  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [AWS::AppSync::ApiCache](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-apicache.html) resource.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Cache"
+        }
+      ]
+    },
+    "Visibility": {
+      "$ref": "#/definitions/PassThroughProp"
+    },
+    "OwnerContact": {
+      "$ref": "#/definitions/PassThroughProp"
+    },
+    "IntrospectionConfig": {
+      "$ref": "#/definitions/PassThroughProp"
+    },
+    "QueryDepthLimit": {
+      "$ref": "#/definitions/PassThroughProp"
+    },
+    "ResolverCountLimit": {
+      "$ref": "#/definitions/PassThroughProp"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "Auth"
+  ],
+  "definitions": {
+    "ApiKey": {
+      "title": "ApiKey",
+      "type": "object",
+      "properties": {
+        "ApiKeyId": {
+          "title": "ApiKeyId",
+          "markdownDescription": "The unique name of your API key. Specify to override the `LogicalId` value.  \n*Type*: String  \n*Required*: Yes  \n*CloudFormation compatibility*: This property is passed directly to the [`ApiKeyId`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-apikey.html#cfn-appsync-apikey-apikeyid) property of an `AWS::AppSync::ApiKey` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "Description": {
+          "title": "Description",
+          "markdownDescription": "Description of your API key.  \n*Type*: String  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`Description`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-apikey.html#cfn-appsync-apikey-description) property of an `AWS::AppSync::ApiKey` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "ExpiresOn": {
+          "title": "ExpiresOn",
+          "markdownDescription": "The time after which the API key expires. The date is represented as seconds since the epoch, rounded down to the nearest hour.  \n*Type*: Double  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`Expires`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-apikey.html#cfn-appsync-apikey-expires) property of an `AWS::AppSync::ApiKey` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "Auth": {
+      "title": "Auth",
+      "type": "object",
+      "properties": {
+        "Type": {
+          "title": "Type",
+          "markdownDescription": "The default authorization type between applications and your AWS AppSync GraphQL API.  \nFor a list and description of allowed values, see [Authorization and authentication](https://docs.aws.amazon.com/appsync/latest/devguide/security-authz.html) in the *AWS AppSync Developer Guide*.  \nWhen you specify a Lambda authorizer (`AWS_LAMBDA`), AWS SAM creates an AWS Identity and Access Management (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/IAM.html) policy to provision permissions between your GraphQL API and Lambda function.  \n*Type*: String  \n*Required*: Yes  \n*CloudFormation compatibility*: This property is passed directly to the `[ AuthenticationType](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-additionalauthenticationprovider.html#cfn-appsync-graphqlapi-additionalauthenticationprovider-authenticationtype)` property of an `AWS::AppSync::GraphQLApi` `[ AdditionalAuthenticationProvider](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-additionalauthenticationprovider.html)` object.",
+          "enum": [
+            "AWS_IAM",
+            "API_KEY",
+            "AWS_LAMBDA",
+            "OPENID_CONNECT",
+            "AMAZON_COGNITO_USER_POOLS"
+          ],
+          "type": "string"
+        },
+        "LambdaAuthorizer": {
+          "$ref": "#/definitions/LambdaAuthorizerConfig"
+        },
+        "OpenIDConnect": {
+          "$ref": "#/definitions/OpenIDConnectConfig"
+        },
+        "UserPool": {
+          "$ref": "#/definitions/UserPoolConfig"
+        },
+        "Additional": {
+          "title": "Additional",
+          "markdownDescription": "A list of additional authorization types for your GraphQL API.  \n*Type*: List of [ AuthProvider](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-graphqlapi-auth-authprovider.html)  \n*Required*: No  \n*CloudFormation compatibility*: This property is unique to AWS SAM and doesn't have an CloudFormation equivalent.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Authorizer"
+          }
+        }
+      },
+      "required": [
+        "Type"
+      ],
+      "additionalProperties": false
+    },
+    "Authorizer": {
+      "title": "Authorizer",
+      "type": "object",
+      "properties": {
+        "Type": {
+          "title": "Type",
+          "markdownDescription": "The default authorization type between applications and your AWS AppSync GraphQL API.  \nFor a list and description of allowed values, see [Authorization and authentication](https://docs.aws.amazon.com/appsync/latest/devguide/security-authz.html) in the *AWS AppSync Developer Guide*.  \nWhen you specify a Lambda authorizer (`AWS_LAMBDA`), AWS SAM creates an AWS Identity and Access Management (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/IAM.html) policy to provision permissions between your GraphQL API and Lambda function.  \n*Type*: String  \n*Required*: Yes  \n*CloudFormation compatibility*: This property is passed directly to the `[ AuthenticationType](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-additionalauthenticationprovider.html#cfn-appsync-graphqlapi-additionalauthenticationprovider-authenticationtype)` property of an `AWS::AppSync::GraphQLApi` `[ AdditionalAuthenticationProvider](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-additionalauthenticationprovider.html)` object.",
+          "enum": [
+            "AWS_IAM",
+            "API_KEY",
+            "AWS_LAMBDA",
+            "OPENID_CONNECT",
+            "AMAZON_COGNITO_USER_POOLS"
+          ],
+          "type": "string"
+        },
+        "LambdaAuthorizer": {
+          "$ref": "#/definitions/LambdaAuthorizerConfig"
+        },
+        "OpenIDConnect": {
+          "$ref": "#/definitions/OpenIDConnectConfig"
+        },
+        "UserPool": {
+          "$ref": "#/definitions/UserPoolConfig"
+        }
+      },
+      "required": [
+        "Type"
+      ],
+      "additionalProperties": false
+    },
+    "Cache": {
+      "title": "Cache",
+      "type": "object",
+      "properties": {
+        "ApiCachingBehavior": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "Ttl": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "Type": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "AtRestEncryptionEnabled": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "TransitEncryptionEnabled": {
+          "$ref": "#/definitions/PassThroughProp"
+        }
+      },
+      "required": [
+        "ApiCachingBehavior",
+        "Ttl",
+        "Type"
+      ],
+      "additionalProperties": false
+    },
+    "Caching": {
+      "title": "Caching",
+      "type": "object",
+      "properties": {
+        "Ttl": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "CachingKeys": {
+          "title": "Cachingkeys",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PassThroughProp"
+          }
+        }
+      },
+      "required": [
+        "Ttl"
+      ],
+      "additionalProperties": false
+    },
+    "DataSources": {
+      "title": "DataSources",
+      "type": "object",
+      "properties": {
+        "DynamoDb": {
+          "title": "DynamoDb",
+          "markdownDescription": "Configure a DynamoDB table as a data source for your GraphQL API resolver.  \n*Type*: [DynamoDb](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-graphqlapi-datasource-dynamodb.html)  \n*Required*: No  \n*CloudFormation compatibility*: This property is unique to AWS SAM and doesn\u2019t have an CloudFormation equivalent.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/DynamoDBDataSource"
+          }
+        },
+        "Lambda": {
+          "title": "Lambda",
+          "markdownDescription": "Configure a Lambda function as a data source for your GraphQL API resolver.  \n*Type*: [Lambda](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-graphqlapi-datasource-lambda.html)  \n*Required*: No  \n*CloudFormation compatibility*: This property is unique to AWS SAM and doesn\u2019t have an CloudFormation equivalent.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/LambdaDataSource"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "DeltaSync": {
+      "title": "DeltaSync",
+      "type": "object",
+      "properties": {
+        "BaseTableTTL": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "DeltaSyncTableName": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "DeltaSyncTableTTL": {
+          "$ref": "#/definitions/PassThroughProp"
+        }
+      },
+      "required": [
+        "BaseTableTTL",
+        "DeltaSyncTableName",
+        "DeltaSyncTableTTL"
+      ],
+      "additionalProperties": false
+    },
+    "DomainName": {
+      "title": "DomainName",
+      "type": "object",
+      "properties": {
+        "CertificateArn": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "DomainName": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "Description": {
+          "$ref": "#/definitions/PassThroughProp"
+        }
+      },
+      "required": [
+        "CertificateArn",
+        "DomainName"
+      ],
+      "additionalProperties": false
+    },
+    "DynamoDBDataSource": {
+      "title": "DynamoDBDataSource",
+      "type": "object",
+      "properties": {
+        "TableName": {
+          "title": "TableName",
+          "markdownDescription": "The table name.  \n*Type*: String  \n*Required*: Yes  \n*CloudFormation compatibility*: This property is passed directly to the [`TableName`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-datasource-dynamodbconfig.html#cfn-appsync-datasource-dynamodbconfig-tablename) property of an `AWS::AppSync::DataSource DynamoDBConfig` object.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "ServiceRoleArn": {
+          "title": "ServiceRoleArn",
+          "markdownDescription": "The AWS Identity and Access Management (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/IAM.html) service role ARN for the data source. The system assumes this role when accessing the data source.  \nYou can specify `Permissions` or `ServiceRoleArn`, but not both.  \n*Type*: String  \n*Required*: No. If not specified, AWS SAM applies the default value for `Permissions`.  \n*CloudFormation compatibility*: This property is passed directly to the [`ServiceRoleArn`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-servicerolearn) property of an `AWS::AppSync::DataSource` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "TableArn": {
+          "title": "TableArn",
+          "markdownDescription": "The ARN for the DynamoDB table.  \n*Type*: String  \n*Required*: Conditional. If you don\u2019t specify `ServiceRoleArn`, `TableArn` is required.  \n*CloudFormation compatibility*: This property is unique to AWS SAM and doesn\u2019t have an CloudFormation equivalent.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "Permissions": {
+          "title": "Permissions",
+          "markdownDescription": "Provision permissions to your data source using [AWS SAM connectors](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/managing-permissions-connectors.html). You can provide any of the following values in a list:  \n+ `Read` \u2013 Allow your resolver to read your data source.\n+ `Write` \u2013 Allow your resolver to write to your data source.\nAWS SAM uses an `AWS::Serverless::Connector` resource which is transformed at deployment to provision your permissions. To learn about generated resources, see [CloudFormation resources generated when you specify AWS::Serverless::Connector](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-generated-resources-connector.html).  \nYou can specify `Permissions` or `ServiceRoleArn`, but not both. If neither are specified, AWS SAM will generate default values of `Read` and `Write`. To revoke access to your data source, remove the DynamoDB object from your AWS SAM template.\n*Type*: List  \n*Required*: No  \n*CloudFormation compatibility*: This property is unique to AWS SAM and doesn\u2019t have an CloudFormation equivalent. It is similar to the `Permissions` property of an `AWS::Serverless::Connector` resource.",
+          "type": "array",
+          "items": {
+            "enum": [
+              "Read",
+              "Write"
+            ],
+            "type": "string"
+          }
+        },
+        "Name": {
+          "title": "Name",
+          "markdownDescription": "The name of your data source. Specify this property to override the `LogicalId` value.  \n*Type*: String  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`Name`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-name) property of an `AWS::AppSync::DataSource` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "Description": {
+          "title": "Description",
+          "markdownDescription": "The description of your data source.  \n*Type*: String  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`Description`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-description) property of an `AWS::AppSync::DataSource` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "Region": {
+          "title": "Region",
+          "markdownDescription": "The AWS Region of your DynamoDB table. If you don\u2019t specify it, AWS SAM uses `[AWS::Region](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html#cfn-pseudo-param-region)`.  \n*Type*: String  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`AwsRegion`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-datasource-dynamodbconfig.html#cfn-appsync-datasource-dynamodbconfig-awsregion) property of an `AWS::AppSync::DataSource DynamoDBConfig` object.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "DeltaSync": {
+          "title": "DeltaSync",
+          "markdownDescription": "Describes a Delta Sync configuration.  \n*Type*: [DeltaSyncConfig](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-datasource-deltasyncconfig.html)  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`DeltaSyncConfig`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-datasource-dynamodbconfig.html#cfn-appsync-datasource-dynamodbconfig-deltasyncconfig) property of an `AWS::AppSync::DataSource DynamoDBConfig` object.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/DeltaSync"
+            }
+          ]
+        },
+        "UseCallerCredentials": {
+          "title": "UseCallerCredentials",
+          "markdownDescription": "Set to `true` to use IAM with this data source.  \n*Type*: Boolean  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`UseCallerCredentials`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-datasource-dynamodbconfig.html#cfn-appsync-datasource-dynamodbconfig-usecallercredentials) property of an `AWS::AppSync::DataSource DynamoDBConfig` object.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "Versioned": {
+          "title": "Versioned",
+          "markdownDescription": "Set to `true` to use [Conflict Detection, Conflict Resolution, and Sync](https://docs.aws.amazon.com/appsync/latest/devguide/conflict-detection-and-sync.html) with this data source.  \n*Type*: Boolean  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`Versioned`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-datasource-dynamodbconfig.html#cfn-appsync-datasource-dynamodbconfig-versioned) property of an `AWS::AppSync::DataSource DynamoDBConfig` object.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        }
+      },
+      "required": [
+        "TableName"
+      ],
+      "additionalProperties": false
+    },
+    "Function": {
+      "title": "Function",
+      "type": "object",
+      "properties": {
+        "DataSource": {
+          "title": "DataSource",
+          "markdownDescription": "The name of the data source that this function will attach to.  \n+ To reference a data source within the `AWS::Serverless::GraphQLApi` resource, specify its logical ID.\n+ To reference a data source outside of the `AWS::Serverless::GraphQLApi` resource, provide its `Name` attribute using the `Fn::GetAtt` intrinsic function. For example, `!GetAtt MyLambdaDataSource.Name`.\n+ To reference a data source from a different stack, use `[Fn::ImportValue](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-importvalue.html)`.\nIf a variation of `[NONE | None | none]` is specified, AWS SAM will generate a `None` value for the `AWS::AppSync::DataSource` [`Type`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-type) object.  \n*Type*: String  \n*Required*: Yes  \n*CloudFormation compatibility*: This property is passed directly to the [`DataSourceName`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-functionconfiguration.html#cfn-appsync-functionconfiguration-datasourcename) property of an `AWS::AppSync::FunctionConfiguration` resource.",
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "Runtime": {
+          "title": "Runtime",
+          "markdownDescription": "Describes a runtime used by an AWS AppSync pipeline resolver or AWS AppSync function. Specifies the name and version of the runtime to use.  \n*Type*: [Runtime](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-graphqlapi-function-runtime.html)  \n*Required*: Yes  \n*CloudFormation compatibility*: This property is unique to AWS SAM and doesn't have an CloudFormation equivalent. It is similar to the [`Runtime`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-functionconfiguration.html#cfn-appsync-functionconfiguration-runtime) property of an `AWS::AppSync::FunctionConfiguration` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Runtime"
+            }
+          ]
+        },
+        "InlineCode": {
+          "title": "InlineCode",
+          "markdownDescription": "The function code that contains the request and response functions.  \n*Type*: String  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`Code`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-functionconfiguration.html#cfn-appsync-functionconfiguration-code) property of an `AWS::AppSync::FunctionConfiguration` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "CodeUri": {
+          "title": "CodeUri",
+          "markdownDescription": "The function code\u2019s Amazon Simple Storage Service (Amazon S3) URI or path to local folder.  \nIf you specify a path to a local folder, CloudFormation requires that the file is first uploaded to Amazon S3 before deployment. You can use the AWS SAM\u00a0CLI to facilitate this process. For more information, see [How AWS SAM uploads local files at deployment](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/deploy-upload-local-files.html).  \n*Type*: String  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`CodeS3Location`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-functionconfiguration.html#cfn-appsync-functionconfiguration-codes3location) property of an `AWS::AppSync::FunctionConfiguration` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "Description": {
+          "title": "Description",
+          "markdownDescription": "The description of your function.  \n*Type*: String  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`Description`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-functionconfiguration.html#cfn-appsync-functionconfiguration-description) property of an `AWS::AppSync::FunctionConfiguration` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "MaxBatchSize": {
+          "title": "MaxBatchSize",
+          "markdownDescription": "The maximum number of resolver request inputs that will be sent to a single AWS Lambda function in a `BatchInvoke` operation.  \n*Type*: Integer  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [MaxBatchSize](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-functionconfiguration.html#cfn-appsync-functionconfiguration-maxbatchsize) property of an `AWS::AppSync::FunctionConfiguration` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "Name": {
+          "title": "Name",
+          "markdownDescription": "The name of the function. Specify to override the `LogicalId` value.  \n*Type*: String  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`Name`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-functionconfiguration.html#cfn-appsync-functionconfiguration-name) property of an `AWS::AppSync::FunctionConfiguration` resource.",
+          "type": "string"
+        },
+        "Id": {
+          "title": "Id",
+          "markdownDescription": "The Function ID for a function located outside of the `AWS::Serverless::GraphQLApi` resource.  \n+ To reference a function within the same AWS SAM template, use the `Fn::GetAtt` intrinsic function. For example `Id: !GetAtt createPostItemFunc.FunctionId`.\n+ To reference a function from a different stack, use `[Fn::ImportValue](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-importvalue.html)`.\nWhen using `Id`, all other properties are not allowed. AWS SAM will automatically pass the Function ID of your referenced function.  \n*Type*: String  \n*Required*: No  \n*CloudFormation compatibility*: This property is unique to AWS SAM and doesn\u2019t have an CloudFormation equivalent.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "Sync": {
+          "title": "Sync",
+          "markdownDescription": "Describes a Sync configuration for a function.  \nSpecifies which Conflict Detection strategy and Resolution strategy to use when the function is invoked.  \n*Type*: [SyncConfig](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-functionconfiguration-syncconfig.html)  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`SyncConfig`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-functionconfiguration.html#cfn-appsync-functionconfiguration-syncconfig) property of an `AWS::AppSync::FunctionConfiguration` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Sync"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "LambdaAuthorizerConfig": {
+      "title": "LambdaAuthorizerConfig",
+      "type": "object",
+      "properties": {
+        "AuthorizerResultTtlInSeconds": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "AuthorizerUri": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "IdentityValidationExpression": {
+          "$ref": "#/definitions/PassThroughProp"
+        }
+      },
+      "required": [
+        "AuthorizerUri"
+      ],
+      "additionalProperties": false
+    },
+    "LambdaConflictHandlerConfig": {
+      "title": "LambdaConflictHandlerConfig",
+      "type": "object",
+      "properties": {
+        "LambdaConflictHandlerArn": {
+          "$ref": "#/definitions/PassThroughProp"
+        }
+      },
+      "required": [
+        "LambdaConflictHandlerArn"
+      ],
+      "additionalProperties": false
+    },
+    "LambdaDataSource": {
+      "title": "LambdaDataSource",
+      "type": "object",
+      "properties": {
+        "FunctionArn": {
+          "title": "FunctionArn",
+          "markdownDescription": "The ARN for the Lambda function.  \n*Type*: String  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`LambdaFunctionArn`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-datasource-lambdaconfig.html#cfn-appsync-datasource-lambdaconfig-lambdafunctionarn) property of an `AWS::AppSync::DataSource LambdaConfig` object.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "ServiceRoleArn": {
+          "title": "ServiceRoleArn",
+          "markdownDescription": "The AWS Identity and Access Management (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/IAM.html) service role ARN for the data source. The system assumes this role when accessing the data source.  \nTo revoke access to your data source, remove the Lambda object from your AWS SAM template.\n*Type*: String  \n*Required*: No. If not specified, AWS SAM will provision `Write` permissions using [AWS SAM connectors](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/managing-permissions-connectors.html).  \n*CloudFormation compatibility*: This property is passed directly to the [`ServiceRoleArn`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-servicerolearn) property of an `AWS::AppSync::DataSource` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "Name": {
+          "title": "Name",
+          "markdownDescription": "The name of your data source. Specify this property to override the `LogicalId` value.  \n*Type*: String  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`Name`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-name) property of an `AWS::AppSync::DataSource` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "Description": {
+          "title": "Description",
+          "markdownDescription": "The description of your data source.  \n*Type*: String  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`Description`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-description) property of an `AWS::AppSync::DataSource` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        }
+      },
+      "required": [
+        "FunctionArn"
+      ],
+      "additionalProperties": false
+    },
+    "Logging": {
+      "title": "Logging",
+      "type": "object",
+      "properties": {
+        "CloudWatchLogsRoleArn": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "ExcludeVerboseContent": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "FieldLogLevel": {
+          "$ref": "#/definitions/PassThroughProp"
+        }
+      },
+      "additionalProperties": false
+    },
+    "OpenIDConnectConfig": {
+      "title": "OpenIDConnectConfig",
+      "type": "object",
+      "properties": {
+        "AuthTTL": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "ClientId": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "IatTTL": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "Issuer": {
+          "$ref": "#/definitions/PassThroughProp"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PassThroughProp": {
+      "title": "PassThroughProp"
+    },
+    "Resolver": {
+      "title": "Resolver",
+      "type": "object",
+      "properties": {
+        "FieldName": {
+          "title": "FieldName",
+          "markdownDescription": "The name of your resolver. Specify this property to override the `LogicalId` value.  \n*Type*: String  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`FieldName`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-resolver.html#cfn-appsync-resolver-fieldname) property of an `AWS::AppSync::Resolver` resource.",
+          "type": "string"
+        },
+        "Caching": {
+          "title": "Caching",
+          "markdownDescription": "The caching configuration for the resolver that has caching activated.  \n*Type*: [CachingConfig](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-resolver-cachingconfig.html)  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`CachingConfig`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-resolver.html#cfn-appsync-resolver-cachingconfig) property of an `AWS::AppSync::Resolver` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Caching"
+            }
+          ]
+        },
+        "InlineCode": {
+          "title": "InlineCode",
+          "markdownDescription": "The resolver code that contains the request and response functions.  \nIf neither `CodeUri` or `InlineCode` are provided, AWS SAM will generate `InlineCode` that redirects the request to the first pipeline function and receives the response from the last pipeline function.  \n*Type*: String  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`Code`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-resolver.html#cfn-appsync-resolver-code) property of an `AWS::AppSync::Resolver` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "CodeUri": {
+          "title": "CodeUri",
+          "markdownDescription": "The resolver function code\u2019s Amazon Simple Storage Service (Amazon S3) URI or path to a local folder.  \nIf you specify a path to a local folder, CloudFormation requires that the file is first uploaded to Amazon S3 before deployment. You can use the AWS SAM\u00a0CLI to facilitate this process. For more information, see [How AWS SAM uploads local files at deployment](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/deploy-upload-local-files.html).  \nIf neither `CodeUri` or `InlineCode` are provided, AWS SAM will generate `InlineCode` that redirects the request to the first pipeline function and receives the response from the last pipeline function.  \n*Type*: String  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`CodeS3Location`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-resolver.html#cfn-appsync-resolver-codes3location) property of an `AWS::AppSync::Resolver` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "MaxBatchSize": {
+          "title": "MaxBatchSize",
+          "markdownDescription": "The maximum number of resolver request inputs that will be sent to a single AWS Lambda function in a `BatchInvoke` operation.  \n*Type*: Integer  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`MaxBatchSize`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-resolver.html#cfn-appsync-resolver-maxbatchsize) property of an `AWS::AppSync::Resolver` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "Pipeline": {
+          "title": "Pipeline",
+          "markdownDescription": "Functions linked with the pipeline resolver. Specify functions by logical ID in a list.  \n*Type*: List  \n*Required*: Yes  \n*CloudFormation compatibility*: This property is unique to AWS SAM and doesn't have an CloudFormation equivalent. It is similar to the [`PipelineConfig`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-resolver.html#cfn-appsync-resolver-pipelineconfig) property of an `AWS::AppSync::Resolver` resource.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Runtime": {
+          "title": "Runtime",
+          "markdownDescription": "The runtime of your pipeline resolver or function. Specifies the name and version to use.  \n*Type*: [Runtime](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-graphqlapi-resolver-runtime.html)  \n*Required*: Yes  \n*CloudFormation compatibility*: This property is unique to AWS SAM and doesn't have an CloudFormation equivalent. It is similar to the [`Runtime`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-resolver.html#cfn-appsync-resolver-runtime) property of an `AWS::AppSync::Resolver` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Runtime"
+            }
+          ]
+        },
+        "Sync": {
+          "title": "Sync",
+          "markdownDescription": "Describes a Sync configuration for a resolver.  \nSpecifies which Conflict Detection strategy and Resolution strategy to use when the resolver is invoked.  \n*Type*: [SyncConfig](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-resolver-syncconfig.html)  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`SyncConfig`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-resolver.html#cfn-appsync-resolver-syncconfig) property of an `AWS::AppSync::Resolver` resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Sync"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "Runtime": {
+      "title": "Runtime",
+      "type": "object",
+      "properties": {
+        "Name": {
+          "title": "Name",
+          "markdownDescription": "The name of the runtime to use. Currently, the only allowed value is `APPSYNC_JS`.  \n*Type*: String  \n*Required*: Yes  \n*CloudFormation compatibility*: This property is passed directly to the [`Name`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-functionconfiguration-appsyncruntime.html#cfn-appsync-functionconfiguration-appsyncruntime-name) property of an `AWS::AppSync::FunctionConfiguration AppSyncRuntime` object.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        },
+        "Version": {
+          "title": "Version",
+          "markdownDescription": "The version of the runtime to use. Currently, the only allowed version is `1.0.0`.  \n*Type*: String  \n*Required*: Yes  \n*CloudFormation compatibility*: This property is passed directly to the [`RuntimeVersion`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-functionconfiguration-appsyncruntime.html#cfn-appsync-functionconfiguration-appsyncruntime-runtimeversion) property of an `AWS::AppSync::FunctionConfiguration AppSyncRuntime` object.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PassThroughProp"
+            }
+          ]
+        }
+      },
+      "required": [
+        "Name",
+        "Version"
+      ],
+      "additionalProperties": false
+    },
+    "Sync": {
+      "title": "Sync",
+      "type": "object",
+      "properties": {
+        "ConflictDetection": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "ConflictHandler": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "LambdaConflictHandlerConfig": {
+          "$ref": "#/definitions/LambdaConflictHandlerConfig"
+        }
+      },
+      "required": [
+        "ConflictDetection"
+      ],
+      "additionalProperties": false
+    },
+    "UserPoolConfig": {
+      "title": "UserPoolConfig",
+      "type": "object",
+      "properties": {
+        "AppIdClientRegex": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "AwsRegion": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "DefaultAction": {
+          "$ref": "#/definitions/PassThroughProp"
+        },
+        "UserPoolId": {
+          "$ref": "#/definitions/PassThroughProp"
+        }
+      },
+      "required": [
+        "UserPoolId"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

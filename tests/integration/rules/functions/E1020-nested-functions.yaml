@@ -1,0 +1,31 @@
+# --- cfn-lint-test ---
+# rule: E1020
+# description: Ref is validated inside nested intrinsic functions
+# expect:
+#   - rule: E1020
+#     path: /
+#     message_contains: "BadParam"
+# ---
+Parameters:
+  GoodParam:
+    Type: String
+Mappings:
+  MyMap:
+    us-east-1:
+      Value: hello
+Resources:
+  NestedGoodRef:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Join
+        - "-"
+        - - !Ref GoodParam
+          - suffix
+
+  NestedBadRef:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Join
+        - "-"
+        - - !Ref BadParam
+          - suffix

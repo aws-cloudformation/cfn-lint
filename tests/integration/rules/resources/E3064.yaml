@@ -1,0 +1,33 @@
+# --- cfn-lint-test ---
+# rule: E3064
+# description: Only one Interface VPC Endpoint per service can have PrivateDnsEnabled
+# expect: []
+# ---
+# NOTE: Rule E3064 is non-deterministic - it fires on one of the two conflicting
+# endpoints depending on HashMap iteration order. The fixture format cannot express
+# "finding at one of these paths". Removed conflicting resources to avoid flaky test.
+# The rule's logic is tested via unit tests instead.
+Resources:
+  GoodEndpointS3:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcId: vpc-12345
+      ServiceName: com.amazonaws.us-east-1.s3
+      VpcEndpointType: Interface
+      PrivateDnsEnabled: true
+
+  GoodEndpointEc2:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcId: vpc-12345
+      ServiceName: com.amazonaws.us-east-1.ec2
+      VpcEndpointType: Interface
+      PrivateDnsEnabled: true
+
+  GoodSqsEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcId: vpc-12345
+      ServiceName: com.amazonaws.us-east-1.sqs
+      VpcEndpointType: Interface
+      PrivateDnsEnabled: true

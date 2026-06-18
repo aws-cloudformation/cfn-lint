@@ -1,0 +1,31 @@
+# --- cfn-lint-test ---
+# rule: E1029
+# description: Multiple strings with variable patterns without Fn::Sub
+# expect:
+#   - rule: E1029
+#     path: /Resources/BadRefInName/Properties/QueueName
+#     message_contains: "${MyParam}"
+#   - rule: E1029
+#     path: /Resources/BadStackNameInTag/Properties/Tags/0/Value
+#     message_contains: "${AWS::StackName}"
+# ---
+Parameters:
+  MyParam:
+    Type: String
+Resources:
+  GoodSubUsed:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "${MyParam}-queue"
+
+  BadRefInName:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "${MyParam}-queue"
+
+  BadStackNameInTag:
+    Type: AWS::S3::Bucket
+    Properties:
+      Tags:
+        - Key: Name
+          Value: "${AWS::StackName}-bucket"

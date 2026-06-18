@@ -1,0 +1,18 @@
+# --- cfn-lint-test ---
+# rule: E1020
+# description: Ref works correctly with GetAtt in the same template
+# expect: []
+# ---
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+
+  MyQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Ref MyBucket
+
+  OutputsGetAtt:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !GetAtt MyBucket.Arn

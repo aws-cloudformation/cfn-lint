@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  Topic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: MyTopic
+
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: my-function
+      Runtime: python3.12
+      Handler: index.handler
+      Role: arn:aws:iam::123456789012:role/MyRole
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return
+
+  SqsSubscriptionWithLambdaArn:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref Topic
+      Protocol: sqs
+      Endpoint: !GetAtt LambdaFunction.Arn

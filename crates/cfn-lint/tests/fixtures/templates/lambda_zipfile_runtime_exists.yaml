@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  # E3678: ZipFile requires Runtime to be specified
+  FunctionMissingRuntime:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: my-function
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "Hello"

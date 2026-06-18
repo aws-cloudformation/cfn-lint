@@ -1,0 +1,14 @@
+# --- cfn-lint-test ---
+# rule: E1001
+# description: Template must have Resources section and valid top-level keys
+# expect:
+#   - rule: E1001
+#     path: /
+#     message_contains: "BadSection"
+# ---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Template with invalid top-level key
+BadSection: this-is-not-valid
+Resources:
+  Placeholder:
+    Type: AWS::CloudFormation::WaitConditionHandle

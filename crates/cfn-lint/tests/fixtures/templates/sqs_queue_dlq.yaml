@@ -1,0 +1,15 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  StandardQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: false
+
+  FifoSourceQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: source.fifo
+      FifoQueue: true
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt StandardQueue.Arn
+        maxReceiveCount: 5

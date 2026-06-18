@@ -1,0 +1,36 @@
+# --- cfn-lint-test ---
+# rule: E3002
+# description: Additional properties not allowed
+# expect:
+#   - rule: E3002
+#     path: /Resources/BadSingleExtra/Properties
+#     message_contains: "Additional properties are not allowed"
+#     message_contains_value: "FakeProp"
+#   - rule: E3002
+#     path: /Resources/BadMultipleExtra/Properties
+#     message_contains: "Additional properties are not allowed"
+#     message_contains_value: "Bogus1"
+#   - rule: E3002
+#     path: /Resources/BadMultipleExtra/Properties
+#     message_contains: "Additional properties are not allowed"
+#     message_contains_value: "Bogus2"
+# ---
+Resources:
+  GoodQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: valid-queue
+      DelaySeconds: 5
+
+  BadSingleExtra:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: my-queue
+      FakeProp: not-real
+
+  BadMultipleExtra:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-bucket
+      Bogus1: aaa
+      Bogus2: bbb

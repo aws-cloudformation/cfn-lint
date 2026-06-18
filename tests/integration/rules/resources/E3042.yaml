@@ -1,0 +1,66 @@
+# --- cfn-lint-test ---
+# rule: E3042
+# description: Validate at least one essential container in ECS TaskDefinition
+# expect:
+#   - rule: E3042
+#     path: /Resources/BadAllNonEssential/Properties/ContainerDefinitions
+#     message_contains: "essential container"
+#   - rule: E3042
+#     path: /Resources/BadTwoNonEssential/Properties/ContainerDefinitions
+#     message_contains: "essential container"
+# ---
+Resources:
+  GoodOneEssential:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          Essential: true
+
+  GoodMixedEssential:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          Essential: true
+        - Name: sidecar
+          Image: fluentd
+          Essential: false
+
+  GoodDefaultEssential:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+
+  GoodOneDefaultOneFalse:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Name: sidecar
+          Image: fluentd
+          Essential: false
+        - Name: main
+          Image: nginx
+
+  BadAllNonEssential:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          Essential: false
+
+  BadTwoNonEssential:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          Essential: false
+        - Name: sidecar
+          Image: fluentd
+          Essential: false

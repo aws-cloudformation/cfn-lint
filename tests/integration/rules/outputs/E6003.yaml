@@ -1,0 +1,19 @@
+# --- cfn-lint-test ---
+# rule: E6003
+# description: Each output must have the required Value property
+# expect:
+#   - rule: E6003
+#     path: /Outputs/MissingValue
+#     message_contains: "required"
+# ---
+Outputs:
+  GoodOutput:
+    Value: some-value
+    Description: Has required Value
+
+  MissingValue:
+    Description: "This output has no Value"
+
+Resources:
+  Placeholder:
+    Type: AWS::CloudFormation::WaitConditionHandle

@@ -1,0 +1,44 @@
+# --- cfn-lint-test ---
+# rule: E7001
+# description: Mappings have appropriate configuration and structure
+# expect:
+#   - rule: E7001
+#     path: /Mappings/BadMappingType
+#     message_contains: "is not of type"
+#   - rule: E7001
+#     path: /Mappings/BadSecondLevel/Key
+#     message_contains: "is not of type"
+#   - rule: E7001
+#     path: /Mappings/BadValueType/Key/SubKey
+#     message_contains: "is not of type"
+# ---
+Mappings:
+  GoodMapping:
+    us-east-1:
+      AMI: ami-12345678
+      Name: US East
+
+  GoodMappingWithList:
+    us-east-1:
+      AZs:
+        - us-east-1a
+        - us-east-1b
+
+  BadMappingType:
+    - this-should-be-an-object
+
+  BadSecondLevel:
+    Key:
+      - this-should-be-an-object
+
+  BadValueType:
+    Key:
+      SubKey:
+        Nested: not-allowed-object-value
+
+Resources:
+  Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !FindInMap [GoodMapping, us-east-1, AMI]
+      InstanceType: t2.micro

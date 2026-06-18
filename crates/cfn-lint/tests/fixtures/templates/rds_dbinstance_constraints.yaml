@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  # E3682: Aurora instance should not specify AllocatedStorage, BackupRetentionPeriod, etc.
+  AuroraInstanceWithExclusiveProps:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Engine: aurora-mysql
+      DBInstanceClass: db.r6g.large
+      DBClusterIdentifier: !Ref AuroraCluster
+      AllocatedStorage: "100"
+      BackupRetentionPeriod: 7
+
+  # E3691: Invalid EngineVersion for mysql engine
+  InstanceBadEngineVersion:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Engine: mysql
+      EngineVersion: "99.99.99"
+      DBInstanceClass: db.m5.large
+      MasterUsername: admin
+      MasterUserPassword: password123
+
+  # E3025: Invalid DBInstanceClass (not in regional enum)
+  InstanceBadClass:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Engine: mysql
+      EngineVersion: "8.0.35"
+      DBInstanceClass: db.t3.nano
+      MasterUsername: admin
+      MasterUserPassword: password123
+
+  # Supporting resource for E3707 and E3709
+  AuroraCluster:
+    Type: AWS::RDS::DBCluster
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Engine: aurora-postgresql
+      EngineVersion: "16.4"
+      MasterUsername: admin
+      MasterUserPassword: password123
+
+  # E3707: Instance engine must match cluster engine
+  # E3709: Instance StorageEncrypted must match cluster
+  InstanceEngineMismatch:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Engine: aurora-mysql
+      DBInstanceClass: db.r6g.large
+      DBClusterIdentifier: !Ref AuroraCluster
+      StorageEncrypted: true

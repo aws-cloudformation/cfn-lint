@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  ValidSnapStartFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: valid-snapstart
+      Runtime: java21
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Handler: com.example.Handler
+      Code:
+        S3Bucket: my-bucket
+        S3Key: code.jar
+      SnapStart:
+        ApplyOn: PublishedVersions
+  InvalidSnapStartFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: invalid-snapstart
+      Runtime: python3.9
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Handler: index.handler
+      Code:
+        S3Bucket: my-bucket
+        S3Key: code.zip
+      SnapStart:
+        ApplyOn: PublishedVersions
+  Bucket:
+    Type: AWS::S3::Bucket

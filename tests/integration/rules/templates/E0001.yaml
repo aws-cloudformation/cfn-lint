@@ -1,0 +1,42 @@
+# --- cfn-lint-test ---
+# rule: E0001
+# description: SAM transform validation for required properties and event sources
+# expect:
+#   - rule: E0001
+#     path: /Resources/BadApi
+#     message_contains: "StageName"
+#   - rule: E0001
+#     path: /Resources/MyFunction/Properties/Events/BadSchedule
+#     message_contains: "Schedule"
+# ---
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  GoodFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      CodeUri: s3://bucket/code.zip
+      Events:
+        GoodSchedule:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 hour)
+
+  BadApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Description: Missing StageName
+
+  MyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      CodeUri: s3://bucket/code.zip
+      Events:
+        BadSchedule:
+          Type: Schedule
+          Properties:
+            Description: Missing Schedule property

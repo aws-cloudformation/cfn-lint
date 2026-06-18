@@ -1,0 +1,34 @@
+# --- cfn-lint-test ---
+# rule: W2001
+# description: Parameters defined but not used should produce a warning
+# expect:
+#   - rule: W2001
+#     path: /Parameters/UnusedParam
+#     message_contains: "defined but not used"
+#     message_contains_value: "UnusedParam"
+#   - rule: W2001
+#     path: /Parameters/AnotherUnused
+#     message_contains: "defined but not used"
+#     message_contains_value: "AnotherUnused"
+# ---
+Parameters:
+  UsedViaRef:
+    Type: String
+
+  UsedViaSub:
+    Type: String
+
+  UnusedParam:
+    Type: String
+
+  AnotherUnused:
+    Type: Number
+
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref UsedViaRef
+      Tags:
+        - Key: Env
+          Value: !Sub "${UsedViaSub}-suffix"

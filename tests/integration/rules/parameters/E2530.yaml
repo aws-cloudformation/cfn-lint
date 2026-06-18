@@ -1,0 +1,46 @@
+# --- cfn-lint-test ---
+# rule: E2530
+# description: SnapStart requires a supported runtime
+# expect:
+#   - rule: E2530
+#     path: /Resources/BadSnapStart/Properties/SnapStart/ApplyOn
+#     message_contains: "not supported for 'SnapStart'"
+# ---
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  GoodSnapStart:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: good-snap
+      Runtime: java21
+      Handler: com.example.Handler
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Code:
+        S3Bucket: my-bucket
+        S3Key: code.jar
+      SnapStart:
+        ApplyOn: PublishedVersions
+
+  BadSnapStart:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: bad-snap
+      Runtime: python3.11
+      Handler: index.handler
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Code:
+        S3Bucket: my-bucket
+        S3Key: code.zip
+      SnapStart:
+        ApplyOn: PublishedVersions
+
+  NoSnapStart:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: no-snap
+      Runtime: python3.11
+      Handler: index.handler
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Code:
+        S3Bucket: my-bucket
+        S3Key: code.zip

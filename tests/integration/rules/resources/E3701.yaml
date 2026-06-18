@@ -1,0 +1,105 @@
+# --- cfn-lint-test ---
+# rule: E3701
+# description: CodePipeline InputArtifacts must reference defined OutputArtifacts
+# expect:
+#   - rule: E3701
+#     path: /Resources/BadPipeline/Properties/Stages/1/Actions/0/InputArtifacts/0/Name
+#     message_contains: "not previously defined"
+#   - rule: E3701
+#     path: /Resources/DuplicatePipeline/Properties/Stages/0/Actions/1/OutputArtifacts/0/Name
+#     message_contains: "already a defined"
+# ---
+Resources:
+  GoodPipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: arn:aws:iam::123456789012:role/PipelineRole
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: S3Source
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Provider: S3
+                Version: "1"
+              OutputArtifacts:
+                - Name: SourceOutput
+              Configuration:
+                S3Bucket: my-bucket
+                S3ObjectKey: source.zip
+        - Name: Deploy
+          Actions:
+            - Name: DeployAction
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: S3
+                Version: "1"
+              InputArtifacts:
+                - Name: SourceOutput
+              Configuration:
+                BucketName: deploy-bucket
+                Extract: "true"
+
+  BadPipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: arn:aws:iam::123456789012:role/PipelineRole
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: S3Source
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Provider: S3
+                Version: "1"
+              OutputArtifacts:
+                - Name: SourceOutput
+              Configuration:
+                S3Bucket: my-bucket
+                S3ObjectKey: source.zip
+        - Name: Deploy
+          Actions:
+            - Name: DeployAction
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: S3
+                Version: "1"
+              InputArtifacts:
+                - Name: NonExistentArtifact
+              Configuration:
+                BucketName: deploy-bucket
+                Extract: "true"
+
+  DuplicatePipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: arn:aws:iam::123456789012:role/PipelineRole
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: S3Source1
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Provider: S3
+                Version: "1"
+              OutputArtifacts:
+                - Name: DuplicateName
+              Configuration:
+                S3Bucket: bucket1
+                S3ObjectKey: source1.zip
+            - Name: S3Source2
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Provider: S3
+                Version: "1"
+              OutputArtifacts:
+                - Name: DuplicateName
+              Configuration:
+                S3Bucket: bucket2
+                S3ObjectKey: source2.zip

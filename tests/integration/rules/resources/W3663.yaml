@@ -1,0 +1,95 @@
+# --- cfn-lint-test ---
+# rule: W3663
+# description: Lambda permission requires sourceAccount when SourceArn lacks account ID
+# expect:
+#   - rule: W3663
+#     path: /Resources/BadMissingSourceAccount/Properties/permission
+#     message_contains: "sourceAccount"
+# ---
+# NOTE: Rule W3663 only detects GetAtt-based SourceArn missing SourceAccount in v2,
+# not static string ARN patterns (BadStringArnNoAccount).
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+
+  SQS:
+    Type: AWS::SQS::Queue
+
+  GoodWithSourceAccount:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+      SourceArn: !GetAtt Bucket.Arn
+      SourceAccount: !Ref AWS::AccountId
+
+  GoodSqsNoSourceAccount:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: sqs.amazonaws.com
+      SourceArn: !GetAtt SQS.Arn
+
+  GoodStringArnWithAccount:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: sqs.amazonaws.com
+      SourceArn: "arn:aws:sqs:us-east-1:123456789012:queue"
+
+  GoodStringArnWithSourceAccount:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+      SourceArn: "arn:aws:s3:::bucket_name"
+      SourceAccount: "123456789012"
+
+  GoodNoSourceArn:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+
+  BadMissingSourceAccount:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+      SourceArn: !GetAtt Bucket.Arn
+
+  BadStringArnNoAccount:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MyFunction
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+      SourceArn: "arn:aws:s3:::bucket_name"
+
+  MyFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "Hello"
+      Role: !GetAtt Role.Arn
+
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole

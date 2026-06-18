@@ -1,0 +1,124 @@
+{
+  "typeName": "AWS::Serverless::Application",
+  "description": "",
+  "properties": {
+    "Location": {
+      "title": "Location",
+      "markdownDescription": "Template URL, file path, or location object of a nested application.  \nIf a template URL is provided, it must follow the format specified in the [CloudFormation TemplateUrl documentation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-stack.html#cfn-cloudformation-stack-templateurl) and contain a valid CloudFormation or SAM template. An [ApplicationLocationObject](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-application-applicationlocationobject.html) can be used to specify an application that has been published to the [AWS Serverless Application Repository](https://docs.aws.amazon.com/serverlessrepo/latest/devguide/what-is-serverlessrepo.html).  \nIf a local file path is provided, the template must go through the workflow that includes the `sam deploy` or `sam package` command, in order for the application to be transformed properly.  \n*Type*: String \\$1 [ApplicationLocationObject](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-application-applicationlocationobject.html)  \n*Required*: Yes  \n*CloudFormation compatibility*: This property is similar to the [`TemplateURL`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-stack.html#cfn-cloudformation-stack-templateurl) property of an `AWS::CloudFormation::Stack` resource. The CloudFormation version does not take an [ApplicationLocationObject](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-application-applicationlocationobject.html) to retrieve an application from the AWS Serverless Application Repository.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/Location"
+        }
+      ]
+    },
+    "NotificationARNs": {
+      "title": "NotificationARNs",
+      "__samPassThrough": {
+        "schemaPath": [
+          "definitions",
+          "AWS::CloudFormation::Stack",
+          "properties",
+          "Properties",
+          "properties",
+          "NotificationARNs"
+        ],
+        "markdownDescriptionOverride": "A list of existing Amazon SNS topics where notifications about stack events are sent.  \n*Type*: List  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`NotificationARNs`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-stack.html#cfn-cloudformation-stack-notificationarns) property of an `AWS::CloudFormation::Stack` resource."
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/PassThroughProp"
+        }
+      ]
+    },
+    "Parameters": {
+      "title": "Parameters",
+      "__samPassThrough": {
+        "schemaPath": [
+          "definitions",
+          "AWS::CloudFormation::Stack",
+          "properties",
+          "Properties",
+          "properties",
+          "Parameters"
+        ],
+        "markdownDescriptionOverride": "Application parameter values.  \n*Type*: Map  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`Parameters`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-stack.html#cfn-cloudformation-stack-parameters) property of an `AWS::CloudFormation::Stack` resource."
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/PassThroughProp"
+        }
+      ]
+    },
+    "Tags": {
+      "title": "Tags",
+      "markdownDescription": "A map (string to string) that specifies the tags to be added to this application. Keys and values are limited to alphanumeric characters. Keys can be 1 to 127 Unicode characters in length and cannot be prefixed with aws:. Values can be 1 to 255 Unicode characters in length.  \n*Type*: Map  \n*Required*: No  \n*CloudFormation compatibility*: This property is similar to the [`Tags`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-stack.html#cfn-cloudformation-stack-tags) property of an `AWS::CloudFormation::Stack` resource. The Tags property in SAM consists of Key:Value pairs; in CloudFormation it consists of a list of Tag objects. When the stack is created, SAM will automatically add a `lambda:createdBy:SAM` tag to this application. In addition, if this application is from the AWS Serverless Application Repository, then SAM will also automatically the two additional tags `serverlessrepo:applicationId:ApplicationId` and `serverlessrepo:semanticVersion:SemanticVersion`.",
+      "type": "object"
+    },
+    "TimeoutInMinutes": {
+      "title": "TimeoutInMinutes",
+      "__samPassThrough": {
+        "schemaPath": [
+          "definitions",
+          "AWS::CloudFormation::Stack",
+          "properties",
+          "Properties",
+          "properties",
+          "TimeoutInMinutes"
+        ],
+        "markdownDescriptionOverride": "The length of time, in minutes, that CloudFormation waits for the nested stack to reach the `CREATE_COMPLETE` state. The default is no timeout. When CloudFormation detects that the nested stack has reached the `CREATE_COMPLETE` state, it marks the nested stack resource as `CREATE_COMPLETE` in the parent stack and resumes creating the parent stack. If the timeout period expires before the nested stack reaches `CREATE_COMPLETE`, CloudFormation marks the nested stack as failed and rolls back both the nested stack and parent stack.  \n*Type*: Integer  \n*Required*: No  \n*CloudFormation compatibility*: This property is passed directly to the [`TimeoutInMinutes`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-stack.html#cfn-cloudformation-stack-timeoutinminutes) property of an `AWS::CloudFormation::Stack` resource."
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/PassThroughProp"
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "Location"
+  ],
+  "definitions": {
+    "Location": {
+      "title": "Location",
+      "type": "object",
+      "properties": {
+        "ApplicationId": {
+          "title": "ApplicationId",
+          "markdownDescription": "The Amazon Resource Name (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/ARN.html) of the application.  \n*Type*: String  \n*Required*: Yes  \n*CloudFormation compatibility*: This property is unique to AWS SAM and doesn't have an CloudFormation equivalent.",
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "SemanticVersion": {
+          "title": "SemanticVersion",
+          "markdownDescription": "The semantic version of the application.  \n*Type*: String  \n*Required*: Yes  \n*CloudFormation compatibility*: This property is unique to AWS SAM and doesn't have an CloudFormation equivalent.",
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "required": [
+        "ApplicationId",
+        "SemanticVersion"
+      ],
+      "additionalProperties": false
+    },
+    "PassThroughProp": {
+      "title": "PassThroughProp"
+    }
+  }
+}

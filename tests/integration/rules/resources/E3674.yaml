@@ -1,0 +1,40 @@
+# --- cfn-lint-test ---
+# rule: E3674
+# description: Primary cannot be True when PrivateIpAddress is specified
+# expect:
+#   - rule: E3674
+#     path: /Resources/BadInstance/Properties/NetworkInterfaces/0/PrivateIpAddresses/0/Primary
+#     message_contains: "false"
+# ---
+Resources:
+  GoodInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      InstanceType: t2.micro
+      NetworkInterfaces:
+        - DeviceIndex: "0"
+          SubnetId: subnet-12345
+          PrivateIpAddresses:
+            - PrivateIpAddress: "10.0.0.5"
+              Primary: false
+
+  GoodInstanceNoPrivateIp:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      InstanceType: t2.micro
+      SubnetId: subnet-12345
+
+  BadInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      InstanceType: t2.micro
+      PrivateIpAddress: "10.0.0.10"
+      NetworkInterfaces:
+        - DeviceIndex: "0"
+          SubnetId: subnet-12345
+          PrivateIpAddresses:
+            - PrivateIpAddress: "10.0.0.11"
+              Primary: true

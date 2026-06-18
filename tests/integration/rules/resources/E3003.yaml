@@ -1,0 +1,31 @@
+# --- cfn-lint-test ---
+# rule: E3003
+# description: Required properties missing
+# expect:
+#   - rule: E3003
+#     path: /Resources/BadLambdaMissingRuntime/Properties
+#     message_contains: "is a required property"
+#     message_contains_value: "Role"
+#   - rule: E3003
+#     path: /Resources/BadLambdaMissingRuntime/Properties
+#     message_contains: "is a required property"
+#     message_contains_value: "Code"
+# ---
+Resources:
+  GoodLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: good-function
+      Runtime: python3.12
+      Handler: index.handler
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/MyRole"
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "ok"
+
+  BadLambdaMissingRuntime:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: missing-required
+      Handler: index.handler

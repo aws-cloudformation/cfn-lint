@@ -1,0 +1,58 @@
+# --- cfn-lint-test ---
+# rule: E3693
+# description: Validate Aurora DB cluster configuration
+# expect:
+#   - rule: E3693
+#     path: /Resources/BadAuroraWithIo1Storage/Properties/StorageType
+#     message_contains: "aurora"
+#   - rule: E3693
+#     path: /Resources/BadAuroraWithExtraProps/Properties/AllocatedStorage
+#     message_contains: "not allowed"
+#   - rule: E3693
+#     path: /Resources/BadAuroraWithExtraProps/Properties/DBClusterInstanceClass
+#     message_contains: "not allowed"
+#   - rule: E3693
+#     path: /Resources/BadAuroraWithExtraProps/Properties/Iops
+#     message_contains: "not allowed"
+# ---
+Resources:
+  GoodAuroraCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-mysql
+      MasterUsername: admin
+      MasterUserPassword: secret123
+
+  GoodAuroraWithAuroraStorage:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-mysql
+      StorageType: aurora
+      MasterUsername: admin
+      MasterUserPassword: secret123
+
+  GoodAuroraWithIopt1Storage:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-mysql
+      StorageType: aurora-iopt1
+      MasterUsername: admin
+      MasterUserPassword: secret123
+
+  BadAuroraWithIo1Storage:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-mysql
+      StorageType: io1
+      MasterUsername: admin
+      MasterUserPassword: secret123
+
+  BadAuroraWithExtraProps:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-mysql
+      AllocatedStorage: 100
+      DBClusterInstanceClass: db.r5.large
+      Iops: 100
+      MasterUsername: admin
+      MasterUserPassword: secret123

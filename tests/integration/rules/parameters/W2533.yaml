@@ -1,0 +1,48 @@
+# --- cfn-lint-test ---
+# rule: W2533
+# description: Check required properties for Lambda if the deployment package is a .zip file
+# expect:
+#   - rule: W2533
+#     path: /Resources/BadMissingHandler/Properties
+#     message_contains: "Handler"
+#   - rule: W2533
+#     path: /Resources/BadMissingBoth/Properties
+#     message_contains: "Handler"
+# ---
+Resources:
+  GoodZipFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: good-func
+      PackageType: Zip
+      Runtime: python3.12
+      Handler: index.handler
+      Code:
+        S3Bucket: my-bucket
+        S3Key: code.zip
+
+  GoodImageFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: good-image-func
+      PackageType: Image
+      Code:
+        ImageUri: 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-repo:latest
+
+  BadMissingHandler:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: bad-missing-handler
+      PackageType: Zip
+      Runtime: python3.12
+      Code:
+        S3Bucket: my-bucket
+        S3Key: code.zip
+
+  BadMissingBoth:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: bad-missing-both
+      Code:
+        S3Bucket: my-bucket
+        S3Key: code.zip

@@ -1,0 +1,78 @@
+{
+ "cfnGather": {
+  "gather": {
+   "service": {
+    "properties": {
+     "LaunchType": "/LaunchType"
+    }
+   },
+   "taskDef": {
+    "filter": {
+     "type": "AWS::ECS::TaskDefinition"
+    },
+    "properties": {
+     "NetworkMode": {
+      "default": null,
+      "path": "/NetworkMode"
+     },
+     "RequiresCompatibilities": "/RequiresCompatibilities"
+    },
+    "reference": "/TaskDefinition"
+   }
+  },
+  "schema": {
+   "if": {
+    "properties": {
+     "service": {
+      "properties": {
+       "LaunchType": {
+        "const": "FARGATE"
+       }
+      },
+      "required": [
+       "LaunchType"
+      ]
+     },
+     "taskDef": {
+      "properties": {
+       "NetworkMode": {
+        "not": {
+         "const": "awsvpc"
+        },
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      }
+     }
+    },
+    "required": [
+     "service",
+     "taskDef"
+    ]
+   },
+   "then": {
+    "properties": {
+     "taskDef": {
+      "properties": {
+       "RequiresCompatibilities": {
+        "if": {
+         "type": "array"
+        },
+        "then": {
+         "contains": {
+          "const": "FARGATE"
+         }
+        }
+       }
+      },
+      "required": [
+       "RequiresCompatibilities"
+      ]
+     }
+    }
+   }
+  }
+ }
+}

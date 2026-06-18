@@ -1,0 +1,40 @@
+{
+ "allOf": [
+  {
+   "if": {
+    "required": [
+     "DBClusterIdentifier"
+    ],
+    "type": "object"
+   },
+   "then": {
+    "properties": {
+     "BackupRetentionPeriod": false
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "DBClusterIdentifier": false,
+     "Engine": {
+      "pattern": "^(?!aurora).*$",
+      "type": "string"
+     },
+     "SourceDBInstanceIdentifier": false
+    },
+    "required": [
+     "Engine"
+    ],
+    "type": "object"
+   },
+   "then": {
+    "properties": {
+     "BackupRetentionPeriod": {
+      "maximum": 35
+     }
+    }
+   }
+  }
+ ]
+}

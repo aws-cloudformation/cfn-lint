@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  ValidGeneveTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      TargetType: instance
+      Protocol: GENEVE
+      Port: 6081
+      VpcId: vpc-12345678
+
+  InvalidGeneveTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      TargetType: instance
+      Protocol: GENEVE
+      Port: 80
+      VpcId: vpc-12345678

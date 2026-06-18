@@ -1,0 +1,53 @@
+# --- cfn-lint-test ---
+# rule: E3638
+# description: DynamoDB PAY_PER_REQUEST must not have ProvisionedThroughput
+# expect:
+#   - rule: E3638
+#     path: /Resources/BadPayPerRequestWithThroughput/Properties/ProvisionedThroughput
+#     message_contains: "False schema"
+# ---
+# NOTE: Rule E3638 in v2 rejects ProvisionedThroughput entirely (even with zero values)
+# when BillingMode is PAY_PER_REQUEST. The GoodPayPerRequestZeroThroughput case was removed
+# as the v2 engine treats any ProvisionedThroughput presence as invalid.
+Resources:
+  GoodPayPerRequest:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: GoodPayPerRequest
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+
+  GoodProvisionedWithThroughput:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: GoodProvisioned
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+
+  BadPayPerRequestWithThroughput:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: BadPayPerRequest
+      BillingMode: PAY_PER_REQUEST
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH

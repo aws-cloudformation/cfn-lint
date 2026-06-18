@@ -1,0 +1,31 @@
+# --- cfn-lint-test ---
+# rule: E3006
+# description: Resource type must be valid CloudFormation type
+# expect:
+#   - rule: E3006
+#     path: /Resources/BadFakeType/Type
+#     message_contains: "does not exist"
+#   - rule: E3006
+#     path: /Resources/BadAnotherFake/Type
+#     message_contains: "does not exist"
+# ---
+Resources:
+  GoodBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: valid-type
+
+  GoodCustomResource:
+    Type: Custom::MyCustom
+    Properties:
+      ServiceToken: arn:aws:lambda:us-east-1:123456789012:function:MyFunc
+
+  BadFakeType:
+    Type: AWS::Fake::NonExistent
+    Properties:
+      Something: value
+
+  BadAnotherFake:
+    Type: AWS::Invalid::Resource
+    Properties:
+      Key: value

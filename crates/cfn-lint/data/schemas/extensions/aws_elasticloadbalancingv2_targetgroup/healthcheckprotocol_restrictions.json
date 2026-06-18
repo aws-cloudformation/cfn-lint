@@ -1,0 +1,37 @@
+{
+ "if": {
+  "properties": {
+   "HealthCheckProtocol": {
+    "type": "string"
+   }
+  },
+  "required": [
+   "HealthCheckProtocol"
+  ]
+ },
+ "then": {
+  "allOf": [
+   {
+    "else": {
+     "properties": {
+      "Matcher": false,
+      "ProtocolVersion": false
+     }
+    },
+    "if": {
+     "properties": {
+      "HealthCheckProtocol": {
+       "enum": [
+        "HTTP",
+        "HTTPS"
+       ]
+      }
+     },
+     "required": [
+      "HealthCheckProtocol"
+     ]
+    }
+   }
+  ]
+ }
+}

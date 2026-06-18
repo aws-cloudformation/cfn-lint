@@ -1,0 +1,18 @@
+# --- cfn-lint-test ---
+# rule: E3012
+# description: Ref and intrinsic functions bypass type checking
+# expect: []
+# ---
+Parameters:
+  Delay:
+    Type: Number
+Resources:
+  RefBypassesTypeCheck:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds: !Ref Delay
+
+  SelectBypassesTypeCheck:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds: !Select [0, [5, 10]]

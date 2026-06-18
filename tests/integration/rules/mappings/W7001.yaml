@@ -1,0 +1,28 @@
+# --- cfn-lint-test ---
+# rule: W7001
+# description: Mappings that are defined but not used via FindInMap
+# expect:
+#   - rule: W7001
+#     path: /Mappings/UnusedMapping
+#     message_contains: "defined but not used"
+#     message_contains_value: "UnusedMapping"
+# ---
+Mappings:
+  UsedMapping:
+    us-east-1:
+      AMI: ami-12345678
+    us-west-2:
+      AMI: ami-87654321
+
+  UnusedMapping:
+    us-east-1:
+      Value: something
+    us-west-2:
+      Value: other
+
+Resources:
+  Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !FindInMap [UsedMapping, us-east-1, AMI]
+      InstanceType: t2.micro

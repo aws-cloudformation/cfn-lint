@@ -1,0 +1,45 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "export": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {}
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  }
+ },
+ "maxProperties": 200,
+ "patternProperties": {
+  "^Fn::ForEach::.+$": true,
+  "^[a-zA-Z0-9]+$": {
+   "additionalProperties": false,
+   "properties": {
+    "Condition": {
+     "type": [
+      "string"
+     ]
+    },
+    "Description": {
+     "maxLength": 1024,
+     "type": "string"
+    },
+    "Export": {
+     "$ref": "#/definitions/export"
+    },
+    "Value": {}
+   },
+   "required": [
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "propertyNames": {
+  "maxLength": 255
+ },
+ "type": "object"
+}

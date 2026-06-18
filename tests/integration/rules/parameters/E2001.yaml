@@ -1,0 +1,34 @@
+# --- cfn-lint-test ---
+# rule: E2001
+# description: Parameters have appropriate properties based on Type
+# expect:
+#   - rule: E2001
+#     path: /Parameters/NumberWithPattern/AllowedPattern
+#     message_contains: "AllowedPattern"
+#   - rule: E2001
+#     path: /Parameters/StringWithMinValue/MinValue
+#     message_contains: "MinValue"
+# ---
+Parameters:
+  GoodString:
+    Type: String
+    AllowedPattern: "^[a-z]+$"
+    MinLength: 1
+    MaxLength: 50
+
+  GoodNumber:
+    Type: Number
+    MinValue: 0
+    MaxValue: 100
+
+  NumberWithPattern:
+    Type: Number
+    AllowedPattern: "[0-9]+"
+
+  StringWithMinValue:
+    Type: String
+    MinValue: 1
+
+Resources:
+  Placeholder:
+    Type: AWS::CloudFormation::WaitConditionHandle

@@ -1,0 +1,21 @@
+# --- cfn-lint-test ---
+# rule: W3045
+# description: S3 Bucket AccessControl is a legacy property
+# expect:
+#   - rule: W3045
+#     path: /Resources/BadAccessControl/Properties/AccessControl
+#     message_contains: "legacy"
+# ---
+Resources:
+  GoodBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: good-bucket
+
+  GoodBucketNoAccessControl:
+    Type: AWS::S3::Bucket
+
+  BadAccessControl:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: AuthenticatedRead

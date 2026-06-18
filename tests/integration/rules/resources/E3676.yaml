@@ -1,0 +1,54 @@
+# --- cfn-lint-test ---
+# rule: E3676
+# description: ELBv2 HTTPS/TLS listeners require certificates
+# expect:
+#   - rule: E3676
+#     path: /Resources/BadTlsNoCertificate/Properties
+#     message_contains: "is a required property"
+# ---
+Resources:
+  GoodHttpListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ALB
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TG
+
+  GoodHttpsWithCertificate:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ALB
+      Port: 443
+      Protocol: HTTPS
+      Certificates:
+        - CertificateArn: arn:aws:acm:us-east-1:123456789012:certificate/abc
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TG
+
+  BadTlsNoCertificate:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ALB
+      Port: 443
+      Protocol: TLS
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TG
+
+  ALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Subnets:
+        - subnet-12345
+        - subnet-67890
+
+  TG:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Port: 80
+      Protocol: HTTP
+      VpcId: vpc-12345

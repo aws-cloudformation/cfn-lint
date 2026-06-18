@@ -1,0 +1,129 @@
+{
+ "additionalProperties": false,
+ "patternProperties": {
+  "^[a-zA-Z0-9]+$": {
+   "additionalProperties": false,
+   "else": {
+    "else": {
+     "propertyNames": {
+      "enum": [
+       "AllowedPattern",
+       "AllowedValues",
+       "ConstraintDescription",
+       "Default",
+       "Description",
+       "MaxLength",
+       "MinLength",
+       "NoEcho",
+       "Type"
+      ]
+     }
+    },
+    "if": {
+     "properties": {
+      "Type": {
+       "enum": [
+        "AWS::SSM::Parameter::Value<String>",
+        "String",
+        "CommaDelimitedList"
+       ]
+      }
+     },
+     "required": [
+      "Type"
+     ]
+    },
+    "then": {
+     "propertyNames": {
+      "enum": [
+       "AllowedPattern",
+       "AllowedValues",
+       "ConstraintDescription",
+       "Default",
+       "Description",
+       "MaxLength",
+       "MinLength",
+       "NoEcho",
+       "Type"
+      ]
+     }
+    }
+   },
+   "if": {
+    "properties": {
+     "Type": {
+      "const": "Number"
+     }
+    },
+    "required": [
+     "Type"
+    ]
+   },
+   "properties": {
+    "AllowedPattern": {
+     "type": "string"
+    },
+    "AllowedValues": {
+     "items": {
+      "maxLength": 4096,
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ConstraintDescription": {
+     "type": "string"
+    },
+    "Default": {
+     "maxLength": 4096,
+     "type": "string"
+    },
+    "Description": {
+     "maxLength": 4000,
+     "type": "string"
+    },
+    "MaxLength": {
+     "maximum": 4096,
+     "type": "integer"
+    },
+    "MaxValue": {
+     "type": "number"
+    },
+    "MinLength": {
+     "type": "integer"
+    },
+    "MinValue": {
+     "type": "number"
+    },
+    "NoEcho": {
+     "type": "boolean"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "then": {
+    "propertyNames": {
+     "enum": [
+      "AllowedValues",
+      "ConstraintDescription",
+      "Default",
+      "Description",
+      "MaxValue",
+      "MinValue",
+      "NoEcho",
+      "Type"
+     ]
+    }
+   },
+   "type": "object"
+  }
+ },
+ "propertyNames": {
+  "maxLength": 255,
+  "minLength": 1
+ },
+ "type": "object"
+}

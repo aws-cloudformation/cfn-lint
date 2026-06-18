@@ -1,0 +1,48 @@
+# --- cfn-lint-test ---
+# rule: E3035
+# description: DeletionPolicy valid values
+# expect:
+#   - rule: E3035
+#     path: /Resources/BadPolicy/DeletionPolicy
+#     message_contains: "is not one of"
+#   - rule: E3035
+#     path: /Resources/BadSnapshotNotSupported/DeletionPolicy
+#     message_contains: "is not one of"
+# ---
+Resources:
+  GoodRetain:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: good-retain
+
+  GoodDelete:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties:
+      BucketName: good-delete
+
+  GoodRetainExceptOnCreate:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: RetainExceptOnCreate
+    Properties:
+      BucketName: good-retain-except
+
+  GoodSnapshot:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Snapshot
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+
+  BadPolicy:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Invalid
+    Properties:
+      BucketName: bad-policy
+
+  BadSnapshotNotSupported:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Snapshot
+    Properties:
+      BucketName: bad-snapshot

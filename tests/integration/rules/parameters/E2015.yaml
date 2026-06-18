@@ -1,0 +1,63 @@
+# --- cfn-lint-test ---
+# rule: E2015
+# description: Parameter Default must satisfy constraints (AllowedValues, AllowedPattern, Min/MaxLength)
+# expect:
+#   - rule: E2015
+#     path: /Parameters/BadAllowedValues/Default
+#     message_contains: "Default should be a value within AllowedValues"
+#   - rule: E2015
+#     path: /Parameters/BadPattern/Default
+#     message_contains: "Default should be allowed by AllowedPattern"
+#   - rule: E2015
+#     path: /Parameters/BadMinLength/Default
+#     message_contains: "length above or equal to MinLength"
+#   - rule: E2015
+#     path: /Parameters/BadMaxLength/Default
+#     message_contains: "length below or equal to MaxLength"
+# ---
+Parameters:
+  GoodAllowedValues:
+    Type: String
+    Default: "prod"
+    AllowedValues:
+      - prod
+      - dev
+      - staging
+
+  GoodPattern:
+    Type: String
+    Default: "abc123"
+    AllowedPattern: "[a-z0-9]+"
+
+  GoodLength:
+    Type: String
+    Default: "hello"
+    MinLength: 3
+    MaxLength: 10
+
+  BadAllowedValues:
+    Type: String
+    Default: "invalid"
+    AllowedValues:
+      - prod
+      - dev
+      - staging
+
+  BadPattern:
+    Type: String
+    Default: "UPPER123"
+    AllowedPattern: "^[a-z]+$"
+
+  BadMinLength:
+    Type: String
+    Default: "ab"
+    MinLength: 5
+
+  BadMaxLength:
+    Type: String
+    Default: "this-is-way-too-long"
+    MaxLength: 5
+
+Resources:
+  Placeholder:
+    Type: AWS::CloudFormation::WaitConditionHandle

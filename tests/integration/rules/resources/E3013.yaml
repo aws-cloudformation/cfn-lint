@@ -1,0 +1,66 @@
+# --- cfn-lint-test ---
+# rule: E3013
+# description: CloudFront distribution aliases must be valid domain names
+# expect:
+#   - rule: E3013
+#     path: /Resources/BadWildcard/Properties/DistributionConfig/Aliases/0
+#     message_contains: "invalid wildcard pattern"
+#   - rule: E3013
+#     path: /Resources/BadInvalidDomain/Properties/DistributionConfig/Aliases/0
+#     message_contains: "is not a valid domain name"
+# ---
+Resources:
+  GoodDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Origins:
+          - DomainName: mybucket.s3.amazonaws.com
+            Id: S3Origin
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          ForwardedValues:
+            QueryString: false
+        Aliases:
+          - "*.example.com"
+          - www.example.com
+
+  BadWildcard:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Origins:
+          - DomainName: mybucket.s3.amazonaws.com
+            Id: S3Origin
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          ForwardedValues:
+            QueryString: false
+        Aliases:
+          - "*.*.example.com"
+
+  BadInvalidDomain:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Origins:
+          - DomainName: mybucket.s3.amazonaws.com
+            Id: S3Origin
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          ForwardedValues:
+            QueryString: false
+        Aliases:
+          - "NOT A DOMAIN"

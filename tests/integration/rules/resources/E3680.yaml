@@ -1,0 +1,39 @@
+# --- cfn-lint-test ---
+# rule: E3680
+# description: Application load balancers require at least 2 subnets
+# expect:
+#   - rule: E3680
+#     path: /Resources/BadApplicationOneSubnet/Properties/Subnets
+#     message_contains: "expected minimum item count"
+#   - rule: E3680
+#     path: /Resources/BadDefaultOneSubnet/Properties/Subnets
+#     message_contains: "expected minimum item count"
+# ---
+Resources:
+  GoodNetworkOneSubnet:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Type: network
+      Subnets:
+        - subnet-12345
+
+  GoodApplicationTwoSubnets:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Type: application
+      Subnets:
+        - subnet-12345
+        - subnet-67890
+
+  BadApplicationOneSubnet:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Type: application
+      Subnets:
+        - subnet-12345
+
+  BadDefaultOneSubnet:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Subnets:
+        - subnet-12345

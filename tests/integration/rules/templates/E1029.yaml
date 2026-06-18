@@ -1,0 +1,21 @@
+# --- cfn-lint-test ---
+# rule: E1029
+# description: Fn::Sub is required when a variable substitution pattern appears in a string
+# expect:
+#   - rule: E1029
+#     path: /Resources/BadLiteralWithVariable/Properties/QueueName
+#     message_contains: "${AWS::Region}"
+# ---
+Parameters:
+  MyParam:
+    Type: String
+Resources:
+  GoodSubUsed:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "${AWS::Region}-queue"
+
+  BadLiteralWithVariable:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "${AWS::Region}-queue"

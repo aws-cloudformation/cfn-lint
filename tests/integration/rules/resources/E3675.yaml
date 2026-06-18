@@ -1,0 +1,40 @@
+# --- cfn-lint-test ---
+# rule: E3675
+# description: Validate EMR cluster instance type
+# expect: []
+# ---
+# NOTE: Rule E3675 EMR instance type validation not yet implemented in v2 engine
+Resources:
+  GoodCluster:
+    Type: AWS::EMR::Cluster
+    Properties:
+      Name: GoodCluster
+      ReleaseLabel: emr-6.3.0
+      JobFlowRole: EMR_EC2_DefaultRole
+      ServiceRole: EMR_DefaultRole
+      Instances:
+        CoreInstanceGroup:
+          InstanceCount: 2
+          InstanceType: m5.xlarge
+          Market: ON_DEMAND
+        MasterInstanceGroup:
+          InstanceCount: 1
+          InstanceType: m5.xlarge
+          Market: ON_DEMAND
+
+  BadCluster:
+    Type: AWS::EMR::Cluster
+    Properties:
+      Name: BadCluster
+      ReleaseLabel: emr-6.3.0
+      JobFlowRole: EMR_EC2_DefaultRole
+      ServiceRole: EMR_DefaultRole
+      Instances:
+        CoreInstanceGroup:
+          InstanceCount: 2
+          InstanceType: x99.nonexistent
+          Market: ON_DEMAND
+        MasterInstanceGroup:
+          InstanceCount: 1
+          InstanceType: m5.xlarge
+          Market: ON_DEMAND

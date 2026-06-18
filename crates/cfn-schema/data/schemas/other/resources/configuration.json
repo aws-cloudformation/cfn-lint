@@ -1,0 +1,87 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ResourceConfiguration": {
+   "additionalProperties": false,
+   "else": {
+    "not": {
+     "required": [
+      "Version"
+     ]
+    },
+    "properties": {
+     "CreationPolicy": {
+      "type": "object"
+     },
+     "UpdatePolicy": {
+      "type": "object"
+     }
+    }
+   },
+   "if": {
+    "properties": {
+     "Type": {
+      "pattern": "(AWS::CloudFormation::CustomResource|Custom::.*)"
+     }
+    }
+   },
+   "properties": {
+    "Condition": {
+     "type": "string"
+    },
+    "CreationPolicy": {
+     "type": "object"
+    },
+    "DeletionPolicy": {},
+    "DependsOn": {
+     "items": {
+      "type": "string"
+     },
+     "type": [
+      "string",
+      "array"
+     ]
+    },
+    "Metadata": {},
+    "Properties": {},
+    "Type": {
+     "type": "string"
+    },
+    "UpdatePolicy": {},
+    "UpdateReplacePolicy": {},
+    "Version": {
+     "type": [
+      "string",
+      "integer"
+     ]
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "then": {
+    "properties": {
+     "CreationPolicy": false,
+     "UpdatePolicy": false,
+     "Version": {
+      "type": [
+       "string",
+       "integer"
+      ]
+     }
+    }
+   },
+   "type": "object"
+  }
+ },
+ "maxProperties": 500,
+ "patternProperties": {
+  "^[a-zA-Z0-9]+$": {
+   "$ref": "#/definitions/ResourceConfiguration"
+  }
+ },
+ "propertyNames": {
+  "maxLength": 255
+ },
+ "type": "object"
+}

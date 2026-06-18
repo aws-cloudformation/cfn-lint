@@ -1,0 +1,25 @@
+# --- cfn-lint-test ---
+# rule: E3015
+# description: Condition references valid condition name
+# expect:
+#   - rule: E3015
+#     path: /Resources/BadConditionRef/Condition
+#     message_contains: "is not one of"
+# ---
+Conditions:
+  IsProd: !Equals
+    - !Ref "AWS::Region"
+    - us-east-1
+
+Resources:
+  GoodConditionRef:
+    Type: AWS::S3::Bucket
+    Condition: IsProd
+    Properties:
+      BucketName: good-condition
+
+  BadConditionRef:
+    Type: AWS::S3::Bucket
+    Condition: DoesNotExist
+    Properties:
+      BucketName: bad-condition

@@ -1,0 +1,37 @@
+# --- cfn-lint-test ---
+# rule: W2530
+# description: Lambda SnapStart configuration requires a Version resource
+# expect:
+#   - rule: W2530
+#     path: /Resources/BadNoVersion/Properties/SnapStart/ApplyOn
+#     message_contains: "SnapStart"
+# ---
+Resources:
+  GoodWithVersion:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: good-func
+      Runtime: java21
+      Handler: com.example.Handler
+      Code:
+        S3Bucket: my-bucket
+        S3Key: code.jar
+      SnapStart:
+        ApplyOn: PublishedVersions
+
+  GoodVersion:
+    Type: AWS::Lambda::Version
+    Properties:
+      FunctionName: !Ref GoodWithVersion
+
+  BadNoVersion:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: bad-func
+      Runtime: java21
+      Handler: com.example.Handler
+      Code:
+        S3Bucket: my-bucket
+        S3Key: code.jar
+      SnapStart:
+        ApplyOn: PublishedVersions

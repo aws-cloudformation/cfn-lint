@@ -1,0 +1,62 @@
+# --- cfn-lint-test ---
+# rule: W2501
+# description: Check if Password Properties are correctly configured
+# expect:
+#   - rule: W2501
+#     path: /Resources/BadHardcoded/Properties/MasterUserPassword
+#     message_contains: "hardcoded"
+#   - rule: W2501
+#     path: /Resources/BadSsmRef/Properties/MasterUserPassword
+#     message_contains: "secure dynamic reference"
+#   - rule: W2501
+#     path: /Parameters/NoEchoMissing
+#     message_contains: "NoEcho should be True"
+# ---
+Parameters:
+  SecureParam:
+    Type: String
+    NoEcho: true
+
+  NoEchoMissing:
+    Type: String
+
+Resources:
+  GoodSecretsManager:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      MasterUsername: admin
+      MasterUserPassword: "{{resolve:secretsmanager:my-secret}}"
+
+  GoodNoEchoRef:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      MasterUsername: admin
+      MasterUserPassword: !Ref SecureParam
+
+  BadHardcoded:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      MasterUsername: admin
+      MasterUserPassword: "MyPlaintextPassword123"
+
+  BadSsmRef:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      MasterUsername: admin
+      MasterUserPassword: "{{resolve:ssm:my-param}}"
+
+  BadNoEchoFalse:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      MasterUsername: admin
+      MasterUserPassword: !Ref NoEchoMissing

@@ -1,0 +1,114 @@
+# --- cfn-lint-test ---
+# rule: E3047
+# description: Validate ECS Fargate CPU and memory combinations
+# expect:
+#   - rule: E3047
+#     path: /Resources/BadCpu16384Memory123904/Properties/Cpu
+#     message_contains: "is not one of"
+#   - rule: E3047
+#     path: /Resources/BadCpu16384Memory123904/Properties/Memory
+#     message_contains: "is not one of"
+#   - rule: E3047
+#     path: /Resources/BadCpu16384Memory1GB/Properties/Cpu
+#     message_contains: "is not one of"
+#   - rule: E3047
+#     path: /Resources/BadCpu16384Memory1GB/Properties/Memory
+#     message_contains: "less than the minimum"
+#   - rule: E3047
+#     path: /Resources/BadCpu4096Memory512/Properties/Cpu
+#     message_contains: "is not one of"
+#   - rule: E3047
+#     path: /Resources/BadCpu4096Memory512/Properties/Memory
+#     message_contains: "less than the minimum"
+# ---
+Resources:
+  GoodCpu256Memory512:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "256"
+      Memory: "512"
+      NetworkMode: awsvpc
+
+  GoodCpu512Memory1024:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "512"
+      Memory: "1024"
+      NetworkMode: awsvpc
+
+  GoodCpu1024Memory2048:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "1024"
+      Memory: "2048"
+      NetworkMode: awsvpc
+
+  GoodCpu2048Memory4096:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "2048"
+      Memory: "4096"
+      NetworkMode: awsvpc
+
+  GoodCpu4096Memory30720:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "4096"
+      Memory: "30720"
+      NetworkMode: awsvpc
+
+  GoodCpu8192Memory16GB:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "8192"
+      Memory: "16384"
+      NetworkMode: awsvpc
+
+  GoodCpu16384Memory122880:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "16384"
+      Memory: "122880"
+      NetworkMode: awsvpc
+
+  BadCpu16384Memory123904:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "16384"
+      Memory: "123904"
+      NetworkMode: awsvpc
+
+  BadCpu16384Memory1GB:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "16384"
+      Memory: "1024"
+      NetworkMode: awsvpc
+
+  BadCpu4096Memory512:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+        - Foo
+      Cpu: "4096"
+      Memory: "512"
+      NetworkMode: awsvpc

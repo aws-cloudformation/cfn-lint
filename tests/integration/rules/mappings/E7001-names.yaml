@@ -1,0 +1,23 @@
+# --- cfn-lint-test ---
+# rule: E7001
+# description: Mapping names must match alphanumeric pattern
+# expect:
+#   - rule: E7001
+#     path: /Mappings
+#     message_contains: "Bad-Mapping-Name"
+# ---
+Mappings:
+  GoodName:
+    us-east-1:
+      AMI: ami-12345678
+
+  Bad-Mapping-Name:
+    us-east-1:
+      AMI: ami-87654321
+
+Resources:
+  Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !FindInMap [GoodName, us-east-1, AMI]
+      InstanceType: t2.micro

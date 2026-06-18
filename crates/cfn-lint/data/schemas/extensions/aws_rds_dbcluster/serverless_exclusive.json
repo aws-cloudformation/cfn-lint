@@ -1,0 +1,55 @@
+{
+ "additionalProperties": true,
+ "allOf": [
+  {
+   "if": {
+    "properties": {
+     "EngineMode": {
+      "const": "provisioned"
+     }
+    },
+    "required": [
+     "EngineMode"
+    ],
+    "type": "object"
+   },
+   "then": {
+    "properties": {
+     "ScalingConfiguration": false
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "EngineMode": {
+      "const": "serverless"
+     }
+    },
+    "required": [
+     "EngineMode"
+    ],
+    "type": "object"
+   },
+   "then": {
+    "properties": {
+     "ServerlessV2ScalingConfiguration": false
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "EngineMode": false
+    },
+    "type": "object"
+   },
+   "then": {
+    "properties": {
+     "ScalingConfiguration": false
+    }
+   }
+  }
+ ],
+ "description": "When creating a serverless 'EngineMode' don't specify 'ServerlessV2ScalingConfiguration'"
+}

@@ -1,0 +1,28 @@
+# --- cfn-lint-test ---
+# rule: E2015
+# description: CommaDelimitedList Default values must match AllowedValues
+# expect:
+#   - rule: E2015
+#     path: /Parameters/BadCDL/Default
+#     message_contains: "Default should be a value within AllowedValues"
+# ---
+Parameters:
+  GoodCDL:
+    Type: CommaDelimitedList
+    Default: "dev,staging"
+    AllowedValues:
+      - dev
+      - staging
+      - prod
+
+  BadCDL:
+    Type: CommaDelimitedList
+    Default: "dev,invalid"
+    AllowedValues:
+      - dev
+      - staging
+      - prod
+
+Resources:
+  Placeholder:
+    Type: AWS::CloudFormation::WaitConditionHandle

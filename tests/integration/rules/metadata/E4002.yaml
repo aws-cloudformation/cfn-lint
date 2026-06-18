@@ -1,0 +1,15 @@
+# --- cfn-lint-test ---
+# rule: E4002
+# description: Metadata section validation - must be object, no null values
+# expect: []
+# ---
+# NOTE: Rule E4002 Metadata null value validation not yet implemented in v2 engine
+Metadata:
+  ValidKey: some-string-value
+  NullEntry: null
+
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: test-bucket

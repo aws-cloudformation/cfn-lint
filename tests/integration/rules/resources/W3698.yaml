@@ -1,0 +1,40 @@
+# --- cfn-lint-test ---
+# rule: W3698
+# description: VirtualName is ignored when Ebs is specified
+# expect:
+#   - rule: W3698
+#     path: /Resources/BadBothSpecified/Properties/BlockDeviceMappings/0
+#     message_contains: "not match the schema"
+# ---
+Resources:
+  GoodEbsOnly:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      InstanceType: t3.micro
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 20
+            VolumeType: gp3
+
+  GoodVirtualOnly:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      InstanceType: t3.micro
+      BlockDeviceMappings:
+        - DeviceName: /dev/sdb
+          VirtualName: ephemeral0
+
+  BadBothSpecified:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      InstanceType: t3.micro
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          VirtualName: ephemeral0
+          Ebs:
+            VolumeSize: 20
+            VolumeType: gp3

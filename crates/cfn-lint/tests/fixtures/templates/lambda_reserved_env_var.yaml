@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  ValidFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: valid-function
+      Runtime: python3.12
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "Hello"
+      Environment:
+        Variables:
+          MY_APP_CONFIG: some-value
+  BadFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: bad-function
+      Runtime: python3.12
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return "Hello"
+      Environment:
+        Variables:
+          AWS_REGION: us-east-1

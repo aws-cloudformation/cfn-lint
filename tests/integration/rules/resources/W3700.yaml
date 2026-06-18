@@ -1,0 +1,44 @@
+# --- cfn-lint-test ---
+# rule: W3700
+# description: Non-standard EIP Domain values are silently converted to vpc
+# expect:
+#   - rule: W3700
+#     path: /Resources/BadMyVpc/Properties/Domain
+#     message_contains: "is not a standard Domain value"
+#   - rule: W3700
+#     path: /Resources/BadVpcId/Properties/Domain
+#     message_contains: "is not a standard Domain value"
+#   - rule: W3700
+#     path: /Resources/BadFoo/Properties/Domain
+#     message_contains: "is not a standard Domain value"
+# ---
+Resources:
+  GoodVpc:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+
+  GoodStandard:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: standard
+
+  GoodVpcUpperCase:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: VPC
+
+  BadMyVpc:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: myVpc
+
+  BadVpcId:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc-0abc123
+
+  BadFoo:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: foo

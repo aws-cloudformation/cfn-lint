@@ -1,0 +1,47 @@
+# --- cfn-lint-test ---
+# rule: E3639
+# description: DynamoDB BillingMode PROVISIONED requires ProvisionedThroughput
+# expect:
+#   - rule: E3639
+#     path: /Resources/BadProvisionedNoThroughput/Properties
+#     message_contains: "ProvisionedThroughput"
+# ---
+Resources:
+  GoodPayPerRequest:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: GoodPayPerRequest
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+
+  GoodProvisionedWithThroughput:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: GoodProvisioned
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+
+  BadProvisionedNoThroughput:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: BadProvisioned
+      BillingMode: PROVISIONED
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH

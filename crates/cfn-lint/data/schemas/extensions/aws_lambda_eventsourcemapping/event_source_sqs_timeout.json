@@ -1,0 +1,73 @@
+{
+ "cfnGather": {
+  "gather": {
+   "function": {
+    "filter": {
+     "type": "AWS::Lambda::Function"
+    },
+    "properties": {
+     "Timeout": {
+      "default": 3,
+      "path": "/Timeout"
+     }
+    },
+    "reference": "/FunctionName"
+   },
+   "queue": {
+    "filter": {
+     "type": "AWS::SQS::Queue"
+    },
+    "properties": {
+     "VisibilityTimeout": {
+      "default": 30,
+      "path": "/VisibilityTimeout"
+     }
+    },
+    "reference": "/EventSourceArn"
+   }
+  },
+  "schema": {
+   "if": {
+    "properties": {
+     "function": {
+      "properties": {
+       "Timeout": {
+        "type": "integer"
+       }
+      },
+      "required": [
+       "Timeout"
+      ]
+     },
+     "queue": {
+      "properties": {
+       "VisibilityTimeout": {
+        "type": "integer"
+       }
+      },
+      "required": [
+       "VisibilityTimeout"
+      ]
+     }
+    },
+    "required": [
+     "function",
+     "queue"
+    ]
+   },
+   "then": {
+    "properties": {
+     "queue": {
+      "properties": {
+       "VisibilityTimeout": {
+        "minimum": {
+         "$data": "/function/Timeout"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

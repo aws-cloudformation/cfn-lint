@@ -1,0 +1,34 @@
+# --- cfn-lint-test ---
+# rule: E3004
+# description: Circular dependencies between resources
+# expect:
+#   - rule: E3004
+#     path: /Resources/BucketA
+#     message_contains: "Circular"
+#   - rule: E3004
+#     path: /Resources/BucketB
+#     message_contains: "Circular"
+# ---
+Resources:
+  GoodIndependent:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: independent
+
+  GoodLinear:
+    Type: AWS::SQS::Queue
+    DependsOn: GoodIndependent
+    Properties:
+      QueueName: linear
+
+  BucketA:
+    Type: AWS::S3::Bucket
+    DependsOn: BucketB
+    Properties:
+      BucketName: bucket-a
+
+  BucketB:
+    Type: AWS::S3::Bucket
+    DependsOn: BucketA
+    Properties:
+      BucketName: bucket-b

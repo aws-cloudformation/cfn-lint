@@ -1,0 +1,26 @@
+# --- cfn-lint-test ---
+# rule: W1020
+# description: Fn::Sub without variables is unnecessary
+# expect:
+#   - rule: W1020
+#     path: /Resources/BadSubNoVariable/Properties/QueueName
+#     message_contains: "isn't needed"
+# ---
+Parameters:
+  MyParam:
+    Type: String
+Resources:
+  GoodSubWithVariable:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "${MyParam}-queue"
+
+  GoodSubWithPseudo:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "${AWS::Region}-queue"
+
+  BadSubNoVariable:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "static-string-no-variables"

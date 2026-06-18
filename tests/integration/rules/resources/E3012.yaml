@@ -1,0 +1,35 @@
+# --- cfn-lint-test ---
+# rule: E3012
+# description: Type validation across primitives and containers
+# expect:
+#   - rule: E3012
+#     path: /Resources/BadStringForInt/Properties/DelaySeconds
+#     message_contains: "is not of type"
+#   - rule: E3012
+#     path: /Resources/BadBoolForArray/Properties/Tags
+#     message_contains: "is not of type"
+# ---
+Resources:
+  GoodQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds: 5
+      QueueName: "valid-queue"
+
+  GoodBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      Tags:
+        - Key: Name
+          Value: test
+
+  BadStringForInt:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds: "not a number"
+
+  BadBoolForArray:
+    Type: AWS::S3::Bucket
+    Properties:
+      Tags: true
+

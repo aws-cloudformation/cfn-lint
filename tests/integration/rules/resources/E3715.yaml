@@ -1,0 +1,50 @@
+# --- cfn-lint-test ---
+# rule: E3715
+# description: VirtualName must use ephemeral device format when Ebs is absent
+# expect:
+#   - rule: E3715
+#     path: /Resources/BadInstance/Properties/BlockDeviceMappings/0/VirtualName
+#     message_contains: "does not match"
+# ---
+Resources:
+  GoodInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      InstanceType: t2.micro
+      BlockDeviceMappings:
+        - DeviceName: /dev/sdb
+          VirtualName: ephemeral0
+        - DeviceName: /dev/sdc
+          VirtualName: ephemeral1
+
+  GoodInstanceWithEbs:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      InstanceType: t2.micro
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 20
+            VolumeType: gp2
+
+  GoodInstanceEbsWithVirtualName:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      InstanceType: t2.micro
+      BlockDeviceMappings:
+        - DeviceName: /dev/sdb
+          Ebs:
+            VolumeSize: 20
+          VirtualName: anything-goes-when-ebs-present
+
+  BadInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      InstanceType: t2.micro
+      BlockDeviceMappings:
+        - DeviceName: /dev/sdb
+          VirtualName: not-ephemeral-format
