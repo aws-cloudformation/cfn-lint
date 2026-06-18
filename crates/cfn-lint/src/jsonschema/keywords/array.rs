@@ -1,5 +1,5 @@
 use super::super::{ValidationError, Validator};
-use super::helpers::{err, ast_to_json_string};
+use super::helpers::{ast_to_json_string, err};
 use crate::ast::AstNode;
 use std::collections::HashSet;
 
@@ -34,7 +34,11 @@ pub fn validate_min_items(
         if arr.elements.len() < min as usize {
             return vec![err(
                 "minItems",
-                format!("expected minimum item count: {}, found: {}", min, arr.elements.len()),
+                format!(
+                    "expected minimum item count: {}, found: {}",
+                    min,
+                    arr.elements.len()
+                ),
                 path,
                 node,
             )];

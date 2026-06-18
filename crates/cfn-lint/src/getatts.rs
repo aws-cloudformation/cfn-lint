@@ -70,21 +70,18 @@ static ALL_PROPERTY_TYPES: &[&str] = &[
 /// Additional GetAtt attributes beyond readOnlyProperties for specific types.
 fn get_exceptions(resource_type: &str) -> Option<&'static [&'static str]> {
     match resource_type {
-        "AWS::AppMesh::GatewayRoute" => {
-            Some(&["GatewayRouteName", "MeshName", "MeshOwner", "VirtualGatewayName"])
-        }
+        "AWS::AppMesh::GatewayRoute" => Some(&[
+            "GatewayRouteName",
+            "MeshName",
+            "MeshOwner",
+            "VirtualGatewayName",
+        ]),
         "AWS::AppMesh::Mesh" => Some(&["MeshName"]),
-        "AWS::AppMesh::Route" => {
-            Some(&["MeshName", "MeshOwner", "RouteName", "VirtualRouterName"])
-        }
-        "AWS::AppMesh::VirtualGateway" => {
-            Some(&["MeshName", "MeshOwner", "VirtualGatewayName"])
-        }
+        "AWS::AppMesh::Route" => Some(&["MeshName", "MeshOwner", "RouteName", "VirtualRouterName"]),
+        "AWS::AppMesh::VirtualGateway" => Some(&["MeshName", "MeshOwner", "VirtualGatewayName"]),
         "AWS::AppMesh::VirtualNode" => Some(&["MeshName", "MeshOwner", "VirtualNodeName"]),
         "AWS::AppMesh::VirtualRouter" => Some(&["MeshName", "MeshOwner", "VirtualRouterName"]),
-        "AWS::AppMesh::VirtualService" => {
-            Some(&["MeshName", "MeshOwner", "VirtualServiceName"])
-        }
+        "AWS::AppMesh::VirtualService" => Some(&["MeshName", "MeshOwner", "VirtualServiceName"]),
         "AWS::AppSync::DataSource" => Some(&["Name"]),
         "AWS::Cloud9::EnvironmentEC2" => Some(&["Name"]),
         "AWS::CloudWatch::InsightRule" => Some(&["RuleName"]),
@@ -195,7 +192,10 @@ fn collect_all_properties(
 }
 
 /// Resolve a `$ref` like `#/definitions/Foo` within the schema root.
-fn resolve_ref<'a>(ref_path: &str, schema_root: &'a serde_json::Value) -> Option<&'a serde_json::Value> {
+fn resolve_ref<'a>(
+    ref_path: &str,
+    schema_root: &'a serde_json::Value,
+) -> Option<&'a serde_json::Value> {
     let path = ref_path.strip_prefix("#/")?;
     let mut current = schema_root;
     for segment in path.split('/') {
@@ -318,9 +318,11 @@ pub fn get_attribute_type(schema: &serde_json::Value, attribute: &str) -> Option
     // Extract type
     match current.get("type") {
         Some(serde_json::Value::String(t)) => Some(vec![t.clone()]),
-        Some(serde_json::Value::Array(arr)) => {
-            Some(arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
-        }
+        Some(serde_json::Value::Array(arr)) => Some(
+            arr.iter()
+                .filter_map(|v| v.as_str().map(String::from))
+                .collect(),
+        ),
         _ => None,
     }
 }
@@ -336,7 +338,10 @@ pub fn get_attribute_format(schema: &serde_json::Value, attribute: &str) -> Opti
             current = current.get("properties")?;
         }
     }
-    current.get("format").and_then(|v| v.as_str()).map(String::from)
+    current
+        .get("format")
+        .and_then(|v| v.as_str())
+        .map(String::from)
 }
 
 /// Get the format(s) of a Ref return value for a resource type.
@@ -380,7 +385,11 @@ pub fn get_ref_formats(schema: &serde_json::Value) -> Vec<String> {
     if let Some(any_of) = current.get("anyOf").and_then(|v| v.as_array()) {
         return any_of
             .iter()
-            .filter_map(|item| item.get("format").and_then(|v| v.as_str()).map(String::from))
+            .filter_map(|item| {
+                item.get("format")
+                    .and_then(|v| v.as_str())
+                    .map(String::from)
+            })
             .collect();
     }
     vec![]
@@ -407,7 +416,9 @@ pub fn get_property_schema<'a>(
             // If current is an array schema, descend into items then properties
             let resolved_items = resolve_schema_ref(items, schema)?;
             current = resolve_schema_ref(
-                resolved_items.get("properties").and_then(|p| p.get(segment))?,
+                resolved_items
+                    .get("properties")
+                    .and_then(|p| p.get(segment))?,
                 schema,
             )?;
         } else {
@@ -501,7 +512,9 @@ mod tests {
             ]
         });
         let attrs = get_valid_attributes(&schema, "AWS::S3::TableBucket");
-        assert!(attrs.contains(&"MetadataTableConfiguration.S3TablesDestination.TableArn".to_string()));
+        assert!(
+            attrs.contains(&"MetadataTableConfiguration.S3TablesDestination.TableArn".to_string())
+        );
     }
 
     #[test]

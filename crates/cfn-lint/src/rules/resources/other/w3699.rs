@@ -8,9 +8,15 @@ const REPLICA_MODE_ENGINES: &[&str] = &["oracle", "custom-oracle", "db2"];
 pub struct W3699;
 
 impl CfnLintRule for W3699 {
-    fn id(&self) -> &str { "W3699" }
-    fn short_description(&self) -> &str { "ReplicaMode is ignored for non-Oracle/Db2 engines" }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn id(&self) -> &str {
+        "W3699"
+    }
+    fn short_description(&self) -> &str {
+        "ReplicaMode is ignored for non-Oracle/Db2 engines"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/AWS::RDS::DBInstance/Properties"]
@@ -39,7 +45,10 @@ impl CfnLintRule for W3699 {
         };
 
         let engine_lower = engine.to_lowercase();
-        if REPLICA_MODE_ENGINES.iter().any(|e| engine_lower.starts_with(e)) {
+        if REPLICA_MODE_ENGINES
+            .iter()
+            .any(|e| engine_lower.starts_with(e))
+        {
             return vec![];
         }
 

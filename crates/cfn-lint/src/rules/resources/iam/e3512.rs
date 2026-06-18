@@ -4,13 +4,16 @@ use std::sync::{Arc, LazyLock};
 use crate::ast::AstNode;
 use crate::context::Context;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
 use crate::rules::iam_helpers::validate_policy_doc;
 use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
 use crate::template::Template;
 
 static POLICY_SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
-    serde_json::from_str(include_str!("../../../../data/schemas/other/iam/policy.json")).unwrap_or_default()
+    serde_json::from_str(include_str!(
+        "../../../../data/schemas/other/iam/policy.json"
+    ))
+    .unwrap_or_default()
 });
 
 static RESOURCE_SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
@@ -56,7 +59,11 @@ impl CfnLintRule for E3512 {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let schema = &*RESOURCE_SCHEMA;
         if schema.is_null() {
             return vec![];

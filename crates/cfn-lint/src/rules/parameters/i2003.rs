@@ -47,10 +47,7 @@ impl CfnLintRule for I2003 {
             return vec![ValidationError {
                 rule_id: None,
                 keyword: format!("cfnLint:{}", self.id()),
-                message: format!(
-                    "{:?} could not be compiled as a valid regex",
-                    pattern
-                ),
+                message: format!("{:?} could not be compiled as a valid regex", pattern),
                 path: path.to_vec(),
                 span: instance.span(),
                 unknown: false,
@@ -67,9 +64,9 @@ impl CfnLintRule for I2003 {
 #[cfg(test)]
 
 mod tests {
-    use crate::template::Template;
     use super::*;
     use crate::parser;
+    use crate::template::Template;
 
     #[test]
     fn test_valid_pattern() {

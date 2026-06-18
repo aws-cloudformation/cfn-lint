@@ -41,7 +41,7 @@ impl CfnLintRule for E3042 {
             match c.get("Essential") {
                 Some(AstNode::Bool(b)) => b.value,
                 Some(AstNode::Function(_)) => true, // can't resolve, assume ok
-                None => true, // default is true
+                None => true,                       // default is true
                 _ => false,
             }
         });
@@ -82,16 +82,29 @@ Resources:
           Image: nginx
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Task").unwrap()
-            .get("Properties").unwrap()
-            .get("ContainerDefinitions").unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Task")
+            .unwrap()
+            .get("Properties")
+            .unwrap()
+            .get("ContainerDefinitions")
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "Task".to_string(),
-            "Properties".to_string(), "ContainerDefinitions".to_string(),
+            "Resources".to_string(),
+            "Task".to_string(),
+            "Properties".to_string(),
+            "ContainerDefinitions".to_string(),
         ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = E3042.validate(&validator, "Resources/AWS::ECS::TaskDefinition/Properties/ContainerDefinitions", instance, &serde_json::json!({}), &path);
+        let errors = E3042.validate(
+            &validator,
+            "Resources/AWS::ECS::TaskDefinition/Properties/ContainerDefinitions",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -108,16 +121,29 @@ Resources:
           Image: fluentd
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Task").unwrap()
-            .get("Properties").unwrap()
-            .get("ContainerDefinitions").unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Task")
+            .unwrap()
+            .get("Properties")
+            .unwrap()
+            .get("ContainerDefinitions")
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "Task".to_string(),
-            "Properties".to_string(), "ContainerDefinitions".to_string(),
+            "Resources".to_string(),
+            "Task".to_string(),
+            "Properties".to_string(),
+            "ContainerDefinitions".to_string(),
         ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = E3042.validate(&validator, "Resources/AWS::ECS::TaskDefinition/Properties/ContainerDefinitions", instance, &serde_json::json!({}), &path);
+        let errors = E3042.validate(
+            &validator,
+            "Resources/AWS::ECS::TaskDefinition/Properties/ContainerDefinitions",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 1);
         assert!(errors[0].message.contains("essential"));
     }

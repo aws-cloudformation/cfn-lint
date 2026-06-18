@@ -1,9 +1,11 @@
 # --- cfn-lint-test ---
 # rule: W1019
 # description: Fn::Sub parameters should be used
-# expect: []
+# expect:
+#   - rule: W1019
+#     path: /Resources/BadUnusedParam/Properties/BucketName
+#     message_contains: "UnusedKey"
 # ---
-# NOTE: Rule W1019 Fn::Sub unused parameter check not yet implemented in v2 engine
 Resources:
   GoodSubWithAllUsed:
     Type: AWS::S3::Bucket

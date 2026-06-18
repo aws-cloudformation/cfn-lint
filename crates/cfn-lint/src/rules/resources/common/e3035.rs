@@ -21,12 +21,18 @@ pub const SNAPSHOT_TYPES: &[&str] = &[
 ];
 
 impl CfnLintRule for E3035 {
-    fn id(&self) -> &str { "E3035" }
-    fn short_description(&self) -> &str { "Check DeletionPolicy values for Resources" }
+    fn id(&self) -> &str {
+        "E3035"
+    }
+    fn short_description(&self) -> &str {
+        "Check DeletionPolicy values for Resources"
+    }
     fn description(&self) -> &str {
         "Check that the DeletionPolicy values are valid"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/*/DeletionPolicy"]

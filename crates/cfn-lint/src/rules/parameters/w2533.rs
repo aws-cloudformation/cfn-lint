@@ -7,14 +7,18 @@ use crate::rules::Severity;
 pub struct W2533;
 
 impl CfnLintRule for W2533 {
-    fn id(&self) -> &str { "W2533" }
+    fn id(&self) -> &str {
+        "W2533"
+    }
     fn short_description(&self) -> &str {
         "Check required properties for Lambda if the deployment package is a .zip file"
     }
     fn description(&self) -> &str {
         "When the package type is Zip, you must also specify the handler and runtime properties"
     }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/AWS::Lambda::Function/Properties"]
@@ -47,8 +51,12 @@ impl CfnLintRule for W2533 {
         }
 
         let mut missing = Vec::new();
-        if props.get("Handler").is_none() { missing.push("Handler"); }
-        if props.get("Runtime").is_none() { missing.push("Runtime"); }
+        if props.get("Handler").is_none() {
+            missing.push("Handler");
+        }
+        if props.get("Runtime").is_none() {
+            missing.push("Runtime");
+        }
 
         if !missing.is_empty() {
             return vec![ValidationError {
@@ -92,14 +100,26 @@ Resources:
         S3Key: code.zip
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Func").unwrap()
-            .get("Properties").unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Func")
+            .unwrap()
+            .get("Properties")
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "Func".to_string(), "Properties".to_string(),
+            "Resources".to_string(),
+            "Func".to_string(),
+            "Properties".to_string(),
         ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = W2533.validate(&validator, "Resources/AWS::Lambda::Function/Properties", instance, &serde_json::json!({}), &path);
+        let errors = W2533.validate(
+            &validator,
+            "Resources/AWS::Lambda::Function/Properties",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -117,14 +137,26 @@ Resources:
         S3Key: code.zip
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Func").unwrap()
-            .get("Properties").unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Func")
+            .unwrap()
+            .get("Properties")
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "Func".to_string(), "Properties".to_string(),
+            "Resources".to_string(),
+            "Func".to_string(),
+            "Properties".to_string(),
         ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = W2533.validate(&validator, "Resources/AWS::Lambda::Function/Properties", instance, &serde_json::json!({}), &path);
+        let errors = W2533.validate(
+            &validator,
+            "Resources/AWS::Lambda::Function/Properties",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 1);
         assert!(errors[0].message.contains("Handler"));
     }

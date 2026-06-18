@@ -2,10 +2,10 @@
 /// Anchor rule: pattern `^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):iam::\d{12}:role/.*$`
 /// is enforced by `validate_format` in `jsonschema/keywords.rs` for format `AWS::IAM::Role::Arn`.
 use crate::ast::AstNode;
-use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
-use crate::template::Template;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
+use crate::template::Template;
 
 pub struct E1156;
 
@@ -30,9 +30,13 @@ impl CfnLintRule for E1156 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         // Handled by jsonschema/keywords.rs validate_format for AWS::IAM::Role::Arn
-                vec![]
+        vec![]
     }
 }
 
@@ -52,8 +56,10 @@ mod tests {
 
     #[test]
     fn test_e1156_returns_empty() {
-        let root = AstNode::Object(ObjectNode { entries: Vec::new(), span: Span::default(),
-         });
+        let root = AstNode::Object(ObjectNode {
+            entries: Vec::new(),
+            span: Span::default(),
+        });
         let tmpl = Template::from_ast(&root).unwrap();
         assert!(E1156.validate_template(&tmpl, &root).is_empty());
     }

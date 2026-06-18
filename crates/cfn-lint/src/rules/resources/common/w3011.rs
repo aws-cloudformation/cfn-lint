@@ -11,7 +11,9 @@ use crate::rules::Severity;
 pub struct W3011;
 
 impl CfnLintRule for W3011 {
-    fn id(&self) -> &str { "W3011" }
+    fn id(&self) -> &str {
+        "W3011"
+    }
     fn short_description(&self) -> &str {
         "Check resources with UpdateReplacePolicy/DeletionPolicy have both"
     }
@@ -19,9 +21,13 @@ impl CfnLintRule for W3011 {
         "Both UpdateReplacePolicy and DeletionPolicy are needed to protect \
          resources from deletion"
     }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
-    fn keywords(&self) -> &[&str] { &["Resources/*"] }
+    fn keywords(&self) -> &[&str] {
+        &["Resources/*"]
+    }
 
     fn validate(
         &self,
@@ -65,7 +71,7 @@ impl CfnLintRule for W3011 {
         }
 
         vec![ValidationError {
-                rule_id: None,
+            rule_id: None,
             keyword: format!("cfnLint:{}", self.id()),
             message: "Both 'UpdateReplacePolicy' and 'DeletionPolicy' are needed \
                       to protect resource from deletion"
@@ -80,10 +86,7 @@ impl CfnLintRule for W3011 {
     }
 }
 
-const EXCLUDED_TYPES: &[&str] = &[
-    "AWS::Lambda::Version",
-    "AWS::Lambda::LayerVersion",
-];
+const EXCLUDED_TYPES: &[&str] = &["AWS::Lambda::Version", "AWS::Lambda::LayerVersion"];
 
 #[cfg(test)]
 mod tests {
@@ -103,7 +106,13 @@ Resources:
         let instance = ast.get("Resources").unwrap().get("Bucket").unwrap();
         let path = vec!["Resources".to_string(), "Bucket".to_string()];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = W3011.validate(&validator, "Resources/*", instance, &serde_json::json!({}), &path);
+        let errors = W3011.validate(
+            &validator,
+            "Resources/*",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -119,7 +128,13 @@ Resources:
         let instance = ast.get("Resources").unwrap().get("Bucket").unwrap();
         let path = vec!["Resources".to_string(), "Bucket".to_string()];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = W3011.validate(&validator, "Resources/*", instance, &serde_json::json!({}), &path);
+        let errors = W3011.validate(
+            &validator,
+            "Resources/*",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 1);
     }
 
@@ -135,7 +150,13 @@ Resources:
         let instance = ast.get("Resources").unwrap().get("Bucket").unwrap();
         let path = vec!["Resources".to_string(), "Bucket".to_string()];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = W3011.validate(&validator, "Resources/*", instance, &serde_json::json!({}), &path);
+        let errors = W3011.validate(
+            &validator,
+            "Resources/*",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -150,7 +171,13 @@ Resources:
         let instance = ast.get("Resources").unwrap().get("Bucket").unwrap();
         let path = vec!["Resources".to_string(), "Bucket".to_string()];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = W3011.validate(&validator, "Resources/*", instance, &serde_json::json!({}), &path);
+        let errors = W3011.validate(
+            &validator,
+            "Resources/*",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -168,7 +195,13 @@ Resources:
         let instance = ast.get("Resources").unwrap().get("Ver").unwrap();
         let path = vec!["Resources".to_string(), "Ver".to_string()];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = W3011.validate(&validator, "Resources/*", instance, &serde_json::json!({}), &path);
+        let errors = W3011.validate(
+            &validator,
+            "Resources/*",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 }

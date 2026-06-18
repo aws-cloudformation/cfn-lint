@@ -1,26 +1,34 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 pub struct E3049;
 
 impl CfnLintRule for E3049 {
-    fn id(&self) -> &str { "E3049" }
+    fn id(&self) -> &str {
+        "E3049"
+    }
     fn short_description(&self) -> &str {
         "Validate ECS tasks with awsvpc network mode"
     }
     fn description(&self) -> &str {
         "When using awsvpc network mode, HostPort must equal ContainerPort (dynamic port mapping not supported)"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let resources_node = match root.get("Resources").and_then(|n| n.as_object()) {
             Some(obj) => obj,
             None => return vec![],
@@ -42,12 +50,10 @@ impl CfnLintRule for E3049 {
 
             // Get the TaskDefinition reference
             let task_def_name = match svc_props.get("TaskDefinition") {
-                Some(AstNode::Function(f)) if f.name == "Ref" => {
-                    match f.args.as_str() {
-                        Some(s) => s,
-                        None => continue,
-                    }
-                }
+                Some(AstNode::Function(f)) if f.name == "Ref" => match f.args.as_str() {
+                    Some(s) => s,
+                    None => continue,
+                },
                 _ => continue,
             };
 
@@ -75,7 +81,10 @@ impl CfnLintRule for E3049 {
             }
 
             // Check container definitions
-            let containers = match task_props.get("ContainerDefinitions").and_then(|n| n.as_array()) {
+            let containers = match task_props
+                .get("ContainerDefinitions")
+                .and_then(|n| n.as_array())
+            {
                 Some(a) => a,
                 None => continue,
             };
@@ -90,7 +99,8 @@ impl CfnLintRule for E3049 {
                         Some(v) => v,
                         None => continue,
                     };
-                    let container_port = match mapping.get("ContainerPort").and_then(|n| n.as_f64()) {
+                    let container_port = match mapping.get("ContainerPort").and_then(|n| n.as_f64())
+                    {
                         Some(v) => v,
                         None => continue,
                     };

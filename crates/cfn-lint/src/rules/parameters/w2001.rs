@@ -5,8 +5,8 @@ use regex::Regex;
 
 use crate::ast::{self, AstNode};
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 static SUB_VAR_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\$\{([^}]+)\}").unwrap());
@@ -27,9 +27,15 @@ impl CfnLintRule for W2001 {
         Severity::Warning
     }
 
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
-    fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let params_node = root.get("Parameters").and_then(|n| n.as_object());
         let param_names: Vec<String> = match &params_node {
             Some(obj) => obj.keys().map(|s| s.to_string()).collect(),
@@ -66,7 +72,7 @@ impl CfnLintRule for W2001 {
                     resolved_from_ref: false,
                     context: vec![],
                     schema_id: None,
-}
+                }
             })
             .collect()
     }
@@ -75,7 +81,8 @@ impl CfnLintRule for W2001 {
 /// Extract `${VarName}` references from an Fn::Sub template string.
 /// Returns variable names found in `${...}` placeholders.
 fn extract_sub_vars(template_str: &str) -> HashSet<String> {
-    SUB_VAR_RE.captures_iter(template_str)
+    SUB_VAR_RE
+        .captures_iter(template_str)
         .map(|cap| cap[1].trim().to_string())
         .collect()
 }

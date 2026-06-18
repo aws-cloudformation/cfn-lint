@@ -35,12 +35,18 @@ fn is_runtime_valid_for_snapstart(runtime: &str) -> bool {
 }
 
 impl CfnLintRule for E2530 {
-    fn id(&self) -> &str { "E2530" }
-    fn short_description(&self) -> &str { "SnapStart supports the configured runtime" }
+    fn id(&self) -> &str {
+        "E2530"
+    }
+    fn short_description(&self) -> &str {
+        "SnapStart supports the configured runtime"
+    }
     fn description(&self) -> &str {
         "To properly leverage SnapStart, you must have a supported runtime"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/AWS::Lambda::Function/Properties"]

@@ -1,6 +1,6 @@
 use super::super::{ValidationError, Validator};
-use super::helpers::{err, unknown_err};
 use super::functions::validate_function_structure;
+use super::helpers::{err, unknown_err};
 use crate::ast::AstNode;
 use regex::Regex;
 use std::sync::Arc;
@@ -21,34 +21,40 @@ pub fn validate_fn_getatt(
         None => return vec![unknown_err("fn_getatt", path, node)],
     };
     let (resource_name, attribute) = match func.args.as_ref() {
-        AstNode::Array(arr) if arr.elements.len() == 2 => {
-            match arr.elements[0].as_str() {
-                Some(r) => {
-                    match arr.elements[1].as_str() {
-                        Some(a) => (r.to_string(), a.to_string()),
-                        None => {
-                            if arr.elements[1].as_function().is_some() || arr.elements[1].as_object().is_some() {
-                                let display = match arr.elements[1].as_function() {
-                                    Some(f) => format!("{{'{}':", f.name),
-                                    None => "object".to_string(),
-                                };
-                                return vec![err("fn_getatt",
-                                    format!("{} is not of type 'string'", display),
-                                    path, node)];
-                            }
-                            return vec![unknown_err("fn_getatt", path, node)];
-                        }
+        AstNode::Array(arr) if arr.elements.len() == 2 => match arr.elements[0].as_str() {
+            Some(r) => match arr.elements[1].as_str() {
+                Some(a) => (r.to_string(), a.to_string()),
+                None => {
+                    if arr.elements[1].as_function().is_some()
+                        || arr.elements[1].as_object().is_some()
+                    {
+                        let display = match arr.elements[1].as_function() {
+                            Some(f) => format!("{{'{}':", f.name),
+                            None => "object".to_string(),
+                        };
+                        return vec![err(
+                            "fn_getatt",
+                            format!("{} is not of type 'string'", display),
+                            path,
+                            node,
+                        )];
                     }
+                    return vec![unknown_err("fn_getatt", path, node)];
                 }
-                None => return vec![unknown_err("fn_getatt", path, node)],
+            },
+            None => return vec![unknown_err("fn_getatt", path, node)],
+        },
+        AstNode::String(s) => match s.value.split_once('.') {
+            Some((r, a)) => (r.to_string(), a.to_string()),
+            None => {
+                return vec![err(
+                    "fn_getatt",
+                    "Fn::GetAtt must have resource.attribute format".to_string(),
+                    path,
+                    node,
+                )]
             }
-        }
-        AstNode::String(s) => {
-            match s.value.split_once('.') {
-                Some((r, a)) => (r.to_string(), a.to_string()),
-                None => return vec![err("fn_getatt", "Fn::GetAtt must have resource.attribute format".to_string(), path, node)],
-            }
-        }
+        },
         _ => return vec![unknown_err("fn_getatt", path, node)],
     };
 
@@ -71,8 +77,17 @@ pub fn validate_fn_getatt(
             if a == "*" || a == &attribute {
                 return true;
             }
-            if a.contains('(') || a.contains('[') || a.contains('.') || a.contains('*') || a.contains('+') || a.contains('?') || a.contains('{') {
-                Regex::new(a).map(|re| re.is_match(&attribute)).unwrap_or(false)
+            if a.contains('(')
+                || a.contains('[')
+                || a.contains('.')
+                || a.contains('*')
+                || a.contains('+')
+                || a.contains('?')
+                || a.contains('{')
+            {
+                Regex::new(a)
+                    .map(|re| re.is_match(&attribute))
+                    .unwrap_or(false)
             } else {
                 false
             }
@@ -104,7 +119,14 @@ pub fn validate_ref(
 
     let ref_name = match func.args.as_str() {
         Some(s) => s,
-        None => return vec![err("ref", "Ref value must be a string".to_string(), path, node)],
+        None => {
+            return vec![err(
+                "ref",
+                "Ref value must be a string".to_string(),
+                path,
+                node,
+            )]
+        }
     };
 
     if ref_name == "AWS::NoValue" {
@@ -126,7 +148,16 @@ pub fn validate_ref(
                 && param.param_type != "CommaDelimitedList"
                 && !param.param_type.starts_with("AWS::SSM::Parameter");
             if ref_returns_string && schema_type == "array" {
-                e1020_errors.push(err("E1020", format!("{:?} is not of type '{}'", serde_json::json!({"Ref": ref_name}), schema_type), path, node));
+                e1020_errors.push(err(
+                    "E1020",
+                    format!(
+                        "{:?} is not of type '{}'",
+                        serde_json::json!({"Ref": ref_name}),
+                        schema_type
+                    ),
+                    path,
+                    node,
+                ));
             }
         }
     }
@@ -176,12 +207,26 @@ pub fn validate_fn_if(
 
     let arr = match func.args.as_array() {
         Some(a) if a.elements.len() == 3 => a,
-        _ => return vec![err("fn_if", "Fn::If requires [condition, true_value, false_value]".to_string(), path, node)],
+        _ => {
+            return vec![err(
+                "fn_if",
+                "Fn::If requires [condition, true_value, false_value]".to_string(),
+                path,
+                node,
+            )]
+        }
     };
 
     let cond_name = match arr.elements[0].as_str() {
         Some(s) => s,
-        None => return vec![err("fn_if", "Fn::If condition must be a string".to_string(), path, node)],
+        None => {
+            return vec![err(
+                "fn_if",
+                "Fn::If condition must be a string".to_string(),
+                path,
+                node,
+            )]
+        }
     };
 
     let ctx = match &validator.context {
@@ -257,7 +302,13 @@ pub fn validate_fn_sub(
 
     let structure_errs = validate_function_structure(validator, "Fn::Sub", &func.args, path);
     if !structure_errs.is_empty() {
-        return structure_errs.into_iter().map(|mut e| { e.keyword = "E1019".to_string(); e }).collect();
+        return structure_errs
+            .into_iter()
+            .map(|mut e| {
+                e.keyword = "E1019".to_string();
+                e
+            })
+            .collect();
     }
 
     let (tmpl_str, local_vars) = match func.args.as_ref() {
@@ -269,12 +320,26 @@ pub fn validate_fn_sub(
                 .map(|o| o.keys().collect())
                 .unwrap_or_default();
             let has_invalid_ref = arr.elements[1].as_object().map_or(false, |o| {
-                let valid_refs_check: std::collections::HashSet<&str> = ctx.template
-                    .parameters.keys().map(|s| s.as_str())
+                let valid_refs_check: std::collections::HashSet<&str> = ctx
+                    .template
+                    .parameters
+                    .keys()
+                    .map(|s| s.as_str())
                     .chain(ctx.template.resources.keys().map(|s| s.as_str()))
-                    .chain(["AWS::AccountId", "AWS::NoValue", "AWS::NotificationARNs",
-                             "AWS::Partition", "AWS::Region", "AWS::StackId",
-                             "AWS::StackName", "AWS::URLSuffix"].iter().copied())
+                    .chain(
+                        [
+                            "AWS::AccountId",
+                            "AWS::NoValue",
+                            "AWS::NotificationARNs",
+                            "AWS::Partition",
+                            "AWS::Region",
+                            "AWS::StackId",
+                            "AWS::StackName",
+                            "AWS::URLSuffix",
+                        ]
+                        .iter()
+                        .copied(),
+                    )
                     .collect();
                 o.values().any(|v| {
                     if let Some(f) = v.as_function() {
@@ -296,12 +361,26 @@ pub fn validate_fn_sub(
     };
 
     if let Some(tmpl) = tmpl_str {
-        let valid_refs: std::collections::HashSet<&str> = ctx.template
-            .parameters.keys().map(|s| s.as_str())
+        let valid_refs: std::collections::HashSet<&str> = ctx
+            .template
+            .parameters
+            .keys()
+            .map(|s| s.as_str())
             .chain(ctx.template.resources.keys().map(|s| s.as_str()))
-            .chain(["AWS::AccountId", "AWS::NoValue", "AWS::NotificationARNs",
-                     "AWS::Partition", "AWS::Region", "AWS::StackId",
-                     "AWS::StackName", "AWS::URLSuffix"].iter().copied())
+            .chain(
+                [
+                    "AWS::AccountId",
+                    "AWS::NoValue",
+                    "AWS::NotificationARNs",
+                    "AWS::Partition",
+                    "AWS::Region",
+                    "AWS::StackId",
+                    "AWS::StackName",
+                    "AWS::URLSuffix",
+                ]
+                .iter()
+                .copied(),
+            )
             .collect();
 
         let mut var_errors = Vec::new();
@@ -311,13 +390,17 @@ pub fn validate_fn_sub(
             if i + 1 < bytes.len() && bytes[i] == b'$' && bytes[i + 1] == b'{' {
                 if i + 2 < bytes.len() && bytes[i + 2] == b'!' {
                     i += 3;
-                    while i < bytes.len() && bytes[i] != b'}' { i += 1; }
+                    while i < bytes.len() && bytes[i] != b'}' {
+                        i += 1;
+                    }
                     i += 1;
                     continue;
                 }
                 let start = i + 2;
                 let mut end = start;
-                while end < bytes.len() && bytes[end] != b'}' { end += 1; }
+                while end < bytes.len() && bytes[end] != b'}' {
+                    end += 1;
+                }
                 let var = tmpl[start..end].trim();
                 if !var.is_empty() {
                     if var.contains('.') {
@@ -326,14 +409,32 @@ pub fn validate_fn_sub(
                             && !valid_refs.contains(resource_name)
                             && !local_vars.contains(resource_name)
                         {
-                            let mut all: Vec<&str> = valid_refs.iter().chain(local_vars.iter()).copied().collect();
+                            let mut all: Vec<&str> = valid_refs
+                                .iter()
+                                .chain(local_vars.iter())
+                                .copied()
+                                .collect();
                             all.sort();
-                            var_errors.push(err("fn_sub", format!("'{}' is not one of {:?}", resource_name, all), path, node));
+                            var_errors.push(err(
+                                "fn_sub",
+                                format!("'{}' is not one of {:?}", resource_name, all),
+                                path,
+                                node,
+                            ));
                         }
                     } else if !valid_refs.contains(var) && !local_vars.contains(var) {
-                        let mut all: Vec<&str> = valid_refs.iter().chain(local_vars.iter()).copied().collect();
+                        let mut all: Vec<&str> = valid_refs
+                            .iter()
+                            .chain(local_vars.iter())
+                            .copied()
+                            .collect();
                         all.sort();
-                        var_errors.push(err("fn_sub", format!("'{}' is not one of {:?}", var, all), path, node));
+                        var_errors.push(err(
+                            "fn_sub",
+                            format!("'{}' is not one of {:?}", var, all),
+                            path,
+                            node,
+                        ));
                     }
                 }
                 i = end + 1;
@@ -351,11 +452,13 @@ pub fn validate_fn_sub(
     match resolver.resolve(node) {
         Some(resolved) => {
             let errs = validator.validate_schema(&resolved, constraint, path);
-            errs.into_iter().map(|mut e| {
-                super::fn_resolve::relabel_resolved(&mut e, "W1031", "Fn::Sub");
-                e.span = original_span;
-                e
-            }).collect()
+            errs.into_iter()
+                .map(|mut e| {
+                    super::fn_resolve::relabel_resolved(&mut e, "W1031", "Fn::Sub");
+                    e.span = original_span;
+                    e
+                })
+                .collect()
         }
         None => vec![unknown_err("fn_sub", path, node)],
     }

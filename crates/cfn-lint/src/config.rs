@@ -1,6 +1,6 @@
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
-use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
 use crate::ast::AstNode;
@@ -102,7 +102,8 @@ impl Config {
 
     /// Merge template-level Metadata.cfn-lint.config into this config.
     pub fn merge_template_metadata(&mut self, root: &AstNode) {
-        let config_node = root.as_object()
+        let config_node = root
+            .as_object()
             .and_then(|o| o.get("Metadata"))
             .and_then(|n| n.as_object())
             .and_then(|o| o.get("cfn-lint"))
@@ -110,7 +111,9 @@ impl Config {
             .and_then(|o| o.get("config"))
             .and_then(|n| n.as_object());
 
-        let Some(config_obj) = config_node else { return };
+        let Some(config_obj) = config_node else {
+            return;
+        };
 
         if let Some(arr) = config_obj.get("ignore_checks").and_then(|n| n.as_array()) {
             for elem in &arr.elements {
@@ -127,7 +130,11 @@ impl Config {
             }
         }
         if let Some(arr) = config_obj.get("regions").and_then(|n| n.as_array()) {
-            self.regions = arr.elements.iter().filter_map(|e| e.as_str().map(String::from)).collect();
+            self.regions = arr
+                .elements
+                .iter()
+                .filter_map(|e| e.as_str().map(String::from))
+                .collect();
         }
         if let Some(val) = config_obj.get("include_experimental") {
             if let Some(b) = val.as_bool() {
@@ -139,13 +146,17 @@ impl Config {
                 self.ignore_bad_template = b;
             }
         }
-        if let Some(obj) = config_obj.get("configure_rules").and_then(|n| n.as_object()) {
+        if let Some(obj) = config_obj
+            .get("configure_rules")
+            .and_then(|n| n.as_object())
+        {
             for (key, value) in obj.iter() {
                 if let Some(rule_obj) = value.as_object() {
                     let mut rule_config = HashMap::new();
                     for (rk, rv) in rule_obj.iter() {
                         if let Some(s) = rv.as_str() {
-                            rule_config.insert(rk.to_string(), serde_json::Value::String(s.to_string()));
+                            rule_config
+                                .insert(rk.to_string(), serde_json::Value::String(s.to_string()));
                         } else if let Some(b) = rv.as_bool() {
                             rule_config.insert(rk.to_string(), serde_json::Value::Bool(b));
                         }
@@ -188,44 +199,102 @@ impl Config {
         let file: Config = serde_yaml::from_str(&content)?;
 
         // Merge lists (extend, don't replace)
-        if !file.templates.is_empty() { self.templates.extend(file.templates); }
-        if !file.regions.is_empty() { self.regions = file.regions; }
-        if !file.ignore_checks.is_empty() { self.ignore_checks.extend(file.ignore_checks); }
-        if !file.include_checks.is_empty() { self.include_checks.extend(file.include_checks); }
-        if !file.mandatory_checks.is_empty() { self.mandatory_checks.extend(file.mandatory_checks); }
-        if file.include_experimental { self.include_experimental = true; }
-        if !file.configure_rules.is_empty() {
-            for (k, v) in file.configure_rules { self.configure_rules.insert(k, v); }
+        if !file.templates.is_empty() {
+            self.templates.extend(file.templates);
         }
-        if !file.append_rules.is_empty() { self.append_rules.extend(file.append_rules); }
-        if file.custom_rules.is_some() { self.custom_rules = file.custom_rules; }
-        if file.override_spec.is_some() { self.override_spec = file.override_spec; }
-        if !file.registry_schemas.is_empty() { self.registry_schemas.extend(file.registry_schemas); }
-        if !file.ignore_templates.is_empty() { self.ignore_templates.extend(file.ignore_templates); }
-        if file.ignore_bad_template { self.ignore_bad_template = true; }
-        if file.merge_configs { self.merge_configs = true; }
-        if file.format != "parseable" { self.format = file.format; }
-        if file.non_zero_exit_code != "error" { self.non_zero_exit_code = file.non_zero_exit_code; }
+        if !file.regions.is_empty() {
+            self.regions = file.regions;
+        }
+        if !file.ignore_checks.is_empty() {
+            self.ignore_checks.extend(file.ignore_checks);
+        }
+        if !file.include_checks.is_empty() {
+            self.include_checks.extend(file.include_checks);
+        }
+        if !file.mandatory_checks.is_empty() {
+            self.mandatory_checks.extend(file.mandatory_checks);
+        }
+        if file.include_experimental {
+            self.include_experimental = true;
+        }
+        if !file.configure_rules.is_empty() {
+            for (k, v) in file.configure_rules {
+                self.configure_rules.insert(k, v);
+            }
+        }
+        if !file.append_rules.is_empty() {
+            self.append_rules.extend(file.append_rules);
+        }
+        if file.custom_rules.is_some() {
+            self.custom_rules = file.custom_rules;
+        }
+        if file.override_spec.is_some() {
+            self.override_spec = file.override_spec;
+        }
+        if !file.registry_schemas.is_empty() {
+            self.registry_schemas.extend(file.registry_schemas);
+        }
+        if !file.ignore_templates.is_empty() {
+            self.ignore_templates.extend(file.ignore_templates);
+        }
+        if file.ignore_bad_template {
+            self.ignore_bad_template = true;
+        }
+        if file.merge_configs {
+            self.merge_configs = true;
+        }
+        if file.format != "parseable" {
+            self.format = file.format;
+        }
+        if file.non_zero_exit_code != "error" {
+            self.non_zero_exit_code = file.non_zero_exit_code;
+        }
 
         Ok(())
     }
 
     fn apply_overrides(&mut self, o: ConfigOverrides) {
-        if !o.templates.is_empty() { self.templates = o.templates; }
-        if let Some(f) = o.format { self.format = f; }
-        if !o.regions.is_empty() { self.regions = o.regions; }
-        if !o.include_checks.is_empty() { self.include_checks = o.include_checks; }
-        if !o.ignore_checks.is_empty() { self.ignore_checks = o.ignore_checks; }
-        if let Some(v) = o.include_experimental { self.include_experimental = v; }
-        if let Some(d) = o.schema_dir { self.schema_dir = Some(d); }
-        if !o.configure_rules.is_empty() {
-            for (k, v) in o.configure_rules { self.configure_rules.insert(k, v); }
+        if !o.templates.is_empty() {
+            self.templates = o.templates;
         }
-        if !o.append_rules.is_empty() { self.append_rules = o.append_rules; }
-        if !o.registry_schemas.is_empty() { self.registry_schemas = o.registry_schemas; }
-        if !o.ignore_templates.is_empty() { self.ignore_templates = o.ignore_templates; }
-        if let Some(n) = o.non_zero_exit_code { self.non_zero_exit_code = n; }
-        if let Some(s) = o.override_spec { self.override_spec = Some(s); }
+        if let Some(f) = o.format {
+            self.format = f;
+        }
+        if !o.regions.is_empty() {
+            self.regions = o.regions;
+        }
+        if !o.include_checks.is_empty() {
+            self.include_checks = o.include_checks;
+        }
+        if !o.ignore_checks.is_empty() {
+            self.ignore_checks = o.ignore_checks;
+        }
+        if let Some(v) = o.include_experimental {
+            self.include_experimental = v;
+        }
+        if let Some(d) = o.schema_dir {
+            self.schema_dir = Some(d);
+        }
+        if !o.configure_rules.is_empty() {
+            for (k, v) in o.configure_rules {
+                self.configure_rules.insert(k, v);
+            }
+        }
+        if !o.append_rules.is_empty() {
+            self.append_rules = o.append_rules;
+        }
+        if !o.registry_schemas.is_empty() {
+            self.registry_schemas = o.registry_schemas;
+        }
+        if !o.ignore_templates.is_empty() {
+            self.ignore_templates = o.ignore_templates;
+        }
+        if let Some(n) = o.non_zero_exit_code {
+            self.non_zero_exit_code = n;
+        }
+        if let Some(s) = o.override_spec {
+            self.override_spec = Some(s);
+        }
     }
 }
 
@@ -253,7 +322,9 @@ fn find_project_config() -> Option<PathBuf> {
     let cwd = std::env::current_dir().ok()?;
     for name in &[".cfnlintrc", ".cfnlintrc.yaml", ".cfnlintrc.yml"] {
         let path = cwd.join(name);
-        if path.exists() { return Some(path); }
+        if path.exists() {
+            return Some(path);
+        }
     }
     None
 }
@@ -263,7 +334,9 @@ fn find_user_config() -> Option<PathBuf> {
     let home = dirs::home_dir()?;
     for name in &[".cfnlintrc", ".cfnlintrc.yaml", ".cfnlintrc.yml"] {
         let path = home.join(name);
-        if path.exists() { return Some(path); }
+        if path.exists() {
+            return Some(path);
+        }
     }
     None
 }
@@ -286,7 +359,8 @@ mod tests {
         let config = Config::load(ConfigOverrides {
             config_file: Some(PathBuf::from("/tmp/nonexistent-cfnlintrc-test")),
             ..Default::default()
-        }).unwrap();
+        })
+        .unwrap();
         assert_eq!(config.format, "parseable");
         // Default region comes from AWS_DEFAULT_REGION/AWS_REGION env var or "us-east-1"
         let expected_region = std::env::var("AWS_DEFAULT_REGION")
@@ -300,12 +374,17 @@ mod tests {
     #[test]
     fn test_config_file() {
         let mut file = NamedTempFile::new().unwrap();
-        writeln!(file, "regions:\n  - eu-west-1\nignore_checks:\n  - E3001\ninclude_experimental: true").unwrap();
+        writeln!(
+            file,
+            "regions:\n  - eu-west-1\nignore_checks:\n  - E3001\ninclude_experimental: true"
+        )
+        .unwrap();
 
         let config = Config::load(ConfigOverrides {
             config_file: Some(file.path().to_path_buf()),
             ..Default::default()
-        }).unwrap();
+        })
+        .unwrap();
 
         assert_eq!(config.regions, vec!["eu-west-1"]);
         assert_eq!(config.ignore_checks, vec!["E3001"]);
@@ -322,7 +401,8 @@ mod tests {
             regions: vec!["ap-southeast-1".to_string()],
             ignore_checks: vec!["W2001".to_string()],
             ..Default::default()
-        }).unwrap();
+        })
+        .unwrap();
 
         assert_eq!(config.regions, vec!["ap-southeast-1"]);
         assert_eq!(config.ignore_checks, vec!["W2001"]);
@@ -356,7 +436,8 @@ mod tests {
         let config = Config::load(ConfigOverrides {
             config_file: Some(file.path().to_path_buf()),
             ..Default::default()
-        }).unwrap();
+        })
+        .unwrap();
 
         let rule_cfg = config.rule_config("E3012").unwrap();
         assert_eq!(rule_cfg.get("strict"), Some(&serde_json::Value::Bool(true)));
@@ -365,13 +446,18 @@ mod tests {
     #[test]
     fn test_merge_configs_flag() {
         let mut file = NamedTempFile::new().unwrap();
-        writeln!(file, "merge_configs: true\nignore_checks:\n  - E3001\n  - E3002").unwrap();
+        writeln!(
+            file,
+            "merge_configs: true\nignore_checks:\n  - E3001\n  - E3002"
+        )
+        .unwrap();
 
         let config = Config::load(ConfigOverrides {
             config_file: Some(file.path().to_path_buf()),
             ignore_checks: vec!["W2001".to_string()],
             ..Default::default()
-        }).unwrap();
+        })
+        .unwrap();
 
         // With merge_configs, CLI overrides replace (current behavior)
         // The merge_configs flag is stored for consumers to use
@@ -475,7 +561,9 @@ Resources: {}"#;
     #[test]
     fn test_all_config_options_from_file() {
         let mut file = NamedTempFile::new().unwrap();
-        writeln!(file, r#"
+        writeln!(
+            file,
+            r#"
 templates:
   - "*.yaml"
 format: json
@@ -494,12 +582,15 @@ non_zero_exit_code: warning
 configure_rules:
   E3012:
     strict: true
-"#).unwrap();
+"#
+        )
+        .unwrap();
 
         let config = Config::load(ConfigOverrides {
             config_file: Some(file.path().to_path_buf()),
             ..Default::default()
-        }).unwrap();
+        })
+        .unwrap();
 
         assert_eq!(config.format, "json");
         assert_eq!(config.regions, vec!["us-west-2"]);

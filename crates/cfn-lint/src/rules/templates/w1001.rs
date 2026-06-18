@@ -1,8 +1,8 @@
 use crate::ast::AstNode;
 use crate::graph::{self, EdgeKind, Graph};
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 pub struct W1001;
@@ -21,9 +21,15 @@ impl CfnLintRule for W1001 {
         Severity::Warning
     }
 
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let dep_graph = Graph::build(template, root);
         let mut issues = Vec::new();
 
@@ -73,7 +79,7 @@ impl CfnLintRule for W1001 {
                     resolved_from_ref: false,
                     context: vec![],
                     schema_id: None,
-});
+                });
             }
         }
         issues

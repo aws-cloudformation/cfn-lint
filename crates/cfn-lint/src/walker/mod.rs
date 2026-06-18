@@ -11,9 +11,9 @@ use crate::engine::{
     is_templated_property, keyword_to_rule_id,
 };
 use crate::getatts;
-use crate::jsonschema::Validator;
 use crate::jsonschema::cfn_lint_keyword::KeywordRuleRegistry;
 use crate::jsonschema::ValidationError;
+use crate::jsonschema::Validator;
 use crate::template::Template;
 
 static RE_RESOURCE_NAME: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^[a-zA-Z0-9]+$").unwrap());
@@ -30,10 +30,19 @@ impl TemplateWalker {
         schema_provider: Option<Arc<dyn cfn_schema::SchemaProvider>>,
         strict_types: bool,
     ) -> Self {
-        Self { keyword_rules, schema_provider, strict_types }
+        Self {
+            keyword_rules,
+            schema_provider,
+            strict_types,
+        }
     }
 
-    pub fn walk(&self, template: &Template, root: &AstNode, regions: &[String]) -> Vec<ValidationError> {
+    pub fn walk(
+        &self,
+        template: &Template,
+        root: &AstNode,
+        regions: &[String],
+    ) -> Vec<ValidationError> {
         let mut issues = Vec::new();
 
         // Dispatch template-level rules (keyword "/") — these need full template access
@@ -53,7 +62,9 @@ impl TemplateWalker {
         }
         let tmpl_arc = Arc::new(tmpl_for_ctx);
         let mut ctx = Context::new(Arc::clone(&tmpl_arc));
-        ctx.sat_conditions = Some(Arc::new(crate::conditions::Conditions::from_template(&tmpl_arc)));
+        ctx.sat_conditions = Some(Arc::new(crate::conditions::Conditions::from_template(
+            &tmpl_arc,
+        )));
         let ctx = if region != "us-east-1" {
             ctx.evolve(crate::context::ContextOptions {
                 regions: Some(regions.to_vec()),
@@ -66,19 +77,21 @@ impl TemplateWalker {
         let validator = Validator::new_with_context(serde_json::json!({}), Arc::clone(&ctx_arc));
 
         // Check if E3012 strict mode is configured via metadata or engine setting
-        let e3012_strict = self.strict_types || template.root
-            .get("Metadata")
-            .and_then(|m| m.get("cfn-lint"))
-            .and_then(|c| c.get("config"))
-            .and_then(|c| c.get("configure_rules"))
-            .and_then(|c| c.get("E3012"))
-            .and_then(|c| c.get("strict"))
-            .and_then(|v| match v {
-                AstNode::Bool(b) => Some(b.value),
-                AstNode::String(s) => Some(s.value == "True" || s.value == "true"),
-                _ => None,
-            })
-            .unwrap_or(false);
+        let e3012_strict = self.strict_types
+            || template
+                .root
+                .get("Metadata")
+                .and_then(|m| m.get("cfn-lint"))
+                .and_then(|c| c.get("config"))
+                .and_then(|c| c.get("configure_rules"))
+                .and_then(|c| c.get("E3012"))
+                .and_then(|c| c.get("strict"))
+                .and_then(|v| match v {
+                    AstNode::Bool(b) => Some(b.value),
+                    AstNode::String(s) => Some(s.value == "True" || s.value == "true"),
+                    _ => None,
+                })
+                .unwrap_or(false);
 
         // Template-level Metadata
         if let Some(metadata_node) = root.get("Metadata") {
@@ -96,7 +109,10 @@ impl TemplateWalker {
                     &validator,
                     "Metadata/AWS::CloudFormation::Interface",
                     interface_node,
-                    &["Metadata".to_string(), "AWS::CloudFormation::Interface".to_string()],
+                    &[
+                        "Metadata".to_string(),
+                        "AWS::CloudFormation::Interface".to_string(),
+                    ],
                     &serde_json::Value::Bool(true),
                     &mut issues,
                 );
@@ -119,7 +135,9 @@ impl TemplateWalker {
             // Load resource schema for this type.
             // None means: schema provider exists but type not found (triggers E3006).
             // When no schema provider exists, we skip schema-dependent validation entirely.
-            let resource_schema = self.schema_provider.as_ref()
+            let resource_schema = self
+                .schema_provider
+                .as_ref()
                 .and_then(|sp| sp.get_resource_schema(resource_type, region));
 
             // Schema validation of Properties
@@ -131,23 +149,41 @@ impl TemplateWalker {
 
                         let branches = expand_fn_if_branches(
                             props_node,
-                            vec!["Resources".to_string(), name.clone(), "Properties".to_string()],
+                            vec![
+                                "Resources".to_string(),
+                                name.clone(),
+                                "Properties".to_string(),
+                            ],
                         );
 
                         let mut errors = Vec::new();
                         let schema_raw_owned = schema_raw.clone();
                         for (branch_node, branch_path) in &branches {
-                            let mut v = Validator::new_with_context(schema_raw_owned.clone(), Arc::clone(&ctx_arc));
+                            let mut v = Validator::new_with_context(
+                                schema_raw_owned.clone(),
+                                Arc::clone(&ctx_arc),
+                            );
                             if e3012_strict {
                                 v.strict_types = true;
                             }
-                            errors.extend(v.validate(*branch_node, &resource_schema_val, branch_path));
+                            errors.extend(v.validate(
+                                *branch_node,
+                                &resource_schema_val,
+                                branch_path,
+                            ));
                         }
 
                         for err in errors.into_iter().flat_map(flatten_validation_errors) {
-                            if err.unknown { continue; }
-                            let rule_id = keyword_to_rule_id(&err.keyword);
-                            if rule_id == "E3012" && is_templated_property(&err.path, resource_type) {
+                            if err.unknown {
+                                continue;
+                            }
+                            let rule_id = if let Some(ref rid) = err.rule_id {
+                                rid.as_str()
+                            } else {
+                                keyword_to_rule_id(&err.keyword)
+                            };
+                            if rule_id == "E3012" && is_templated_property(&err.path, resource_type)
+                            {
                                 continue;
                             }
                             let final_rule_id = if err.resolved_from_ref {
@@ -240,9 +276,20 @@ impl TemplateWalker {
         let schema_raw = schema_node
             .map(|s| &s.raw)
             .or_else(|| resource_schema.map(|rs| &rs.raw))
-            .unwrap_or(if self.schema_provider.is_some() { &serde_json::Value::Null } else { &EMPTY_SCHEMA });
+            .unwrap_or(if self.schema_provider.is_some() {
+                &serde_json::Value::Null
+            } else {
+                &EMPTY_SCHEMA
+            });
 
-        self.dispatch(validator, &type_keyword, node, instance_path, schema_raw, issues);
+        self.dispatch(
+            validator,
+            &type_keyword,
+            node,
+            instance_path,
+            schema_raw,
+            issues,
+        );
 
         match node {
             AstNode::Object(obj) => {
@@ -271,8 +318,7 @@ impl TemplateWalker {
                 }
             }
             AstNode::Array(arr) => {
-                let items_schema = schema_node
-                    .and_then(|s| s.items.as_deref());
+                let items_schema = schema_node.and_then(|s| s.items.as_deref());
 
                 for (i, elem) in arr.elements.iter().enumerate() {
                     let mut child_inst = instance_path.to_vec();
@@ -292,9 +338,30 @@ impl TemplateWalker {
                 }
             }
             AstNode::Function(func) if func.name == "Fn::If" => {
-                self.walk_fn_if(validator, func, instance_path, type_path, schema_node, resource_schema, issues);
+                self.walk_fn_if(
+                    validator,
+                    func,
+                    instance_path,
+                    type_path,
+                    schema_node,
+                    resource_schema,
+                    issues,
+                );
             }
-            AstNode::Function(_) => {}
+            AstNode::Function(func) => {
+                let fn_keyword = format!(
+                    "Fn/{}",
+                    func.name.strip_prefix("Fn::").unwrap_or(&func.name)
+                );
+                self.dispatch(
+                    validator,
+                    &fn_keyword,
+                    node,
+                    instance_path,
+                    schema_raw,
+                    issues,
+                );
+            }
 
             _ => {}
         }
@@ -364,13 +431,10 @@ impl TemplateWalker {
         schema: &serde_json::Value,
         issues: &mut Vec<ValidationError>,
     ) {
-        for err in self.keyword_rules.dispatch(
-            validator,
-            path_keyword,
-            node,
-            schema,
-            instance_path,
-        ) {
+        for err in self
+            .keyword_rules
+            .dispatch(validator, path_keyword, node, schema, instance_path)
+        {
             let rule_id = if err.keyword.starts_with("cfnLint:") {
                 err.keyword.trim_start_matches("cfnLint:").to_string()
             } else if err.rule_id.is_some() {
@@ -378,11 +442,14 @@ impl TemplateWalker {
             } else {
                 keyword_to_rule_id(&err.keyword).to_string()
             };
-            issues.push(ValidationError::new(rule_id, err.message, err.path, err.span));
+            issues.push(ValidationError::new(
+                rule_id,
+                err.message,
+                err.path,
+                err.span,
+            ));
         }
     }
-
-
 }
 
 #[cfg(test)]
@@ -413,14 +480,16 @@ mod tests {
 
     #[test]
     fn walks_outputs() {
-        let yaml = b"Resources:\n  B:\n    Type: AWS::S3::Bucket\nOutputs:\n  Out:\n    Value: !Ref B\n";
+        let yaml =
+            b"Resources:\n  B:\n    Type: AWS::S3::Bucket\nOutputs:\n  Out:\n    Value: !Ref B\n";
         let issues = walk_yaml(yaml);
         let _ = issues;
     }
 
     #[test]
     fn walks_parameters() {
-        let yaml = b"Parameters:\n  Env:\n    Type: String\nResources:\n  B:\n    Type: AWS::S3::Bucket\n";
+        let yaml =
+            b"Parameters:\n  Env:\n    Type: String\nResources:\n  B:\n    Type: AWS::S3::Bucket\n";
         let issues = walk_yaml(yaml);
         let _ = issues;
     }
@@ -459,7 +528,8 @@ Resources:
 
     #[test]
     fn unknown_resource_type_no_crash() {
-        let yaml = b"Resources:\n  Custom:\n    Type: Custom::MyThing\n    Properties:\n      Foo: bar\n";
+        let yaml =
+            b"Resources:\n  Custom:\n    Type: Custom::MyThing\n    Properties:\n      Foo: bar\n";
         let issues = walk_yaml(yaml);
         let _ = issues;
     }
@@ -500,6 +570,9 @@ Resources:
         let tmpl = crate::template::Template::from_ast(&ast).unwrap();
         let mut engine = crate::engine::Engine::new();
         let issues = engine.validate(&tmpl, &ast, &["us-east-1".to_string()]);
-        assert!(!issues.iter().any(|i| i.rule_id.as_deref() == Some("W2001")), "W2001 should be suppressed");
+        assert!(
+            !issues.iter().any(|i| i.rule_id.as_deref() == Some("W2001")),
+            "W2001 should be suppressed"
+        );
     }
 }

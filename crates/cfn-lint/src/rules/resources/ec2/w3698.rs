@@ -9,10 +9,18 @@ use crate::rules::Severity;
 pub struct W3698;
 
 impl CfnLintRule for W3698 {
-    fn id(&self) -> &str { "W3698" }
-    fn short_description(&self) -> &str { "VirtualName is ignored when Ebs is specified" }
-    fn description(&self) -> &str { "VirtualName is ignored when Ebs is specified" }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn id(&self) -> &str {
+        "W3698"
+    }
+    fn short_description(&self) -> &str {
+        "VirtualName is ignored when Ebs is specified"
+    }
+    fn description(&self) -> &str {
+        "VirtualName is ignored when Ebs is specified"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
     fn keywords(&self) -> &[&str] {
         &[
@@ -32,7 +40,14 @@ impl CfnLintRule for W3698 {
         _schema: &serde_json::Value,
         path: &[String],
     ) -> Vec<ValidationError> {
-        validate_schema("W3698", "VirtualName is ignored when Ebs is specified", validator, instance, &SCHEMA, path)
+        validate_schema(
+            "W3698",
+            "VirtualName is ignored when Ebs is specified",
+            validator,
+            instance,
+            &SCHEMA,
+            path,
+        )
     }
 }
 

@@ -1,8 +1,8 @@
 use crate::ast::AstNode;
-use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
-use crate::template::Template;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
+use crate::template::Template;
 
 /// W2030: Check if parameters have a valid value based on AllowedValues.
 /// For each parameter with AllowedValues, check Default is in the list.
@@ -29,9 +29,13 @@ impl CfnLintRule for W2030 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         // Schema-driven in Python — triggered by parent rule E3030
-                vec![]
+        vec![]
     }
 }
 

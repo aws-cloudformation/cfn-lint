@@ -64,17 +64,12 @@ impl CfnLintRule for I2530 {
             err_path.push("SnapStart".to_string());
             err_path.push("ApplyOn".to_string());
 
-            let span = props.get("Runtime")
-                .map(|n| n.span())
-                .unwrap_or_default();
+            let span = props.get("Runtime").map(|n| n.span()).unwrap_or_default();
 
             return vec![ValidationError {
                 rule_id: None,
                 keyword: format!("cfnLint:{}", self.id()),
-                message: format!(
-                    "'{}' runtime should consider using 'SnapStart'",
-                    runtime
-                ),
+                message: format!("'{}' runtime should consider using 'SnapStart'", runtime),
                 path: err_path,
                 span,
                 unknown: false,
@@ -108,14 +103,26 @@ Resources:
       Role: arn:aws:iam::123456789012:role/role
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Func").unwrap()
-            .get("Properties").unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Func")
+            .unwrap()
+            .get("Properties")
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "Func".to_string(), "Properties".to_string(),
+            "Resources".to_string(),
+            "Func".to_string(),
+            "Properties".to_string(),
         ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = I2530.validate(&validator, "Resources/AWS::Lambda::Function/Properties", instance, &serde_json::json!({}), &path);
+        let errors = I2530.validate(
+            &validator,
+            "Resources/AWS::Lambda::Function/Properties",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 1);
         assert!(errors[0].message.contains("SnapStart"));
     }
@@ -135,14 +142,26 @@ Resources:
       Role: arn:aws:iam::123456789012:role/role
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Func").unwrap()
-            .get("Properties").unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Func")
+            .unwrap()
+            .get("Properties")
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "Func".to_string(), "Properties".to_string(),
+            "Resources".to_string(),
+            "Func".to_string(),
+            "Properties".to_string(),
         ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = I2530.validate(&validator, "Resources/AWS::Lambda::Function/Properties", instance, &serde_json::json!({}), &path);
+        let errors = I2530.validate(
+            &validator,
+            "Resources/AWS::Lambda::Function/Properties",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 }

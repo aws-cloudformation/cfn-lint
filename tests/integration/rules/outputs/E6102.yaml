@@ -1,9 +1,11 @@
 # --- cfn-lint-test ---
 # rule: E6102
 # description: Output export names must be strings
-# expect: []
+# expect:
+#   - rule: E6102
+#     path: /Outputs/BadExport/Export/Name
+#     message_contains: "is not of type"
 # ---
-# NOTE: Rule E6102 output Export/Name type validation not yet implemented in v2 engine
 AWSTemplateFormatVersion: "2010-09-09"
 Resources:
   Bucket:

@@ -6,10 +6,18 @@ use crate::rules::Severity;
 pub struct E3027;
 
 impl CfnLintRule for E3027 {
-    fn id(&self) -> &str { "E3027" }
-    fn short_description(&self) -> &str { "Validate AWS Event ScheduleExpression format" }
-    fn description(&self) -> &str { "Validates EventBridge/CloudWatch Events schedule expressions" }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn id(&self) -> &str {
+        "E3027"
+    }
+    fn short_description(&self) -> &str {
+        "Validate AWS Event ScheduleExpression format"
+    }
+    fn description(&self) -> &str {
+        "Validates EventBridge/CloudWatch Events schedule expressions"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/AWS::Events::Rule/Properties/ScheduleExpression"]
@@ -53,10 +61,7 @@ fn validate_schedule(val: &str) -> Option<String> {
     if let Some(inner) = val.strip_prefix("cron(").and_then(|s| s.strip_suffix(')')) {
         return validate_cron(inner);
     }
-    Some(format!(
-        "{:?} has to be either 'cron()' or 'rate()'",
-        val
-    ))
+    Some(format!("{:?} has to be either 'cron()' or 'rate()'", val))
 }
 
 fn validate_rate(inner: &str) -> Option<String> {
@@ -66,27 +71,18 @@ fn validate_rate(inner: &str) -> Option<String> {
 
     let parts: Vec<&str> = inner.split_whitespace().collect();
     if parts.len() != 2 {
-        return Some(format!(
-            "{:?} has to be of format rate(Value Unit)",
-            inner
-        ));
+        return Some(format!("{:?} has to be of format rate(Value Unit)", inner));
     }
 
     let n: u64 = match parts[0].parse() {
         Ok(v) => v,
         Err(_) => {
-            return Some(format!(
-                "{:?} is not of type 'integer'",
-                parts[0]
-            ));
+            return Some(format!("{:?} is not of type 'integer'", parts[0]));
         }
     };
 
     if n == 0 {
-        return Some(format!(
-            "{:?} is less than the minimum of 0",
-            parts[0]
-        ));
+        return Some(format!("{:?} is less than the minimum of 0", parts[0]));
     }
 
     let valid_periods = if n <= 1 {
@@ -96,10 +92,7 @@ fn validate_rate(inner: &str) -> Option<String> {
     };
 
     if !valid_periods.contains(&parts[1]) {
-        return Some(format!(
-            "{:?} is not one of {:?}",
-            parts[1], valid_periods
-        ));
+        return Some(format!("{:?} is not one of {:?}", parts[1], valid_periods));
     }
 
     None

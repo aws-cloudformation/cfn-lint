@@ -9,9 +9,16 @@ impl Validator {
     /// Keywords that need per-condition-scenario validation (Python's group_functions).
     /// These keywords are sensitive to Fn::If / Ref AWS::NoValue in property values.
     pub(super) const GROUP_KEYWORDS: &'static [&'static str] = &[
-        "required", "dependentRequired", "dependentExcluded",
-        "requiredXor", "requiredOr", "uniqueItems",
-        "minItems", "maxItems", "minProperties", "maxProperties",
+        "required",
+        "dependentRequired",
+        "dependentExcluded",
+        "requiredXor",
+        "requiredOr",
+        "uniqueItems",
+        "minItems",
+        "maxItems",
+        "minProperties",
+        "maxProperties",
     ];
 
     /// When no context is set or the node is not a function, returns the
@@ -38,33 +45,41 @@ impl Validator {
 
         // cfnContext: evolve context and replace schema with inner schema,
         // then continue filter processing (including function routing)
-        let (effective_schema, evolved_context) = if let Some(cfn_ctx) = schema.get("cfnContext").and_then(|v| v.as_object()) {
-            let inner = cfn_ctx.get("schema").cloned().unwrap_or(serde_json::json!({}));
-            if let Some(funcs) = cfn_ctx.get("functions").and_then(|f| f.as_array()) {
-                let func_names: Vec<String> = funcs.iter().filter_map(|v| v.as_str().map(String::from)).collect();
-                if let Some(ctx) = &self.context {
-                    let new_ctx = ctx.evolve(crate::context::ContextOptions {
-                        functions: Some(func_names),
-                        ..Default::default()
-                    });
-                    (inner, Some(Arc::new(new_ctx)))
+        let (effective_schema, evolved_context) =
+            if let Some(cfn_ctx) = schema.get("cfnContext").and_then(|v| v.as_object()) {
+                let inner = cfn_ctx
+                    .get("schema")
+                    .cloned()
+                    .unwrap_or(serde_json::json!({}));
+                if let Some(funcs) = cfn_ctx.get("functions").and_then(|f| f.as_array()) {
+                    let func_names: Vec<String> = funcs
+                        .iter()
+                        .filter_map(|v| v.as_str().map(String::from))
+                        .collect();
+                    if let Some(ctx) = &self.context {
+                        let new_ctx = ctx.evolve(crate::context::ContextOptions {
+                            functions: Some(func_names),
+                            ..Default::default()
+                        });
+                        (inner, Some(Arc::new(new_ctx)))
+                    } else {
+                        let mut ctx = crate::context::Context::empty();
+                        ctx.functions = Some(func_names);
+                        (inner, Some(Arc::new(ctx)))
+                    }
                 } else {
-                    let mut ctx = crate::context::Context::empty();
-                    ctx.functions = Some(func_names);
-                    (inner, Some(Arc::new(ctx)))
+                    (inner, None)
                 }
             } else {
-                (inner, None)
-            }
-        } else {
-            (schema.clone(), None)
-        };
+                (schema.clone(), None)
+            };
         let schema = &effective_schema;
 
         // Functions: replace schema with {"fn_name": schema}
         // Only route if the function is allowed in the current context
         if let AstNode::Function(func) = node {
-            let ctx_ref = evolved_context.as_ref().or(self.context.as_ref()); let is_allowed = match ctx_ref {
+            let ctx_ref = evolved_context.as_ref().or(self.context.as_ref());
+            let is_allowed = match ctx_ref {
                 Some(ctx) => match &ctx.functions {
                     Some(funcs) => funcs.contains(&func.name),
                     None => true, // No restriction
@@ -110,7 +125,9 @@ impl Validator {
 
             if has_conditional_props {
                 if let Some(schema_obj) = schema.as_object() {
-                    let has_group = schema_obj.keys().any(|k| Self::GROUP_KEYWORDS.contains(&k.as_str()));
+                    let has_group = schema_obj
+                        .keys()
+                        .any(|k| Self::GROUP_KEYWORDS.contains(&k.as_str()));
                     if has_group {
                         let mut standard = serde_json::Map::new();
                         let mut group = serde_json::Map::new();
@@ -133,9 +150,12 @@ impl Validator {
                                     cfn_path_parts.extend_from_slice(&path[base_len..]);
                                 }
                                 if let Some(o) = std_schema.as_object_mut() {
-                                    let paths = o.entry("cfnLint").or_insert_with(|| serde_json::json!([]));
+                                    let paths =
+                                        o.entry("cfnLint").or_insert_with(|| serde_json::json!([]));
                                     if let Some(arr) = paths.as_array_mut() {
-                                        arr.push(serde_json::Value::String(cfn_path_parts.join("/")));
+                                        arr.push(serde_json::Value::String(
+                                            cfn_path_parts.join("/"),
+                                        ));
                                     }
                                 }
                             }
@@ -144,7 +164,9 @@ impl Validator {
 
                         if !group.is_empty() {
                             let group_schema = serde_json::Value::Object(group);
-                            let cond_state = self.context.as_ref()
+                            let cond_state = self
+                                .context
+                                .as_ref()
                                 .map(|c| c.condition_state.clone())
                                 .unwrap_or_default();
                             let scenarios = resolve_object_conditions(obj, &cond_state);
@@ -176,7 +198,9 @@ impl Validator {
             }
             let cfn_path_str = cfn_path_parts.join("/");
             if let Some(obj) = modified.as_object_mut() {
-                let paths = obj.entry("cfnLint").or_insert_with(|| serde_json::json!([]));
+                let paths = obj
+                    .entry("cfnLint")
+                    .or_insert_with(|| serde_json::json!([]));
                 if let Some(arr) = paths.as_array_mut() {
                     arr.push(serde_json::Value::String(cfn_path_str));
                 }
@@ -185,7 +209,9 @@ impl Validator {
                 // properties/additionalProperties/patternProperties) to force descent.
                 // Matches Python's _filter_schemas behavior for nested JSON objects.
                 let is_object_type = obj.get("type").map_or(false, |t| {
-                    t.as_str() == Some("object") || t.as_array().map_or(false, |a| a.iter().any(|v| v.as_str() == Some("object")))
+                    t.as_str() == Some("object")
+                        || t.as_array()
+                            .map_or(false, |a| a.iter().any(|v| v.as_str() == Some("object")))
                 });
                 if is_object_type
                     && !obj.contains_key("properties")
@@ -197,7 +223,9 @@ impl Validator {
                     }));
                 }
                 let is_array_type = obj.get("type").map_or(false, |t| {
-                    t.as_str() == Some("array") || t.as_array().map_or(false, |a| a.iter().any(|v| v.as_str() == Some("array")))
+                    t.as_str() == Some("array")
+                        || t.as_array()
+                            .map_or(false, |a| a.iter().any(|v| v.as_str() == Some("array")))
                 });
                 if is_array_type && !obj.contains_key("items") {
                     obj.insert("items".to_string(), serde_json::json!({"type": ["array", "boolean", "integer", "null", "number", "object", "string"]}));
@@ -308,7 +336,11 @@ fn resolve_value_for_scenario(
                 if arr.elements.len() == 3 {
                     if let Some(name) = arr.elements[0].as_str() {
                         if let Some(&val) = scenario.get(name) {
-                            let branch = if val { &arr.elements[1] } else { &arr.elements[2] };
+                            let branch = if val {
+                                &arr.elements[1]
+                            } else {
+                                &arr.elements[2]
+                            };
                             return resolve_value_for_scenario(branch, scenario);
                         }
                     }

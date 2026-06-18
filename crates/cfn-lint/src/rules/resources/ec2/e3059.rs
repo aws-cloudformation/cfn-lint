@@ -2,27 +2,35 @@ use std::net::Ipv4Addr;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 pub struct E3059;
 
 impl CfnLintRule for E3059 {
-    fn id(&self) -> &str { "E3059" }
+    fn id(&self) -> &str {
+        "E3059"
+    }
     fn short_description(&self) -> &str {
         "Validate subnet CIDRs are within the CIDRs of the VPC"
     }
     fn description(&self) -> &str {
         "When specifying subnet CIDRs for a VPC the subnet CIDRs must be within the VPC CIDRs"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let resources_node = match root.get("Resources").and_then(|n| n.as_object()) {
             Some(obj) => obj,
             None => return vec![],
@@ -44,12 +52,10 @@ impl CfnLintRule for E3059 {
 
             // Get VpcId via Ref
             let vpc_name = match subnet_props.get("VpcId") {
-                Some(AstNode::Function(f)) if f.name == "Ref" => {
-                    match f.args.as_str() {
-                        Some(s) => s,
-                        None => continue,
-                    }
-                }
+                Some(AstNode::Function(f)) if f.name == "Ref" => match f.args.as_str() {
+                    Some(s) => s,
+                    None => continue,
+                },
                 _ => continue,
             };
 
@@ -95,7 +101,7 @@ impl CfnLintRule for E3059 {
                     resolved_from_ref: false,
                     context: vec![],
                     schema_id: None,
-});
+                });
             }
         }
         issues
@@ -112,7 +118,11 @@ fn parse_cidr(cidr: &str) -> Option<(u32, u32)> {
     if prefix > 32 {
         return None;
     }
-    let mask = if prefix == 0 { 0 } else { !0u32 << (32 - prefix) };
+    let mask = if prefix == 0 {
+        0
+    } else {
+        !0u32 << (32 - prefix)
+    };
     let network = u32::from(ip) & mask;
     Some((network, mask))
 }

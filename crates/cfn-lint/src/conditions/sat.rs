@@ -78,11 +78,7 @@ fn expr_to_cnf(expr: &Expr, num_vars: &mut usize) -> Vec<Vec<(usize, bool)>> {
 }
 
 /// Tseitin transformation: returns a variable index representing this expression.
-fn tseitin(
-    expr: &Expr,
-    clauses: &mut Vec<Vec<(usize, bool)>>,
-    num_vars: &mut usize,
-) -> usize {
+fn tseitin(expr: &Expr, clauses: &mut Vec<Vec<(usize, bool)>>, num_vars: &mut usize) -> usize {
     match expr {
         Expr::Const(true) => {
             let v = fresh(num_vars);

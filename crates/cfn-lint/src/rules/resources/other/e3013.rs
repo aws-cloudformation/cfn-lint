@@ -13,8 +13,7 @@ use crate::rules::Severity;
 /// - Must match valid domain name pattern
 pub struct E3013;
 
-static DYN_REF_RE: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"\{\{resolve:.+\}\}").unwrap());
+static DYN_REF_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\{\{resolve:.+\}\}").unwrap());
 
 static DOMAIN_RE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^(?:[a-z0-9\*](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$")
@@ -22,12 +21,18 @@ static DOMAIN_RE: LazyLock<Regex> = LazyLock::new(|| {
 });
 
 impl CfnLintRule for E3013 {
-    fn id(&self) -> &str { "E3013" }
-    fn short_description(&self) -> &str { "CloudFront Aliases" }
+    fn id(&self) -> &str {
+        "E3013"
+    }
+    fn short_description(&self) -> &str {
+        "CloudFront Aliases"
+    }
     fn description(&self) -> &str {
         "CloudFront aliases should contain valid domain names"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/AWS::CloudFront::Distribution/Properties/DistributionConfig/Aliases/*"]
@@ -58,10 +63,7 @@ impl CfnLintRule for E3013 {
             errors.push(ValidationError {
                 rule_id: None,
                 keyword: format!("cfnLint:{}", self.id()),
-                message: format!(
-                    "{:?} contains an invalid wildcard pattern",
-                    alias
-                ),
+                message: format!("{:?} contains an invalid wildcard pattern", alias),
                 path: path.to_vec(),
                 span: instance.span(),
                 unknown: false,

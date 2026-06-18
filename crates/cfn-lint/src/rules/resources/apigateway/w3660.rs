@@ -7,7 +7,9 @@ use crate::rules::Severity;
 pub struct W3660;
 
 impl CfnLintRule for W3660 {
-    fn id(&self) -> &str { "W3660" }
+    fn id(&self) -> &str {
+        "W3660"
+    }
     fn short_description(&self) -> &str {
         "Validate if multiple resources are modifying a Rest API definition"
     }
@@ -16,7 +18,9 @@ impl CfnLintRule for W3660 {
          the resource handler uses PutRestApi with mode overwrite which may \
          cause drift and orphaned resources"
     }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
     fn keywords(&self) -> &[&str] {
         &[
@@ -101,9 +105,9 @@ const APIGW_CHILD_TYPES: &[&str] = &[
 #[cfg(test)]
 
 mod tests {
-    use crate::template::Template;
     use super::*;
     use crate::parser;
+    use crate::template::Template;
 
     #[test]
     fn test_no_body_no_warning() {

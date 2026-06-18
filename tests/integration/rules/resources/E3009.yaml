@@ -1,9 +1,11 @@
 # --- cfn-lint-test ---
 # rule: E3009
 # description: CloudFormation Init configuration validation
-# expect: []
+# expect:
+#   - rule: E3009
+#     path: /Resources/BadInitInvalidKey/Metadata/AWS::CloudFormation::Init/invalid_section
+#     message_contains: "is not of type"
 # ---
-# NOTE: Rule E3009 CloudFormation::Init validation not yet implemented in v2 engine
 Resources:
   GoodInit:
     Type: AWS::EC2::Instance

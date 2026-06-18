@@ -1,7 +1,7 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E3055: Check CreationPolicy values for Resources.
@@ -29,7 +29,11 @@ impl CfnLintRule for E3055 {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let resources = match root.get("Resources").and_then(|n| n.as_object()) {
             Some(obj) => obj,
             None => return vec![],
@@ -70,7 +74,7 @@ impl CfnLintRule for E3055 {
                     resolved_from_ref: false,
                     context: vec![],
                     schema_id: None,
-});
+                });
                 continue;
             }
 
@@ -111,7 +115,7 @@ impl CfnLintRule for E3055 {
                         resolved_from_ref: false,
                         context: vec![],
                         schema_id: None,
-});
+                    });
                 }
             }
 
@@ -136,26 +140,20 @@ impl CfnLintRule for E3055 {
                                     "AutoScalingCreationPolicy".to_string(),
                                     key.to_string(),
                                 ],
-                                span: asc
-                                    .get(key)
-                                    .map(|n| n.span().clone())
-                                    .unwrap_or_default(),
+                                span: asc.get(key).map(|n| n.span().clone()).unwrap_or_default(),
                                 keyword: String::new(),
                                 unknown: false,
                                 resolved_from_ref: false,
                                 context: vec![],
                                 schema_id: None,
-});
+                            });
                         }
                     }
                 }
             }
 
             // Validate nested ResourceSignal keys
-            if let Some(rs) = policy_obj
-                .get("ResourceSignal")
-                .and_then(|n| n.as_object())
-            {
+            if let Some(rs) = policy_obj.get("ResourceSignal").and_then(|n| n.as_object()) {
                 for key in rs.keys() {
                     if !VALID_RESOURCE_SIGNAL_KEYS.contains(&key) {
                         issues.push(ValidationError {
@@ -168,16 +166,13 @@ impl CfnLintRule for E3055 {
                                 "ResourceSignal".to_string(),
                                 key.to_string(),
                             ],
-                            span: rs
-                                .get(key)
-                                .map(|n| n.span().clone())
-                                .unwrap_or_default(),
+                            span: rs.get(key).map(|n| n.span().clone()).unwrap_or_default(),
                             keyword: String::new(),
                             unknown: false,
                             resolved_from_ref: false,
                             context: vec![],
                             schema_id: None,
-});
+                        });
                     }
                 }
             }

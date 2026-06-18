@@ -3,14 +3,16 @@ use std::sync::LazyLock;
 use crate::ast::AstNode;
 use crate::engine::format_node_short;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
 use crate::jsonschema::Validator;
 use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
 use crate::template::Template;
 
 static SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
-    serde_json::from_str(include_str!("../../../data/schemas/other/parameters/configuration.json"))
-        .unwrap_or_default()
+    serde_json::from_str(include_str!(
+        "../../../data/schemas/other/parameters/configuration.json"
+    ))
+    .unwrap_or_default()
 });
 
 /// E2001: Parameters have appropriate properties.
@@ -33,7 +35,11 @@ impl CfnLintRule for E2001 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let params = match root.get("Parameters") {
             Some(n) => n,
             None => return vec![],
@@ -62,11 +68,11 @@ impl CfnLintRule for E2001 {
                         message: err.message,
                         path: err.path,
                         span: err.span,
-                keyword: String::new(),
-                unknown: false,
-                resolved_from_ref: false,
-                context: vec![],
-                    schema_id: None,
+                        keyword: String::new(),
+                        unknown: false,
+                        resolved_from_ref: false,
+                        context: vec![],
+                        schema_id: None,
                     }
                 }),
         );
@@ -95,7 +101,7 @@ impl CfnLintRule for E2001 {
                                 resolved_from_ref: false,
                                 context: vec![],
                                 schema_id: None,
-});
+                            });
                         }
                     }
                 }

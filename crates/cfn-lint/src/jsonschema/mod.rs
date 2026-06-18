@@ -35,7 +35,12 @@ pub struct ValidationError {
 }
 
 impl ValidationError {
-    pub fn new(rule_id: impl Into<String>, message: impl Into<String>, path: Vec<String>, span: Span) -> Self {
+    pub fn new(
+        rule_id: impl Into<String>,
+        message: impl Into<String>,
+        path: Vec<String>,
+        span: Span,
+    ) -> Self {
         Self {
             rule_id: Some(rule_id.into()),
             message: message.into(),
@@ -45,7 +50,12 @@ impl ValidationError {
         }
     }
 
-    pub fn schema_error(keyword: impl Into<String>, message: impl Into<String>, path: Vec<String>, span: Span) -> Self {
+    pub fn schema_error(
+        keyword: impl Into<String>,
+        message: impl Into<String>,
+        path: Vec<String>,
+        span: Span,
+    ) -> Self {
         Self {
             message: message.into(),
             path,
@@ -157,91 +167,272 @@ impl Validator {
         store: HashMap<String, serde_json::Value>,
     ) -> Self {
         use std::sync::LazyLock;
-        static DEFAULT_VALIDATORS: LazyLock<Arc<HashMap<String, KeywordValidator>>> = LazyLock::new(|| {
-            let mut m = HashMap::new();
+        static DEFAULT_VALIDATORS: LazyLock<Arc<HashMap<String, KeywordValidator>>> =
+            LazyLock::new(|| {
+                let mut m = HashMap::new();
 
-            // Type
-            m.insert("type".to_string(), keywords::validate_type as KeywordValidator);
+                // Type
+                m.insert(
+                    "type".to_string(),
+                    keywords::validate_type as KeywordValidator,
+                );
 
-            // String
-            m.insert("minLength".to_string(), keywords::validate_min_length as KeywordValidator);
-            m.insert("maxLength".to_string(), keywords::validate_max_length as KeywordValidator);
-            m.insert("pattern".to_string(), keywords::validate_pattern as KeywordValidator);
+                // String
+                m.insert(
+                    "minLength".to_string(),
+                    keywords::validate_min_length as KeywordValidator,
+                );
+                m.insert(
+                    "maxLength".to_string(),
+                    keywords::validate_max_length as KeywordValidator,
+                );
+                m.insert(
+                    "pattern".to_string(),
+                    keywords::validate_pattern as KeywordValidator,
+                );
 
-            // Numeric
-            m.insert("minimum".to_string(), keywords::validate_minimum as KeywordValidator);
-            m.insert("maximum".to_string(), keywords::validate_maximum as KeywordValidator);
-            m.insert("exclusiveMinimum".to_string(), keywords::validate_exclusive_minimum as KeywordValidator);
-            m.insert("exclusiveMaximum".to_string(), keywords::validate_exclusive_maximum as KeywordValidator);
-            m.insert("multipleOf".to_string(), keywords::validate_multiple_of as KeywordValidator);
+                // Numeric
+                m.insert(
+                    "minimum".to_string(),
+                    keywords::validate_minimum as KeywordValidator,
+                );
+                m.insert(
+                    "maximum".to_string(),
+                    keywords::validate_maximum as KeywordValidator,
+                );
+                m.insert(
+                    "exclusiveMinimum".to_string(),
+                    keywords::validate_exclusive_minimum as KeywordValidator,
+                );
+                m.insert(
+                    "exclusiveMaximum".to_string(),
+                    keywords::validate_exclusive_maximum as KeywordValidator,
+                );
+                m.insert(
+                    "multipleOf".to_string(),
+                    keywords::validate_multiple_of as KeywordValidator,
+                );
 
-            // Object
-            m.insert("properties".to_string(), keywords::validate_properties as KeywordValidator);
-            m.insert("required".to_string(), keywords::validate_required as KeywordValidator);
-            m.insert("additionalProperties".to_string(), keywords::validate_additional_properties as KeywordValidator);
-            m.insert("patternProperties".to_string(), keywords::validate_pattern_properties as KeywordValidator);
-            m.insert("dependentRequired".to_string(), keywords::validate_dependent_required as KeywordValidator);
-            m.insert("dependentExcluded".to_string(), keywords::validate_dependent_excluded as KeywordValidator);
-            m.insert("maxProperties".to_string(), keywords::validate_max_properties as KeywordValidator);
-            m.insert("minProperties".to_string(), keywords::validate_min_properties as KeywordValidator);
-            m.insert("propertyNames".to_string(), keywords::validate_property_names as KeywordValidator);
-            m.insert("requiredXor".to_string(), keywords::validate_required_xor as KeywordValidator);
-            m.insert("requiredOr".to_string(), keywords::validate_required_or as KeywordValidator);
+                // Object
+                m.insert(
+                    "properties".to_string(),
+                    keywords::validate_properties as KeywordValidator,
+                );
+                m.insert(
+                    "required".to_string(),
+                    keywords::validate_required as KeywordValidator,
+                );
+                m.insert(
+                    "additionalProperties".to_string(),
+                    keywords::validate_additional_properties as KeywordValidator,
+                );
+                m.insert(
+                    "patternProperties".to_string(),
+                    keywords::validate_pattern_properties as KeywordValidator,
+                );
+                m.insert(
+                    "dependentRequired".to_string(),
+                    keywords::validate_dependent_required as KeywordValidator,
+                );
+                m.insert(
+                    "dependentExcluded".to_string(),
+                    keywords::validate_dependent_excluded as KeywordValidator,
+                );
+                m.insert(
+                    "maxProperties".to_string(),
+                    keywords::validate_max_properties as KeywordValidator,
+                );
+                m.insert(
+                    "minProperties".to_string(),
+                    keywords::validate_min_properties as KeywordValidator,
+                );
+                m.insert(
+                    "propertyNames".to_string(),
+                    keywords::validate_property_names as KeywordValidator,
+                );
+                m.insert(
+                    "requiredXor".to_string(),
+                    keywords::validate_required_xor as KeywordValidator,
+                );
+                m.insert(
+                    "requiredOr".to_string(),
+                    keywords::validate_required_or as KeywordValidator,
+                );
 
-            // Array
-            m.insert("items".to_string(), keywords::validate_items as KeywordValidator);
-            m.insert("minItems".to_string(), keywords::validate_min_items as KeywordValidator);
-            m.insert("maxItems".to_string(), keywords::validate_max_items as KeywordValidator);
-            m.insert("maxUniqueItems".to_string(), keywords::validate_max_unique_items as KeywordValidator);
-            m.insert("uniqueItems".to_string(), keywords::validate_unique_items as KeywordValidator);
-            m.insert("contains".to_string(), keywords::validate_contains as KeywordValidator);
-            m.insert("prefixItems".to_string(), keywords::validate_prefix_items as KeywordValidator);
-            m.insert("uniqueKeys".to_string(), keywords::validate_unique_keys as KeywordValidator);
+                // Array
+                m.insert(
+                    "items".to_string(),
+                    keywords::validate_items as KeywordValidator,
+                );
+                m.insert(
+                    "minItems".to_string(),
+                    keywords::validate_min_items as KeywordValidator,
+                );
+                m.insert(
+                    "maxItems".to_string(),
+                    keywords::validate_max_items as KeywordValidator,
+                );
+                m.insert(
+                    "maxUniqueItems".to_string(),
+                    keywords::validate_max_unique_items as KeywordValidator,
+                );
+                m.insert(
+                    "uniqueItems".to_string(),
+                    keywords::validate_unique_items as KeywordValidator,
+                );
+                m.insert(
+                    "contains".to_string(),
+                    keywords::validate_contains as KeywordValidator,
+                );
+                m.insert(
+                    "prefixItems".to_string(),
+                    keywords::validate_prefix_items as KeywordValidator,
+                );
+                m.insert(
+                    "uniqueKeys".to_string(),
+                    keywords::validate_unique_keys as KeywordValidator,
+                );
 
-            // Value
-            m.insert("enum".to_string(), keywords::validate_enum as KeywordValidator);
-            m.insert("enumCaseInsensitive".to_string(), keywords::validate_enum_case_insensitive as KeywordValidator);
-            m.insert("const".to_string(), keywords::validate_const as KeywordValidator);
+                // Value
+                m.insert(
+                    "enum".to_string(),
+                    keywords::validate_enum as KeywordValidator,
+                );
+                m.insert(
+                    "enumCaseInsensitive".to_string(),
+                    keywords::validate_enum_case_insensitive as KeywordValidator,
+                );
+                m.insert(
+                    "const".to_string(),
+                    keywords::validate_const as KeywordValidator,
+                );
 
-            // Composition
-            m.insert("allOf".to_string(), keywords::validate_all_of as KeywordValidator);
-            m.insert("anyOf".to_string(), keywords::validate_any_of as KeywordValidator);
-            m.insert("oneOf".to_string(), keywords::validate_one_of as KeywordValidator);
-            m.insert("not".to_string(), keywords::validate_not as KeywordValidator);
+                // Composition
+                m.insert(
+                    "allOf".to_string(),
+                    keywords::validate_all_of as KeywordValidator,
+                );
+                m.insert(
+                    "anyOf".to_string(),
+                    keywords::validate_any_of as KeywordValidator,
+                );
+                m.insert(
+                    "oneOf".to_string(),
+                    keywords::validate_one_of as KeywordValidator,
+                );
+                m.insert(
+                    "not".to_string(),
+                    keywords::validate_not as KeywordValidator,
+                );
 
-            // Conditional
-            m.insert("if".to_string(), keywords::validate_if_then_else as KeywordValidator);
+                // Conditional
+                m.insert(
+                    "if".to_string(),
+                    keywords::validate_if_then_else as KeywordValidator,
+                );
 
-            // Format
-            m.insert("format".to_string(), keywords::validate_format as KeywordValidator);
+                // Format
+                m.insert(
+                    "format".to_string(),
+                    keywords::validate_format as KeywordValidator,
+                );
 
-            // CloudFormation function keywords (dispatched by filter)
-            m.insert("ref".to_string(), keywords::validate_ref as KeywordValidator);
-            m.insert("fn_if".to_string(), keywords::validate_fn_if as KeywordValidator);
-            m.insert("fn_sub".to_string(), keywords::validate_fn_sub as KeywordValidator);
-            m.insert("fn_join".to_string(), keywords::validate_fn_resolvable as KeywordValidator);
-            m.insert("fn_select".to_string(), keywords::validate_fn_resolve_and_check as KeywordValidator);
-            m.insert("fn_split".to_string(), keywords::validate_fn_resolvable as KeywordValidator);
-            m.insert("fn_findinmap".to_string(), keywords::validate_fn_resolve_and_check as KeywordValidator);
-            m.insert("fn_base64".to_string(), keywords::validate_fn_resolve_and_check as KeywordValidator);
-            m.insert("fn_getatt".to_string(), keywords::validate_fn_getatt as KeywordValidator);
-            m.insert("fn_getazs".to_string(), keywords::validate_fn_resolve_and_check as KeywordValidator);
-            m.insert("fn_importvalue".to_string(), keywords::validate_fn_resolve_and_check as KeywordValidator);
-            m.insert("fn_transform".to_string(), keywords::validate_fn_unknown as KeywordValidator);
-            m.insert("fn_tojsonstring".to_string(), keywords::validate_fn_resolve_and_check as KeywordValidator);
-            m.insert("fn_length".to_string(), keywords::validate_fn_resolve_and_check as KeywordValidator);
-            m.insert("fn_cidr".to_string(), keywords::validate_fn_resolve_and_check as KeywordValidator);
-            m.insert("fn_getstackoutput".to_string(), keywords::validate_fn_getstackoutput as KeywordValidator);
-            m.insert("fn_equals".to_string(), keywords::validate_fn_structure_only as KeywordValidator);
-            m.insert("fn_condition".to_string(), keywords::validate_fn_structure_only as KeywordValidator);
-            m.insert("fn_unknown".to_string(), keywords::validate_fn_unknown as KeywordValidator);
-            m.insert("dynamicReference".to_string(), keywords::validate_dynamic_reference as KeywordValidator);
-            m.insert("dynamicValidation".to_string(), keywords::validate_dynamic_validation as KeywordValidator);
-            m.insert("cfnLint".to_string(), keywords::validate_cfn_lint as KeywordValidator);
-            m.insert("cfnGather".to_string(), keywords::validate_cfn_gather as KeywordValidator);
+                // CloudFormation function keywords (dispatched by filter)
+                m.insert(
+                    "ref".to_string(),
+                    keywords::validate_ref as KeywordValidator,
+                );
+                m.insert(
+                    "fn_if".to_string(),
+                    keywords::validate_fn_if as KeywordValidator,
+                );
+                m.insert(
+                    "fn_sub".to_string(),
+                    keywords::validate_fn_sub as KeywordValidator,
+                );
+                m.insert(
+                    "fn_join".to_string(),
+                    keywords::validate_fn_resolvable as KeywordValidator,
+                );
+                m.insert(
+                    "fn_select".to_string(),
+                    keywords::validate_fn_resolve_and_check as KeywordValidator,
+                );
+                m.insert(
+                    "fn_split".to_string(),
+                    keywords::validate_fn_resolvable as KeywordValidator,
+                );
+                m.insert(
+                    "fn_findinmap".to_string(),
+                    keywords::validate_fn_resolve_and_check as KeywordValidator,
+                );
+                m.insert(
+                    "fn_base64".to_string(),
+                    keywords::validate_fn_resolve_and_check as KeywordValidator,
+                );
+                m.insert(
+                    "fn_getatt".to_string(),
+                    keywords::validate_fn_getatt as KeywordValidator,
+                );
+                m.insert(
+                    "fn_getazs".to_string(),
+                    keywords::validate_fn_resolve_and_check as KeywordValidator,
+                );
+                m.insert(
+                    "fn_importvalue".to_string(),
+                    keywords::validate_fn_resolve_and_check as KeywordValidator,
+                );
+                m.insert(
+                    "fn_transform".to_string(),
+                    keywords::validate_fn_unknown as KeywordValidator,
+                );
+                m.insert(
+                    "fn_tojsonstring".to_string(),
+                    keywords::validate_fn_resolve_and_check as KeywordValidator,
+                );
+                m.insert(
+                    "fn_length".to_string(),
+                    keywords::validate_fn_resolve_and_check as KeywordValidator,
+                );
+                m.insert(
+                    "fn_cidr".to_string(),
+                    keywords::validate_fn_resolve_and_check as KeywordValidator,
+                );
+                m.insert(
+                    "fn_getstackoutput".to_string(),
+                    keywords::validate_fn_getstackoutput as KeywordValidator,
+                );
+                m.insert(
+                    "fn_equals".to_string(),
+                    keywords::validate_fn_structure_only as KeywordValidator,
+                );
+                m.insert(
+                    "fn_condition".to_string(),
+                    keywords::validate_fn_structure_only as KeywordValidator,
+                );
+                m.insert(
+                    "fn_unknown".to_string(),
+                    keywords::validate_fn_unknown as KeywordValidator,
+                );
+                m.insert(
+                    "dynamicReference".to_string(),
+                    keywords::validate_dynamic_reference as KeywordValidator,
+                );
+                m.insert(
+                    "dynamicValidation".to_string(),
+                    keywords::validate_dynamic_validation as KeywordValidator,
+                );
+                m.insert(
+                    "cfnLint".to_string(),
+                    keywords::validate_cfn_lint as KeywordValidator,
+                );
+                m.insert(
+                    "cfnGather".to_string(),
+                    keywords::validate_cfn_gather as KeywordValidator,
+                );
 
-            Arc::new(m)
-        });
+                Arc::new(m)
+            });
 
         Validator {
             validators: Arc::clone(&DEFAULT_VALIDATORS),
@@ -359,7 +550,10 @@ mod tests {
     use serde_json::json;
 
     fn pos() -> Span {
-        Span { start: Position { line: 1, column: 1 }, end: Position { line: 1, column: 1 } }
+        Span {
+            start: Position { line: 1, column: 1 },
+            end: Position { line: 1, column: 1 },
+        }
     }
 
     fn str_node(s: &str) -> AstNode {
@@ -387,14 +581,19 @@ mod tests {
         let mut map: Vec<ObjectEntry> = Vec::new();
         for (k, v) in props {
             map.push(ObjectEntry {
-                key_node: AstNode::String(StringNode { value: k.to_string(), span: Span::default() }),
+                key_node: AstNode::String(StringNode {
+                    value: k.to_string(),
+                    span: Span::default(),
+                }),
                 key: k.to_string(),
                 value: v,
                 key_span: Span::default(),
             });
         }
-        AstNode::Object(ObjectNode { entries: map, span: pos(),
-         })
+        AstNode::Object(ObjectNode {
+            entries: map,
+            span: pos(),
+        })
     }
 
     fn arr_node(elems: Vec<AstNode>) -> AstNode {
@@ -1036,7 +1235,10 @@ mod tests {
         let v = Validator::new(schema.clone());
         assert!(!v.strict_types);
         let errs = v.validate(&num_node(42.0), &schema, &[]);
-        assert!(errs.is_empty(), "Relaxed mode: number should coerce to string");
+        assert!(
+            errs.is_empty(),
+            "Relaxed mode: number should coerce to string"
+        );
     }
 
     #[test]
@@ -1044,7 +1246,10 @@ mod tests {
         let schema = json!({"type": "string"});
         let v = Validator::new(schema.clone());
         let errs = v.validate(&bool_node(true), &schema, &[]);
-        assert!(errs.is_empty(), "Relaxed mode: boolean should coerce to string");
+        assert!(
+            errs.is_empty(),
+            "Relaxed mode: boolean should coerce to string"
+        );
     }
 
     #[test]
@@ -1052,7 +1257,10 @@ mod tests {
         let schema = json!({"type": "string"});
         let v = Validator::new(schema.clone());
         let errs = v.validate(&obj_node(vec![]), &schema, &[]);
-        assert!(!errs.is_empty(), "Relaxed mode: object should NOT coerce to string");
+        assert!(
+            !errs.is_empty(),
+            "Relaxed mode: object should NOT coerce to string"
+        );
     }
 
     #[test]
@@ -1060,7 +1268,10 @@ mod tests {
         let schema = json!({"type": "string"});
         let v = Validator::new(schema.clone());
         let errs = v.validate(&arr_node(vec![]), &schema, &[]);
-        assert!(!errs.is_empty(), "Relaxed mode: array should NOT coerce to string");
+        assert!(
+            !errs.is_empty(),
+            "Relaxed mode: array should NOT coerce to string"
+        );
     }
 
     #[test]
@@ -1068,7 +1279,10 @@ mod tests {
         let schema = json!({"type": "number"});
         let v = Validator::new(schema.clone());
         let errs = v.validate(&str_node("10"), &schema, &[]);
-        assert!(errs.is_empty(), "Relaxed mode: string '10' should coerce to number");
+        assert!(
+            errs.is_empty(),
+            "Relaxed mode: string '10' should coerce to number"
+        );
     }
 
     #[test]
@@ -1076,7 +1290,10 @@ mod tests {
         let schema = json!({"type": "integer"});
         let v = Validator::new(schema.clone());
         let errs = v.validate(&str_node("42"), &schema, &[]);
-        assert!(errs.is_empty(), "Relaxed mode: string '42' should coerce to integer");
+        assert!(
+            errs.is_empty(),
+            "Relaxed mode: string '42' should coerce to integer"
+        );
     }
 
     #[test]
@@ -1084,7 +1301,10 @@ mod tests {
         let schema = json!({"type": "integer"});
         let v = Validator::new(schema.clone());
         let errs = v.validate(&str_node("3.14"), &schema, &[]);
-        assert!(!errs.is_empty(), "Relaxed mode: string '3.14' should NOT coerce to integer");
+        assert!(
+            !errs.is_empty(),
+            "Relaxed mode: string '3.14' should NOT coerce to integer"
+        );
     }
 
     #[test]
@@ -1092,7 +1312,10 @@ mod tests {
         let schema = json!({"type": "number"});
         let v = Validator::new(schema.clone());
         let errs = v.validate(&str_node("hello"), &schema, &[]);
-        assert!(!errs.is_empty(), "Relaxed mode: non-numeric string should NOT coerce to number");
+        assert!(
+            !errs.is_empty(),
+            "Relaxed mode: non-numeric string should NOT coerce to number"
+        );
     }
 
     #[test]
@@ -1101,7 +1324,10 @@ mod tests {
         let v = Validator::new_strict(schema.clone());
         assert!(v.strict_types);
         let errs = v.validate(&num_node(42.0), &schema, &[]);
-        assert!(!errs.is_empty(), "Strict mode: number should NOT pass for string");
+        assert!(
+            !errs.is_empty(),
+            "Strict mode: number should NOT pass for string"
+        );
     }
 
     #[test]
@@ -1109,7 +1335,10 @@ mod tests {
         let schema = json!({"type": "string"});
         let v = Validator::new_strict(schema.clone());
         let errs = v.validate(&bool_node(true), &schema, &[]);
-        assert!(!errs.is_empty(), "Strict mode: boolean should NOT pass for string");
+        assert!(
+            !errs.is_empty(),
+            "Strict mode: boolean should NOT pass for string"
+        );
     }
 
     #[test]
@@ -1117,7 +1346,10 @@ mod tests {
         let schema = json!({"type": "number"});
         let v = Validator::new_strict(schema.clone());
         let errs = v.validate(&str_node("10"), &schema, &[]);
-        assert!(!errs.is_empty(), "Strict mode: string should NOT pass for number");
+        assert!(
+            !errs.is_empty(),
+            "Strict mode: string should NOT pass for number"
+        );
     }
 
     #[test]
@@ -1125,16 +1357,27 @@ mod tests {
         let schema = json!({"type": "integer"});
         let v = Validator::new_strict(schema.clone());
         let errs = v.validate(&str_node("42"), &schema, &[]);
-        assert!(!errs.is_empty(), "Strict mode: string should NOT pass for integer");
+        assert!(
+            !errs.is_empty(),
+            "Strict mode: string should NOT pass for integer"
+        );
     }
 
     #[test]
     fn test_strict_exact_types_still_pass() {
         let v = Validator::new_strict(json!({}));
-        assert!(v.validate(&str_node("hi"), &json!({"type": "string"}), &[]).is_empty());
-        assert!(v.validate(&num_node(42.0), &json!({"type": "integer"}), &[]).is_empty());
-        assert!(v.validate(&num_node(3.14), &json!({"type": "number"}), &[]).is_empty());
-        assert!(v.validate(&bool_node(true), &json!({"type": "boolean"}), &[]).is_empty());
+        assert!(v
+            .validate(&str_node("hi"), &json!({"type": "string"}), &[])
+            .is_empty());
+        assert!(v
+            .validate(&num_node(42.0), &json!({"type": "integer"}), &[])
+            .is_empty());
+        assert!(v
+            .validate(&num_node(3.14), &json!({"type": "number"}), &[])
+            .is_empty());
+        assert!(v
+            .validate(&bool_node(true), &json!({"type": "boolean"}), &[])
+            .is_empty());
     }
 
     #[test]
@@ -1143,7 +1386,10 @@ mod tests {
         let v = Validator::new(schema.clone());
         let null_node = AstNode::Null(crate::ast::NullNode { span: pos() });
         let errs = v.validate(&null_node, &schema, &[]);
-        assert!(!errs.is_empty(), "Relaxed mode: null should NOT coerce to string");
+        assert!(
+            !errs.is_empty(),
+            "Relaxed mode: null should NOT coerce to string"
+        );
     }
 
     // ===== evolve() tests =====
@@ -1151,8 +1397,8 @@ mod tests {
     #[test]
     fn test_evolve_restricts_functions() {
         use crate::context::Context;
-        use crate::template::Template;
         use crate::parser;
+        use crate::template::Template;
 
         let yaml = b"AWSTemplateFormatVersion: '2010-09-09'\n";
         let ast = parser::parse(yaml).unwrap();
@@ -1169,7 +1415,10 @@ mod tests {
 
         // Check evolved context has restricted functions
         let evolved_ctx = evolved.context().unwrap();
-        assert_eq!(evolved_ctx.functions, Some(vec!["Ref".to_string(), "Fn::Sub".to_string()]));
+        assert_eq!(
+            evolved_ctx.functions,
+            Some(vec!["Ref".to_string(), "Fn::Sub".to_string()])
+        );
         // Original is unchanged
         let orig_ctx = v.context().unwrap();
         assert_eq!(orig_ctx.functions, None);
@@ -1178,8 +1427,8 @@ mod tests {
     #[test]
     fn test_evolve_changes_regions() {
         use crate::context::Context;
-        use crate::template::Template;
         use crate::parser;
+        use crate::template::Template;
 
         let yaml = b"AWSTemplateFormatVersion: '2010-09-09'\n";
         let ast = parser::parse(yaml).unwrap();
@@ -1216,9 +1465,9 @@ mod tests {
     #[test]
     fn test_evolve_preserves_cfn_lint_rules() {
         use crate::context::Context;
-        use crate::template::Template;
         use crate::jsonschema::cfn_lint_keyword::KeywordRuleRegistry;
         use crate::parser;
+        use crate::template::Template;
 
         let yaml = b"AWSTemplateFormatVersion: '2010-09-09'\n";
         let ast = parser::parse(yaml).unwrap();

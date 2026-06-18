@@ -29,7 +29,10 @@ struct Match {
 #[pymethods]
 impl Match {
     fn __repr__(&self) -> String {
-        format!("Match(rule={}, line={}, message={})", self.rule_id, self.line_start, self.message)
+        format!(
+            "Match(rule={}, line={}, message={})",
+            self.rule_id, self.line_start, self.message
+        )
     }
 }
 
@@ -64,7 +67,7 @@ fn validate(
     if let Some(rules_dict) = configure_rules {
         for (key, value) in rules_dict.iter() {
             let rule_id: String = key.extract()?;
-            if let Ok(rule_config) = value.downcast::<PyDict>() {
+            if let Ok(rule_config) = value.extract::<pyo3::Bound<'_, PyDict>>() {
                 let mut cfg = std::collections::HashMap::new();
                 for (k, v) in rule_config.iter() {
                     let k: String = k.extract()?;
@@ -99,7 +102,8 @@ fn validate(
     let issues = engine.validate(&tmpl, &ast, &config.regions);
 
     // Filter using config
-    let matches: Vec<Match> = issues.into_iter()
+    let matches: Vec<Match> = issues
+        .into_iter()
         .filter(|i| {
             let rid = i.rule_id.as_deref().unwrap_or("");
             !config.is_ignored(rid)

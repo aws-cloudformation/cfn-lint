@@ -78,7 +78,7 @@ fn validate_schema_matches(
             for ctx_err in &e.context {
                 if !ctx_err.unknown {
                     results.push(ValidationError {
-                        rule_id: None,
+                        rule_id: Some(id.to_string()),
                         keyword: format!("cfnLint:{}", id),
                         message: ctx_err.message.clone(),
                         path: ctx_err.path.clone(),
@@ -92,7 +92,7 @@ fn validate_schema_matches(
             }
         } else {
             results.push(ValidationError {
-                rule_id: None,
+                rule_id: Some(id.to_string()),
                 keyword: format!("cfnLint:{}", id),
                 message: e.message,
                 path: e.path,
@@ -124,7 +124,8 @@ pub fn validate_regional(
     };
     let mut errors = Vec::new();
     for region in &regions {
-        let region_schema = schema.get(region.as_str())
+        let region_schema = schema
+            .get(region.as_str())
             .unwrap_or(&serde_json::Value::Bool(true));
         if region_schema == &serde_json::Value::Bool(true) {
             continue;

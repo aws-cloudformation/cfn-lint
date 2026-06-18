@@ -2,8 +2,8 @@ use std::collections::HashMap;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 pub struct E3026;
@@ -45,14 +45,20 @@ impl E3026 {
                             // If parent_scenario already pins this condition, use that
                             if let Some(sc) = parent_scenario {
                                 if let Some(&val) = sc.get(cond_name) {
-                                    let branch = if val { &arr.elements[1] } else { &arr.elements[2] };
+                                    let branch = if val {
+                                        &arr.elements[1]
+                                    } else {
+                                        &arr.elements[2]
+                                    };
                                     let is_yes = branch.as_str() == Some("yes");
                                     return vec![(parent_scenario.clone(), is_yes)];
                                 }
                             }
                             // Expand into two scenarios
                             let mut results = vec![];
-                            for (branch_val, branch_node) in [(true, &arr.elements[1]), (false, &arr.elements[2])] {
+                            for (branch_val, branch_node) in
+                                [(true, &arr.elements[1]), (false, &arr.elements[2])]
+                            {
                                 let is_yes = branch_node.as_str() == Some("yes");
                                 let mut sc = parent_scenario.clone().unwrap_or_default();
                                 sc.insert(cond_name.to_string(), branch_val);
@@ -82,7 +88,11 @@ impl E3026 {
                         if let Some(cond_name) = arr.elements[0].as_str() {
                             if let Some(sc) = scenario {
                                 if let Some(&val) = sc.get(cond_name) {
-                                    return if val { &arr.elements[1] } else { &arr.elements[2] };
+                                    return if val {
+                                        &arr.elements[1]
+                                    } else {
+                                        &arr.elements[2]
+                                    };
                                 }
                             }
                         }
@@ -95,10 +105,7 @@ impl E3026 {
 
     /// Extract Ref target resource names from CacheParameterGroupName.
     /// Returns (Option<Scenario>, ref_name) pairs.
-    fn get_param_group_refs(
-        &self,
-        cpg_node: &AstNode,
-    ) -> Vec<(Option<Scenario>, String)> {
+    fn get_param_group_refs(&self, cpg_node: &AstNode) -> Vec<(Option<Scenario>, String)> {
         // Direct Ref
         if let Some(func) = cpg_node.as_function() {
             if func.name == "Ref" {
@@ -112,7 +119,9 @@ impl E3026 {
                     if arr.elements.len() == 3 {
                         if let Some(cond_name) = arr.elements[0].as_str() {
                             let mut results = vec![];
-                            for (branch_val, branch_node) in [(true, &arr.elements[1]), (false, &arr.elements[2])] {
+                            for (branch_val, branch_node) in
+                                [(true, &arr.elements[1]), (false, &arr.elements[2])]
+                            {
                                 if let Some(ref_func) = branch_node.as_function() {
                                     if ref_func.name == "Ref" {
                                         if let Some(name) = ref_func.args.as_str() {
@@ -135,7 +144,13 @@ impl E3026 {
     fn scenario_text(scenario: &Scenario) -> String {
         scenario
             .iter()
-            .map(|(k, v)| format!("when condition \"{}\" is {}", k, if *v { "True" } else { "False" }))
+            .map(|(k, v)| {
+                format!(
+                    "when condition \"{}\" is {}",
+                    k,
+                    if *v { "True" } else { "False" }
+                )
+            })
             .collect::<Vec<_>>()
             .join(" and ")
     }
@@ -214,11 +229,11 @@ impl E3026 {
                                 "AutomaticFailoverEnabled".to_string(),
                             ],
                             span: af_node.span(),
-                keyword: String::new(),
-                unknown: false,
-                resolved_from_ref: false,
-                context: vec![],
-                        schema_id: None,
+                            keyword: String::new(),
+                            unknown: false,
+                            resolved_from_ref: false,
+                            context: vec![],
+                            schema_id: None,
                         });
                     }
                 }
@@ -267,11 +282,11 @@ impl E3026 {
                                 "NumCacheClusters".to_string(),
                             ],
                             span: ncc_span,
-                keyword: String::new(),
-                unknown: false,
-                resolved_from_ref: false,
-                context: vec![],
-                        schema_id: None,
+                            keyword: String::new(),
+                            unknown: false,
+                            resolved_from_ref: false,
+                            context: vec![],
+                            schema_id: None,
                         });
                     }
                 }
@@ -283,16 +298,28 @@ impl E3026 {
 }
 
 impl CfnLintRule for E3026 {
-    fn id(&self) -> &str { "E3026" }
-    fn short_description(&self) -> &str { "Check Elastic Cache Redis Cluster settings" }
-    fn description(&self) -> &str { "Validates ElastiCache Redis cluster failover settings" }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn id(&self) -> &str {
+        "E3026"
+    }
+    fn short_description(&self) -> &str {
+        "Check Elastic Cache Redis Cluster settings"
+    }
+    fn description(&self) -> &str {
+        "Validates ElastiCache Redis cluster failover settings"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let mut issues = Vec::new();
         for (name, resource) in &template.resources {
             if resource.resource_type != "AWS::ElastiCache::ReplicationGroup" {
@@ -355,8 +382,12 @@ Resources:
         let tmpl = Template::from_ast(&ast).unwrap();
         let issues = E3026.validate_template(&tmpl, &ast);
         assert_eq!(issues.len(), 2); // failover false + NumCacheClusters missing
-        assert!(issues.iter().any(|i| i.message.contains("AutomaticFailoverEnabled")));
-        assert!(issues.iter().any(|i| i.message.contains("NumCacheClusters")));
+        assert!(issues
+            .iter()
+            .any(|i| i.message.contains("AutomaticFailoverEnabled")));
+        assert!(issues
+            .iter()
+            .any(|i| i.message.contains("NumCacheClusters")));
     }
 
     #[test]

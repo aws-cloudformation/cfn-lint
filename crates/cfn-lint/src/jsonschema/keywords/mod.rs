@@ -1,29 +1,29 @@
-pub mod helpers;
-pub mod type_validators;
-pub mod string;
-pub mod numeric;
-pub mod object;
 pub mod array;
-pub mod value;
+pub mod cfn_gather;
 pub mod composition;
-pub mod format;
-pub mod functions;
 pub mod fn_intrinsics;
 pub mod fn_resolve;
-pub mod cfn_gather;
+pub mod format;
+pub mod functions;
+pub mod helpers;
+pub mod numeric;
+pub mod object;
+pub mod string;
+pub mod type_validators;
+pub mod value;
 
 #[cfg(test)]
 mod tests;
 
-pub use type_validators::*;
-pub use string::*;
-pub use numeric::*;
-pub use object::*;
 pub use array::*;
-pub use value::*;
+pub use cfn_gather::*;
 pub use composition::*;
-pub use format::*;
-pub use functions::*;
 pub use fn_intrinsics::*;
 pub use fn_resolve::*;
-pub use cfn_gather::*;
+pub use format::*;
+pub use functions::*;
+pub use numeric::*;
+pub use object::*;
+pub use string::*;
+pub use type_validators::*;
+pub use value::*;

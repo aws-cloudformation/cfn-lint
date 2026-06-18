@@ -14,15 +14,21 @@ static SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
 });
 
 impl CfnLintRule for E3679 {
-    fn id(&self) -> &str { "E3679" }
-    fn short_description(&self) -> &str { "Validate ELB protocols that require certificates have a certificate specified" }
-    fn description(&self) -> &str { "Validate ELB protocols that require certificates have a certificate specified" }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn id(&self) -> &str {
+        "E3679"
+    }
+    fn short_description(&self) -> &str {
+        "Validate ELB protocols that require certificates have a certificate specified"
+    }
+    fn description(&self) -> &str {
+        "Validate ELB protocols that require certificates have a certificate specified"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
-        &[
-            "Resources/AWS::ElasticLoadBalancing::LoadBalancer/Properties/Listeners/*",
-        ]
+        &["Resources/AWS::ElasticLoadBalancing::LoadBalancer/Properties/Listeners/*"]
     }
 
     fn validate(
@@ -33,7 +39,14 @@ impl CfnLintRule for E3679 {
         _schema: &serde_json::Value,
         path: &[String],
     ) -> Vec<ValidationError> {
-        validate_schema(self.id(), self.short_description(), validator, instance, &SCHEMA, path)
+        validate_schema(
+            self.id(),
+            self.short_description(),
+            validator,
+            instance,
+            &SCHEMA,
+            path,
+        )
     }
 }
 

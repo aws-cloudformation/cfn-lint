@@ -7,7 +7,9 @@ use crate::rules::Severity;
 pub struct I3011;
 
 impl CfnLintRule for I3011 {
-    fn id(&self) -> &str { "I3011" }
+    fn id(&self) -> &str {
+        "I3011"
+    }
     fn short_description(&self) -> &str {
         "Check stateful resources have a set UpdateReplacePolicy/DeletionPolicy"
     }
@@ -15,9 +17,13 @@ impl CfnLintRule for I3011 {
         "The default action when replacing/removing a resource is to delete it. \
          This check requires you to explicitly set policies"
     }
-    fn severity(&self) -> Severity { Severity::Informational }
+    fn severity(&self) -> Severity {
+        Severity::Informational
+    }
 
-    fn keywords(&self) -> &[&str] { &["Resources/*"] }
+    fn keywords(&self) -> &[&str] {
+        &["Resources/*"]
+    }
 
     fn validate(
         &self,
@@ -53,7 +59,8 @@ impl CfnLintRule for I3011 {
                 keyword: format!("cfnLint:{}", self.id()),
                 message: "'DeletionPolicy' is a required property (The default action when \
                          replacing/removing a resource is to delete it. Set explicit \
-                         values for stateful resource)".to_string(),
+                         values for stateful resource)"
+                    .to_string(),
                 path: path.to_vec(),
                 span: instance.span(),
                 unknown: false,
@@ -68,7 +75,8 @@ impl CfnLintRule for I3011 {
                 keyword: format!("cfnLint:{}", self.id()),
                 message: "'UpdateReplacePolicy' is a required property (The default action when \
                          replacing/removing a resource is to delete it. Set explicit \
-                         values for stateful resource)".to_string(),
+                         values for stateful resource)"
+                    .to_string(),
                 path: path.to_vec(),
                 span: instance.span(),
                 unknown: false,
@@ -133,7 +141,13 @@ Resources:
         let instance = ast.get("Resources").unwrap().get("DB").unwrap();
         let path = vec!["Resources".to_string(), "DB".to_string()];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = I3011.validate(&validator, "Resources/*", instance, &serde_json::json!({}), &path);
+        let errors = I3011.validate(
+            &validator,
+            "Resources/*",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -150,7 +164,13 @@ Resources:
         let instance = ast.get("Resources").unwrap().get("DB").unwrap();
         let path = vec!["Resources".to_string(), "DB".to_string()];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = I3011.validate(&validator, "Resources/*", instance, &serde_json::json!({}), &path);
+        let errors = I3011.validate(
+            &validator,
+            "Resources/*",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 2);
         assert!(errors[0].message.contains("DeletionPolicy"));
         assert!(errors[1].message.contains("UpdateReplacePolicy"));

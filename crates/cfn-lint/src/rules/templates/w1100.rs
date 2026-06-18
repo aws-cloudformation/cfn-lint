@@ -1,7 +1,7 @@
 use crate::ast::{self, AstNode};
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// W1100: Validate if the template is using YAML merge keys (<<).
@@ -22,9 +22,15 @@ impl CfnLintRule for W1100 {
         Severity::Warning
     }
 
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
-    fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let mut issues = Vec::new();
         ast::walk(root, &[], &mut |node, path| {
             if let Some(obj) = node.as_object() {
@@ -44,7 +50,7 @@ impl CfnLintRule for W1100 {
                         resolved_from_ref: false,
                         context: vec![],
                         schema_id: None,
-});
+                    });
                 }
             }
             true
@@ -73,25 +79,40 @@ mod tests {
         // Build AST manually since serde_yaml resolves merge keys
         let mut merge_props: Vec<ObjectEntry> = Vec::new();
         merge_props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "<<".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "<<".to_string(),
+                span: Span::default(),
+            }),
             key: "<<".to_string(),
             value: AstNode::Object(ObjectNode {
                 entries: vec![ObjectEntry {
-                    key_node: AstNode::String(StringNode { value: "Key".to_string(), span: Span::default() }),
+                    key_node: AstNode::String(StringNode {
+                        value: "Key".to_string(),
+                        span: Span::default(),
+                    }),
                     key: "Key".to_string(),
                     value: AstNode::String(StringNode {
                         value: "val".to_string(),
-                        span: Span { start: Position { line: 3, column: 5 }, end: Position { line: 3, column: 5 } },
+                        span: Span {
+                            start: Position { line: 3, column: 5 },
+                            end: Position { line: 3, column: 5 },
+                        },
                     }),
                     key_span: Span::default(),
                 }],
-                span: Span { start: Position { line: 3, column: 3 }, end: Position { line: 3, column: 3 } },
+                span: Span {
+                    start: Position { line: 3, column: 3 },
+                    end: Position { line: 3, column: 3 },
+                },
             }),
             key_span: Span::default(),
         });
         let mut res_props: Vec<ObjectEntry> = Vec::new();
         res_props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Type".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Type".to_string(),
+                span: Span::default(),
+            }),
             key: "Type".to_string(),
             value: AstNode::String(StringNode {
                 value: "AWS::S3::Bucket".to_string(),
@@ -100,29 +121,46 @@ mod tests {
             key_span: Span::default(),
         });
         res_props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Properties".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Properties".to_string(),
+                span: Span::default(),
+            }),
             key: "Properties".to_string(),
-            value: AstNode::Object(ObjectNode { entries: merge_props, span: Span::default(),
+            value: AstNode::Object(ObjectNode {
+                entries: merge_props,
+                span: Span::default(),
             }),
             key_span: Span::default(),
         });
         let mut resources: Vec<ObjectEntry> = Vec::new();
         resources.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Bucket".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Bucket".to_string(),
+                span: Span::default(),
+            }),
             key: "Bucket".to_string(),
-            value: AstNode::Object(ObjectNode { entries: res_props, span: Span::default(),
+            value: AstNode::Object(ObjectNode {
+                entries: res_props,
+                span: Span::default(),
             }),
             key_span: Span::default(),
         });
         let mut root_props: Vec<ObjectEntry> = Vec::new();
         root_props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Resources".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Resources".to_string(),
+                span: Span::default(),
+            }),
             key: "Resources".to_string(),
-            value: AstNode::Object(ObjectNode { entries: resources, span: Span::default(),
+            value: AstNode::Object(ObjectNode {
+                entries: resources,
+                span: Span::default(),
             }),
             key_span: Span::default(),
         });
-        let root = AstNode::Object(ObjectNode { entries: root_props, span: Span::default(),
+        let root = AstNode::Object(ObjectNode {
+            entries: root_props,
+            span: Span::default(),
         });
         let tmpl = Template::from_ast(&root).unwrap();
         let issues = W1100.validate_template(&tmpl, &root);

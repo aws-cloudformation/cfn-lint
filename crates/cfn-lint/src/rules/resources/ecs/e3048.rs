@@ -60,7 +60,7 @@ impl CfnLintRule for E3048 {
                         let mut mode_path = path.to_vec();
                         mode_path.push("NetworkMode".to_string());
                         errors.push(ValidationError {
-                rule_id: None,
+                            rule_id: None,
                             keyword: format!("cfnLint:{}", self.id()),
                             message: format!(
                                 "Fargate tasks must use 'awsvpc' NetworkMode, got '{}'",
@@ -78,7 +78,7 @@ impl CfnLintRule for E3048 {
             }
             None => {
                 errors.push(ValidationError {
-                rule_id: None,
+                    rule_id: None,
                     keyword: format!("cfnLint:{}", self.id()),
                     message: "'NetworkMode' is a required property".to_string(),
                     path: path.to_vec(),
@@ -99,7 +99,7 @@ impl CfnLintRule for E3048 {
                         let mut cpu_path = path.to_vec();
                         cpu_path.push("Cpu".to_string());
                         errors.push(ValidationError {
-                rule_id: None,
+                            rule_id: None,
                             keyword: format!("cfnLint:{}", self.id()),
                             message: format!(
                                 "Fargate task has invalid Cpu value '{}'. Must be one of {:?}",
@@ -117,7 +117,7 @@ impl CfnLintRule for E3048 {
             }
             None => {
                 errors.push(ValidationError {
-                rule_id: None,
+                    rule_id: None,
                     keyword: format!("cfnLint:{}", self.id()),
                     message: "'Cpu' is a required property".to_string(),
                     path: path.to_vec(),
@@ -190,12 +190,26 @@ Resources:
           Image: nginx
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Task").unwrap()
-            .get("Properties").unwrap();
-        let path = vec!["Resources".to_string(), "Task".to_string(), "Properties".to_string()];
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Task")
+            .unwrap()
+            .get("Properties")
+            .unwrap();
+        let path = vec![
+            "Resources".to_string(),
+            "Task".to_string(),
+            "Properties".to_string(),
+        ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = E3048.validate(&validator, "Resources/AWS::ECS::TaskDefinition/Properties", instance, &serde_json::json!({}), &path);
+        let errors = E3048.validate(
+            &validator,
+            "Resources/AWS::ECS::TaskDefinition/Properties",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -218,12 +232,26 @@ Resources:
           Image: nginx
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Task").unwrap()
-            .get("Properties").unwrap();
-        let path = vec!["Resources".to_string(), "Task".to_string(), "Properties".to_string()];
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Task")
+            .unwrap()
+            .get("Properties")
+            .unwrap();
+        let path = vec![
+            "Resources".to_string(),
+            "Task".to_string(),
+            "Properties".to_string(),
+        ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = E3048.validate(&validator, "Resources/AWS::ECS::TaskDefinition/Properties", instance, &serde_json::json!({}), &path);
+        let errors = E3048.validate(
+            &validator,
+            "Resources/AWS::ECS::TaskDefinition/Properties",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 1);
         assert!(errors[0].message.contains("PlacementConstraints"));
     }

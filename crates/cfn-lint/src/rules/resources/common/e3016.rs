@@ -1,7 +1,7 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 pub struct E3016;
@@ -36,7 +36,11 @@ impl CfnLintRule for E3016 {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let mut issues = Vec::new();
         let resources = match root.get("Resources").and_then(|r| r.as_object()) {
             Some(r) => r,
@@ -67,18 +71,14 @@ impl CfnLintRule for E3016 {
                         "UpdatePolicy is not supported for resource type '{}'",
                         res_type
                     ),
-                    path: vec![
-                        "Resources".into(),
-                        name.to_string(),
-                        "UpdatePolicy".into(),
-                    ],
+                    path: vec!["Resources".into(), name.to_string(), "UpdatePolicy".into()],
                     span: update_policy.span().clone(),
                     keyword: String::new(),
                     unknown: false,
                     resolved_from_ref: false,
                     context: vec![],
                     schema_id: None,
-});
+                });
                 continue;
             }
 
@@ -90,24 +90,19 @@ impl CfnLintRule for E3016 {
                 issues.push(ValidationError {
                     rule_id: Some(self.id().to_string()),
                     message: "UpdatePolicy must be an object".to_string(),
-                    path: vec![
-                        "Resources".into(),
-                        name.to_string(),
-                        "UpdatePolicy".into(),
-                    ],
+                    path: vec!["Resources".into(), name.to_string(), "UpdatePolicy".into()],
                     span: update_policy.span().clone(),
-                keyword: String::new(),
-                unknown: false,
-                resolved_from_ref: false,
-                context: vec![],
-                schema_id: None,
+                    keyword: String::new(),
+                    unknown: false,
+                    resolved_from_ref: false,
+                    context: vec![],
+                    schema_id: None,
                 });
             }
         }
         issues
     }
 }
-
 
 #[cfg(test)]
 mod tests {

@@ -1,5 +1,5 @@
 use super::super::{ValidationError, Validator};
-use super::helpers::{err, unknown_err, has_unknown};
+use super::helpers::{err, has_unknown, unknown_err};
 use crate::ast::AstNode;
 
 pub fn validate_all_of(

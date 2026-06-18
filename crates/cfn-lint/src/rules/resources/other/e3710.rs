@@ -1,7 +1,7 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E3710: Resource type is from a service that has been shut down.
@@ -12,24 +12,35 @@ use crate::template::Template;
 pub struct E3710;
 
 impl CfnLintRule for E3710 {
-    fn id(&self) -> &str { "E3710" }
-    fn short_description(&self) -> &str { "Resource type is from a shut down service" }
+    fn id(&self) -> &str {
+        "E3710"
+    }
+    fn short_description(&self) -> &str {
+        "Resource type is from a shut down service"
+    }
     fn description(&self) -> &str {
         "Checks if a resource type belongs to an AWS service that has \
          reached full shutdown and is no longer available"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let mut issues = Vec::new();
         for (name, resource) in &template.resources {
             for prefix in SHUTDOWN_PREFIXES {
                 if resource.resource_type.starts_with(prefix) {
-                    let span = root.get("Resources")
+                    let span = root
+                        .get("Resources")
                         .and_then(|r| r.get(name))
                         .and_then(|r| r.get("Type"))
                         .map(|t| t.span())
@@ -47,7 +58,7 @@ impl CfnLintRule for E3710 {
                         resolved_from_ref: false,
                         context: vec![],
                         schema_id: None,
-});
+                    });
                 }
             }
         }
@@ -55,10 +66,7 @@ impl CfnLintRule for E3710 {
     }
 }
 
-const SHUTDOWN_PREFIXES: &[&str] = &[
-    "AWS::OpsWorks::",
-    "AWS::Cloud9::",
-];
+const SHUTDOWN_PREFIXES: &[&str] = &["AWS::OpsWorks::", "AWS::Cloud9::"];
 
 #[cfg(test)]
 mod tests {

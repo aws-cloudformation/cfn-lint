@@ -1,7 +1,10 @@
 # --- cfn-lint-test ---
 # rule: E3712
 # description: TargetTrackingScaling policy requires ASG MaxSize > MinSize
-# expect: []
+# expect:
+#   - rule: E3712
+#     path: /Resources/BadPolicy/Properties/asg/MaxSize
+#     message_contains: "is not greater than"
 # ---
 # NOTE: Rule E3712 cross-resource ASG/ScalingPolicy validation not yet resolving Ref targets in v2 engine
 Resources:

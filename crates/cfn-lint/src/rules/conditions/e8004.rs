@@ -1,8 +1,8 @@
 use crate::ast::AstNode;
-use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
-use crate::template::Template;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
+use crate::template::Template;
 
 /// E8004: Check Fn::And structure for validity.
 /// Fn::And must be an array of 2-10 elements.
@@ -29,9 +29,13 @@ impl CfnLintRule for E8004 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         // Validation is handled by the schema pipeline's fn_condition keyword (maps to "E8004")
-                vec![]
+        vec![]
     }
 }
 

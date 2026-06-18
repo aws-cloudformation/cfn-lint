@@ -6,8 +6,10 @@ use crate::jsonschema::{ValidationError, Validator};
 use crate::rules::Severity;
 
 static SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
-    serde_json::from_str(include_str!("../../../../data/schemas/other/resources/cfn_init.json"))
-        .unwrap_or_default()
+    serde_json::from_str(include_str!(
+        "../../../../data/schemas/other/resources/cfn_init.json"
+    ))
+    .unwrap_or_default()
 });
 
 /// E3009: Check CloudFormation init configuration.
@@ -17,12 +19,18 @@ static SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
 pub struct E3009;
 
 impl CfnLintRule for E3009 {
-    fn id(&self) -> &str { "E3009" }
-    fn short_description(&self) -> &str { "Check CloudFormation init configuration" }
+    fn id(&self) -> &str {
+        "E3009"
+    }
+    fn short_description(&self) -> &str {
+        "Check CloudFormation init configuration"
+    }
     fn description(&self) -> &str {
         "Validate that the items in a CloudFormation init adhere to standards"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/*/Metadata/AWS::CloudFormation::Init"]

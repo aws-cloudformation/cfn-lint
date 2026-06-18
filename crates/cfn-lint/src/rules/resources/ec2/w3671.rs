@@ -14,9 +14,15 @@ const NO_IOPS_VOLUME_TYPES: &[&str] = &["gp2", "st1", "sc1", "standard"];
 pub struct W3671;
 
 impl CfnLintRule for W3671 {
-    fn id(&self) -> &str { "W3671" }
-    fn short_description(&self) -> &str { "Iops is ignored for certain EBS volume types" }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn id(&self) -> &str {
+        "W3671"
+    }
+    fn short_description(&self) -> &str {
+        "Iops is ignored for certain EBS volume types"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
     fn keywords(&self) -> &[&str] {
         &[

@@ -6,20 +6,27 @@ use crate::template::Template;
 use regex::Regex;
 use std::sync::LazyLock;
 
-static RE_DYN_REF: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"\{\{resolve:([^}]+)\}\}").unwrap()
-});
+static RE_DYN_REF: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"\{\{resolve:([^}]+)\}\}").unwrap());
 
 const VALID_SERVICES: &[&str] = &["ssm", "ssm-secure", "secretsmanager"];
 
 pub struct E1050;
 
 impl CfnLintRule for E1050 {
-    fn id(&self) -> &str { "E1050" }
-    fn short_description(&self) -> &str { "Validate the structure of a dynamic reference" }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn id(&self) -> &str {
+        "E1050"
+    }
+    fn short_description(&self) -> &str {
+        "Validate the structure of a dynamic reference"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
     fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<ValidationError> {
         let mut issues = Vec::new();
@@ -31,7 +38,10 @@ impl CfnLintRule for E1050 {
                     if parts.len() < 2 {
                         issues.push(ValidationError {
                             rule_id: Some(self.id().to_string()),
-                            message: format!("Dynamic reference '{{{{resolve:{}}}}}' is missing service type", inner),
+                            message: format!(
+                                "Dynamic reference '{{{{resolve:{}}}}}' is missing service type",
+                                inner
+                            ),
                             path: path.to_vec(),
                             span: node.span(),
                             ..Default::default()

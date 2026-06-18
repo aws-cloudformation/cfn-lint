@@ -7,11 +7,19 @@ use crate::template::Template;
 pub struct W6001;
 
 impl CfnLintRule for W6001 {
-    fn id(&self) -> &str { "W6001" }
-    fn short_description(&self) -> &str { "Check Outputs using ImportValue" }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn id(&self) -> &str {
+        "W6001"
+    }
+    fn short_description(&self) -> &str {
+        "Check Outputs using ImportValue"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
     fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<ValidationError> {
         let mut issues = Vec::new();
@@ -25,9 +33,7 @@ impl CfnLintRule for W6001 {
                 if has_import_value(value) {
                     issues.push(ValidationError {
                         rule_id: Some(self.id().to_string()),
-                        message: format!(
-                            "The output value is an import from another output"
-                        ),
+                        message: format!("The output value is an import from another output"),
                         path: vec!["Outputs".to_string(), name.to_string(), "Value".to_string()],
                         span: value.span(),
                         ..Default::default()

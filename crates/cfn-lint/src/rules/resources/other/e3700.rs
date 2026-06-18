@@ -1,7 +1,7 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E3700: Validate CodePipeline Source actions are only in the first stage.
@@ -26,7 +26,11 @@ impl CfnLintRule for E3700 {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let resources = match root.get("Resources").and_then(|n| n.as_object()) {
             Some(obj) => obj,
             None => return vec![],

@@ -1,7 +1,7 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E5001: Check that Modules resources are valid.
@@ -12,19 +12,29 @@ use crate::template::Template;
 pub struct E5001;
 
 impl CfnLintRule for E5001 {
-    fn id(&self) -> &str { "E5001" }
-    fn short_description(&self) -> &str { "Check that Modules resources are valid" }
+    fn id(&self) -> &str {
+        "E5001"
+    }
+    fn short_description(&self) -> &str {
+        "Check that Modules resources are valid"
+    }
     fn description(&self) -> &str {
         "Validates that MODULE resources do not use CreationPolicy, \
          UpdatePolicy, or Tags"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let resources = match root.get("Resources").and_then(|n| n.as_object()) {
             Some(obj) => obj,
             None => return vec![],
@@ -56,7 +66,7 @@ impl CfnLintRule for E5001 {
                         resolved_from_ref: false,
                         context: vec![],
                         schema_id: None,
-});
+                    });
                 }
             }
 
@@ -65,29 +75,38 @@ impl CfnLintRule for E5001 {
                     issues.push(ValidationError {
                         rule_id: Some(self.id().to_string()),
                         message: "Tags is not permitted within Modules".to_string(),
-                        path: vec!["Resources".into(), name.to_string(), "Properties".into(), "Tags".into()],
+                        path: vec![
+                            "Resources".into(),
+                            name.to_string(),
+                            "Properties".into(),
+                            "Tags".into(),
+                        ],
                         span: node.span(),
-                keyword: String::new(),
-                unknown: false,
-                resolved_from_ref: false,
-                context: vec![],
-                    schema_id: None,
+                        keyword: String::new(),
+                        unknown: false,
+                        resolved_from_ref: false,
+                        context: vec![],
+                        schema_id: None,
                     });
                 }
             }
         }
 
         // Check for reserved metadata key across all MODULE resources
-        let module_names: Vec<&str> = resources.iter()
-            .filter(|(_, v)| v.as_object()
-                .and_then(|o| o.get("Type"))
-                .and_then(|t| t.as_str())
-                .map_or(false, |t| t.ends_with("::MODULE")))
+        let module_names: Vec<&str> = resources
+            .iter()
+            .filter(|(_, v)| {
+                v.as_object()
+                    .and_then(|o| o.get("Type"))
+                    .and_then(|t| t.as_str())
+                    .map_or(false, |t| t.ends_with("::MODULE"))
+            })
             .map(|(n, _)| n)
             .collect();
         if !module_names.is_empty() {
             for (name, node) in resources.iter() {
-                if let Some(metadata) = node.as_object()
+                if let Some(metadata) = node
+                    .as_object()
                     .and_then(|o| o.get("Metadata"))
                     .and_then(|m| m.as_object())
                 {
@@ -96,14 +115,20 @@ impl CfnLintRule for E5001 {
                     {
                         issues.push(ValidationError {
                             rule_id: Some(self.id().to_string()),
-                            message: "The Metadata key AWS::CloudFormation::Module is reserved".to_string(),
-                            path: vec!["Resources".into(), name.to_string(), "Metadata".into(), "AWS::CloudFormation::Module".into()],
+                            message: "The Metadata key AWS::CloudFormation::Module is reserved"
+                                .to_string(),
+                            path: vec![
+                                "Resources".into(),
+                                name.to_string(),
+                                "Metadata".into(),
+                                "AWS::CloudFormation::Module".into(),
+                            ],
                             span: node.span(),
-                keyword: String::new(),
-                unknown: false,
-                resolved_from_ref: false,
-                context: vec![],
-                        schema_id: None,
+                            keyword: String::new(),
+                            unknown: false,
+                            resolved_from_ref: false,
+                            context: vec![],
+                            schema_id: None,
                         });
                     }
                 }

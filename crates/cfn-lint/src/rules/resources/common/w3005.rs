@@ -73,10 +73,7 @@ impl CfnLintRule for W3005 {
             {
                 continue;
             }
-            let mut full_path = vec![
-                "Resources".to_string(),
-                from_resource_name.to_string(),
-            ];
+            let mut full_path = vec!["Resources".to_string(), from_resource_name.to_string()];
             full_path.extend(edge.source_path.clone());
             errors.push(ValidationError {
                 rule_id: None,
@@ -102,9 +99,9 @@ impl CfnLintRule for W3005 {
 #[cfg(test)]
 
 mod tests {
-    use crate::template::Template;
     use super::*;
     use crate::parser;
+    use crate::template::Template;
 
     #[test]
     fn test_depends_on_with_ref_stub() {

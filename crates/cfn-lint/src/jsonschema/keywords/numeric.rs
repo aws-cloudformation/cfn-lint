@@ -9,14 +9,21 @@ pub fn validate_minimum(
     _schema: &serde_json::Value,
     path: &[String],
 ) -> Vec<ValidationError> {
-    let min = match constraint.as_f64() {
+    let min = match constraint
+        .as_f64()
+        .or_else(|| constraint.as_str().and_then(|s| s.parse::<f64>().ok()))
+    {
         Some(m) => m,
         None => return vec![],
     };
-    let val = node.as_f64().or_else(|| node.as_str().and_then(|s| s.parse::<f64>().ok()));
+    let val = node
+        .as_f64()
+        .or_else(|| node.as_str().and_then(|s| s.parse::<f64>().ok()));
     if let Some(val) = val {
         if val.is_finite() && val < min {
-            let display = node.as_str().map(|s| format!("'{}'", s))
+            let display = node
+                .as_str()
+                .map(|s| format!("'{}'", s))
                 .unwrap_or_else(|| format!("{}", val));
             return vec![err(
                 "minimum",
@@ -36,15 +43,22 @@ pub fn validate_maximum(
     _schema: &serde_json::Value,
     path: &[String],
 ) -> Vec<ValidationError> {
-    let max = match constraint.as_f64() {
+    let max = match constraint
+        .as_f64()
+        .or_else(|| constraint.as_str().and_then(|s| s.parse::<f64>().ok()))
+    {
         Some(m) => m,
         None => return vec![],
     };
     // Try number first, then parse string as number (matches Python behavior)
-    let val = node.as_f64().or_else(|| node.as_str().and_then(|s| s.parse::<f64>().ok()));
+    let val = node
+        .as_f64()
+        .or_else(|| node.as_str().and_then(|s| s.parse::<f64>().ok()));
     if let Some(val) = val {
         if val.is_finite() && val > max {
-            let display = node.as_str().map(|s| format!("'{}'", s))
+            let display = node
+                .as_str()
+                .map(|s| format!("'{}'", s))
                 .unwrap_or_else(|| format!("{}", val));
             return vec![err(
                 "maximum",
@@ -64,7 +78,13 @@ pub fn validate_exclusive_minimum(
     _schema: &serde_json::Value,
     path: &[String],
 ) -> Vec<ValidationError> {
-    if let (Some(val), Some(min)) = (node.as_f64(), constraint.as_f64()) {
+    let min = constraint
+        .as_f64()
+        .or_else(|| constraint.as_str().and_then(|s| s.parse::<f64>().ok()));
+    let val = node
+        .as_f64()
+        .or_else(|| node.as_str().and_then(|s| s.parse::<f64>().ok()));
+    if let (Some(val), Some(min)) = (val, min) {
         if val <= min {
             return vec![err(
                 "exclusiveMinimum",
@@ -84,7 +104,13 @@ pub fn validate_exclusive_maximum(
     _schema: &serde_json::Value,
     path: &[String],
 ) -> Vec<ValidationError> {
-    if let (Some(val), Some(max)) = (node.as_f64(), constraint.as_f64()) {
+    let max = constraint
+        .as_f64()
+        .or_else(|| constraint.as_str().and_then(|s| s.parse::<f64>().ok()));
+    let val = node
+        .as_f64()
+        .or_else(|| node.as_str().and_then(|s| s.parse::<f64>().ok()));
+    if let (Some(val), Some(max)) = (val, max) {
         if val >= max {
             return vec![err(
                 "exclusiveMaximum",

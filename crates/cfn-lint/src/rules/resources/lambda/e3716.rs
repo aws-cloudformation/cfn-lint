@@ -7,7 +7,9 @@ use crate::rules::Severity;
 pub struct E3716;
 
 impl CfnLintRule for E3716 {
-    fn id(&self) -> &str { "E3716" }
+    fn id(&self) -> &str {
+        "E3716"
+    }
     fn short_description(&self) -> &str {
         "Validate Lambda layer ARN length based on region"
     }
@@ -15,7 +17,9 @@ impl CfnLintRule for E3716 {
         "Validates the Lambda layer ARN length based on region. \
          Max length is 176 + len(partition) + len(region)."
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/AWS::Lambda::Function/Properties/Layers/*"]
@@ -45,12 +49,9 @@ impl CfnLintRule for E3716 {
             let max_length = 176 + partition.len() + region.len();
             if val.len() > max_length {
                 errors.push(ValidationError {
-                rule_id: None,
+                    rule_id: None,
                     keyword: format!("cfnLint:{}", self.id()),
-                    message: format!(
-                        "{:?} is longer than {} in {:?}",
-                        val, max_length, region
-                    ),
+                    message: format!("{:?} is longer than {} in {:?}", val, max_length, region),
                     path: path.to_vec(),
                     span: instance.span(),
                     unknown: false,
@@ -86,9 +87,9 @@ fn get_partition(region: &str) -> &'static str {
 #[cfg(test)]
 
 mod tests {
-    use crate::template::Template;
     use super::*;
     use crate::parser;
+    use crate::template::Template;
 
     #[test]
     fn test_stubbed_out() {

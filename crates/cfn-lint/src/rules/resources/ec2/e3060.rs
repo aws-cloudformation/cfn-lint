@@ -2,28 +2,36 @@ use std::net::IpAddr;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E3060: Validate subnet CIDRs do not overlap with other subnets in the same VPC.
 pub struct E3060;
 
 impl CfnLintRule for E3060 {
-    fn id(&self) -> &str { "E3060" }
+    fn id(&self) -> &str {
+        "E3060"
+    }
     fn short_description(&self) -> &str {
         "Validate subnet CIDRs do not overlap with other subnets"
     }
     fn description(&self) -> &str {
         "When specifying subnet CIDRs for a VPC the subnet CIDRs must not overlap with each other"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let resources = match root.get("Resources").and_then(|n| n.as_object()) {
             Some(obj) => obj,
             None => return vec![],
@@ -51,13 +59,16 @@ impl CfnLintRule for E3060 {
             for key in &["CidrBlock", "Ipv6CidrBlock"] {
                 if let Some(cidr_str) = props.get(key).and_then(|n| n.as_str()) {
                     if let Some(net) = parse_cidr(cidr_str) {
-                        vpc_subnets.entry(vpc_id.clone()).or_default().push(SubnetInfo {
-                            resource_name: name.to_string(),
-                            cidr: cidr_str.to_string(),
-                            network: net,
-                            span: props.get(key).map(|n| n.span().clone()).unwrap_or_default(),
-                            condition: res.condition.clone(),
-                        });
+                        vpc_subnets
+                            .entry(vpc_id.clone())
+                            .or_default()
+                            .push(SubnetInfo {
+                                resource_name: name.to_string(),
+                                cidr: cidr_str.to_string(),
+                                network: net,
+                                span: props.get(key).map(|n| n.span().clone()).unwrap_or_default(),
+                                condition: res.condition.clone(),
+                            });
                     }
                 }
             }
@@ -91,7 +102,7 @@ impl CfnLintRule for E3060 {
                             resolved_from_ref: false,
                             context: vec![],
                             schema_id: None,
-});
+                        });
                         // Only report first overlap per subnet
                         break;
                     }
@@ -125,30 +136,74 @@ fn parse_cidr(s: &str) -> Option<Network> {
     let addr: IpAddr = parts[0].parse().ok()?;
     match addr {
         IpAddr::V4(v4) => {
-            if prefix > 32 { return None; }
+            if prefix > 32 {
+                return None;
+            }
             let bits = u32::from(v4);
-            let mask = if prefix == 0 { 0 } else { !0u32 << (32 - prefix) };
-            Some(Network::V4 { addr: bits & mask, prefix })
+            let mask = if prefix == 0 {
+                0
+            } else {
+                !0u32 << (32 - prefix)
+            };
+            Some(Network::V4 {
+                addr: bits & mask,
+                prefix,
+            })
         }
         IpAddr::V6(v6) => {
-            if prefix > 128 { return None; }
+            if prefix > 128 {
+                return None;
+            }
             let bits = u128::from(v6);
-            let mask = if prefix == 0 { 0 } else { !0u128 << (128 - prefix) };
-            Some(Network::V6 { addr: bits & mask, prefix })
+            let mask = if prefix == 0 {
+                0
+            } else {
+                !0u128 << (128 - prefix)
+            };
+            Some(Network::V6 {
+                addr: bits & mask,
+                prefix,
+            })
         }
     }
 }
 
 fn networks_overlap(a: &Network, b: &Network) -> bool {
     match (a, b) {
-        (Network::V4 { addr: a_addr, prefix: a_pfx }, Network::V4 { addr: b_addr, prefix: b_pfx }) => {
+        (
+            Network::V4 {
+                addr: a_addr,
+                prefix: a_pfx,
+            },
+            Network::V4 {
+                addr: b_addr,
+                prefix: b_pfx,
+            },
+        ) => {
             let min_pfx = std::cmp::min(*a_pfx, *b_pfx);
-            let mask = if min_pfx == 0 { 0 } else { !0u32 << (32 - min_pfx) };
+            let mask = if min_pfx == 0 {
+                0
+            } else {
+                !0u32 << (32 - min_pfx)
+            };
             (a_addr & mask) == (b_addr & mask)
         }
-        (Network::V6 { addr: a_addr, prefix: a_pfx }, Network::V6 { addr: b_addr, prefix: b_pfx }) => {
+        (
+            Network::V6 {
+                addr: a_addr,
+                prefix: a_pfx,
+            },
+            Network::V6 {
+                addr: b_addr,
+                prefix: b_pfx,
+            },
+        ) => {
             let min_pfx = std::cmp::min(*a_pfx, *b_pfx);
-            let mask = if min_pfx == 0 { 0 } else { !0u128 << (128 - min_pfx) };
+            let mask = if min_pfx == 0 {
+                0
+            } else {
+                !0u128 << (128 - min_pfx)
+            };
             (a_addr & mask) == (b_addr & mask)
         }
         _ => false,

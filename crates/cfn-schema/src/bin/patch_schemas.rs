@@ -13,7 +13,9 @@ fn main() {
     let args: Vec<String> = std::env::args().collect();
     if args.len() != 3 {
         eprintln!("Usage: patch-schemas <schemas-dir> <patches-dir>");
-        eprintln!("  e.g. patch-schemas crates/cfn-lint/data/schemas crates/cfn-schema/data/patches");
+        eprintln!(
+            "  e.g. patch-schemas crates/cfn-lint/data/schemas crates/cfn-schema/data/patches"
+        );
         std::process::exit(1);
     }
 

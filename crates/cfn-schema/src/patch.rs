@@ -19,7 +19,10 @@ pub fn apply_patches_for_type(
     // Apply in same order as Python: providers first, then extensions
     apply_patches_from_dir(schema, &patches_dir.join("providers").join(&type_dir));
     apply_patches_from_dir(schema, &patches_dir.join("extensions").join(&type_dir));
-    apply_patches_from_dir(schema, &patches_dir.join("extensions").join("all").join(&type_dir));
+    apply_patches_from_dir(
+        schema,
+        &patches_dir.join("extensions").join("all").join(&type_dir),
+    );
 }
 
 fn apply_patches_from_dir(schema: &mut serde_json::Value, dir: &Path) {
@@ -63,10 +66,14 @@ mod tests {
         fs::write(
             provider_dir.join("fix.json"),
             r#"[{"op": "add", "path": "/properties/Tag", "value": {"type": "string"}}]"#,
-        ).unwrap();
+        )
+        .unwrap();
 
         // Create an extension/all patch
-        let ext_dir = patches_dir.join("extensions").join("all").join("aws_s3_bucket");
+        let ext_dir = patches_dir
+            .join("extensions")
+            .join("all")
+            .join("aws_s3_bucket");
         fs::create_dir_all(&ext_dir).unwrap();
         fs::write(
             ext_dir.join("format.json"),
@@ -80,7 +87,10 @@ mod tests {
         apply_patches_for_type(&mut schema, &patches_dir, "AWS::S3::Bucket");
 
         assert_eq!(schema["properties"]["Tag"]["type"], "string");
-        assert_eq!(schema["properties"]["Name"]["format"], "AWS::S3::Bucket.Name");
+        assert_eq!(
+            schema["properties"]["Name"]["format"],
+            "AWS::S3::Bucket.Name"
+        );
     }
 
     #[test]

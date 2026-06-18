@@ -8,10 +8,10 @@
 ///
 /// This rule struct exists solely to provide metadata for `--list-rules`.
 use crate::ast::AstNode;
-use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
-use crate::template::Template;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
+use crate::template::Template;
 
 pub struct E3040;
 
@@ -36,9 +36,13 @@ impl CfnLintRule for E3040 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         // Handled by Engine::validate_readonly_properties
-                vec![]
+        vec![]
     }
 }
 

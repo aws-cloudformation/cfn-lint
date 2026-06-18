@@ -2,9 +2,9 @@ use std::sync::LazyLock;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
 use crate::jsonschema::Validator;
 use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
 use crate::template::Template;
 
 static TRANSFORM_SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
@@ -41,7 +41,11 @@ impl CfnLintRule for E1005 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let transform = match root.get("Transform") {
             Some(t) => t,
             None => return vec![],
@@ -71,7 +75,7 @@ impl CfnLintRule for E1005 {
                 unknown: false,
                 resolved_from_ref: false,
                 context: vec![],
-            schema_id: None,
+                schema_id: None,
             })
             .collect()
     }

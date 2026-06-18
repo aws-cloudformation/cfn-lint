@@ -7,7 +7,9 @@ use crate::rules::Severity;
 pub struct W3703;
 
 impl CfnLintRule for W3703 {
-    fn id(&self) -> &str { "W3703" }
+    fn id(&self) -> &str {
+        "W3703"
+    }
     fn short_description(&self) -> &str {
         "VPNGateway Type should be ipsec.1"
     }
@@ -15,7 +17,9 @@ impl CfnLintRule for W3703 {
         "The only supported value for AWS::EC2::VPNGateway Type is 'ipsec.1'. \
          Other values may not be available."
     }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/AWS::EC2::VPNGateway/Properties/Type"]
@@ -58,11 +62,11 @@ impl CfnLintRule for W3703 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::parser;
-    use crate::template::Template;
     use crate::ast::AstNode;
     use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+    use crate::parser;
     use crate::rules::Issue;
+    use crate::template::Template;
 
     #[test]
     fn test_invalid_type_flagged() {
@@ -76,16 +80,29 @@ Resources:
         let ast = parser::parse(yaml).unwrap();
         let tmpl = Template::from_ast(&ast).unwrap();
         // Simulate keyword dispatch: get the node at the keyword path
-        let instance = ast.get("Resources").unwrap()
-            .get("VGW").unwrap()
-            .get("Properties").unwrap()
-            .get("Type").unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("VGW")
+            .unwrap()
+            .get("Properties")
+            .unwrap()
+            .get("Type")
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "VGW".to_string(),
-            "Properties".to_string(), "Type".to_string(),
+            "Resources".to_string(),
+            "VGW".to_string(),
+            "Properties".to_string(),
+            "Type".to_string(),
         ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = W3703.validate(&validator, "Resources/AWS::EC2::VPNGateway/Properties/Type", instance, &serde_json::json!({}), &path);
+        let errors = W3703.validate(
+            &validator,
+            "Resources/AWS::EC2::VPNGateway/Properties/Type",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 1);
     }
 
@@ -99,16 +116,29 @@ Resources:
       Type: ipsec.1
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("VGW").unwrap()
-            .get("Properties").unwrap()
-            .get("Type").unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("VGW")
+            .unwrap()
+            .get("Properties")
+            .unwrap()
+            .get("Type")
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "VGW".to_string(),
-            "Properties".to_string(), "Type".to_string(),
+            "Resources".to_string(),
+            "VGW".to_string(),
+            "Properties".to_string(),
+            "Type".to_string(),
         ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = W3703.validate(&validator, "Resources/AWS::EC2::VPNGateway/Properties/Type", instance, &serde_json::json!({}), &path);
+        let errors = W3703.validate(
+            &validator,
+            "Resources/AWS::EC2::VPNGateway/Properties/Type",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 }

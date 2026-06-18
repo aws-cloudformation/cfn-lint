@@ -56,7 +56,7 @@ impl CfnLintRule for E3038 {
         }
 
         vec![ValidationError {
-                rule_id: None,
+            rule_id: None,
             keyword: format!("cfnLint:{}", self.id()),
             message: format!(
                 "{:?} type used without the serverless transform 'AWS::Serverless-2016-10-31'",
@@ -75,9 +75,9 @@ impl CfnLintRule for E3038 {
 #[cfg(test)]
 
 mod tests {
-    use crate::template::Template;
     use super::*;
     use crate::parser;
+    use crate::template::Template;
 
     #[test]
     fn test_stubbed_out() {

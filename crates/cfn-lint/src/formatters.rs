@@ -41,9 +41,13 @@ impl Formatter for ParseableFormatter {
                     let rule_id = i.rule_id.as_deref().unwrap_or("");
                     format!(
                         "{}:{}:{}:{}:{}:{}:{}",
-                        r.filename, i.span.start.line as usize, i.span.start.column as usize,
-                        i.span.end.line as usize, i.span.end.column as usize,
-                        rule_id, i.message
+                        r.filename,
+                        i.span.start.line as usize,
+                        i.span.start.column as usize,
+                        i.span.end.line as usize,
+                        i.span.end.column as usize,
+                        rule_id,
+                        i.message
                     )
                 })
             })
@@ -149,7 +153,10 @@ mod tests {
                     rule_id: Some("E1003".to_string()),
                     message: "Description too long".to_string(),
                     path: vec!["Description".to_string()],
-                    span: Span { start: Position { line: 2, column: 1 }, end: Position { line: 2, column: 1 } },
+                    span: Span {
+                        start: Position { line: 2, column: 1 },
+                        end: Position { line: 2, column: 1 },
+                    },
                     keyword: String::new(),
                     unknown: false,
                     resolved_from_ref: false,
@@ -160,7 +167,10 @@ mod tests {
                     rule_id: Some("W2001".to_string()),
                     message: "Unused parameter".to_string(),
                     path: vec!["Parameters".to_string(), "Env".to_string()],
-                    span: Span { start: Position { line: 5, column: 3 }, end: Position { line: 5, column: 3 } },
+                    span: Span {
+                        start: Position { line: 5, column: 3 },
+                        end: Position { line: 5, column: 3 },
+                    },
                     keyword: String::new(),
                     unknown: false,
                     resolved_from_ref: false,
@@ -250,7 +260,10 @@ mod tests {
                 rule_id: Some("I1001".to_string()),
                 message: "Info".to_string(),
                 path: vec![],
-                span: Span { start: Position { line: 1, column: 1 }, end: Position { line: 1, column: 1 } },
+                span: Span {
+                    start: Position { line: 1, column: 1 },
+                    end: Position { line: 1, column: 1 },
+                },
                 keyword: String::new(),
                 unknown: false,
                 resolved_from_ref: false,

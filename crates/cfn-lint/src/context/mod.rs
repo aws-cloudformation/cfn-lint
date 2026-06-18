@@ -1,4 +1,3 @@
-
 use std::collections::HashMap;
 use std::sync::Arc;
 
@@ -63,7 +62,10 @@ impl Context {
 
     pub fn empty() -> Self {
         use crate::ast::{AstNode, ObjectNode, Span};
-        let empty_root = AstNode::Object(ObjectNode { entries: vec![], span: Span::default() });
+        let empty_root = AstNode::Object(ObjectNode {
+            entries: vec![],
+            span: Span::default(),
+        });
         let tmpl = Template::from_ast(&empty_root).unwrap_or_else(|_| Template {
             root: empty_root,
             parameters: HashMap::new(),
@@ -98,7 +100,11 @@ impl Context {
                 .condition_state
                 .unwrap_or_else(|| self.condition_state.clone()),
             regions: opts.regions.unwrap_or_else(|| self.regions.clone()),
-            functions: if opts.functions.is_some() { opts.functions } else { self.functions.clone() },
+            functions: if opts.functions.is_some() {
+                opts.functions
+            } else {
+                self.functions.clone()
+            },
             sat_conditions: self.sat_conditions.clone(),
         }
     }
@@ -221,7 +227,9 @@ impl Context {
 
         let mut scenarios = Vec::new();
 
-        if self.sat_conditions.as_ref()
+        if self
+            .sat_conditions
+            .as_ref()
             .map(|sat| sat.is_condition_set_satisfiable(&true_state))
             .unwrap_or(true)
         {
@@ -234,7 +242,9 @@ impl Context {
             });
         }
 
-        if self.sat_conditions.as_ref()
+        if self
+            .sat_conditions
+            .as_ref()
             .map(|sat| sat.is_condition_set_satisfiable(&false_state))
             .unwrap_or(true)
         {
@@ -299,55 +309,61 @@ impl Context {
     /// - `Condition` (parsed as Function): look up in condition_state
     pub fn try_evaluate(&self, node: &AstNode) -> Option<bool> {
         match node {
-            AstNode::Function(func) => {
-                match func.name.as_str() {
-                    "Condition" => {
-                        let name = func.args.as_str()?;
-                        self.condition_state.get(name).copied()
-                    }
-                    "Fn::Equals" => {
-                        let arr = func.args.as_array()?;
-                        if arr.elements.len() != 2 {
-                            return None;
-                        }
-                        let left = self.resolve_value(&arr.elements[0])?;
-                        let right = self.resolve_value(&arr.elements[1])?;
-                        Some(ast_values_equal(&left, &right))
-                    }
-                    "Fn::Not" => {
-                        let arr = func.args.as_array()?;
-                        if arr.elements.len() != 1 {
-                            return None;
-                        }
-                        self.try_evaluate(&arr.elements[0]).map(|v| !v)
-                    }
-                    "Fn::And" => {
-                        let arr = func.args.as_array()?;
-                        let mut has_unknown = false;
-                        for elem in &arr.elements {
-                            match self.try_evaluate(elem) {
-                                Some(false) => return Some(false),
-                                None => has_unknown = true,
-                                Some(true) => {}
-                            }
-                        }
-                        if has_unknown { None } else { Some(true) }
-                    }
-                    "Fn::Or" => {
-                        let arr = func.args.as_array()?;
-                        let mut has_unknown = false;
-                        for elem in &arr.elements {
-                            match self.try_evaluate(elem) {
-                                Some(true) => return Some(true),
-                                None => has_unknown = true,
-                                Some(false) => {}
-                            }
-                        }
-                        if has_unknown { None } else { Some(false) }
-                    }
-                    _ => None,
+            AstNode::Function(func) => match func.name.as_str() {
+                "Condition" => {
+                    let name = func.args.as_str()?;
+                    self.condition_state.get(name).copied()
                 }
-            }
+                "Fn::Equals" => {
+                    let arr = func.args.as_array()?;
+                    if arr.elements.len() != 2 {
+                        return None;
+                    }
+                    let left = self.resolve_value(&arr.elements[0])?;
+                    let right = self.resolve_value(&arr.elements[1])?;
+                    Some(ast_values_equal(&left, &right))
+                }
+                "Fn::Not" => {
+                    let arr = func.args.as_array()?;
+                    if arr.elements.len() != 1 {
+                        return None;
+                    }
+                    self.try_evaluate(&arr.elements[0]).map(|v| !v)
+                }
+                "Fn::And" => {
+                    let arr = func.args.as_array()?;
+                    let mut has_unknown = false;
+                    for elem in &arr.elements {
+                        match self.try_evaluate(elem) {
+                            Some(false) => return Some(false),
+                            None => has_unknown = true,
+                            Some(true) => {}
+                        }
+                    }
+                    if has_unknown {
+                        None
+                    } else {
+                        Some(true)
+                    }
+                }
+                "Fn::Or" => {
+                    let arr = func.args.as_array()?;
+                    let mut has_unknown = false;
+                    for elem in &arr.elements {
+                        match self.try_evaluate(elem) {
+                            Some(true) => return Some(true),
+                            None => has_unknown = true,
+                            Some(false) => {}
+                        }
+                    }
+                    if has_unknown {
+                        None
+                    } else {
+                        Some(false)
+                    }
+                }
+                _ => None,
+            },
             // Fallback for raw object form (e.g., from serde_json deserialization)
             AstNode::Object(obj) if obj.len() == 1 => {
                 let (key, value) = obj.iter().next()?;
@@ -378,7 +394,11 @@ impl Context {
                                 Some(true) => {}
                             }
                         }
-                        if has_unknown { None } else { Some(true) }
+                        if has_unknown {
+                            None
+                        } else {
+                            Some(true)
+                        }
                     }
                     "Fn::Or" => {
                         let arr = value.as_array()?;
@@ -390,7 +410,11 @@ impl Context {
                                 Some(false) => {}
                             }
                         }
-                        if has_unknown { None } else { Some(false) }
+                        if has_unknown {
+                            None
+                        } else {
+                            Some(false)
+                        }
                     }
                     "Condition" => {
                         let name = value.as_str()?;
@@ -729,7 +753,10 @@ Resources:
     fn make_equals(left: AstNode, right: AstNode) -> AstNode {
         let mut props: Vec<ObjectEntry> = Vec::new();
         props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Fn::Equals".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Fn::Equals".to_string(),
+                span: Span::default(),
+            }),
             key: "Fn::Equals".to_string(),
             value: AstNode::Array(ArrayNode {
                 elements: vec![left, right],
@@ -737,15 +764,20 @@ Resources:
             }),
             key_span: Span::default(),
         });
-        AstNode::Object(ObjectNode { entries: props, span: Span::default(),
-         })
+        AstNode::Object(ObjectNode {
+            entries: props,
+            span: Span::default(),
+        })
     }
 
     /// Helper: build an Fn::Not object node.
     fn make_not(inner: AstNode) -> AstNode {
         let mut props: Vec<ObjectEntry> = Vec::new();
         props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Fn::Not".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Fn::Not".to_string(),
+                span: Span::default(),
+            }),
             key: "Fn::Not".to_string(),
             value: AstNode::Array(ArrayNode {
                 elements: vec![inner],
@@ -753,15 +785,20 @@ Resources:
             }),
             key_span: Span::default(),
         });
-        AstNode::Object(ObjectNode { entries: props, span: Span::default(),
-         })
+        AstNode::Object(ObjectNode {
+            entries: props,
+            span: Span::default(),
+        })
     }
 
     /// Helper: build an Fn::And object node.
     fn make_and(conditions: Vec<AstNode>) -> AstNode {
         let mut props: Vec<ObjectEntry> = Vec::new();
         props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Fn::And".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Fn::And".to_string(),
+                span: Span::default(),
+            }),
             key: "Fn::And".to_string(),
             value: AstNode::Array(ArrayNode {
                 elements: conditions,
@@ -769,15 +806,20 @@ Resources:
             }),
             key_span: Span::default(),
         });
-        AstNode::Object(ObjectNode { entries: props, span: Span::default(),
-         })
+        AstNode::Object(ObjectNode {
+            entries: props,
+            span: Span::default(),
+        })
     }
 
     /// Helper: build an Fn::Or object node.
     fn make_or(conditions: Vec<AstNode>) -> AstNode {
         let mut props: Vec<ObjectEntry> = Vec::new();
         props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Fn::Or".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Fn::Or".to_string(),
+                span: Span::default(),
+            }),
             key: "Fn::Or".to_string(),
             value: AstNode::Array(ArrayNode {
                 elements: conditions,
@@ -785,15 +827,20 @@ Resources:
             }),
             key_span: Span::default(),
         });
-        AstNode::Object(ObjectNode { entries: props, span: Span::default(),
-         })
+        AstNode::Object(ObjectNode {
+            entries: props,
+            span: Span::default(),
+        })
     }
 
     /// Helper: build a Condition reference as object (how it appears in condition expressions).
     fn make_condition_ref_obj(name: &str) -> AstNode {
         let mut props: Vec<ObjectEntry> = Vec::new();
         props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Condition".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Condition".to_string(),
+                span: Span::default(),
+            }),
             key: "Condition".to_string(),
             value: AstNode::String(StringNode {
                 value: name.to_string(),
@@ -801,8 +848,10 @@ Resources:
             }),
             key_span: Span::default(),
         });
-        AstNode::Object(ObjectNode { entries: props, span: Span::default(),
-         })
+        AstNode::Object(ObjectNode {
+            entries: props,
+            span: Span::default(),
+        })
     }
 
     fn str_node(s: &str) -> AstNode {
@@ -1032,7 +1081,8 @@ Resources:
 "#,
         );
         let mut ctx = Context::new(tmpl);
-        ctx.ref_values.insert("Environment".into(), str_node("prod"));
+        ctx.ref_values
+            .insert("Environment".into(), str_node("prod"));
 
         let scenarios = ctx.evaluate_condition("IsProd");
         // try_evaluate resolves Fn::Equals to true (Environment == "prod")

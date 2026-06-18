@@ -6,18 +6,25 @@ use crate::template::Template;
 use regex::Regex;
 use std::sync::LazyLock;
 
-static RE_DYN_REF_SPACES: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"\{\{\s+resolve:|\{\{resolve\s+:").unwrap()
-});
+static RE_DYN_REF_SPACES: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"\{\{\s+resolve:|\{\{resolve\s+:").unwrap());
 
 pub struct W1053;
 
 impl CfnLintRule for W1053 {
-    fn id(&self) -> &str { "W1053" }
-    fn short_description(&self) -> &str { "Dynamic references should not contain spaces" }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn id(&self) -> &str {
+        "W1053"
+    }
+    fn short_description(&self) -> &str {
+        "Dynamic references should not contain spaces"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
     fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<ValidationError> {
         let mut issues = Vec::new();

@@ -70,7 +70,9 @@ fn today_str() -> String {
 }
 
 impl Default for E2533 {
-    fn default() -> Self { Self::new() }
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl E2533 {
@@ -82,12 +84,18 @@ impl E2533 {
 }
 
 impl CfnLintRule for E2533 {
-    fn id(&self) -> &str { "E2533" }
-    fn short_description(&self) -> &str { "Check if Lambda Function Runtimes are updatable" }
+    fn id(&self) -> &str {
+        "E2533"
+    }
+    fn short_description(&self) -> &str {
+        "Check if Lambda Function Runtimes are updatable"
+    }
     fn description(&self) -> &str {
         "Check if an EOL Lambda Runtime is specified and you cannot update the function"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &[
@@ -146,8 +154,13 @@ impl CfnLintRule for E2533 {
 
         vec![]
     }
-    fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
-        let runtime_node = root.get("Globals")
+    fn validate_template(
+        &self,
+        _template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
+        let runtime_node = root
+            .get("Globals")
             .and_then(|g| g.get("Function"))
             .and_then(|f| f.get("Runtime"));
 
@@ -179,7 +192,11 @@ impl CfnLintRule for E2533 {
                      and update on {:?}. Please consider updating to {:?}",
                     runtime, deprecated, create_block, update_block, successor
                 ),
-                path: vec!["Globals".to_string(), "Function".to_string(), "Runtime".to_string()],
+                path: vec![
+                    "Globals".to_string(),
+                    "Function".to_string(),
+                    "Runtime".to_string(),
+                ],
                 span: runtime_node.unwrap().span(),
                 keyword: String::new(),
                 unknown: false,
@@ -191,6 +208,4 @@ impl CfnLintRule for E2533 {
 
         vec![]
     }
-
 }
-

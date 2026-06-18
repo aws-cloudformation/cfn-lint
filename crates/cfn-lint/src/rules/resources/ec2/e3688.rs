@@ -9,15 +9,25 @@ use crate::rules::Severity;
 pub struct E3688;
 
 static SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
-    serde_json::from_str(include_str!("../../../../data/schemas/extensions/aws_ec2_securitygroup/all_to_and_from_ports.json"))
-        .unwrap_or_default()
+    serde_json::from_str(include_str!(
+        "../../../../data/schemas/extensions/aws_ec2_securitygroup/all_to_and_from_ports.json"
+    ))
+    .unwrap_or_default()
 });
 
 impl CfnLintRule for E3688 {
-    fn id(&self) -> &str { "E3688" }
-    fn short_description(&self) -> &str { "Validate that to and from ports are both -1" }
-    fn description(&self) -> &str { "Validate that to and from ports are both -1" }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn id(&self) -> &str {
+        "E3688"
+    }
+    fn short_description(&self) -> &str {
+        "Validate that to and from ports are both -1"
+    }
+    fn description(&self) -> &str {
+        "Validate that to and from ports are both -1"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &[
@@ -36,7 +46,14 @@ impl CfnLintRule for E3688 {
         _schema: &serde_json::Value,
         path: &[String],
     ) -> Vec<ValidationError> {
-        validate_schema(self.id(), self.short_description(), validator, instance, &SCHEMA, path)
+        validate_schema(
+            self.id(),
+            self.short_description(),
+            validator,
+            instance,
+            &SCHEMA,
+            path,
+        )
     }
 }
 

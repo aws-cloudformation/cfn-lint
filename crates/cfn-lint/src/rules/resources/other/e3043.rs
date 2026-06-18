@@ -3,8 +3,8 @@ use std::path::Path;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E3043: Validate parameters for a nested stack.
@@ -29,10 +29,16 @@ impl CfnLintRule for E3043 {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
-        let base_dir = match template.filename.as_ref().and_then(|f| {
-            Path::new(f).parent().map(|p| p.to_path_buf())
-        }) {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
+        let base_dir = match template
+            .filename
+            .as_ref()
+            .and_then(|f| Path::new(f).parent().map(|p| p.to_path_buf()))
+        {
             Some(d) => d,
             None => return vec![],
         };
@@ -152,7 +158,7 @@ fn compare_params(
             resolved_from_ref: false,
             context: vec![],
             schema_id: None,
-});
+        });
     }
 
     // Required parameters missing from specification
@@ -182,8 +188,8 @@ fn compare_params(
                 unknown: false,
                 resolved_from_ref: false,
                 context: vec![],
-schema_id: None,
-});
+                schema_id: None,
+            });
         }
     }
 }
@@ -192,7 +198,13 @@ schema_id: None,
 fn scenario_text(scenario: &HashMap<String, bool>) -> String {
     let mut parts: Vec<String> = scenario
         .iter()
-        .map(|(k, v)| format!("when condition \"{}\" is {}", k, if *v { "True" } else { "False" }))
+        .map(|(k, v)| {
+            format!(
+                "when condition \"{}\" is {}",
+                k,
+                if *v { "True" } else { "False" }
+            )
+        })
         .collect();
     parts.sort();
     parts.join(" and ")
@@ -244,12 +256,22 @@ fn expand_fn_if_inner(
                         // True branch
                         let mut true_scenario = current_scenario.clone();
                         true_scenario.insert(cond_name.to_string(), true);
-                        expand_fn_if_inner(&arr.elements[1], &true_scenario, all_conditions, results);
+                        expand_fn_if_inner(
+                            &arr.elements[1],
+                            &true_scenario,
+                            all_conditions,
+                            results,
+                        );
 
                         // False branch
                         let mut false_scenario = current_scenario.clone();
                         false_scenario.insert(cond_name.to_string(), false);
-                        expand_fn_if_inner(&arr.elements[2], &false_scenario, all_conditions, results);
+                        expand_fn_if_inner(
+                            &arr.elements[2],
+                            &false_scenario,
+                            all_conditions,
+                            results,
+                        );
                     }
                 }
             }
@@ -275,10 +297,7 @@ fn expand_fn_if_inner(
 }
 
 /// Load nested template and return parameter name -> has_default map.
-fn load_nested_parameters(
-    base_dir: &Path,
-    template_url: &str,
-) -> Option<HashMap<String, bool>> {
+fn load_nested_parameters(base_dir: &Path, template_url: &str) -> Option<HashMap<String, bool>> {
     let nested_path = base_dir.join(template_url);
     let nested_path = nested_path.canonicalize().ok().unwrap_or(nested_path);
     let content = std::fs::read_to_string(&nested_path).ok()?;

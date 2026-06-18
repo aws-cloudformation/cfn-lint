@@ -61,9 +61,11 @@ impl CfnLintRule for E3673 {
 
             if !has_lt {
                 errors.push(ValidationError {
-                rule_id: None,
+                    rule_id: None,
                     keyword: format!("cfnLint:{}", self.id()),
-                    message: "'ImageId' is a required property when 'LaunchTemplate' is not provided".to_string(),
+                    message:
+                        "'ImageId' is a required property when 'LaunchTemplate' is not provided"
+                            .to_string(),
                     path: path.to_vec(),
                     span: instance.span(),
                     unknown: false,
@@ -80,9 +82,9 @@ impl CfnLintRule for E3673 {
 #[cfg(test)]
 
 mod tests {
-    use crate::template::Template;
     use super::*;
     use crate::parser;
+    use crate::template::Template;
 
     #[test]
     fn test_validate_is_stub() {

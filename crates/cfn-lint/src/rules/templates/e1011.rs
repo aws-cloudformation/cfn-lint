@@ -4,10 +4,10 @@
 /// In our Rust implementation, structural validation is handled by E1028 and schema validation
 /// by the schema validator. This rule exists as an anchor for rule ID compatibility.
 use crate::ast::AstNode;
-use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
-use crate::template::Template;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
+use crate::template::Template;
 
 pub struct E1011;
 
@@ -32,9 +32,13 @@ impl CfnLintRule for E1011 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         // Structural validation handled by E1028; schema validation by schema validator
-                vec![]
+        vec![]
     }
 }
 
@@ -54,8 +58,10 @@ mod tests {
 
     #[test]
     fn test_e1011_returns_empty() {
-        let root = AstNode::Object(ObjectNode { entries: Vec::new(), span: Span::default(),
-         });
+        let root = AstNode::Object(ObjectNode {
+            entries: Vec::new(),
+            span: Span::default(),
+        });
         let tmpl = Template::from_ast(&root).unwrap();
         assert!(E1011.validate_template(&tmpl, &root).is_empty());
     }

@@ -38,8 +38,7 @@ impl CfnLintRule for W2002 {
         };
 
         // Only flag SSM or List types that aren't in the valid list
-        if (type_val.starts_with("AWS::SSM::Parameter::Value<")
-            || type_val.starts_with("List<"))
+        if (type_val.starts_with("AWS::SSM::Parameter::Value<") || type_val.starts_with("List<"))
             && !VALID_PARAMETER_TYPES.contains(&type_val)
         {
             return vec![ValidationError {
@@ -121,9 +120,9 @@ const VALID_PARAMETER_TYPES: &[&str] = &[
 #[cfg(test)]
 
 mod tests {
-    use crate::template::Template;
     use super::*;
     use crate::parser;
+    use crate::template::Template;
 
     #[test]
     fn test_valid_types_no_warnings() {

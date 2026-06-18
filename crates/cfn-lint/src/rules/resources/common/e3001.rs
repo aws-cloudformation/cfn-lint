@@ -2,14 +2,16 @@ use std::sync::LazyLock;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
 use crate::jsonschema::Validator;
 use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
 use crate::template::Template;
 
 static SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
-    serde_json::from_str(include_str!("../../../../data/schemas/other/resources/configuration.json"))
-        .unwrap_or_default()
+    serde_json::from_str(include_str!(
+        "../../../../data/schemas/other/resources/configuration.json"
+    ))
+    .unwrap_or_default()
 });
 
 /// E3001: Basic CloudFormation Resource Check.
@@ -21,15 +23,27 @@ static SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
 pub struct E3001;
 
 impl CfnLintRule for E3001 {
-    fn id(&self) -> &str { "E3001" }
-    fn short_description(&self) -> &str { "Validate basic resource configuration" }
+    fn id(&self) -> &str {
+        "E3001"
+    }
+    fn short_description(&self) -> &str {
+        "Validate basic resource configuration"
+    }
     fn description(&self) -> &str {
         "Validates basic CloudFormation resource configuration"
     }
-    fn severity(&self) -> Severity { Severity::Error }
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
-    fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let resources = match root.get("Resources") {
             Some(r) => r,
             None => return vec![],
@@ -54,11 +68,11 @@ impl CfnLintRule for E3001 {
                     message: err.message,
                     path: err.path,
                     span: err.span,
-                keyword: String::new(),
-                unknown: false,
-                resolved_from_ref: false,
-                context: vec![],
-                schema_id: None,
+                    keyword: String::new(),
+                    unknown: false,
+                    resolved_from_ref: false,
+                    context: vec![],
+                    schema_id: None,
                 }
             })
             .collect()

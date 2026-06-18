@@ -2,8 +2,8 @@ use std::collections::HashSet;
 
 use crate::ast::{self, AstNode};
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 pub struct W7001;
@@ -22,9 +22,15 @@ impl CfnLintRule for W7001 {
         Severity::Warning
     }
 
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         if template.mappings.is_empty() {
             return vec![];
         }
@@ -55,7 +61,7 @@ impl CfnLintRule for W7001 {
                 resolved_from_ref: false,
                 context: vec![],
                 schema_id: None,
-})
+            })
             .collect()
     }
 }
@@ -82,7 +88,11 @@ fn collect_findinmap_names(root: &AstNode) -> Option<HashSet<String>> {
         }
         true
     });
-    if has_dynamic { None } else { Some(names) }
+    if has_dynamic {
+        None
+    } else {
+        Some(names)
+    }
 }
 
 #[cfg(test)]

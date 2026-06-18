@@ -1,7 +1,7 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// Template body size limit in bytes (1 MB).
@@ -15,7 +15,11 @@ pub struct I1002;
 impl I1002 {
     /// Validate with an explicit byte size (for testability and when the caller
     /// already knows the file size).
-    pub fn validate_size(&self, byte_size: usize, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    pub fn validate_size(
+        &self,
+        byte_size: usize,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let limit = (TEMPLATE_BODY_LIMIT as f64 * THRESHOLD) as usize;
         if byte_size > limit && byte_size <= TEMPLATE_BODY_LIMIT {
             vec![ValidationError {
@@ -31,7 +35,7 @@ impl I1002 {
                 resolved_from_ref: false,
                 context: vec![],
                 schema_id: None,
-}]
+            }]
         } else {
             vec![]
         }
@@ -52,9 +56,15 @@ impl CfnLintRule for I1002 {
         Severity::Informational
     }
 
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         // File-size check requires the raw byte length, which is passed via
         // validate_size() from the runner. The trait method alone cannot access
         // the original file bytes, so it returns nothing.

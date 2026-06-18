@@ -2,8 +2,8 @@ use regex::Regex;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 pub struct E1029;
@@ -40,7 +40,11 @@ impl CfnLintRule for E1029 {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let re = Regex::new(r"\$\{[A-Za-z0-9_:\.]+\}").unwrap();
         let mut issues = Vec::new();
         self.check_node(root, &[], &re, template, root, &mut issues);
@@ -69,7 +73,8 @@ impl E1029 {
     }
 
     fn path_contains_definition_string(path: &[String]) -> bool {
-        path.iter().any(|p| p == "DefinitionString" || p == "Definition")
+        path.iter()
+            .any(|p| p == "DefinitionString" || p == "Definition")
     }
 
     fn is_in_definition_substitutions(
@@ -175,7 +180,6 @@ impl E1029 {
         }
     }
 }
-
 
 #[cfg(test)]
 mod tests {

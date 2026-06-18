@@ -1,7 +1,7 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// I7010: Mapping limit approaching.
@@ -10,16 +10,28 @@ use crate::template::Template;
 pub struct I7010;
 
 impl CfnLintRule for I7010 {
-    fn id(&self) -> &str { "I7010" }
-    fn short_description(&self) -> &str { "Mapping limit" }
+    fn id(&self) -> &str {
+        "I7010"
+    }
+    fn short_description(&self) -> &str {
+        "Mapping limit"
+    }
     fn description(&self) -> &str {
         "Check the number of Mappings in the template is approaching the upper limit"
     }
-    fn severity(&self) -> Severity { Severity::Informational }
+    fn severity(&self) -> Severity {
+        Severity::Informational
+    }
 
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         vec![]
     }
 }

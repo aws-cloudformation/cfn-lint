@@ -1,9 +1,9 @@
-use std::collections::HashMap;
-use std::sync::Arc;
+use super::{ValidationError, Validator};
 use crate::ast::AstNode;
 use crate::rules::Severity;
 use crate::template::Template;
-use super::{ValidationError, Validator};
+use std::collections::HashMap;
+use std::sync::Arc;
 
 /// Unified trait for all cfn-lint rules.
 ///
@@ -20,13 +20,21 @@ use super::{ValidationError, Validator};
 /// rules that don't need metadata (like extension schema rules) can omit them.
 pub trait CfnLintRule: Send + Sync {
     fn id(&self) -> &str;
-    fn short_description(&self) -> &str { "" }
-    fn description(&self) -> &str { self.short_description() }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn short_description(&self) -> &str {
+        ""
+    }
+    fn description(&self) -> &str {
+        self.short_description()
+    }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
     fn keywords(&self) -> &[&str];
     /// When true (default), yield all validation errors with their original messages.
     /// When false, pick the best match and replace its message with short_description.
-    fn all_matches(&self) -> bool { true }
+    fn all_matches(&self) -> bool {
+        true
+    }
     fn validate(
         &self,
         _validator: &Validator,
@@ -39,7 +47,11 @@ pub trait CfnLintRule: Send + Sync {
     }
     /// Template-level validation dispatched by the engine for rules with keyword `"/"`.
     /// Rules that need access to the full template tree implement this method.
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         vec![]
     }
 }
@@ -77,7 +89,10 @@ impl KeywordRuleRegistry {
     /// Build a registry pre-populated from all inventory-registered rules.
     pub fn from_inventory() -> Self {
         let static_rules: Vec<&'static dyn CfnLintRule> =
-            inventory::iter::<&'static dyn CfnLintRule>.into_iter().copied().collect();
+            inventory::iter::<&'static dyn CfnLintRule>
+                .into_iter()
+                .copied()
+                .collect();
         let mut static_index: HashMap<String, Vec<usize>> = HashMap::new();
         let mut static_wildcard: Vec<usize> = Vec::new();
         for (i, rule) in static_rules.iter().enumerate() {
@@ -194,15 +209,22 @@ impl KeywordRuleRegistry {
         let mut errors = Vec::new();
         let seg = first_segment(path_keyword);
 
-        let static_candidates = self.static_index.get(seg)
-            .into_iter().flatten()
+        let static_candidates = self
+            .static_index
+            .get(seg)
+            .into_iter()
+            .flatten()
             .chain(self.static_wildcard.iter());
         for &idx in static_candidates {
             let rule = self.static_rules[idx];
             for kw in rule.keywords() {
                 if keyword_matches(kw, path_keyword) {
-                    let mut rule_errors = rule.validate(validator, path_keyword, instance, schema, path);
+                    let mut rule_errors =
+                        rule.validate(validator, path_keyword, instance, schema, path);
                     for err in &mut rule_errors {
+                        if err.rule_id.is_none() {
+                            err.rule_id = Some(rule.id().to_string());
+                        }
                         if err.keyword.is_empty() {
                             err.keyword = format!("cfnLint:{}", rule.id());
                         }
@@ -213,15 +235,22 @@ impl KeywordRuleRegistry {
             }
         }
 
-        let dynamic_candidates = self.dynamic_index.get(seg)
-            .into_iter().flatten()
+        let dynamic_candidates = self
+            .dynamic_index
+            .get(seg)
+            .into_iter()
+            .flatten()
             .chain(self.dynamic_wildcard.iter());
         for &idx in dynamic_candidates {
             let rule = self.dynamic_rules[idx].as_ref();
             for kw in rule.keywords() {
                 if keyword_matches(kw, path_keyword) {
-                    let mut rule_errors = rule.validate(validator, path_keyword, instance, schema, path);
+                    let mut rule_errors =
+                        rule.validate(validator, path_keyword, instance, schema, path);
                     for err in &mut rule_errors {
+                        if err.rule_id.is_none() {
+                            err.rule_id = Some(rule.id().to_string());
+                        }
                         if err.keyword.is_empty() {
                             err.keyword = format!("cfnLint:{}", rule.id());
                         }
@@ -237,7 +266,11 @@ impl KeywordRuleRegistry {
 
     /// Dispatch template-level validation on all CfnLintRule rules.
     /// Called by the engine to run `validate_template()` on every registered rule.
-    pub fn validate_template_all(&self, template: &Template, root: &AstNode) -> Vec<ValidationError> {
+    pub fn validate_template_all(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<ValidationError> {
         let mut issues = Vec::new();
         for rule in &self.static_rules {
             issues.extend(rule.validate_template(template, root));
@@ -261,7 +294,8 @@ fn keyword_matches(pattern: &str, path: &str) -> bool {
     if pat_parts.len() != path_parts.len() {
         return false;
     }
-    pat_parts.iter().zip(path_parts.iter()).all(|(p, v)| {
-        *p == *v || *p == "*"
-    })
+    pat_parts
+        .iter()
+        .zip(path_parts.iter())
+        .all(|(p, v)| *p == *v || *p == "*")
 }

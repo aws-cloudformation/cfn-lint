@@ -1,7 +1,7 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E3007: Resources and Parameters must have unique names.
@@ -31,7 +31,11 @@ impl CfnLintRule for E3007 {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let mut issues = Vec::new();
         let resources_node = root.get("Resources").and_then(|n| n.as_object());
 
@@ -54,7 +58,7 @@ impl CfnLintRule for E3007 {
                     resolved_from_ref: false,
                     context: vec![],
                     schema_id: None,
-});
+                });
             }
         }
         issues

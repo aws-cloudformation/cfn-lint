@@ -44,7 +44,7 @@ pub fn validate_required(
                 None => false,
                 Some(AstNode::Null(_)) => false,
                 Some(v) => !is_ref_no_value(v, validator),
-                };
+            };
             if !is_present {
                 errors.push(err(
                     "required",
@@ -122,22 +122,14 @@ pub fn validate_additional_properties(
                                 .join(", ")
                         })
                         .unwrap_or_default();
-                    format!(
-                        "'{}' does not match any of the regexes: {}",
-                        key, patterns
-                    )
+                    format!("'{}' does not match any of the regexes: {}", key, patterns)
                 } else {
                     format!(
                         "Additional properties are not allowed ('{}' was unexpected)",
                         key
                     )
                 };
-                errors.push(err(
-                    "additionalProperties",
-                    message,
-                    path,
-                    prop_node,
-                ));
+                errors.push(err("additionalProperties", message, path, prop_node));
             }
             serde_json::Value::Object(_) => {
                 let mut child_path = path.to_vec();
@@ -168,7 +160,11 @@ pub fn validate_pattern_properties(
     let mut errors = Vec::new();
     for (pattern, prop_schema) in patterns {
         let re_std = Regex::new(pattern).ok();
-        let re_fancy = if re_std.is_none() { fancy_regex::Regex::new(pattern).ok() } else { None };
+        let re_fancy = if re_std.is_none() {
+            fancy_regex::Regex::new(pattern).ok()
+        } else {
+            None
+        };
         for (key, value) in obj.iter() {
             // Non-string keys cannot match string patterns
             if obj.is_non_string_key(key) {
@@ -252,10 +248,7 @@ pub fn validate_dependent_excluded(
                         exc_path.push(name.to_string());
                         errors.push(err(
                             "dependentExcluded",
-                            format!(
-                                "\"{}\" should not be included with \"{}\"",
-                                name, trigger
-                            ),
+                            format!("\"{}\" should not be included with \"{}\"", name, trigger),
                             &exc_path,
                             node,
                         ));

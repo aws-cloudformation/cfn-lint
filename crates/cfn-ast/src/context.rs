@@ -102,7 +102,10 @@ impl Context {
                 .and_then(|n| n.as_array())
                 .map(|a| a.elements.clone());
 
-            let description = obj.get("Description").and_then(|n| n.as_str()).map(String::from);
+            let description = obj
+                .get("Description")
+                .and_then(|n| n.as_str())
+                .map(String::from);
 
             self.parameters.insert(
                 name.to_string(),
@@ -164,7 +167,9 @@ impl Context {
             mappings: self.mappings.clone(),
             outputs: self.outputs.clone(),
             ref_values: opts.ref_values.unwrap_or_else(|| self.ref_values.clone()),
-            condition_state: opts.condition_state.unwrap_or_else(|| self.condition_state.clone()),
+            condition_state: opts
+                .condition_state
+                .unwrap_or_else(|| self.condition_state.clone()),
             regions: opts.regions.unwrap_or_else(|| self.regions.clone()),
         }
     }

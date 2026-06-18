@@ -1,17 +1,20 @@
 use super::super::{ValidationError, Validator};
-use super::helpers::{err, ast_matches_json};
+use super::helpers::{ast_matches_json, err};
 use crate::ast::AstNode;
 
 fn format_enum_values(constraint: &serde_json::Value) -> String {
     match constraint.as_array() {
         Some(arr) => {
-            let items: Vec<String> = arr.iter().map(|v| match v {
-                serde_json::Value::String(s) => format!("'{}'", s),
-                serde_json::Value::Number(n) => n.to_string(),
-                serde_json::Value::Bool(b) => b.to_string(),
-                serde_json::Value::Null => "null".to_string(),
-                other => format!("{}", other),
-            }).collect();
+            let items: Vec<String> = arr
+                .iter()
+                .map(|v| match v {
+                    serde_json::Value::String(s) => format!("'{}'", s),
+                    serde_json::Value::Number(n) => n.to_string(),
+                    serde_json::Value::Bool(b) => b.to_string(),
+                    serde_json::Value::Null => "null".to_string(),
+                    other => format!("{}", other),
+                })
+                .collect();
             format!("[{}]", items.join(", "))
         }
         None => format!("{}", constraint),
@@ -43,7 +46,7 @@ pub fn validate_enum(
                 unknown: true,
                 resolved_from_ref: false,
                 context: vec![],
-            schema_id: None,
+                schema_id: None,
             }];
         }
     }
@@ -147,7 +150,8 @@ pub fn validate_enum_case_insensitive(
             "enumCaseInsensitive",
             format!(
                 "{} is not one of {} (case-insensitive)",
-                node, format_enum_values(constraint)
+                node,
+                format_enum_values(constraint)
             ),
             path,
             node,
@@ -164,7 +168,9 @@ pub fn validate_const(
 ) -> Vec<ValidationError> {
     if matches!(node, AstNode::Function(_)) {
         // When functions are disabled (empty list), treat function as literal object
-        let functions_disabled = validator.context.as_ref()
+        let functions_disabled = validator
+            .context
+            .as_ref()
             .and_then(|ctx| ctx.functions.as_ref())
             .map(|f| f.is_empty())
             .unwrap_or(false);

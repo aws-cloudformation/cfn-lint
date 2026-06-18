@@ -6,9 +6,9 @@ use std::sync::Arc;
 use crate::ast::AstNode;
 use crate::context::Context;
 use crate::engine::flatten_validation_errors;
+use crate::jsonschema::ValidationError;
 use crate::jsonschema::Validator;
 use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
 
 /// Validate a policy document AstNode against an IAM policy schema.
 /// Skips function nodes. Returns issues tagged with the given rule_id.
@@ -66,7 +66,7 @@ pub(crate) fn validate_policy_doc(
                 unknown: false,
                 resolved_from_ref: false,
                 context: vec![],
-            schema_id: None,
+                schema_id: None,
             }
         })
         .collect()

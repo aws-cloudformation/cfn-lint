@@ -80,12 +80,17 @@ impl ObjectNode {
 
     /// Get the key span for a given key name.
     pub fn key_span(&self, key: &str) -> Option<Span> {
-        self.entries.iter().find(|e| e.key == key).map(|e| e.key_span)
+        self.entries
+            .iter()
+            .find(|e| e.key == key)
+            .map(|e| e.key_span)
     }
 
     /// Check if a key was originally a non-string node.
     pub fn is_non_string_key(&self, key: &str) -> bool {
-        self.entries.iter().any(|e| e.key == key && !matches!(e.key_node, AstNode::String(_)))
+        self.entries
+            .iter()
+            .any(|e| e.key == key && !matches!(e.key_node, AstNode::String(_)))
     }
 
     /// Get all entries with duplicate keys.
@@ -102,7 +107,10 @@ impl ObjectNode {
 
     /// Get all entries with non-string keys.
     pub fn non_string_key_entries(&self) -> Vec<&ObjectEntry> {
-        self.entries.iter().filter(|e| !matches!(e.key_node, AstNode::String(_))).collect()
+        self.entries
+            .iter()
+            .filter(|e| !matches!(e.key_node, AstNode::String(_)))
+            .collect()
     }
 }
 
@@ -221,7 +229,11 @@ impl AstNode {
             AstNode::Array(_) => "array",
             AstNode::String(_) => "string",
             AstNode::Number(n) => {
-                if n.value.fract() == 0.0 { "integer" } else { "number" }
+                if n.value.fract() == 0.0 {
+                    "integer"
+                } else {
+                    "number"
+                }
             }
             AstNode::Bool(_) => "boolean",
             AstNode::Null(_) => "null",

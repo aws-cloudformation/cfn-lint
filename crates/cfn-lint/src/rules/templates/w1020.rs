@@ -2,8 +2,8 @@ use regex::Regex;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// W1020: Fn::Sub isn't needed if it doesn't have a variable defined.
@@ -23,9 +23,15 @@ impl CfnLintRule for W1020 {
         Severity::Warning
     }
 
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
-    fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         if crate::transform::is_sam_template(root) {
             return vec![];
         }
@@ -36,7 +42,12 @@ impl CfnLintRule for W1020 {
     }
 }
 
-fn find_sub_no_vars(node: &AstNode, path: &[String], re: &Regex, issues: &mut Vec<ValidationError>) {
+fn find_sub_no_vars(
+    node: &AstNode,
+    path: &[String],
+    re: &Regex,
+    issues: &mut Vec<ValidationError>,
+) {
     match node {
         AstNode::Function(func) => {
             if func.name == "Fn::Sub" {
@@ -49,14 +60,15 @@ fn find_sub_no_vars(node: &AstNode, path: &[String], re: &Regex, issues: &mut Ve
                     if !re.is_match(s) {
                         issues.push(ValidationError {
                             rule_id: Some("W1020".to_string()),
-                            message: "'Fn::Sub' isn't needed because there are no variables".to_string(),
+                            message: "'Fn::Sub' isn't needed because there are no variables"
+                                .to_string(),
                             path: path.to_vec(),
                             span: func.span.clone(),
-                keyword: String::new(),
-                unknown: false,
-                resolved_from_ref: false,
-                context: vec![],
-                        schema_id: None,
+                            keyword: String::new(),
+                            unknown: false,
+                            resolved_from_ref: false,
+                            context: vec![],
+                            schema_id: None,
                         });
                     }
                 }

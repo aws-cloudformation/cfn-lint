@@ -2,8 +2,8 @@ use regex::Regex;
 
 use crate::ast::{self, AstNode};
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// I3042: ARNs should use correctly placed Pseudo Parameters.
@@ -28,9 +28,15 @@ impl CfnLintRule for I3042 {
         Severity::Informational
     }
 
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
-    fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let arn_re = Regex::new(
             r"arn:(\$\{[^:\r\n]*::[^:\r\n]*}|[^:\s]*):[^:\s]+:(\$\{[^:\r\n]*::[^:\r\n]*}|[^:\s]*):(\$\{[^:\r\n]*::[^:\r\n]*}|[^:\s]*)"
         ).unwrap();
@@ -47,9 +53,7 @@ impl CfnLintRule for I3042 {
                 if func.name == "Fn::Sub" {
                     let tmpl_str = match func.args.as_ref() {
                         AstNode::String(s) => Some(s.value.as_str()),
-                        AstNode::Array(arr) if !arr.elements.is_empty() => {
-                            arr.elements[0].as_str()
-                        }
+                        AstNode::Array(arr) if !arr.elements.is_empty() => arr.elements[0].as_str(),
                         _ => None,
                     };
 
@@ -57,10 +61,8 @@ impl CfnLintRule for I3042 {
                         for caps in arn_re.captures_iter(s) {
                             let partition = caps.get(1).map_or("", |m| m.as_str());
                             if !partition_ok(partition) {
-                                let resource_name = path
-                                    .get(1)
-                                    .map(|s| s.as_str())
-                                    .unwrap_or("Unknown");
+                                let resource_name =
+                                    path.get(1).map(|s| s.as_str()).unwrap_or("Unknown");
 
                                 let mut issue_path = path.to_vec();
                                 issue_path.push(func.name.clone());
@@ -94,9 +96,7 @@ impl CfnLintRule for I3042 {
 
 /// Returns true if the partition value is acceptable (not hardcoded).
 fn partition_ok(partition: &str) -> bool {
-    partition.is_empty()
-        || partition == "*"
-        || partition.starts_with("${")
+    partition.is_empty() || partition == "*" || partition.starts_with("${")
 }
 
 #[cfg(test)]

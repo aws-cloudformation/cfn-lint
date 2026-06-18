@@ -93,12 +93,7 @@ impl CfnLintRule for CustomRule {
             ];
             let pos = prop_value
                 .map(|v| v.span().clone())
-                .or_else(|| {
-                    resource
-                        .properties
-                        .as_ref()
-                        .map(|p| p.span().clone())
-                })
+                .or_else(|| resource.properties.as_ref().map(|p| p.span().clone()))
                 .unwrap_or_default();
 
             let violation = match &self.operator {
@@ -138,12 +133,10 @@ impl CfnLintRule for CustomRule {
                     Some(n) => !(n < *threshold),
                     None => true,
                 },
-                Operator::LessThanOrEqual(threshold) => {
-                    match prop_value.and_then(|v| v.as_f64()) {
-                        Some(n) => !(n <= *threshold),
-                        None => true,
-                    }
-                }
+                Operator::LessThanOrEqual(threshold) => match prop_value.and_then(|v| v.as_f64()) {
+                    Some(n) => !(n <= *threshold),
+                    None => true,
+                },
             };
 
             if violation {
@@ -297,10 +290,12 @@ fn parse_custom_rules(content: &str) -> Result<Vec<Arc<dyn CfnLintRule>>, Custom
                         message: "> requires a numeric value".to_string(),
                     });
                 }
-                let n = value_str.parse::<f64>().map_err(|_| CustomRuleError::ParseError {
-                    line: line_num + 1,
-                    message: format!("> requires a numeric value, got '{}'", value_str),
-                })?;
+                let n = value_str
+                    .parse::<f64>()
+                    .map_err(|_| CustomRuleError::ParseError {
+                        line: line_num + 1,
+                        message: format!("> requires a numeric value, got '{}'", value_str),
+                    })?;
                 Operator::GreaterThan(n)
             }
             ">=" => {
@@ -310,10 +305,12 @@ fn parse_custom_rules(content: &str) -> Result<Vec<Arc<dyn CfnLintRule>>, Custom
                         message: ">= requires a numeric value".to_string(),
                     });
                 }
-                let n = value_str.parse::<f64>().map_err(|_| CustomRuleError::ParseError {
-                    line: line_num + 1,
-                    message: format!(">= requires a numeric value, got '{}'", value_str),
-                })?;
+                let n = value_str
+                    .parse::<f64>()
+                    .map_err(|_| CustomRuleError::ParseError {
+                        line: line_num + 1,
+                        message: format!(">= requires a numeric value, got '{}'", value_str),
+                    })?;
                 Operator::GreaterThanOrEqual(n)
             }
             "<" => {
@@ -323,10 +320,12 @@ fn parse_custom_rules(content: &str) -> Result<Vec<Arc<dyn CfnLintRule>>, Custom
                         message: "< requires a numeric value".to_string(),
                     });
                 }
-                let n = value_str.parse::<f64>().map_err(|_| CustomRuleError::ParseError {
-                    line: line_num + 1,
-                    message: format!("< requires a numeric value, got '{}'", value_str),
-                })?;
+                let n = value_str
+                    .parse::<f64>()
+                    .map_err(|_| CustomRuleError::ParseError {
+                        line: line_num + 1,
+                        message: format!("< requires a numeric value, got '{}'", value_str),
+                    })?;
                 Operator::LessThan(n)
             }
             "<=" => {
@@ -336,10 +335,12 @@ fn parse_custom_rules(content: &str) -> Result<Vec<Arc<dyn CfnLintRule>>, Custom
                         message: "<= requires a numeric value".to_string(),
                     });
                 }
-                let n = value_str.parse::<f64>().map_err(|_| CustomRuleError::ParseError {
-                    line: line_num + 1,
-                    message: format!("<= requires a numeric value, got '{}'", value_str),
-                })?;
+                let n = value_str
+                    .parse::<f64>()
+                    .map_err(|_| CustomRuleError::ParseError {
+                        line: line_num + 1,
+                        message: format!("<= requires a numeric value, got '{}'", value_str),
+                    })?;
                 Operator::LessThanOrEqual(n)
             }
             other => {
@@ -382,18 +383,27 @@ mod tests {
         let mut prop_map: Vec<ObjectEntry> = Vec::new();
         for (k, v) in props {
             prop_map.push(ObjectEntry {
-                key_node: AstNode::String(StringNode { value: k.to_string(), span: Span::default() }),
+                key_node: AstNode::String(StringNode {
+                    value: k.to_string(),
+                    span: Span::default(),
+                }),
                 key: k.to_string(),
                 value: AstNode::String(StringNode {
                     value: v.to_string(),
-                    span: Span { start: Position { line: 5, column: 3 }, end: Position { line: 5, column: 3 } },
+                    span: Span {
+                        start: Position { line: 5, column: 3 },
+                        end: Position { line: 5, column: 3 },
+                    },
                 }),
                 key_span: Span::default(),
             });
         }
         let mut res_inner: Vec<ObjectEntry> = Vec::new();
         res_inner.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Type".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Type".to_string(),
+                span: Span::default(),
+            }),
             key: "Type".to_string(),
             value: AstNode::String(StringNode {
                 value: resource_type.to_string(),
@@ -402,30 +412,47 @@ mod tests {
             key_span: Span::default(),
         });
         res_inner.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Properties".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Properties".to_string(),
+                span: Span::default(),
+            }),
             key: "Properties".to_string(),
-            value: AstNode::Object(ObjectNode { entries: prop_map, span: Span::default(),
-             }),
+            value: AstNode::Object(ObjectNode {
+                entries: prop_map,
+                span: Span::default(),
+            }),
             key_span: Span::default(),
         });
         let mut resources: Vec<ObjectEntry> = Vec::new();
         resources.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "MyResource".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "MyResource".to_string(),
+                span: Span::default(),
+            }),
             key: "MyResource".to_string(),
-            value: AstNode::Object(ObjectNode { entries: res_inner, span: Span::default(),
-             }),
+            value: AstNode::Object(ObjectNode {
+                entries: res_inner,
+                span: Span::default(),
+            }),
             key_span: Span::default(),
         });
         let mut root_props: Vec<ObjectEntry> = Vec::new();
         root_props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Resources".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Resources".to_string(),
+                span: Span::default(),
+            }),
             key: "Resources".to_string(),
-            value: AstNode::Object(ObjectNode { entries: resources, span: Span::default(),
-             }),
+            value: AstNode::Object(ObjectNode {
+                entries: resources,
+                span: Span::default(),
+            }),
             key_span: Span::default(),
         });
-        let root = AstNode::Object(ObjectNode { entries: root_props, span: Span::default(),
-         });
+        let root = AstNode::Object(ObjectNode {
+            entries: root_props,
+            span: Span::default(),
+        });
         let tmpl = Template::from_ast(&root).unwrap();
         (tmpl, root)
     }
@@ -524,7 +551,11 @@ AWS::Lambda::Function Runtime IN nodejs20.x
     fn test_parse_error_unknown_operator() {
         let result = parse_custom_rules("AWS::S3::Bucket Prop FOOBAR value\n");
         assert!(result.is_err());
-        assert!(result.err().unwrap().to_string().contains("unknown operator"));
+        assert!(result
+            .err()
+            .unwrap()
+            .to_string()
+            .contains("unknown operator"));
     }
 
     #[test]
@@ -549,8 +580,7 @@ AWS::Lambda::Function Runtime IN nodejs20.x
 
     #[test]
     fn test_validate_is_defined_pass() {
-        let rules =
-            parse_custom_rules("AWS::S3::Bucket BucketName IS_DEFINED\n").unwrap();
+        let rules = parse_custom_rules("AWS::S3::Bucket BucketName IS_DEFINED\n").unwrap();
         let (tmpl, root) = make_template("AWS::S3::Bucket", vec![("BucketName", "my-bucket")]);
         let issues = rules[0].validate_template(&tmpl, &root);
         assert!(issues.is_empty());
@@ -558,8 +588,7 @@ AWS::Lambda::Function Runtime IN nodejs20.x
 
     #[test]
     fn test_validate_is_defined_fail() {
-        let rules =
-            parse_custom_rules("AWS::S3::Bucket BucketEncryption IS_DEFINED\n").unwrap();
+        let rules = parse_custom_rules("AWS::S3::Bucket BucketEncryption IS_DEFINED\n").unwrap();
         let (tmpl, root) = make_template("AWS::S3::Bucket", vec![("BucketName", "my-bucket")]);
         let issues = rules[0].validate_template(&tmpl, &root);
         assert_eq!(issues.len(), 1);
@@ -569,8 +598,7 @@ AWS::Lambda::Function Runtime IN nodejs20.x
 
     #[test]
     fn test_validate_not_defined_pass() {
-        let rules =
-            parse_custom_rules("AWS::S3::Bucket BadProp NOT_DEFINED\n").unwrap();
+        let rules = parse_custom_rules("AWS::S3::Bucket BadProp NOT_DEFINED\n").unwrap();
         let (tmpl, root) = make_template("AWS::S3::Bucket", vec![("BucketName", "my-bucket")]);
         let issues = rules[0].validate_template(&tmpl, &root);
         assert!(issues.is_empty());
@@ -578,8 +606,7 @@ AWS::Lambda::Function Runtime IN nodejs20.x
 
     #[test]
     fn test_validate_not_defined_fail() {
-        let rules =
-            parse_custom_rules("AWS::S3::Bucket BucketName NOT_DEFINED\n").unwrap();
+        let rules = parse_custom_rules("AWS::S3::Bucket BucketName NOT_DEFINED\n").unwrap();
         let (tmpl, root) = make_template("AWS::S3::Bucket", vec![("BucketName", "my-bucket")]);
         let issues = rules[0].validate_template(&tmpl, &root);
         assert_eq!(issues.len(), 1);
@@ -627,8 +654,7 @@ AWS::Lambda::Function Runtime IN nodejs20.x
             "AWS::Lambda::Function Runtime IN nodejs20.x,python3.12,python3.13\n",
         )
         .unwrap();
-        let (tmpl, root) =
-            make_template("AWS::Lambda::Function", vec![("Runtime", "python3.12")]);
+        let (tmpl, root) = make_template("AWS::Lambda::Function", vec![("Runtime", "python3.12")]);
         let issues = rules[0].validate_template(&tmpl, &root);
         assert!(issues.is_empty());
     }
@@ -639,8 +665,7 @@ AWS::Lambda::Function Runtime IN nodejs20.x
             "AWS::Lambda::Function Runtime IN nodejs20.x,python3.12,python3.13\n",
         )
         .unwrap();
-        let (tmpl, root) =
-            make_template("AWS::Lambda::Function", vec![("Runtime", "python2.7")]);
+        let (tmpl, root) = make_template("AWS::Lambda::Function", vec![("Runtime", "python2.7")]);
         let issues = rules[0].validate_template(&tmpl, &root);
         assert_eq!(issues.len(), 1);
     }
@@ -650,8 +675,7 @@ AWS::Lambda::Function Runtime IN nodejs20.x
         let rules =
             parse_custom_rules("AWS::Lambda::Function Runtime NOT_IN python2.7,python3.6\n")
                 .unwrap();
-        let (tmpl, root) =
-            make_template("AWS::Lambda::Function", vec![("Runtime", "python3.12")]);
+        let (tmpl, root) = make_template("AWS::Lambda::Function", vec![("Runtime", "python3.12")]);
         let issues = rules[0].validate_template(&tmpl, &root);
         assert!(issues.is_empty());
     }
@@ -661,8 +685,7 @@ AWS::Lambda::Function Runtime IN nodejs20.x
         let rules =
             parse_custom_rules("AWS::Lambda::Function Runtime NOT_IN python2.7,python3.6\n")
                 .unwrap();
-        let (tmpl, root) =
-            make_template("AWS::Lambda::Function", vec![("Runtime", "python2.7")]);
+        let (tmpl, root) = make_template("AWS::Lambda::Function", vec![("Runtime", "python2.7")]);
         let issues = rules[0].validate_template(&tmpl, &root);
         assert_eq!(issues.len(), 1);
     }
@@ -681,16 +704,14 @@ AWS::Lambda::Function Runtime IN nodejs20.x
     fn test_validate_regex_match_fail() {
         let rules =
             parse_custom_rules("AWS::S3::Bucket BucketName REGEX_MATCH ^my-company-.*\n").unwrap();
-        let (tmpl, root) =
-            make_template("AWS::S3::Bucket", vec![("BucketName", "other-bucket")]);
+        let (tmpl, root) = make_template("AWS::S3::Bucket", vec![("BucketName", "other-bucket")]);
         let issues = rules[0].validate_template(&tmpl, &root);
         assert_eq!(issues.len(), 1);
     }
 
     #[test]
     fn test_validate_skips_non_matching_resource_type() {
-        let rules =
-            parse_custom_rules("AWS::S3::Bucket BucketName IS_DEFINED\n").unwrap();
+        let rules = parse_custom_rules("AWS::S3::Bucket BucketName IS_DEFINED\n").unwrap();
         let (tmpl, root) = make_template("AWS::Lambda::Function", vec![("Runtime", "python3.12")]);
         let issues = rules[0].validate_template(&tmpl, &root);
         assert!(issues.is_empty());
@@ -698,8 +719,7 @@ AWS::Lambda::Function Runtime IN nodejs20.x
 
     #[test]
     fn test_validate_issue_path() {
-        let rules =
-            parse_custom_rules("AWS::S3::Bucket BucketEncryption IS_DEFINED\n").unwrap();
+        let rules = parse_custom_rules("AWS::S3::Bucket BucketEncryption IS_DEFINED\n").unwrap();
         let (tmpl, root) = make_template("AWS::S3::Bucket", vec![("BucketName", "test")]);
         let issues = rules[0].validate_template(&tmpl, &root);
         assert_eq!(issues.len(), 1);
@@ -733,20 +753,33 @@ AWS::Lambda::Function Runtime IN nodejs20.x
 
     // --- Helper for numeric templates ---
 
-    fn make_numeric_template(resource_type: &str, prop_name: &str, value: f64) -> (Template, AstNode) {
+    fn make_numeric_template(
+        resource_type: &str,
+        prop_name: &str,
+        value: f64,
+    ) -> (Template, AstNode) {
         let mut prop_map: Vec<ObjectEntry> = Vec::new();
         prop_map.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: prop_name.to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: prop_name.to_string(),
+                span: Span::default(),
+            }),
             key: prop_name.to_string(),
             value: AstNode::Number(NumberNode {
                 value,
-                span: Span { start: Position { line: 5, column: 3 }, end: Position { line: 5, column: 3 } },
+                span: Span {
+                    start: Position { line: 5, column: 3 },
+                    end: Position { line: 5, column: 3 },
+                },
             }),
             key_span: Span::default(),
         });
         let mut res_inner: Vec<ObjectEntry> = Vec::new();
         res_inner.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Type".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Type".to_string(),
+                span: Span::default(),
+            }),
             key: "Type".to_string(),
             value: AstNode::String(StringNode {
                 value: resource_type.to_string(),
@@ -755,26 +788,47 @@ AWS::Lambda::Function Runtime IN nodejs20.x
             key_span: Span::default(),
         });
         res_inner.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Properties".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Properties".to_string(),
+                span: Span::default(),
+            }),
             key: "Properties".to_string(),
-            value: AstNode::Object(ObjectNode { entries: prop_map, span: Span::default() }),
+            value: AstNode::Object(ObjectNode {
+                entries: prop_map,
+                span: Span::default(),
+            }),
             key_span: Span::default(),
         });
         let mut resources: Vec<ObjectEntry> = Vec::new();
         resources.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "MyResource".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "MyResource".to_string(),
+                span: Span::default(),
+            }),
             key: "MyResource".to_string(),
-            value: AstNode::Object(ObjectNode { entries: res_inner, span: Span::default() }),
+            value: AstNode::Object(ObjectNode {
+                entries: res_inner,
+                span: Span::default(),
+            }),
             key_span: Span::default(),
         });
         let mut root_props: Vec<ObjectEntry> = Vec::new();
         root_props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Resources".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Resources".to_string(),
+                span: Span::default(),
+            }),
             key: "Resources".to_string(),
-            value: AstNode::Object(ObjectNode { entries: resources, span: Span::default() }),
+            value: AstNode::Object(ObjectNode {
+                entries: resources,
+                span: Span::default(),
+            }),
             key_span: Span::default(),
         });
-        let root = AstNode::Object(ObjectNode { entries: root_props, span: Span::default() });
+        let root = AstNode::Object(ObjectNode {
+            entries: root_props,
+            span: Span::default(),
+        });
         let tmpl = Template::from_ast(&root).unwrap();
         (tmpl, root)
     }
@@ -836,14 +890,16 @@ AWS::Lambda::Function Runtime IN nodejs20.x
 
     #[test]
     fn test_parse_severity_warn() {
-        let rules = parse_custom_rules("AWS::S3::Bucket BucketEncryption IS_DEFINED WARN\n").unwrap();
+        let rules =
+            parse_custom_rules("AWS::S3::Bucket BucketEncryption IS_DEFINED WARN\n").unwrap();
         assert_eq!(rules.len(), 1);
         assert_eq!(rules[0].severity(), Severity::Warning);
     }
 
     #[test]
     fn test_parse_severity_error_explicit() {
-        let rules = parse_custom_rules("AWS::S3::Bucket BucketEncryption IS_DEFINED ERROR\n").unwrap();
+        let rules =
+            parse_custom_rules("AWS::S3::Bucket BucketEncryption IS_DEFINED ERROR\n").unwrap();
         assert_eq!(rules.len(), 1);
         assert_eq!(rules[0].severity(), Severity::Error);
     }
@@ -857,7 +913,8 @@ AWS::Lambda::Function Runtime IN nodejs20.x
 
     #[test]
     fn test_parse_severity_with_value() {
-        let rules = parse_custom_rules("AWS::EC2::Instance InstanceType EQUALS t3.micro WARN\n").unwrap();
+        let rules =
+            parse_custom_rules("AWS::EC2::Instance InstanceType EQUALS t3.micro WARN\n").unwrap();
         assert_eq!(rules.len(), 1);
         assert_eq!(rules[0].severity(), Severity::Warning);
     }
@@ -901,13 +958,19 @@ AWS::Lambda::Function Runtime IN nodejs20.x
         .unwrap();
         assert_eq!(rules.len(), 1);
         assert_eq!(rules[0].severity(), Severity::Error);
-        assert_eq!(rules[0].short_description(), "Max message size must be at most 256KB");
+        assert_eq!(
+            rules[0].short_description(),
+            "Max message size must be at most 256KB"
+        );
     }
 
     #[test]
     fn test_parse_no_custom_message_uses_raw_line() {
         let rules = parse_custom_rules("AWS::S3::Bucket BucketEncryption IS_DEFINED\n").unwrap();
-        assert_eq!(rules[0].short_description(), "AWS::S3::Bucket BucketEncryption IS_DEFINED");
+        assert_eq!(
+            rules[0].short_description(),
+            "AWS::S3::Bucket BucketEncryption IS_DEFINED"
+        );
     }
 
     // --- Validation tests for numeric operators ---

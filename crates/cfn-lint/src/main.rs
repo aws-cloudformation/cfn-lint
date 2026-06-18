@@ -159,11 +159,19 @@ fn main() {
 
     let config = match Config::load(ConfigOverrides {
         templates,
-        format: if cli.format != "parseable" { Some(cli.format) } else { None },
+        format: if cli.format != "parseable" {
+            Some(cli.format)
+        } else {
+            None
+        },
         regions: cli.regions,
         include_checks: cli.include_checks,
         ignore_checks: cli.ignore_checks,
-        include_experimental: if cli.include_experimental { Some(true) } else { None },
+        include_experimental: if cli.include_experimental {
+            Some(true)
+        } else {
+            None
+        },
         schema_dir: cli.schema_dir,
         config_file: cli.config_file,
         configure_rules,
@@ -278,10 +286,7 @@ fn main() {
         // Apply include/exclude filters
         // Python cfn-lint excludes I-rules by default; include only if user
         // explicitly passes `-c I` or `-c I3011` etc.
-        let i_rules_included = config
-            .include_checks
-            .iter()
-            .any(|c| c.starts_with('I'));
+        let i_rules_included = config.include_checks.iter().any(|c| c.starts_with('I'));
         let filtered: Vec<_> = issues
             .into_iter()
             .filter(|issue| {
@@ -290,14 +295,8 @@ fn main() {
                     None => return true,
                 };
                 let dominated_by_include = config.include_checks.is_empty()
-                    || config
-                        .include_checks
-                        .iter()
-                        .any(|i| rid.starts_with(i));
-                let excluded = config
-                    .ignore_checks
-                    .iter()
-                    .any(|e| rid.starts_with(e));
+                    || config.include_checks.iter().any(|i| rid.starts_with(i));
+                let excluded = config.ignore_checks.iter().any(|e| rid.starts_with(e));
                 // Exclude I-rules unless explicitly included
                 if rid.starts_with('I') && !i_rules_included {
                     return false;
@@ -326,26 +325,44 @@ fn main() {
     }
 
     // Determine exit code based on --non-zero-exit-code threshold
-    let has_errors = all_results
-        .iter()
-        .any(|r| r.issues.iter().any(|i| i.rule_id.as_ref().map_or(true, |id| id.starts_with('E'))));
-    let has_warnings = all_results
-        .iter()
-        .any(|r| r.issues.iter().any(|i| i.rule_id.as_ref().map_or(false, |id| id.starts_with('W'))));
-    let has_informational = all_results
-        .iter()
-        .any(|r| r.issues.iter().any(|i| i.rule_id.as_ref().map_or(false, |id| id.starts_with('I'))));
+    let has_errors = all_results.iter().any(|r| {
+        r.issues
+            .iter()
+            .any(|i| i.rule_id.as_ref().map_or(true, |id| id.starts_with('E')))
+    });
+    let has_warnings = all_results.iter().any(|r| {
+        r.issues
+            .iter()
+            .any(|i| i.rule_id.as_ref().map_or(false, |id| id.starts_with('W')))
+    });
+    let has_informational = all_results.iter().any(|r| {
+        r.issues
+            .iter()
+            .any(|i| i.rule_id.as_ref().map_or(false, |id| id.starts_with('I')))
+    });
 
     let exit_code = match config.non_zero_exit_code.as_str() {
         "informational" => {
-            if has_errors || has_warnings || has_informational { 2 } else { 0 }
+            if has_errors || has_warnings || has_informational {
+                2
+            } else {
+                0
+            }
         }
         "warning" => {
-            if has_errors || has_warnings { 2 } else { 0 }
+            if has_errors || has_warnings {
+                2
+            } else {
+                0
+            }
         }
         _ => {
             // "error" (default)
-            if has_errors { 2 } else { 0 }
+            if has_errors {
+                2
+            } else {
+                0
+            }
         }
     };
 

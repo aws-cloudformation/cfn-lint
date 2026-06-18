@@ -10,12 +10,18 @@ use crate::rules::Severity;
 pub struct E3015;
 
 impl CfnLintRule for E3015 {
-    fn id(&self) -> &str { "E3015" }
-    fn short_description(&self) -> &str { "Validate the resource condition is valid" }
+    fn id(&self) -> &str {
+        "E3015"
+    }
+    fn short_description(&self) -> &str {
+        "Validate the resource condition is valid"
+    }
     fn description(&self) -> &str {
         "Validates resource Condition references exist in Conditions section"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/*/Condition"]
@@ -109,13 +115,30 @@ Resources:
 "#;
         let ast = parser::parse(yaml).unwrap();
         let tmpl = Template::from_ast(&ast).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Bucket").unwrap()
-            .get("Condition").unwrap();
-        let path = vec!["Resources".to_string(), "Bucket".to_string(), "Condition".to_string()];
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Bucket")
+            .unwrap()
+            .get("Condition")
+            .unwrap();
+        let path = vec![
+            "Resources".to_string(),
+            "Bucket".to_string(),
+            "Condition".to_string(),
+        ];
         let ctx = crate::context::Context::new(std::sync::Arc::new(tmpl));
-        let validator = crate::jsonschema::Validator::new_with_context(serde_json::json!({}), std::sync::Arc::new(ctx));
-        let errors = E3015.validate(&validator, "Resources/*/Condition", instance, &serde_json::json!({}), &path);
+        let validator = crate::jsonschema::Validator::new_with_context(
+            serde_json::json!({}),
+            std::sync::Arc::new(ctx),
+        );
+        let errors = E3015.validate(
+            &validator,
+            "Resources/*/Condition",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -129,13 +152,30 @@ Resources:
 "#;
         let ast = parser::parse(yaml).unwrap();
         let tmpl = Template::from_ast(&ast).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Bucket").unwrap()
-            .get("Condition").unwrap();
-        let path = vec!["Resources".to_string(), "Bucket".to_string(), "Condition".to_string()];
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Bucket")
+            .unwrap()
+            .get("Condition")
+            .unwrap();
+        let path = vec![
+            "Resources".to_string(),
+            "Bucket".to_string(),
+            "Condition".to_string(),
+        ];
         let ctx = crate::context::Context::new(std::sync::Arc::new(tmpl));
-        let validator = crate::jsonschema::Validator::new_with_context(serde_json::json!({}), std::sync::Arc::new(ctx));
-        let errors = E3015.validate(&validator, "Resources/*/Condition", instance, &serde_json::json!({}), &path);
+        let validator = crate::jsonschema::Validator::new_with_context(
+            serde_json::json!({}),
+            std::sync::Arc::new(ctx),
+        );
+        let errors = E3015.validate(
+            &validator,
+            "Resources/*/Condition",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(!errors.is_empty());
     }
 
@@ -151,8 +191,14 @@ Resources:
             name: "Fn::GetAtt".to_string(),
             args: Box::new(AstNode::Array(ArrayNode {
                 elements: vec![
-                    AstNode::String(StringNode { value: "MyBucket".to_string(), span: Span::default() }),
-                    AstNode::String(StringNode { value: "Arn".to_string(), span: Span::default() }),
+                    AstNode::String(StringNode {
+                        value: "MyBucket".to_string(),
+                        span: Span::default(),
+                    }),
+                    AstNode::String(StringNode {
+                        value: "Arn".to_string(),
+                        span: Span::default(),
+                    }),
                 ],
                 span: Span::default(),
             })),

@@ -24,7 +24,9 @@ impl CfnLintRule for E6005 {
         Severity::Error
     }
 
-    fn keywords(&self) -> &[&str] { &["Outputs/*/Condition"] }
+    fn keywords(&self) -> &[&str] {
+        &["Outputs/*/Condition"]
+    }
 
     fn validate(
         &self,
@@ -42,7 +44,10 @@ impl CfnLintRule for E6005 {
 
         // Build enum schema from the template's conditions
         let condition_names: Vec<serde_json::Value> = match validator.context() {
-            Some(ctx) => ctx.template.conditions.keys()
+            Some(ctx) => ctx
+                .template
+                .conditions
+                .keys()
                 .map(|k| serde_json::Value::String(k.clone()))
                 .collect(),
             None => return vec![],
@@ -53,10 +58,7 @@ impl CfnLintRule for E6005 {
             return vec![ValidationError {
                 rule_id: None,
                 keyword: "enum".to_string(),
-                message: format!(
-                    "'{}' is not one of []",
-                    instance.as_str().unwrap_or("")
-                ),
+                message: format!("'{}' is not one of []", instance.as_str().unwrap_or("")),
                 path: path.to_vec(),
                 span: instance.span(),
                 unknown: false,
@@ -107,11 +109,21 @@ Outputs:
     Value: !Ref Bucket
 "#;
         let (validator, ast) = make_validator(yaml);
-        let cond_node = ast.get("Outputs").unwrap()
-            .get("BucketArn").unwrap()
-            .get("Condition").unwrap();
+        let cond_node = ast
+            .get("Outputs")
+            .unwrap()
+            .get("BucketArn")
+            .unwrap()
+            .get("Condition")
+            .unwrap();
         let path = vec!["Outputs".into(), "BucketArn".into(), "Condition".into()];
-        let errors = E6005.validate(&validator, "Outputs/*/Condition", cond_node, &serde_json::json!({}), &path);
+        let errors = E6005.validate(
+            &validator,
+            "Outputs/*/Condition",
+            cond_node,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -124,11 +136,21 @@ Outputs:
     Value: !Ref Bucket
 "#;
         let (validator, ast) = make_validator(yaml);
-        let cond_node = ast.get("Outputs").unwrap()
-            .get("BucketArn").unwrap()
-            .get("Condition").unwrap();
+        let cond_node = ast
+            .get("Outputs")
+            .unwrap()
+            .get("BucketArn")
+            .unwrap()
+            .get("Condition")
+            .unwrap();
         let path = vec!["Outputs".into(), "BucketArn".into(), "Condition".into()];
-        let errors = E6005.validate(&validator, "Outputs/*/Condition", cond_node, &serde_json::json!({}), &path);
+        let errors = E6005.validate(
+            &validator,
+            "Outputs/*/Condition",
+            cond_node,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 1);
         assert_eq!(errors[0].keyword, "enum");
     }

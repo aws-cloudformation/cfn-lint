@@ -93,10 +93,7 @@ fn parse_section(root: &ObjectNode, key: &str) -> HashMap<String, AstNode> {
 
 fn parse_parameters(root: &ObjectNode) -> HashMap<String, Parameter> {
     let mut map = HashMap::new();
-    let section = match root
-        .get("Parameters")
-        .and_then(|n| n.as_object())
-    {
+    let section = match root.get("Parameters").and_then(|n| n.as_object()) {
         Some(obj) => obj,
         None => return map,
     };
@@ -125,10 +122,7 @@ fn parse_one_parameter(node: &AstNode) -> Option<Parameter> {
         .and_then(|n| n.as_str())
         .map(String::from);
 
-    let no_echo = obj
-        .get("NoEcho")
-        .and_then(|n| n.as_bool())
-        .unwrap_or(false);
+    let no_echo = obj.get("NoEcho").and_then(|n| n.as_bool()).unwrap_or(false);
 
     Some(Parameter {
         param_type,

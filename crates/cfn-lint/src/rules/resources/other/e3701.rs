@@ -2,8 +2,8 @@ use std::collections::HashSet;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E3701: Validate CodePipeline InputArtifacts reference previously defined OutputArtifacts,
@@ -11,19 +11,29 @@ use crate::template::Template;
 pub struct E3701;
 
 impl CfnLintRule for E3701 {
-    fn id(&self) -> &str { "E3701" }
-    fn short_description(&self) -> &str { "Validate CodePipeline artifact names" }
+    fn id(&self) -> &str {
+        "E3701"
+    }
+    fn short_description(&self) -> &str {
+        "Validate CodePipeline artifact names"
+    }
     fn description(&self) -> &str {
         "InputArtifacts names must be previously defined OutputArtifact names, \
          and OutputArtifacts names must be unique"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let mut issues = Vec::new();
         for (name, resource) in &template.resources {
             if resource.resource_type != "AWS::CodePipeline::Pipeline" {
@@ -50,7 +60,8 @@ impl CfnLintRule for E3701 {
 
                 for (action_idx, action) in actions.elements.iter().enumerate() {
                     // Collect OutputArtifacts
-                    if let Some(outputs) = action.get("OutputArtifacts").and_then(|o| o.as_array()) {
+                    if let Some(outputs) = action.get("OutputArtifacts").and_then(|o| o.as_array())
+                    {
                         for (oa_idx, oa) in outputs.elements.iter().enumerate() {
                             if let Some(oa_name) = oa.get("Name").and_then(|n| n.as_str()) {
                                 if !output_names.insert(oa_name.to_string()) {
@@ -61,19 +72,27 @@ impl CfnLintRule for E3701 {
                                             oa_name
                                         ),
                                         path: vec![
-                                            "Resources".into(), name.clone(), "Properties".into(),
-                                            "Stages".into(), stage_idx.to_string(),
-                                            "Actions".into(), action_idx.to_string(),
-                                            "OutputArtifacts".into(), oa_idx.to_string(),
+                                            "Resources".into(),
+                                            name.clone(),
+                                            "Properties".into(),
+                                            "Stages".into(),
+                                            stage_idx.to_string(),
+                                            "Actions".into(),
+                                            action_idx.to_string(),
+                                            "OutputArtifacts".into(),
+                                            oa_idx.to_string(),
                                             "Name".into(),
                                         ],
-                                        span: oa.get("Name").map(|n| n.span().clone()).unwrap_or_default(),
+                                        span: oa
+                                            .get("Name")
+                                            .map(|n| n.span().clone())
+                                            .unwrap_or_default(),
                                         keyword: String::new(),
                                         unknown: false,
                                         resolved_from_ref: false,
                                         context: vec![],
                                         schema_id: None,
-});
+                                    });
                                 }
                             }
                         }
@@ -91,19 +110,27 @@ impl CfnLintRule for E3701 {
                                             ia_name
                                         ),
                                         path: vec![
-                                            "Resources".into(), name.clone(), "Properties".into(),
-                                            "Stages".into(), stage_idx.to_string(),
-                                            "Actions".into(), action_idx.to_string(),
-                                            "InputArtifacts".into(), ia_idx.to_string(),
+                                            "Resources".into(),
+                                            name.clone(),
+                                            "Properties".into(),
+                                            "Stages".into(),
+                                            stage_idx.to_string(),
+                                            "Actions".into(),
+                                            action_idx.to_string(),
+                                            "InputArtifacts".into(),
+                                            ia_idx.to_string(),
                                             "Name".into(),
                                         ],
-                                        span: ia.get("Name").map(|n| n.span().clone()).unwrap_or_default(),
+                                        span: ia
+                                            .get("Name")
+                                            .map(|n| n.span().clone())
+                                            .unwrap_or_default(),
                                         keyword: String::new(),
                                         unknown: false,
                                         resolved_from_ref: false,
                                         context: vec![],
                                         schema_id: None,
-});
+                                    });
                                 }
                             }
                         }

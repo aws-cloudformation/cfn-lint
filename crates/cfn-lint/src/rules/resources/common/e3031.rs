@@ -1,8 +1,8 @@
 use crate::ast::AstNode;
-use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
-use crate::template::Template;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
+use crate::template::Template;
 
 /// E3031 — Validates that string values match their declared AWS format
 /// (e.g. AMI IDs, Security Group IDs, VPC IDs).
@@ -33,10 +33,14 @@ impl CfnLintRule for E3031 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         // Format validation is handled by the jsonschema format keyword validator.
-                // Schema errors with keyword "format" are mapped to rule E3031 in the engine.
-                vec![]
+        // Schema errors with keyword "format" are mapped to rule E3031 in the engine.
+        vec![]
     }
 }
 

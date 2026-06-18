@@ -2,8 +2,8 @@ use regex::Regex;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E3511: Validate IAM role ARN pattern.
@@ -31,7 +31,11 @@ impl CfnLintRule for E3511 {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let re = match Regex::new(ROLE_ARN_PATTERN) {
             Ok(r) => r,
             Err(_) => return vec![],
@@ -56,11 +60,7 @@ impl CfnLintRule for E3511 {
                 };
                 if let Some(arn) = node.as_str() {
                     if !re.is_match(arn) {
-                        let mut path = vec![
-                            "Resources".into(),
-                            name.clone(),
-                            "Properties".into(),
-                        ];
+                        let mut path = vec!["Resources".into(), name.clone(), "Properties".into()];
                         path.extend(prop_path.split('/').map(String::from));
                         issues.push(ValidationError {
                             rule_id: Some(self.id().to_string()),
@@ -72,7 +72,7 @@ impl CfnLintRule for E3511 {
                             resolved_from_ref: false,
                             context: vec![],
                             schema_id: None,
-});
+                        });
                     }
                 }
             }
@@ -83,15 +83,20 @@ impl CfnLintRule for E3511 {
 
 const ROLE_ARN_PATHS: &[(&str, &str)] = &[
     ("AWS::Backup::BackupSelection", "BackupSelection/IamRoleArn"),
-    ("AWS::Batch::ComputeEnvironment", "ComputeResources/SpotIamFleetRole"),
+    (
+        "AWS::Batch::ComputeEnvironment",
+        "ComputeResources/SpotIamFleetRole",
+    ),
     ("AWS::Batch::ComputeEnvironment", "ServiceRole"),
-    ("AWS::EC2::SpotFleet", "SpotFleetRequestConfigData/IamFleetRole"),
+    (
+        "AWS::EC2::SpotFleet",
+        "SpotFleetRequestConfigData/IamFleetRole",
+    ),
     ("AWS::ECS::TaskDefinition", "ExecutionRoleArn"),
     ("AWS::S3::Bucket", "ReplicationConfiguration/Role"),
 ];
 
-const ROLE_ARN_PATTERN: &str =
-    r"^arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+$";
+const ROLE_ARN_PATTERN: &str = r"^arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+$";
 
 fn resolve_path<'a>(node: &'a AstNode, path: &str) -> Option<&'a AstNode> {
     let mut current = node;

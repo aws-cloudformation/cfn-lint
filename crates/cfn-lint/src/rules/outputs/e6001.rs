@@ -2,14 +2,16 @@ use std::sync::LazyLock;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
 use crate::jsonschema::Validator;
 use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
 use crate::template::Template;
 
 static SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
-    serde_json::from_str(include_str!("../../../data/schemas/other/outputs/configuration.json"))
-        .unwrap_or_default()
+    serde_json::from_str(include_str!(
+        "../../../data/schemas/other/outputs/configuration.json"
+    ))
+    .unwrap_or_default()
 });
 
 /// E6001: Outputs have appropriate configuration.
@@ -32,7 +34,11 @@ impl CfnLintRule for E6001 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let outputs = match root.get("Outputs") {
             Some(n) => n,
             None => return vec![],
@@ -57,11 +63,11 @@ impl CfnLintRule for E6001 {
                     message: err.message,
                     path: err.path,
                     span: err.span,
-                keyword: String::new(),
-                unknown: false,
-                resolved_from_ref: false,
-                context: vec![],
-                schema_id: None,
+                    keyword: String::new(),
+                    unknown: false,
+                    resolved_from_ref: false,
+                    context: vec![],
+                    schema_id: None,
                 }
             })
             .collect()

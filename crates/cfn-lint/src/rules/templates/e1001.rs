@@ -2,15 +2,17 @@ use std::sync::LazyLock;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
 use crate::jsonschema::Validator;
 use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
 use crate::template::Template;
 use crate::transform::is_sam_template;
 
 static TEMPLATE_SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
-    serde_json::from_str(include_str!("../../../data/schemas/other/template/template.json"))
-        .unwrap_or_default()
+    serde_json::from_str(include_str!(
+        "../../../data/schemas/other/template/template.json"
+    ))
+    .unwrap_or_default()
 });
 
 /// E1001: Basic CloudFormation Template Configuration.
@@ -40,7 +42,11 @@ impl CfnLintRule for E1001 {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let schema = &*TEMPLATE_SCHEMA;
         if schema.is_null() {
             return vec![];
@@ -68,11 +74,11 @@ impl CfnLintRule for E1001 {
                     message: err.message,
                     path: err.path,
                     span: err.span,
-                keyword: String::new(),
-                unknown: false,
-                resolved_from_ref: false,
-                context: vec![],
-                schema_id: None,
+                    keyword: String::new(),
+                    unknown: false,
+                    resolved_from_ref: false,
+                    context: vec![],
+                    schema_id: None,
                 }),
         );
 
@@ -85,14 +91,16 @@ fn check_condition_nulls(node: &AstNode, path: &[String], issues: &mut Vec<Valid
     if node.is_null() {
         issues.push(ValidationError {
             rule_id: Some("E1001".to_string()),
-            message: "None is not of type 'array', 'boolean', 'integer', 'number', 'object', 'string'".to_string(),
+            message:
+                "None is not of type 'array', 'boolean', 'integer', 'number', 'object', 'string'"
+                    .to_string(),
             path: path.to_vec(),
             span: node.span(),
-                keyword: String::new(),
-                unknown: false,
-                resolved_from_ref: false,
-                context: vec![],
-        schema_id: None,
+            keyword: String::new(),
+            unknown: false,
+            resolved_from_ref: false,
+            context: vec![],
+            schema_id: None,
         });
         return;
     }
@@ -146,6 +154,9 @@ mod tests {
         let ast = parser::parse(yaml).unwrap();
         let tmpl = Template::from_ast(&ast).unwrap();
         let issues = E1001.validate_template(&tmpl, &ast);
-        assert!(issues.iter().any(|i| i.rule_id.as_deref() == Some("E1001") && i.message.contains("None is not of type")));
+        assert!(issues
+            .iter()
+            .any(|i| i.rule_id.as_deref() == Some("E1001")
+                && i.message.contains("None is not of type")));
     }
 }

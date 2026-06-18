@@ -9,7 +9,7 @@ use std::sync::LazyLock;
 
 use regex::Regex;
 
-use crate::ast::{AstNode, ArrayNode, Span, StringNode};
+use crate::ast::{ArrayNode, AstNode, Span, StringNode};
 use crate::context::Context;
 
 static RE_SUB_VARS: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\$\{([^!].*?)\}").unwrap());
@@ -221,22 +221,20 @@ fn resolve_split(ctx: &Context, args: &AstNode) -> Vec<Resolved> {
 fn resolve_sub(ctx: &Context, args: &AstNode) -> Vec<Resolved> {
     let (template_str, extra_ctx) = match args {
         AstNode::String(s) => (s.value.clone(), None),
-        _ => {
-            if let Some(arr) = args.as_array() {
-                if arr.elements.len() == 2 {
-                    let s = match arr.elements[0].as_str() {
-                        Some(s) => s.to_string(),
-                        None => return vec![],
-                    };
-                    Some((s, Some(&arr.elements[1])))
-                } else {
-                    None
-                }
+        _ => if let Some(arr) = args.as_array() {
+            if arr.elements.len() == 2 {
+                let s = match arr.elements[0].as_str() {
+                    Some(s) => s.to_string(),
+                    None => return vec![],
+                };
+                Some((s, Some(&arr.elements[1])))
             } else {
                 None
             }
-            .unwrap_or_else(|| return (String::new(), None))
+        } else {
+            None
         }
+        .unwrap_or_else(|| return (String::new(), None)),
     };
 
     if template_str.is_empty() {
@@ -378,7 +376,9 @@ fn to_usize(node: &AstNode) -> Option<usize> {
     if let Some(s) = node.as_str() {
         s.parse().ok()
     } else if let Some(n) = node.as_f64() {
-        if n < 0.0 { return None; }
+        if n < 0.0 {
+            return None;
+        }
         Some(n as usize)
     } else {
         None
@@ -443,8 +443,18 @@ fn get_azs_for_region(region: &str) -> Option<Vec<String>> {
     let azs: &[&str] = match region {
         "af-south-1" => &["af-south-1a", "af-south-1b", "af-south-1c"],
         "ap-east-1" => &["ap-east-1a", "ap-east-1b", "ap-east-1c"],
-        "ap-northeast-1" => &["ap-northeast-1a", "ap-northeast-1b", "ap-northeast-1c", "ap-northeast-1d"],
-        "ap-northeast-2" => &["ap-northeast-2a", "ap-northeast-2b", "ap-northeast-2c", "ap-northeast-2d"],
+        "ap-northeast-1" => &[
+            "ap-northeast-1a",
+            "ap-northeast-1b",
+            "ap-northeast-1c",
+            "ap-northeast-1d",
+        ],
+        "ap-northeast-2" => &[
+            "ap-northeast-2a",
+            "ap-northeast-2b",
+            "ap-northeast-2c",
+            "ap-northeast-2d",
+        ],
         "ap-northeast-3" => &["ap-northeast-3a", "ap-northeast-3b", "ap-northeast-3c"],
         "ap-south-1" => &["ap-south-1a", "ap-south-1b", "ap-south-1c"],
         "ap-south-2" => &["ap-south-2a", "ap-south-2b", "ap-south-2c"],
@@ -468,7 +478,14 @@ fn get_azs_for_region(region: &str) -> Option<Vec<String>> {
         "me-central-1" => &["me-central-1a", "me-central-1b", "me-central-1c"],
         "me-south-1" => &["me-south-1a", "me-south-1b", "me-south-1c"],
         "sa-east-1" => &["sa-east-1a", "sa-east-1b", "sa-east-1c"],
-        "us-east-1" => &["us-east-1a", "us-east-1b", "us-east-1c", "us-east-1d", "us-east-1e", "us-east-1f"],
+        "us-east-1" => &[
+            "us-east-1a",
+            "us-east-1b",
+            "us-east-1c",
+            "us-east-1d",
+            "us-east-1e",
+            "us-east-1f",
+        ],
         "us-east-2" => &["us-east-2a", "us-east-2b", "us-east-2c"],
         "us-gov-east-1" => &["us-gov-east-1a", "us-gov-east-1b", "us-gov-east-1c"],
         "us-gov-west-1" => &["us-gov-west-1a", "us-gov-west-1b", "us-gov-west-1c"],
@@ -532,9 +549,7 @@ mod tests {
 
     #[test]
     fn test_resolve_if() {
-        let (ast, ctx) = ctx_from(
-            b"val:\n  Fn::If:\n    - IsProd\n    - prod\n    - dev\n",
-        );
+        let (ast, ctx) = ctx_from(b"val:\n  Fn::If:\n    - IsProd\n    - prod\n    - dev\n");
         let val = ast.get("val").unwrap();
         let results = resolve_value(&ctx, val);
         assert_eq!(results.len(), 2);
@@ -576,7 +591,8 @@ mod tests {
 
     #[test]
     fn test_resolve_join() {
-        let (ast, ctx) = ctx_from(b"val:\n  Fn::Join:\n    - '-'\n    - - a\n      - b\n      - c\n");
+        let (ast, ctx) =
+            ctx_from(b"val:\n  Fn::Join:\n    - '-'\n    - - a\n      - b\n      - c\n");
         let val = ast.get("val").unwrap();
         let results = resolve_value(&ctx, val);
         assert_eq!(results.len(), 1);
@@ -585,7 +601,8 @@ mod tests {
 
     #[test]
     fn test_resolve_select() {
-        let (ast, ctx) = ctx_from(b"val:\n  Fn::Select:\n    - 1\n    - - a\n      - b\n      - c\n");
+        let (ast, ctx) =
+            ctx_from(b"val:\n  Fn::Select:\n    - 1\n    - - a\n      - b\n      - c\n");
         let val = ast.get("val").unwrap();
         let results = resolve_value(&ctx, val);
         assert_eq!(results.len(), 1);
@@ -605,9 +622,7 @@ mod tests {
 
     #[test]
     fn test_resolve_sub_simple() {
-        let (ast, ctx) = ctx_from(
-            b"val:\n  Fn::Sub: 'arn:aws:s3:::${AWS::Region}-bucket'\n",
-        );
+        let (ast, ctx) = ctx_from(b"val:\n  Fn::Sub: 'arn:aws:s3:::${AWS::Region}-bucket'\n");
         let val = ast.get("val").unwrap();
         let results = resolve_value(&ctx, val);
         assert_eq!(results.len(), 1);

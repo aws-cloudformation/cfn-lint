@@ -1,21 +1,21 @@
-pub mod templates;
+pub mod conditions;
+pub mod mappings;
+pub mod metadata;
+pub mod outputs;
 pub mod parameters;
 pub mod resources;
-pub mod metadata;
+pub mod templates;
 pub mod transforms;
-pub mod outputs;
-pub mod mappings;
-pub mod conditions;
 
 // Re-export all submodules so existing `crate::rules::e3015` style paths continue to work
-pub use templates::*;
+pub use conditions::*;
+pub use mappings::*;
+pub use metadata::*;
+pub use outputs::*;
 pub use parameters::*;
 pub use resources::*;
-pub use metadata::*;
+pub use templates::*;
 pub use transforms::*;
-pub use outputs::*;
-pub use mappings::*;
-pub use conditions::*;
 
 /// Register a CfnLintRule for automatic discovery via inventory.
 /// For fully migrated rules (implementing CfnLintRule directly).
@@ -26,7 +26,6 @@ macro_rules! register_cfn_lint_rule {
         inventory::submit! { &$rule as &'static dyn $crate::jsonschema::cfn_lint_keyword::CfnLintRule }
     };
 }
-
 
 /// Macro for extension schema rules that validate resource properties against
 /// a JSON Schema file embedded at compile time. Handles both regional schemas
@@ -246,7 +245,10 @@ mod tests {
             rule_id: "E1003".to_string(),
             message: "Too long".to_string(),
             path: vec!["Description".to_string()],
-            span: Span { start: Position { line: 2, column: 1 }, end: Position { line: 2, column: 1 } },
+            span: Span {
+                start: Position { line: 2, column: 1 },
+                end: Position { line: 2, column: 1 },
+            },
             severity: Severity::Error,
         };
         assert_eq!(format!("{}", issue), "2:1: [E] Too long (E1003)");

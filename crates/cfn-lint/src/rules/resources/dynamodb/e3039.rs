@@ -2,8 +2,8 @@ use std::collections::BTreeSet;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E3039: Verify the set of Attributes in AttributeDefinitions and KeySchemas match.
@@ -27,7 +27,11 @@ impl CfnLintRule for E3039 {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let mut issues = Vec::new();
         for (name, resource) in &template.resources {
             if resource.resource_type != "AWS::DynamoDB::Table" {
@@ -95,13 +99,19 @@ fn collect_key_schema_attrs(props: &AstNode) -> BTreeSet<String> {
     // Primary key schema
     keys.extend(extract_key_schema(props.get("KeySchema")));
     // Global secondary indexes
-    if let Some(gsi) = props.get("GlobalSecondaryIndexes").and_then(|n| n.as_array()) {
+    if let Some(gsi) = props
+        .get("GlobalSecondaryIndexes")
+        .and_then(|n| n.as_array())
+    {
         for idx in &gsi.elements {
             keys.extend(extract_key_schema(idx.get("KeySchema")));
         }
     }
     // Local secondary indexes
-    if let Some(lsi) = props.get("LocalSecondaryIndexes").and_then(|n| n.as_array()) {
+    if let Some(lsi) = props
+        .get("LocalSecondaryIndexes")
+        .and_then(|n| n.as_array())
+    {
         for idx in &lsi.elements {
             keys.extend(extract_key_schema(idx.get("KeySchema")));
         }
@@ -120,7 +130,6 @@ fn extract_key_schema(node: Option<&AstNode>) -> BTreeSet<String> {
     }
     keys
 }
-
 
 fn contains_transform(node: &AstNode) -> bool {
     match node {

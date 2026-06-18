@@ -1,7 +1,7 @@
 use crate::ast::{self, AstNode};
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// I1022: Prefer `Fn::Sub` over `Fn::Join` when the delimiter is empty.
@@ -29,7 +29,11 @@ impl CfnLintRule for I1022 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let mut issues = Vec::new();
         ast::walk(root, &[], &mut |node, path| {
             if let AstNode::Function(func) = node {

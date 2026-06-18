@@ -10,12 +10,18 @@ use regex::Regex;
 pub struct I3100;
 
 impl CfnLintRule for I3100 {
-    fn id(&self) -> &str { "I3100" }
-    fn short_description(&self) -> &str { "Checks for legacy instance type generations" }
+    fn id(&self) -> &str {
+        "I3100"
+    }
+    fn short_description(&self) -> &str {
+        "Checks for legacy instance type generations"
+    }
     fn description(&self) -> &str {
         "New instance type generations increase performance and decrease cost"
     }
-    fn severity(&self) -> Severity { Severity::Informational }
+    fn severity(&self) -> Severity {
+        Severity::Informational
+    }
 
     fn keywords(&self) -> &[&str] {
         &[
@@ -89,16 +95,29 @@ Resources:
       ImageId: ami-12345678
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Instance").unwrap()
-            .get("Properties").unwrap()
-            .get("InstanceType").unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Instance")
+            .unwrap()
+            .get("Properties")
+            .unwrap()
+            .get("InstanceType")
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "Instance".to_string(),
-            "Properties".to_string(), "InstanceType".to_string(),
+            "Resources".to_string(),
+            "Instance".to_string(),
+            "Properties".to_string(),
+            "InstanceType".to_string(),
         ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = I3100.validate(&validator, "Resources/AWS::EC2::Instance/Properties/InstanceType", instance, &serde_json::json!({}), &path);
+        let errors = I3100.validate(
+            &validator,
+            "Resources/AWS::EC2::Instance/Properties/InstanceType",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -113,16 +132,29 @@ Resources:
       ImageId: ami-12345678
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Instance").unwrap()
-            .get("Properties").unwrap()
-            .get("InstanceType").unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Instance")
+            .unwrap()
+            .get("Properties")
+            .unwrap()
+            .get("InstanceType")
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "Instance".to_string(),
-            "Properties".to_string(), "InstanceType".to_string(),
+            "Resources".to_string(),
+            "Instance".to_string(),
+            "Properties".to_string(),
+            "InstanceType".to_string(),
         ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = I3100.validate(&validator, "Resources/AWS::EC2::Instance/Properties/InstanceType", instance, &serde_json::json!({}), &path);
+        let errors = I3100.validate(
+            &validator,
+            "Resources/AWS::EC2::Instance/Properties/InstanceType",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 1);
         assert!(errors[0].message.contains("m1.large"));
     }

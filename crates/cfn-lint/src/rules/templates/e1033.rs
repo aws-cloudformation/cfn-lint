@@ -8,11 +8,21 @@ use crate::rules::Severity;
 pub struct E1033;
 
 impl CfnLintRule for E1033 {
-    fn id(&self) -> &str { "E1033" }
-    fn short_description(&self) -> &str { "Validate GetStackOutput configuration" }
-    fn description(&self) -> &str { "Validates that Fn::GetStackOutput has the correct structure with required StackName and OutputName fields" }
-    fn severity(&self) -> Severity { Severity::Error }
-    fn keywords(&self) -> &[&str] { &[] }
+    fn id(&self) -> &str {
+        "E1033"
+    }
+    fn short_description(&self) -> &str {
+        "Validate GetStackOutput configuration"
+    }
+    fn description(&self) -> &str {
+        "Validates that Fn::GetStackOutput has the correct structure with required StackName and OutputName fields"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
+    fn keywords(&self) -> &[&str] {
+        &[]
+    }
 }
 
 crate::register_cfn_lint_rule!(E1033);

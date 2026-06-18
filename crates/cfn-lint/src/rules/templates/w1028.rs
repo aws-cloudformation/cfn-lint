@@ -3,8 +3,8 @@ use std::collections::HashMap;
 use crate::ast::AstNode;
 use crate::conditions::Conditions;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// W1028: Check Fn::If has a path that cannot be reached.
@@ -24,9 +24,15 @@ impl CfnLintRule for W1028 {
         Severity::Warning
     }
 
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         if template.conditions.is_empty() {
             return vec![];
         }
@@ -88,7 +94,7 @@ fn check_if_branch(
             resolved_from_ref: false,
             context: vec![],
             schema_id: None,
-});
+        });
     } else {
         let mut true_ctx = ctx.clone();
         true_ctx.insert(cond_name.to_string(), true);
@@ -115,7 +121,7 @@ fn check_if_branch(
             resolved_from_ref: false,
             context: vec![],
             schema_id: None,
-});
+        });
     } else {
         let mut false_ctx = ctx.clone();
         false_ctx.insert(cond_name.to_string(), false);
@@ -190,7 +196,11 @@ Resources:
         let ast = parser::parse(yaml).unwrap();
         let tmpl = Template::from_ast(&ast).unwrap();
         let issues = W1028.validate_template(&tmpl, &ast);
-        assert!(issues.is_empty(), "No W1028 issues expected, got: {:?}", issues.iter().map(|i| &i.message).collect::<Vec<_>>());
+        assert!(
+            issues.is_empty(),
+            "No W1028 issues expected, got: {:?}",
+            issues.iter().map(|i| &i.message).collect::<Vec<_>>()
+        );
     }
 }
 

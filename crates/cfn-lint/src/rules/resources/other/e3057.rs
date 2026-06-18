@@ -10,14 +10,18 @@ use crate::rules::Severity;
 pub struct E3057;
 
 impl CfnLintRule for E3057 {
-    fn id(&self) -> &str { "E3057" }
+    fn id(&self) -> &str {
+        "E3057"
+    }
     fn short_description(&self) -> &str {
         "Validate that CloudFront TargetOriginId is a specified Origin"
     }
     fn description(&self) -> &str {
         "CloudFront TargetOriginId has to map to an Origin Id that is in the same DistributionConfig"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/AWS::CloudFront::Distribution/Properties/DistributionConfig"]
@@ -61,12 +65,9 @@ impl CfnLintRule for E3057 {
                     err_path.push("DefaultCacheBehavior".to_string());
                     err_path.push("TargetOriginId".to_string());
                     errors.push(ValidationError {
-                rule_id: None,
+                        rule_id: None,
                         keyword: format!("cfnLint:{}", self.id()),
-                        message: format!(
-                            "'{}' is not one of {:?}",
-                            target_id, origin_ids
-                        ),
+                        message: format!("'{}' is not one of {:?}", target_id, origin_ids),
                         path: err_path,
                         span: target_id_node.span(),
                         unknown: false,
@@ -103,16 +104,29 @@ Resources:
           ViewerProtocolPolicy: allow-all
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Dist").unwrap()
-            .get("Properties").unwrap()
-            .get("DistributionConfig").unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Dist")
+            .unwrap()
+            .get("Properties")
+            .unwrap()
+            .get("DistributionConfig")
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "Dist".to_string(),
-            "Properties".to_string(), "DistributionConfig".to_string(),
+            "Resources".to_string(),
+            "Dist".to_string(),
+            "Properties".to_string(),
+            "DistributionConfig".to_string(),
         ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = E3057.validate(&validator, "Resources/AWS::CloudFront::Distribution/Properties/DistributionConfig", instance, &serde_json::json!({}), &path);
+        let errors = E3057.validate(
+            &validator,
+            "Resources/AWS::CloudFront::Distribution/Properties/DistributionConfig",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -132,16 +146,29 @@ Resources:
           ViewerProtocolPolicy: allow-all
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Dist").unwrap()
-            .get("Properties").unwrap()
-            .get("DistributionConfig").unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Dist")
+            .unwrap()
+            .get("Properties")
+            .unwrap()
+            .get("DistributionConfig")
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "Dist".to_string(),
-            "Properties".to_string(), "DistributionConfig".to_string(),
+            "Resources".to_string(),
+            "Dist".to_string(),
+            "Properties".to_string(),
+            "DistributionConfig".to_string(),
         ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = E3057.validate(&validator, "Resources/AWS::CloudFront::Distribution/Properties/DistributionConfig", instance, &serde_json::json!({}), &path);
+        let errors = E3057.validate(
+            &validator,
+            "Resources/AWS::CloudFront::Distribution/Properties/DistributionConfig",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 1);
         assert!(errors[0].message.contains("nonExistentOrigin"));
     }

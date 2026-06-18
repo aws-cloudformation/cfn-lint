@@ -9,7 +9,8 @@ use crate::template::Template;
 
 use super::TemplateWalker;
 
-static RE_FN_SUB_VARS: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\$\{([^!][^}]*)\}").unwrap());
+static RE_FN_SUB_VARS: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"\$\{([^!][^}]*)\}").unwrap());
 
 impl TemplateWalker {
     /// Validate that output values using Fn::GetAtt resolve to string types.
@@ -32,7 +33,14 @@ impl TemplateWalker {
                 Some(v) => v,
                 None => continue,
             };
-            self.check_output_value_type(template, value, name, &["Outputs".into(), name.to_string(), "Value".into()], region, &mut issues);
+            self.check_output_value_type(
+                template,
+                value,
+                name,
+                &["Outputs".into(), name.to_string(), "Value".into()],
+                region,
+                &mut issues,
+            );
         }
 
         issues
@@ -50,17 +58,25 @@ impl TemplateWalker {
         match node {
             AstNode::Function(func) => match func.name.as_str() {
                 "Fn::GetAtt" => {
-                    if let Some((resource_name, attribute)) = crate::rules::e3015::parse_getatt_args(func) {
+                    if let Some((resource_name, attribute)) =
+                        crate::rules::e3015::parse_getatt_args(func)
+                    {
                         // First check if the attribute is valid
                         if let Some(resource) = template.resources.get(&resource_name) {
-                            let valid_attrs = self.get_output_getatt_valid_attrs(&resource.resource_type, region);
-                            if !valid_attrs.is_empty() && !getatts::is_valid_attribute(&attribute, &valid_attrs) {
+                            let valid_attrs =
+                                self.get_output_getatt_valid_attrs(&resource.resource_type, region);
+                            if !valid_attrs.is_empty()
+                                && !getatts::is_valid_attribute(&attribute, &valid_attrs)
+                            {
                                 let mut p = path.to_vec();
                                 p.push("Fn::GetAtt".into());
                                 p.push("1".into());
                                 issues.push(ValidationError::new(
                                     "E6101",
-                                    format!("'{}' is not one of {:?} in ['{}']", attribute, valid_attrs, region),
+                                    format!(
+                                        "'{}' is not one of {:?} in ['{}']",
+                                        attribute, valid_attrs, region
+                                    ),
                                     p,
                                     func.span.clone(),
                                 ));
@@ -68,13 +84,18 @@ impl TemplateWalker {
                             }
                         }
                         // Then check type
-                        if let Some(attr_types) = self.get_getatt_type(template, &resource_name, &attribute, region) {
+                        if let Some(attr_types) =
+                            self.get_getatt_type(template, &resource_name, &attribute, region)
+                        {
                             if !attr_types.iter().any(|t| t == "string") {
                                 let mut p = path.to_vec();
                                 p.push("Fn::GetAtt".into());
                                 issues.push(ValidationError::new(
                                     "E6101",
-                                    format!("{{'Fn::GetAtt': ['{}', '{}']}} is not of type 'string'", resource_name, attribute),
+                                    format!(
+                                        "{{'Fn::GetAtt': ['{}', '{}']}} is not of type 'string'",
+                                        resource_name, attribute
+                                    ),
                                     p,
                                     func.span.clone(),
                                 ));
@@ -91,11 +112,20 @@ impl TemplateWalker {
                                 for (key, val) in ctx_map.iter() {
                                     if let AstNode::Function(inner_func) = val {
                                         if inner_func.name == "Fn::GetAtt" {
-                                            if let Some((rn, attr)) = crate::rules::e3015::parse_getatt_args(inner_func) {
-                                                if let Some(attr_types) = self.get_getatt_type(template, &rn, &attr, region) {
+                                            if let Some((rn, attr)) =
+                                                crate::rules::e3015::parse_getatt_args(inner_func)
+                                            {
+                                                if let Some(attr_types) = self
+                                                    .get_getatt_type(template, &rn, &attr, region)
+                                                {
                                                     if !attr_types.iter().any(|t| t == "string") {
                                                         let mut p = path.to_vec();
-                                                        p.extend(["Fn::Sub".into(), "1".into(), key.to_string(), "Fn::GetAtt".into()]);
+                                                        p.extend([
+                                                            "Fn::Sub".into(),
+                                                            "1".into(),
+                                                            key.to_string(),
+                                                            "Fn::GetAtt".into(),
+                                                        ]);
                                                         issues.push(ValidationError::new(
                                                             "E6101",
                                                             format!("{{'Fn::GetAtt': ['{}', '{}']}} is not of type 'string'", rn, attr),
@@ -139,7 +169,9 @@ impl TemplateWalker {
                                         }
                                     }
                                 }
-                                if let Some(attr_types) = self.get_getatt_type(template, rn, attr, region) {
+                                if let Some(attr_types) =
+                                    self.get_getatt_type(template, rn, attr, region)
+                                {
                                     if !attr_types.iter().any(|t| t == "string") {
                                         let mut p = path.to_vec();
                                         p.push("Fn::Sub".into());
@@ -152,13 +184,21 @@ impl TemplateWalker {
                                     }
                                 } else if let Some(resource) = template.resources.get(rn) {
                                     // Check attribute validity even when type can't be determined
-                                    let valid_attrs = self.get_output_getatt_valid_attrs(&resource.resource_type, region);
-                                    if !valid_attrs.is_empty() && !getatts::is_valid_attribute(attr, &valid_attrs) {
+                                    let valid_attrs = self.get_output_getatt_valid_attrs(
+                                        &resource.resource_type,
+                                        region,
+                                    );
+                                    if !valid_attrs.is_empty()
+                                        && !getatts::is_valid_attribute(attr, &valid_attrs)
+                                    {
                                         let mut p = path.to_vec();
                                         p.push("Fn::Sub".into());
                                         issues.push(ValidationError::new(
                                             "E6101",
-                                            format!("'{}' is not one of {:?} in ['{}']", attr, valid_attrs, region),
+                                            format!(
+                                                "'{}' is not one of {:?} in ['{}']",
+                                                attr, valid_attrs, region
+                                            ),
                                             p,
                                             func.span.clone(),
                                         ));
@@ -176,11 +216,20 @@ impl TemplateWalker {
                                 for (i, item) in items.elements.iter().enumerate() {
                                     if let AstNode::Function(inner_func) = item {
                                         if inner_func.name == "Fn::GetAtt" {
-                                            if let Some((rn, attr)) = crate::rules::e3015::parse_getatt_args(inner_func) {
-                                                if let Some(attr_types) = self.get_getatt_type(template, &rn, &attr, region) {
+                                            if let Some((rn, attr)) =
+                                                crate::rules::e3015::parse_getatt_args(inner_func)
+                                            {
+                                                if let Some(attr_types) = self
+                                                    .get_getatt_type(template, &rn, &attr, region)
+                                                {
                                                     if !attr_types.iter().any(|t| t == "string") {
                                                         let mut p = path.to_vec();
-                                                        p.extend(["Fn::Join".into(), "1".into(), i.to_string(), "Fn::GetAtt".into()]);
+                                                        p.extend([
+                                                            "Fn::Join".into(),
+                                                            "1".into(),
+                                                            i.to_string(),
+                                                            "Fn::GetAtt".into(),
+                                                        ]);
                                                         issues.push(ValidationError::new(
                                                             "E6101",
                                                             format!("{{'Fn::GetAtt': ['{}', '{}']}} is not of type 'string'", rn, attr),
@@ -270,23 +319,26 @@ impl TemplateWalker {
                 continue;
             }
             let dest_resource_name = &path[1];
-            let property_path_segments: Vec<&str> =
-                path[3..].iter().map(|s| s.as_str()).collect();
+            let property_path_segments: Vec<&str> = path[3..].iter().map(|s| s.as_str()).collect();
 
             // Get destination resource type and schema
             let dest_resource = match template.resources.get(dest_resource_name.as_str()) {
                 Some(r) => r,
                 None => continue,
             };
-            let dest_schema = match schema_provider.get_resource_schema(&dest_resource.resource_type, region) {
-                Some(s) => s.raw.clone(),
-                None => continue,
-            };
+            let dest_schema =
+                match schema_provider.get_resource_schema(&dest_resource.resource_type, region) {
+                    Some(s) => s.raw.clone(),
+                    None => continue,
+                };
 
             // Navigate to the destination property schema
-            let dest_prop_schema = getatts::get_property_schema(&dest_schema, &property_path_segments);
+            let dest_prop_schema =
+                getatts::get_property_schema(&dest_schema, &property_path_segments);
 
-            let dest_type = dest_prop_schema.and_then(|s| s.get("type")).and_then(|v| v.as_str());
+            let dest_type = dest_prop_schema
+                .and_then(|s| s.get("type"))
+                .and_then(|v| v.as_str());
             let dest_format_from_schema = dest_prop_schema
                 .and_then(|s| s.get("format"))
                 .and_then(|v| v.as_str());
@@ -327,22 +379,30 @@ impl TemplateWalker {
                     {
                         continue;
                     }
-                    let source_schema = match schema_provider.get_resource_schema(&source_resource.resource_type, region) {
+                    let source_schema = match schema_provider
+                        .get_resource_schema(&source_resource.resource_type, region)
+                    {
                         Some(s) => s.raw.clone(),
                         None => continue,
                     };
 
                     // E1010: Type mismatch
                     if let Some(dest_t) = dest_type {
-                        if let Some(source_types) = getatts::get_attribute_type(&source_schema, &attribute) {
+                        if let Some(source_types) =
+                            getatts::get_attribute_type(&source_schema, &attribute)
+                        {
                             let type_matches = source_types.iter().any(|st| {
-                                st == dest_t || (dest_t == "number" && st == "integer")
+                                st == dest_t
+                                    || (dest_t == "number" && st == "integer")
                                     || (dest_t == "integer" && st == "number")
                             });
                             if !type_matches {
                                 issues.push(ValidationError::new(
                                     "E1010",
-                                    format!("{{'Fn::GetAtt': ['{}', '{}']}} is not of type '{}'", resource_name, attribute, dest_t),
+                                    format!(
+                                        "{{'Fn::GetAtt': ['{}', '{}']}} is not of type '{}'",
+                                        resource_name, attribute, dest_t
+                                    ),
                                     path.clone(),
                                     func.span.clone(),
                                 ));
@@ -357,7 +417,8 @@ impl TemplateWalker {
                         if !dest_fmt.starts_with("AWS::") {
                             continue;
                         }
-                        let source_format = getatts::get_attribute_format(&source_schema, &attribute);
+                        let source_format =
+                            getatts::get_attribute_format(&source_schema, &attribute);
                         match &source_format {
                             Some(src_fmt) if src_fmt == dest_fmt => {} // Match
                             Some(src_fmt) => {
@@ -399,7 +460,9 @@ impl TemplateWalker {
                         if !dest_fmt.starts_with("AWS::") {
                             continue;
                         }
-                        let source_schema = match schema_provider.get_resource_schema(&source_resource.resource_type, region) {
+                        let source_schema = match schema_provider
+                            .get_resource_schema(&source_resource.resource_type, region)
+                        {
                             Some(s) => s.raw.clone(),
                             None => continue,
                         };
@@ -409,18 +472,21 @@ impl TemplateWalker {
                         // whether VpcId is specified in the resource properties.
                         // With VpcId: returns SecurityGroup.Id
                         // Without VpcId: returns SecurityGroup.Name
-                        let effective_formats = if source_resource.resource_type == "AWS::EC2::SecurityGroup" {
-                            let has_vpc_id = source_resource.properties.as_ref()
-                                .and_then(|p| p.get("VpcId"))
-                                .is_some();
-                            if has_vpc_id {
-                                vec!["AWS::EC2::SecurityGroup.Id".to_string()]
+                        let effective_formats =
+                            if source_resource.resource_type == "AWS::EC2::SecurityGroup" {
+                                let has_vpc_id = source_resource
+                                    .properties
+                                    .as_ref()
+                                    .and_then(|p| p.get("VpcId"))
+                                    .is_some();
+                                if has_vpc_id {
+                                    vec!["AWS::EC2::SecurityGroup.Id".to_string()]
+                                } else {
+                                    vec!["AWS::EC2::SecurityGroup.Name".to_string()]
+                                }
                             } else {
-                                vec!["AWS::EC2::SecurityGroup.Name".to_string()]
-                            }
-                        } else {
-                            source_formats
-                        };
+                                source_formats
+                            };
 
                         // If source has any format that matches destination, it's OK
                         if effective_formats.iter().any(|f| f == dest_fmt) {
@@ -437,7 +503,12 @@ impl TemplateWalker {
                                 ref_name, effective_formats, dest_fmt
                             )
                         };
-                        issues.push(ValidationError::new("E1041", msg, path.clone(), func.span.clone()));
+                        issues.push(ValidationError::new(
+                            "E1041",
+                            msg,
+                            path.clone(),
+                            func.span.clone(),
+                        ));
                     }
                 }
                 _ => {}

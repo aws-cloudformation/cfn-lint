@@ -7,14 +7,18 @@ use crate::rules::Severity;
 pub struct W3702;
 
 impl CfnLintRule for W3702 {
-    fn id(&self) -> &str { "W3702" }
+    fn id(&self) -> &str {
+        "W3702"
+    }
     fn short_description(&self) -> &str {
         "awslayer ARN format may not be available"
     }
     fn description(&self) -> &str {
         "Layer ARNs using the 'awslayer' format may not be available."
     }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/AWS::Lambda::Function/Properties/Layers/*"]
@@ -70,18 +74,35 @@ Resources:
         - arn:aws:lambda:::awslayer:my-layer
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Func").unwrap()
-            .get("Properties").unwrap()
-            .get("Layers").unwrap()
-            .as_array().unwrap()
-            .elements.first().unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Func")
+            .unwrap()
+            .get("Properties")
+            .unwrap()
+            .get("Layers")
+            .unwrap()
+            .as_array()
+            .unwrap()
+            .elements
+            .first()
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "Func".to_string(),
-            "Properties".to_string(), "Layers".to_string(), "0".to_string(),
+            "Resources".to_string(),
+            "Func".to_string(),
+            "Properties".to_string(),
+            "Layers".to_string(),
+            "0".to_string(),
         ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = W3702.validate(&validator, "Resources/AWS::Lambda::Function/Properties/Layers/*", instance, &serde_json::json!({}), &path);
+        let errors = W3702.validate(
+            &validator,
+            "Resources/AWS::Lambda::Function/Properties/Layers/*",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 1);
         assert!(errors[0].message.contains("awslayer"));
     }
@@ -97,18 +118,35 @@ Resources:
         - arn:aws:lambda:us-east-1:123456789012:layer:my-layer:1
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Func").unwrap()
-            .get("Properties").unwrap()
-            .get("Layers").unwrap()
-            .as_array().unwrap()
-            .elements.first().unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Func")
+            .unwrap()
+            .get("Properties")
+            .unwrap()
+            .get("Layers")
+            .unwrap()
+            .as_array()
+            .unwrap()
+            .elements
+            .first()
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "Func".to_string(),
-            "Properties".to_string(), "Layers".to_string(), "0".to_string(),
+            "Resources".to_string(),
+            "Func".to_string(),
+            "Properties".to_string(),
+            "Layers".to_string(),
+            "0".to_string(),
         ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = W3702.validate(&validator, "Resources/AWS::Lambda::Function/Properties/Layers/*", instance, &serde_json::json!({}), &path);
+        let errors = W3702.validate(
+            &validator,
+            "Resources/AWS::Lambda::Function/Properties/Layers/*",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 }

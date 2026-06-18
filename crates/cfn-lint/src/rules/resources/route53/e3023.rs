@@ -7,16 +7,24 @@ use crate::jsonschema::{ValidationError, Validator};
 use crate::rules::Severity;
 
 static SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
-    serde_json::from_str(include_str!("../../../../data/schemas/extensions/aws_route53_recordset/recordset_pattern.json"))
-        .unwrap_or_default()
+    serde_json::from_str(include_str!(
+        "../../../../data/schemas/extensions/aws_route53_recordset/recordset_pattern.json"
+    ))
+    .unwrap_or_default()
 });
 
 pub struct E3023;
 
 impl CfnLintRule for E3023 {
-    fn id(&self) -> &str { "E3023" }
-    fn short_description(&self) -> &str { "Validate Route53 RecordSets" }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn id(&self) -> &str {
+        "E3023"
+    }
+    fn short_description(&self) -> &str {
+        "Validate Route53 RecordSets"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &[
@@ -33,7 +41,14 @@ impl CfnLintRule for E3023 {
         _schema: &serde_json::Value,
         path: &[String],
     ) -> Vec<ValidationError> {
-        validate_schema("E3023", "Validate Route53 RecordSets", validator, instance, &SCHEMA, path)
+        validate_schema(
+            "E3023",
+            "Validate Route53 RecordSets",
+            validator,
+            instance,
+            &SCHEMA,
+            path,
+        )
     }
 }
 

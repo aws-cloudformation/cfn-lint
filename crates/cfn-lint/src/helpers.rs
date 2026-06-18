@@ -146,13 +146,15 @@ mod tests {
 
     #[test]
     fn test_fn_if_branches() {
-        let (ast, ctx) = make_ctx(
-            b"val:\n  Fn::If:\n    - IsProd\n    - prod-value\n    - dev-value\n",
-        );
+        let (ast, ctx) =
+            make_ctx(b"val:\n  Fn::If:\n    - IsProd\n    - prod-value\n    - dev-value\n");
         let mut path = VecDeque::from(["val".into()]);
         let results = get_value_from_path(&ctx, Some(&ast), &mut path);
         assert_eq!(results.len(), 2);
-        let values: Vec<_> = results.iter().filter_map(|(v, _)| v.and_then(|n| n.as_str())).collect();
+        let values: Vec<_> = results
+            .iter()
+            .filter_map(|(v, _)| v.and_then(|n| n.as_str()))
+            .collect();
         assert!(values.contains(&"prod-value"));
         assert!(values.contains(&"dev-value"));
         // Check condition state is pinned
@@ -162,9 +164,8 @@ mod tests {
 
     #[test]
     fn test_fn_if_with_pinned_condition() {
-        let (ast, mut ctx) = make_ctx(
-            b"val:\n  Fn::If:\n    - IsProd\n    - prod-value\n    - dev-value\n",
-        );
+        let (ast, mut ctx) =
+            make_ctx(b"val:\n  Fn::If:\n    - IsProd\n    - prod-value\n    - dev-value\n");
         ctx.condition_state.insert("IsProd".into(), true);
         let mut path = VecDeque::from(["val".into()]);
         let results = get_value_from_path(&ctx, Some(&ast), &mut path);
@@ -187,7 +188,10 @@ mod tests {
         let mut path = VecDeque::from(["items".into(), "*".into(), "name".into()]);
         let results = get_value_from_path(&ctx, Some(&ast), &mut path);
         assert_eq!(results.len(), 2);
-        let values: Vec<_> = results.iter().filter_map(|(v, _)| v.and_then(|n| n.as_str())).collect();
+        let values: Vec<_> = results
+            .iter()
+            .filter_map(|(v, _)| v.and_then(|n| n.as_str()))
+            .collect();
         assert!(values.contains(&"a"));
         assert!(values.contains(&"b"));
     }

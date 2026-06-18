@@ -1,8 +1,8 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
 use crate::jsonschema::{ValidationError, Validator};
-use crate::rules::Severity;
 use crate::rules::e3035::SNAPSHOT_TYPES;
+use crate::rules::Severity;
 
 /// E3036: Check UpdateReplacePolicy values for Resources.
 ///
@@ -11,12 +11,18 @@ use crate::rules::e3035::SNAPSHOT_TYPES;
 pub struct E3036;
 
 impl CfnLintRule for E3036 {
-    fn id(&self) -> &str { "E3036" }
-    fn short_description(&self) -> &str { "Check UpdateReplacePolicy values for Resources" }
+    fn id(&self) -> &str {
+        "E3036"
+    }
+    fn short_description(&self) -> &str {
+        "Check UpdateReplacePolicy values for Resources"
+    }
     fn description(&self) -> &str {
         "Check that the UpdateReplacePolicy values are valid"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/*/UpdateReplacePolicy"]

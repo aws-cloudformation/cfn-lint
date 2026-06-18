@@ -24,7 +24,9 @@ impl CfnLintRule for W3697 {
         Severity::Warning
     }
 
-    fn keywords(&self) -> &[&str] { &["Resources/*"] }
+    fn keywords(&self) -> &[&str] {
+        &["Resources/*"]
+    }
 
     fn validate(
         &self,
@@ -48,9 +50,7 @@ impl CfnLintRule for W3697 {
             let mut props_path = path.to_vec();
             props_path.push("Properties".to_string());
 
-            let span = obj.get("Properties")
-                .map(|n| n.span())
-                .unwrap_or_default();
+            let span = obj.get("Properties").map(|n| n.span()).unwrap_or_default();
 
             return vec![ValidationError {
                 rule_id: None,
@@ -74,9 +74,8 @@ impl CfnLintRule for W3697 {
 }
 
 /// Known maintenance-mode resource types with their maintenance start dates.
-const MAINTENANCE_TYPES: &[(&str, &str)] = &[
-    ("AWS::AutoScaling::LaunchConfiguration", "2024-10-01"),
-];
+const MAINTENANCE_TYPES: &[(&str, &str)] =
+    &[("AWS::AutoScaling::LaunchConfiguration", "2024-10-01")];
 
 #[cfg(test)]
 mod tests {
@@ -101,7 +100,13 @@ Resources:
         let instance = ast.get("Resources").unwrap().get("Bucket").unwrap();
         let path = vec!["Resources".to_string(), "Bucket".to_string()];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = W3697.validate(&validator, "Resources/*", instance, &serde_json::json!({}), &path);
+        let errors = W3697.validate(
+            &validator,
+            "Resources/*",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -119,14 +124,19 @@ Resources:
         let instance = ast.get("Resources").unwrap().get("LC").unwrap();
         let path = vec!["Resources".to_string(), "LC".to_string()];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = W3697.validate(&validator, "Resources/*", instance, &serde_json::json!({}), &path);
-        assert_eq!(errors.len(), 1);
-        assert!(errors[0].message.contains("AWS::AutoScaling::LaunchConfiguration"));
-        assert!(errors[0].message.contains("2024-10-01"));
-        assert_eq!(
-            errors[0].path,
-            vec!["Resources", "LC", "Properties"]
+        let errors = W3697.validate(
+            &validator,
+            "Resources/*",
+            instance,
+            &serde_json::json!({}),
+            &path,
         );
+        assert_eq!(errors.len(), 1);
+        assert!(errors[0]
+            .message
+            .contains("AWS::AutoScaling::LaunchConfiguration"));
+        assert!(errors[0].message.contains("2024-10-01"));
+        assert_eq!(errors[0].path, vec!["Resources", "LC", "Properties"]);
     }
 
     #[test]
@@ -145,7 +155,13 @@ Resources:
         let instance = ast.get("Resources").unwrap().get("LC").unwrap();
         let path = vec!["Resources".to_string(), "LC".to_string()];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = W3697.validate(&validator, "Resources/*", instance, &serde_json::json!({}), &path);
+        let errors = W3697.validate(
+            &validator,
+            "Resources/*",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 1);
         assert!(errors[0].message.contains("LaunchConfiguration"));
     }

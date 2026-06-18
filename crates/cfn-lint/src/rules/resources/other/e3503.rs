@@ -71,10 +71,7 @@ impl CfnLintRule for E3503 {
                     validation_domain, domain_name
                 ),
                 path: err_path,
-                span: obj
-                    .get("DomainName")
-                    .map(|n| n.span())
-                    .unwrap_or_default(),
+                span: obj.get("DomainName").map(|n| n.span()).unwrap_or_default(),
                 unknown: false,
                 resolved_from_ref: false,
                 context: vec![],

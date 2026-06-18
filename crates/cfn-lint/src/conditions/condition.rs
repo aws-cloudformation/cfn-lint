@@ -42,41 +42,71 @@ impl ConditionNode {
         if let AstNode::Function(func) = node {
             return match func.name.as_str() {
                 "Fn::Equals" => {
-                    let arr = func.args.as_array().ok_or("Fn::Equals value should be an array")?;
+                    let arr = func
+                        .args
+                        .as_array()
+                        .ok_or("Fn::Equals value should be an array")?;
                     if arr.elements.len() != 2 {
                         return Err("Fn::Equals must have exactly 2 elements".into());
                     }
-                    Ok(ConditionNode::Equals(Equal::new(&arr.elements[0], &arr.elements[1])?))
+                    Ok(ConditionNode::Equals(Equal::new(
+                        &arr.elements[0],
+                        &arr.elements[1],
+                    )?))
                 }
                 "Fn::And" => {
-                    let arr = func.args.as_array().ok_or("Fn::And value should be an array")?;
-                    let children: Result<Vec<_>, _> = arr.elements.iter()
+                    let arr = func
+                        .args
+                        .as_array()
+                        .ok_or("Fn::And value should be an array")?;
+                    let children: Result<Vec<_>, _> = arr
+                        .elements
+                        .iter()
                         .map(|v| ConditionNode::parse_inner(v, all_conditions, visited))
                         .collect();
                     Ok(ConditionNode::And(children?))
                 }
                 "Fn::Or" => {
-                    let arr = func.args.as_array().ok_or("Fn::Or value should be an array")?;
-                    let children: Result<Vec<_>, _> = arr.elements.iter()
+                    let arr = func
+                        .args
+                        .as_array()
+                        .ok_or("Fn::Or value should be an array")?;
+                    let children: Result<Vec<_>, _> = arr
+                        .elements
+                        .iter()
                         .map(|v| ConditionNode::parse_inner(v, all_conditions, visited))
                         .collect();
                     Ok(ConditionNode::Or(children?))
                 }
                 "Fn::Not" => {
-                    let arr = func.args.as_array().ok_or("Fn::Not value should be an array")?;
+                    let arr = func
+                        .args
+                        .as_array()
+                        .ok_or("Fn::Not value should be an array")?;
                     if arr.elements.len() != 1 {
                         return Err("Condition length must be 1".into());
                     }
-                    Ok(ConditionNode::Not(Box::new(ConditionNode::parse_inner(&arr.elements[0], all_conditions, visited)?)))
+                    Ok(ConditionNode::Not(Box::new(ConditionNode::parse_inner(
+                        &arr.elements[0],
+                        all_conditions,
+                        visited,
+                    )?)))
                 }
                 "Condition" => {
-                    let name = func.args.as_str().ok_or("Condition value must be a string")?;
+                    let name = func
+                        .args
+                        .as_str()
+                        .ok_or("Condition value must be a string")?;
                     if !visited.insert(name.to_string()) {
                         return Err(format!("Circular condition reference: {name}"));
                     }
-                    let sub = all_conditions.get(name)
+                    let sub = all_conditions
+                        .get(name)
                         .ok_or(format!("Condition {name} not found"))?;
-                    let result = ConditionNode::Named(name.to_string(), Box::new(ConditionNode::parse_inner(sub, all_conditions, visited)?));
+                    let result = ConditionNode::Named(
+                        name.to_string(),
+                        Box::new(ConditionNode::parse_inner(sub, all_conditions, visited)?),
+                    );
                     visited.remove(name);
                     Ok(result)
                 }
@@ -85,7 +115,9 @@ impl ConditionNode {
         }
 
         // Object form ({"Fn::Equals": [...]} as a plain object)
-        let obj = node.as_object().ok_or("Condition value must be an object or function")?;
+        let obj = node
+            .as_object()
+            .ok_or("Condition value must be an object or function")?;
         if obj.len() != 1 {
             return Err("Condition value must be an object of length 1".into());
         }
@@ -93,22 +125,31 @@ impl ConditionNode {
         let (key, val) = obj.iter().next().unwrap();
         match key {
             "Fn::Equals" => {
-                let arr = val.as_array().ok_or("Fn::Equals value should be an array")?;
+                let arr = val
+                    .as_array()
+                    .ok_or("Fn::Equals value should be an array")?;
                 if arr.elements.len() != 2 {
                     return Err("Fn::Equals must have exactly 2 elements".into());
                 }
-                Ok(ConditionNode::Equals(Equal::new(&arr.elements[0], &arr.elements[1])?))
+                Ok(ConditionNode::Equals(Equal::new(
+                    &arr.elements[0],
+                    &arr.elements[1],
+                )?))
             }
             "Fn::And" => {
                 let arr = val.as_array().ok_or("Fn::And value should be an array")?;
-                let children: Result<Vec<_>, _> = arr.elements.iter()
+                let children: Result<Vec<_>, _> = arr
+                    .elements
+                    .iter()
                     .map(|v| ConditionNode::parse_inner(v, all_conditions, visited))
                     .collect();
                 Ok(ConditionNode::And(children?))
             }
             "Fn::Or" => {
                 let arr = val.as_array().ok_or("Fn::Or value should be an array")?;
-                let children: Result<Vec<_>, _> = arr.elements.iter()
+                let children: Result<Vec<_>, _> = arr
+                    .elements
+                    .iter()
                     .map(|v| ConditionNode::parse_inner(v, all_conditions, visited))
                     .collect();
                 Ok(ConditionNode::Or(children?))
@@ -118,16 +159,24 @@ impl ConditionNode {
                 if arr.elements.len() != 1 {
                     return Err("Condition length must be 1".into());
                 }
-                Ok(ConditionNode::Not(Box::new(ConditionNode::parse_inner(&arr.elements[0], all_conditions, visited)?)))
+                Ok(ConditionNode::Not(Box::new(ConditionNode::parse_inner(
+                    &arr.elements[0],
+                    all_conditions,
+                    visited,
+                )?)))
             }
             "Condition" => {
                 let name = val.as_str().ok_or("Condition value must be a string")?;
                 if !visited.insert(name.to_string()) {
                     return Err(format!("Circular condition reference: {name}"));
                 }
-                let sub = all_conditions.get(name)
+                let sub = all_conditions
+                    .get(name)
                     .ok_or(format!("Condition {name} not found"))?;
-                let result = ConditionNode::Named(name.to_string(), Box::new(ConditionNode::parse_inner(sub, all_conditions, visited)?));
+                let result = ConditionNode::Named(
+                    name.to_string(),
+                    Box::new(ConditionNode::parse_inner(sub, all_conditions, visited)?),
+                );
                 visited.remove(name);
                 Ok(result)
             }
@@ -145,16 +194,28 @@ impl ConditionNode {
         }
     }
 
-    pub fn build_expr(&self, solver_params: &HashMap<String, usize>, static_equals: &HashMap<String, bool>) -> Expr {
+    pub fn build_expr(
+        &self,
+        solver_params: &HashMap<String, usize>,
+        static_equals: &HashMap<String, bool>,
+    ) -> Expr {
         match self {
             ConditionNode::Equals(eq) => eq.build_expr(solver_params, static_equals),
-            ConditionNode::And(children) => {
-                Expr::And(children.iter().map(|c| c.build_expr(solver_params, static_equals)).collect())
+            ConditionNode::And(children) => Expr::And(
+                children
+                    .iter()
+                    .map(|c| c.build_expr(solver_params, static_equals))
+                    .collect(),
+            ),
+            ConditionNode::Or(children) => Expr::Or(
+                children
+                    .iter()
+                    .map(|c| c.build_expr(solver_params, static_equals))
+                    .collect(),
+            ),
+            ConditionNode::Not(child) => {
+                Expr::Not(Box::new(child.build_expr(solver_params, static_equals)))
             }
-            ConditionNode::Or(children) => {
-                Expr::Or(children.iter().map(|c| c.build_expr(solver_params, static_equals)).collect())
-            }
-            ConditionNode::Not(child) => Expr::Not(Box::new(child.build_expr(solver_params, static_equals))),
             ConditionNode::Named(_, child) => child.build_expr(solver_params, static_equals),
         }
     }
@@ -169,7 +230,8 @@ pub struct ConditionNamed {
 
 impl ConditionNamed {
     pub fn new(name: &str, all_conditions: &HashMap<String, AstNode>) -> Result<Self, String> {
-        let value = all_conditions.get(name)
+        let value = all_conditions
+            .get(name)
             .ok_or(format!("Condition {name} not found"))?;
         Ok(Self {
             name: name.to_string(),
@@ -181,7 +243,11 @@ impl ConditionNamed {
         self.root.equals()
     }
 
-    pub fn build_expr(&self, solver_params: &HashMap<String, usize>, static_equals: &HashMap<String, bool>) -> Expr {
+    pub fn build_expr(
+        &self,
+        solver_params: &HashMap<String, usize>,
+        static_equals: &HashMap<String, bool>,
+    ) -> Expr {
         self.root.build_expr(solver_params, static_equals)
     }
 }
@@ -195,24 +261,29 @@ mod tests {
     fn parse_conditions(yaml: &[u8]) -> HashMap<String, AstNode> {
         let ast = parser::parse(yaml).unwrap();
         let obj = ast.as_object().unwrap();
-        obj.iter().map(|(k, v)| (k.to_string(), v.clone())).collect()
+        obj.iter()
+            .map(|(k, v)| (k.to_string(), v.clone()))
+            .collect()
     }
 
     #[test]
     fn test_parse_equals() {
-        let conds = parse_conditions(br#"
+        let conds = parse_conditions(
+            br#"
 IsProd:
   Fn::Equals:
     - !Ref Env
     - prod
-"#);
+"#,
+        );
         let c = ConditionNamed::new("IsProd", &conds).unwrap();
         assert_eq!(c.equals().len(), 1);
     }
 
     #[test]
     fn test_parse_and() {
-        let conds = parse_conditions(br#"
+        let conds = parse_conditions(
+            br#"
 IsProd:
   Fn::Equals:
     - !Ref Env
@@ -225,14 +296,16 @@ Both:
   Fn::And:
     - Condition: IsProd
     - Condition: IsUsEast1
-"#);
+"#,
+        );
         let c = ConditionNamed::new("Both", &conds).unwrap();
         assert_eq!(c.equals().len(), 2);
     }
 
     #[test]
     fn test_parse_not() {
-        let conds = parse_conditions(br#"
+        let conds = parse_conditions(
+            br#"
 IsProd:
   Fn::Equals:
     - !Ref Env
@@ -240,14 +313,16 @@ IsProd:
 IsNotProd:
   Fn::Not:
     - Condition: IsProd
-"#);
+"#,
+        );
         let c = ConditionNamed::new("IsNotProd", &conds).unwrap();
         assert_eq!(c.equals().len(), 1);
     }
 
     #[test]
     fn test_parse_or() {
-        let conds = parse_conditions(br#"
+        let conds = parse_conditions(
+            br#"
 IsProd:
   Fn::Equals:
     - !Ref Env
@@ -260,7 +335,8 @@ Either:
   Fn::Or:
     - Condition: IsProd
     - Condition: IsDev
-"#);
+"#,
+        );
         let c = ConditionNamed::new("Either", &conds).unwrap();
         assert_eq!(c.equals().len(), 2);
     }

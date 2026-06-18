@@ -51,9 +51,7 @@ impl CfnLintRule for E3046 {
         let mut errors = Vec::new();
 
         for required in &["awslogs-group", "awslogs-region"] {
-            let has_option = options
-                .map(|o| o.contains_key(*required))
-                .unwrap_or(false);
+            let has_option = options.map(|o| o.contains_key(*required)).unwrap_or(false);
             if !has_option {
                 let mut options_path = path.to_vec();
                 options_path.push("Options".to_string());
@@ -100,20 +98,38 @@ Resources:
               awslogs-region: us-east-1
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Task").unwrap()
-            .get("Properties").unwrap()
-            .get("ContainerDefinitions").unwrap()
-            .as_array().unwrap()
-            .elements.first().unwrap()
-            .get("LogConfiguration").unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Task")
+            .unwrap()
+            .get("Properties")
+            .unwrap()
+            .get("ContainerDefinitions")
+            .unwrap()
+            .as_array()
+            .unwrap()
+            .elements
+            .first()
+            .unwrap()
+            .get("LogConfiguration")
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "Task".to_string(),
-            "Properties".to_string(), "ContainerDefinitions".to_string(),
-            "0".to_string(), "LogConfiguration".to_string(),
+            "Resources".to_string(),
+            "Task".to_string(),
+            "Properties".to_string(),
+            "ContainerDefinitions".to_string(),
+            "0".to_string(),
+            "LogConfiguration".to_string(),
         ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = E3046.validate(&validator, "Resources/AWS::ECS::TaskDefinition/Properties/ContainerDefinitions/*/LogConfiguration", instance, &serde_json::json!({}), &path);
+        let errors = E3046.validate(
+            &validator,
+            "Resources/AWS::ECS::TaskDefinition/Properties/ContainerDefinitions/*/LogConfiguration",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -133,20 +149,38 @@ Resources:
               awslogs-stream-prefix: ecs
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Task").unwrap()
-            .get("Properties").unwrap()
-            .get("ContainerDefinitions").unwrap()
-            .as_array().unwrap()
-            .elements.first().unwrap()
-            .get("LogConfiguration").unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Task")
+            .unwrap()
+            .get("Properties")
+            .unwrap()
+            .get("ContainerDefinitions")
+            .unwrap()
+            .as_array()
+            .unwrap()
+            .elements
+            .first()
+            .unwrap()
+            .get("LogConfiguration")
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "Task".to_string(),
-            "Properties".to_string(), "ContainerDefinitions".to_string(),
-            "0".to_string(), "LogConfiguration".to_string(),
+            "Resources".to_string(),
+            "Task".to_string(),
+            "Properties".to_string(),
+            "ContainerDefinitions".to_string(),
+            "0".to_string(),
+            "LogConfiguration".to_string(),
         ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = E3046.validate(&validator, "Resources/AWS::ECS::TaskDefinition/Properties/ContainerDefinitions/*/LogConfiguration", instance, &serde_json::json!({}), &path);
+        let errors = E3046.validate(
+            &validator,
+            "Resources/AWS::ECS::TaskDefinition/Properties/ContainerDefinitions/*/LogConfiguration",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 2); // missing awslogs-group and awslogs-region
     }
 }

@@ -1,9 +1,11 @@
 # --- cfn-lint-test ---
 # rule: E4002
 # description: Metadata section validation - must be object, no null values
-# expect: []
+# expect:
+#   - rule: E4002
+#     path: /Metadata/NullEntry
+#     message_contains: "is not of type"
 # ---
-# NOTE: Rule E4002 Metadata null value validation not yet implemented in v2 engine
 Metadata:
   ValidKey: some-string-value
   NullEntry: null

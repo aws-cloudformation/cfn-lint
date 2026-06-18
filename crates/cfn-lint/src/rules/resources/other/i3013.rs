@@ -10,8 +10,14 @@ const RETENTION_CHECKS: &[(&str, &[&str])] = &[
     ("AWS::Kinesis::Stream", &["RetentionPeriodHours"]),
     ("AWS::SQS::Queue", &["MessageRetentionPeriod"]),
     ("AWS::DocDB::DBCluster", &["BackupRetentionPeriod"]),
-    ("AWS::Synthetics::Canary", &["SuccessRetentionPeriod", "FailureRetentionPeriod"]),
-    ("AWS::Redshift::Cluster", &["AutomatedSnapshotRetentionPeriod"]),
+    (
+        "AWS::Synthetics::Canary",
+        &["SuccessRetentionPeriod", "FailureRetentionPeriod"],
+    ),
+    (
+        "AWS::Redshift::Cluster",
+        &["AutomatedSnapshotRetentionPeriod"],
+    ),
     ("AWS::RDS::DBCluster", &["BackupRetentionPeriod"]),
 ];
 
@@ -32,7 +38,9 @@ impl I3013 {
 }
 
 impl CfnLintRule for I3013 {
-    fn id(&self) -> &str { "I3013" }
+    fn id(&self) -> &str {
+        "I3013"
+    }
     fn short_description(&self) -> &str {
         "Check resources with auto expiring content have explicit retention period"
     }
@@ -40,7 +48,9 @@ impl CfnLintRule for I3013 {
         "The default retention period will delete the data after a pre-defined time. \
          Set explicit values to avoid data loss on resource"
     }
-    fn severity(&self) -> Severity { Severity::Informational }
+    fn severity(&self) -> Severity {
+        Severity::Informational
+    }
 
     fn keywords(&self) -> &[&str] {
         &[
@@ -81,7 +91,7 @@ impl CfnLintRule for I3013 {
             }
             if props.get("BackupRetentionPeriod").is_none() {
                 return vec![ValidationError {
-                rule_id: None,
+                    rule_id: None,
                     keyword: format!("cfnLint:{}", self.id()),
                     message: format!(
                         "'BackupRetentionPeriod' is missing (The default retention period will \
@@ -109,7 +119,7 @@ impl CfnLintRule for I3013 {
         for attr in *required_attrs {
             if props.get(attr).is_none() {
                 errors.push(ValidationError {
-                rule_id: None,
+                    rule_id: None,
                     keyword: format!("cfnLint:{}", self.id()),
                     message: format!(
                         "'{}' is missing (The default retention period will \
@@ -148,12 +158,26 @@ Resources:
       BackupRetentionPeriod: 7
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("DB").unwrap()
-            .get("Properties").unwrap();
-        let path = vec!["Resources".to_string(), "DB".to_string(), "Properties".to_string()];
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("DB")
+            .unwrap()
+            .get("Properties")
+            .unwrap();
+        let path = vec![
+            "Resources".to_string(),
+            "DB".to_string(),
+            "Properties".to_string(),
+        ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = I3013.validate(&validator, "Resources/AWS::RDS::DBInstance/Properties", instance, &serde_json::json!({}), &path);
+        let errors = I3013.validate(
+            &validator,
+            "Resources/AWS::RDS::DBInstance/Properties",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -168,12 +192,26 @@ Resources:
       Engine: mysql
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("DB").unwrap()
-            .get("Properties").unwrap();
-        let path = vec!["Resources".to_string(), "DB".to_string(), "Properties".to_string()];
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("DB")
+            .unwrap()
+            .get("Properties")
+            .unwrap();
+        let path = vec![
+            "Resources".to_string(),
+            "DB".to_string(),
+            "Properties".to_string(),
+        ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = I3013.validate(&validator, "Resources/AWS::RDS::DBInstance/Properties", instance, &serde_json::json!({}), &path);
+        let errors = I3013.validate(
+            &validator,
+            "Resources/AWS::RDS::DBInstance/Properties",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 1);
         assert!(errors[0].message.contains("BackupRetentionPeriod"));
     }
@@ -189,12 +227,26 @@ Resources:
       Engine: aurora-postgresql
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("DB").unwrap()
-            .get("Properties").unwrap();
-        let path = vec!["Resources".to_string(), "DB".to_string(), "Properties".to_string()];
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("DB")
+            .unwrap()
+            .get("Properties")
+            .unwrap();
+        let path = vec![
+            "Resources".to_string(),
+            "DB".to_string(),
+            "Properties".to_string(),
+        ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = I3013.validate(&validator, "Resources/AWS::RDS::DBInstance/Properties", instance, &serde_json::json!({}), &path);
+        let errors = I3013.validate(
+            &validator,
+            "Resources/AWS::RDS::DBInstance/Properties",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -210,12 +262,26 @@ Resources:
       SourceDBInstanceIdentifier: source-db
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("DB").unwrap()
-            .get("Properties").unwrap();
-        let path = vec!["Resources".to_string(), "DB".to_string(), "Properties".to_string()];
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("DB")
+            .unwrap()
+            .get("Properties")
+            .unwrap();
+        let path = vec![
+            "Resources".to_string(),
+            "DB".to_string(),
+            "Properties".to_string(),
+        ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = I3013.validate(&validator, "Resources/AWS::RDS::DBInstance/Properties", instance, &serde_json::json!({}), &path);
+        let errors = I3013.validate(
+            &validator,
+            "Resources/AWS::RDS::DBInstance/Properties",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 }

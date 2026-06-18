@@ -2,8 +2,8 @@ use std::collections::HashMap;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E3019: Validate that all resources have unique primary identifiers.
@@ -28,7 +28,11 @@ impl CfnLintRule for E3019 {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         // Build negation map: if CondA = !Not [Condition CondB], then CondA negates CondB
         let mut negations: HashMap<String, String> = HashMap::new();
         if let Some(conds) = root.get("Conditions").and_then(|c| c.as_object()) {
@@ -39,7 +43,9 @@ impl CfnLintRule for E3019 {
                         if let Some(arr) = func.args.as_array() {
                             if arr.elements.len() == 1 {
                                 if let Some(inner) = arr.elements[0].as_object() {
-                                    if let Some(cond_ref) = inner.get("Condition").and_then(|v| v.as_str()) {
+                                    if let Some(cond_ref) =
+                                        inner.get("Condition").and_then(|v| v.as_str())
+                                    {
                                         negations.insert(name.to_string(), cond_ref.to_string());
                                         negations.insert(cond_ref.to_string(), name.to_string());
                                     }
@@ -47,8 +53,10 @@ impl CfnLintRule for E3019 {
                                 if let Some(inner) = arr.elements[0].as_function() {
                                     if inner.name == "Condition" {
                                         if let Some(cond_ref) = inner.args.as_str() {
-                                            negations.insert(name.to_string(), cond_ref.to_string());
-                                            negations.insert(cond_ref.to_string(), name.to_string());
+                                            negations
+                                                .insert(name.to_string(), cond_ref.to_string());
+                                            negations
+                                                .insert(cond_ref.to_string(), name.to_string());
                                         }
                                     }
                                 }
@@ -66,10 +74,11 @@ impl CfnLintRule for E3019 {
                 .and_then(|r| r.get(name))
                 .and_then(|r| r.get("Properties"));
             if let Some(p) = props {
-                by_type
-                    .entry(&resource.resource_type)
-                    .or_default()
-                    .push((name, p, resource.condition.as_deref()));
+                by_type.entry(&resource.resource_type).or_default().push((
+                    name,
+                    p,
+                    resource.condition.as_deref(),
+                ));
             }
         }
 
@@ -97,18 +106,31 @@ impl CfnLintRule for E3019 {
                 for j in (i + 1)..seen.len() {
                     let has_conflict = seen[i].1.iter().any(|a| {
                         seen[j].1.iter().any(|b| {
-                            a.values == b.values && conditions_compatible(&a.conditions, &b.conditions, &negations)
+                            a.values == b.values
+                                && conditions_compatible(&a.conditions, &b.conditions, &negations)
                         })
                     });
                     if has_conflict {
                         // Find the matching values for the message
-                        let id_vals = &seen[i].1.iter().find(|a| {
-                            seen[j].1.iter().any(|b| {
-                                a.values == b.values && conditions_compatible(&a.conditions, &b.conditions, &negations)
+                        let id_vals = &seen[i]
+                            .1
+                            .iter()
+                            .find(|a| {
+                                seen[j].1.iter().any(|b| {
+                                    a.values == b.values
+                                        && conditions_compatible(
+                                            &a.conditions,
+                                            &b.conditions,
+                                            &negations,
+                                        )
+                                })
                             })
-                        }).unwrap().values;
-                        let id_display: Vec<String> =
-                            id_vals.iter().map(|(k, v)| format!("{}={}", k, v)).collect();
+                            .unwrap()
+                            .values;
+                        let id_display: Vec<String> = id_vals
+                            .iter()
+                            .map(|(k, v)| format!("{}={}", k, v))
+                            .collect();
                         for name in [seen[i].0, seen[j].0] {
                             let mut path = vec![
                                 "Resources".to_string(),
@@ -164,7 +186,11 @@ struct ConditionalTuple {
 }
 
 /// Check if two condition maps are compatible (no contradictions).
-fn conditions_compatible(a: &HashMap<String, bool>, b: &HashMap<String, bool>, negations: &HashMap<String, String>) -> bool {
+fn conditions_compatible(
+    a: &HashMap<String, bool>,
+    b: &HashMap<String, bool>,
+    negations: &HashMap<String, String>,
+) -> bool {
     // Direct conflict: same condition, opposite values
     for (k, v) in a {
         if let Some(bv) = b.get(k) {
@@ -307,7 +333,10 @@ fn expand_props<'a>(
 }
 
 /// Extract all possible string values from a node with their condition constraints.
-fn extract_string_values(node: &AstNode, base_conditions: &HashMap<String, bool>) -> Vec<ConditionalValue> {
+fn extract_string_values(
+    node: &AstNode,
+    base_conditions: &HashMap<String, bool>,
+) -> Vec<ConditionalValue> {
     if let Some(s) = node.as_str() {
         return vec![ConditionalValue {
             value: s.to_string(),
@@ -418,7 +447,9 @@ Resources:
         let issues = E3019.validate_template(&tmpl, &ast);
         assert_eq!(issues.len(), 2); // One issue per resource
         assert!(issues.iter().all(|i| i.rule_id.as_deref() == Some("E3019")));
-        assert!(issues.iter().all(|i| i.rule_id.as_deref().unwrap_or("E").starts_with('E')));
+        assert!(issues
+            .iter()
+            .all(|i| i.rule_id.as_deref().unwrap_or("E").starts_with('E')));
     }
 }
 

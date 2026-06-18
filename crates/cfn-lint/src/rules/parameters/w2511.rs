@@ -6,10 +6,18 @@ use crate::rules::Severity;
 pub struct W2511;
 
 impl CfnLintRule for W2511 {
-    fn id(&self) -> &str { "W2511" }
-    fn short_description(&self) -> &str { "Check IAM Resource Policies syntax" }
-    fn description(&self) -> &str { "IAM Policy Version should be updated to 2012-10-17" }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn id(&self) -> &str {
+        "W2511"
+    }
+    fn short_description(&self) -> &str {
+        "Check IAM Resource Policies syntax"
+    }
+    fn description(&self) -> &str {
+        "IAM Policy Version should be updated to 2012-10-17"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
     fn keywords(&self) -> &[&str] {
         &[
@@ -44,7 +52,7 @@ impl CfnLintRule for W2511 {
                 unknown: false,
                 resolved_from_ref: false,
                 context: vec![],
-            schema_id: None,
+                schema_id: None,
             }]
         } else {
             vec![]

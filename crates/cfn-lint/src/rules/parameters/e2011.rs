@@ -1,7 +1,7 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E2011: Validate the name for a parameter.
@@ -11,16 +11,28 @@ use crate::template::Template;
 pub struct E2011;
 
 impl CfnLintRule for E2011 {
-    fn id(&self) -> &str { "E2011" }
-    fn short_description(&self) -> &str { "Validate the name for a parameter" }
+    fn id(&self) -> &str {
+        "E2011"
+    }
+    fn short_description(&self) -> &str {
+        "Validate the name for a parameter"
+    }
     fn description(&self) -> &str {
         "Validate the name of a parameter with special handling of the max length"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         vec![]
     }
 }

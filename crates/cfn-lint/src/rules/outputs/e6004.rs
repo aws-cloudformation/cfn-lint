@@ -1,7 +1,7 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E6004: Outputs have required properties.
@@ -11,16 +11,28 @@ use crate::template::Template;
 pub struct E6004;
 
 impl CfnLintRule for E6004 {
-    fn id(&self) -> &str { "E6004" }
-    fn short_description(&self) -> &str { "Outputs have required properties" }
+    fn id(&self) -> &str {
+        "E6004"
+    }
+    fn short_description(&self) -> &str {
+        "Outputs have required properties"
+    }
     fn description(&self) -> &str {
         "Making sure the outputs have required properties and no extra keys"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         vec![]
     }
 }

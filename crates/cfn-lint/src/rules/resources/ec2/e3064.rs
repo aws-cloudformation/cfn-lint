@@ -2,15 +2,17 @@ use std::collections::HashMap;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E3064: Validate unique PrivateDnsEnabled per service per VPC
 pub struct E3064;
 
 impl CfnLintRule for E3064 {
-    fn id(&self) -> &str { "E3064" }
+    fn id(&self) -> &str {
+        "E3064"
+    }
     fn short_description(&self) -> &str {
         "Validate unique PrivateDnsEnabled per service per VPC"
     }
@@ -19,13 +21,19 @@ impl CfnLintRule for E3064 {
          set to true in a VPC. A second endpoint will fail to create due to a \
          conflicting private DNS domain."
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let mut issues = Vec::new();
         // Group: (vpc_key, service_key) -> first resource name
         let mut seen: HashMap<(String, String), String> = HashMap::new();
@@ -35,7 +43,8 @@ impl CfnLintRule for E3064 {
                 continue;
             }
             let props = match root
-                .get("Resources").and_then(|r| r.get(name))
+                .get("Resources")
+                .and_then(|r| r.get(name))
                 .and_then(|r| r.get("Properties"))
             {
                 Some(p) => p,
@@ -67,14 +76,18 @@ impl CfnLintRule for E3064 {
                              'PrivateDnsEnabled' set to true in a VPC. Conflicts with '{}'.",
                             first
                         ),
-                        path: vec!["Resources".to_string(), name.clone(), "Properties".to_string()],
+                        path: vec![
+                            "Resources".to_string(),
+                            name.clone(),
+                            "Properties".to_string(),
+                        ],
                         span: props.span(),
                         keyword: String::new(),
                         unknown: false,
                         resolved_from_ref: false,
                         context: vec![],
                         schema_id: None,
-});
+                    });
                 } else {
                     seen.insert(group, name.clone());
                 }

@@ -72,9 +72,9 @@ impl CfnLintRule for E3697 {
 #[cfg(test)]
 
 mod tests {
-    use crate::template::Template;
     use super::*;
     use crate::parser;
+    use crate::template::Template;
 
     #[test]
     fn test_stubbed_out() {

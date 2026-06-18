@@ -1,7 +1,7 @@
 use crate::ast::{self, AstNode};
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 pub struct E1032;
@@ -38,7 +38,11 @@ impl CfnLintRule for E1032 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let has_ext = has_language_extensions(root);
         let mut issues = Vec::new();
 
@@ -67,14 +71,16 @@ impl CfnLintRule for E1032 {
                             if !matches!(&arr.elements[0], AstNode::String(_)) {
                                 issues.push(ValidationError {
                                     rule_id: Some(self.id().to_string()),
-                                    message: "Fn::ForEach first element must be a string identifier".to_string(),
+                                    message:
+                                        "Fn::ForEach first element must be a string identifier"
+                                            .to_string(),
                                     path: path.to_vec(),
                                     span: func.span.clone(),
-                keyword: String::new(),
-                unknown: false,
-                resolved_from_ref: false,
-                context: vec![],
-                                schema_id: None,
+                                    keyword: String::new(),
+                                    unknown: false,
+                                    resolved_from_ref: false,
+                                    context: vec![],
+                                    schema_id: None,
                                 });
                             }
                         }
@@ -137,7 +143,6 @@ impl CfnLintRule for E1032 {
         issues
     }
 }
-
 
 #[cfg(test)]
 mod tests {

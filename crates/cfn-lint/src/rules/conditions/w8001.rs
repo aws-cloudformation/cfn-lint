@@ -2,8 +2,8 @@ use std::collections::HashSet;
 
 use crate::ast::{self, AstNode};
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// W8001 is the warning-level check for unused conditions.
@@ -26,9 +26,15 @@ impl CfnLintRule for W8001 {
         Severity::Warning
     }
 
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         // If Conditions exists but is not an object, report E0002 (matches Python behavior
         // where W8001 crashes on non-object Conditions)
         if let Some(conds_node) = root.get("Conditions") {
@@ -46,7 +52,7 @@ impl CfnLintRule for W8001 {
                     resolved_from_ref: false,
                     context: vec![],
                     schema_id: None,
-}];
+                }];
             }
         }
 
@@ -113,7 +119,7 @@ impl CfnLintRule for W8001 {
                 resolved_from_ref: false,
                 context: vec![],
                 schema_id: None,
-})
+            })
             .collect()
     }
 }

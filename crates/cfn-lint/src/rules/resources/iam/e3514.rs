@@ -2,8 +2,8 @@ use regex::Regex;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E3514: Validate IAM resource policy resource ARNs.
@@ -30,7 +30,11 @@ impl CfnLintRule for E3514 {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let re = match Regex::new(RESOURCE_ARN_PATTERN) {
             Ok(r) => r,
             Err(_) => return vec![],
@@ -56,7 +60,8 @@ impl CfnLintRule for E3514 {
             let pattern = if is_s3 { &s3_re } else { &re };
 
             // Find PolicyDocument in various locations
-            let policy_doc = props.get("PolicyDocument")
+            let policy_doc = props
+                .get("PolicyDocument")
                 .or_else(|| props.get("PolicyText"))
                 .or_else(|| props.get("KeyPolicy"))
                 .or_else(|| props.get("AccessPolicies"));
@@ -70,8 +75,7 @@ impl CfnLintRule for E3514 {
 
 const RESOURCE_ARN_PATTERN: &str =
     r"^(arn:aws[A-Za-z\-]*?:[^:]+:[^:]*(:(?:\d{12}|\*|aws)?:.+|)|\*)$";
-const S3_RESOURCE_ARN_PATTERN: &str =
-    r"^arn:aws[A-Za-z\-]*?:[^:]+:[^:]*(:(?:\d{12}|\*|aws)?:.+|)$";
+const S3_RESOURCE_ARN_PATTERN: &str = r"^arn:aws[A-Za-z\-]*?:[^:]+:[^:]*(:(?:\d{12}|\*|aws)?:.+|)$";
 
 const POLICY_RESOURCE_TYPES: &[&str] = &[
     "AWS::IAM::Policy",
@@ -83,7 +87,13 @@ const POLICY_RESOURCE_TYPES: &[&str] = &[
 ];
 
 impl E3514 {
-    fn check_statements(&self, resource_name: &str, doc: &AstNode, pattern: &Regex, issues: &mut Vec<ValidationError>) {
+    fn check_statements(
+        &self,
+        resource_name: &str,
+        doc: &AstNode,
+        pattern: &Regex,
+        issues: &mut Vec<ValidationError>,
+    ) {
         let statements = match doc.get("Statement").and_then(|n| n.as_array()) {
             Some(a) => a,
             None => return,
@@ -128,7 +138,7 @@ impl E3514 {
                         resolved_from_ref: false,
                         context: vec![],
                         schema_id: None,
-});
+                    });
                 }
             }
             AstNode::Array(arr) => {

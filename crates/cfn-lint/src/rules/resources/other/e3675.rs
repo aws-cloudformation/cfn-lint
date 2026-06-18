@@ -2,7 +2,7 @@ use std::sync::LazyLock;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::jsonschema::json_schema_rule::validate_schema;
+use crate::jsonschema::json_schema_rule::validate_regional;
 use crate::jsonschema::{ValidationError, Validator};
 use crate::rules::Severity;
 
@@ -14,10 +14,18 @@ static SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
 });
 
 impl CfnLintRule for E3675 {
-    fn id(&self) -> &str { "E3675" }
-    fn short_description(&self) -> &str { "Validate EMR cluster instance type" }
-    fn description(&self) -> &str { "Validate EMR cluster instance type" }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn id(&self) -> &str {
+        "E3675"
+    }
+    fn short_description(&self) -> &str {
+        "Validate EMR cluster instance type"
+    }
+    fn description(&self) -> &str {
+        "Validate EMR cluster instance type"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &[
@@ -36,7 +44,14 @@ impl CfnLintRule for E3675 {
         _schema: &serde_json::Value,
         path: &[String],
     ) -> Vec<ValidationError> {
-        validate_schema(self.id(), self.short_description(), validator, instance, &SCHEMA, path)
+        validate_regional(
+            self.id(),
+            self.short_description(),
+            validator,
+            instance,
+            &SCHEMA,
+            path,
+        )
     }
 }
 

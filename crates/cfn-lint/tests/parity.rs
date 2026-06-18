@@ -5,8 +5,8 @@ use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
 use cfn_lint::engine::Engine;
-use cfn_lint::parser;
 use cfn_lint::jsonschema::ValidationError;
+use cfn_lint::parser;
 use cfn_lint::rules::Severity;
 use cfn_lint::template::Template;
 
@@ -31,7 +31,10 @@ fn data_dir() -> PathBuf {
 fn run_engine(engine: &mut Engine, path: &Path) -> Vec<ValidationError> {
     let content = match std::fs::read(path) {
         Ok(c) => c,
-        Err(e) => { eprintln!("READ FAIL {}: {}", path.display(), e); return vec![]; }
+        Err(e) => {
+            eprintln!("READ FAIL {}: {}", path.display(), e);
+            return vec![];
+        }
     };
 
     // Handle empty files like Python does — treat as empty object
@@ -156,7 +159,9 @@ fn parity_good_templates_no_errors() {
     println!("{}\n", "=".repeat(100));
 
     // Load Python's pre-generated results for good templates
-    let results_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests").join("python_good_results.json");
+    let results_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("tests")
+        .join("python_good_results.json");
     let python_results: HashMap<String, Vec<String>> = std::fs::read_to_string(&results_path)
         .ok()
         .and_then(|c| serde_json::from_str(&c).ok())
@@ -184,23 +189,37 @@ fn parity_good_templates_no_errors() {
         let mut rust_ids: Vec<String> = issues
             .into_iter()
             .filter(|i| !i.rule_id.as_deref().unwrap_or("").starts_with("I"))
-            
             .filter_map(|i| i.rule_id)
             .collect();
         rust_ids.sort();
 
         let lookup_name = name.strip_prefix("good/").unwrap_or(&name).to_string();
-        let mut python_ids = python_results.get(&lookup_name).cloned().unwrap_or_default();
+        let mut python_ids = python_results
+            .get(&lookup_name)
+            .cloned()
+            .unwrap_or_default();
         python_ids.sort();
 
         if rust_ids == python_ids {
             matched += 1;
         } else {
             println!("MISMATCH: {}", name);
-            let rust_only: Vec<&str> = rust_ids.iter().filter(|id| !python_ids.contains(id)).map(|s| s.as_str()).collect();
-            let python_only: Vec<&str> = python_ids.iter().filter(|id| !rust_ids.contains(id)).map(|s| s.as_str()).collect();
-            if !rust_only.is_empty() { println!("  Rust extra: {:?}", rust_only); }
-            if !python_only.is_empty() { println!("  Python extra: {:?}", python_only); }
+            let rust_only: Vec<&str> = rust_ids
+                .iter()
+                .filter(|id| !python_ids.contains(id))
+                .map(|s| s.as_str())
+                .collect();
+            let python_only: Vec<&str> = python_ids
+                .iter()
+                .filter(|id| !rust_ids.contains(id))
+                .map(|s| s.as_str())
+                .collect();
+            if !rust_only.is_empty() {
+                println!("  Rust extra: {:?}", rust_only);
+            }
+            if !python_only.is_empty() {
+                println!("  Python extra: {:?}", python_only);
+            }
             mismatches.push((name, rust_ids, python_ids));
         }
     }
@@ -269,12 +288,16 @@ fn parity_bad_templates_report_inner() {
         } else {
             with_issues += 1;
             for issue in &issues {
-                *rule_counts.entry(issue.rule_id.clone().unwrap_or_default()).or_default() += 1;
+                *rule_counts
+                    .entry(issue.rule_id.clone().unwrap_or_default())
+                    .or_default() += 1;
             }
         }
     }
 
-    println!("Bad templates: {total} total, {with_issues} produced issues, {no_issues} produced nothing");
+    println!(
+        "Bad templates: {total} total, {with_issues} produced issues, {no_issues} produced nothing"
+    );
     println!(
         "Detection rate: {:.1}%",
         with_issues as f64 / total as f64 * 100.0
@@ -347,7 +370,9 @@ fn parity_quickstart_fixtures() {
         }
         let mut act_by_rule: HashMap<String, usize> = HashMap::new();
         for a in &actual {
-            *act_by_rule.entry(a.rule_id.clone().unwrap_or_default()).or_default() += 1;
+            *act_by_rule
+                .entry(a.rule_id.clone().unwrap_or_default())
+                .or_default() += 1;
         }
 
         let matched: usize = exp_by_rule
@@ -391,7 +416,11 @@ fn load_expected_results(path: &Path) -> Vec<String> {
     arr.as_array()
         .map(|a| {
             a.iter()
-                .filter_map(|e| e.pointer("/Rule/Id").and_then(|v| v.as_str()).map(String::from))
+                .filter_map(|e| {
+                    e.pointer("/Rule/Id")
+                        .and_then(|v| v.as_str())
+                        .map(String::from)
+                })
                 .collect()
         })
         .unwrap_or_default()
@@ -437,10 +466,13 @@ fn parity_vs_python_inner() {
         }
 
         let content = std::fs::read_to_string(&results_file).unwrap();
-        let py_results: HashMap<String, Vec<String>> =
-            serde_json::from_str(&content).unwrap();
+        let py_results: HashMap<String, Vec<String>> = serde_json::from_str(&content).unwrap();
 
-        println!("--- {} templates ({} files) ---", category, py_results.len());
+        println!(
+            "--- {} templates ({} files) ---",
+            category,
+            py_results.len()
+        );
 
         for (name, py_rules) in &py_results {
             let template_path = templates_base.join(name);
@@ -476,11 +508,8 @@ fn parity_vs_python_inner() {
                 *rs_counts.entry(r.as_str()).or_default() += 1;
             }
 
-            let all_rules: std::collections::HashSet<&str> = py_counts
-                .keys()
-                .chain(rs_counts.keys())
-                .copied()
-                .collect();
+            let all_rules: std::collections::HashSet<&str> =
+                py_counts.keys().chain(rs_counts.keys()).copied().collect();
 
             let mut file_matched = 0;
             let mut file_py_only = 0;
@@ -582,11 +611,16 @@ fn parity_sam_translator() {
     let content = std::fs::read_to_string(&results_file).unwrap();
     let py_results: HashMap<String, Vec<String>> = serde_json::from_str(&content).unwrap();
 
-    let ignored_rules: std::collections::HashSet<&str> =
-        ["E2531", "E2533", "W2531", "E3001", "W2001", "E3006", "W3037"].into();
+    let ignored_rules: std::collections::HashSet<&str> = [
+        "E2531", "E2533", "W2531", "E3001", "W2001", "E3006", "W3037",
+    ]
+    .into();
 
     println!("\n{}", "=".repeat(100));
-    println!("SAM TRANSLATOR PARITY ({} templates with Python issues)", py_results.len());
+    println!(
+        "SAM TRANSLATOR PARITY ({} templates with Python issues)",
+        py_results.len()
+    );
     println!("{}\n", "=".repeat(100));
 
     let mut engine = Engine::with_data_dir(data_dir());
@@ -625,9 +659,13 @@ fn parity_sam_translator() {
             .collect();
 
         let mut py_counts: HashMap<&str, usize> = HashMap::new();
-        for r in &py_rules { *py_counts.entry(r.as_str()).or_default() += 1; }
+        for r in &py_rules {
+            *py_counts.entry(r.as_str()).or_default() += 1;
+        }
         let mut rs_counts: HashMap<&str, usize> = HashMap::new();
-        for r in &rs_rules { *rs_counts.entry(r.as_str()).or_default() += 1; }
+        for r in &rs_rules {
+            *rs_counts.entry(r.as_str()).or_default() += 1;
+        }
 
         let all_rules: std::collections::HashSet<&str> =
             py_counts.keys().chain(rs_counts.keys()).copied().collect();
@@ -640,8 +678,12 @@ fn parity_sam_translator() {
             total_matched += m;
             let po = pc.saturating_sub(rc);
             let ro = rc.saturating_sub(pc);
-            if po > 0 { *per_rule_py_only.entry(rule.to_string()).or_default() += po; }
-            if ro > 0 { *per_rule_rs_only.entry(rule.to_string()).or_default() += ro; }
+            if po > 0 {
+                *per_rule_py_only.entry(rule.to_string()).or_default() += po;
+            }
+            if ro > 0 {
+                *per_rule_rs_only.entry(rule.to_string()).or_default() += ro;
+            }
             if po > 0 || ro > 0 {
                 diffs.push(format!("{}: py={} rs={}", rule, pc, rc));
             }
@@ -661,24 +703,35 @@ fn parity_sam_translator() {
     println!("\n{}", "=".repeat(100));
     println!("SAM TRANSLATOR PARITY RESULTS");
     println!("{}", "=".repeat(100));
-    println!("Python total: {}  Rust total: {}  Matched: {}", total_py, total_rs, total_matched);
+    println!(
+        "Python total: {}  Rust total: {}  Matched: {}",
+        total_py, total_rs, total_matched
+    );
     let py_only: usize = per_rule_py_only.values().sum();
     let rs_only: usize = per_rule_rs_only.values().sum();
     println!("Python-only: {} | Rust-only: {}", py_only, rs_only);
-    let pct = if total_py == 0 { 100.0 } else { total_matched as f64 / total_py as f64 * 100.0 };
+    let pct = if total_py == 0 {
+        100.0
+    } else {
+        total_matched as f64 / total_py as f64 * 100.0
+    };
     println!("Parity: {:.1}%\n", pct);
 
     if !per_rule_py_only.is_empty() {
         let mut rules: Vec<_> = per_rule_py_only.iter().collect();
         rules.sort_by(|a, b| b.1.cmp(a.1));
         println!("PYTHON-ONLY by rule:");
-        for (rule, count) in &rules { println!("  {}: {}", rule, count); }
+        for (rule, count) in &rules {
+            println!("  {}: {}", rule, count);
+        }
     }
     if !per_rule_rs_only.is_empty() {
         let mut rules: Vec<_> = per_rule_rs_only.iter().collect();
         rules.sort_by(|a, b| b.1.cmp(a.1));
         println!("\nRUST-ONLY by rule:");
-        for (rule, count) in &rules { println!("  {}: {}", rule, count); }
+        for (rule, count) in &rules {
+            println!("  {}: {}", rule, count);
+        }
     }
     println!("{}", "=".repeat(100));
 }

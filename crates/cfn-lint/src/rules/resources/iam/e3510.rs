@@ -5,13 +5,16 @@ use crate::ast::AstNode;
 use crate::context::Context;
 use crate::engine::expand_fn_if_branches;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
 use crate::rules::iam_helpers::validate_policy_doc;
 use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
 use crate::template::Template;
 
 static POLICY_SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
-    serde_json::from_str(include_str!("../../../../data/schemas/other/iam/policy.json")).unwrap_or_default()
+    serde_json::from_str(include_str!(
+        "../../../../data/schemas/other/iam/policy.json"
+    ))
+    .unwrap_or_default()
 });
 
 static IDENTITY_SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
@@ -62,7 +65,11 @@ impl CfnLintRule for E3510 {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let schema = &*IDENTITY_SCHEMA;
         if schema.is_null() {
             return vec![];

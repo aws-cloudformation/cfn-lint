@@ -109,4 +109,3 @@ pub(crate) fn is_uri_char(c: char) -> bool {
 pub(crate) fn is_tag_char(c: char) -> bool {
     is_uri_char(c) && !is_flow(c) && c != '!'
 }
-

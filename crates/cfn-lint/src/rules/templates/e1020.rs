@@ -1,7 +1,7 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 const PSEUDO_PARAMETERS: &[&str] = &[
@@ -38,7 +38,11 @@ impl CfnLintRule for E1020 {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         // SAM templates create implicit resources we can't predict
         if crate::transform::is_sam_template(root) {
             return vec![];
@@ -65,15 +69,30 @@ impl CfnLintRule for E1020 {
         valid_refs.sort_unstable();
 
         // Build set of valid condition names
-        let condition_names: std::collections::HashSet<&str> = template.conditions.keys().map(|s| s.as_str()).collect();
+        let condition_names: std::collections::HashSet<&str> =
+            template.conditions.keys().map(|s| s.as_str()).collect();
 
         // Walk the AST looking for Ref functions
-        collect_ref_issues(root, &valid_refs, &module_prefixes, &condition_names, false, &mut issues);
+        collect_ref_issues(
+            root,
+            &valid_refs,
+            &module_prefixes,
+            &condition_names,
+            false,
+            &mut issues,
+        );
         issues
     }
 }
 
-fn collect_ref_issues(node: &AstNode, valid_refs: &[&str], module_prefixes: &[String], condition_names: &std::collections::HashSet<&str>, in_unknown_condition: bool, issues: &mut Vec<ValidationError>) {
+fn collect_ref_issues(
+    node: &AstNode,
+    valid_refs: &[&str],
+    module_prefixes: &[String],
+    condition_names: &std::collections::HashSet<&str>,
+    in_unknown_condition: bool,
+    issues: &mut Vec<ValidationError>,
+) {
     match node {
         AstNode::Function(func) if func.name == "Ref" => {
             if let Some(ref_name) = func.args.as_str() {
@@ -85,14 +104,13 @@ fn collect_ref_issues(node: &AstNode, valid_refs: &[&str], module_prefixes: &[St
                 if in_unknown_condition {
                     return;
                 }
-                let is_module_sub = module_prefixes.iter().any(|p| ref_name.starts_with(p.as_str()));
+                let is_module_sub = module_prefixes
+                    .iter()
+                    .any(|p| ref_name.starts_with(p.as_str()));
                 if !is_module_sub && valid_refs.binary_search(&ref_name).is_err() {
                     issues.push(ValidationError {
                         rule_id: Some("E1020".to_string()),
-                        message: format!(
-                            "'{}' is not one of {:?}",
-                            ref_name, valid_refs
-                        ),
+                        message: format!("'{}' is not one of {:?}", ref_name, valid_refs),
                         path: vec![],
                         span: func.span.clone(),
                         keyword: String::new(),
@@ -100,11 +118,18 @@ fn collect_ref_issues(node: &AstNode, valid_refs: &[&str], module_prefixes: &[St
                         resolved_from_ref: false,
                         context: vec![],
                         schema_id: None,
-});
+                    });
                 }
             }
             // Also walk args in case of nested functions
-            collect_ref_issues(&func.args, valid_refs, module_prefixes, condition_names, in_unknown_condition, issues);
+            collect_ref_issues(
+                &func.args,
+                valid_refs,
+                module_prefixes,
+                condition_names,
+                in_unknown_condition,
+                issues,
+            );
         }
         AstNode::Function(func) if func.name == "Fn::If" => {
             // Check if the condition name exists
@@ -114,30 +139,64 @@ fn collect_ref_issues(node: &AstNode, valid_refs: &[&str], module_prefixes: &[St
                     let cond_unknown = !condition_names.contains(cond_name);
                     // Walk branches with updated condition awareness
                     for elem in &arr.elements {
-                        collect_ref_issues(elem, valid_refs, module_prefixes, condition_names, in_unknown_condition || cond_unknown, issues);
+                        collect_ref_issues(
+                            elem,
+                            valid_refs,
+                            module_prefixes,
+                            condition_names,
+                            in_unknown_condition || cond_unknown,
+                            issues,
+                        );
                     }
                     return;
                 }
             }
-            collect_ref_issues(&func.args, valid_refs, module_prefixes, condition_names, in_unknown_condition, issues);
+            collect_ref_issues(
+                &func.args,
+                valid_refs,
+                module_prefixes,
+                condition_names,
+                in_unknown_condition,
+                issues,
+            );
         }
         AstNode::Function(func) => {
-            collect_ref_issues(&func.args, valid_refs, module_prefixes, condition_names, in_unknown_condition, issues);
+            collect_ref_issues(
+                &func.args,
+                valid_refs,
+                module_prefixes,
+                condition_names,
+                in_unknown_condition,
+                issues,
+            );
         }
         AstNode::Object(obj) => {
             for value in obj.values() {
-                collect_ref_issues(value, valid_refs, module_prefixes, condition_names, in_unknown_condition, issues);
+                collect_ref_issues(
+                    value,
+                    valid_refs,
+                    module_prefixes,
+                    condition_names,
+                    in_unknown_condition,
+                    issues,
+                );
             }
         }
         AstNode::Array(arr) => {
             for elem in &arr.elements {
-                collect_ref_issues(elem, valid_refs, module_prefixes, condition_names, in_unknown_condition, issues);
+                collect_ref_issues(
+                    elem,
+                    valid_refs,
+                    module_prefixes,
+                    condition_names,
+                    in_unknown_condition,
+                    issues,
+                );
             }
         }
         _ => {}
     }
 }
-
 
 #[cfg(test)]
 mod tests {

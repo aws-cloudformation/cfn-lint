@@ -1,7 +1,7 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E3703: Validate CodePipeline action configuration.
@@ -9,26 +9,37 @@ use crate::template::Template;
 pub struct E3703;
 
 impl CfnLintRule for E3703 {
-    fn id(&self) -> &str { "E3703" }
-    fn short_description(&self) -> &str { "Validate CodePipeline action configuration" }
+    fn id(&self) -> &str {
+        "E3703"
+    }
+    fn short_description(&self) -> &str {
+        "Validate CodePipeline action configuration"
+    }
     fn description(&self) -> &str {
         "Certain action types have configuration constraints such as \
          TemplatePath referencing a valid InputArtifact"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let mut issues = Vec::new();
         for (name, resource) in &template.resources {
             if resource.resource_type != "AWS::CodePipeline::Pipeline" {
                 continue;
             }
             let stages = match root
-                .get("Resources").and_then(|r| r.get(name))
+                .get("Resources")
+                .and_then(|r| r.get(name))
                 .and_then(|r| r.get("Properties"))
                 .and_then(|p| p.get("Stages"))
                 .and_then(|s| s.as_array())
@@ -44,8 +55,13 @@ impl CfnLintRule for E3703 {
                 };
                 for (ai, action) in actions.elements.iter().enumerate() {
                     let base_path = vec![
-                        "Resources".into(), name.clone(), "Properties".into(),
-                        "Stages".into(), si.to_string(), "Actions".into(), ai.to_string(),
+                        "Resources".into(),
+                        name.clone(),
+                        "Properties".into(),
+                        "Stages".into(),
+                        si.to_string(),
+                        "Actions".into(),
+                        ai.to_string(),
                     ];
 
                     // Check TemplatePath references a valid InputArtifact
@@ -58,7 +74,8 @@ impl CfnLintRule for E3703 {
                             .get("InputArtifacts")
                             .and_then(|i| i.as_array())
                             .map(|arr| {
-                                arr.elements.iter()
+                                arr.elements
+                                    .iter()
                                     .filter_map(|e| e.get("Name").and_then(|n| n.as_str()))
                                     .map(String::from)
                                     .collect()
@@ -76,7 +93,8 @@ impl CfnLintRule for E3703 {
                                     artifact_prefix, input_names
                                 ),
                                 path,
-                                span: action.get("Configuration")
+                                span: action
+                                    .get("Configuration")
                                     .and_then(|c| c.get("TemplatePath"))
                                     .map(|n| n.span().clone())
                                     .unwrap_or_default(),
@@ -85,7 +103,7 @@ impl CfnLintRule for E3703 {
                                 resolved_from_ref: false,
                                 context: vec![],
                                 schema_id: None,
-});
+                            });
                         }
                     }
 
@@ -95,17 +113,18 @@ impl CfnLintRule for E3703 {
                         .and_then(|c| c.get("RoleArn"))
                         .and_then(|r| r.as_str())
                     {
-                        if !role_arn.starts_with("arn:") || !role_arn.contains(":iam:") || !role_arn.contains(":role/") {
+                        if !role_arn.starts_with("arn:")
+                            || !role_arn.contains(":iam:")
+                            || !role_arn.contains(":role/")
+                        {
                             let mut path = base_path.clone();
                             path.extend(["Configuration".into(), "RoleArn".into()]);
                             issues.push(ValidationError {
                                 rule_id: Some(self.id().to_string()),
-                                message: format!(
-                                    "'{}' is not a valid IAM Role ARN",
-                                    role_arn
-                                ),
+                                message: format!("'{}' is not a valid IAM Role ARN", role_arn),
                                 path,
-                                span: action.get("Configuration")
+                                span: action
+                                    .get("Configuration")
                                     .and_then(|c| c.get("RoleArn"))
                                     .map(|n| n.span().clone())
                                     .unwrap_or_default(),
@@ -114,7 +133,7 @@ impl CfnLintRule for E3703 {
                                 resolved_from_ref: false,
                                 context: vec![],
                                 schema_id: None,
-});
+                            });
                         }
                     }
                 }

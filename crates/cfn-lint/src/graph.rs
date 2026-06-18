@@ -79,13 +79,7 @@ impl Graph {
             if let Some(obj) = outputs_node.as_object() {
                 for (output_name, output_node) in obj.iter() {
                     let source = format!("Output-{}", output_name);
-                    collect_ref_edges_with_source(
-                        output_node,
-                        &source,
-                        template,
-                        &mut edges,
-                        &[],
-                    );
+                    collect_ref_edges_with_source(output_node, &source, template, &mut edges, &[]);
                 }
             }
         }
@@ -163,7 +157,10 @@ fn collect_ref_edges_with_source(
                     let sub_str = if let Some(s) = func.args.as_str() {
                         Some(s.to_string())
                     } else if let Some(arr) = func.args.as_array() {
-                        arr.elements.first().and_then(|e| e.as_str()).map(|s| s.to_string())
+                        arr.elements
+                            .first()
+                            .and_then(|e| e.as_str())
+                            .map(|s| s.to_string())
                     } else {
                         None
                     };
@@ -197,10 +194,7 @@ fn collect_ref_edges_with_source(
 /// Conditions come from:
 /// 1. Resource/Output `Condition` property (always True for the resource to exist)
 /// 2. `Fn::If` branches along the path (True for then-branch, False for else-branch)
-pub fn get_conditions_from_path(
-    root: &AstNode,
-    path: &[String],
-) -> HashMap<String, HashSet<bool>> {
+pub fn get_conditions_from_path(root: &AstNode, path: &[String]) -> HashMap<String, HashSet<bool>> {
     let mut conditions: HashMap<String, HashSet<bool>> = HashMap::new();
 
     if path.len() < 2 {
@@ -414,7 +408,8 @@ mod tests {
 
     #[test]
     fn test_graph_ref_edge() {
-        let (tmpl, ast) = parse(br#"
+        let (tmpl, ast) = parse(
+            br#"
 Resources:
   Topic:
     Type: AWS::SNS::Topic
@@ -422,9 +417,14 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref Topic
-"#);
+"#,
+        );
         let graph = Graph::build(&tmpl, &ast);
-        let edges: Vec<_> = graph.edges.iter().filter(|e| e.kind == EdgeKind::Ref).collect();
+        let edges: Vec<_> = graph
+            .edges
+            .iter()
+            .filter(|e| e.kind == EdgeKind::Ref)
+            .collect();
         assert_eq!(edges.len(), 1);
         assert_eq!(edges[0].source, "Bucket");
         assert_eq!(edges[0].target, "Topic");
@@ -432,7 +432,8 @@ Resources:
 
     #[test]
     fn test_graph_getatt_edge() {
-        let (tmpl, ast) = parse(br#"
+        let (tmpl, ast) = parse(
+            br#"
 Resources:
   Vpc:
     Type: AWS::EC2::VPC
@@ -442,9 +443,14 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !GetAtt Vpc.VpcId
-"#);
+"#,
+        );
         let graph = Graph::build(&tmpl, &ast);
-        let edges: Vec<_> = graph.edges.iter().filter(|e| e.kind == EdgeKind::GetAtt).collect();
+        let edges: Vec<_> = graph
+            .edges
+            .iter()
+            .filter(|e| e.kind == EdgeKind::GetAtt)
+            .collect();
         assert_eq!(edges.len(), 1);
         assert_eq!(edges[0].source, "Subnet");
         assert_eq!(edges[0].target, "Vpc");
@@ -452,20 +458,23 @@ Resources:
 
     #[test]
     fn test_resource_available_no_condition() {
-        let (tmpl, ast) = parse(br#"
+        let (tmpl, ast) = parse(
+            br#"
 Resources:
   Topic:
     Type: AWS::SNS::Topic
   Bucket:
     Type: AWS::S3::Bucket
-"#);
+"#,
+        );
         let path = vec!["Resources".into(), "Bucket".into(), "Properties".into()];
         assert!(is_resource_available(&tmpl, &ast, &path, "Topic").is_empty());
     }
 
     #[test]
     fn test_resource_unavailable_conditional_target() {
-        let (tmpl, ast) = parse(br#"
+        let (tmpl, ast) = parse(
+            br#"
 Conditions:
   CreateTopic:
     Fn::Equals: [a, b]
@@ -477,8 +486,14 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref Topic
-"#);
-        let path = vec!["Resources".into(), "Bucket".into(), "Properties".into(), "BucketName".into()];
+"#,
+        );
+        let path = vec![
+            "Resources".into(),
+            "Bucket".into(),
+            "Properties".into(),
+            "BucketName".into(),
+        ];
         let scenarios = is_resource_available(&tmpl, &ast, &path, "Topic");
         assert_eq!(scenarios.len(), 1);
         assert_eq!(scenarios[0].get("CreateTopic"), Some(&false));
@@ -486,7 +501,8 @@ Resources:
 
     #[test]
     fn test_resource_available_same_condition() {
-        let (tmpl, ast) = parse(br#"
+        let (tmpl, ast) = parse(
+            br#"
 Conditions:
   CreateResources:
     Fn::Equals: [a, b]
@@ -499,14 +515,21 @@ Resources:
     Condition: CreateResources
     Properties:
       BucketName: !Ref Topic
-"#);
-        let path = vec!["Resources".into(), "Bucket".into(), "Properties".into(), "BucketName".into()];
+"#,
+        );
+        let path = vec![
+            "Resources".into(),
+            "Bucket".into(),
+            "Properties".into(),
+            "BucketName".into(),
+        ];
         assert!(is_resource_available(&tmpl, &ast, &path, "Topic").is_empty());
     }
 
     #[test]
     fn test_resource_available_and_condition_implies() {
-        let (tmpl, ast) = parse(br#"
+        let (tmpl, ast) = parse(
+            br#"
 Conditions:
   BaseEnabled:
     Fn::Equals: [true, a]
@@ -523,17 +546,28 @@ Resources:
     Condition: SubEnabled
     Properties:
       Endpoint: !GetAtt Queue.Arn
-"#);
-        let path = vec!["Resources".into(), "Sub".into(), "Properties".into(), "Endpoint".into()];
+"#,
+        );
+        let path = vec![
+            "Resources".into(),
+            "Sub".into(),
+            "Properties".into(),
+            "Endpoint".into(),
+        ];
         let scenarios = is_resource_available(&tmpl, &ast, &path, "Queue");
         // SubEnabled = And(BaseEnabled, ...) so SubEnabled=true implies BaseEnabled=true
-        assert!(scenarios.is_empty(), "Expected no issues but got: {:?}", scenarios);
+        assert!(
+            scenarios.is_empty(),
+            "Expected no issues but got: {:?}",
+            scenarios
+        );
     }
 
     #[test]
     fn test_resource_available_and_condition_implies_tag_form() {
         // Uses !And and !Condition tag forms (parsed as Function nodes)
-        let (tmpl, ast) = parse(br#"
+        let (tmpl, ast) = parse(
+            br#"
 Conditions:
   BaseEnabled:
     Fn::Equals: [true, a]
@@ -549,9 +583,19 @@ Resources:
     Condition: SubEnabled
     Properties:
       Endpoint: !GetAtt Queue.Arn
-"#);
-        let path = vec!["Resources".into(), "Sub".into(), "Properties".into(), "Endpoint".into()];
+"#,
+        );
+        let path = vec![
+            "Resources".into(),
+            "Sub".into(),
+            "Properties".into(),
+            "Endpoint".into(),
+        ];
         let scenarios = is_resource_available(&tmpl, &ast, &path, "Queue");
-        assert!(scenarios.is_empty(), "Expected no issues but got: {:?}", scenarios);
+        assert!(
+            scenarios.is_empty(),
+            "Expected no issues but got: {:?}",
+            scenarios
+        );
     }
 }

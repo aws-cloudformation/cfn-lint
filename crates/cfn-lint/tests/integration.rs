@@ -5,8 +5,8 @@ use cfn_lint::formatters::{
     get_formatter, Formatter, JsonFormatter, PrettyFormatter, ValidationResult,
 };
 use cfn_lint::parser;
-use cfn_schema::SchemaProvider;
 use cfn_lint::template::Template;
+use cfn_schema::SchemaProvider;
 
 fn data_dir() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("data")
@@ -28,7 +28,10 @@ fn validate_yaml_with_schemas(yaml: &[u8]) -> Vec<cfn_lint::jsonschema::Validati
     engine.validate(&tmpl, &ast, &["us-east-1".to_string()])
 }
 
-fn make_result(filename: &str, issues: Vec<cfn_lint::jsonschema::ValidationError>) -> Vec<ValidationResult> {
+fn make_result(
+    filename: &str,
+    issues: Vec<cfn_lint::jsonschema::ValidationError>,
+) -> Vec<ValidationResult> {
     vec![ValidationResult {
         filename: filename.to_string(),
         issues,
@@ -36,12 +39,16 @@ fn make_result(filename: &str, issues: Vec<cfn_lint::jsonschema::ValidationError
 }
 
 fn compute_exit_code(results: &[ValidationResult]) -> i32 {
-    let has_errors = results
-        .iter()
-        .any(|r| r.issues.iter().any(|i| i.rule_id.as_deref().unwrap_or("E").starts_with('E')));
-    let has_warnings = results
-        .iter()
-        .any(|r| r.issues.iter().any(|i| i.rule_id.as_deref().unwrap_or("").starts_with('W')));
+    let has_errors = results.iter().any(|r| {
+        r.issues
+            .iter()
+            .any(|i| i.rule_id.as_deref().unwrap_or("E").starts_with('E'))
+    });
+    let has_warnings = results.iter().any(|r| {
+        r.issues
+            .iter()
+            .any(|i| i.rule_id.as_deref().unwrap_or("").starts_with('W'))
+    });
     match (has_errors, has_warnings) {
         (true, _) => 2,
         (false, true) => 4,
@@ -66,7 +73,10 @@ Resources:
       InstanceType: t2.micro
 "#;
     let issues = validate_yaml_with_schemas(yaml);
-    let e3001: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref() == Some("E3001")).collect();
+    let e3001: Vec<_> = issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref() == Some("E3001"))
+        .collect();
     assert!(
         e3001.is_empty(),
         "valid EC2 instance should produce no E3001 errors, got: {:?}",
@@ -97,7 +107,10 @@ Resources:
             return "Hello"
 "#;
     let issues = validate_yaml_with_schemas(yaml);
-    let e3001: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref() == Some("E3001")).collect();
+    let e3001: Vec<_> = issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref() == Some("E3001"))
+        .collect();
     assert!(
         e3001.is_empty(),
         "valid Lambda function should produce no E3001 errors, got: {:?}",
@@ -144,7 +157,10 @@ Resources:
             return "Hello"
 "#;
     let issues = validate_yaml_with_schemas(yaml);
-    let e3001: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref() == Some("E3001")).collect();
+    let e3001: Vec<_> = issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref() == Some("E3001"))
+        .collect();
     assert!(
         e3001.is_empty(),
         "multi-resource template should produce no E3001 errors, got: {:?}",
@@ -190,7 +206,10 @@ Resources:
       InstanceType: !Ref InstanceType
 "#;
     let issues = validate_yaml_with_schemas(yaml);
-    let e3001: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref() == Some("E3001")).collect();
+    let e3001: Vec<_> = issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref() == Some("E3001"))
+        .collect();
     assert!(
         e3001.is_empty(),
         "Ref to parameters should not cause E3001 type errors, got: {:?}",
@@ -235,14 +254,20 @@ Resources:
           - dev-bucket
 "#;
     let issues = validate_yaml_with_schemas(yaml);
-    let e3006: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref() == Some("E3006")).collect();
+    let e3006: Vec<_> = issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref() == Some("E3006"))
+        .collect();
     assert!(
         e3006.is_empty(),
         "valid conditions should not produce E3006, got: {:?}",
         e3006
     );
     // E8001 should also not fire since IsProd is used
-    let e8001: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref() == Some("E8001")).collect();
+    let e8001: Vec<_> = issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref() == Some("E8001"))
+        .collect();
     assert!(
         e8001.is_empty(),
         "used condition should not produce E8001, got: {:?}",
@@ -276,13 +301,19 @@ Outputs:
       Name: MyBucketName
 "#;
     let issues = validate_yaml_with_schemas(yaml);
-    let e6001: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref() == Some("E6001")).collect();
+    let e6001: Vec<_> = issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref() == Some("E6001"))
+        .collect();
     assert!(
         e6001.is_empty(),
         "outputs with Value should not produce E6001, got: {:?}",
         e6001
     );
-    let e6002: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref() == Some("E6002")).collect();
+    let e6002: Vec<_> = issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref() == Some("E6002"))
+        .collect();
     assert!(
         e6002.is_empty(),
         "unique export names should not produce E6002, got: {:?}",
@@ -315,7 +346,10 @@ Outputs:
         long_desc
     );
     let issues = validate_yaml_with_schemas(yaml.as_bytes());
-    let rule_ids: Vec<&str> = issues.iter().map(|i| i.rule_id.as_deref().unwrap_or("")).collect();
+    let rule_ids: Vec<&str> = issues
+        .iter()
+        .map(|i| i.rule_id.as_deref().unwrap_or(""))
+        .collect();
 
     assert!(
         rule_ids.contains(&"E1003"),
@@ -374,9 +408,18 @@ Resources:
         assert!(item.get("rule_id").is_some(), "missing rule_id");
         assert!(item.get("message").is_some(), "missing message");
         assert!(item.get("location").is_some(), "missing location");
-        assert!(item["location"].get("start").is_some(), "missing location.start");
-        assert!(item["location"].get("end").is_some(), "missing location.end");
-        assert!(item["location"].get("path").is_some(), "missing location.path");
+        assert!(
+            item["location"].get("start").is_some(),
+            "missing location.start"
+        );
+        assert!(
+            item["location"].get("end").is_some(),
+            "missing location.end"
+        );
+        assert!(
+            item["location"].get("path").is_some(),
+            "missing location.path"
+        );
         assert!(item.get("severity").is_some(), "missing severity");
     }
 }
@@ -415,7 +458,10 @@ Resources:
       BucketName: my-bucket
 "#;
     let issues = validate_yaml(yaml);
-    let errors: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref().unwrap_or("E").starts_with('E')).collect();
+    let errors: Vec<_> = issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref().unwrap_or("E").starts_with('E'))
+        .collect();
     assert!(errors.is_empty(), "expected no errors, got: {:?}", errors);
 }
 
@@ -427,8 +473,14 @@ fn approaching_description_limit_gets_i1003() {
         long_desc
     );
     let issues = validate_yaml(yaml.as_bytes());
-    assert!(issues.iter().any(|i| i.rule_id.as_deref() == Some("I1003")), "expected I1003");
-    assert!(issues.iter().filter(|i| i.rule_id.as_deref() == Some("I1003")).all(|i| i.rule_id.as_deref().unwrap_or("").starts_with('I')));
+    assert!(
+        issues.iter().any(|i| i.rule_id.as_deref() == Some("I1003")),
+        "expected I1003"
+    );
+    assert!(issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref() == Some("I1003"))
+        .all(|i| i.rule_id.as_deref().unwrap_or("").starts_with('I')));
 }
 
 #[test]
@@ -436,7 +488,10 @@ fn e1001_catches_missing_resources() {
     // Template without Resources section should produce E1001
     let yaml = b"AWSTemplateFormatVersion: '2010-09-09'\nDescription: No resources\n";
     let issues = validate_yaml(yaml);
-    let e1001: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref() == Some("E1001")).collect();
+    let e1001: Vec<_> = issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref() == Some("E1001"))
+        .collect();
     assert!(!e1001.is_empty(), "Missing Resources should trigger E1001");
 }
 
@@ -444,7 +499,10 @@ fn e1001_catches_missing_resources() {
 fn e1001_valid_template_no_issues() {
     let yaml = b"AWSTemplateFormatVersion: '2010-09-09'\nResources:\n  Bucket:\n    Type: AWS::S3::Bucket\n";
     let issues = validate_yaml(yaml);
-    let e1001: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref() == Some("E1001")).collect();
+    let e1001: Vec<_> = issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref() == Some("E1001"))
+        .collect();
     assert_eq!(e1001.len(), 0);
 }
 
@@ -462,7 +520,10 @@ Resources:
       BucketName: hardcoded
 "#;
     let issues = validate_yaml(yaml);
-    let w2001: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref() == Some("W2001")).collect();
+    let w2001: Vec<_> = issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref() == Some("W2001"))
+        .collect();
     assert_eq!(w2001.len(), 1);
     assert!(w2001[0].rule_id.as_deref().unwrap().starts_with('W'));
 }
@@ -479,7 +540,10 @@ Outputs:
     Description: Missing value property
 "#;
     let issues = validate_yaml(yaml);
-    let e6002: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref() == Some("E6002")).collect();
+    let e6002: Vec<_> = issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref() == Some("E6002"))
+        .collect();
     assert_eq!(e6002.len(), 1);
 }
 
@@ -489,7 +553,8 @@ Outputs:
 
 #[test]
 fn schema_provider_loads_real_s3_bucket_schema() {
-    let provider = cfn_schema::BundledSchemaProvider::new(data_dir()).expect("failed to load schema provider");
+    let provider =
+        cfn_schema::BundledSchemaProvider::new(data_dir()).expect("failed to load schema provider");
     let schema = provider
         .get_resource_schema("AWS::S3::Bucket", "us-east-1")
         .expect("AWS::S3::Bucket schema not found");
@@ -498,7 +563,8 @@ fn schema_provider_loads_real_s3_bucket_schema() {
 
 #[test]
 fn schema_provider_loads_template_schema() {
-    let provider = cfn_schema::BundledSchemaProvider::new(data_dir()).expect("failed to load schema provider");
+    let provider =
+        cfn_schema::BundledSchemaProvider::new(data_dir()).expect("failed to load schema provider");
     let schema = provider
         .get_template_schema()
         .expect("template schema not found");
@@ -507,7 +573,8 @@ fn schema_provider_loads_template_schema() {
 
 #[test]
 fn schema_provider_lists_over_100_resource_types() {
-    let provider = cfn_schema::BundledSchemaProvider::new(data_dir()).expect("failed to load schema provider");
+    let provider =
+        cfn_schema::BundledSchemaProvider::new(data_dir()).expect("failed to load schema provider");
     let types = provider.resource_types("us-east-1");
     assert!(
         types.len() > 100,
@@ -527,7 +594,10 @@ Resources:
       BucketName: my-test-bucket
 "#;
     let issues = validate_yaml_with_schemas(yaml);
-    let e3001: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref() == Some("E3001")).collect();
+    let e3001: Vec<_> = issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref() == Some("E3001"))
+        .collect();
     assert!(e3001.is_empty(), "got unexpected E3001: {:?}", e3001);
 }
 
@@ -573,7 +643,9 @@ fn exit_code_two_for_errors() {
         long_desc
     );
     let issues = validate_yaml(yaml.as_bytes());
-    assert!(issues.iter().any(|i| i.rule_id.as_deref().unwrap_or("E").starts_with('E')));
+    assert!(issues
+        .iter()
+        .any(|i| i.rule_id.as_deref().unwrap_or("E").starts_with('E')));
     let results = make_result("bad.yaml", issues);
     assert_eq!(compute_exit_code(&results), 2);
 }
@@ -593,12 +665,17 @@ Resources:
 "#;
     let issues = validate_yaml(yaml);
     assert!(
-        issues.iter().all(|i| i.rule_id.as_deref().unwrap_or("").starts_with('W') || i.rule_id.as_deref().unwrap_or("").starts_with('I')),
+        issues
+            .iter()
+            .all(|i| i.rule_id.as_deref().unwrap_or("").starts_with('W')
+                || i.rule_id.as_deref().unwrap_or("").starts_with('I')),
         "expected only warnings/informational, got: {:?}",
         issues
     );
     assert!(
-        issues.iter().any(|i| i.rule_id.as_deref().unwrap_or("").starts_with('W')),
+        issues
+            .iter()
+            .any(|i| i.rule_id.as_deref().unwrap_or("").starts_with('W')),
         "expected at least one warning"
     );
     let results = make_result("warn.yaml", issues);
@@ -634,8 +711,15 @@ Outputs:
 
     let mut engine = Engine::new();
     let issues = engine.validate(&tmpl, &ast, &["us-east-1".to_string()]);
-    let errors: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref().unwrap_or("E").starts_with('E')).collect();
-    assert!(errors.is_empty(), "valid template should have no errors: {:?}", errors);
+    let errors: Vec<_> = issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref().unwrap_or("E").starts_with('E'))
+        .collect();
+    assert!(
+        errors.is_empty(),
+        "valid template should have no errors: {:?}",
+        errors
+    );
 
     let results = make_result("pipeline.yaml", issues);
     let json_out = JsonFormatter.format(&results);
@@ -705,11 +789,17 @@ Resources:
             Action: sts:AssumeRole
 "#;
     let issues = validate_yaml_with_schemas(yaml);
-    let w2511_issues: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref() == Some("W2511")).collect();
+    let w2511_issues: Vec<_> = issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref() == Some("W2511"))
+        .collect();
     assert!(
         !w2511_issues.is_empty(),
         "expected W2511 for old policy version, got rules: {:?}",
-        issues.iter().map(|i| i.rule_id.as_deref().unwrap_or("")).collect::<Vec<_>>()
+        issues
+            .iter()
+            .map(|i| i.rule_id.as_deref().unwrap_or(""))
+            .collect::<Vec<_>>()
     );
 }
 
@@ -735,14 +825,19 @@ Resources:
       DBInstanceClass: db.t3.micro
 "#;
     let issues = validate_yaml_with_schemas(yaml);
-    let w1011_issues: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref() == Some("W1011")).collect();
+    let w1011_issues: Vec<_> = issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref() == Some("W1011"))
+        .collect();
     assert!(
         !w1011_issues.is_empty(),
         "expected W1011 for Ref to password parameter, got rules: {:?}",
-        issues.iter().map(|i| i.rule_id.as_deref().unwrap_or("")).collect::<Vec<_>>()
+        issues
+            .iter()
+            .map(|i| i.rule_id.as_deref().unwrap_or(""))
+            .collect::<Vec<_>>()
     );
 }
-
 
 // ═══════════════════════════════════════════════════════════════════════
 // Parameter file / Deployment file integration tests
@@ -780,7 +875,8 @@ Resources:
 "#;
     // Without params: W1030 fires for MY_APP_INVALID
     let issues_no_params = validate_yaml_with_schemas(yaml);
-    let w1030: Vec<_> = issues_no_params.iter()
+    let w1030: Vec<_> = issues_no_params
+        .iter()
         .filter(|i| i.rule_id.as_deref() == Some("W1030"))
         .collect();
     assert!(!w1030.is_empty(), "expected W1030 without parameter file");
@@ -789,11 +885,15 @@ Resources:
     let mut params = std::collections::HashMap::new();
     params.insert("BucketPrefix".to_string(), "my-app".to_string());
     let issues_with_params = validate_yaml_with_parameters(yaml, params);
-    let w1030_pinned: Vec<_> = issues_with_params.iter()
+    let w1030_pinned: Vec<_> = issues_with_params
+        .iter()
         .filter(|i| i.rule_id.as_deref() == Some("W1030"))
         .collect();
-    assert!(w1030_pinned.is_empty(), "W1030 should not fire when parameter is pinned to valid value, got: {:?}",
-        w1030_pinned.iter().map(|i| &i.message).collect::<Vec<_>>());
+    assert!(
+        w1030_pinned.is_empty(),
+        "W1030 should not fire when parameter is pinned to valid value, got: {:?}",
+        w1030_pinned.iter().map(|i| &i.message).collect::<Vec<_>>()
+    );
 }
 
 #[test]
@@ -814,10 +914,14 @@ Resources:
     let mut params = std::collections::HashMap::new();
     params.insert("BucketName".to_string(), "INVALID_BUCKET_NAME".to_string());
     let issues = validate_yaml_with_parameters(yaml, params);
-    let w1030: Vec<_> = issues.iter()
+    let w1030: Vec<_> = issues
+        .iter()
         .filter(|i| i.rule_id.as_deref() == Some("W1030"))
         .collect();
-    assert!(!w1030.is_empty(), "expected W1030 when parameter file provides invalid bucket name");
+    assert!(
+        !w1030.is_empty(),
+        "expected W1030 when parameter file provides invalid bucket name"
+    );
 }
 
 #[test]
@@ -838,15 +942,27 @@ Resources:
 "#;
     // Without params: resolves to "valid-topic" (default), clean
     let issues_default = validate_yaml_with_schemas(yaml);
-    assert!(issues_default.is_empty(), "expected no issues with default value, got: {:?}",
-        issues_default.iter().map(|i| (&i.rule_id, &i.message)).collect::<Vec<_>>());
+    assert!(
+        issues_default.is_empty(),
+        "expected no issues with default value, got: {:?}",
+        issues_default
+            .iter()
+            .map(|i| (&i.rule_id, &i.message))
+            .collect::<Vec<_>>()
+    );
 
     // With params providing valid value: still clean
     let mut params = std::collections::HashMap::new();
     params.insert("TopicName".to_string(), "my-topic".to_string());
     let issues_pinned = validate_yaml_with_parameters(yaml, params);
-    assert!(issues_pinned.is_empty(), "expected no issues with pinned valid value, got: {:?}",
-        issues_pinned.iter().map(|i| (&i.rule_id, &i.message)).collect::<Vec<_>>());
+    assert!(
+        issues_pinned.is_empty(),
+        "expected no issues with pinned valid value, got: {:?}",
+        issues_pinned
+            .iter()
+            .map(|i| (&i.rule_id, &i.message))
+            .collect::<Vec<_>>()
+    );
 }
 
 #[test]
@@ -863,8 +979,8 @@ Resources:
 "#;
     // This tests the validator machinery — the actual recursive schema is injected
     // via a custom validator call, not via the template.
+    use cfn_lint::ast::{AstNode, Span, StringNode};
     use cfn_lint::jsonschema::Validator;
-    use cfn_lint::ast::{AstNode, StringNode, Span};
 
     let recursive_schema = serde_json::json!({
         "definitions": {
@@ -880,7 +996,10 @@ Resources:
         "type": "object"
     });
 
-    let node = AstNode::String(StringNode { value: "test".to_string(), span: Span::default() });
+    let node = AstNode::String(StringNode {
+        value: "test".to_string(),
+        span: Span::default(),
+    });
     let v = Validator::new(recursive_schema.clone());
     let prop_schema = serde_json::json!({"$ref": "#/definitions/Recursive"});
     // This should terminate without stack overflow
@@ -1039,7 +1158,10 @@ fn rule_integration_tests() {
         .parent()
         .expect("workspace root");
 
-    let rules_dir = workspace_root.join("tests").join("integration").join("rules");
+    let rules_dir = workspace_root
+        .join("tests")
+        .join("integration")
+        .join("rules");
     if !rules_dir.is_dir() {
         // No test fixtures yet — skip gracefully
         eprintln!(
@@ -1065,7 +1187,9 @@ fn rule_integration_tests() {
         .into_iter()
         .filter_map(|e| e.ok())
         .filter(|e| {
-            e.path().extension().map_or(false, |ext| ext == "yaml" || ext == "yml")
+            e.path()
+                .extension()
+                .map_or(false, |ext| ext == "yaml" || ext == "yml")
         })
     {
         let path = entry.path();
@@ -1131,8 +1255,7 @@ fn rule_integration_tests() {
             let matching_issues: Vec<_> = issues
                 .iter()
                 .filter(|i| {
-                    i.rule_id.as_deref() == Some(&expected.rule)
-                        && i.path == expected_segments
+                    i.rule_id.as_deref() == Some(&expected.rule) && i.path == expected_segments
                 })
                 .collect();
 
@@ -1228,9 +1351,10 @@ fn rule_integration_tests() {
             .filter(|i| i.rule_id.as_deref() == Some(front_matter.rule.as_str()))
             .filter(|i| {
                 let issue_path_str = format!("/{}", i.path.join("/"));
-                !front_matter.expect.iter().any(|exp| {
-                    exp.rule == front_matter.rule && exp.path == issue_path_str
-                })
+                !front_matter
+                    .expect
+                    .iter()
+                    .any(|exp| exp.rule == front_matter.rule && exp.path == issue_path_str)
             })
             .collect();
 
@@ -1278,10 +1402,7 @@ fn rule_integration_tests() {
         panic!("{}", report);
     }
 
-    eprintln!(
-        "OK: {} rule integration test file(s) passed.",
-        test_count
-    );
+    eprintln!("OK: {} rule integration test file(s) passed.", test_count);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -1291,8 +1412,8 @@ fn rule_integration_tests() {
 
 #[test]
 fn rule_keywords_are_reachable() {
-    use std::collections::HashSet;
     use cfn_lint::jsonschema::cfn_lint_keyword::KeywordRuleRegistry;
+    use std::collections::HashSet;
 
     let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let schema_dir = manifest_dir.join("data");
@@ -1305,9 +1426,10 @@ fn rule_keywords_are_reachable() {
         );
     }
 
-    let provider = cfn_schema::BundledSchemaProvider::new(schema_dir)
-        .expect("failed to load schema provider");
-    let resource_types: HashSet<String> = provider.resource_types("us-east-1").into_iter().collect();
+    let provider =
+        cfn_schema::BundledSchemaProvider::new(schema_dir).expect("failed to load schema provider");
+    let resource_types: HashSet<String> =
+        provider.resource_types("us-east-1").into_iter().collect();
 
     // Build the registry the same way Engine::new() does
     let mut registry = KeywordRuleRegistry::from_inventory();
@@ -1316,10 +1438,20 @@ fn rule_keywords_are_reachable() {
     registry.register(std::sync::Arc::new(cfn_lint::rules::w2531::W2531::new()));
 
     let top_level_sections: HashSet<&str> = [
-        "Resources", "Parameters", "Outputs", "Conditions",
-        "Mappings", "Metadata", "Transform", "AWSTemplateFormatVersion",
-        "Description", "Rules", "Hooks",
-    ].into_iter().collect();
+        "Resources",
+        "Parameters",
+        "Outputs",
+        "Conditions",
+        "Mappings",
+        "Metadata",
+        "Transform",
+        "AWSTemplateFormatVersion",
+        "Description",
+        "Rules",
+        "Hooks",
+    ]
+    .into_iter()
+    .collect();
 
     let mut rules_checked = 0;
     let mut unreachable_keywords: Vec<(String, String)> = Vec::new(); // (rule_id, keyword)
@@ -1341,10 +1473,7 @@ fn rule_keywords_are_reachable() {
 
             // First segment must be a known top-level section
             if !top_level_sections.contains(segments[0]) {
-                unreachable_keywords.push((
-                    rule.id().to_string(),
-                    keyword.to_string(),
-                ));
+                unreachable_keywords.push((rule.id().to_string(), keyword.to_string()));
                 continue;
             }
 
@@ -1363,10 +1492,7 @@ fn rule_keywords_are_reachable() {
 
                 // Check if the resource type exists in the schema
                 if !resource_types.contains(type_segment) {
-                    unreachable_keywords.push((
-                        rule.id().to_string(),
-                        keyword.to_string(),
-                    ));
+                    unreachable_keywords.push((rule.id().to_string(), keyword.to_string()));
                     continue;
                 }
 
@@ -1375,7 +1501,8 @@ fn rule_keywords_are_reachable() {
                 if segments.len() >= 3 && segments[2] == "Properties" && segments.len() > 3 {
                     // Build path for schema resolution (skip array wildcards for
                     // the purpose of checking basic reachability)
-                    let schema_path: Vec<&str> = segments.iter()
+                    let schema_path: Vec<&str> = segments
+                        .iter()
                         .take_while(|s| **s != "*")
                         .copied()
                         .collect();
@@ -1384,10 +1511,7 @@ fn rule_keywords_are_reachable() {
                     if schema_path.len() > 3 {
                         let resolved = provider.resolve(&schema_path, "us-east-1");
                         if resolved.is_none() {
-                            unreachable_keywords.push((
-                                rule.id().to_string(),
-                                keyword.to_string(),
-                            ));
+                            unreachable_keywords.push((rule.id().to_string(), keyword.to_string()));
                         }
                     }
                 }
@@ -1401,7 +1525,10 @@ fn rule_keywords_are_reachable() {
     if !unreachable_keywords.is_empty() {
         eprintln!("\n=== Unreachable keyword warnings ===");
         for (rule_id, keyword) in &unreachable_keywords {
-            eprintln!("  WARNING: rule {} keyword '{}' is not reachable via schema", rule_id, keyword);
+            eprintln!(
+                "  WARNING: rule {} keyword '{}' is not reachable via schema",
+                rule_id, keyword
+            );
         }
     }
 

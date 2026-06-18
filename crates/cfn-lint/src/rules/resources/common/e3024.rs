@@ -1,11 +1,11 @@
 use std::sync::LazyLock;
 
 use crate::ast::AstNode;
+use crate::engine::flatten_validation_errors;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
 use crate::jsonschema::{ValidationError, Validator};
 use crate::rules::Severity;
 use crate::template::Template;
-use crate::engine::flatten_validation_errors;
 
 static TAGGING_SCHEMA: LazyLock<Option<serde_json::Value>> = LazyLock::new(|| {
     let schema_str = include_str!("../../../../data/schemas/other/resources/tagging.json");
@@ -45,9 +45,11 @@ impl CfnLintRule for E3024 {
         schema: &serde_json::Value,
         path: &[String],
     ) -> Vec<ValidationError> {
-        let is_taggable = schema.get("tagging")
+        let is_taggable = schema
+            .get("tagging")
             .and_then(|t| t.get("taggable"))
-            .and_then(|t| t.as_bool()) == Some(true);
+            .and_then(|t| t.as_bool())
+            == Some(true);
         if !is_taggable {
             return vec![];
         }
@@ -77,9 +79,9 @@ impl CfnLintRule for E3024 {
 
 #[cfg(test)]
 mod tests {
+    use crate::engine::Engine;
     use crate::parser;
     use crate::template::Template;
-    use crate::engine::Engine;
 
     #[test]
     fn test_valid_tags() {
@@ -98,7 +100,10 @@ Resources:
         let tmpl = Template::from_ast(&ast).unwrap();
         let mut engine = Engine::new();
         let issues = engine.validate(&tmpl, &ast, &["us-east-1".to_string()]);
-        let e3024: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref() == Some("E3024")).collect();
+        let e3024: Vec<_> = issues
+            .iter()
+            .filter(|i| i.rule_id.as_deref() == Some("E3024"))
+            .collect();
         assert!(e3024.is_empty());
     }
 
@@ -119,7 +124,10 @@ Resources:
         let tmpl = Template::from_ast(&ast).unwrap();
         let mut engine = Engine::new();
         let issues = engine.validate(&tmpl, &ast, &["us-east-1".to_string()]);
-        let e3024: Vec<_> = issues.iter().filter(|i| i.rule_id.as_deref() == Some("E3024")).collect();
+        let e3024: Vec<_> = issues
+            .iter()
+            .filter(|i| i.rule_id.as_deref() == Some("E3024"))
+            .collect();
         // Without a schema provider, E3024 can't determine taggability — no errors expected
         assert!(e3024.is_empty());
     }

@@ -1,32 +1,43 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E3702: Validate the number of input and output artifacts in a CodePipeline.
 pub struct E3702;
 
 impl CfnLintRule for E3702 {
-    fn id(&self) -> &str { "E3702" }
-    fn short_description(&self) -> &str { "Validate CodePipeline artifact counts" }
+    fn id(&self) -> &str {
+        "E3702"
+    }
+    fn short_description(&self) -> &str {
+        "Validate CodePipeline artifact counts"
+    }
     fn description(&self) -> &str {
         "Action types have different constraints for InputArtifacts and OutputArtifacts counts"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let mut issues = Vec::new();
         for (name, resource) in &template.resources {
             if resource.resource_type != "AWS::CodePipeline::Pipeline" {
                 continue;
             }
             let stages = match root
-                .get("Resources").and_then(|r| r.get(name))
+                .get("Resources")
+                .and_then(|r| r.get(name))
                 .and_then(|r| r.get("Properties"))
                 .and_then(|p| p.get("Stages"))
                 .and_then(|s| s.as_array())
@@ -45,28 +56,47 @@ impl CfnLintRule for E3702 {
                         Some(at) => at,
                         None => continue,
                     };
-                    let owner = action_type.get("Owner").and_then(|n| n.as_str()).unwrap_or("");
-                    let category = action_type.get("Category").and_then(|n| n.as_str()).unwrap_or("");
-                    let provider = action_type.get("Provider").and_then(|n| n.as_str()).unwrap_or("");
+                    let owner = action_type
+                        .get("Owner")
+                        .and_then(|n| n.as_str())
+                        .unwrap_or("");
+                    let category = action_type
+                        .get("Category")
+                        .and_then(|n| n.as_str())
+                        .unwrap_or("");
+                    let provider = action_type
+                        .get("Provider")
+                        .and_then(|n| n.as_str())
+                        .unwrap_or("");
 
                     let constraint = match get_constraint(owner, category, provider) {
                         Some(c) => c,
                         None => continue,
                     };
 
-                    let input_count = action.get("InputArtifacts")
+                    let input_count = action
+                        .get("InputArtifacts")
                         .and_then(|n| n.as_array())
                         .map(|a| a.elements.len())
                         .unwrap_or(0);
-                    let output_count = action.get("OutputArtifacts")
+                    let output_count = action
+                        .get("OutputArtifacts")
                         .and_then(|n| n.as_array())
                         .map(|a| a.elements.len())
                         .unwrap_or(0);
 
-                    let repr = format!("{{'Owner': '{}', 'Category': '{}', 'Provider': '{}'}}", owner, category, provider);
+                    let repr = format!(
+                        "{{'Owner': '{}', 'Category': '{}', 'Provider': '{}'}}",
+                        owner, category, provider
+                    );
                     let base_path = vec![
-                        "Resources".into(), name.clone(), "Properties".into(),
-                        "Stages".into(), si.to_string(), "Actions".into(), ai.to_string(),
+                        "Resources".into(),
+                        name.clone(),
+                        "Properties".into(),
+                        "Stages".into(),
+                        si.to_string(),
+                        "Actions".into(),
+                        ai.to_string(),
                     ];
 
                     if input_count < constraint.min_input {
@@ -85,7 +115,7 @@ impl CfnLintRule for E3702 {
                             resolved_from_ref: false,
                             context: vec![],
                             schema_id: None,
-});
+                        });
                     }
                     if input_count > constraint.max_input {
                         let mut path = base_path.clone();
@@ -103,7 +133,7 @@ impl CfnLintRule for E3702 {
                             resolved_from_ref: false,
                             context: vec![],
                             schema_id: None,
-});
+                        });
                     }
                     if output_count < constraint.min_output {
                         let mut path = base_path.clone();
@@ -121,7 +151,7 @@ impl CfnLintRule for E3702 {
                             resolved_from_ref: false,
                             context: vec![],
                             schema_id: None,
-});
+                        });
                     }
                     if output_count > constraint.max_output {
                         let mut path = base_path.clone();
@@ -139,7 +169,7 @@ impl CfnLintRule for E3702 {
                             resolved_from_ref: false,
                             context: vec![],
                             schema_id: None,
-});
+                        });
                     }
                 }
             }
@@ -157,30 +187,82 @@ struct ArtifactConstraint {
 
 fn get_constraint(owner: &str, category: &str, provider: &str) -> Option<ArtifactConstraint> {
     match (owner, category, provider) {
-        ("AWS", "Source", "S3" | "CodeCommit" | "ECR") =>
-            Some(ArtifactConstraint { min_input: 0, max_input: 0, min_output: 1, max_output: 1 }),
-        ("AWS", "Test", "CodeBuild") =>
-            Some(ArtifactConstraint { min_input: 1, max_input: 5, min_output: 0, max_output: 5 }),
-        ("AWS", "Test", "DeviceFarm") =>
-            Some(ArtifactConstraint { min_input: 1, max_input: 1, min_output: 0, max_output: 0 }),
-        ("AWS", "Build", "CodeBuild") =>
-            Some(ArtifactConstraint { min_input: 1, max_input: 5, min_output: 0, max_output: 5 }),
-        ("AWS", "Approval", "Manual") =>
-            Some(ArtifactConstraint { min_input: 0, max_input: 0, min_output: 0, max_output: 0 }),
-        ("AWS", "Deploy", "S3") =>
-            Some(ArtifactConstraint { min_input: 1, max_input: 1, min_output: 0, max_output: 0 }),
-        ("AWS", "Deploy", "CloudFormation") =>
-            Some(ArtifactConstraint { min_input: 0, max_input: 10, min_output: 0, max_output: 1 }),
-        ("AWS", "Deploy", "CodeDeploy" | "ElasticBeanstalk" | "OpsWorks" | "ECS" | "ServiceCatalog") =>
-            Some(ArtifactConstraint { min_input: 1, max_input: 1, min_output: 0, max_output: 0 }),
-        ("AWS", "Invoke", "Lambda") =>
-            Some(ArtifactConstraint { min_input: 0, max_input: 5, min_output: 0, max_output: 5 }),
-        ("ThirdParty", "Source", "GitHub") =>
-            Some(ArtifactConstraint { min_input: 0, max_input: 0, min_output: 1, max_output: 1 }),
-        ("ThirdParty", "Deploy", "AlexaSkillsKit") =>
-            Some(ArtifactConstraint { min_input: 0, max_input: 2, min_output: 0, max_output: 0 }),
-        ("Custom", "Build" | "Test", "Jenkins") =>
-            Some(ArtifactConstraint { min_input: 0, max_input: 5, min_output: 0, max_output: 5 }),
+        ("AWS", "Source", "S3" | "CodeCommit" | "ECR") => Some(ArtifactConstraint {
+            min_input: 0,
+            max_input: 0,
+            min_output: 1,
+            max_output: 1,
+        }),
+        ("AWS", "Test", "CodeBuild") => Some(ArtifactConstraint {
+            min_input: 1,
+            max_input: 5,
+            min_output: 0,
+            max_output: 5,
+        }),
+        ("AWS", "Test", "DeviceFarm") => Some(ArtifactConstraint {
+            min_input: 1,
+            max_input: 1,
+            min_output: 0,
+            max_output: 0,
+        }),
+        ("AWS", "Build", "CodeBuild") => Some(ArtifactConstraint {
+            min_input: 1,
+            max_input: 5,
+            min_output: 0,
+            max_output: 5,
+        }),
+        ("AWS", "Approval", "Manual") => Some(ArtifactConstraint {
+            min_input: 0,
+            max_input: 0,
+            min_output: 0,
+            max_output: 0,
+        }),
+        ("AWS", "Deploy", "S3") => Some(ArtifactConstraint {
+            min_input: 1,
+            max_input: 1,
+            min_output: 0,
+            max_output: 0,
+        }),
+        ("AWS", "Deploy", "CloudFormation") => Some(ArtifactConstraint {
+            min_input: 0,
+            max_input: 10,
+            min_output: 0,
+            max_output: 1,
+        }),
+        (
+            "AWS",
+            "Deploy",
+            "CodeDeploy" | "ElasticBeanstalk" | "OpsWorks" | "ECS" | "ServiceCatalog",
+        ) => Some(ArtifactConstraint {
+            min_input: 1,
+            max_input: 1,
+            min_output: 0,
+            max_output: 0,
+        }),
+        ("AWS", "Invoke", "Lambda") => Some(ArtifactConstraint {
+            min_input: 0,
+            max_input: 5,
+            min_output: 0,
+            max_output: 5,
+        }),
+        ("ThirdParty", "Source", "GitHub") => Some(ArtifactConstraint {
+            min_input: 0,
+            max_input: 0,
+            min_output: 1,
+            max_output: 1,
+        }),
+        ("ThirdParty", "Deploy", "AlexaSkillsKit") => Some(ArtifactConstraint {
+            min_input: 0,
+            max_input: 2,
+            min_output: 0,
+            max_output: 0,
+        }),
+        ("Custom", "Build" | "Test", "Jenkins") => Some(ArtifactConstraint {
+            min_input: 0,
+            max_input: 5,
+            min_output: 0,
+            max_output: 5,
+        }),
         _ => None,
     }
 }
@@ -241,7 +323,9 @@ Resources:
         let tmpl = Template::from_ast(&ast).unwrap();
         let issues = E3702.validate_template(&tmpl, &ast);
         assert!(!issues.is_empty());
-        assert!(issues.iter().any(|i| i.message.contains("InputArtifacts") && i.message.contains("maximum is 0")));
+        assert!(issues
+            .iter()
+            .any(|i| i.message.contains("InputArtifacts") && i.message.contains("maximum is 0")));
     }
 }
 

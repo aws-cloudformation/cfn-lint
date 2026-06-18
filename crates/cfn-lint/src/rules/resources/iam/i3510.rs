@@ -1,8 +1,8 @@
 use crate::ast::AstNode;
-use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
-use crate::template::Template;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
+use crate::template::Template;
 
 /// I3510: Validate IAM statement resources match the actions.
 ///
@@ -30,9 +30,13 @@ impl CfnLintRule for I3510 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         // Schema-driven in Python, needs proper IAM action-resource matching
-                vec![]
+        vec![]
     }
 }
 

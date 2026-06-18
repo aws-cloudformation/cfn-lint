@@ -31,12 +31,22 @@ const OUTPUT_VALUE_FUNCTIONS: &[&str] = &[
 pub struct E6101;
 
 impl CfnLintRule for E6101 {
-    fn id(&self) -> &str { "E6101" }
-    fn short_description(&self) -> &str { "Validate that outputs values are a string" }
-    fn description(&self) -> &str { "Make sure that output values have a type of string" }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn id(&self) -> &str {
+        "E6101"
+    }
+    fn short_description(&self) -> &str {
+        "Validate that outputs values are a string"
+    }
+    fn description(&self) -> &str {
+        "Make sure that output values have a type of string"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
-    fn keywords(&self) -> &[&str] { &["Outputs/*"] }
+    fn keywords(&self) -> &[&str] {
+        &["Outputs/*"]
+    }
 
     fn validate(
         &self,
@@ -67,7 +77,12 @@ impl CfnLintRule for E6101 {
 
         // Evolve context: restrict functions, optionally pin condition
         let evolved = validator.evolve(ContextEvolution {
-            functions: Some(OUTPUT_VALUE_FUNCTIONS.iter().map(|s| s.to_string()).collect()),
+            functions: Some(
+                OUTPUT_VALUE_FUNCTIONS
+                    .iter()
+                    .map(|s| s.to_string())
+                    .collect(),
+            ),
             condition_state,
             ..Default::default()
         });
@@ -116,7 +131,13 @@ Outputs:
         let (validator, ast) = make_validator(yaml);
         let output = ast.get("Outputs").unwrap().get("Out1").unwrap();
         let path = vec!["Outputs".into(), "Out1".into()];
-        let errors = E6101.validate(&validator, "Outputs/*", output, &serde_json::json!({}), &path);
+        let errors = E6101.validate(
+            &validator,
+            "Outputs/*",
+            output,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -135,7 +156,13 @@ Outputs:
         let (validator, ast) = make_validator(yaml);
         let output = ast.get("Outputs").unwrap().get("Out1").unwrap();
         let path = vec!["Outputs".into(), "Out1".into()];
-        let errors = E6101.validate(&validator, "Outputs/*", output, &serde_json::json!({}), &path);
+        let errors = E6101.validate(
+            &validator,
+            "Outputs/*",
+            output,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(!errors.is_empty());
         assert!(errors.iter().any(|e| e.keyword == "type"));
     }
@@ -153,8 +180,17 @@ Outputs:
         let (validator, ast) = make_validator(yaml);
         let output = ast.get("Outputs").unwrap().get("Out1").unwrap();
         let path = vec!["Outputs".into(), "Out1".into()];
-        let errors = E6101.validate(&validator, "Outputs/*", output, &serde_json::json!({}), &path);
-        assert!(errors.is_empty(), "Fn::Sub should be allowed in output values");
+        let errors = E6101.validate(
+            &validator,
+            "Outputs/*",
+            output,
+            &serde_json::json!({}),
+            &path,
+        );
+        assert!(
+            errors.is_empty(),
+            "Fn::Sub should be allowed in output values"
+        );
     }
 
     #[test]
@@ -170,7 +206,13 @@ Outputs:
         let (validator, ast) = make_validator(yaml);
         let output = ast.get("Outputs").unwrap().get("Out1").unwrap();
         let path = vec!["Outputs".into(), "Out1".into()];
-        let errors = E6101.validate(&validator, "Outputs/*", output, &serde_json::json!({}), &path);
+        let errors = E6101.validate(
+            &validator,
+            "Outputs/*",
+            output,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 }

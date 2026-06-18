@@ -33,7 +33,13 @@ where
 /// Find the deepest AstNode at a given cursor position (span-based).
 pub fn node_at_position(root: &AstNode, line: u32, col: u32) -> Option<(&AstNode, Vec<String>)> {
     let mut best: Option<(&AstNode, Vec<String>)> = None;
-    fn search<'a>(node: &'a AstNode, path: &[String], line: u32, col: u32, best: &mut Option<(&'a AstNode, Vec<String>)>) {
+    fn search<'a>(
+        node: &'a AstNode,
+        path: &[String],
+        line: u32,
+        col: u32,
+        best: &mut Option<(&'a AstNode, Vec<String>)>,
+    ) {
         if !span_contains(node.span(), line, col) {
             return;
         }
@@ -68,15 +74,9 @@ pub fn function_at_position(root: &AstNode, line: u32, col: u32) -> Option<&Func
             return None;
         }
         match node {
-            AstNode::Function(func) => {
-                search(&func.args, line, col).or(Some(func))
-            }
-            AstNode::Object(obj) => {
-                obj.values().find_map(|v| search(v, line, col))
-            }
-            AstNode::Array(arr) => {
-                arr.elements.iter().find_map(|e| search(e, line, col))
-            }
+            AstNode::Function(func) => search(&func.args, line, col).or(Some(func)),
+            AstNode::Object(obj) => obj.values().find_map(|v| search(v, line, col)),
+            AstNode::Array(arr) => arr.elements.iter().find_map(|e| search(e, line, col)),
             _ => None,
         }
     }
@@ -91,7 +91,11 @@ pub fn function_at_position(root: &AstNode, line: u32, col: u32) -> Option<&Func
 ///
 /// This function walks the object tree and uses line ordering + column
 /// indentation to determine which object the cursor is logically inside.
-pub fn object_context_at_position(root: &AstNode, line: u32, col: u32) -> Option<(&AstNode, Vec<String>)> {
+pub fn object_context_at_position(
+    root: &AstNode,
+    line: u32,
+    col: u32,
+) -> Option<(&AstNode, Vec<String>)> {
     let mut best: Option<(&AstNode, Vec<String>)> = None;
 
     fn search_obj<'a>(
@@ -105,7 +109,8 @@ pub fn object_context_at_position(root: &AstNode, line: u32, col: u32) -> Option
 
         for (i, (key, value)) in entries.iter().enumerate() {
             let value_start_line = value.span().start.line;
-            let next_start_line = entries.get(i + 1)
+            let next_start_line = entries
+                .get(i + 1)
                 .map(|(_, v)| v.span().start.line)
                 .unwrap_or(obj.span.end.line + 1);
 
@@ -188,7 +193,11 @@ pub fn find_references(root: &AstNode, name: &str) -> Vec<Span> {
                     let template_str = match func.args.as_ref() {
                         AstNode::String(s) => Some(&s.value),
                         AstNode::Array(arr) => arr.elements.first().and_then(|e| {
-                            if let AstNode::String(s) = e { Some(&s.value) } else { None }
+                            if let AstNode::String(s) = e {
+                                Some(&s.value)
+                            } else {
+                                None
+                            }
                         }),
                         _ => None,
                     };
@@ -208,10 +217,12 @@ pub fn find_references(root: &AstNode, name: &str) -> Vec<Span> {
 }
 
 fn span_contains(span: Span, line: u32, col: u32) -> bool {
-    if span.start.line == 0 && span.start.column == 0 && span.end.line == 0 && span.end.column == 0 {
+    if span.start.line == 0 && span.start.column == 0 && span.end.line == 0 && span.end.column == 0
+    {
         return false;
     }
-    let after_start = line > span.start.line || (line == span.start.line && col >= span.start.column);
+    let after_start =
+        line > span.start.line || (line == span.start.line && col >= span.start.column);
     let before_end = line < span.end.line || (line == span.end.line && col <= span.end.column);
     after_start && before_end
 }

@@ -9,7 +9,7 @@ pub mod e3674;
 pub mod e3687;
 pub mod e3688;
 pub mod e3715;
+pub mod w3671;
 pub mod w3687;
 pub mod w3698;
 pub mod w3703;
-pub mod w3671;

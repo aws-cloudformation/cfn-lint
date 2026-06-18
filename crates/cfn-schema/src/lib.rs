@@ -82,14 +82,14 @@ pub enum AdditionalProperties {
 impl SchemaNode {
     pub fn allowed_values(&self) -> Option<Vec<String>> {
         self.enum_values.as_ref().map(|vals| {
-            vals.iter().filter_map(|v| v.as_str().map(String::from)).collect()
+            vals.iter()
+                .filter_map(|v| v.as_str().map(String::from))
+                .collect()
         })
     }
 
     pub fn has_composition(&self) -> bool {
-        !self.any_of.is_empty()
-            || !self.one_of.is_empty()
-            || self.if_schema.is_some()
+        !self.any_of.is_empty() || !self.one_of.is_empty() || self.if_schema.is_some()
     }
 }
 
@@ -128,10 +128,14 @@ pub trait SchemaProvider: Send + Sync {
     ) -> Vec<(&'a ResourceSchema, Vec<&'a str>)>;
 
     /// Get the raw template-level schema (top-level keys like Resources, Parameters, etc.)
-    fn get_template_schema(&self) -> Option<&serde_json::Value> { None }
+    fn get_template_schema(&self) -> Option<&serde_json::Value> {
+        None
+    }
 
     /// Get a raw "other" schema by dot-path (e.g. "transforms/configuration", "parameters/configuration").
-    fn get_other_schema(&self, _path: &str) -> Option<&serde_json::Value> { None }
+    fn get_other_schema(&self, _path: &str) -> Option<&serde_json::Value> {
+        None
+    }
 }
 
 /// Reads pre-patched schemas from disk. No patching at runtime.
@@ -206,7 +210,8 @@ impl BundledSchemaProvider {
                         for sub_entry in sub_entries.flatten() {
                             let sub_path = sub_entry.path();
                             if let Some(name) = sub_path.file_stem().and_then(|s| s.to_str()) {
-                                let dir_name = path.file_name().and_then(|s| s.to_str()).unwrap_or("");
+                                let dir_name =
+                                    path.file_name().and_then(|s| s.to_str()).unwrap_or("");
                                 let key = format!("{}/{}", dir_name, name);
                                 if let Ok(content) = std::fs::read_to_string(&sub_path) {
                                     if let Ok(val) = serde_json::from_str(&content) {
@@ -221,12 +226,11 @@ impl BundledSchemaProvider {
         }
 
         // Load SAM provider mapping
-        let sam_registry: HashMap<String, String> = std::fs::read_to_string(
-            data_dir.join("schemas").join("sam").join("provider.json"),
-        )
-        .ok()
-        .and_then(|c| serde_json::from_str(&c).ok())
-        .unwrap_or_default();
+        let sam_registry: HashMap<String, String> =
+            std::fs::read_to_string(data_dir.join("schemas").join("sam").join("provider.json"))
+                .ok()
+                .and_then(|c| serde_json::from_str(&c).ok())
+                .unwrap_or_default();
 
         Some(Self {
             data_dir,
@@ -238,8 +242,16 @@ impl BundledSchemaProvider {
     }
 
     fn load_resource_schema(&self, hash: &str, resource_type: &str) -> Option<ResourceSchema> {
-        let path = self.data_dir.join("schemas").join("resources").join(format!("{}.json", hash));
-        let sam_path = self.data_dir.join("schemas").join("sam").join(format!("{}.json", hash));
+        let path = self
+            .data_dir
+            .join("schemas")
+            .join("resources")
+            .join(format!("{}.json", hash));
+        let sam_path = self
+            .data_dir
+            .join("schemas")
+            .join("sam")
+            .join(format!("{}.json", hash));
         let content = std::fs::read_to_string(&path)
             .or_else(|_| std::fs::read_to_string(&sam_path))
             .ok()?;
@@ -248,14 +260,13 @@ impl BundledSchemaProvider {
     }
 
     fn get_cached_schema(&self, resource_type: &str, region: &str) -> Option<&ResourceSchema> {
-        let hash = self.registry.get(region)?.get(resource_type)
-            .or_else(|| {
-                if resource_type.starts_with("AWS::Serverless::") {
-                    self.sam_registry.get(resource_type)
-                } else {
-                    None
-                }
-            })?;
+        let hash = self.registry.get(region)?.get(resource_type).or_else(|| {
+            if resource_type.starts_with("AWS::Serverless::") {
+                self.sam_registry.get(resource_type)
+            } else {
+                None
+            }
+        })?;
         {
             let cache = self.cache.read().ok()?;
             if let Some(schema) = cache.get(hash) {
@@ -267,7 +278,9 @@ impl BundledSchemaProvider {
         }
         let schema = self.load_resource_schema(hash, resource_type)?;
         let mut cache = self.cache.write().ok()?;
-        let entry = cache.entry(hash.clone()).or_insert_with(|| Box::new(schema));
+        let entry = cache
+            .entry(hash.clone())
+            .or_insert_with(|| Box::new(schema));
         // SAFETY: Same as above — Box provides a stable heap address.
         let ptr: *const ResourceSchema = &**entry;
         Some(unsafe { &*ptr })
@@ -280,18 +293,23 @@ impl SchemaProvider for BundledSchemaProvider {
             // Resource entry attributes (Type, Properties, DependsOn, etc.)
             ["Resources", _, rest @ ..] if rest.is_empty() => {
                 if let Some(res_schema) = self.prefix_schemas.get("resources/configuration") {
-                    let res_def = res_schema.get("definitions")
+                    let res_def = res_schema
+                        .get("definitions")
                         .and_then(|d| d.get("ResourceConfiguration"));
                     if let Some(def) = res_def {
                         let node = parse_schema_node_with_defs(def, res_schema.get("definitions"));
                         return Some(node);
                     }
                     // Fallback: use patternProperties
-                    let res_def = res_schema.get("patternProperties")
+                    let res_def = res_schema
+                        .get("patternProperties")
                         .and_then(|pp| pp.as_object())
                         .and_then(|pp| pp.values().next());
                     if let Some(def) = res_def {
-                        return Some(parse_schema_node_with_defs(def, res_schema.get("definitions")));
+                        return Some(parse_schema_node_with_defs(
+                            def,
+                            res_schema.get("definitions"),
+                        ));
                     }
                 }
                 None
@@ -308,7 +326,8 @@ impl SchemaProvider for BundledSchemaProvider {
             }
             ["Parameters", _, rest @ ..] => {
                 if let Some(param_schema) = self.prefix_schemas.get("parameters/configuration") {
-                    let param_def = param_schema.get("patternProperties")
+                    let param_def = param_schema
+                        .get("patternProperties")
                         .and_then(|pp| pp.as_object())
                         .and_then(|pp| pp.values().next());
                     if let Some(def) = param_def {
@@ -364,7 +383,8 @@ impl SchemaProvider for BundledSchemaProvider {
     }
 
     fn resource_types(&self, region: &str) -> Vec<String> {
-        let mut types: Vec<String> = self.registry
+        let mut types: Vec<String> = self
+            .registry
             .get(region)
             .map(|m| m.keys().cloned().collect())
             .unwrap_or_default();
@@ -379,7 +399,10 @@ impl SchemaProvider for BundledSchemaProvider {
     ) -> Vec<(&'a ResourceSchema, Vec<&'a str>)> {
         let mut hash_to_regions: IndexMap<&str, Vec<&str>> = IndexMap::new();
         for region in regions {
-            let hash = self.registry.get(region.as_str()).and_then(|m| m.get(resource_type))
+            let hash = self
+                .registry
+                .get(region.as_str())
+                .and_then(|m| m.get(resource_type))
                 .or_else(|| {
                     if resource_type.starts_with("AWS::Serverless::") {
                         self.sam_registry.get(resource_type)
@@ -388,7 +411,10 @@ impl SchemaProvider for BundledSchemaProvider {
                     }
                 });
             if let Some(hash) = hash {
-                hash_to_regions.entry(hash.as_str()).or_default().push(region.as_str());
+                hash_to_regions
+                    .entry(hash.as_str())
+                    .or_default()
+                    .push(region.as_str());
             }
         }
         hash_to_regions
@@ -426,8 +452,8 @@ pub fn navigate_schema_node(node: &SchemaNode, path: &[&str]) -> Option<SchemaNo
         return navigate_schema_node(child, &path[1..]);
     }
 
-    use std::sync::{LazyLock, Mutex};
     use std::collections::HashMap as StdHashMap;
+    use std::sync::{LazyLock, Mutex};
     static REGEX_CACHE: LazyLock<Mutex<StdHashMap<String, regex::Regex>>> =
         LazyLock::new(|| Mutex::new(StdHashMap::new()));
 
@@ -451,13 +477,20 @@ pub fn parse_schema_node(raw: &serde_json::Value) -> SchemaNode {
     parse_schema_node_with_defs(raw, None)
 }
 
-pub fn parse_schema_node_with_defs(raw: &serde_json::Value, definitions: Option<&serde_json::Value>) -> SchemaNode {
+pub fn parse_schema_node_with_defs(
+    raw: &serde_json::Value,
+    definitions: Option<&serde_json::Value>,
+) -> SchemaNode {
     parse_schema_node_impl(raw, definitions, 0)
 }
 
 const MAX_REF_DEPTH: u16 = 50;
 
-fn parse_schema_node_impl(raw: &serde_json::Value, definitions: Option<&serde_json::Value>, depth: u16) -> SchemaNode {
+fn parse_schema_node_impl(
+    raw: &serde_json::Value,
+    definitions: Option<&serde_json::Value>,
+    depth: u16,
+) -> SchemaNode {
     if depth > MAX_REF_DEPTH {
         return empty_schema_node();
     }
@@ -472,9 +505,10 @@ fn parse_schema_node_impl(raw: &serde_json::Value, definitions: Option<&serde_js
     // Type
     let schema_type = match raw.get("type") {
         Some(serde_json::Value::String(s)) => vec![s.clone()],
-        Some(serde_json::Value::Array(arr)) => {
-            arr.iter().filter_map(|v| v.as_str().map(String::from)).collect()
-        }
+        Some(serde_json::Value::Array(arr)) => arr
+            .iter()
+            .filter_map(|v| v.as_str().map(String::from))
+            .collect(),
         _ => vec![],
     };
 
@@ -482,21 +516,30 @@ fn parse_schema_node_impl(raw: &serde_json::Value, definitions: Option<&serde_js
     let mut properties = IndexMap::new();
     if let Some(props) = raw.get("properties").and_then(|v| v.as_object()) {
         for (name, prop_raw) in props {
-            properties.insert(name.clone(), parse_schema_node_impl(prop_raw, definitions, depth + 1));
+            properties.insert(
+                name.clone(),
+                parse_schema_node_impl(prop_raw, definitions, depth + 1),
+            );
         }
     }
 
     let required: Vec<String> = raw
         .get("required")
         .and_then(|v| v.as_array())
-        .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+        .map(|arr| {
+            arr.iter()
+                .filter_map(|v| v.as_str().map(String::from))
+                .collect()
+        })
         .unwrap_or_default();
 
-    let additional_properties = raw.get("additionalProperties").map(|v| {
-        match v {
-            serde_json::Value::Bool(b) => AdditionalProperties::Bool(*b),
-            _ => AdditionalProperties::Schema(Box::new(parse_schema_node_impl(v, definitions, depth + 1))),
-        }
+    let additional_properties = raw.get("additionalProperties").map(|v| match v {
+        serde_json::Value::Bool(b) => AdditionalProperties::Bool(*b),
+        _ => AdditionalProperties::Schema(Box::new(parse_schema_node_impl(
+            v,
+            definitions,
+            depth + 1,
+        ))),
     });
 
     let pattern_properties: Vec<(String, SchemaNode)> = raw
@@ -504,7 +547,12 @@ fn parse_schema_node_impl(raw: &serde_json::Value, definitions: Option<&serde_js
         .and_then(|v| v.as_object())
         .map(|obj| {
             obj.iter()
-                .map(|(pat, schema)| (pat.clone(), parse_schema_node_impl(schema, definitions, depth + 1)))
+                .map(|(pat, schema)| {
+                    (
+                        pat.clone(),
+                        parse_schema_node_impl(schema, definitions, depth + 1),
+                    )
+                })
                 .collect()
         })
         .unwrap_or_default();
@@ -515,8 +563,13 @@ fn parse_schema_node_impl(raw: &serde_json::Value, definitions: Option<&serde_js
         .map(|obj| {
             obj.iter()
                 .map(|(k, v)| {
-                    let deps = v.as_array()
-                        .map(|arr| arr.iter().filter_map(|s| s.as_str().map(String::from)).collect())
+                    let deps = v
+                        .as_array()
+                        .map(|arr| {
+                            arr.iter()
+                                .filter_map(|s| s.as_str().map(String::from))
+                                .collect()
+                        })
                         .unwrap_or_default();
                     (k.clone(), deps)
                 })
@@ -530,8 +583,13 @@ fn parse_schema_node_impl(raw: &serde_json::Value, definitions: Option<&serde_js
         .map(|obj| {
             obj.iter()
                 .map(|(k, v)| {
-                    let deps = v.as_array()
-                        .map(|arr| arr.iter().filter_map(|s| s.as_str().map(String::from)).collect())
+                    let deps = v
+                        .as_array()
+                        .map(|arr| {
+                            arr.iter()
+                                .filter_map(|s| s.as_str().map(String::from))
+                                .collect()
+                        })
                         .unwrap_or_default();
                     (k.clone(), deps)
                 })
@@ -542,39 +600,58 @@ fn parse_schema_node_impl(raw: &serde_json::Value, definitions: Option<&serde_js
     let max_properties = raw.get("maxProperties").and_then(|v| v.as_u64());
     let min_properties = raw.get("minProperties").and_then(|v| v.as_u64());
 
-    let property_names = raw.get("propertyNames")
+    let property_names = raw
+        .get("propertyNames")
         .map(|v| Box::new(parse_schema_node_impl(v, definitions, depth + 1)));
 
-    let required_xor: Option<Vec<String>> = raw
-        .get("requiredXor")
-        .and_then(|v| v.as_array())
-        .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect());
+    let required_xor: Option<Vec<String>> =
+        raw.get("requiredXor")
+            .and_then(|v| v.as_array())
+            .map(|arr| {
+                arr.iter()
+                    .filter_map(|v| v.as_str().map(String::from))
+                    .collect()
+            });
 
-    let required_or: Option<Vec<String>> = raw
-        .get("requiredOr")
-        .and_then(|v| v.as_array())
-        .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect());
+    let required_or: Option<Vec<String>> =
+        raw.get("requiredOr").and_then(|v| v.as_array()).map(|arr| {
+            arr.iter()
+                .filter_map(|v| v.as_str().map(String::from))
+                .collect()
+        });
 
     // Array keywords
-    let items = raw.get("items").map(|i| Box::new(parse_schema_node_impl(i, definitions, depth + 1)));
+    let items = raw
+        .get("items")
+        .map(|i| Box::new(parse_schema_node_impl(i, definitions, depth + 1)));
     let min_items = raw.get("minItems").and_then(|v| v.as_u64());
     let max_items = raw.get("maxItems").and_then(|v| v.as_u64());
     let unique_items = raw.get("uniqueItems").and_then(|v| v.as_bool());
-    let unique_keys: Option<Vec<String>> = raw
-        .get("uniqueKeys")
-        .and_then(|v| v.as_array())
-        .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect());
+    let unique_keys: Option<Vec<String>> =
+        raw.get("uniqueKeys").and_then(|v| v.as_array()).map(|arr| {
+            arr.iter()
+                .filter_map(|v| v.as_str().map(String::from))
+                .collect()
+        });
     let max_unique_items = raw.get("maxUniqueItems").and_then(|v| v.as_u64());
     let prefix_items: Vec<SchemaNode> = raw
         .get("prefixItems")
         .and_then(|v| v.as_array())
-        .map(|arr| arr.iter().map(|v| parse_schema_node_impl(v, definitions, depth + 1)).collect())
+        .map(|arr| {
+            arr.iter()
+                .map(|v| parse_schema_node_impl(v, definitions, depth + 1))
+                .collect()
+        })
         .unwrap_or_default();
-    let contains = raw.get("contains")
+    let contains = raw
+        .get("contains")
         .map(|v| Box::new(parse_schema_node_impl(v, definitions, depth + 1)));
 
     // String keywords
-    let pattern = raw.get("pattern").and_then(|v| v.as_str()).map(String::from);
+    let pattern = raw
+        .get("pattern")
+        .and_then(|v| v.as_str())
+        .map(String::from);
     let min_length = raw.get("minLength").and_then(|v| v.as_u64());
     let max_length = raw.get("maxLength").and_then(|v| v.as_u64());
     let format = raw.get("format").and_then(|v| v.as_str()).map(String::from);
@@ -587,40 +664,66 @@ fn parse_schema_node_impl(raw: &serde_json::Value, definitions: Option<&serde_js
     let multiple_of = raw.get("multipleOf").and_then(|v| v.as_f64());
 
     // Value keywords
-    let enum_values = raw.get("enum").and_then(|v| v.as_array()).map(|arr| arr.clone());
+    let enum_values = raw
+        .get("enum")
+        .and_then(|v| v.as_array())
+        .map(|arr| arr.clone());
     let enum_case_insensitive: Option<Vec<String>> = raw
         .get("enumCaseInsensitive")
         .and_then(|v| v.as_array())
-        .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect());
+        .map(|arr| {
+            arr.iter()
+                .filter_map(|v| v.as_str().map(String::from))
+                .collect()
+        });
     let const_value = raw.get("const").cloned();
 
     // Composition keywords
     let all_of: Vec<SchemaNode> = raw
         .get("allOf")
         .and_then(|v| v.as_array())
-        .map(|arr| arr.iter().map(|v| parse_schema_node_impl(v, definitions, depth + 1)).collect())
+        .map(|arr| {
+            arr.iter()
+                .map(|v| parse_schema_node_impl(v, definitions, depth + 1))
+                .collect()
+        })
         .unwrap_or_default();
     let any_of: Vec<SchemaNode> = raw
         .get("anyOf")
         .and_then(|v| v.as_array())
-        .map(|arr| arr.iter().map(|v| parse_schema_node_impl(v, definitions, depth + 1)).collect())
+        .map(|arr| {
+            arr.iter()
+                .map(|v| parse_schema_node_impl(v, definitions, depth + 1))
+                .collect()
+        })
         .unwrap_or_default();
     let one_of: Vec<SchemaNode> = raw
         .get("oneOf")
         .and_then(|v| v.as_array())
-        .map(|arr| arr.iter().map(|v| parse_schema_node_impl(v, definitions, depth + 1)).collect())
+        .map(|arr| {
+            arr.iter()
+                .map(|v| parse_schema_node_impl(v, definitions, depth + 1))
+                .collect()
+        })
         .unwrap_or_default();
-    let not = raw.get("not")
+    let not = raw
+        .get("not")
         .map(|v| Box::new(parse_schema_node_impl(v, definitions, depth + 1)));
-    let if_schema = raw.get("if")
+    let if_schema = raw
+        .get("if")
         .map(|v| Box::new(parse_schema_node_impl(v, definitions, depth + 1)));
-    let then_schema = raw.get("then")
+    let then_schema = raw
+        .get("then")
         .map(|v| Box::new(parse_schema_node_impl(v, definitions, depth + 1)));
-    let else_schema = raw.get("else")
+    let else_schema = raw
+        .get("else")
         .map(|v| Box::new(parse_schema_node_impl(v, definitions, depth + 1)));
 
     // IDE
-    let description = raw.get("description").and_then(|v| v.as_str()).map(String::from);
+    let description = raw
+        .get("description")
+        .and_then(|v| v.as_str())
+        .map(String::from);
 
     // CFN extensions
     let cfn_lint = raw.get("cfnLint").cloned();
@@ -723,7 +826,10 @@ pub fn empty_schema_node() -> SchemaNode {
 pub fn output_schema_node() -> SchemaNode {
     let mut props = IndexMap::new();
     let mut value_node = empty_schema_node();
-    value_node.description = Some("The value of the property returned by the aws cloudformation describe-stacks command.".to_string());
+    value_node.description = Some(
+        "The value of the property returned by the aws cloudformation describe-stacks command."
+            .to_string(),
+    );
     props.insert("Value".to_string(), value_node);
 
     let mut desc_node = empty_schema_node();
@@ -733,13 +839,16 @@ pub fn output_schema_node() -> SchemaNode {
 
     let mut cond_node = empty_schema_node();
     cond_node.schema_type = vec!["string".to_string()];
-    cond_node.description = Some("The name of a condition to associate with this output.".to_string());
+    cond_node.description =
+        Some("The name of a condition to associate with this output.".to_string());
     props.insert("Condition".to_string(), cond_node);
 
     let mut export_node = empty_schema_node();
     let mut name_node = empty_schema_node();
     name_node.schema_type = vec!["string".to_string()];
-    name_node.description = Some("The name of the resource output to be exported for cross-stack reference.".to_string());
+    name_node.description = Some(
+        "The name of the resource output to be exported for cross-stack reference.".to_string(),
+    );
     export_node.properties.insert("Name".to_string(), name_node);
     props.insert("Export".to_string(), export_node);
 
@@ -756,7 +865,10 @@ pub fn condition_schema_node() -> SchemaNode {
     empty_schema_node()
 }
 
-pub fn resolve_ref<'a>(ref_path: &str, definitions: Option<&'a serde_json::Value>) -> Option<&'a serde_json::Value> {
+pub fn resolve_ref<'a>(
+    ref_path: &str,
+    definitions: Option<&'a serde_json::Value>,
+) -> Option<&'a serde_json::Value> {
     // Handle "#/definitions/Foo"
     let name = ref_path.strip_prefix("#/definitions/")?;
     definitions?.get(name)
@@ -764,7 +876,11 @@ pub fn resolve_ref<'a>(ref_path: &str, definitions: Option<&'a serde_json::Value
 
 /// Recursively collect all propertyNames enum values from if/then/else structures.
 pub fn collect_property_names(val: &serde_json::Value, props: &mut IndexMap<String, SchemaNode>) {
-    if let Some(pn) = val.get("propertyNames").and_then(|v| v.get("enum")).and_then(|v| v.as_array()) {
+    if let Some(pn) = val
+        .get("propertyNames")
+        .and_then(|v| v.get("enum"))
+        .and_then(|v| v.as_array())
+    {
         for name in pn.iter().filter_map(|v| v.as_str()) {
             if !props.contains_key(name) {
                 let mut node = empty_schema_node();
@@ -789,12 +905,20 @@ pub fn collect_type_enum(val: &serde_json::Value, props: &mut IndexMap<String, S
         node.schema_type = vec!["string".to_string()];
         node.description = Some("The data type for the parameter.".to_string());
         let type_strings: Vec<String> = types.into_iter().collect();
-        node.enum_values = Some(type_strings.iter().map(|s| serde_json::Value::String(s.clone())).collect());
+        node.enum_values = Some(
+            type_strings
+                .iter()
+                .map(|s| serde_json::Value::String(s.clone()))
+                .collect(),
+        );
         props.insert("Type".to_string(), node);
     }
 }
 
-pub fn collect_type_values(val: &serde_json::Value, types: &mut std::collections::BTreeSet<String>) {
+pub fn collect_type_values(
+    val: &serde_json::Value,
+    types: &mut std::collections::BTreeSet<String>,
+) {
     if let Some(props) = val.get("properties").and_then(|v| v.get("Type")) {
         if let Some(c) = props.get("const").and_then(|v| v.as_str()) {
             types.insert(c.to_string());
@@ -813,7 +937,10 @@ pub fn collect_type_values(val: &serde_json::Value, types: &mut std::collections
 }
 
 pub fn parse_resource_schema(resource_type: &str, raw: serde_json::Value) -> ResourceSchema {
-    let description = raw.get("description").and_then(|v| v.as_str()).map(String::from);
+    let description = raw
+        .get("description")
+        .and_then(|v| v.as_str())
+        .map(String::from);
 
     let read_only_paths: Vec<String> = raw
         .get("readOnlyProperties")
@@ -854,7 +981,11 @@ pub fn parse_resource_schema(resource_type: &str, raw: serde_json::Value) -> Res
     let required: Vec<String> = raw
         .get("required")
         .and_then(|v| v.as_array())
-        .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+        .map(|arr| {
+            arr.iter()
+                .filter_map(|v| v.as_str().map(String::from))
+                .collect()
+        })
         .unwrap_or_default();
     root.required = required;
 
@@ -928,12 +1059,20 @@ impl CacheProvider {
     pub fn new() -> Self {
         let cache_dir = default_cache_dir().unwrap_or_else(|| PathBuf::from(".cfn-lsp/schemas"));
         let inner = BundledSchemaProvider::new(cache_dir.clone());
-        Self { inner, cache_dir, patches_dir: None }
+        Self {
+            inner,
+            cache_dir,
+            patches_dir: None,
+        }
     }
 
     pub fn from_dir(cache_dir: PathBuf) -> Self {
         let inner = BundledSchemaProvider::new(cache_dir.clone());
-        Self { inner, cache_dir, patches_dir: None }
+        Self {
+            inner,
+            cache_dir,
+            patches_dir: None,
+        }
     }
 
     /// Set the patches directory for download-time patching.
@@ -951,11 +1090,16 @@ impl CacheProvider {
     }
 
     /// Write a region mapping (type -> hash) to the cache.
-    pub fn write_region(&self, region: &str, types: &HashMap<String, String>) -> std::io::Result<()> {
+    pub fn write_region(
+        &self,
+        region: &str,
+        types: &HashMap<String, String>,
+    ) -> std::io::Result<()> {
         let providers_dir = self.cache_dir.join("schemas").join("providers");
         std::fs::create_dir_all(&providers_dir)?;
         let filename = region.replace('-', "_") + ".json";
-        let content = serde_json::to_string_pretty(types).map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+        let content = serde_json::to_string_pretty(types)
+            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
         std::fs::write(providers_dir.join(filename), content)
     }
 
@@ -963,13 +1107,18 @@ impl CacheProvider {
     pub fn write_schema(&self, hash: &str, schema: &serde_json::Value) -> std::io::Result<()> {
         let resources_dir = self.cache_dir.join("schemas").join("resources");
         std::fs::create_dir_all(&resources_dir)?;
-        let content = serde_json::to_string_pretty(schema).map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+        let content = serde_json::to_string_pretty(schema)
+            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
         std::fs::write(resources_dir.join(format!("{}.json", hash)), content)
     }
 
     /// Check if a schema hash exists in the cache.
     pub fn has_schema(&self, hash: &str) -> bool {
-        self.cache_dir.join("schemas").join("resources").join(format!("{}.json", hash)).exists()
+        self.cache_dir
+            .join("schemas")
+            .join("resources")
+            .join(format!("{}.json", hash))
+            .exists()
     }
 
     /// Reload the inner provider after writing new data.
@@ -983,13 +1132,25 @@ impl SchemaProvider for CacheProvider {
         self.inner.as_ref()?.resolve(path, region)
     }
     fn get_resource_schema(&self, resource_type: &str, region: &str) -> Option<&ResourceSchema> {
-        self.inner.as_ref()?.get_resource_schema(resource_type, region)
+        self.inner
+            .as_ref()?
+            .get_resource_schema(resource_type, region)
     }
     fn resource_types(&self, region: &str) -> Vec<String> {
-        self.inner.as_ref().map(|p| p.resource_types(region)).unwrap_or_default()
+        self.inner
+            .as_ref()
+            .map(|p| p.resource_types(region))
+            .unwrap_or_default()
     }
-    fn schemas_for_regions<'a>(&'a self, resource_type: &str, regions: &'a [String]) -> Vec<(&'a ResourceSchema, Vec<&'a str>)> {
-        self.inner.as_ref().map(|p| p.schemas_for_regions(resource_type, regions)).unwrap_or_default()
+    fn schemas_for_regions<'a>(
+        &'a self,
+        resource_type: &str,
+        regions: &'a [String],
+    ) -> Vec<(&'a ResourceSchema, Vec<&'a str>)> {
+        self.inner
+            .as_ref()
+            .map(|p| p.schemas_for_regions(resource_type, regions))
+            .unwrap_or_default()
     }
     fn get_template_schema(&self) -> Option<&serde_json::Value> {
         self.inner.as_ref()?.get_template_schema()
@@ -1010,7 +1171,10 @@ pub struct S3Provider {
 #[cfg(feature = "fetch")]
 fn schema_base_url(region: &str) -> String {
     let suffix = if region.starts_with("cn-") { ".cn" } else { "" };
-    format!("https://schema.cloudformation.{}.amazonaws.com{}", region, suffix)
+    format!(
+        "https://schema.cloudformation.{}.amazonaws.com{}",
+        region, suffix
+    )
 }
 
 #[cfg(feature = "fetch")]
@@ -1058,10 +1222,20 @@ impl S3Provider {
 
     /// Fetch a single resource type schema. Uses ETag as version key.
     /// Returns true if schema was new or updated.
-    pub fn fetch_type(&mut self, type_name: &str, region: &str) -> Result<bool, Box<dyn std::error::Error>> {
-        let url = format!("{}/{}", schema_base_url(region), type_to_filename(type_name));
+    pub fn fetch_type(
+        &mut self,
+        type_name: &str,
+        region: &str,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let url = format!(
+            "{}/{}",
+            schema_base_url(region),
+            type_to_filename(type_name)
+        );
         let resp = ureq::get(&url).call()?;
-        let etag = resp.headers().get("ETag")
+        let etag = resp
+            .headers()
+            .get("ETag")
             .and_then(|v| v.to_str().ok())
             .map(parse_etag)
             .unwrap_or_default();
@@ -1084,13 +1258,30 @@ impl S3Provider {
     }
 
     /// HEAD request to check current ETag without downloading.
-    pub fn check_etag(&self, type_name: &str, region: &str) -> Result<Option<String>, Box<dyn std::error::Error>> {
-        let url = format!("{}/{}", schema_base_url(region), type_to_filename(type_name));
+    pub fn check_etag(
+        &self,
+        type_name: &str,
+        region: &str,
+    ) -> Result<Option<String>, Box<dyn std::error::Error>> {
+        let url = format!(
+            "{}/{}",
+            schema_base_url(region),
+            type_to_filename(type_name)
+        );
         let resp = ureq::head(&url).call()?;
-        Ok(resp.headers().get("ETag").and_then(|v| v.to_str().ok()).map(parse_etag))
+        Ok(resp
+            .headers()
+            .get("ETag")
+            .and_then(|v| v.to_str().ok())
+            .map(parse_etag))
     }
 
-    fn update_region_mapping(&mut self, type_name: &str, etag: &str, region: &str) -> Result<bool, Box<dyn std::error::Error>> {
+    fn update_region_mapping(
+        &mut self,
+        type_name: &str,
+        etag: &str,
+        region: &str,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
         let providers_dir = self.cache.cache_dir().join("schemas").join("providers");
         let filename = region.replace('-', "_") + ".json";
         let path = providers_dir.join(&filename);
@@ -1110,7 +1301,10 @@ impl S3Provider {
 
     /// Download all schemas from the CloudFormation zip archive.
     /// Returns the number of schemas written.
-    pub fn fetch_all_from_zip(&mut self, region: &str) -> Result<usize, Box<dyn std::error::Error>> {
+    pub fn fetch_all_from_zip(
+        &mut self,
+        region: &str,
+    ) -> Result<usize, Box<dyn std::error::Error>> {
         use std::io::{Cursor, Read};
 
         let url = format!("{}/CloudformationSchema.zip", schema_base_url(region));
@@ -1171,7 +1365,11 @@ impl SchemaProvider for S3Provider {
     fn resource_types(&self, region: &str) -> Vec<String> {
         self.cache.resource_types(region)
     }
-    fn schemas_for_regions<'a>(&'a self, resource_type: &str, regions: &'a [String]) -> Vec<(&'a ResourceSchema, Vec<&'a str>)> {
+    fn schemas_for_regions<'a>(
+        &'a self,
+        resource_type: &str,
+        regions: &'a [String],
+    ) -> Vec<(&'a ResourceSchema, Vec<&'a str>)> {
         self.cache.schemas_for_regions(resource_type, regions)
     }
 }
@@ -1192,7 +1390,9 @@ impl SchemaProvider for ChainProvider {
         self.providers.iter().find_map(|p| p.resolve(path, region))
     }
     fn get_resource_schema(&self, resource_type: &str, region: &str) -> Option<&ResourceSchema> {
-        self.providers.iter().find_map(|p| p.get_resource_schema(resource_type, region))
+        self.providers
+            .iter()
+            .find_map(|p| p.get_resource_schema(resource_type, region))
     }
     fn resource_types(&self, region: &str) -> Vec<String> {
         // Merge from all providers, dedup
@@ -1207,7 +1407,11 @@ impl SchemaProvider for ChainProvider {
         }
         types
     }
-    fn schemas_for_regions<'a>(&'a self, resource_type: &str, regions: &'a [String]) -> Vec<(&'a ResourceSchema, Vec<&'a str>)> {
+    fn schemas_for_regions<'a>(
+        &'a self,
+        resource_type: &str,
+        regions: &'a [String],
+    ) -> Vec<(&'a ResourceSchema, Vec<&'a str>)> {
         for p in &self.providers {
             let result = p.schemas_for_regions(resource_type, regions);
             if !result.is_empty() {
@@ -1235,7 +1439,11 @@ mod tests {
 
         // Check resource types
         let types = provider.resource_types("us-east-1");
-        assert!(types.len() > 100, "should have many resource types, got {}", types.len());
+        assert!(
+            types.len() > 100,
+            "should have many resource types, got {}",
+            types.len()
+        );
         assert!(types.contains(&"AWS::S3::Bucket".to_string()));
 
         // Resolve Properties path
@@ -1243,25 +1451,54 @@ mod tests {
         assert!(node.is_some(), "should resolve Properties path");
         let node = node.unwrap();
         eprintln!("S3 Bucket properties count: {}", node.properties.len());
-        eprintln!("S3 Bucket property names: {:?}", node.properties.keys().collect::<Vec<_>>());
-        assert!(node.properties.len() > 10, "S3 Bucket should have many properties, got {}", node.properties.len());
+        eprintln!(
+            "S3 Bucket property names: {:?}",
+            node.properties.keys().collect::<Vec<_>>()
+        );
+        assert!(
+            node.properties.len() > 10,
+            "S3 Bucket should have many properties, got {}",
+            node.properties.len()
+        );
         assert!(node.properties.contains_key("BucketName"));
 
         // Resolve a specific property
-        let bn = provider.resolve(&["Resources", "AWS::S3::Bucket", "Properties", "BucketName"], "us-east-1");
+        let bn = provider.resolve(
+            &["Resources", "AWS::S3::Bucket", "Properties", "BucketName"],
+            "us-east-1",
+        );
         assert!(bn.is_some(), "should resolve BucketName");
         let bn = bn.unwrap();
-        assert!(bn.schema_type.contains(&"string".to_string()), "BucketName should be string type");
+        assert!(
+            bn.schema_type.contains(&"string".to_string()),
+            "BucketName should be string type"
+        );
 
         // $ref resolution: VersioningConfiguration should have Status with enum
-        let vc = provider.resolve(&["Resources", "AWS::S3::Bucket", "Properties", "VersioningConfiguration"], "us-east-1");
+        let vc = provider.resolve(
+            &[
+                "Resources",
+                "AWS::S3::Bucket",
+                "Properties",
+                "VersioningConfiguration",
+            ],
+            "us-east-1",
+        );
         assert!(vc.is_some(), "should resolve VersioningConfiguration");
         let vc = vc.unwrap();
-        assert!(vc.properties.contains_key("Status"), "VC should have Status property, got: {:?}", vc.properties.keys().collect::<Vec<_>>());
+        assert!(
+            vc.properties.contains_key("Status"),
+            "VC should have Status property, got: {:?}",
+            vc.properties.keys().collect::<Vec<_>>()
+        );
         let status = &vc.properties["Status"];
         let vals = status.allowed_values();
         assert!(vals.is_some(), "Status should have enum values");
         let vals = vals.unwrap();
-        assert!(vals.contains(&"Enabled".to_string()), "Status enum should contain Enabled, got: {:?}", vals);
+        assert!(
+            vals.contains(&"Enabled".to_string()),
+            "Status enum should contain Enabled, got: {:?}",
+            vals
+        );
     }
 }

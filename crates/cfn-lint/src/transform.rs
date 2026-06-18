@@ -21,7 +21,10 @@ pub fn get_serverless_resource_types() -> &'static [&'static str] {
 pub fn is_sam_template(root: &AstNode) -> bool {
     match root.get("Transform") {
         Some(AstNode::String(s)) => s.value == SAM_TRANSFORM,
-        Some(AstNode::Array(arr)) => arr.elements.iter().any(|e| e.as_str() == Some(SAM_TRANSFORM)),
+        Some(AstNode::Array(arr)) => arr
+            .elements
+            .iter()
+            .any(|e| e.as_str() == Some(SAM_TRANSFORM)),
         _ => false,
     }
 }
@@ -41,7 +44,10 @@ mod tests {
     fn test_is_sam_template_string_transform() {
         let mut props: Vec<ObjectEntry> = Vec::new();
         props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Transform".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Transform".to_string(),
+                span: Span::default(),
+            }),
             key: "Transform".to_string(),
             value: AstNode::String(StringNode {
                 value: "AWS::Serverless-2016-10-31".to_string(),
@@ -49,7 +55,10 @@ mod tests {
             }),
             key_span: Span::default(),
         });
-        let root = AstNode::Object(ObjectNode { entries: props, span: Span::default()  });
+        let root = AstNode::Object(ObjectNode {
+            entries: props,
+            span: Span::default(),
+        });
         assert!(is_sam_template(&root));
     }
 
@@ -57,7 +66,10 @@ mod tests {
     fn test_is_sam_template_array_transform() {
         let mut props: Vec<ObjectEntry> = Vec::new();
         props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Transform".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Transform".to_string(),
+                span: Span::default(),
+            }),
             key: "Transform".to_string(),
             value: AstNode::Array(ArrayNode {
                 elements: vec![
@@ -74,7 +86,10 @@ mod tests {
             }),
             key_span: Span::default(),
         });
-        let root = AstNode::Object(ObjectNode { entries: props, span: Span::default()  });
+        let root = AstNode::Object(ObjectNode {
+            entries: props,
+            span: Span::default(),
+        });
         assert!(is_sam_template(&root));
     }
 
@@ -82,7 +97,10 @@ mod tests {
     fn test_is_not_sam_template() {
         let mut props: Vec<ObjectEntry> = Vec::new();
         props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Transform".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Transform".to_string(),
+                span: Span::default(),
+            }),
             key: "Transform".to_string(),
             value: AstNode::String(StringNode {
                 value: "AWS::Other-Transform".to_string(),
@@ -90,14 +108,19 @@ mod tests {
             }),
             key_span: Span::default(),
         });
-        let root = AstNode::Object(ObjectNode { entries: props, span: Span::default()  });
+        let root = AstNode::Object(ObjectNode {
+            entries: props,
+            span: Span::default(),
+        });
         assert!(!is_sam_template(&root));
     }
 
     #[test]
     fn test_is_not_sam_template_no_transform() {
-        let root = AstNode::Object(ObjectNode { entries: Vec::new(), span: Span::default(),
-         });
+        let root = AstNode::Object(ObjectNode {
+            entries: Vec::new(),
+            span: Span::default(),
+        });
         assert!(!is_sam_template(&root));
     }
 

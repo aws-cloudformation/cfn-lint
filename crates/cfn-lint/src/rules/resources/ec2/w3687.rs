@@ -14,10 +14,18 @@ static SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
 });
 
 impl CfnLintRule for W3687 {
-    fn id(&self) -> &str { "W3687" }
-    fn short_description(&self) -> &str { "Validate that ports are not specified for certain protocols" }
-    fn description(&self) -> &str { "Validate that ports are not specified for certain protocols" }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn id(&self) -> &str {
+        "W3687"
+    }
+    fn short_description(&self) -> &str {
+        "Validate that ports are not specified for certain protocols"
+    }
+    fn description(&self) -> &str {
+        "Validate that ports are not specified for certain protocols"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
     fn keywords(&self) -> &[&str] {
         &[
@@ -36,7 +44,14 @@ impl CfnLintRule for W3687 {
         _schema: &serde_json::Value,
         path: &[String],
     ) -> Vec<ValidationError> {
-        validate_schema(self.id(), self.short_description(), validator, instance, &SCHEMA, path)
+        validate_schema(
+            self.id(),
+            self.short_description(),
+            validator,
+            instance,
+            &SCHEMA,
+            path,
+        )
     }
 }
 

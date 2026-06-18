@@ -1,7 +1,7 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// W1054: Pseudo-parameter string found without Ref
@@ -53,7 +53,7 @@ impl W1054 {
                     resolved_from_ref: false,
                     context: vec![],
                     schema_id: None,
-});
+                });
             }
             AstNode::Object(obj) => {
                 for (key, value) in obj.iter() {
@@ -75,7 +75,9 @@ impl W1054 {
 }
 
 impl CfnLintRule for W1054 {
-    fn id(&self) -> &str { "W1054" }
+    fn id(&self) -> &str {
+        "W1054"
+    }
     fn short_description(&self) -> &str {
         "Pseudo-parameter string found without Ref"
     }
@@ -83,11 +85,19 @@ impl CfnLintRule for W1054 {
         "A pseudo-parameter such as 'AWS::Region' was used as a plain string value. \
          In most cases you want 'Ref: AWS::...' instead of the raw string."
     }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
-    fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let mut issues = Vec::new();
         // Only check within Resources (matches Python which fires via schema validation)
         if let Some(resources) = root.get("Resources") {

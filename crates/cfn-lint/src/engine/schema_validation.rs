@@ -20,7 +20,13 @@ impl Engine {
         let resources: Vec<(String, String, Option<AstNode>)> = template
             .resources
             .iter()
-            .map(|(name, res)| (name.clone(), res.resource_type.clone(), res.properties.clone()))
+            .map(|(name, res)| {
+                (
+                    name.clone(),
+                    res.resource_type.clone(),
+                    res.properties.clone(),
+                )
+            })
             .collect();
 
         for (name, resource_type, properties) in &resources {

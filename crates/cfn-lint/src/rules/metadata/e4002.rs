@@ -6,20 +6,28 @@ use crate::jsonschema::{ValidationError, Validator};
 use crate::rules::Severity;
 
 static SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
-    serde_json::from_str(include_str!("../../../data/schemas/other/metadata/configuration.json"))
-        .unwrap_or_default()
+    serde_json::from_str(include_str!(
+        "../../../data/schemas/other/metadata/configuration.json"
+    ))
+    .unwrap_or_default()
 });
 
 /// E4002: Validate the configuration of the Metadata section.
 pub struct E4002;
 
 impl CfnLintRule for E4002 {
-    fn id(&self) -> &str { "E4002" }
-    fn short_description(&self) -> &str { "Validate Metadata section configuration" }
+    fn id(&self) -> &str {
+        "E4002"
+    }
+    fn short_description(&self) -> &str {
+        "Validate Metadata section configuration"
+    }
     fn description(&self) -> &str {
         "Validates that Metadata section is an object and has no null values"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Metadata"]

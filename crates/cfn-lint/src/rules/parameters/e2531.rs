@@ -70,7 +70,9 @@ fn today_str() -> String {
 }
 
 impl Default for E2531 {
-    fn default() -> Self { Self::new() }
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl E2531 {
@@ -82,12 +84,18 @@ impl E2531 {
 }
 
 impl CfnLintRule for E2531 {
-    fn id(&self) -> &str { "E2531" }
-    fn short_description(&self) -> &str { "Validate if lambda runtime is deprecated" }
+    fn id(&self) -> &str {
+        "E2531"
+    }
+    fn short_description(&self) -> &str {
+        "Validate if lambda runtime is deprecated"
+    }
     fn description(&self) -> &str {
         "Check the lambda runtime has reached the end of life for creation"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &[
@@ -150,4 +158,3 @@ impl CfnLintRule for E2531 {
         vec![]
     }
 }
-

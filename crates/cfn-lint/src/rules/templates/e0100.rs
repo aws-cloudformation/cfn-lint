@@ -1,8 +1,8 @@
 use crate::ast::AstNode;
-use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
-use crate::template::Template;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
+use crate::template::Template;
 
 /// E0100: Validate deployment file configuration.
 ///
@@ -31,10 +31,14 @@ impl CfnLintRule for E0100 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         // Deployment file validation is handled at the runner level
-                // before template parsing. This rule serves as a registry anchor.
-                vec![]
+        // before template parsing. This rule serves as a registry anchor.
+        vec![]
     }
 }
 

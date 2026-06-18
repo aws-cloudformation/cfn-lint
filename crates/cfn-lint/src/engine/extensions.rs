@@ -1,6 +1,6 @@
 use crate::ast::AstNode;
 
-use super::{follow_pointer, ast_to_json};
+use super::{ast_to_json, follow_pointer};
 
 /// Resolve `$data` and `$lookup` references in a JSON schema.
 ///
@@ -13,7 +13,10 @@ use super::{follow_pointer, ast_to_json};
 ///
 /// When a data-bearing keyword (`const`, `enum`, `pattern`, numeric constraints) resolves
 /// to `null`, the keyword is dropped from the schema so it doesn't cause false positives.
-pub(crate) fn resolve_data_refs(schema: &serde_json::Value, gathered: &AstNode) -> serde_json::Value {
+pub(crate) fn resolve_data_refs(
+    schema: &serde_json::Value,
+    gathered: &AstNode,
+) -> serde_json::Value {
     resolve_data_value(schema, gathered)
 }
 
@@ -21,13 +24,24 @@ pub(crate) fn resolve_data_refs(schema: &serde_json::Value, gathered: &AstNode) 
 /// When these resolve to null the keyword should be dropped entirely
 /// (matching Python cfn-lint's `_UNRESOLVED` / `continue` behaviour).
 const DATA_KEYWORDS: &[&str] = &[
-    "const", "enum", "pattern",
-    "minimum", "maximum", "exclusiveMinimum", "exclusiveMaximum",
-    "minLength", "maxLength", "minItems", "maxItems",
+    "const",
+    "enum",
+    "pattern",
+    "minimum",
+    "maximum",
+    "exclusiveMinimum",
+    "exclusiveMaximum",
+    "minLength",
+    "maxLength",
+    "minItems",
+    "maxItems",
 ];
 
 /// Resolve a single JSON value that may contain `$data` or `$lookup`.
-pub(crate) fn resolve_data_value(value: &serde_json::Value, gathered: &AstNode) -> serde_json::Value {
+pub(crate) fn resolve_data_value(
+    value: &serde_json::Value,
+    gathered: &AstNode,
+) -> serde_json::Value {
     match value {
         serde_json::Value::Object(map) => {
             // Handle $data
@@ -68,9 +82,11 @@ pub(crate) fn resolve_data_value(value: &serde_json::Value, gathered: &AstNode) 
                 .collect();
             serde_json::Value::Object(resolved)
         }
-        serde_json::Value::Array(arr) => {
-            serde_json::Value::Array(arr.iter().map(|v| resolve_data_value(v, gathered)).collect())
-        }
+        serde_json::Value::Array(arr) => serde_json::Value::Array(
+            arr.iter()
+                .map(|v| resolve_data_value(v, gathered))
+                .collect(),
+        ),
         other => other.clone(),
     }
 }
@@ -88,7 +104,9 @@ pub(crate) fn is_data_reference(value: &serde_json::Value) -> bool {
 /// Extracts all validation-relevant keywords from the full resource provider
 /// schema so that `allOf`, `anyOf`, `oneOf`, `if`/`then`/`else`, etc. are
 /// preserved and evaluated by the JSON Schema validator.
-pub(crate) fn build_resource_properties_schema(full_schema: &serde_json::Value) -> serde_json::Value {
+pub(crate) fn build_resource_properties_schema(
+    full_schema: &serde_json::Value,
+) -> serde_json::Value {
     const VALIDATION_KEYWORDS: &[&str] = &[
         "type",
         "properties",

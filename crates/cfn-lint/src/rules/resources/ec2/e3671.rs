@@ -15,10 +15,18 @@ use crate::rules::Severity;
 pub struct E3671;
 
 impl CfnLintRule for E3671 {
-    fn id(&self) -> &str { "E3671" }
-    fn short_description(&self) -> &str { "Validate block device mapping configuration" }
-    fn description(&self) -> &str { "Certain volume types require Iops to be specified" }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn id(&self) -> &str {
+        "E3671"
+    }
+    fn short_description(&self) -> &str {
+        "Validate block device mapping configuration"
+    }
+    fn description(&self) -> &str {
+        "Certain volume types require Iops to be specified"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &[
@@ -38,13 +46,22 @@ impl CfnLintRule for E3671 {
         _schema: &serde_json::Value,
         path: &[String],
     ) -> Vec<ValidationError> {
-        validate_schema("E3671", "Validate block device mapping configuration", validator, instance, &SCHEMA, path)
+        validate_schema(
+            "E3671",
+            "Validate block device mapping configuration",
+            validator,
+            instance,
+            &SCHEMA,
+            path,
+        )
     }
 }
 
 static SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
-    serde_json::from_str(include_str!("../../../../data/schemas/extensions/aws_ec2_instance/blockdevicemappings.json"))
-        .unwrap_or_default()
+    serde_json::from_str(include_str!(
+        "../../../../data/schemas/extensions/aws_ec2_instance/blockdevicemappings.json"
+    ))
+    .unwrap_or_default()
 });
 
 crate::register_cfn_lint_rule!(E3671);

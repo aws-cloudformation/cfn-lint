@@ -1,9 +1,11 @@
 # --- cfn-lint-test ---
 # rule: E3675
 # description: Validate EMR cluster instance type
-# expect: []
+# expect:
+#   - rule: E3675
+#     path: /Resources/BadCluster/Properties/Instances/CoreInstanceGroup/InstanceType
+#     message_contains: "Validate EMR cluster instance type"
 # ---
-# NOTE: Rule E3675 EMR instance type validation not yet implemented in v2 engine
 Resources:
   GoodCluster:
     Type: AWS::EMR::Cluster

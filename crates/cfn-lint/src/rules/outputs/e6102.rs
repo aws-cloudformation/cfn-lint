@@ -31,14 +31,22 @@ const EXPORT_NAME_FUNCTIONS: &[&str] = &[
 pub struct E6102;
 
 impl CfnLintRule for E6102 {
-    fn id(&self) -> &str { "E6102" }
-    fn short_description(&self) -> &str { "Output export names must be strings" }
+    fn id(&self) -> &str {
+        "E6102"
+    }
+    fn short_description(&self) -> &str {
+        "Output export names must be strings"
+    }
     fn description(&self) -> &str {
         "Make sure output exports have a value of type string"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
-    fn keywords(&self) -> &[&str] { &["Outputs/*/Export/Name"] }
+    fn keywords(&self) -> &[&str] {
+        &["Outputs/*/Export/Name"]
+    }
 
     fn validate(
         &self,
@@ -50,7 +58,12 @@ impl CfnLintRule for E6102 {
     ) -> Vec<ValidationError> {
         // Evolve context: restrict allowed functions (exclude Fn::GetStackOutput)
         let evolved = validator.evolve(ContextEvolution {
-            functions: Some(EXPORT_NAME_FUNCTIONS.iter().map(|s| s.to_string()).collect()),
+            functions: Some(
+                EXPORT_NAME_FUNCTIONS
+                    .iter()
+                    .map(|s| s.to_string())
+                    .collect(),
+            ),
             ..Default::default()
         });
 
@@ -92,12 +105,28 @@ Outputs:
       Name: my-export
 "#;
         let (validator, ast) = make_validator(yaml);
-        let export_name = ast.get("Outputs").unwrap()
-            .get("Out1").unwrap()
-            .get("Export").unwrap()
-            .get("Name").unwrap();
-        let path = vec!["Outputs".into(), "Out1".into(), "Export".into(), "Name".into()];
-        let errors = E6102.validate(&validator, "Outputs/*/Export/Name", export_name, &serde_json::json!({}), &path);
+        let export_name = ast
+            .get("Outputs")
+            .unwrap()
+            .get("Out1")
+            .unwrap()
+            .get("Export")
+            .unwrap()
+            .get("Name")
+            .unwrap();
+        let path = vec![
+            "Outputs".into(),
+            "Out1".into(),
+            "Export".into(),
+            "Name".into(),
+        ];
+        let errors = E6102.validate(
+            &validator,
+            "Outputs/*/Export/Name",
+            export_name,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -113,12 +142,28 @@ Outputs:
         - item2
 "#;
         let (validator, ast) = make_validator(yaml);
-        let export_name = ast.get("Outputs").unwrap()
-            .get("Out1").unwrap()
-            .get("Export").unwrap()
-            .get("Name").unwrap();
-        let path = vec!["Outputs".into(), "Out1".into(), "Export".into(), "Name".into()];
-        let errors = E6102.validate(&validator, "Outputs/*/Export/Name", export_name, &serde_json::json!({}), &path);
+        let export_name = ast
+            .get("Outputs")
+            .unwrap()
+            .get("Out1")
+            .unwrap()
+            .get("Export")
+            .unwrap()
+            .get("Name")
+            .unwrap();
+        let path = vec![
+            "Outputs".into(),
+            "Out1".into(),
+            "Export".into(),
+            "Name".into(),
+        ];
+        let errors = E6102.validate(
+            &validator,
+            "Outputs/*/Export/Name",
+            export_name,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 1);
         assert_eq!(errors[0].keyword, "type");
     }
@@ -134,13 +179,32 @@ Outputs:
       Name: 123
 "#;
         let (validator, ast) = make_validator(yaml);
-        let export_name = ast.get("Outputs").unwrap()
-            .get("Out1").unwrap()
-            .get("Export").unwrap()
-            .get("Name").unwrap();
-        let path = vec!["Outputs".into(), "Out1".into(), "Export".into(), "Name".into()];
-        let errors = E6102.validate(&validator, "Outputs/*/Export/Name", export_name, &serde_json::json!({}), &path);
-        assert!(errors.is_empty(), "Numbers should coerce to strings in relaxed mode");
+        let export_name = ast
+            .get("Outputs")
+            .unwrap()
+            .get("Out1")
+            .unwrap()
+            .get("Export")
+            .unwrap()
+            .get("Name")
+            .unwrap();
+        let path = vec![
+            "Outputs".into(),
+            "Out1".into(),
+            "Export".into(),
+            "Name".into(),
+        ];
+        let errors = E6102.validate(
+            &validator,
+            "Outputs/*/Export/Name",
+            export_name,
+            &serde_json::json!({}),
+            &path,
+        );
+        assert!(
+            errors.is_empty(),
+            "Numbers should coerce to strings in relaxed mode"
+        );
     }
 
     #[test]
@@ -153,13 +217,32 @@ Outputs:
       Name: !Sub "${AWS::StackName}-export"
 "#;
         let (validator, ast) = make_validator(yaml);
-        let export_name = ast.get("Outputs").unwrap()
-            .get("Out1").unwrap()
-            .get("Export").unwrap()
-            .get("Name").unwrap();
-        let path = vec!["Outputs".into(), "Out1".into(), "Export".into(), "Name".into()];
-        let errors = E6102.validate(&validator, "Outputs/*/Export/Name", export_name, &serde_json::json!({}), &path);
-        assert!(errors.is_empty(), "Fn::Sub should be allowed in export names");
+        let export_name = ast
+            .get("Outputs")
+            .unwrap()
+            .get("Out1")
+            .unwrap()
+            .get("Export")
+            .unwrap()
+            .get("Name")
+            .unwrap();
+        let path = vec![
+            "Outputs".into(),
+            "Out1".into(),
+            "Export".into(),
+            "Name".into(),
+        ];
+        let errors = E6102.validate(
+            &validator,
+            "Outputs/*/Export/Name",
+            export_name,
+            &serde_json::json!({}),
+            &path,
+        );
+        assert!(
+            errors.is_empty(),
+            "Fn::Sub should be allowed in export names"
+        );
     }
 }
 

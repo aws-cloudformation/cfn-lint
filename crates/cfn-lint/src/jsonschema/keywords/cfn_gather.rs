@@ -17,7 +17,7 @@ pub fn validate_cfn_gather(
     path: &[String],
 ) -> Vec<ValidationError> {
     use crate::ast::{ObjectEntry, ObjectNode, Span, StringNode};
-    use crate::engine::{follow_pointer, resolve_data_refs, ref_to_resource_name};
+    use crate::engine::{follow_pointer, ref_to_resource_name, resolve_data_refs};
     use crate::resolver::Resolver;
 
     let gather_spec = match constraint.get("gather").and_then(|g| g.as_object()) {
@@ -51,49 +51,59 @@ pub fn validate_cfn_gather(
             None => continue,
         };
 
-        let (target_props, target_resource_type) = if let Some(ref_path) = source_obj.get("reference").and_then(|v| v.as_str()) {
-            // Follow reference to find target resource
-            let ref_node = match follow_pointer(node, ref_path) {
-                Some(n) => n,
-                None => {
-                    all_resolved = false; continue;
+        let (target_props, target_resource_type) =
+            if let Some(ref_path) = source_obj.get("reference").and_then(|v| v.as_str()) {
+                // Follow reference to find target resource
+                let ref_node = match follow_pointer(node, ref_path) {
+                    Some(n) => n,
+                    None => {
+                        all_resolved = false;
+                        continue;
+                    }
+                };
+                let target_name = match ref_to_resource_name(ref_node) {
+                    Some(n) => n,
+                    None => {
+                        all_resolved = false;
+                        continue;
+                    }
+                };
+                let target_res = match ctx.template.resources.get(&target_name) {
+                    Some(r) => r,
+                    None => {
+                        all_resolved = false;
+                        continue;
+                    }
+                };
+                // Check filter type if specified
+                if let Some(filter_type) = source_obj
+                    .get("filter")
+                    .and_then(|f| f.get("type"))
+                    .and_then(|t| t.as_str())
+                {
+                    if target_res.resource_type != filter_type {
+                        all_resolved = false;
+                        continue;
+                    }
                 }
-            };
-            let target_name = match ref_to_resource_name(ref_node) {
-                Some(n) => n,
-                None => {
-                    all_resolved = false; continue;
+                let rt = Some(target_res.resource_type.as_str());
+                match &target_res.properties {
+                    Some(p) => (p as &AstNode, rt),
+                    None => (&empty_props as &AstNode, rt),
                 }
-            };
-            let target_res = match ctx.template.resources.get(&target_name) {
-                Some(r) => r,
-                None => { all_resolved = false; continue; }
-            };
-            // Check filter type if specified
-            if let Some(filter_type) = source_obj.get("filter")
-                .and_then(|f| f.get("type"))
-                .and_then(|t| t.as_str())
-            {
-                if target_res.resource_type != filter_type {
-                    all_resolved = false;
-                    continue;
-                }
-            }
-            let rt = Some(target_res.resource_type.as_str());
-            match &target_res.properties {
-                Some(p) => (p as &AstNode, rt),
-                None => (&empty_props as &AstNode, rt),
-            }
-        } else {
-            // Self-reference: use current resource's properties (the node being validated)
-            // Derive resource type from path (Resources/<name>/Properties → look up name)
-            let self_type: Option<&str> = if path.len() >= 2 && path[0] == "Resources" {
-                ctx.template.resources.get(&path[1]).map(|r| r.resource_type.as_str())
             } else {
-                None
+                // Self-reference: use current resource's properties (the node being validated)
+                // Derive resource type from path (Resources/<name>/Properties → look up name)
+                let self_type: Option<&str> = if path.len() >= 2 && path[0] == "Resources" {
+                    ctx.template
+                        .resources
+                        .get(&path[1])
+                        .map(|r| r.resource_type.as_str())
+                } else {
+                    None
+                };
+                (node, self_type)
             };
-            (node, self_type)
-        };
 
         // Extract specified properties
         let prop_specs = match source_obj.get("properties").and_then(|p| p.as_object()) {
@@ -101,7 +111,10 @@ pub fn validate_cfn_gather(
             None => {
                 // Source with no properties — add empty object
                 gathered_entries.push(ObjectEntry {
-                    key_node: AstNode::String(StringNode { value: source_name.clone(), span: Span::default() }),
+                    key_node: AstNode::String(StringNode {
+                        value: source_name.clone(),
+                        span: Span::default(),
+                    }),
                     key: source_name.clone(),
                     value: AstNode::Object(ObjectNode {
                         entries: Vec::new(),
@@ -119,7 +132,10 @@ pub fn validate_cfn_gather(
             if prop_spec.as_str() == Some("$type") {
                 if let Some(rt) = target_resource_type {
                     source_entries.push(ObjectEntry {
-                        key_node: AstNode::String(StringNode { value: prop_name.clone(), span: Span::default() }),
+                        key_node: AstNode::String(StringNode {
+                            value: prop_name.clone(),
+                            span: Span::default(),
+                        }),
                         key: prop_name.clone(),
                         value: AstNode::String(StringNode {
                             value: rt.to_string(),
@@ -133,7 +149,10 @@ pub fn validate_cfn_gather(
             let extracted = extract_gather_property_inline(target_props, prop_spec, &resolver);
             if let Some(val) = extracted {
                 source_entries.push(ObjectEntry {
-                    key_node: AstNode::String(StringNode { value: prop_name.clone(), span: Span::default() }),
+                    key_node: AstNode::String(StringNode {
+                        value: prop_name.clone(),
+                        span: Span::default(),
+                    }),
                     key: prop_name.clone(),
                     value: val,
                     key_span: Span::default(),
@@ -142,7 +161,10 @@ pub fn validate_cfn_gather(
         }
 
         gathered_entries.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: source_name.clone(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: source_name.clone(),
+                span: Span::default(),
+            }),
             key: source_name.clone(),
             value: AstNode::Object(ObjectNode {
                 entries: source_entries,
@@ -165,12 +187,19 @@ pub fn validate_cfn_gather(
     let resolved_schema = resolve_data_refs(inner_schema, &gathered);
 
     // Strip cfnContext wrapper and apply context (e.g. functions=[])
-    let has_cfn_ctx_functions = resolved_schema.get("cfnContext")
+    let has_cfn_ctx_functions = resolved_schema
+        .get("cfnContext")
         .and_then(|c| c.get("functions"))
         .and_then(|f| f.as_array())
         .is_some();
-    let final_schema = if let Some(cfn_ctx) = resolved_schema.get("cfnContext").and_then(|c| c.as_object()) {
-        cfn_ctx.get("schema").cloned().unwrap_or(serde_json::json!({}))
+    let final_schema = if let Some(cfn_ctx) = resolved_schema
+        .get("cfnContext")
+        .and_then(|c| c.as_object())
+    {
+        cfn_ctx
+            .get("schema")
+            .cloned()
+            .unwrap_or(serde_json::json!({}))
     } else {
         resolved_schema
     };
@@ -202,7 +231,7 @@ fn extract_gather_property_inline(
     spec: &serde_json::Value,
     resolver: &crate::resolver::Resolver,
 ) -> Option<AstNode> {
-    use crate::engine::{follow_pointer, resolve_functions, json_to_ast};
+    use crate::engine::{follow_pointer, json_to_ast, resolve_functions};
 
     let (path, default_val) = match spec {
         serde_json::Value::String(s) => (s.as_str(), None),
@@ -220,8 +249,6 @@ fn extract_gather_property_inline(
             let resolved = resolve_functions(node, resolver);
             Some(resolved)
         }
-        None => {
-            default_val.map(json_to_ast)
-        }
+        None => default_val.map(json_to_ast),
     }
 }

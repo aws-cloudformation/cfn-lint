@@ -9,10 +9,18 @@ use crate::rules::Severity;
 pub struct E3715;
 
 impl CfnLintRule for E3715 {
-    fn id(&self) -> &str { "E3715" }
-    fn short_description(&self) -> &str { "VirtualName must use ephemeral device format when Ebs is absent" }
-    fn description(&self) -> &str { "VirtualName must use ephemeral device format when Ebs is absent" }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn id(&self) -> &str {
+        "E3715"
+    }
+    fn short_description(&self) -> &str {
+        "VirtualName must use ephemeral device format when Ebs is absent"
+    }
+    fn description(&self) -> &str {
+        "VirtualName must use ephemeral device format when Ebs is absent"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &[
@@ -32,7 +40,14 @@ impl CfnLintRule for E3715 {
         _schema: &serde_json::Value,
         path: &[String],
     ) -> Vec<ValidationError> {
-        validate_schema("E3715", "VirtualName must use ephemeral device format when Ebs is absent", validator, instance, &SCHEMA, path)
+        validate_schema(
+            "E3715",
+            "VirtualName must use ephemeral device format when Ebs is absent",
+            validator,
+            instance,
+            &SCHEMA,
+            path,
+        )
     }
 }
 

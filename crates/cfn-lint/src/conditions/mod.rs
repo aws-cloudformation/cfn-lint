@@ -49,7 +49,9 @@ impl Conditions {
 
         for (k, _) in &template.conditions {
             match ConditionNamed::new(k, &template.conditions) {
-                Ok(c) => { conditions.insert(k.clone(), c); }
+                Ok(c) => {
+                    conditions.insert(k.clone(), c);
+                }
                 Err(_) => {
                     // Condition uses unsupported functions or malformed structure —
                     // excluded from SAT model (becomes unconstrained)
@@ -58,9 +60,16 @@ impl Conditions {
         }
 
         let condition_names: Vec<String> = conditions.keys().cloned().collect();
-        let (cnf, solver_params, static_equals) = build_cnf(&conditions, template, &condition_names);
+        let (cnf, solver_params, static_equals) =
+            build_cnf(&conditions, template, &condition_names);
 
-        Self { conditions, cnf, solver_params, static_equals, max_scenarios: 128 }
+        Self {
+            conditions,
+            cnf,
+            solver_params,
+            static_equals,
+            max_scenarios: 128,
+        }
     }
 
     pub fn get(&self, name: &str) -> Option<&ConditionNamed> {
@@ -87,7 +96,9 @@ impl Conditions {
     /// Check if the given scenario implies a condition is true.
     pub fn check_implies(&self, scenarios: &HashMap<String, bool>, implies: &str) -> bool {
         if let Some(&val) = scenarios.get(implies) {
-            if !val { return false; }
+            if !val {
+                return false;
+            }
         }
 
         let implies_cond = match self.conditions.get(implies) {
@@ -108,7 +119,9 @@ impl Conditions {
         }
 
         // If scenarios AND NOT(implies) is unsatisfiable, then scenarios => implies
-        cnf.add_expr(&Expr::Not(Box::new(implies_cond.build_expr(&self.solver_params, &self.static_equals))));
+        cnf.add_expr(&Expr::Not(Box::new(
+            implies_cond.build_expr(&self.solver_params, &self.static_equals),
+        )));
         !cnf.is_satisfiable()
     }
 
@@ -117,7 +130,9 @@ impl Conditions {
         &self,
         conditions: &HashMap<String, std::collections::HashSet<bool>>,
     ) -> Vec<HashMap<String, bool>> {
-        if conditions.is_empty() { return vec![]; }
+        if conditions.is_empty() {
+            return vec![];
+        }
 
         let mut base_cnf = self.cnf.clone();
         let mut fixed: HashMap<String, bool> = HashMap::new();
@@ -129,7 +144,9 @@ impl Conditions {
                     base_cnf.add_expr(&cond.build_expr(&self.solver_params, &self.static_equals));
                     fixed.insert(name.clone(), true);
                 } else if *values == [false].into() {
-                    base_cnf.add_expr(&Expr::Not(Box::new(cond.build_expr(&self.solver_params, &self.static_equals))));
+                    base_cnf.add_expr(&Expr::Not(Box::new(
+                        cond.build_expr(&self.solver_params, &self.static_equals),
+                    )));
                     fixed.insert(name.clone(), false);
                 } else {
                     variable_names.push(name.clone());
@@ -183,9 +200,11 @@ impl Conditions {
         for (condition_name, &opt) in conditions {
             let cond = match self.conditions.get(condition_name) {
                 Some(c) => c,
-                None => return Err(UnknownSatisfaction {
-                    message: format!("Can't resolve satisfaction for {condition_name:?}"),
-                }),
+                None => {
+                    return Err(UnknownSatisfaction {
+                        message: format!("Can't resolve satisfaction for {condition_name:?}"),
+                    })
+                }
             };
 
             for c_equals in cond.equals() {
@@ -197,7 +216,9 @@ impl Conditions {
                     for c_equal_param in c_equals.parameters() {
                         if !c_equal_param.satisfiable {
                             return Err(UnknownSatisfaction {
-                                message: format!("Can't resolve satisfaction for {condition_name:?}"),
+                                message: format!(
+                                    "Can't resolve satisfaction for {condition_name:?}"
+                                ),
                             });
                         }
                     }
@@ -247,7 +268,9 @@ fn build_cnf(
     for name in condition_names {
         if let Some(cond) = conditions.get(name) {
             for eq in cond.equals() {
-                if equal_vars.contains_key(&eq.hash) { continue; }
+                if equal_vars.contains_key(&eq.hash) {
+                    continue;
+                }
 
                 // Python treats all Equals as opaque symbols in the SAT solver,
                 // even static ones. Always create a variable.
@@ -276,9 +299,7 @@ fn build_cnf(
     for (param_name, param) in &template.parameters {
         if let Some(ref av) = param.allowed_values {
             let rh = equals::ref_hash(param_name);
-            let hashes: Vec<String> = av.iter()
-                .map(|v| equals::get_hash(v))
-                .collect();
+            let hashes: Vec<String> = av.iter().map(|v| equals::get_hash(v)).collect();
             allowed_values.insert(rh, hashes);
         }
     }
@@ -318,7 +339,8 @@ fn build_cnf(
         }
     }
 
-    let solver_params: HashMap<String, usize> = equal_vars.iter()
+    let solver_params: HashMap<String, usize> = equal_vars
+        .iter()
         .filter_map(|(hash, static_val)| {
             if static_val.is_none() {
                 Some((hash.clone(), cnf.get_or_create_var(hash)))
@@ -328,10 +350,9 @@ fn build_cnf(
         })
         .collect();
 
-    let static_equals: HashMap<String, bool> = equal_vars.iter()
-        .filter_map(|(hash, static_val)| {
-            static_val.map(|v| (hash.clone(), v))
-        })
+    let static_equals: HashMap<String, bool> = equal_vars
+        .iter()
+        .filter_map(|(hash, static_val)| static_val.map(|v| (hash.clone(), v)))
         .collect();
 
     (cnf, solver_params, static_equals)
@@ -349,7 +370,8 @@ mod tests {
 
     #[test]
     fn test_basic_condition_parsing() {
-        let t = make_template(br#"
+        let t = make_template(
+            br#"
 Conditions:
   IsProd:
     Fn::Equals:
@@ -362,14 +384,16 @@ Parameters:
 Resources:
   D:
     Type: AWS::SNS::Topic
-"#);
+"#,
+        );
         let c = Conditions::from_template(&t);
         assert!(c.get("IsProd").is_some());
     }
 
     #[test]
     fn test_satisfiable_empty() {
-        let t = make_template(br#"
+        let t = make_template(
+            br#"
 Conditions:
   IsProd:
     Fn::Equals:
@@ -381,14 +405,16 @@ Parameters:
 Resources:
   D:
     Type: AWS::SNS::Topic
-"#);
+"#,
+        );
         let c = Conditions::from_template(&t);
         assert!(c.satisfiable(&HashMap::new(), &HashMap::new()).unwrap());
     }
 
     #[test]
     fn test_check_implies_true() {
-        let t = make_template(br#"
+        let t = make_template(
+            br#"
 Conditions:
   IsProd:
     Fn::Equals:
@@ -406,7 +432,8 @@ Parameters:
 Resources:
   D:
     Type: AWS::SNS::Topic
-"#);
+"#,
+        );
         let c = Conditions::from_template(&t);
         let mut scenarios = HashMap::new();
         scenarios.insert("IsProd".to_string(), true);
@@ -415,7 +442,8 @@ Resources:
 
     #[test]
     fn test_check_implies_false_in_scenarios() {
-        let t = make_template(br#"
+        let t = make_template(
+            br#"
 Conditions:
   IsProd:
     Fn::Equals:
@@ -427,7 +455,8 @@ Parameters:
 Resources:
   D:
     Type: AWS::SNS::Topic
-"#);
+"#,
+        );
         let c = Conditions::from_template(&t);
         let mut scenarios = HashMap::new();
         scenarios.insert("IsProd".to_string(), false);
@@ -436,7 +465,8 @@ Resources:
 
     #[test]
     fn test_static_equals() {
-        let t = make_template(br#"
+        let t = make_template(
+            br#"
 Conditions:
   AlwaysTrue:
     Fn::Equals: ["a", "a"]
@@ -445,7 +475,8 @@ Conditions:
 Resources:
   D:
     Type: AWS::SNS::Topic
-"#);
+"#,
+        );
         let c = Conditions::from_template(&t);
         let scenarios = HashMap::new();
         // Python's SAT solver treats all Equals as opaque symbols,
@@ -457,7 +488,8 @@ Resources:
 
     #[test]
     fn test_not_condition() {
-        let t = make_template(br#"
+        let t = make_template(
+            br#"
 Conditions:
   IsProd:
     Fn::Equals:
@@ -472,7 +504,8 @@ Parameters:
 Resources:
   D:
     Type: AWS::SNS::Topic
-"#);
+"#,
+        );
         let c = Conditions::from_template(&t);
         let mut scenarios = HashMap::new();
         scenarios.insert("IsProd".to_string(), false);
@@ -481,7 +514,8 @@ Resources:
 
     #[test]
     fn test_mutual_exclusion_with_allowed_values() {
-        let t = make_template(br#"
+        let t = make_template(
+            br#"
 Conditions:
   IsProd:
     Fn::Equals:
@@ -498,7 +532,8 @@ Parameters:
 Resources:
   D:
     Type: AWS::SNS::Topic
-"#);
+"#,
+        );
         let c = Conditions::from_template(&t);
         let mut scenarios = HashMap::new();
         scenarios.insert("IsProd".to_string(), true);
@@ -507,7 +542,8 @@ Resources:
 
     #[test]
     fn test_build_scenarios() {
-        let t = make_template(br#"
+        let t = make_template(
+            br#"
 Conditions:
   IsProd:
     Fn::Equals:
@@ -523,7 +559,8 @@ Parameters:
 Resources:
   D:
     Type: AWS::SNS::Topic
-"#);
+"#,
+        );
         let c = Conditions::from_template(&t);
         let mut conds = HashMap::new();
         conds.insert("IsProd".to_string(), [true, false].into());
@@ -535,7 +572,8 @@ Resources:
 
     #[test]
     fn test_is_condition_set_satisfiable() {
-        let t = make_template(br#"
+        let t = make_template(
+            br#"
 Conditions:
   IsProd:
     Fn::Equals:
@@ -552,7 +590,8 @@ Parameters:
 Resources:
   D:
     Type: AWS::SNS::Topic
-"#);
+"#,
+        );
         let c = Conditions::from_template(&t);
 
         // IsProd=true alone is fine
@@ -567,7 +606,8 @@ Resources:
 
     #[test]
     fn test_single_condition_both_branches_satisfiable() {
-        let t = make_template(br#"
+        let t = make_template(
+            br#"
 Conditions:
   MultiAZ:
     Fn::Equals:
@@ -580,15 +620,22 @@ Parameters:
 Resources:
   D:
     Type: AWS::SNS::Topic
-"#);
+"#,
+        );
         let c = Conditions::from_template(&t);
 
         let mut s = HashMap::new();
         s.insert("MultiAZ".to_string(), true);
-        assert!(c.is_condition_set_satisfiable(&s), "MultiAZ=true should be satisfiable");
+        assert!(
+            c.is_condition_set_satisfiable(&s),
+            "MultiAZ=true should be satisfiable"
+        );
 
         s.clear();
         s.insert("MultiAZ".to_string(), false);
-        assert!(c.is_condition_set_satisfiable(&s), "MultiAZ=false should be satisfiable");
+        assert!(
+            c.is_condition_set_satisfiable(&s),
+            "MultiAZ=false should be satisfiable"
+        );
     }
 }

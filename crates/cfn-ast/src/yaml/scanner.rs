@@ -2323,7 +2323,9 @@ impl<T: Iterator<Item = char>> Scanner<T> {
 
     /// Fetch a value from a mapping (after a `:`).
     fn fetch_value(&mut self) -> ScanResult {
-        let sk = self.simple_keys.last()
+        let sk = self
+            .simple_keys
+            .last()
             .ok_or_else(|| ScanError::new(self.mark, "internal error: simple_keys is empty"))?
             .clone();
         let start_mark = self.mark;
@@ -2510,7 +2512,9 @@ impl<T: Iterator<Item = char>> Scanner<T> {
     }
 
     fn remove_simple_key(&mut self) -> ScanResult {
-        let last = self.simple_keys.last_mut()
+        let last = self
+            .simple_keys
+            .last_mut()
             .ok_or_else(|| ScanError::new(self.mark, "internal error: simple_keys is empty"))?;
         if last.possible && last.required {
             return Err(ScanError::new(self.mark, "simple key expected"));

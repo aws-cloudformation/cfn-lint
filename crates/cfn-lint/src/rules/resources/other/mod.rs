@@ -20,6 +20,7 @@ pub mod e3641;
 pub mod e3642;
 pub mod e3643;
 pub mod e3644;
+pub mod e3652;
 pub mod e3653;
 pub mod e3667;
 pub mod e3670;

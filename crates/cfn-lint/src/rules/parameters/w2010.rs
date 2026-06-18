@@ -2,8 +2,8 @@ use regex::Regex;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 pub struct W2010;
@@ -22,9 +22,15 @@ impl CfnLintRule for W2010 {
         Severity::Warning
     }
 
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let no_echo_params: Vec<&str> = template
             .parameters
             .iter()
@@ -40,12 +46,24 @@ impl CfnLintRule for W2010 {
 
         // Check template-level Metadata section
         if let Some(metadata) = root.get("Metadata") {
-            find_noecho_refs(metadata, &no_echo_params, &["Metadata"], "Metadata", &mut issues);
+            find_noecho_refs(
+                metadata,
+                &no_echo_params,
+                &["Metadata"],
+                "Metadata",
+                &mut issues,
+            );
         }
 
         // Check Outputs section
         if let Some(outputs) = root.get("Outputs") {
-            find_noecho_refs(outputs, &no_echo_params, &["Outputs"], "Outputs", &mut issues);
+            find_noecho_refs(
+                outputs,
+                &no_echo_params,
+                &["Outputs"],
+                "Outputs",
+                &mut issues,
+            );
         }
 
         // Check Resource Metadata
@@ -105,7 +123,7 @@ fn find_refs_recursive(
                             resolved_from_ref: false,
                             context: vec![],
                             schema_id: None,
-});
+                        });
                     }
                 }
             } else if func.name == "Fn::Sub" {
@@ -149,7 +167,7 @@ fn find_refs_recursive(
                                 resolved_from_ref: false,
                                 context: vec![],
                                 schema_id: None,
-});
+                            });
                         }
                     }
                 }

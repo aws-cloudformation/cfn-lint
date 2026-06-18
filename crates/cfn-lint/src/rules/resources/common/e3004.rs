@@ -2,23 +2,35 @@ use std::collections::{HashMap, HashSet};
 
 use crate::ast::{self, AstNode};
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 pub struct E3004;
 
 impl CfnLintRule for E3004 {
-    fn id(&self) -> &str { "E3004" }
-    fn short_description(&self) -> &str { "Resource dependencies are not circular" }
-    fn description(&self) -> &str { "Check for circular dependencies between resources" }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn id(&self) -> &str {
+        "E3004"
+    }
+    fn short_description(&self) -> &str {
+        "Resource dependencies are not circular"
+    }
+    fn description(&self) -> &str {
+        "Check for circular dependencies between resources"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let resource_names: HashSet<&str> = template.resources.keys().map(|s| s.as_str()).collect();
         let resources_node = match root.get("Resources").and_then(|n| n.as_object()) {
             Some(o) => o,
@@ -46,16 +58,22 @@ impl CfnLintRule for E3004 {
             let cycle = find_cycle(name.as_str(), &graph, &mut visited, &mut stack);
             if let Some(cycle) = cycle {
                 for res in &cycle {
-                    if reported.contains(res) { continue; }
+                    if reported.contains(res) {
+                        continue;
+                    }
                     reported.insert(res.clone());
                     // Find what it cycles with
-                    let deps: Vec<&str> = graph.get(res.as_str())
-                        .map(|d| d.iter()
-                            .filter(|dep| cycle.contains(dep))
-                            .map(|s| s.as_str())
-                            .collect())
+                    let deps: Vec<&str> = graph
+                        .get(res.as_str())
+                        .map(|d| {
+                            d.iter()
+                                .filter(|dep| cycle.contains(dep))
+                                .map(|s| s.as_str())
+                                .collect()
+                        })
                         .unwrap_or_default();
-                    let pos = resources_node.get(res.as_str())
+                    let pos = resources_node
+                        .get(res.as_str())
                         .map(|n| n.span().clone())
                         .unwrap_or_default();
                     issues.push(ValidationError {
@@ -71,7 +89,7 @@ impl CfnLintRule for E3004 {
                         resolved_from_ref: false,
                         context: vec![],
                         schema_id: None,
-});
+                    });
                 }
             }
         }
@@ -94,8 +112,13 @@ fn collect_resource_refs(node: &AstNode, resources: &HashSet<&str>, deps: &mut H
                     let res_name = if let Some(s) = func.args.as_str() {
                         s.split('.').next().map(|s| s.to_string())
                     } else if let Some(arr) = func.args.as_array() {
-                        arr.elements.first().and_then(|e| e.as_str()).map(|s| s.to_string())
-                    } else { None };
+                        arr.elements
+                            .first()
+                            .and_then(|e| e.as_str())
+                            .map(|s| s.to_string())
+                    } else {
+                        None
+                    };
                     if let Some(name) = res_name {
                         if resources.contains(name.as_str()) {
                             deps.insert(name);
@@ -106,8 +129,13 @@ fn collect_resource_refs(node: &AstNode, resources: &HashSet<&str>, deps: &mut H
                     let template_str = if let Some(s) = func.args.as_str() {
                         Some(s.to_string())
                     } else if let Some(arr) = func.args.as_array() {
-                        arr.elements.first().and_then(|e| e.as_str()).map(|s| s.to_string())
-                    } else { None };
+                        arr.elements
+                            .first()
+                            .and_then(|e| e.as_str())
+                            .map(|s| s.to_string())
+                    } else {
+                        None
+                    };
                     if let Some(s) = template_str {
                         for cap in s.split("${").skip(1) {
                             if let Some(var) = cap.split('}').next() {
@@ -153,7 +181,6 @@ fn find_cycle<'a>(
     stack.pop();
     None
 }
-
 
 #[cfg(test)]
 mod tests {

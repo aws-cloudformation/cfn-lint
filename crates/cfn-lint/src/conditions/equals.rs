@@ -4,8 +4,8 @@
 //! Fn::Equals evaluation with parameter awareness.
 //! Mirrors Python's `cfnlint.conditions._equals`.
 
-use std::hash::{Hash, Hasher};
 use std::collections::hash_map::DefaultHasher;
+use std::hash::{Hash, Hasher};
 
 use crate::ast::AstNode;
 
@@ -38,7 +38,10 @@ fn ast_to_canonical(node: &AstNode) -> String {
                 .map(|(k, v)| (k.to_string(), ast_to_canonical(v)))
                 .collect();
             pairs.sort_by(|a, b| a.0.cmp(&b.0));
-            let items: Vec<String> = pairs.iter().map(|(k, v)| format!("\"{}\": {}", k, v)).collect();
+            let items: Vec<String> = pairs
+                .iter()
+                .map(|(k, v)| format!("\"{}\": {}", k, v))
+                .collect();
             format!("{{{}}}", items.join(", "))
         }
         AstNode::Function(func) => {
@@ -98,7 +101,11 @@ impl Equal {
 
         // Hash the sorted pair
         let hash = {
-            let s = format!("[{}, {}]", ast_to_canonical(sorted_l), ast_to_canonical(sorted_r));
+            let s = format!(
+                "[{}, {}]",
+                ast_to_canonical(sorted_l),
+                ast_to_canonical(sorted_r)
+            );
             let mut hasher = DefaultHasher::new();
             s.hash(&mut hasher);
             format!("{:016x}", hasher.finish())
@@ -107,12 +114,21 @@ impl Equal {
         let is_static = match (&left_side, &right_side) {
             (EqualSide::Literal(_, h1), EqualSide::Literal(_, h2)) => Some(h1 == h2),
             (EqualSide::Parameter(p1), EqualSide::Parameter(p2)) => {
-                if p1.hash == p2.hash { Some(true) } else { None }
+                if p1.hash == p2.hash {
+                    Some(true)
+                } else {
+                    None
+                }
             }
             _ => None,
         };
 
-        Ok(Self { hash, is_static, left: left_side, right: right_side })
+        Ok(Self {
+            hash,
+            is_static,
+            left: left_side,
+            right: right_side,
+        })
     }
 
     pub fn parameters(&self) -> Vec<&EqualParameter> {
@@ -134,9 +150,7 @@ impl Equal {
     pub fn static_value_hash(&self) -> Option<String> {
         match (&self.left, &self.right) {
             (EqualSide::Literal(_, h), EqualSide::Parameter(_))
-            | (EqualSide::Parameter(_), EqualSide::Literal(_, h)) => {
-                Some(h.clone())
-            }
+            | (EqualSide::Parameter(_), EqualSide::Literal(_, h)) => Some(h.clone()),
             _ => None,
         }
     }
@@ -146,13 +160,21 @@ impl Equal {
             return is_static;
         }
         match (&self.left, &self.right) {
-            (EqualSide::Parameter(p), EqualSide::Literal(v, _)) if p.hash == param_hash => value == v,
-            (EqualSide::Literal(v, _), EqualSide::Parameter(p)) if p.hash == param_hash => value == v,
+            (EqualSide::Parameter(p), EqualSide::Literal(v, _)) if p.hash == param_hash => {
+                value == v
+            }
+            (EqualSide::Literal(v, _), EqualSide::Parameter(p)) if p.hash == param_hash => {
+                value == v
+            }
             _ => false,
         }
     }
 
-    pub fn build_expr(&self, solver_params: &std::collections::HashMap<String, usize>, static_equals: &std::collections::HashMap<String, bool>) -> Expr {
+    pub fn build_expr(
+        &self,
+        solver_params: &std::collections::HashMap<String, usize>,
+        static_equals: &std::collections::HashMap<String, bool>,
+    ) -> Expr {
         if let Some(&var) = solver_params.get(&self.hash) {
             Expr::Var(var)
         } else if let Some(&val) = static_equals.get(&self.hash) {
@@ -166,7 +188,9 @@ impl Equal {
 fn init_side(node: &AstNode) -> EqualSide {
     match node {
         AstNode::String(s) => EqualSide::Literal(s.value.clone(), get_hash(node)),
-        AstNode::Function(_) | AstNode::Object(_) => EqualSide::Parameter(EqualParameter::from_ast(node)),
+        AstNode::Function(_) | AstNode::Object(_) => {
+            EqualSide::Parameter(EqualParameter::from_ast(node))
+        }
         AstNode::Number(n) => {
             let s = n.value.to_string();
             EqualSide::Literal(s, get_hash(node))
@@ -202,7 +226,10 @@ mod tests {
     use crate::ast::*;
 
     fn str_node(s: &str) -> AstNode {
-        AstNode::String(StringNode { value: s.into(), span: Span::default() })
+        AstNode::String(StringNode {
+            value: s.into(),
+            span: Span::default(),
+        })
     }
 
     fn ref_node(name: &str) -> AstNode {

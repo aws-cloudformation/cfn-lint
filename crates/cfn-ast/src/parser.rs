@@ -55,11 +55,16 @@ impl LineIndex {
                 starts.push(i + 1);
             }
         }
-        Self { line_starts: starts }
+        Self {
+            line_starts: starts,
+        }
     }
 
     fn position(&self, offset: usize) -> Position {
-        let line = self.line_starts.partition_point(|&s| s <= offset).saturating_sub(1);
+        let line = self
+            .line_starts
+            .partition_point(|&s| s <= offset)
+            .saturating_sub(1);
         let col = offset - self.line_starts[line];
         Position {
             line: line as u32,
@@ -82,8 +87,8 @@ use crate::yaml::scanner::{Marker, TScalarStyle};
 
 fn marker_to_pos(m: Marker) -> Position {
     Position {
-        line: m.line().saturating_sub(1) as u32,  // yaml-rust2 lines are 1-based
-        column: m.col() as u32,                    // yaml-rust2 columns are 0-based
+        line: m.line().saturating_sub(1) as u32, // yaml-rust2 lines are 1-based
+        column: m.col() as u32,                  // yaml-rust2 columns are 0-based
     }
 }
 
@@ -114,7 +119,10 @@ const YAML_TAG_MAP: &[(&str, &str)] = &[
 
 fn resolve_tag(tag: &Tag) -> Option<&'static str> {
     let tag_str = format!("!{}", tag.suffix);
-    YAML_TAG_MAP.iter().find(|(k, _)| *k == tag_str).map(|(_, v)| *v)
+    YAML_TAG_MAP
+        .iter()
+        .find(|(k, _)| *k == tag_str)
+        .map(|(_, v)| *v)
 }
 
 /// Pending key info while parsing a YAML mapping.
@@ -162,13 +170,20 @@ impl CfnYamlLoader {
                     };
                     let key_span = Span {
                         start: pos,
-                        end: Position { line: pos.line, column: pos.column + len },
+                        end: Position {
+                            line: pos.line,
+                            column: pos.column + len,
+                        },
                     };
                     let key = match &node {
                         AstNode::String(s) => s.value.clone(),
                         other => format!("{}", other),
                     };
-                    *pending = Some(PendingKey { key_node: node, key, key_span });
+                    *pending = Some(PendingKey {
+                        key_node: node,
+                        key,
+                        key_span,
+                    });
                 } else {
                     // This node is a value — create entry
                     let pk = pending.take().unwrap();
@@ -307,7 +322,10 @@ impl MarkedEventReceiver for CfnYamlLoader {
                 // Check for tag-based function
                 if let Some(func_name) = tag.as_ref().and_then(resolve_tag) {
                     // Extend span backwards to cover the tag (e.g., "!Ref ")
-                    let tag_text = tag.as_ref().map(|t| format!("!{} ", t.suffix)).unwrap_or_default();
+                    let tag_text = tag
+                        .as_ref()
+                        .map(|t| format!("!{} ", t.suffix))
+                        .unwrap_or_default();
                     let func_start = marker_to_pos(mark);
                     let func_span = Span {
                         start: Position {
@@ -337,7 +355,9 @@ impl MarkedEventReceiver for CfnYamlLoader {
                 } else {
                     match value.as_str() {
                         "true" | "True" | "TRUE" => AstNode::Bool(BoolNode { value: true, span }),
-                        "false" | "False" | "FALSE" => AstNode::Bool(BoolNode { value: false, span }),
+                        "false" | "False" | "FALSE" => {
+                            AstNode::Bool(BoolNode { value: false, span })
+                        }
                         "~" | "null" | "Null" | "NULL" | "" => AstNode::Null(NullNode { span }),
                         _ => {
                             if let Ok(n) = value.parse::<f64>() {
@@ -361,8 +381,12 @@ impl MarkedEventReceiver for CfnYamlLoader {
 pub fn parse_yaml(input: &str) -> Result<AstNode, ParseError> {
     let mut loader = CfnYamlLoader::new();
     let mut parser = Parser::new(input.chars());
-    parser.load(&mut loader, true).map_err(|e| ParseError::Yaml(e.to_string()))?;
-    loader.result.ok_or_else(|| ParseError::Yaml("empty document".to_string()))
+    parser
+        .load(&mut loader, true)
+        .map_err(|e| ParseError::Yaml(e.to_string()))?;
+    loader
+        .result
+        .ok_or_else(|| ParseError::Yaml("empty document".to_string()))
 }
 
 /// Parse YAML text leniently — on error, recover the partial AST built so far.
@@ -405,10 +429,16 @@ pub fn parse_yaml_lenient(input: &str) -> (Option<AstNode>, Vec<String>) {
             // Update end span to cover up to the error position
             match &mut node {
                 AstNode::Object(obj) => {
-                    obj.span.end = Position { line: error_line, column: error_col };
+                    obj.span.end = Position {
+                        line: error_line,
+                        column: error_col,
+                    };
                 }
                 AstNode::Array(arr) => {
-                    arr.span.end = Position { line: error_line, column: error_col };
+                    arr.span.end = Position {
+                        line: error_line,
+                        column: error_col,
+                    };
                 }
                 _ => {}
             }
@@ -416,7 +446,11 @@ pub fn parse_yaml_lenient(input: &str) -> (Option<AstNode>, Vec<String>) {
             // Wrap in function if tagged
             let node = if let Some(name) = func_name {
                 let span = node.span();
-                AstNode::Function(FunctionNode { name, args: Box::new(node), span })
+                AstNode::Function(FunctionNode {
+                    name,
+                    args: Box::new(node),
+                    span,
+                })
             } else {
                 node
             };
@@ -458,7 +492,11 @@ pub fn parse_yaml_lenient(input: &str) -> (Option<AstNode>, Vec<String>) {
                 // These are likely top-level keys like "Outputs:", "Parameters:", etc.
                 for start_line in err_line..lines.len() {
                     let line = lines[start_line];
-                    if !line.starts_with(' ') && !line.starts_with('#') && !line.trim().is_empty() && line.contains(':') {
+                    if !line.starts_with(' ')
+                        && !line.starts_with('#')
+                        && !line.trim().is_empty()
+                        && line.contains(':')
+                    {
                         // Found a potential top-level key — try parsing from here
                         let remaining = lines[start_line..].join("\n");
                         if let Ok(partial) = parse_yaml(&remaining) {
@@ -476,7 +514,10 @@ pub fn parse_yaml_lenient(input: &str) -> (Option<AstNode>, Vec<String>) {
                                     }
                                     root_obj.entries.push(entry);
                                 }
-                                root_obj.span.end = Position { line: lines.len() as u32, column: 0 };
+                                root_obj.span.end = Position {
+                                    line: lines.len() as u32,
+                                    column: 0,
+                                };
                             }
                         }
                         break;
@@ -486,11 +527,18 @@ pub fn parse_yaml_lenient(input: &str) -> (Option<AstNode>, Vec<String>) {
                 // Also check for sibling keys at the same indent as the error
                 // (e.g., another resource after a broken one)
                 if err_line < lines.len() {
-                    let err_indent = lines.get(err_line).map(|l| l.len() - l.trim_start().len()).unwrap_or(0);
+                    let err_indent = lines
+                        .get(err_line)
+                        .map(|l| l.len() - l.trim_start().len())
+                        .unwrap_or(0);
                     for start_line in err_line..lines.len() {
                         let line = lines[start_line];
                         let indent = line.len() - line.trim_start().len();
-                        if indent <= err_indent && !line.trim().is_empty() && line.contains(':') && indent > 0 {
+                        if indent <= err_indent
+                            && !line.trim().is_empty()
+                            && line.contains(':')
+                            && indent > 0
+                        {
                             // Found a sibling key — try parsing a sub-document
                             let remaining = lines[start_line..].join("\n");
                             if let Ok(partial) = parse_yaml(&remaining) {
@@ -549,10 +597,22 @@ fn adjust_spans(node: &mut AstNode, line_offset: u32) {
             func.span.end.line += line_offset;
             adjust_spans(&mut func.args, line_offset);
         }
-        AstNode::String(s) => { s.span.start.line += line_offset; s.span.end.line += line_offset; }
-        AstNode::Number(n) => { n.span.start.line += line_offset; n.span.end.line += line_offset; }
-        AstNode::Bool(b) => { b.span.start.line += line_offset; b.span.end.line += line_offset; }
-        AstNode::Null(n) => { n.span.start.line += line_offset; n.span.end.line += line_offset; }
+        AstNode::String(s) => {
+            s.span.start.line += line_offset;
+            s.span.end.line += line_offset;
+        }
+        AstNode::Number(n) => {
+            n.span.start.line += line_offset;
+            n.span.end.line += line_offset;
+        }
+        AstNode::Bool(b) => {
+            b.span.start.line += line_offset;
+            b.span.end.line += line_offset;
+        }
+        AstNode::Null(n) => {
+            n.span.start.line += line_offset;
+            n.span.end.line += line_offset;
+        }
     }
 }
 
@@ -600,7 +660,10 @@ fn convert_json_spanned(value: &spanned::Value, idx: &LineIndex) -> AstNode {
                 let key_str: &str = key.get_ref();
                 let key_span = idx.span(key.start()..key.end());
                 entries.push(ObjectEntry {
-                    key_node: AstNode::String(StringNode { value: key_str.to_string(), span: key_span }),
+                    key_node: AstNode::String(StringNode {
+                        value: key_str.to_string(),
+                        span: key_span,
+                    }),
                     key: key_str.to_string(),
                     value: convert_json_spanned(val, idx),
                     key_span,
@@ -620,10 +683,7 @@ fn convert_json_spanned(value: &spanned::Value, idx: &LineIndex) -> AstNode {
             value: n.as_f64().unwrap_or(0.0),
             span,
         }),
-        json_spanned_value::Value::Bool(b) => AstNode::Bool(BoolNode {
-            value: *b,
-            span,
-        }),
+        json_spanned_value::Value::Bool(b) => AstNode::Bool(BoolNode { value: *b, span }),
         json_spanned_value::Value::Null => AstNode::Null(NullNode { span }),
     }
 }
@@ -648,18 +708,29 @@ pub fn parse_json_lenient(input: &str) -> (Option<AstNode>, Vec<String>) {
     // Fix 1: Remove trailing commas before } or ]
     loop {
         let prev = fixed.clone();
-        fixed = fixed.replace(", }", " }").replace(",}", "}").replace(", ]", " ]").replace(",]", "]");
+        fixed = fixed
+            .replace(", }", " }")
+            .replace(",}", "}")
+            .replace(", ]", " ]")
+            .replace(",]", "]");
         // Also handle whitespace/newlines between comma and closing
         let re_obj = regex_trailing_comma(&fixed, '}');
-        if let Some(f) = re_obj { fixed = f; }
+        if let Some(f) = re_obj {
+            fixed = f;
+        }
         let re_arr = regex_trailing_comma(&fixed, ']');
-        if let Some(f) = re_arr { fixed = f; }
-        if fixed == prev { break; }
+        if let Some(f) = re_arr {
+            fixed = f;
+        }
+        if fixed == prev {
+            break;
+        }
     }
 
     // Fix 2: Remove empty lines (lines with only whitespace)
     let lines: Vec<&str> = fixed.lines().collect();
-    let fixed: String = lines.iter()
+    let fixed: String = lines
+        .iter()
         .filter(|l| !l.trim().is_empty())
         .cloned()
         .collect::<Vec<_>>()
@@ -681,11 +752,17 @@ pub fn parse_json_lenient(input: &str) -> (Option<AstNode>, Vec<String>) {
             continue;
         }
         if in_string {
-            if ch == '\\' { escape_next = true; }
-            else if ch == '"' { in_string = false; }
+            if ch == '\\' {
+                escape_next = true;
+            } else if ch == '"' {
+                in_string = false;
+            }
             continue;
         }
-        if ch == '"' { in_string = true; continue; }
+        if ch == '"' {
+            in_string = true;
+            continue;
+        }
         match ch {
             '{' => open_braces += 1,
             '}' => open_braces -= 1,
@@ -695,8 +772,12 @@ pub fn parse_json_lenient(input: &str) -> (Option<AstNode>, Vec<String>) {
         }
     }
     let mut closed = fixed.clone();
-    for _ in 0..open_brackets { closed.push(']'); }
-    for _ in 0..open_braces { closed.push('}'); }
+    for _ in 0..open_brackets {
+        closed.push(']');
+    }
+    for _ in 0..open_braces {
+        closed.push('}');
+    }
 
     if let Ok(node) = parse_json(&closed) {
         errors.push("JSON repaired (unclosed braces/brackets)".to_string());
@@ -717,7 +798,12 @@ fn regex_trailing_comma(input: &str, closing: char) -> Option<String> {
         if result[i] == b',' {
             // Look ahead past whitespace/newlines for closing delimiter
             let mut j = i + 1;
-            while j < result.len() && (result[j] == b' ' || result[j] == b'\n' || result[j] == b'\r' || result[j] == b'\t') {
+            while j < result.len()
+                && (result[j] == b' '
+                    || result[j] == b'\n'
+                    || result[j] == b'\r'
+                    || result[j] == b'\t')
+            {
                 j += 1;
             }
             if j < result.len() && result[j] == closing as u8 {
@@ -727,7 +813,11 @@ fn regex_trailing_comma(input: &str, closing: char) -> Option<String> {
         }
         i += 1;
     }
-    if changed { Some(String::from_utf8(result).ok()?) } else { None }
+    if changed {
+        Some(String::from_utf8(result).ok()?)
+    } else {
+        None
+    }
 }
 
 /// Parse text as YAML or JSON (auto-detect by first non-whitespace char).
@@ -781,8 +871,16 @@ mod tests {
         assert_eq!(span.start.line, 0);
         // !Ref starts at col 11, but yaml-rust2 reports scalar at col 16 (1-based=16, 0-based=15)
         // tag "!Ref " is 5 chars, so func start = 15 - 5 = 10
-        assert!(span.start.column <= 11, "span start col {} should be <= 11", span.start.column);
-        assert!(span.end.column >= 25, "span end col {} should be >= 25", span.end.column);
+        assert!(
+            span.start.column <= 11,
+            "span start col {} should be <= 11",
+            span.start.column
+        );
+        assert!(
+            span.end.column >= 25,
+            "span end col {} should be >= 25",
+            span.end.column
+        );
     }
 
     #[test]
@@ -802,74 +900,109 @@ mod tests {
     }
 }
 
-    #[test]
-    fn test_nested_object_spans() {
-        let template = "Resources:\n  AppBucket:\n    Type: AWS::S3::Bucket\n    Properties:\n      BucketName: test\n      VersioningConfiguration:\n        Status: Enabled\n\n      Tags:\n        - Key: Env\n          Value: dev";
-        let node = parse_yaml(template).unwrap();
+#[test]
+fn test_nested_object_spans() {
+    let template = "Resources:\n  AppBucket:\n    Type: AWS::S3::Bucket\n    Properties:\n      BucketName: test\n      VersioningConfiguration:\n        Status: Enabled\n\n      Tags:\n        - Key: Env\n          Value: dev";
+    let node = parse_yaml(template).unwrap();
 
-        let props = node.get("Resources").unwrap()
-            .get("AppBucket").unwrap()
-            .get("Properties").unwrap();
-        let props_obj = props.as_object().unwrap();
-        for (k, v) in props_obj.iter() {
-            let s = v.span();
-            eprintln!("  Properties.{}: {}:{} -> {}:{}", k, s.start.line, s.start.column, s.end.line, s.end.column);
-        }
-
-        use crate::traverse::{node_at_position, object_context_at_position};
-
-        // Line 7 is the blank line between "Status: Enabled" and "Tags:"
-        // At col 6 (Properties key indent) -> should get Properties
-        let result = object_context_at_position(&node, 7, 6);
-        eprintln!("object_context(7,6) -> {:?}", result.as_ref().map(|(_, p)| p));
-        assert!(result.is_some(), "should find context on blank line");
-        let (_, ctx_path) = result.unwrap();
-        assert_eq!(ctx_path, vec!["Resources", "AppBucket", "Properties"],
-            "col 6 on blank line should resolve to Properties, got: {:?}", ctx_path);
-
-        // At col 8 (VC child indent) -> should get VersioningConfiguration
-        let result2 = object_context_at_position(&node, 7, 8);
-        eprintln!("object_context(7,8) -> {:?}", result2.as_ref().map(|(_, p)| p));
-        assert!(result2.is_some(), "should find context at col 8");
-        let (_, ctx_path2) = result2.unwrap();
-        assert_eq!(ctx_path2, vec!["Resources", "AppBucket", "Properties", "VersioningConfiguration"],
-            "col 8 on blank line should resolve to VC, got: {:?}", ctx_path2);
+    let props = node
+        .get("Resources")
+        .unwrap()
+        .get("AppBucket")
+        .unwrap()
+        .get("Properties")
+        .unwrap();
+    let props_obj = props.as_object().unwrap();
+    for (k, v) in props_obj.iter() {
+        let s = v.span();
+        eprintln!(
+            "  Properties.{}: {}:{} -> {}:{}",
+            k, s.start.line, s.start.column, s.end.line, s.end.column
+        );
     }
 
-    #[test]
-    fn test_func_spans() {
-        let yaml = "Value: !Ref Environment";
-        let node = parse_yaml(yaml).unwrap();
-        let val = node.get("Value").unwrap();
-        if let crate::node::AstNode::Function(f) = val {
-            eprintln!("func name={} span={}:{}-{}:{}", f.name, f.span.start.line, f.span.start.column, f.span.end.line, f.span.end.column);
-            let args_span = f.args.span();
-            eprintln!("args span={}:{}-{}:{}", args_span.start.line, args_span.start.column, args_span.end.line, args_span.end.column);
-        }
+    use crate::traverse::{node_at_position, object_context_at_position};
 
-        let yaml2 = "Value: !GetAtt MyBucket.Arn";
-        let node2 = parse_yaml(yaml2).unwrap();
-        let val2 = node2.get("Value").unwrap();
-        if let crate::node::AstNode::Function(f) = val2 {
-            eprintln!("getatt dot: name={} args={:?}", f.name, f.args);
-        }
+    // Line 7 is the blank line between "Status: Enabled" and "Tags:"
+    // At col 6 (Properties key indent) -> should get Properties
+    let result = object_context_at_position(&node, 7, 6);
+    eprintln!(
+        "object_context(7,6) -> {:?}",
+        result.as_ref().map(|(_, p)| p)
+    );
+    assert!(result.is_some(), "should find context on blank line");
+    let (_, ctx_path) = result.unwrap();
+    assert_eq!(
+        ctx_path,
+        vec!["Resources", "AppBucket", "Properties"],
+        "col 6 on blank line should resolve to Properties, got: {:?}",
+        ctx_path
+    );
 
-        // Inline array form
-        let yaml3 = "Value: !GetAtt [MyBucket, Arn]";
-        let node3 = parse_yaml(yaml3).unwrap();
-        let val3 = node3.get("Value").unwrap();
-        eprintln!("getatt inline array: {:?}", val3);
+    // At col 8 (VC child indent) -> should get VersioningConfiguration
+    let result2 = object_context_at_position(&node, 7, 8);
+    eprintln!(
+        "object_context(7,8) -> {:?}",
+        result2.as_ref().map(|(_, p)| p)
+    );
+    assert!(result2.is_some(), "should find context at col 8");
+    let (_, ctx_path2) = result2.unwrap();
+    assert_eq!(
+        ctx_path2,
+        vec![
+            "Resources",
+            "AppBucket",
+            "Properties",
+            "VersioningConfiguration"
+        ],
+        "col 8 on blank line should resolve to VC, got: {:?}",
+        ctx_path2
+    );
+}
 
-        // Block array form
-        let yaml4 = "Value:\n  Fn::GetAtt:\n    - MyBucket\n    - Arn";
-        let node4 = parse_yaml(yaml4).unwrap();
-        let val4 = node4.get("Value").unwrap();
-        eprintln!("getatt block: {:?}", val4);
-
-        // Plain string
-        let yaml5 = "Type: AWS::S3::Bucket";
-        let node5 = parse_yaml(yaml5).unwrap();
-        let val5 = node5.get("Type").unwrap();
-        let s = val5.span();
-        eprintln!("string span={}:{}-{}:{}", s.start.line, s.start.column, s.end.line, s.end.column);
+#[test]
+fn test_func_spans() {
+    let yaml = "Value: !Ref Environment";
+    let node = parse_yaml(yaml).unwrap();
+    let val = node.get("Value").unwrap();
+    if let crate::node::AstNode::Function(f) = val {
+        eprintln!(
+            "func name={} span={}:{}-{}:{}",
+            f.name, f.span.start.line, f.span.start.column, f.span.end.line, f.span.end.column
+        );
+        let args_span = f.args.span();
+        eprintln!(
+            "args span={}:{}-{}:{}",
+            args_span.start.line, args_span.start.column, args_span.end.line, args_span.end.column
+        );
     }
+
+    let yaml2 = "Value: !GetAtt MyBucket.Arn";
+    let node2 = parse_yaml(yaml2).unwrap();
+    let val2 = node2.get("Value").unwrap();
+    if let crate::node::AstNode::Function(f) = val2 {
+        eprintln!("getatt dot: name={} args={:?}", f.name, f.args);
+    }
+
+    // Inline array form
+    let yaml3 = "Value: !GetAtt [MyBucket, Arn]";
+    let node3 = parse_yaml(yaml3).unwrap();
+    let val3 = node3.get("Value").unwrap();
+    eprintln!("getatt inline array: {:?}", val3);
+
+    // Block array form
+    let yaml4 = "Value:\n  Fn::GetAtt:\n    - MyBucket\n    - Arn";
+    let node4 = parse_yaml(yaml4).unwrap();
+    let val4 = node4.get("Value").unwrap();
+    eprintln!("getatt block: {:?}", val4);
+
+    // Plain string
+    let yaml5 = "Type: AWS::S3::Bucket";
+    let node5 = parse_yaml(yaml5).unwrap();
+    let val5 = node5.get("Type").unwrap();
+    let s = val5.span();
+    eprintln!(
+        "string span={}:{}-{}:{}",
+        s.start.line, s.start.column, s.end.line, s.end.column
+    );
+}

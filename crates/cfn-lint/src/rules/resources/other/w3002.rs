@@ -1,9 +1,9 @@
 use crate::ast::AstNode;
+use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
 use crate::jsonschema::{ValidationError, Validator};
 use crate::rules::Severity;
 use crate::template::Template;
 use crate::transform::is_sam_template;
-use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
 
 pub struct W3002;
 
@@ -56,8 +56,14 @@ impl CfnLintRule for W3002 {
 
         // Skip if inside a function context
         let functions = [
-            "Fn::If", "Fn::Select", "Fn::GetAtt", "Fn::Sub", "Fn::Join",
-            "Fn::Split", "Fn::FindInMap", "Ref",
+            "Fn::If",
+            "Fn::Select",
+            "Fn::GetAtt",
+            "Fn::Sub",
+            "Fn::Join",
+            "Fn::Split",
+            "Fn::FindInMap",
+            "Ref",
         ];
         if path.iter().any(|p| functions.contains(&p.as_str())) {
             return vec![];
@@ -81,7 +87,7 @@ impl CfnLintRule for W3002 {
         }
 
         vec![ValidationError {
-                rule_id: None,
+            rule_id: None,
             keyword: format!("cfnLint:{}", CfnLintRule::id(self)),
             message: "This code may only work with 'package' cli command".to_string(),
             path: path.to_vec(),
@@ -93,7 +99,11 @@ impl CfnLintRule for W3002 {
         }]
     }
 
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         vec![]
     }
 }

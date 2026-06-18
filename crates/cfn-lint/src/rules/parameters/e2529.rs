@@ -2,8 +2,8 @@ use std::collections::HashMap;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E2529: Check for SubscriptionFilters having beyond 2 attachments to a
@@ -17,7 +17,9 @@ pub struct E2529;
 const SUBSCRIPTION_FILTER_LIMIT: usize = 2;
 
 impl CfnLintRule for E2529 {
-    fn id(&self) -> &str { "E2529" }
+    fn id(&self) -> &str {
+        "E2529"
+    }
     fn short_description(&self) -> &str {
         "Check for SubscriptionFilters have beyond 2 attachments to a CloudWatch Log Group"
     }
@@ -26,13 +28,19 @@ impl CfnLintRule for E2529 {
          filters. We will look for duplicate LogGroupNames inside Subscription Filters \
          and make sure they are within 2."
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         // Group subscription filter resource names by their serialized LogGroupName
         let mut log_group_map: HashMap<String, Vec<String>> = HashMap::new();
 
@@ -40,19 +48,26 @@ impl CfnLintRule for E2529 {
             if resource.resource_type != "AWS::Logs::SubscriptionFilter" {
                 continue;
             }
-            let log_group_name = resource.properties.as_ref()
+            let log_group_name = resource
+                .properties
+                .as_ref()
                 .and_then(|p| p.get("LogGroupName"))
                 .map(|n| format!("{}", n))
                 .unwrap_or_default();
 
-            log_group_map.entry(log_group_name).or_default().push(name.clone());
+            log_group_map
+                .entry(log_group_name)
+                .or_default()
+                .push(name.clone());
         }
 
         let mut issues = Vec::new();
         for (_, resources) in &log_group_map {
             if resources.len() > SUBSCRIPTION_FILTER_LIMIT {
                 if let Some(res_name) = resources.get(SUBSCRIPTION_FILTER_LIMIT) {
-                    let pos = template.resources.get(res_name)
+                    let pos = template
+                        .resources
+                        .get(res_name)
                         .and_then(|r| r.properties.as_ref())
                         .map(|p| p.span().clone())
                         .unwrap_or_default();
@@ -69,14 +84,13 @@ impl CfnLintRule for E2529 {
                         resolved_from_ref: false,
                         context: vec![],
                         schema_id: None,
-});
+                    });
                 }
             }
         }
         issues
     }
 }
-
 
 #[cfg(test)]
 mod tests {

@@ -16,13 +16,17 @@ pub fn parse_json(input: &[u8]) -> Result<cfn_ast::node::AstNode, ParseError> {
 
 /// Detect non-string mapping keys in a parsed AST (e.g. `!ImportValue Fn::Sub:` creates
 /// a function node as a mapping key, which Python reports as E0000 "Unhashable type").
-pub fn detect_non_string_keys(ast: &cfn_ast::node::AstNode) -> Vec<crate::jsonschema::ValidationError> {
+pub fn detect_non_string_keys(
+    ast: &cfn_ast::node::AstNode,
+) -> Vec<crate::jsonschema::ValidationError> {
     use crate::jsonschema::ValidationError;
     use cfn_ast::node::AstNode;
 
     let mut issues = Vec::new();
     fn walk(node: &AstNode, issues: &mut Vec<ValidationError>) {
-        if !issues.is_empty() { return; } // Python stops at first unhashable key
+        if !issues.is_empty() {
+            return;
+        } // Python stops at first unhashable key
         match node {
             AstNode::Object(obj) => {
                 for entry in obj.non_string_key_entries() {
@@ -48,13 +52,17 @@ pub fn detect_non_string_keys(ast: &cfn_ast::node::AstNode) -> Vec<crate::jsonsc
                 }
                 for v in obj.values() {
                     walk(v, issues);
-                    if !issues.is_empty() { return; }
+                    if !issues.is_empty() {
+                        return;
+                    }
                 }
             }
             AstNode::Array(arr) => {
                 for e in &arr.elements {
                     walk(e, issues);
-                    if !issues.is_empty() { return; }
+                    if !issues.is_empty() {
+                        return;
+                    }
                 }
             }
             AstNode::Function(f) => {

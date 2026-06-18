@@ -5,16 +5,20 @@ use crate::rules::Severity;
 use regex::Regex;
 use std::sync::LazyLock;
 
-static RE_SUB_VARS: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"\$\{([^}]+)\}").unwrap()
-});
+static RE_SUB_VARS: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\$\{([^}]+)\}").unwrap());
 
 pub struct W1019;
 
 impl CfnLintRule for W1019 {
-    fn id(&self) -> &str { "W1019" }
-    fn short_description(&self) -> &str { "Validate that parameters to a Fn::Sub are used" }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn id(&self) -> &str {
+        "W1019"
+    }
+    fn short_description(&self) -> &str {
+        "Validate that parameters to a Fn::Sub are used"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Fn/Sub"]
@@ -48,7 +52,8 @@ impl CfnLintRule for W1019 {
             None => return vec![],
         };
 
-        let used_vars: Vec<&str> = RE_SUB_VARS.captures_iter(template_str)
+        let used_vars: Vec<&str> = RE_SUB_VARS
+            .captures_iter(template_str)
             .filter_map(|c| c.get(1).map(|m| m.as_str()))
             .collect();
 

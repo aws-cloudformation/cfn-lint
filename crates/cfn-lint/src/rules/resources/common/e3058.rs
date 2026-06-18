@@ -8,11 +8,21 @@ use crate::template::Template;
 pub struct E3058;
 
 impl CfnLintRule for E3058 {
-    fn id(&self) -> &str { "E3058" }
-    fn short_description(&self) -> &str { "At least one of the required properties must exist" }
-    fn description(&self) -> &str { "Validates that at least one of the listed properties is present" }
-    fn severity(&self) -> Severity { Severity::Error }
-    fn keywords(&self) -> &[&str] { &["Resources/*"] }
+    fn id(&self) -> &str {
+        "E3058"
+    }
+    fn short_description(&self) -> &str {
+        "At least one of the required properties must exist"
+    }
+    fn description(&self) -> &str {
+        "Validates that at least one of the listed properties is present"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
+    fn keywords(&self) -> &[&str] {
+        &["Resources/*"]
+    }
 
     fn validate(
         &self,

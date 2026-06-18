@@ -6,11 +6,21 @@ use crate::rules::Severity;
 pub struct E3006;
 
 impl CfnLintRule for E3006 {
-    fn id(&self) -> &str { "E3006" }
-    fn short_description(&self) -> &str { "Validate the CloudFormation resource type" }
-    fn description(&self) -> &str { "Validates resource types are valid CloudFormation types" }
-    fn severity(&self) -> Severity { Severity::Error }
-    fn keywords(&self) -> &[&str] { &["Resources/*"] }
+    fn id(&self) -> &str {
+        "E3006"
+    }
+    fn short_description(&self) -> &str {
+        "Validate the CloudFormation resource type"
+    }
+    fn description(&self) -> &str {
+        "Validates resource types are valid CloudFormation types"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
+    fn keywords(&self) -> &[&str] {
+        &["Resources/*"]
+    }
 
     fn validate(
         &self,
@@ -37,7 +47,8 @@ impl CfnLintRule for E3006 {
             return vec![];
         }
 
-        let region = validator.context()
+        let region = validator
+            .context()
             .and_then(|ctx| ctx.regions.first().cloned())
             .unwrap_or_else(|| "us-east-1".to_string());
 
@@ -47,7 +58,10 @@ impl CfnLintRule for E3006 {
 
         vec![ValidationError::new(
             self.id(),
-            format!("Resource type '{}' does not exist in '{}'", resource_type, region),
+            format!(
+                "Resource type '{}' does not exist in '{}'",
+                resource_type, region
+            ),
             type_path,
             span,
         )]

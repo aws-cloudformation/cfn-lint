@@ -1,7 +1,7 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 pub struct E1002;
@@ -27,7 +27,11 @@ impl CfnLintRule for E1002 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         if root.as_object().is_some() {
             vec![]
         } else {
@@ -41,7 +45,7 @@ impl CfnLintRule for E1002 {
                 resolved_from_ref: false,
                 context: vec![],
                 schema_id: None,
-}]
+            }]
         }
     }
 }
@@ -54,8 +58,10 @@ mod tests {
 
     #[test]
     fn test_valid_object_root() {
-        let root = AstNode::Object(ObjectNode { entries: Vec::new(), span: Span::default(),
-         });
+        let root = AstNode::Object(ObjectNode {
+            entries: Vec::new(),
+            span: Span::default(),
+        });
         let tmpl = Template::from_ast(&root).unwrap();
         assert!(E1002.validate_template(&tmpl, &root).is_empty());
     }
@@ -64,11 +70,16 @@ mod tests {
     fn test_string_root() {
         let root = AstNode::String(StringNode {
             value: "not a template".to_string(),
-            span: Span { start: Position { line: 1, column: 1 }, end: Position { line: 1, column: 1 } },
+            span: Span {
+                start: Position { line: 1, column: 1 },
+                end: Position { line: 1, column: 1 },
+            },
         });
         // Template::from_ast will fail on non-object, so we build a dummy template
-        let dummy = AstNode::Object(ObjectNode { entries: Vec::new(), span: Span::default(),
-         });
+        let dummy = AstNode::Object(ObjectNode {
+            entries: Vec::new(),
+            span: Span::default(),
+        });
         let tmpl = Template::from_ast(&dummy).unwrap();
         let issues = E1002.validate_template(&tmpl, &root);
         assert_eq!(issues.len(), 1);
@@ -80,10 +91,15 @@ mod tests {
     fn test_array_root() {
         let root = AstNode::Array(ArrayNode {
             elements: vec![],
-            span: Span { start: Position { line: 1, column: 1 }, end: Position { line: 1, column: 1 } },
+            span: Span {
+                start: Position { line: 1, column: 1 },
+                end: Position { line: 1, column: 1 },
+            },
         });
-        let dummy = AstNode::Object(ObjectNode { entries: Vec::new(), span: Span::default(),
-         });
+        let dummy = AstNode::Object(ObjectNode {
+            entries: Vec::new(),
+            span: Span::default(),
+        });
         let tmpl = Template::from_ast(&dummy).unwrap();
         let issues = E1002.validate_template(&tmpl, &root);
         assert_eq!(issues.len(), 1);

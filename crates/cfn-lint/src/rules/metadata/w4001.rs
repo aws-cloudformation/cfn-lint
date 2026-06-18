@@ -52,7 +52,7 @@ impl CfnLintRule for W4001 {
                                 let mut p = path.to_vec();
                                 p.push("ParameterGroups".to_string());
                                 errors.push(ValidationError {
-                rule_id: None,
+                                    rule_id: None,
                                     keyword: format!("cfnLint:{}", self.id()),
                                     message: format!(
                                         "Parameter {:?} in Metadata Interface does not exist",
@@ -79,7 +79,7 @@ impl CfnLintRule for W4001 {
                     let mut p = path.to_vec();
                     p.push("ParameterLabels".to_string());
                     errors.push(ValidationError {
-                rule_id: None,
+                        rule_id: None,
                         keyword: format!("cfnLint:{}", self.id()),
                         message: format!(
                             "Parameter {:?} in Metadata Interface does not exist",
@@ -103,9 +103,9 @@ impl CfnLintRule for W4001 {
 #[cfg(test)]
 
 mod tests {
-    use crate::template::Template;
     use super::*;
     use crate::parser;
+    use crate::template::Template;
 
     #[test]
     fn test_valid_interface_params() {

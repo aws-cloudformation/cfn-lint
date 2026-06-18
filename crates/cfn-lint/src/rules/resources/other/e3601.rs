@@ -5,32 +5,43 @@ use std::sync::LazyLock;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
 use crate::jsonschema::Validator;
 use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
 use crate::template::Template;
 
 static STATEMACHINE_SCHEMA: LazyLock<Option<serde_json::Value>> = LazyLock::new(|| {
-    serde_json::from_str(include_str!("../../../../data/schemas/other/step_functions/statemachine.json")).ok()
+    serde_json::from_str(include_str!(
+        "../../../../data/schemas/other/step_functions/statemachine.json"
+    ))
+    .ok()
 });
 
 pub struct E3601;
 
 impl CfnLintRule for E3601 {
-    fn id(&self) -> &str { "E3601" }
+    fn id(&self) -> &str {
+        "E3601"
+    }
     fn short_description(&self) -> &str {
         "Validate the structure of a StateMachine definition"
     }
     fn description(&self) -> &str {
         "Validate the Definition or DefinitionString inside a AWS::StepFunctions::StateMachine resource"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let resources = match root.get("Resources").and_then(|n| n.as_object()) {
             Some(obj) => obj,
             None => return vec![],
@@ -82,11 +93,11 @@ impl CfnLintRule for E3601 {
                                 message: err.message,
                                 path: err.path,
                                 span: val.span().clone(),
-                keyword: String::new(),
-                unknown: false,
-                resolved_from_ref: false,
-                context: vec![],
-                            schema_id: None,
+                                keyword: String::new(),
+                                unknown: false,
+                                resolved_from_ref: false,
+                                context: vec![],
+                                schema_id: None,
                             }));
                         }
                         Err(_) => {} // Not valid JSON — skip
@@ -98,11 +109,11 @@ impl CfnLintRule for E3601 {
                         message: err.message,
                         path: err.path,
                         span: val.span().clone(),
-                keyword: String::new(),
-                unknown: false,
-                resolved_from_ref: false,
-                context: vec![],
-                    schema_id: None,
+                        keyword: String::new(),
+                        unknown: false,
+                        resolved_from_ref: false,
+                        context: vec![],
+                        schema_id: None,
                     }));
                 }
             }

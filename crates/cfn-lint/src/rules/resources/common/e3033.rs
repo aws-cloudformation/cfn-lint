@@ -17,10 +17,10 @@
 /// be done in `jsonschema/keywords.rs` rather than here, since the Rule trait
 /// does not have access to schema definitions.
 use crate::ast::AstNode;
-use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
-use crate::template::Template;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
+use crate::template::Template;
 
 pub struct E3033;
 
@@ -45,10 +45,14 @@ impl CfnLintRule for E3033 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         // Basic minLength/maxLength handled by jsonschema/keywords.rs.
-                // Fn::Sub heuristic estimation requires keyword-level integration.
-                vec![]
+        // Fn::Sub heuristic estimation requires keyword-level integration.
+        vec![]
     }
 }
 
@@ -61,7 +65,10 @@ mod tests {
     #[test]
     fn test_rule_metadata() {
         assert_eq!(E3033.id(), "E3033");
-        assert_eq!(E3033.short_description(), "Check if string has between min and max number of values");
+        assert_eq!(
+            E3033.short_description(),
+            "Check if string has between min and max number of values"
+        );
         assert_eq!(E3033.severity(), Severity::Error);
     }
 }

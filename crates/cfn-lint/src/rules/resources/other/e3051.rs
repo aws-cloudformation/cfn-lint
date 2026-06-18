@@ -5,28 +5,36 @@
 /// as JSON first.
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
 use crate::jsonschema::Validator;
 use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
 use crate::template::Template;
 
 pub struct E3051;
 
 impl CfnLintRule for E3051 {
-    fn id(&self) -> &str { "E3051" }
+    fn id(&self) -> &str {
+        "E3051"
+    }
     fn short_description(&self) -> &str {
         "Validate the structure of a SSM document"
     }
     fn description(&self) -> &str {
         "SSM documents are nested JSON/YAML in CloudFormation. This rule validates those documents."
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let resources = match root.get("Resources").and_then(|n| n.as_object()) {
             Some(obj) => obj,
             None => return vec![],
@@ -88,11 +96,11 @@ impl CfnLintRule for E3051 {
                         message: err.message,
                         path: err.path,
                         span: content.span().clone(),
-                keyword: String::new(),
-                unknown: false,
-                resolved_from_ref: false,
-                context: vec![],
-                    schema_id: None,
+                        keyword: String::new(),
+                        unknown: false,
+                        resolved_from_ref: false,
+                        context: vec![],
+                        schema_id: None,
                     }));
                 }
             } else if content.as_object().is_some() {
@@ -102,11 +110,11 @@ impl CfnLintRule for E3051 {
                     message: err.message,
                     path: err.path,
                     span: content.span().clone(),
-                keyword: String::new(),
-                unknown: false,
-                resolved_from_ref: false,
-                context: vec![],
-                schema_id: None,
+                    keyword: String::new(),
+                    unknown: false,
+                    resolved_from_ref: false,
+                    context: vec![],
+                    schema_id: None,
                 }));
             }
         }

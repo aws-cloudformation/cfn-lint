@@ -50,12 +50,17 @@ impl Validator {
                     Ok(resolved) => {
                         let mut errors = self.validate_schema(node, &resolved, path);
                         // Also validate sibling keywords (excluding $ref itself)
-                        let siblings: serde_json::Map<String, serde_json::Value> = schema_obj.iter()
+                        let siblings: serde_json::Map<String, serde_json::Value> = schema_obj
+                            .iter()
                             .filter(|(k, _)| k.as_str() != "$ref")
                             .map(|(k, v)| (k.clone(), v.clone()))
                             .collect();
                         if !siblings.is_empty() {
-                            errors.extend(self.validate_schema(node, &serde_json::Value::Object(siblings), path));
+                            errors.extend(self.validate_schema(
+                                node,
+                                &serde_json::Value::Object(siblings),
+                                path,
+                            ));
                         }
                         return errors;
                     }
@@ -129,7 +134,8 @@ impl Validator {
                     continue;
                 }
                 if let Some(validator_fn) = v.validators.get(keyword) {
-                    let keyword_errors = validator_fn(v, instance, constraint, &modified_schema, path);
+                    let keyword_errors =
+                        validator_fn(v, instance, constraint, &modified_schema, path);
                     errors.extend(keyword_errors);
                 }
             }

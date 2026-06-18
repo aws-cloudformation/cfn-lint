@@ -63,8 +63,14 @@ impl CfnLintRule for W3010 {
         // If we're inside a function (Fn::If, Fn::Select, etc.), skip
         // The path should not contain function names for hardcoded values
         let functions = [
-            "Fn::If", "Fn::Select", "Fn::GetAtt", "Fn::Sub", "Fn::Join",
-            "Fn::Split", "Fn::FindInMap", "Ref",
+            "Fn::If",
+            "Fn::Select",
+            "Fn::GetAtt",
+            "Fn::Sub",
+            "Fn::Join",
+            "Fn::Split",
+            "Fn::FindInMap",
+            "Ref",
         ];
         if path.iter().any(|p| functions.contains(&p.as_str())) {
             return vec![];
@@ -72,7 +78,7 @@ impl CfnLintRule for W3010 {
 
         // A hardcoded string at an AZ property path is a warning
         vec![ValidationError {
-                rule_id: None,
+            rule_id: None,
             keyword: format!("cfnLint:{}", self.id()),
             message: format!("Avoid hardcoding availability zones {:?}", zone),
             path: path.to_vec(),
@@ -88,9 +94,9 @@ impl CfnLintRule for W3010 {
 #[cfg(test)]
 
 mod tests {
-    use crate::template::Template;
     use super::*;
     use crate::parser;
+    use crate::template::Template;
 
     #[test]
     fn test_stubbed_out() {

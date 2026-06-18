@@ -2,8 +2,8 @@ use std::collections::HashMap;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// A grouping key: (resource_condition, property_condition, subnet_value).
@@ -32,7 +32,11 @@ impl CfnLintRule for E3022 {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let mut issues = Vec::new();
         // Map SubnetKey -> list of resource names
         let mut key_to_resources: HashMap<SubnetKey, Vec<String>> = HashMap::new();
@@ -50,14 +54,10 @@ impl CfnLintRule for E3022 {
                 .and_then(|r| r.get("Properties"))
                 .and_then(|p| p.get("SubnetId"));
 
-            if let Some(values) = subnet_id.map(|n| extract_values(n, &resource_condition, &None))
-            {
+            if let Some(values) = subnet_id.map(|n| extract_values(n, &resource_condition, &None)) {
                 resource_values.insert(name.clone(), values.clone());
                 for val in values {
-                    key_to_resources
-                        .entry(val)
-                        .or_default()
-                        .push(name.clone());
+                    key_to_resources.entry(val).or_default().push(name.clone());
                 }
             }
         }
@@ -113,7 +113,7 @@ impl CfnLintRule for E3022 {
                         resolved_from_ref: false,
                         context: vec![],
                         schema_id: None,
-});
+                    });
                 }
             }
         }
@@ -149,8 +149,7 @@ fn extract_values(
                 if let Some(arr) = f.args.as_array() {
                     let mut vals = Vec::new();
                     if arr.elements.len() >= 3 {
-                        let cond_name =
-                            arr.elements[0].as_str().map(|s| s.to_string());
+                        let cond_name = arr.elements[0].as_str().map(|s| s.to_string());
                         vals.extend(extract_values(
                             &arr.elements[1],
                             resource_condition,
@@ -170,11 +169,8 @@ fn extract_values(
             "Fn::GetAtt" => {
                 if let Some(arr) = f.args.as_array() {
                     if arr.elements.len() == 2 {
-                        let parts: Vec<&str> = arr
-                            .elements
-                            .iter()
-                            .filter_map(|e| e.as_str())
-                            .collect();
+                        let parts: Vec<&str> =
+                            arr.elements.iter().filter_map(|e| e.as_str()).collect();
                         if parts.len() == 2 {
                             return vec![(
                                 resource_condition.clone(),

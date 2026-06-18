@@ -44,7 +44,10 @@ impl CfnLintRule for E3504 {
             Some(v) => v,
             None => return vec![],
         };
-        let cold = match lifecycle.get("MoveToColdStorageAfterDays").and_then(|n| n.as_f64()) {
+        let cold = match lifecycle
+            .get("MoveToColdStorageAfterDays")
+            .and_then(|n| n.as_f64())
+        {
             Some(v) => v,
             None => return vec![],
         };
@@ -94,21 +97,41 @@ Resources:
               DeleteAfterDays: 100
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Plan").unwrap()
-            .get("Properties").unwrap()
-            .get("BackupPlan").unwrap()
-            .get("BackupPlanRule").unwrap()
-            .as_array().unwrap()
-            .elements.first().unwrap()
-            .get("Lifecycle").unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Plan")
+            .unwrap()
+            .get("Properties")
+            .unwrap()
+            .get("BackupPlan")
+            .unwrap()
+            .get("BackupPlanRule")
+            .unwrap()
+            .as_array()
+            .unwrap()
+            .elements
+            .first()
+            .unwrap()
+            .get("Lifecycle")
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "Plan".to_string(),
-            "Properties".to_string(), "BackupPlan".to_string(),
-            "BackupPlanRule".to_string(), "0".to_string(), "Lifecycle".to_string(),
+            "Resources".to_string(),
+            "Plan".to_string(),
+            "Properties".to_string(),
+            "BackupPlan".to_string(),
+            "BackupPlanRule".to_string(),
+            "0".to_string(),
+            "Lifecycle".to_string(),
         ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = E3504.validate(&validator, "Resources/AWS::Backup::BackupPlan/Properties/BackupPlan/BackupPlanRule/*/Lifecycle", instance, &serde_json::json!({}), &path);
+        let errors = E3504.validate(
+            &validator,
+            "Resources/AWS::Backup::BackupPlan/Properties/BackupPlan/BackupPlanRule/*/Lifecycle",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -129,21 +152,41 @@ Resources:
               DeleteAfterDays: 50
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Plan").unwrap()
-            .get("Properties").unwrap()
-            .get("BackupPlan").unwrap()
-            .get("BackupPlanRule").unwrap()
-            .as_array().unwrap()
-            .elements.first().unwrap()
-            .get("Lifecycle").unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Plan")
+            .unwrap()
+            .get("Properties")
+            .unwrap()
+            .get("BackupPlan")
+            .unwrap()
+            .get("BackupPlanRule")
+            .unwrap()
+            .as_array()
+            .unwrap()
+            .elements
+            .first()
+            .unwrap()
+            .get("Lifecycle")
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "Plan".to_string(),
-            "Properties".to_string(), "BackupPlan".to_string(),
-            "BackupPlanRule".to_string(), "0".to_string(), "Lifecycle".to_string(),
+            "Resources".to_string(),
+            "Plan".to_string(),
+            "Properties".to_string(),
+            "BackupPlan".to_string(),
+            "BackupPlanRule".to_string(),
+            "0".to_string(),
+            "Lifecycle".to_string(),
         ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = E3504.validate(&validator, "Resources/AWS::Backup::BackupPlan/Properties/BackupPlan/BackupPlanRule/*/Lifecycle", instance, &serde_json::json!({}), &path);
+        let errors = E3504.validate(
+            &validator,
+            "Resources/AWS::Backup::BackupPlan/Properties/BackupPlan/BackupPlanRule/*/Lifecycle",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 1);
         assert!(errors[0].message.contains("90 days"));
     }

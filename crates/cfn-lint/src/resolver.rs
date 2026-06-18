@@ -206,13 +206,18 @@ Resources:
 
         let mut map_props: Vec<ObjectEntry> = Vec::new();
         map_props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "MyVar".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "MyVar".to_string(),
+                span: Span::default(),
+            }),
             key: "MyVar".to_string(),
             value: str_node("custom-value"),
             key_span: Span::default(),
         });
-        let map_node = AstNode::Object(ObjectNode { entries: map_props, span: Span::default(),
-         });
+        let map_node = AstNode::Object(ObjectNode {
+            entries: map_props,
+            span: Span::default(),
+        });
 
         let node = func_node(
             "Fn::Sub",

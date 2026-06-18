@@ -103,12 +103,9 @@ impl CfnLintRule for E2002 {
         }
 
         vec![ValidationError {
-                rule_id: None,
+            rule_id: None,
             keyword: format!("cfnLint:{}", self.id()),
-            message: format!(
-                "{:?} is not a valid parameter type",
-                type_val
-            ),
+            message: format!("{:?} is not a valid parameter type", type_val),
             path: path.to_vec(),
             span: instance.span(),
             unknown: false,

@@ -19,12 +19,16 @@ pub enum SchemaError {
 /// When `force` is true, downloads all schemas from the zip archive.
 /// Otherwise, incrementally updates known types via individual fetches.
 #[cfg(feature = "fetch")]
-pub fn update_schemas(data_dir: &std::path::Path, regions: &[String], force: bool) -> Result<(), SchemaError> {
+pub fn update_schemas(
+    data_dir: &std::path::Path,
+    regions: &[String],
+    force: bool,
+) -> Result<(), SchemaError> {
     use cfn_schema::SchemaProvider;
 
     let patches_dir = data_dir.join("patches");
-    let cache = cfn_schema::CacheProvider::from_dir(data_dir.to_path_buf())
-        .with_patches_dir(patches_dir);
+    let cache =
+        cfn_schema::CacheProvider::from_dir(data_dir.to_path_buf()).with_patches_dir(patches_dir);
     let mut provider = cfn_schema::S3Provider::new(cache);
 
     if force {
@@ -57,7 +61,10 @@ pub fn update_schemas(data_dir: &std::path::Path, regions: &[String], force: boo
                 Ok(true) => updated += 1,
                 Ok(false) => {}
                 Err(e) => {
-                    eprintln!("  Warning: failed to fetch {} in {}: {}", type_name, region, e);
+                    eprintln!(
+                        "  Warning: failed to fetch {} in {}: {}",
+                        type_name, region, e
+                    );
                     errors += 1;
                 }
             }
@@ -69,7 +76,11 @@ pub fn update_schemas(data_dir: &std::path::Path, regions: &[String], force: boo
 }
 
 #[cfg(not(feature = "fetch"))]
-pub fn update_schemas(_data_dir: &std::path::Path, _regions: &[String], _force: bool) -> Result<(), SchemaError> {
+pub fn update_schemas(
+    _data_dir: &std::path::Path,
+    _regions: &[String],
+    _force: bool,
+) -> Result<(), SchemaError> {
     Err(SchemaError::Update(
         "Schema fetching not available. Build with --features fetch".into(),
     ))

@@ -7,13 +7,19 @@ use crate::rules::Severity;
 pub struct W2530;
 
 impl CfnLintRule for W2530 {
-    fn id(&self) -> &str { "W2530" }
-    fn short_description(&self) -> &str { "Validate that SnapStart is properly configured" }
+    fn id(&self) -> &str {
+        "W2530"
+    }
+    fn short_description(&self) -> &str {
+        "Validate that SnapStart is properly configured"
+    }
     fn description(&self) -> &str {
         "To properly leverage SnapStart, you must configure both the lambda function \
          and attach a Lambda version resource"
     }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/AWS::Lambda::Function/Properties/SnapStart/ApplyOn"]
@@ -69,7 +75,8 @@ impl CfnLintRule for W2530 {
                 rule_id: None,
                 keyword: format!("cfnLint:{}", self.id()),
                 message: "'SnapStart' is enabled but an 'AWS::Lambda::Version' \
-                          resource is not attached".into(),
+                          resource is not attached"
+                    .into(),
                 path: path.to_vec(),
                 span: instance.span(),
                 unknown: false,
@@ -107,18 +114,36 @@ Resources:
 "#;
         let ast = parser::parse(yaml).unwrap();
         let tmpl = Template::from_ast(&ast).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Func").unwrap()
-            .get("Properties").unwrap()
-            .get("SnapStart").unwrap()
-            .get("ApplyOn").unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Func")
+            .unwrap()
+            .get("Properties")
+            .unwrap()
+            .get("SnapStart")
+            .unwrap()
+            .get("ApplyOn")
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "Func".to_string(),
-            "Properties".to_string(), "SnapStart".to_string(), "ApplyOn".to_string(),
+            "Resources".to_string(),
+            "Func".to_string(),
+            "Properties".to_string(),
+            "SnapStart".to_string(),
+            "ApplyOn".to_string(),
         ];
         let ctx = crate::context::Context::new(std::sync::Arc::new(tmpl));
-        let validator = crate::jsonschema::Validator::new_with_context(serde_json::json!({}), std::sync::Arc::new(ctx));
-        let errors = W2530.validate(&validator, "Resources/AWS::Lambda::Function/Properties/SnapStart/ApplyOn", instance, &serde_json::json!({}), &path);
+        let validator = crate::jsonschema::Validator::new_with_context(
+            serde_json::json!({}),
+            std::sync::Arc::new(ctx),
+        );
+        let errors = W2530.validate(
+            &validator,
+            "Resources/AWS::Lambda::Function/Properties/SnapStart/ApplyOn",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -136,18 +161,36 @@ Resources:
 "#;
         let ast = parser::parse(yaml).unwrap();
         let tmpl = Template::from_ast(&ast).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Func").unwrap()
-            .get("Properties").unwrap()
-            .get("SnapStart").unwrap()
-            .get("ApplyOn").unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Func")
+            .unwrap()
+            .get("Properties")
+            .unwrap()
+            .get("SnapStart")
+            .unwrap()
+            .get("ApplyOn")
+            .unwrap();
         let path = vec![
-            "Resources".to_string(), "Func".to_string(),
-            "Properties".to_string(), "SnapStart".to_string(), "ApplyOn".to_string(),
+            "Resources".to_string(),
+            "Func".to_string(),
+            "Properties".to_string(),
+            "SnapStart".to_string(),
+            "ApplyOn".to_string(),
         ];
         let ctx = crate::context::Context::new(std::sync::Arc::new(tmpl));
-        let validator = crate::jsonschema::Validator::new_with_context(serde_json::json!({}), std::sync::Arc::new(ctx));
-        let errors = W2530.validate(&validator, "Resources/AWS::Lambda::Function/Properties/SnapStart/ApplyOn", instance, &serde_json::json!({}), &path);
+        let validator = crate::jsonschema::Validator::new_with_context(
+            serde_json::json!({}),
+            std::sync::Arc::new(ctx),
+        );
+        let errors = W2530.validate(
+            &validator,
+            "Resources/AWS::Lambda::Function/Properties/SnapStart/ApplyOn",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 1);
         assert!(errors[0].message.contains("SnapStart"));
     }

@@ -63,9 +63,7 @@ pub fn validate_type(
 
     let valid = match constraint {
         serde_json::Value::String(s) => type_ok(s),
-        serde_json::Value::Array(arr) => arr
-            .iter()
-            .any(|t| t.as_str().is_some_and(|s| type_ok(s))),
+        serde_json::Value::Array(arr) => arr.iter().any(|t| t.as_str().is_some_and(|s| type_ok(s))),
         _ => true,
     };
     if valid {

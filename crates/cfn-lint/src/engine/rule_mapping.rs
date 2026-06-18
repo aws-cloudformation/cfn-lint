@@ -103,13 +103,21 @@ pub(crate) const TEMPLATED_PROPERTY_PATHS: &[&str] = &[
 ];
 
 pub(crate) fn is_templated_property(err_path: &[String], resource_type: &str) -> bool {
-    if err_path.len() < 3 { return false; }
+    if err_path.len() < 3 {
+        return false;
+    }
     let prop_path = err_path[2..].join("/");
     let check = format!("Resources/{}/{}", resource_type, prop_path);
-    TEMPLATED_PROPERTY_PATHS.iter().any(|p| check.starts_with(p))
+    TEMPLATED_PROPERTY_PATHS
+        .iter()
+        .any(|p| check.starts_with(p))
 }
 
-pub(crate) fn check_equals_comma_delimited(node: &AstNode, template: &Template, issues: &mut Vec<ValidationError>) {
+pub(crate) fn check_equals_comma_delimited(
+    node: &AstNode,
+    template: &Template,
+    issues: &mut Vec<ValidationError>,
+) {
     match node {
         AstNode::Function(func) if func.name == "Fn::Equals" => {
             if let Some(arr) = func.args.as_array() {
@@ -132,7 +140,7 @@ pub(crate) fn check_equals_comma_delimited(node: &AstNode, template: &Template, 
                                             resolved_from_ref: false,
                                             context: vec![],
                                             schema_id: None,
-});
+                                        });
                                     }
                                 }
                             }

@@ -1,8 +1,8 @@
 use crate::ast::AstNode;
-use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
-use crate::template::Template;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
+use crate::template::Template;
 
 /// E3011: Check property names in Resources.
 ///
@@ -31,9 +31,13 @@ impl CfnLintRule for E3011 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         // Validation is handled by the schema pipeline's propertyNames keyword (maps to "E3011")
-                vec![]
+        vec![]
     }
 }
 
@@ -49,10 +53,7 @@ mod tests {
         // Validation is handled by the schema pipeline's propertyNames keyword;
         // this rule struct is only a metadata holder for the rule registry.
         let long_name = "A".repeat(256);
-        let yaml = format!(
-            "Resources:\n  {}:\n    Type: AWS::S3::Bucket\n",
-            long_name
-        );
+        let yaml = format!("Resources:\n  {}:\n    Type: AWS::S3::Bucket\n", long_name);
         let ast = parser::parse(yaml.as_bytes()).unwrap();
         let tmpl = Template::from_ast(&ast).unwrap();
         assert!(E3011.validate_template(&tmpl, &ast).is_empty());

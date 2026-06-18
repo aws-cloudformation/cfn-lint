@@ -1,9 +1,11 @@
 # --- cfn-lint-test ---
 # rule: E3706
 # description: AutoScaling MaxSize must be >= MinSize
-# expect: []
+# expect:
+#   - rule: E3706
+#     path: /Resources/BadMaxLessThanMin/Properties/this/MaxSize
+#     message_contains: "is less than the minimum"
 # ---
-# NOTE: Rule E3706 cross-resource comparison not yet implemented in v2 engine
 Resources:
   GoodMaxGreaterThanMin:
     Type: AWS::AutoScaling::AutoScalingGroup

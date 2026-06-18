@@ -1,7 +1,7 @@
 use crate::ast::{AstNode, Span};
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 use crate::transform::is_sam_template;
 
@@ -16,7 +16,10 @@ const SAM_REQUIRED: &[(&str, &[&str])] = &[
     ("AWS::Serverless::Api", &["StageName"]),
     ("AWS::Serverless::Application", &["Location"]),
     ("AWS::Serverless::LayerVersion", &["ContentUri"]),
-    ("AWS::Serverless::Connector", &["Source", "Destination", "Permissions"]),
+    (
+        "AWS::Serverless::Connector",
+        &["Source", "Destination", "Permissions"],
+    ),
 ];
 
 /// Required properties for SAM event types (under Function Events).
@@ -34,18 +37,28 @@ const SAM_EVENT_REQUIRED: &[(&str, &[&str])] = &[
 ];
 
 impl CfnLintRule for E0001 {
-    fn id(&self) -> &str { "E0001" }
-    fn short_description(&self) -> &str { "Error found when transforming the template" }
+    fn id(&self) -> &str {
+        "E0001"
+    }
+    fn short_description(&self) -> &str {
+        "Error found when transforming the template"
+    }
     fn description(&self) -> &str {
         "Errors found when performing transformation on the template"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         if !is_sam_template(root) {
             return vec![];
         }
@@ -85,7 +98,9 @@ impl CfnLintRule for E0001 {
 
             // Check SAM Function event sources
             if resource.resource_type == "AWS::Serverless::Function" {
-                if let Some(events) = resource.properties.as_ref()
+                if let Some(events) = resource
+                    .properties
+                    .as_ref()
                     .and_then(|p| p.get("Events"))
                     .and_then(|e| e.as_object())
                 {
@@ -95,7 +110,9 @@ impl CfnLintRule for E0001 {
 
                         if let Some(etype) = event_type {
                             for &(sam_etype, required) in SAM_EVENT_REQUIRED {
-                                if etype != sam_etype { continue; }
+                                if etype != sam_etype {
+                                    continue;
+                                }
                                 for &req in required {
                                     let missing = match &event_props {
                                         Some(obj) => !obj.contains_key(req),
@@ -129,11 +146,13 @@ impl CfnLintRule for E0001 {
                 }
 
                 // Validate AutoPublishAlias: must be a string or Ref
-                if let Some(apa) = resource.properties.as_ref()
+                if let Some(apa) = resource
+                    .properties
+                    .as_ref()
                     .and_then(|p| p.get("AutoPublishAlias"))
                 {
                     match apa {
-                        AstNode::String(_) => {} // valid
+                        AstNode::String(_) => {}                      // valid
                         AstNode::Function(f) if f.name == "Ref" => {} // valid
                         AstNode::Object(obj) => {
                             // Check if it's a single-key Ref
@@ -199,7 +218,6 @@ impl CfnLintRule for E0001 {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -207,7 +225,10 @@ mod tests {
     use indexmap::IndexMap;
 
     fn empty_template() -> (Template, AstNode) {
-        let root = AstNode::Object(ObjectNode { entries: Vec::new(), span: Span::default() });
+        let root = AstNode::Object(ObjectNode {
+            entries: Vec::new(),
+            span: Span::default(),
+        });
         let tmpl = Template::from_ast(&root).unwrap();
         (tmpl, root)
     }

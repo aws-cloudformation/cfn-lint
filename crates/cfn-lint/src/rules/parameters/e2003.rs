@@ -2,8 +2,8 @@ use regex::Regex;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 pub struct E2003;
@@ -29,7 +29,11 @@ impl CfnLintRule for E2003 {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let re = Regex::new(r"^[a-zA-Z0-9_-]+$").unwrap();
         template
             .parameters

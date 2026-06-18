@@ -1,8 +1,8 @@
 use crate::ast::AstNode;
-use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
-use crate::template::Template;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
+use crate::template::Template;
 
 /// E3018: Check Properties that need only one of a list of properties.
 ///
@@ -31,7 +31,11 @@ impl CfnLintRule for E3018 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         vec![]
     }
 }
@@ -52,7 +56,10 @@ mod tests {
 
     #[test]
     fn test_anchor_returns_empty() {
-        let root = AstNode::Object(ObjectNode { entries: Vec::new(), span: Span::default()  });
+        let root = AstNode::Object(ObjectNode {
+            entries: Vec::new(),
+            span: Span::default(),
+        });
         let tmpl = Template::from_ast(&root).unwrap();
         assert!(E3018.validate_template(&tmpl, &root).is_empty());
     }

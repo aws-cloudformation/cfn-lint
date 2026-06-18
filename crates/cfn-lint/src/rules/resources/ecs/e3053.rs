@@ -10,14 +10,18 @@ use crate::rules::Severity;
 pub struct E3053;
 
 impl CfnLintRule for E3053 {
-    fn id(&self) -> &str { "E3053" }
+    fn id(&self) -> &str {
+        "E3053"
+    }
     fn short_description(&self) -> &str {
         "Validate ECS task definition has correct values for HostPort"
     }
     fn description(&self) -> &str {
         "The HostPort must either be undefined or equal to the ContainerPort value when NetworkMode is awsvpc"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/AWS::ECS::TaskDefinition/Properties"]
@@ -116,12 +120,26 @@ Resources:
               HostPort: 80
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Task").unwrap()
-            .get("Properties").unwrap();
-        let path = vec!["Resources".to_string(), "Task".to_string(), "Properties".to_string()];
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Task")
+            .unwrap()
+            .get("Properties")
+            .unwrap();
+        let path = vec![
+            "Resources".to_string(),
+            "Task".to_string(),
+            "Properties".to_string(),
+        ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = E3053.validate(&validator, "Resources/AWS::ECS::TaskDefinition/Properties", instance, &serde_json::json!({}), &path);
+        let errors = E3053.validate(
+            &validator,
+            "Resources/AWS::ECS::TaskDefinition/Properties",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -140,12 +158,26 @@ Resources:
               HostPort: 8080
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Task").unwrap()
-            .get("Properties").unwrap();
-        let path = vec!["Resources".to_string(), "Task".to_string(), "Properties".to_string()];
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Task")
+            .unwrap()
+            .get("Properties")
+            .unwrap();
+        let path = vec![
+            "Resources".to_string(),
+            "Task".to_string(),
+            "Properties".to_string(),
+        ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = E3053.validate(&validator, "Resources/AWS::ECS::TaskDefinition/Properties", instance, &serde_json::json!({}), &path);
+        let errors = E3053.validate(
+            &validator,
+            "Resources/AWS::ECS::TaskDefinition/Properties",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 1);
         assert!(errors[0].message.contains("8080"));
     }

@@ -1,7 +1,7 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 pub struct E1004;
@@ -27,7 +27,11 @@ impl CfnLintRule for E1004 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         if let Some(desc) = root.get("Description") {
             if !matches!(desc, AstNode::String(_)) {
                 return vec![ValidationError {
@@ -43,7 +47,7 @@ impl CfnLintRule for E1004 {
                     resolved_from_ref: false,
                     context: vec![],
                     schema_id: None,
-}];
+                }];
             }
         }
         vec![]
@@ -62,7 +66,10 @@ mod tests {
     fn test_valid_string_description() {
         let mut props: Vec<ObjectEntry> = Vec::new();
         props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Description".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Description".to_string(),
+                span: Span::default(),
+            }),
             key: "Description".to_string(),
             value: AstNode::String(StringNode {
                 value: "A valid description".to_string(),
@@ -70,8 +77,10 @@ mod tests {
             }),
             key_span: Span::default(),
         });
-        let root = AstNode::Object(ObjectNode { entries: props, span: Span::default(),
-         });
+        let root = AstNode::Object(ObjectNode {
+            entries: props,
+            span: Span::default(),
+        });
         let tmpl = Template::from_ast(&root).unwrap();
         assert!(E1004.validate_template(&tmpl, &root).is_empty());
     }
@@ -80,16 +89,24 @@ mod tests {
     fn test_number_description() {
         let mut props: Vec<ObjectEntry> = Vec::new();
         props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode { value: "Description".to_string(), span: Span::default() }),
+            key_node: AstNode::String(StringNode {
+                value: "Description".to_string(),
+                span: Span::default(),
+            }),
             key: "Description".to_string(),
             value: AstNode::Number(NumberNode {
                 value: 42.0,
-                span: Span { start: Position { line: 2, column: 1 }, end: Position { line: 2, column: 1 } },
+                span: Span {
+                    start: Position { line: 2, column: 1 },
+                    end: Position { line: 2, column: 1 },
+                },
             }),
             key_span: Span::default(),
         });
-        let root = AstNode::Object(ObjectNode { entries: props, span: Span::default(),
-         });
+        let root = AstNode::Object(ObjectNode {
+            entries: props,
+            span: Span::default(),
+        });
         let tmpl = Template::from_ast(&root).unwrap();
         let issues = E1004.validate_template(&tmpl, &root);
         assert_eq!(issues.len(), 1);
@@ -99,8 +116,10 @@ mod tests {
 
     #[test]
     fn test_no_description() {
-        let root = AstNode::Object(ObjectNode { entries: Vec::new(), span: Span::default(),
-         });
+        let root = AstNode::Object(ObjectNode {
+            entries: Vec::new(),
+            span: Span::default(),
+        });
         let tmpl = Template::from_ast(&root).unwrap();
         assert!(E1004.validate_template(&tmpl, &root).is_empty());
     }

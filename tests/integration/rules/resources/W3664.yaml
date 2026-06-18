@@ -4,10 +4,14 @@
 # expect:
 #   - rule: W3664
 #     path: /Resources/BadS3BucketWithSnsPrincipal/Properties/permission/principal
-#     message_contains: "does not match const"
+#     message_contains: "does not match"
+#   - rule: W3664
+#     path: /Resources/BadLogGroupWithS3Principal/Properties/permission/principal
+#     message_contains: "does not match"
+#   - rule: W3664
+#     path: /Resources/BadIotWithS3Principal/Properties/permission/principal
+#     message_contains: "does not match"
 # ---
-# NOTE: Rule W3664 in v2 only detects the S3 Bucket/SNS mismatch case via cross-resource
-# resolution. LogGroup and IoT cases are not yet resolved.
 Resources:
   Bucket:
     Type: AWS::S3::Bucket

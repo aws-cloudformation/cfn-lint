@@ -86,13 +86,17 @@ fn fixture_templates() {
         let issues = run_template(&mut engine, template_path);
 
         let results = vec![ValidationResult {
-            filename: template_path.file_name().unwrap().to_string_lossy().to_string(),
+            filename: template_path
+                .file_name()
+                .unwrap()
+                .to_string_lossy()
+                .to_string(),
             issues,
         }];
 
         let actual_json = get_formatter("json").format(&results);
-        let actual: serde_json::Value = serde_json::from_str(&actual_json)
-            .expect("formatter produced invalid JSON");
+        let actual: serde_json::Value =
+            serde_json::from_str(&actual_json).expect("formatter produced invalid JSON");
 
         if !results_path.exists() {
             // No expected file — write the actual output so the developer can review

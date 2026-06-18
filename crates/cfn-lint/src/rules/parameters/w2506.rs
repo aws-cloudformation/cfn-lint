@@ -7,14 +7,18 @@ use crate::rules::Severity;
 pub struct W2506;
 
 impl CfnLintRule for W2506 {
-    fn id(&self) -> &str { "W2506" }
+    fn id(&self) -> &str {
+        "W2506"
+    }
     fn short_description(&self) -> &str {
         "Check if ImageId Parameters have the correct type"
     }
     fn description(&self) -> &str {
         "See if there are any refs for ImageId to a parameter of inappropriate type"
     }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
     fn keywords(&self) -> &[&str] {
         &[
@@ -36,20 +40,14 @@ impl CfnLintRule for W2506 {
         _schema: &serde_json::Value,
         path: &[String],
     ) -> Vec<ValidationError> {
-        // We need a resolved Ref value (a parameter name string)
-        let param_name = match instance.as_str() {
-            Some(s) => s,
-            None => return vec![],
+        // Extract parameter name from Ref function node
+        let param_name = match instance {
+            AstNode::Function(func) if func.name == "Ref" => match func.args.as_str() {
+                Some(s) => s,
+                None => return vec![],
+            },
+            _ => return vec![],
         };
-
-        // Skip if inside a function context
-        let functions = [
-            "Fn::If", "Fn::Select", "Fn::GetAtt", "Fn::Sub", "Fn::Join",
-            "Fn::Split", "Fn::FindInMap", "Ref",
-        ];
-        if path.iter().any(|p| functions.contains(&p.as_str())) {
-            return vec![];
-        }
 
         // Look up the parameter in the context
         let ctx = match validator.context() {
@@ -96,9 +94,9 @@ const VALID_IMAGE_TYPES: &[&str] = &[
 #[cfg(test)]
 
 mod tests {
-    use crate::template::Template;
     use super::*;
     use crate::parser;
+    use crate::template::Template;
 
     #[test]
     fn test_correct_image_type_ok() {

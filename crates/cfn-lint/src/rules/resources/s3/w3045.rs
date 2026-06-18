@@ -10,7 +10,9 @@ use crate::rules::Severity;
 pub struct W3045;
 
 impl CfnLintRule for W3045 {
-    fn id(&self) -> &str { "W3045" }
+    fn id(&self) -> &str {
+        "W3045"
+    }
     fn short_description(&self) -> &str {
         "Controlling access to an S3 bucket should be done with bucket policies"
     }
@@ -18,7 +20,9 @@ impl CfnLintRule for W3045 {
         "Nearly all access control configurations can be more successfully achieved \
          with bucket policies. Consider using bucket policies instead of access control."
     }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/AWS::S3::Bucket/Properties"]
@@ -56,9 +60,9 @@ impl CfnLintRule for W3045 {
 #[cfg(test)]
 
 mod tests {
-    use crate::template::Template;
     use super::*;
     use crate::parser;
+    use crate::template::Template;
 
     #[test]
     fn test_bucket_without_access_control() {

@@ -1,7 +1,7 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 pub struct E3687;
@@ -9,7 +9,13 @@ pub struct E3687;
 const PROTOCOLS_REQUIRING_PORTS: &[&str] = &["1", "icmp", "6", "tcp", "17", "udp"];
 
 impl E3687 {
-    fn check_rule(&self, node: &AstNode, resource: &str, ctx: &str, issues: &mut Vec<ValidationError>) {
+    fn check_rule(
+        &self,
+        node: &AstNode,
+        resource: &str,
+        ctx: &str,
+        issues: &mut Vec<ValidationError>,
+    ) {
         let proto = match node.get("IpProtocol") {
             Some(p) => p,
             None => return,
@@ -45,23 +51,34 @@ impl E3687 {
 }
 
 impl CfnLintRule for E3687 {
-    fn id(&self) -> &str { "E3687" }
-    fn short_description(&self) -> &str { "Validate to and from ports based on the protocol" }
+    fn id(&self) -> &str {
+        "E3687"
+    }
+    fn short_description(&self) -> &str {
+        "Validate to and from ports based on the protocol"
+    }
     fn description(&self) -> &str {
         "When using icmp, icmpv6, tcp, or udp you have to specify the to and from port ranges"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["/"]
     }
 
-    fn validate_template(&self, template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let mut issues = Vec::new();
         for (name, resource) in &template.resources {
             match resource.resource_type.as_str() {
                 "AWS::EC2::SecurityGroup" => {
-                    let props = match root.get("Resources")
+                    let props = match root
+                        .get("Resources")
                         .and_then(|r| r.get(name))
                         .and_then(|r| r.get("Properties"))
                     {
@@ -71,13 +88,19 @@ impl CfnLintRule for E3687 {
                     for dir in &["SecurityGroupIngress", "SecurityGroupEgress"] {
                         if let Some(arr) = props.get(dir).and_then(|n| n.as_array()) {
                             for (i, rule) in arr.elements.iter().enumerate() {
-                                self.check_rule(rule, name, &format!("Properties/{}/{}", dir, i), &mut issues);
+                                self.check_rule(
+                                    rule,
+                                    name,
+                                    &format!("Properties/{}/{}", dir, i),
+                                    &mut issues,
+                                );
                             }
                         }
                     }
                 }
                 "AWS::EC2::SecurityGroupIngress" | "AWS::EC2::SecurityGroupEgress" => {
-                    if let Some(props) = root.get("Resources")
+                    if let Some(props) = root
+                        .get("Resources")
                         .and_then(|r| r.get(name))
                         .and_then(|r| r.get("Properties"))
                     {

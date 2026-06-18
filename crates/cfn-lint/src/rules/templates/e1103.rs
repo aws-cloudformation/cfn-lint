@@ -7,10 +7,10 @@
 ///
 /// This rule struct exists solely to provide metadata for `--list-rules`.
 use crate::ast::AstNode;
-use crate::rules::Severity;
-use crate::jsonschema::ValidationError;
-use crate::template::Template;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
+use crate::template::Template;
 
 pub struct E1103;
 
@@ -35,9 +35,13 @@ impl CfnLintRule for E1103 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         // Format validation handled by jsonschema/keywords.rs validate_format
-                vec![]
+        vec![]
     }
 }
 
@@ -57,8 +61,10 @@ mod tests {
 
     #[test]
     fn test_e1103_returns_empty() {
-        let root = AstNode::Object(ObjectNode { entries: Vec::new(), span: Span::default(),
-         });
+        let root = AstNode::Object(ObjectNode {
+            entries: Vec::new(),
+            span: Span::default(),
+        });
         let tmpl = Template::from_ast(&root).unwrap();
         assert!(E1103.validate_template(&tmpl, &root).is_empty());
     }

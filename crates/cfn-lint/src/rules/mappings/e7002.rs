@@ -1,7 +1,7 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 /// E7002: Mappings are appropriately configured.
@@ -10,16 +10,28 @@ use crate::template::Template;
 pub struct E7002;
 
 impl CfnLintRule for E7002 {
-    fn id(&self) -> &str { "E7002" }
-    fn short_description(&self) -> &str { "Mappings are appropriately configured" }
+    fn id(&self) -> &str {
+        "E7002"
+    }
+    fn short_description(&self) -> &str {
+        "Mappings are appropriately configured"
+    }
     fn description(&self) -> &str {
         "Check if Mappings are properly configured per CloudFormation limits"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
-    fn keywords(&self) -> &[&str] { &["/"] }
+    fn keywords(&self) -> &[&str] {
+        &["/"]
+    }
 
-    fn validate_template(&self, _template: &Template, _root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        _root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         vec![]
     }
 }

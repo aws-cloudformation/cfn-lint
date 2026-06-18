@@ -2,40 +2,107 @@ use std::collections::HashMap;
 use std::sync::LazyLock;
 
 use super::super::{ValidationError, Validator};
-use super::helpers::{err, unknown_err, ast_to_json_string};
+use super::helpers::{ast_to_json_string, err, unknown_err};
 use crate::ast::AstNode;
 
 static FUNCTION_SCHEMAS: LazyLock<HashMap<&'static str, serde_json::Value>> = LazyLock::new(|| {
     let entries: &[(&str, &str)] = &[
-        ("Fn::If", include_str!("../../../data/schemas/other/functions/if.json")),
-        ("Fn::GetAtt", include_str!("../../../data/schemas/other/functions/getatt.json")),
-        ("Fn::Sub", include_str!("../../../data/schemas/other/functions/sub.json")),
-        ("Fn::Join", include_str!("../../../data/schemas/other/functions/join.json")),
-        ("Fn::Select", include_str!("../../../data/schemas/other/functions/select.json")),
-        ("Fn::FindInMap", include_str!("../../../data/schemas/other/functions/findinmap.json")),
-        ("Fn::Base64", include_str!("../../../data/schemas/other/functions/base64.json")),
-        ("Fn::ImportValue", include_str!("../../../data/schemas/other/functions/importvalue.json")),
-        ("Fn::GetAZs", include_str!("../../../data/schemas/other/functions/getazs.json")),
-        ("Fn::Split", include_str!("../../../data/schemas/other/functions/split.json")),
-        ("Fn::Cidr", include_str!("../../../data/schemas/other/functions/cidr.json")),
-        ("Fn::Length", include_str!("../../../data/schemas/other/functions/length.json")),
-        ("Fn::ToJsonString", include_str!("../../../data/schemas/other/functions/tojsonstring.json")),
-        ("Fn::GetStackOutput", include_str!("../../../data/schemas/other/functions/getstackoutput.json")),
-        ("Fn::Equals", include_str!("../../../data/schemas/other/functions/equals.json")),
-        ("Fn::And", include_str!("../../../data/schemas/other/functions/and.json")),
-        ("Fn::Or", include_str!("../../../data/schemas/other/functions/or.json")),
-        ("Fn::Not", include_str!("../../../data/schemas/other/functions/not.json")),
-        ("Condition", include_str!("../../../data/schemas/other/functions/condition.json")),
-        ("Ref", include_str!("../../../data/schemas/other/functions/ref.json")),
+        (
+            "Fn::If",
+            include_str!("../../../data/schemas/other/functions/if.json"),
+        ),
+        (
+            "Fn::GetAtt",
+            include_str!("../../../data/schemas/other/functions/getatt.json"),
+        ),
+        (
+            "Fn::Sub",
+            include_str!("../../../data/schemas/other/functions/sub.json"),
+        ),
+        (
+            "Fn::Join",
+            include_str!("../../../data/schemas/other/functions/join.json"),
+        ),
+        (
+            "Fn::Select",
+            include_str!("../../../data/schemas/other/functions/select.json"),
+        ),
+        (
+            "Fn::FindInMap",
+            include_str!("../../../data/schemas/other/functions/findinmap.json"),
+        ),
+        (
+            "Fn::Base64",
+            include_str!("../../../data/schemas/other/functions/base64.json"),
+        ),
+        (
+            "Fn::ImportValue",
+            include_str!("../../../data/schemas/other/functions/importvalue.json"),
+        ),
+        (
+            "Fn::GetAZs",
+            include_str!("../../../data/schemas/other/functions/getazs.json"),
+        ),
+        (
+            "Fn::Split",
+            include_str!("../../../data/schemas/other/functions/split.json"),
+        ),
+        (
+            "Fn::Cidr",
+            include_str!("../../../data/schemas/other/functions/cidr.json"),
+        ),
+        (
+            "Fn::Length",
+            include_str!("../../../data/schemas/other/functions/length.json"),
+        ),
+        (
+            "Fn::ToJsonString",
+            include_str!("../../../data/schemas/other/functions/tojsonstring.json"),
+        ),
+        (
+            "Fn::GetStackOutput",
+            include_str!("../../../data/schemas/other/functions/getstackoutput.json"),
+        ),
+        (
+            "Fn::Equals",
+            include_str!("../../../data/schemas/other/functions/equals.json"),
+        ),
+        (
+            "Fn::And",
+            include_str!("../../../data/schemas/other/functions/and.json"),
+        ),
+        (
+            "Fn::Or",
+            include_str!("../../../data/schemas/other/functions/or.json"),
+        ),
+        (
+            "Fn::Not",
+            include_str!("../../../data/schemas/other/functions/not.json"),
+        ),
+        (
+            "Condition",
+            include_str!("../../../data/schemas/other/functions/condition.json"),
+        ),
+        (
+            "Ref",
+            include_str!("../../../data/schemas/other/functions/ref.json"),
+        ),
     ];
-    entries.iter().map(|(k, v)| (*k, serde_json::from_str(v).unwrap())).collect()
+    entries
+        .iter()
+        .map(|(k, v)| (*k, serde_json::from_str(v).unwrap()))
+        .collect()
 });
 
 fn to_equals_str(node: &AstNode) -> Option<String> {
     match node {
         AstNode::String(s) => Some(s.value.clone()),
         AstNode::Number(n) => Some(n.value.to_string()),
-        AstNode::Bool(b) => Some(if b.value { "true".to_string() } else { "false".to_string() }),
+        AstNode::Bool(b) => Some(if b.value {
+            "true".to_string()
+        } else {
+            "false".to_string()
+        }),
         _ => None,
     }
 }
@@ -151,9 +218,8 @@ pub fn validate_dynamic_reference(
     use regex::Regex;
     use std::sync::LazyLock;
 
-    static RE_DYN_REF: LazyLock<Regex> = LazyLock::new(|| {
-        Regex::new(r"\{\{resolve:([^}]+)\}\}").unwrap()
-    });
+    static RE_DYN_REF: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"\{\{resolve:([^}]+)\}\}").unwrap());
 
     let s = match node.as_str() {
         Some(s) => s,
@@ -219,8 +285,13 @@ pub fn validate_dynamic_reference(
                 }
 
                 // W1051: Check if used where an ARN is expected
-                let arn_fields = ["SecretArn", "SecretARN", "SecretsManagerSecretId",
-                    "SecretsManagerOracleAsmSecretId", "SecretsManagerSecurityDbEncryptionSecretId"];
+                let arn_fields = [
+                    "SecretArn",
+                    "SecretARN",
+                    "SecretsManagerSecretId",
+                    "SecretsManagerOracleAsmSecretId",
+                    "SecretsManagerSecurityDbEncryptionSecretId",
+                ];
                 if path.iter().any(|p| arn_fields.contains(&p.as_str())) {
                     errors.push(ValidationError {
                         keyword: "W1051".to_string(),
@@ -246,7 +317,9 @@ pub fn validate_dynamic_reference(
 }
 
 fn is_valid_ssm_location(path: &[String]) -> bool {
-    if path.len() < 3 { return false; }
+    if path.len() < 3 {
+        return false;
+    }
     match path[0].as_str() {
         "Resources" => path.len() >= 3 && (path[2] == "Properties" || path[2] == "Metadata"),
         "Outputs" => path.len() >= 3 && path[2] == "Value",
@@ -256,7 +329,9 @@ fn is_valid_ssm_location(path: &[String]) -> bool {
 }
 
 fn is_valid_secrets_manager_location(path: &[String]) -> bool {
-    if path.len() < 3 { return false; }
+    if path.len() < 3 {
+        return false;
+    }
     match path[0].as_str() {
         "Resources" => path[2] == "Properties",
         "Parameters" => path[2] == "Default",
@@ -265,8 +340,12 @@ fn is_valid_secrets_manager_location(path: &[String]) -> bool {
 }
 
 fn is_valid_secure_string_location(path: &[String]) -> bool {
-    if path.len() < 3 { return false; }
-    if path[0] != "Resources" || path[2] != "Properties" { return false; }
+    if path.len() < 3 {
+        return false;
+    }
+    if path[0] != "Resources" || path[2] != "Properties" {
+        return false;
+    }
     true
 }
 
@@ -299,9 +378,12 @@ pub fn validate_dynamic_validation(
         let transform_node = ctx.template.root.get("Transform");
         let has_transform = match transform_node {
             Some(t) if t.as_str().is_some() => t.as_str().unwrap() == transform,
-            Some(t) if t.as_array().is_some() => {
-                t.as_array().unwrap().elements.iter().any(|e| e.as_str() == Some(transform))
-            }
+            Some(t) if t.as_array().is_some() => t
+                .as_array()
+                .unwrap()
+                .elements
+                .iter()
+                .any(|e| e.as_str() == Some(transform)),
             _ => false,
         };
         if !has_transform {
@@ -377,7 +459,5 @@ pub fn validate_function_structure(
         cfn_path: vec![],
     };
     let errs = v.validate_schema(args, schema, path);
-    errs.into_iter()
-        .filter(|e| !e.unknown)
-        .collect()
+    errs.into_iter().filter(|e| !e.unknown).collect()
 }

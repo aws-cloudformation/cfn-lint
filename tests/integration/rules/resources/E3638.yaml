@@ -1,13 +1,14 @@
 # --- cfn-lint-test ---
 # rule: E3638
-# description: DynamoDB PAY_PER_REQUEST must not have ProvisionedThroughput
+# description: DynamoDB PAY_PER_REQUEST must not have non-zero ProvisionedThroughput
 # expect:
 #   - rule: E3638
-#     path: /Resources/BadPayPerRequestWithThroughput/Properties/ProvisionedThroughput
-#     message_contains: "False schema"
+#     path: /Resources/BadPayPerRequestWithThroughput/Properties/ProvisionedThroughput/ReadCapacityUnits
+#     message_contains: "does not match const"
+#   - rule: E3638
+#     path: /Resources/BadPayPerRequestWithThroughput/Properties/ProvisionedThroughput/WriteCapacityUnits
+#     message_contains: "does not match const"
 # ---
-# NOTE: Rule E3638 in v2 rejects ProvisionedThroughput entirely (even with zero values)
-# when BillingMode is PAY_PER_REQUEST. The GoodPayPerRequestZeroThroughput case was removed
 # as the v2 engine treats any ProvisionedThroughput presence as invalid.
 Resources:
   GoodPayPerRequest:

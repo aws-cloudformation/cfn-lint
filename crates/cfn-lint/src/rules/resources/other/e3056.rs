@@ -7,7 +7,9 @@ use crate::rules::Severity;
 pub struct E3056;
 
 impl CfnLintRule for E3056 {
-    fn id(&self) -> &str { "E3056" }
+    fn id(&self) -> &str {
+        "E3056"
+    }
     fn short_description(&self) -> &str {
         "EC2 health check type cannot be combined with other types"
     }
@@ -15,7 +17,9 @@ impl CfnLintRule for E3056 {
         "When specifying multiple health check types for an Auto Scaling group, \
          EC2 cannot be combined with other health check types."
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/AWS::AutoScaling::AutoScalingGroup/Properties/HealthCheckType"]
@@ -63,9 +67,9 @@ impl CfnLintRule for E3056 {
 #[cfg(test)]
 
 mod tests {
-    use crate::template::Template;
     use super::*;
     use crate::parser;
+    use crate::template::Template;
 
     #[test]
     fn test_stubbed_out() {

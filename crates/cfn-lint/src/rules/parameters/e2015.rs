@@ -2,8 +2,8 @@ use regex::Regex;
 
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::rules::Severity;
 use crate::jsonschema::ValidationError;
+use crate::rules::Severity;
 use crate::template::Template;
 
 pub struct E2015;
@@ -19,11 +19,11 @@ impl E2015 {
                 "Default".to_string(),
             ],
             span: default_node.span(),
-                keyword: String::new(),
-                unknown: false,
-                resolved_from_ref: false,
-                context: vec![],
-        schema_id: None,
+            keyword: String::new(),
+            unknown: false,
+            resolved_from_ref: false,
+            context: vec![],
+            schema_id: None,
         }
     }
 }
@@ -49,7 +49,11 @@ impl CfnLintRule for E2015 {
         &["/"]
     }
 
-    fn validate_template(&self, _template: &Template, root: &AstNode) -> Vec<crate::jsonschema::ValidationError> {
+    fn validate_template(
+        &self,
+        _template: &Template,
+        root: &AstNode,
+    ) -> Vec<crate::jsonschema::ValidationError> {
         let params = match root.get("Parameters").and_then(|n| n.as_object()) {
             Some(obj) => obj,
             None => return vec![],
@@ -101,30 +105,53 @@ impl CfnLintRule for E2015 {
             if let Some(pattern_str) = obj.get("AllowedPattern").and_then(|n| n.as_str()) {
                 if let Ok(re) = Regex::new(&format!("^(?:{})$", pattern_str)) {
                     if is_cdl {
-                        let any_fail = default_str.split(',').map(|s| s.trim()).any(|v| !re.is_match(v));
+                        let any_fail = default_str
+                            .split(',')
+                            .map(|s| s.trim())
+                            .any(|v| !re.is_match(v));
                         if any_fail {
-                            issues.push(self.make_issue(name, default_node, "Default should be allowed by AllowedPattern"));
+                            issues.push(self.make_issue(
+                                name,
+                                default_node,
+                                "Default should be allowed by AllowedPattern",
+                            ));
                         }
                     } else if !re.is_match(&default_str) {
-                        issues.push(self.make_issue(name, default_node, "Default should be allowed by AllowedPattern"));
+                        issues.push(self.make_issue(
+                            name,
+                            default_node,
+                            "Default should be allowed by AllowedPattern",
+                        ));
                     }
                 }
             }
 
             // MinValue (Number type)
             if let Some(min_node) = obj.get("MinValue") {
-                if let (Some(min_val), Some(default_val)) = (min_node.as_f64(), default_node.as_f64()) {
+                if let (Some(min_val), Some(default_val)) =
+                    (min_node.as_f64(), default_node.as_f64())
+                {
                     if (default_val as i64) < (min_val as i64) {
-                        issues.push(self.make_issue(name, default_node, "Default should be equal to or higher than MinValue"));
+                        issues.push(self.make_issue(
+                            name,
+                            default_node,
+                            "Default should be equal to or higher than MinValue",
+                        ));
                     }
                 }
             }
 
             // MaxValue (Number type)
             if let Some(max_node) = obj.get("MaxValue") {
-                if let (Some(max_val), Some(default_val)) = (max_node.as_f64(), default_node.as_f64()) {
+                if let (Some(max_val), Some(default_val)) =
+                    (max_node.as_f64(), default_node.as_f64())
+                {
                     if (default_val as i64) > (max_val as i64) {
-                        issues.push(self.make_issue(name, default_node, "Default should be less than or equal to MaxValue"));
+                        issues.push(self.make_issue(
+                            name,
+                            default_node,
+                            "Default should be less than or equal to MaxValue",
+                        ));
                     }
                 }
             }
@@ -132,25 +159,45 @@ impl CfnLintRule for E2015 {
             // AllowedValues
             if let Some(av_node) = obj.get("AllowedValues") {
                 if let Some(arr) = av_node.as_array() {
-                    let allowed: Vec<String> = arr.elements.iter().filter_map(|e| {
-                        e.as_str().map(|s| s.to_string()).or_else(|| {
-                            e.as_f64().map(|n| if n.fract() == 0.0 { format!("{}", n as i64) } else { format!("{}", n) })
+                    let allowed: Vec<String> = arr
+                        .elements
+                        .iter()
+                        .filter_map(|e| {
+                            e.as_str().map(|s| s.to_string()).or_else(|| {
+                                e.as_f64().map(|n| {
+                                    if n.fract() == 0.0 {
+                                        format!("{}", n as i64)
+                                    } else {
+                                        format!("{}", n)
+                                    }
+                                })
+                            })
                         })
-                    }).collect();
+                        .collect();
                     if is_cdl {
                         // Python logic: for CDL, split and check each value.
                         // If split check fails, also check whole string.
                         // Only report if whole-string check also fails.
-                        let split_fail = default_str.split(',').map(|s| s.trim())
+                        let split_fail = default_str
+                            .split(',')
+                            .map(|s| s.trim())
                             .any(|v| !allowed.iter().any(|a| a == v));
                         if split_fail {
                             let whole_fail = !allowed.iter().any(|v| v == &default_str);
                             if whole_fail {
-                                issues.push(self.make_issue(name, default_node, "Default should be a value within AllowedValues"));
+                                issues.push(self.make_issue(
+                                    name,
+                                    default_node,
+                                    "Default should be a value within AllowedValues",
+                                ));
                             }
                         }
                     } else if !allowed.iter().any(|v| v == &default_str) {
-                        issues.push(self.make_issue(name, default_node, "Default should be a value within AllowedValues"));
+                        issues.push(self.make_issue(
+                            name,
+                            default_node,
+                            "Default should be a value within AllowedValues",
+                        ));
                     }
                 }
             }
@@ -159,7 +206,11 @@ impl CfnLintRule for E2015 {
             if let Some(ml_node) = obj.get("MinLength") {
                 if let Some(min_len) = ml_node.as_f64() {
                     if (default_str.len() as f64) < min_len {
-                        issues.push(self.make_issue(name, default_node, "Default should have a length above or equal to MinLength"));
+                        issues.push(self.make_issue(
+                            name,
+                            default_node,
+                            "Default should have a length above or equal to MinLength",
+                        ));
                     }
                 }
             }
@@ -168,7 +219,11 @@ impl CfnLintRule for E2015 {
             if let Some(ml_node) = obj.get("MaxLength") {
                 if let Some(max_len) = ml_node.as_f64() {
                     if (default_str.len() as f64) > max_len {
-                        issues.push(self.make_issue(name, default_node, "Default should have a length below or equal to MaxLength"));
+                        issues.push(self.make_issue(
+                            name,
+                            default_node,
+                            "Default should have a length below or equal to MaxLength",
+                        ));
                     }
                 }
             }
@@ -176,7 +231,6 @@ impl CfnLintRule for E2015 {
         issues
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -211,7 +265,10 @@ Parameters:
         let issues = E2015.validate_template(&tmpl, &ast);
         assert_eq!(issues.len(), 1);
         assert_eq!(issues[0].rule_id.as_deref(), Some("E2015"));
-        assert_eq!(issues[0].message, "Default should be allowed by AllowedPattern");
+        assert_eq!(
+            issues[0].message,
+            "Default should be allowed by AllowedPattern"
+        );
     }
 
     #[test]

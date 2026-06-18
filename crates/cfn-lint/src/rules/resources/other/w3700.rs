@@ -6,9 +6,15 @@ use crate::rules::Severity;
 pub struct W3700;
 
 impl CfnLintRule for W3700 {
-    fn id(&self) -> &str { "W3700" }
-    fn short_description(&self) -> &str { "Non-standard Domain values are converted to vpc" }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn id(&self) -> &str {
+        "W3700"
+    }
+    fn short_description(&self) -> &str {
+        "Non-standard Domain values are converted to vpc"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/AWS::EC2::EIP/Properties/Domain"]

@@ -9,14 +9,18 @@ use crate::rules::Severity;
 pub struct E3061;
 
 impl CfnLintRule for E3061 {
-    fn id(&self) -> &str { "E3061" }
+    fn id(&self) -> &str {
+        "E3061"
+    }
     fn short_description(&self) -> &str {
         "Validate the days for tierings in IntelligentTieringConfigurations"
     }
     fn description(&self) -> &str {
         "When using S3 IntelligentTieringConfigurations the Tierings have minimum and maximum values"
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/AWS::S3::Bucket/Properties/IntelligentTieringConfigurations/*/Tierings/*"]
@@ -55,7 +59,7 @@ impl CfnLintRule for E3061 {
                 let mut days_path = path.to_vec();
                 days_path.push("Days".to_string());
                 return vec![ValidationError {
-                rule_id: None,
+                    rule_id: None,
                     keyword: format!("cfnLint:{}", self.id()),
                     message: format!(
                         "Days {} for {} must be between {} and {}",
@@ -91,9 +95,9 @@ fn tiering_limits(access_tier: &str) -> Option<TieringLimits> {
 #[cfg(test)]
 
 mod tests {
-    use crate::template::Template;
     use super::*;
     use crate::parser;
+    use crate::template::Template;
 
     #[test]
     fn test_stubbed_out() {

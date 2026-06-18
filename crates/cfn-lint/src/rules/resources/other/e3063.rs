@@ -9,14 +9,18 @@ use crate::rules::Severity;
 pub struct E3063;
 
 impl CfnLintRule for E3063 {
-    fn id(&self) -> &str { "E3063" }
+    fn id(&self) -> &str {
+        "E3063"
+    }
     fn short_description(&self) -> &str {
         "Validate GuardDuty Detector property exclusivity"
     }
     fn description(&self) -> &str {
         "Both DataSources and Features cannot be provided. Use Features instead."
     }
-    fn severity(&self) -> Severity { Severity::Error }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/AWS::GuardDuty::Detector/Properties"]
@@ -71,12 +75,26 @@ Resources:
           Status: ENABLED
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Detector").unwrap()
-            .get("Properties").unwrap();
-        let path = vec!["Resources".to_string(), "Detector".to_string(), "Properties".to_string()];
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Detector")
+            .unwrap()
+            .get("Properties")
+            .unwrap();
+        let path = vec![
+            "Resources".to_string(),
+            "Detector".to_string(),
+            "Properties".to_string(),
+        ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = E3063.validate(&validator, "Resources/AWS::GuardDuty::Detector/Properties", instance, &serde_json::json!({}), &path);
+        let errors = E3063.validate(
+            &validator,
+            "Resources/AWS::GuardDuty::Detector/Properties",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert!(errors.is_empty());
     }
 
@@ -96,12 +114,26 @@ Resources:
           Status: ENABLED
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let instance = ast.get("Resources").unwrap()
-            .get("Detector").unwrap()
-            .get("Properties").unwrap();
-        let path = vec!["Resources".to_string(), "Detector".to_string(), "Properties".to_string()];
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Detector")
+            .unwrap()
+            .get("Properties")
+            .unwrap();
+        let path = vec![
+            "Resources".to_string(),
+            "Detector".to_string(),
+            "Properties".to_string(),
+        ];
         let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
-        let errors = E3063.validate(&validator, "Resources/AWS::GuardDuty::Detector/Properties", instance, &serde_json::json!({}), &path);
+        let errors = E3063.validate(
+            &validator,
+            "Resources/AWS::GuardDuty::Detector/Properties",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
         assert_eq!(errors.len(), 1);
         assert!(errors[0].message.contains("DataSources"));
         assert!(errors[0].message.contains("Features"));

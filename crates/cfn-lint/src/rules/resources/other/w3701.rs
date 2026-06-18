@@ -12,9 +12,15 @@ static RE_VALID_NAME: LazyLock<Regex> = LazyLock::new(|| {
 pub struct W3701;
 
 impl CfnLintRule for W3701 {
-    fn id(&self) -> &str { "W3701" }
-    fn short_description(&self) -> &str { "SSM Parameter Name should not use /aws/ or /ssm/ prefix" }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn id(&self) -> &str {
+        "W3701"
+    }
+    fn short_description(&self) -> &str {
+        "SSM Parameter Name should not use /aws/ or /ssm/ prefix"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
     fn keywords(&self) -> &[&str] {
         &["Resources/AWS::SSM::Parameter/Properties/Name"]

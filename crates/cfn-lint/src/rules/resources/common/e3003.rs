@@ -8,11 +8,21 @@ use crate::template::Template;
 pub struct E3003;
 
 impl CfnLintRule for E3003 {
-    fn id(&self) -> &str { "E3003" }
-    fn short_description(&self) -> &str { "Required Resource properties are missing" }
-    fn description(&self) -> &str { "Make sure that Resources properties that are required exist" }
-    fn severity(&self) -> Severity { Severity::Error }
-    fn keywords(&self) -> &[&str] { &["Resources/*"] }
+    fn id(&self) -> &str {
+        "E3003"
+    }
+    fn short_description(&self) -> &str {
+        "Required Resource properties are missing"
+    }
+    fn description(&self) -> &str {
+        "Make sure that Resources properties that are required exist"
+    }
+    fn severity(&self) -> Severity {
+        Severity::Error
+    }
+    fn keywords(&self) -> &[&str] {
+        &["Resources/*"]
+    }
 
     fn validate(
         &self,

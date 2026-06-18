@@ -6,12 +6,18 @@ use crate::rules::Severity;
 pub struct W1011;
 
 impl CfnLintRule for W1011 {
-    fn id(&self) -> &str { "W1011" }
-    fn short_description(&self) -> &str { "Use dynamic references over parameters for secrets" }
+    fn id(&self) -> &str {
+        "W1011"
+    }
+    fn short_description(&self) -> &str {
+        "Use dynamic references over parameters for secrets"
+    }
     fn description(&self) -> &str {
         "Instead of REFing a parameter for a secret use a dynamic reference"
     }
-    fn severity(&self) -> Severity { Severity::Warning }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
 
     fn keywords(&self) -> &[&str] {
         &[
@@ -40,12 +46,13 @@ impl CfnLintRule for W1011 {
         if let AstNode::Function(func) = instance {
             if func.name == "Ref" {
                 if let Some(param_name) = func.args.as_str() {
-                    let is_parameter = validator.context()
+                    let is_parameter = validator
+                        .context()
                         .map(|ctx| ctx.template.parameters.contains_key(param_name))
                         .unwrap_or(false);
                     if is_parameter {
                         return vec![ValidationError {
-                rule_id: None,
+                            rule_id: None,
                             message: "Use dynamic references over parameters for secrets"
                                 .to_string(),
                             path: path.to_vec(),
@@ -54,7 +61,7 @@ impl CfnLintRule for W1011 {
                             unknown: false,
                             resolved_from_ref: false,
                             context: vec![],
-                        schema_id: None,
+                            schema_id: None,
                         }];
                     }
                 }

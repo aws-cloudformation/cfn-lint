@@ -45,11 +45,16 @@ impl CfnLintRule for E3005 {
             None => return vec![],
         };
 
-        let mut resource_names: Vec<&str> = ctx.template.resources.keys().map(|s| s.as_str()).collect();
+        let mut resource_names: Vec<&str> =
+            ctx.template.resources.keys().map(|s| s.as_str()).collect();
 
         // Determine the resource that owns this DependsOn by looking at the path
         // Path is like ["Resources", "MyResource", "DependsOn"] or ["Resources", "MyResource", "DependsOn", "0"]
-        let owner_resource = if path.len() >= 2 { Some(path[1].as_str()) } else { None };
+        let owner_resource = if path.len() >= 2 {
+            Some(path[1].as_str())
+        } else {
+            None
+        };
 
         // A resource cannot depend on itself
         if let Some(owner) = owner_resource {
@@ -60,10 +65,7 @@ impl CfnLintRule for E3005 {
             return vec![ValidationError {
                 rule_id: None,
                 keyword: format!("cfnLint:{}", self.id()),
-                message: format!(
-                    "{:?} is not one of {:?}",
-                    dep_name, resource_names
-                ),
+                message: format!("{:?} is not one of {:?}", dep_name, resource_names),
                 path: path.to_vec(),
                 span: instance.span(),
                 unknown: false,
@@ -92,7 +94,7 @@ impl CfnLintRule for E3005 {
                     // Check if the condition being false is satisfiable
                     if ctx.is_condition_satisfiable(target_condition, false) {
                         errors.push(ValidationError {
-                rule_id: None,
+                            rule_id: None,
                             keyword: format!("cfnLint:{}", self.id()),
                             message: format!(
                                 "{:?} will not exist when condition {:?} is false",
