@@ -8,7 +8,7 @@ from collections import deque
 import pytest
 
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules.resources.cloudfront.DistributionCacheBehaviorForwardedValuesIgnored import (
+from cfnlint.rules.resources.cloudfront.DistributionCacheBehaviorForwardedValuesIgnored import (  # noqa: E501
     DistributionCacheBehaviorForwardedValuesIgnored,
 )
 
@@ -42,7 +42,10 @@ def rule():
         ),
         (
             {
-                "ForwardedValues": {"QueryString": False, "Cookies": {"Forward": "none"}},
+                "ForwardedValues": {
+                    "QueryString": False,
+                    "Cookies": {"Forward": "none"},
+                },
             },
             [],
         ),

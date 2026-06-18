@@ -293,6 +293,8 @@ def cfn():
                     " 'MetadataConfiguration.JournalTableConfiguration.TableArn',"
                     " 'MetadataConfiguration.InventoryTableConfiguration.TableName',"
                     " 'MetadataConfiguration.InventoryTableConfiguration.TableArn',"
+                    " 'MetadataConfiguration.AnnotationTableConfiguration.TableName',"
+                    " 'MetadataConfiguration.AnnotationTableConfiguration.TableArn',"
                     " 'WebsiteURL'] in ['us-east-1']",
                     path=deque(["Fn::Sub"]),
                     schema_path=deque([]),

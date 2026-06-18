@@ -83,6 +83,8 @@ class _Fail(CfnLintKeyword):
                     " 'MetadataConfiguration.JournalTableConfiguration.TableArn',"
                     " 'MetadataConfiguration.InventoryTableConfiguration.TableName',"
                     " 'MetadataConfiguration.InventoryTableConfiguration.TableArn',"
+                    " 'MetadataConfiguration.AnnotationTableConfiguration.TableName',"
+                    " 'MetadataConfiguration.AnnotationTableConfiguration.TableArn',"
                     " 'WebsiteURL'] "
                     "in ['us-east-1']",
                     path=deque(["Fn::GetAtt", 1]),
@@ -229,6 +231,8 @@ class _Fail(CfnLintKeyword):
                     " 'MetadataConfiguration.JournalTableConfiguration.TableArn',"
                     " 'MetadataConfiguration.InventoryTableConfiguration.TableName',"
                     " 'MetadataConfiguration.InventoryTableConfiguration.TableArn',"
+                    " 'MetadataConfiguration.AnnotationTableConfiguration.TableName',"
+                    " 'MetadataConfiguration.AnnotationTableConfiguration.TableArn',"
                     " 'WebsiteURL'] in ['us-east-1'] when "
                     "{'Ref': 'MyResourceParameter'} is resolved",
                     path=deque(["Fn::GetAtt", 1]),

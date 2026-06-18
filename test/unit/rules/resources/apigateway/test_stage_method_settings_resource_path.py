@@ -33,7 +33,9 @@ def rule():
                     "'api/{proxy+}' does not match '^/.*$'",
                     rule=StageMethodSettingsResourcePath(),
                     path=deque(["ResourcePath"]),
-                    schema_path=deque(["then", "properties", "ResourcePath", "pattern"]),
+                    schema_path=deque(
+                        ["then", "properties", "ResourcePath", "pattern"]
+                    ),
                     validator="pattern",
                 ),
             ],
@@ -72,7 +74,9 @@ def rule():
                     "'no-slash' does not match '^/.*$'",
                     rule=StageMethodSettingsResourcePath(),
                     path=deque(["ResourcePath"]),
-                    schema_path=deque(["then", "properties", "ResourcePath", "pattern"]),
+                    schema_path=deque(
+                        ["then", "properties", "ResourcePath", "pattern"]
+                    ),
                     validator="pattern",
                 ),
             ],
