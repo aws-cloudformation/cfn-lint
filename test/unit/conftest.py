@@ -6,13 +6,30 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 from collections import deque
+from pathlib import Path as FilePath
 
 import pytest
 
 from cfnlint.context import Path, create_context_for_template
 from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import CfnTemplateValidator
+from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 from cfnlint.template import Template
+
+_fixtures_dir = FilePath(__file__).parent.parent / "fixtures" / "schemas"
+
+_default_providers_dir = FilePath(__file__).parent.parent.parent / (
+    "src/cfnlint/data/schemas/providers"
+)
+
+_has_full_schemas = _default_providers_dir.exists() and any(
+    _default_providers_dir.glob("*.json")
+)
+
+if not _has_full_schemas:
+    PROVIDER_SCHEMA_MANAGER._providers_dir = _fixtures_dir / "providers"
+    PROVIDER_SCHEMA_MANAGER._resources_dir = _fixtures_dir / "resources"
+    PROVIDER_SCHEMA_MANAGER.reset()
 
 
 @pytest.fixture

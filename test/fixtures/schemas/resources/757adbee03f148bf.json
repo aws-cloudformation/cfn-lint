@@ -1,0 +1,248 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "EndpointConfiguration": {
+   "additionalProperties": false,
+   "description": "The ``EndpointConfiguration`` property type specifies the endpoint types and IP address types of a REST API.\n ``EndpointConfiguration`` is a property of the [AWS::ApiGateway::RestApi](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html) resource.",
+   "properties": {
+    "IpAddressType": {
+     "description": "",
+     "type": "string"
+    },
+    "Types": {
+     "description": "",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "VpcEndpointIds": {
+     "description": "",
+     "items": {
+      "relationshipRef": {
+       "propertyPath": "/properties/Id",
+       "typeName": "AWS::EC2::VPCEndpoint"
+      },
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "description": "``S3Location`` is a property of the [AWS::ApiGateway::RestApi](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html) resource that specifies the Amazon S3 location of a OpenAPI (formerly Swagger) file that defines a set of RESTful APIs in JSON or YAML.\n  On January 1, 2016, the Swagger Specification was donated to the [OpenAPI initiative](https://docs.aws.amazon.com/https://www.openapis.org/), becoming the foundation of the OpenAPI Specification.",
+   "properties": {
+    "Bucket": {
+     "description": "The name of the S3 bucket where the OpenAPI file is stored.",
+     "type": "string"
+    },
+    "ETag": {
+     "description": "The Amazon S3 ETag (a file checksum) of the OpenAPI file. If you don't specify a value, API Gateway skips ETag validation of your OpenAPI file.",
+     "type": "string"
+    },
+    "Key": {
+     "description": "The file name of the OpenAPI file (Amazon S3 object name).",
+     "type": "string"
+    },
+    "Version": {
+     "description": "For versioning-enabled buckets, a specific version of the OpenAPI file.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "An array of key-value pairs to apply to this resource.\n For more information, see [Tag](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html).",
+   "properties": {
+    "Key": {
+     "description": "A string you can use to assign a value. The combination of tag keys and values can help you organize and categorize your resources.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the specified tag key.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The ``AWS::ApiGateway::RestApi`` resource creates a REST API. For more information, see [restapi:create](https://docs.aws.amazon.com/apigateway/latest/api/API_CreateRestApi.html) in the *Amazon API Gateway REST API Reference*.\n  On January 1, 2016, the Swagger Specification was donated to the [OpenAPI initiative](https://docs.aws.amazon.com/https://www.openapis.org/), becoming the foundation of the OpenAPI Specification.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:POST",
+    "apigateway:PUT",
+    "apigateway:PATCH",
+    "apigateway:UpdateRestApiPolicy",
+    "s3:GetObject",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:DELETE",
+    "apigateway:PATCH",
+    "apigateway:PUT",
+    "apigateway:UpdateRestApiPolicy",
+    "s3:GetObject",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RestApiId"
+ ],
+ "properties": {
+  "ApiKeySourceType": {
+   "description": "",
+   "type": "string"
+  },
+  "BinaryMediaTypes": {
+   "description": "",
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Body": {
+   "description": "An OpenAPI specification that defines a set of RESTful APIs in JSON format. For YAML templates, you can also provide the specification in YAML format.",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "BodyS3Location": {
+   "$ref": "#/definitions/S3Location",
+   "description": "The Amazon Simple Storage Service (Amazon S3) location that points to an OpenAPI file, which defines a set of RESTful APIs in JSON or YAML format."
+  },
+  "CloneFrom": {
+   "description": "",
+   "type": "string"
+  },
+  "Description": {
+   "description": "",
+   "type": "string"
+  },
+  "DisableExecuteApiEndpoint": {
+   "description": "",
+   "type": "boolean"
+  },
+  "EndpointAccessMode": {
+   "description": "",
+   "type": "string"
+  },
+  "EndpointConfiguration": {
+   "$ref": "#/definitions/EndpointConfiguration",
+   "description": "A list of the endpoint types and IP address types of the API. Use this property when creating an API. When importing an existing API, specify the endpoint configuration types using the ``Parameters`` property."
+  },
+  "FailOnWarnings": {
+   "description": "",
+   "type": "boolean"
+  },
+  "MinimumCompressionSize": {
+   "description": "",
+   "type": "integer"
+  },
+  "Mode": {
+   "description": "This property applies only when you use OpenAPI to define your REST API. The ``Mode`` determines how API Gateway handles resource updates.\n Valid values are ``overwrite`` or ``merge``. \n For ``overwrite``, the new API definition replaces the existing one. The existing API identifier remains unchanged.\n  For ``merge``, the new API definition is merged with the existing API.\n If you don't specify this property, a default value is chosen. For REST APIs created before March 29, 2021, the default is ``overwrite``. For REST APIs created after March 29, 2021, the new API definition takes precedence, but any container types such as endpoint configurations and binary media types are merged with the existing API. \n Use the default mode to define top-level ``RestApi`` properties in addition to using OpenAPI. Generally, it's preferred to use API Gateway's OpenAPI extensions to model these properties.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the RestApi. A name is required if the REST API is not based on an OpenAPI specification.",
+   "type": "string"
+  },
+  "Parameters": {
+   "additionalProperties": false,
+   "description": "",
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Policy": {
+   "description": "A policy document that contains the permissions for the ``RestApi`` resource. To set the ARN for the policy, use the ``!Join`` intrinsic function with ``\"\"`` as delimiter and values of ``\"execute-api:/\"`` and ``\"*\"``.",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "RestApiId": {
+   "description": "",
+   "type": "string"
+  },
+  "RootResourceId": {
+   "description": "",
+   "type": "string"
+  },
+  "SecurityPolicy": {
+   "description": "",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RestApiId",
+  "/properties/RootResourceId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "apigateway:PUT",
+   "apigateway:DELETE",
+   "apigateway:GET"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ApiGateway::RestApi",
+ "writeOnlyProperties": [
+  "/properties/Body",
+  "/properties/BodyS3Location",
+  "/properties/CloneFrom",
+  "/properties/FailOnWarnings",
+  "/properties/Mode",
+  "/properties/Parameters"
+ ]
+}

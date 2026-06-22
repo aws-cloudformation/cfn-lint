@@ -1,0 +1,323 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ServiceName",
+  "/properties/VpcEndpointType",
+  "/properties/VpcId",
+  "/properties/ServiceNetworkArn",
+  "/properties/ResourceConfigurationArn",
+  "/properties/ServiceRegion",
+  "/properties/DnsOptions/PrivateDnsPreference",
+  "/properties/DnsOptions/PrivateDnsSpecifiedDomains"
+ ],
+ "definitions": {
+  "DnsOptionsSpecification": {
+   "additionalProperties": false,
+   "description": "Describes the DNS options for an endpoint.",
+   "properties": {
+    "DnsRecordIpType": {
+     "description": "The DNS records created for the endpoint.",
+     "enum": [
+      "ipv4",
+      "ipv6",
+      "dualstack",
+      "service-defined",
+      "not-specified"
+     ],
+     "type": "string"
+    },
+    "PrivateDnsOnlyForInboundResolverEndpoint": {
+     "description": "Indicates whether to enable private DNS only for inbound endpoints. This option is available only for services that support both gateway and interface endpoints. It routes traffic that originates from the VPC to the gateway endpoint and traffic that originates from on-premises to the interface endpoint.",
+     "enum": [
+      "OnlyInboundResolver",
+      "AllResolvers",
+      "NotSpecified"
+     ],
+     "type": "string"
+    },
+    "PrivateDnsPreference": {
+     "description": "The preference for which private domains have a private hosted zone created for and associated with the specified VPC. Only supported when private DNS is enabled and when the VPC endpoint type is ServiceNetwork or Resource.",
+     "enum": [
+      "VERIFIED_DOMAINS_ONLY",
+      "ALL_DOMAINS",
+      "VERIFIED_DOMAINS_AND_SPECIFIED_DOMAINS",
+      "SPECIFIED_DOMAINS_ONLY"
+     ],
+     "type": "string"
+    },
+    "PrivateDnsSpecifiedDomains": {
+     "description": "Indicates which of the private domains to create private hosted zones for and associate with the specified VPC. Only supported when private DNS is enabled and the private DNS preference is ``VERIFIED_DOMAINS_AND_SPECIFIED_DOMAINS`` or ``SPECIFIED_DOMAINS_ONLY``.",
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "Describes a tag.",
+   "properties": {
+    "Key": {
+     "description": "The key of the tag.\n Constraints: Tag keys are case-sensitive and accept a maximum of 127 Unicode characters. May not begin with ``aws:``.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value of the tag.\n Constraints: Tag values are case-sensitive and accept a maximum of 256 Unicode characters.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Specifies a VPC endpoint. A VPC endpoint provides a private connection between your VPC and an endpoint service. You can use an endpoint service provided by AWS, an MKT Partner, or another AWS accounts in your organization. For more information, see the [User Guide](https://docs.aws.amazon.com/vpc/latest/privatelink/).\n An endpoint of type ``Interface`` establishes connections between the subnets in your VPC and an AWS-service, your own service, or a service hosted by another AWS-account. With an interface VPC endpoint, you specify the subnets in which to create the endpoint and the security groups to associate with the endpoint network interfaces.\n An endpoint of type ``gateway`` serves as a target for a route in your route table for traffic destined for S3 or DDB. You can specify an endpoint policy for the endpoint, which controls access to the service from your VPC. You can also specify the VPC route tables that use the endpoint. For more information about connectivity to S3, see [Why can't I connect to an S3 bucket using a gateway VPC endpoint?](https://docs.aws.amazon.com/premiumsupport/knowledge-center/connect-s3-vpc-endpoint)\n An endpoint of type ``GatewayLoadBalancer`` provides private connectivity between your VPC and virtual appliances from a service provider.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateVpcEndpoint",
+    "ec2:DescribeVpcEndpoints",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups",
+    "vpc-lattice:CreateServiceNetworkVpcEndpointAssociation",
+    "vpc-lattice:DescribeServiceNetworkVpcEndpointAssociation",
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "vpce:AllowMultiRegion",
+    "ec2:DescribeVpcs"
+   ],
+   "timeoutInMinutes": 210
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteVpcEndpoints",
+    "ec2:DescribeVpcEndpoints",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups",
+    "vpc-lattice:DescribeServiceNetworkVpcEndpointAssociation",
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "vpce:AllowMultiRegion",
+    "ec2:DescribeVpcs"
+   ],
+   "timeoutInMinutes": 210
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeVpcEndpoints",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups",
+    "vpc-lattice:DescribeServiceNetworkVpcEndpointAssociation",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeVpcEndpoints",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups",
+    "vpc-lattice:DescribeServiceNetworkVpcEndpointAssociation",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:ModifyVpcEndpoint",
+    "ec2:DescribeVpcEndpoints",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups",
+    "vpc-lattice:CreateServiceNetworkVpcEndpointAssociation",
+    "vpc-lattice:DescribeServiceNetworkVpcEndpointAssociation",
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "vpce:AllowMultiRegion",
+    "ec2:DescribeVpcs"
+   ],
+   "timeoutInMinutes": 210
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "CreationTimestamp": {
+   "description": "",
+   "type": "string"
+  },
+  "DnsEntries": {
+   "description": "",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "DnsOptions": {
+   "$ref": "#/definitions/DnsOptionsSpecification",
+   "description": "Describes the DNS options for an endpoint."
+  },
+  "Id": {
+   "description": "",
+   "type": "string"
+  },
+  "IpAddressType": {
+   "description": "The supported IP address types.",
+   "enum": [
+    "ipv4",
+    "ipv6",
+    "dualstack",
+    "not-specified"
+   ],
+   "type": "string"
+  },
+  "NetworkInterfaceIds": {
+   "description": "",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PolicyDocument": {
+   "description": "An endpoint policy, which controls access to the service from the VPC. The default endpoint policy allows full access to the service. Endpoint policies are supported only for gateway and interface endpoints.\n For CloudFormation templates in YAML, you can provide the policy in JSON or YAML format. For example, if you have a JSON policy, you can convert it to YAML before including it in the YAML template, and CFNlong converts the policy to JSON format before calling the API actions for privatelink. Alternatively, you can include the JSON directly in the YAML, as shown in the following ``Properties`` section:\n ``Properties: VpcEndpointType: 'Interface' ServiceName: !Sub 'com.amazonaws.${AWS::Region}.logs' PolicyDocument: '{ \"Version\":\"2012-10-17\", \"Statement\": [{ \"Effect\":\"Allow\", \"Principal\":\"*\", \"Action\":[\"logs:Describe*\",\"logs:Get*\",\"logs:List*\",\"logs:FilterLogEvents\"], \"Resource\":\"*\" }] }'``",
+   "type": [
+    "string",
+    "object"
+   ]
+  },
+  "PrivateDnsEnabled": {
+   "description": "Indicate whether to associate a private hosted zone with the specified VPC. The private hosted zone contains a record set for the default public DNS name for the service for the Region (for example, ``kinesis.us-east-1.amazonaws.com``), which resolves to the private IP addresses of the endpoint network interfaces in the VPC. This enables you to make requests to the default public DNS name for the service instead of the public DNS names that are automatically generated by the VPC endpoint service.\n To use a private hosted zone, you must set the following VPC attributes to ``true``: ``enableDnsHostnames`` and ``enableDnsSupport``.\n This property is supported only for interface endpoints.\n Default: ``false``",
+   "type": "boolean"
+  },
+  "ResourceConfigurationArn": {
+   "description": "The Amazon Resource Name (ARN) of the resource configuration.",
+   "type": "string"
+  },
+  "RouteTableIds": {
+   "description": "The IDs of the route tables. Routing is supported only for gateway endpoints.",
+   "insertionOrder": false,
+   "items": {
+    "relationshipRef": {
+     "propertyPath": "/properties/RouteTableId",
+     "typeName": "AWS::EC2::RouteTable"
+    },
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SecurityGroupIds": {
+   "description": "The IDs of the security groups to associate with the endpoint network interfaces. If this parameter is not specified, we use the default security group for the VPC. Security groups are supported only for interface endpoints.",
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "anyOf": [
+     {
+      "relationshipRef": {
+       "propertyPath": "/properties/GroupId",
+       "typeName": "AWS::EC2::SecurityGroup"
+      }
+     },
+     {
+      "relationshipRef": {
+       "propertyPath": "/properties/Id",
+       "typeName": "AWS::EC2::SecurityGroup"
+      }
+     },
+     {
+      "relationshipRef": {
+       "propertyPath": "/properties/DefaultSecurityGroup",
+       "typeName": "AWS::EC2::VPC"
+      }
+     }
+    ],
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ServiceName": {
+   "description": "The name of the endpoint service.",
+   "type": "string"
+  },
+  "ServiceNetworkArn": {
+   "description": "The Amazon Resource Name (ARN) of the service network.",
+   "type": "string"
+  },
+  "ServiceRegion": {
+   "description": "Describes a Region.",
+   "type": "string"
+  },
+  "SubnetIds": {
+   "description": "The IDs of the subnets in which to create endpoint network interfaces. You must specify this property for an interface endpoint or a Gateway Load Balancer endpoint. You can't specify this property for a gateway endpoint. For a Gateway Load Balancer endpoint, you can specify only one subnet.",
+   "insertionOrder": false,
+   "items": {
+    "relationshipRef": {
+     "propertyPath": "/properties/SubnetId",
+     "typeName": "AWS::EC2::Subnet"
+    },
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "description": "The tags to associate with the endpoint.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcEndpointType": {
+   "description": "The type of endpoint.\n Default: Gateway",
+   "enum": [
+    "Interface",
+    "Gateway",
+    "GatewayLoadBalancer",
+    "ServiceNetwork",
+    "Resource"
+   ],
+   "type": "string"
+  },
+  "VpcId": {
+   "description": "The ID of the VPC.",
+   "format": "AWS::EC2::VPC.Id",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/NetworkInterfaceIds",
+  "/properties/CreationTimestamp",
+  "/properties/DnsEntries",
+  "/properties/Id"
+ ],
+ "required": [
+  "VpcId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "ec2:CreateTags",
+   "ec2:DeleteTags",
+   "ec2:DescribeVpcEndpoints"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::VPCEndpoint"
+}

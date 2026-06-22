@@ -1,0 +1,936 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AWS::ApiGateway::DomainName.MutualTlsAuthentication": {
+   "additionalProperties": false,
+   "properties": {
+    "TruststoreUri": {
+     "type": "string"
+    },
+    "TruststoreVersion": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AWS::ApiGateway::Stage.AccessLogSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationArn": {
+     "type": "string"
+    },
+    "Format": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AWS::ApiGateway::Stage.CanarySetting": {
+   "additionalProperties": false,
+   "properties": {
+    "DeploymentId": {
+     "type": "string"
+    },
+    "PercentTraffic": {
+     "type": "number"
+    },
+    "StageVariableOverrides": {
+     "additionalProperties": true,
+     "patternProperties": {
+      "^[a-zA-Z0-9]+$": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "UseStageCache": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "AWS::ApiGateway::Stage.MethodSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "CacheDataEncrypted": {
+     "type": "boolean"
+    },
+    "CacheTtlInSeconds": {
+     "type": "number"
+    },
+    "CachingEnabled": {
+     "type": "boolean"
+    },
+    "DataTraceEnabled": {
+     "type": "boolean"
+    },
+    "HttpMethod": {
+     "type": "string"
+    },
+    "LoggingLevel": {
+     "type": "string"
+    },
+    "MetricsEnabled": {
+     "type": "boolean"
+    },
+    "ResourcePath": {
+     "type": "string"
+    },
+    "ThrottlingBurstLimit": {
+     "type": "number"
+    },
+    "ThrottlingRateLimit": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "AccessAssociation": {
+   "additionalProperties": false,
+   "properties": {
+    "VpcEndpointId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "VpcEndpointId"
+   ],
+   "type": "object"
+  },
+  "Auth": {
+   "additionalProperties": false,
+   "properties": {
+    "AddApiKeyRequiredToCorsPreflight": {
+     "type": "boolean"
+    },
+    "AddDefaultAuthorizerToCorsPreflight": {
+     "type": "boolean"
+    },
+    "ApiKeyRequired": {
+     "type": "boolean"
+    },
+    "Authorizers": {
+     "additionalProperties": {
+      "anyOf": [
+       {
+        "$ref": "#/definitions/CognitoAuthorizer"
+       },
+       {
+        "$ref": "#/definitions/LambdaTokenAuthorizer"
+       },
+       {
+        "$ref": "#/definitions/LambdaRequestAuthorizer"
+       }
+      ]
+     },
+     "type": "object"
+    },
+    "DefaultAuthorizer": {
+     "type": "string"
+    },
+    "InvokeRole": {
+     "type": "string"
+    },
+    "ResourcePolicy": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/ResourcePolicy"
+      }
+     ]
+    },
+    "UsagePlan": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/UsagePlan"
+      }
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "CognitoAuthorizer": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationScopes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Identity": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/CognitoAuthorizerIdentity"
+      }
+     ]
+    },
+    "UserPoolArn": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    }
+   },
+   "required": [
+    "UserPoolArn"
+   ],
+   "type": "object"
+  },
+  "CognitoAuthorizerIdentity": {
+   "additionalProperties": false,
+   "properties": {
+    "Header": {
+     "type": "string"
+    },
+    "ReauthorizeEvery": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "integer"
+      }
+     ]
+    },
+    "ValidationExpression": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Cors": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowCredentials": {
+     "type": "boolean"
+    },
+    "AllowHeaders": {
+     "type": "string"
+    },
+    "AllowMethods": {
+     "type": "string"
+    },
+    "AllowOrigin": {
+     "type": "string"
+    },
+    "MaxAge": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AllowOrigin"
+   ],
+   "type": "object"
+  },
+  "DefinitionUri": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Domain": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessAssociation": {
+     "$ref": "#/definitions/AccessAssociation"
+    },
+    "BasePath": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "CertificateArn": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "DomainName": {
+     "type": "string"
+    },
+    "EndpointAccessMode": {
+     "type": "string"
+    },
+    "EndpointConfiguration": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "enum": [
+        "REGIONAL",
+        "EDGE",
+        "PRIVATE"
+       ],
+       "type": "string"
+      }
+     ]
+    },
+    "IpAddressType": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "MutualTlsAuthentication": {
+     "$ref": "#/definitions/AWS::ApiGateway::DomainName.MutualTlsAuthentication"
+    },
+    "NormalizeBasePath": {
+     "type": "boolean"
+    },
+    "OwnershipVerificationCertificateArn": {
+     "type": "string"
+    },
+    "Policy": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "Route53": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/Route53"
+      }
+     ]
+    },
+    "SecurityPolicy": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "CertificateArn",
+    "DomainName"
+   ],
+   "type": "object"
+  },
+  "EndpointConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IpAddressType": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "Type": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "VPCEndpointIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "LambdaRequestAuthorizer": {
+   "additionalProperties": false,
+   "properties": {
+    "DisableFunctionDefaultPermissions": {
+     "type": "boolean"
+    },
+    "FunctionArn": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "FunctionInvokeRole": {
+     "type": "string"
+    },
+    "FunctionPayloadType": {
+     "enum": [
+      "REQUEST"
+     ],
+     "type": "string"
+    },
+    "Identity": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/LambdaRequestAuthorizerIdentity"
+      }
+     ]
+    }
+   },
+   "required": [
+    "FunctionArn"
+   ],
+   "type": "object"
+  },
+  "LambdaRequestAuthorizerIdentity": {
+   "additionalProperties": false,
+   "properties": {
+    "Context": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Headers": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "QueryStrings": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ReauthorizeEvery": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "integer"
+      }
+     ]
+    },
+    "StageVariables": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "LambdaTokenAuthorizer": {
+   "additionalProperties": false,
+   "properties": {
+    "DisableFunctionDefaultPermissions": {
+     "type": "boolean"
+    },
+    "FunctionArn": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "FunctionInvokeRole": {
+     "type": "string"
+    },
+    "FunctionPayloadType": {
+     "enum": [
+      "TOKEN"
+     ],
+     "type": "string"
+    },
+    "Identity": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/LambdaTokenAuthorizerIdentity"
+      }
+     ]
+    }
+   },
+   "required": [
+    "FunctionArn"
+   ],
+   "type": "object"
+  },
+  "LambdaTokenAuthorizerIdentity": {
+   "additionalProperties": false,
+   "properties": {
+    "Header": {
+     "type": "string"
+    },
+    "ReauthorizeEvery": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "integer"
+      }
+     ]
+    },
+    "ValidationExpression": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PassThroughProp": {},
+  "QuotaSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "Limit": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "Offset": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "Period": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResourcePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsAccountBlacklist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "AwsAccountWhitelist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "CustomStatements": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "IntrinsicVpcBlacklist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "IntrinsicVpcWhitelist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "IntrinsicVpceBlacklist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "IntrinsicVpceWhitelist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "IpRangeBlacklist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "IpRangeWhitelist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "SourceVpcBlacklist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "SourceVpcWhitelist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Route53": {
+   "additionalProperties": false,
+   "properties": {
+    "DistributionDomainName": {
+     "type": "string"
+    },
+    "EvaluateTargetHealth": {
+     "type": "boolean"
+    },
+    "HostedZoneId": {
+     "type": "string"
+    },
+    "HostedZoneName": {
+     "type": "string"
+    },
+    "IpV6": {
+     "type": "boolean"
+    },
+    "Region": {
+     "type": "string"
+    },
+    "SeparateRecordSetGroup": {
+     "type": "boolean"
+    },
+    "SetIdentifier": {
+     "type": "string"
+    },
+    "VpcEndpointDomainName": {
+     "type": "string"
+    },
+    "VpcEndpointHostedZoneId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ThrottleSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "BurstLimit": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "RateLimit": {
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "UsagePlan": {
+   "additionalProperties": false,
+   "properties": {
+    "CreateUsagePlan": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "enum": [
+        "PER_API",
+        "SHARED",
+        "NONE"
+       ],
+       "type": "string"
+      }
+     ]
+    },
+    "Description": {
+     "description": "",
+     "type": "string"
+    },
+    "Quota": {
+     "$ref": "#/definitions/QuotaSettings",
+     "description": ""
+    },
+    "Tags": {
+     "description": "",
+     "insertionOrder": false,
+     "items": {
+      "additionalProperties": false,
+      "description": "An array of key-value pairs to apply to this resource.\n For more information, see [Tag](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html).",
+      "properties": {
+       "Key": {
+        "description": "A string you can use to assign a value. The combination of tag keys and values can help you organize and categorize your resources.",
+        "maxLength": 128,
+        "minLength": 1,
+        "type": "string"
+       },
+       "Value": {
+        "description": "The value for the specified tag key.",
+        "maxLength": 256,
+        "minLength": 0,
+        "type": "string"
+       }
+      },
+      "required": [
+       "Value",
+       "Key"
+      ],
+      "type": "object"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Throttle": {
+     "$ref": "#/definitions/ThrottleSettings",
+     "description": ""
+    },
+    "UsagePlanName": {
+     "description": "",
+     "type": "string"
+    }
+   },
+   "required": [
+    "CreateUsagePlan"
+   ],
+   "type": "object"
+  }
+ },
+ "properties": {
+  "AccessLogSetting": {
+   "$ref": "#/definitions/AWS::ApiGateway::Stage.AccessLogSetting"
+  },
+  "AlwaysDeploy": {
+   "type": "boolean"
+  },
+  "ApiKeySourceType": {
+   "type": "string"
+  },
+  "Auth": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/Auth"
+    }
+   ]
+  },
+  "BinaryMediaTypes": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   ]
+  },
+  "CacheClusterEnabled": {
+   "type": "boolean"
+  },
+  "CacheClusterSize": {
+   "type": "string"
+  },
+  "CanarySetting": {
+   "$ref": "#/definitions/AWS::ApiGateway::Stage.CanarySetting"
+  },
+  "Cors": {
+   "anyOf": [
+    {
+     "type": "object"
+    },
+    {
+     "type": "string"
+    },
+    {
+     "$ref": "#/definitions/Cors"
+    }
+   ]
+  },
+  "DefinitionBody": {
+   "type": "object"
+  },
+  "DefinitionUri": {
+   "anyOf": [
+    {
+     "type": "string"
+    },
+    {
+     "$ref": "#/definitions/DefinitionUri"
+    }
+   ]
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DisableExecuteApiEndpoint": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   ]
+  },
+  "Domain": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/Domain"
+    }
+   ]
+  },
+  "EndpointAccessMode": {
+   "type": "string"
+  },
+  "EndpointConfiguration": {
+   "anyOf": [
+    {
+     "type": "object"
+    },
+    {
+     "$ref": "#/definitions/EndpointConfiguration"
+    }
+   ]
+  },
+  "FailOnWarnings": {
+   "type": "boolean"
+  },
+  "GatewayResponses": {
+   "type": "object"
+  },
+  "MergeDefinitions": {
+   "type": "boolean"
+  },
+  "MethodSettings": {
+   "items": {
+    "$ref": "#/definitions/AWS::ApiGateway::Stage.MethodSetting"
+   },
+   "type": "array"
+  },
+  "MinimumCompressionSize": {
+   "type": "number"
+  },
+  "Mode": {
+   "type": "string"
+  },
+  "Models": {
+   "type": "object"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "OpenApiVersion": {
+   "anyOf": [
+    {
+     "type": "number"
+    },
+    {
+     "type": "string"
+    }
+   ]
+  },
+  "Policy": {
+   "type": "object"
+  },
+  "PropagateTags": {
+   "type": "boolean"
+  },
+  "SecurityPolicy": {
+   "type": "string"
+  },
+  "StageName": {
+   "anyOf": [
+    {
+     "type": "object"
+    },
+    {
+     "type": "string"
+    }
+   ]
+  },
+  "Tags": {
+   "type": "object"
+  },
+  "TracingEnabled": {
+   "type": "boolean"
+  },
+  "Variables": {
+   "additionalProperties": true,
+   "patternProperties": {
+    "^[a-zA-Z0-9]+$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RestApiId",
+  "/properties/RootResourceId"
+ ],
+ "required": [
+  "StageName"
+ ],
+ "typeName": "AWS::Serverless::Api"
+}

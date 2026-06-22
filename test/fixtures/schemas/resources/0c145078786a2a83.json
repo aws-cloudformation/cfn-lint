@@ -1,0 +1,638 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EventSourceArn",
+  "/properties/StartingPosition",
+  "/properties/StartingPositionTimestamp",
+  "/properties/SelfManagedEventSource"
+ ],
+ "definitions": {
+  "AmazonManagedKafkaEventSourceConfig": {
+   "additionalProperties": false,
+   "description": "Specific configuration settings for an Amazon Managed Streaming for Apache Kafka (Amazon MSK) event source.",
+   "properties": {
+    "ConsumerGroupId": {
+     "$ref": "#/definitions/ConsumerGroupId",
+     "description": "The identifier for the Kafka consumer group to join. The consumer group ID must be unique among all your Kafka event sources. After creating a Kafka event source mapping with the consumer group ID specified, you cannot update this value. For more information, see [Customizable consumer group ID](https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html#services-msk-consumer-group-id)."
+    },
+    "SchemaRegistryConfig": {
+     "$ref": "#/definitions/SchemaRegistryConfig",
+     "description": "Specific configuration settings for a Kafka schema registry."
+    }
+   },
+   "type": "object"
+  },
+  "ConsumerGroupId": {
+   "description": "The identifier for the Kafka Consumer Group to join.",
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9-\\/*:_+=.@-]*",
+   "type": "string"
+  },
+  "DestinationConfig": {
+   "additionalProperties": false,
+   "description": "A configuration object that specifies the destination of an event after Lambda processes it. For more information, see [Adding a destination](https://docs.aws.amazon.com/lambda/latest/dg/invocation-async-retain-records.html#invocation-async-destinations).",
+   "properties": {
+    "OnFailure": {
+     "$ref": "#/definitions/OnFailure",
+     "description": "The destination configuration for failed invocations."
+    }
+   },
+   "type": "object"
+  },
+  "DocumentDBEventSourceConfig": {
+   "additionalProperties": false,
+   "description": "Specific configuration settings for a DocumentDB event source.",
+   "properties": {
+    "CollectionName": {
+     "description": "The name of the collection to consume within the database. If you do not specify a collection, Lambda consumes all collections.",
+     "maxLength": 57,
+     "minLength": 1,
+     "pattern": "^(^(?!(system\\x2e)))(^[_a-zA-Z0-9])([^$]*)$",
+     "type": "string"
+    },
+    "DatabaseName": {
+     "description": "The name of the database to consume within the DocumentDB cluster.",
+     "maxLength": 63,
+     "minLength": 1,
+     "pattern": "^[^ /\\.$\\x22]*$",
+     "type": "string"
+    },
+    "FullDocument": {
+     "description": "Determines what DocumentDB sends to your event stream during document update operations. If set to UpdateLookup, DocumentDB sends a delta describing the changes, along with a copy of the entire document. Otherwise, DocumentDB sends only a partial document that contains the changes.",
+     "enum": [
+      "UpdateLookup",
+      "Default"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Endpoints": {
+   "additionalProperties": false,
+   "description": "The list of bootstrap servers for your Kafka brokers in the following format: ``\"KafkaBootstrapServers\": [\"abc.xyz.com:xxxx\",\"abc2.xyz.com:xxxx\"]``.",
+   "properties": {
+    "KafkaBootstrapServers": {
+     "description": "The list of bootstrap servers for your Kafka brokers in the following format: ``\"KafkaBootstrapServers\": [\"abc.xyz.com:xxxx\",\"abc2.xyz.com:xxxx\"]``.",
+     "items": {
+      "description": "The URL of a Kafka server.",
+      "maxLength": 300,
+      "minLength": 1,
+      "pattern": "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9]):[0-9]{1,5}",
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Filter": {
+   "additionalProperties": false,
+   "description": "A structure within a ``FilterCriteria`` object that defines an event filtering pattern.",
+   "properties": {
+    "Pattern": {
+     "description": "A filter pattern. For more information on the syntax of a filter pattern, see [Filter rule syntax](https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html#filtering-syntax).",
+     "maxLength": 4096,
+     "minLength": 0,
+     "pattern": ".*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FilterCriteria": {
+   "additionalProperties": false,
+   "description": "An object that contains the filters for an event source.",
+   "properties": {
+    "Filters": {
+     "description": "A list of filters.",
+     "items": {
+      "$ref": "#/definitions/Filter"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "LoggingConfig": {
+   "additionalProperties": false,
+   "description": "The function's Amazon CloudWatch Logs configuration settings.",
+   "properties": {
+    "SystemLogLevel": {
+     "description": "Set this property to filter the system logs for your function that Lambda sends to CloudWatch. Lambda only sends system logs at the selected level of detail and lower, where ``DEBUG`` is the highest level and ``WARN`` is the lowest.",
+     "enum": [
+      "DEBUG",
+      "INFO",
+      "WARN"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MaximumConcurrency": {
+   "description": "The maximum number of concurrent functions that an event source can invoke.",
+   "maximum": 1000,
+   "minimum": 2,
+   "type": "integer"
+  },
+  "MetricsConfig": {
+   "additionalProperties": false,
+   "description": "The metrics configuration for your event source. Use this configuration object to define which metrics you want your event source mapping to produce.",
+   "properties": {
+    "Metrics": {
+     "description": "The metrics you want your event source mapping to produce. Include ``EventCount`` to receive event source mapping metrics related to the number of events processed by your event source mapping. For more information about these metrics, see [Event source mapping metrics](https://docs.aws.amazon.com/lambda/latest/dg/monitoring-metrics-types.html#event-source-mapping-metrics).",
+     "items": {
+      "enum": [
+       "EventCount",
+       "ErrorCount",
+       "KafkaMetrics"
+      ],
+      "type": "string"
+     },
+     "maxItems": 3,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "OnFailure": {
+   "additionalProperties": false,
+   "description": "A destination for events that failed processing. For more information, see [Adding a destination](https://docs.aws.amazon.com/lambda/latest/dg/invocation-async-retain-records.html#invocation-async-destinations).",
+   "properties": {
+    "Destination": {
+     "description": "The Amazon Resource Name (ARN) of the destination resource.\n To retain records of unsuccessful [asynchronous invocations](https://docs.aws.amazon.com/lambda/latest/dg/invocation-async.html#invocation-async-destinations), you can configure an Amazon SNS topic, Amazon SQS queue, Amazon S3 bucket, Lambda function, or Amazon EventBridge event bus as the destination.\n  Amazon SNS destinations have a message size limit of 256 KB. If the combined size of the function request and response payload exceeds the limit, Lambda will drop the payload when sending ``OnFailure`` event to the destination. For details on this behavior, refer to [Retaining records of asynchronous invocations](https://docs.aws.amazon.com/lambda/latest/dg/invocation-async-retain-records.html).\n  To retain records of failed invocations from [Kinesis](https://docs.aws.amazon.com/lambda/latest/dg/with-kinesis.html), [DynamoDB](https://docs.aws.amazon.com/lambda/latest/dg/with-ddb.html), [self-managed Kafka](https://docs.aws.amazon.com/lambda/latest/dg/with-kafka.html#services-smaa-onfailure-destination) or [Amazon MSK](https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html#services-msk-onfailure-destination), you can configure an Amazon SNS topic, Amazon SQS queue, or Amazon S3 bucket as the destination.",
+     "maxLength": 1024,
+     "minLength": 12,
+     "pattern": "^$|kafka://([^.]([a-zA-Z0-9\\-_.]{0,248}))|arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:((eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ProvisionedPollerConfig": {
+   "additionalProperties": false,
+   "description": "The [provisioned mode](https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventsourcemapping.html#invocation-eventsourcemapping-provisioned-mode) configuration for the event source. Use Provisioned Mode to customize the minimum and maximum number of event pollers for your event source.",
+   "properties": {
+    "MaximumPollers": {
+     "description": "The maximum number of event pollers this event source can scale up to. For Amazon SQS events source mappings, default is 200, and minimum value allowed is 2. For Amazon MSK and self-managed Apache Kafka event source mappings, default is 200, and minimum value allowed is 1.",
+     "maximum": 2000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MinimumPollers": {
+     "description": "The minimum number of event pollers this event source can scale down to. For Amazon SQS events source mappings, default is 2, and minimum 2 required. For Amazon MSK and self-managed Apache Kafka event source mappings, default is 1.",
+     "maximum": 200,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "PollerGroupName": {
+     "description": "",
+     "maxLength": 128,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9-_]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ScalingConfig": {
+   "additionalProperties": false,
+   "description": "(Amazon SQS only) The scaling configuration for the event source. To remove the configuration, pass an empty value.",
+   "properties": {
+    "MaximumConcurrency": {
+     "$ref": "#/definitions/MaximumConcurrency",
+     "description": "Limits the number of concurrent instances that the SQS event source can invoke."
+    }
+   },
+   "type": "object"
+  },
+  "SchemaRegistryAccessConfig": {
+   "additionalProperties": false,
+   "description": "Specific access configuration settings that tell Lambda how to authenticate with your schema registry.\n If you're working with an GLU schema registry, don't provide authentication details in this object. Instead, ensure that your execution role has the required permissions for Lambda to access your cluster.\n If you're working with a Confluent schema registry, choose the authentication method in the ``Type`` field, and provide the ASMlong secret ARN in the ``URI`` field.",
+   "properties": {
+    "Type": {
+     "description": "The type of authentication Lambda uses to access your schema registry.",
+     "enum": [
+      "BASIC_AUTH",
+      "CLIENT_CERTIFICATE_TLS_AUTH",
+      "SERVER_ROOT_CA_CERTIFICATE"
+     ],
+     "type": "string"
+    },
+    "URI": {
+     "description": "The URI of the secret (Secrets Manager secret ARN) to authenticate with your schema registry.",
+     "maxLength": 10000,
+     "minLength": 1,
+     "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:((eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SchemaRegistryConfig": {
+   "additionalProperties": false,
+   "description": "Specific configuration settings for a Kafka schema registry.",
+   "properties": {
+    "AccessConfigs": {
+     "description": "An array of access configuration objects that tell Lambda how to authenticate with your schema registry.",
+     "items": {
+      "$ref": "#/definitions/SchemaRegistryAccessConfig"
+     },
+     "maxItems": 2,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "EventRecordFormat": {
+     "description": "The record format that Lambda delivers to your function after schema validation.\n  +  Choose ``JSON`` to have Lambda deliver the record to your function as a standard JSON object.\n  +  Choose ``SOURCE`` to have Lambda deliver the record to your function in its original source format. Lambda removes all schema metadata, such as the schema ID, before sending the record to your function.",
+     "enum": [
+      "JSON",
+      "SOURCE"
+     ],
+     "type": "string"
+    },
+    "SchemaRegistryURI": {
+     "description": "The URI for your schema registry. The correct URI format depends on the type of schema registry you're using.\n  +  For GLU schema registries, use the ARN of the registry.\n  +  For Confluent schema registries, use the URL of the registry.",
+     "maxLength": 10000,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9-/*:_+=.@-]*",
+     "type": "string"
+    },
+    "SchemaValidationConfigs": {
+     "description": "An array of schema validation configuration objects, which tell Lambda the message attributes you want to validate and filter using your schema registry.",
+     "items": {
+      "$ref": "#/definitions/SchemaValidationConfig"
+     },
+     "maxItems": 2,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "SchemaValidationConfig": {
+   "additionalProperties": false,
+   "description": "Specific schema validation configuration settings that tell Lambda the message attributes you want to validate and filter using your schema registry.",
+   "properties": {
+    "Attribute": {
+     "description": "The attributes you want your schema registry to validate and filter for. If you selected ``JSON`` as the ``EventRecordFormat``, Lambda also deserializes the selected message attributes.",
+     "enum": [
+      "KEY",
+      "VALUE"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SelfManagedEventSource": {
+   "additionalProperties": false,
+   "description": "The self-managed Apache Kafka cluster for your event source.",
+   "properties": {
+    "Endpoints": {
+     "$ref": "#/definitions/Endpoints",
+     "description": "The list of bootstrap servers for your Kafka brokers in the following format: ``\"KafkaBootstrapServers\": [\"abc.xyz.com:xxxx\",\"abc2.xyz.com:xxxx\"]``."
+    }
+   },
+   "type": "object"
+  },
+  "SelfManagedKafkaEventSourceConfig": {
+   "additionalProperties": false,
+   "description": "Specific configuration settings for a self-managed Apache Kafka event source.",
+   "properties": {
+    "ConsumerGroupId": {
+     "$ref": "#/definitions/ConsumerGroupId",
+     "description": "The identifier for the Kafka consumer group to join. The consumer group ID must be unique among all your Kafka event sources. After creating a Kafka event source mapping with the consumer group ID specified, you cannot update this value. For more information, see [Customizable consumer group ID](https://docs.aws.amazon.com/lambda/latest/dg/with-kafka-process.html#services-smaa-topic-add)."
+    },
+    "SchemaRegistryConfig": {
+     "$ref": "#/definitions/SchemaRegistryConfig",
+     "description": "Specific configuration settings for a Kafka schema registry."
+    }
+   },
+   "type": "object"
+  },
+  "SourceAccessConfiguration": {
+   "additionalProperties": false,
+   "description": "An array of the authentication protocol, VPC components, or virtual host to secure and define your event source.",
+   "properties": {
+    "Type": {
+     "description": "The type of authentication protocol, VPC components, or virtual host for your event source. For example: ``\"Type\":\"SASL_SCRAM_512_AUTH\"``.\n  +  ``BASIC_AUTH`` \u2013 (Amazon MQ) The ASMlong secret that stores your broker credentials.\n  +  ``BASIC_AUTH`` \u2013 (Self-managed Apache Kafka) The Secrets Manager ARN of your secret key used for SASL/PLAIN authentication of your Apache Kafka brokers.\n  +  ``VPC_SUBNET`` \u2013 (Self-managed Apache Kafka) The subnets associated with your VPC. Lambda connects to these subnets to fetch data from your self-managed Apache Kafka cluster.\n  +  ``VPC_SECURITY_GROUP`` \u2013 (Self-managed Apache Kafka) The VPC security group used to manage access to your self-managed Apache Kafka brokers.\n  +  ``SASL_SCRAM_256_AUTH`` \u2013 (Self-managed Apache Kafka) The Secrets Manager ARN of your secret key used for SASL SCRAM-256 authentication of your self-managed Apache Kafka brokers.\n  +  ``SASL_SCRAM_512_AUTH`` \u2013 (Amazon MSK, Self-managed Apache Kafka) The Secrets Manager ARN of your secret key used for SASL SCRAM-512 authentication of your self-managed Apache Kafka brokers.\n  +  ``VIRTUAL_HOST`` \u2013- (RabbitMQ) The name of the virtual host in your RabbitMQ broker. Lambda uses this RabbitMQ host as the event source. This property cannot be specified in an UpdateEventSourceMapping API call.\n  +  ``CLIENT_CERTIFICATE_TLS_AUTH`` \u2013 (Amazon MSK, self-managed Apache Kafka) The Secrets Manager ARN of your secret key containing the certificate chain (X.509 PEM), private key (PKCS#8 PEM), and private key password (optional) used for mutual TLS authentication of your MSK/Apache Kafka brokers.\n  +  ``SERVER_ROOT_CA_CERTIFICATE`` \u2013 (Self-managed Apache Kafka) The Secrets Manager ARN of your secret key containing the root CA certificate (X.509 PEM) used for TLS encryption of your Apache Kafka brokers.",
+     "enum": [
+      "BASIC_AUTH",
+      "VPC_SUBNET",
+      "VPC_SECURITY_GROUP",
+      "SASL_SCRAM_512_AUTH",
+      "SASL_SCRAM_256_AUTH",
+      "VIRTUAL_HOST",
+      "CLIENT_CERTIFICATE_TLS_AUTH",
+      "SERVER_ROOT_CA_CERTIFICATE"
+     ],
+     "type": "string"
+    },
+    "URI": {
+     "description": "The value for your chosen configuration in ``Type``. For example: ``\"URI\": \"arn:aws:secretsmanager:us-east-1:01234567890:secret:MyBrokerSecretName\"``.",
+     "maxLength": 200,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9-\\/*:_+=.@-]*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A [tag](https://docs.aws.amazon.com/lambda/latest/dg/tagging.html) to apply to the event source mapping.",
+   "properties": {
+    "Key": {
+     "description": "The key for this tag.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for this tag.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The ``AWS::Lambda::EventSourceMapping`` resource creates a mapping between an event source and an LAMlong function. LAM reads items from the event source and triggers the function.\n For details about each event source type, see the following topics. In particular, each of the topics describes the required and optional parameters for the specific event source. \n  +   [Configuring a Dynamo DB stream as an event source](https://docs.aws.amazon.com/lambda/latest/dg/with-ddb.html#services-dynamodb-eventsourcemapping) \n  +   [Configuring a Kinesis stream as an event source](https://docs.aws.amazon.com/lambda/latest/dg/with-kinesis.html#services-kinesis-eventsourcemapping) \n  +   [Configuring an SQS queue as an event source](https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#events-sqs-eventsource) \n  +   [Configuring an MQ broker as an event source](https://docs.aws.amazon.com/lambda/latest/dg/with-mq.html#services-mq-eventsourcemapping) \n  +   [Configuring MSK as an event source](https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html) \n  +   [Configuring Self-Managed Apache Kafka as an event source](https://docs.aws.amazon.com/lambda/latest/dg/kafka-smaa.html) \n  +   [Configuring Amazon DocumentDB as an event source](https://docs.aws.amazon.com/lambda/latest/dg/with-documentdb.html)",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lambda:CreateEventSourceMapping",
+    "lambda:GetEventSourceMapping",
+    "lambda:TagResource",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lambda:DeleteEventSourceMapping",
+    "lambda:GetEventSourceMapping",
+    "kms:Decrypt"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "lambda:ListEventSourceMappings"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lambda:GetEventSourceMapping",
+    "lambda:ListTags",
+    "kms:Decrypt"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "lambda:UpdateEventSourceMapping",
+    "lambda:GetEventSourceMapping",
+    "lambda:TagResource",
+    "lambda:UntagResource",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AmazonManagedKafkaEventSourceConfig": {
+   "$ref": "#/definitions/AmazonManagedKafkaEventSourceConfig",
+   "description": "Specific configuration settings for an Amazon Managed Streaming for Apache Kafka (Amazon MSK) event source."
+  },
+  "BatchSize": {
+   "description": "The maximum number of records in each batch that Lambda pulls from your stream or queue and sends to your function. Lambda passes all of the records in the batch to the function in a single call, up to the payload limit for synchronous invocation (6 MB).\n  +  *Amazon Kinesis* \u2013 Default 100. Max 10,000.\n  +  *Amazon DynamoDB Streams* \u2013 Default 100. Max 10,000.\n  +  *Amazon Simple Queue Service* \u2013 Default 10. For standard queues the max is 10,000. For FIFO queues the max is 10.\n  +  *Amazon Managed Streaming for Apache Kafka* \u2013 Default 100. Max 10,000.\n  +  *Self-managed Apache Kafka* \u2013 Default 100. Max 10,000.\n  +  *Amazon MQ (ActiveMQ and RabbitMQ)* \u2013 Default 100. Max 10,000.\n  +  *DocumentDB* \u2013 Default 100. Max 10,000.",
+   "maximum": 10000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "BisectBatchOnFunctionError": {
+   "description": "(Kinesis and DynamoDB Streams only) If the function returns an error, split the batch in two and retry. The default value is false.\n  When using ``BisectBatchOnFunctionError``, check the ``BatchSize`` parameter in the ``OnFailure`` destination message's metadata. The ``BatchSize`` could be greater than 1 since LAM consolidates failed messages metadata when writing to the ``OnFailure`` destination.",
+   "type": "boolean"
+  },
+  "DestinationConfig": {
+   "$ref": "#/definitions/DestinationConfig",
+   "description": "(Kinesis, DynamoDB Streams, Amazon MSK, and self-managed Apache Kafka event sources only) A configuration object that specifies the destination of an event after Lambda processes it."
+  },
+  "DocumentDBEventSourceConfig": {
+   "$ref": "#/definitions/DocumentDBEventSourceConfig",
+   "description": "Specific configuration settings for a DocumentDB event source."
+  },
+  "Enabled": {
+   "description": "When true, the event source mapping is active. When false, Lambda pauses polling and invocation.\n Default: True",
+   "type": "boolean"
+  },
+  "EventSourceArn": {
+   "description": "The Amazon Resource Name (ARN) of the event source.\n  +  *Amazon Kinesis* \u2013 The ARN of the data stream or a stream consumer.\n  +  *Amazon DynamoDB Streams* \u2013 The ARN of the stream.\n  +  *Amazon Simple Queue Service* \u2013 The ARN of the queue.\n  +  *Amazon Managed Streaming for Apache Kafka* \u2013 The ARN of the cluster or the ARN of the VPC connection (for [cross-account event source mappings](https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html#msk-multi-vpc)).\n  +  *Amazon MQ* \u2013 The ARN of the broker.\n  +  *Amazon DocumentDB* \u2013 The ARN of the DocumentDB change stream.",
+   "maxLength": 1024,
+   "minLength": 12,
+   "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:((eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+   "type": "string"
+  },
+  "EventSourceMappingArn": {
+   "description": "",
+   "maxLength": 120,
+   "minLength": 85,
+   "pattern": "arn:(aws[a-zA-Z-]*)?:lambda:(eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:\\d{12}:event-source-mapping:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+   "type": "string"
+  },
+  "FilterCriteria": {
+   "$ref": "#/definitions/FilterCriteria",
+   "description": "An object that defines the filter criteria that determine whether Lambda should process an event. For more information, see [Lambda event filtering](https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html)."
+  },
+  "FunctionName": {
+   "description": "The name or ARN of the Lambda function.\n  **Name formats**\n +  *Function name* \u2013 ``MyFunction``.\n  +  *Function ARN* \u2013 ``arn:aws:lambda:us-west-2:123456789012:function:MyFunction``.\n  +  *Version or Alias ARN* \u2013 ``arn:aws:lambda:us-west-2:123456789012:function:MyFunction:PROD``.\n  +  *Partial ARN* \u2013 ``123456789012:function:MyFunction``.\n  \n The length constraint applies only to the full ARN. If you specify only the function name, it's limited to 64 characters in length.",
+   "maxLength": 140,
+   "minLength": 1,
+   "pattern": "(arn:(aws[a-zA-Z-]*)?:lambda:)?((eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST(\\.PUBLISHED)?|[a-zA-Z0-9-_]+))?",
+   "type": "string"
+  },
+  "FunctionResponseTypes": {
+   "description": "(Kinesis, DynamoDB Streams, and SQS) A list of current response type enums applied to the event source mapping.\n Valid Values: ``ReportBatchItemFailures``",
+   "items": {
+    "enum": [
+     "ReportBatchItemFailures"
+    ],
+    "type": "string"
+   },
+   "maxItems": 1,
+   "maxLength": 1,
+   "minItems": 0,
+   "minLength": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Id": {
+   "description": "",
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "description": "The ARN of the KMSlong (KMS) customer managed key that Lambda uses to encrypt your function's [filter criteria](https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html#filtering-basics).",
+   "format": "AWS::KMS::Key.Arn",
+   "maxLength": 2048,
+   "minLength": 12,
+   "pattern": "(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()",
+   "type": "string"
+  },
+  "LoggingConfig": {
+   "$ref": "#/definitions/LoggingConfig",
+   "description": "The function's Amazon CloudWatch Logs configuration settings."
+  },
+  "MaximumBatchingWindowInSeconds": {
+   "description": "The maximum amount of time, in seconds, that Lambda spends gathering records before invoking the function.\n *Default (, , event sources)*: 0\n *Default (, Kafka, , event sources)*: 500 ms\n *Related setting:* For SQS event sources, when you set ``BatchSize`` to a value greater than 10, you must set ``MaximumBatchingWindowInSeconds`` to at least 1.",
+   "maximum": 300,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "MaximumRecordAgeInSeconds": {
+   "description": "(Kinesis and DynamoDB Streams only) Discard records older than the specified age. The default value is -1, which sets the maximum age to infinite. When the value is set to infinite, Lambda never discards old records.\n  The minimum valid value for maximum record age is 60s. Although values less than 60 and greater than -1 fall within the parameter's absolute range, they are not allowed",
+   "maximum": 604800,
+   "minimum": -1,
+   "type": "integer"
+  },
+  "MaximumRetryAttempts": {
+   "description": "(Kinesis and DynamoDB Streams only) Discard records after the specified number of retries. The default value is -1, which sets the maximum number of retries to infinite. When MaximumRetryAttempts is infinite, Lambda retries failed records until the record expires in the event source.",
+   "maximum": 10000,
+   "minimum": -1,
+   "type": "integer"
+  },
+  "MetricsConfig": {
+   "$ref": "#/definitions/MetricsConfig",
+   "description": "The metrics configuration for your event source. For more information, see [Event source mapping metrics](https://docs.aws.amazon.com/lambda/latest/dg/monitoring-metrics-types.html#event-source-mapping-metrics)."
+  },
+  "ParallelizationFactor": {
+   "description": "(Kinesis and DynamoDB Streams only) The number of batches to process concurrently from each shard. The default value is 1.",
+   "maximum": 10,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ProvisionedPollerConfig": {
+   "$ref": "#/definitions/ProvisionedPollerConfig",
+   "description": "(Amazon SQS, Amazon MSK, and self-managed Apache Kafka only) The provisioned mode configuration for the event source. For more information, see [provisioned mode](https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventsourcemapping.html#invocation-eventsourcemapping-provisioned-mode)."
+  },
+  "Queues": {
+   "description": "(Amazon MQ) The name of the Amazon MQ broker destination queue to consume.",
+   "items": {
+    "maxLength": 1000,
+    "minLength": 1,
+    "pattern": "[\\s\\S]*",
+    "type": "string"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ScalingConfig": {
+   "$ref": "#/definitions/ScalingConfig",
+   "description": "This property is for Amazon SQS event sources only. You cannot use ``ProvisionedPollerConfig`` while using ``ScalingConfig``. These options are mutually exclusive. To remove the scaling configuration, pass an empty value."
+  },
+  "SelfManagedEventSource": {
+   "$ref": "#/definitions/SelfManagedEventSource",
+   "description": "The self-managed Apache Kafka cluster for your event source."
+  },
+  "SelfManagedKafkaEventSourceConfig": {
+   "$ref": "#/definitions/SelfManagedKafkaEventSourceConfig",
+   "description": "Specific configuration settings for a self-managed Apache Kafka event source."
+  },
+  "SourceAccessConfigurations": {
+   "description": "An array of the authentication protocol, VPC components, or virtual host to secure and define your event source.",
+   "items": {
+    "$ref": "#/definitions/SourceAccessConfiguration"
+   },
+   "maxItems": 22,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "StartingPosition": {
+   "description": "The position in a stream from which to start reading. Required for Amazon Kinesis and Amazon DynamoDB.\n  +  *LATEST* - Read only new records.\n  +  *TRIM_HORIZON* - Process all available records.\n  +  *AT_TIMESTAMP* - Specify a time from which to start reading records.",
+   "maxLength": 12,
+   "minLength": 6,
+   "pattern": "(LATEST|TRIM_HORIZON|AT_TIMESTAMP)+",
+   "type": "string"
+  },
+  "StartingPositionTimestamp": {
+   "description": "With ``StartingPosition`` set to ``AT_TIMESTAMP``, the time from which to start reading, in Unix time seconds. ``StartingPositionTimestamp`` cannot be in the future.",
+   "type": "number"
+  },
+  "Tags": {
+   "description": "A list of tags to add to the event source mapping.\n  You must have the ``lambda:TagResource``, ``lambda:UntagResource``, and ``lambda:ListTags`` permissions for your [principal](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_terms-and-concepts.html) to manage the CFN stack. If you don't have these permissions, there might be unexpected behavior with stack-level tags propagating to the resource during resource creation and update.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Topics": {
+   "description": "The name of the Kafka topic.",
+   "items": {
+    "maxLength": 249,
+    "minLength": 1,
+    "pattern": "^[^.]([a-zA-Z0-9\\-_.]+)",
+    "type": "string"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TumblingWindowInSeconds": {
+   "description": "(Kinesis and DynamoDB Streams only) The duration in seconds of a processing window for DynamoDB and Kinesis Streams event sources. A value of 0 seconds indicates no tumbling window.",
+   "maximum": 900,
+   "minimum": 0,
+   "type": "integer"
+  }
+ },
+ "propertyTransform": {
+  "/properties/FunctionName": "$split(FunctionName, \":\")[-1] $OR FunctionName $OR $join([\"((arn:.*:lambda:.*:[0-9]{12}:function)|([0-9]{12}:function)):\", $split(FunctionName, \":\")[-1]])",
+  "/properties/StartingPositionTimestamp": "StartingPositionTimestamp * 1000"
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/EventSourceMappingArn"
+ ],
+ "required": [
+  "FunctionName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "lambda:ListTags",
+   "lambda:TagResource",
+   "lambda:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Lambda::EventSourceMapping"
+}

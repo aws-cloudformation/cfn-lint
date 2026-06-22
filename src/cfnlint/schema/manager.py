@@ -36,11 +36,15 @@ _MODULE_SCHEMA = Schema(
 
 
 class ProviderSchemaManager:
-    def __init__(self) -> None:
-        self._providers_dir = Path(
+    def __init__(
+        self,
+        providers_dir: Path | None = None,
+        resources_dir: Path | None = None,
+    ) -> None:
+        self._providers_dir = providers_dir or Path(
             os.path.dirname(__file__), "..", "data", "schemas", "providers"
         )
-        self._resources_dir = Path(
+        self._resources_dir = resources_dir or Path(
             os.path.dirname(__file__), "..", "data", "schemas", "resources"
         )
         self._registry_schemas: dict[str, Schema] = {}
