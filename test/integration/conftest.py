@@ -20,12 +20,12 @@ _has_full_schemas = _default_providers_dir.exists() and any(
 )
 
 
-def pytest_collection_modifyitems(config, items):
-    if _has_full_schemas:
-        return
-    skip = pytest.mark.skip(reason="Full schemas not available (run cfn-lint -u)")
-    for item in items:
-        item.add_marker(skip)
+def pytest_configure(config):
+    if not _has_full_schemas:
+        raise pytest.UsageError(
+            "Full schemas not available. Run 'cfn-lint -u' before running "
+            "integration tests."
+        )
 
 
 FROZEN_DATE = datetime(2026, 1, 1)
