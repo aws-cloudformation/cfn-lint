@@ -1,0 +1,94 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "Specifies a tag. For more information, see [Resource tags](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html).",
+   "properties": {
+    "Key": {
+     "description": "The tag key.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The tag value.",
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Allocates an internet gateway for use with a VPC. After creating the Internet gateway, you then attach it to a VPC.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateInternetGateway",
+    "ec2:CreateTags",
+    "ec2:DescribeInternetGateways"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteInternetGateway",
+    "ec2:DescribeInternetGateways"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeInternetGateways"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeInternetGateways"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DeleteTags",
+    "ec2:CreateTags",
+    "ec2:DescribeInternetGateways"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InternetGatewayId"
+ ],
+ "properties": {
+  "InternetGatewayId": {
+   "description": "",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Any tags to assign to the internet gateway.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/InternetGatewayId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "ec2:CreateTags",
+   "ec2:DeleteTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::InternetGateway"
+}

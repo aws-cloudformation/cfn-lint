@@ -6,9 +6,27 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 from datetime import datetime
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+
+_default_providers_dir = Path(__file__).parent.parent.parent / (
+    "src/cfnlint/data/schemas/providers"
+)
+
+_has_full_schemas = _default_providers_dir.exists() and any(
+    _default_providers_dir.glob("*.json")
+)
+
+
+def pytest_configure(config):
+    if not _has_full_schemas:
+        raise pytest.UsageError(
+            "Full schemas not available. Run 'cfn-lint -u' before running "
+            "integration tests."
+        )
+
 
 FROZEN_DATE = datetime(2026, 1, 1)
 

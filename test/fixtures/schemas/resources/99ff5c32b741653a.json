@@ -1,0 +1,614 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ApiKey": {
+   "additionalProperties": false,
+   "properties": {
+    "ApiKeyId": {
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "ExpiresOn": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "Auth": {
+   "additionalProperties": false,
+   "properties": {
+    "Additional": {
+     "items": {
+      "$ref": "#/definitions/Authorizer"
+     },
+     "type": "array"
+    },
+    "LambdaAuthorizer": {
+     "$ref": "#/definitions/LambdaAuthorizerConfig"
+    },
+    "OpenIDConnect": {
+     "$ref": "#/definitions/OpenIDConnectConfig"
+    },
+    "Type": {
+     "enum": [
+      "AWS_IAM",
+      "API_KEY",
+      "AWS_LAMBDA",
+      "OPENID_CONNECT",
+      "AMAZON_COGNITO_USER_POOLS"
+     ],
+     "type": "string"
+    },
+    "UserPool": {
+     "$ref": "#/definitions/UserPoolConfig"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Authorizer": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaAuthorizer": {
+     "$ref": "#/definitions/LambdaAuthorizerConfig"
+    },
+    "OpenIDConnect": {
+     "$ref": "#/definitions/OpenIDConnectConfig"
+    },
+    "Type": {
+     "enum": [
+      "AWS_IAM",
+      "API_KEY",
+      "AWS_LAMBDA",
+      "OPENID_CONNECT",
+      "AMAZON_COGNITO_USER_POOLS"
+     ],
+     "type": "string"
+    },
+    "UserPool": {
+     "$ref": "#/definitions/UserPoolConfig"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Cache": {
+   "additionalProperties": false,
+   "properties": {
+    "ApiCachingBehavior": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "AtRestEncryptionEnabled": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "TransitEncryptionEnabled": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "Ttl": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "Type": {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   },
+   "required": [
+    "ApiCachingBehavior",
+    "Ttl",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Caching": {
+   "additionalProperties": false,
+   "properties": {
+    "CachingKeys": {
+     "items": {
+      "$ref": "#/definitions/PassThroughProp"
+     },
+     "type": "array"
+    },
+    "Ttl": {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   },
+   "required": [
+    "Ttl"
+   ],
+   "type": "object"
+  },
+  "DataSources": {
+   "additionalProperties": false,
+   "properties": {
+    "DynamoDb": {
+     "additionalProperties": {
+      "$ref": "#/definitions/DynamoDBDataSource"
+     },
+     "type": "object"
+    },
+    "Lambda": {
+     "additionalProperties": {
+      "$ref": "#/definitions/LambdaDataSource"
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "DeltaSync": {
+   "additionalProperties": false,
+   "properties": {
+    "BaseTableTTL": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "DeltaSyncTableName": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "DeltaSyncTableTTL": {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   },
+   "required": [
+    "BaseTableTTL",
+    "DeltaSyncTableName",
+    "DeltaSyncTableTTL"
+   ],
+   "type": "object"
+  },
+  "DomainName": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateArn": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "Description": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "DomainName": {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   },
+   "required": [
+    "CertificateArn",
+    "DomainName"
+   ],
+   "type": "object"
+  },
+  "DynamoDBDataSource": {
+   "additionalProperties": false,
+   "properties": {
+    "DeltaSync": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/DeltaSync"
+      }
+     ]
+    },
+    "Description": {
+     "description": "The description of the data source.",
+     "type": "string"
+    },
+    "Name": {
+     "description": "Friendly name for you to identify your AppSync data source after creation.",
+     "type": "string"
+    },
+    "Permissions": {
+     "items": {
+      "enum": [
+       "Read",
+       "Write"
+      ],
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Region": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "ServiceRoleArn": {
+     "description": "The AWS Identity and Access Management service role ARN for the data source. The system assumes this role when accessing the data source.",
+     "type": "string"
+    },
+    "TableArn": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "TableName": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "UseCallerCredentials": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "Versioned": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    }
+   },
+   "required": [
+    "TableName"
+   ],
+   "type": "object"
+  },
+  "Function": {
+   "additionalProperties": false,
+   "properties": {
+    "CodeUri": {
+     "description": "The Amazon S3 endpoint (where the code is located??).",
+     "type": "string"
+    },
+    "DataSource": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "Description": {
+     "description": "The function description.",
+     "type": "string"
+    },
+    "Id": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "InlineCode": {
+     "description": "The resolver code that contains the request and response functions. When code is used, the runtime is required. The runtime value must be APPSYNC_JS.",
+     "type": "string"
+    },
+    "MaxBatchSize": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Runtime": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/Runtime"
+      }
+     ]
+    },
+    "Sync": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/Sync"
+      }
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "LambdaAuthorizerConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizerResultTtlInSeconds": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "AuthorizerUri": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "IdentityValidationExpression": {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   },
+   "required": [
+    "AuthorizerUri"
+   ],
+   "type": "object"
+  },
+  "LambdaConflictHandlerConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaConflictHandlerArn": {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   },
+   "required": [
+    "LambdaConflictHandlerArn"
+   ],
+   "type": "object"
+  },
+  "LambdaDataSource": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "description": "The description of the data source.",
+     "type": "string"
+    },
+    "FunctionArn": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "Name": {
+     "description": "Friendly name for you to identify your AppSync data source after creation.",
+     "type": "string"
+    },
+    "ServiceRoleArn": {
+     "description": "The AWS Identity and Access Management service role ARN for the data source. The system assumes this role when accessing the data source.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "FunctionArn"
+   ],
+   "type": "object"
+  },
+  "Logging": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogsRoleArn": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "ExcludeVerboseContent": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "FieldLogLevel": {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   },
+   "type": "object"
+  },
+  "OpenIDConnectConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthTTL": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "ClientId": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "IatTTL": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "Issuer": {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   },
+   "type": "object"
+  },
+  "PassThroughProp": {},
+  "Resolver": {
+   "additionalProperties": false,
+   "properties": {
+    "Caching": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/Caching"
+      }
+     ]
+    },
+    "CodeUri": {
+     "description": "The Amazon S3 endpoint.",
+     "type": "string"
+    },
+    "FieldName": {
+     "type": "string"
+    },
+    "InlineCode": {
+     "description": "The ``resolver`` code that contains the request and response functions. When code is used, the ``runtime`` is required. The runtime value must be ``APPSYNC_JS``.",
+     "type": "string"
+    },
+    "MaxBatchSize": {
+     "description": "The maximum number of resolver request inputs that will be sent to a single LAMlong function in a ``BatchInvoke`` operation.",
+     "type": "integer"
+    },
+    "Pipeline": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Runtime": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/Runtime"
+      }
+     ]
+    },
+    "Sync": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/Sync"
+      }
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "Runtime": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "Version": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Name",
+    "Version"
+   ],
+   "type": "object"
+  },
+  "Sync": {
+   "additionalProperties": false,
+   "properties": {
+    "ConflictDetection": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "ConflictHandler": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "LambdaConflictHandlerConfig": {
+     "$ref": "#/definitions/LambdaConflictHandlerConfig"
+    }
+   },
+   "required": [
+    "ConflictDetection"
+   ],
+   "type": "object"
+  },
+  "UserPoolConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AppIdClientRegex": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "AwsRegion": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "DefaultAction": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "UserPoolId": {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   },
+   "required": [
+    "UserPoolId"
+   ],
+   "type": "object"
+  }
+ },
+ "properties": {
+  "ApiKeys": {
+   "additionalProperties": {
+    "$ref": "#/definitions/ApiKey"
+   },
+   "type": "object"
+  },
+  "Auth": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/Auth"
+    }
+   ]
+  },
+  "Cache": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/Cache"
+    }
+   ]
+  },
+  "DataSources": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/DataSources"
+    }
+   ]
+  },
+  "DomainName": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/DomainName"
+    }
+   ]
+  },
+  "Functions": {
+   "additionalProperties": {
+    "$ref": "#/definitions/Function"
+   },
+   "type": "object"
+  },
+  "IntrospectionConfig": {
+   "$ref": "#/definitions/PassThroughProp"
+  },
+  "Logging": {
+   "anyOf": [
+    {
+     "$ref": "#/definitions/Logging"
+    },
+    {
+     "type": "boolean"
+    }
+   ]
+  },
+  "Name": {
+   "description": "The API name",
+   "type": "string"
+  },
+  "OwnerContact": {
+   "$ref": "#/definitions/PassThroughProp"
+  },
+  "QueryDepthLimit": {
+   "$ref": "#/definitions/PassThroughProp"
+  },
+  "ResolverCountLimit": {
+   "$ref": "#/definitions/PassThroughProp"
+  },
+  "Resolvers": {
+   "additionalProperties": {
+    "additionalProperties": {
+     "$ref": "#/definitions/Resolver"
+    },
+    "type": "object"
+   },
+   "type": "object"
+  },
+  "SchemaInline": {
+   "type": "string"
+  },
+  "SchemaUri": {
+   "type": "string"
+  },
+  "Tags": {
+   "type": "object"
+  },
+  "Visibility": {
+   "$ref": "#/definitions/PassThroughProp"
+  },
+  "XrayEnabled": {
+   "type": "boolean"
+  }
+ },
+ "required": [
+  "Auth"
+ ],
+ "typeName": "AWS::Serverless::GraphQLApi"
+}

@@ -1,0 +1,597 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/AuthToken",
+  "/properties/NodeGroupConfiguration"
+ ],
+ "createOnlyProperties": [
+  "/properties/AtRestEncryptionEnabled",
+  "/properties/CacheSubnetGroupName",
+  "/properties/DataTieringEnabled",
+  "/properties/GlobalReplicationGroupId",
+  "/properties/KmsKeyId",
+  "/properties/NetworkType",
+  "/properties/Port",
+  "/properties/PreferredCacheClusterAZs",
+  "/properties/ReplicationGroupId",
+  "/properties/SnapshotArns",
+  "/properties/SnapshotName"
+ ],
+ "definitions": {
+  "CloudWatchLogsDestinationDetails": {
+   "additionalProperties": false,
+   "description": "The configuration details of the CloudWatch Logs destination. Note that this field is marked as required but only if CloudWatch Logs was chosen as the destination.",
+   "properties": {
+    "LogGroup": {
+     "description": "The name of the CloudWatch Logs log group.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "LogGroup"
+   ],
+   "type": "object"
+  },
+  "DestinationDetails": {
+   "additionalProperties": false,
+   "description": "Configuration details of either a CloudWatch Logs destination or Kinesis Data Firehose destination.",
+   "properties": {
+    "CloudWatchLogsDetails": {
+     "$ref": "#/definitions/CloudWatchLogsDestinationDetails"
+    },
+    "KinesisFirehoseDetails": {
+     "$ref": "#/definitions/KinesisFirehoseDestinationDetails"
+    }
+   },
+   "type": "object"
+  },
+  "Endpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "description": "The DNS hostname of the cache node.",
+     "type": "string"
+    },
+    "Port": {
+     "description": "The port number that the cache engine is listening on.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "KinesisFirehoseDestinationDetails": {
+   "additionalProperties": false,
+   "description": "The configuration details of the Kinesis Data Firehose destination. Note that this field is marked as required but only if Kinesis Data Firehose was chosen as the destination.",
+   "properties": {
+    "DeliveryStream": {
+     "description": "The name of the Kinesis Data Firehose delivery stream.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "DeliveryStream"
+   ],
+   "type": "object"
+  },
+  "LogDeliveryConfigurationRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationDetails": {
+     "$ref": "#/definitions/DestinationDetails"
+    },
+    "DestinationType": {
+     "description": "Specify either CloudWatch Logs or Kinesis Data Firehose as the destination type. Valid values are either cloudwatch-logs or kinesis-firehose.",
+     "enumCaseInsensitive": [
+      "cloudwatch-logs",
+      "kinesis-firehose"
+     ],
+     "type": "string"
+    },
+    "LogFormat": {
+     "description": "Valid values are either json or text.",
+     "enumCaseInsensitive": [
+      "json",
+      "text"
+     ],
+     "type": "string"
+    },
+    "LogType": {
+     "description": "Valid value is either slow-log, which refers to slow-log or engine-log.",
+     "enumCaseInsensitive": [
+      "engine-log",
+      "slow-log"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "DestinationDetails",
+    "DestinationType",
+    "LogFormat",
+    "LogType"
+   ],
+   "type": "object"
+  },
+  "NodeGroupConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "NodeGroupId": {
+     "description": "Either the ElastiCache for Redis supplied 4-digit id or a user supplied id for the node group these configuration values apply to.",
+     "maxLength": 4,
+     "minLength": 1,
+     "pattern": "^\\d+$",
+     "type": "string"
+    },
+    "PrimaryAvailabilityZone": {
+     "description": "The Availability Zone where the primary node of this node group (shard) is launched.",
+     "type": "string"
+    },
+    "ReplicaAvailabilityZones": {
+     "description": "A list of Availability Zones to be used for the read replicas. The number of Availability Zones in this list must match the value of ReplicaCount or ReplicasPerNodeGroup if not specified.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ReplicaCount": {
+     "description": "The number of read replica nodes in this node group (shard).",
+     "type": "integer"
+    },
+    "Slots": {
+     "description": "A string of comma-separated values where the first set of values are the slot numbers (zero based), and the second set of values are the keyspaces for each slot. The following example specifies three slots (numbered 0, 1, and 2): 0,1,2,0-4999,5000-9999,10000-16,383.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/CacheSecurityGroupNames"
+ ],
+ "description": "Resource type definition for AWS::ElastiCache::ReplicationGroup",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "elasticache:CreateReplicationGroup",
+    "elasticache:DescribeReplicationGroups",
+    "elasticache:ModifyReplicationGroup",
+    "elasticache:AddTagsToResource",
+    "logs:CreateLogStream",
+    "logs:PutLogEvents",
+    "logs:CreateLogDelivery",
+    "logs:UpdateLogDelivery",
+    "logs:DeleteLogDelivery",
+    "logs:GetLogDelivery",
+    "logs:ListLogDeliveries",
+    "firehose:PutRecord",
+    "firehose:PutRecordBatch",
+    "firehose:TagDeliveryStream",
+    "iam:CreateServiceLinkedRole",
+    "kms:Decrypt",
+    "kms:Encrypt",
+    "kms:GenerateDataKey",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "s3:GetObject"
+   ],
+   "timeoutInMinutes": 300
+  },
+  "delete": {
+   "permissions": [
+    "elasticache:DeleteReplicationGroup",
+    "elasticache:DescribeReplicationGroups",
+    "elasticache:CreateSnapshot"
+   ],
+   "timeoutInMinutes": 300
+  },
+  "list": {
+   "permissions": [
+    "elasticache:DescribeReplicationGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "elasticache:DescribeReplicationGroups",
+    "elasticache:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "elasticache:ModifyReplicationGroup",
+    "elasticache:ModifyReplicationGroupShardConfiguration",
+    "elasticache:IncreaseReplicaCount",
+    "elasticache:DecreaseReplicaCount",
+    "elasticache:DescribeReplicationGroups",
+    "elasticache:ListTagsForResource",
+    "elasticache:AddTagsToResource",
+    "elasticache:RemoveTagsFromResource",
+    "elasticache:CreateCacheCluster",
+    "elasticache:DeleteCacheCluster",
+    "elasticache:DescribeCacheClusters",
+    "logs:CreateLogStream",
+    "logs:PutLogEvents",
+    "logs:CreateLogDelivery",
+    "logs:UpdateLogDelivery",
+    "logs:DeleteLogDelivery",
+    "logs:GetLogDelivery",
+    "logs:ListLogDeliveries",
+    "firehose:PutRecord",
+    "firehose:PutRecordBatch",
+    "s3:GetObject",
+    "firehose:TagDeliveryStream",
+    "kms:Decrypt",
+    "kms:Encrypt",
+    "kms:GenerateDataKey",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "iam:CreateServiceLinkedRole"
+   ],
+   "timeoutInMinutes": 1440
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ReplicationGroupId"
+ ],
+ "properties": {
+  "AtRestEncryptionEnabled": {
+   "default": false,
+   "description": "A flag that enables encryption at rest when set to true.AtRestEncryptionEnabled after the replication group is created. To enable encryption at rest on a replication group you must set AtRestEncryptionEnabled to true when you create the replication group.",
+   "type": "boolean"
+  },
+  "AuthToken": {
+   "description": "Reserved parameter. The password used to access a password protected server.AuthToken can be specified only on replication groups where TransitEncryptionEnabled is true. For more information.",
+   "type": "string"
+  },
+  "AutoMinorVersionUpgrade": {
+   "description": "This parameter is currently disabled.",
+   "type": "boolean"
+  },
+  "AutomaticFailoverEnabled": {
+   "default": false,
+   "description": "Specifies whether a read-only replica is automatically promoted to read/write primary if the existing primary fails. AutomaticFailoverEnabled must be enabled for Redis (cluster mode enabled) replication groups.",
+   "type": "boolean"
+  },
+  "CacheNodeType": {
+   "description": "The compute and memory capacity of the nodes in the node group (shard).",
+   "type": "string"
+  },
+  "CacheParameterGroupName": {
+   "description": "The name of the parameter group to associate with this replication group. If this argument is omitted, the default cache parameter group for the specified engine is used.",
+   "type": "string"
+  },
+  "CacheSecurityGroupNames": {
+   "description": "A list of cache security group names to associate with this replication group.",
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CacheSubnetGroupName": {
+   "description": "The name of the cache subnet group to be used for the replication group.",
+   "type": "string"
+  },
+  "ClusterMode": {
+   "description": "Enabled or Disabled. To modify cluster mode from Disabled to Enabled, you must first set the cluster mode to Compatible. Compatible mode allows your Redis OSS clients to connect using both cluster mode enabled and cluster mode disabled. After you migrate all Redis OSS clients to use cluster mode enabled, you can then complete cluster mode configuration and set the cluster mode to Enabled. For more information, see Modify cluster mode.",
+   "enumCaseInsensitive": [
+    "compatible",
+    "disabled",
+    "enabled"
+   ],
+   "type": "string"
+  },
+  "ConfigurationEndPoint": {
+   "$ref": "#/definitions/Endpoint",
+   "description": "The configuration details of the replication group."
+  },
+  "DataTieringEnabled": {
+   "description": "Enables data tiering. Data tiering is only supported for replication groups using the r6gd node type. This parameter must be set to true when using r6gd nodes.",
+   "type": "boolean"
+  },
+  "Durability": {
+   "description": "The durability setting for the replication group. Valid values: default, async, sync, disabled. Enabling durability on an existing non-durable cluster or disabling durability on an existing durable cluster is not currently supported and will result in an error; specify the desired durability at create time. The resolved state is returned in EffectiveDurability.",
+   "enumCaseInsensitive": [
+    "async",
+    "default",
+    "disabled",
+    "sync"
+   ],
+   "type": "string"
+  },
+  "EffectiveDurability": {
+   "description": "The resolved durability state of the replication group after resolving the default value. This is a read-only property.",
+   "enum": [
+    "async",
+    "sync",
+    "disabled"
+   ],
+   "type": "string"
+  },
+  "Engine": {
+   "description": "The name of the cache engine to be used for the clusters in this replication group.",
+   "type": "string"
+  },
+  "EngineVersion": {
+   "description": "The version number of the cache engine to be used for the clusters in this replication group. To view the supported cache engine versions, use the DescribeCacheEngineVersions operation.",
+   "type": "string"
+  },
+  "GlobalReplicationGroupId": {
+   "description": "The name of the Global datastore",
+   "type": "string"
+  },
+  "IpDiscovery": {
+   "description": "The network type you choose when creating a replication group, either ipv4 | ipv6. IPv6 is supported for workloads using Redis OSS engine version 6.2 onward or Memcached engine version 1.6.6 on all instances built on the Nitro system.",
+   "enumCaseInsensitive": [
+    "ipv4",
+    "ipv6"
+   ],
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
+   "description": "The ID of the KMS key used to encrypt the disk on the cluster.",
+   "type": "string"
+  },
+  "LogDeliveryConfigurations": {
+   "description": "Specifies the destination, format and type of the logs.",
+   "items": {
+    "$ref": "#/definitions/LogDeliveryConfigurationRequest"
+   },
+   "type": "array"
+  },
+  "MultiAZEnabled": {
+   "description": "A flag indicating if you have Multi-AZ enabled to enhance fault tolerance. For more information, see Minimizing Downtime: Multi-AZ.",
+   "type": "boolean"
+  },
+  "NetworkType": {
+   "description": "Must be either ipv4 | ipv6 | dual_stack. IPv6 is supported for workloads using Redis OSS engine version 6.2 onward or Memcached engine version 1.6.6 on all instances built on the Nitro system",
+   "enumCaseInsensitive": [
+    "dual_stack",
+    "ipv4",
+    "ipv6"
+   ],
+   "type": "string"
+  },
+  "NodeGroupConfiguration": {
+   "description": "NodeGroupConfiguration is a property of the AWS::ElastiCache::ReplicationGroup resource that configures an Amazon ElastiCache (ElastiCache) Redis cluster node group.",
+   "items": {
+    "$ref": "#/definitions/NodeGroupConfiguration"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "NotificationTopicArn": {
+   "description": "The Amazon Resource Name (ARN) of the Amazon Simple Notification Service (SNS) topic to which notifications are sent.",
+   "type": "string"
+  },
+  "NumCacheClusters": {
+   "description": "The number of clusters this replication group initially has.This parameter is not used if there is more than one node group (shard). You should use ReplicasPerNodeGroup instead.",
+   "maximum": 6,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "NumNodeGroups": {
+   "default": 1,
+   "description": "An optional parameter that specifies the number of node groups (shards) for this Redis (cluster mode enabled) replication group. For Redis (cluster mode disabled) either omit this parameter or set it to 1.",
+   "type": "integer"
+  },
+  "Port": {
+   "description": "The port number on which each member of the replication group accepts connections.",
+   "type": "integer"
+  },
+  "PreferredCacheClusterAZs": {
+   "description": "A list of EC2 Availability Zones in which the replication group's clusters are created. The order of the Availability Zones in the list is the order in which clusters are allocated. The primary cluster is created in the first AZ in the list. This parameter is not used if there is more than one node group (shard). You should use NodeGroupConfiguration instead.",
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PreferredMaintenanceWindow": {
+   "description": "Specifies the weekly time range during which maintenance on the cluster is performed. It is specified as a range in the format ddd:hh24:mi-ddd:hh24:mi (24H Clock UTC). The minimum maintenance window is a 60 minute period.",
+   "type": "string"
+  },
+  "PrimaryClusterId": {
+   "description": "The identifier of the cluster that serves as the primary for this replication group. This cluster must already exist and have a status of available.",
+   "type": "string"
+  },
+  "PrimaryEndPoint": {
+   "$ref": "#/definitions/Endpoint",
+   "description": "The primary endpoint configuration"
+  },
+  "ReadEndPoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Addresses": {
+     "description": "A string containing a comma-separated list of endpoints for the primary and read-only replicas, formatted as [address1, address2, ...]. The order of the addresses maps to the order of the ports from the ReadEndPoint.Ports attribute.",
+     "type": "string"
+    },
+    "AddressesList": {
+     "description": "A list of endpoints for the read-only replicas. The order of the addresses maps to the order of the ports from the ReadEndPoint.Ports attribute.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Ports": {
+     "description": "A string containing a comma-separated list of ports for the read-only replicas, formatted as [port1, port2, ...]. The order of the ports maps to the order of the addresses from the ReadEndPoint.Addresses attribute.",
+     "type": "string"
+    },
+    "PortsList": {
+     "description": "A list of ports for the read-only replicas. The order of the ports maps to the order of the addresses from the ReadEndPoint.Addresses attribute.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "ReaderEndPoint": {
+   "$ref": "#/definitions/Endpoint",
+   "description": "The endpoint of the reader node in the replication group."
+  },
+  "ReplicasPerNodeGroup": {
+   "description": "An optional parameter that specifies the number of replica nodes in each node group (shard). Valid values are 0 to 5.\n\n**Note:** Using ReplicasPerNodeGroup with NodeGroupConfiguration results in resource replacement. For online scaling, use ReplicasPerNodeGroup alone.",
+   "maximum": 5,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "ReplicationGroupDescription": {
+   "description": "A user-created description for the replication group.",
+   "type": "string"
+  },
+  "ReplicationGroupId": {
+   "description": "The replication group identifier. This parameter is stored as a lowercase string.",
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "description": "One or more Amazon VPC security groups associated with this replication group.",
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SnapshotArns": {
+   "description": "A list of Amazon Resource Names (ARN) that uniquely identify the Redis RDB snapshot files stored in Amazon S3.",
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SnapshotName": {
+   "description": "The name of a snapshot from which to restore data into the new replication group. The snapshot status changes to restoring while the new replication group is being created.",
+   "type": "string"
+  },
+  "SnapshotRetentionLimit": {
+   "default": 0,
+   "description": "The number of days for which ElastiCache retains automatic snapshots before deleting them. For example, if you set SnapshotRetentionLimit to 5, a snapshot that was taken today is retained for 5 days before being deleted.",
+   "type": "integer"
+  },
+  "SnapshotWindow": {
+   "description": "The daily time range (in UTC) during which ElastiCache begins taking a daily snapshot of your node group (shard).",
+   "type": "string"
+  },
+  "SnapshottingClusterId": {
+   "description": "The cluster ID that is used as the daily snapshot source for the replication group. This parameter cannot be set for Redis (cluster mode enabled) replication groups.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A list of cost allocation tags to be added to this resource. Tags are comma-separated key,value pairs (e.g. Key=myKey, Value=myKeyValue. You can include multiple tags as shown following: Key=myKey, Value=myKeyValue Key=mySecondKey, Value=mySecondKeyValue.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TransitEncryptionEnabled": {
+   "default": false,
+   "description": "A flag that enables in-transit encryption when set to true.",
+   "type": "boolean"
+  },
+  "TransitEncryptionMode": {
+   "description": "A setting that allows you to migrate your clients to use in-transit encryption, with no downtime. When setting TransitEncryptionEnabled to true, you can set your TransitEncryptionMode to preferred in the same request, to allow both encrypted and unencrypted connections at the same time. Once you migrate all your Redis OSS clients to use encrypted connections you can modify the value to required to allow encrypted connections only. Setting TransitEncryptionMode to required is a two-step process that requires you to first set the TransitEncryptionMode to preferred, after that you can set TransitEncryptionMode to required. This process will not trigger the replacement of the replication group.",
+   "enumCaseInsensitive": [
+    "preferred",
+    "required"
+   ],
+   "type": "string"
+  },
+  "UserGroupIds": {
+   "description": "The ID of user group to associate with the replication group.",
+   "items": {
+    "minLength": 1,
+    "pattern": "^[a-zA-Z][a-zA-Z0-9\\-]*$",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConfigurationEndPoint",
+  "/properties/ConfigurationEndPoint/Address",
+  "/properties/ConfigurationEndPoint/Port",
+  "/properties/PrimaryEndPoint",
+  "/properties/PrimaryEndPoint/Address",
+  "/properties/PrimaryEndPoint/Port",
+  "/properties/ReadEndPoint",
+  "/properties/ReadEndPoint/Addresses",
+  "/properties/ReadEndPoint/AddressesList",
+  "/properties/ReadEndPoint/Ports",
+  "/properties/ReadEndPoint/PortsList",
+  "/properties/ReaderEndPoint",
+  "/properties/ReaderEndPoint/Address",
+  "/properties/ReaderEndPoint/Port",
+  "/properties/EffectiveDurability"
+ ],
+ "required": [
+  "ReplicationGroupDescription"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticache",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "elasticache:ListTagsForResource",
+   "elasticache:AddTagsToResource",
+   "elasticache:RemoveTagsFromResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ElastiCache::ReplicationGroup",
+ "writeOnlyProperties": [
+  "/properties/AuthToken",
+  "/properties/CacheParameterGroupName",
+  "/properties/CacheSecurityGroupNames",
+  "/properties/CacheSubnetGroupName",
+  "/properties/EngineVersion",
+  "/properties/NotificationTopicArn",
+  "/properties/PreferredMaintenanceWindow",
+  "/properties/SecurityGroupIds",
+  "/properties/SnapshotArns",
+  "/properties/SnapshotName",
+  "/properties/NodeGroupConfiguration",
+  "/properties/NumNodeGroups",
+  "/properties/KmsKeyId",
+  "/properties/PrimaryClusterId",
+  "/properties/PreferredCacheClusterAZs"
+ ]
+}

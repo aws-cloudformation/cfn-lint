@@ -7,11 +7,30 @@ import io
 import json
 import logging
 import zipfile
+from pathlib import Path
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import MagicMock, patch
 
 from cfnlint.schema._patch import SchemaPatch
 from cfnlint.schema.manager import ProviderSchemaManager, ResourceNotFoundError
+
+_fixtures_dir = Path(__file__).parent.parent.parent.parent / "fixtures" / "schemas"
+_default_providers_dir = Path(__file__).parent.parent.parent.parent.parent / (
+    "src/cfnlint/data/schemas/providers"
+)
+_has_full_schemas = _default_providers_dir.exists() and any(
+    _default_providers_dir.glob("*.json")
+)
+
+
+def _make_manager() -> ProviderSchemaManager:
+    if _has_full_schemas:
+        return ProviderSchemaManager()
+    return ProviderSchemaManager(
+        providers_dir=_fixtures_dir / "providers",
+        resources_dir=_fixtures_dir / "resources",
+    )
+
 
 LOGGER = logging.getLogger("cfnlint.schema.manager")
 LOGGER.disabled = True
@@ -22,7 +41,7 @@ class TestUpdateResourceSchemas(BaseTestCase):
 
     def setUp(self) -> None:
         super().setUp()
-        self.manager = ProviderSchemaManager()
+        self.manager = _make_manager()
 
     @patch("cfnlint.schema.manager.url_has_newer_version")
     def test_no_update_when_cached(self, mock_url_newer):
@@ -89,7 +108,7 @@ class TestSamModuleLoading(BaseTestCase):
 
     def setUp(self) -> None:
         super().setUp()
-        self.manager = ProviderSchemaManager()
+        self.manager = _make_manager()
 
     def test_sam_module_missing_file(self):
         """Returns empty dict when sam.json doesn't exist"""
@@ -198,7 +217,7 @@ class TestManagerGetResourceSchema(BaseTestCase):
     def setUp(self) -> None:
         super().setUp()
 
-        self.manager = ProviderSchemaManager()
+        self.manager = _make_manager()
 
     def test_getting_cached_schema(self):
         rt = "AWS::EC2::VPC"
@@ -243,7 +262,7 @@ class TestManagerPatch(BaseTestCase):
 
     def setUp(self) -> None:
         super().setUp()
-        self.manager = ProviderSchemaManager()
+        self.manager = _make_manager()
         self.schema_patch = [{"op": "add", "path": "/cfnSchema", "value": ["test"]}]
 
     @patch("cfnlint.schema.manager.print")

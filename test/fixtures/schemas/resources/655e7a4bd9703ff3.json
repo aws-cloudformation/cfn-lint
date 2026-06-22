@@ -1,0 +1,869 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ActionDeclaration": {
+   "additionalProperties": false,
+   "description": "Represents information about an action declaration.",
+   "properties": {
+    "ActionTypeId": {
+     "$ref": "#/definitions/ActionTypeId"
+    },
+    "Commands": {
+     "description": "The shell commands to run with your compute action in CodePipeline.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Configuration": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "EnvironmentVariables": {
+     "description": "The list of environment variables that are input to a compute based action.",
+     "items": {
+      "$ref": "#/definitions/EnvironmentVariable"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "InputArtifacts": {
+     "items": {
+      "$ref": "#/definitions/InputArtifact"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "description": "The action declaration's name.",
+     "pattern": "^[A-Za-z0-9.@\\-_]{1,100}$",
+     "type": "string"
+    },
+    "Namespace": {
+     "description": "The variable namespace associated with the action. All variables produced as output by this action fall under this namespace.",
+     "type": "string"
+    },
+    "OutputArtifacts": {
+     "items": {
+      "$ref": "#/definitions/OutputArtifact"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "OutputVariables": {
+     "description": "The list of variables that are to be exported from the compute action.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Region": {
+     "description": "The action declaration's AWS Region, such as us-east-1.",
+     "type": "string"
+    },
+    "RoleArn": {
+     "description": "The ARN of the IAM service role that performs the declared action. This is assumed through the roleArn for the pipeline.",
+     "format": "AWS::IAM::Role.Arn",
+     "pattern": "arn:aws(-[\\w]+)*:iam::[0-9]{12}:role/.*",
+     "type": "string"
+    },
+    "RunOrder": {
+     "description": "The order in which actions are run.",
+     "type": "integer"
+    },
+    "TimeoutInMinutes": {
+     "description": "A timeout duration in minutes that can be applied against the ActionType\u2019s default timeout value specified in Quotas for AWS CodePipeline. This attribute is available only to the manual approval ActionType.",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ActionTypeId",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "ActionTypeId": {
+   "additionalProperties": false,
+   "description": "Represents information about an action type.",
+   "properties": {
+    "Category": {
+     "description": "A category defines what kind of action can be taken in the stage, and constrains the provider type for the action. Valid categories are limited to one of the values below.",
+     "enum": [
+      "Source",
+      "Build",
+      "Test",
+      "Deploy",
+      "Invoke",
+      "Approval",
+      "Compute"
+     ],
+     "type": "string"
+    },
+    "Owner": {
+     "description": "The creator of the action being called. There are three valid values for the Owner field in the action category section within your pipeline structure: AWS, ThirdParty, and Custom.",
+     "type": "string"
+    },
+    "Provider": {
+     "description": "The provider of the service being called by the action. Valid providers are determined by the action category. For example, an action in the Deploy category type might have a provider of CodeDeploy, which would be specified as CodeDeploy.",
+     "type": "string"
+    },
+    "Version": {
+     "description": "A string that describes the action version.",
+     "pattern": "^[0-9A-Za-z_\\-]{1,9}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Owner",
+    "Category",
+    "Version",
+    "Provider"
+   ],
+   "type": "object"
+  },
+  "ArtifactStore": {
+   "additionalProperties": false,
+   "description": "The S3 bucket where artifacts for the pipeline are stored.",
+   "properties": {
+    "EncryptionKey": {
+     "$ref": "#/definitions/EncryptionKey"
+    },
+    "Location": {
+     "description": "The S3 bucket used for storing the artifacts for a pipeline. You can specify the name of an S3 bucket but not a folder in the bucket. A folder to contain the pipeline artifacts is created for you based on the name of the pipeline. You can use any S3 bucket in the same AWS Region as the pipeline to store your pipeline artifacts.",
+     "type": "string"
+    },
+    "Type": {
+     "description": "The type of the artifact store, such as S3.",
+     "enum": [
+      "S3"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Location"
+   ],
+   "type": "object"
+  },
+  "ArtifactStoreMap": {
+   "additionalProperties": false,
+   "description": "A mapping of artifactStore objects and their corresponding AWS Regions. There must be an artifact store for the pipeline Region and for each cross-region action in the pipeline.",
+   "properties": {
+    "ArtifactStore": {
+     "$ref": "#/definitions/ArtifactStore"
+    },
+    "Region": {
+     "description": "The action declaration's AWS Region, such as us-east-1.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ArtifactStore",
+    "Region"
+   ],
+   "type": "object"
+  },
+  "BeforeEntryConditions": {
+   "additionalProperties": false,
+   "description": "The configuration that specifies the rules to run before stage starts.",
+   "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "BlockerDeclaration": {
+   "additionalProperties": false,
+   "description": "Reserved for future use.",
+   "properties": {
+    "Name": {
+     "description": "Reserved for future use.",
+     "type": "string"
+    },
+    "Type": {
+     "description": "Reserved for future use.",
+     "enum": [
+      "Schedule"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Condition": {
+   "additionalProperties": false,
+   "description": "Represents information about condition.",
+   "properties": {
+    "Result": {
+     "description": "The specified result for when the failure conditions are met, such as rolling back the stage",
+     "type": "string"
+    },
+    "Rules": {
+     "items": {
+      "$ref": "#/definitions/RuleDeclaration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "EncryptionKey": {
+   "additionalProperties": false,
+   "description": "Represents information about the key used to encrypt data in the artifact store, such as an AWS Key Management Service (AWS KMS) key",
+   "properties": {
+    "Id": {
+     "description": "The ID used to identify the key. For an AWS KMS key, you can use the key ID, the key ARN, or the alias ARN.",
+     "type": "string"
+    },
+    "Type": {
+     "description": "The type of encryption key, such as an AWS KMS key. When creating or updating a pipeline, the value must be set to 'KMS'.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Id"
+   ],
+   "type": "object"
+  },
+  "EnvironmentVariable": {
+   "additionalProperties": false,
+   "description": "Represents information about the environment variable of an action.",
+   "properties": {
+    "Name": {
+     "description": "The name of the environment variable.",
+     "type": "string"
+    },
+    "Type": {
+     "description": "The type of the environment variable.",
+     "enum": [
+      "PLAINTEXT",
+      "SECRETS_MANAGER"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value of the environment variable.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "FailureConditions": {
+   "additionalProperties": false,
+   "description": "The configuration that specifies the result, such as rollback, to occur upon stage failure",
+   "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Result": {
+     "description": "The specified result for when the failure conditions are met, such as rolling back the stage",
+     "enum": [
+      "ROLLBACK",
+      "RETRY"
+     ],
+     "type": "string"
+    },
+    "RetryConfiguration": {
+     "additionalProperties": false,
+     "description": "The configuration that specifies the retry configuration for a stage",
+     "properties": {
+      "RetryMode": {
+       "description": "The specified retry mode type for the given stage. FAILED_ACTIONS will retry only the failed actions. ALL_ACTIONS will retry both failed and successful",
+       "enum": [
+        "ALL_ACTIONS",
+        "FAILED_ACTIONS"
+       ],
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "GitBranchFilterCriteria": {
+   "additionalProperties": false,
+   "description": "The Git repository branches specified as filter criteria to start the pipeline.",
+   "properties": {
+    "Excludes": {
+     "description": "The list of patterns of Git branches that, when a commit is pushed, are to be excluded from starting the pipeline.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Includes": {
+     "description": "The list of patterns of Git branches that, when a commit is pushed, are to be included as criteria that starts the pipeline.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "GitConfiguration": {
+   "additionalProperties": false,
+   "description": "A type of trigger configuration for Git-based source actions.",
+   "properties": {
+    "PullRequest": {
+     "description": "The field where the repository event that will start the pipeline is specified as pull requests.",
+     "items": {
+      "$ref": "#/definitions/GitPullRequestFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Push": {
+     "description": "The field where the repository event that will start the pipeline, such as pushing Git tags, is specified with details.",
+     "items": {
+      "$ref": "#/definitions/GitPushFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SourceActionName": {
+     "description": "The name of the pipeline source action where the trigger configuration, such as Git tags, is specified. The trigger configuration will start the pipeline upon the specified change only.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceActionName"
+   ],
+   "type": "object"
+  },
+  "GitFilePathFilterCriteria": {
+   "additionalProperties": false,
+   "description": "The Git repository file paths specified as filter criteria to start the pipeline.",
+   "properties": {
+    "Excludes": {
+     "description": "The list of patterns of Git repository file paths that, when a commit is pushed, are to be excluded from starting the pipeline.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Includes": {
+     "description": "The list of patterns of Git repository file paths that, when a commit is pushed, are to be included as criteria that starts the pipeline.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "GitPullRequestFilter": {
+   "additionalProperties": false,
+   "description": "The event criteria for the pull request trigger configuration, such as the lists of branches or file paths to include and exclude.",
+   "properties": {
+    "Branches": {
+     "$ref": "#/definitions/GitBranchFilterCriteria"
+    },
+    "Events": {
+     "description": "The field that specifies which pull request events to filter on (opened, updated, closed) for the trigger configuration.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "FilePaths": {
+     "$ref": "#/definitions/GitFilePathFilterCriteria"
+    }
+   },
+   "type": "object"
+  },
+  "GitPushFilter": {
+   "additionalProperties": false,
+   "description": "The event criteria that specify when a specified repository event will start the pipeline for the specified trigger configuration, such as the lists of Git tags to include and exclude.",
+   "properties": {
+    "Branches": {
+     "$ref": "#/definitions/GitBranchFilterCriteria"
+    },
+    "FilePaths": {
+     "$ref": "#/definitions/GitFilePathFilterCriteria"
+    },
+    "Tags": {
+     "$ref": "#/definitions/GitTagFilterCriteria"
+    }
+   },
+   "type": "object"
+  },
+  "GitTagFilterCriteria": {
+   "additionalProperties": false,
+   "description": "The Git tags specified as filter criteria for whether a Git tag repository event will start the pipeline.",
+   "properties": {
+    "Excludes": {
+     "description": "The list of patterns of Git tags that, when pushed, are to be excluded from starting the pipeline.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Includes": {
+     "description": "The list of patterns of Git tags that, when pushed, are to be included as criteria that starts the pipeline.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "InputArtifact": {
+   "additionalProperties": false,
+   "description": "Represents information about an artifact to be worked on, such as a test or build artifact.",
+   "properties": {
+    "Name": {
+     "description": "The name of the artifact to be worked on (for example, \"My App\").",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "OutputArtifact": {
+   "additionalProperties": false,
+   "description": "Represents information about the output of an action.",
+   "properties": {
+    "Files": {
+     "description": "The files that you want to associate with the output artifact that will be exported from the compute action.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "description": "The name of the output of an artifact, such as \"My App\".",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "PipelineTriggerDeclaration": {
+   "additionalProperties": false,
+   "description": "Represents information about the specified trigger configuration, such as the filter criteria and the source stage for the action that contains the trigger.",
+   "properties": {
+    "GitConfiguration": {
+     "$ref": "#/definitions/GitConfiguration"
+    },
+    "ProviderType": {
+     "description": "The source provider for the event, such as connections configured for a repository with Git tags, for the specified trigger configuration.",
+     "enum": [
+      "CodeStarSourceConnection"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ProviderType"
+   ],
+   "type": "object"
+  },
+  "RuleDeclaration": {
+   "additionalProperties": false,
+   "description": "Represents information about condition.",
+   "properties": {
+    "Commands": {
+     "description": "The shell commands to run with your compute action in CodePipeline.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Configuration": {
+     "description": "The rule's configuration. These are key-value pairs that specify input values for a rule.",
+     "type": "object"
+    },
+    "InputArtifacts": {
+     "items": {
+      "$ref": "#/definitions/InputArtifact"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "description": "The rule declaration's name.",
+     "type": "string"
+    },
+    "Region": {
+     "description": "The rule declaration's AWS Region, such as us-east-1.",
+     "type": "string"
+    },
+    "RoleArn": {
+     "description": "The ARN of the IAM service role that performs the declared rule. This is assumed through the roleArn for the pipeline.",
+     "format": "AWS::IAM::Role.Arn",
+     "pattern": "arn:aws(-[\\w]+)*:iam::[0-9]{12}:role/.*",
+     "type": "string"
+    },
+    "RuleTypeId": {
+     "$ref": "#/definitions/RuleTypeId"
+    }
+   },
+   "type": "object"
+  },
+  "RuleTypeId": {
+   "additionalProperties": false,
+   "description": "Represents information about a rule type.",
+   "properties": {
+    "Category": {
+     "description": "A category for the provider type for the rule.",
+     "type": "string"
+    },
+    "Owner": {
+     "description": "The creator of the rule being called. Only AWS is supported.",
+     "type": "string"
+    },
+    "Provider": {
+     "description": "The provider of the service being called by the rule.",
+     "type": "string"
+    },
+    "Version": {
+     "description": "A string that describes the rule version.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "StageDeclaration": {
+   "additionalProperties": false,
+   "description": "Represents information about a stage and its definition.",
+   "properties": {
+    "Actions": {
+     "items": {
+      "$ref": "#/definitions/ActionDeclaration"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true,
+     "uniqueKeys": [
+      "Name"
+     ]
+    },
+    "BeforeEntry": {
+     "$ref": "#/definitions/BeforeEntryConditions",
+     "description": "The method to use before stage runs.",
+     "type": "object"
+    },
+    "Blockers": {
+     "items": {
+      "$ref": "#/definitions/BlockerDeclaration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "description": "The name of the stage.",
+     "type": "string"
+    },
+    "OnFailure": {
+     "$ref": "#/definitions/FailureConditions",
+     "description": "The method to use when a stage has not completed successfully",
+     "type": "object"
+    },
+    "OnSuccess": {
+     "$ref": "#/definitions/SuccessConditions",
+     "description": "The method to use when a stage has completed successfully",
+     "type": "object"
+    }
+   },
+   "required": [
+    "Actions",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "StageTransition": {
+   "additionalProperties": false,
+   "description": "The name of the pipeline in which you want to disable the flow of artifacts from one stage to another.",
+   "properties": {
+    "Reason": {
+     "description": "The reason given to the user that a stage is disabled, such as waiting for manual approval or manual tests. This message is displayed in the pipeline console UI.",
+     "type": "string"
+    },
+    "StageName": {
+     "description": "The name of the stage where you want to disable the inbound or outbound transition of artifacts.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "StageName",
+    "Reason"
+   ],
+   "type": "object"
+  },
+  "SuccessConditions": {
+   "additionalProperties": false,
+   "description": "The configuration that specifies the result, such as rollback, to occur upon stage failure",
+   "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A tag is a key-value pair that is used to manage the resource.",
+   "properties": {
+    "Key": {
+     "description": "The tag's key.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The tag's value.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VariableDeclaration": {
+   "additionalProperties": false,
+   "description": "A variable declared at the pipeline level.",
+   "properties": {
+    "DefaultValue": {
+     "description": "The value of a pipeline-level variable.",
+     "type": "string"
+    },
+    "Description": {
+     "description": "The description of a pipeline-level variable. It's used to add additional context about the variable, and not being used at time when pipeline executes.",
+     "type": "string"
+    },
+    "Name": {
+     "description": "The name of a pipeline-level variable.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The AWS::CodePipeline::Pipeline resource creates a CodePipeline pipeline that describes how software changes go through a release process.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:GetRole",
+    "iam:PassRole",
+    "codepipeline:GetPipeline",
+    "codepipeline:CreatePipeline",
+    "codepipeline:DisableStageTransition",
+    "codepipeline:GetPipelineState",
+    "codepipeline:TagResource",
+    "codestar-connections:PassConnection"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "codepipeline:GetPipeline",
+    "codepipeline:DeletePipeline"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "codepipeline:ListPipelines"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "codepipeline:GetPipeline",
+    "codepipeline:ListTagsForResource",
+    "codepipeline:GetPipelineState"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:GetRole",
+    "iam:PassRole",
+    "codepipeline:EnableStageTransition",
+    "codepipeline:StartPipelineExecution",
+    "codepipeline:GetPipeline",
+    "codepipeline:UpdatePipeline",
+    "codepipeline:GetPipelineState",
+    "codepipeline:DisableStageTransition",
+    "codepipeline:TagResource",
+    "codepipeline:UntagResource",
+    "codestar-connections:PassConnection"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "ArtifactStore": {
+   "$ref": "#/definitions/ArtifactStore",
+   "description": "The S3 bucket where artifacts for the pipeline are stored."
+  },
+  "ArtifactStores": {
+   "description": "A mapping of artifactStore objects and their corresponding AWS Regions. There must be an artifact store for the pipeline Region and for each cross-region action in the pipeline.",
+   "items": {
+    "$ref": "#/definitions/ArtifactStoreMap"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DisableInboundStageTransitions": {
+   "description": "Represents the input of a DisableStageTransition action.",
+   "items": {
+    "$ref": "#/definitions/StageTransition"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ExecutionMode": {
+   "default": "SUPERSEDED",
+   "description": "The method that the pipeline will use to handle multiple executions. The default mode is SUPERSEDED.",
+   "enum": [
+    "QUEUED",
+    "SUPERSEDED",
+    "PARALLEL"
+   ],
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the pipeline.",
+   "type": "string"
+  },
+  "PipelineType": {
+   "description": "CodePipeline provides the following pipeline types, which differ in characteristics and price, so that you can tailor your pipeline features and cost to the needs of your applications.",
+   "enum": [
+    "V1",
+    "V2"
+   ],
+   "type": "string"
+  },
+  "RestartExecutionOnUpdate": {
+   "description": "Indicates whether to rerun the CodePipeline pipeline after you update it.",
+   "type": "boolean"
+  },
+  "RoleArn": {
+   "description": "The Amazon Resource Name (ARN) for CodePipeline to use to either perform actions with no actionRoleArn, or to use to assume roles for actions with an actionRoleArn",
+   "format": "AWS::IAM::Role.Arn",
+   "pattern": "arn:aws(-[\\w]+)*:iam::[0-9]{12}:role/.*",
+   "type": "string"
+  },
+  "Stages": {
+   "description": "Represents information about a stage and its definition.",
+   "items": {
+    "$ref": "#/definitions/StageDeclaration"
+   },
+   "minItems": 2,
+   "type": "array",
+   "uniqueItems": true,
+   "uniqueKeys": [
+    "Name"
+   ]
+  },
+  "Tags": {
+   "description": "Specifies the tags applied to the pipeline.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Triggers": {
+   "description": "The trigger configuration specifying a type of event, such as Git tags, that starts the pipeline.",
+   "items": {
+    "$ref": "#/definitions/PipelineTriggerDeclaration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Variables": {
+   "description": "A list that defines the pipeline variables for a pipeline resource. Variable names can have alphanumeric and underscore characters, and the values must match [A-Za-z0-9@\\-_]+.",
+   "items": {
+    "$ref": "#/definitions/VariableDeclaration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Version": {
+   "description": "The version of the pipeline.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Version"
+ ],
+ "required": [
+  "Stages",
+  "RoleArn"
+ ],
+ "requiredXor": [
+  "ArtifactStore",
+  "ArtifactStores"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codepipeline",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "codepipeline:TagResource",
+   "codepipeline:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CodePipeline::Pipeline",
+ "writeOnlyProperties": [
+  "/properties/RestartExecutionOnUpdate"
+ ]
+}
