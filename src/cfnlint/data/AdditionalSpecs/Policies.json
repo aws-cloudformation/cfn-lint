@@ -989,6 +989,8 @@
  },
  "agentaccess-mcp": {
   "Actions": {
+   "callforwardedtool": {},
+   "checkconnectionstatus": {},
    "doubleclick": {},
    "getscreenshot": {},
    "holdkey": {},
@@ -10135,6 +10137,7 @@
  },
  "bedrock": {
   "Actions": {
+   "agenticretrievestream": {},
    "allowvendedlogdeliveryforresource": {
     "Resources": [
      "knowledge-base"
@@ -10158,6 +10161,11 @@
     ]
    },
    "associatethirdpartyknowledgebase": {},
+   "batchdeleteadvancedpromptoptimizationjob": {
+    "Resources": [
+     "advanced-prompt-optimization-job"
+    ]
+   },
    "batchdeleteevaluationjob": {
     "Resources": [
      "evaluation-job"
@@ -10179,6 +10187,7 @@
      "foundation-model"
     ]
    },
+   "createadvancedpromptoptimizationjob": {},
    "createagent": {},
    "createagentactiongroup": {
     "Resources": [
@@ -10456,7 +10465,8 @@
     "Resources": [
      "custom-model",
      "guardrail",
-     "guardrail-profile"
+     "guardrail-profile",
+     "knowledge-base"
     ]
    },
    "deletesession": {
@@ -10498,6 +10508,11 @@
    },
    "generatequery": {},
    "getaccountdataretention": {},
+   "getadvancedpromptoptimizationjob": {
+    "Resources": [
+     "advanced-prompt-optimization-job"
+    ]
+   },
    "getagent": {
     "Resources": [
      "agent"
@@ -10627,6 +10642,7 @@
      "knowledge-base"
     ]
    },
+   "getdocumentcontent": {},
    "getevaluationjob": {
     "Resources": [
      "evaluation-job"
@@ -10755,7 +10771,8 @@
     "Resources": [
      "custom-model",
      "guardrail",
-     "guardrail-profile"
+     "guardrail-profile",
+     "knowledge-base"
     ]
    },
    "getsession": {
@@ -10816,6 +10833,7 @@
      "flow-alias"
     ]
    },
+   "invokeguardrailchecks": {},
    "invokeinlineagent": {},
    "invokemodel": {
     "Resources": [
@@ -10851,6 +10869,7 @@
      "system-tool"
     ]
    },
+   "listadvancedpromptoptimizationjobs": {},
    "listagentactiongroups": {
     "Resources": [
      "agent"
@@ -11003,6 +11022,7 @@
    "listsessions": {},
    "listtagsforresource": {
     "Resources": [
+     "advanced-prompt-optimization-job",
      "agent",
      "agent-alias",
      "application-inference-profile",
@@ -11059,7 +11079,8 @@
     "Resources": [
      "custom-model",
      "guardrail",
-     "guardrail-profile"
+     "guardrail-profile",
+     "knowledge-base"
     ]
    },
    "putusecaseformodelaccess": {},
@@ -11102,6 +11123,11 @@
      "knowledge-base"
     ]
    },
+   "stopadvancedpromptoptimizationjob": {
+    "Resources": [
+     "advanced-prompt-optimization-job"
+    ]
+   },
    "stopevaluationjob": {
     "Resources": [
      "evaluation-job"
@@ -11131,6 +11157,7 @@
    },
    "tagresource": {
     "Resources": [
+     "advanced-prompt-optimization-job",
      "agent",
      "agent-alias",
      "application-inference-profile",
@@ -11165,6 +11192,7 @@
    },
    "untagresource": {
     "Resources": [
+     "advanced-prompt-optimization-job",
      "agent",
      "agent-alias",
      "application-inference-profile",
@@ -11314,6 +11342,14 @@
    "validateflowdefinition": {}
   },
   "Resources": {
+   "advanced-prompt-optimization-job": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock:${Region}:${Account}:advanced-prompt-optimization-job/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "agent": {
     "ARNFormats": [
      "arn:${Partition}:bedrock:${Region}:${Account}:agent/.*"
@@ -11670,6 +11706,11 @@
     ]
    },
    "createharness": {},
+   "createharnessendpoint": {
+    "Resources": [
+     "harness"
+    ]
+   },
    "creatememory": {},
    "createoauth2credentialprovider": {
     "Resources": [
@@ -11795,6 +11836,12 @@
      "harness"
     ]
    },
+   "deleteharnessendpoint": {
+    "Resources": [
+     "harness",
+     "harness-endpoint"
+    ]
+   },
    "deletememory": {
     "Resources": [
      "memory"
@@ -11886,6 +11933,22 @@
      "evaluator"
     ]
    },
+   "gatewayassociatewebacl": {
+    "Resources": [
+     "gateway"
+    ]
+   },
+   "gatewaydisassociatewebacl": {
+    "Resources": [
+     "gateway"
+    ]
+   },
+   "gatewaygetwebaclforresource": {
+    "Resources": [
+     "gateway"
+    ]
+   },
+   "gatewaylistresourcesforwebacl": {},
    "getabtest": {
     "Resources": [
      "ab-test"
@@ -11984,6 +12047,12 @@
    "getharness": {
     "Resources": [
      "harness"
+    ]
+   },
+   "getharnessendpoint": {
+    "Resources": [
+     "harness",
+     "harness-endpoint"
     ]
    },
    "getmemory": {
@@ -12196,12 +12265,18 @@
    },
    "invokeharness": {
     "Resources": [
-     "harness"
+     "harness",
+     "harness-endpoint"
     ]
    },
    "invokeregistrymcp": {
     "Resources": [
      "registry"
+    ]
+   },
+   "invokewebsearch": {
+    "Resources": [
+     "web-search"
     ]
    },
    "listabtests": {},
@@ -12253,6 +12328,7 @@
      "gateway"
     ]
    },
+   "listharnessendpoints": {},
    "listharnesses": {},
    "listmemories": {},
    "listmemoryextractionjobs": {
@@ -12568,6 +12644,12 @@
      "harness"
     ]
    },
+   "updateharnessendpoint": {
+    "Resources": [
+     "harness",
+     "harness-endpoint"
+    ]
+   },
    "updatememory": {
     "Resources": [
      "memory"
@@ -12637,6 +12719,9 @@
    "ab-test": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:ab-test/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "apikeycredentialprovider": {
@@ -12650,6 +12735,9 @@
    "batch-evaluate": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:batch-evaluate/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "browser": {
@@ -12689,6 +12777,9 @@
    "configuration-bundle": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:configuration-bundle/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "evaluator": {
@@ -12708,6 +12799,14 @@
     ]
    },
    "harness": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:harness/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "harness-endpoint": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:harness/.*"
     ],
@@ -12776,6 +12875,9 @@
    "recommendation": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:recommendation/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "registry": {
@@ -12810,6 +12912,11 @@
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "web-search": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:tool/web-search.v1"
     ]
    },
    "workload-identity": {
@@ -18921,12 +19028,21 @@
      "dashboard"
     ]
    },
+   "getdataset": {
+    "Resources": [
+     "dataset"
+    ]
+   },
    "getinsightrulereport": {
     "Resources": [
      "insight-rule"
     ]
    },
-   "getmetricdata": {},
+   "getmetricdata": {
+    "Resources": [
+     "dataset"
+    ]
+   },
    "getmetricstatistics": {},
    "getmetricstream": {
     "Resources": [
@@ -18961,7 +19077,11 @@
    "listdashboards": {},
    "listentitiesformetric": {},
    "listmanagedinsightrules": {},
-   "listmetrics": {},
+   "listmetrics": {
+    "Resources": [
+     "dataset"
+    ]
+   },
    "listmetricstreams": {},
    "listservicelevelobjectives": {},
    "listservices": {},
@@ -18970,7 +19090,10 @@
      "alarm",
      "alarm-mute-rule",
      "dashboard",
+     "dataset",
      "insight-rule",
+     "metric-stream",
+     "service",
      "slo"
     ]
    },
@@ -18996,13 +19119,23 @@
      "insight-rule"
     ]
    },
-   "putmanagedinsightrules": {},
-   "putmetricalarm": {
+   "putlogalarm": {
     "Resources": [
      "alarm"
     ]
    },
-   "putmetricdata": {},
+   "putmanagedinsightrules": {},
+   "putmetricalarm": {
+    "Resources": [
+     "alarm",
+     "dataset"
+    ]
+   },
+   "putmetricdata": {
+    "Resources": [
+     "dataset"
+    ]
+   },
    "putmetricstream": {
     "Resources": [
      "metric-stream"
@@ -19030,7 +19163,10 @@
      "alarm",
      "alarm-mute-rule",
      "dashboard",
+     "dataset",
      "insight-rule",
+     "metric-stream",
+     "service",
      "slo"
     ]
    },
@@ -19039,7 +19175,10 @@
      "alarm",
      "alarm-mute-rule",
      "dashboard",
+     "dataset",
      "insight-rule",
+     "metric-stream",
+     "service",
      "slo"
     ]
    },
@@ -19069,6 +19208,14 @@
    "dashboard": {
     "ARNFormats": [
      "arn:${Partition}:cloudwatch::${Account}:dashboard/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "dataset": {
+    "ARNFormats": [
+     "arn:${Partition}:cloudwatch:${Region}:${Account}:dataset/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -24818,11 +24965,7 @@
      "contact-flow"
     ]
    },
-   "startoutboundvoicecontact": {
-    "Resources": [
-     "contact"
-    ]
-   },
+   "startoutboundvoicecontact": {},
    "startscreensharing": {
     "Resources": [
      "contact",
@@ -27059,6 +27202,7 @@
    "deleteformtype": {},
    "deleteglossary": {},
    "deleteglossaryterm": {},
+   "deletelineageevent": {},
    "deletelisting": {},
    "deletenotebook": {},
    "deleteproject": {},
@@ -27079,6 +27223,7 @@
    "getcell": {},
    "getcellrun": {},
    "getcellrunresult": {},
+   "getcompute": {},
    "getconnection": {},
    "getconversation": {},
    "getdataexportconfiguration": {},
@@ -27201,12 +27346,15 @@
      "domain"
     ]
    },
+   "startcompute": {},
    "startconversation": {},
    "startdatasourcerun": {},
    "startmetadatagenerationrun": {},
    "startnotebookcompute": {},
    "startnotebookexport": {},
    "startnotebookimport": {},
+   "startnotebooksync": {},
+   "stopcompute": {},
    "stopmetadatagenerationrun": {},
    "stopnotebookcompute": {},
    "tagresource": {
@@ -40730,6 +40878,11 @@
      "domain"
     ]
    },
+   "attachdatasource": {
+    "Resources": [
+     "application"
+    ]
+   },
    "authorizevpcendpointaccess": {},
    "canceldomainconfigchange": {
     "Resources": [
@@ -40818,6 +40971,11 @@
      "application"
     ]
    },
+   "describedatasourceattachment": {
+    "Resources": [
+     "application"
+    ]
+   },
    "describedomain": {
     "Resources": [
      "domain"
@@ -40890,6 +41048,11 @@
    "describereservedinstanceofferings": {},
    "describereservedinstances": {},
    "describevpcendpoints": {},
+   "detachdatasource": {
+    "Resources": [
+     "application"
+    ]
+   },
    "dissociatepackage": {
     "Resources": [
      "domain"
@@ -40992,6 +41155,11 @@
     ]
    },
    "listapplications": {
+    "Resources": [
+     "application"
+    ]
+   },
+   "listdatasourceattachments": {
     "Resources": [
      "application"
     ]
@@ -51312,14 +51480,6 @@
    "code security scan configuration": {
     "ARNFormats": [
      "arn:${Partition}:inspector2:${Region}:${Account}:owner/.*"
-    ],
-    "ConditionKeys": [
-     "aws:ResourceTag/${TagKey}"
-    ]
-   },
-   "connector": {
-    "ARNFormats": [
-     "arn:${Partition}:inspector2:${Region}:${Account}:connector/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -67757,6 +67917,11 @@
      "configurations"
     ]
    },
+   "describesharedresources": {
+    "Resources": [
+     "brokers"
+    ]
+   },
    "describeuser": {
     "Resources": [
      "brokers"
@@ -73094,6 +73259,11 @@
     ]
    },
    "getprogrammanagementaccount": {},
+   "getprospectingfromengagementtask": {
+    "Resources": [
+     "ProspectingFromEngagementTask"
+    ]
+   },
    "getrelationship": {
     "Resources": [
      "Relationship"
@@ -73158,6 +73328,7 @@
      "ProgramManagementAccount"
     ]
    },
+   "listprospectingfromengagementtasks": {},
    "listrelationships": {
     "Resources": [
      "Relationship"
@@ -73223,6 +73394,11 @@
    "startprofileupdatetask": {
     "Resources": [
      "Partner"
+    ]
+   },
+   "startprospectingfromengagementtask": {
+    "Resources": [
+     "Engagement"
     ]
    },
    "startresourcesnapshotjob": {
@@ -73390,6 +73566,11 @@
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "prospectingfromengagementtask": {
+    "ARNFormats": [
+     "arn:${Partition}:partnercentral:${Region}::catalog/.*"
     ]
    },
    "relationship": {
@@ -77659,6 +77840,11 @@
   "Actions": {
    "accountconfigurations": {},
    "allowvendedlogdeliveryforresource": {},
+   "batchassignlimitsprofile": {
+    "Resources": [
+     "limitsProfile"
+    ]
+   },
    "batchcreatetopicreviewedanswer": {
     "Resources": [
      "topic"
@@ -77675,6 +77861,11 @@
     ]
    },
    "batchgetpreferences": {},
+   "batchunassignlimitsprofile": {
+    "Resources": [
+     "limitsProfile"
+    ]
+   },
    "batchupdatepreferences": {},
    "cancelingestion": {
     "Resources": [
@@ -77770,6 +77961,11 @@
    "createingestion": {
     "Resources": [
      "ingestion"
+    ]
+   },
+   "createlimitsprofile": {
+    "Resources": [
+     "limitsProfile"
     ]
    },
    "createnamespace": {
@@ -77933,6 +78129,11 @@
      "knowledgeBase"
     ]
    },
+   "deletelimitsprofile": {
+    "Resources": [
+     "limitsProfile"
+    ]
+   },
    "deletenamespace": {
     "Resources": [
      "namespace"
@@ -78055,6 +78256,16 @@
    "describeassetbundleimportjob": {
     "Resources": [
      "assetBundleImportJob"
+    ]
+   },
+   "describeautomationgroup": {
+    "Resources": [
+     "automationGroup"
+    ]
+   },
+   "describeautomationgrouppermissions": {
+    "Resources": [
+     "automationGroup"
     ]
    },
    "describeautomationjob": {
@@ -78186,6 +78397,11 @@
    "describeknowledgebasepermissions": {
     "Resources": [
      "knowledgeBase"
+    ]
+   },
+   "describelimitsprofile": {
+    "Resources": [
+     "limitsProfile"
     ]
    },
    "describenamespace": {
@@ -78342,6 +78558,12 @@
      "assetBundleImportJob"
     ]
    },
+   "listassignmentsforprincipal": {
+    "Resources": [
+     "limitsProfile"
+    ]
+   },
+   "listautomationgroups": {},
    "listbrands": {},
    "listcustomermanagedkeys": {},
    "listcustompermissions": {},
@@ -78402,8 +78624,18 @@
    "listingestions": {},
    "listkmskeysforuser": {},
    "listknowledgebases": {},
+   "listlimitsprofiles": {
+    "Resources": [
+     "limitsProfile"
+    ]
+   },
    "listnamespaces": {},
    "listoauthclientapplications": {},
+   "listprofileassignments": {
+    "Resources": [
+     "limitsProfile"
+    ]
+   },
    "listrefreshschedules": {},
    "listrolememberships": {},
    "listselfupgrades": {
@@ -78534,6 +78766,7 @@
      "analysis"
     ]
    },
+   "searchautomationgroups": {},
    "searchdashboards": {
     "Resources": [
      "dashboard"
@@ -78690,6 +78923,11 @@
     ]
    },
    "updateapplicationwithtokenexchangegrant": {},
+   "updateautomationgrouppermissions": {
+    "Resources": [
+     "automationGroup"
+    ]
+   },
    "updatebrand": {
     "Resources": [
      "brand"
@@ -78796,6 +79034,11 @@
    "updateknowledgebasepermissions": {
     "Resources": [
      "knowledgeBase"
+    ]
+   },
+   "updatelimitsprofile": {
+    "Resources": [
+     "limitsProfile"
     ]
    },
    "updateoauthclientapplication": {
@@ -79061,6 +79304,14 @@
    "knowledgebase": {
     "ARNFormats": [
      "arn:${Partition}:quicksight:${Region}:${Account}:knowledge-base/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "limitsprofile": {
+    "ARNFormats": [
+     "arn:${Partition}:quicksight:${Region}:${Account}:limits-profile/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -85576,6 +85827,12 @@
      "object"
     ]
    },
+   "deleteobjectannotation": {
+    "Resources": [
+     "accesspointobject",
+     "object"
+    ]
+   },
    "deleteobjecttagging": {
     "Resources": [
      "accesspointobject",
@@ -85583,6 +85840,12 @@
     ]
    },
    "deleteobjectversion": {
+    "Resources": [
+     "accesspointobject",
+     "object"
+    ]
+   },
+   "deleteobjectversionannotation": {
     "Resources": [
      "accesspointobject",
      "object"
@@ -85843,6 +86106,12 @@
      "object"
     ]
    },
+   "getobjectannotation": {
+    "Resources": [
+     "accesspointobject",
+     "object"
+    ]
+   },
    "getobjectattributes": {
     "Resources": [
      "accesspointobject",
@@ -85881,6 +86150,17 @@
    "getobjectversionacl": {
     "Resources": [
      "accesspointobject",
+     "object"
+    ]
+   },
+   "getobjectversionannotation": {
+    "Resources": [
+     "accesspointobject",
+     "object"
+    ]
+   },
+   "getobjectversionannotationforreplication": {
+    "Resources": [
      "object"
     ]
    },
@@ -85980,6 +86260,18 @@
     ]
    },
    "listmultiregionaccesspoints": {},
+   "listobjectannotations": {
+    "Resources": [
+     "accesspointobject",
+     "object"
+    ]
+   },
+   "listobjectversionannotations": {
+    "Resources": [
+     "accesspointobject",
+     "object"
+    ]
+   },
    "liststoragelensconfigurations": {},
    "liststoragelensgroups": {},
    "listtagsforresource": {
@@ -86146,6 +86438,12 @@
      "object"
     ]
    },
+   "putobjectannotation": {
+    "Resources": [
+     "accesspointobject",
+     "object"
+    ]
+   },
    "putobjectlegalhold": {
     "Resources": [
      "accesspointobject",
@@ -86165,6 +86463,12 @@
     ]
    },
    "putobjectversionacl": {
+    "Resources": [
+     "accesspointobject",
+     "object"
+    ]
+   },
+   "putobjectversionannotation": {
     "Resources": [
      "accesspointobject",
      "object"
@@ -86193,6 +86497,11 @@
     ]
    },
    "replicateobject": {
+    "Resources": [
+     "object"
+    ]
+   },
+   "replicateobjectannotation": {
     "Resources": [
      "object"
     ]
@@ -86236,6 +86545,11 @@
    "updateaccessgrantslocation": {
     "Resources": [
      "accessgrantslocation"
+    ]
+   },
+   "updatebucketmetadataannotationtableconfiguration": {
+    "Resources": [
+     "bucket"
     ]
    },
    "updatebucketmetadatainventorytableconfiguration": {
@@ -103402,6 +103716,9 @@
      "regexpatternset"
     ]
    },
+   "getrevenuestatistics": {},
+   "getrevenuestatisticssummary": {},
+   "getrevenuestatisticstimeseries": {},
    "getrulegroup": {
     "Resources": [
      "rulegroup"
@@ -103452,6 +103769,7 @@
     ]
    },
    "listrulegroups": {},
+   "listsettlementrecords": {},
    "listtagsforresource": {
     "Resources": [
      "ipset",
