@@ -1,3 +1,14 @@
+### v1.52.0
+## What's Changed
+* Source schemas from enhanced-schemas repo instead of local patching by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4539
+* fix: LanguageExtensions transform preserves Fn::Sub with underscore variables by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4548
+* fix: Resolve false positives for dead config properties by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4550
+* chore(deps): bump actions/checkout from 6 to 7 by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4552
+* Update CloudFormation schemas to 2026-06-22 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4549
+* fix: Add static test schemas so unit tests pass without cfn-lint -u by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4553
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.51.5...v1.52.0
+
 ### v1.51.5
 ## What's Changed
 * fix: Correct schema false positives for ElastiCache and IAM by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4540
