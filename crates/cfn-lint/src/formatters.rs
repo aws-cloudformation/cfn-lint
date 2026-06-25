@@ -24,6 +24,8 @@ pub fn get_formatter(name: &str) -> Box<dyn Formatter> {
     match name {
         "json" => Box::new(JsonFormatter),
         "pretty" => Box::new(PrettyFormatter),
+        "junit" => Box::new(JUnitFormatter),
+        "sarif" => Box::new(SarifFormatter),
         _ => Box::new(ParseableFormatter),
     }
 }
@@ -137,6 +139,195 @@ fn severity_color(s: Severity) -> (&'static str, &'static str) {
         Severity::Error => ("\x1b[31m", "\x1b[0m"),
         Severity::Warning => ("\x1b[33m", "\x1b[0m"),
         Severity::Informational => ("\x1b[36m", "\x1b[0m"),
+    }
+}
+
+// --- JUnit XML ---
+
+pub struct JUnitFormatter;
+
+fn xml_escape(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    for ch in s.chars() {
+        match ch {
+            '&' => out.push_str("&amp;"),
+            '<' => out.push_str("&lt;"),
+            '>' => out.push_str("&gt;"),
+            '"' => out.push_str("&quot;"),
+            _ => out.push(ch),
+        }
+    }
+    out
+}
+
+impl Formatter for JUnitFormatter {
+    fn format(&self, results: &[ValidationResult]) -> String {
+        let tests = results.len();
+        let failures = results
+            .iter()
+            .filter(|r| {
+                r.issues.iter().any(|i| {
+                    matches!(
+                        severity_from_rule_id(i.rule_id.as_deref()),
+                        Severity::Error
+                    )
+                })
+            })
+            .count();
+
+        let mut out = String::new();
+        out.push_str("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        out.push_str("<testsuites>\n");
+        out.push_str(&format!(
+            "  <testsuite name=\"cfn-lint\" tests=\"{}\" failures=\"{}\">\n",
+            tests, failures
+        ));
+
+        for r in results {
+            if r.issues.is_empty() {
+                out.push_str(&format!(
+                    "    <testcase name=\"{}\"/>\n",
+                    xml_escape(&r.filename)
+                ));
+            } else {
+                out.push_str(&format!(
+                    "    <testcase name=\"{}\">\n",
+                    xml_escape(&r.filename)
+                ));
+                for i in &r.issues {
+                    let rule_id = i.rule_id.as_deref().unwrap_or("");
+                    let line = i.span.start.line as usize;
+                    let col = i.span.start.column as usize;
+                    let message_attr = xml_escape(&format!(
+                        "{} at {}:{}:{}",
+                        rule_id, r.filename, line, col
+                    ));
+                    let message_text =
+                        xml_escape(&format!("{}: {}", rule_id, i.message));
+                    out.push_str(&format!(
+                        "      <failure message=\"{}\" type=\"{}\">{}</failure>\n",
+                        message_attr,
+                        xml_escape(rule_id),
+                        message_text
+                    ));
+                }
+                out.push_str("    </testcase>\n");
+            }
+        }
+
+        out.push_str("  </testsuite>\n");
+        out.push_str("</testsuites>\n");
+        out
+    }
+}
+
+// --- SARIF 2.1.0 ---
+
+pub struct SarifFormatter;
+
+/// Map a rule_id prefix to a SARIF level string.
+fn sarif_level(rule_id: Option<&str>) -> &'static str {
+    match rule_id.and_then(|r| r.chars().next()) {
+        Some('W') => "warning",
+        Some('I') => "note",
+        _ => "error",
+    }
+}
+
+impl Formatter for SarifFormatter {
+    fn format(&self, results: &[ValidationResult]) -> String {
+        use std::collections::BTreeMap;
+
+        struct Finding<'a> {
+            rule_id: &'a str,
+            level: &'static str,
+            message: &'a str,
+            uri: &'a str,
+            start_line: usize,
+            start_column: usize,
+            end_line: usize,
+            end_column: usize,
+        }
+
+        let mut findings: Vec<Finding> = Vec::new();
+        // BTreeMap keeps rule ids sorted for deterministic output.
+        let mut seen_rules: BTreeMap<&str, ()> = BTreeMap::new();
+
+        for r in results {
+            for i in &r.issues {
+                let rule_id = i.rule_id.as_deref().unwrap_or("unknown");
+                let level = sarif_level(i.rule_id.as_deref());
+                seen_rules.insert(rule_id, ());
+                findings.push(Finding {
+                    rule_id,
+                    level,
+                    message: &i.message,
+                    uri: &r.filename,
+                    start_line: i.span.start.line as usize,
+                    start_column: i.span.start.column as usize,
+                    end_line: i.span.end.line as usize,
+                    end_column: i.span.end.column as usize,
+                });
+            }
+        }
+
+        let rules: Vec<serde_json::Value> = seen_rules
+            .keys()
+            .map(|id| {
+                serde_json::json!({
+                    "id": id,
+                    "shortDescription": { "text": id },
+                    "helpUri": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/rules.md"
+                })
+            })
+            .collect();
+
+        let sarif_results: Vec<serde_json::Value> = findings
+            .iter()
+            .map(|f| {
+                serde_json::json!({
+                    "ruleId": f.rule_id,
+                    "level": f.level,
+                    "message": { "text": f.message },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": f.uri,
+                                    "uriBaseId": "EXECUTIONROOT"
+                                },
+                                "region": {
+                                    "startLine": f.start_line,
+                                    "startColumn": f.start_column,
+                                    "endLine": f.end_line,
+                                    "endColumn": f.end_column
+                                }
+                            }
+                        }
+                    ]
+                })
+            })
+            .collect();
+
+        let sarif = serde_json::json!({
+            "$schema": "https://docs.oasis-open.org/sarif/sarif/v2.1.0/cos02/schemas/sarif-schema-2.1.0.json",
+            "version": "2.1.0",
+            "runs": [
+                {
+                    "tool": {
+                        "driver": {
+                            "name": "cfn-lint",
+                            "informationUri": "https://github.com/aws-cloudformation/cfn-lint",
+                            "version": "2.0.0",
+                            "rules": rules
+                        }
+                    },
+                    "results": sarif_results
+                }
+            ]
+        });
+
+        serde_json::to_string_pretty(&sarif).unwrap_or_else(|_| "{}".to_string())
     }
 }
 
@@ -280,5 +471,244 @@ mod tests {
         let out = JsonFormatter.format(&results);
         let parsed: serde_json::Value = serde_json::from_str(&out).unwrap();
         assert_eq!(parsed[0]["severity"], "Informational");
+    }
+
+    #[test]
+    fn test_junit_formatter_basic() {
+        let out = JUnitFormatter.format(&sample_results());
+        // XML declaration and root elements
+        assert!(out.starts_with("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        assert!(out.contains("<testsuites>"));
+        assert!(out.contains("</testsuites>"));
+        // One template file → tests=1; one file has E1003 (error) → failures=1
+        assert!(out.contains("<testsuite name=\"cfn-lint\" tests=\"1\" failures=\"1\">"));
+        // Testcase for template.yaml
+        assert!(out.contains("<testcase name=\"template.yaml\">"));
+        assert!(out.contains("</testcase>"));
+        // E1003 failure element
+        assert!(out.contains("message=\"E1003 at template.yaml:2:1\""));
+        assert!(out.contains("type=\"E1003\""));
+        assert!(out.contains(">E1003: Description too long</failure>"));
+        // W2001 failure element
+        assert!(out.contains("message=\"W2001 at template.yaml:5:3\""));
+        assert!(out.contains("type=\"W2001\""));
+        assert!(out.contains(">W2001: Unused parameter</failure>"));
+    }
+
+    #[test]
+    fn test_junit_formatter_empty() {
+        let results: Vec<ValidationResult> = vec![];
+        let out = JUnitFormatter.format(&results);
+        assert!(out.contains("<testsuite name=\"cfn-lint\" tests=\"0\" failures=\"0\">"));
+        assert!(out.contains("</testsuite>"));
+    }
+
+    #[test]
+    fn test_junit_formatter_no_issues_self_closing() {
+        let results = vec![ValidationResult {
+            filename: "clean.yaml".to_string(),
+            issues: vec![],
+        }];
+        let out = JUnitFormatter.format(&results);
+        assert!(out.contains("<testsuite name=\"cfn-lint\" tests=\"1\" failures=\"0\">"));
+        assert!(out.contains("<testcase name=\"clean.yaml\"/>"));
+        assert!(!out.contains("</testcase>"));
+    }
+
+    #[test]
+    fn test_junit_formatter_warning_only_not_counted_as_failure() {
+        let results = vec![ValidationResult {
+            filename: "warn.yaml".to_string(),
+            issues: vec![ValidationError {
+                rule_id: Some("W3001".to_string()),
+                message: "Some warning".to_string(),
+                path: vec![],
+                span: Span {
+                    start: Position { line: 1, column: 1 },
+                    end: Position { line: 1, column: 1 },
+                },
+                keyword: String::new(),
+                unknown: false,
+                resolved_from_ref: false,
+                context: vec![],
+                schema_id: None,
+            }],
+        }];
+        let out = JUnitFormatter.format(&results);
+        // tests=1 but failures=0 because only a warning
+        assert!(out.contains("<testsuite name=\"cfn-lint\" tests=\"1\" failures=\"0\">"));
+        // The warning still appears as a <failure> element (it's a lint finding)
+        assert!(out.contains("type=\"W3001\""));
+    }
+
+    #[test]
+    fn test_junit_formatter_xml_escaping() {
+        let results = vec![ValidationResult {
+            filename: "tmpl.yaml".to_string(),
+            issues: vec![ValidationError {
+                rule_id: Some("E9999".to_string()),
+                message: "Value <a> & \"b\" > c".to_string(),
+                path: vec![],
+                span: Span {
+                    start: Position { line: 1, column: 1 },
+                    end: Position { line: 1, column: 1 },
+                },
+                keyword: String::new(),
+                unknown: false,
+                resolved_from_ref: false,
+                context: vec![],
+                schema_id: None,
+            }],
+        }];
+        let out = JUnitFormatter.format(&results);
+        assert!(out.contains("&lt;a&gt;"));
+        assert!(out.contains("&amp;"));
+        assert!(out.contains("&quot;b&quot;"));
+        assert!(!out.contains("<a>"));
+    }
+
+    #[test]
+    fn test_get_formatter_junit() {
+        let f = get_formatter("junit");
+        let out = f.format(&sample_results());
+        assert!(out.contains("<testsuites>"));
+        assert!(out.contains("<testsuite name=\"cfn-lint\""));
+    }
+
+    #[test]
+    fn test_sarif_formatter_basic() {
+        let out = SarifFormatter.format(&sample_results());
+        let parsed: serde_json::Value = serde_json::from_str(&out).unwrap();
+
+        // Top-level structure
+        assert_eq!(parsed["version"], "2.1.0");
+        assert!(parsed["$schema"].as_str().unwrap().contains("sarif-schema-2.1.0.json"));
+
+        let run = &parsed["runs"][0];
+
+        // Tool driver
+        assert_eq!(run["tool"]["driver"]["name"], "cfn-lint");
+        assert_eq!(run["tool"]["driver"]["version"], "2.0.0");
+
+        // Rules — deduplicated, E1003 and W2001 both present
+        let rules = run["tool"]["driver"]["rules"].as_array().unwrap();
+        assert_eq!(rules.len(), 2);
+        let rule_ids: Vec<&str> = rules.iter().map(|r| r["id"].as_str().unwrap()).collect();
+        assert!(rule_ids.contains(&"E1003"));
+        assert!(rule_ids.contains(&"W2001"));
+
+        // Results
+        let results = run["results"].as_array().unwrap();
+        assert_eq!(results.len(), 2);
+
+        // First result: E1003 → error
+        let r0 = &results[0];
+        assert_eq!(r0["ruleId"], "E1003");
+        assert_eq!(r0["level"], "error");
+        assert_eq!(r0["message"]["text"], "Description too long");
+        let loc0 = &r0["locations"][0]["physicalLocation"];
+        assert_eq!(loc0["artifactLocation"]["uri"], "template.yaml");
+        assert_eq!(loc0["artifactLocation"]["uriBaseId"], "EXECUTIONROOT");
+        assert_eq!(loc0["region"]["startLine"], 2);
+        assert_eq!(loc0["region"]["startColumn"], 1);
+
+        // Second result: W2001 → warning
+        let r1 = &results[1];
+        assert_eq!(r1["ruleId"], "W2001");
+        assert_eq!(r1["level"], "warning");
+        assert_eq!(r1["message"]["text"], "Unused parameter");
+    }
+
+    #[test]
+    fn test_sarif_formatter_empty() {
+        let results: Vec<ValidationResult> = vec![];
+        let out = SarifFormatter.format(&results);
+        let parsed: serde_json::Value = serde_json::from_str(&out).unwrap();
+        assert_eq!(parsed["version"], "2.1.0");
+        assert_eq!(parsed["runs"][0]["results"].as_array().unwrap().len(), 0);
+        assert_eq!(
+            parsed["runs"][0]["tool"]["driver"]["rules"]
+                .as_array()
+                .unwrap()
+                .len(),
+            0
+        );
+    }
+
+    #[test]
+    fn test_sarif_formatter_informational() {
+        let results = vec![ValidationResult {
+            filename: "t.yaml".to_string(),
+            issues: vec![ValidationError {
+                rule_id: Some("I1001".to_string()),
+                message: "Info message".to_string(),
+                path: vec![],
+                span: Span {
+                    start: Position { line: 1, column: 1 },
+                    end: Position { line: 1, column: 1 },
+                },
+                keyword: String::new(),
+                unknown: false,
+                resolved_from_ref: false,
+                context: vec![],
+                schema_id: None,
+            }],
+        }];
+        let out = SarifFormatter.format(&results);
+        let parsed: serde_json::Value = serde_json::from_str(&out).unwrap();
+        assert_eq!(parsed["runs"][0]["results"][0]["level"], "note");
+    }
+
+    #[test]
+    fn test_sarif_rules_deduplicated() {
+        // Two issues with the same rule_id should produce only one rule entry.
+        let results = vec![ValidationResult {
+            filename: "t.yaml".to_string(),
+            issues: vec![
+                ValidationError {
+                    rule_id: Some("E1003".to_string()),
+                    message: "First".to_string(),
+                    path: vec![],
+                    span: Span {
+                        start: Position { line: 1, column: 1 },
+                        end: Position { line: 1, column: 1 },
+                    },
+                    keyword: String::new(),
+                    unknown: false,
+                    resolved_from_ref: false,
+                    context: vec![],
+                    schema_id: None,
+                },
+                ValidationError {
+                    rule_id: Some("E1003".to_string()),
+                    message: "Second".to_string(),
+                    path: vec![],
+                    span: Span {
+                        start: Position { line: 2, column: 1 },
+                        end: Position { line: 2, column: 1 },
+                    },
+                    keyword: String::new(),
+                    unknown: false,
+                    resolved_from_ref: false,
+                    context: vec![],
+                    schema_id: None,
+                },
+            ],
+        }];
+        let out = SarifFormatter.format(&results);
+        let parsed: serde_json::Value = serde_json::from_str(&out).unwrap();
+        let rules = parsed["runs"][0]["tool"]["driver"]["rules"]
+            .as_array()
+            .unwrap();
+        assert_eq!(rules.len(), 1, "duplicate rule_id should produce one rule entry");
+        assert_eq!(parsed["runs"][0]["results"].as_array().unwrap().len(), 2);
+    }
+
+    #[test]
+    fn test_get_formatter_sarif() {
+        let f = get_formatter("sarif");
+        let out = f.format(&sample_results());
+        let parsed: serde_json::Value = serde_json::from_str(&out).unwrap();
+        assert_eq!(parsed["version"], "2.1.0");
     }
 }

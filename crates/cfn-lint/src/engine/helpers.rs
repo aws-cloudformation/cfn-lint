@@ -111,6 +111,18 @@ pub(crate) fn flatten_validation_errors(
     if err.context.is_empty() {
         return vec![err];
     }
+    // anyOf/oneOf: emit the top-level error (→ E3017/E3024) AND the flattened
+    // sub-errors. Python emits both: the anyOf violation AND individual required
+    // failures from each failing branch.
+    if err.keyword == "anyOf" || err.keyword == "oneOf" {
+        let top = crate::jsonschema::ValidationError {
+            context: vec![],
+            ..err.clone()
+        };
+        let mut result = vec![top];
+        result.extend(err.context.into_iter().flat_map(flatten_validation_errors));
+        return result;
+    }
     let context = err.context;
     let flattened: Vec<_> = context
         .into_iter()
