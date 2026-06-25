@@ -195,6 +195,9 @@
     },
     "Name": {
      "description": "Friendly name for you to identify your AppSync data source after creation.",
+     "maxLength": 65536,
+     "minLength": 1,
+     "pattern": "^[_A-Za-z][_0-9A-Za-z]*$",
      "type": "string"
     },
     "Permissions": {
@@ -216,6 +219,7 @@
     },
     "ServiceRoleArn": {
      "description": "The AWS Identity and Access Management service role ARN for the data source. The system assumes this role when accessing the data source.",
+     "format": "AWS::IAM::Role.Arn",
      "type": "string"
     },
     "TableArn": {
@@ -282,6 +286,8 @@
     },
     "InlineCode": {
      "description": "The resolver code that contains the request and response functions. When code is used, the runtime is required. The runtime value must be APPSYNC_JS.",
+     "maxLength": 32768,
+     "minLength": 1,
      "type": "string"
     },
     "MaxBatchSize": {
@@ -357,10 +363,14 @@
     },
     "Name": {
      "description": "Friendly name for you to identify your AppSync data source after creation.",
+     "maxLength": 65536,
+     "minLength": 1,
+     "pattern": "^[_A-Za-z][_0-9A-Za-z]*$",
      "type": "string"
     },
     "ServiceRoleArn": {
      "description": "The AWS Identity and Access Management service role ARN for the data source. The system assumes this role when accessing the data source.",
+     "format": "AWS::IAM::Role.Arn",
      "type": "string"
     }
    },
@@ -422,10 +432,14 @@
     },
     "InlineCode": {
      "description": "The ``resolver`` code that contains the request and response functions. When code is used, the ``runtime`` is required. The runtime value must be ``APPSYNC_JS``.",
+     "maxLength": 32768,
+     "minLength": 1,
      "type": "string"
     },
     "MaxBatchSize": {
      "description": "The maximum number of resolver request inputs that will be sent to a single LAMlong function in a ``BatchInvoke`` operation.",
+     "maximum": 2000,
+     "minimum": 0,
      "type": "integer"
     },
     "Pipeline": {

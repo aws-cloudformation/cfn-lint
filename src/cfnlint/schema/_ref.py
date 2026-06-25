@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 
 class Ref:
     def __init__(self, schema: "Schema") -> None:
+        self._ref: dict[str, Any] = {}
         primary_ids = schema.schema.get("primaryIdentifier", [])
         if len(primary_ids) > 1:
             self._ref = {"type": "string"}
