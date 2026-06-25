@@ -211,7 +211,6 @@ _exceptions = {
 
 _unnamed_unknown_types = (
     "Custom::",
-    "AWS::Serverless::",
     "AWS::CloudFormation::CustomResource",
     "Module",
 )
