@@ -211,6 +211,50 @@ class TestSamModuleLoading(BaseTestCase):
             self.assertTrue((resources_dir / "sam123.json").exists())
 
 
+class TestAutoDownloadOnMissingSchemas(BaseTestCase):
+    """Test that schemas are auto-downloaded when provider files are missing"""
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.manager = _make_manager()
+
+    @patch("cfnlint.schema.manager.ProviderSchemaManager.update")
+    def test_auto_downloads_when_no_providers(self, mock_update):
+        """When no provider files exist, update is called automatically"""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            providers_dir = Path(tmpdir) / "providers"
+            providers_dir.mkdir()
+
+            self.manager._providers_dir = providers_dir
+            self.manager._provider_schema_modules = {}
+
+            self.manager._load_provider_module("us-east-1")
+            mock_update.assert_called_once_with(force=False)
+
+    @patch("cfnlint.schema.manager.ProviderSchemaManager.update")
+    def test_no_auto_download_when_providers_exist(self, mock_update):
+        """When provider files exist, update is not called"""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            providers_dir = Path(tmpdir) / "providers"
+            providers_dir.mkdir()
+            (providers_dir / "us-east-1.json").write_text(
+                json.dumps({"AWS::S3::Bucket": "abc123"})
+            )
+
+            self.manager._providers_dir = providers_dir
+            self.manager._provider_schema_modules = {}
+            self.manager._sam_schema_module = {}
+
+            self.manager._load_provider_module("us-east-1")
+            mock_update.assert_not_called()
+
+
 class TestManagerGetResourceSchema(BaseTestCase):
     """Test get resource schema"""
 
