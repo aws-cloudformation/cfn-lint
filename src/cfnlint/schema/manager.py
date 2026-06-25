@@ -98,6 +98,8 @@ class ProviderSchemaManager:
             Dict mapping resource type to schema hash
         """
         if region not in self._provider_schema_modules:
+            if not (self._providers_dir / "us-east-1.json").exists():
+                self.update(force=False)
             provider_file = self._providers_dir / f"{region}.json"
             if not provider_file.exists():
                 provider_file = self._providers_dir / "us-east-1.json"
