@@ -4468,6 +4468,11 @@
  },
  "application-signals": {
   "Actions": {
+   "batchdeleteinstrumentationconfigurations": {
+    "Resources": [
+     "instrumentationConfig"
+    ]
+   },
    "batchgetservicelevelobjectivebudgetreport": {
     "Resources": [
      "slo"
@@ -4478,11 +4483,27 @@
      "slo"
     ]
    },
+   "createinstrumentationconfiguration": {},
    "createservicelevelobjective": {},
    "deletegroupingconfiguration": {},
+   "deleteinstrumentationconfiguration": {
+    "Resources": [
+     "instrumentationConfig"
+    ]
+   },
    "deleteservicelevelobjective": {
     "Resources": [
      "slo"
+    ]
+   },
+   "getinstrumentationconfiguration": {
+    "Resources": [
+     "instrumentationConfig"
+    ]
+   },
+   "getinstrumentationconfigurationstatus": {
+    "Resources": [
+     "instrumentationConfig"
     ]
    },
    "getservice": {},
@@ -4495,6 +4516,7 @@
    "listauditfindings": {},
    "listentityevents": {},
    "listgroupingattributedefinitions": {},
+   "listinstrumentationconfigurations": {},
    "listobservedentities": {},
    "listservicedependencies": {},
    "listservicedependents": {},
@@ -4509,18 +4531,26 @@
    "listservicestates": {},
    "listtagsforresource": {
     "Resources": [
+     "instrumentationConfig",
      "slo"
     ]
    },
    "putgroupingconfiguration": {},
+   "reportinstrumentationconfigurationstatus": {
+    "Resources": [
+     "instrumentationConfig"
+    ]
+   },
    "startdiscovery": {},
    "tagresource": {
     "Resources": [
+     "instrumentationConfig",
      "slo"
     ]
    },
    "untagresource": {
     "Resources": [
+     "instrumentationConfig",
      "slo"
     ]
    },
@@ -4531,6 +4561,14 @@
    }
   },
   "Resources": {
+   "instrumentationconfig": {
+    "ARNFormats": [
+     "arn:${Partition}:application-signals:${Region}:${Account}:instrumentationConfig/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "slo": {
     "ARNFormats": [
      "arn:${Partition}:application-signals:${Region}:${Account}:slo/.*"
@@ -13203,7 +13241,17 @@
    "getcontractinformation": {},
    "getcreditallocationhistory": {},
    "getcredits": {},
+   "getcumulativetracking": {
+    "Resources": [
+     "contract"
+    ]
+   },
    "getiamaccesspreference": {},
+   "getmonthlytracking": {
+    "Resources": [
+     "contract"
+    ]
+   },
    "getresourcepolicy": {
     "Resources": [
      "billingview"
@@ -13254,6 +13302,11 @@
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "contract": {
+    "ARNFormats": [
+     "arn:${Partition}:billing::${Account}:contract/.*"
     ]
    }
   }
@@ -23076,6 +23129,11 @@
      "ConformancePack"
     ]
    },
+   "deleteconnector": {
+    "Resources": [
+     "Connector"
+    ]
+   },
    "deletedeliverychannel": {},
    "deleteevaluationresults": {
     "Resources": [
@@ -23217,6 +23275,11 @@
      "ConformancePack"
     ]
    },
+   "getconnector": {
+    "Resources": [
+     "Connector"
+    ]
+   },
    "getcustomrulepolicy": {
     "Resources": [
      "ConfigRule"
@@ -23252,6 +23315,7 @@
    },
    "listconfigurationrecorders": {},
    "listconformancepackcompliancescores": {},
+   "listconnectors": {},
    "listdiscoveredresources": {},
    "listresourceevaluations": {},
    "liststoredqueries": {},
@@ -23293,6 +23357,11 @@
      "ConformancePack"
     ]
    },
+   "putconnector": {
+    "Resources": [
+     "Connector"
+    ]
+   },
    "putdeliverychannel": {},
    "putevaluations": {},
    "putexternalevaluation": {
@@ -23322,6 +23391,11 @@
    "putstoredquery": {
     "Resources": [
      "StoredQuery"
+    ]
+   },
+   "putthirdpartyservicelinkedconfigurationrecorder": {
+    "Resources": [
+     "Connector"
     ]
    },
    "selectaggregateresourceconfig": {
@@ -23410,6 +23484,14 @@
    "conformancepack": {
     "ARNFormats": [
      "arn:${Partition}:config:${Region}:${Account}:conformance-pack/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "connector": {
+    "ARNFormats": [
+     "arn:${Partition}:config:${Region}:${Account}:connector/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -48656,6 +48738,7 @@
      "filter"
     ]
    },
+   "createinvestigation": {},
    "createipset": {},
    "createmalwareprotectionplan": {},
    "createmembers": {},
@@ -48737,6 +48820,7 @@
    },
    "getfindings": {},
    "getfindingsstatistics": {},
+   "getinvestigation": {},
    "getinvitationscount": {},
    "getipset": {
     "Resources": [
@@ -48780,6 +48864,7 @@
    "listdetectors": {},
    "listfilters": {},
    "listfindings": {},
+   "listinvestigations": {},
    "listinvitations": {},
    "listipsets": {},
    "listmalwareprotectionplans": {},
@@ -51346,6 +51431,11 @@
      "Code Security Scan Configuration"
     ]
    },
+   "createconnector": {
+    "Resources": [
+     "Connector"
+    ]
+   },
    "createfilter": {
     "Resources": [
      "Filter"
@@ -51366,6 +51456,11 @@
    "deletecodesecurityscanconfiguration": {
     "Resources": [
      "Code Security Scan Configuration"
+    ]
+   },
+   "deleteconnector": {
+    "Resources": [
+     "Connector"
     ]
    },
    "deletefilter": {
@@ -51400,6 +51495,8 @@
    "listcodesecurityintegrations": {},
    "listcodesecurityscanconfigurationassociations": {},
    "listcodesecurityscanconfigurations": {},
+   "listconnectors": {},
+   "listconnectorscanconfigurations": {},
    "listcoverage": {},
    "listcoveragestatistics": {},
    "listdelegatedadminaccounts": {},
@@ -51450,6 +51547,12 @@
     ]
    },
    "updateconfiguration": {},
+   "updateconnector": {
+    "Resources": [
+     "Connector"
+    ]
+   },
+   "updateconnectorscanconfiguration": {},
    "updateec2deepinspectionconfiguration": {},
    "updateencryptionkey": {},
    "updatefilter": {
@@ -51480,6 +51583,14 @@
    "code security scan configuration": {
     "ARNFormats": [
      "arn:${Partition}:inspector2:${Region}:${Account}:owner/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "connector": {
+    "ARNFormats": [
+     "arn:${Partition}:inspector2:${Region}:${Account}:connector/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -58779,6 +58890,7 @@
      "durable execution"
     ]
    },
+   "connectmicrovm": {},
    "createalias": {
     "Resources": [
      "function"
@@ -58799,6 +58911,22 @@
    "createfunctionurlconfig": {
     "Resources": [
      "function"
+    ]
+   },
+   "createmicrovmauthtoken": {
+    "Resources": [
+     "microvmImage"
+    ]
+   },
+   "createmicrovmimage": {},
+   "createmicrovmshellauthtoken": {
+    "Resources": [
+     "microvmImage"
+    ]
+   },
+   "createnetworkconnector": {
+    "Resources": [
+     "networkConnector"
     ]
    },
    "deletealias": {
@@ -58849,6 +58977,21 @@
    "deletelayerversion": {
     "Resources": [
      "layerVersion"
+    ]
+   },
+   "deletemicrovmimage": {
+    "Resources": [
+     "microvmImage"
+    ]
+   },
+   "deletemicrovmimageversion": {
+    "Resources": [
+     "microvmImage"
+    ]
+   },
+   "deletenetworkconnector": {
+    "Resources": [
+     "networkConnector"
     ]
    },
    "deleteprovisionedconcurrencyconfig": {
@@ -58953,6 +59096,31 @@
      "layerVersion"
     ]
    },
+   "getmicrovm": {
+    "Resources": [
+     "microvmImage"
+    ]
+   },
+   "getmicrovmimage": {
+    "Resources": [
+     "microvmImage"
+    ]
+   },
+   "getmicrovmimagebuild": {
+    "Resources": [
+     "microvmImage"
+    ]
+   },
+   "getmicrovmimageversion": {
+    "Resources": [
+     "microvmImage"
+    ]
+   },
+   "getnetworkconnector": {
+    "Resources": [
+     "networkConnector"
+    ]
+   },
    "getpolicy": {
     "Resources": [
      "function"
@@ -59020,6 +59188,25 @@
    },
    "listlayers": {},
    "listlayerversions": {},
+   "listmanagedmicrovmimages": {},
+   "listmanagedmicrovmimageversions": {
+    "Resources": [
+     "microvmImage"
+    ]
+   },
+   "listmicrovmimagebuilds": {
+    "Resources": [
+     "microvmImage"
+    ]
+   },
+   "listmicrovmimages": {},
+   "listmicrovmimageversions": {
+    "Resources": [
+     "microvmImage"
+    ]
+   },
+   "listmicrovms": {},
+   "listnetworkconnectors": {},
    "listprovisionedconcurrencyconfigs": {
     "Resources": [
      "function"
@@ -59030,7 +59217,9 @@
      "capacityProvider",
      "code signing config",
      "eventSourceMapping",
-     "function"
+     "function",
+     "microvmImage",
+     "networkConnector"
     ]
    },
    "listversionsbyfunction": {
@@ -59043,6 +59232,7 @@
      "capacityProvider"
     ]
    },
+   "passnetworkconnector": {},
    "publishlayerversion": {
     "Resources": [
      "layer"
@@ -59100,6 +59290,16 @@
      "function"
     ]
    },
+   "resumemicrovm": {
+    "Resources": [
+     "microvmImage"
+    ]
+   },
+   "runmicrovm": {
+    "Resources": [
+     "microvmImage"
+    ]
+   },
    "senddurableexecutioncallbackfailure": {
     "Resources": [
      "durable execution"
@@ -59120,12 +59320,24 @@
      "durable execution"
     ]
    },
+   "suspendmicrovm": {
+    "Resources": [
+     "microvmImage"
+    ]
+   },
    "tagresource": {
     "Resources": [
      "capacityProvider",
      "code signing config",
      "eventSourceMapping",
-     "function"
+     "function",
+     "microvmImage",
+     "networkConnector"
+    ]
+   },
+   "terminatemicrovm": {
+    "Resources": [
+     "microvmImage"
     ]
    },
    "untagresource": {
@@ -59133,7 +59345,9 @@
      "capacityProvider",
      "code signing config",
      "eventSourceMapping",
-     "function"
+     "function",
+     "microvmImage",
+     "networkConnector"
     ]
    },
    "updatealias": {
@@ -59180,6 +59394,21 @@
    "updatefunctionurlconfig": {
     "Resources": [
      "function"
+    ]
+   },
+   "updatemicrovmimage": {
+    "Resources": [
+     "microvmImage"
+    ]
+   },
+   "updatemicrovmimageversion": {
+    "Resources": [
+     "microvmImage"
+    ]
+   },
+   "updatenetworkconnector": {
+    "Resources": [
+     "networkConnector"
     ]
    }
   },
@@ -59245,6 +59474,22 @@
    "layerversion": {
     "ARNFormats": [
      "arn:${Partition}:lambda:${Region}:${Account}:layer:.*"
+    ]
+   },
+   "microvmimage": {
+    "ARNFormats": [
+     "arn:${Partition}:lambda:${Region}:${Account}:microvm-image:.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "networkconnector": {
+    "ARNFormats": [
+     "arn:${Partition}:lambda:${Region}:${Account}:network-connector:.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    }
   }
@@ -61326,6 +61571,11 @@
      "log-group"
     ]
    },
+   "deletesyslogconfiguration": {
+    "Resources": [
+     "log-group"
+    ]
+   },
    "deletetransformer": {
     "Resources": [
      "log-group"
@@ -61471,6 +61721,7 @@
    "listloggroupsforquery": {},
    "listscheduledqueries": {},
    "listsourcesfors3tableintegration": {},
+   "listsyslogconfigurations": {},
    "listtagsforresource": {
     "Resources": [
      "anomaly-detector",
@@ -61556,6 +61807,11 @@
    "putsubscriptionfilter": {
     "Resources": [
      "destination",
+     "log-group"
+    ]
+   },
+   "putsyslogconfiguration": {
+    "Resources": [
      "log-group"
     ]
    },
@@ -92444,6 +92700,7 @@
    "createautomationrule": {},
    "createautomationrulev2": {},
    "createconfigurationpolicy": {},
+   "createconnector": {},
    "createconnectorv2": {},
    "createfindingaggregator": {},
    "createinsight": {
@@ -92484,6 +92741,11 @@
    "deleteconfigurationpolicy": {
     "Resources": [
      "configuration-policy"
+    ]
+   },
+   "deleteconnector": {
+    "Resources": [
+     "connector"
     ]
    },
    "deleteconnectorv2": {
@@ -92562,6 +92824,11 @@
      "hub"
     ]
    },
+   "disablesecurityhubfeaturev2": {
+    "Resources": [
+     "hubv2"
+    ]
+   },
    "disablesecurityhubv2": {},
    "disassociatefromadministratoraccount": {
     "Resources": [
@@ -92591,6 +92858,11 @@
    "enablesecurityhub": {
     "Resources": [
      "hub"
+    ]
+   },
+   "enablesecurityhubfeaturev2": {
+    "Resources": [
+     "hubv2"
     ]
    },
    "enablesecurityhubv2": {},
@@ -92626,6 +92898,11 @@
     ]
    },
    "getconfigurationpolicyassociation": {},
+   "getconnector": {
+    "Resources": [
+     "connector"
+    ]
+   },
    "getconnectorv2": {
     "Resources": [
      "connectorv2"
@@ -92748,6 +93025,7 @@
    "listautomationrulesv2": {},
    "listconfigurationpolicies": {},
    "listconfigurationpolicyassociations": {},
+   "listconnectors": {},
    "listconnectorsv2": {},
    "listcontrolevaluationsummaries": {
     "Resources": [
@@ -92810,6 +93088,7 @@
      "automation-rule",
      "automation-rulev2",
      "configuration-policy",
+     "connector",
      "connectorv2",
      "hub",
      "hubv2"
@@ -92821,6 +93100,7 @@
      "automation-rule",
      "automation-rulev2",
      "configuration-policy",
+     "connector",
      "connectorv2",
      "hub",
      "hubv2"
@@ -92844,6 +93124,11 @@
    "updateconfigurationpolicy": {
     "Resources": [
      "configuration-policy"
+    ]
+   },
+   "updateconnector": {
+    "Resources": [
+     "connector"
     ]
    },
    "updateconnectorv2": {
@@ -92911,6 +93196,14 @@
    "configuration-policy": {
     "ARNFormats": [
      "arn:${Partition}:securityhub:${Region}:${Account}:configuration-policy/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "connector": {
+    "ARNFormats": [
+     "arn:${Partition}:securityhub:${Region}:${Account}:connector/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -96424,6 +96717,7 @@
     "Resources": [
      "association",
      "automation-execution",
+     "cloud-connector",
      "document",
      "instance",
      "maintenancewindow",
@@ -96462,6 +96756,11 @@
      "managed-instance"
     ]
    },
+   "createcloudconnector": {
+    "Resources": [
+     "cloud-connector"
+    ]
+   },
    "createdocument": {
     "Resources": [
      "document"
@@ -96483,6 +96782,11 @@
      "document",
      "instance",
      "managed-instance"
+    ]
+   },
+   "deletecloudconnector": {
+    "Resources": [
+     "cloud-connector"
     ]
    },
    "deletedocument": {
@@ -96682,6 +96986,11 @@
      "document"
     ]
    },
+   "getcloudconnector": {
+    "Resources": [
+     "cloud-connector"
+    ]
+   },
    "getcommandinvocation": {},
    "getconnectionstatus": {
     "Resources": [
@@ -96782,6 +97091,7 @@
      "association"
     ]
    },
+   "listcloudconnectors": {},
    "listcommandinvocations": {},
    "listcommands": {},
    "listcomplianceitems": {},
@@ -96823,6 +97133,7 @@
     "Resources": [
      "association",
      "automation-execution",
+     "cloud-connector",
      "document",
      "maintenancewindow",
      "managed-instance",
@@ -96887,6 +97198,7 @@
     "Resources": [
      "association",
      "automation-execution",
+     "cloud-connector",
      "document",
      "instance",
      "maintenancewindow",
@@ -96985,6 +97297,11 @@
      "managed-instance"
     ]
    },
+   "updatecloudconnector": {
+    "Resources": [
+     "cloud-connector"
+    ]
+   },
    "updatedocument": {
     "Resources": [
      "document"
@@ -97060,6 +97377,11 @@
     "Resources": [
      "servicesetting"
     ]
+   },
+   "validatecloudconnector": {
+    "Resources": [
+     "cloud-connector"
+    ]
    }
   },
   "Resources": {
@@ -97091,6 +97413,14 @@
    "bucket": {
     "ARNFormats": [
      "arn:${Partition}:s3:::.*"
+    ]
+   },
+   "cloud-connector": {
+    "ARNFormats": [
+     "arn:${Partition}:ssm:${Region}:${Account}:cloud-connector/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "document": {
