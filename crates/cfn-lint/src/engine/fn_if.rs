@@ -28,6 +28,7 @@ pub(crate) fn expand_fn_if_branches<'a>(
     vec![(node, base_path)]
 }
 
+
 pub(crate) fn is_ref_no_value(node: &AstNode) -> bool {
     matches!(node, AstNode::Function(f) if f.name == "Ref" && f.args.as_str() == Some("AWS::NoValue"))
 }

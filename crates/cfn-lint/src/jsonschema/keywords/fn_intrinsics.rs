@@ -234,19 +234,25 @@ pub fn validate_fn_if(
         None => return vec![unknown_err("fn_if", path, node)],
     };
 
-    if !ctx.template.conditions.contains_key(cond_name) {
+    let mut errors = Vec::new();
+    let condition_undefined = !ctx.template.conditions.contains_key(cond_name);
+
+    if condition_undefined {
         let mut names: Vec<&str> = ctx.template.conditions.keys().map(|s| s.as_str()).collect();
         names.sort();
-        return vec![err(
+        errors.push(err(
             "fn_if",
             format!("'{}' is not one of {:?}", cond_name, names),
             path,
             &arr.elements[0],
-        )];
+        ));
+        // Don't return early — continue validating branches so nested Fn::If
+        // conditions are also checked (matching Python's behavior).
+        // Branch errors are marked unknown so only nested condition-reference
+        // errors bubble up.
     }
 
     let scenarios = ctx.evaluate_condition(cond_name);
-    let mut errors = Vec::new();
 
     for scenario in &scenarios {
         let branch = if scenario.value {
@@ -275,7 +281,25 @@ pub fn validate_fn_if(
             cfn_path: validator.cfn_path.clone(),
         };
 
-        errors.extend(evolved.validate_schema(branch, constraint, path));
+        // The constraint is {"fn_if": <inner_schema>} — validate branch against
+        // the inner schema so that maxItems, minItems, pattern etc. are checked.
+        let inner_schema = constraint
+            .get("fn_if")
+            .unwrap_or(constraint);
+        let branch_errors = evolved.validate_schema(branch, inner_schema, path);
+        if condition_undefined {
+            // Condition doesn't exist — mark branch errors as unknown so only
+            // nested condition-reference errors (fn_if) bubble up, not schema
+            // validation errors on the branches themselves.
+            for mut e in branch_errors {
+                if e.keyword != "fn_if" {
+                    e.unknown = true;
+                }
+                errors.push(e);
+            }
+        } else {
+            errors.extend(branch_errors);
+        }
     }
 
     if errors.is_empty() && scenarios.is_empty() {
