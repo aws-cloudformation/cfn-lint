@@ -1,3 +1,14 @@
+### v1.52.1
+## What's Changed
+* fix: Auto-download schemas when not present for pre-commit users by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4558
+* Update CloudFormation schemas to 2026-06-26 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4554
+* Update CloudFormation schemas to 2026-06-29 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4559
+
+## New Contributors
+* @johnanand707 made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4527
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.52.0...v1.52.1
+
 ### v1.52.0
 ## What's Changed
 * Source schemas from enhanced-schemas repo instead of local patching by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4539
