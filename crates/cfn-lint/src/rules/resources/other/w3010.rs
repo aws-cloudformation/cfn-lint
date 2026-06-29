@@ -44,12 +44,21 @@ impl CfnLintRule for W3010 {
 
     fn validate(
         &self,
-        _validator: &Validator,
+        validator: &Validator,
         _keyword: &str,
         instance: &AstNode,
         _schema: &serde_json::Value,
         path: &[String],
     ) -> Vec<ValidationError> {
+        // Skip for CDK templates — CDK synthesizes AZs and they can't be parameterized
+        if let Some(ctx) = &validator.context {
+            if ctx.template.resources.contains_key("CDKMetadata")
+                || ctx.template.resources.values().any(|r| r.resource_type == "AWS::CDK::Metadata")
+            {
+                return vec![];
+            }
+        }
+
         let zone = match instance.as_str() {
             Some(s) => s,
             None => return vec![],

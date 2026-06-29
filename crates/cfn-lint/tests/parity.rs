@@ -91,10 +91,9 @@ fn run_engine(engine: &mut Engine, path: &Path) -> Vec<ValidationError> {
         all.extend(nsk_issues);
         return all;
     }
-    let default_region = std::env::var("AWS_REGION")
-        .or_else(|_| std::env::var("AWS_DEFAULT_REGION"))
-        .unwrap_or_else(|_| "us-east-1".to_string());
-    let issues = engine.validate(&tmpl, &ast, &[default_region]);
+    // Always use us-east-1 for parity comparison — python_bad/good_results.json
+    // was captured with us-east-1. Env vars like AWS_REGION must not affect this.
+    let issues = engine.validate(&tmpl, &ast, &["us-east-1".to_string()]);
     if dup_issues.is_empty() {
         issues
     } else {
