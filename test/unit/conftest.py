@@ -11,16 +11,14 @@ from pathlib import Path as FilePath
 import pytest
 
 from cfnlint.context import Path, create_context_for_template
-from cfnlint.helpers import FUNCTIONS
+from cfnlint.helpers import FUNCTIONS, get_cache_dir
 from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 from cfnlint.template import Template
 
 _fixtures_dir = FilePath(__file__).parent.parent / "fixtures" / "schemas"
 
-_default_providers_dir = FilePath(__file__).parent.parent.parent / (
-    "src/cfnlint/data/schemas/providers"
-)
+_default_providers_dir = FilePath(get_cache_dir()) / "providers"
 
 _has_full_schemas = _default_providers_dir.exists() and any(
     _default_providers_dir.glob("*.json")

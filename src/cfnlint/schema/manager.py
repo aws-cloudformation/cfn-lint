@@ -15,7 +15,12 @@ from functools import lru_cache
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Iterator, Sequence
 
-from cfnlint.helpers import REGIONS, get_url_retrieve, url_has_newer_version
+from cfnlint.helpers import (
+    REGIONS,
+    get_cache_dir,
+    get_url_retrieve,
+    url_has_newer_version,
+)
 from cfnlint.schema._exceptions import ResourceNotFoundError
 from cfnlint.schema._getatts import AttributeDict
 from cfnlint.schema._schema import Schema
@@ -41,12 +46,9 @@ class ProviderSchemaManager:
         providers_dir: Path | None = None,
         resources_dir: Path | None = None,
     ) -> None:
-        self._providers_dir = providers_dir or Path(
-            os.path.dirname(__file__), "..", "data", "schemas", "providers"
-        )
-        self._resources_dir = resources_dir or Path(
-            os.path.dirname(__file__), "..", "data", "schemas", "resources"
-        )
+        _cache = Path(get_cache_dir())
+        self._providers_dir = providers_dir or _cache / "providers"
+        self._resources_dir = resources_dir or _cache / "resources"
         self._registry_schemas: dict[str, Schema] = {}
         self._provider_schema_modules: dict[str, dict[str, str]] = {}
         self._sam_schema_module: dict[str, str] | None = None
