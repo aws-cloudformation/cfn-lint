@@ -11,9 +11,9 @@ from unittest.mock import patch
 
 import pytest
 
-_default_providers_dir = Path(__file__).parent.parent.parent / (
-    "src/cfnlint/data/schemas/providers"
-)
+from cfnlint.helpers import get_cache_dir
+
+_default_providers_dir = Path(get_cache_dir()) / "providers"
 
 _has_full_schemas = _default_providers_dir.exists() and any(
     _default_providers_dir.glob("*.json")

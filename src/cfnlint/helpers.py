@@ -409,9 +409,29 @@ class RegexDict(dict):
             return default
 
 
+def get_cache_dir() -> str:
+    """Returns the platform-appropriate cache directory for cfn-lint.
+
+    Uses AWS-standard paths:
+        Linux:   ~/.cache/aws/cfn-lint/schemas/
+        macOS:   ~/Library/Caches/aws/cfn-lint/schemas/
+        Windows: %LOCALAPPDATA%/aws/cfn-lint/schemas/
+    """
+    import sys
+
+    if sys.platform == "win32":
+        base = os.environ.get("LOCALAPPDATA", os.path.expanduser("~\\AppData\\Local"))
+    elif sys.platform == "darwin":
+        base = os.path.expanduser("~/Library/Caches")
+    else:
+        base = os.environ.get("XDG_CACHE_HOME", os.path.expanduser("~/.cache"))
+
+    return os.path.join(base, "aws", "cfn-lint", "schemas")
+
+
 def get_metadata_filename(url):
     """Returns the filename for a metadata file associated with a remote resource"""
-    caching_dir = os.path.join(os.path.dirname(__file__), "data", "DownloadsMetadata")
+    caching_dir = os.path.join(get_cache_dir(), "metadata")
     encoded_url = hashlib.sha256(url.encode()).hexdigest()
     metadata_filename = os.path.join(caching_dir, encoded_url + ".meta.json")
 
@@ -526,8 +546,7 @@ def load_metadata(filename):
 def save_metadata(metadata, filename):
     """Save the contents of the download metadata file"""
     dirname = os.path.dirname(filename)
-    if not os.path.exists(dirname):
-        os.mkdir(dirname)
+    os.makedirs(dirname, exist_ok=True)
 
     with open(filename, "w", encoding="utf-8") as metadata_file:
         json.dump(metadata, metadata_file)

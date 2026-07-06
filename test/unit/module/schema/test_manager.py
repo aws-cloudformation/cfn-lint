@@ -11,13 +11,12 @@ from pathlib import Path
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import MagicMock, patch
 
+from cfnlint.helpers import get_cache_dir
 from cfnlint.schema._patch import SchemaPatch
 from cfnlint.schema.manager import ProviderSchemaManager, ResourceNotFoundError
 
 _fixtures_dir = Path(__file__).parent.parent.parent.parent / "fixtures" / "schemas"
-_default_providers_dir = Path(__file__).parent.parent.parent.parent.parent / (
-    "src/cfnlint/data/schemas/providers"
-)
+_default_providers_dir = Path(get_cache_dir()) / "providers"
 _has_full_schemas = _default_providers_dir.exists() and any(
     _default_providers_dir.glob("*.json")
 )

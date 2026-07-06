@@ -42,20 +42,16 @@ class TestDownloadsMetadata(BaseTestCase):
 
             self.assertEqual(result, file_contents)
 
-    @patch("cfnlint.helpers.os.path.exists")
     @patch("cfnlint.helpers.os.path.dirname")
-    @patch("cfnlint.helpers.os.mkdir")
+    @patch("cfnlint.helpers.os.makedirs")
     @patch("cfnlint.helpers.json.dump")
-    def test_save_download_metadata(
-        self, mock_json_dump, mock_mkdir, mock_dirname, mock_path_exists
-    ):
+    def test_save_download_metadata(self, mock_json_dump, mock_makedirs, mock_dirname):
         """Test success run"""
 
         filename = "foo.bar"
         filedir = "foobardir"
         file_contents = {"etag": "foo"}
 
-        mock_path_exists.return_value = False
         mock_dirname.return_value = filedir
 
         builtin_module_name = "builtins"
@@ -63,5 +59,5 @@ class TestDownloadsMetadata(BaseTestCase):
         mo = mock_open()
         with patch("{}.open".format(builtin_module_name), mo):
             cfnlint.helpers.save_metadata(file_contents, filename)
-            mock_mkdir.assert_called_with(filedir)
+            mock_makedirs.assert_called_with(filedir, exist_ok=True)
             mock_json_dump.assert_called_once
