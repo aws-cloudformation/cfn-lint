@@ -714,9 +714,55 @@
      "certificate"
     ]
    },
+   "createacmedomainvalidation": {
+    "Resources": [
+     "acme-endpoint"
+    ]
+   },
+   "createacmeendpoint": {},
+   "createacmeexternalaccountbinding": {
+    "Resources": [
+     "acme-endpoint"
+    ]
+   },
+   "deleteacmedomainvalidation": {
+    "Resources": [
+     "acme-domain-validation"
+    ]
+   },
+   "deleteacmeendpoint": {
+    "Resources": [
+     "acme-endpoint"
+    ]
+   },
+   "deleteacmeexternalaccountbinding": {
+    "Resources": [
+     "acme-external-account-binding"
+    ]
+   },
    "deletecertificate": {
     "Resources": [
      "certificate"
+    ]
+   },
+   "describeacmeaccount": {
+    "Resources": [
+     "acme-endpoint"
+    ]
+   },
+   "describeacmedomainvalidation": {
+    "Resources": [
+     "acme-domain-validation"
+    ]
+   },
+   "describeacmeendpoint": {
+    "Resources": [
+     "acme-endpoint"
+    ]
+   },
+   "describeacmeexternalaccountbinding": {
+    "Resources": [
+     "acme-external-account-binding"
     ]
    },
    "describecertificate": {
@@ -730,6 +776,11 @@
     ]
    },
    "getaccountconfiguration": {},
+   "getacmeexternalaccountbindingcredentials": {
+    "Resources": [
+     "acme-external-account-binding"
+    ]
+   },
    "getcertificate": {
     "Resources": [
      "certificate"
@@ -740,10 +791,33 @@
      "certificate"
     ]
    },
+   "listacmeaccounts": {
+    "Resources": [
+     "acme-endpoint"
+    ]
+   },
+   "listacmedomainvalidations": {
+    "Resources": [
+     "acme-endpoint"
+    ]
+   },
+   "listacmeendpoints": {},
+   "listacmeexternalaccountbindings": {
+    "Resources": [
+     "acme-endpoint"
+    ]
+   },
    "listcertificates": {},
    "listtagsforcertificate": {
     "Resources": [
      "certificate"
+    ]
+   },
+   "listtagsforresource": {
+    "Resources": [
+     "acme-domain-validation",
+     "acme-endpoint",
+     "acme-external-account-binding"
     ]
    },
    "putaccountconfiguration": {},
@@ -763,12 +837,51 @@
      "certificate"
     ]
    },
+   "revokeacmeaccount": {
+    "Resources": [
+     "acme-endpoint"
+    ]
+   },
+   "revokeacmeexternalaccountbinding": {
+    "Resources": [
+     "acme-external-account-binding"
+    ]
+   },
    "revokecertificate": {
     "Resources": [
      "certificate"
     ]
    },
    "searchcertificates": {},
+   "tagresource": {
+    "Resources": [
+     "acme-domain-validation",
+     "acme-endpoint",
+     "acme-external-account-binding"
+    ]
+   },
+   "untagresource": {
+    "Resources": [
+     "acme-domain-validation",
+     "acme-endpoint",
+     "acme-external-account-binding"
+    ]
+   },
+   "updateacmedomainvalidation": {
+    "Resources": [
+     "acme-domain-validation"
+    ]
+   },
+   "updateacmeendpoint": {
+    "Resources": [
+     "acme-endpoint"
+    ]
+   },
+   "updatecertificate": {
+    "Resources": [
+     "certificate"
+    ]
+   },
    "updatecertificateoptions": {
     "Resources": [
      "certificate"
@@ -776,6 +889,30 @@
    }
   },
   "Resources": {
+   "acme-domain-validation": {
+    "ARNFormats": [
+     "arn:${Partition}:acm:${Region}:${Account}:acme-endpoint/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "acme-endpoint": {
+    "ARNFormats": [
+     "arn:${Partition}:acm:${Region}:${Account}:acme-endpoint/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "acme-external-account-binding": {
+    "ARNFormats": [
+     "arn:${Partition}:acm:${Region}:${Account}:acme-endpoint/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "certificate": {
     "ARNFormats": [
      "arn:${Partition}:acm:${Region}:${Account}:certificate/.*"
@@ -6935,10 +7072,25 @@
      "agreement"
     ]
    },
+   "createcomplianceinquiry": {
+    "Resources": [
+     "compliance-inquiry"
+    ]
+   },
+   "exportcomplianceinquiry": {
+    "Resources": [
+     "compliance-inquiry"
+    ]
+   },
    "getaccountsettings": {},
    "getagreement": {
     "Resources": [
      "agreement"
+    ]
+   },
+   "getcomplianceinquirymetadata": {
+    "Resources": [
+     "compliance-inquiry"
     ]
    },
    "getcustomeragreement": {
@@ -6967,13 +7119,34 @@
     ]
    },
    "listagreements": {},
+   "listcomplianceinquiries": {},
+   "listcomplianceinquiryqueries": {
+    "Resources": [
+     "compliance-inquiry"
+    ]
+   },
    "listcustomeragreements": {},
    "listreports": {},
    "listreportversions": {},
+   "listtagsforresource": {
+    "Resources": [
+     "compliance-inquiry"
+    ]
+   },
    "putaccountsettings": {},
+   "tagresource": {
+    "Resources": [
+     "compliance-inquiry"
+    ]
+   },
    "terminateagreement": {
     "Resources": [
      "customer-agreement"
+    ]
+   },
+   "untagresource": {
+    "Resources": [
+     "compliance-inquiry"
     ]
    }
   },
@@ -6981,6 +7154,14 @@
    "agreement": {
     "ARNFormats": [
      "arn:${Partition}:artifact:::agreement/*"
+    ]
+   },
+   "compliance-inquiry": {
+    "ARNFormats": [
+     "arn:${Partition}:artifact:${Region}:${Account}:compliance-inquiry/*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "customer-agreement": {
@@ -15788,14 +15969,16 @@
     "Resources": [
      "collaboration",
      "configuredtableassociation",
-     "idmappingtable"
+     "idmappingtable",
+     "intermediatetable"
     ]
    },
    "batchgetschemaanalysisrule": {
     "Resources": [
      "collaboration",
      "configuredtableassociation",
-     "idmappingtable"
+     "idmappingtable",
+     "intermediatetable"
     ]
    },
    "createanalysistemplate": {
@@ -15852,6 +16035,18 @@
     "Resources": [
      "idnamespaceassociation",
      "membership"
+    ]
+   },
+   "createintermediatetable": {
+    "Resources": [
+     "analysistemplate",
+     "intermediatetable",
+     "membership"
+    ]
+   },
+   "createintermediatetableanalysisrule": {
+    "Resources": [
+     "intermediatetable"
     ]
    },
    "createmembership": {
@@ -15913,6 +16108,17 @@
      "membership"
     ]
    },
+   "deleteintermediatetable": {
+    "Resources": [
+     "intermediatetable",
+     "membership"
+    ]
+   },
+   "deleteintermediatetableanalysisrule": {
+    "Resources": [
+     "intermediatetable"
+    ]
+   },
    "deletemember": {
     "Resources": [
      "collaboration"
@@ -15926,6 +16132,11 @@
    "deleteprivacybudgettemplate": {
     "Resources": [
      "privacybudgettemplate"
+    ]
+   },
+   "disallowintermediatetable": {
+    "Resources": [
+     "membership"
     ]
    },
    "getanalysistemplate": {
@@ -16002,6 +16213,17 @@
     "Resources": [
      "idnamespaceassociation",
      "membership"
+    ]
+   },
+   "getintermediatetable": {
+    "Resources": [
+     "intermediatetable",
+     "membership"
+    ]
+   },
+   "getintermediatetableanalysisrule": {
+    "Resources": [
+     "intermediatetable"
     ]
    },
    "getmembership": {
@@ -16098,6 +16320,18 @@
      "membership"
     ]
    },
+   "listintermediatetables": {
+    "Resources": [
+     "intermediatetable",
+     "membership"
+    ]
+   },
+   "listintermediatetableversions": {
+    "Resources": [
+     "intermediatetable",
+     "membership"
+    ]
+   },
    "listmembers": {
     "Resources": [
      "collaboration"
@@ -16137,6 +16371,7 @@
      "configuredaudiencemodelassociation",
      "configuredtable",
      "configuredtableassociation",
+     "intermediatetable",
      "membership",
      "privacybudgettemplate"
     ]
@@ -16157,6 +16392,14 @@
      "membership"
     ]
    },
+   "populateintermediatetable": {
+    "Resources": [
+     "configuredtableassociation",
+     "idmappingtable",
+     "intermediatetable",
+     "membership"
+    ]
+   },
    "previewprivacyimpact": {
     "Resources": [
      "membership"
@@ -16166,6 +16409,7 @@
     "Resources": [
      "analysistemplate",
      "configuredtableassociation",
+     "intermediatetable",
      "membership"
     ]
    },
@@ -16174,6 +16418,7 @@
      "analysistemplate",
      "configuredtableassociation",
      "idmappingtable",
+     "intermediatetable",
      "membership"
     ]
    },
@@ -16186,6 +16431,7 @@
      "configuredtableassociation",
      "idmappingtable",
      "idnamespaceassociation",
+     "intermediatetable",
      "membership",
      "privacybudgettemplate"
     ]
@@ -16199,6 +16445,7 @@
      "configuredtableassociation",
      "idmappingtable",
      "idnamespaceassociation",
+     "intermediatetable",
      "membership",
      "privacybudgettemplate"
     ]
@@ -16263,6 +16510,17 @@
     "Resources": [
      "idnamespaceassociation",
      "membership"
+    ]
+   },
+   "updateintermediatetable": {
+    "Resources": [
+     "intermediatetable",
+     "membership"
+    ]
+   },
+   "updateintermediatetableanalysisrule": {
+    "Resources": [
+     "intermediatetable"
     ]
    },
    "updatemembership": {
@@ -16336,6 +16594,14 @@
     ]
    },
    "idnamespaceassociation": {
+    "ARNFormats": [
+     "arn:${Partition}:cleanrooms:${Region}:${Account}:membership/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "intermediatetable": {
     "ARNFormats": [
      "arn:${Partition}:cleanrooms:${Region}:${Account}:membership/.*"
     ],
@@ -19035,6 +19301,11 @@
      "metric-stream"
     ]
    },
+   "deletepipelinerule": {
+    "Resources": [
+     "dataset"
+    ]
+   },
    "deleteservicelevelobjective": {
     "Resources": [
      "slo"
@@ -19197,6 +19468,11 @@
    "putmetricstream": {
     "Resources": [
      "metric-stream"
+    ]
+   },
+   "putpipelinerule": {
+    "Resources": [
+     "dataset"
     ]
    },
    "setalarmstate": {
@@ -23721,6 +23997,11 @@
      "agent-status"
     ]
    },
+   "createattachedfile": {
+    "Resources": [
+     "attached-file"
+    ]
+   },
    "createauthenticationprofile": {
     "Resources": [
      "authentication-profile"
@@ -24414,6 +24695,11 @@
      "instance"
     ]
    },
+   "getevaluationformvalidation": {
+    "Resources": [
+     "evaluation-form"
+    ]
+   },
    "getfederationtoken": {
     "Resources": [
      "instance"
@@ -25005,6 +25291,11 @@
      "contact-flow"
     ]
    },
+   "startcontactconversationalanalyticsjob": {
+    "Resources": [
+     "contact"
+    ]
+   },
    "startcontactevaluation": {
     "Resources": [
      "contact",
@@ -25031,6 +25322,11 @@
    "startemailcontact": {
     "Resources": [
      "contact-flow"
+    ]
+   },
+   "startevaluationformvalidation": {
+    "Resources": [
+     "evaluation-form"
     ]
    },
    "startforecastingplanningschedulingintegration": {
@@ -25516,6 +25812,9 @@
    "ai-agent": {
     "ARNFormats": [
      "arn:${Partition}:wisdom:${Region}:${Account}:.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "attached-file": {
@@ -31978,6 +32277,11 @@
      "vpc"
     ]
    },
+   "attachimagewatermark": {
+    "Resources": [
+     "image"
+    ]
+   },
    "attachinternetgateway": {
     "Resources": [
      "internet-gateway",
@@ -32116,6 +32420,7 @@
    },
    "createcapacityreservationcancellationquote": {
     "Resources": [
+     "capacity-reservation",
      "capacity-reservation-cancellation-quote"
     ]
    },
@@ -33735,6 +34040,11 @@
      "vpc"
     ]
    },
+   "detachimagewatermark": {
+    "Resources": [
+     "image"
+    ]
+   },
    "detachinternetgateway": {
     "Resources": [
      "internet-gateway",
@@ -35083,9 +35393,11 @@
      "license-configuration",
      "network-interface",
      "placement-group",
+     "secondary-interface",
      "secondary-subnet",
      "security-group",
      "snapshot",
+     "spot-instances-request",
      "subnet",
      "volume"
     ]
@@ -37210,6 +37522,11 @@
  },
  "ecs": {
   "Actions": {
+   "allowvendedlogdeliveryforresource": {
+    "Resources": [
+     "cluster"
+    ]
+   },
    "continueservicedeployment": {
     "Resources": [
      "service",
@@ -37733,6 +38050,11 @@
     ]
    },
    "associateidentityproviderconfig": {
+    "Resources": [
+     "cluster"
+    ]
+   },
+   "cancelupdate": {
     "Resources": [
      "cluster"
     ]
@@ -41485,7 +41807,8 @@
    },
    "createeventbus": {
     "Resources": [
-     "event-bus"
+     "event-bus",
+     "event-busv2"
     ]
    },
    "createpartnereventsource": {
@@ -41525,7 +41848,8 @@
    },
    "deleteeventbus": {
     "Resources": [
-     "event-bus"
+     "event-bus",
+     "event-busv2"
     ]
    },
    "deletepartnereventsource": {
@@ -41562,7 +41886,8 @@
    },
    "describeeventbus": {
     "Resources": [
-     "event-bus"
+     "event-bus",
+     "event-busv2"
     ]
    },
    "describeeventsource": {
@@ -41621,8 +41946,11 @@
    "listtagsforresource": {
     "Resources": [
      "event-bus",
+     "event-busv2",
+     "publisher",
      "rule-on-custom-event-bus",
-     "rule-on-default-event-bus"
+     "rule-on-default-event-bus",
+     "subscriber"
     ]
    },
    "listtargetsbyrule": {
@@ -41673,16 +42001,22 @@
    "tagresource": {
     "Resources": [
      "event-bus",
+     "event-busv2",
+     "publisher",
      "rule-on-custom-event-bus",
-     "rule-on-default-event-bus"
+     "rule-on-default-event-bus",
+     "subscriber"
     ]
    },
    "testeventpattern": {},
    "untagresource": {
     "Resources": [
      "event-bus",
+     "event-busv2",
+     "publisher",
      "rule-on-custom-event-bus",
-     "rule-on-default-event-bus"
+     "rule-on-default-event-bus",
+     "subscriber"
     ]
    },
    "updateapidestination": {
@@ -41709,7 +42043,8 @@
    },
    "updateeventbus": {
     "Resources": [
-     "event-bus"
+     "event-bus",
+     "event-busv2"
     ]
    }
   },
@@ -45005,6 +45340,11 @@
    },
    "createapplication": {},
    "createstreamgroup": {},
+   "createstreamsessionadminshell": {
+    "Resources": [
+     "stream group"
+    ]
+   },
    "createstreamsessionconnection": {
     "Resources": [
      "stream group"
@@ -61701,6 +62041,7 @@
      "scheduled-query"
     ]
    },
+   "getstoragetierpolicy": {},
    "gettransformer": {
     "Resources": [
      "log-group"
@@ -61814,6 +62155,7 @@
      "log-group"
     ]
    },
+   "putstoragetierpolicy": {},
    "putsubscriptionfilter": {
     "Resources": [
      "destination",
@@ -68696,6 +69038,11 @@
      "ProxyRuleGroup"
     ]
    },
+   "createcontainerassociation": {
+    "Resources": [
+     "ContainerAssociation"
+    ]
+   },
    "createfirewall": {
     "Resources": [
      "Firewall",
@@ -68747,6 +69094,11 @@
     "Resources": [
      "Firewall",
      "VpcEndpointAssociation"
+    ]
+   },
+   "deletecontainerassociation": {
+    "Resources": [
+     "ContainerAssociation"
     ]
    },
    "deletefirewall": {
@@ -68806,6 +69158,11 @@
    "deletevpcendpointassociation": {
     "Resources": [
      "VpcEndpointAssociation"
+    ]
+   },
+   "describecontainerassociation": {
+    "Resources": [
+     "ContainerAssociation"
     ]
    },
    "describefirewall": {
@@ -68918,6 +69275,7 @@
      "Firewall"
     ]
    },
+   "listcontainerassociations": {},
    "listfirewallpolicies": {
     "Resources": [
      "FirewallPolicy"
@@ -68956,6 +69314,7 @@
    "listrulegroups": {},
    "listtagsforresource": {
     "Resources": [
+     "ContainerAssociation",
      "Firewall",
      "FirewallPolicy",
      "StatefulRuleGroup",
@@ -69004,6 +69363,7 @@
    },
    "tagresource": {
     "Resources": [
+     "ContainerAssociation",
      "Firewall",
      "FirewallPolicy",
      "Proxy",
@@ -69017,6 +69377,7 @@
    },
    "untagresource": {
     "Resources": [
+     "ContainerAssociation",
      "Firewall",
      "FirewallPolicy",
      "Proxy",
@@ -69031,6 +69392,11 @@
    "updateavailabilityzonechangeprotection": {
     "Resources": [
      "Firewall"
+    ]
+   },
+   "updatecontainerassociation": {
+    "Resources": [
+     "ContainerAssociation"
     ]
    },
    "updatefirewallanalysissettings": {
@@ -69114,6 +69480,14 @@
    }
   },
   "Resources": {
+   "containerassociation": {
+    "ARNFormats": [
+     "arn:${Partition}:network-firewall:${Region}:${Account}:container-association/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "firewall": {
     "ARNFormats": [
      "arn:${Partition}:network-firewall:${Region}:${Account}:firewall/.*"
@@ -73395,6 +73769,12 @@
      "engagement-invitation"
     ]
    },
+   "createmarketplacerevenueshare": {},
+   "createmarketplacerevenueshareallocation": {
+    "Resources": [
+     "MarketplaceRevenueShare"
+    ]
+   },
    "createopportunity": {
     "Resources": [
      "Opportunity"
@@ -73417,6 +73797,7 @@
      "resource-snapshot-job"
     ]
    },
+   "createrevenueattribution": {},
    "deleteprogrammanagementaccount": {
     "Resources": [
      "ProgramManagementAccount"
@@ -73498,6 +73879,16 @@
      "engagement-invitation"
     ]
    },
+   "getmarketplacerevenueshare": {
+    "Resources": [
+     "MarketplaceRevenueShare"
+    ]
+   },
+   "getmarketplacerevenueshareallocation": {
+    "Resources": [
+     "MarketplaceRevenueShare"
+    ]
+   },
    "getopportunity": {
     "Resources": [
      "Opportunity"
@@ -73545,6 +73936,21 @@
      "resource-snapshot-job"
     ]
    },
+   "getrevenueattribution": {
+    "Resources": [
+     "RevenueAttribution"
+    ]
+   },
+   "getrevenueattributionallocation": {
+    "Resources": [
+     "RevenueAttribution"
+    ]
+   },
+   "getrevenueattributionallocationstask": {
+    "Resources": [
+     "RevenueAttribution"
+    ]
+   },
    "getsellingsystemsettings": {},
    "getverification": {},
    "listbenefitallocations": {
@@ -73585,6 +73991,12 @@
     ]
    },
    "listengagements": {},
+   "listmarketplacerevenueshareallocations": {
+    "Resources": [
+     "MarketplaceRevenueShare"
+    ]
+   },
+   "listmarketplacerevenueshares": {},
    "listopportunities": {},
    "listopportunityfromengagementtasks": {},
    "listpartnerpaths": {},
@@ -73606,6 +74018,12 @@
      "ResourceSnapshot"
     ]
    },
+   "listrevenueattributionallocations": {
+    "Resources": [
+     "RevenueAttribution"
+    ]
+   },
+   "listrevenueattributions": {},
    "listsolutions": {},
    "listtagsforresource": {},
    "putallianceleadcontact": {
@@ -73672,6 +74090,11 @@
      "resource-snapshot-job"
     ]
    },
+   "startrevenueattributionallocationstask": {
+    "Resources": [
+     "RevenueAttribution"
+    ]
+   },
    "startverification": {},
    "stopresourcesnapshotjob": {
     "Resources": [
@@ -73692,10 +74115,12 @@
     "Resources": [
      "BenefitApplication",
      "ChannelHandshake",
+     "MarketplaceRevenueShare",
      "Opportunity",
      "Partner",
      "ProgramManagementAccount",
      "Relationship",
+     "RevenueAttribution",
      "resource-snapshot-job"
     ]
    },
@@ -73703,10 +74128,12 @@
     "Resources": [
      "BenefitApplication",
      "ChannelHandshake",
+     "MarketplaceRevenueShare",
      "Opportunity",
      "Partner",
      "ProgramManagementAccount",
      "Relationship",
+     "RevenueAttribution",
      "resource-snapshot-job"
     ]
    },
@@ -73719,6 +74146,11 @@
    "updateengagementcontext": {
     "Resources": [
      "Engagement"
+    ]
+   },
+   "updatemarketplacerevenueshareallocation": {
+    "Resources": [
+     "MarketplaceRevenueShare"
     ]
    },
    "updateopportunity": {
@@ -73734,6 +74166,11 @@
    "updaterelationship": {
     "Resources": [
      "Relationship"
+    ]
+   },
+   "updaterevenueattribution": {
+    "Resources": [
+     "RevenueAttribution"
     ]
    },
    "usesession": {}
@@ -73805,6 +74242,14 @@
      "arn:${Partition}:partnercentral:${Region}::catalog/.*"
     ]
    },
+   "marketplacerevenueshare": {
+    "ARNFormats": [
+     "arn:${Partition}:partnercentral:${Region}:${Account}:catalog/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "opportunity": {
     "ARNFormats": [
      "arn:${Partition}:partnercentral:${Region}:${Account}:catalog/.*"
@@ -73858,6 +74303,14 @@
    "resourcesnapshot": {
     "ARNFormats": [
      "arn:${Partition}:partnercentral:${Region}:${Account}:catalog/.*"
+    ]
+   },
+   "revenueattribution": {
+    "ARNFormats": [
+     "arn:${Partition}:partnercentral:${Region}:${Account}:catalog/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "solution": {
@@ -88190,6 +88643,11 @@
      "training-job"
     ]
    },
+   "batchwriterecord": {
+    "Resources": [
+     "feature-group"
+    ]
+   },
    "callmlflowappapi": {
     "Resources": [
      "mlflow-app"
@@ -89575,6 +90033,11 @@
    },
    "listprocessingjobs": {},
    "listprojects": {},
+   "listrecords": {
+    "Resources": [
+     "feature-group"
+    ]
+   },
    "listresourcecatalogs": {},
    "listsharedmodelevents": {},
    "listsharedmodels": {},
@@ -96204,6 +96667,11 @@
  "social-messaging": {
   "Actions": {
    "associatewhatsappbusinessaccount": {},
+   "createwhatsappflow": {
+    "Resources": [
+     "waba"
+    ]
+   },
    "createwhatsappmessagetemplate": {
     "Resources": [
      "waba"
@@ -96219,12 +96687,22 @@
      "waba"
     ]
    },
+   "deletewhatsappflow": {
+    "Resources": [
+     "waba"
+    ]
+   },
    "deletewhatsappmessagemedia": {
     "Resources": [
      "phone-number-id"
     ]
    },
    "deletewhatsappmessagetemplate": {
+    "Resources": [
+     "waba"
+    ]
+   },
+   "deprecatewhatsappflow": {
     "Resources": [
      "waba"
     ]
@@ -96244,6 +96722,16 @@
      "phone-number-id"
     ]
    },
+   "getwhatsappflow": {
+    "Resources": [
+     "waba"
+    ]
+   },
+   "getwhatsappflowpreview": {
+    "Resources": [
+     "waba"
+    ]
+   },
    "getwhatsappmessagemedia": {
     "Resources": [
      "phone-number-id"
@@ -96261,6 +96749,16 @@
      "waba"
     ]
    },
+   "listwhatsappflowassets": {
+    "Resources": [
+     "waba"
+    ]
+   },
+   "listwhatsappflows": {
+    "Resources": [
+     "waba"
+    ]
+   },
    "listwhatsappmessagetemplates": {
     "Resources": [
      "waba"
@@ -96274,6 +96772,11 @@
    "postwhatsappmessagemedia": {
     "Resources": [
      "phone-number-id"
+    ]
+   },
+   "publishwhatsappflow": {
+    "Resources": [
+     "waba"
     ]
    },
    "putwhatsappbusinessaccounteventdestinations": {
@@ -96295,6 +96798,16 @@
    "untagresource": {
     "Resources": [
      "phone-number-id",
+     "waba"
+    ]
+   },
+   "updatewhatsappflow": {
+    "Resources": [
+     "waba"
+    ]
+   },
+   "updatewhatsappflowassets": {
+    "Resources": [
      "waba"
     ]
    },
@@ -101689,6 +102202,7 @@
      "package"
     ]
    },
+   "sendtelemetryevent": {},
    "sharetransformationpackage": {
     "Resources": [
      "package"
@@ -103940,6 +104454,7 @@
   "Actions": {
    "associatewebacl": {
     "Resources": [
+     "agentcore-gateway",
      "amplify-app",
      "apigateway",
      "apprunner",
@@ -104024,6 +104539,7 @@
    },
    "disassociatewebacl": {
     "Resources": [
+     "agentcore-gateway",
      "amplify-app",
      "apigateway",
      "apprunner",
@@ -104091,6 +104607,7 @@
    },
    "getwebaclforresource": {
     "Resources": [
+     "agentcore-gateway",
      "amplify-app",
      "apigateway",
      "apprunner",
@@ -104111,6 +104628,7 @@
    "listregexpatternsets": {},
    "listresourcesforwebacl": {
     "Resources": [
+     "agentcore-gateway",
      "amplify-app",
      "apprunner",
      "userpool",
@@ -104199,6 +104717,11 @@
    }
   },
   "Resources": {
+   "agentcore-gateway": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:gateway/.*"
+    ]
+   },
    "amplify-app": {
     "ARNFormats": [
      "arn:${Partition}:amplify:${Region}:${Account}:apps/.*"
