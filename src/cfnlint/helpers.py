@@ -18,6 +18,7 @@ import inspect
 import json
 import logging
 import os
+import sys
 from io import BytesIO
 from typing import Any, Sequence
 from urllib.request import Request, urlopen, urlretrieve
@@ -417,8 +418,6 @@ def get_cache_dir() -> str:
         macOS:   ~/Library/Caches/aws/cfn-lint/schemas/
         Windows: %LOCALAPPDATA%/aws/cfn-lint/schemas/
     """
-    import sys
-
     if sys.platform == "win32":
         base = os.environ.get("LOCALAPPDATA", os.path.expanduser("~\\AppData\\Local"))
     elif sys.platform == "darwin":
