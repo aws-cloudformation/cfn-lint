@@ -26,6 +26,8 @@ jobs:
           pip install -e .
           cfn-lint --update-iam-policies
           cfn-lint --update-specs --force
+          scripts/update_specs_from_pricing.py
+          scripts/update_schemas_from_aws_api.py
           cfn-lint --update-documentation
           scripts/update_serverless_aws_policies.py
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
