@@ -35,6 +35,29 @@ LOGGER = logging.getLogger("cfnlint.schema.manager")
 LOGGER.disabled = True
 
 
+class TestInitWithExplicitDirs(BaseTestCase):
+    """Test __init__ with explicit providers_dir/resources_dir"""
+
+    def test_explicit_providers_dir(self):
+        """Explicit providers_dir is used directly"""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            providers = Path(tmpdir) / "p"
+            providers.mkdir()
+            (providers / "us-east-1.json").write_text(
+                json.dumps({"AWS::S3::Bucket": "abc123"})
+            )
+            resources = Path(tmpdir) / "r"
+            resources.mkdir()
+            mgr = ProviderSchemaManager(
+                providers_dir=providers, resources_dir=resources
+            )
+            self.assertEqual(mgr._providers_dir, providers)
+            self.assertEqual(mgr._resources_dir, resources)
+
+
 class TestUpdateResourceSchemas(BaseTestCase):
     """Used for Testing Resource Schemas"""
 
