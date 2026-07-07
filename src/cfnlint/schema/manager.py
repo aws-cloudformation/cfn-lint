@@ -18,6 +18,7 @@ from typing import TYPE_CHECKING, Any, Iterator, Sequence
 from cfnlint.helpers import (
     REGIONS,
     get_cache_dir,
+    get_url_content,
     get_url_retrieve,
     url_has_newer_version,
 )
@@ -34,6 +35,10 @@ _ENHANCED_SCHEMAS_URL = (
     "https://github.com/aws-cloudformation/"
     "resource-provider-enhanced-schemas/releases/download/latest/schemas-cfn-lint.zip"
 )
+_VERSION_URL = (
+    "https://github.com/aws-cloudformation/"
+    "resource-provider-enhanced-schemas/releases/download/latest/version.json"
+)
 
 _MODULE_SCHEMA = Schema(
     {"additionalProperties": True, "type": "object", "typeName": "Module"}
@@ -46,29 +51,60 @@ class ProviderSchemaManager:
         providers_dir: Path | None = None,
         resources_dir: Path | None = None,
     ) -> None:
-        _pkg_data = Path(os.path.dirname(__file__), "..", "data", "schemas")
-        _pkg_providers = _pkg_data / "providers"
-        _cache = Path(get_cache_dir())
-
-        if providers_dir:
-            self._providers_dir = providers_dir
-        elif _pkg_providers.exists() and any(_pkg_providers.glob("*.json")):
-            self._providers_dir = _pkg_providers
+        if providers_dir or resources_dir:
+            _cache = Path(get_cache_dir())
+            self._providers_dir = providers_dir or _cache / "providers"
+            self._resources_dir = resources_dir or _cache / "resources"
         else:
-            self._providers_dir = _cache / "providers"
-
-        if resources_dir:
-            self._resources_dir = resources_dir
-        elif (_pkg_data / "resources").exists() and any(
-            (_pkg_data / "resources").glob("*.json")
-        ):
-            self._resources_dir = _pkg_data / "resources"
-        else:
-            self._resources_dir = _cache / "resources"
+            self._providers_dir, self._resources_dir = self._resolve_schema_dirs()
         self._registry_schemas: dict[str, Schema] = {}
         self._provider_schema_modules: dict[str, dict[str, str]] = {}
         self._sam_schema_module: dict[str, str] | None = None
         self.reset()
+
+    @staticmethod
+    def _read_schema_date(directory: Path) -> str:
+        """Read schema_date from a version.json file."""
+        version_file = directory / "version.json"
+        try:
+            with open(version_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                result: str = data.get("schema_date", "")
+                return result
+        except (FileNotFoundError, json.JSONDecodeError):
+            return ""
+
+    @staticmethod
+    def _resolve_schema_dirs() -> tuple[Path, Path]:
+        """Determine which schema directory to use.
+
+        Precedence:
+        1. If both bundled and cache exist, use whichever has a newer schema_date
+        2. If only bundled exists, use bundled
+        3. If only cache exists, use cache
+        4. If neither exists, use cache (auto-download will populate it)
+        """
+        _pkg_data = Path(os.path.dirname(__file__), "..", "data", "schemas")
+        _pkg_providers = _pkg_data / "providers"
+        _cache = Path(get_cache_dir())
+        _cache_providers = _cache / "providers"
+
+        bundled_exists = _pkg_providers.exists() and any(_pkg_providers.glob("*.json"))
+        cache_exists = _cache_providers.exists() and any(
+            _cache_providers.glob("*.json")
+        )
+
+        if bundled_exists and cache_exists:
+            bundled_date = ProviderSchemaManager._read_schema_date(_pkg_data)
+            cache_date = ProviderSchemaManager._read_schema_date(_cache)
+            if cache_date > bundled_date:
+                return _cache / "providers", _cache / "resources"
+            return _pkg_providers, _pkg_data / "resources"
+
+        if bundled_exists:
+            return _pkg_providers, _pkg_data / "resources"
+
+        return _cache / "providers", _cache / "resources"
 
     def reset(self) -> None:
         """
@@ -304,6 +340,13 @@ class ProviderSchemaManager:
                     dest = resources_dir / Path(name).name
                     with zip_ref.open(name) as src, open(dest, "wb") as dst:
                         dst.write(src.read())
+
+        try:
+            version_content = get_url_content(_VERSION_URL)
+            with open(_cache / "version.json", "w", encoding="utf-8") as vf:
+                vf.write(version_content)
+        except Exception:
+            LOGGER.debug("Could not download version.json")
 
         self._providers_dir = providers_dir
         self._resources_dir = resources_dir
