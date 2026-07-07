@@ -51,7 +51,8 @@ class TestUpdateResourceSchemas(BaseTestCase):
 
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
-    def test_update_force(self, mock_get_url, mock_url_newer):
+    @patch("cfnlint.schema.manager.get_cache_dir")
+    def test_update_force(self, mock_cache_dir, mock_get_url, mock_url_newer):
         """Force download even if cached"""
         import tempfile
         from pathlib import Path
@@ -71,13 +72,7 @@ class TestUpdateResourceSchemas(BaseTestCase):
         zip_buffer.seek(0)
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            providers_dir = Path(tmpdir) / "providers"
-            resources_dir = Path(tmpdir) / "resources"
-            providers_dir.mkdir()
-            resources_dir.mkdir()
-
-            self.manager._providers_dir = providers_dir
-            self.manager._resources_dir = resources_dir
+            mock_cache_dir.return_value = tmpdir
 
             with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as tmp:
                 tmp.write(zip_buffer.getvalue())
@@ -88,8 +83,8 @@ class TestUpdateResourceSchemas(BaseTestCase):
 
             self.assertEqual(result, 0)
             mock_get_url.assert_called_once()
-            self.assertTrue((providers_dir / "us-east-1.json").exists())
-            self.assertTrue((resources_dir / "abc123.json").exists())
+            self.assertTrue((Path(tmpdir) / "providers" / "us-east-1.json").exists())
+            self.assertTrue((Path(tmpdir) / "resources" / "abc123.json").exists())
 
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
@@ -162,7 +157,10 @@ class TestSamModuleLoading(BaseTestCase):
 
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
-    def test_update_extracts_sam_json(self, mock_get_url, mock_url_newer):
+    @patch("cfnlint.schema.manager.get_cache_dir")
+    def test_update_extracts_sam_json(
+        self, mock_cache_dir, mock_get_url, mock_url_newer
+    ):
         """Update extracts sam.json from zip into providers dir"""
         import tempfile
         from pathlib import Path
@@ -190,13 +188,7 @@ class TestSamModuleLoading(BaseTestCase):
         zip_buffer.seek(0)
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            providers_dir = Path(tmpdir) / "providers"
-            resources_dir = Path(tmpdir) / "resources"
-            providers_dir.mkdir()
-            resources_dir.mkdir()
-
-            self.manager._providers_dir = providers_dir
-            self.manager._resources_dir = resources_dir
+            mock_cache_dir.return_value = tmpdir
 
             with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as tmp:
                 tmp.write(zip_buffer.getvalue())
@@ -206,8 +198,8 @@ class TestSamModuleLoading(BaseTestCase):
                 result = self.manager.update(force=True)
 
             self.assertEqual(result, 0)
-            self.assertTrue((providers_dir / "sam.json").exists())
-            self.assertTrue((resources_dir / "sam123.json").exists())
+            self.assertTrue((Path(tmpdir) / "providers" / "sam.json").exists())
+            self.assertTrue((Path(tmpdir) / "resources" / "sam123.json").exists())
 
 
 class TestAutoDownloadOnMissingSchemas(BaseTestCase):

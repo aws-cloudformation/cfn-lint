@@ -46,9 +46,25 @@ class ProviderSchemaManager:
         providers_dir: Path | None = None,
         resources_dir: Path | None = None,
     ) -> None:
+        _pkg_data = Path(os.path.dirname(__file__), "..", "data", "schemas")
+        _pkg_providers = _pkg_data / "providers"
         _cache = Path(get_cache_dir())
-        self._providers_dir = providers_dir or _cache / "providers"
-        self._resources_dir = resources_dir or _cache / "resources"
+
+        if providers_dir:
+            self._providers_dir = providers_dir
+        elif _pkg_providers.exists() and any(_pkg_providers.glob("*.json")):
+            self._providers_dir = _pkg_providers
+        else:
+            self._providers_dir = _cache / "providers"
+
+        if resources_dir:
+            self._resources_dir = resources_dir
+        elif (_pkg_data / "resources").exists() and any(
+            (_pkg_data / "resources").glob("*.json")
+        ):
+            self._resources_dir = _pkg_data / "resources"
+        else:
+            self._resources_dir = _cache / "resources"
         self._registry_schemas: dict[str, Schema] = {}
         self._provider_schema_modules: dict[str, dict[str, str]] = {}
         self._sam_schema_module: dict[str, str] | None = None
@@ -246,6 +262,9 @@ class ProviderSchemaManager:
     def update(self, force: bool) -> int:
         """Update schemas from the enhanced schemas repository.
 
+        Writes to the user cache directory. After update, switches
+        to reading from the cache so the fresh schemas are used.
+
         Args:
             force (bool): force the schemas to be downloaded
         Returns:
@@ -261,27 +280,33 @@ class ProviderSchemaManager:
             LOGGER.error("Failed to download enhanced schemas: %s", e)
             return 2
 
-        with zipfile.ZipFile(filehandle, "r") as zip_ref:
-            self._providers_dir.mkdir(parents=True, exist_ok=True)
-            self._resources_dir.mkdir(parents=True, exist_ok=True)
+        _cache = Path(get_cache_dir())
+        providers_dir = _cache / "providers"
+        resources_dir = _cache / "resources"
 
-            for f in self._providers_dir.glob("*.json"):
+        with zipfile.ZipFile(filehandle, "r") as zip_ref:
+            providers_dir.mkdir(parents=True, exist_ok=True)
+            resources_dir.mkdir(parents=True, exist_ok=True)
+
+            for f in providers_dir.glob("*.json"):
                 f.unlink()
-            for f in self._resources_dir.glob("*.json"):
+            for f in resources_dir.glob("*.json"):
                 f.unlink()
 
             for name in zip_ref.namelist():
                 if not name.endswith(".json"):
                     continue
                 if name.startswith("providers/"):
-                    dest = self._providers_dir / Path(name).name
+                    dest = providers_dir / Path(name).name
                     with zip_ref.open(name) as src, open(dest, "wb") as dst:
                         dst.write(src.read())
                 elif name.startswith("resources/"):
-                    dest = self._resources_dir / Path(name).name
+                    dest = resources_dir / Path(name).name
                     with zip_ref.open(name) as src, open(dest, "wb") as dst:
                         dst.write(src.read())
 
+        self._providers_dir = providers_dir
+        self._resources_dir = resources_dir
         LOGGER.info("Schemas updated successfully")
         self.reset()
         return 0
