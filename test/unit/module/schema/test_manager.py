@@ -476,6 +476,31 @@ class TestResolveSchemaDirs(BaseTestCase):
 
             self.assertEqual(providers, pkg_providers)
 
+    @patch("cfnlint.schema.manager.get_cache_dir")
+    @patch("cfnlint.schema.manager.os.path.dirname")
+    def test_bundled_only_no_cache(self, mock_dirname, mock_cache_dir):
+        """Bundled schemas used when cache is empty"""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            pkg_schema_dir = Path(tmpdir) / "pkg" / "schema"
+            pkg_schema_dir.mkdir(parents=True)
+            pkg_data = pkg_schema_dir / ".." / "data" / "schemas"
+            pkg_providers = pkg_data / "providers"
+            pkg_providers.mkdir(parents=True)
+            (pkg_providers / "us-east-1.json").write_text("{}")
+
+            cache_dir = Path(tmpdir) / "cache"
+            cache_dir.mkdir()
+
+            mock_dirname.return_value = str(pkg_schema_dir)
+            mock_cache_dir.return_value = str(cache_dir)
+
+            providers, resources = ProviderSchemaManager._resolve_schema_dirs()
+
+            self.assertEqual(providers, pkg_providers)
+
 
 class TestUpdateDownloadsVersionJson(BaseTestCase):
     """Test that update() fetches version.json"""
