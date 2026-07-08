@@ -35,6 +35,29 @@ LOGGER = logging.getLogger("cfnlint.schema.manager")
 LOGGER.disabled = True
 
 
+class TestInitWithExplicitDirs(BaseTestCase):
+    """Test __init__ with explicit providers_dir/resources_dir"""
+
+    def test_explicit_providers_dir(self):
+        """Explicit providers_dir is used directly"""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            providers = Path(tmpdir) / "p"
+            providers.mkdir()
+            (providers / "us-east-1.json").write_text(
+                json.dumps({"AWS::S3::Bucket": "abc123"})
+            )
+            resources = Path(tmpdir) / "r"
+            resources.mkdir()
+            mgr = ProviderSchemaManager(
+                providers_dir=providers, resources_dir=resources
+            )
+            self.assertEqual(mgr._providers_dir, providers)
+            self.assertEqual(mgr._resources_dir, resources)
+
+
 class TestUpdateResourceSchemas(BaseTestCase):
     """Used for Testing Resource Schemas"""
 
@@ -51,7 +74,8 @@ class TestUpdateResourceSchemas(BaseTestCase):
 
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
-    def test_update_force(self, mock_get_url, mock_url_newer):
+    @patch("cfnlint.schema.manager.get_cache_dir")
+    def test_update_force(self, mock_cache_dir, mock_get_url, mock_url_newer):
         """Force download even if cached"""
         import tempfile
         from pathlib import Path
@@ -71,13 +95,7 @@ class TestUpdateResourceSchemas(BaseTestCase):
         zip_buffer.seek(0)
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            providers_dir = Path(tmpdir) / "providers"
-            resources_dir = Path(tmpdir) / "resources"
-            providers_dir.mkdir()
-            resources_dir.mkdir()
-
-            self.manager._providers_dir = providers_dir
-            self.manager._resources_dir = resources_dir
+            mock_cache_dir.return_value = tmpdir
 
             with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as tmp:
                 tmp.write(zip_buffer.getvalue())
@@ -88,8 +106,8 @@ class TestUpdateResourceSchemas(BaseTestCase):
 
             self.assertEqual(result, 0)
             mock_get_url.assert_called_once()
-            self.assertTrue((providers_dir / "us-east-1.json").exists())
-            self.assertTrue((resources_dir / "abc123.json").exists())
+            self.assertTrue((Path(tmpdir) / "providers" / "us-east-1.json").exists())
+            self.assertTrue((Path(tmpdir) / "resources" / "abc123.json").exists())
 
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
@@ -162,7 +180,10 @@ class TestSamModuleLoading(BaseTestCase):
 
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
-    def test_update_extracts_sam_json(self, mock_get_url, mock_url_newer):
+    @patch("cfnlint.schema.manager.get_cache_dir")
+    def test_update_extracts_sam_json(
+        self, mock_cache_dir, mock_get_url, mock_url_newer
+    ):
         """Update extracts sam.json from zip into providers dir"""
         import tempfile
         from pathlib import Path
@@ -190,13 +211,7 @@ class TestSamModuleLoading(BaseTestCase):
         zip_buffer.seek(0)
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            providers_dir = Path(tmpdir) / "providers"
-            resources_dir = Path(tmpdir) / "resources"
-            providers_dir.mkdir()
-            resources_dir.mkdir()
-
-            self.manager._providers_dir = providers_dir
-            self.manager._resources_dir = resources_dir
+            mock_cache_dir.return_value = tmpdir
 
             with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as tmp:
                 tmp.write(zip_buffer.getvalue())
@@ -206,8 +221,8 @@ class TestSamModuleLoading(BaseTestCase):
                 result = self.manager.update(force=True)
 
             self.assertEqual(result, 0)
-            self.assertTrue((providers_dir / "sam.json").exists())
-            self.assertTrue((resources_dir / "sam123.json").exists())
+            self.assertTrue((Path(tmpdir) / "providers" / "sam.json").exists())
+            self.assertTrue((Path(tmpdir) / "resources" / "sam123.json").exists())
 
 
 class TestAutoDownloadOnMissingSchemas(BaseTestCase):
@@ -328,3 +343,250 @@ class TestManagerPatch(BaseTestCase):
         )
 
         mock_exit.assert_called_with(1)
+
+
+class TestReadSchemaDate(BaseTestCase):
+    """Test _read_schema_date"""
+
+    def test_reads_valid_version_json(self):
+        """Returns schema_date from a valid version.json"""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            version_file = Path(tmpdir) / "version.json"
+            version_file.write_text(json.dumps({"schema_date": "2026-07-07T14:23:15Z"}))
+            result = ProviderSchemaManager._read_schema_date(Path(tmpdir))
+            self.assertEqual(result, "2026-07-07T14:23:15Z")
+
+    def test_returns_empty_when_missing(self):
+        """Returns empty string when version.json doesn't exist"""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            result = ProviderSchemaManager._read_schema_date(Path(tmpdir))
+            self.assertEqual(result, "")
+
+    def test_returns_empty_on_invalid_json(self):
+        """Returns empty string on malformed JSON"""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            version_file = Path(tmpdir) / "version.json"
+            version_file.write_text("not valid json{{{")
+            result = ProviderSchemaManager._read_schema_date(Path(tmpdir))
+            self.assertEqual(result, "")
+
+    def test_returns_empty_when_field_missing(self):
+        """Returns empty string when schema_date field is absent"""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            version_file = Path(tmpdir) / "version.json"
+            version_file.write_text(json.dumps({"other": "data"}))
+            result = ProviderSchemaManager._read_schema_date(Path(tmpdir))
+            self.assertEqual(result, "")
+
+
+class TestResolveSchemaDirs(BaseTestCase):
+    """Test _resolve_schema_dirs"""
+
+    @patch("cfnlint.schema.manager.get_cache_dir")
+    @patch("cfnlint.schema.manager.os.path.dirname")
+    def test_cache_only(self, mock_dirname, mock_cache_dir):
+        """When no bundled schemas exist, returns cache dirs"""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mock_cache_dir.return_value = tmpdir
+            mock_dirname.return_value = str(Path(tmpdir) / "nonexistent")
+            providers, resources = ProviderSchemaManager._resolve_schema_dirs()
+            self.assertEqual(providers, Path(tmpdir) / "providers")
+            self.assertEqual(resources, Path(tmpdir) / "resources")
+
+    @patch("cfnlint.schema.manager.get_cache_dir")
+    @patch("cfnlint.schema.manager.os.path.dirname")
+    def test_cache_wins_when_newer(self, mock_dirname, mock_cache_dir):
+        """Cache wins when its schema_date is newer than bundled"""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            pkg_schema_dir = Path(tmpdir) / "pkg" / "schema"
+            pkg_schema_dir.mkdir(parents=True)
+            pkg_data = pkg_schema_dir / ".." / "data" / "schemas"
+            pkg_providers = pkg_data / "providers"
+            pkg_providers.mkdir(parents=True)
+            (pkg_providers / "us-east-1.json").write_text("{}")
+            (pkg_data / "version.json").write_text(
+                json.dumps({"schema_date": "2026-07-01T00:00:00Z"})
+            )
+
+            cache_dir = Path(tmpdir) / "cache"
+            cache_dir.mkdir()
+            cache_providers = cache_dir / "providers"
+            cache_providers.mkdir()
+            (cache_providers / "us-east-1.json").write_text("{}")
+            (cache_dir / "version.json").write_text(
+                json.dumps({"schema_date": "2026-07-07T14:00:00Z"})
+            )
+
+            mock_dirname.return_value = str(pkg_schema_dir)
+            mock_cache_dir.return_value = str(cache_dir)
+
+            providers, resources = ProviderSchemaManager._resolve_schema_dirs()
+
+            self.assertEqual(providers, cache_providers)
+
+    @patch("cfnlint.schema.manager.get_cache_dir")
+    @patch("cfnlint.schema.manager.os.path.dirname")
+    def test_bundled_wins_when_newer(self, mock_dirname, mock_cache_dir):
+        """Bundled wins when its schema_date is newer than cache"""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            pkg_schema_dir = Path(tmpdir) / "pkg" / "schema"
+            pkg_schema_dir.mkdir(parents=True)
+            pkg_data = pkg_schema_dir / ".." / "data" / "schemas"
+            pkg_providers = pkg_data / "providers"
+            pkg_providers.mkdir(parents=True)
+            (pkg_providers / "us-east-1.json").write_text("{}")
+            (pkg_data / "version.json").write_text(
+                json.dumps({"schema_date": "2026-07-07T14:00:00Z"})
+            )
+
+            cache_dir = Path(tmpdir) / "cache"
+            cache_dir.mkdir()
+            cache_providers = cache_dir / "providers"
+            cache_providers.mkdir()
+            (cache_providers / "us-east-1.json").write_text("{}")
+            (cache_dir / "version.json").write_text(
+                json.dumps({"schema_date": "2026-07-01T00:00:00Z"})
+            )
+
+            mock_dirname.return_value = str(pkg_schema_dir)
+            mock_cache_dir.return_value = str(cache_dir)
+
+            providers, resources = ProviderSchemaManager._resolve_schema_dirs()
+
+            self.assertEqual(providers, pkg_providers)
+
+    @patch("cfnlint.schema.manager.get_cache_dir")
+    @patch("cfnlint.schema.manager.os.path.dirname")
+    def test_bundled_only_no_cache(self, mock_dirname, mock_cache_dir):
+        """Bundled schemas used when cache is empty"""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            pkg_schema_dir = Path(tmpdir) / "pkg" / "schema"
+            pkg_schema_dir.mkdir(parents=True)
+            pkg_data = pkg_schema_dir / ".." / "data" / "schemas"
+            pkg_providers = pkg_data / "providers"
+            pkg_providers.mkdir(parents=True)
+            (pkg_providers / "us-east-1.json").write_text("{}")
+
+            cache_dir = Path(tmpdir) / "cache"
+            cache_dir.mkdir()
+
+            mock_dirname.return_value = str(pkg_schema_dir)
+            mock_cache_dir.return_value = str(cache_dir)
+
+            providers, resources = ProviderSchemaManager._resolve_schema_dirs()
+
+            self.assertEqual(providers, pkg_providers)
+
+
+class TestUpdateDownloadsVersionJson(BaseTestCase):
+    """Test that update() fetches version.json"""
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.manager = _make_manager()
+
+    @patch("cfnlint.schema.manager.get_url_content")
+    @patch("cfnlint.schema.manager.url_has_newer_version")
+    @patch("cfnlint.schema.manager.get_url_retrieve")
+    @patch("cfnlint.schema.manager.get_cache_dir")
+    def test_version_json_saved(
+        self, mock_cache_dir, mock_get_url, mock_url_newer, mock_get_content
+    ):
+        """update() saves version.json to cache"""
+        import tempfile
+        from pathlib import Path
+
+        mock_url_newer.return_value = False
+        mock_get_content.return_value = '{"schema_date": "2026-07-07T14:23:15Z"}'
+
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, "w") as zf:
+            zf.writestr(
+                "providers/us-east-1.json",
+                json.dumps({"AWS::S3::Bucket": "abc123"}),
+            )
+            zf.writestr(
+                "resources/abc123.json",
+                json.dumps({"typeName": "AWS::S3::Bucket", "properties": {}}),
+            )
+        zip_buffer.seek(0)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mock_cache_dir.return_value = tmpdir
+
+            with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as tmp:
+                tmp.write(zip_buffer.getvalue())
+                tmp.flush()
+                mock_get_url.return_value = tmp.name
+
+                result = self.manager.update(force=True)
+
+            self.assertEqual(result, 0)
+            version_file = Path(tmpdir) / "version.json"
+            self.assertTrue(version_file.exists())
+            with open(version_file) as f:
+                data = json.load(f)
+            self.assertEqual(data["schema_date"], "2026-07-07T14:23:15Z")
+
+    @patch("cfnlint.schema.manager.get_url_content")
+    @patch("cfnlint.schema.manager.url_has_newer_version")
+    @patch("cfnlint.schema.manager.get_url_retrieve")
+    @patch("cfnlint.schema.manager.get_cache_dir")
+    def test_version_json_failure_non_fatal(
+        self, mock_cache_dir, mock_get_url, mock_url_newer, mock_get_content
+    ):
+        """update() succeeds even if version.json download fails"""
+        import tempfile
+        from pathlib import Path
+
+        mock_url_newer.return_value = False
+        mock_get_content.side_effect = Exception("Network error")
+
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, "w") as zf:
+            zf.writestr(
+                "providers/us-east-1.json",
+                json.dumps({"AWS::S3::Bucket": "abc123"}),
+            )
+            zf.writestr(
+                "resources/abc123.json",
+                json.dumps({"typeName": "AWS::S3::Bucket", "properties": {}}),
+            )
+        zip_buffer.seek(0)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mock_cache_dir.return_value = tmpdir
+
+            with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as tmp:
+                tmp.write(zip_buffer.getvalue())
+                tmp.flush()
+                mock_get_url.return_value = tmp.name
+
+                result = self.manager.update(force=True)
+
+            self.assertEqual(result, 0)
+            self.assertFalse((Path(tmpdir) / "version.json").exists())

@@ -23,8 +23,13 @@ jobs:
           pip install --upgrade pip
           pip install --upgrade setuptools build wheel twine
           pip install -e .
-      - name: Download schemas
-        run: cfn-lint --update-specs --force
+      - name: Download schemas into package for bundling
+        run: |
+          cache_dir="$(python -c 'from cfnlint.helpers import get_cache_dir; print(get_cache_dir())')"
+          cfn-lint --update-specs --force
+          cp -r "$cache_dir/providers" src/cfnlint/data/schemas/providers
+          cp -r "$cache_dir/resources" src/cfnlint/data/schemas/resources
+          cp "$cache_dir/version.json" src/cfnlint/data/schemas/version.json
       - name: Build and publish
         run: |
           python -m build
