@@ -22496,6 +22496,7 @@
      "userpool"
     ]
    },
+   "getprovisionedlimit": {},
    "getsigningcertificate": {
     "Resources": [
      "userpool"
@@ -22650,6 +22651,7 @@
      "userpool"
     ]
    },
+   "updateprovisionedlimit": {},
    "updateresourceserver": {
     "Resources": [
      "userpool"
@@ -91663,9 +91665,7 @@
  },
  "sagemaker-unified-studio-mcp": {
   "Actions": {
-   "callprivilegedtool": {},
-   "callreadonlytool": {},
-   "invokemcp": {}
+   "authorizevpce": {}
   },
   "Resources": {}
  },
@@ -95765,7 +95765,8 @@
     "Resources": [
      "console",
      "oauth2-public-client-localhost",
-     "oauth2-public-client-remote"
+     "oauth2-public-client-remote",
+     "oauth2-resource-service-principal"
     ]
    },
    "createaccount": {
@@ -95773,11 +95774,17 @@
      "console"
     ]
    },
+   "createoauth2publicclient": {
+    "Resources": [
+     "oauth2-public-client-registration"
+    ]
+   },
    "createoauth2token": {
     "Resources": [
      "console",
      "oauth2-public-client-localhost",
-     "oauth2-public-client-remote"
+     "oauth2-public-client-remote",
+     "oauth2-resource-service-principal"
     ]
    },
    "createtrustedidentitypropagationapplicationforconsole": {},
@@ -95785,10 +95792,24 @@
    "deleteresourcepermissionstatement": {},
    "getconsoleauthorizationconfiguration": {},
    "getresourcepolicy": {},
+   "introspectoauth2token": {
+    "Resources": [
+     "oauth2-public-client-localhost",
+     "oauth2-public-client-remote",
+     "oauth2-resource-service-principal"
+    ]
+   },
    "listresourcepermissionstatements": {},
    "listtrustedidentitypropagationapplicationsforconsole": {},
    "putconsoleauthorizationconfiguration": {},
-   "putresourcepermissionstatement": {}
+   "putresourcepermissionstatement": {},
+   "revokeoauth2token": {
+    "Resources": [
+     "oauth2-public-client-localhost",
+     "oauth2-public-client-remote",
+     "oauth2-resource-service-principal"
+    ]
+   }
   },
   "Resources": {
    "console": {
@@ -95801,9 +95822,19 @@
      "arn:${Partition}:signin:${Region}:${Account}:oauth2/public-client/localhost"
     ]
    },
+   "oauth2-public-client-registration": {
+    "ARNFormats": [
+     "arn:${Partition}:signin:${Region}::external-client/dcr/*"
+    ]
+   },
    "oauth2-public-client-remote": {
     "ARNFormats": [
      "arn:${Partition}:signin:${Region}:${Account}:oauth2/public-client/remote"
+    ]
+   },
+   "oauth2-resource-service-principal": {
+    "ARNFormats": [
+     "arn:${Partition}:signin:${Region}:${Account}:service-principal/.*"
     ]
    }
   }
@@ -100211,6 +100242,61 @@
    "updateslackchannelconfiguration": {}
   },
   "Resources": {}
+ },
+ "supportauthz": {
+  "Actions": {
+   "createsupportpermit": {},
+   "deletesupportpermit": {
+    "Resources": [
+     "supportpermit"
+    ]
+   },
+   "getaction": {},
+   "getsupportpermit": {
+    "Resources": [
+     "supportpermit"
+    ]
+   },
+   "listactions": {},
+   "listsupportpermitrequests": {},
+   "listsupportpermits": {},
+   "listtagsforresource": {
+    "Resources": [
+     "supportpermit"
+    ]
+   },
+   "registerkey": {},
+   "rejectsupportpermitrequest": {
+    "Resources": [
+     "supportpermitrequest"
+    ]
+   },
+   "tagresource": {
+    "Resources": [
+     "supportpermit"
+    ]
+   },
+   "untagresource": {
+    "Resources": [
+     "supportpermit"
+    ]
+   }
+  },
+  "Resources": {
+   "supportpermit": {
+    "ARNFormats": [
+     "arn:${Partition}:supportauthz:${Region}:${Account}:supportpermit/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "supportpermitrequest": {
+    "ARNFormats": [
+     "arn:${Partition}:supportauthz:${Region}:${Account}:supportpermitrequest/.*"
+    ]
+   }
+  }
  },
  "supportplans": {
   "Actions": {
@@ -104815,6 +104901,17 @@
     ]
    },
    "configureintegration": {},
+   "createagentcontext": {
+    "Resources": [
+     "agent-profile"
+    ]
+   },
+   "createagentgoal": {
+    "Resources": [
+     "agent-profile"
+    ]
+   },
+   "createagentprofile": {},
    "createlensshare": {
     "Resources": [
      "lens"
@@ -104846,6 +104943,21 @@
    "createworkloadshare": {
     "Resources": [
      "workload"
+    ]
+   },
+   "deleteagentcontext": {
+    "Resources": [
+     "agent-profile"
+    ]
+   },
+   "deleteagentgoal": {
+    "Resources": [
+     "agent-profile"
+    ]
+   },
+   "deleteagentprofile": {
+    "Resources": [
+     "agent-profile"
     ]
    },
    "deletelens": {
@@ -104901,6 +105013,31 @@
    "exportlens": {
     "Resources": [
      "lens"
+    ]
+   },
+   "getagentcontext": {
+    "Resources": [
+     "agent-profile"
+    ]
+   },
+   "getagentgoal": {
+    "Resources": [
+     "agent-profile"
+    ]
+   },
+   "getagentprofile": {
+    "Resources": [
+     "agent-profile"
+    ]
+   },
+   "getagentrecommendation": {
+    "Resources": [
+     "agent-recommendation"
+    ]
+   },
+   "getagentrecommendationgeneration": {
+    "Resources": [
+     "agent-profile"
     ]
    },
    "getanswer": {
@@ -104962,6 +105099,32 @@
     ]
    },
    "importlens": {},
+   "listagentcontexts": {
+    "Resources": [
+     "agent-profile"
+    ]
+   },
+   "listagentgoals": {
+    "Resources": [
+     "agent-profile"
+    ]
+   },
+   "listagentprofiles": {},
+   "listagentrecommendationgenerations": {
+    "Resources": [
+     "agent-profile"
+    ]
+   },
+   "listagentrecommendationitems": {
+    "Resources": [
+     "agent-recommendation"
+    ]
+   },
+   "listagentrecommendations": {
+    "Resources": [
+     "agent-profile"
+    ]
+   },
    "listanswers": {
     "Resources": [
      "workload"
@@ -105015,6 +105178,8 @@
    "listshareinvitations": {},
    "listtagsforresource": {
     "Resources": [
+     "agent-profile",
+     "agent-recommendation",
      "lens",
      "profile",
      "review-template",
@@ -105032,8 +105197,20 @@
      "workload"
     ]
    },
+   "putagentrecommendationfeedback": {
+    "Resources": [
+     "agent-recommendation"
+    ]
+   },
+   "startagentrecommendationgeneration": {
+    "Resources": [
+     "agent-profile"
+    ]
+   },
    "tagresource": {
     "Resources": [
+     "agent-profile",
+     "agent-recommendation",
      "lens",
      "profile",
      "review-template",
@@ -105042,10 +105219,32 @@
    },
    "untagresource": {
     "Resources": [
+     "agent-profile",
+     "agent-recommendation",
      "lens",
      "profile",
      "review-template",
      "workload"
+    ]
+   },
+   "updateagentcontext": {
+    "Resources": [
+     "agent-profile"
+    ]
+   },
+   "updateagentgoal": {
+    "Resources": [
+     "agent-profile"
+    ]
+   },
+   "updateagentprofile": {
+    "Resources": [
+     "agent-profile"
+    ]
+   },
+   "updateagentrecommendationstatus": {
+    "Resources": [
+     "agent-recommendation"
     ]
    },
    "updateanswer": {
@@ -105113,6 +105312,22 @@
    }
   },
   "Resources": {
+   "agent-profile": {
+    "ARNFormats": [
+     "arn:${Partition}:wellarchitected:${Region}:${Account}:agent-profile/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "agent-recommendation": {
+    "ARNFormats": [
+     "arn:${Partition}:wellarchitected:${Region}:${Account}:agent-recommendation/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "lens": {
     "ARNFormats": [
      "arn:${Partition}:wellarchitected:${Region}:${Account}:lens/.*"
