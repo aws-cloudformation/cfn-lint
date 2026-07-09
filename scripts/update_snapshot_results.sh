@@ -12,6 +12,10 @@ done
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
+# Run from the project root so all relative paths below resolve consistently
+# regardless of where the script was invoked from.
+cd "$PROJECT_DIR"
+
 TEMPLATES_DIR="test/fixtures/templates"
 RESULTS_DIR="test/fixtures/results"
 
@@ -55,47 +59,48 @@ main()
 # ============================================================================
 
 # integration/
-run_lint "$TEMPLATES_DIR/integration/dynamic-references.yaml" "$RESULTS_DIR/integration/dynamic-references.json"
-run_lint "$TEMPLATES_DIR/integration/resources-cloudformation-init.yaml" "$RESULTS_DIR/integration/resources-cloudformation-init.json"
-run_lint "$TEMPLATES_DIR/integration/ref-no-value.yaml" "$RESULTS_DIR/integration/ref-no-value.json"
-run_lint "$TEMPLATES_DIR/integration/availability-zones.yaml" "$RESULTS_DIR/integration/availability-zones.json"
-run_lint "$TEMPLATES_DIR/integration/getatt-types.yaml" "$RESULTS_DIR/integration/getatt-types.json"
-run_lint "$TEMPLATES_DIR/integration/ref-types.yaml" "$RESULTS_DIR/integration/ref-types.json"
-run_lint "$TEMPLATES_DIR/integration/formats.yaml" "$RESULTS_DIR/integration/formats.json"
-run_lint "$TEMPLATES_DIR/integration/aws-ec2-networkinterface.yaml" "$RESULTS_DIR/integration/aws-ec2-networkinterface.json"
-run_lint "$TEMPLATES_DIR/integration/aws-ec2-instance.yaml" "$RESULTS_DIR/integration/aws-ec2-instance.json"
-run_lint "$TEMPLATES_DIR/integration/aws-ec2-launchtemplate.yaml" "$RESULTS_DIR/integration/aws-ec2-launchtemplate.json"
-run_lint "$TEMPLATES_DIR/integration/aws-ec2-subnet.yaml" "$RESULTS_DIR/integration/aws-ec2-subnet.json"
-run_lint "$TEMPLATES_DIR/integration/aws-dynamodb-table.yaml" "$RESULTS_DIR/integration/aws-dynamodb-table.json"
-run_lint "$TEMPLATES_DIR/integration/custom-resources.yaml" "$RESULTS_DIR/integration/custom-resources.json"
-run_lint "$TEMPLATES_DIR/integration/cfn-gather.yaml" "$RESULTS_DIR/integration/cfn-gather.json"
-run_lint "$TEMPLATES_DIR/integration/aws-lambda-function.yaml" "$RESULTS_DIR/integration/aws-lambda-function.json"
-run_lint "$TEMPLATES_DIR/integration/module-sub-resources.yaml" "$RESULTS_DIR/integration/module-sub-resources.json"
+run_lint "$TEMPLATES_DIR/integration/dynamic-references.yaml" "$RESULTS_DIR/integration/dynamic-references_yaml.json"
+run_lint "$TEMPLATES_DIR/integration/resources-cloudformation-init.yaml" "$RESULTS_DIR/integration/resources-cloudformation-init_yaml.json"
+run_lint "$TEMPLATES_DIR/integration/ref-no-value.yaml" "$RESULTS_DIR/integration/ref-no-value_yaml.json"
+run_lint "$TEMPLATES_DIR/integration/availability-zones.yaml" "$RESULTS_DIR/integration/availability-zones_yaml.json"
+run_lint "$TEMPLATES_DIR/integration/getatt-types.yaml" "$RESULTS_DIR/integration/getatt-types_yaml.json"
+run_lint "$TEMPLATES_DIR/integration/ref-types.yaml" "$RESULTS_DIR/integration/ref-types_yaml.json"
+run_lint "$TEMPLATES_DIR/integration/formats.yaml" "$RESULTS_DIR/integration/formats_yaml.json"
+run_lint "$TEMPLATES_DIR/integration/aws-ec2-networkinterface.yaml" "$RESULTS_DIR/integration/aws-ec2-networkinterface_yaml.json"
+run_lint "$TEMPLATES_DIR/integration/aws-ec2-instance.yaml" "$RESULTS_DIR/integration/aws-ec2-instance_yaml.json"
+run_lint "$TEMPLATES_DIR/integration/aws-ec2-launchtemplate.yaml" "$RESULTS_DIR/integration/aws-ec2-launchtemplate_yaml.json"
+run_lint "$TEMPLATES_DIR/integration/aws-ec2-subnet.yaml" "$RESULTS_DIR/integration/aws-ec2-subnet_yaml.json"
+run_lint "$TEMPLATES_DIR/integration/aws-dynamodb-table.yaml" "$RESULTS_DIR/integration/aws-dynamodb-table_yaml.json"
+run_lint "$TEMPLATES_DIR/integration/custom-resources.yaml" "$RESULTS_DIR/integration/custom-resources_yaml.json"
+run_lint "$TEMPLATES_DIR/integration/cfn-gather.yaml" "$RESULTS_DIR/integration/cfn-gather_yaml.json"
+run_lint "$TEMPLATES_DIR/integration/aws-lambda-function.yaml" "$RESULTS_DIR/integration/aws-lambda-function_yaml.json"
+run_lint "$TEMPLATES_DIR/integration/module-sub-resources.yaml" "$RESULTS_DIR/integration/module-sub-resources_yaml.json"
+run_lint "$TEMPLATES_DIR/integration/get-stack-output.yaml" "$RESULTS_DIR/integration/get-stack-output_yaml.json"
 
 # integration/ special name mapping (template has typo: metdata)
-run_lint "$TEMPLATES_DIR/integration/metdata.yaml" "$RESULTS_DIR/integration/metadata.json"
+run_lint "$TEMPLATES_DIR/integration/metdata.yaml" "$RESULTS_DIR/integration/metadata_yaml.json"
 
 # public/ (watchmaker needs strict E3012)
-run_lint "$TEMPLATES_DIR/public/lambda-poller.yaml" "$RESULTS_DIR/public/lambda-poller.json"
-run_lint "$TEMPLATES_DIR/public/watchmaker.json" "$RESULTS_DIR/public/watchmaker.json" -x E3012:strict=true
+run_lint "$TEMPLATES_DIR/public/lambda-poller.yaml" "$RESULTS_DIR/public/lambda-poller_yaml.json"
+run_lint "$TEMPLATES_DIR/public/watchmaker.json" "$RESULTS_DIR/public/watchmaker_json.json" -x E3012:strict=true
 
 # quickstart/non_strict/
-run_lint "$TEMPLATES_DIR/quickstart/cis_benchmark.yaml" "$RESULTS_DIR/quickstart/non_strict/cis_benchmark.json"
-run_lint "$TEMPLATES_DIR/quickstart/nist_application.yaml" "$RESULTS_DIR/quickstart/non_strict/nist_application.json"
-run_lint "$TEMPLATES_DIR/quickstart/nist_high_main.yaml" "$RESULTS_DIR/quickstart/non_strict/nist_high_main.json"
-run_lint "$TEMPLATES_DIR/quickstart/openshift.yaml" "$RESULTS_DIR/quickstart/non_strict/openshift.json"
+run_lint "$TEMPLATES_DIR/quickstart/cis_benchmark.yaml" "$RESULTS_DIR/quickstart/non_strict/cis_benchmark_yaml.json"
+run_lint "$TEMPLATES_DIR/quickstart/nist_application.yaml" "$RESULTS_DIR/quickstart/non_strict/nist_application_yaml.json"
+run_lint "$TEMPLATES_DIR/quickstart/nist_high_main.yaml" "$RESULTS_DIR/quickstart/non_strict/nist_high_main_yaml.json"
+run_lint "$TEMPLATES_DIR/quickstart/openshift.yaml" "$RESULTS_DIR/quickstart/non_strict/openshift_yaml.json"
 
 # quickstart/ (strict E3012)
-run_lint "$TEMPLATES_DIR/quickstart/cis_benchmark.yaml" "$RESULTS_DIR/quickstart/cis_benchmark.json" -x E3012:strict=true
-run_lint "$TEMPLATES_DIR/quickstart/nist_application.yaml" "$RESULTS_DIR/quickstart/nist_application.json" -x E3012:strict=true
-run_lint "$TEMPLATES_DIR/quickstart/nist_config_rules.yaml" "$RESULTS_DIR/quickstart/nist_config_rules.json" -x E3012:strict=true
-run_lint "$TEMPLATES_DIR/quickstart/nist_high_main.yaml" "$RESULTS_DIR/quickstart/nist_high_main.json" -x E3012:strict=true
-run_lint "$TEMPLATES_DIR/quickstart/nist_iam.yaml" "$RESULTS_DIR/quickstart/nist_iam.json" -x E3012:strict=true
-run_lint "$TEMPLATES_DIR/quickstart/nist_logging.yaml" "$RESULTS_DIR/quickstart/nist_logging.json" -x E3012:strict=true
-run_lint "$TEMPLATES_DIR/quickstart/nist_vpc_management.yaml" "$RESULTS_DIR/quickstart/nist_vpc_management.json" -x E3012:strict=true
-run_lint "$TEMPLATES_DIR/quickstart/nist_vpc_production.yaml" "$RESULTS_DIR/quickstart/nist_vpc_production.json" -x E3012:strict=true
-run_lint "$TEMPLATES_DIR/quickstart/openshift.yaml" "$RESULTS_DIR/quickstart/openshift.json" -x E3012:strict=true
-run_lint "$TEMPLATES_DIR/quickstart/openshift_master.yaml" "$RESULTS_DIR/quickstart/openshift_master.json" -x E3012:strict=true
+run_lint "$TEMPLATES_DIR/quickstart/cis_benchmark.yaml" "$RESULTS_DIR/quickstart/cis_benchmark_yaml.json" -x E3012:strict=true
+run_lint "$TEMPLATES_DIR/quickstart/nist_application.yaml" "$RESULTS_DIR/quickstart/nist_application_yaml.json" -x E3012:strict=true
+run_lint "$TEMPLATES_DIR/quickstart/nist_config_rules.yaml" "$RESULTS_DIR/quickstart/nist_config_rules_yaml.json" -x E3012:strict=true
+run_lint "$TEMPLATES_DIR/quickstart/nist_high_main.yaml" "$RESULTS_DIR/quickstart/nist_high_main_yaml.json" -x E3012:strict=true
+run_lint "$TEMPLATES_DIR/quickstart/nist_iam.yaml" "$RESULTS_DIR/quickstart/nist_iam_yaml.json" -x E3012:strict=true
+run_lint "$TEMPLATES_DIR/quickstart/nist_logging.yaml" "$RESULTS_DIR/quickstart/nist_logging_yaml.json" -x E3012:strict=true
+run_lint "$TEMPLATES_DIR/quickstart/nist_vpc_management.yaml" "$RESULTS_DIR/quickstart/nist_vpc_management_yaml.json" -x E3012:strict=true
+run_lint "$TEMPLATES_DIR/quickstart/nist_vpc_production.yaml" "$RESULTS_DIR/quickstart/nist_vpc_production_yaml.json" -x E3012:strict=true
+run_lint "$TEMPLATES_DIR/quickstart/openshift.yaml" "$RESULTS_DIR/quickstart/openshift_yaml.json" -x E3012:strict=true
+run_lint "$TEMPLATES_DIR/quickstart/openshift_master.yaml" "$RESULTS_DIR/quickstart/openshift_master_yaml.json" -x E3012:strict=true
 
 # ============================================================================
 # Auto-discover remaining templates not handled above (requires --auto-discover)
@@ -115,9 +120,11 @@ while read -r template; do
         continue
     fi
 
-    # Compute result path: replace templates/ with results/, change extension to .json
+    # Compute result path: replace templates/ with results/, fold the template
+    # extension into the name as an underscore suffix so json/yaml/yml templates
+    # with the same name don't clobber each other (e.g. foo.yaml -> foo_yaml.json).
     relative="${template#$TEMPLATES_DIR/}"
-    result_file="$RESULTS_DIR/${relative%.*}.json"
+    result_file="$RESULTS_DIR/${relative%.*}_${relative##*.}.json"
 
     # Skip if another template already wrote this result file during this run
     if grep -qxF "$result_file" "$WRITTEN"; then
