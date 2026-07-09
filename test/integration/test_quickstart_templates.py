@@ -24,7 +24,9 @@ class TestQuickStartTemplates(BaseCliTestCase):
         },
         {
             "filename": "test/fixtures/templates/quickstart/nist_high_main.yaml",
-            "results_filename": "test/fixtures/results/quickstart/nist_high_main_yaml.json",
+            "results_filename": (
+                "test/fixtures/results/quickstart/nist_high_main_yaml.json"
+            ),
             "exit_code": 14,
         },
         {
@@ -48,7 +50,9 @@ class TestQuickStartTemplates(BaseCliTestCase):
         },
         {
             "filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
-            "results_filename": "test/fixtures/results/quickstart/nist_logging_yaml.json",
+            "results_filename": (
+                "test/fixtures/results/quickstart/nist_logging_yaml.json"
+            ),
             "exit_code": 14,
         },
         {
@@ -79,7 +83,9 @@ class TestQuickStartTemplates(BaseCliTestCase):
         },
         {
             "filename": "test/fixtures/templates/quickstart/cis_benchmark.yaml",
-            "results_filename": "test/fixtures/results/quickstart/cis_benchmark_yaml.json",
+            "results_filename": (
+                "test/fixtures/results/quickstart/cis_benchmark_yaml.json"
+            ),
             "exit_code": 6,
         },
     ]

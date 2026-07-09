@@ -30,7 +30,9 @@ class TestQuickStartTemplates(BaseCliTestCase):
         },
         {
             "filename": "test/fixtures/templates/integration/ref-no-value.yaml",
-            "results_filename": "test/fixtures/results/integration/ref-no-value_yaml.json",
+            "results_filename": (
+                "test/fixtures/results/integration/ref-no-value_yaml.json"
+            ),
             "exit_code": 2,
         },
         {
@@ -47,7 +49,9 @@ class TestQuickStartTemplates(BaseCliTestCase):
         },
         {
             "filename": "test/fixtures/templates/integration/getatt-types.yaml",
-            "results_filename": "test/fixtures/results/integration/getatt-types_yaml.json",
+            "results_filename": (
+                "test/fixtures/results/integration/getatt-types_yaml.json"
+            ),
             "exit_code": 10,
         },
         {
@@ -87,7 +91,9 @@ class TestQuickStartTemplates(BaseCliTestCase):
         },
         {
             "filename": "test/fixtures/templates/integration/aws-ec2-subnet.yaml",
-            "results_filename": "test/fixtures/results/integration/aws-ec2-subnet_yaml.json",
+            "results_filename": (
+                "test/fixtures/results/integration/aws-ec2-subnet_yaml.json"
+            ),
             "exit_code": 2,
         },
         {
@@ -106,7 +112,9 @@ class TestQuickStartTemplates(BaseCliTestCase):
         },
         {
             "filename": "test/fixtures/templates/integration/cfn-gather.yaml",
-            "results_filename": ("test/fixtures/results/integration/cfn-gather_yaml.json"),
+            "results_filename": (
+                "test/fixtures/results/integration/cfn-gather_yaml.json"
+            ),
             "exit_code": 14,
         },
         {
