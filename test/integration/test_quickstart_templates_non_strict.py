@@ -15,28 +15,28 @@ class TestQuickStartTemplates(BaseCliTestCase):
         {
             "filename": "test/fixtures/templates/quickstart/nist_high_main.yaml",
             "results_filename": (
-                "test/fixtures/results/quickstart/non_strict/nist_high_main.json"
+                "test/fixtures/results/quickstart/non_strict/nist_high_main_yaml.json"
             ),
             "exit_code": 14,
         },
         {
             "filename": "test/fixtures/templates/quickstart/nist_application.yaml",
             "results_filename": (
-                "test/fixtures/results/quickstart/non_strict/nist_application.json"
+                "test/fixtures/results/quickstart/non_strict/nist_application_yaml.json"
             ),
             "exit_code": 12,
         },
         {
             "filename": "test/fixtures/templates/quickstart/openshift.yaml",
             "results_filename": (
-                "test/fixtures/results/quickstart/non_strict/openshift.json"
+                "test/fixtures/results/quickstart/non_strict/openshift_yaml.json"
             ),
             "exit_code": 12,
         },
         {
             "filename": "test/fixtures/templates/quickstart/cis_benchmark.yaml",
             "results_filename": (
-                "test/fixtures/results/quickstart/non_strict/cis_benchmark.json"
+                "test/fixtures/results/quickstart/non_strict/cis_benchmark_yaml.json"
             ),
             "exit_code": 4,
         },

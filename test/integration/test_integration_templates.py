@@ -17,47 +17,47 @@ class TestQuickStartTemplates(BaseCliTestCase):
                 "test/fixtures/templates/integration/resources-cloudformation-init.yaml"
             ),
             "results_filename": (
-                "test/fixtures/results/integration/resources-cloudformation-init.json"
+                "test/fixtures/results/integration/resources-cloudformation-init_yaml.json"
             ),
             "exit_code": 0,
         },
         {
             "filename": "test/fixtures/templates/integration/dynamic-references.yaml",
             "results_filename": (
-                "test/fixtures/results/integration/dynamic-references.json"
+                "test/fixtures/results/integration/dynamic-references_yaml.json"
             ),
             "exit_code": 6,
         },
         {
             "filename": "test/fixtures/templates/integration/ref-no-value.yaml",
-            "results_filename": "test/fixtures/results/integration/ref-no-value.json",
+            "results_filename": "test/fixtures/results/integration/ref-no-value_yaml.json",
             "exit_code": 2,
         },
         {
             "filename": "test/fixtures/templates/integration/metdata.yaml",
-            "results_filename": "test/fixtures/results/integration/metadata.json",
+            "results_filename": "test/fixtures/results/integration/metadata_yaml.json",
             "exit_code": 4,
         },
         {
             "filename": "test/fixtures/templates/integration/availability-zones.yaml",
             "results_filename": (
-                "test/fixtures/results/integration/availability-zones.json"
+                "test/fixtures/results/integration/availability-zones_yaml.json"
             ),
             "exit_code": 2,
         },
         {
             "filename": "test/fixtures/templates/integration/getatt-types.yaml",
-            "results_filename": "test/fixtures/results/integration/getatt-types.json",
+            "results_filename": "test/fixtures/results/integration/getatt-types_yaml.json",
             "exit_code": 10,
         },
         {
             "filename": "test/fixtures/templates/integration/ref-types.yaml",
-            "results_filename": "test/fixtures/results/integration/ref-types.json",
+            "results_filename": "test/fixtures/results/integration/ref-types_yaml.json",
             "exit_code": 6,
         },
         {
             "filename": "test/fixtures/templates/integration/formats.yaml",
-            "results_filename": "test/fixtures/results/integration/formats.json",
+            "results_filename": "test/fixtures/results/integration/formats_yaml.json",
             "exit_code": 2,
         },
         {
@@ -65,14 +65,14 @@ class TestQuickStartTemplates(BaseCliTestCase):
                 "test/fixtures/templates/integration/aws-ec2-networkinterface.yaml"
             ),
             "results_filename": (
-                "test/fixtures/results/integration/aws-ec2-networkinterface.json"
+                "test/fixtures/results/integration/aws-ec2-networkinterface_yaml.json"
             ),
             "exit_code": 2,
         },
         {
             "filename": "test/fixtures/templates/integration/aws-ec2-instance.yaml",
             "results_filename": (
-                "test/fixtures/results/integration/aws-ec2-instance.json"
+                "test/fixtures/results/integration/aws-ec2-instance_yaml.json"
             ),
             "exit_code": 2,
         },
@@ -81,38 +81,38 @@ class TestQuickStartTemplates(BaseCliTestCase):
                 "test/fixtures/templates/integration/aws-ec2-launchtemplate.yaml"
             ),
             "results_filename": (
-                "test/fixtures/results/integration/aws-ec2-launchtemplate.json"
+                "test/fixtures/results/integration/aws-ec2-launchtemplate_yaml.json"
             ),
             "exit_code": 2,
         },
         {
             "filename": "test/fixtures/templates/integration/aws-ec2-subnet.yaml",
-            "results_filename": "test/fixtures/results/integration/aws-ec2-subnet.json",
+            "results_filename": "test/fixtures/results/integration/aws-ec2-subnet_yaml.json",
             "exit_code": 2,
         },
         {
             "filename": "test/fixtures/templates/integration/aws-dynamodb-table.yaml",
             "results_filename": (
-                "test/fixtures/results/integration/aws-dynamodb-table.json"
+                "test/fixtures/results/integration/aws-dynamodb-table_yaml.json"
             ),
             "exit_code": 2,
         },
         {
             "filename": "test/fixtures/templates/integration/aws-lambda-function.yaml",
             "results_filename": (
-                "test/fixtures/results/integration/aws-lambda-function.json"
+                "test/fixtures/results/integration/aws-lambda-function_yaml.json"
             ),
             "exit_code": 0,
         },
         {
             "filename": "test/fixtures/templates/integration/cfn-gather.yaml",
-            "results_filename": ("test/fixtures/results/integration/cfn-gather.json"),
+            "results_filename": ("test/fixtures/results/integration/cfn-gather_yaml.json"),
             "exit_code": 14,
         },
         {
             "filename": ("test/fixtures/templates/integration/get-stack-output.yaml"),
             "results_filename": (
-                "test/fixtures/results/integration/get-stack-output.json"
+                "test/fixtures/results/integration/get-stack-output_yaml.json"
             ),
             "exit_code": 2,
         },
@@ -121,7 +121,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                 "test/fixtures/templates/integration/module-sub-resources.yaml"
             ),
             "results_filename": (
-                "test/fixtures/results/integration/module-sub-resources.json"
+                "test/fixtures/results/integration/module-sub-resources_yaml.json"
             ),
             "exit_code": 0,
         },
