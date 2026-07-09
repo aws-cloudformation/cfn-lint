@@ -1,3 +1,17 @@
+### v1.53.0
+## What's Changed
+* fix: Restore pricing and AWS API scripts, fix Elasticsearch instance type enum by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4569
+* Update CloudFormation schemas to 2026-07-06 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4562
+* fix: Move schema cache to platform-appropriate user directory by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4571
+* feat: Add version.json schema precedence and bundled fallback by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4573
+* Fix shared pricing defaults by @0xTaoZ in https://github.com/aws-cloudformation/cfn-lint/pull/4572
+* Update CloudFormation schemas to 2026-07-09 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4570
+
+## New Contributors
+* @0xTaoZ made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4572
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.52.1...v1.53.0
+
 ### v1.52.1
 ## What's Changed
 * fix: Auto-download schemas when not present for pre-commit users by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4558
