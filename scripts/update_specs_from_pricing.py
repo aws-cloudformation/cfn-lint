@@ -398,7 +398,7 @@ def get_results(service, product_families, default=None):
                         )
                         continue
                     if not results.get(location):
-                        results[location] = default
+                        results[location] = set(default)
                     instance_type = product.get("attributes").get("instanceType")
                     if instance_type:
                         results[location].add(instance_type)
