@@ -278,3 +278,64 @@ def test_validate(
         assert ref_mock.call_count == len(ref_mock_values) or 1
 
     assert errs == expected, f"Test {name!r} got {errs!r}"
+
+
+@pytest.fixture(scope="module")
+def cfn_with_default():
+    return Template(
+        "",
+        {
+            "Parameters": {"Stage": {"Type": "String", "Default": ""}},
+            "Resources": {"Dummy": Resource({"Type": "AWS::SNS::Topic"})},
+            "Mappings": {"StageMap": {"gamma": {"TCS": "1"}, "prod": {"TCS": "2"}}},
+        },
+        regions=["us-east-1"],
+    )
+
+
+@pytest.mark.parametrize(
+    "name,instance,expected_messages",
+    [
+        (
+            # A Ref to a parameter's Default resolves to a value that a
+            # deployer can override, so a missing mapping key isn't a
+            # definite failure and must not be reported (was E1011).
+            "Top level key from a parameter Default is not reported",
+            {"Fn::FindInMap": ["StageMap", {"Ref": "Stage"}, "TCS"]},
+            [],
+        ),
+        (
+            "Second level key from a parameter Default is not reported",
+            {"Fn::FindInMap": ["StageMap", "gamma", {"Ref": "Stage"}]},
+            [],
+        ),
+        (
+            # Hardcoded keys aren't overridable, so they are still validated.
+            "Hardcoded top level key is still reported",
+            {"Fn::FindInMap": ["StageMap", "typo", "TCS"]},
+            ["'typo' is not one of ['gamma', 'prod'] for mapping 'StageMap'"],
+        ),
+        (
+            "Hardcoded second level key is still reported",
+            {"Fn::FindInMap": ["StageMap", "gamma", "typo"]},
+            ["'typo' is not one of ['TCS'] for mapping 'StageMap' and key 'gamma'"],
+        ),
+    ],
+)
+def test_resolve_from_parameter_default(
+    name, instance, expected_messages, rule, cfn_with_default
+):
+    """Values resolved from an overridable parameter Default shouldn't
+    surface resolution errors, while hardcoded values still do."""
+    context = create_context_for_template(cfn_with_default)
+    validator = CfnTemplateValidator({}).extend(validators={})(
+        context=context, cfn=cfn_with_default
+    )
+
+    # A constraining schema is required for resolution to run
+    schema = {"type": "string", "pattern": "^[0-9]+$"}
+    errs = list(rule.resolve(validator, schema, instance, {}))
+
+    assert [err.message for err in errs] == expected_messages, (
+        f"{name!r} failed and got errors {[e.message for e in errs]!r}"
+    )
