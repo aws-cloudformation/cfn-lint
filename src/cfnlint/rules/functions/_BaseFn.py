@@ -175,6 +175,12 @@ class BaseFn(CfnLintJsonSchema):
         all_errs = []
         for value, v, resolve_err in validator.resolve_value(instance):
             if resolve_err:
+                # A resolution error against a value that only exists because
+                # of a parameter's Default (which a deployer can override at
+                # deployment time) is not a definite failure, so we don't
+                # report it. Hardcoded values are still validated.
+                if v.context.is_resolved_from_parameters:
+                    continue
                 yield from self.fix_errors(iter([resolve_err]))
                 continue
             errs = list(
