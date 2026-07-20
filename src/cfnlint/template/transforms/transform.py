@@ -18,7 +18,7 @@ from cfnlint.helpers import (
 )
 from cfnlint.match import Match
 from cfnlint.template.transforms._language_extensions import language_extension
-from cfnlint.template.transforms._sam import sam
+from cfnlint.template.transforms._sam_globals import merge_globals
 from cfnlint.template.transforms._types import TransformResult
 
 LOGGER = logging.getLogger("cfnlint")
@@ -27,7 +27,6 @@ LOGGER = logging.getLogger("cfnlint")
 class Transform:
     def __init__(self) -> None:
         self.transforms: Mapping[str, Callable[[Any], TransformResult]] = {
-            TRANSFORM_SAM: sam,
             TRANSFORM_LANGUAGE_EXTENSION: language_extension,
         }
 
@@ -43,6 +42,12 @@ class Transform:
 
         if not transform_type:
             return matches
+
+        # Merge SAM Globals into resources before validation.
+        # This replaces the full SAM transform — we validate the
+        # SAM template directly using SAM schemas instead.
+        if TRANSFORM_SAM in transform_type:
+            merge_globals(cfn.template)
 
         cfn.transform_pre["Globals"] = cfn.template.get("Globals", {})
         for name in transform_type:
@@ -61,13 +66,6 @@ class Transform:
             if matches:
                 return matches
             cfn.template = template
-
-        if len(transform_type) > 1:
-            # SAM will erase the entire Transform section
-            # this sets it back with all transforms except SAM
-            cfn.template["Transform"] = [
-                t for t in transform_type if t != TRANSFORM_SAM
-            ]
 
         LOGGER.info("Transformed template: \n%s", format_json_string(cfn.template))
         cfn.graph = Graph(cfn)

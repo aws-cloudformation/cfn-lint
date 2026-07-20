@@ -1,0 +1,28 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  Function:
+    Runtime: nodejs6.10
+    Timeout: 180
+Resources:
+  IgnoredFunction:
+    Type: AWS::Serverless::Function
+    IgnoreGlobals: "*"
+    Properties:
+      Runtime: nodejs22.x
+      Handler: index.handler
+      CodeUri: 's3://test-bucket/mySourceCode.zip'
+  SelectiveIgnoreFunction:
+    Type: AWS::Serverless::Function
+    IgnoreGlobals:
+      - Runtime
+    Properties:
+      Runtime: nodejs22.x
+      Handler: index.handler
+      CodeUri: 's3://test-bucket/mySourceCode.zip'
+  InheritsGlobalsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      CodeUri: 's3://test-bucket/mySourceCode.zip'

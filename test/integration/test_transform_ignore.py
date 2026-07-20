@@ -16,7 +16,15 @@ class TestTransformIgnore(BaseCliTestCase):
             "filename": (
                 "test/fixtures/templates/bad/transform_serverless_template.yaml"
             ),
-            "exit_code": 0,
+            # SAM transform errors (E0001) no longer occur since SAM resources
+            # are validated directly via schemas. The template still has schema
+            # errors (E3003, E3012, etc.) which produce exit code 10 (error +
+            # informational).
+            "results_filename": (
+                "test/fixtures/results/transform_ignore"
+                "/transform_serverless_template.json"
+            ),
+            "exit_code": 10,
         },
     ]
 

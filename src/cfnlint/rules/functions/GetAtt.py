@@ -14,6 +14,7 @@ from cfnlint.helpers import ensure_list, is_types_compatible
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.functions._BaseFn import BaseFn, all_types
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
+from cfnlint.schema.resolver import RefResolutionError
 
 
 class GetAtt(BaseFn):
@@ -105,7 +106,10 @@ class GetAtt(BaseFn):
                         t = validator.context.resources[resource_name].type
                         pointer = getatts.match(region, [resource_name, attribute_name])
 
-                        getatt_schema = schema.resolver.resolve_cfn_pointer(pointer)
+                        try:
+                            getatt_schema = schema.resolver.resolve_cfn_pointer(pointer)
+                        except RefResolutionError:
+                            continue
                         # there is one exception we need to handle.  The resource type
                         # has a mix of types the input is integer and the output
                         # is string.  Since this is the only occurence

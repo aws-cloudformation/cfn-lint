@@ -16,7 +16,7 @@ import pytest
 import regex as re
 
 import cfnlint
-from cfnlint.helpers import ensure_list, load_plugins
+from cfnlint.helpers import ensure_list, load_plugins, load_resource
 from cfnlint.jsonschema import StandardValidator, ValidationError
 from cfnlint.schema.resolver import RefResolutionError, RefResolver
 
@@ -29,6 +29,8 @@ class TestSchemaFiles(TestCase):
         "*",
         "Conditions",
         "Description",
+        "Globals",
+        "Globals/Function/Runtime",
         "Mappings",
         "Metadata",
         "Metadata/AWS::CloudFormation::Interface",
@@ -45,10 +47,12 @@ class TestSchemaFiles(TestCase):
         "Resources",
         "Resources/*",
         "Resources/*/Condition",
+        "Resources/*/Connectors",
         "Resources/*/CreationPolicy",
         "Resources/*/DeletionPolicy",
         "Resources/*/DependsOn",
         "Resources/*/DependsOn/*",
+        "Resources/*/IgnoreGlobals",
         "Resources/*/Metadata",
         "Resources/*/Metadata/AWS::CloudFormation::Init",
         "Resources/*/Type",
@@ -117,6 +121,127 @@ class TestSchemaFiles(TestCase):
                     self.assertIsNotNone(schema_resolver.resolve_cfn_pointer(prop))
                 except RefResolutionError:
                     self.fail(f"Can't find prop {prop} for {section} in {filepath}")
+
+    def _build_keywords(self, obj: Any, schema_resolver: RefResolver, refs: list[str]):
+        if not isinstance(obj, dict):
+            yield []
+            return
+
+        if "$ref" in obj:
+            ref = obj["$ref"]
+            if ref in refs:
+                yield []
+                return
+            _, resolved_schema = schema_resolver.resolve(ref)
+            yield from self._build_keywords(
+                resolved_schema, schema_resolver, refs + [ref]
+            )
+
+        if "type" in obj:
+            if "object" in ensure_list(obj["type"]):
+                if "properties" in obj:
+                    for k, v in obj["properties"].items():
+                        for item in self._build_keywords(v, schema_resolver, refs):
+                            yield [k] + item
+            if "array" in ensure_list(obj["type"]):
+                if "items" in obj:
+                    for item in self._build_keywords(
+                        obj["items"], schema_resolver, refs
+                    ):
+                        yield ["*"] + item
+
+        yield []
+
+    def build_keywords(self, schema_resolver):
+        self._found_keywords.append(
+            "/".join(["Resources", schema_resolver.referrer["typeName"], "Properties"])
+        )
+        for k, v in schema_resolver.referrer.get("properties").items():
+            for item in self._build_keywords(v, schema_resolver, []):
+                self._found_keywords.append(
+                    "/".join(
+                        [
+                            "Resources",
+                            schema_resolver.referrer["typeName"],
+                            "Properties",
+                            k,
+                        ]
+                        + item
+                    )
+                )
+
+    def test_data_module_specs(self):
+        """Test data file formats"""
+        self._found_keywords: list[str] = []
+
+        draft7_schema = load_resource(
+            "cfnlint.data.schemas.other.draft7", "schema.json"
+        )
+        store = {"http://json-schema.org/draft-07/schema": draft7_schema}
+        dir = self.paths["fixtures"]
+        for dirpath, filename in self.get_files(dir):
+            with open(os.path.join(dirpath, filename), "r", encoding="utf8") as fh:
+                store[filename] = json.load(fh)
+
+        resolver = RefResolver.from_schema(
+            store["provider.definition.schema.v1.json"], store=store
+        )
+
+        validator = (
+            StandardValidator({})
+            .extend(
+                validators={
+                    "cfnLint": self.cfn_lint,
+                    "pattern": self.pattern,
+                },
+            )(schema=store["provider.definition.schema.v1.json"])
+            .evolve(resolver=resolver)
+        )
+
+        # Load resource types from test fixture provider JSON files
+        fixtures_dir = os.path.join(
+            os.path.dirname(__file__), "..", "fixtures", "schemas"
+        )
+        resource_types: dict[str, str] = {}
+        for provider_file in ("us-east-1.json", "sam.json"):
+            provider_path = os.path.join(fixtures_dir, "providers", provider_file)
+            if os.path.exists(provider_path):
+                with open(provider_path, "r", encoding="utf8") as fh:
+                    resource_types.update(json.load(fh))
+
+        # Load each resource schema
+        resources_dir = os.path.join(fixtures_dir, "resources")
+        for resource_type, schema_hash in resource_types.items():
+            schema_path = os.path.join(resources_dir, f"{schema_hash}.json")
+
+            if not os.path.exists(schema_path):
+                continue
+
+            with open(schema_path, "r", encoding="utf8") as fh:
+                d = json.load(fh)
+                # not allowed but true with this resource
+                if resource_type == "AWS::CloudFormation::CustomResource":
+                    d["additionalProperties"] = False
+                # Skip synthetic types that don't follow standard schema
+                if resource_type in ("Module", "AWS::CDK::Metadata"):
+                    continue
+                if resource_type.startswith("AWS::Serverless::"):
+                    # SAM schemas don't conform to CFN provider schema format
+                    # but we still need their keywords for rule validation
+                    schema_resolver = RefResolver(d)
+                    self.build_keywords(schema_resolver)
+                    continue
+                errs = list(validator.iter_errors(d))
+                self.assertListEqual(
+                    errs, [], f"Error with {resource_type} ({schema_hash}): {errs}"
+                )
+                schema_resolver = RefResolver(d)
+                self.validate_basic_schema_details(
+                    schema_resolver, f"{resource_type} ({schema_hash})"
+                )
+
+                # Build keywords for us-east-1 schemas
+                self.build_keywords(schema_resolver)
 
     def cfn_lint(self, validator, _, keywords, schema):
         pass
@@ -209,6 +334,10 @@ class TestSchemaFiles(TestCase):
             self.skipTest(
                 "Schemas not downloaded — run cfn-lint --update-specs --force"
             )
+        sam_file = os.path.join(self.paths["providers"], "sam.json")
+        if os.path.exists(sam_file):
+            with open(sam_file, "r", encoding="utf-8") as f:
+                resource_types.update(json.load(f))
 
         # Collect cfnLint keywords from extension/other schemas
         cfnlint_keywords: set[str] = set()

@@ -202,6 +202,7 @@ class Context:
                 name
                 for name, resource in self.resources.items()
                 if resource.type.endswith("::MODULE")
+                or resource.type.startswith("AWS::Serverless::")
             ),
         )
 
@@ -582,6 +583,136 @@ def _init_transforms(transforms: Any) -> Transforms:
     return Transforms([])
 
 
+def _inject(
+    resources: dict[str, Resource], logical_id: str, resource_type: str
+) -> None:
+    """Add a synthetic resource if it doesn't already exist."""
+    if logical_id not in resources:
+        try:
+            resources[logical_id] = Resource({"Type": resource_type})
+        except ValueError:
+            pass
+
+
+def _inject_sam_implicit_resources(
+    template_resources: Any, resources: dict[str, Resource]
+) -> None:
+    """Add synthetic resources for SAM implicit APIs and generated roles.
+
+    SAM auto-generates these when Functions have Api/HttpApi events
+    without explicit RestApiId/ApiId references, and IAM Roles when
+    no explicit Role property is set.
+    """
+    if not isinstance(template_resources, dict):
+        return
+
+    needs_rest_api = False
+    needs_http_api = False
+
+    for resource_id, resource in template_resources.items():
+        if not isinstance(resource, dict):
+            continue
+        resource_type = resource.get("Type")
+        props = resource.get("Properties", {})
+        if not isinstance(props, dict):
+            props = {}
+
+        # SAM Functions/StateMachines without explicit Role get a generated Role
+        if resource_type in (
+            "AWS::Serverless::Function",
+            "AWS::Serverless::StateMachine",
+        ):
+            if "Role" not in props:
+                _inject(resources, f"{resource_id}Role", "AWS::IAM::Role")
+
+        if resource_type == "AWS::Serverless::Function":
+            # Version/Alias when AutoPublishAlias or DeploymentPreference
+            has_alias = "AutoPublishAlias" in props or "DeploymentPreference" in props
+            if has_alias:
+                for suffix, rtype in (
+                    (f"{resource_id}.Version", "AWS::Lambda::Version"),
+                    (f"{resource_id}.Alias", "AWS::Lambda::Alias"),
+                ):
+                    if suffix not in resources:
+                        try:
+                            resources[suffix] = Resource({"Type": rtype})
+                        except ValueError:
+                            pass
+
+            # Url when FunctionUrlConfig is set
+            if "FunctionUrlConfig" in props:
+                _inject(resources, f"{resource_id}Url", "AWS::Lambda::Url")
+
+            # DeploymentPreference generates CodeDeploy resources
+            dp = props.get("DeploymentPreference", {})
+            if isinstance(dp, dict) and dp.get("Enabled", True):
+                _inject(
+                    resources,
+                    "ServerlessDeploymentApplication",
+                    "AWS::CodeDeploy::Application",
+                )
+                _inject(
+                    resources,
+                    f"{resource_id}DeploymentGroup",
+                    "AWS::CodeDeploy::DeploymentGroup",
+                )
+                if "Role" not in dp:
+                    _inject(resources, "CodeDeployServiceRole", "AWS::IAM::Role")
+
+            # Per-event permissions and implicit API detection
+            events = props.get("Events", {})
+            if isinstance(events, dict):
+                for event_name, event in events.items():
+                    if not isinstance(event, dict):
+                        continue
+                    _inject(
+                        resources,
+                        f"{resource_id}{event_name}Permission",
+                        "AWS::Lambda::Permission",
+                    )
+                    event_type = event.get("Type")
+                    if event_type == "Api":
+                        event_props = event.get("Properties", {})
+                        if (
+                            not isinstance(event_props, dict)
+                            or "RestApiId" not in event_props
+                        ):
+                            needs_rest_api = True
+                    elif event_type == "HttpApi":
+                        event_props = event.get("Properties", {})
+                        if (
+                            not isinstance(event_props, dict)
+                            or "ApiId" not in event_props
+                        ):
+                            needs_http_api = True
+
+        if resource_type == "AWS::Serverless::Api":
+            _inject(resources, f"{resource_id}Stage", "AWS::ApiGateway::Stage")
+            if "Domain" in props:
+                _inject(
+                    resources,
+                    f"{resource_id}DomainName",
+                    "AWS::ApiGateway::DomainName",
+                )
+            if "Auth" in props:
+                _inject(
+                    resources,
+                    f"{resource_id}UsagePlan",
+                    "AWS::ApiGateway::UsagePlan",
+                )
+
+        if resource_type == "AWS::Serverless::HttpApi":
+            _inject(resources, f"{resource_id}Stage", "AWS::ApiGatewayV2::Stage")
+
+    if needs_rest_api:
+        _inject(resources, "ServerlessRestApi", "AWS::Serverless::Api")
+        _inject(resources, "ServerlessRestApiStage", "AWS::ApiGateway::Stage")
+
+    if needs_http_api:
+        _inject(resources, "ServerlessHttpApi", "AWS::Serverless::HttpApi")
+        _inject(resources, "ServerlessHttpApiStage", "AWS::ApiGatewayV2::Stage")
+
+
 def create_context_for_template(
     cfn: Template,
 ) -> "Context":
@@ -596,6 +727,13 @@ def create_context_for_template(
         resources = _init_resources(cfn.template.get("Resources", {}), cfn.filename)
     except (ValueError, AttributeError):
         pass
+
+    # Inject synthetic resources for SAM implicit APIs.
+    # When a SAM Function has an Api event without an explicit RestApiId,
+    # SAM generates "ServerlessRestApi" (AWS::Serverless::Api).
+    # Similarly for HttpApi events -> "ServerlessHttpApi".
+    if cfn.has_serverless_transform():
+        _inject_sam_implicit_resources(cfn.template.get("Resources", {}), resources)
 
     transforms = _init_transforms(cfn.template.get("Transform", []))
 
