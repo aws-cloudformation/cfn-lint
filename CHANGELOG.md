@@ -1,3 +1,12 @@
+### v1.53.1
+## What's Changed
+* Update snapshot script results file naming so that templates with sam… by @satyakigh in https://github.com/aws-cloudformation/cfn-lint/pull/4575
+* fix: Don't error on `FindInMap` keys resolved from parameter defaults by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4580
+* chore(deps): bump actions/setup-python from 6 to 7 by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4581
+* Update CloudFormation schemas to `2026-07-20` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4576
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.53.0...v1.53.1
+
 ### v1.53.0
 ## What's Changed
 * fix: Restore pricing and AWS API scripts, fix Elasticsearch instance type enum by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4569
