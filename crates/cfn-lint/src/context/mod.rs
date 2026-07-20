@@ -26,6 +26,7 @@ pub struct ContextOptions {
     pub condition_state: Option<HashMap<String, bool>>,
     pub regions: Option<Vec<String>>,
     pub functions: Option<Vec<String>>,
+    pub unresolvable_function_mode: Option<bool>,
 }
 
 /// Mutable validation state that evolves as we traverse the template.
@@ -42,6 +43,12 @@ pub struct Context {
     /// Supported intrinsic functions at this point in the template.
     /// None = all functions allowed. Some([]) = no functions allowed.
     pub functions: Option<Vec<String>>,
+    /// When `true`, intrinsic functions like `Ref` are treated as unresolvable:
+    /// instead of resolving parameter/resource references, validators emit an
+    /// `unknown=true` error so the value is left unvalidated. Used by extension
+    /// schemas (e.g. E3671) where resolving parameter combinations we can't
+    /// predict at static analysis time would create false positives.
+    pub unresolvable_function_mode: bool,
     /// SAT solver for condition satisfiability checks.
     pub sat_conditions: Option<Arc<SatConditions>>,
 }
@@ -56,6 +63,7 @@ impl Context {
             condition_state: HashMap::new(),
             regions: vec!["us-east-1".to_string()],
             functions: None,
+            unresolvable_function_mode: false,
             sat_conditions: None,
         }
     }
@@ -85,6 +93,7 @@ impl Context {
             condition_state: HashMap::new(),
             regions: vec![],
             functions: None,
+            unresolvable_function_mode: false,
             sat_conditions: None,
         }
     }
@@ -105,6 +114,9 @@ impl Context {
             } else {
                 self.functions.clone()
             },
+            unresolvable_function_mode: opts
+                .unresolvable_function_mode
+                .unwrap_or(self.unresolvable_function_mode),
             sat_conditions: self.sat_conditions.clone(),
         }
     }
@@ -134,6 +146,17 @@ impl Context {
     /// Resolution order: pseudo-parameters → already-resolved refs →
     /// template parameters (expanding AllowedValues) → resources.
     pub fn resolve_ref(&self, name: &str) -> Vec<RefScenario> {
+        // In unresolvable_function_mode, don't resolve ANY ref. This is the common
+        // chokepoint for every intrinsic that pulls in parameter values — Ref directly,
+        // and Fn::Sub / Fn::FindInMap / Fn::Select / Fn::Join / Fn::If / … indirectly via
+        // `resolvers::resolve_value`. Returning no scenarios means "unresolvable", so
+        // validators emit unknown=true and leave the value unvalidated (mirrors Python's
+        // `_function_unknown` handler bound to all functions). Used by extension schemas
+        // (e.g. E3671) where expanding parameter combinations creates false positives.
+        if self.unresolvable_function_mode {
+            return vec![];
+        }
+
         // 1. Pseudo-parameters
         if let Some(value) = self.resolve_pseudo_parameter(name) {
             return vec![RefScenario {
@@ -650,6 +673,34 @@ Resources:
         let scenarios = ctx.resolve_ref("MyBucket");
         // Ref to a resource returns a resource-type-specific value we can't determine
         assert_eq!(scenarios.len(), 0);
+    }
+
+    #[test]
+    fn test_resolve_ref_unresolvable_function_mode() {
+        // In unresolvable_function_mode, no ref resolves — not pseudo-parameters,
+        // not ref_values, not parameters. This is the common chokepoint that makes
+        // every intrinsic function unresolvable for extension schemas.
+        let tmpl = make_template(
+            br#"
+Parameters:
+  Env:
+    Type: String
+    Default: dev
+Resources:
+  Dummy:
+    Type: AWS::SNS::Topic
+"#,
+        );
+        let mut ctx = Context::new(tmpl);
+        ctx.ref_values.insert("Pinned".into(), str_node("v"));
+        let ctx = ctx.evolve(ContextOptions {
+            unresolvable_function_mode: Some(true),
+            ..Default::default()
+        });
+
+        assert!(ctx.resolve_ref("Env").is_empty());
+        assert!(ctx.resolve_ref("AWS::Region").is_empty());
+        assert!(ctx.resolve_ref("Pinned").is_empty());
     }
 
     #[test]

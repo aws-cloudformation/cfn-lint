@@ -338,6 +338,16 @@ impl TemplateWalker {
                 }
             }
             AstNode::Function(func) if func.name == "Fn::If" => {
+                // Dispatch to Fn/If for any registered rules
+                self.dispatch(
+                    validator,
+                    "Fn/If",
+                    node,
+                    instance_path,
+                    schema_raw,
+                    issues,
+                );
+
                 self.walk_fn_if(
                     validator,
                     func,
@@ -431,23 +441,19 @@ impl TemplateWalker {
         schema: &serde_json::Value,
         issues: &mut Vec<ValidationError>,
     ) {
-        for err in self
+        for mut err in self
             .keyword_rules
             .dispatch(validator, path_keyword, node, schema, instance_path)
         {
-            let rule_id = if err.keyword.starts_with("cfnLint:") {
-                err.keyword.trim_start_matches("cfnLint:").to_string()
-            } else if err.rule_id.is_some() {
-                err.rule_id.clone().unwrap()
-            } else {
-                keyword_to_rule_id(&err.keyword).to_string()
-            };
-            issues.push(ValidationError::new(
-                rule_id,
-                err.message,
-                err.path,
-                err.span,
-            ));
+            // Fix up rule_id if needed
+            if err.rule_id.is_none() {
+                if err.keyword.starts_with("cfnLint:") {
+                    err.rule_id = Some(err.keyword.trim_start_matches("cfnLint:").to_string());
+                } else {
+                    err.rule_id = Some(keyword_to_rule_id(&err.keyword).to_string());
+                }
+            }
+            issues.push(err); // Push actual error with all metadata intact
         }
     }
 }

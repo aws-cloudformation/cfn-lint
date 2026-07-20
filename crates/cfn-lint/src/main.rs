@@ -1,6 +1,8 @@
+use cfn_lint::ast::Span;
 use cfn_lint::config::{Config, ConfigOverrides};
 use cfn_lint::engine::Engine;
 use cfn_lint::formatters::{get_formatter, ValidationResult};
+use cfn_lint::jsonschema::ValidationError;
 use cfn_lint::parser;
 use cfn_lint::schema::update_schemas;
 use cfn_lint::template::Template;
@@ -130,7 +132,19 @@ fn find_schema_dir(cli_schema_dir: &Option<PathBuf>) -> Option<PathBuf> {
         }
     }
 
-    // Try relative to the binary
+    // Prefer the default cache directory (populated by --update-schemas), which
+    // is always the most current/complete set of schemas. `default_cache_dir()`
+    // already ends in `/schemas`, so use its parent as the data dir base — the
+    // downstream schema provider joins `schemas/providers` onto it.
+    if let Some(schemas_dir) = cfn_schema::default_cache_dir() {
+        if let Some(cache_base) = schemas_dir.parent() {
+            if cache_base.join("schemas").join("providers").is_dir() {
+                return Some(cache_base.to_path_buf());
+            }
+        }
+    }
+
+    // Fall back to schemas bundled relative to the binary.
     if let Ok(exe) = std::env::current_exe() {
         if let Some(exe_dir) = exe.parent() {
             let candidate = exe_dir.join("data");
@@ -141,6 +155,22 @@ fn find_schema_dir(cli_schema_dir: &Option<PathBuf>) -> Option<PathBuf> {
     }
 
     None
+}
+
+/// Build a template-level E0000 finding for parse/load failures, mirroring
+/// Python v1's behavior of reporting these as a finding rather than aborting.
+fn e0000(message: String) -> ValidationError {
+    ValidationError {
+        rule_id: Some("E0000".to_string()),
+        message,
+        path: vec![],
+        keyword: String::new(),
+        span: Span::default(),
+        unknown: false,
+        resolved_from_ref: false,
+        context: vec![],
+        schema_id: None,
+    }
 }
 
 fn main() {
@@ -197,6 +227,7 @@ fn main() {
             .schema_dir
             .clone()
             .or_else(|| find_schema_dir(&None))
+            .or_else(|| cfn_schema::default_cache_dir())
             .unwrap_or_else(|| PathBuf::from("data"));
         if let Err(e) = update_schemas(&data_dir, &config.regions, force) {
             eprintln!("Error updating schemas: {}", e);
@@ -208,7 +239,17 @@ fn main() {
 
     let mut engine = match find_schema_dir(&config.schema_dir) {
         Some(dir) => Engine::with_data_dir(dir),
-        None => Engine::new(),
+        None => {
+            // Try to extract bundled schemas on first run
+            #[cfg(feature = "bundled")]
+            if let Some(cache_dir) = cfn_schema::extract_bundled_schemas() {
+                Engine::with_data_dir(cache_dir)
+            } else {
+                Engine::new()
+            }
+            #[cfg(not(feature = "bundled"))]
+            Engine::new()
+        }
     };
 
     if let Some(custom_rules_path) = &cli.custom_rules {
@@ -267,19 +308,42 @@ fn main() {
 
         let ast = match parser::parse(&content) {
             Ok(a) => a,
-            Err(_e) => {
-                eprintln!("Error parsing {}: {}", filename, _e);
-                process::exit(4);
+            Err(e) => {
+                // Emit the parse failure as an E0000 finding through the normal
+                // output path (matches Python v1) instead of writing to stderr
+                // and bailing. A stdout-only consumer would otherwise see an
+                // empty result and mistake a broken template for a clean one.
+                all_results.push(ValidationResult {
+                    filename: (*filename).clone(),
+                    issues: vec![e0000(format!(
+                        "Parsing error found when parsing the template: {}",
+                        e
+                    ))],
+                });
+                continue;
             }
         };
 
-        let tmpl = match Template::from_ast(&ast) {
+        let mut tmpl = match Template::from_ast(&ast) {
             Ok(t) => t,
             Err(e) => {
-                eprintln!("Error loading {}: {}", filename, e);
-                process::exit(4);
+                // Root-not-object and other load failures: same treatment as
+                // parse errors — surface as an E0000 finding, not a stderr bail.
+                all_results.push(ValidationResult {
+                    filename: (*filename).clone(),
+                    issues: vec![e0000(format!(
+                        "Parsing error found when parsing the template: {}",
+                        e
+                    ))],
+                });
+                continue;
             }
         };
+        // Populate the source filename so rules that resolve paths relative to
+        // the template (e.g. E3043 nested-stack TemplateURL) can run. Without
+        // this, Template::from_ast leaves filename = None and those rules
+        // early-return with no findings.
+        tmpl.filename = Some((*filename).clone());
 
         let issues = engine.validate(&tmpl, &ast, &config.regions);
 

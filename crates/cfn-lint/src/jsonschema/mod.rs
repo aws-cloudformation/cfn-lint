@@ -133,8 +133,8 @@ pub struct ContextEvolution {
 /// JSON Schema validator with registered keyword validators.
 pub struct Validator {
     validators: Arc<HashMap<String, KeywordValidator>>,
-    root_schema: serde_json::Value,
-    store: HashMap<String, serde_json::Value>,
+    root_schema: Arc<serde_json::Value>,
+    store: Arc<HashMap<String, serde_json::Value>>,
     /// When `false` (default), apply CloudFormation type coercion rules:
     /// numbers/booleans accepted where strings are expected, numeric strings
     /// accepted where numbers/integers are expected.  When `true`, exact
@@ -436,8 +436,8 @@ impl Validator {
 
         Validator {
             validators: Arc::clone(&DEFAULT_VALIDATORS),
-            root_schema,
-            store,
+            root_schema: Arc::new(root_schema),
+            store: Arc::new(store),
             strict_types: false,
             context: None,
             cfn_lint_rules: None,

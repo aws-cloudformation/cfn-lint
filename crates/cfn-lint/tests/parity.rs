@@ -1,5 +1,56 @@
 //! Comprehensive parity test: run Rust cfn-lint against Python cfn-lint's
 //! good/bad test fixtures and compare results.
+//!
+//! ## Accepted divergences ("v2 is better") — do not treat as bugs
+//!
+//! On a handful of malformed `bad/` fixtures, Python v1 bails out early with a
+//! single generic `E0000` (parse/load error), while Rust v2 parses further and
+//! emits more specific, more useful findings. These are intentional and are
+//! considered improvements over v1, not parity gaps:
+//!
+//! - `bad/duplicate.yaml` — Python: E0000 x3 (its YAML loader aborts on the
+//!   duplicate `mySnsTopic` keys). v2 pinpoints each duplicate (E1001 x2) plus
+//!   the invalid `Parameters` property on each copy (E3001 x5). v2's output
+//!   tells the user exactly what is wrong instead of "couldn't parse".
+//! - `bad/core/parse_invalid_map.yaml` — the file is valid YAML but has a
+//!   malformed intrinsic (`!ImportValue Fn::Sub:` nested wrong on the join
+//!   line). Python: E0000 x1. v2 reports the concrete problems: undefined-Ref
+//!   params (E1020 x5), the malformed Fn::Join (E1022), and unnecessary Fn::Sub
+//!   (W1020 x2).
+//! - `bad/functions_join.yaml` — Python: E1021 x4, v2: E1021 x3. The extra
+//!   Python finding is `Exception '0' raised while validating 'fn_join'`, which
+//!   is Python's generic catch-all wrapper (validators.py:277) surfacing an
+//!   INTERNAL CRASH in its fn_join validator on the malformed `Fn::Join: !Ref`
+//!   input — not a real check. v2 validates the same input cleanly with one
+//!   correct finding ("function is not of type array") and does not crash.
+//!   Reproducing Python's count would mean emulating a Python bug; we don't.
+//!
+//! To keep this harness at parity with the frozen Python baseline, `run_engine`
+//! below pre-empts these cases the way Python does (synthesize E0000 for parse
+//! errors / root-not-object / duplicate / non-string keys, and stop before
+//! schema validation). The richer v2 findings are what the *real CLI* emits;
+//! they are deliberately not asserted here. If you are reconciling a CLI-based
+//! parity run (e.g. /tmp/parity_run.py) that surfaces these as "rust-only",
+//! that is expected — see the module docs and project memory
+//! `project_cfn_lint_parity_baseline_refresh`.
+//! - `bad/empty_file.yaml` — a 0-byte file. Python: E1001 (`'Resources' is a
+//!   required property`). The real CLI reports `E0000 "empty document"` (a
+//!   0-byte file is a YAML parse error, which routes through the E0000 path
+//!   below), exit 2. Both tools flag the file with a non-zero exit; they differ
+//!   only in rule code. v2's E1001 rule exists and is correct — it simply never
+//!   receives a template object because parsing an empty file errors first. The
+//!   "v2 emits E1001 on empty" expectation was always a harness artifact: only
+//!   `run_engine` substitutes `{}` for empty input (see below); the CLI does
+//!   not. Accepted as-is — `E0000 "empty document"` is arguably a clearer
+//!   message than Python's for a genuinely empty file.
+//!
+//! NOTE: the genuinely-broken bail cases — `bad/string.yaml` (root not an
+//! object), `bad/template.yaml` and `bad/core/config_invalid_yaml.yaml`
+//! (unparseable YAML) — were previously a reporting-shape GAP (real CLI wrote to
+//! stderr, exit 4, EMPTY stdout — a stdout-only consumer saw no findings). This
+//! is now FIXED: `main.rs` routes parse/load errors through the formatter as an
+//! `E0000` finding with a non-zero exit, matching Python. These templates match
+//! Python on rule code (E0000) via that path.
 
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
@@ -588,6 +639,56 @@ fn parity_vs_python_inner() {
         }
     }
     println!("{}", "=".repeat(100));
+}
+
+#[test]
+fn parity_e1021_debug() {
+    let fixtures_dir = match python_fixtures_dir() {
+        Some(d) => d,
+        None => {
+            eprintln!("Skipping: set CFN_LINT_FIXTURES_DIR to enable");
+            return;
+        }
+    };
+    let _ = &fixtures_dir;
+    let mut engine = Engine::with_data_dir(data_dir());
+    let probe = PathBuf::from("/tmp/e1021probe/templates");
+    for name in [
+        "bad/b64_list.yaml",
+        "bad/b64_findinmap_getatt.yaml",
+        "bad/b64_join_multi.yaml",
+    ] {
+        let path = probe.join(name);
+        let issues = run_engine(&mut engine, &path);
+        println!("\n##### {} #####", name);
+        for i in &issues {
+            println!(
+                "  {} [{}] path={:?} :: {}",
+                i.rule_id.as_deref().unwrap_or("?"),
+                i.keyword,
+                i.path,
+                i.message
+            );
+        }
+    }
+
+    // Directly probe base64 function structure validation
+    use cfn_lint::jsonschema::Validator;
+    let base64_schema: serde_json::Value = serde_json::from_str(include_str!(
+        "../data/schemas/other/functions/base64.json"
+    ))
+    .unwrap();
+    println!("\n##### direct validate_schema: list vs base64 schema #####");
+    let yaml = "Fn::Base64:\n- Random String\n";
+    let ast = cfn_lint::parser::parse(yaml.as_bytes()).unwrap();
+    // ast root is object with Fn::Base64; get the function args
+    println!("  ast root type debug: {:?}", ast);
+    let v = Validator::new(base64_schema.clone());
+    // validate the whole {Fn::Base64: [..]} against base64 schema
+    let errs = v.validate(&ast, &base64_schema, &[]);
+    for e in &errs {
+        println!("  ROOT-ERR {} [{}] :: {}", e.rule_id.as_deref().unwrap_or("?"), e.keyword, e.message);
+    }
 }
 
 #[test]

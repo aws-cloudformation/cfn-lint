@@ -1003,7 +1003,7 @@ pub fn parse_resource_schema(resource_type: &str, raw: serde_json::Value) -> Res
 /// Linux: ~/.cache/cfn-lsp/schemas
 /// Windows: %LOCALAPPDATA%\cfn-lsp\cache\schemas
 pub fn default_cache_dir() -> Option<std::path::PathBuf> {
-    dirs::cache_dir().map(|d| d.join("cfn-lsp").join("schemas"))
+    dirs::cache_dir().map(|d| d.join("aws").join("cfn-lint").join("schemas"))
 }
 
 /// Embedded schema archive (compressed tar.gz).
@@ -1015,35 +1015,62 @@ static BUNDLED_SCHEMAS: &[u8] = include_bytes!("../data/bundled/schemas.tar.gz")
 #[cfg(feature = "bundled")]
 pub fn extract_bundled_schemas() -> Option<PathBuf> {
     let cache_dir = default_cache_dir()?;
+    let version_file = cache_dir.join(".version");
     let providers_dir = cache_dir.join("schemas").join("providers");
 
-    // Already extracted?
-    if providers_dir.is_dir() {
-        if let Ok(entries) = std::fs::read_dir(&providers_dir) {
-            if entries.count() > 0 {
-                return Some(cache_dir);
-            }
+    let current_version = env!("CARGO_PKG_VERSION");
+
+    // Check if we should extract
+    let should_extract = if let Ok(cached_version) = std::fs::read_to_string(&version_file) {
+        let cached = cached_version.trim();
+        // Compare versions: only extract if current > cached (prevents downgrade)
+        match (parse_semver(current_version), parse_semver(cached)) {
+            (Some(cur), Some(cach)) => cur > cach,
+            _ => true, // Can't parse, re-extract
         }
+    } else {
+        true // No version file, extract
+    };
+
+    if !should_extract && providers_dir.is_dir() {
+        return Some(cache_dir);
     }
 
-    // Extract
+    // Extract (overwrites old schemas)
     use flate2::read::GzDecoder;
     use tar::Archive;
 
-    let decoder = GzDecoder::new(BUNDLED_SCHEMAS);
-    let mut archive = Archive::new(decoder);
-
+    let _ = std::fs::remove_dir_all(&cache_dir); // Clean old
     if let Err(e) = std::fs::create_dir_all(&cache_dir) {
         eprintln!("Failed to create cache dir: {}", e);
         return None;
     }
+
+    let decoder = GzDecoder::new(BUNDLED_SCHEMAS);
+    let mut archive = Archive::new(decoder);
 
     if let Err(e) = archive.unpack(&cache_dir) {
         eprintln!("Failed to extract bundled schemas: {}", e);
         return None;
     }
 
+    // Write version marker
+    let _ = std::fs::write(&version_file, current_version);
+
     Some(cache_dir)
+}
+
+// Simple semver parser for "0.1.0" format
+fn parse_semver(s: &str) -> Option<(u32, u32, u32)> {
+    let parts: Vec<_> = s.split('.').collect();
+    if parts.len() != 3 {
+        return None;
+    }
+    Some((
+        parts[0].parse().ok()?,
+        parts[1].parse().ok()?,
+        parts[2].parse().ok()?,
+    ))
 }
 
 /// Reads/writes schemas from the OS cache directory.

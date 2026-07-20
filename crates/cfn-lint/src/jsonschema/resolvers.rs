@@ -24,6 +24,15 @@ pub struct Resolved {
 /// Non-function nodes yield themselves. Functions dispatch to their resolver.
 pub fn resolve_value(ctx: &Context, node: &AstNode) -> Vec<Resolved> {
     if let Some(func) = node.as_function() {
+        // In unresolvable_function_mode, no intrinsic function resolves. This is the
+        // second chokepoint (alongside `Context::resolve_ref`): it also catches
+        // functions that never touch a Ref, e.g. `Fn::FindInMap` with all-literal keys.
+        // Returning no scenarios means "unresolvable", so the caller emits unknown=true.
+        // Literal (non-function) nodes still pass through below — a literal value is
+        // known, not unresolvable.
+        if ctx.unresolvable_function_mode {
+            return vec![];
+        }
         match func.name.as_str() {
             "Ref" => resolve_ref(ctx, &func.args),
             "Fn::If" => resolve_if(ctx, &func.args),
@@ -641,6 +650,69 @@ mod tests {
         let results = resolve_value(&ctx, val);
         assert_eq!(results.len(), 1);
         assert_eq!(results[0].value.as_str(), Some("ami-12345"));
+    }
+
+    // ── unresolvable_function_mode chokepoint tests ──
+    // In this mode (used by extension schemas) NO intrinsic function may resolve,
+    // mirroring Python's `_function_unknown` handler bound to every function.
+
+    fn unresolvable(ctx: &Context) -> Context {
+        ctx.evolve(crate::context::ContextOptions {
+            unresolvable_function_mode: Some(true),
+            ..Default::default()
+        })
+    }
+
+    #[test]
+    fn test_unresolvable_mode_ref_not_resolved() {
+        let (ast, ctx) = ctx_from(
+            b"Parameters:\n  Env:\n    Type: String\n    Default: prod\nResources:\n  D:\n    Type: AWS::SNS::Topic\nval: !Ref Env\n",
+        );
+        let val = ast.get("val").unwrap();
+        // Normal mode resolves the parameter default.
+        assert_eq!(resolve_value(&ctx, val).len(), 1);
+        // Unresolvable mode yields nothing.
+        assert!(resolve_value(&unresolvable(&ctx), val).is_empty());
+    }
+
+    #[test]
+    fn test_unresolvable_mode_nested_ref_in_find_in_map() {
+        // !FindInMap [Map, !Ref Param, Key] — the nested Ref must not resolve,
+        // so the whole FindInMap is unresolvable.
+        let (ast, ctx) = ctx_from(
+            b"Parameters:\n  Key:\n    Type: String\n    Default: us-east-1\nMappings:\n  RegionMap:\n    us-east-1:\n      AMI: ami-12345\nResources:\n  D:\n    Type: AWS::SNS::Topic\nval:\n  Fn::FindInMap:\n    - RegionMap\n    - !Ref Key\n    - AMI\n",
+        );
+        let val = ast.get("val").unwrap();
+        // Normal mode resolves through the nested Ref to the mapping value.
+        assert_eq!(
+            resolve_value(&ctx, val)[0].value.as_str(),
+            Some("ami-12345")
+        );
+        // Unresolvable mode yields nothing.
+        assert!(resolve_value(&unresolvable(&ctx), val).is_empty());
+    }
+
+    #[test]
+    fn test_unresolvable_mode_if_both_branches_not_resolved() {
+        // !If [Cond, !Ref A, !Ref B] — neither branch may resolve.
+        let (ast, ctx) = ctx_from(
+            b"Parameters:\n  A:\n    Type: String\n    Default: a\n  B:\n    Type: String\n    Default: b\nConditions:\n  Cond:\n    Fn::Equals: [a, a]\nResources:\n  D:\n    Type: AWS::SNS::Topic\nval:\n  Fn::If:\n    - Cond\n    - !Ref A\n    - !Ref B\n",
+        );
+        let val = ast.get("val").unwrap();
+        // Normal mode resolves at least one branch.
+        assert!(!resolve_value(&ctx, val).is_empty());
+        // Unresolvable mode yields nothing.
+        assert!(resolve_value(&unresolvable(&ctx), val).is_empty());
+    }
+
+    #[test]
+    fn test_unresolvable_mode_literal_still_passes_through() {
+        // Literal (non-function) values are known, not unresolvable.
+        let (_, ctx) = ctx_from(b"AWSTemplateFormatVersion: '2010-09-09'\n");
+        let node = str_node("hello");
+        let results = resolve_value(&unresolvable(&ctx), &node);
+        assert_eq!(results.len(), 1);
+        assert_eq!(results[0].value.as_str(), Some("hello"));
     }
 
     #[test]

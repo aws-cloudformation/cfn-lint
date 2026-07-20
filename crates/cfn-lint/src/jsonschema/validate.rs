@@ -163,7 +163,7 @@ impl Validator {
         };
 
         let base_schema = if schema_name.is_empty() {
-            &self.root_schema
+            self.root_schema.as_ref()
         } else {
             self.store
                 .get(schema_name)
@@ -197,7 +197,7 @@ impl Validator {
 
     /// Return a reference to the root schema used for `$ref` resolution.
     pub fn root_schema(&self) -> &serde_json::Value {
-        &self.root_schema
+        self.root_schema.as_ref()
     }
 }
 

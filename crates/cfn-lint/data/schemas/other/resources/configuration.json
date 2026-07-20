@@ -3,6 +3,40 @@
   "definitions": {
     "ResourceConfiguration": {
       "additionalProperties": false,
+      "if": {
+        "properties": {
+          "Type": {
+            "pattern": "(AWS::CloudFormation::CustomResource|Custom::.*)"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "CreationPolicy": false,
+          "UpdatePolicy": false,
+          "Version": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        }
+      },
+      "else": {
+        "not": {
+          "required": [
+            "Version"
+          ]
+        },
+        "properties": {
+          "CreationPolicy": {
+            "type": "object"
+          },
+          "UpdatePolicy": {
+            "type": "object"
+          }
+        }
+      },
       "properties": {
         "Condition": {
           "cfnContext": {

@@ -141,23 +141,34 @@ pub fn validate_ref(
         None => return vec![unknown_err("ref", path, node)],
     };
 
+    // Extension schemas run in unresolvable_function_mode. We no longer special-case
+    // Ref here: resolution is suppressed at the common chokepoint
+    // `Context::resolve_ref`, which returns no scenarios in that mode. That makes the
+    // `scenarios.is_empty()` branch below emit an unknown=true error (left unvalidated,
+    // suppressed by the existing unknown filtering) — and crucially also covers every
+    // other intrinsic (Fn::Sub, Fn::FindInMap, Fn::If, …) that resolves through the
+    // same chokepoint, not just Ref.
     let mut e1020_errors = Vec::new();
-    if let Some(param) = ctx.template.parameters.get(ref_name) {
-        if let Some(schema_type) = constraint.get("type").and_then(|t| t.as_str()) {
-            let ref_returns_string = !param.param_type.starts_with("List<")
-                && param.param_type != "CommaDelimitedList"
-                && !param.param_type.starts_with("AWS::SSM::Parameter");
-            if ref_returns_string && schema_type == "array" {
-                e1020_errors.push(err(
-                    "E1020",
-                    format!(
-                        "{:?} is not of type '{}'",
-                        serde_json::json!({"Ref": ref_name}),
-                        schema_type
-                    ),
-                    path,
-                    node,
-                ));
+    // In unresolvable_function_mode we suppress all parameter-derived findings,
+    // including the E1020 array/string type check, so the value is left unvalidated.
+    if !ctx.unresolvable_function_mode {
+        if let Some(param) = ctx.template.parameters.get(ref_name) {
+            if let Some(schema_type) = constraint.get("type").and_then(|t| t.as_str()) {
+                let ref_returns_string = !param.param_type.starts_with("List<")
+                    && param.param_type != "CommaDelimitedList"
+                    && !param.param_type.starts_with("AWS::SSM::Parameter");
+                if ref_returns_string && schema_type == "array" {
+                    e1020_errors.push(err(
+                        "E1020",
+                        format!(
+                            "{:?} is not of type '{}'",
+                            serde_json::json!({"Ref": ref_name}),
+                            schema_type
+                        ),
+                        path,
+                        node,
+                    ));
+                }
             }
         }
     }

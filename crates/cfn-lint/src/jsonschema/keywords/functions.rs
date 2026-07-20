@@ -451,7 +451,7 @@ pub fn validate_function_structure(
 
     let v = Validator {
         validators: validator.validators.clone(),
-        root_schema: schema.clone(),
+        root_schema: std::sync::Arc::new(schema.clone()),
         store: validator.store.clone(),
         strict_types: validator.strict_types,
         context: validator.context.clone(),
