@@ -1,0 +1,447 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "CloudWatchLogging": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroup": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_\\-/.#]+$",
+     "type": "string"
+    },
+    "LogStream": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[^:*]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CodeArtifact": {
+   "additionalProperties": false,
+   "properties": {
+    "Uri": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^[^\\s]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Uri"
+   ],
+   "type": "object"
+  },
+  "CpuConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Architecture": {
+     "enum": [
+      "ARM_64"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Architecture"
+   ],
+   "type": "object"
+  },
+  "EnvironmentVariable": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[^\\s]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 4096,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "HookState": {
+   "enum": [
+    "DISABLED",
+    "ENABLED"
+   ],
+   "type": "string"
+  },
+  "Hooks": {
+   "additionalProperties": false,
+   "properties": {
+    "MicrovmHooks": {
+     "$ref": "#/definitions/MicrovmHooks"
+    },
+    "MicrovmImageHooks": {
+     "$ref": "#/definitions/MicrovmImageHooks"
+    },
+    "Port": {
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Logging": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatch": {
+     "$ref": "#/definitions/CloudWatchLogging"
+    },
+    "Disabled": {
+     "default": false,
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "MicrovmHooks": {
+   "additionalProperties": false,
+   "properties": {
+    "Resume": {
+     "$ref": "#/definitions/HookState"
+    },
+    "ResumeTimeoutInSeconds": {
+     "maximum": 60,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Run": {
+     "$ref": "#/definitions/HookState"
+    },
+    "RunTimeoutInSeconds": {
+     "maximum": 60,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Suspend": {
+     "$ref": "#/definitions/HookState"
+    },
+    "SuspendTimeoutInSeconds": {
+     "maximum": 60,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Terminate": {
+     "$ref": "#/definitions/HookState"
+    },
+    "TerminateTimeoutInSeconds": {
+     "maximum": 60,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "MicrovmImageHooks": {
+   "additionalProperties": false,
+   "properties": {
+    "Ready": {
+     "$ref": "#/definitions/HookState"
+    },
+    "ReadyTimeoutInSeconds": {
+     "maximum": 3600,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Validate": {
+     "$ref": "#/definitions/HookState"
+    },
+    "ValidateTimeoutInSeconds": {
+     "maximum": 3600,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "MicrovmImageState": {
+   "enum": [
+    "CREATING",
+    "CREATED",
+    "CREATE_FAILED",
+    "UPDATING",
+    "UPDATED",
+    "UPDATE_FAILED",
+    "DELETING",
+    "DELETE_FAILED",
+    "DELETED"
+   ],
+   "type": "string"
+  },
+  "Resources": {
+   "additionalProperties": false,
+   "properties": {
+    "MinimumMemoryInMiB": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MinimumMemoryInMiB"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Lambda::MicrovmImage",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lambda:TagResource",
+    "lambda:TagResource20170331v2",
+    "lambda:GetMicrovmImage",
+    "lambda:CreateMicrovmImage",
+    "lambda:PassNetworkConnector",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lambda:GetMicrovmImage",
+    "lambda:DeleteMicrovmImage"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "lambda:ListMicrovmImages"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lambda:GetMicrovmImage",
+    "lambda:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "lambda:TagResource",
+    "lambda:TagResource20170331v2",
+    "lambda:GetMicrovmImage",
+    "lambda:UpdateMicrovmImage",
+    "lambda:UntagResource",
+    "lambda:UntagResource20170331v2",
+    "lambda:PassNetworkConnector",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ImageArn"
+ ],
+ "properties": {
+  "AdditionalOsCapabilities": {
+   "insertionOrder": false,
+   "items": {
+    "enum": [
+     "ALL"
+    ],
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "BaseImageArn": {
+   "description": "ARN of the base MicroVM image.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[^\\s]+$",
+   "type": "string"
+  },
+  "BaseImageVersion": {
+   "description": "Specific version of the base MicroVM image to use.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[^\\s]+$",
+   "type": "string"
+  },
+  "BuildRoleArn": {
+   "description": "ARN of the IAM build role.",
+   "format": "AWS::IAM::Role.Arn",
+   "pattern": "^arn:aws[a-zA-Z-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "CodeArtifact": {
+   "$ref": "#/definitions/CodeArtifact",
+   "description": "Code artifact for the active MicroVM image."
+  },
+  "CpuConfigurations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CpuConfiguration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CreatedAt": {
+   "description": "Timestamp when the MicroVM image was created.",
+   "type": "string"
+  },
+  "Description": {
+   "description": "Human-readable description of the MicroVM image and its purpose.",
+   "type": "string"
+  },
+  "EgressNetworkConnectors": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 10,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "EnvironmentVariables": {
+   "description": "Environment variables to set in the container during the snapshot build.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EnvironmentVariable"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Hooks": {
+   "$ref": "#/definitions/Hooks"
+  },
+  "ImageArn": {
+   "description": "ARN of the MicroVM image.",
+   "type": "string"
+  },
+  "LatestActiveImageVersion": {
+   "description": "The latest active version of the MicroVM image.",
+   "type": "string"
+  },
+  "LatestFailedImageVersion": {
+   "description": "The latest failed version of the MicroVM image.",
+   "type": "string"
+  },
+  "Logging": {
+   "$ref": "#/definitions/Logging",
+   "description": "Configuration for MicroVM image logging."
+  },
+  "Name": {
+   "description": "Unique name for the MicroVM image within the account.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_]+$",
+   "type": "string"
+  },
+  "Resources": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Resources"
+   },
+   "maxItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "State": {
+   "$ref": "#/definitions/MicrovmImageState",
+   "description": "Current state of the MicroVM image."
+  },
+  "Tags": {
+   "description": "Key-value pairs to associate with the MicroVM image for organization and management.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdatedAt": {
+   "description": "Timestamp when the MicroVM image was updated.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ImageArn",
+  "/properties/State",
+  "/properties/LatestActiveImageVersion",
+  "/properties/LatestFailedImageVersion",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "Name",
+  "BaseImageArn",
+  "BaseImageVersion",
+  "BuildRoleArn",
+  "Description",
+  "CodeArtifact",
+  "Logging",
+  "EgressNetworkConnectors",
+  "CpuConfigurations",
+  "Resources",
+  "AdditionalOsCapabilities",
+  "Hooks",
+  "EnvironmentVariables"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "lambda:ListTags",
+   "lambda:TagResource",
+   "lambda:UntagResource",
+   "lambda:TagResource20170331v2",
+   "lambda:UntagResource20170331v2"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Lambda::MicrovmImage",
+ "writeOnlyProperties": [
+  "/properties/BaseImageArn",
+  "/properties/BaseImageVersion",
+  "/properties/BuildRoleArn",
+  "/properties/Description",
+  "/properties/CodeArtifact",
+  "/properties/Logging",
+  "/properties/EgressNetworkConnectors",
+  "/properties/CpuConfigurations",
+  "/properties/Resources",
+  "/properties/AdditionalOsCapabilities",
+  "/properties/Hooks",
+  "/properties/EnvironmentVariables"
+ ]
+}

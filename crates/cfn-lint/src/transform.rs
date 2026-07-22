@@ -38,12 +38,10 @@ pub fn is_serverless_type(resource_type: &str) -> bool {
 mod tests {
     use super::*;
     use crate::ast::*;
-    use indexmap::IndexMap;
 
     #[test]
     fn test_is_sam_template_string_transform() {
-        let mut props: Vec<ObjectEntry> = Vec::new();
-        props.push(ObjectEntry {
+        let props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "Transform".to_string(),
                 span: Span::default(),
@@ -54,7 +52,7 @@ mod tests {
                 span: Span::default(),
             }),
             key_span: Span::default(),
-        });
+        }];
         let root = AstNode::Object(ObjectNode {
             entries: props,
             span: Span::default(),
@@ -64,8 +62,7 @@ mod tests {
 
     #[test]
     fn test_is_sam_template_array_transform() {
-        let mut props: Vec<ObjectEntry> = Vec::new();
-        props.push(ObjectEntry {
+        let props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "Transform".to_string(),
                 span: Span::default(),
@@ -85,7 +82,7 @@ mod tests {
                 span: Span::default(),
             }),
             key_span: Span::default(),
-        });
+        }];
         let root = AstNode::Object(ObjectNode {
             entries: props,
             span: Span::default(),
@@ -95,8 +92,7 @@ mod tests {
 
     #[test]
     fn test_is_not_sam_template() {
-        let mut props: Vec<ObjectEntry> = Vec::new();
-        props.push(ObjectEntry {
+        let props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "Transform".to_string(),
                 span: Span::default(),
@@ -107,7 +103,7 @@ mod tests {
                 span: Span::default(),
             }),
             key_span: Span::default(),
-        });
+        }];
         let root = AstNode::Object(ObjectNode {
             entries: props,
             span: Span::default(),

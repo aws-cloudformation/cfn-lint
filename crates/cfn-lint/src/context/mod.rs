@@ -122,12 +122,33 @@ impl Context {
     }
 
     /// Resolve an AWS pseudo-parameter by name.
+    ///
+    /// Returns synthetic, deterministic values mirroring Python cfn-lint's
+    /// `_get_pseudo_value` / `_get_pseudo_value_by_region`. Resolving
+    /// `AWS::StackName`/`AWS::StackId` (rather than leaving them unresolved) lets
+    /// templates that reference them in `Fn::Sub`/`Fn::Equals` narrow scenarios
+    /// instead of always evaluating both condition branches.
+    ///
+    /// Region-dependent values (`AWS::Partition`, `AWS::URLSuffix`, `AWS::StackId`,
+    /// `AWS::Region`) are derived from the first active region, so `cn-*`
+    /// (aws-cn / amazonaws.com.cn) and `us-gov-*` (aws-us-gov) resolve correctly.
     pub fn resolve_pseudo_parameter(&self, name: &str) -> Option<AstNode> {
         let value = match name {
             "AWS::Region" => self.regions.first()?.clone(),
             "AWS::AccountId" => "123456789012".to_string(),
-            "AWS::Partition" => "aws".to_string(),
-            "AWS::URLSuffix" => "amazonaws.com".to_string(),
+            "AWS::StackName" => "teststack".to_string(),
+            "AWS::StackId" => {
+                // Mirrors Python's synthetic StackId, with region/partition derived
+                // from the active region so it stays correct in cn-*/us-gov-*.
+                let region = self.regions.first()?;
+                format!(
+                    "arn:{}:cloudformation:{region}:123456789012:\
+                     stack/teststack/51af3dc0-da77-11e4-872e-1234567db123",
+                    partition_for_region(region)
+                )
+            }
+            "AWS::Partition" => partition_for_region(self.regions.first()?).to_string(),
+            "AWS::URLSuffix" => url_suffix_for_region(self.regions.first()?).to_string(),
             "AWS::NoValue" => {
                 return Some(AstNode::Null(NullNode {
                     span: Span::default(),
@@ -451,6 +472,29 @@ impl Context {
     }
 }
 
+/// Map an AWS region to its ARN partition, mirroring Python cfn-lint's
+/// `_get_partition`. Prefix matching covers all current and future regions in
+/// each partition (e.g. every `cn-*` region is in `aws-cn`).
+fn partition_for_region(region: &str) -> &'static str {
+    if region.starts_with("us-gov-") {
+        "aws-us-gov"
+    } else if region.starts_with("cn-") {
+        "aws-cn"
+    } else {
+        "aws"
+    }
+}
+
+/// Map an AWS region to its `AWS::URLSuffix`, mirroring Python cfn-lint.
+/// China regions use `amazonaws.com.cn`; everything else uses `amazonaws.com`.
+fn url_suffix_for_region(region: &str) -> &'static str {
+    if region.starts_with("cn-") {
+        "amazonaws.com.cn"
+    } else {
+        "amazonaws.com"
+    }
+}
+
 /// Compare two resolved AstNode values for equality (string comparison semantics).
 fn ast_to_cfn_string(node: &AstNode) -> Option<String> {
     match node {
@@ -558,8 +602,122 @@ mod tests {
         let no_val = ctx.resolve_pseudo_parameter("AWS::NoValue").unwrap();
         assert!(matches!(no_val, AstNode::Null(_)));
 
-        assert!(ctx.resolve_pseudo_parameter("AWS::StackName").is_none());
+        // C47: StackName/StackId now resolve to synthetic deterministic values
+        // (mirroring Python cfn-lint) so they narrow condition scenarios instead
+        // of leaving both branches live.
+        let stack_name = ctx.resolve_pseudo_parameter("AWS::StackName").unwrap();
+        assert_eq!(stack_name.as_str(), Some("teststack"));
+
+        let stack_id = ctx.resolve_pseudo_parameter("AWS::StackId").unwrap();
+        assert_eq!(
+            stack_id.as_str(),
+            Some(
+                "arn:aws:cloudformation:us-east-1:123456789012:\
+                 stack/teststack/51af3dc0-da77-11e4-872e-1234567db123"
+            )
+        );
+
         assert!(ctx.resolve_pseudo_parameter("NotAPseudo").is_none());
+    }
+
+    #[test]
+    fn test_resolve_pseudo_partition_default_region() {
+        // us-east-1 (default) is in the standard partition.
+        let ctx = Context::new(empty_template());
+        assert_eq!(
+            ctx.resolve_pseudo_parameter("AWS::Partition")
+                .unwrap()
+                .as_str(),
+            Some("aws")
+        );
+        assert_eq!(
+            ctx.resolve_pseudo_parameter("AWS::URLSuffix")
+                .unwrap()
+                .as_str(),
+            Some("amazonaws.com")
+        );
+    }
+
+    #[test]
+    fn test_resolve_pseudo_partition_china() {
+        // C48: cn-* regions resolve to the aws-cn partition and .cn URL suffix.
+        for region in ["cn-north-1", "cn-northwest-1"] {
+            let ctx = Context::new(empty_template()).evolve(ContextOptions {
+                regions: Some(vec![region.into()]),
+                ..Default::default()
+            });
+            assert_eq!(
+                ctx.resolve_pseudo_parameter("AWS::Partition")
+                    .unwrap()
+                    .as_str(),
+                Some("aws-cn"),
+                "partition for {region}"
+            );
+            assert_eq!(
+                ctx.resolve_pseudo_parameter("AWS::URLSuffix")
+                    .unwrap()
+                    .as_str(),
+                Some("amazonaws.com.cn"),
+                "url suffix for {region}"
+            );
+            assert_eq!(
+                ctx.resolve_pseudo_parameter("AWS::StackId")
+                    .unwrap()
+                    .as_str(),
+                Some(
+                    format!(
+                        "arn:aws-cn:cloudformation:{region}:123456789012:\
+                         stack/teststack/51af3dc0-da77-11e4-872e-1234567db123"
+                    )
+                    .as_str()
+                ),
+                "stack id for {region}"
+            );
+        }
+    }
+
+    #[test]
+    fn test_resolve_pseudo_partition_gov() {
+        // C48: us-gov-* regions resolve to the aws-us-gov partition; URL suffix
+        // stays amazonaws.com (only China differs).
+        for region in ["us-gov-east-1", "us-gov-west-1"] {
+            let ctx = Context::new(empty_template()).evolve(ContextOptions {
+                regions: Some(vec![region.into()]),
+                ..Default::default()
+            });
+            assert_eq!(
+                ctx.resolve_pseudo_parameter("AWS::Partition")
+                    .unwrap()
+                    .as_str(),
+                Some("aws-us-gov"),
+                "partition for {region}"
+            );
+            assert_eq!(
+                ctx.resolve_pseudo_parameter("AWS::URLSuffix")
+                    .unwrap()
+                    .as_str(),
+                Some("amazonaws.com"),
+                "url suffix for {region}"
+            );
+        }
+    }
+
+    #[test]
+    fn test_stack_name_narrows_condition() {
+        // C47 regression: an Fn::Equals on AWS::StackName must resolve so the
+        // condition collapses to a single scenario instead of returning both.
+        let ctx = Context::new(empty_template());
+        let ref_node = AstNode::Function(FunctionNode {
+            name: "Ref".to_string(),
+            args: Box::new(str_node("AWS::StackName")),
+            span: Span::default(),
+        });
+        // teststack == teststack -> true
+        let node = make_equals(ref_node.clone(), str_node("teststack"));
+        assert_eq!(ctx.try_evaluate(&node), Some(true));
+        // teststack == other -> false (still resolved, not unknown)
+        let node = make_equals(ref_node, str_node("prod-stack"));
+        assert_eq!(ctx.try_evaluate(&node), Some(false));
     }
 
     #[test]
@@ -798,12 +956,10 @@ Resources:
     // ── Condition satisfiability tests ──
 
     use crate::ast::{ArrayNode, FunctionNode, ObjectEntry, ObjectNode};
-    use indexmap::IndexMap;
 
     /// Helper: build an Fn::Equals object node (parsed as single-key object).
     fn make_equals(left: AstNode, right: AstNode) -> AstNode {
-        let mut props: Vec<ObjectEntry> = Vec::new();
-        props.push(ObjectEntry {
+        let props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "Fn::Equals".to_string(),
                 span: Span::default(),
@@ -814,7 +970,7 @@ Resources:
                 span: Span::default(),
             }),
             key_span: Span::default(),
-        });
+        }];
         AstNode::Object(ObjectNode {
             entries: props,
             span: Span::default(),
@@ -823,8 +979,7 @@ Resources:
 
     /// Helper: build an Fn::Not object node.
     fn make_not(inner: AstNode) -> AstNode {
-        let mut props: Vec<ObjectEntry> = Vec::new();
-        props.push(ObjectEntry {
+        let props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "Fn::Not".to_string(),
                 span: Span::default(),
@@ -835,7 +990,7 @@ Resources:
                 span: Span::default(),
             }),
             key_span: Span::default(),
-        });
+        }];
         AstNode::Object(ObjectNode {
             entries: props,
             span: Span::default(),
@@ -844,8 +999,7 @@ Resources:
 
     /// Helper: build an Fn::And object node.
     fn make_and(conditions: Vec<AstNode>) -> AstNode {
-        let mut props: Vec<ObjectEntry> = Vec::new();
-        props.push(ObjectEntry {
+        let props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "Fn::And".to_string(),
                 span: Span::default(),
@@ -856,7 +1010,7 @@ Resources:
                 span: Span::default(),
             }),
             key_span: Span::default(),
-        });
+        }];
         AstNode::Object(ObjectNode {
             entries: props,
             span: Span::default(),
@@ -865,8 +1019,7 @@ Resources:
 
     /// Helper: build an Fn::Or object node.
     fn make_or(conditions: Vec<AstNode>) -> AstNode {
-        let mut props: Vec<ObjectEntry> = Vec::new();
-        props.push(ObjectEntry {
+        let props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "Fn::Or".to_string(),
                 span: Span::default(),
@@ -877,7 +1030,7 @@ Resources:
                 span: Span::default(),
             }),
             key_span: Span::default(),
-        });
+        }];
         AstNode::Object(ObjectNode {
             entries: props,
             span: Span::default(),
@@ -886,8 +1039,7 @@ Resources:
 
     /// Helper: build a Condition reference as object (how it appears in condition expressions).
     fn make_condition_ref_obj(name: &str) -> AstNode {
-        let mut props: Vec<ObjectEntry> = Vec::new();
-        props.push(ObjectEntry {
+        let props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "Condition".to_string(),
                 span: Span::default(),
@@ -898,7 +1050,7 @@ Resources:
                 span: Span::default(),
             }),
             key_span: Span::default(),
-        });
+        }];
         AstNode::Object(ObjectNode {
             entries: props,
             span: Span::default(),

@@ -194,14 +194,10 @@ pub fn validate_unique_keys(
         };
         let vals: Vec<String> = key_names
             .iter()
-            .map(|k| {
-                obj.get(*k)
-                    .map(|v| ast_to_json_string(v))
-                    .unwrap_or_default()
-            })
+            .map(|k| obj.get(k).map(ast_to_json_string).unwrap_or_default())
             .collect();
         // Skip items where any key is missing — missing keys don't count as duplicates
-        if key_names.iter().any(|k| !obj.contains_key(*k)) {
+        if key_names.iter().any(|k| !obj.contains_key(k)) {
             continue;
         }
         if seen.contains(&vals) {

@@ -1,0 +1,873 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AWS::Events::Rule.InputTransformer": {
+   "additionalProperties": false,
+   "properties": {
+    "InputPathsMap": {
+     "additionalProperties": true,
+     "patternProperties": {
+      "^[a-zA-Z0-9]+$": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "InputTemplate": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "InputTemplate"
+   ],
+   "type": "object"
+  },
+  "ApiEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/ApiEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "Api"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "ApiEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Auth": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/Auth"
+      }
+     ]
+    },
+    "Method": {
+     "type": "string"
+    },
+    "Path": {
+     "type": "string"
+    },
+    "RestApiId": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "UnescapeMappingTemplate": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Method",
+    "Path"
+   ],
+   "type": "object"
+  },
+  "Auth": {
+   "additionalProperties": false,
+   "properties": {
+    "ApiKeyRequired": {
+     "type": "boolean"
+    },
+    "AuthorizationScopes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Authorizer": {
+     "type": "string"
+    },
+    "ResourcePolicy": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/ResourcePolicy"
+      }
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "CloudWatchEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/CloudWatchEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "CloudWatchEvent"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "CloudWatchEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "EventBusName": {
+     "description": "The name or ARN of the event bus associated with the rule. If you omit this, the default event bus is used.",
+     "maxLength": 1600,
+     "minLength": 1,
+     "pattern": "^(arn:aws[\\w-]*:events:[a-z]{2}-[a-z]+-[\\w-]+:[0-9]{12}:event-bus\\/)?[/\\.\\-_A-Za-z0-9]+$",
+     "type": "string"
+    },
+    "Input": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "InputPath": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "Pattern": {
+     "description": "The event pattern of the rule. For more information, see Events and Event Patterns in the Amazon EventBridge User Guide.",
+     "type": [
+      "string",
+      "object"
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "DeadLetterConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "description": "The ARN of the rule, such as arn:aws:events:us-east-2:123456789012:rule/example.",
+     "type": "string"
+    },
+    "QueueLogicalId": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "SQS"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EventBridgeRuleEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/EventBridgeRuleEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "EventBridgeRule"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "EventBridgeRuleEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "DeadLetterConfig": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/DeadLetterConfig"
+      }
+     ]
+    },
+    "EventBusName": {
+     "description": "The name or ARN of the event bus associated with the rule. If you omit this, the default event bus is used.",
+     "maxLength": 1600,
+     "minLength": 1,
+     "pattern": "^(arn:aws[\\w-]*:events:[a-z]{2}-[a-z]+-[\\w-]+:[0-9]{12}:event-bus\\/)?[/\\.\\-_A-Za-z0-9]+$",
+     "type": "string"
+    },
+    "Input": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "InputPath": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "InputTransformer": {
+     "$ref": "#/definitions/AWS::Events::Rule.InputTransformer"
+    },
+    "Pattern": {
+     "description": "The event pattern of the rule. For more information, see Events and Event Patterns in the Amazon EventBridge User Guide.",
+     "type": [
+      "string",
+      "object"
+     ]
+    },
+    "RetryPolicy": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "RuleName": {
+     "description": "The name of the rule.",
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[\\.\\-_A-Za-z0-9]+$",
+     "type": "string"
+    },
+    "Target": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/EventBridgeRuleTarget"
+      }
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "EventBridgeRuleTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "PassThroughProp": {},
+  "ResourcePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsAccountBlacklist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "AwsAccountWhitelist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "CustomStatements": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "IntrinsicVpcBlacklist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "IntrinsicVpcWhitelist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "IntrinsicVpceBlacklist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "IntrinsicVpceWhitelist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "IpRangeBlacklist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "IpRangeWhitelist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "SourceVpcBlacklist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "SourceVpcWhitelist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ScheduleEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/ScheduleEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "Schedule"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "ScheduleEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "DeadLetterConfig": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/DeadLetterConfig"
+      }
+     ]
+    },
+    "Description": {
+     "description": "The description of the rule.",
+     "maxLength": 512,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "Input": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "Name": {
+     "description": "The name of the rule.",
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[\\.\\-_A-Za-z0-9]+$",
+     "type": "string"
+    },
+    "RetryPolicy": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "Schedule": {
+     "description": "The scheduling expression. For example, \"cron(0 20 * * ? *)\", \"rate(5 minutes)\". For more information, see Creating an Amazon EventBridge rule that runs on a schedule.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    },
+    "State": {
+     "description": "The state of the rule.",
+     "enum": [
+      "DISABLED",
+      "ENABLED",
+      "ENABLED_WITH_ALL_CLOUDTRAIL_MANAGEMENT_EVENTS"
+     ],
+     "type": "string"
+    },
+    "Target": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/ScheduleTarget"
+      }
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "ScheduleTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "ScheduleV2Event": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/ScheduleV2EventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "ScheduleV2"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "ScheduleV2EventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "DeadLetterConfig": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/DeadLetterConfig"
+      }
+     ]
+    },
+    "Description": {
+     "description": "The description of the schedule.",
+     "maxLength": 512,
+     "minLength": 0,
+     "type": "string"
+    },
+    "EndDate": {
+     "description": "The date, in UTC, before which the schedule can invoke its target. Depending on the schedule's recurrence expression, invocations might stop on, or before, the EndDate you specify.",
+     "format": "date-time",
+     "type": "string"
+    },
+    "FlexibleTimeWindow": {
+     "additionalProperties": false,
+     "description": "Flexible time window allows configuration of a window within which a schedule can be invoked",
+     "properties": {
+      "MaximumWindowInMinutes": {
+       "description": "The maximum time window during which a schedule can be invoked.",
+       "maximum": 1440,
+       "minimum": 1,
+       "type": "number"
+      },
+      "Mode": {
+       "description": "Determines whether the schedule is executed within a flexible time window.",
+       "enum": [
+        "OFF",
+        "FLEXIBLE"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "Mode"
+     ],
+     "type": "object"
+    },
+    "GroupName": {
+     "description": "The name of the schedule group to associate with this schedule. If you omit this, the default schedule group is used.",
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[0-9a-zA-Z-_.]+$",
+     "type": "string"
+    },
+    "Input": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "KmsKeyArn": {
+     "description": "The ARN for a KMS Key that will be used to encrypt customer data.",
+     "format": "AWS::KMS::Key.Arn",
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:aws[a-z-]*:kms:[a-z0-9\\-]+:\\d{12}:(key|alias)\\/[0-9a-zA-Z-_]*$",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[0-9a-zA-Z-_.]+$",
+     "type": "string"
+    },
+    "OmitName": {
+     "type": "boolean"
+    },
+    "PermissionsBoundary": {
+     "description": "The ARN of the policy used to set the permissions boundary for the role.\n For more information about permissions boundaries, see [Permissions boundaries for IAM identities](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html) in the *IAM User Guide*.",
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    },
+    "RetryPolicy": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "RoleArn": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "ScheduleExpression": {
+     "description": "The scheduling expression.",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ScheduleExpressionTimezone": {
+     "description": "The timezone in which the scheduling expression is evaluated.",
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "StartDate": {
+     "description": "The date, in UTC, after which the schedule can begin invoking its target. Depending on the schedule's recurrence expression, invocations might occur on, or after, the StartDate you specify.",
+     "format": "date-time",
+     "type": "string"
+    },
+    "State": {
+     "description": "Specifies whether the schedule is enabled or disabled.",
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "AutoPublishAlias": {
+   "$ref": "#/definitions/PassThroughProp"
+  },
+  "Definition": {
+   "type": "object"
+  },
+  "DefinitionSubstitutions": {
+   "type": "object"
+  },
+  "DefinitionUri": {
+   "anyOf": [
+    {
+     "type": "string"
+    },
+    {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   ]
+  },
+  "DeploymentPreference": {
+   "$ref": "#/definitions/PassThroughProp"
+  },
+  "Events": {
+   "additionalProperties": {
+    "anyOf": [
+     {
+      "$ref": "#/definitions/ScheduleEvent"
+     },
+     {
+      "$ref": "#/definitions/ScheduleV2Event"
+     },
+     {
+      "$ref": "#/definitions/CloudWatchEvent"
+     },
+     {
+      "$ref": "#/definitions/EventBridgeRuleEvent"
+     },
+     {
+      "$ref": "#/definitions/ApiEvent"
+     }
+    ]
+   },
+   "type": "object"
+  },
+  "Logging": {
+   "additionalProperties": false,
+   "properties": {
+    "Destinations": {
+     "insertionOrder": false,
+     "items": {
+      "additionalProperties": false,
+      "properties": {
+       "CloudWatchLogsLogGroup": {
+        "additionalProperties": false,
+        "properties": {
+         "LogGroupArn": {
+          "maxLength": 256,
+          "minLength": 1,
+          "type": "string"
+         }
+        },
+        "type": "object"
+       }
+      },
+      "type": "object"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "IncludeExecutionData": {
+     "type": "boolean"
+    },
+    "Level": {
+     "enum": [
+      "ALL",
+      "ERROR",
+      "FATAL",
+      "OFF"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Name": {
+   "maxLength": 80,
+   "minLength": 1,
+   "type": "string"
+  },
+  "PermissionsBoundary": {
+   "description": "The ARN of the policy used to set the permissions boundary for the role.\n For more information about permissions boundaries, see [Permissions boundaries for IAM identities](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html) in the *IAM User Guide*.",
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "Policies": {
+   "anyOf": [
+    {
+     "type": "string"
+    },
+    {
+     "type": "object"
+    },
+    {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    }
+   ]
+  },
+  "PropagateTags": {
+   "type": "boolean"
+  },
+  "Role": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   ]
+  },
+  "RolePath": {
+   "default": "/",
+   "description": "The path to the role. For more information about paths, see [IAM Identifiers](https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html) in the *IAM User Guide*.\n This parameter is optional. If it is not included, it defaults to a slash (/).\n This parameter allows (through its [regex pattern](https://docs.aws.amazon.com/http://wikipedia.org/wiki/regex)) a string of characters consisting of either a forward slash (/) by itself or a string that must begin and end with forward slashes. In addition, it can contain any ASCII character from the ! (``\\u0021``) through the DEL character (``\\u007F``), including most punctuation characters, digits, and upper and lowercased letters.",
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^(\\u002F)|(\\u002F[\\u0021-\\u007E]+\\u002F)$",
+   "type": "string"
+  },
+  "StateMachineRevisionId": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "type": "object"
+  },
+  "Tracing": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "Type": {
+   "enum": [
+    "STANDARD",
+    "EXPRESS"
+   ],
+   "type": "string"
+  },
+  "UseAliasAsEventTarget": {
+   "type": "boolean"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Name",
+  "/properties/StateMachineRevisionId"
+ ],
+ "typeName": "AWS::Serverless::StateMachine"
+}

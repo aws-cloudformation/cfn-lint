@@ -1,0 +1,298 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/FileSystemId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Bucket",
+  "/properties/Prefix",
+  "/properties/ClientToken",
+  "/properties/KmsKeyId",
+  "/properties/RoleArn",
+  "/properties/AcceptBucketWarning"
+ ],
+ "definitions": {
+  "ExpirationDataRule": {
+   "additionalProperties": false,
+   "properties": {
+    "DaysAfterLastAccess": {
+     "maximum": 365,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "DaysAfterLastAccess"
+   ],
+   "type": "object"
+  },
+  "ImportDataRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Prefix": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^(|.*/)$",
+     "type": "string"
+    },
+    "SizeLessThan": {
+     "format": "int64",
+     "maximum": 52673613135872,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "Trigger": {
+     "enum": [
+      "ON_DIRECTORY_FIRST_ACCESS",
+      "ON_FILE_ACCESS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Prefix",
+    "Trigger",
+    "SizeLessThan"
+   ],
+   "type": "object"
+  },
+  "SynchronizationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ExpirationDataRules": {
+     "items": {
+      "$ref": "#/definitions/ExpirationDataRule"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    },
+    "ImportDataRules": {
+     "items": {
+      "$ref": "#/definitions/ImportDataRule"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    },
+    "LatestVersionNumber": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ImportDataRules",
+    "ExpirationDataRules"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]+)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::S3Files::FileSystem",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3files:CreateFileSystem",
+    "s3files:GetFileSystem",
+    "s3files:PutSynchronizationConfiguration",
+    "s3files:GetSynchronizationConfiguration",
+    "s3files:TagResource",
+    "kms:DescribeKey",
+    "kms:GenerateDataKeyWithoutPlaintext",
+    "kms:CreateGrant",
+    "iam:PassRole",
+    "s3:PutBucketNotification",
+    "s3:GetBucketNotification",
+    "events:PutTargets",
+    "events:PutRule",
+    "events:ListTargetsByRule",
+    "events:ListRules",
+    "events:DescribeRule"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "s3files:DeleteFileSystem",
+    "s3files:GetFileSystem",
+    "events:DescribeRule",
+    "events:DeleteRule",
+    "events:ListTargetsByRule",
+    "events:PutRule",
+    "events:RemoveTargets"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "Bucket": {
+      "$ref": "resource-schema.json#/properties/Bucket"
+     }
+    }
+   },
+   "permissions": [
+    "s3files:ListFileSystems",
+    "s3files:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "s3files:GetFileSystem",
+    "s3files:GetSynchronizationConfiguration",
+    "s3files:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "s3files:GetFileSystem",
+    "s3files:GetSynchronizationConfiguration",
+    "s3files:PutSynchronizationConfiguration",
+    "s3files:TagResource",
+    "s3files:UntagResource",
+    "s3files:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FileSystemArn"
+ ],
+ "properties": {
+  "AcceptBucketWarning": {
+   "type": "boolean"
+  },
+  "Bucket": {
+   "pattern": "^(arn:aws[a-zA-Z0-9-]*:s3:::.+)$",
+   "type": "string"
+  },
+  "ClientToken": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^(.+)$",
+   "type": "string"
+  },
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "FileSystemArn": {
+   "pattern": "^(arn:aws[-a-z]*:s3files:[0-9a-z-:]+:file-system/fs-[0-9a-f]{17,40})$",
+   "type": "string"
+  },
+  "FileSystemId": {
+   "maxLength": 128,
+   "pattern": "^(arn:aws[-a-z]*:s3files:[0-9a-z-:]+:file-system/fs-[0-9a-f]{17,40}|fs-[0-9a-f]{17,40})$",
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
+   "maxLength": 2048,
+   "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|mrk-[0-9a-f]{32}|alias/[a-zA-Z0-9/_-]+|(arn:aws[-a-z]*:kms:[a-z0-9-]+:\\d{12}:((key/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})|(key/mrk-[0-9a-f]{32})|(alias/[a-zA-Z0-9/_-]+))))$",
+   "type": "string"
+  },
+  "OwnerId": {
+   "type": "string"
+  },
+  "Prefix": {
+   "maxLength": 1024,
+   "pattern": "^(|.*/)$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "pattern": "^arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "creating",
+    "available",
+    "updating",
+    "deleting",
+    "deleted",
+    "error"
+   ],
+   "type": "string"
+  },
+  "StatusMessage": {
+   "type": "string"
+  },
+  "SynchronizationConfiguration": {
+   "$ref": "#/definitions/SynchronizationConfiguration"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/KmsKeyId": "\"arn:aws[-a-z]*:kms:[a-z0-9-]+:[0-9]{12}:key/[a-zA-Z0-9-]+\""
+ },
+ "readOnlyProperties": [
+  "/properties/CreationTime",
+  "/properties/FileSystemArn",
+  "/properties/FileSystemId",
+  "/properties/CreationTime",
+  "/properties/Status",
+  "/properties/StatusMessage",
+  "/properties/OwnerId",
+  "/properties/SynchronizationConfiguration/LatestVersionNumber"
+ ],
+ "required": [
+  "Bucket",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "s3files:TagResource",
+   "s3files:ListTagsForResource",
+   "s3files:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::S3Files::FileSystem",
+ "writeOnlyProperties": [
+  "/properties/AcceptBucketWarning"
+ ]
+}

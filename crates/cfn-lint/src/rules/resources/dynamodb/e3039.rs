@@ -69,7 +69,7 @@ impl CfnLintRule for E3039 {
                         path.join("/"),
                     ),
                     path,
-                    span: props.span().clone(),
+                    span: props.span(),
                     keyword: String::new(),
                     unknown: false,
                     resolved_from_ref: false,

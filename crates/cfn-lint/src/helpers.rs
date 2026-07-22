@@ -1,9 +1,26 @@
 //! Helpers for keyword rules, mirroring Python's `cfnlint.rules.helpers`.
 
 use std::collections::VecDeque;
+use std::sync::LazyLock;
+
+use regex::Regex;
 
 use crate::ast::AstNode;
 use crate::context::Context;
+
+/// Shared `Fn::Sub` variable-extraction regex.
+///
+/// Capture group 1 is the variable name inside `${...}`. The pattern excludes a
+/// *leading* `!` because `${!Literal}` is CloudFormation's literal escape (it is
+/// rendered verbatim as `${Literal}` and does not reference anything). Only the
+/// leading `!` is special: `${Foo!Bar}` is still a (malformed) variable name and
+/// is captured. This mirrors Python cfn-lint's `\${([^!].*?)}` for all realistic
+/// inputs while additionally refusing to span a `}`.
+///
+/// The captured name may carry surrounding whitespace (e.g. `${ Foo }`); callers
+/// that compare against identifiers should `.trim()` it.
+pub static SUB_VARIABLE_REGEX: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"\$\{([^!}][^}]*)\}").unwrap());
 
 /// Walk a path through an AstNode, branching through Fn::If conditions.
 ///

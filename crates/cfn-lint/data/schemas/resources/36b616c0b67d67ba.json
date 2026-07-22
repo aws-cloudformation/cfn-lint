@@ -1,0 +1,228 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DatabaseName"
+ ],
+ "definitions": {
+  "DataLakePrincipal": {
+   "additionalProperties": false,
+   "description": "The AWS Lake Formation principal.",
+   "properties": {
+    "DataLakePrincipalIdentifier": {
+     "description": "An identifier for the AWS Lake Formation principal.",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DatabaseIdentifier": {
+   "additionalProperties": false,
+   "description": "A structure that describes a target database for resource linking.",
+   "properties": {
+    "CatalogId": {
+     "description": "The ID of the Data Catalog in which the database resides.",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "DatabaseName": {
+     "description": "The name of the catalog database.",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Region": {
+     "description": "Region of the target database.",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DatabaseInput": {
+   "additionalProperties": false,
+   "description": "The structure used to create or update a database.",
+   "properties": {
+    "CreateTableDefaultPermissions": {
+     "description": "Creates a set of default permissions on the table for principals. Used by AWS Lake Formation. Not used in the normal course of AWS Glue operations.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/PrincipalPrivileges",
+      "description": "The permissions granted to a principal."
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Description": {
+     "description": "A description of the database.",
+     "maxLength": 2048,
+     "minLength": 0,
+     "type": "string"
+    },
+    "FederatedDatabase": {
+     "$ref": "#/definitions/FederatedDatabase",
+     "description": "A FederatedDatabase structure that references an entity outside the AWS Glue Data Catalog."
+    },
+    "LocationUri": {
+     "description": "The location of the database (for example, an HDFS path).",
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "description": "The name of the database. For hive compatibility, this is folded to lowercase when it is stored.",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Parameters": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "TargetDatabase": {
+     "$ref": "#/definitions/DatabaseIdentifier",
+     "description": "A DatabaseIdentifier structure that describes a target database for resource linking."
+    }
+   },
+   "type": "object"
+  },
+  "FederatedDatabase": {
+   "additionalProperties": false,
+   "description": "A FederatedDatabase structure that references an entity outside the AWS Glue Data Catalog.",
+   "properties": {
+    "ConnectionName": {
+     "description": "The name of the connection to the external metastore.",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Identifier": {
+     "description": "A unique identifier for the federated database.",
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PrincipalPrivileges": {
+   "additionalProperties": false,
+   "description": "The permissions granted to a principal.",
+   "properties": {
+    "Permissions": {
+     "description": "The permissions that are granted to the principal.",
+     "insertionOrder": false,
+     "items": {
+      "enum": [
+       "ALL",
+       "ALTER",
+       "CREATE_DATABASE",
+       "CREATE_TABLE",
+       "DATA_LOCATION_ACCESS",
+       "DELETE",
+       "DROP",
+       "INSERT",
+       "SELECT"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Principal": {
+     "$ref": "#/definitions/DataLakePrincipal",
+     "description": "The principal who is granted permissions."
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Glue::Database",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "glue:CreateDatabase",
+    "glue:GetDatabase",
+    "glue:PassConnection",
+    "glue:CreateConnection",
+    "lakeformation:ListResources",
+    "lakeformation:DescribeResource",
+    "lakeformation:DescribeLakeFormationIdentityCenterConfiguration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "glue:DeleteDatabase",
+    "glue:GetDatabase",
+    "glue:DeleteConnection",
+    "glue:GetConnection",
+    "lakeformation:ListResources",
+    "lakeformation:DescribeResource",
+    "lakeformation:DescribeLakeFormationIdentityCenterConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "glue:GetDatabases",
+    "lakeformation:ListResources",
+    "lakeformation:DescribeResource",
+    "lakeformation:DescribeLakeFormationIdentityCenterConfiguration"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "glue:GetDatabase",
+    "glue:GetConnection",
+    "lakeformation:ListResources",
+    "lakeformation:DescribeResource",
+    "lakeformation:DescribeLakeFormationIdentityCenterConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "glue:UpdateDatabase",
+    "glue:UpdateConnection",
+    "lakeformation:ListResources",
+    "lakeformation:DescribeResource",
+    "lakeformation:DescribeLakeFormationIdentityCenterConfiguration"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DatabaseName"
+ ],
+ "properties": {
+  "CatalogId": {
+   "description": "The AWS account ID for the account in which to create the catalog object.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DatabaseInput": {
+   "$ref": "#/definitions/DatabaseInput",
+   "description": "The metadata for the database."
+  },
+  "DatabaseName": {
+   "description": "The name of the database. For hive compatibility, this is folded to lowercase when it is store.",
+   "type": "string"
+  }
+ },
+ "required": [
+  "DatabaseInput",
+  "CatalogId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-glue.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Glue::Database"
+}

@@ -1,0 +1,503 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/WorkflowName"
+ ],
+ "definitions": {
+  "AttributeName": {
+   "maxLength": 255,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z_0-9- \\t]*$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "description": "The time of this MatchingWorkflow got created",
+   "type": "string"
+  },
+  "CustomerProfilesDomainArn": {
+   "description": "The Amazon Resource Name (ARN) of the Customer Profiles domain",
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):profile:[a-z]{2}-[a-z]{1,10}-[0-9]:[0-9]{12}:(domains/[a-zA-Z_0-9-]{1,255})$",
+   "type": "string"
+  },
+  "CustomerProfilesIntegrationConfig": {
+   "additionalProperties": false,
+   "description": "The Customer Profiles integration configuration for the output source",
+   "properties": {
+    "DomainArn": {
+     "$ref": "#/definitions/CustomerProfilesDomainArn"
+    },
+    "ObjectTypeArn": {
+     "$ref": "#/definitions/CustomerProfilesObjectTypeArn"
+    }
+   },
+   "required": [
+    "DomainArn",
+    "ObjectTypeArn"
+   ],
+   "type": "object"
+  },
+  "CustomerProfilesObjectTypeArn": {
+   "description": "The Amazon Resource Name (ARN) of the Customer Profiles object type",
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):profile:[a-z]{2}-[a-z]{1,10}-[0-9]:[0-9]{12}:(domains/[a-zA-Z_0-9-]{1,255}/object-types/[a-zA-Z_0-9-]{1,255})$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 0,
+   "type": "string"
+  },
+  "EntityName": {
+   "maxLength": 255,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z_0-9-]*$",
+   "type": "string"
+  },
+  "IncrementalRunConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "IncrementalRunType": {
+     "enum": [
+      "IMMEDIATE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "IncrementalRunType"
+   ],
+   "type": "object"
+  },
+  "InputSource": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplyNormalization": {
+     "type": "boolean"
+    },
+    "InputSourceARN": {
+     "description": "An Glue table ARN for the input source table",
+     "pattern": "arn:(aws|aws-us-gov|aws-cn):.*:.*:[0-9]+:.*$",
+     "type": "string"
+    },
+    "SchemaArn": {
+     "$ref": "#/definitions/SchemaMappingArn",
+     "type": "string"
+    }
+   },
+   "required": [
+    "InputSourceARN",
+    "SchemaArn"
+   ],
+   "type": "object"
+  },
+  "IntermediateSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IntermediateS3Path": {
+     "description": "The s3 path that would be used to stage the intermediate data being generated during workflow execution.",
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^s3://[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9](/.*)?$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "IntermediateS3Path"
+   ],
+   "type": "object"
+  },
+  "KMSArn": {
+   "format": "AWS::KMS::Key.Arn",
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):kms:.*:[0-9]+:.*$",
+   "type": "string"
+  },
+  "MatchingConfig": {
+   "additionalProperties": false,
+   "description": "Configuration for matching behavior within rule condition properties",
+   "properties": {
+    "EnableTransitiveMatching": {
+     "description": "Enables transitive matching to process records across all rule levels and connect unmatched records to existing match groups",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "MatchingWorkflowArn": {
+   "description": "The default MatchingWorkflow arn",
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):entityresolution:.*:[0-9]+:(matchingworkflow/.*)$",
+   "type": "string"
+  },
+  "OutputAttribute": {
+   "additionalProperties": false,
+   "properties": {
+    "Hashed": {
+     "type": "boolean"
+    },
+    "Name": {
+     "$ref": "#/definitions/AttributeName"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "OutputSource": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplyNormalization": {
+     "type": "boolean"
+    },
+    "CustomerProfilesIntegrationConfig": {
+     "$ref": "#/definitions/CustomerProfilesIntegrationConfig"
+    },
+    "KMSArn": {
+     "$ref": "#/definitions/KMSArn"
+    },
+    "Output": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/OutputAttribute"
+     },
+     "maxItems": 750,
+     "minItems": 0,
+     "type": "array"
+    },
+    "OutputS3Path": {
+     "description": "The S3 path to which Entity Resolution will write the output table",
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^s3://([^/]+)/?(.*?([^/]+)/?)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Output"
+   ],
+   "type": "object"
+  },
+  "ProviderProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "IntermediateSourceConfiguration": {
+     "$ref": "#/definitions/IntermediateSourceConfiguration"
+    },
+    "ProviderConfiguration": {
+     "additionalProperties": false,
+     "description": "Additional Provider configuration that would be required for the provider service. The Configuration must be in JSON string format",
+     "patternProperties": {
+      "^.+$": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "ProviderServiceArn": {
+     "description": "Arn of the Provider service being used.",
+     "maxLength": 255,
+     "minLength": 20,
+     "pattern": "^arn:(aws|aws-us-gov|aws-cn):(entityresolution):([a-z]{2}-[a-z]{1,10}-[0-9])::providerservice/([a-zA-Z0-9_-]{1,255})/([a-zA-Z0-9_-]{1,255})$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ProviderServiceArn"
+   ],
+   "type": "object"
+  },
+  "ResolutionTechniques": {
+   "additionalProperties": false,
+   "properties": {
+    "ProviderProperties": {
+     "$ref": "#/definitions/ProviderProperties"
+    },
+    "ResolutionType": {
+     "$ref": "#/definitions/ResolutionType"
+    },
+    "RuleBasedProperties": {
+     "$ref": "#/definitions/RuleBasedProperties"
+    },
+    "RuleConditionProperties": {
+     "$ref": "#/definitions/RuleConditionProperties"
+    }
+   },
+   "type": "object"
+  },
+  "ResolutionType": {
+   "enum": [
+    "RULE_MATCHING",
+    "ML_MATCHING",
+    "PROVIDER"
+   ],
+   "type": "string"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "properties": {
+    "MatchingKeys": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/AttributeName"
+     },
+     "maxItems": 15,
+     "minItems": 1,
+     "type": "array"
+    },
+    "RuleName": {
+     "maxLength": 255,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z_0-9- \\t]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RuleName",
+    "MatchingKeys"
+   ],
+   "type": "object"
+  },
+  "RuleBasedProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "AttributeMatchingModel": {
+     "enum": [
+      "ONE_TO_ONE",
+      "MANY_TO_MANY"
+     ],
+     "type": "string"
+    },
+    "MatchPurpose": {
+     "enum": [
+      "IDENTIFIER_GENERATION",
+      "INDEXING"
+     ],
+     "type": "string"
+    },
+    "Rules": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Rule"
+     },
+     "maxItems": 25,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "AttributeMatchingModel",
+    "Rules"
+   ],
+   "type": "object"
+  },
+  "RuleCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "Condition": {
+     "type": "string"
+    },
+    "RuleName": {
+     "$ref": "#/definitions/AttributeName"
+    }
+   },
+   "type": "object"
+  },
+  "RuleConditionProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "MatchingConfig": {
+     "$ref": "#/definitions/MatchingConfig"
+    },
+    "Rules": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/RuleCondition"
+     },
+     "maxItems": 25,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Rules"
+   ],
+   "type": "object"
+  },
+  "SchemaMappingArn": {
+   "description": "The SchemaMapping arn associated with the Schema",
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):entityresolution:.*:[0-9]+:(schemamapping/.*)$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UpdatedAt": {
+   "description": "The time of this MatchingWorkflow got last updated at",
+   "type": "string"
+  }
+ },
+ "description": "MatchingWorkflow defined in AWS Entity Resolution service",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "entityresolution:CreateMatchingWorkflow",
+    "entityresolution:GetMatchingWorkflow",
+    "entityresolution:TagResource",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "iam:PassRole",
+    "events:PutRule",
+    "events:DeleteRule",
+    "events:PutTargets",
+    "events:ListTargetsByRule",
+    "profile:PutIntegration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "entityresolution:DeleteMatchingWorkflow",
+    "entityresolution:GetMatchingWorkflow",
+    "entityresolution:UntagResource",
+    "events:PutRule",
+    "events:DeleteRule",
+    "events:PutTargets",
+    "events:RemoveTargets",
+    "events:ListTargetsByRule",
+    "profile:DeleteIntegration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "entityresolution:ListMatchingWorkflows"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "entityresolution:GetMatchingWorkflow",
+    "entityresolution:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "entityresolution:GetMatchingWorkflow",
+    "entityresolution:UpdateMatchingWorkflow",
+    "entityresolution:ListTagsForResource",
+    "entityresolution:TagResource",
+    "entityresolution:UntagResource",
+    "iam:PassRole",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "events:PutRule",
+    "events:DeleteRule",
+    "events:PutTargets",
+    "events:RemoveTargets",
+    "events:ListTargetsByRule"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WorkflowName"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "$ref": "#/definitions/CreatedAt"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description",
+   "description": "The description of the MatchingWorkflow"
+  },
+  "IncrementalRunConfig": {
+   "$ref": "#/definitions/IncrementalRunConfig"
+  },
+  "InputSourceConfig": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/InputSource"
+   },
+   "maxItems": 20,
+   "minItems": 1,
+   "type": "array"
+  },
+  "OutputSourceConfig": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/OutputSource"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
+  },
+  "ResolutionTechniques": {
+   "$ref": "#/definitions/ResolutionTechniques"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdatedAt": {
+   "$ref": "#/definitions/UpdatedAt"
+  },
+  "WorkflowArn": {
+   "$ref": "#/definitions/MatchingWorkflowArn"
+  },
+  "WorkflowName": {
+   "$ref": "#/definitions/EntityName",
+   "description": "The name of the MatchingWorkflow"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/WorkflowArn",
+  "/properties/UpdatedAt",
+  "/properties/CreatedAt"
+ ],
+ "required": [
+  "WorkflowName",
+  "InputSourceConfig",
+  "OutputSourceConfig",
+  "ResolutionTechniques",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-entity-resolution.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "entityresolution:TagResource",
+   "entityresolution:UntagResource",
+   "entityresolution:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EntityResolution::MatchingWorkflow"
+}

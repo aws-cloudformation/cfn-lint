@@ -1,0 +1,172 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Enabled": {
+   "description": "Specifies whether the flow module resource is enabled for external invocation",
+   "type": "boolean"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is maximum of 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Connect::ContactFlowModule.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect:CreateContactFlowModule",
+    "connect:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect:DeleteContactFlowModule",
+    "connect:UntagResource"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "InstanceArn": {
+      "$ref": "resource-schema.json#/properties/InstanceArn"
+     }
+    },
+    "required": [
+     "InstanceArn"
+    ]
+   },
+   "permissions": [
+    "connect:ListContactFlowModules"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect:DescribeContactFlowModule"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "connect:UpdateContactFlowModuleMetadata",
+    "connect:UpdateContactFlowModuleContent",
+    "connect:TagResource",
+    "connect:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ContactFlowModuleArn"
+ ],
+ "properties": {
+  "ContactFlowModuleArn": {
+   "description": "The identifier of the contact flow module (ARN).",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/flow-module/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Content": {
+   "description": "The content of the contact flow module in JSON format.",
+   "maxLength": 256000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the contact flow module.",
+   "maxLength": 500,
+   "minLength": 0,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "ExternalInvocationConfiguration": {
+   "additionalProperties": false,
+   "description": "Defines the external invocation configuration of the flow module resource",
+   "properties": {
+    "Enabled": {
+     "$ref": "#/definitions/Enabled"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceArn": {
+   "description": "The identifier of the Amazon Connect instance (ARN).",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the contact flow module.",
+   "maxLength": 127,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "Settings": {
+   "description": "The schema of the settings for contact flow module in JSON Schema V4 format.",
+   "maxLength": 256000,
+   "type": "string"
+  },
+  "State": {
+   "description": "The state of the contact flow module.",
+   "maxLength": 500,
+   "type": "string"
+  },
+  "Status": {
+   "description": "The status of the contact flow module.",
+   "maxLength": 500,
+   "type": "string"
+  },
+  "Tags": {
+   "description": "One or more tags.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ContactFlowModuleArn",
+  "/properties/Status"
+ ],
+ "required": [
+  "InstanceArn",
+  "Name",
+  "Content"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "connect:ListTagsForResource",
+   "connect:UntagResource",
+   "connect:TagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::ContactFlowModule"
+}

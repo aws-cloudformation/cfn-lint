@@ -1,0 +1,254 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DeploymentPatternName",
+  "/properties/Name",
+  "/properties/WorkloadName"
+ ],
+ "definitions": {
+  "DeploymentSpecifications": {
+   "additionalProperties": false,
+   "maxProperties": 100,
+   "minProperties": 1,
+   "patternProperties": {
+    "^[a-zA-Z0-9-:]{3,256}$": {
+     "maxLength": 1500,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DeploymentStatus": {
+   "enum": [
+    "COMPLETED",
+    "CREATING",
+    "DELETE_IN_PROGRESS",
+    "DELETE_INITIATING",
+    "DELETE_FAILED",
+    "DELETED",
+    "FAILED",
+    "IN_PROGRESS",
+    "VALIDATING"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Definition of AWS::LaunchWizard::Deployment Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "launchwizard:CreateDeployment",
+    "launchwizard:GetDeployment",
+    "launchwizard:ListDeploymentEvents",
+    "launchwizard:ListTagsForResource",
+    "launchwizard:TagResource",
+    "ssm:GetParameter",
+    "ssm:PutParameter",
+    "ssm:DescribeParameters",
+    "ssm:AddTagsToResource",
+    "ssm:DeleteParameter",
+    "secretsmanager:DescribeSecret",
+    "secretsmanager:PutSecretValue",
+    "secretsmanager:CreateSecret",
+    "secretsmanager:TagResource",
+    "secretsmanager:UpdateSecret",
+    "resource-groups:CreateGroup",
+    "resource-groups:DeleteGroup",
+    "cloudformation:DeleteStack",
+    "cloudformation:DescribeStackResources",
+    "cloudformation:DescribeStackResource",
+    "cloudformation:DescribeStacks",
+    "cloudformation:DescribeStackEvents",
+    "cloudformation:CreateStack",
+    "cloudformation:TagResource",
+    "s3:PutObject",
+    "s3:GetObject",
+    "s3:CreateBucket",
+    "sns:ListSubscriptionsByTopic",
+    "sns:Publish",
+    "sns:ListSubscriptions",
+    "sns:ListTopics",
+    "sns:CreateTopic",
+    "sns:Subscribe",
+    "sns:Unsubscribe",
+    "sqs:TagQueue",
+    "sqs:GetQueueUrl",
+    "sqs:AddPermission",
+    "sqs:ListQueues",
+    "sqs:GetQueueAttributes",
+    "sqs:ListQueueTags",
+    "sqs:CreateQueue",
+    "sqs:SetQueueAttributes",
+    "ec2:DescribeInstances"
+   ],
+   "timeoutInMinutes": 370
+  },
+  "delete": {
+   "permissions": [
+    "launchwizard:GetDeployment",
+    "launchwizard:DeleteDeployment",
+    "launchwizard:UntagResource",
+    "ssm:DeleteParameter",
+    "secretsmanager:DeleteSecret",
+    "resource-groups:DeleteGroup",
+    "cloudformation:DeleteStack",
+    "cloudformation:DescribeStacks",
+    "ssm:GetParameter",
+    "sns:ListSubscriptionsByTopic",
+    "sns:Publish",
+    "sns:ListSubscriptions",
+    "sns:ListTopics",
+    "sns:CreateTopic",
+    "sns:DeleteTopic",
+    "sns:Subscribe",
+    "sns:Unsubscribe",
+    "sqs:GetQueueUrl",
+    "sqs:ListQueues",
+    "sqs:DeleteQueue",
+    "sqs:GetQueueAttributes",
+    "sqs:ListQueueTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "launchwizard:ListDeployments",
+    "launchwizard:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "launchwizard:GetDeployment",
+    "launchwizard:ListDeploymentEvents",
+    "launchwizard:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "launchwizard:GetDeployment",
+    "launchwizard:ListTagsForResource",
+    "launchwizard:TagResource",
+    "launchwizard:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "ARN of the LaunchWizard deployment",
+   "pattern": "^arn:aws(-cn|-us-gov)?:launchwizard:[a-z0-9-]+:[0-9]{12}:deployment/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "description": "Timestamp of LaunchWizard deployment creation",
+   "format": "date-time",
+   "type": "string"
+  },
+  "DeletedAt": {
+   "description": "Timestamp of LaunchWizard deployment deletion",
+   "format": "date-time",
+   "type": "string"
+  },
+  "DeploymentId": {
+   "description": "Deployment ID of the LaunchWizard deployment",
+   "maxLength": 128,
+   "minLength": 2,
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "DeploymentPatternName": {
+   "description": "Workload deployment pattern name",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9][a-zA-Z0-9-]*$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "Name of LaunchWizard deployment",
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9_\\s\\.-]+$",
+   "type": "string"
+  },
+  "ResourceGroup": {
+   "description": "Resource Group Name created for LaunchWizard deployment",
+   "type": "string"
+  },
+  "Specifications": {
+   "$ref": "#/definitions/DeploymentSpecifications",
+   "description": "LaunchWizard deployment specifications"
+  },
+  "Status": {
+   "$ref": "#/definitions/DeploymentStatus",
+   "description": "Status of LaunchWizard deployment"
+  },
+  "Tags": {
+   "description": "Tags for LaunchWizard deployment",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tags"
+   },
+   "type": "array"
+  },
+  "WorkloadName": {
+   "description": "Workload Name for LaunchWizard deployment",
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[A-Za-z][a-zA-Z0-9-_]*$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/DeletedAt",
+  "/properties/DeploymentId",
+  "/properties/ResourceGroup",
+  "/properties/Status"
+ ],
+ "required": [
+  "DeploymentPatternName",
+  "Name",
+  "WorkloadName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "launchwizard:ListTagsForResource",
+   "launchwizard:TagResource",
+   "launchwizard:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::LaunchWizard::Deployment",
+ "writeOnlyProperties": [
+  "/properties/Specifications"
+ ]
+}

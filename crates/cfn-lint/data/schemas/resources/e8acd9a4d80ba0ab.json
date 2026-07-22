@@ -1,0 +1,344 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/ClusterId",
+  "/properties/InstanceConfigs"
+ ],
+ "definitions": {
+  "ErrorInfo": {
+   "additionalProperties": false,
+   "description": "An error that occurred during resource provisioning.",
+   "properties": {
+    "Code": {
+     "description": "The short-form error code.",
+     "type": "string"
+    },
+    "Message": {
+     "description": "The detailed error information.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceConfig": {
+   "additionalProperties": false,
+   "description": "An EC2 instance configuration AWS PCS uses to launch compute nodes.",
+   "properties": {
+    "InstanceType": {
+     "description": "The EC2 instance type that AWS PCS can provision in the compute node group.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SlurmCustomSetting": {
+   "additionalProperties": false,
+   "description": "Additional settings that directly map to Slurm settings.",
+   "properties": {
+    "ParameterName": {
+     "description": "AWS PCS supports configuration of the following Slurm parameters for compute node groups: Weight and RealMemory.",
+     "type": "string"
+    },
+    "ParameterValue": {
+     "description": "The value for the configured Slurm setting.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ParameterName",
+    "ParameterValue"
+   ],
+   "type": "object"
+  },
+  "SubnetId": {
+   "description": "A VPC subnet ID.",
+   "type": "string"
+  }
+ },
+ "description": "AWS::PCS::ComputeNodeGroup resource creates an AWS PCS compute node group.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:DescribeImages",
+    "ec2:DescribeVpcs",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeLaunchTemplates",
+    "ec2:DescribeLaunchTemplateVersions",
+    "ec2:DescribeInstanceTypes",
+    "ec2:DescribeInstanceTypeOfferings",
+    "ec2:RunInstances",
+    "ec2:CreateFleet",
+    "ec2:CreateTags",
+    "iam:PassRole",
+    "iam:GetInstanceProfile",
+    "pcs:CreateComputeNodeGroup",
+    "pcs:GetComputeNodeGroup",
+    "pcs:ListTagsForResource",
+    "pcs:TagResource"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DescribeImages",
+    "ec2:DescribeVpcs",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeLaunchTemplates",
+    "ec2:DescribeLaunchTemplateVersions",
+    "ec2:DescribeInstanceTypes",
+    "ec2:DescribeInstanceTypeOfferings",
+    "ec2:TerminateInstances",
+    "ec2:CreateFleet",
+    "ec2:CreateTags",
+    "iam:PassRole",
+    "iam:GetInstanceProfile",
+    "pcs:GetComputeNodeGroup",
+    "pcs:DeleteComputeNodeGroup",
+    "pcs:ListTagsForResource",
+    "pcs:TagResource",
+    "pcs:UntagResource"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ClusterId": {
+      "$ref": "resource-schema.json#/properties/ClusterId"
+     }
+    },
+    "required": [
+     "ClusterId"
+    ]
+   },
+   "permissions": [
+    "pcs:ListClusters",
+    "pcs:ListComputeNodeGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "pcs:GetComputeNodeGroup",
+    "pcs:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeImages",
+    "ec2:DescribeVpcs",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeLaunchTemplates",
+    "ec2:DescribeLaunchTemplateVersions",
+    "ec2:DescribeInstanceTypes",
+    "ec2:DescribeInstanceTypeOfferings",
+    "ec2:RunInstances",
+    "ec2:CreateFleet",
+    "ec2:CreateTags",
+    "iam:PassRole",
+    "iam:GetInstanceProfile",
+    "pcs:GetComputeNodeGroup",
+    "pcs:UpdateComputeNodeGroup",
+    "pcs:ListTagsForResource",
+    "pcs:TagResource",
+    "pcs:UntagResource"
+   ],
+   "timeoutInMinutes": 60
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AmiId": {
+   "description": "The ID of the Amazon Machine Image (AMI) that AWS PCS uses to launch instances. If not provided, AWS PCS uses the AMI ID specified in the custom launch template.",
+   "format": "AWS::EC2::Image.Id",
+   "pattern": "^ami-[a-z0-9]+$",
+   "type": "string"
+  },
+  "Arn": {
+   "description": "The unique Amazon Resource Name (ARN) of the compute node group.",
+   "type": "string"
+  },
+  "ClusterId": {
+   "description": "The ID of the cluster of the compute node group.",
+   "type": "string"
+  },
+  "CustomLaunchTemplate": {
+   "additionalProperties": false,
+   "description": "An Amazon EC2 launch template AWS PCS uses to launch compute nodes.",
+   "properties": {
+    "TemplateId": {
+     "description": "The ID of the EC2 launch template to use to provision instances.",
+     "type": "string"
+    },
+    "Version": {
+     "description": "The version of the EC2 launch template to use to provision instances.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Version"
+   ],
+   "type": "object"
+  },
+  "ErrorInfo": {
+   "description": "The list of errors that occurred during compute node group provisioning.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ErrorInfo"
+   },
+   "type": "array"
+  },
+  "IamInstanceProfileArn": {
+   "description": "The Amazon Resource Name (ARN) of the IAM instance profile used to pass an IAM role when launching EC2 instances. The role contained in your instance profile must have pcs:RegisterComputeNodeGroupInstance permissions attached to provision instances correctly.",
+   "pattern": "^arn:aws([a-zA-Z-]{0,10})?:iam::[0-9]{12}:instance-profile/.{1,128}$",
+   "type": "string"
+  },
+  "Id": {
+   "description": "The generated unique ID of the compute node group.",
+   "type": "string"
+  },
+  "InstanceConfigs": {
+   "description": "A list of EC2 instance configurations that AWS PCS can provision in the compute node group.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/InstanceConfig"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "description": "The name that identifies the compute node group.",
+   "type": "string"
+  },
+  "PurchaseOption": {
+   "description": "Specifies how EC2 instances are purchased on your behalf. AWS PCS supports On-Demand, Spot, Capacity Block, and Interruptible Capacity Reservation instances. For more information, see Instance purchasing options in the Amazon Elastic Compute Cloud User Guide. If you don't provide this option, it defaults to On-Demand.",
+   "enum": [
+    "ONDEMAND",
+    "SPOT",
+    "CAPACITY_BLOCK",
+    "INTERRUPTIBLE_CAPACITY_RESERVATION"
+   ],
+   "type": "string"
+  },
+  "ScalingConfiguration": {
+   "additionalProperties": false,
+   "description": "Specifies the boundaries of the compute node group auto scaling.",
+   "properties": {
+    "MaxInstanceCount": {
+     "description": "The upper bound of the number of instances allowed in the compute fleet.",
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MinInstanceCount": {
+     "description": "The lower bound of the number of instances allowed in the compute fleet.",
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxInstanceCount",
+    "MinInstanceCount"
+   ],
+   "type": "object"
+  },
+  "SlurmConfiguration": {
+   "additionalProperties": false,
+   "description": "Additional options related to the Slurm scheduler.",
+   "properties": {
+    "ScaleDownIdleTimeInSeconds": {
+     "description": "The time before an idle node is scaled down.",
+     "maximum": 10000000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "SlurmCustomSettings": {
+     "description": "Additional Slurm-specific configuration that directly maps to Slurm settings.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SlurmCustomSetting"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "SpotOptions": {
+   "additionalProperties": false,
+   "description": "Additional configuration when you specify SPOT as the purchase option.",
+   "properties": {
+    "AllocationStrategy": {
+     "description": "The Amazon EC2 allocation strategy AWS PCS uses to provision EC2 instances. AWS PCS supports lowest price, capacity optimized, and price capacity optimized. If you don't provide this option, it defaults to price capacity optimized.",
+     "enum": [
+      "lowest-price",
+      "capacity-optimized",
+      "price-capacity-optimized"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Status": {
+   "description": "The provisioning status of the compute node group. The provisioning status doesn't indicate the overall health of the compute node group.",
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "UPDATING",
+    "DELETING",
+    "CREATE_FAILED",
+    "DELETE_FAILED",
+    "UPDATE_FAILED"
+   ],
+   "type": "string"
+  },
+  "SubnetIds": {
+   "description": "The list of subnet IDs where instances are provisioned by the compute node group. The subnets must be in the same VPC as the cluster.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SubnetId"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "1 or more tags added to the resource. Each tag consists of a tag key and tag value. The tag value is optional and can be an empty string.",
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   }
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ErrorInfo",
+  "/properties/Id",
+  "/properties/Status"
+ ],
+ "required": [
+  "ClusterId",
+  "CustomLaunchTemplate",
+  "IamInstanceProfileArn",
+  "InstanceConfigs",
+  "ScalingConfiguration",
+  "SubnetIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-pcs.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "pcs:TagResource",
+   "pcs:ListTagsForResource",
+   "pcs:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::PCS::ComputeNodeGroup"
+}

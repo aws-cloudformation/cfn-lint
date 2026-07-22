@@ -1,0 +1,251 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ],
+  [
+   "/properties/Arn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Tags",
+  "/properties/Type",
+  "/properties/StandbyReplicas",
+  "/properties/CollectionGroupName",
+  "/properties/EncryptionConfig"
+ ],
+ "definitions": {
+  "CollectionType": {
+   "description": "The possible types for the collection",
+   "enum": [
+    "SEARCH",
+    "TIMESERIES",
+    "VECTORSEARCH"
+   ],
+   "type": "string"
+  },
+  "DeletionProtection": {
+   "description": "The deletion protection state of the collection",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "EncryptionConfig": {
+   "additionalProperties": false,
+   "description": "Encryption settings for the collection",
+   "properties": {
+    "AWSOwnedKey": {
+     "description": "Indicates whether to use an AWS owned key for encryption.",
+     "type": "boolean"
+    },
+    "KmsKeyArn": {
+     "description": "Key Management Service key used to encrypt the collection.",
+     "format": "AWS::KMS::Key.Arn",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FipsEndpoints": {
+   "additionalProperties": false,
+   "properties": {
+    "CollectionEndpoint": {
+     "type": "string"
+    },
+    "DashboardEndpoint": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ServerlessVectorAcceleration": {
+   "description": "Indicates whether GPU acceleration is enabled for vector indexing",
+   "enum": [
+    "ENABLED",
+    "DISABLED",
+    "ALLOWED"
+   ],
+   "type": "string"
+  },
+  "StandbyReplicas": {
+   "description": "The possible standby replicas for the collection",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair metadata associated with resource",
+   "properties": {
+    "Key": {
+     "description": "The key in the key-value pair",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value in the key-value pair",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VectorOptions": {
+   "additionalProperties": false,
+   "description": "Vector search configuration options for the collection",
+   "properties": {
+    "ServerlessVectorAcceleration": {
+     "$ref": "#/definitions/ServerlessVectorAcceleration"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Amazon OpenSearchServerless collection resource",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "aoss:CreateCollection",
+    "aoss:BatchGetCollection",
+    "aoss:AddCollectionToCollectionGroup",
+    "aoss:TagResource",
+    "iam:CreateServiceLinkedRole",
+    "kms:CreateGrant",
+    "kms:DescribeKey"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "aoss:DeleteCollection",
+    "aoss:BatchGetCollection"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "aoss:ListCollections"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "aoss:BatchGetCollection",
+    "aoss:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "aoss:UpdateCollection",
+    "aoss:BatchGetCollection"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the collection.",
+   "type": "string"
+  },
+  "CollectionEndpoint": {
+   "description": "The endpoint for the collection.",
+   "type": "string"
+  },
+  "CollectionGroupName": {
+   "description": "The name of the collection group to associate with the collection.",
+   "maxLength": 32,
+   "minLength": 3,
+   "pattern": "^[a-z][a-z0-9-]+$",
+   "type": "string"
+  },
+  "DashboardEndpoint": {
+   "description": "The OpenSearch Dashboards endpoint for the collection.",
+   "type": "string"
+  },
+  "DeletionProtection": {
+   "$ref": "#/definitions/DeletionProtection"
+  },
+  "Description": {
+   "description": "The description of the collection",
+   "maxLength": 1000,
+   "type": "string"
+  },
+  "EncryptionConfig": {
+   "$ref": "#/definitions/EncryptionConfig"
+  },
+  "FipsEndpoints": {
+   "$ref": "#/definitions/FipsEndpoints"
+  },
+  "Id": {
+   "description": "The identifier of the collection",
+   "maxLength": 40,
+   "minLength": 3,
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "description": "Key Management Service key used to encrypt the collection.",
+   "format": "AWS::KMS::Key.Arn",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the collection.\n\nThe name must meet the following criteria:\nUnique to your account and AWS Region\nStarts with a lowercase letter\nContains only lowercase letters a-z, the numbers 0-9 and the hyphen (-)\nContains between 3 and 64 characters\n",
+   "maxLength": 64,
+   "minLength": 3,
+   "pattern": "^[a-z][a-z0-9-]{2,63}$",
+   "type": "string"
+  },
+  "StandbyReplicas": {
+   "$ref": "#/definitions/StandbyReplicas"
+  },
+  "Tags": {
+   "description": "List of tags to be added to the resource",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Type": {
+   "$ref": "#/definitions/CollectionType"
+  },
+  "VectorOptions": {
+   "$ref": "#/definitions/VectorOptions"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/CollectionEndpoint",
+  "/properties/DashboardEndpoint",
+  "/properties/FipsEndpoints",
+  "/properties/KmsKeyArn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::OpenSearchServerless::Collection",
+ "writeOnlyProperties": [
+  "/properties/Tags",
+  "/properties/EncryptionConfig"
+ ]
+}

@@ -1,0 +1,117 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TransitGatewayId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "AWS::EC2::TransitGatewayMeteringPolicy Resource Definition",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayMeteringPolicies",
+    "ec2:CreateTransitGatewayMeteringPolicy",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayMeteringPolicies",
+    "ec2:DeleteTransitGatewayMeteringPolicy",
+    "ec2:DeleteTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayMeteringPolicies",
+    "ec2:DescribeTags"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayMeteringPolicies",
+    "ec2:DescribeTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayMeteringPolicies",
+    "ec2:ModifyTransitGatewayMeteringPolicy",
+    "ec2:CreateTags",
+    "ec2:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TransitGatewayMeteringPolicyId"
+ ],
+ "properties": {
+  "MiddleboxAttachmentIds": {
+   "description": "Middle box attachment Ids",
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "State": {
+   "description": "State of the transit gateway metering policy",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TransitGatewayId": {
+   "description": "The Id of transit gateway",
+   "type": "string"
+  },
+  "TransitGatewayMeteringPolicyId": {
+   "description": "The Id of the transit gateway metering policy",
+   "type": "string"
+  },
+  "UpdateEffectiveAt": {
+   "description": "The timestamp at which the latest action performed on the metering policy will become effective",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TransitGatewayMeteringPolicyId",
+  "/properties/State",
+  "/properties/UpdateEffectiveAt"
+ ],
+ "required": [
+  "TransitGatewayId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "ec2:CreateTags",
+   "ec2:DeleteTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::TransitGatewayMeteringPolicy"
+}

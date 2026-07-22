@@ -1,0 +1,144 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/WindowId"
+ ],
+ "definitions": {
+  "Targets": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "User-defined criteria for sending commands that target managed nodes that meet the criteria.",
+     "maxLength": 163,
+     "minLength": 1,
+     "pattern": "^[\\p{L}\\p{Z}\\p{N}_.:/=\\-@]*$|resource-groups:ResourceTypeFilters|resource-groups:Name$",
+     "type": "string"
+    },
+    "Values": {
+     "description": "User-defined criteria that maps to Key.",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Values",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource type definition for AWS::SSM::MaintenanceWindowTarget",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ssm:DescribeMaintenanceWindowTargets",
+    "ssm:RegisterTargetWithMaintenanceWindow"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ssm:DescribeMaintenanceWindowTargets",
+    "ssm:DeregisterTargetFromMaintenanceWindow"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "WindowId": {
+      "$ref": "resource-schema.json#/properties/WindowId"
+     }
+    },
+    "required": [
+     "WindowId"
+    ]
+   },
+   "permissions": [
+    "ssm:DescribeMaintenanceWindowTargets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ssm:DescribeMaintenanceWindowTargets"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ssm:UpdateMaintenanceWindowTarget"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WindowId",
+  "/properties/WindowTargetId"
+ ],
+ "properties": {
+  "Description": {
+   "description": "A description for the target.",
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name for the maintenance window target.",
+   "maxLength": 128,
+   "minLength": 3,
+   "pattern": "^[a-zA-Z0-9_\\-.]{3,128}$",
+   "type": "string"
+  },
+  "OwnerInformation": {
+   "description": "A user-provided value that will be included in any Amazon CloudWatch Events events that are raised while running tasks for these targets in this maintenance window.",
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResourceType": {
+   "description": "The type of target that is being registered with the maintenance window.",
+   "enum": [
+    "INSTANCE",
+    "RESOURCE_GROUP"
+   ],
+   "type": "string"
+  },
+  "Targets": {
+   "description": "The targets to register with the maintenance window.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Targets"
+   },
+   "maxItems": 5,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "WindowId": {
+   "description": "The ID of the maintenance window to register the target with.",
+   "maxLength": 20,
+   "minLength": 20,
+   "pattern": "^mw-[0-9a-f]{17}$",
+   "type": "string"
+  },
+  "WindowTargetId": {
+   "description": "The ID of the target.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/WindowTargetId"
+ ],
+ "required": [
+  "WindowId",
+  "ResourceType",
+  "Targets"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ssm/tree/master/aws-ssm-maintenancewindowtask",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::SSM::MaintenanceWindowTarget"
+}

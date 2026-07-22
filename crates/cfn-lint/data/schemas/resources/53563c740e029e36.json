@@ -1,0 +1,162 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Filter": {
+   "description": "The filter to use when scanning.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-z0-9*](?:[._\\-/a-z0-9*]?[a-z0-9*]+)*$",
+   "type": "string"
+  },
+  "FilterType": {
+   "description": "The type associated with the filter.",
+   "enum": [
+    "WILDCARD"
+   ],
+   "type": "string"
+  },
+  "RegistryId": {
+   "description": "The registry id.",
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "RepositoryFilter": {
+   "additionalProperties": false,
+   "description": "The filter settings used with image replication. Specifying a repository filter to a replication rule provides a method for controlling which repositories in a private registry are replicated. If no filters are added, the contents of all repositories are replicated.",
+   "properties": {
+    "Filter": {
+     "$ref": "#/definitions/Filter",
+     "description": "The filter to use when scanning."
+    },
+    "FilterType": {
+     "$ref": "#/definitions/FilterType",
+     "description": "The type associated with the filter."
+    }
+   },
+   "required": [
+    "Filter",
+    "FilterType"
+   ],
+   "type": "object"
+  },
+  "ScanFrequency": {
+   "description": "The frequency that scans are performed.",
+   "enum": [
+    "SCAN_ON_PUSH",
+    "CONTINUOUS_SCAN"
+   ],
+   "type": "string"
+  },
+  "ScanType": {
+   "description": "The type of scanning configured for the registry.",
+   "enum": [
+    "BASIC",
+    "ENHANCED"
+   ],
+   "type": "string"
+  },
+  "ScanningRule": {
+   "additionalProperties": false,
+   "description": "The scanning rules associated with the registry.",
+   "properties": {
+    "RepositoryFilters": {
+     "description": "The details of a scanning repository filter. For more information on how to use filters, see [Using filters](https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-scanning.html#image-scanning-filters) in the *Amazon Elastic Container Registry User Guide*.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/RepositoryFilter"
+     },
+     "maxItems": 100,
+     "minItems": 0,
+     "type": "array"
+    },
+    "ScanFrequency": {
+     "$ref": "#/definitions/ScanFrequency",
+     "description": "The frequency that scans are performed at for a private registry. When the ``ENHANCED`` scan type is specified, the supported scan frequencies are ``CONTINUOUS_SCAN`` and ``SCAN_ON_PUSH``. When the ``BASIC`` scan type is specified, the ``SCAN_ON_PUSH`` scan frequency is supported. If scan on push is not specified, then the ``MANUAL`` scan frequency is set by default."
+    }
+   },
+   "required": [
+    "ScanFrequency",
+    "RepositoryFilters"
+   ],
+   "type": "object"
+  },
+  "ScanningRules": {
+   "description": "The scanning rules associated with the registry. A registry scanning configuration may contain a maximum of 2 rules.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ScanningRule"
+   },
+   "maxItems": 2,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "description": "The scanning configuration for a private registry.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ecr:PutRegistryScanningConfiguration",
+    "ecr:GetRegistryScanningConfiguration",
+    "inspector2:Enable",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ecr:PutRegistryScanningConfiguration",
+    "ecr:GetRegistryScanningConfiguration",
+    "inspector2:ListAccountPermissions",
+    "inspector2:Disable"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ecr:GetRegistryScanningConfiguration"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ecr:GetRegistryScanningConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ecr:PutRegistryScanningConfiguration",
+    "ecr:GetRegistryScanningConfiguration",
+    "inspector2:Enable",
+    "inspector2:Disable",
+    "inspector2:ListAccountPermissions",
+    "iam:CreateServiceLinkedRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RegistryId"
+ ],
+ "properties": {
+  "RegistryId": {
+   "$ref": "#/definitions/RegistryId",
+   "description": ""
+  },
+  "Rules": {
+   "$ref": "#/definitions/ScanningRules",
+   "description": "The scanning rules associated with the registry."
+  },
+  "ScanType": {
+   "$ref": "#/definitions/ScanType",
+   "description": "The type of scanning configured for the registry."
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RegistryId"
+ ],
+ "required": [
+  "Rules",
+  "ScanType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ecr.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ECR::RegistryScanningConfiguration"
+}

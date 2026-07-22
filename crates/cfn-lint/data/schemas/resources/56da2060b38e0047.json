@@ -1,0 +1,144 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "FairsharePolicy": {
+   "additionalProperties": false,
+   "description": "Fair Share Policy for the Job Queue.",
+   "properties": {
+    "ComputeReservation": {
+     "maximum": 99,
+     "minimum": 0,
+     "type": "number"
+    },
+    "ShareDecaySeconds": {
+     "maximum": 604800,
+     "minimum": 0,
+     "type": "number"
+    },
+    "ShareDistribution": {
+     "description": "List of Share Attributes",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ShareAttributes"
+     },
+     "type": "array"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "QuotaSharePolicy": {
+   "additionalProperties": false,
+   "description": "Quota Share Policy for the Job Queue.",
+   "properties": {
+    "IdleResourceAssignmentStrategy": {
+     "enumCaseInsensitive": [
+      "fifo"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceArn": {
+   "description": "ARN of the Scheduling Policy.",
+   "type": "string"
+  },
+  "ShareAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "ShareIdentifier": {
+     "type": "string"
+    },
+    "WeightFactor": {
+     "maximum": 1000,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "required": [],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Batch::SchedulingPolicy",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "Batch:CreateSchedulingPolicy",
+    "Batch:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "Batch:DescribeSchedulingPolicies",
+    "Batch:DeleteSchedulingPolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "Batch:ListSchedulingPolicies",
+    "Batch:DescribeSchedulingPolicies"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "Batch:DescribeSchedulingPolicies"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "Batch:UpdateSchedulingPolicy",
+    "Batch:TagResource",
+    "Batch:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "FairsharePolicy": {
+   "$ref": "#/definitions/FairsharePolicy"
+  },
+  "Name": {
+   "description": "Name of Scheduling Policy.",
+   "pattern": "",
+   "type": "string"
+  },
+  "QuotaSharePolicy": {
+   "$ref": "#/definitions/QuotaSharePolicy"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "patternProperties": {
+    ".*": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-batch.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "Batch:TagResource",
+   "Batch:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Batch::SchedulingPolicy"
+}

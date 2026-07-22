@@ -2,6 +2,18 @@ use super::super::{ValidationError, Validator};
 use super::helpers::err;
 use crate::ast::AstNode;
 
+/// Format a numeric bound for an error message. Integer-valued bounds are
+/// rendered without a fractional part (e.g. `5`), while genuinely fractional
+/// bounds are shown as-is (e.g. `1.5`). Casting to `i64` unconditionally would
+/// wrongly report `minimum: 1.5` as "minimum of 1".
+fn format_bound(bound: f64) -> String {
+    if bound.fract() == 0.0 && bound.is_finite() {
+        format!("{}", bound as i64)
+    } else {
+        format!("{}", bound)
+    }
+}
+
 pub fn validate_minimum(
     _validator: &Validator,
     node: &AstNode,
@@ -27,7 +39,11 @@ pub fn validate_minimum(
                 .unwrap_or_else(|| format!("{}", val));
             return vec![err(
                 "minimum",
-                format!("{} is less than the minimum of {}", display, min as i64),
+                format!(
+                    "{} is less than the minimum of {}",
+                    display,
+                    format_bound(min)
+                ),
                 path,
                 node,
             )];
@@ -62,7 +78,11 @@ pub fn validate_maximum(
                 .unwrap_or_else(|| format!("{}", val));
             return vec![err(
                 "maximum",
-                format!("{} is greater than the maximum of {}", display, max as i64),
+                format!(
+                    "{} is greater than the maximum of {}",
+                    display,
+                    format_bound(max)
+                ),
                 path,
                 node,
             )];

@@ -1,0 +1,335 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RestApiId",
+  "/properties/ResourceId",
+  "/properties/HttpMethod"
+ ],
+ "definitions": {
+  "Integration": {
+   "additionalProperties": false,
+   "description": "``Integration`` is a property of the [AWS::ApiGateway::Method](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-method.html) resource that specifies information about the target backend that a method calls.",
+   "properties": {
+    "CacheKeyParameters": {
+     "description": "",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "CacheNamespace": {
+     "description": "",
+     "type": "string"
+    },
+    "ConnectionId": {
+     "description": "",
+     "type": "string"
+    },
+    "ConnectionType": {
+     "description": "",
+     "enum": [
+      "INTERNET",
+      "VPC_LINK"
+     ],
+     "type": "string"
+    },
+    "ContentHandling": {
+     "description": "",
+     "enum": [
+      "CONVERT_TO_BINARY",
+      "CONVERT_TO_TEXT"
+     ],
+     "type": "string"
+    },
+    "Credentials": {
+     "description": "",
+     "type": "string"
+    },
+    "IntegrationHttpMethod": {
+     "description": "",
+     "type": "string"
+    },
+    "IntegrationResponses": {
+     "description": "",
+     "items": {
+      "$ref": "#/definitions/IntegrationResponse"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "IntegrationTarget": {
+     "description": "",
+     "type": "string"
+    },
+    "PassthroughBehavior": {
+     "description": "",
+     "enum": [
+      "WHEN_NO_MATCH",
+      "WHEN_NO_TEMPLATES",
+      "NEVER"
+     ],
+     "type": "string"
+    },
+    "RequestParameters": {
+     "additionalProperties": false,
+     "description": "",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "RequestTemplates": {
+     "additionalProperties": false,
+     "description": "",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "ResponseTransferMode": {
+     "default": "BUFFERED",
+     "description": "",
+     "enum": [
+      "BUFFERED",
+      "STREAM"
+     ],
+     "type": "string"
+    },
+    "TimeoutInMillis": {
+     "description": "",
+     "minimum": 50,
+     "type": "integer"
+    },
+    "Type": {
+     "description": "",
+     "enum": [
+      "AWS",
+      "AWS_PROXY",
+      "HTTP",
+      "HTTP_PROXY",
+      "MOCK"
+     ],
+     "type": "string"
+    },
+    "Uri": {
+     "description": "",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "IntegrationResponse": {
+   "additionalProperties": false,
+   "description": "``IntegrationResponse`` is a property of the [Amazon API Gateway Method Integration](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apitgateway-method-integration.html) property type that specifies the response that API Gateway sends after a method's backend finishes processing a request.",
+   "properties": {
+    "ContentHandling": {
+     "description": "",
+     "enum": [
+      "CONVERT_TO_BINARY",
+      "CONVERT_TO_TEXT"
+     ],
+     "type": "string"
+    },
+    "ResponseParameters": {
+     "additionalProperties": false,
+     "description": "",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "ResponseTemplates": {
+     "additionalProperties": false,
+     "description": "",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "SelectionPattern": {
+     "description": "",
+     "type": "string"
+    },
+    "StatusCode": {
+     "description": "",
+     "type": "string"
+    }
+   },
+   "required": [
+    "StatusCode"
+   ],
+   "type": "object"
+  },
+  "MethodResponse": {
+   "additionalProperties": false,
+   "description": "",
+   "properties": {
+    "ResponseModels": {
+     "additionalProperties": false,
+     "description": "",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "ResponseParameters": {
+     "additionalProperties": false,
+     "description": "",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": [
+        "boolean",
+        "string"
+       ]
+      }
+     },
+     "type": "object"
+    },
+    "StatusCode": {
+     "description": "",
+     "type": "string"
+    }
+   },
+   "required": [
+    "StatusCode"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The ``AWS::ApiGateway::Method`` resource creates API Gateway methods that define the parameters and body that clients must send in their requests.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:PUT",
+    "apigateway:GET",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:DELETE",
+    "apigateway:PUT",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RestApiId",
+  "/properties/ResourceId",
+  "/properties/HttpMethod"
+ ],
+ "properties": {
+  "ApiKeyRequired": {
+   "description": "",
+   "type": "boolean"
+  },
+  "AuthorizationScopes": {
+   "description": "",
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "AuthorizationType": {
+   "description": "The method's authorization type. This parameter is required. For valid values, see [Method](https://docs.aws.amazon.com/apigateway/latest/api/API_Method.html) in the *API Gateway API Reference*.\n  If you specify the ``AuthorizerId`` property, specify ``CUSTOM`` or ``COGNITO_USER_POOLS`` for this property.",
+   "type": "string"
+  },
+  "AuthorizerId": {
+   "description": "",
+   "type": "string"
+  },
+  "HttpMethod": {
+   "description": "",
+   "type": "string"
+  },
+  "Integration": {
+   "$ref": "#/definitions/Integration",
+   "description": ""
+  },
+  "MethodResponses": {
+   "description": "",
+   "items": {
+    "$ref": "#/definitions/MethodResponse"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "OperationName": {
+   "description": "",
+   "type": "string"
+  },
+  "RequestModels": {
+   "additionalProperties": false,
+   "description": "",
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RequestParameters": {
+   "additionalProperties": false,
+   "description": "",
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": [
+      "boolean",
+      "string"
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "RequestValidatorId": {
+   "description": "",
+   "type": "string"
+  },
+  "ResourceId": {
+   "description": "",
+   "type": "string"
+  },
+  "RestApiId": {
+   "description": "",
+   "type": "string"
+  }
+ },
+ "required": [
+  "RestApiId",
+  "ResourceId",
+  "HttpMethod"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ApiGateway::Method"
+}

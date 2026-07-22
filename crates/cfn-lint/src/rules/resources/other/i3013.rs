@@ -93,11 +93,11 @@ impl CfnLintRule for I3013 {
                 return vec![ValidationError {
                     rule_id: None,
                     keyword: format!("cfnLint:{}", self.id()),
-                    message: format!(
+                    message:
                         "'BackupRetentionPeriod' is missing (The default retention period will \
                          delete the data after a pre-defined time. Set an explicit value to \
                          avoid data loss on resource)"
-                    ),
+                            .to_string(),
                     path: path.to_vec(),
                     span: instance.span(),
                     unknown: false,

@@ -1,0 +1,107 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AWS::DynamoDB::Table.PointInTimeRecoverySpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "PointInTimeRecoveryEnabled": {
+     "type": "boolean"
+    },
+    "RecoveryPeriodInDays": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "AWS::DynamoDB::Table.ProvisionedThroughput": {
+   "additionalProperties": false,
+   "properties": {
+    "ReadCapacityUnits": {
+     "type": "number"
+    },
+    "WriteCapacityUnits": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "ReadCapacityUnits",
+    "WriteCapacityUnits"
+   ],
+   "type": "object"
+  },
+  "AWS::DynamoDB::Table.SSESpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "KMSMasterKeyId": {
+     "type": "string"
+    },
+    "SSEEnabled": {
+     "type": "boolean"
+    },
+    "SSEType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SSEEnabled"
+   ],
+   "type": "object"
+  },
+  "PrimaryKey": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Type"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TableName"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "",
+   "type": "string"
+  },
+  "PointInTimeRecoverySpecification": {
+   "$ref": "#/definitions/AWS::DynamoDB::Table.PointInTimeRecoverySpecification"
+  },
+  "PrimaryKey": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/PrimaryKey"
+    }
+   ]
+  },
+  "ProvisionedThroughput": {
+   "$ref": "#/definitions/AWS::DynamoDB::Table.ProvisionedThroughput"
+  },
+  "SSESpecification": {
+   "$ref": "#/definitions/AWS::DynamoDB::Table.SSESpecification"
+  },
+  "StreamArn": {
+   "description": "",
+   "type": "string"
+  },
+  "TableName": {
+   "type": "string"
+  },
+  "Tags": {
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/StreamArn"
+ ],
+ "typeName": "AWS::Serverless::SimpleTable"
+}

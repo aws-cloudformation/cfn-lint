@@ -1,0 +1,137 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Destination's resource schema demonstrating some basic constructs and validation rules.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "iotwireless:CreateDestination",
+    "iotwireless:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iotwireless:DeleteDestination"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iotwireless:ListDestinations",
+    "iotwireless:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iotwireless:GetDestination",
+    "iotwireless:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "iotwireless:GetDestination",
+    "iotwireless:UpdateDestination",
+    "iotwireless:UntagResource",
+    "iotwireless:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "Destination arn. Returned after successful create.",
+   "type": "string"
+  },
+  "Description": {
+   "description": "Destination description",
+   "maxLength": 2048,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Expression": {
+   "description": "Destination expression",
+   "maxLength": 2048,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ExpressionType": {
+   "description": "Must be RuleName",
+   "enum": [
+    "RuleName",
+    "MqttTopic",
+    "SnsTopic"
+   ],
+   "type": "string"
+  },
+  "Name": {
+   "description": "Unique name of destination",
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "[a-zA-Z0-9:_-]+",
+   "type": "string"
+  },
+  "RoleArn": {
+   "description": "AWS role ARN that grants access",
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A list of key-value pairs that contain metadata for the destination.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "Expression",
+  "ExpressionType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "iotwireless:TagResource",
+   "iotwireless:UntagResource",
+   "iotwireless:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTWireless::Destination"
+}

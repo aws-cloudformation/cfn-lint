@@ -1,0 +1,170 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/RunConfigurations"
+ ],
+ "definitions": {
+  "RunConfigurations": {
+   "additionalProperties": false,
+   "properties": {
+    "VpcConfig": {
+     "$ref": "#/definitions/VpcConfig"
+    }
+   },
+   "type": "object"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "description": "A map of resource tags",
+   "patternProperties": {
+    ".+": {
+     "description": "Resource tag value",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "maxLength": 128,
+      "minLength": 4,
+      "pattern": "^sg-[0-9a-f]+$",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "type": "array"
+    },
+    "SubnetIds": {
+     "items": {
+      "maxLength": 128,
+      "minLength": 8,
+      "pattern": "^subnet-[0-9a-f]+$",
+      "type": "string"
+     },
+     "maxItems": 16,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::Omics::Configuration",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "omics:CreateConfiguration",
+    "omics:GetConfiguration",
+    "omics:TagResource",
+    "iam:CreateServiceLinkedRole",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "omics:DeleteConfiguration",
+    "omics:GetConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "omics:ListConfigurations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "omics:GetConfiguration",
+    "omics:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "Unique resource identifier for the configuration.",
+   "maxLength": 190,
+   "minLength": 1,
+   "pattern": "^arn:.+$",
+   "type": "string"
+  },
+  "CreationTime": {
+   "description": "Configuration creation timestamp.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "description": "Optional description for the configuration.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "User-friendly name for the configuration.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9][A-Za-z0-9\\-\\._]*$",
+   "type": "string"
+  },
+  "RunConfigurations": {
+   "$ref": "#/definitions/RunConfigurations",
+   "description": "Required run-specific configurations."
+  },
+  "Status": {
+   "description": "Current configuration status.",
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "UPDATING",
+    "DELETING",
+    "DELETED",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap",
+   "description": "Tags for the configuration."
+  },
+  "Uuid": {
+   "description": "Unique identifier for the configuration.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Uuid",
+  "/properties/Status",
+  "/properties/CreationTime"
+ ],
+ "required": [
+  "Name",
+  "RunConfigurations"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "omics:TagResource",
+   "omics:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::Omics::Configuration"
+}

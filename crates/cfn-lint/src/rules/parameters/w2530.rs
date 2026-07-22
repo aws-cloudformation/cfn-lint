@@ -55,11 +55,9 @@ impl CfnLintRule for W2530 {
                     return false;
                 }
                 if let Some(props) = &r.properties {
-                    if let Some(func_ref) = props.get("FunctionName") {
-                        if let AstNode::Function(f) = func_ref {
-                            if f.name == "Ref" {
-                                return f.args.as_str() == Some(resource_name.as_str());
-                            }
+                    if let Some(AstNode::Function(f)) = props.get("FunctionName") {
+                        if f.name == "Ref" {
+                            return f.args.as_str() == Some(resource_name.as_str());
                         }
                     }
                 }

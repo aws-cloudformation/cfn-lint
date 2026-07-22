@@ -1,0 +1,117 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationId",
+  "/properties/ConfigurationProfileId",
+  "/properties/Description",
+  "/properties/Content",
+  "/properties/ContentType",
+  "/properties/LatestVersionNumber",
+  "/properties/VersionLabel"
+ ],
+ "description": "Resource Type definition for AWS::AppConfig::HostedConfigurationVersion",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "appconfig:CreateHostedConfigurationVersion"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "appconfig:DeleteHostedConfigurationVersion"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ApplicationId": {
+      "$ref": "resource-schema.json#/properties/ApplicationId"
+     },
+     "ConfigurationProfileId": {
+      "$ref": "resource-schema.json#/properties/ConfigurationProfileId"
+     }
+    },
+    "required": [
+     "ApplicationId",
+     "ConfigurationProfileId"
+    ]
+   },
+   "permissions": [
+    "appconfig:ListHostedConfigurationVersions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "appconfig:GetHostedConfigurationVersion"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationId",
+  "/properties/ConfigurationProfileId",
+  "/properties/VersionNumber"
+ ],
+ "properties": {
+  "ApplicationId": {
+   "description": "The application ID.",
+   "pattern": "[a-z0-9]{4,7}",
+   "type": "string"
+  },
+  "ConfigurationProfileId": {
+   "description": "The configuration profile ID.",
+   "pattern": "[a-z0-9]{4,7}",
+   "type": "string"
+  },
+  "Content": {
+   "description": "The content of the configuration or the configuration data.",
+   "type": "string"
+  },
+  "ContentType": {
+   "description": "A standard MIME type describing the format of the configuration content.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "description": "A description of the hosted configuration version.",
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "LatestVersionNumber": {
+   "description": "An optional locking token used to prevent race conditions from overwriting configuration updates when creating a new version. To ensure your data is not overwritten when creating multiple hosted configuration versions in rapid succession, specify the version number of the latest hosted configuration version.",
+   "type": "integer"
+  },
+  "VersionLabel": {
+   "description": "A user-defined label for an AWS AppConfig hosted configuration version.",
+   "maxLength": 64,
+   "minLength": 0,
+   "pattern": "^$|.*[^0-9].*",
+   "type": "string"
+  },
+  "VersionNumber": {
+   "description": "Current version number of hosted configuration version.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VersionNumber"
+ ],
+ "required": [
+  "ApplicationId",
+  "ConfigurationProfileId",
+  "Content",
+  "ContentType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appconfig.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::AppConfig::HostedConfigurationVersion",
+ "writeOnlyProperties": [
+  "/properties/LatestVersionNumber"
+ ]
+}

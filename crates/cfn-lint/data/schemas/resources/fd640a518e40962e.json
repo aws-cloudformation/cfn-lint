@@ -1,0 +1,83 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Actions",
+  "/properties/CertificateAuthorityArn",
+  "/properties/Principal",
+  "/properties/SourceAccount"
+ ],
+ "description": "Permission set on private certificate authority",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "acm-pca:CreatePermission",
+    "acm-pca:ListPermissions"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "acm-pca:DeletePermission"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "acm-pca:ListPermissions"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CertificateAuthorityArn",
+  "/properties/Principal"
+ ],
+ "properties": {
+  "Actions": {
+   "description": "The actions that the specified AWS service principal can use. Actions IssueCertificate, GetCertificate and ListPermissions must be provided.",
+   "insertionOrder": false,
+   "items": {
+    "enum": [
+     "GetCertificate",
+     "IssueCertificate",
+     "ListPermissions"
+    ],
+    "type": "string"
+   },
+   "maxItems": 3,
+   "minItems": 1,
+   "type": "array"
+  },
+  "CertificateAuthorityArn": {
+   "description": "The Amazon Resource Name (ARN) of the Private Certificate Authority that grants the permission.",
+   "maxLength": 200,
+   "minLength": 5,
+   "pattern": "^arn:[\\w+=/,.@-]+:acm-pca:[\\w+=/,.@-]*:[0-9]*:[\\w+=,.@-]+(/[\\w+=,.@-]+)*$",
+   "type": "string"
+  },
+  "Principal": {
+   "description": "The AWS service or identity that receives the permission. At this time, the only valid principal is acm.amazonaws.com.",
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "^[^*]+$",
+   "type": "string"
+  },
+  "SourceAccount": {
+   "description": "The ID of the calling account.",
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[0-9]+$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "Actions",
+  "CertificateAuthorityArn",
+  "Principal"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_ACMPCA.html",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ACMPCA::Permission"
+}

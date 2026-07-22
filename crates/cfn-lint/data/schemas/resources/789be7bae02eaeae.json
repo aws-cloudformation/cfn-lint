@@ -1,0 +1,191 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SourceArn",
+  "/properties/TargetArn",
+  "/properties/KMSKeyId",
+  "/properties/AdditionalEncryptionContext"
+ ],
+ "definitions": {
+  "EncryptionContextMap": {
+   "additionalProperties": false,
+   "description": "An optional set of non-secret key\u2013value pairs that contains additional contextual information about the data.",
+   "patternProperties": {
+    "^[\\s\\S]*$": {
+     "maxLength": 131072,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "Metadata assigned to an Amazon RDS resource consisting of a key-value pair.\n For more information, see [Tagging Amazon RDS Resources](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Tagging.html) in the *Amazon RDS User Guide* or [Tagging Amazon Aurora and Amazon RDS Resources](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_Tagging.html) in the *Amazon Aurora User Guide*.",
+   "properties": {
+    "Key": {
+     "description": "A key is the required name of the tag. The string value can be from 1 to 128 Unicode characters in length and can't be prefixed with ``aws:`` or ``rds:``. The string can only contain only the set of Unicode letters, digits, white-space, '_', '.', ':', '/', '=', '+', '-', '@' (Java regex: \"^([\\\\p{L}\\\\p{Z}\\\\p{N}_.:/=+\\\\-@]*)$\").",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "A value is the optional value of the tag. The string value can be from 1 to 256 Unicode characters in length and can't be prefixed with ``aws:`` or ``rds:``. The string can only contain only the set of Unicode letters, digits, white-space, '_', '.', ':', '/', '=', '+', '-', '@' (Java regex: \"^([\\\\p{L}\\\\p{Z}\\\\p{N}_.:/=+\\\\-@]*)$\").",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "description": "A zero-ETL integration with Amazon Redshift.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "rds:CreateIntegration",
+    "rds:DescribeIntegrations",
+    "rds:AddTagsToResource",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "redshift:CreateInboundIntegration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "rds:DeleteIntegration",
+    "rds:DescribeIntegrations"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "rds:DescribeIntegrations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "rds:DescribeIntegrations"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "rds:DescribeIntegrations",
+    "rds:AddTagsToResource",
+    "rds:RemoveTagsFromResource",
+    "rds:ModifyIntegration"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IntegrationArn"
+ ],
+ "properties": {
+  "AdditionalEncryptionContext": {
+   "$ref": "#/definitions/EncryptionContextMap",
+   "description": "An optional set of non-secret key\u2013value pairs that contains additional contextual information about the data. For more information, see [Encryption context](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context) in the *Key Management Service Developer Guide*.\n You can only include this parameter if you specify the ``KMSKeyId`` parameter."
+  },
+  "CreateTime": {
+   "description": "",
+   "type": "string"
+  },
+  "DataFilter": {
+   "description": "Data filters for the integration. These filters determine which tables from the source database are sent to the target Amazon Redshift data warehouse.",
+   "maxLength": 25600,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_ \"\\\\\\-$,*.:?+\\/]*",
+   "type": "string"
+  },
+  "Description": {
+   "description": "A description of the integration.",
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "IntegrationArn": {
+   "description": "",
+   "type": "string"
+  },
+  "IntegrationName": {
+   "description": "The name of the integration.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z](?:-?[a-zA-Z0-9]+)*$",
+   "type": "string"
+  },
+  "KMSKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
+   "description": "The AWS Key Management System (AWS KMS) key identifier for the key to use to encrypt the integration. If you don't specify an encryption key, RDS uses a default AWS owned key.",
+   "type": "string"
+  },
+  "SourceArn": {
+   "description": "The Amazon Resource Name (ARN) of the database to use as the source for replication.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^arn:aws[a-z\\-]*:rds(-[a-z]*)?:[a-z0-9\\-]*:[0-9]*:(cluster|db):[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A list of tags. For more information, see [Tagging Amazon RDS Resources](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Tagging.html) in the *Amazon RDS User Guide.*.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TargetArn": {
+   "description": "The ARN of the Redshift data warehouse to use as the target for replication.",
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/KmsKeyId": "$join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:kms:[a-z]{2}[-]{1}[a-z]{3,10}[-]{0,1}[a-z]{0,10}[-]{1}[1-3]{1}:[0-9]{12}[:]{1}key\\/\", KmsKeyId])",
+  "/properties/SourceArn": "$lowercase(SourceArn)"
+ },
+ "readOnlyProperties": [
+  "/properties/IntegrationArn",
+  "/properties/CreateTime"
+ ],
+ "required": [
+  "SourceArn",
+  "TargetArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "permissions": [
+   "rds:AddTagsToResource",
+   "rds:RemoveTagsFromResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RDS::Integration"
+}

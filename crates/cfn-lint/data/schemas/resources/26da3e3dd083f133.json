@@ -1,0 +1,222 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/SecurityControlArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "anyOf": [
+  {
+   "required": [
+    "SecurityControlId"
+   ]
+  },
+  {
+   "required": [
+    "SecurityControlArn"
+   ]
+  }
+ ],
+ "createOnlyProperties": [
+  "/properties/SecurityControlId"
+ ],
+ "definitions": {
+  "IntegerList": {
+   "items": {
+    "type": "integer"
+   },
+   "type": "array"
+  },
+  "NonEmptyString": {
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "NonEmptyStringList": {
+   "items": {
+    "$ref": "#/definitions/NonEmptyString"
+   },
+   "type": "array"
+  },
+  "ParameterConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "$ref": "#/definitions/ParameterValue"
+    },
+    "ValueType": {
+     "enum": [
+      "DEFAULT",
+      "CUSTOM"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ValueType"
+   ],
+   "type": "object"
+  },
+  "ParameterValue": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "Boolean"
+     ]
+    },
+    {
+     "required": [
+      "Double"
+     ]
+    },
+    {
+     "required": [
+      "Enum"
+     ]
+    },
+    {
+     "required": [
+      "EnumList"
+     ]
+    },
+    {
+     "required": [
+      "Integer"
+     ]
+    },
+    {
+     "required": [
+      "IntegerList"
+     ]
+    },
+    {
+     "required": [
+      "String"
+     ]
+    },
+    {
+     "required": [
+      "StringList"
+     ]
+    }
+   ],
+   "properties": {
+    "Boolean": {
+     "description": "A control parameter that is a boolean.",
+     "type": "boolean"
+    },
+    "Double": {
+     "description": "A control parameter that is a double.",
+     "type": "number"
+    },
+    "Enum": {
+     "$ref": "#/definitions/NonEmptyString",
+     "description": "A control parameter that is a enum."
+    },
+    "EnumList": {
+     "$ref": "#/definitions/NonEmptyStringList",
+     "description": "A control parameter that is a list of enums."
+    },
+    "Integer": {
+     "description": "A control parameter that is a integer.",
+     "type": "integer"
+    },
+    "IntegerList": {
+     "$ref": "#/definitions/IntegerList",
+     "description": "A control parameter that is a list of integers."
+    },
+    "String": {
+     "$ref": "#/definitions/NonEmptyString",
+     "description": "A control parameter that is a string."
+    },
+    "StringList": {
+     "$ref": "#/definitions/NonEmptyStringList",
+     "description": "A control parameter that is a list of strings."
+    }
+   },
+   "type": "object"
+  },
+  "Parameters": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".*\\S.*": {
+     "$ref": "#/definitions/ParameterConfiguration"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "A security control in Security Hub describes a security best practice related to a specific resource.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityhub:BatchGetSecurityControls",
+    "securityhub:DescribeStandardsControls",
+    "securityhub:UpdateSecurityControl",
+    "securityhub:UpdateStandardsControl"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "delete": {
+   "permissions": [
+    "securityhub:BatchGetSecurityControls",
+    "securityhub:DescribeStandardsControls",
+    "securityhub:UpdateSecurityControl",
+    "securityhub:UpdateStandardsControl"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "list": {
+   "permissions": [
+    "securityhub:BatchGetSecurityControls",
+    "securityhub:DescribeStandardsControls",
+    "securityhub:ListSecurityControlDefinitions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityhub:BatchGetSecurityControls",
+    "securityhub:DescribeStandardsControls"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securityhub:BatchGetSecurityControls",
+    "securityhub:DescribeStandardsControls",
+    "securityhub:UpdateSecurityControl",
+    "securityhub:UpdateStandardsControl"
+   ],
+   "timeoutInMinutes": 2160
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SecurityControlId"
+ ],
+ "properties": {
+  "LastUpdateReason": {
+   "description": "The most recent reason for updating the customizable properties of a security control. This differs from the UpdateReason field of the BatchUpdateStandardsControlAssociations API, which tracks the reason for updating the enablement status of a control. This field accepts alphanumeric characters in addition to white spaces, dashes, and underscores.",
+   "pattern": "^([^\u0000-\u007f]|[-_ a-zA-Z0-9])+$",
+   "type": "string"
+  },
+  "Parameters": {
+   "$ref": "#/definitions/Parameters",
+   "description": "An object that identifies the name of a control parameter, its current value, and whether it has been customized."
+  },
+  "SecurityControlArn": {
+   "$ref": "#/definitions/NonEmptyString",
+   "description": "The Amazon Resource Name (ARN) for a security control across standards, such as `arn:aws:securityhub:eu-central-1:123456789012:security-control/S3.1`. This parameter doesn't mention a specific standard."
+  },
+  "SecurityControlId": {
+   "$ref": "#/definitions/NonEmptyString",
+   "description": "The unique identifier of a security control across standards. Values for this field typically consist of an AWS service name and a number, such as APIGateway.3."
+  }
+ },
+ "required": [
+  "Parameters"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securityhub",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::SecurityHub::SecurityControl"
+}

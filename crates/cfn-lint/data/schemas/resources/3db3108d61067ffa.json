@@ -1,0 +1,60 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AccountId": {
+   "description": "The identifier for the specified AWS account.",
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  }
+ },
+ "description": "Resource Type definition for AWS::ApplicationSignals::Discovery",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "application-signals:StartDiscovery",
+    "application-signals:ListServices",
+    "iam:CreateServiceLinkedRole",
+    "cloudtrail:CreateServiceLinkedChannel"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "application-signals:ListServices"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "application-signals:ListServices"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "application-signals:ListServices"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "application-signals:ListServices"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccountId"
+ ],
+ "properties": {
+  "AccountId": {
+   "$ref": "#/definitions/AccountId"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccountId"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-applicationsignals",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ApplicationSignals::Discovery"
+}

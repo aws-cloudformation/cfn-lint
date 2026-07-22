@@ -1,0 +1,243 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AutoParticipantRecordingConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration object for individual participant recording, to attach to the new stage.",
+   "properties": {
+    "HlsConfiguration": {
+     "$ref": "#/definitions/HlsConfiguration"
+    },
+    "MediaTypes": {
+     "default": [
+      "AUDIO_VIDEO"
+     ],
+     "description": "Types of media to be recorded. Default: AUDIO_VIDEO.",
+     "insertionOrder": false,
+     "items": {
+      "enum": [
+       "AUDIO_VIDEO",
+       "AUDIO_ONLY"
+      ],
+      "type": "string"
+     },
+     "maxItems": 1,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "RecordingReconnectWindowSeconds": {
+     "default": 0,
+     "description": "If a stage publisher disconnects and then reconnects within the specified interval, the multiple recordings will be considered a single recording and merged together. The default value is 0, which disables merging.",
+     "maximum": 300,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "StorageConfigurationArn": {
+     "description": "ARN of the StorageConfiguration resource to use for individual participant recording.",
+     "maxLength": 128,
+     "minLength": 0,
+     "pattern": "^$|^arn:aws:ivs:[a-z0-9-]+:[0-9]+:storage-configuration/[a-zA-Z0-9-]+$",
+     "type": "string"
+    },
+    "ThumbnailConfiguration": {
+     "$ref": "#/definitions/ThumbnailConfiguration"
+    }
+   },
+   "required": [
+    "StorageConfigurationArn"
+   ],
+   "type": "object"
+  },
+  "HlsConfiguration": {
+   "additionalProperties": false,
+   "description": "HLS configuration object for individual participant recording.",
+   "properties": {
+    "ParticipantRecordingHlsConfiguration": {
+     "$ref": "#/definitions/ParticipantRecordingHlsConfiguration"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "ParticipantRecordingHlsConfiguration": {
+   "additionalProperties": false,
+   "description": "An object representing a configuration of participant HLS recordings for individual participant recording.",
+   "properties": {
+    "TargetSegmentDurationSeconds": {
+     "default": 6,
+     "description": "Defines the target duration for recorded segments generated when recording a stage participant. Segments may have durations longer than the specified value when needed to ensure each segment begins with a keyframe. Default: 6.",
+     "maximum": 10,
+     "minimum": 2,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "ThumbnailConfiguration": {
+   "additionalProperties": false,
+   "description": "A complex type that allows you to enable/disable the recording of thumbnails for individual participant recording and modify the interval at which thumbnails are generated for the live session.",
+   "properties": {
+    "ParticipantThumbnailConfiguration": {
+     "additionalProperties": false,
+     "description": "An object representing a configuration of thumbnails for recorded video from an individual participant.",
+     "properties": {
+      "RecordingMode": {
+       "default": "DISABLED",
+       "description": "Thumbnail recording mode. Default: DISABLED.",
+       "enum": [
+        "INTERVAL",
+        "DISABLED"
+       ],
+       "type": "string"
+      },
+      "Storage": {
+       "default": [
+        "SEQUENTIAL"
+       ],
+       "description": "Indicates the format in which thumbnails are recorded. SEQUENTIAL records all generated thumbnails in a serial manner, to the media/thumbnails/high directory. LATEST saves the latest thumbnail in media/latest_thumbnail/high/thumb.jpg and overwrites it at the interval specified by targetIntervalSeconds. You can enable both SEQUENTIAL and LATEST. Default: SEQUENTIAL.",
+       "insertionOrder": false,
+       "items": {
+        "enum": [
+         "SEQUENTIAL",
+         "LATEST"
+        ],
+        "type": "string"
+       },
+       "maxItems": 2,
+       "minItems": 0,
+       "type": "array",
+       "uniqueItems": true
+      },
+      "TargetIntervalSeconds": {
+       "default": 60,
+       "description": "The targeted thumbnail-generation interval in seconds. This is configurable only if recordingMode is INTERVAL. Default: 60.",
+       "maximum": 86400,
+       "minimum": 1,
+       "type": "integer"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::IVS::Stage.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ivs:CreateStage",
+    "ivs:GetStage",
+    "ivs:TagResource",
+    "ivs:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ivs:DeleteStage",
+    "ivs:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ivs:ListStages",
+    "ivs:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ivs:GetStage",
+    "ivs:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ivs:GetStage",
+    "ivs:UpdateStage",
+    "ivs:TagResource",
+    "ivs:UntagResource",
+    "ivs:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "ActiveSessionId": {
+   "description": "ID of the active session within the stage.",
+   "maxLength": 128,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Arn": {
+   "description": "Stage ARN is automatically generated on creation and assigned as the unique identifier.",
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "^arn:aws[-a-z]*:ivs:[a-z0-9-]+:[0-9]+:stage/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "AutoParticipantRecordingConfiguration": {
+   "$ref": "#/definitions/AutoParticipantRecordingConfiguration"
+  },
+  "Name": {
+   "description": "Stage name",
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9-_]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ActiveSessionId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "ivs:TagResource",
+   "ivs:UntagResource",
+   "ivs:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IVS::Stage"
+}

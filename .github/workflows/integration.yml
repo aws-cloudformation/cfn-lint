@@ -6,26 +6,25 @@ on:
   pull_request:
     branches: [v2]
 
+# Least privilege by default; grant per-job minimums below (C86).
+permissions: {}
+
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
   integration:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # stable
+        with:
+          toolchain: stable
 
-      - uses: Swatinem/rust-cache@v2
-
-      - name: Download schemas
-        run: |
-          curl -sL https://github.com/aws-cloudformation/resource-provider-enhanced-schemas/releases/download/latest/schemas-cfn-lint.zip -o /tmp/schemas.zip
-          cd crates/cfn-lint/data/schemas
-          unzip -qo /tmp/schemas.zip
-          cd providers
-          for f in *-*.json; do mv "$f" "$(echo $f | tr '-' '_')" 2>/dev/null; done
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
 
       - name: Run integration tests
         run: cargo test --test integration

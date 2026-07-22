@@ -1,0 +1,125 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConsumerName",
+  "/properties/StreamARN",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "An arbitrary set of tags (key-value pairs) to associate with the Kinesis consumer.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Kinesis::StreamConsumer",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "kinesis:RegisterStreamConsumer",
+    "kinesis:DescribeStreamConsumer",
+    "kinesis:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "kinesis:DeregisterStreamConsumer",
+    "kinesis:DescribeStreamConsumer",
+    "kinesis:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "kinesis:ListStreamConsumers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "kinesis:DescribeStreamConsumer",
+    "kinesis:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConsumerARN"
+ ],
+ "properties": {
+  "ConsumerARN": {
+   "description": "The ARN returned by Kinesis Data Streams when you registered the consumer. If you don't know the ARN of the consumer that you want to deregister, you can use the ListStreamConsumers operation to get a list of the descriptions of all the consumers that are currently registered with a given data stream. The description of a consumer contains its ARN.",
+   "type": "string"
+  },
+  "ConsumerCreationTimestamp": {
+   "description": "Timestamp when the consumer was created.",
+   "type": "string"
+  },
+  "ConsumerName": {
+   "description": "The name of the Kinesis Stream Consumer. For a given Kinesis data stream, each consumer must have a unique name. However, consumer names don't have to be unique across data streams.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_.-]+$",
+   "type": "string"
+  },
+  "ConsumerStatus": {
+   "description": "A consumer can't read data while in the CREATING or DELETING states. Valid Values: CREATING | DELETING | ACTIVE",
+   "type": "string"
+  },
+  "StreamARN": {
+   "description": "The Amazon resource name (ARN) of the Kinesis data stream that you want to register the consumer with.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws.*:kinesis:.*:\\d{12}:stream/\\S+",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An arbitrary set of tags (key\u2013value pairs) to associate with the Kinesis consumer.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConsumerARN",
+  "/properties/ConsumerStatus",
+  "/properties/ConsumerCreationTimestamp"
+ ],
+ "required": [
+  "ConsumerName",
+  "StreamARN"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kinesis.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "kinesis:TagResource",
+   "kinesis:UntagResource",
+   "kinesis:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::Kinesis::StreamConsumer"
+}

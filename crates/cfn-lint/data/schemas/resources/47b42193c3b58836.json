@@ -1,0 +1,132 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Definition of AWS::BedrockAgentCore::WorkloadIdentity Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "bedrock-agentcore:CreateWorkloadIdentity",
+    "bedrock-agentcore:GetWorkloadIdentity",
+    "bedrock-agentcore:TagResource",
+    "bedrock-agentcore:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "bedrock-agentcore:DeleteWorkloadIdentity"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "bedrock-agentcore:ListWorkloadIdentities"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bedrock-agentcore:GetWorkloadIdentity",
+    "bedrock-agentcore:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "bedrock-agentcore:UpdateWorkloadIdentity",
+    "bedrock-agentcore:GetWorkloadIdentity",
+    "bedrock-agentcore:TagResource",
+    "bedrock-agentcore:UntagResource",
+    "bedrock-agentcore:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "AllowedResourceOauth2ReturnUrls": {
+   "description": "The list of allowed OAuth2 return URLs for resources associated with this workload identity.",
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "minLength": 1,
+    "pattern": "\\w+:(/?/?)[^\\s]+",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "CreatedTime": {
+   "description": "The timestamp when the workload identity was created.",
+   "type": "number"
+  },
+  "LastUpdatedTime": {
+   "description": "The timestamp when the workload identity was last updated.",
+   "type": "number"
+  },
+  "Name": {
+   "description": "The name of the workload identity. The name must be unique within your account.",
+   "maxLength": 255,
+   "minLength": 3,
+   "pattern": "[A-Za-z0-9_.-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "WorkloadIdentityArn": {
+   "description": "The Amazon Resource Name (ARN) of the workload identity.",
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/WorkloadIdentityArn",
+  "/properties/CreatedTime",
+  "/properties/LastUpdatedTime"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "bedrock-agentcore:TagResource",
+   "bedrock-agentcore:UntagResource",
+   "bedrock-agentcore:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BedrockAgentCore::WorkloadIdentity"
+}

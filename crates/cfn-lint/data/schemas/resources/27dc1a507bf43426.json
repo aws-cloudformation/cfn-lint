@@ -1,0 +1,171 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SecurityGroupIds",
+  "/properties/SubnetIds",
+  "/properties/VpcId"
+ ],
+ "definitions": {
+  "LicenseEndpointStatus": {
+   "enum": [
+    "CREATE_IN_PROGRESS",
+    "DELETE_IN_PROGRESS",
+    "READY",
+    "NOT_READY"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Deadline::LicenseEndpoint",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "deadline:CreateLicenseEndpoint",
+    "deadline:GetLicenseEndpoint",
+    "ec2:CreateTags",
+    "ec2:CreateVpcEndpoint",
+    "ec2:DescribeVpcEndpoints",
+    "deadline:TagResource",
+    "deadline:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "deadline:GetLicenseEndpoint",
+    "deadline:DeleteLicenseEndpoint",
+    "ec2:DeleteVpcEndpoints",
+    "ec2:DescribeVpcEndpoints"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "deadline:ListLicenseEndpoints"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "deadline:GetLicenseEndpoint",
+    "deadline:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "deadline:TagResource",
+    "deadline:UntagResource",
+    "deadline:ListTagsForResource",
+    "deadline:GetLicenseEndpoint"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:(aws[a-zA-Z-]*):deadline:[a-z0-9-]+:[0-9]{12}:license-endpoint/le-[0-9a-z]{32}",
+   "type": "string"
+  },
+  "DnsName": {
+   "type": "string"
+  },
+  "LicenseEndpointId": {
+   "pattern": "^le-[0-9a-f]{32}$",
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "pattern": "^sg-[\\w]{1,120}$",
+    "type": "string"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Status": {
+   "$ref": "#/definitions/LicenseEndpointStatus"
+  },
+  "StatusMessage": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "SubnetIds": {
+   "items": {
+    "maxLength": 32,
+    "minLength": 1,
+    "pattern": "^subnet-[\\w]{1,120}$",
+    "type": "string"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "^vpc-[\\w]{1,120}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DnsName",
+  "/properties/LicenseEndpointId",
+  "/properties/Status",
+  "/properties/StatusMessage",
+  "/properties/Arn"
+ ],
+ "required": [
+  "SecurityGroupIds",
+  "SubnetIds",
+  "VpcId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "deadline:TagResource",
+   "deadline:UntagResource",
+   "deadline:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Deadline::LicenseEndpoint"
+}

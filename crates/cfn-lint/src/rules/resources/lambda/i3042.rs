@@ -74,7 +74,7 @@ impl CfnLintRule for I3042 {
                                         resource_name
                                     ),
                                     path: issue_path,
-                                    span: func.span.clone(),
+                                    span: func.span,
                                     keyword: String::new(),
                                     unknown: false,
                                     resolved_from_ref: false,

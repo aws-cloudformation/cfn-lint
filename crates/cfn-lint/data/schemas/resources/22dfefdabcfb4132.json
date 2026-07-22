@@ -1,0 +1,77 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AccountId": {
+   "description": "User account id, used as the primary identifier for the resource",
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "IndexingPercentage": {
+   "description": "Determines the percentage of traces indexed from CloudWatch Logs to X-Ray",
+   "maximum": 100,
+   "minimum": 0,
+   "type": "number"
+  }
+ },
+ "description": "This schema provides construct and validation rules for AWS-XRay TransactionSearchConfig resource parameters.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "application-signals:StartDiscovery",
+    "iam:CreateServiceLinkedRole",
+    "logs:CreateLogGroup",
+    "logs:CreateLogStream",
+    "logs:PutRetentionPolicy",
+    "xray:GetIndexingRules",
+    "xray:GetTraceSegmentDestination",
+    "xray:UpdateIndexingRule",
+    "xray:UpdateTraceSegmentDestination"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "xray:GetTraceSegmentDestination",
+    "xray:UpdateTraceSegmentDestination",
+    "xray:UpdateIndexingRule"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "xray:GetTraceSegmentDestination",
+    "xray:GetIndexingRules"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "xray:GetTraceSegmentDestination",
+    "xray:GetIndexingRules"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "xray:GetIndexingRules",
+    "xray:GetTraceSegmentDestination",
+    "xray:UpdateIndexingRule"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccountId"
+ ],
+ "properties": {
+  "AccountId": {
+   "$ref": "#/definitions/AccountId"
+  },
+  "IndexingPercentage": {
+   "$ref": "#/definitions/IndexingPercentage"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccountId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::XRay::TransactionSearchConfig"
+}

@@ -1,0 +1,826 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KnowledgeBaseArn",
+  "/properties/ChannelSubtype"
+ ],
+ "definitions": {
+  "AgentAttributes": {
+   "additionalProperties": false,
+   "description": "The agent attributes that are used with the message template.",
+   "properties": {
+    "FirstName": {
+     "description": "The agent\u2019s first name as entered in their Amazon Connect user account.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "LastName": {
+     "description": "The agent\u2019s last name as entered in their Amazon Connect user account.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AttachmentName": {
+   "description": "The name of the attachment file being uploaded. The name should include the file extension.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "AttachmentUrl": {
+   "description": "The S3 Presigned URL for the attachment file. When generating the PreSignedUrl, please ensure that the expires-in time is set to 30 minutes. The URL can be generated through the AWS Console or through the AWS CLI (https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html). ",
+   "minLength": 1,
+   "type": "string"
+  },
+  "ChannelSubtype": {
+   "description": "The channel subtype this message template applies to.",
+   "enum": [
+    "EMAIL",
+    "SMS"
+   ],
+   "type": "string"
+  },
+  "Content": {
+   "additionalProperties": false,
+   "description": "The content of the message template.",
+   "oneOf": [
+    {
+     "required": [
+      "EmailMessageTemplateContent"
+     ]
+    },
+    {
+     "required": [
+      "SmsMessageTemplateContent"
+     ]
+    }
+   ],
+   "properties": {
+    "EmailMessageTemplateContent": {
+     "$ref": "#/definitions/EmailMessageTemplateContent"
+    },
+    "SmsMessageTemplateContent": {
+     "$ref": "#/definitions/SmsMessageTemplateContent"
+    }
+   },
+   "type": "object"
+  },
+  "CustomAttributes": {
+   "additionalProperties": false,
+   "description": "The custom attributes that are used with the message template.",
+   "patternProperties": {
+    "^[a-zA-Z0-9\\s._:/=+@-]*$": {
+     "description": "Value of a custom attribute.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CustomerProfileAttributes": {
+   "additionalProperties": false,
+   "description": "The customer profile attributes that are used with the message template.",
+   "properties": {
+    "AccountNumber": {
+     "description": "A unique account number that you have given to the customer.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AdditionalInformation": {
+     "description": "Any additional information relevant to the customer's profile.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Address1": {
+     "description": "The first line of a customer address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Address2": {
+     "description": "The second line of a customer address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Address3": {
+     "description": "The third line of a customer address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Address4": {
+     "description": "The fourth line of a customer address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingAddress1": {
+     "description": "The first line of a customer\u2019s billing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingAddress2": {
+     "description": "The second line of a customer\u2019s billing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingAddress3": {
+     "description": "The third line of a customer\u2019s billing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingAddress4": {
+     "description": "The fourth line of a customer\u2019s billing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingCity": {
+     "description": "The city of a customer\u2019s billing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingCountry": {
+     "description": "The country of a customer\u2019s billing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingCounty": {
+     "description": "The county of a customer\u2019s billing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingPostalCode": {
+     "description": "The postal code of a customer\u2019s billing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingProvince": {
+     "description": "The province of a customer\u2019s billing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingState": {
+     "description": "The state of a customer\u2019s billing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BirthDate": {
+     "description": "The customer's birth date.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BusinessEmailAddress": {
+     "description": "The customer's business email address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BusinessName": {
+     "description": "The name of the customer's business.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BusinessPhoneNumber": {
+     "description": "The customer's business phone number.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "City": {
+     "description": "The city in which a customer lives.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Country": {
+     "description": "The country in which a customer lives.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "County": {
+     "description": "The county in which a customer lives.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Custom": {
+     "$ref": "#/definitions/CustomAttributes"
+    },
+    "EmailAddress": {
+     "description": "The customer's email address, which has not been specified as a personal or business address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "FirstName": {
+     "description": "The customer's first name.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Gender": {
+     "description": "The customer's gender.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "HomePhoneNumber": {
+     "description": "The customer's home phone number.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "LastName": {
+     "description": "The customer's last name.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingAddress1": {
+     "description": "The first line of a customer\u2019s mailing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingAddress2": {
+     "description": "The second line of a customer\u2019s mailing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingAddress3": {
+     "description": "The third line of a customer\u2019s mailing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingAddress4": {
+     "description": "The fourth line of a customer\u2019s mailing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingCity": {
+     "description": "The city of a customer\u2019s mailing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingCountry": {
+     "description": "The country of a customer\u2019s mailing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingCounty": {
+     "description": "The county of a customer\u2019s mailing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingPostalCode": {
+     "description": "The postal code of a customer\u2019s mailing address",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingProvince": {
+     "description": "The province of a customer\u2019s mailing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingState": {
+     "description": "The state of a customer\u2019s mailing address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MiddleName": {
+     "description": "The customer's middle name.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MobilePhoneNumber": {
+     "description": "The customer's mobile phone number.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "PartyType": {
+     "description": "The customer's party type.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "PhoneNumber": {
+     "description": "The customer's phone number, which has not been specified as a mobile, home, or business number.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "PostalCode": {
+     "description": "The postal code of a customer address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ProfileARN": {
+     "description": "The ARN of a customer profile.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ProfileId": {
+     "description": "The unique identifier of a customer profile.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Province": {
+     "description": "The province in which a customer lives.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingAddress1": {
+     "description": "The first line of a customer\u2019s shipping address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingAddress2": {
+     "description": "The second line of a customer\u2019s shipping address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingAddress3": {
+     "description": "The third line of a customer\u2019s shipping address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingAddress4": {
+     "description": "The fourth line of a customer\u2019s shipping address",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingCity": {
+     "description": "The city of a customer\u2019s shipping address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingCountry": {
+     "description": "The country of a customer\u2019s shipping address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingCounty": {
+     "description": "The county of a customer\u2019s shipping address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingPostalCode": {
+     "description": "The postal code of a customer\u2019s shipping address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingProvince": {
+     "description": "The province of a customer\u2019s shipping address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingState": {
+     "description": "The state of a customer\u2019s shipping address.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "State": {
+     "description": "The state in which a customer lives.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EmailMessageTemplateContent": {
+   "additionalProperties": false,
+   "description": "The content of message template that applies to email channel subtype.",
+   "properties": {
+    "Body": {
+     "$ref": "#/definitions/EmailMessageTemplateContentBody"
+    },
+    "Headers": {
+     "description": "The email headers to include in email messages.",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/EmailMessageTemplateHeader"
+     },
+     "maxItems": 15,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Subject": {
+     "description": "The subject line, or title, to use in email messages.",
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Subject",
+    "Body",
+    "Headers"
+   ],
+   "type": "object"
+  },
+  "EmailMessageTemplateContentBody": {
+   "additionalProperties": false,
+   "description": "The body to use in email messages.",
+   "properties": {
+    "Html": {
+     "$ref": "#/definitions/MessageTemplateBodyContentProvider",
+     "description": "The message body, in HTML format, to use in email messages that are based on the message template. We recommend using HTML format for email clients that render HTML content. You can include links, formatted text, and more in an HTML message."
+    },
+    "PlainText": {
+     "$ref": "#/definitions/MessageTemplateBodyContentProvider",
+     "description": "The message body, in plain text format, to use in email messages that are based on the message template. We recommend using plain text format for email clients that don't render HTML content and clients that are connected to high-latency networks, such as mobile devices."
+    }
+   },
+   "type": "object"
+  },
+  "EmailMessageTemplateHeader": {
+   "additionalProperties": false,
+   "description": "The email header to include in email messages.",
+   "properties": {
+    "Name": {
+     "description": "The name of the email header.",
+     "maxLength": 126,
+     "minLength": 1,
+     "pattern": "^[!-9;-@A-~]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value of the email header.",
+     "maxLength": 870,
+     "minLength": 1,
+     "pattern": "[ -~]*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "GroupingConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration information of the user groups that the message template is accessible to.",
+   "properties": {
+    "Criteria": {
+     "description": "The criteria used for grouping Amazon Q in Connect users.",
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Values": {
+     "description": "The list of values that define different groups of Amazon Q in Connect users.",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/GroupingValue"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Criteria",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "GroupingValue": {
+   "description": "The value that define the group of Amazon Q in Connect users.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MessageTemplateAttachment": {
+   "additionalProperties": false,
+   "description": "",
+   "properties": {
+    "AttachmentId": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "AttachmentName": {
+     "$ref": "#/definitions/AttachmentName"
+    },
+    "S3PresignedUrl": {
+     "$ref": "#/definitions/AttachmentUrl"
+    }
+   },
+   "required": [
+    "AttachmentName",
+    "S3PresignedUrl"
+   ],
+   "type": "object"
+  },
+  "MessageTemplateAttributes": {
+   "additionalProperties": false,
+   "description": "An object that specifies the default values to use for variables in the message template. This object contains different categories of key-value pairs. Each key defines a variable or placeholder in the message template. The corresponding value defines the default value for that variable.",
+   "properties": {
+    "AgentAttributes": {
+     "$ref": "#/definitions/AgentAttributes"
+    },
+    "CustomAttributes": {
+     "$ref": "#/definitions/CustomAttributes"
+    },
+    "CustomerProfileAttributes": {
+     "$ref": "#/definitions/CustomerProfileAttributes"
+    },
+    "SystemAttributes": {
+     "$ref": "#/definitions/SystemAttributes"
+    }
+   },
+   "type": "object"
+  },
+  "MessageTemplateBodyContentProvider": {
+   "additionalProperties": false,
+   "description": "The container of message template body.",
+   "properties": {
+    "Content": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SmsMessageTemplateContent": {
+   "additionalProperties": false,
+   "description": "The content of message template that applies to SMS channel subtype.",
+   "properties": {
+    "Body": {
+     "$ref": "#/definitions/SmsMessageTemplateContentBody"
+    }
+   },
+   "required": [
+    "Body"
+   ],
+   "type": "object"
+  },
+  "SmsMessageTemplateContentBody": {
+   "additionalProperties": false,
+   "description": "The body to use in SMS messages.",
+   "properties": {
+    "PlainText": {
+     "$ref": "#/definitions/MessageTemplateBodyContentProvider"
+    }
+   },
+   "type": "object"
+  },
+  "SystemAttributes": {
+   "additionalProperties": false,
+   "description": "The system attributes that are used with the message template.",
+   "properties": {
+    "CustomerEndpoint": {
+     "$ref": "#/definitions/SystemEndpointAttributes",
+     "description": "The CustomerEndpoint attribute."
+    },
+    "Name": {
+     "description": "The name of the task.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SystemEndpoint": {
+     "$ref": "#/definitions/SystemEndpointAttributes",
+     "description": "The SystemEndpoint attribute."
+    }
+   },
+   "type": "object"
+  },
+  "SystemEndpointAttributes": {
+   "additionalProperties": false,
+   "description": "The system endpoint attributes that are used with the message template.",
+   "properties": {
+    "Address": {
+     "description": "The customer's phone number if used with customerEndpoint, or the number the customer dialed to call your contact center if used with systemEndpoint.",
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Definition of AWS::Wisdom::MessageTemplate Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "wisdom:CreateMessageTemplate",
+    "wisdom:GetMessageTemplate",
+    "wisdom:TagResource",
+    "connect:SearchRoutingProfiles",
+    "connect:DescribeRoutingProfile",
+    "wisdom:CreateMessageTemplateAttachment",
+    "wisdom:DeleteMessageTemplateAttachment"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "wisdom:DeleteMessageTemplate",
+    "wisdom:UntagResource",
+    "wisdom:DeleteMessageTemplateAttachment"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "KnowledgeBaseArn": {
+      "$ref": "resource-schema.json#/properties/KnowledgeBaseArn"
+     }
+    },
+    "required": [
+     "KnowledgeBaseArn"
+    ]
+   },
+   "permissions": [
+    "wisdom:ListMessageTemplates"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "wisdom:GetMessageTemplate"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "wisdom:UpdateMessageTemplate",
+    "wisdom:UpdateMessageTemplateMetadata",
+    "wisdom:GetMessageTemplate",
+    "wisdom:TagResource",
+    "wisdom:UntagResource",
+    "connect:SearchRoutingProfiles",
+    "connect:DescribeRoutingProfile",
+    "wisdom:CreateMessageTemplateAttachment",
+    "wisdom:DeleteMessageTemplateAttachment"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MessageTemplateArn"
+ ],
+ "properties": {
+  "ChannelSubtype": {
+   "$ref": "#/definitions/ChannelSubtype"
+  },
+  "Content": {
+   "$ref": "#/definitions/Content"
+  },
+  "DefaultAttributes": {
+   "$ref": "#/definitions/MessageTemplateAttributes"
+  },
+  "Description": {
+   "description": "The description of the message template.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\\\s_.,-]+",
+   "type": "string"
+  },
+  "GroupingConfiguration": {
+   "$ref": "#/definitions/GroupingConfiguration"
+  },
+  "KnowledgeBaseArn": {
+   "description": "The Amazon Resource Name (ARN) of the knowledge base to which the message template belongs.",
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})?$",
+   "type": "string"
+  },
+  "Language": {
+   "description": "The language code value for the language in which the message template is written. The supported language codes include de_DE, en_US, es_ES, fr_FR, id_ID, it_IT, ja_JP, ko_KR, pt_BR, zh_CN, zh_TW",
+   "maxLength": 5,
+   "minLength": 2,
+   "type": "string"
+  },
+  "MessageTemplateArn": {
+   "description": "The Amazon Resource Name (ARN) of the message template.",
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})?$",
+   "type": "string"
+  },
+  "MessageTemplateAttachments": {
+   "description": "List of message template attachments",
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/MessageTemplateAttachment"
+   },
+   "type": "array"
+  },
+  "MessageTemplateContentSha256": {
+   "description": "The content SHA256 of the message template.",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MessageTemplateId": {
+   "description": "The unique identifier of the message template.",
+   "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the message template.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\\\s_.,-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "The tags used to organize, track, or control access for this resource. For example, { \"tags\": {\"key1\":\"value1\", \"key2\":\"value2\"} }.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/MessageTemplateId",
+  "/properties/MessageTemplateArn",
+  "/properties/MessageTemplateContentSha256",
+  "/properties/MessageTemplateAttachments/*/AttachmentId"
+ ],
+ "replacementStrategy": "create_then_delete",
+ "required": [
+  "KnowledgeBaseArn",
+  "ChannelSubtype",
+  "Name",
+  "Content"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-wisdom",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "wisdom:TagResource",
+   "wisdom:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Wisdom::MessageTemplate",
+ "writeOnlyProperties": [
+  "/properties/MessageTemplateAttachments/*/S3PresignedUrl"
+ ]
+}

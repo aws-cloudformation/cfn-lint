@@ -1,0 +1,226 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Id"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StreamClass",
+  "/properties/DefaultApplication/Id"
+ ],
+ "definitions": {
+  "DefaultApplication": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^arn:aws:gameliftstreams:([^:\n]*):([0-9]{12}):([^:\n]*)$",
+     "type": "string"
+    },
+    "Id": {
+     "maxLength": 32,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LocationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AlwaysOnCapacity": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "LocationName": {
+     "maxLength": 20,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-]+$",
+     "type": "string"
+    },
+    "MaximumCapacity": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "OnDemandCapacity": {
+     "description": "This shape is deprecated.",
+     "minimum": 0,
+     "type": "integer"
+    },
+    "TargetIdleCapacity": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "VpcTransitConfiguration": {
+     "$ref": "#/definitions/VpcTransitConfiguration"
+    }
+   },
+   "required": [
+    "LocationName"
+   ],
+   "type": "object"
+  },
+  "StreamClass": {
+   "maxLength": 20,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "minProperties": 1,
+   "patternProperties": {
+    ".+": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VpcTransitConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Ipv4CidrBlocks": {
+     "items": {
+      "pattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])/([0-9]|[1-2][0-9]|3[0-2])$",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "VpcId": {
+     "format": "AWS::EC2::VPC.Id",
+     "maxLength": 32,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Ipv4CidrBlocks",
+    "VpcId"
+   ],
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/LocationConfigurations/*/OnDemandCapacity"
+ ],
+ "description": "Definition of AWS::GameLiftStreams::StreamGroup Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "gameliftstreams:CreateStreamGroup",
+    "gameliftstreams:UpdateStreamGroup",
+    "gameliftstreams:GetStreamGroup",
+    "gameliftstreams:TagResource",
+    "gameliftstreams:ListTagsForResource",
+    "gameliftstreams:AssociateApplications",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "gameliftstreams:DeleteStreamGroup",
+    "gameliftstreams:GetStreamGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "gameliftstreams:ListStreamGroups",
+    "gameliftstreams:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "gameliftstreams:GetStreamGroup",
+    "gameliftstreams:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "gameliftstreams:UpdateStreamGroup",
+    "gameliftstreams:GetStreamGroup",
+    "gameliftstreams:AddStreamGroupLocations",
+    "gameliftstreams:RemoveStreamGroupLocations",
+    "gameliftstreams:TagResource",
+    "gameliftstreams:UntagResource",
+    "gameliftstreams:ListTagsForResource",
+    "ec2:DescribeVpcs"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^(^[a-zA-Z0-9-]+$)|(^arn:aws:gameliftstreams:([^:\n]*):([0-9]{12}):([^:\n]*)$)$",
+   "type": "string"
+  },
+  "DefaultApplication": {
+   "$ref": "#/definitions/DefaultApplication"
+  },
+  "Description": {
+   "maxLength": 80,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_.!+@/][a-zA-Z0-9-_.!+@/ ]*$",
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "LocationConfigurations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LocationConfiguration"
+   },
+   "maxItems": 100,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "StreamClass": {
+   "$ref": "#/definitions/StreamClass"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "propertyTransform": {
+  "/properties/LocationConfiguration/MaximumCapacity": "($exists(LocationConfiguration.OnDemandCapacity) ? LocationConfiguration.OnDemandCapacity : 0) + LocationConfiguration.AlwaysOnCapacity",
+  "/properties/LocationConfiguration/OnDemandCapacity": "$exists(LocationConfiguration.MaximumCapacity) ? (LocationConfiguration.MaximumCapacity - LocationConfiguration.AlwaysOnCapacity) : 0"
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "Description",
+  "LocationConfigurations",
+  "StreamClass"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "gameliftstreams:TagResource",
+   "gameliftstreams:UntagResource",
+   "gameliftstreams:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GameLiftStreams::StreamGroup"
+}

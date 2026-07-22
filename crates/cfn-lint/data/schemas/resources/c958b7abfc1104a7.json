@@ -1,0 +1,75 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceArn"
+ ],
+ "description": "Resource Type definition for AWS::BedrockAgentCore::ResourcePolicy",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "bedrock-agentcore:PutResourcePolicy",
+    "bedrock-agentcore:GetResourcePolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "bedrock-agentcore:DeleteResourcePolicy",
+    "bedrock-agentcore:GetResourcePolicy"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ResourceArn": {
+      "maxLength": 1011,
+      "minLength": 20,
+      "type": "string"
+     }
+    },
+    "required": [
+     "ResourceArn"
+    ]
+   },
+   "permissions": [
+    "bedrock-agentcore:GetResourcePolicy"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bedrock-agentcore:GetResourcePolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "bedrock-agentcore:PutResourcePolicy",
+    "bedrock-agentcore:GetResourcePolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResourceArn"
+ ],
+ "properties": {
+  "Policy": {
+   "description": "The resource policy to create or update.",
+   "maxLength": 20480,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResourceArn": {
+   "description": "The Amazon Resource Name (ARN) of the resource for which to create or update the resource policy.",
+   "maxLength": 1011,
+   "minLength": 20,
+   "pattern": "^arn:[a-z0-9-]+:bedrock-agentcore:[a-z0-9-]*:[0-9]{12}:.+$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "ResourceArn",
+  "Policy"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::BedrockAgentCore::ResourcePolicy"
+}

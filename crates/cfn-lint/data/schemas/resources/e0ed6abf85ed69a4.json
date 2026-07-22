@@ -1,0 +1,120 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Id"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProjectName"
+ ],
+ "description": "Represents an AWS CodeBuild build, which is a single execution of a build project.",
+ "handlers": {
+  "list": {
+   "permissions": [
+    "codebuild:ListBuilds",
+    "codebuild:BatchGetBuilds"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "codebuild:BatchGetBuilds"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the build.",
+   "minLength": 1,
+   "type": "string"
+  },
+  "BuildComplete": {
+   "description": "Whether the build is complete.",
+   "type": "boolean"
+  },
+  "BuildNumber": {
+   "description": "The number of the build.",
+   "type": "integer"
+  },
+  "BuildStatus": {
+   "description": "The current status of the build.",
+   "enum": [
+    "SUCCEEDED",
+    "FAILED",
+    "FAULT",
+    "TIMED_OUT",
+    "IN_PROGRESS",
+    "STOPPED"
+   ],
+   "type": "string"
+  },
+  "CurrentPhase": {
+   "description": "The current build phase.",
+   "type": "string"
+  },
+  "EncryptionKey": {
+   "description": "The KMS key used to encrypt the build output artifacts.",
+   "minLength": 1,
+   "type": "string"
+  },
+  "EndTime": {
+   "description": "When the build process ended, in ISO 8601 format.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Id": {
+   "description": "The unique ID for the build (format: projectName:buildId).",
+   "minLength": 1,
+   "type": "string"
+  },
+  "Initiator": {
+   "description": "The entity that started the build.",
+   "type": "string"
+  },
+  "ProjectName": {
+   "description": "The name of the CodeBuild build project.",
+   "minLength": 1,
+   "type": "string"
+  },
+  "QueuedTimeoutInMinutes": {
+   "description": "The number of minutes a build is allowed to be queued before it times out.",
+   "type": "integer"
+  },
+  "ServiceRole": {
+   "description": "The name of a service role used for this build.",
+   "minLength": 1,
+   "type": "string"
+  },
+  "StartTime": {
+   "description": "When the build process started, in ISO 8601 format.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "TimeoutInMinutes": {
+   "description": "How long, in minutes, from 5 to 2160 (36 hours), for CodeBuild to wait before timing out the build.",
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/BuildNumber",
+  "/properties/BuildStatus",
+  "/properties/BuildComplete",
+  "/properties/CurrentPhase",
+  "/properties/StartTime",
+  "/properties/EndTime",
+  "/properties/ServiceRole",
+  "/properties/EncryptionKey",
+  "/properties/TimeoutInMinutes",
+  "/properties/QueuedTimeoutInMinutes",
+  "/properties/Initiator"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::CodeBuild::Build"
+}

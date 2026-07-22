@@ -1,0 +1,164 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ControlId"
+  ]
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "ImplementationDetails": {
+   "additionalProperties": false,
+   "description": "An object that describes the implementation type for a control.",
+   "properties": {
+    "Identifier": {
+     "description": "A service-specific identifier for the control.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_\\.-]+$",
+     "type": "string"
+    },
+    "Type": {
+     "description": "A string that describes a control's implementation type.",
+     "maxLength": 2048,
+     "minLength": 7,
+     "pattern": "^[A-Za-z0-9]+(::[A-Za-z0-9_]+){2,3}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "RegionConfiguration": {
+   "additionalProperties": false,
+   "description": "Information about the control's region configuration.",
+   "properties": {
+    "DeployableRegions": {
+     "description": "Regions in which the control is available to be deployed.",
+     "insertionOrder": false,
+     "items": {
+      "pattern": "^[a-zA-Z0-9-]{1,128}$",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Scope": {
+     "description": "The scope of the control.",
+     "enum": [
+      "GLOBAL",
+      "REGIONAL"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Scope"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Returns details about a control from the AWS Control Catalog, including its name, description, behavior, severity, region configuration, and implementation details.",
+ "handlers": {
+  "list": {
+   "permissions": [
+    "controlcatalog:ListControls"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "controlcatalog:GetControl"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Aliases": {
+   "description": "A list of alternative identifiers for the control.",
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^[a-zA-Z0-9](?:[a-zA-Z0-9_.-]{0,254}[a-zA-Z0-9])$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the control.",
+   "maxLength": 2048,
+   "minLength": 34,
+   "pattern": "^arn:(aws(?:[-a-z]*)?):(controlcatalog|controltower):[a-zA-Z0-9-]*::control/[0-9a-zA-Z_\\-]+$",
+   "type": "string"
+  },
+  "Behavior": {
+   "description": "A term that identifies the control's functional behavior.",
+   "enum": [
+    "PREVENTIVE",
+    "PROACTIVE",
+    "DETECTIVE"
+   ],
+   "type": "string"
+  },
+  "ControlId": {
+   "description": "The unique opaque identifier of the control.",
+   "pattern": "^[0-9a-zA-Z_\\-]+$",
+   "type": "string"
+  },
+  "CreateTime": {
+   "description": "A timestamp that notes the time when the control was released.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "description": "A description of what the control does.",
+   "type": "string"
+  },
+  "GovernedResources": {
+   "description": "A list of AWS resource types that are governed by this control.",
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Implementation": {
+   "$ref": "#/definitions/ImplementationDetails"
+  },
+  "Name": {
+   "description": "The display name of the control.",
+   "type": "string"
+  },
+  "RegionConfiguration": {
+   "$ref": "#/definitions/RegionConfiguration"
+  },
+  "Severity": {
+   "description": "The severity of the control.",
+   "enum": [
+    "LOW",
+    "MEDIUM",
+    "HIGH",
+    "CRITICAL"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ControlId",
+  "/properties/Name",
+  "/properties/Description",
+  "/properties/Behavior",
+  "/properties/Severity",
+  "/properties/RegionConfiguration",
+  "/properties/Implementation",
+  "/properties/Aliases",
+  "/properties/CreateTime",
+  "/properties/GovernedResources"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ControlCatalog::Control"
+}

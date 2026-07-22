@@ -1,0 +1,298 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IndexName",
+  "/properties/CollectionEndpoint",
+  "/properties/Settings/Analysis"
+ ],
+ "definitions": {
+  "IndexSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "Analysis": {
+     "additionalProperties": false,
+     "description": "Custom analysis configuration including analyzers, tokenizers, and filters",
+     "properties": {
+      "Analyzer": {
+       "additionalProperties": false,
+       "description": "Custom analyzer definitions",
+       "patternProperties": {
+        "^[A-Za-z0-9_.-]{1,64}$": {
+         "additionalProperties": false,
+         "properties": {
+          "CharFilter": {
+           "description": "Character filters to apply",
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "Filter": {
+           "description": "Token filters to apply",
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "Tokenizer": {
+           "description": "The tokenizer to use",
+           "type": "string"
+          },
+          "Type": {
+           "description": "The analyzer type (e.g. custom, standard, simple)",
+           "type": "string"
+          }
+         },
+         "type": "object"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    },
+    "Index": {
+     "additionalProperties": false,
+     "properties": {
+      "Knn": {
+       "description": "Enable/disable k-nearest neighbor search capability",
+       "type": "boolean"
+      },
+      "KnnAlgoParamEfSearch": {
+       "description": "Size of the dynamic list for the nearest neighbors",
+       "type": "integer"
+      },
+      "RefreshInterval": {
+       "description": "How often to perform refresh operation (e.g. '1s', '5s')",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "PropertyMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "Analyzer": {
+     "description": "The analyzer to use for this field (for text and keyword fields)",
+     "type": "string"
+    },
+    "CompressionLevel": {
+     "description": "The compression level for knn_vector fields",
+     "enum": [
+      "16x",
+      "32x",
+      "8x",
+      "4x",
+      "2x",
+      "1x"
+     ],
+     "type": "string"
+    },
+    "Dimension": {
+     "description": "Dimension size for vector fields, defines the number of dimensions in the vector",
+     "type": "integer"
+    },
+    "Index": {
+     "description": "Whether a field should be indexed",
+     "type": "boolean"
+    },
+    "Method": {
+     "additionalProperties": false,
+     "description": "Configuration for k-NN search method",
+     "properties": {
+      "Engine": {
+       "description": "The k-NN search engine to use",
+       "enum": [
+        "nmslib",
+        "faiss",
+        "lucene"
+       ],
+       "type": "string"
+      },
+      "Name": {
+       "description": "The algorithm name for k-NN search",
+       "enum": [
+        "hnsw",
+        "ivf"
+       ],
+       "type": "string"
+      },
+      "Parameters": {
+       "additionalProperties": false,
+       "description": "Additional parameters for the k-NN algorithm",
+       "properties": {
+        "EfConstruction": {
+         "description": "The size of the dynamic list used during k-NN graph creation",
+         "minimum": 1,
+         "type": "integer"
+        },
+        "M": {
+         "description": "Number of neighbors to consider during k-NN search",
+         "maximum": 100,
+         "minimum": 2,
+         "type": "integer"
+        }
+       },
+       "type": "object"
+      },
+      "SpaceType": {
+       "description": "The distance function used for k-NN search",
+       "enum": [
+        "l2",
+        "l1",
+        "linf",
+        "cosinesimil",
+        "innerproduct",
+        "hamming"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "Name"
+     ],
+     "type": "object"
+    },
+    "Properties": {
+     "additionalProperties": false,
+     "description": "Nested fields within an object or nested field type",
+     "patternProperties": {
+      "^[A-Za-z0-9_.-]{1,64}$": {
+       "$ref": "#/definitions/PropertyMapping",
+       "description": "Nested field name and its mapping configuration"
+      }
+     },
+     "type": "object"
+    },
+    "SpaceType": {
+     "description": "The distance function used for k-NN search (field-level, outside Method)",
+     "enum": [
+      "l2",
+      "l1",
+      "linf",
+      "cosinesimil",
+      "innerproduct",
+      "hamming"
+     ],
+     "type": "string"
+    },
+    "Type": {
+     "description": "The field data type. Must be a valid OpenSearch field type.",
+     "enum": [
+      "text",
+      "knn_vector",
+      "keyword",
+      "integer"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "description": "Default value for the field when not specified in a document",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::OpenSearchServerless::Index",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "aoss:APIAccessAll"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "aoss:APIAccessAll"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "CollectionEndpoint": {
+      "$ref": "resource-schema.json#/properties/CollectionEndpoint"
+     }
+    },
+    "required": [
+     "CollectionEndpoint"
+    ]
+   },
+   "permissions": [
+    "aoss:APIAccessAll"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "aoss:APIAccessAll"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "aoss:APIAccessAll"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IndexName",
+  "/properties/CollectionEndpoint"
+ ],
+ "properties": {
+  "CollectionEndpoint": {
+   "description": "The endpoint for the collection.",
+   "type": "string"
+  },
+  "IndexName": {
+   "description": "The name of the OpenSearch Serverless index.",
+   "pattern": "^(?![_-])[a-z][a-z0-9_-]*$",
+   "type": "string"
+  },
+  "Mappings": {
+   "additionalProperties": false,
+   "description": "Index Mappings",
+   "properties": {
+    "Properties": {
+     "additionalProperties": false,
+     "description": "Defines the fields within the mapping, including their types and configurations",
+     "patternProperties": {
+      "^[A-Za-z0-9_.-]{1,64}$": {
+       "$ref": "#/definitions/PropertyMapping",
+       "description": "Field name and its mapping configuration"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Settings": {
+   "$ref": "#/definitions/IndexSettings",
+   "description": "Index settings"
+  },
+  "Uuid": {
+   "description": "The unique identifier for the index.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Uuid"
+ ],
+ "required": [
+  "CollectionEndpoint",
+  "IndexName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-opensearchserverless",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::OpenSearchServerless::Index",
+ "writeOnlyProperties": [
+  "/properties/Settings/Index/RefreshInterval",
+  "/properties/Settings/Index/KnnAlgoParamEfSearch"
+ ]
+}

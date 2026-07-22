@@ -1,0 +1,1271 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AwsAccountId",
+  "/properties/DataSourceId",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "AmazonElasticsearchParameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters for OpenSearch.</p>",
+   "properties": {
+    "Domain": {
+     "description": "<p>The OpenSearch domain.</p>",
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Domain"
+   ],
+   "type": "object"
+  },
+  "AmazonOpenSearchParameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters for OpenSearch.</p>",
+   "properties": {
+    "Domain": {
+     "description": "<p>The OpenSearch domain.</p>",
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Domain"
+   ],
+   "type": "object"
+  },
+  "AthenaParameters": {
+   "additionalProperties": false,
+   "description": "<p>Parameters for Amazon Athena.</p>",
+   "properties": {
+    "IdentityCenterConfiguration": {
+     "$ref": "#/definitions/IdentityCenterConfiguration"
+    },
+    "RoleArn": {
+     "description": "<p>Use the <code>RoleArn</code> structure to override an account-wide role for a specific Athena data source. For example, say an account administrator has turned off all Athena access with an account-wide role. The administrator can then use <code>RoleArn</code> to bypass the account-wide role and allow Athena access for the single Athena data source that is specified in the structure, even if the account-wide role forbidding Athena access is still active.</p>",
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    },
+    "WorkGroup": {
+     "description": "<p>The workgroup that Amazon Athena uses.</p>",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AuroraParameters": {
+   "additionalProperties": false,
+   "description": "<p>Parameters for Amazon Aurora.</p>",
+   "properties": {
+    "Database": {
+     "description": "<p>Database.</p>",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "description": "<p>Host.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "description": "<p>Port.</p>",
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Database",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "AuroraPostgreSqlParameters": {
+   "additionalProperties": false,
+   "description": "<p>Parameters for Amazon Aurora PostgreSQL-Compatible Edition.</p>",
+   "properties": {
+    "Database": {
+     "description": "<p>The Amazon Aurora PostgreSQL database to connect to.</p>",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "description": "<p>The Amazon Aurora PostgreSQL-Compatible host to connect to.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "description": "<p>The port that Amazon Aurora PostgreSQL is listening on.</p>",
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Database",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "AuthenticationType": {
+   "enum": [
+    "PASSWORD",
+    "TOKEN",
+    "X509",
+    "KEYPAIR"
+   ],
+   "type": "string"
+  },
+  "AwsIotAnalyticsParameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters for IoT Analytics.</p>",
+   "properties": {
+    "DataSetName": {
+     "description": "<p>Dataset name.</p>",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "DataSetName"
+   ],
+   "type": "object"
+  },
+  "CredentialPair": {
+   "additionalProperties": false,
+   "description": "<p>The combination of user name and password that are used as credentials.</p>",
+   "properties": {
+    "AlternateDataSourceParameters": {
+     "description": "<p>A set of alternate data source parameters that you want to share for these\n            credentials. The credentials are applied in tandem with the data source parameters when\n            you copy a data source by using a create or update request. The API operation compares\n            the <code>DataSourceParameters</code> structure that's in the request with the\n            structures in the <code>AlternateDataSourceParameters</code> allow list. If the\n            structures are an exact match, the request is allowed to use the new data source with\n            the existing credentials. If the <code>AlternateDataSourceParameters</code> list is\n            null, the <code>DataSourceParameters</code> originally used with these\n                <code>Credentials</code> is automatically allowed.</p>",
+     "items": {
+      "$ref": "#/definitions/DataSourceParameters"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Password": {
+     "description": "<p>Password.</p>",
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Username": {
+     "description": "<p>User name.</p>",
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Password",
+    "Username"
+   ],
+   "type": "object"
+  },
+  "DataSourceCredentials": {
+   "additionalProperties": false,
+   "description": "<p>Data source credentials. This is a variant type structure. For this structure to be\n            valid, only one of the attributes can be non-null.</p>",
+   "properties": {
+    "CopySourceArn": {
+     "description": "<p>The Amazon Resource Name (ARN) of a data source that has the credential pair that you\n            want to use. When <code>CopySourceArn</code> is not null, the credential pair from the\n            data source in the ARN is used as the credentials for the\n            <code>DataSourceCredentials</code> structure.</p>",
+     "pattern": "^arn:[-a-z0-9]*:quicksight:[-a-z0-9]*:[0-9]{12}:datasource/.+$",
+     "type": "string"
+    },
+    "CredentialPair": {
+     "$ref": "#/definitions/CredentialPair"
+    },
+    "KeyPairCredentials": {
+     "$ref": "#/definitions/KeyPairCredentials"
+    },
+    "SecretArn": {
+     "description": "<p>The Amazon Resource Name (ARN) of the secret associated with the data source in Amazon Secrets Manager.</p>",
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:[-a-z0-9]*:secretsmanager:[-a-z0-9]*:[0-9]{12}:secret:.+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DataSourceErrorInfo": {
+   "additionalProperties": false,
+   "description": "<p>Error information for the data source creation or update.</p>",
+   "properties": {
+    "Message": {
+     "description": "<p>Error message.</p>",
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/DataSourceErrorInfoType"
+    }
+   },
+   "type": "object"
+  },
+  "DataSourceErrorInfoType": {
+   "enum": [
+    "ACCESS_DENIED",
+    "COPY_SOURCE_NOT_FOUND",
+    "TIMEOUT",
+    "ENGINE_VERSION_NOT_SUPPORTED",
+    "UNKNOWN_HOST",
+    "GENERIC_SQL_FAILURE",
+    "CONFLICT",
+    "UNKNOWN"
+   ],
+   "type": "string"
+  },
+  "DataSourceParameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters that Amazon QuickSight uses to connect to your underlying data source.\n            This is a variant type structure. For this structure to be valid, only one of the\n            attributes can be non-null.</p>",
+   "properties": {
+    "AmazonElasticsearchParameters": {
+     "$ref": "#/definitions/AmazonElasticsearchParameters"
+    },
+    "AmazonOpenSearchParameters": {
+     "$ref": "#/definitions/AmazonOpenSearchParameters"
+    },
+    "AthenaParameters": {
+     "$ref": "#/definitions/AthenaParameters"
+    },
+    "AuroraParameters": {
+     "$ref": "#/definitions/AuroraParameters"
+    },
+    "AuroraPostgreSqlParameters": {
+     "$ref": "#/definitions/AuroraPostgreSqlParameters"
+    },
+    "DatabricksParameters": {
+     "$ref": "#/definitions/DatabricksParameters"
+    },
+    "MariaDbParameters": {
+     "$ref": "#/definitions/MariaDbParameters"
+    },
+    "MySqlParameters": {
+     "$ref": "#/definitions/MySqlParameters"
+    },
+    "OracleParameters": {
+     "$ref": "#/definitions/OracleParameters"
+    },
+    "PostgreSqlParameters": {
+     "$ref": "#/definitions/PostgreSqlParameters"
+    },
+    "PrestoParameters": {
+     "$ref": "#/definitions/PrestoParameters"
+    },
+    "RdsParameters": {
+     "$ref": "#/definitions/RdsParameters"
+    },
+    "RedshiftParameters": {
+     "$ref": "#/definitions/RedshiftParameters"
+    },
+    "S3Parameters": {
+     "$ref": "#/definitions/S3Parameters"
+    },
+    "S3TablesParameters": {
+     "$ref": "#/definitions/S3TablesParameters"
+    },
+    "SnowflakeParameters": {
+     "$ref": "#/definitions/SnowflakeParameters"
+    },
+    "SparkParameters": {
+     "$ref": "#/definitions/SparkParameters"
+    },
+    "SqlServerParameters": {
+     "$ref": "#/definitions/SqlServerParameters"
+    },
+    "StarburstParameters": {
+     "$ref": "#/definitions/StarburstParameters"
+    },
+    "TeradataParameters": {
+     "$ref": "#/definitions/TeradataParameters"
+    },
+    "TrinoParameters": {
+     "$ref": "#/definitions/TrinoParameters"
+    }
+   },
+   "type": "object"
+  },
+  "DataSourceType": {
+   "enum": [
+    "ADOBE_ANALYTICS",
+    "AMAZON_ELASTICSEARCH",
+    "AMAZON_OPENSEARCH",
+    "ATHENA",
+    "AURORA",
+    "AURORA_POSTGRESQL",
+    "AWS_IOT_ANALYTICS",
+    "DATABRICKS",
+    "DENODO",
+    "DREMIO",
+    "DYNAMODB",
+    "SAPHANA",
+    "DB2_AS400",
+    "EXASOL",
+    "FILE",
+    "FULLY_MANAGED_KNOWLEDGE_BASE",
+    "GITHUB",
+    "INTERNATIONAL_DATA_CORPORATION",
+    "JIRA",
+    "MARIADB",
+    "MYSQL",
+    "ORACLE",
+    "POSTGRESQL",
+    "PRESTO",
+    "QBUSINESS",
+    "REDSHIFT",
+    "S3",
+    "S3_TABLES",
+    "S3_KNOWLEDGE_BASE",
+    "SALESFORCE",
+    "SERVICENOW",
+    "SNOWFLAKE",
+    "SPARK",
+    "SPICE",
+    "SQLSERVER",
+    "TERADATA",
+    "TIMESTREAM",
+    "TWITTER",
+    "BIGQUERY",
+    "GOOGLE_ANALYTICS",
+    "TRINO",
+    "STARBURST",
+    "MONGO",
+    "MONGO_ATLAS",
+    "DOCUMENTDB",
+    "APPFLOW",
+    "IMPALA",
+    "GLUE",
+    "GOOGLE_DRIVE",
+    "CONFLUENCE",
+    "SHAREPOINT",
+    "ONE_DRIVE",
+    "WEB_CRAWLER",
+    "BOX",
+    "GOOGLESHEETS"
+   ],
+   "type": "string"
+  },
+  "DatabricksParameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters that are required to connect to a Databricks data source.</p>",
+   "properties": {
+    "Host": {
+     "description": "<p>The host name of the Databricks data source.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "description": "<p>The port for the Databricks data source.</p>",
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    },
+    "SqlEndpointPath": {
+     "description": "<p>The HTTP path of the Databricks data source.</p>",
+     "maxLength": 4096,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Host",
+    "Port",
+    "SqlEndpointPath"
+   ],
+   "type": "object"
+  },
+  "IdentityCenterConfiguration": {
+   "additionalProperties": false,
+   "description": "<p>The parameters for an IAM Identity Center configuration.</p>",
+   "properties": {
+    "EnableIdentityPropagation": {
+     "default": null,
+     "description": "<p>A Boolean option that controls whether Trusted Identity Propagation should be used.</p>",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "ImpalaParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Host": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    },
+    "SqlEndpointPath": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Host",
+    "Port",
+    "SqlEndpointPath"
+   ],
+   "type": "object"
+  },
+  "KeyPairCredentials": {
+   "additionalProperties": false,
+   "properties": {
+    "KeyPairUsername": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "PrivateKey": {
+     "maxLength": 8000,
+     "minLength": 1600,
+     "pattern": "^-{5}BEGIN (ENCRYPTED )?PRIVATE KEY-{5}\\u000D?\\u000A([A-Za-z0-9/+]{64}\\u000D?\\u000A)*[A-Za-z0-9/+]{1,64}={0,2}\\u000D?\\u000A-{5}END (ENCRYPTED )?PRIVATE KEY-{5}(\\u000D?\\u000A)?$",
+     "type": "string"
+    },
+    "PrivateKeyPassphrase": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "KeyPairUsername",
+    "PrivateKey"
+   ],
+   "type": "object"
+  },
+  "ManifestFileLocation": {
+   "additionalProperties": false,
+   "description": "<p>Amazon S3 manifest file location.</p>",
+   "properties": {
+    "Bucket": {
+     "description": "<p>Amazon S3 bucket.</p>",
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Key": {
+     "description": "<p>Amazon S3 key that identifies an object.</p>",
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "MariaDbParameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters for MariaDB.</p>",
+   "properties": {
+    "Database": {
+     "description": "<p>Database.</p>",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "description": "<p>Host.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "description": "<p>Port.</p>",
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Database",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "MySqlParameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters for MySQL.</p>",
+   "properties": {
+    "Database": {
+     "description": "<p>Database.</p>",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "description": "<p>Host.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "description": "<p>Port.</p>",
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Database",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "OAuthParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "IdentityProviderResourceUri": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "IdentityProviderVpcConnectionProperties": {
+     "$ref": "#/definitions/VpcConnectionProperties"
+    },
+    "OAuthScope": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TokenProviderUrl": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "TokenProviderUrl"
+   ],
+   "type": "object"
+  },
+  "OracleParameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters for Oracle.</p>",
+   "properties": {
+    "Database": {
+     "description": "<p>The database.</p>",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "description": "<p>An Oracle host.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "description": "<p>The port.</p>",
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    },
+    "UseServiceName": {
+     "default": false,
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Database",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "PostgreSqlParameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters for PostgreSQL.</p>",
+   "properties": {
+    "Database": {
+     "description": "<p>Database.</p>",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "description": "<p>Host.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "description": "<p>Port.</p>",
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Database",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "PrestoParameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters for Presto.</p>",
+   "properties": {
+    "Catalog": {
+     "description": "<p>Catalog.</p>",
+     "maxLength": 128,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Host": {
+     "description": "<p>Host.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "description": "<p>Port.</p>",
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Catalog",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "RdsParameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters for Amazon RDS.</p>",
+   "properties": {
+    "Database": {
+     "description": "<p>Database.</p>",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "InstanceId": {
+     "description": "<p>Instance ID.</p>",
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Database",
+    "InstanceId"
+   ],
+   "type": "object"
+  },
+  "RedshiftIAMParameters": {
+   "additionalProperties": false,
+   "description": "<p>A structure that grants Amazon QuickSight access to your cluster and make a call to the <code>redshift:GetClusterCredentials</code> API. For more information on the <code>redshift:GetClusterCredentials</code> API, see <a href=\"https://docs.aws.amazon.com/redshift/latest/APIReference/API_GetClusterCredentials.html\">\n               <code>GetClusterCredentials</code>\n            </a>.</p>",
+   "properties": {
+    "AutoCreateDatabaseUser": {
+     "default": false,
+     "description": "<p>Automatically creates a database user. If your database doesn't have a <code>DatabaseUser</code>, set this parameter to <code>True</code>. If there is no <code>DatabaseUser</code>, Amazon QuickSight can't connect to your cluster. The <code>RoleArn</code> that you use for this operation must grant access to <code>redshift:CreateClusterUser</code> to successfully create the user.</p>",
+     "type": "boolean"
+    },
+    "DatabaseGroups": {
+     "description": "<p>A list of groups whose permissions will be granted to Amazon QuickSight to access the cluster. These permissions are combined with the permissions granted to Amazon QuickSight by the <code>DatabaseUser</code>. If you choose to include this parameter, the <code>RoleArn</code> must grant access to <code>redshift:JoinGroup</code>.</p>",
+     "items": {
+      "maxLength": 64,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array"
+    },
+    "DatabaseUser": {
+     "description": "<p>The user whose permissions and group memberships will be used by Amazon QuickSight to access the cluster. If this user already exists in your database, Amazon QuickSight is granted the same permissions that the user has. If the user doesn't exist, set the value of <code>AutoCreateDatabaseUser</code> to <code>True</code> to create a new user with PUBLIC permissions.</p>",
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "RoleArn": {
+     "description": "<p>Use the <code>RoleArn</code> structure to allow Amazon QuickSight to call <code>redshift:GetClusterCredentials</code> on your cluster. The calling principal must have <code>iam:PassRole</code> access to pass the role to Amazon QuickSight. The role's trust policy must allow the Amazon QuickSight service principal to assume the role.</p>",
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "RedshiftParameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters for Amazon Redshift. The <code>ClusterId</code> field can be blank if\n            <code>Host</code> and <code>Port</code> are both set. The <code>Host</code> and <code>Port</code> fields can be blank if the <code>ClusterId</code> field is set.</p>",
+   "properties": {
+    "ClusterId": {
+     "description": "<p>Cluster ID. This field can be blank if the <code>Host</code> and <code>Port</code> are\n            provided.</p>",
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Database": {
+     "description": "<p>Database.</p>",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "description": "<p>Host. This field can be blank if <code>ClusterId</code> is provided.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "IAMParameters": {
+     "$ref": "#/definitions/RedshiftIAMParameters"
+    },
+    "IdentityCenterConfiguration": {
+     "$ref": "#/definitions/IdentityCenterConfiguration"
+    },
+    "Port": {
+     "default": 0,
+     "description": "<p>Port. This field can be blank if the <code>ClusterId</code> is provided.</p>",
+     "maximum": 65535,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Database"
+   ],
+   "type": "object"
+  },
+  "ResourcePermission": {
+   "additionalProperties": false,
+   "description": "<p>Permission for the resource.</p>",
+   "properties": {
+    "Actions": {
+     "description": "<p>The IAM action to grant or revoke permissions on.</p>",
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 30,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Principal": {
+     "description": "<p>The Amazon Resource Name (ARN) of the principal. This can be one of the\n            following:</p>\n         <ul>\n            <li>\n               <p>The ARN of an Amazon QuickSight user or group associated with a data source or dataset. (This is common.)</p>\n            </li>\n            <li>\n               <p>The ARN of an Amazon QuickSight user, group, or namespace associated with an analysis, dashboard, template, or theme. (This is common.)</p>\n            </li>\n            <li>\n               <p>The ARN of an Amazon Web Services account root: This is an IAM ARN rather than a QuickSight\n                    ARN. Use this option only to share resources (templates) across Amazon Web Services accounts.\n                    (This is less common.) </p>\n            </li>\n         </ul>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Resource": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Actions",
+    "Principal"
+   ],
+   "type": "object"
+  },
+  "ResourceStatus": {
+   "enum": [
+    "CREATION_IN_PROGRESS",
+    "CREATION_SUCCESSFUL",
+    "CREATION_FAILED",
+    "UPDATE_IN_PROGRESS",
+    "UPDATE_SUCCESSFUL",
+    "UPDATE_FAILED",
+    "PENDING_UPDATE",
+    "DELETED"
+   ],
+   "type": "string"
+  },
+  "S3Parameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters for S3.</p>",
+   "properties": {
+    "ManifestFileLocation": {
+     "$ref": "#/definitions/ManifestFileLocation"
+    },
+    "RoleArn": {
+     "description": "<p>Use the <code>RoleArn</code> structure to override an account-wide role for a specific S3 data source. For example, say an account administrator has turned off all S3 access with an account-wide role. The administrator can then use <code>RoleArn</code> to bypass the account-wide role and allow S3 access for the single S3 data source that is specified in the structure, even if the account-wide role forbidding S3 access is still active.</p>",
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ManifestFileLocation"
+   ],
+   "type": "object"
+  },
+  "S3TablesParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "TableBucketArn": {
+     "pattern": "^(arn:aws[-a-z0-9]*:[a-z0-9]+:[-a-z0-9]*:[0-9]{12}:bucket/[a-zA-Z0-9-_]{3,63})$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SnowflakeParameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters for Snowflake.</p>",
+   "properties": {
+    "AuthenticationType": {
+     "$ref": "#/definitions/AuthenticationType"
+    },
+    "Database": {
+     "description": "<p>Database.</p>",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "DatabaseAccessControlRole": {
+     "maxLength": 128,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Host": {
+     "description": "<p>Host.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "OAuthParameters": {
+     "$ref": "#/definitions/OAuthParameters"
+    },
+    "Warehouse": {
+     "description": "<p>Warehouse.</p>",
+     "maxLength": 128,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Database",
+    "Host",
+    "Warehouse"
+   ],
+   "type": "object"
+  },
+  "SparkParameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters for Spark.</p>",
+   "properties": {
+    "Host": {
+     "description": "<p>Host.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "description": "<p>Port.</p>",
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "SqlServerParameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters for SQL Server.</p>",
+   "properties": {
+    "Database": {
+     "description": "<p>Database.</p>",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "description": "<p>Host.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "description": "<p>Port.</p>",
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Database",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "SslProperties": {
+   "additionalProperties": false,
+   "description": "<p>Secure Socket Layer (SSL) properties that apply when Amazon QuickSight connects to your\n            underlying data source.</p>",
+   "properties": {
+    "DisableSsl": {
+     "default": false,
+     "description": "<p>A Boolean option to control whether SSL should be disabled.</p>",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "StarburstParameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters that are required to connect to a Starburst data source.</p>",
+   "properties": {
+    "AuthenticationType": {
+     "$ref": "#/definitions/AuthenticationType"
+    },
+    "Catalog": {
+     "description": "<p>The catalog name for the Starburst data source.</p>",
+     "maxLength": 128,
+     "minLength": 0,
+     "type": "string"
+    },
+    "DatabaseAccessControlRole": {
+     "maxLength": 128,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Host": {
+     "description": "<p>The host name of the Starburst data source.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "OAuthParameters": {
+     "$ref": "#/definitions/OAuthParameters"
+    },
+    "Port": {
+     "default": 0,
+     "description": "<p>The port for the Starburst data source.</p>",
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    },
+    "ProductType": {
+     "$ref": "#/definitions/StarburstProductType"
+    }
+   },
+   "required": [
+    "Catalog",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "StarburstProductType": {
+   "enum": [
+    "GALAXY",
+    "ENTERPRISE"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "<p>The key or keys of the key-value pairs for the resource tag or tags assigned to the\n            resource.</p>",
+   "properties": {
+    "Key": {
+     "description": "<p>Tag key.</p>",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "<p>Tag value.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TeradataParameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters for Teradata.</p>",
+   "properties": {
+    "Database": {
+     "description": "<p>Database.</p>",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "description": "<p>Host.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "description": "<p>Port.</p>",
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Database",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "TrinoParameters": {
+   "additionalProperties": false,
+   "description": "<p>The parameters that are required to connect to a Trino data source.</p>",
+   "properties": {
+    "Catalog": {
+     "description": "<p>The catalog name for the Trino data source.</p>",
+     "maxLength": 128,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Host": {
+     "description": "<p>The host name of the Trino data source.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "description": "<p>The port for the Trino data source.</p>",
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Catalog",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "VpcConnectionProperties": {
+   "additionalProperties": false,
+   "description": "<p>VPC connection properties.</p>",
+   "properties": {
+    "VpcConnectionArn": {
+     "description": "<p>The Amazon Resource Name (ARN) for the VPC connection.</p>",
+     "type": "string"
+    }
+   },
+   "required": [
+    "VpcConnectionArn"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Definition of the AWS::QuickSight::DataSource Resource Type.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "quicksight:CreateDataSource",
+    "quicksight:DescribeDataSource",
+    "quicksight:DescribeDataSourcePermissions",
+    "quicksight:TagResource",
+    "quicksight:ListTagsForResource",
+    "quicksight:CreateFolderMembership",
+    "quicksight:DeleteFolderMembership",
+    "quicksight:ListFoldersForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "quicksight:DescribeDataSource",
+    "quicksight:DescribeDataSourcePermissions",
+    "quicksight:DeleteDataSource",
+    "quicksight:ListTagsForResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "quicksight:DescribeDataSource",
+    "quicksight:ListDataSources"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "quicksight:DescribeDataSource",
+    "quicksight:DescribeDataSourcePermissions",
+    "quicksight:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "quicksight:DescribeDataSource",
+    "quicksight:DescribeDataSourcePermissions",
+    "quicksight:UpdateDataSource",
+    "quicksight:UpdateDataSourcePermissions",
+    "quicksight:CreateFolderMembership",
+    "quicksight:DeleteFolderMembership",
+    "quicksight:ListFoldersForResource",
+    "quicksight:TagResource",
+    "quicksight:UntagResource",
+    "quicksight:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AwsAccountId",
+  "/properties/DataSourceId"
+ ],
+ "properties": {
+  "AlternateDataSourceParameters": {
+   "description": "<p>A set of alternate data source parameters that you want to share for the credentials\n            stored with this data source. The credentials are applied in tandem with the data source\n            parameters when you copy a data source by using a create or update request. The API\n            operation compares the <code>DataSourceParameters</code> structure that's in the request\n            with the structures in the <code>AlternateDataSourceParameters</code> allow list. If the\n            structures are an exact match, the request is allowed to use the credentials from this\n            existing data source. If the <code>AlternateDataSourceParameters</code> list is null,\n            the <code>Credentials</code> originally used with this <code>DataSourceParameters</code>\n            are automatically allowed.</p>",
+   "items": {
+    "$ref": "#/definitions/DataSourceParameters"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Arn": {
+   "description": "<p>The Amazon Resource Name (ARN) of the data source.</p>",
+   "type": "string"
+  },
+  "AwsAccountId": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "CreatedTime": {
+   "description": "<p>The time that this data source was created.</p>",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Credentials": {
+   "$ref": "#/definitions/DataSourceCredentials"
+  },
+  "DataSourceId": {
+   "type": "string"
+  },
+  "DataSourceParameters": {
+   "$ref": "#/definitions/DataSourceParameters"
+  },
+  "ErrorInfo": {
+   "$ref": "#/definitions/DataSourceErrorInfo"
+  },
+  "FolderArns": {
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 10,
+   "minItems": 0,
+   "type": "array"
+  },
+  "LastUpdatedTime": {
+   "description": "<p>The last time that this data source was updated.</p>",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Permissions": {
+   "items": {
+    "$ref": "#/definitions/ResourcePermission"
+   },
+   "maxItems": 64,
+   "minItems": 1,
+   "type": "array"
+  },
+  "SslProperties": {
+   "$ref": "#/definitions/SslProperties"
+  },
+  "Status": {
+   "$ref": "#/definitions/ResourceStatus"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Type": {
+   "$ref": "#/definitions/DataSourceType"
+  },
+  "VpcConnectionProperties": {
+   "$ref": "#/definitions/VpcConnectionProperties"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedTime",
+  "/properties/LastUpdatedTime",
+  "/properties/Status"
+ ],
+ "required": [
+  "Name",
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-quicksight",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "quicksight:TagResource",
+   "quicksight:UntagResource",
+   "quicksight:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::QuickSight::DataSource",
+ "writeOnlyProperties": [
+  "/properties/Credentials",
+  "/properties/FolderArns"
+ ]
+}

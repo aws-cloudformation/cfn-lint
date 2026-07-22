@@ -1,0 +1,227 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TelemetryPipeline": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "maxLength": 1011,
+     "minLength": 1,
+     "pattern": "^arn:aws([a-z0-9\\-]+)?:([a-zA-Z0-9\\-]+):([a-z0-9\\-]+)?:([0-9]{12})?:(.+)$",
+     "type": "string"
+    },
+    "Configuration": {
+     "$ref": "#/definitions/TelemetryPipelineConfiguration"
+    },
+    "CreatedTimeStamp": {
+     "type": "number"
+    },
+    "LastUpdateTimeStamp": {
+     "type": "number"
+    },
+    "Name": {
+     "maxLength": 28,
+     "minLength": 3,
+     "pattern": "[a-z][a-z0-9\\-]+",
+     "type": "string"
+    },
+    "Status": {
+     "$ref": "#/definitions/TelemetryPipelineStatus"
+    },
+    "StatusReason": {
+     "$ref": "#/definitions/TelemetryPipelineStatusReason"
+    },
+    "Tags": {
+     "description": "An array of key-value pairs to apply to this resource",
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "TelemetryPipelineConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Body": {
+     "maxLength": 24000,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Body"
+   ],
+   "type": "object"
+  },
+  "TelemetryPipelineStatus": {
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "UPDATING",
+    "DELETING",
+    "CREATE_FAILED",
+    "UPDATE_FAILED"
+   ],
+   "type": "string"
+  },
+  "TelemetryPipelineStatusReason": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::ObservabilityAdmin::TelemetryPipelines",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cloudwatch:PutPipelineRule",
+    "iam:PassRole",
+    "logs:PutPipelineRule",
+    "observabilityadmin:CreateTelemetryPipeline",
+    "observabilityadmin:GetTelemetryPipeline",
+    "observabilityadmin:ListTagsForResource",
+    "observabilityadmin:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cloudwatch:DeletePipelineRule",
+    "logs:DeletePipelineRule",
+    "observabilityadmin:DeleteTelemetryPipeline",
+    "observabilityadmin:GetTelemetryPipeline"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "observabilityadmin:ListTagsForResource",
+    "observabilityadmin:ListTelemetryPipelines"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "observabilityadmin:GetTelemetryPipeline",
+    "observabilityadmin:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cloudwatch:PutPipelineRule",
+    "iam:PassRole",
+    "logs:DeletePipelineRule",
+    "logs:PutPipelineRule",
+    "observabilityadmin:GetTelemetryPipeline",
+    "observabilityadmin:ListTagsForResource",
+    "observabilityadmin:TagResource",
+    "observabilityadmin:UntagResource",
+    "observabilityadmin:UpdateTelemetryPipeline"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PipelineIdentifier"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1011,
+   "minLength": 1,
+   "pattern": "^arn:aws([a-z0-9\\-]+)?:([a-zA-Z0-9\\-]+):([a-z0-9\\-]+)?:([0-9]{12})?:(.+)$",
+   "type": "string"
+  },
+  "Configuration": {
+   "$ref": "#/definitions/TelemetryPipelineConfiguration"
+  },
+  "Name": {
+   "maxLength": 28,
+   "minLength": 3,
+   "pattern": "[a-z][a-z0-9\\-]+",
+   "type": "string"
+  },
+  "Pipeline": {
+   "$ref": "#/definitions/TelemetryPipeline"
+  },
+  "PipelineIdentifier": {
+   "maxLength": 512,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/TelemetryPipelineStatus"
+  },
+  "StatusReason": {
+   "$ref": "#/definitions/TelemetryPipelineStatusReason"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Pipeline",
+  "/properties/PipelineIdentifier",
+  "/properties/Status",
+  "/properties/StatusReason"
+ ],
+ "required": [
+  "Configuration"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "observabilityadmin:ListTagsForResource",
+   "observabilityadmin:TagResource",
+   "observabilityadmin:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ObservabilityAdmin::TelemetryPipelines"
+}

@@ -1,0 +1,324 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CmkSecretConfig": {
+   "additionalProperties": false,
+   "description": "Specifies configuration information for a DataSync-managed secret, such as a password or set of credentials that DataSync uses to access a specific transfer location, and a customer-managed AWS KMS key.",
+   "properties": {
+    "KmsKeyArn": {
+     "description": "Specifies the ARN for the customer-managed AWS KMS key used to encrypt the secret specified for SecretArn. DataSync provides this key to AWS Secrets Manager.",
+     "format": "AWS::KMS::Key.Arn",
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):kms:[a-z-0-9]+:[0-9]{12}:key/.*|)$",
+     "type": "string"
+    },
+    "SecretArn": {
+     "description": "Specifies the ARN for an AWS Secrets Manager secret, managed by DataSync.",
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):secretsmanager:[a-z-0-9]+:[0-9]{12}:secret:.*|)$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CustomSecretConfig": {
+   "additionalProperties": false,
+   "description": "Specifies configuration information for a customer-managed secret, such as a password or set of credentials that DataSync uses to access a specific transfer location, and an IAM role that DataSync can assume and access the customer-managed secret.",
+   "properties": {
+    "SecretAccessRoleArn": {
+     "description": "Specifies the ARN for the AWS Identity and Access Management role that DataSync uses to access the secret specified for SecretArn.",
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):iam::[0-9]{12}:role/.*|)$",
+     "type": "string"
+    },
+    "SecretArn": {
+     "description": "Specifies the ARN for a customer created AWS Secrets Manager secret.",
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):secretsmanager:[a-z-0-9]+:[0-9]{12}:secret:.*|)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretArn",
+    "SecretAccessRoleArn"
+   ],
+   "type": "object"
+  },
+  "ManagedSecretConfig": {
+   "additionalProperties": false,
+   "description": "Specifies configuration information for a DataSync-managed secret, such as a password or set of credentials that DataSync uses to access a specific transfer location. DataSync uses the default AWS-managed KMS key to encrypt this secret in AWS Secrets Manager.",
+   "properties": {
+    "SecretArn": {
+     "description": "Specifies the ARN for an AWS Secrets Manager secret.",
+     "maxLength": 2048,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):secretsmanager:[a-z-0-9]+:[0-9]{12}:secret:.*|)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretArn"
+   ],
+   "type": "object"
+  },
+  "MountOptions": {
+   "additionalProperties": false,
+   "description": "The mount options used by DataSync to access the SMB server.",
+   "properties": {
+    "Version": {
+     "description": "The specific SMB version that you want DataSync to use to mount your SMB share.",
+     "enum": [
+      "AUTOMATIC",
+      "SMB1",
+      "SMB2_0",
+      "SMB2",
+      "SMB3"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key for an AWS resource tag.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:/-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for an AWS resource tag.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::DataSync::LocationSMB.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "datasync:CreateLocationSmb",
+    "datasync:DescribeLocationSmb",
+    "datasync:ListTagsForResource",
+    "datasync:TagResource",
+    "secretsmanager:CreateSecret",
+    "secretsmanager:PutSecretValue",
+    "secretsmanager:DeleteSecret",
+    "iam:CreateServiceLinkedRole",
+    "iam:PassRole",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:GenerateDataKey"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "datasync:DeleteLocation",
+    "secretsmanager:DeleteSecret"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "datasync:ListLocations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "datasync:DescribeLocationSmb",
+    "datasync:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "datasync:DescribeLocationSmb",
+    "datasync:ListTagsForResource",
+    "datasync:TagResource",
+    "datasync:UntagResource",
+    "datasync:UpdateLocationSmb",
+    "secretsmanager:UpdateSecret",
+    "secretsmanager:DeleteSecret",
+    "secretsmanager:PutSecretValue",
+    "secretsmanager:CreateSecret",
+    "iam:CreateServiceLinkedRole",
+    "iam:PassRole",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:GenerateDataKey"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LocationArn"
+ ],
+ "properties": {
+  "AgentArns": {
+   "description": "The Amazon Resource Names (ARNs) of agents to use for a Simple Message Block (SMB) location.",
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 128,
+    "minLength": 0,
+    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:agent/agent-[0-9a-z]{17}$",
+    "type": "string"
+   },
+   "maxItems": 8,
+   "minItems": 1,
+   "type": "array"
+  },
+  "AuthenticationType": {
+   "description": "The authentication mode used to determine identity of user.",
+   "enum": [
+    "NTLM",
+    "KERBEROS"
+   ],
+   "type": "string"
+  },
+  "CmkSecretConfig": {
+   "$ref": "#/definitions/CmkSecretConfig"
+  },
+  "CustomSecretConfig": {
+   "$ref": "#/definitions/CustomSecretConfig"
+  },
+  "DnsIpAddresses": {
+   "default": null,
+   "description": "Specifies the IPv4 addresses for the DNS servers that your SMB file server belongs to. This parameter applies only if AuthenticationType is set to KERBEROS. If you have multiple domains in your environment, configuring this parameter makes sure that DataSync connects to the right SMB file server.",
+   "insertionOrder": true,
+   "items": {
+    "maxLength": 15,
+    "minLength": 7,
+    "pattern": "\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\Z",
+    "type": "string"
+   },
+   "maxItems": 2,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Domain": {
+   "description": "The name of the Windows domain that the SMB server belongs to.",
+   "maxLength": 253,
+   "minLength": 0,
+   "pattern": "^([A-Za-z0-9]+[A-Za-z0-9-.]*)*[A-Za-z0-9-]*[A-Za-z0-9]$",
+   "type": "string"
+  },
+  "KerberosKeytab": {
+   "description": "The Base64 string representation of the Keytab file. Specifies your Kerberos key table (keytab) file, which includes mappings between your service principal name (SPN) and encryption keys. To avoid task execution errors, make sure that the SPN in the keytab file matches exactly what you specify for KerberosPrincipal and in your krb5.conf file.",
+   "maxLength": 87384,
+   "type": "string"
+  },
+  "KerberosKrb5Conf": {
+   "description": "The string representation of the Krb5Conf file, or the presigned URL to access the Krb5.conf file within an S3 bucket. Specifies a Kerberos configuration file (krb5.conf) that defines your Kerberos realm configuration. To avoid task execution errors, make sure that the service principal name (SPN) in the krb5.conf file matches exactly what you specify for KerberosPrincipal and in your keytab file.",
+   "maxLength": 174764,
+   "type": "string"
+  },
+  "KerberosPrincipal": {
+   "description": "Specifies a service principal name (SPN), which is an identity in your Kerberos realm that has permission to access the files, folders, and file metadata in your SMB file server. SPNs are case sensitive and must include a prepended cifs/. For example, an SPN might look like cifs/kerberosuser@EXAMPLE.COM. Your task execution will fail if the SPN that you provide for this parameter doesn't match exactly what's in your keytab or krb5.conf files.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^.+$",
+   "type": "string"
+  },
+  "LocationArn": {
+   "description": "The Amazon Resource Name (ARN) of the SMB location that is created.",
+   "maxLength": 128,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:location/loc-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "LocationUri": {
+   "description": "The URL of the SMB location that was described.",
+   "maxLength": 4356,
+   "pattern": "^(efs|nfs|s3|smb|fsxw)://[a-zA-Z0-9./\\-]+$",
+   "type": "string"
+  },
+  "ManagedSecretConfig": {
+   "$ref": "#/definitions/ManagedSecretConfig"
+  },
+  "MountOptions": {
+   "$ref": "#/definitions/MountOptions",
+   "default": {
+    "Version": "AUTOMATIC"
+   }
+  },
+  "Password": {
+   "description": "The password of the user who can mount the share and has the permissions to access files and folders in the SMB share.",
+   "maxLength": 104,
+   "pattern": "^.{0,104}$",
+   "type": "string"
+  },
+  "ServerHostname": {
+   "description": "The name of the SMB server. This value is the IP address or Domain Name Service (DNS) name of the SMB server.",
+   "maxLength": 255,
+   "minLength": 0,
+   "pattern": "^(([a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9\\-]*[A-Za-z0-9])$",
+   "type": "string"
+  },
+  "Subdirectory": {
+   "description": "The subdirectory in the SMB file system that is used to read data from the SMB source location or write data to the SMB destination",
+   "maxLength": 4096,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9_\\-\\+\\./\\(\\)\\$\\p{Zs}]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "User": {
+   "description": "The user who can mount the share, has the permissions to access files and folders in the SMB share.",
+   "maxLength": 104,
+   "pattern": "^[^\\x5B\\x5D\\\\/:;|=,+*?]{1,104}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LocationArn",
+  "/properties/LocationUri",
+  "/properties/ManagedSecretConfig",
+  "/properties/CmkSecretConfig/SecretArn"
+ ],
+ "required": [
+  "AgentArns"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datasync.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "datasync:TagResource",
+   "datasync:UntagResource",
+   "datasync:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataSync::LocationSMB",
+ "writeOnlyProperties": [
+  "/properties/Password",
+  "/properties/Subdirectory",
+  "/properties/ServerHostname",
+  "/properties/KerberosKeytab",
+  "/properties/KerberosKrb5Conf"
+ ]
+}

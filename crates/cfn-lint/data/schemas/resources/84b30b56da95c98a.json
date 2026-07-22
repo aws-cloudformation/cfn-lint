@@ -1,0 +1,455 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AgentSpaceId"
+ ],
+ "definitions": {
+  "Actor": {
+   "additionalProperties": false,
+   "description": "An authenticated actor to be used during pentest execution",
+   "properties": {
+    "Authentication": {
+     "$ref": "#/definitions/Authentication",
+     "description": "Authentication credentials for this actor"
+    },
+    "Description": {
+     "description": "Description of the actor",
+     "type": "string"
+    },
+    "Identifier": {
+     "description": "Identifier for the actor",
+     "type": "string"
+    },
+    "Uris": {
+     "description": "List of URIs this actor is authorized to access",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Assets": {
+   "additionalProperties": false,
+   "description": "Collection of assets to be tested during the pentest",
+   "properties": {
+    "Actors": {
+     "description": "List of actors used during testing",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Actor"
+     },
+     "type": "array"
+    },
+    "Documents": {
+     "description": "List of documents providing additional context for the pentest",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/DocumentInfo"
+     },
+     "type": "array"
+    },
+    "Endpoints": {
+     "description": "List of endpoints to test",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Endpoint"
+     },
+     "type": "array"
+    },
+    "IntegratedRepositories": {
+     "description": "List of repositories connected via provider integrations",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/IntegratedRepository"
+     },
+     "type": "array"
+    },
+    "SourceCode": {
+     "description": "List of source code repositories to analyze",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SourceCodeRepository"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Authentication": {
+   "additionalProperties": false,
+   "description": "Authentication configuration for a pentest actor",
+   "properties": {
+    "ProviderType": {
+     "description": "Type of authentication provider",
+     "enum": [
+      "SECRETS_MANAGER",
+      "AWS_LAMBDA",
+      "AWS_IAM_ROLE",
+      "AWS_INTERNAL"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "description": "Reference value for the authentication provider, such as a secret ARN or Lambda ARN",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CleanUpStrategy": {
+   "description": "Strategy for cleaning up resources after pentest job completion",
+   "enum": [
+    "BEST_EFFORT_DELETE",
+    "RETAIN_ALL"
+   ],
+   "type": "string"
+  },
+  "CloudWatchLog": {
+   "additionalProperties": false,
+   "description": "CloudWatch Logs configuration for pentest output",
+   "properties": {
+    "LogGroup": {
+     "description": "CloudWatch log group",
+     "type": "string"
+    },
+    "LogStream": {
+     "description": "CloudWatch log stream",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CodeRemediationStrategy": {
+   "description": "Strategy for remediating code vulnerabilities discovered during the pentest",
+   "enum": [
+    "AUTOMATIC",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "CustomHeader": {
+   "additionalProperties": false,
+   "description": "A custom header to include in outbound requests",
+   "properties": {
+    "Name": {
+     "description": "Name of the header",
+     "type": "string"
+    },
+    "Value": {
+     "description": "Value of the header",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DocumentInfo": {
+   "additionalProperties": false,
+   "description": "A document attached to the pentest, uploaded to S3",
+   "properties": {
+    "ArtifactId": {
+     "description": "Artifact identifier",
+     "type": "string"
+    },
+    "S3Location": {
+     "description": "S3 document location",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Endpoint": {
+   "additionalProperties": false,
+   "description": "An endpoint to be tested during the pentest",
+   "properties": {
+    "Uri": {
+     "description": "URI of the endpoint to test",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "IntegratedRepository": {
+   "additionalProperties": false,
+   "description": "A repository connected via a provider integration",
+   "properties": {
+    "IntegrationId": {
+     "description": "Unique identifier of the provider integration",
+     "type": "string"
+    },
+    "ProviderResourceId": {
+     "description": "Identifier of the resource within the provider integration",
+     "type": "string"
+    }
+   },
+   "required": [
+    "IntegrationId",
+    "ProviderResourceId"
+   ],
+   "type": "object"
+  },
+  "NetworkTrafficConfig": {
+   "additionalProperties": false,
+   "description": "Network traffic configuration for the pentest",
+   "properties": {
+    "CustomHeaders": {
+     "description": "Custom headers to include in outbound requests",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/CustomHeader"
+     },
+     "type": "array"
+    },
+    "Rules": {
+     "description": "Ordered list of network traffic rules",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/NetworkTrafficRule"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "NetworkTrafficRule": {
+   "additionalProperties": false,
+   "description": "Network traffic rule",
+   "properties": {
+    "Effect": {
+     "description": "Whether to allow or deny traffic matching this rule",
+     "enum": [
+      "ALLOW",
+      "DENY"
+     ],
+     "type": "string"
+    },
+    "NetworkTrafficRuleType": {
+     "description": "Type of pattern matching for this rule",
+     "enum": [
+      "URL"
+     ],
+     "type": "string"
+    },
+    "Pattern": {
+     "description": "URL pattern this rule applies to",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RiskType": {
+   "description": "Type of security risk to test for",
+   "enum": [
+    "CROSS_SITE_SCRIPTING",
+    "DEFAULT_CREDENTIALS",
+    "INSECURE_DIRECT_OBJECT_REFERENCE",
+    "PRIVILEGE_ESCALATION",
+    "SERVER_SIDE_TEMPLATE_INJECTION",
+    "COMMAND_INJECTION",
+    "CODE_INJECTION",
+    "SQL_INJECTION",
+    "ARBITRARY_FILE_UPLOAD",
+    "INSECURE_DESERIALIZATION",
+    "LOCAL_FILE_INCLUSION",
+    "INFORMATION_DISCLOSURE",
+    "PATH_TRAVERSAL",
+    "SERVER_SIDE_REQUEST_FORGERY",
+    "JSON_WEB_TOKEN_VULNERABILITIES",
+    "XML_EXTERNAL_ENTITY",
+    "FILE_DELETION",
+    "OTHER",
+    "GRAPHQL_VULNERABILITIES",
+    "BUSINESS_LOGIC_VULNERABILITIES",
+    "CRYPTOGRAPHIC_VULNERABILITIES",
+    "DENIAL_OF_SERVICE",
+    "FILE_ACCESS",
+    "FILE_CREATION",
+    "DATABASE_MODIFICATION",
+    "DATABASE_ACCESS",
+    "OUTBOUND_SERVICE_REQUEST",
+    "UNKNOWN"
+   ],
+   "type": "string"
+  },
+  "SkillType": {
+   "description": "Type of managed skill that can be disabled for a pentest",
+   "enum": [
+    "FINDING_PERSONALIZATION",
+    "LOGIN_OPTIMIZATION"
+   ],
+   "type": "string"
+  },
+  "SourceCodeRepository": {
+   "additionalProperties": false,
+   "description": "A source code archive stored in S3 for analysis during the pentest",
+   "properties": {
+    "S3Location": {
+     "description": "S3 source code location",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "description": "VPC configuration that the pentest agent accesses",
+   "properties": {
+    "SecurityGroupArns": {
+     "description": "List of security groups in the VPC",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SubnetArns": {
+     "description": "List of subnets in the VPC",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "VpcArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SecurityAgent::Pentest",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityagent:CreatePentest",
+    "securityagent:BatchGetPentests",
+    "kms:Decrypt"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securityagent:BatchGetPentests",
+    "securityagent:BatchDeletePentests",
+    "kms:Decrypt"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "AgentSpaceId": {
+      "$ref": "resource-schema.json#/properties/AgentSpaceId"
+     }
+    },
+    "required": [
+     "AgentSpaceId"
+    ]
+   },
+   "permissions": [
+    "securityagent:ListPentests",
+    "kms:Decrypt"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityagent:BatchGetPentests",
+    "kms:Decrypt"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securityagent:UpdatePentest",
+    "securityagent:BatchGetPentests",
+    "kms:Decrypt"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PentestId",
+  "/properties/AgentSpaceId"
+ ],
+ "properties": {
+  "AgentSpaceId": {
+   "description": "Identifier of agent space where the pentest should be created",
+   "type": "string"
+  },
+  "Assets": {
+   "$ref": "#/definitions/Assets",
+   "description": "Collection of assets to be tested or used during the penetration test"
+  },
+  "CleanUpStrategy": {
+   "$ref": "#/definitions/CleanUpStrategy",
+   "description": "Strategy for cleaning up resources after pentest job completion"
+  },
+  "CodeRemediationStrategy": {
+   "$ref": "#/definitions/CodeRemediationStrategy",
+   "description": "Strategy for code remediation on findings"
+  },
+  "CreatedAt": {
+   "description": "Timestamp when the pentest was created",
+   "format": "date-time",
+   "type": "string"
+  },
+  "DisableManagedSkills": {
+   "description": "A list of managed skills to disable for this pentest",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SkillType"
+   },
+   "type": "array"
+  },
+  "ExcludeRiskTypes": {
+   "description": "A list of risk types excluded from the pentest execution",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RiskType"
+   },
+   "type": "array"
+  },
+  "LogConfig": {
+   "$ref": "#/definitions/CloudWatchLog",
+   "description": "CloudWatch logs config"
+  },
+  "NetworkTrafficConfig": {
+   "$ref": "#/definitions/NetworkTrafficConfig",
+   "description": "Configuration for network traffic filtering"
+  },
+  "PentestId": {
+   "description": "Unique identifier of the pentest",
+   "type": "string"
+  },
+  "ServiceRole": {
+   "description": "Service role for accessing resources",
+   "type": "string"
+  },
+  "Title": {
+   "description": "Title of the penetration test",
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "description": "Timestamp when the pentest was last updated",
+   "format": "date-time",
+   "type": "string"
+  },
+  "VpcConfig": {
+   "$ref": "#/definitions/VpcConfig",
+   "description": "VPC configuration that the security testing environment accesses"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PentestId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "AgentSpaceId",
+  "ServiceRole",
+  "Assets"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-securityagent-pentest.html",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::SecurityAgent::Pentest"
+}

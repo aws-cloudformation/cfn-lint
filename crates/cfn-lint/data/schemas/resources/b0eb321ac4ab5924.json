@@ -1,0 +1,88 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AccountId",
+  "/properties/PortfolioId"
+ ],
+ "description": "Resource Type definition for AWS::ServiceCatalog::PortfolioShare",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "servicecatalog:DescribePortfolioShares",
+    "servicecatalog:CreatePortfolioShare"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "servicecatalog:DescribePortfolioShares",
+    "servicecatalog:DeletePortfolioShare"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "PortfolioId": {
+      "$ref": "resource-schema.json#/properties/PortfolioId"
+     }
+    },
+    "required": [
+     "PortfolioId"
+    ]
+   },
+   "permissions": [
+    "servicecatalog:DescribePortfolioShares"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "servicecatalog:DescribePortfolioShares"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "servicecatalog:DescribePortfolioShares",
+    "servicecatalog:UpdatePortfolioShare"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PortfolioId",
+  "/properties/AccountId"
+ ],
+ "properties": {
+  "AcceptLanguage": {
+   "description": "The language code.",
+   "maxLength": 100,
+   "minLength": 0,
+   "type": "string"
+  },
+  "AccountId": {
+   "description": "The AWS account ID.",
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "PortfolioId": {
+   "description": "The portfolio identifier.",
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_\\-]*$",
+   "type": "string"
+  },
+  "ShareTagOptions": {
+   "description": "Enables or disables TagOptions sharing when creating the portfolio share.",
+   "type": "boolean"
+  }
+ },
+ "required": [
+  "AccountId",
+  "PortfolioId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ServiceCatalog::PortfolioShare",
+ "writeOnlyProperties": [
+  "/properties/AcceptLanguage"
+ ]
+}

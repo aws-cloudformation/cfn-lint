@@ -41,7 +41,7 @@ impl CfnLintRule for E1003 {
                         desc.value.len()
                     ),
                     path: vec!["Description".to_string()],
-                    span: desc.span.clone(),
+                    span: desc.span,
                     keyword: String::new(),
                     unknown: false,
                     resolved_from_ref: false,
@@ -58,11 +58,9 @@ impl CfnLintRule for E1003 {
 mod tests {
     use super::*;
     use crate::ast::{ObjectEntry, ObjectNode, Position, Span, StringNode};
-    use indexmap::IndexMap;
 
     fn make_template_with_description(desc: &str) -> (Template, AstNode) {
-        let mut props: Vec<ObjectEntry> = Vec::new();
-        props.push(ObjectEntry {
+        let props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "Description".to_string(),
                 span: Span::default(),
@@ -76,7 +74,7 @@ mod tests {
                 },
             }),
             key_span: Span::default(),
-        });
+        }];
         let root = AstNode::Object(ObjectNode {
             entries: props,
             span: Span::default(),

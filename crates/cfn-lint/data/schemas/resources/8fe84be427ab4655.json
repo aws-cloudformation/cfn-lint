@@ -1,0 +1,280 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Identifier"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceType"
+ ],
+ "definitions": {
+  "ResourceTag": {
+   "additionalProperties": false,
+   "description": "The resource tag of the rule.",
+   "properties": {
+    "ResourceTagKey": {
+     "description": "The tag key of the resource.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[\\S\\s]{1,128}$",
+     "type": "string"
+    },
+    "ResourceTagValue": {
+     "description": "The tag value of the resource",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[\\S\\s]{0,256}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceTagKey",
+    "ResourceTagValue"
+   ],
+   "type": "object"
+  },
+  "RetentionPeriod": {
+   "additionalProperties": false,
+   "description": "The retention period of the rule.",
+   "properties": {
+    "RetentionPeriodUnit": {
+     "description": "The retention period unit of the rule",
+     "enum": [
+      "DAYS"
+     ],
+     "type": "string"
+    },
+    "RetentionPeriodValue": {
+     "description": "The retention period value of the rule.",
+     "maximum": 3650,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "RetentionPeriodValue",
+    "RetentionPeriodUnit"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "Metadata of a retention rule, consisting of a key-value pair.",
+   "properties": {
+    "Key": {
+     "description": "A unique identifier for the tag.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "String which you can use to describe or define the tag.",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UnlockDelay": {
+   "additionalProperties": false,
+   "properties": {
+    "UnlockDelayUnit": {
+     "description": "The unit of time in which to measure the unlock delay. Currently, the unlock delay can be measure only in days.",
+     "enum": [
+      "DAYS"
+     ],
+     "type": "string"
+    },
+    "UnlockDelayValue": {
+     "description": "The unlock delay period, measured in the unit specified for UnlockDelayUnit.",
+     "maximum": 30,
+     "minimum": 7,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Rbin::Rule",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "rbin:CreateRule",
+    "rbin:GetRule",
+    "rbin:LockRule",
+    "rbin:TagResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "rbin:GetRule",
+    "rbin:DeleteRule",
+    "iam:PassRole"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ExcludeResourceTags": {
+      "$ref": "resource-schema.json#/properties/ExcludeResourceTags"
+     },
+     "LockState": {
+      "$ref": "resource-schema.json#/properties/LockState"
+     },
+     "ResourceTags": {
+      "$ref": "resource-schema.json#/properties/ResourceTags"
+     },
+     "ResourceType": {
+      "$ref": "resource-schema.json#/properties/ResourceType"
+     }
+    },
+    "required": [
+     "ResourceType"
+    ]
+   },
+   "permissions": [
+    "rbin:ListRules",
+    "rbin:ListTagsForResource",
+    "iam:PassRole"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "rbin:GetRule",
+    "rbin:ListTagsForResource",
+    "iam:PassRole"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "rbin:GetRule",
+    "rbin:UpdateRule",
+    "rbin:LockRule",
+    "rbin:UnlockRule",
+    "rbin:TagResource",
+    "rbin:UntagResource",
+    "rbin:ListTagsForResource",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "Rule Arn is unique for each rule.",
+   "maxLength": 1011,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the retention rule.",
+   "maxLength": 255,
+   "pattern": "^[\\S ]{0,255}$",
+   "type": "string"
+  },
+  "ExcludeResourceTags": {
+   "description": "Information about the exclude resource tags used to identify resources that are excluded by the retention rule.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ResourceTag"
+   },
+   "maxItems": 5,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Identifier": {
+   "description": "The unique ID of the retention rule.",
+   "pattern": "[0-9a-zA-Z]{11}",
+   "type": "string"
+  },
+  "LockConfiguration": {
+   "$ref": "#/definitions/UnlockDelay",
+   "description": "Information about the retention rule lock configuration."
+  },
+  "LockState": {
+   "description": "The lock state for the retention rule.",
+   "pattern": "locked|pending_unlock|unlocked",
+   "type": "string"
+  },
+  "ResourceTags": {
+   "description": "Information about the resource tags used to identify resources that are retained by the retention rule.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ResourceTag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ResourceType": {
+   "description": "The resource type retained by the retention rule.",
+   "enum": [
+    "EBS_SNAPSHOT",
+    "EC2_IMAGE",
+    "EBS_VOLUME"
+   ],
+   "type": "string"
+  },
+  "RetentionPeriod": {
+   "$ref": "#/definitions/RetentionPeriod",
+   "description": "Information about the retention period for which the retention rule is to retain resources."
+  },
+  "Status": {
+   "description": "The state of the retention rule. Only retention rules that are in the available state retain resources.",
+   "pattern": "pending|available",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Information about the tags assigned to the retention rule.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Identifier",
+  "/properties/LockState"
+ ],
+ "required": [
+  "RetentionPeriod",
+  "ResourceType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-rbin",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "rbin:TagResource",
+   "rbin:UntagResource",
+   "rbin:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Rbin::Rule",
+ "writeOnlyProperties": [
+  "/properties/LockConfiguration",
+  "/properties/LockConfiguration/UnlockDelayValue",
+  "/properties/LockConfiguration/UnlockDelayUnit"
+ ]
+}

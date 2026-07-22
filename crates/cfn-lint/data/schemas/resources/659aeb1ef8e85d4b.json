@@ -1,0 +1,71 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceArn"
+ ],
+ "description": "Resource Type definition for AWS::Lambda::ResourcePolicy",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lambda:PutResourcePolicy",
+    "lambda:GetResourcePolicy",
+    "lambda:AddPermission",
+    "lambda:RemovePermission",
+    "lambda:GetPolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lambda:PutResourcePolicy",
+    "lambda:DeleteResourcePolicy",
+    "lambda:GetResourcePolicy",
+    "lambda:AddPermission",
+    "lambda:RemovePermission",
+    "lambda:GetPolicy",
+    "cloudformation:DescribeStacks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lambda:GetResourcePolicy",
+    "lambda:GetPolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "lambda:PutResourcePolicy",
+    "lambda:GetResourcePolicy",
+    "lambda:AddPermission",
+    "lambda:RemovePermission",
+    "lambda:GetPolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResourceArn"
+ ],
+ "properties": {
+  "PolicyDocument": {
+   "description": "The resource policy of your Lambda resource",
+   "type": "object"
+  },
+  "ResourceArn": {
+   "description": "The resource arn of your Lambda resource",
+   "maxLength": 1024,
+   "minLength": 12,
+   "pattern": "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:|web-function/)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "ResourceArn",
+  "PolicyDocument"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Lambda::ResourcePolicy"
+}

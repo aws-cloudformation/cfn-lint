@@ -1,0 +1,86 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GroupId",
+  "/properties/VpcId"
+ ],
+ "definitions": {
+  "SecurityGroupVpcAssociationState": {
+   "additionalProperties": false,
+   "enum": [
+    "associating",
+    "associated",
+    "association-failed",
+    "disassociating",
+    "disassociated",
+    "disassociation-failed"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "Resource type definition for the AWS::EC2::SecurityGroupVpcAssociation resource",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:AssociateSecurityGroupVpc",
+    "ec2:DescribeSecurityGroupVpcAssociations"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DisassociateSecurityGroupVpc",
+    "ec2:DescribeSecurityGroupVpcAssociations"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeSecurityGroupVpcAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeSecurityGroupVpcAssociations"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GroupId",
+  "/properties/VpcId"
+ ],
+ "properties": {
+  "GroupId": {
+   "description": "The group ID of the specified security group.",
+   "type": "string"
+  },
+  "State": {
+   "$ref": "#/definitions/SecurityGroupVpcAssociationState",
+   "description": "The state of the security group vpc association."
+  },
+  "StateReason": {
+   "description": "The reason for the state of the security group vpc association.",
+   "type": "string"
+  },
+  "VpcId": {
+   "description": "The ID of the VPC in the security group vpc association.",
+   "format": "AWS::EC2::VPC.Id",
+   "type": "string"
+  },
+  "VpcOwnerId": {
+   "description": "The owner of the VPC in the security group vpc association.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VpcOwnerId",
+  "/properties/State",
+  "/properties/StateReason"
+ ],
+ "required": [
+  "GroupId",
+  "VpcId"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::SecurityGroupVpcAssociation"
+}

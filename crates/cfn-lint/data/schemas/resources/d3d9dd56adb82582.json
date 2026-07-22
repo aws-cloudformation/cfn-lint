@@ -1,0 +1,133 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/VpcId",
+  "/properties/SubnetId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::EC2::VPCBlockPublicAccessExclusion.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:DescribeVpcBlockPublicAccessExclusions",
+    "ec2:CreateVpcBlockPublicAccessExclusion",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DescribeVpcBlockPublicAccessExclusions",
+    "ec2:DeleteVpcBlockPublicAccessExclusion"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeVpcBlockPublicAccessExclusions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeVpcBlockPublicAccessExclusions"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeVpcBlockPublicAccessExclusions",
+    "ec2:ModifyVpcBlockPublicAccessExclusion",
+    "ec2:CreateTags",
+    "ec2:DeleteTags"
+   ]
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "VpcId"
+   ]
+  },
+  {
+   "required": [
+    "SubnetId"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/ExclusionId"
+ ],
+ "properties": {
+  "ExclusionId": {
+   "description": "The ID of the exclusion",
+   "type": "string"
+  },
+  "InternetGatewayExclusionMode": {
+   "description": "The desired Block Public Access Exclusion Mode for a specific VPC/Subnet.",
+   "enum": [
+    "allow-bidirectional",
+    "allow-egress"
+   ],
+   "type": "string"
+  },
+  "SubnetId": {
+   "description": "The ID of the subnet. Required only if you don't specify VpcId",
+   "format": "AWS::EC2::Subnet.Id",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcId": {
+   "description": "The ID of the vpc. Required only if you don't specify SubnetId.",
+   "format": "AWS::EC2::VPC.Id",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ExclusionId"
+ ],
+ "required": [
+  "InternetGatewayExclusionMode"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-vpcblockpublicaccessexclusion.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "ec2:CreateTags",
+   "ec2:DeleteTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::VPCBlockPublicAccessExclusion"
+}

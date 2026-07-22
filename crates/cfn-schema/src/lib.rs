@@ -5,6 +5,20 @@ use std::path::PathBuf;
 
 use indexmap::IndexMap;
 
+/// Validates a schema hash before it is used as a filesystem path component.
+///
+/// C74 (path traversal): hashes originate from HTTP ETags returned by the
+/// schema endpoint, which is untrusted. A malicious/compromised endpoint could
+/// return an ETag like `../../etc/foo`, causing `{hash}.json` to be written or
+/// read outside the cache directory. Only accept non-empty strings made of
+/// `[A-Za-z0-9_-]` — this excludes `/`, `\`, `.` (and thus `..`), and NUL.
+fn is_valid_schema_hash(hash: &str) -> bool {
+    !hash.is_empty()
+        && hash
+            .bytes()
+            .all(|b| b.is_ascii_alphanumeric() || b == b'_' || b == b'-')
+}
+
 /// A node in a resolved schema tree. Represents the schema at any depth.
 /// Used by IDE features (completion, hover) and validation.
 #[derive(Debug, Clone)]
@@ -145,8 +159,11 @@ pub struct BundledSchemaProvider {
     registry: HashMap<String, HashMap<String, String>>,
     /// SAM resource_type → hash (loaded from schemas/sam/provider.json)
     sam_registry: HashMap<String, String>,
-    /// hash → loaded schema (lazy cache; Box for stable heap address)
-    cache: std::sync::RwLock<HashMap<String, Box<ResourceSchema>>>,
+    /// hash → loaded schema (lazy, insert-only cache).
+    /// `elsa::sync::FrozenMap` hands out `&ResourceSchema` references that stay
+    /// valid for the life of `&self` without unsafe: entries are never removed
+    /// or overwritten, and `Box` keeps each schema at a stable heap address.
+    cache: elsa::sync::FrozenMap<String, Box<ResourceSchema>>,
     /// Path prefix schemas (UpdatePolicy, CreationPolicy, Parameters, etc.)
     prefix_schemas: HashMap<String, serde_json::Value>,
 }
@@ -236,12 +253,18 @@ impl BundledSchemaProvider {
             data_dir,
             registry,
             sam_registry,
-            cache: std::sync::RwLock::new(HashMap::new()),
+            cache: elsa::sync::FrozenMap::new(),
             prefix_schemas,
         })
     }
 
     fn load_resource_schema(&self, hash: &str, resource_type: &str) -> Option<ResourceSchema> {
+        // Defense in depth (C74): the hash becomes a filename component. Reject
+        // anything that could escape the resources/ directory even though the
+        // registry is normally written by trusted code.
+        if !is_valid_schema_hash(hash) {
+            return None;
+        }
         let path = self
             .data_dir
             .join("schemas")
@@ -267,23 +290,15 @@ impl BundledSchemaProvider {
                 None
             }
         })?;
-        {
-            let cache = self.cache.read().ok()?;
-            if let Some(schema) = cache.get(hash) {
-                // SAFETY: Box provides a stable heap address. We never remove entries
-                // from the cache, so the pointee lives as long as `self`.
-                let ptr: *const ResourceSchema = &**schema;
-                return Some(unsafe { &*ptr });
-            }
+        if let Some(schema) = self.cache.get(hash) {
+            return Some(schema);
         }
         let schema = self.load_resource_schema(hash, resource_type)?;
-        let mut cache = self.cache.write().ok()?;
-        let entry = cache
-            .entry(hash.clone())
-            .or_insert_with(|| Box::new(schema));
-        // SAFETY: Same as above — Box provides a stable heap address.
-        let ptr: *const ResourceSchema = &**entry;
-        Some(unsafe { &*ptr })
+        // FrozenMap::insert is insert-only and never overwrites: if another
+        // thread raced us to the same hash, we get a reference to the existing
+        // entry and our freshly-loaded copy is dropped. Either way the returned
+        // reference is valid for the life of `&self` — no unsafe required.
+        Some(self.cache.insert(hash.clone(), Box::new(schema)))
     }
 }
 
@@ -291,7 +306,7 @@ impl SchemaProvider for BundledSchemaProvider {
     fn resolve(&self, path: &[&str], region: &str) -> Option<SchemaNode> {
         match path {
             // Resource entry attributes (Type, Properties, DependsOn, etc.)
-            ["Resources", _, rest @ ..] if rest.is_empty() => {
+            ["Resources", _] => {
                 if let Some(res_schema) = self.prefix_schemas.get("resources/configuration") {
                     let res_def = res_schema
                         .get("definitions")
@@ -456,12 +471,17 @@ pub fn navigate_schema_node(node: &SchemaNode, path: &[&str]) -> Option<SchemaNo
     use std::sync::{LazyLock, Mutex};
     static REGEX_CACHE: LazyLock<Mutex<StdHashMap<String, regex::Regex>>> =
         LazyLock::new(|| Mutex::new(StdHashMap::new()));
+    // Fallback regex used when a pattern fails to compile: matches only the
+    // empty string. Hoisted into a static so it is compiled once rather than
+    // on every loop iteration (clippy::regex_creation_in_loops). `Regex` is
+    // cheaply cloneable (internally reference-counted).
+    static EMPTY_REGEX: LazyLock<regex::Regex> = LazyLock::new(|| regex::Regex::new("^$").unwrap());
 
     for (pattern, schema) in &node.pattern_properties {
         let matches = {
             let mut cache = REGEX_CACHE.lock().unwrap();
             let re = cache.entry(pattern.clone()).or_insert_with(|| {
-                regex::Regex::new(pattern).unwrap_or_else(|_| regex::Regex::new("^$").unwrap())
+                regex::Regex::new(pattern).unwrap_or_else(|_| EMPTY_REGEX.clone())
             });
             re.is_match(path[0])
         };
@@ -664,10 +684,7 @@ fn parse_schema_node_impl(
     let multiple_of = raw.get("multipleOf").and_then(|v| v.as_f64());
 
     // Value keywords
-    let enum_values = raw
-        .get("enum")
-        .and_then(|v| v.as_array())
-        .map(|arr| arr.clone());
+    let enum_values = raw.get("enum").and_then(|v| v.as_array()).cloned();
     let enum_case_insensitive: Option<Vec<String>> = raw
         .get("enumCaseInsensitive")
         .and_then(|v| v.as_array())
@@ -1061,6 +1078,7 @@ pub fn extract_bundled_schemas() -> Option<PathBuf> {
 }
 
 // Simple semver parser for "0.1.0" format
+#[cfg(feature = "bundled")]
 fn parse_semver(s: &str) -> Option<(u32, u32, u32)> {
     let parts: Vec<_> = s.split('.').collect();
     if parts.len() != 3 {
@@ -1080,6 +1098,12 @@ pub struct CacheProvider {
     cache_dir: PathBuf,
     /// Directory containing JSON patches to apply at download time.
     patches_dir: Option<PathBuf>,
+}
+
+impl Default for CacheProvider {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl CacheProvider {
@@ -1125,22 +1149,34 @@ impl CacheProvider {
         let providers_dir = self.cache_dir.join("schemas").join("providers");
         std::fs::create_dir_all(&providers_dir)?;
         let filename = region.replace('-', "_") + ".json";
-        let content = serde_json::to_string_pretty(types)
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+        let content = serde_json::to_string_pretty(types).map_err(std::io::Error::other)?;
         std::fs::write(providers_dir.join(filename), content)
     }
 
     /// Write a schema to the cache by its hash.
     pub fn write_schema(&self, hash: &str, schema: &serde_json::Value) -> std::io::Result<()> {
+        // C74: reject hashes that could escape the resources/ directory.
+        if !is_valid_schema_hash(hash) {
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::InvalidInput,
+                format!(
+                    "refusing to write schema: invalid hash (possible path traversal): {hash:?}"
+                ),
+            ));
+        }
         let resources_dir = self.cache_dir.join("schemas").join("resources");
         std::fs::create_dir_all(&resources_dir)?;
-        let content = serde_json::to_string_pretty(schema)
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+        let content = serde_json::to_string_pretty(schema).map_err(std::io::Error::other)?;
         std::fs::write(resources_dir.join(format!("{}.json", hash)), content)
     }
 
     /// Check if a schema hash exists in the cache.
     pub fn has_schema(&self, hash: &str) -> bool {
+        // C74: an invalid hash can never correspond to a file we wrote, and we
+        // must not stat an attacker-controlled traversal path.
+        if !is_valid_schema_hash(hash) {
+            return false;
+        }
         self.cache_dir
             .join("schemas")
             .join("resources")
@@ -1196,12 +1232,31 @@ pub struct S3Provider {
 }
 
 #[cfg(feature = "fetch")]
-fn schema_base_url(region: &str) -> String {
+fn is_valid_region(region: &str) -> bool {
+    use std::sync::LazyLock;
+    // Matches AWS region syntax: two-letter partition/geo code, one or more
+    // dash-separated lowercase words, then a numeric suffix. Naturally covers
+    // gov/iso variants (e.g. us-gov-west-1, us-iso-east-1, us-isob-east-1) and
+    // China (cn-north-1) without allowing hosts, paths, ports, or fragments.
+    static REGION_RE: LazyLock<regex::Regex> =
+        LazyLock::new(|| regex::Regex::new(r"^[a-z]{2}(-[a-z]+)+-\d+$").unwrap());
+    REGION_RE.is_match(region)
+}
+
+#[cfg(feature = "fetch")]
+fn schema_base_url(region: &str) -> Result<String, Box<dyn std::error::Error>> {
+    // C77 (SSRF): the region is interpolated into the schema host. An
+    // unvalidated value like "evil.com/foo#" would redirect fetches to an
+    // attacker-controlled host whose responses get cached locally. Validate
+    // strictly before building the URL.
+    if !is_valid_region(region) {
+        return Err(format!("invalid AWS region: {region:?}").into());
+    }
     let suffix = if region.starts_with("cn-") { ".cn" } else { "" };
-    format!(
+    Ok(format!(
         "https://schema.cloudformation.{}.amazonaws.com{}",
         region, suffix
-    )
+    ))
 }
 
 #[cfg(feature = "fetch")]
@@ -1256,7 +1311,7 @@ impl S3Provider {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let url = format!(
             "{}/{}",
-            schema_base_url(region),
+            schema_base_url(region)?,
             type_to_filename(type_name)
         );
         let resp = ureq::get(&url).call()?;
@@ -1292,7 +1347,7 @@ impl S3Provider {
     ) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let url = format!(
             "{}/{}",
-            schema_base_url(region),
+            schema_base_url(region)?,
             type_to_filename(type_name)
         );
         let resp = ureq::head(&url).call()?;
@@ -1334,7 +1389,7 @@ impl S3Provider {
     ) -> Result<usize, Box<dyn std::error::Error>> {
         use std::io::{Cursor, Read};
 
-        let url = format!("{}/CloudformationSchema.zip", schema_base_url(region));
+        let url = format!("{}/CloudformationSchema.zip", schema_base_url(region)?);
         let resp = ureq::get(&url).call()?;
         let body = resp.into_body().read_to_vec()?;
 
@@ -1452,6 +1507,104 @@ impl SchemaProvider for ChainProvider {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_schema_hash_validation() {
+        // Valid content-addressable hashes (hex, FNV output, ETags).
+        assert!(is_valid_schema_hash("abc123"));
+        assert!(is_valid_schema_hash("deadbeefcafef00d"));
+        assert!(is_valid_schema_hash("A1b2_C3-d4"));
+
+        // C74: path traversal / separators / dots must be rejected.
+        assert!(!is_valid_schema_hash("../../etc/foo"));
+        assert!(!is_valid_schema_hash("..\\..\\windows"));
+        assert!(!is_valid_schema_hash("foo/bar"));
+        assert!(!is_valid_schema_hash("foo.json"));
+        assert!(!is_valid_schema_hash(".."));
+        assert!(!is_valid_schema_hash("/etc/passwd"));
+        assert!(!is_valid_schema_hash("a\0b"));
+        assert!(!is_valid_schema_hash(""));
+    }
+
+    #[test]
+    fn test_write_and_has_schema_reject_path_traversal() {
+        let tmp = tempfile::tempdir().unwrap();
+        let cache = CacheProvider::from_dir(tmp.path().to_path_buf());
+        let schema = serde_json::json!({ "typeName": "AWS::S3::Bucket" });
+
+        // C74: a malicious ETag used as a hash must be rejected outright.
+        let malicious = "../../../../tmp/cfn-lint-evil";
+        assert!(
+            cache.write_schema(malicious, &schema).is_err(),
+            "malicious hash should be refused by write_schema"
+        );
+        assert!(
+            !cache.has_schema(malicious),
+            "has_schema must never stat a traversal path"
+        );
+
+        // A well-formed hash still works and stays inside the cache dir.
+        let good = "deadbeef1234abcd";
+        cache.write_schema(good, &schema).unwrap();
+        assert!(cache.has_schema(good));
+        let expected = tmp
+            .path()
+            .join("schemas")
+            .join("resources")
+            .join(format!("{good}.json"));
+        assert!(expected.exists(), "valid schema should be written in-cache");
+    }
+
+    #[cfg(feature = "fetch")]
+    #[test]
+    fn test_region_validation_rejects_ssrf() {
+        // Real regions, including gov/iso/China variants.
+        for region in [
+            "us-east-1",
+            "eu-central-1",
+            "ap-southeast-2",
+            "cn-north-1",
+            "us-gov-west-1",
+            "us-iso-east-1",
+            "us-isob-east-1",
+        ] {
+            assert!(is_valid_region(region), "{region} should be valid");
+        }
+
+        // C77: SSRF payloads and malformed regions must be rejected.
+        for region in [
+            "evil.com/foo#",
+            "us-east-1.evil.com",
+            "../us-east-1",
+            "us-east-1/../../secret",
+            "US-EAST-1",
+            "us_east_1",
+            "us-east-",
+            "useast1",
+            "",
+            "localhost",
+        ] {
+            assert!(!is_valid_region(region), "{region:?} should be rejected");
+        }
+    }
+
+    #[cfg(feature = "fetch")]
+    #[test]
+    fn test_schema_base_url() {
+        // Valid regions produce the expected AWS host.
+        assert_eq!(
+            schema_base_url("us-east-1").unwrap(),
+            "https://schema.cloudformation.us-east-1.amazonaws.com"
+        );
+        // China gets the .cn suffix.
+        assert_eq!(
+            schema_base_url("cn-north-1").unwrap(),
+            "https://schema.cloudformation.cn-north-1.amazonaws.com.cn"
+        );
+        // C77: invalid region never yields a URL.
+        assert!(schema_base_url("evil.com/foo#").is_err());
+        assert!(schema_base_url("us-east-1.attacker.example").is_err());
+    }
 
     #[test]
     fn test_bundled_schema_provider() {

@@ -1,0 +1,109 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/OptOutListName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SMSVOICE::OptOutList",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sms-voice:CreateOptOutList",
+    "sms-voice:DescribeOptOutLists",
+    "sms-voice:TagResource",
+    "sms-voice:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sms-voice:DeleteOptOutList",
+    "sms-voice:DescribeOptOutLists"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sms-voice:DescribeOptOutLists"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sms-voice:DescribeOptOutLists",
+    "sms-voice:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sms-voice:DescribeOptOutLists",
+    "sms-voice:UntagResource",
+    "sms-voice:TagResource",
+    "sms-voice:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/OptOutListName"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) for the OptOutList.",
+   "type": "string"
+  },
+  "OptOutListName": {
+   "description": "The name of the new OptOutList.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9_-]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resoource-providers-smsvoice.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "sms-voice:UntagResource",
+   "sms-voice:TagResource",
+   "sms-voice:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SMSVOICE::OptOutList"
+}

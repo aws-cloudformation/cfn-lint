@@ -1,0 +1,119 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  Conditions/intrinsic-heavy benchmark fixture. Exercises the condition solver
+  (Fn::Equals/And/Or/Not), nested Fn::If resolution, Fn::FindInMap, Fn::Sub and
+  Ref chains across parameters, mappings and conditions.
+
+Parameters:
+  Environment:
+    Type: String
+    AllowedValues: [dev, staging, prod]
+    Default: dev
+  Region:
+    Type: String
+    Default: us-east-1
+  EnableBackups:
+    Type: String
+    AllowedValues: ['true', 'false']
+    Default: 'false'
+  InstanceCount:
+    Type: Number
+    Default: 1
+
+Mappings:
+  EnvConfig:
+    dev:
+      InstanceType: t3.micro
+      Retention: 1
+    staging:
+      InstanceType: t3.medium
+      Retention: 7
+    prod:
+      InstanceType: m5.large
+      Retention: 30
+  RegionMap:
+    us-east-1:
+      Ami: ami-0abcdef1234567890
+    us-west-2:
+      Ami: ami-0fedcba9876543210
+
+Conditions:
+  IsProd: !Equals [!Ref Environment, prod]
+  IsStaging: !Equals [!Ref Environment, staging]
+  IsDev: !Equals [!Ref Environment, dev]
+  IsProdOrStaging: !Or
+    - !Condition IsProd
+    - !Condition IsStaging
+  IsNotDev: !Not [!Condition IsDev]
+  BackupsEnabled: !Equals [!Ref EnableBackups, 'true']
+  ProdWithBackups: !And
+    - !Condition IsProd
+    - !Condition BackupsEnabled
+  HighAvailability: !And
+    - !Condition IsProdOrStaging
+    - !Not [!Equals [!Ref InstanceCount, 1]]
+  UseEastAmi: !Equals [!Ref Region, us-east-1]
+
+Resources:
+  DataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${Environment}-data-${AWS::AccountId}-${AWS::Region}'
+      VersioningConfiguration:
+        Status: !If [BackupsEnabled, Enabled, Suspended]
+      LifecycleConfiguration:
+        Rules:
+          - Id: retention
+            Status: Enabled
+            ExpirationInDays: !FindInMap [EnvConfig, !Ref Environment, Retention]
+
+  LogBucket:
+    Type: AWS::S3::Bucket
+    Condition: IsNotDev
+    Properties:
+      BucketName: !Sub
+        - '${env}-logs-${suffix}'
+        - env: !Ref Environment
+          suffix: !If [IsProd, prod-secure, standard]
+
+  PrimaryQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub '${Environment}-primary'
+      MessageRetentionPeriod: !If
+        - IsProd
+        - 1209600
+        - !If
+          - IsStaging
+          - 604800
+          - 86400
+      RedrivePolicy: !If
+        - ProdWithBackups
+        - deadLetterTargetArn: !GetAtt DeadLetterQueue.Arn
+          maxReceiveCount: 5
+        - !Ref AWS::NoValue
+
+  DeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Condition: BackupsEnabled
+    Properties:
+      QueueName: !Sub '${Environment}-dlq'
+
+  HaTopic:
+    Type: AWS::SNS::Topic
+    Condition: HighAvailability
+    Properties:
+      TopicName: !Sub '${Environment}-ha-events'
+      DisplayName: !If [IsProd, 'Production Events', 'Non-Prod Events']
+
+Outputs:
+  BucketName:
+    Value: !Ref DataBucket
+  QueueUrl:
+    Value: !Ref PrimaryQueue
+  LogBucketName:
+    Condition: IsNotDev
+    Value: !Ref LogBucket
+  SelectedAmi:
+    Condition: UseEastAmi
+    Value: !FindInMap [RegionMap, !Ref Region, Ami]

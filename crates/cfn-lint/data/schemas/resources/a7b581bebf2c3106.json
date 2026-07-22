@@ -1,0 +1,404 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyId"
+ ],
+ "definitions": {
+  "CreatedAt": {
+   "description": "Time this policy was created",
+   "format": "date-time",
+   "type": "string"
+  },
+  "DefinitionHash": {
+   "description": "The hash for this version",
+   "maxLength": 128,
+   "minLength": 128,
+   "pattern": "^[0-9a-z]{128}$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "pattern": "^[\\s\\S]+$",
+   "type": "string"
+  },
+  "ForceDelete": {
+   "default": false,
+   "description": "Specifies whether to force delete the automated reasoning policy even if it has active resources. When false , Amazon Bedrock validates if all artifacts have been deleted (e.g. policy version, test case, test result) for a policy before deletion. When true , Amazon Bedrock will delete the policy and all its artifacts without validation. Default is false",
+   "type": "boolean"
+  },
+  "KmsKeyArn": {
+   "description": "The KMS key with which the Policy's assets will be encrypted at rest.",
+   "format": "AWS::KMS::Key.Arn",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[^:]+)?:kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
+   "description": "The KMS key with which the Policy's assets will be encrypted at rest.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^(arn:aws(-[^:]+)?:kms:[a-zA-Z0-9-]*:[0-9]{12}:((key/[a-zA-Z0-9-]{36})|(alias/[a-zA-Z0-9-_/]+)))|([a-zA-Z0-9-]{36})|(alias/[a-zA-Z0-9-_/]+)$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[0-9a-zA-Z-_ ]+$",
+   "type": "string"
+  },
+  "PolicyArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:automated-reasoning-policy\\/[a-z0-9]{12}$",
+   "type": "string"
+  },
+  "PolicyDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Rules": {
+     "$ref": "#/definitions/PolicyDefinitionRuleList",
+     "description": "The rules definition block of an AutomatedReasoningPolicyDefinition."
+    },
+    "Types": {
+     "$ref": "#/definitions/PolicyDefinitionTypeList",
+     "description": "The types definition block of an AutomatedReasoningPolicyDefinition."
+    },
+    "Variables": {
+     "$ref": "#/definitions/PolicyDefinitionVariableList",
+     "description": "The variables definition block of an AutomatedReasoningPolicyDefinition."
+    },
+    "Version": {
+     "description": "The policy format version.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PolicyDefinitionRule": {
+   "additionalProperties": false,
+   "properties": {
+    "AlternateExpression": {
+     "description": "An alternate expression for this rule",
+     "maxLength": 2048,
+     "pattern": "^[\\s\\S]+$",
+     "type": "string"
+    },
+    "Expression": {
+     "description": "The SMT expression for this rule",
+     "maxLength": 2048,
+     "pattern": "^[\\s\\S]+$",
+     "type": "string"
+    },
+    "Id": {
+     "description": "A unique id within the PolicyDefinition",
+     "maxLength": 12,
+     "minLength": 12,
+     "pattern": "^[A-Z][0-9A-Z]{11}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Id",
+    "Expression"
+   ],
+   "type": "object"
+  },
+  "PolicyDefinitionRuleList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PolicyDefinitionRule"
+   },
+   "maxItems": 500,
+   "minItems": 0,
+   "type": "array"
+  },
+  "PolicyDefinitionType": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "description": "A natural language description of this type.",
+     "maxLength": 1024,
+     "pattern": "^[\\s\\S]+$",
+     "type": "string"
+    },
+    "Name": {
+     "description": "A name for this type.",
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[A-Za-z][A-Za-z0-9_]+$",
+     "type": "string"
+    },
+    "Values": {
+     "$ref": "#/definitions/PolicyDefinitionTypeValueList",
+     "description": "A list of valid values for this type."
+    }
+   },
+   "required": [
+    "Name",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "PolicyDefinitionTypeList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PolicyDefinitionType"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "PolicyDefinitionTypeValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "description": "A natural language description of the type's value.",
+     "maxLength": 1024,
+     "pattern": "^[\\s\\S]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value of the type value.",
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[A-Za-z][A-Za-z0-9_]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value"
+   ],
+   "type": "object"
+  },
+  "PolicyDefinitionTypeValueList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PolicyDefinitionTypeValue"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array"
+  },
+  "PolicyDefinitionVariable": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "description": "A natural language description of this variable.",
+     "maxLength": 1024,
+     "pattern": "^[\\s\\S]+$",
+     "type": "string"
+    },
+    "Name": {
+     "description": "A name from this variable.",
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[A-Za-z][A-Za-z0-9_]+$",
+     "type": "string"
+    },
+    "Type": {
+     "description": "A type for this variable.",
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[A-Za-z][A-Za-z0-9_]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Type",
+    "Description"
+   ],
+   "type": "object"
+  },
+  "PolicyDefinitionVariableList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PolicyDefinitionVariable"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "PolicyId": {
+   "description": "The id of the policy",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[a-z0-9]{12}$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "Definition of the key/value pair for a tag",
+   "properties": {
+    "Key": {
+     "description": "Tag Key",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "Tag Value",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "description": "Time this policy was last updated",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Version": {
+   "description": "Version of the policy that was created. This will always be `DRAFT`",
+   "pattern": "^(([1-9][0-9]{0,11})|(DRAFT))$",
+   "type": "string"
+  }
+ },
+ "description": "Definition of AWS::Bedrock::AutomatedReasoningPolicy Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "bedrock:CreateAutomatedReasoningPolicy",
+    "bedrock:GetAutomatedReasoningPolicy",
+    "bedrock:TagResource",
+    "bedrock:ListTagsForResource",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "bedrock:DeleteAutomatedReasoningPolicy",
+    "bedrock:GetAutomatedReasoningPolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "bedrock:ListAutomatedReasoningPolicies"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bedrock:GetAutomatedReasoningPolicy",
+    "bedrock:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "bedrock:UpdateAutomatedReasoningPolicy",
+    "bedrock:GetAutomatedReasoningPolicy",
+    "bedrock:ExportAutomatedReasoningPolicyVersion",
+    "bedrock:ListTagsForResource",
+    "bedrock:TagResource",
+    "bedrock:UntagResource",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PolicyArn"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "$ref": "#/definitions/CreatedAt"
+  },
+  "DefinitionHash": {
+   "$ref": "#/definitions/DefinitionHash"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "ForceDelete": {
+   "$ref": "#/definitions/ForceDelete"
+  },
+  "KmsKeyArn": {
+   "$ref": "#/definitions/KmsKeyArn"
+  },
+  "KmsKeyId": {
+   "$ref": "#/definitions/KmsKeyId"
+  },
+  "Name": {
+   "$ref": "#/definitions/Name"
+  },
+  "PolicyArn": {
+   "$ref": "#/definitions/PolicyArn"
+  },
+  "PolicyDefinition": {
+   "$ref": "#/definitions/PolicyDefinition"
+  },
+  "PolicyId": {
+   "$ref": "#/definitions/PolicyId"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "UpdatedAt": {
+   "$ref": "#/definitions/UpdatedAt"
+  },
+  "Version": {
+   "$ref": "#/definitions/Version"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Version",
+  "/properties/PolicyId",
+  "/properties/PolicyArn",
+  "/properties/DefinitionHash",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/KmsKeyArn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "bedrock:TagResource",
+   "bedrock:ListTagsForResource",
+   "bedrock:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Bedrock::AutomatedReasoningPolicy",
+ "writeOnlyProperties": [
+  "/properties/KmsKeyId",
+  "/properties/ForceDelete",
+  "/properties/PolicyDefinition"
+ ]
+}

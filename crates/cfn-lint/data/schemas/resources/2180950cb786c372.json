@@ -1,0 +1,142 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TenantName"
+ ],
+ "definitions": {
+  "ResourceAssociation": {
+   "additionalProperties": false,
+   "description": "The resource to associate with the tenant",
+   "properties": {
+    "ResourceArn": {
+     "description": "The ARN of the resource to associate with the tenant",
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "An object that defines the tags (keys and values) that you want to associate with the tenant.",
+   "properties": {
+    "Key": {
+     "description": "The key of the key-value tag.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value of the key-value tag.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SES::Tenant",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ses:CreateTenant",
+    "ses:GetTenant",
+    "ses:CreateTenantResourceAssociation",
+    "ses:ListTenantResources",
+    "ses:UntagResource",
+    "ses:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ses:GetTenant",
+    "ses:DeleteTenant"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ses:ListTenants"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ses:GetTenant",
+    "ses:ListTenantResources"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ses:GetTenant",
+    "ses:CreateTenantResourceAssociation",
+    "ses:DeleteTenantResourceAssociation",
+    "ses:ListTenantResources",
+    "ses:TagResource",
+    "ses:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TenantName"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "Amazon Resource Name (ARN) of the tenant.",
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResourceAssociations": {
+   "description": "The list of resources to associate with the tenant.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ResourceAssociation"
+   },
+   "minItems": 0,
+   "type": "array"
+  },
+  "Tags": {
+   "description": "The tags (keys and values) associated with the tenant.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "TenantName": {
+   "description": "The name of the tenant.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[\\w\\-_]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "TenantName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "ses:TagResource",
+   "ses:UntagResource",
+   "ses:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SES::Tenant"
+}

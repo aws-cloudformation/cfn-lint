@@ -1,0 +1,592 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ActionConnectorId",
+  "/properties/AwsAccountId",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "APIKeyConnectionMetadata": {
+   "additionalProperties": false,
+   "properties": {
+    "ApiKey": {
+     "type": "string"
+    },
+    "BaseEndpoint": {
+     "maxLength": 8192,
+     "minLength": 1,
+     "pattern": "^https://.*",
+     "type": "string"
+    },
+    "Email": {
+     "pattern": "^[\\w.%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ApiKey",
+    "BaseEndpoint"
+   ],
+   "type": "object"
+  },
+  "ActionConnectorType": {
+   "enum": [
+    "GENERIC_HTTP",
+    "SERVICENOW_NOW_PLATFORM",
+    "SALESFORCE_CRM",
+    "MICROSOFT_OUTLOOK",
+    "PAGERDUTY_ADVANCE",
+    "JIRA_CLOUD",
+    "ATLASSIAN_CONFLUENCE",
+    "AMAZON_S3",
+    "AMAZON_BEDROCK_AGENT_RUNTIME",
+    "AMAZON_BEDROCK_RUNTIME",
+    "AMAZON_BEDROCK_DATA_AUTOMATION_RUNTIME",
+    "AMAZON_TEXTRACT",
+    "AMAZON_COMPREHEND",
+    "AMAZON_COMPREHEND_MEDICAL",
+    "MICROSOFT_ONEDRIVE",
+    "MICROSOFT_SHAREPOINT",
+    "MICROSOFT_TEAMS",
+    "SAP_BUSINESSPARTNER",
+    "SAP_PRODUCTMASTERDATA",
+    "SAP_PHYSICALINVENTORY",
+    "SAP_BILLOFMATERIALS",
+    "SAP_MATERIALSTOCK",
+    "ZENDESK_SUITE",
+    "SMARTSHEET",
+    "SLACK",
+    "ASANA",
+    "BAMBOO_HR"
+   ],
+   "type": "string"
+  },
+  "AuthConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthenticationMetadata": {
+     "$ref": "#/definitions/AuthenticationMetadata"
+    },
+    "AuthenticationType": {
+     "$ref": "#/definitions/ConnectionAuthType"
+    }
+   },
+   "required": [
+    "AuthenticationMetadata",
+    "AuthenticationType"
+   ],
+   "type": "object"
+  },
+  "AuthenticationMetadata": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "AuthorizationCodeGrantMetadata": {
+       "$ref": "#/definitions/AuthorizationCodeGrantMetadata"
+      }
+     },
+     "required": [
+      "AuthorizationCodeGrantMetadata"
+     ],
+     "title": "AuthorizationCodeGrantMetadata",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ClientCredentialsGrantMetadata": {
+       "$ref": "#/definitions/ClientCredentialsGrantMetadata"
+      }
+     },
+     "required": [
+      "ClientCredentialsGrantMetadata"
+     ],
+     "title": "ClientCredentialsGrantMetadata",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "BasicAuthConnectionMetadata": {
+       "$ref": "#/definitions/BasicAuthConnectionMetadata"
+      }
+     },
+     "required": [
+      "BasicAuthConnectionMetadata"
+     ],
+     "title": "BasicAuthConnectionMetadata",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ApiKeyConnectionMetadata": {
+       "$ref": "#/definitions/APIKeyConnectionMetadata"
+      }
+     },
+     "required": [
+      "ApiKeyConnectionMetadata"
+     ],
+     "title": "ApiKeyConnectionMetadata",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "NoneConnectionMetadata": {
+       "$ref": "#/definitions/NoneConnectionMetadata"
+      }
+     },
+     "required": [
+      "NoneConnectionMetadata"
+     ],
+     "title": "NoneConnectionMetadata",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "IamConnectionMetadata": {
+       "$ref": "#/definitions/IAMConnectionMetadata"
+      }
+     },
+     "required": [
+      "IamConnectionMetadata"
+     ],
+     "title": "IamConnectionMetadata",
+     "type": "object"
+    }
+   ]
+  },
+  "AuthorizationCodeGrantCredentialsDetails": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "AuthorizationCodeGrantDetails": {
+       "$ref": "#/definitions/AuthorizationCodeGrantDetails"
+      }
+     },
+     "required": [
+      "AuthorizationCodeGrantDetails"
+     ],
+     "title": "AuthorizationCodeGrantDetails",
+     "type": "object"
+    }
+   ]
+  },
+  "AuthorizationCodeGrantCredentialsSource": {
+   "enum": [
+    "PLAIN_CREDENTIALS"
+   ],
+   "type": "string"
+  },
+  "AuthorizationCodeGrantDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationEndpoint": {
+     "maxLength": 8192,
+     "minLength": 1,
+     "pattern": "^https://.*",
+     "type": "string"
+    },
+    "ClientId": {
+     "maxLength": 1024,
+     "type": "string"
+    },
+    "ClientSecret": {
+     "maxLength": 2048,
+     "type": "string"
+    },
+    "TokenEndpoint": {
+     "maxLength": 8192,
+     "minLength": 1,
+     "pattern": "^https://.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AuthorizationEndpoint",
+    "ClientId",
+    "ClientSecret",
+    "TokenEndpoint"
+   ],
+   "type": "object"
+  },
+  "AuthorizationCodeGrantMetadata": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationCodeGrantCredentialsDetails": {
+     "$ref": "#/definitions/AuthorizationCodeGrantCredentialsDetails"
+    },
+    "AuthorizationCodeGrantCredentialsSource": {
+     "$ref": "#/definitions/AuthorizationCodeGrantCredentialsSource"
+    },
+    "BaseEndpoint": {
+     "maxLength": 8192,
+     "minLength": 1,
+     "pattern": "^https://.*",
+     "type": "string"
+    },
+    "RedirectUrl": {
+     "maxLength": 8192,
+     "minLength": 1,
+     "pattern": "^https://.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BaseEndpoint",
+    "RedirectUrl"
+   ],
+   "type": "object"
+  },
+  "BasicAuthConnectionMetadata": {
+   "additionalProperties": false,
+   "properties": {
+    "BaseEndpoint": {
+     "maxLength": 8192,
+     "minLength": 1,
+     "pattern": "^https://.*",
+     "type": "string"
+    },
+    "Password": {
+     "type": "string"
+    },
+    "Username": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "BaseEndpoint",
+    "Password",
+    "Username"
+   ],
+   "type": "object"
+  },
+  "ClientCredentialsDetails": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ClientCredentialsGrantDetails": {
+       "$ref": "#/definitions/ClientCredentialsGrantDetails"
+      }
+     },
+     "required": [
+      "ClientCredentialsGrantDetails"
+     ],
+     "title": "ClientCredentialsGrantDetails",
+     "type": "object"
+    }
+   ]
+  },
+  "ClientCredentialsGrantDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientId": {
+     "maxLength": 1024,
+     "type": "string"
+    },
+    "ClientSecret": {
+     "maxLength": 2048,
+     "type": "string"
+    },
+    "TokenEndpoint": {
+     "maxLength": 8192,
+     "minLength": 1,
+     "pattern": "^https://.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClientId",
+    "ClientSecret",
+    "TokenEndpoint"
+   ],
+   "type": "object"
+  },
+  "ClientCredentialsGrantMetadata": {
+   "additionalProperties": false,
+   "properties": {
+    "BaseEndpoint": {
+     "maxLength": 8192,
+     "minLength": 1,
+     "pattern": "^https://.*",
+     "type": "string"
+    },
+    "ClientCredentialsDetails": {
+     "$ref": "#/definitions/ClientCredentialsDetails"
+    },
+    "ClientCredentialsSource": {
+     "$ref": "#/definitions/ClientCredentialsSource"
+    }
+   },
+   "required": [
+    "BaseEndpoint"
+   ],
+   "type": "object"
+  },
+  "ClientCredentialsSource": {
+   "enum": [
+    "PLAIN_CREDENTIALS"
+   ],
+   "type": "string"
+  },
+  "ConnectionAuthType": {
+   "enum": [
+    "BASIC",
+    "API_KEY",
+    "OAUTH2_CLIENT_CREDENTIALS",
+    "NONE",
+    "IAM",
+    "OAUTH2_AUTHORIZATION_CODE"
+   ],
+   "type": "string"
+  },
+  "IAMConnectionMetadata": {
+   "additionalProperties": false,
+   "properties": {
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "NoneConnectionMetadata": {
+   "additionalProperties": false,
+   "properties": {
+    "BaseEndpoint": {
+     "maxLength": 8192,
+     "minLength": 1,
+     "pattern": "^https://.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BaseEndpoint"
+   ],
+   "type": "object"
+  },
+  "ResourcePermission": {
+   "additionalProperties": false,
+   "description": "<p>Permission for the resource.</p>",
+   "properties": {
+    "Actions": {
+     "description": "<p>The IAM action to grant or revoke permissions on.</p>",
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 30,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Principal": {
+     "description": "<p>The Amazon Resource Name (ARN) of the principal. This can be one of the\n            following:</p>\n         <ul>\n            <li>\n               <p>The ARN of an Amazon QuickSight user or group associated with a data source or dataset. (This is common.)</p>\n            </li>\n            <li>\n               <p>The ARN of an Amazon QuickSight user, group, or namespace associated with an analysis, dashboard, template, or theme. (This is common.)</p>\n            </li>\n            <li>\n               <p>The ARN of an Amazon Web Services account root: This is an IAM ARN rather than a QuickSight\n                    ARN. Use this option only to share resources (templates) across Amazon Web Services accounts.\n                    (This is less common.) </p>\n            </li>\n         </ul>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Actions",
+    "Principal"
+   ],
+   "type": "object"
+  },
+  "ResourceStatus": {
+   "enum": [
+    "CREATION_IN_PROGRESS",
+    "CREATION_SUCCESSFUL",
+    "CREATION_FAILED",
+    "UPDATE_IN_PROGRESS",
+    "UPDATE_SUCCESSFUL",
+    "UPDATE_FAILED",
+    "PENDING_UPDATE",
+    "DELETED"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "<p>The key or keys of the key-value pairs for the resource tag or tags assigned to the\n            resource.</p>",
+   "properties": {
+    "Key": {
+     "description": "<p>Tag key.</p>",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "<p>Tag value.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Definition of the AWS::QuickSight::ActionConnector Resource Type.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "quicksight:CreateActionConnector",
+    "quicksight:DescribeActionConnector",
+    "quicksight:DescribeActionConnectorPermissions",
+    "quicksight:TagResource",
+    "quicksight:ListTagsForResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "quicksight:DescribeActionConnector",
+    "quicksight:DeleteActionConnector"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "quicksight:ListActionConnectors"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "quicksight:DescribeActionConnector",
+    "quicksight:DescribeActionConnectorPermissions",
+    "quicksight:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "quicksight:DescribeActionConnector",
+    "quicksight:DescribeActionConnectorPermissions",
+    "quicksight:UpdateActionConnector",
+    "quicksight:UpdateActionConnectorPermissions",
+    "quicksight:TagResource",
+    "quicksight:UntagResource",
+    "quicksight:ListTagsForResource",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ActionConnectorId",
+  "/properties/AwsAccountId"
+ ],
+ "properties": {
+  "ActionConnectorId": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^[\\w\\-]+$",
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "AuthenticationConfig": {
+   "$ref": "#/definitions/AuthConfig"
+  },
+  "AwsAccountId": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "CreatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9 _.,!?-]*$",
+   "type": "string"
+  },
+  "EnabledActions": {
+   "items": {
+    "pattern": "^[\\w@:_.,!?+-/]+$",
+    "type": "string"
+   },
+   "maxItems": 100,
+   "type": "array"
+  },
+  "LastUpdatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9](?:[\\w- ]*[A-Za-z0-9])?$",
+   "type": "string"
+  },
+  "Permissions": {
+   "items": {
+    "$ref": "#/definitions/ResourcePermission"
+   },
+   "maxItems": 64,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Status": {
+   "$ref": "#/definitions/ResourceStatus"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Type": {
+   "$ref": "#/definitions/ActionConnectorType"
+  },
+  "VpcConnectionArn": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedTime",
+  "/properties/EnabledActions",
+  "/properties/LastUpdatedTime",
+  "/properties/Status"
+ ],
+ "required": [
+  "ActionConnectorId",
+  "AuthenticationConfig",
+  "AwsAccountId",
+  "Name",
+  "Type"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "quicksight:TagResource",
+   "quicksight:UntagResource",
+   "quicksight:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::QuickSight::ActionConnector",
+ "writeOnlyProperties": [
+  "/properties/AuthenticationConfig",
+  "/properties/VpcConnectionArn"
+ ]
+}

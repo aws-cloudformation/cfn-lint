@@ -1,0 +1,179 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RouteServerEndpointId",
+  "/properties/PeerAddress",
+  "/properties/BgpOptions"
+ ],
+ "definitions": {
+  "BgpOptions": {
+   "additionalProperties": false,
+   "description": "BGP Options",
+   "properties": {
+    "PeerAsn": {
+     "description": "BGP ASN of the Route Server Peer",
+     "format": "int64",
+     "maximum": 4294967294,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "PeerLivenessDetection": {
+     "description": "BGP Liveness Detection",
+     "enum": [
+      "bfd",
+      "bgp-keepalive"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "VPC Route Server Peer",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateRouteServerPeer",
+    "ec2:CreateTags",
+    "ec2:DescribeRouteServerPeers",
+    "ec2:AuthorizeSecurityGroupIngress"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DescribeTags",
+    "ec2:DescribeRouteServerPeers",
+    "ec2:DeleteRouteServerPeer",
+    "ec2:DeleteTags",
+    "ec2:RevokeSecurityGroupIngress"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeTags",
+    "ec2:DescribeRouteServerPeers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeRouteServerPeers",
+    "ec2:DescribeTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "ec2:DescribeRouteServerPeers",
+    "ec2:DescribeTags",
+    "ec2:ModifyRouteServerPeer"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the Route Server Peer.",
+   "type": "string"
+  },
+  "BgpOptions": {
+   "$ref": "#/definitions/BgpOptions"
+  },
+  "EndpointEniAddress": {
+   "description": "Elastic Network Interface IP address owned by the Route Server Endpoint",
+   "type": "string"
+  },
+  "EndpointEniId": {
+   "description": "Elastic Network Interface ID owned by the Route Server Endpoint",
+   "type": "string"
+  },
+  "Id": {
+   "description": "The ID of the Route Server Peer.",
+   "type": "string"
+  },
+  "PeerAddress": {
+   "description": "IP address of the Route Server Peer",
+   "type": "string"
+  },
+  "RouteServerEndpointId": {
+   "description": "Route Server Endpoint ID",
+   "type": "string"
+  },
+  "RouteServerId": {
+   "description": "Route Server ID",
+   "type": "string"
+  },
+  "SubnetId": {
+   "description": "Subnet ID",
+   "format": "AWS::EC2::Subnet.Id",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcId": {
+   "description": "VPC ID",
+   "format": "AWS::EC2::VPC.Id",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/RouteServerId",
+  "/properties/EndpointEniId",
+  "/properties/EndpointEniAddress",
+  "/properties/SubnetId",
+  "/properties/VpcId"
+ ],
+ "required": [
+  "RouteServerEndpointId",
+  "PeerAddress",
+  "BgpOptions"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "ec2:CreateTags",
+   "ec2:DescribeTags",
+   "ec2:DeleteTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::RouteServerPeer"
+}

@@ -1,0 +1,117 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Region": {
+   "pattern": "^[a-zA-Z0-9-]{1,32}$",
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with the Security Hub V2 resource.",
+   "maxProperties": 50,
+   "patternProperties": {
+    "^(?!aws:)[a-zA-Z+-=._:/]+$": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "The AWS::SecurityHub::AggregatorV2 resource represents the AWS Security Hub AggregatorV2 in your account. One aggregatorv2 resource is created for each account in non opt-in region in which you configure region linking mode.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityhub:CreateAggregatorV2",
+    "securityhub:GetAggregatorV2",
+    "securityhub:TagResource",
+    "securityhub:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securityhub:DeleteAggregatorV2"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securityhub:ListAggregatorsV2",
+    "securityhub:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityhub:GetAggregatorV2",
+    "securityhub:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securityhub:UpdateAggregatorV2",
+    "securityhub:GetAggregatorV2",
+    "securityhub:TagResource",
+    "securityhub:UntagResource",
+    "securityhub:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AggregatorV2Arn"
+ ],
+ "properties": {
+  "AggregationRegion": {
+   "$ref": "#/definitions/Region",
+   "description": "The aggregation Region of the AggregatorV2"
+  },
+  "AggregatorV2Arn": {
+   "description": "The ARN of the AggregatorV2 being created and assigned as the unique identifier",
+   "pattern": "arn:aws\\S*:securityhub:\\S*",
+   "type": "string"
+  },
+  "LinkedRegions": {
+   "description": "The list of included Regions",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Region"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RegionLinkingMode": {
+   "description": "Indicates to link a list of included Regions",
+   "enum": [
+    "SPECIFIED_REGIONS"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AggregatorV2Arn",
+  "/properties/AggregationRegion"
+ ],
+ "required": [
+  "RegionLinkingMode",
+  "LinkedRegions"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securityhub",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "securityhub:ListTagsForResource",
+   "securityhub:TagResource",
+   "securityhub:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityHub::AggregatorV2"
+}

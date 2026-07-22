@@ -1,0 +1,412 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/EvaluatorId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EvaluatorName"
+ ],
+ "definitions": {
+  "BedrockEvaluatorModelConfig": {
+   "additionalProperties": false,
+   "description": "The configuration for using Amazon Bedrock models in evaluator assessments.",
+   "properties": {
+    "AdditionalModelRequestFields": {
+     "description": "Additional model-specific request fields.",
+     "type": "object"
+    },
+    "InferenceConfig": {
+     "$ref": "#/definitions/InferenceConfiguration"
+    },
+    "ModelId": {
+     "description": "The identifier of the Amazon Bedrock model to use for evaluation.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ModelId"
+   ],
+   "type": "object"
+  },
+  "CategoricalScaleDefinition": {
+   "additionalProperties": false,
+   "description": "A categorical rating scale option.",
+   "properties": {
+    "Definition": {
+     "description": "The description that explains what this categorical rating represents.",
+     "type": "string"
+    },
+    "Label": {
+     "description": "The label of this categorical rating option.",
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Label",
+    "Definition"
+   ],
+   "type": "object"
+  },
+  "CodeBasedEvaluatorConfig": {
+   "additionalProperties": false,
+   "description": "The configuration for code-based evaluation using a Lambda function.",
+   "properties": {
+    "LambdaConfig": {
+     "$ref": "#/definitions/LambdaEvaluatorConfig"
+    }
+   },
+   "required": [
+    "LambdaConfig"
+   ],
+   "type": "object"
+  },
+  "EvaluatorConfig": {
+   "additionalProperties": false,
+   "description": "The configuration that defines how an evaluator assesses agent performance.",
+   "oneOf": [
+    {
+     "required": [
+      "LlmAsAJudge"
+     ]
+    },
+    {
+     "required": [
+      "CodeBased"
+     ]
+    }
+   ],
+   "properties": {
+    "CodeBased": {
+     "$ref": "#/definitions/CodeBasedEvaluatorConfig"
+    },
+    "LlmAsAJudge": {
+     "$ref": "#/definitions/LlmAsAJudgeEvaluatorConfig"
+    }
+   },
+   "type": "object"
+  },
+  "EvaluatorLevel": {
+   "enum": [
+    "TOOL_CALL",
+    "TRACE",
+    "SESSION"
+   ],
+   "type": "string"
+  },
+  "EvaluatorModelConfig": {
+   "additionalProperties": false,
+   "description": "The model configuration that specifies which foundation model to use for evaluation.",
+   "properties": {
+    "BedrockEvaluatorModelConfig": {
+     "$ref": "#/definitions/BedrockEvaluatorModelConfig"
+    }
+   },
+   "required": [
+    "BedrockEvaluatorModelConfig"
+   ],
+   "type": "object"
+  },
+  "EvaluatorStatus": {
+   "enum": [
+    "ACTIVE",
+    "CREATING",
+    "CREATE_FAILED",
+    "UPDATING",
+    "UPDATE_FAILED",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "InferenceConfiguration": {
+   "additionalProperties": false,
+   "description": "The inference configuration parameters that control model behavior during evaluation.",
+   "properties": {
+    "MaxTokens": {
+     "description": "The maximum number of tokens to generate in the model response.",
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Temperature": {
+     "description": "The temperature value that controls randomness in the model's responses.",
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    },
+    "TopP": {
+     "description": "The top-p sampling parameter that controls the diversity of the model's responses.",
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "LambdaEvaluatorConfig": {
+   "additionalProperties": false,
+   "description": "The Lambda function configuration for code-based evaluation.",
+   "properties": {
+    "LambdaArn": {
+     "description": "The ARN of the Lambda function used for evaluation.",
+     "format": "AWS::Lambda::Function.Arn",
+     "pattern": "^arn:(aws[a-zA-Z-]*)?:lambda:([a-z]{2}(-gov)?-[a-z]+-\\d{1}):(\\d{12}):function:([a-zA-Z0-9-_.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
+     "type": "string"
+    },
+    "LambdaTimeoutInSeconds": {
+     "description": "The timeout in seconds for the Lambda function invocation.",
+     "maximum": 300,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "LambdaArn"
+   ],
+   "type": "object"
+  },
+  "LlmAsAJudgeEvaluatorConfig": {
+   "additionalProperties": false,
+   "description": "The configuration for LLM-as-a-Judge evaluation.",
+   "properties": {
+    "Instructions": {
+     "description": "The evaluation instructions that guide the language model in assessing agent performance.",
+     "type": "string"
+    },
+    "ModelConfig": {
+     "$ref": "#/definitions/EvaluatorModelConfig"
+    },
+    "RatingScale": {
+     "$ref": "#/definitions/RatingScale"
+    }
+   },
+   "required": [
+    "Instructions",
+    "RatingScale",
+    "ModelConfig"
+   ],
+   "type": "object"
+  },
+  "NumericalScaleDefinition": {
+   "additionalProperties": false,
+   "description": "A numerical rating scale option.",
+   "properties": {
+    "Definition": {
+     "description": "The description that explains what this numerical rating represents.",
+     "type": "string"
+    },
+    "Label": {
+     "description": "The label that describes this numerical rating option.",
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The numerical value for this rating scale option.",
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Value",
+    "Label",
+    "Definition"
+   ],
+   "type": "object"
+  },
+  "RatingScale": {
+   "additionalProperties": false,
+   "description": "The rating scale that defines how evaluators should score agent performance.",
+   "oneOf": [
+    {
+     "required": [
+      "Numerical"
+     ]
+    },
+    {
+     "required": [
+      "Categorical"
+     ]
+    }
+   ],
+   "properties": {
+    "Categorical": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CategoricalScaleDefinition"
+     },
+     "type": "array"
+    },
+    "Numerical": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/NumericalScaleDefinition"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::BedrockAgentCore::Evaluator - Creates a custom evaluator for agent quality assessment using LLM-as-a-Judge configurations.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "bedrock-agentcore:CreateEvaluator",
+    "bedrock-agentcore:GetEvaluator",
+    "bedrock-agentcore:TagResource",
+    "bedrock:InvokeModel",
+    "lambda:GetFunction",
+    "lambda:InvokeFunction",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "bedrock-agentcore:DeleteEvaluator",
+    "bedrock-agentcore:GetEvaluator"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "bedrock-agentcore:ListEvaluators"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bedrock-agentcore:GetEvaluator",
+    "bedrock-agentcore:ListTagsForResource",
+    "kms:Decrypt"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "bedrock-agentcore:UpdateEvaluator",
+    "bedrock-agentcore:GetEvaluator",
+    "bedrock-agentcore:TagResource",
+    "bedrock-agentcore:UntagResource",
+    "bedrock-agentcore:ListTagsForResource",
+    "bedrock:InvokeModel",
+    "lambda:GetFunction",
+    "lambda:InvokeFunction",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EvaluatorArn"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "description": "The timestamp when the evaluator was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the evaluator.",
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "EvaluatorArn": {
+   "description": "The Amazon Resource Name (ARN) of the evaluator.",
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov):bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:evaluator/[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+   "type": "string"
+  },
+  "EvaluatorConfig": {
+   "$ref": "#/definitions/EvaluatorConfig",
+   "description": "The configuration for the evaluator."
+  },
+  "EvaluatorId": {
+   "description": "The unique identifier of the evaluator.",
+   "pattern": "^(Builtin.[a-zA-Z0-9_-]+|[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10})$",
+   "type": "string"
+  },
+  "EvaluatorName": {
+   "description": "The name of the evaluator. Must be unique within your account.",
+   "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,47}$",
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "description": "The ARN of the KMS key used to encrypt evaluator data.",
+   "format": "AWS::KMS::Key.Arn",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(|-cn|-us-gov):kms:[a-zA-Z0-9-]+:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
+   "type": "string"
+  },
+  "Level": {
+   "$ref": "#/definitions/EvaluatorLevel",
+   "description": "The evaluation level that determines the scope of evaluation."
+  },
+  "Status": {
+   "$ref": "#/definitions/EvaluatorStatus",
+   "description": "The current status of the evaluator."
+  },
+  "Tags": {
+   "description": "A list of tags to assign to the evaluator.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "description": "The timestamp when the evaluator was last updated.",
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/EvaluatorId",
+  "/properties/EvaluatorArn",
+  "/properties/Status",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "EvaluatorName",
+  "EvaluatorConfig",
+  "Level"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "bedrock-agentcore:TagResource",
+   "bedrock-agentcore:UntagResource",
+   "bedrock-agentcore:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BedrockAgentCore::Evaluator"
+}

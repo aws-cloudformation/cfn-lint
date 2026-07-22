@@ -1,0 +1,147 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IdCConfiguration/IdCInstanceArn",
+  "/properties/IdCConfiguration"
+ ],
+ "definitions": {
+  "IdCConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IdCApplicationArn": {
+     "type": "string"
+    },
+    "IdCInstanceArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SecurityAgent::Application",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityagent:CreateApplication",
+    "securityagent:GetApplication",
+    "securityagent:TagResource",
+    "securityagent:ListTagsForResource",
+    "iam:PassRole",
+    "sso:DescribeInstance",
+    "sso:CreateApplication",
+    "sso:PutApplicationGrant",
+    "sso:PutApplicationAuthenticationMethod",
+    "sso:PutApplicationAccessScope",
+    "kms:DescribeKey"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securityagent:GetApplication",
+    "securityagent:DeleteApplication",
+    "sso:DeleteApplication"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securityagent:ListApplications"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityagent:GetApplication",
+    "securityagent:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securityagent:UpdateApplication",
+    "securityagent:GetApplication",
+    "securityagent:TagResource",
+    "securityagent:ListTagsForResource",
+    "securityagent:UntagResource",
+    "iam:PassRole",
+    "kms:DescribeKey"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationId"
+ ],
+ "properties": {
+  "ApplicationId": {
+   "type": "string"
+  },
+  "ApplicationName": {
+   "type": "string"
+  },
+  "DefaultKmsKeyId": {
+   "description": "Identifier of a KMS key. Can be a key ID, key ARN, alias name, or alias ARN.",
+   "maxLength": 2048,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Domain": {
+   "type": "string"
+  },
+  "IdCConfiguration": {
+   "$ref": "#/definitions/IdCConfiguration"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Tags for the application",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ApplicationName",
+  "/properties/ApplicationId",
+  "/properties/Domain",
+  "/properties/IdCConfiguration/IdCApplicationArn"
+ ],
+ "required": [],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "securityagent:TagResource",
+   "securityagent:UntagResource",
+   "securityagent:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityAgent::Application"
+}

@@ -1,0 +1,153 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/LocalGatewayId",
+  "/properties/LocalBgpAsn",
+  "/properties/LocalBgpAsnExtended"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "^(?!aws:.*)",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^(?!aws:.*)",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to associate with a resource, each pair must be unique.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "description": "Resource Type definition for LocalGatewayVirtualInterfaceGroup which describes a group of LocalGateway VirtualInterfaces",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateLocalGatewayVirtualInterfaceGroup",
+    "ec2:DescribeLocalGatewayVirtualInterfaceGroups",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteLocalGatewayVirtualInterfaceGroup",
+    "ec2:DescribeLocalGatewayVirtualInterfaceGroups",
+    "ec2:DeleteTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeLocalGatewayVirtualInterfaceGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeLocalGatewayVirtualInterfaceGroups",
+    "ec2:DescribeTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeLocalGatewayVirtualInterfaceGroups",
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "ec2:DescribeTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LocalGatewayVirtualInterfaceGroupId"
+ ],
+ "properties": {
+  "ConfigurationState": {
+   "description": "The current state of the local gateway virtual interface group",
+   "type": "string"
+  },
+  "LocalBgpAsn": {
+   "description": "The Autonomous System Number(ASN) for the local Border Gateway Protocol (BGP)",
+   "type": "integer"
+  },
+  "LocalBgpAsnExtended": {
+   "description": "The extended 32-bit ASN for the local BGP configuration",
+   "format": "int64",
+   "type": "integer"
+  },
+  "LocalGatewayId": {
+   "description": "The ID of the local gateway",
+   "type": "string"
+  },
+  "LocalGatewayVirtualInterfaceGroupArn": {
+   "description": "The Amazon Resource Number (ARN) of the local gateway virtual interface group",
+   "type": "string"
+  },
+  "LocalGatewayVirtualInterfaceGroupId": {
+   "description": "The ID of the virtual interface group",
+   "type": "string"
+  },
+  "LocalGatewayVirtualInterfaceIds": {
+   "description": "The IDs of the virtual interfaces",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "OwnerId": {
+   "description": "The ID of the Amazon Web Services account that owns the local gateway virtual interface group",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "The tags assigned to the virtual interface group",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LocalGatewayVirtualInterfaceGroupArn",
+  "/properties/LocalGatewayVirtualInterfaceGroupId",
+  "/properties/LocalGatewayVirtualInterfaceIds",
+  "/properties/OwnerId",
+  "/properties/ConfigurationState"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "LocalGatewayId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-lgw.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "ec2:CreateTags",
+   "ec2:DeleteTags",
+   "ec2:DescribeTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::LocalGatewayVirtualInterfaceGroup"
+}

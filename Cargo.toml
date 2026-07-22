@@ -15,3 +15,12 @@ serde_json = "1"
 tempfile = "3"
 thiserror = "2"
 tokio = { version = "1", features = ["full"] }
+
+# Centralized lint levels shared by all workspace crates (via `[lints]
+# workspace = true` in each crate's Cargo.toml). These are set to `warn` so
+# local `cargo build`/`cargo clippy` stays non-fatal during development; CI
+# escalates them to errors with `cargo clippy ... -- -D warnings`. Keeping the
+# levels here (rather than only in the CI flag) means local and CI agree and
+# gives a single place to tune specific lints later.
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }

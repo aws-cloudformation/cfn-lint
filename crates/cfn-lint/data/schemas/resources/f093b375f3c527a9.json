@@ -1,0 +1,250 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AnomalyDetectionComputationModelConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InputProperties": {
+     "description": "Input properties for anomaly detection.",
+     "maxLength": 67,
+     "minLength": 4,
+     "pattern": "^\\$\\{[a-z][a-z0-9_]*\\}$",
+     "type": "string"
+    },
+    "ResultProperty": {
+     "description": "Result property for anomaly detection.",
+     "maxLength": 67,
+     "minLength": 4,
+     "pattern": "^\\$\\{[a-z][a-z0-9_]*\\}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "InputProperties",
+    "ResultProperty"
+   ],
+   "type": "object"
+  },
+  "AssetModelPropertyBindingValue": {
+   "additionalProperties": false,
+   "properties": {
+    "AssetModelId": {
+     "description": "The ID of the asset model.",
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    },
+    "PropertyId": {
+     "description": "The ID of the asset model property.",
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AssetModelId",
+    "PropertyId"
+   ],
+   "type": "object"
+  },
+  "AssetPropertyBindingValue": {
+   "additionalProperties": false,
+   "properties": {
+    "AssetId": {
+     "description": "The ID of the asset.",
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    },
+    "PropertyId": {
+     "description": "The ID of the asset property.",
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AssetId",
+    "PropertyId"
+   ],
+   "type": "object"
+  },
+  "ComputationModelConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AnomalyDetection": {
+     "$ref": "#/definitions/AnomalyDetectionComputationModelConfiguration",
+     "description": "Contains configuration for anomaly detection computation model."
+    }
+   },
+   "type": "object"
+  },
+  "ComputationModelDataBinding": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-z][a-z0-9_]{0,63}$": {
+     "$ref": "#/definitions/ComputationModelDataBindingValue"
+    }
+   },
+   "type": "object"
+  },
+  "ComputationModelDataBindingValue": {
+   "additionalProperties": false,
+   "properties": {
+    "AssetModelProperty": {
+     "$ref": "#/definitions/AssetModelPropertyBindingValue",
+     "description": "Defines an asset model property binding."
+    },
+    "AssetProperty": {
+     "$ref": "#/definitions/AssetPropertyBindingValue",
+     "description": "Defines an asset property binding."
+    },
+    "List": {
+     "description": "Defines a list of computation model binding values.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ComputationModelDataBindingValue"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::IoTSiteWise::ComputationModel.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iotsitewise:CreateComputationModel",
+    "iotsitewise:DescribeComputationModel",
+    "iotsitewise:ListTagsForResource",
+    "iotsitewise:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iotsitewise:DeleteComputationModel",
+    "iotsitewise:DescribeComputationModel",
+    "iotsitewise:ListTagsForResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iotsitewise:ListComputationModels",
+    "iotsitewise:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iotsitewise:DescribeComputationModel",
+    "iotsitewise:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iotsitewise:UpdateComputationModel",
+    "iotsitewise:DescribeComputationModel",
+    "iotsitewise:ListTagsForResource",
+    "iotsitewise:TagResource",
+    "iotsitewise:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ComputationModelId"
+ ],
+ "properties": {
+  "ComputationModelArn": {
+   "description": "The ARN of the computation model.",
+   "maxLength": 1600,
+   "minLength": 1,
+   "pattern": "^arn:aws(-cn|-us-gov)?:[a-zA-Z0-9-:/_\\.]+$",
+   "type": "string"
+  },
+  "ComputationModelConfiguration": {
+   "$ref": "#/definitions/ComputationModelConfiguration",
+   "description": "The configuration for the computation model."
+  },
+  "ComputationModelDataBinding": {
+   "$ref": "#/definitions/ComputationModelDataBinding",
+   "description": "The data binding for the computation model."
+  },
+  "ComputationModelDescription": {
+   "description": "A description about the computation model.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9 _\\-#$*!@]+$",
+   "type": "string"
+  },
+  "ComputationModelId": {
+   "description": "The ID of the computation model.",
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "ComputationModelName": {
+   "description": "The name of the computation model.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9 _\\-#$*!@]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ComputationModelArn",
+  "/properties/ComputationModelId"
+ ],
+ "required": [
+  "ComputationModelName",
+  "ComputationModelConfiguration",
+  "ComputationModelDataBinding"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-IoTSiteWise.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "iotsitewise:TagResource",
+   "iotsitewise:UntagResource",
+   "iotsitewise:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTSiteWise::ComputationModel"
+}

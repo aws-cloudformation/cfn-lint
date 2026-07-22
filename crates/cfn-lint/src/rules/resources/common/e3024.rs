@@ -5,7 +5,6 @@ use crate::engine::flatten_validation_errors;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
 use crate::jsonschema::{ValidationError, Validator};
 use crate::rules::Severity;
-use crate::template::Template;
 
 static TAGGING_SCHEMA: LazyLock<Option<serde_json::Value>> = LazyLock::new(|| {
     let schema_str = include_str!("../../../../data/schemas/other/resources/tagging.json");

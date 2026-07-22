@@ -1,0 +1,199 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ContextName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ContextName",
+  "/properties/ContextType",
+  "/properties/Source"
+ ],
+ "description": "Resource type definition for AWS::SageMaker::Context. A context is a lineage tracking entity that represents a logical grouping of other tracking or experiment entities.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sagemaker:CreateContext",
+    "sagemaker:DescribeContext",
+    "sagemaker:AddTags",
+    "sagemaker:ListTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DeleteContext",
+    "sagemaker:DescribeContext",
+    "sagemaker:ListTags"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "Source": {
+      "additionalProperties": false,
+      "properties": {
+       "SourceUri": {
+        "maxLength": 2048,
+        "minLength": 1,
+        "type": "string"
+       }
+      },
+      "type": "object"
+     }
+    }
+   },
+   "permissions": [
+    "sagemaker:ListContexts"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribeContext",
+    "sagemaker:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sagemaker:UpdateContext",
+    "sagemaker:DescribeContext",
+    "sagemaker:AddTags",
+    "sagemaker:DeleteTags",
+    "sagemaker:ListTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the context.",
+   "maxLength": 256,
+   "pattern": "^arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:context/",
+   "type": "string"
+  },
+  "ContextName": {
+   "description": "The name of the context. Must be unique to your account in an AWS Region.",
+   "maxLength": 120,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9]([-_]*[a-zA-Z0-9]){0,119}$",
+   "type": "string"
+  },
+  "ContextType": {
+   "description": "The context type.",
+   "maxLength": 256,
+   "minLength": 0,
+   "type": "string"
+  },
+  "CreationTime": {
+   "description": "When the context was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the context.",
+   "maxLength": 3072,
+   "minLength": 0,
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "description": "When the context was last modified.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Properties": {
+   "additionalProperties": false,
+   "description": "A list of properties to add to the context.",
+   "maxProperties": 30,
+   "patternProperties": {
+    "^.{0,2500}$": {
+     "maxLength": 2500,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Source": {
+   "additionalProperties": false,
+   "description": "The source type, ID, and URI.",
+   "properties": {
+    "SourceId": {
+     "description": "The ID of the source.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    },
+    "SourceType": {
+     "description": "The type of the source.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    },
+    "SourceUri": {
+     "description": "The URI of the source.",
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceUri"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "description": "A list of tags to apply to the context.",
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "Key": {
+      "description": "The tag key.",
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+      "type": "string"
+     },
+     "Value": {
+      "description": "The tag value.",
+      "maxLength": 256,
+      "minLength": 0,
+      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+      "type": "string"
+     }
+    },
+    "required": [
+     "Key",
+     "Value"
+    ],
+    "type": "object"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationTime",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "ContextName",
+  "ContextType",
+  "Source"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "sagemaker:AddTags",
+   "sagemaker:DeleteTags",
+   "sagemaker:ListTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::Context"
+}

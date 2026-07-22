@@ -1,0 +1,161 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/BundleId",
+  "/properties/VolumeEncryptionKey",
+  "/properties/RootVolumeEncryptionEnabled",
+  "/properties/UserVolumeEncryptionEnabled"
+ ],
+ "createOnlyProperties": [
+  "/properties/UserName",
+  "/properties/DirectoryId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "WorkspaceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "ComputeTypeName": {
+     "type": "string"
+    },
+    "RootVolumeSizeGib": {
+     "type": "integer"
+    },
+    "RunningMode": {
+     "type": "string"
+    },
+    "RunningModeAutoStopTimeoutInMinutes": {
+     "type": "integer"
+    },
+    "UserVolumeSizeGib": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::WorkSpaces::Workspace",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "workspaces:DescribeWorkspaces",
+    "workspaces:CreateWorkspaces",
+    "workspaces:CreateTags",
+    "kms:CreateGrant",
+    "kms:DescribeKey"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "workspaces:DescribeWorkspaces",
+    "workspaces:TerminateWorkspaces"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "workspaces:DescribeWorkspaces",
+    "workspaces:DescribeTags"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "workspaces:DescribeWorkspaces",
+    "workspaces:DescribeTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "workspaces:DescribeWorkspaces",
+    "workspaces:DescribeWorkspaceBundles",
+    "workspaces:ModifyWorkspaceProperties",
+    "workspaces:DescribeTags",
+    "workspaces:CreateTags",
+    "workspaces:DeleteTags",
+    "kms:CreateGrant",
+    "kms:DescribeKey"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WorkspaceId"
+ ],
+ "properties": {
+  "BundleId": {
+   "type": "string"
+  },
+  "DirectoryId": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "RootVolumeEncryptionEnabled": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "UserName": {
+   "type": "string"
+  },
+  "UserVolumeEncryptionEnabled": {
+   "type": "boolean"
+  },
+  "VolumeEncryptionKey": {
+   "type": "string"
+  },
+  "WorkspaceId": {
+   "type": "string"
+  },
+  "WorkspaceProperties": {
+   "$ref": "#/definitions/WorkspaceProperties"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/WorkspaceId",
+  "/properties/Id"
+ ],
+ "required": [
+  "BundleId",
+  "DirectoryId",
+  "UserName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-workspaces-workspace",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "workspaces:CreateTags",
+   "workspaces:DeleteTags",
+   "workspaces:DescribeTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::WorkSpaces::Workspace"
+}

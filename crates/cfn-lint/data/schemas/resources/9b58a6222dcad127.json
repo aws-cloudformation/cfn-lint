@@ -1,0 +1,71 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceArn"
+ ],
+ "description": "Resource Type definition for AWS::Kinesis::ResourcePolicy",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "kinesis:GetResourcePolicy",
+    "kinesis:PutResourcePolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "kinesis:DeleteResourcePolicy",
+    "kinesis:GetResourcePolicy"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "kinesis:GetResourcePolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "kinesis:PutResourcePolicy",
+    "kinesis:GetResourcePolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResourceArn"
+ ],
+ "properties": {
+  "ResourceArn": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::Kinesis::Stream"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/ConsumerARN",
+      "typeName": "AWS::Kinesis::StreamConsumer"
+     }
+    }
+   ],
+   "description": "The ARN of the AWS Kinesis resource to which the policy applies.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "arn:aws.*:kinesis:.*:\\d{12}:stream/\\S+",
+   "type": "string"
+  },
+  "ResourcePolicy": {
+   "description": "A policy document containing permissions to add to the specified resource. In IAM, you must provide policy documents in JSON format. However, in CloudFormation you can provide the policy in JSON or YAML format because CloudFormation converts YAML to JSON before submitting it to IAM.",
+   "type": "object"
+  }
+ },
+ "required": [
+  "ResourceArn",
+  "ResourcePolicy"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kinesis.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Kinesis::ResourcePolicy"
+}

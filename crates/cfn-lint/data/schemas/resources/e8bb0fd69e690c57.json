@@ -1,0 +1,262 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RegionName"
+ ],
+ "definitions": {
+  "PublicRouterNetworkInterfaceConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration settings for a public router network interface, including the list of allowed CIDR blocks.",
+   "properties": {
+    "AllowRules": {
+     "description": "The list of allowed CIDR blocks for the public router network interface.",
+     "items": {
+      "$ref": "#/definitions/PublicRouterNetworkInterfaceRule"
+     },
+     "maxItems": 10,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "AllowRules"
+   ],
+   "type": "object"
+  },
+  "PublicRouterNetworkInterfaceRule": {
+   "additionalProperties": false,
+   "description": "A rule that allows a specific CIDR block to access the public router network interface.",
+   "properties": {
+    "Cidr": {
+     "description": "The CIDR block that is allowed to access the public router network interface.",
+     "format": "ipv4-network",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Cidr"
+   ],
+   "type": "object"
+  },
+  "RouterNetworkInterfaceConfiguration": {
+   "description": "The configuration settings for a router network interface.",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Public": {
+       "$ref": "#/definitions/PublicRouterNetworkInterfaceConfiguration"
+      }
+     },
+     "required": [
+      "Public"
+     ],
+     "title": "Public",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Vpc": {
+       "$ref": "#/definitions/VpcRouterNetworkInterfaceConfiguration"
+      }
+     },
+     "required": [
+      "Vpc"
+     ],
+     "title": "Vpc",
+     "type": "object"
+    }
+   ]
+  },
+  "RouterNetworkInterfaceState": {
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "UPDATING",
+    "DELETING",
+    "ERROR",
+    "RECOVERING"
+   ],
+   "type": "string"
+  },
+  "RouterNetworkInterfaceType": {
+   "enum": [
+    "PUBLIC",
+    "VPC"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "VpcRouterNetworkInterfaceConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration settings for a router network interface within a VPC, including the security group IDs and subnet ID.",
+   "properties": {
+    "SecurityGroupIds": {
+     "description": "The IDs of the security groups to associate with the router network interface within the VPC.",
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    },
+    "SubnetId": {
+     "description": "The ID of the subnet within the VPC to associate the router network interface with.",
+     "format": "AWS::EC2::Subnet.Id",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecurityGroupIds",
+    "SubnetId"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Represents a router network interface in AWS Elemental MediaConnect that is used to define a network boundary for router resources",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "mediaconnect:GetRouterNetworkInterface",
+    "mediaconnect:ListRouterNetworkInterfaces",
+    "iam:CreateServiceLinkedRole",
+    "mediaconnect:CreateRouterNetworkInterface",
+    "mediaconnect:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "mediaconnect:GetRouterNetworkInterface",
+    "mediaconnect:ListRouterNetworkInterfaces",
+    "mediaconnect:DeleteRouterNetworkInterface"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "mediaconnect:ListRouterNetworkInterfaces"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "mediaconnect:GetRouterNetworkInterface"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "mediaconnect:ListTagsForResource",
+    "mediaconnect:TagResource",
+    "mediaconnect:UntagResource",
+    "mediaconnect:GetRouterNetworkInterface",
+    "iam:CreateServiceLinkedRole",
+    "mediaconnect:UpdateRouterNetworkInterface"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:(aws[a-zA-Z-]*):mediaconnect:[a-z0-9-]+:[0-9]{12}:routerNetworkInterface:[a-z0-9]{12}$",
+   "type": "string"
+  },
+  "AssociatedInputCount": {
+   "description": "The number of router inputs associated with the network interface.",
+   "type": "integer"
+  },
+  "AssociatedOutputCount": {
+   "description": "The number of router outputs associated with the network interface.",
+   "type": "integer"
+  },
+  "Configuration": {
+   "$ref": "#/definitions/RouterNetworkInterfaceConfiguration"
+  },
+  "CreatedAt": {
+   "description": "The timestamp when the router network interface was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Id": {
+   "description": "The unique identifier of the router network interface.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the router network interface.",
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "NetworkInterfaceType": {
+   "$ref": "#/definitions/RouterNetworkInterfaceType"
+  },
+  "RegionName": {
+   "description": "The AWS Region for the router network interface. Defaults to the current region if not specified.",
+   "type": "string"
+  },
+  "State": {
+   "$ref": "#/definitions/RouterNetworkInterfaceState"
+  },
+  "Tags": {
+   "description": "Key-value pairs that can be used to tag and organize this router network interface.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "description": "The timestamp when the router network interface was last updated.",
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/AssociatedInputCount",
+  "/properties/AssociatedOutputCount",
+  "/properties/CreatedAt",
+  "/properties/Id",
+  "/properties/NetworkInterfaceType",
+  "/properties/State",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "Configuration",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "mediaconnect:ListTagsForResource",
+   "mediaconnect:TagResource",
+   "mediaconnect:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaConnect::RouterNetworkInterface"
+}

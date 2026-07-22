@@ -1,0 +1,173 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceArn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Glue::IntegrationResourceProperty",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "glue:CreateIntegrationResourceProperty",
+    "glue:GetIntegrationResourceProperty",
+    "iam:PassRole",
+    "glue:TagResource",
+    "glue:GetConnections",
+    "glue:GetConnection"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "glue:UntagResource",
+    "glue:DeleteIntegrationResourceProperty",
+    "glue:UpdateIntegrationResourceProperty"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "glue:ListIntegrationResourceProperties"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "glue:GetIntegrationResourceProperty",
+    "glue:GetTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "glue:UpdateIntegrationResourceProperty",
+    "glue:GetIntegrationResourceProperty",
+    "glue:TagResource",
+    "glue:UntagResource",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResourceArn",
+  "/properties/ResourcePropertyArn"
+ ],
+ "properties": {
+  "ResourceArn": {
+   "description": "The connection ARN of the source, or the database ARN of the target.",
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "arn:aws:.*:.*:[0-9]+:.*",
+   "type": "string"
+  },
+  "ResourcePropertyArn": {
+   "description": "The integration resource property ARN.",
+   "pattern": "arn:aws:glue:.*:[0-9]+:.*",
+   "type": "string"
+  },
+  "SourceProcessingProperties": {
+   "additionalProperties": false,
+   "description": "The resource properties associated with the integration source.",
+   "properties": {
+    "RoleArn": {
+     "description": "The IAM role to access the Glue connection.",
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TargetProcessingProperties": {
+   "additionalProperties": false,
+   "description": "The resource properties associated with the integration target.",
+   "properties": {
+    "ConnectionName": {
+     "description": "The Glue network connection to configure the Glue job running in the customer VPC.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "EventBusArn": {
+     "description": "The ARN of an Eventbridge event bus to receive the integration status notification.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "KmsArn": {
+     "description": "The ARN of the KMS key used for encryption.",
+     "format": "AWS::KMS::Key.Arn",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "arn:aws:kms:.*:[0-9]+:.*",
+     "type": "string"
+    },
+    "RoleArn": {
+     "description": "The IAM role to access the Glue database.",
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "arn:aws:iam:.*:[0-9]+:.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn"
+   ],
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ResourcePropertyArn"
+ ],
+ "required": [
+  "ResourceArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-glue.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "glue:TagResource",
+   "glue:UntagResource",
+   "glue:GetTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Glue::IntegrationResourceProperty"
+}

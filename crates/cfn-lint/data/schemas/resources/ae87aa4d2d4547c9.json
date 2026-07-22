@@ -1,0 +1,166 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ManagedPolicyName",
+  "/properties/Description",
+  "/properties/Path"
+ ],
+ "description": "Creates a new managed policy for your AWS-account.\n This operation creates a policy version with a version identifier of ``v1`` and sets v1 as the policy's default version. For more information about policy versions, see [Versioning for managed policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-versions.html) in the *IAM User Guide*.\n As a best practice, you can validate your IAM policies. To learn more, see [Validating IAM policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_policy-validator.html) in the *IAM User Guide*.\n For more information about managed policies in general, see [Managed policies and inline policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html) in the *IAM User Guide*.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:CreatePolicy",
+    "iam:AttachGroupPolicy",
+    "iam:AttachUserPolicy",
+    "iam:AttachRolePolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iam:DetachRolePolicy",
+    "iam:GetPolicy",
+    "iam:ListPolicyVersions",
+    "iam:DetachGroupPolicy",
+    "iam:DetachUserPolicy",
+    "iam:DeletePolicyVersion",
+    "iam:DeletePolicy",
+    "iam:ListEntitiesForPolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iam:ListPolicies"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iam:GetPolicy",
+    "iam:ListEntitiesForPolicy",
+    "iam:GetPolicyVersion"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:DetachRolePolicy",
+    "iam:GetPolicy",
+    "iam:ListPolicyVersions",
+    "iam:DetachGroupPolicy",
+    "iam:DetachUserPolicy",
+    "iam:CreatePolicyVersion",
+    "iam:DeletePolicyVersion",
+    "iam:AttachGroupPolicy",
+    "iam:AttachUserPolicy",
+    "iam:AttachRolePolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PolicyArn"
+ ],
+ "properties": {
+  "AttachmentCount": {
+   "description": "",
+   "type": "integer"
+  },
+  "CreateDate": {
+   "description": "",
+   "type": "string"
+  },
+  "DefaultVersionId": {
+   "description": "",
+   "type": "string"
+  },
+  "Description": {
+   "description": "A friendly description of the policy.\n Typically used to store information about the permissions defined in the policy. For example, \"Grants access to production DynamoDB tables.\"\n The policy description is immutable. After a value is assigned, it cannot be changed.",
+   "maxLength": 1000,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Groups": {
+   "description": "The name (friendly name, not ARN) of the group to attach the policy to.\n This parameter allows (through its [regex pattern](https://docs.aws.amazon.com/http://wikipedia.org/wiki/regex)) a string of characters consisting of upper and lowercase alphanumeric characters with no spaces. You can also include any of the following characters: _+=,.@-",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "IsAttachable": {
+   "description": "",
+   "type": "boolean"
+  },
+  "ManagedPolicyName": {
+   "description": "The friendly name of the policy.\n  If you specify a name, you cannot perform updates that require replacement of this resource. You can perform updates that require no or some interruption. If you must replace the resource, specify a new name.\n  If you specify a name, you must specify the ``CAPABILITY_NAMED_IAM`` value to acknowledge your template's capabilities. For more information, see [Acknowledging Resources in Templates](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-iam-template.html#using-iam-capabilities).\n  Naming an IAM resource can cause an unrecoverable error if you reuse the same template in multiple Regions. To prevent this, we recommend using ``Fn::Join`` and ``AWS::Region`` to create a Region-specific name, as in the following example: ``{\"Fn::Join\": [\"\", [{\"Ref\": \"AWS::Region\"}, {\"Ref\": \"MyResourceName\"}]]}``.",
+   "type": "string"
+  },
+  "Path": {
+   "default": "/",
+   "description": "The path for the policy.\n For more information about paths, see [IAM identifiers](https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html) in the *IAM User Guide*.\n This parameter is optional. If it is not included, it defaults to a slash (/).\n This parameter allows (through its [regex pattern](https://docs.aws.amazon.com/http://wikipedia.org/wiki/regex)) a string of characters consisting of either a forward slash (/) by itself or a string that must begin and end with forward slashes. In addition, it can contain any ASCII character from the ! (``\\u0021``) through the DEL character (``\\u007F``), including most punctuation characters, digits, and upper and lowercased letters.\n  You cannot use an asterisk (*) in the path name.",
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^((/[A-Za-z0-9\\.,\\+@=_-]+)*)/$",
+   "type": "string"
+  },
+  "PermissionsBoundaryUsageCount": {
+   "description": "",
+   "type": "integer"
+  },
+  "PolicyArn": {
+   "description": "",
+   "type": "string"
+  },
+  "PolicyDocument": {
+   "format": "json",
+   "maxLength": 131072,
+   "minLength": 1,
+   "pattern": "^[\\u0009\\u000A\\u000D\\u0020-\\u00FF]+$"
+  },
+  "PolicyId": {
+   "description": "",
+   "type": "string"
+  },
+  "Roles": {
+   "description": "The name (friendly name, not ARN) of the role to attach the policy to.\n This parameter allows (per its [regex pattern](https://docs.aws.amazon.com/http://wikipedia.org/wiki/regex)) a string of characters consisting of upper and lowercase alphanumeric characters with no spaces. You can also include any of the following characters: _+=,.@-\n  If an external policy (such as ``AWS::IAM::Policy`` or ``AWS::IAM::ManagedPolicy``) has a ``Ref`` to a role and if a resource (such as ``AWS::ECS::Service``) also has a ``Ref`` to the same role, add a ``DependsOn`` attribute to the resource to make the resource depend on the external policy. This dependency ensures that the role's policy is available throughout the resource's lifecycle. For example, when you delete a stack with an ``AWS::ECS::Service`` resource, the ``DependsOn`` attribute ensures that CFN deletes the ``AWS::ECS::Service`` resource before deleting its role's policy.",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdateDate": {
+   "description": "",
+   "type": "string"
+  },
+  "Users": {
+   "description": "The name (friendly name, not ARN) of the IAM user to attach the policy to.\n This parameter allows (through its [regex pattern](https://docs.aws.amazon.com/http://wikipedia.org/wiki/regex)) a string of characters consisting of upper and lowercase alphanumeric characters with no spaces. You can also include any of the following characters: _+=,.@-",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PolicyArn",
+  "/properties/AttachmentCount",
+  "/properties/CreateDate",
+  "/properties/DefaultVersionId",
+  "/properties/IsAttachable",
+  "/properties/PermissionsBoundaryUsageCount",
+  "/properties/PolicyId",
+  "/properties/UpdateDate"
+ ],
+ "required": [
+  "PolicyDocument"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iam",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::IAM::ManagedPolicy"
+}

@@ -1,0 +1,133 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TableARN"
+ ],
+ "definitions": {
+  "Namespace": {
+   "description": "The namespace that the table belongs to.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[0-9a-z_]*$",
+   "type": "string"
+  },
+  "ResourcePolicy": {
+   "description": "A policy document containing permissions to add to the specified table. In IAM, you must provide policy documents in JSON format. However, in CloudFormation you can provide the policy in JSON or YAML format because CloudFormation converts YAML to JSON before submitting it to IAM.",
+   "maxLength": 20480,
+   "minLength": 1,
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "TableARN": {
+   "description": "The Amazon Resource Name (ARN) of the specified table.",
+   "examples": [
+    "arn:aws:s3tables:us-west-2:123456789012:bucket/mytablebucket/table/813aadd1-a378-4d0f-8467-e3247306f309"
+   ],
+   "type": "string"
+  },
+  "TableBucketARN": {
+   "description": "The Amazon Resource Name (ARN) of the specified table bucket.",
+   "examples": [
+    "arn:aws:s3tables:us-west-2:123456789012:bucket/mytablebucket"
+   ],
+   "pattern": "^(arn:aws[-a-z0-9]*:[a-z0-9]+:[-a-z0-9]*:[0-9]{12}:bucket/[a-z0-9_-]{3,63})$",
+   "type": "string"
+  },
+  "TableName": {
+   "description": "The name for the table.",
+   "type": "string"
+  }
+ },
+ "description": "Resource Type definition for AWS::S3Tables::TablePolicy",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3tables:GetTablePolicy",
+    "s3tables:PutTablePolicy",
+    "s3tables:GetTable"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "s3tables:GetTablePolicy",
+    "s3tables:DeleteTablePolicy",
+    "s3tables:GetTable"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "Namespace": {
+      "description": "The namespace that the table belongs to.",
+      "type": "string"
+     },
+     "TableBucketARN": {
+      "description": "The Amazon Resource Name (ARN) of the specified table bucket.",
+      "examples": [
+       "arn:aws:s3tables:us-west-2:123456789012:bucket/mytablebucket"
+      ],
+      "type": "string"
+     }
+    },
+    "required": [
+     "TableBucketARN"
+    ]
+   },
+   "permissions": [
+    "s3tables:ListTables",
+    "s3tables:GetTablePolicy"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "s3tables:GetTable",
+    "s3tables:GetTablePolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "s3tables:GetTablePolicy",
+    "s3tables:PutTablePolicy",
+    "s3tables:GetTable"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TableARN"
+ ],
+ "properties": {
+  "Namespace": {
+   "$ref": "#/definitions/Namespace"
+  },
+  "ResourcePolicy": {
+   "$ref": "#/definitions/ResourcePolicy"
+  },
+  "TableARN": {
+   "$ref": "#/definitions/TableARN"
+  },
+  "TableBucketARN": {
+   "$ref": "#/definitions/TableBucketARN"
+  },
+  "TableName": {
+   "$ref": "#/definitions/TableName"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TableBucketARN",
+  "/properties/Namespace",
+  "/properties/TableName"
+ ],
+ "required": [
+  "TableARN",
+  "ResourcePolicy"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::S3Tables::TablePolicy"
+}

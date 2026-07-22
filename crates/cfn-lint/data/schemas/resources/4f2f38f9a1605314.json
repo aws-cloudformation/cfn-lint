@@ -1,0 +1,60 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProductArn"
+ ],
+ "description": "The AWS::SecurityHub::ProductSubscription resource represents a subscription to a service that is allowed to generate findings for your Security Hub account. One product subscription resource is created for each product enabled.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityhub:EnableImportFindingsForProduct"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securityhub:ListEnabledProductsForImport",
+    "securityhub:DisableImportFindingsForProduct"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securityhub:ListEnabledProductsForImport"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityhub:ListEnabledProductsForImport"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ProductSubscriptionArn"
+ ],
+ "properties": {
+  "ProductArn": {
+   "description": "The generic ARN of the product being subscribed to",
+   "pattern": "arn:aws\\S*:securityhub:\\S*",
+   "type": "string"
+  },
+  "ProductSubscriptionArn": {
+   "description": "The ARN of the product subscription for the account",
+   "pattern": "arn:aws\\S*:securityhub:\\S*",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ProductSubscriptionArn"
+ ],
+ "required": [
+  "ProductArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securityhub",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::SecurityHub::ProductSubscription"
+}

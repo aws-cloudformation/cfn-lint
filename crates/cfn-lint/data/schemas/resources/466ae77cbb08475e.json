@@ -1,0 +1,124 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CatalogId"
+ ],
+ "definitions": {
+  "ConnectionPasswordEncryption": {
+   "additionalProperties": false,
+   "description": "When connection password protection is enabled, the Data Catalog uses a customer-provided key to encrypt the password as part of CreateConnection or UpdateConnection and store it in the ENCRYPTED_PASSWORD field in the connection properties. You can enable catalog encryption or only password encryption.",
+   "properties": {
+    "KmsKeyId": {
+     "anyOf": [
+      {
+       "format": "AWS::KMS::Key.Arn"
+      },
+      {
+       "format": "AWS::KMS::Key.Id"
+      },
+      {
+       "format": "AWS::KMS::Alias.AliasName"
+      }
+     ],
+     "description": "An AWS KMS key that is used to encrypt the connection password.",
+     "type": "string"
+    },
+    "ReturnConnectionPasswordEncrypted": {
+     "description": "When the ReturnConnectionPasswordEncrypted flag is set to 'true', passwords remain encrypted in the responses of GetConnection and GetConnections. This encryption takes effect independently from catalog encryption.",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "DataCatalogEncryptionSettings": {
+   "additionalProperties": false,
+   "description": "Contains configuration information for maintaining Data Catalog security.",
+   "properties": {
+    "ConnectionPasswordEncryption": {
+     "$ref": "#/definitions/ConnectionPasswordEncryption"
+    },
+    "EncryptionAtRest": {
+     "$ref": "#/definitions/EncryptionAtRest"
+    }
+   },
+   "type": "object"
+  },
+  "EncryptionAtRest": {
+   "additionalProperties": false,
+   "description": "Specifies the encryption-at-rest configuration for the Data Catalog.",
+   "properties": {
+    "CatalogEncryptionMode": {
+     "description": "The encryption-at-rest mode for encrypting Data Catalog data.",
+     "enum": [
+      "DISABLED",
+      "SSE-KMS",
+      "SSE-KMS-WITH-SERVICE-ROLE"
+     ],
+     "type": "string"
+    },
+    "CatalogEncryptionServiceRole": {
+     "description": "The role that AWS Glue assumes to encrypt and decrypt the Data Catalog objects on the caller's behalf.",
+     "pattern": "^arn:aws(-(cn|us-gov|iso(-[bef])?))?:iam::[0-9]{12}:role/.+$",
+     "type": "string"
+    },
+    "SseAwsKmsKeyId": {
+     "description": "The ID of the AWS KMS key to use for encryption at rest.",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Glue::DataCatalogEncryptionSettings",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "glue:GetDataCatalogEncryptionSettings",
+    "glue:PutDataCatalogEncryptionSettings",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "glue:GetDataCatalogEncryptionSettings",
+    "glue:PutDataCatalogEncryptionSettings"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "glue:GetDataCatalogEncryptionSettings"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "glue:GetDataCatalogEncryptionSettings",
+    "glue:PutDataCatalogEncryptionSettings",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CatalogId"
+ ],
+ "properties": {
+  "CatalogId": {
+   "description": "The ID of the Data Catalog in which the settings are created.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DataCatalogEncryptionSettings": {
+   "$ref": "#/definitions/DataCatalogEncryptionSettings"
+  }
+ },
+ "required": [
+  "DataCatalogEncryptionSettings",
+  "CatalogId"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Glue::DataCatalogEncryptionSettings"
+}

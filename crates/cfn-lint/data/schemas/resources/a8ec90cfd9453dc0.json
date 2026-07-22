@@ -1,0 +1,169 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IntegrationName",
+  "/properties/IntegrationType",
+  "/properties/ResourceConfig"
+ ],
+ "definitions": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "[\\w#+=/:,.@-]*\\*?",
+   "type": "string"
+  },
+  "OpenSearchResourceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationARN": {
+     "$ref": "#/definitions/Arn"
+    },
+    "DashboardViewerPrincipals": {
+     "items": {
+      "$ref": "#/definitions/Arn"
+     },
+     "type": "array"
+    },
+    "DataSourceRoleArn": {
+     "$ref": "#/definitions/Arn",
+     "format": "AWS::IAM::Role.Arn"
+    },
+    "KmsKeyArn": {
+     "$ref": "#/definitions/Arn",
+     "format": "AWS::KMS::Key.Arn"
+    },
+    "RetentionDays": {
+     "maximum": 3650,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "DataSourceRoleArn",
+    "DashboardViewerPrincipals"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Schema for Logs Integration Resource",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "logs:PutIntegration",
+    "logs:GetIntegration",
+    "aoss:CreateCollection",
+    "aoss:CreateSecurityPolicy",
+    "aoss:CreateAccessPolicy",
+    "aoss:CreateLifeCyclePolicy",
+    "aoss:BatchGetCollection",
+    "aoss:DeleteCollection",
+    "aoss:DeleteSecurityPolicy",
+    "aoss:DeleteAccessPolicy",
+    "aoss:DeleteLifeCyclePolicy",
+    "aoss:GetAccessPolicy",
+    "aoss:GetSecurityPolicy",
+    "aoss:BatchGetLifecyclePolicy",
+    "aoss:TagResource",
+    "aoss:APIAccessAll",
+    "opensearch:AddDirectQueryDataSource",
+    "opensearch:DeleteDirectQueryDataSource",
+    "opensearch:GetDirectQueryDataSource",
+    "opensearch:CreateApplication",
+    "opensearch:GetApplication",
+    "opensearch:UpdateApplication",
+    "opensearch:DeleteApplication",
+    "opensearch:ApplicationAccessAll",
+    "opensearch:DashboardsAccessAll",
+    "opensearch:StartDirectQuery",
+    "opensearch:GetDirectQuery",
+    "iam:PassRole",
+    "iam:CreateServiceLinkedRole",
+    "iam:AttachRolePolicy",
+    "iam:AttachUserPolicy",
+    "es:AddDirectQueryDataSource",
+    "es:CreateApplication",
+    "es:UpdateApplication",
+    "es:GetApplication",
+    "es:DeleteApplication",
+    "es:DeleteDirectQueryDataSource",
+    "es:GetDirectQueryDataSource",
+    "es:AddTags",
+    "es:ListApplications"
+   ],
+   "timeoutInMinutes": 30
+  },
+  "delete": {
+   "permissions": [
+    "logs:DeleteIntegration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "logs:ListIntegrations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "logs:GetIntegration"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IntegrationName"
+ ],
+ "properties": {
+  "IntegrationName": {
+   "description": "User provided identifier for integration, unique to the user account.",
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "[\\.\\-_/#A-Za-z0-9]+",
+   "type": "string"
+  },
+  "IntegrationStatus": {
+   "description": "Status of creation for the Integration and its resources",
+   "enum": [
+    "PROVISIONING",
+    "ACTIVE",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "IntegrationType": {
+   "description": "The type of the Integration.",
+   "enum": [
+    "OPENSEARCH"
+   ],
+   "type": "string"
+  },
+  "ResourceConfig": {
+   "additionalProperties": false,
+   "description": "OpenSearchResourceConfig for the given Integration",
+   "properties": {
+    "OpenSearchResourceConfig": {
+     "$ref": "#/definitions/OpenSearchResourceConfig"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IntegrationStatus"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "IntegrationName",
+  "IntegrationType",
+  "ResourceConfig"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Logs::Integration",
+ "writeOnlyProperties": [
+  "/properties/ResourceConfig"
+ ]
+}

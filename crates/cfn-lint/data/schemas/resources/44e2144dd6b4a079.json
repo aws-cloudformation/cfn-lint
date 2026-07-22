@@ -1,0 +1,83 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Region": {
+   "pattern": "^[a-zA-Z0-9-]{1,32}$",
+   "type": "string"
+  }
+ },
+ "description": "The ``AWS::SecurityHub::FindingAggregator`` resource enables cross-Region aggregation. When cross-Region aggregation is enabled, you can aggregate findings, finding updates, insights, control compliance statuses, and security scores from one or more linked Regions to a single aggregation Region. You can then view and manage all of this data from the aggregation Region. For more details about cross-Region aggregation, see [Cross-Region aggregation](https://docs.aws.amazon.com/securityhub/latest/userguide/finding-aggregation.html) in the *User Guide*\n This resource must be created in the Region that you want to designate as your aggregation Region.\n Cross-Region aggregation is also a prerequisite for using [central configuration](https://docs.aws.amazon.com/securityhub/latest/userguide/central-configuration-intro.html) in ASH.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityhub:CreateFindingAggregator"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securityhub:DeleteFindingAggregator"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securityhub:ListFindingAggregators"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityhub:GetFindingAggregator"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securityhub:UpdateFindingAggregator"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FindingAggregatorArn"
+ ],
+ "properties": {
+  "FindingAggregationRegion": {
+   "$ref": "#/definitions/Region",
+   "description": ""
+  },
+  "FindingAggregatorArn": {
+   "description": "",
+   "pattern": "arn:aws\\S*:securityhub:\\S*",
+   "type": "string"
+  },
+  "RegionLinkingMode": {
+   "description": "Indicates whether to aggregate findings from all of the available Regions in the current partition. Also determines whether to automatically aggregate findings from new Regions as Security Hub supports them and you opt into them.\n The selected option also determines how to use the Regions provided in the Regions list.\n In CFN, the options for this property are as follows:\n  +  ``ALL_REGIONS`` - Indicates to aggregate findings from all of the Regions where Security Hub is enabled. When you choose this option, Security Hub also automatically aggregates findings from new Regions as Security Hub supports them and you opt into them. \n  +  ``ALL_REGIONS_EXCEPT_SPECIFIED`` - Indicates to aggregate findings from all of the Regions where Security Hub is enabled, except for the Regions listed in the ``Regions`` parameter. When you choose this option, Security Hub also automatically aggregates findings from new Regions as Security Hub supports them and you opt into them. \n  +  ``SPECIFIED_REGIONS`` - Indicates to aggregate findings only from the Regions listed in the ``Regions`` parameter. Security Hub does not automatically aggregate findings from new Regions.",
+   "enum": [
+    "ALL_REGIONS",
+    "ALL_REGIONS_EXCEPT_SPECIFIED",
+    "SPECIFIED_REGIONS"
+   ],
+   "type": "string"
+  },
+  "Regions": {
+   "description": "If ``RegionLinkingMode`` is ``ALL_REGIONS_EXCEPT_SPECIFIED``, then this is a space-separated list of Regions that do not aggregate findings to the aggregation Region.\n If ``RegionLinkingMode`` is ``SPECIFIED_REGIONS``, then this is a space-separated list of Regions that do aggregate findings to the aggregation Region.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Region"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/FindingAggregatorArn",
+  "/properties/FindingAggregationRegion"
+ ],
+ "required": [
+  "RegionLinkingMode"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securityhub",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::SecurityHub::FindingAggregator"
+}

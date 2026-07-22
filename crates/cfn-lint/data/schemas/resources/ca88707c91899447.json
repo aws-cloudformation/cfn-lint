@@ -1,0 +1,168 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CookiesConfig": {
+   "additionalProperties": false,
+   "description": "An object that determines whether any cookies in viewer requests (and if so, which cookies) are included in requests that CloudFront sends to the origin.",
+   "properties": {
+    "CookieBehavior": {
+     "description": "Determines whether cookies in viewer requests are included in requests that CloudFront sends to the origin. Valid values are:\n  +  ``none`` \u2013 No cookies in viewer requests are included in requests that CloudFront sends to the origin. Even when this field is set to ``none``, any cookies that are listed in a ``CachePolicy``*are* included in origin requests.\n  +  ``whitelist`` \u2013 Only the cookies in viewer requests that are listed in the ``CookieNames`` type are included in requests that CloudFront sends to the origin.\n  +  ``all`` \u2013 All cookies in viewer requests are included in requests that CloudFront sends to the origin.\n  +  ``allExcept`` \u2013 All cookies in viewer requests are included in requests that CloudFront sends to the origin, *except* for those listed in the ``CookieNames`` type, which are not included.",
+     "pattern": "^(none|whitelist|all|allExcept)$",
+     "type": "string"
+    },
+    "Cookies": {
+     "description": "Contains a list of cookie names.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "CookieBehavior"
+   ],
+   "type": "object"
+  },
+  "HeadersConfig": {
+   "additionalProperties": false,
+   "description": "An object that determines whether any HTTP headers (and if so, which headers) are included in requests that CloudFront sends to the origin.",
+   "properties": {
+    "HeaderBehavior": {
+     "description": "Determines whether any HTTP headers are included in requests that CloudFront sends to the origin. Valid values are:\n  +  ``none`` \u2013 No HTTP headers in viewer requests are included in requests that CloudFront sends to the origin. Even when this field is set to ``none``, any headers that are listed in a ``CachePolicy``*are* included in origin requests.\n  +  ``whitelist`` \u2013 Only the HTTP headers that are listed in the ``Headers`` type are included in requests that CloudFront sends to the origin.\n  +  ``allViewer`` \u2013 All HTTP headers in viewer requests are included in requests that CloudFront sends to the origin.\n  +  ``allViewerAndWhitelistCloudFront`` \u2013 All HTTP headers in viewer requests and the additional CloudFront headers that are listed in the ``Headers`` type are included in requests that CloudFront sends to the origin. The additional headers are added by CloudFront.\n  +  ``allExcept`` \u2013 All HTTP headers in viewer requests are included in requests that CloudFront sends to the origin, *except* for those listed in the ``Headers`` type, which are not included.",
+     "pattern": "^(none|whitelist|allViewer|allViewerAndWhitelistCloudFront|allExcept)$",
+     "type": "string"
+    },
+    "Headers": {
+     "description": "Contains a list of HTTP header names.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "HeaderBehavior"
+   ],
+   "type": "object"
+  },
+  "OriginRequestPolicyConfig": {
+   "additionalProperties": false,
+   "description": "An origin request policy configuration.\n This configuration determines the values that CloudFront includes in requests that it sends to the origin. Each request that CloudFront sends to the origin includes the following:\n  +  The request body and the URL path (without the domain name) from the viewer request.\n  +  The headers that CloudFront automatically includes in every origin request, including ``Host``, ``User-Agent``, and ``X-Amz-Cf-Id``.\n  +  All HTTP headers, cookies, and URL query strings that are specified in the cache policy or the origin request policy. These can include items from the viewer request and, in the case of headers, additional ones that are added by CloudFront.\n  \n CloudFront sends a request when it can't find an object in its cache that matches the request. If you want to send values to the origin and also include them in the cache key, use ``CachePolicy``.",
+   "properties": {
+    "Comment": {
+     "description": "A comment to describe the origin request policy. The comment cannot be longer than 128 characters.",
+     "type": "string"
+    },
+    "CookiesConfig": {
+     "$ref": "#/definitions/CookiesConfig",
+     "description": "The cookies from viewer requests to include in origin requests."
+    },
+    "HeadersConfig": {
+     "$ref": "#/definitions/HeadersConfig",
+     "description": "The HTTP headers to include in origin requests. These can include headers from viewer requests and additional headers added by CloudFront."
+    },
+    "Name": {
+     "description": "A unique name to identify the origin request policy.",
+     "type": "string"
+    },
+    "QueryStringsConfig": {
+     "$ref": "#/definitions/QueryStringsConfig",
+     "description": "The URL query strings from viewer requests to include in origin requests."
+    }
+   },
+   "required": [
+    "Name",
+    "HeadersConfig",
+    "CookiesConfig",
+    "QueryStringsConfig"
+   ],
+   "type": "object"
+  },
+  "QueryStringsConfig": {
+   "additionalProperties": false,
+   "description": "An object that determines whether any URL query strings in viewer requests (and if so, which query strings) are included in requests that CloudFront sends to the origin.",
+   "properties": {
+    "QueryStringBehavior": {
+     "description": "Determines whether any URL query strings in viewer requests are included in requests that CloudFront sends to the origin. Valid values are:\n  +  ``none`` \u2013 No query strings in viewer requests are included in requests that CloudFront sends to the origin. Even when this field is set to ``none``, any query strings that are listed in a ``CachePolicy``*are* included in origin requests.\n  +  ``whitelist`` \u2013 Only the query strings in viewer requests that are listed in the ``QueryStringNames`` type are included in requests that CloudFront sends to the origin.\n  +  ``all`` \u2013 All query strings in viewer requests are included in requests that CloudFront sends to the origin.\n  +  ``allExcept`` \u2013 All query strings in viewer requests are included in requests that CloudFront sends to the origin, *except* for those listed in the ``QueryStringNames`` type, which are not included.",
+     "pattern": "^(none|whitelist|all|allExcept)$",
+     "type": "string"
+    },
+    "QueryStrings": {
+     "description": "Contains a list of query string names.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "QueryStringBehavior"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "An origin request policy.\n When it's attached to a cache behavior, the origin request policy determines the values that CloudFront includes in requests that it sends to the origin. Each request that CloudFront sends to the origin includes the following:\n  +  The request body and the URL path (without the domain name) from the viewer request.\n  +  The headers that CloudFront automatically includes in every origin request, including ``Host``, ``User-Agent``, and ``X-Amz-Cf-Id``.\n  +  All HTTP headers, cookies, and URL query strings that are specified in the cache policy or the origin request policy. These can include items from the viewer request and, in the case of headers, additional ones that are added by CloudFront.\n  \n CloudFront sends a request when it can't find an object in its cache that matches the request. If you want to send values to the origin and also include them in the cache key, use ``CachePolicy``.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cloudfront:CreateOriginRequestPolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cloudfront:DeleteOriginRequestPolicy",
+    "cloudfront:GetOriginRequestPolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cloudfront:ListOriginRequestPolicies"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cloudfront:GetOriginRequestPolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cloudfront:UpdateOriginRequestPolicy",
+    "cloudfront:GetOriginRequestPolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "description": "",
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "description": "",
+   "type": "string"
+  },
+  "OriginRequestPolicyConfig": {
+   "$ref": "#/definitions/OriginRequestPolicyConfig",
+   "description": "The origin request policy configuration."
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "OriginRequestPolicyConfig"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::CloudFront::OriginRequestPolicy"
+}

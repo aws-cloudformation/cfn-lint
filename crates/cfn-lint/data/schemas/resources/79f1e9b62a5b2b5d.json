@@ -1,0 +1,90 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AllocationId",
+  "/properties/NetworkInterfaceId",
+  "/properties/InstanceId",
+  "/properties/PrivateIpAddress",
+  "/properties/EIP"
+ ],
+ "deprecatedProperties": [
+  "/properties/EIP"
+ ],
+ "description": "Associates an Elastic IP address with an instance or a network interface. Before you can use an Elastic IP address, you must allocate it to your account. For more information about working with Elastic IP addresses, see [Elastic IP address concepts and rules](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-eips.html#vpc-eip-overview).\n You must specify ``AllocationId`` and either ``InstanceId``, ``NetworkInterfaceId``, or ``PrivateIpAddress``.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:DescribeAddresses",
+    "ec2:AssociateAddress"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DisassociateAddress",
+    "ec2:DescribeAddresses"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeAddresses"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeAddresses"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AllocationId": {
+   "description": "The allocation ID. This is required.",
+   "type": "string"
+  },
+  "EIP": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/PublicIp",
+      "typeName": "AWS::EC2::EIP"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/AllocationId",
+      "typeName": "AWS::EC2::EIP"
+     }
+    }
+   ],
+   "description": "",
+   "type": "string"
+  },
+  "Id": {
+   "description": "",
+   "type": "string"
+  },
+  "InstanceId": {
+   "description": "The ID of the instance. The instance must have exactly one attached network interface. You can specify either the instance ID or the network interface ID, but not both.",
+   "type": "string"
+  },
+  "NetworkInterfaceId": {
+   "description": "The ID of the network interface. If the instance has more than one network interface, you must specify a network interface ID.\n You can specify either the instance ID or the network interface ID, but not both.",
+   "type": "string"
+  },
+  "PrivateIpAddress": {
+   "description": "The primary or secondary private IP address to associate with the Elastic IP address. If no private IP address is specified, the Elastic IP address is associated with the primary private IP address.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2/tree/master/aws-ec2-eipassociation",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::EIPAssociation"
+}

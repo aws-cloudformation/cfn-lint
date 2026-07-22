@@ -1,0 +1,40 @@
+[package]
+name = "cfn-lint-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+license = "MIT-0"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+
+# Fuzz the parser/AST layer only. `default-features = false` keeps the fuzz
+# binary lean and offline: it drops the `fetch`/`bundled` schema-download code
+# paths, which the parse + Template::from_ast entry points never touch.
+cfn-ast = { path = "../crates/cfn-ast" }
+cfn-lint = { path = "../crates/cfn-lint", default-features = false }
+
+# Symbols in release builds so libFuzzer crash reports are readable.
+[profile.release]
+debug = 1
+
+# Detach from the parent workspace: cargo-fuzz crates are their own workspace
+# root so `cargo build --workspace` at the repo root never pulls in libFuzzer.
+[workspace]
+
+[[bin]]
+name = "ast_parse"
+path = "fuzz_targets/ast_parse.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "template_parse"
+path = "fuzz_targets/template_parse.rs"
+test = false
+doc = false
+bench = false

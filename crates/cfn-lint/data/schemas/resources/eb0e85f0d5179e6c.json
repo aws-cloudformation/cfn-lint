@@ -1,0 +1,155 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/Description",
+  "/properties/Model",
+  "/properties/Status",
+  "/properties/OwningProjectIdentifier"
+ ],
+ "createOnlyProperties": [
+  "/properties/DomainIdentifier",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Model": {
+   "additionalProperties": false,
+   "description": "Indicates the smithy model of the API.",
+   "properties": {
+    "Smithy": {
+     "maxLength": 100000,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Create and manage form types in Amazon Datazone",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "datazone:CreateFormType",
+    "datazone:GetFormType"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "datazone:DeleteFormType",
+    "datazone:GetFormType"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "datazone:GetFormType"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "datazone:CreateFormType",
+    "datazone:GetFormType"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainIdentifier",
+  "/properties/FormTypeIdentifier"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "description": "The timestamp of when this Amazon DataZone metadata form type was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "CreatedBy": {
+   "description": "The user who created this Amazon DataZone metadata form type.",
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of this Amazon DataZone metadata form type.",
+   "maxLength": 2048,
+   "minLength": 0,
+   "type": "string"
+  },
+  "DomainId": {
+   "description": "The ID of the Amazon DataZone domain in which this metadata form type is created.",
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "DomainIdentifier": {
+   "description": "The ID of the Amazon DataZone domain in which this metadata form type is created.",
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "FormTypeIdentifier": {
+   "description": "The ID of this Amazon DataZone metadata form type.",
+   "maxLength": 385,
+   "minLength": 1,
+   "pattern": "^(?!\\.)[\\w\\.]*\\w$",
+   "type": "string"
+  },
+  "Model": {
+   "$ref": "#/definitions/Model",
+   "description": "The model of this Amazon DataZone metadata form type.",
+   "type": "object"
+  },
+  "Name": {
+   "description": "The name of this Amazon DataZone metadata form type.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^(?![0-9_])\\w+$|^_\\w*[a-zA-Z0-9]\\w*$",
+   "type": "string"
+  },
+  "OwningProjectId": {
+   "description": "The ID of the project that owns this Amazon DataZone metadata form type.",
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "OwningProjectIdentifier": {
+   "description": "The ID of the Amazon DataZone project that owns this metadata form type.",
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Revision": {
+   "description": "The revision of this Amazon DataZone metadata form type.",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Status": {
+   "description": "The status of this Amazon DataZone metadata form type.",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DomainId",
+  "/properties/OwningProjectId",
+  "/properties/Revision",
+  "/properties/FormTypeIdentifier",
+  "/properties/CreatedAt",
+  "/properties/CreatedBy"
+ ],
+ "required": [
+  "DomainIdentifier",
+  "Model",
+  "Name",
+  "OwningProjectIdentifier"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::DataZone::FormType"
+}

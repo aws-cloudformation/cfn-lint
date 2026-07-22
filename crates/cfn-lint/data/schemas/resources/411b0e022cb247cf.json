@@ -1,0 +1,202 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PackageName"
+ ],
+ "definitions": {
+  "NodePackageArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "NodePackageId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-\\_\\/]+$",
+   "type": "string"
+  },
+  "NodePackageName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-\\_]+$",
+   "type": "string"
+  },
+  "StorageLocation": {
+   "additionalProperties": false,
+   "description": "A storage location.",
+   "properties": {
+    "BinaryPrefixLocation": {
+     "description": "The location's binary prefix.",
+     "type": "string"
+    },
+    "Bucket": {
+     "description": "The location's bucket.",
+     "type": "string"
+    },
+    "GeneratedPrefixLocation": {
+     "description": "The location's generated prefix.",
+     "type": "string"
+    },
+    "ManifestPrefixLocation": {
+     "description": "The location's manifest prefix.",
+     "type": "string"
+    },
+    "RepoPrefixLocation": {
+     "description": "The location's repo prefix.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "",
+   "properties": {
+    "Key": {
+     "description": "",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^.+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^.+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TagList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Timestamp": {
+   "type": "integer"
+  }
+ },
+ "description": "Creates a package and storage location in an Amazon S3 access point.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "panorama:CreatePackage",
+    "panorama:ListTagsForResource",
+    "panorama:TagResource",
+    "panorama:DescribePackage",
+    "s3:ListBucket",
+    "s3:PutObject",
+    "s3:GetObject",
+    "s3:GetObjectVersion"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "panorama:DeletePackage",
+    "panorama:DescribePackage",
+    "s3:DeleteObject",
+    "s3:DeleteObjectVersion",
+    "s3:DeleteObjectVersionTagging",
+    "s3:ListObjects",
+    "s3:ListObjectsV2",
+    "s3:ListBucket",
+    "s3:GetObject",
+    "s3:GetObjectVersion"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "panorama:ListPackages",
+    "s3:ListBucket",
+    "s3:GetObject",
+    "s3:GetObjectVersion"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "panorama:DescribePackage",
+    "panorama:ListTagsForResource",
+    "s3:ListBucket",
+    "s3:GetObject",
+    "s3:GetObjectVersion"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "panorama:DescribePackage",
+    "panorama:ListTagsForResource",
+    "panorama:TagResource",
+    "panorama:UntagResource",
+    "s3:PutObject",
+    "s3:ListBucket",
+    "s3:GetObject",
+    "s3:GetObjectVersion"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PackageId"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/NodePackageArn",
+   "description": ""
+  },
+  "CreatedTime": {
+   "$ref": "#/definitions/Timestamp",
+   "description": ""
+  },
+  "PackageId": {
+   "$ref": "#/definitions/NodePackageId",
+   "description": ""
+  },
+  "PackageName": {
+   "$ref": "#/definitions/NodePackageName",
+   "description": "A name for the package."
+  },
+  "StorageLocation": {
+   "$ref": "#/definitions/StorageLocation",
+   "description": "A storage location."
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagList",
+   "description": "Tags for the package."
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PackageId",
+  "/properties/Arn",
+  "/properties/CreatedTime",
+  "/properties/StorageLocation/Bucket",
+  "/properties/StorageLocation/RepoPrefixLocation",
+  "/properties/StorageLocation/GeneratedPrefixLocation",
+  "/properties/StorageLocation/BinaryPrefixLocation",
+  "/properties/StorageLocation/ManifestPrefixLocation"
+ ],
+ "required": [
+  "PackageName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "panorama:ListTagsForResource",
+   "panorama:TagResource",
+   "panorama:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Panorama::Package"
+}

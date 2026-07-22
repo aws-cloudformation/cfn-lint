@@ -1,0 +1,132 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Description",
+  "/properties/Family"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The AWS::Neptune::DBClusterParameterGroup resource creates a new Amazon Neptune DB cluster parameter group",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "rds:AddTagsToResource",
+    "rds:CreateDBClusterParameterGroup",
+    "rds:DescribeDBClusterParameterGroups",
+    "rds:DescribeDBClusterParameters",
+    "rds:DescribeEngineDefaultClusterParameters",
+    "rds:ListTagsForResource",
+    "rds:ModifyDBClusterParameterGroup",
+    "iam:CreateServiceLinkedRole"
+   ],
+   "timeoutInMinutes": 180
+  },
+  "delete": {
+   "permissions": [
+    "rds:DeleteDBClusterParameterGroup",
+    "rds:ListTagsForResource",
+    "rds:RemoveTagsFromResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "rds:DescribeDBClusterParameterGroups",
+    "rds:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "rds:DescribeDBClusterParameterGroups",
+    "rds:ListTagsForResource",
+    "rds:DescribeDBClusterParameters"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "rds:AddTagsToResource",
+    "rds:DescribeDBClusterParameterGroups",
+    "rds:DescribeDBClusterParameters",
+    "rds:DescribeDBClusters",
+    "rds:DescribeEngineDefaultClusterParameters",
+    "rds:ListTagsForResource",
+    "rds:ModifyDBClusterParameterGroup",
+    "rds:RemoveTagsFromResource",
+    "rds:ResetDBClusterParameterGroup"
+   ],
+   "timeoutInMinutes": 180
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Description": {
+   "description": "Provides the customer-specified description for this DB cluster parameter group.",
+   "type": "string"
+  },
+  "Family": {
+   "description": "Must be neptune1 for engine versions prior to 1.2.0.0, or neptune1.2 for engine version 1.2.0.0 and higher.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "Provides the name of the DB cluster parameter group.",
+   "type": "string"
+  },
+  "Parameters": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Tags": {
+   "description": "The list of tags for the cluster parameter group.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "propertyTransform": {
+  "/properties/Name": "$lowercase(Name)"
+ },
+ "required": [
+  "Description",
+  "Family",
+  "Parameters"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-neptune",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "rds:AddTagsToResource",
+   "rds:ListTagsForResource",
+   "rds:RemoveTagsFromResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Neptune::DBClusterParameterGroup"
+}

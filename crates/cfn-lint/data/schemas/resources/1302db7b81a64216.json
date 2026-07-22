@@ -1,0 +1,75 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SourcePortfolioId",
+  "/properties/AcceptLanguage",
+  "/properties/PortfolioId",
+  "/properties/ProductId"
+ ],
+ "description": "Resource Type definition for AWS::ServiceCatalog::PortfolioProductAssociation",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "servicecatalog:AssociateProductWithPortfolio",
+    "servicecatalog:ListPortfoliosForProduct"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "servicecatalog:DisassociateProductFromPortfolio",
+    "servicecatalog:ListPortfoliosForProduct"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ProductId": {
+      "$ref": "resource-schema.json#/properties/ProductId"
+     }
+    },
+    "required": [
+     "ProductId"
+    ]
+   },
+   "permissions": [
+    "servicecatalog:ListPortfoliosForProduct"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "servicecatalog:ListPortfoliosForProduct"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PortfolioId",
+  "/properties/ProductId"
+ ],
+ "properties": {
+  "AcceptLanguage": {
+   "description": "The language code.",
+   "type": "string"
+  },
+  "PortfolioId": {
+   "description": "The portfolio identifier.",
+   "type": "string"
+  },
+  "ProductId": {
+   "description": "The product identifier.",
+   "type": "string"
+  },
+  "SourcePortfolioId": {
+   "description": "The identifier of the source portfolio. The source portfolio must be a portfolio imported from a different account than the one creating the association. This account must have previously shared this portfolio with the account creating the association.",
+   "type": "string"
+  }
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-servicecatalog/tree/master/aws-servicecatalog-portfolioproductassociation.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ServiceCatalog::PortfolioProductAssociation",
+ "writeOnlyProperties": [
+  "/properties/SourcePortfolioId",
+  "/properties/AcceptLanguage"
+ ]
+}

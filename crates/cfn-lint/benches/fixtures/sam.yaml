@@ -1,0 +1,102 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >-
+  SAM benchmark fixture. Exercises the AWS::Serverless-* schema path plus
+  Globals, implicit resource generation, and Ref/GetAtt/Sub resolution.
+
+Globals:
+  Function:
+    Runtime: python3.12
+    Timeout: 30
+    MemorySize: 256
+    Tracing: Active
+    Environment:
+      Variables:
+        LOG_LEVEL: INFO
+
+Parameters:
+  Stage:
+    Type: String
+    Default: prod
+    AllowedValues: [dev, prod]
+
+Conditions:
+  IsProd: !Equals [!Ref Stage, prod]
+
+Resources:
+  ItemsTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: String
+
+  Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref Stage
+      TracingEnabled: true
+      MethodSettings:
+        - ResourcePath: /*
+          HttpMethod: '*'
+          ThrottlingBurstLimit: 200
+          ThrottlingRateLimit: 100
+
+  GetItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${Stage}-get-item'
+      Handler: app.get_handler
+      CodeUri: src/
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ItemsTable
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref ItemsTable
+      Events:
+        GetItem:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /items/{id}
+            Method: get
+
+  PutItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${Stage}-put-item'
+      Handler: app.put_handler
+      CodeUri: src/
+      ReservedConcurrentExecutions: !If [IsProd, 100, 5]
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ItemsTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ItemsTable
+      Events:
+        PutItem:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /items
+            Method: post
+
+  StreamProcessor:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.stream_handler
+      CodeUri: src/
+      Policies:
+        - DynamoDBStreamReadPolicy:
+            TableName: !Ref ItemsTable
+            StreamName: '*'
+
+Outputs:
+  ApiUrl:
+    Value: !Sub 'https://${Api}.execute-api.${AWS::Region}.amazonaws.com/${Stage}'
+  TableName:
+    Value: !Ref ItemsTable
+  GetFunctionArn:
+    Value: !GetAtt GetItemFunction.Arn

@@ -1,0 +1,468 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/OdbNetworkId",
+  "/properties/CloudExadataInfrastructureId",
+  "/properties/DbServers",
+  "/properties/IsMtlsEnabledVmCluster",
+  "/properties/MemoryPerOracleComputeUnitInGBs",
+  "/properties/ScanListenerPortNonTls",
+  "/properties/ScanListenerPortTls",
+  "/properties/TimeZone",
+  "/properties/AutonomousDataStorageSizeInTBs",
+  "/properties/DisplayName",
+  "/properties/CpuCoreCountPerNode",
+  "/properties/Description",
+  "/properties/LicenseModel",
+  "/properties/MaintenanceWindow",
+  "/properties/TotalContainerDatabases"
+ ],
+ "definitions": {
+  "IamRole": {
+   "additionalProperties": false,
+   "description": "An AWS Identity and Access Management (IAM) service role associated with the Autonomous VM cluster.",
+   "properties": {
+    "AwsIntegration": {
+     "description": "The AWS integration configuration settings for the AWS Identity and Access Management (IAM) service role.",
+     "type": "string"
+    },
+    "IamRoleArn": {
+     "description": "The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM) service role.",
+     "format": "AWS::IAM::Role.Arn",
+     "type": "string"
+    },
+    "Status": {
+     "description": "The current status of the AWS Identity and Access Management (IAM) service role.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MaintenanceWindow": {
+   "additionalProperties": false,
+   "description": "The scheduling details for the maintenance window. Patching and system updates take place during the maintenance window.",
+   "properties": {
+    "DaysOfWeek": {
+     "description": "The days of the week when maintenance can be performed.",
+     "items": {
+      "enum": [
+       "MONDAY",
+       "TUESDAY",
+       "WEDNESDAY",
+       "THURSDAY",
+       "FRIDAY",
+       "SATURDAY",
+       "SUNDAY"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "HoursOfDay": {
+     "description": "The hours of the day when maintenance can be performed.",
+     "items": {
+      "type": "integer"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "LeadTimeInWeeks": {
+     "description": "The lead time in weeks before the maintenance window.",
+     "maxLength": 4,
+     "minLength": 1,
+     "type": "integer"
+    },
+    "Months": {
+     "description": "The months when maintenance can be performed.",
+     "items": {
+      "enum": [
+       "JANUARY",
+       "FEBRUARY",
+       "MARCH",
+       "APRIL",
+       "MAY",
+       "JUNE",
+       "JULY",
+       "AUGUST",
+       "SEPTEMBER",
+       "OCTOBER",
+       "NOVEMBER",
+       "DECEMBER"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Preference": {
+     "description": "The preference for the maintenance window scheduling.",
+     "enum": [
+      "NO_PREFERENCE",
+      "CUSTOM_PREFERENCE"
+     ],
+     "type": "string"
+    },
+    "WeeksOfMonth": {
+     "description": "The weeks of the month when maintenance can be performed.",
+     "items": {
+      "type": "integer"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that's 1 to 128 Unicode characters in length and can't be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., :, /, =, +, @, -, and \".",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that's 1 to 256 characters in length. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The AWS::ODB::CloudAutonomousVmCluster resource creates a Cloud Autonomous VM Cluster",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:DescribeAvailabilityZones",
+    "iam:CreateServiceLinkedRole",
+    "iam:PassRole",
+    "odb:CreateCloudAutonomousVmCluster",
+    "odb:GetCloudAutonomousVmCluster",
+    "odb:ListCloudAutonomousVmClusters",
+    "odb:ListTagsForResource",
+    "odb:TagResource",
+    "odb:AssociateIamRoleToResource",
+    "sts:GetCallerIdentity"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "delete": {
+   "permissions": [
+    "odb:DeleteCloudAutonomousVmCluster",
+    "odb:GetCloudAutonomousVmCluster",
+    "odb:ListCloudAutonomousVmClusters",
+    "odb:ListTagsForResource",
+    "sts:GetCallerIdentity"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "list": {
+   "permissions": [
+    "odb:ListCloudAutonomousVmClusters",
+    "odb:ListTagsForResource",
+    "sts:GetCallerIdentity"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "odb:GetCloudAutonomousVmCluster",
+    "odb:ListTagsForResource",
+    "sts:GetCallerIdentity"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "odb:TagResource",
+    "odb:UntagResource",
+    "odb:GetCloudAutonomousVmCluster",
+    "odb:ListCloudAutonomousVmClusters",
+    "odb:ListTagsForResource",
+    "odb:AssociateIamRoleToResource",
+    "odb:DisassociateIamRoleFromResource",
+    "sts:GetCallerIdentity"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CloudAutonomousVmClusterArn"
+ ],
+ "properties": {
+  "AutonomousDataStoragePercentage": {
+   "description": "The percentage of data storage currently in use for Autonomous Databases in the Autonomous VM cluster.",
+   "type": "number"
+  },
+  "AutonomousDataStorageSizeInTBs": {
+   "description": "The data storage size allocated for Autonomous Databases in the Autonomous VM cluster, in TB.",
+   "type": "number"
+  },
+  "AvailableAutonomousDataStorageSizeInTBs": {
+   "description": "The available data storage space for Autonomous Databases in the Autonomous VM cluster, in TB.",
+   "type": "number"
+  },
+  "AvailableContainerDatabases": {
+   "description": "The number of Autonomous CDBs that you can create with the currently available storage.",
+   "type": "integer"
+  },
+  "AvailableCpus": {
+   "description": "The number of CPU cores available for allocation to Autonomous Databases.",
+   "type": "number"
+  },
+  "CloudAutonomousVmClusterArn": {
+   "description": "The Amazon Resource Name (ARN) for the Autonomous VM cluster.",
+   "type": "string"
+  },
+  "CloudAutonomousVmClusterId": {
+   "description": "The unique identifier of the Autonomous VM cluster.",
+   "type": "string"
+  },
+  "CloudExadataInfrastructureId": {
+   "description": "The unique identifier of the Cloud Exadata Infrastructure containing this Autonomous VM cluster.",
+   "maxLength": 2048,
+   "minLength": 6,
+   "pattern": "^(arn:(?:aws|aws-cn|aws-us-gov|aws-iso-{0,1}[a-z]{0,1}):[a-z0-9-]+:[a-z0-9-]*:[0-9]+:[a-z0-9-]+/[a-zA-Z0-9_~.-]{6,64}|[a-zA-Z0-9_~.-]{6,64})$",
+   "type": "string"
+  },
+  "ComputeModel": {
+   "description": "The compute model of the Autonomous VM cluster: ECPU or OCPU.",
+   "enum": [
+    "ECPU",
+    "OCPU"
+   ],
+   "type": "string"
+  },
+  "CpuCoreCount": {
+   "description": "The total number of CPU cores in the Autonomous VM cluster.",
+   "type": "integer"
+  },
+  "CpuCoreCountPerNode": {
+   "description": "The number of CPU cores enabled per node in the Autonomous VM cluster.",
+   "type": "integer"
+  },
+  "CpuPercentage": {
+   "description": "The percentage of total CPU cores currently in use in the Autonomous VM cluster.",
+   "type": "number"
+  },
+  "DataStorageSizeInGBs": {
+   "description": "The total data storage allocated to the Autonomous VM cluster, in GB.",
+   "type": "number"
+  },
+  "DataStorageSizeInTBs": {
+   "description": "The total data storage allocated to the Autonomous VM cluster, in TB.",
+   "type": "number"
+  },
+  "DbNodeStorageSizeInGBs": {
+   "description": "The local node storage allocated to the Autonomous VM cluster, in gigabytes (GB).",
+   "type": "integer"
+  },
+  "DbServers": {
+   "description": "The list of database servers associated with the Autonomous VM cluster.",
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 1024,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Description": {
+   "description": "The user-provided description of the Autonomous VM cluster.",
+   "type": "string"
+  },
+  "DisplayName": {
+   "description": "The display name of the Autonomous VM cluster.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z_](?!.*--)[a-zA-Z0-9_-]*$",
+   "type": "string"
+  },
+  "Domain": {
+   "description": "The domain name for the Autonomous VM cluster.",
+   "type": "string"
+  },
+  "ExadataStorageInTBsLowestScaledValue": {
+   "description": "The minimum value to which you can scale down the Exadata storage, in TB.",
+   "type": "number"
+  },
+  "Hostname": {
+   "description": "The hostname for the Autonomous VM cluster.",
+   "type": "string"
+  },
+  "IamRoles": {
+   "description": "The AWS Identity and Access Management (IAM) service roles associated with the Autonomous VM cluster.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IamRole"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "IsMtlsEnabledVmCluster": {
+   "description": "Indicates whether mutual TLS (mTLS) authentication is enabled for the Autonomous VM cluster.",
+   "type": "boolean"
+  },
+  "LicenseModel": {
+   "description": "The Oracle license model that applies to the Autonomous VM cluster. Valid values are LICENSE_INCLUDED or BRING_YOUR_OWN_LICENSE.",
+   "enum": [
+    "BRING_YOUR_OWN_LICENSE",
+    "LICENSE_INCLUDED"
+   ],
+   "type": "string"
+  },
+  "MaintenanceWindow": {
+   "$ref": "#/definitions/MaintenanceWindow",
+   "description": "The scheduling details for the maintenance window. Patching and system updates take place during the maintenance window."
+  },
+  "MaxAcdsLowestScaledValue": {
+   "description": "The minimum value to which you can scale down the maximum number of Autonomous CDBs.",
+   "type": "integer"
+  },
+  "MemoryPerOracleComputeUnitInGBs": {
+   "description": "The amount of memory allocated per Oracle Compute Unit, in GB.",
+   "type": "integer"
+  },
+  "MemorySizeInGBs": {
+   "description": "The total amount of memory allocated to the Autonomous VM cluster, in gigabytes (GB).",
+   "type": "integer"
+  },
+  "NodeCount": {
+   "description": "The number of database server nodes in the Autonomous VM cluster.",
+   "type": "integer"
+  },
+  "NonProvisionableAutonomousContainerDatabases": {
+   "description": "The number of Autonomous CDBs that can't be provisioned because of resource constraints.",
+   "type": "integer"
+  },
+  "OciResourceAnchorName": {
+   "description": "The name of the OCI resource anchor associated with this Autonomous VM cluster.",
+   "type": "string"
+  },
+  "OciUrl": {
+   "description": "The URL for accessing the OCI console page for this Autonomous VM cluster.",
+   "type": "string"
+  },
+  "Ocid": {
+   "description": "The Oracle Cloud Identifier (OCID) of the Autonomous VM cluster.",
+   "type": "string"
+  },
+  "OdbNetworkId": {
+   "description": "The unique identifier of the ODB network associated with this Autonomous VM cluster.",
+   "maxLength": 2048,
+   "minLength": 6,
+   "pattern": "^(arn:(?:aws|aws-cn|aws-us-gov|aws-iso-{0,1}[a-z]{0,1}):[a-z0-9-]+:[a-z0-9-]*:[0-9]+:[a-z0-9-]+/[a-zA-Z0-9_~.-]{6,64}|[a-zA-Z0-9_~.-]{6,64})$",
+   "type": "string"
+  },
+  "ProvisionableAutonomousContainerDatabases": {
+   "description": "The number of Autonomous CDBs that can be provisioned in the Autonomous VM cluster.",
+   "type": "integer"
+  },
+  "ProvisionedAutonomousContainerDatabases": {
+   "description": "The number of Autonomous CDBs currently provisioned in the Autonomous VM cluster.",
+   "type": "integer"
+  },
+  "ProvisionedCpus": {
+   "description": "The number of CPU cores currently provisioned in the Autonomous VM cluster.",
+   "type": "number"
+  },
+  "ReclaimableCpus": {
+   "description": "The number of CPU cores that can be reclaimed from terminated or scaled-down Autonomous Databases.",
+   "type": "number"
+  },
+  "ReservedCpus": {
+   "description": "The number of CPU cores reserved for system operations and redundancy.",
+   "type": "number"
+  },
+  "ScanListenerPortNonTls": {
+   "description": "The SCAN listener port for non-TLS (TCP) protocol. The default is 1521.",
+   "maximum": 8999,
+   "minimum": 1024,
+   "type": "integer"
+  },
+  "ScanListenerPortTls": {
+   "description": "The SCAN listener port for TLS (TCP) protocol. The default is 2484.",
+   "maximum": 8999,
+   "minimum": 1024,
+   "type": "integer"
+  },
+  "Shape": {
+   "description": "The shape of the Exadata infrastructure for the Autonomous VM cluster.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "The tags associated with the Autonomous VM cluster.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TimeZone": {
+   "description": "The time zone of the Autonomous VM cluster.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "TotalContainerDatabases": {
+   "description": "The total number of Autonomous Container Databases that can be created with the allocated local storage.",
+   "type": "integer"
+  }
+ },
+ "propertyTransform": {
+  "/properties/CloudExadataInfrastructureId": "$split(CloudExadataInfrastructureId, \"cloud-exadata-infrastructure/\")[-1] $OR CloudExadataInfrastructureId",
+  "/properties/OdbNetworkId": "$split(OdbNetworkId, \"odb-network/\")[-1] $OR OdbNetworkId"
+ },
+ "readOnlyProperties": [
+  "/properties/CloudAutonomousVmClusterId",
+  "/properties/CloudAutonomousVmClusterArn",
+  "/properties/OciResourceAnchorName",
+  "/properties/AutonomousDataStoragePercentage",
+  "/properties/AvailableAutonomousDataStorageSizeInTBs",
+  "/properties/AvailableContainerDatabases",
+  "/properties/AvailableCpus",
+  "/properties/ComputeModel",
+  "/properties/CpuCoreCount",
+  "/properties/CpuPercentage",
+  "/properties/DataStorageSizeInGBs",
+  "/properties/DataStorageSizeInTBs",
+  "/properties/DbNodeStorageSizeInGBs",
+  "/properties/Domain",
+  "/properties/ExadataStorageInTBsLowestScaledValue",
+  "/properties/Hostname",
+  "/properties/Ocid",
+  "/properties/OciUrl",
+  "/properties/MaxAcdsLowestScaledValue",
+  "/properties/MemorySizeInGBs",
+  "/properties/NodeCount",
+  "/properties/NonProvisionableAutonomousContainerDatabases",
+  "/properties/ProvisionableAutonomousContainerDatabases",
+  "/properties/ProvisionedAutonomousContainerDatabases",
+  "/properties/ProvisionedCpus",
+  "/properties/ReclaimableCpus",
+  "/properties/ReservedCpus",
+  "/properties/Shape",
+  "/properties/IamRoles/*/Status"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "odb:TagResource",
+   "odb:UntagResource",
+   "odb:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ODB::CloudAutonomousVmCluster"
+}

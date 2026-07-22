@@ -208,10 +208,10 @@ impl Validator {
                 // Inject patternProperties for free-form objects (type: object with no
                 // properties/additionalProperties/patternProperties) to force descent.
                 // Matches Python's _filter_schemas behavior for nested JSON objects.
-                let is_object_type = obj.get("type").map_or(false, |t| {
+                let is_object_type = obj.get("type").is_some_and(|t| {
                     t.as_str() == Some("object")
                         || t.as_array()
-                            .map_or(false, |a| a.iter().any(|v| v.as_str() == Some("object")))
+                            .is_some_and(|a| a.iter().any(|v| v.as_str() == Some("object")))
                 });
                 if is_object_type
                     && !obj.contains_key("properties")
@@ -222,10 +222,10 @@ impl Validator {
                         ".*": {"type": ["array", "boolean", "integer", "null", "number", "object", "string"]}
                     }));
                 }
-                let is_array_type = obj.get("type").map_or(false, |t| {
+                let is_array_type = obj.get("type").is_some_and(|t| {
                     t.as_str() == Some("array")
                         || t.as_array()
-                            .map_or(false, |a| a.iter().any(|v| v.as_str() == Some("array")))
+                            .is_some_and(|a| a.iter().any(|v| v.as_str() == Some("array")))
                 });
                 if is_array_type && !obj.contains_key("items") {
                     obj.insert("items".to_string(), serde_json::json!({"type": ["array", "boolean", "integer", "null", "number", "object", "string"]}));
@@ -276,13 +276,24 @@ fn resolve_object_conditions(
     }
 
     let n = conditions.len();
-    let max = std::cmp::min(1usize << n, 128);
+    // `1usize << n` panics (overflow) once n >= 64. Since the scenario count is
+    // capped at 128 (== 2^7) anyway, short-circuit for large n to avoid the shift.
+    let max = if n >= 7 { 128 } else { 1usize << n };
     let mut results = Vec::new();
     let mut seen_keys: Vec<Vec<String>> = Vec::new();
     for i in 0..max {
         let mut scenario = base_scenario.clone();
         for (j, name) in conditions.iter().enumerate() {
-            scenario.insert(name.clone(), (i >> (n - 1 - j)) & 1 == 0);
+            // `i >> shift` also overflows once shift >= 64. With `max` capped at
+            // 128 only the low 7 bits of `i` vary, so any higher condition slot
+            // gets a fixed bit (0) rather than panicking.
+            let shift = n - 1 - j;
+            let bit = if shift >= usize::BITS as usize {
+                0
+            } else {
+                (i >> shift) & 1
+            };
+            scenario.insert(name.clone(), bit == 0);
         }
         let resolved = resolve_one_scenario(obj, &scenario);
         if let Some(robj) = resolved.as_object() {
@@ -349,4 +360,56 @@ fn resolve_value_for_scenario(
         }
     }
     Some(node.clone())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::ast::{ArrayNode, FunctionNode, ObjectEntry, ObjectNode, Span, StringNode};
+    use std::collections::HashMap;
+
+    fn sn(s: &str) -> AstNode {
+        AstNode::String(StringNode {
+            value: s.to_string(),
+            span: Span::default(),
+        })
+    }
+
+    fn if_func(cond: &str) -> AstNode {
+        AstNode::Function(FunctionNode {
+            name: "Fn::If".to_string(),
+            args: Box::new(AstNode::Array(ArrayNode {
+                elements: vec![sn(cond), sn("a"), sn("b")],
+                span: Span::default(),
+            })),
+            span: Span::default(),
+        })
+    }
+
+    #[test]
+    fn test_many_conditions_does_not_overflow_shift() {
+        // 70 distinct conditions makes n >= 64, where `1usize << n` previously
+        // panicked with a shift overflow. The scenario count must stay capped at 128.
+        let entries: Vec<ObjectEntry> = (0..70)
+            .map(|k| {
+                let key = format!("P{k}");
+                ObjectEntry {
+                    key_node: sn(&key),
+                    key: key.clone(),
+                    value: if_func(&format!("C{k}")),
+                    key_span: Span::default(),
+                }
+            })
+            .collect();
+        let obj = ObjectNode {
+            entries,
+            span: Span::default(),
+        };
+        let results = resolve_object_conditions(&obj, &HashMap::new());
+        assert!(
+            results.len() <= 128,
+            "scenario count must be capped, got {}",
+            results.len()
+        );
+    }
 }

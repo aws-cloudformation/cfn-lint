@@ -404,17 +404,27 @@ pub fn parse_yaml_lenient(input: &str) -> (Option<AstNode>, Vec<String>) {
         // Recover partial AST: unwind the doc_stack, closing each open node
         // and inserting it into its parent, bottom-up.
         while loader.doc_stack.len() > 1 {
-            // Handle any pending key at this level (incomplete key without value)
-            if let Some(pending) = loader.pending_key_stack.last_mut() {
-                if let Some(pk) = pending.take() {
-                    // Key was started but no value — insert with null value
-                    if let Some((AstNode::Object(obj), _)) = loader.doc_stack.last_mut() {
-                        obj.entries.push(ObjectEntry {
-                            key_node: pk.key_node,
-                            key: pk.key,
-                            value: AstNode::Null(NullNode { span: pk.key_span }),
-                            key_span: pk.key_span,
-                        });
+            // Handle any pending key at this level (incomplete key without value).
+            // `pending_key_stack` only tracks Object levels (MappingStart pushes it),
+            // but `doc_stack` holds Objects AND Arrays. Only consume the pending key
+            // when the top of `doc_stack` is the Object it belongs to — otherwise
+            // `.take()` would steal an ancestor Object's key while the inner Object
+            // guard blocks insertion, silently dropping the key-value pair.
+            if matches!(
+                loader.doc_stack.last().map(|(n, _)| n),
+                Some(AstNode::Object(_))
+            ) {
+                if let Some(pending) = loader.pending_key_stack.last_mut() {
+                    if let Some(pk) = pending.take() {
+                        // Key was started but no value — insert with null value
+                        if let Some((AstNode::Object(obj), _)) = loader.doc_stack.last_mut() {
+                            obj.entries.push(ObjectEntry {
+                                key_node: pk.key_node,
+                                key: pk.key,
+                                value: AstNode::Null(NullNode { span: pk.key_span }),
+                                key_span: pk.key_span,
+                            });
+                        }
                     }
                 }
             }
@@ -486,7 +496,7 @@ pub fn parse_yaml_lenient(input: &str) -> (Option<AstNode>, Vec<String>) {
         if let Some(ref mut root) = loader.result {
             if let Some(root_obj) = root.as_object_mut() {
                 let lines: Vec<&str> = input.lines().collect();
-                let err_line = error_line.saturating_sub(1) as usize; // scanner is 1-indexed
+                let err_line = error_line as usize; // error_line is already 0-based (see above)
 
                 // Find lines after the error that are at the root indentation level (col 0)
                 // These are likely top-level keys like "Outputs:", "Parameters:", etc.
@@ -499,26 +509,24 @@ pub fn parse_yaml_lenient(input: &str) -> (Option<AstNode>, Vec<String>) {
                     {
                         // Found a potential top-level key — try parsing from here
                         let remaining = lines[start_line..].join("\n");
-                        if let Ok(partial) = parse_yaml(&remaining) {
-                            if let AstNode::Object(partial_obj) = partial {
-                                // Merge entries, adjusting line numbers
-                                for mut entry in partial_obj.entries {
-                                    // Adjust spans
-                                    let offset = start_line as u32;
-                                    adjust_spans(&mut entry.value, offset);
-                                    entry.key_span.start.line += offset;
-                                    entry.key_span.end.line += offset;
-                                    if let AstNode::String(ref mut s) = entry.key_node {
-                                        s.span.start.line += offset;
-                                        s.span.end.line += offset;
-                                    }
-                                    root_obj.entries.push(entry);
+                        if let Ok(AstNode::Object(partial_obj)) = parse_yaml(&remaining) {
+                            // Merge entries, adjusting line numbers
+                            for mut entry in partial_obj.entries {
+                                // Adjust spans
+                                let offset = start_line as u32;
+                                adjust_spans(&mut entry.value, offset);
+                                entry.key_span.start.line += offset;
+                                entry.key_span.end.line += offset;
+                                if let AstNode::String(ref mut s) = entry.key_node {
+                                    s.span.start.line += offset;
+                                    s.span.end.line += offset;
                                 }
-                                root_obj.span.end = Position {
-                                    line: lines.len() as u32,
-                                    column: 0,
-                                };
+                                root_obj.entries.push(entry);
                             }
+                            root_obj.span.end = Position {
+                                line: lines.len() as u32,
+                                column: 0,
+                            };
                         }
                         break;
                     }
@@ -541,21 +549,19 @@ pub fn parse_yaml_lenient(input: &str) -> (Option<AstNode>, Vec<String>) {
                         {
                             // Found a sibling key — try parsing a sub-document
                             let remaining = lines[start_line..].join("\n");
-                            if let Ok(partial) = parse_yaml(&remaining) {
-                                if let AstNode::Object(partial_obj) = partial {
-                                    // Find the parent in the root to merge into
-                                    let offset = start_line as u32;
-                                    for mut entry in partial_obj.entries {
-                                        adjust_spans(&mut entry.value, offset);
-                                        entry.key_span.start.line += offset;
-                                        entry.key_span.end.line += offset;
-                                        if let AstNode::String(ref mut s) = entry.key_node {
-                                            s.span.start.line += offset;
-                                            s.span.end.line += offset;
-                                        }
-                                        // Try to find the right parent section
-                                        merge_entry_into_parent(root_obj, entry, indent);
+                            if let Ok(AstNode::Object(partial_obj)) = parse_yaml(&remaining) {
+                                // Find the parent in the root to merge into
+                                let offset = start_line as u32;
+                                for mut entry in partial_obj.entries {
+                                    adjust_spans(&mut entry.value, offset);
+                                    entry.key_span.start.line += offset;
+                                    entry.key_span.end.line += offset;
+                                    if let AstNode::String(ref mut s) = entry.key_node {
+                                        s.span.start.line += offset;
+                                        s.span.end.line += offset;
                                     }
+                                    // Try to find the right parent section
+                                    merge_entry_into_parent(root_obj, entry, indent);
                                 }
                             }
                             break;
@@ -697,9 +703,8 @@ pub fn parse_json(input: &str) -> Result<AstNode, ParseError> {
 
 /// Parse JSON leniently — fix trailing commas, unclosed braces, empty lines.
 pub fn parse_json_lenient(input: &str) -> (Option<AstNode>, Vec<String>) {
-    match parse_json(input) {
-        Ok(node) => return (Some(node), vec![]),
-        Err(_) => {}
+    if let Ok(node) = parse_json(input) {
+        return (Some(node), vec![]);
     }
 
     let mut errors = Vec::new();
@@ -891,12 +896,172 @@ mod tests {
         assert_eq!(value.as_bool(), Some(true));
     }
 
+    // --- C2: multi-line scalar line folding ---------------------------------
+    // A single line break between content lines folds to one space; a blank
+    // line (two consecutive breaks) folds to a newline. This mirrors the
+    // behaviour of block scalars and the YAML spec's flow line folding.
+
+    #[test]
+    fn test_multiline_double_quoted_scalar_folds_to_space() {
+        let template = "Value: \"first\n  second\"";
+        let node = parse_yaml(template).unwrap();
+        assert_eq!(node.get("Value").unwrap().as_str(), Some("first second"));
+    }
+
+    #[test]
+    fn test_multiline_single_quoted_scalar_folds_to_space() {
+        let template = "Value: 'first\n  second'";
+        let node = parse_yaml(template).unwrap();
+        assert_eq!(node.get("Value").unwrap().as_str(), Some("first second"));
+    }
+
+    #[test]
+    fn test_blank_line_in_quoted_scalar_folds_to_newline() {
+        // "first" <break> <break> "second" -> one newline is kept.
+        let template = "Value: \"first\n\n  second\"";
+        let node = parse_yaml(template).unwrap();
+        assert_eq!(node.get("Value").unwrap().as_str(), Some("first\nsecond"));
+    }
+
+    #[test]
+    fn test_multiline_plain_scalar_folds_to_space() {
+        let template = "Value: first\n  second";
+        let node = parse_yaml(template).unwrap();
+        assert_eq!(node.get("Value").unwrap().as_str(), Some("first second"));
+    }
+
+    #[test]
+    fn test_escaped_line_break_in_double_quoted_scalar_is_removed() {
+        // A backslash at end of line inside a double-quoted scalar is a line
+        // continuation: the break (and the following indentation) is removed
+        // entirely, with no folded space. This is the case that relies on the
+        // `leading_break.is_empty()` branch and would regress if the folding
+        // condition were naively inverted.
+        let template = "Value: \"first\\\n  second\"";
+        let node = parse_yaml(template).unwrap();
+        assert_eq!(node.get("Value").unwrap().as_str(), Some("firstsecond"));
+    }
+
+    // --- C4: multiple %TAG directives must all be retained ------------------
+
+    #[test]
+    fn test_multiple_tag_directives_all_retained() {
+        // Two %TAG directives are declared; a tag using the FIRST handle must
+        // still resolve. Before the fix, the directive accumulator was reset
+        // every loop iteration so only the last (`!b!`) survived, making
+        // `!a!foo` fail with "the handle wasn't declared".
+        let template = concat!(
+            "%TAG !a! tag:example.com,2000:a/\n",
+            "%TAG !b! tag:example.com,2000:b/\n",
+            "---\n",
+            "Value: !a!foo bar\n",
+        );
+        let result = parse_yaml(template);
+        assert!(
+            result.is_ok(),
+            "both %TAG handles should be retained; got error: {:?}",
+            result.err()
+        );
+        let node = result.unwrap();
+        assert_eq!(node.get("Value").unwrap().as_str(), Some("bar"));
+    }
+
+    #[test]
+    fn test_second_tag_directive_also_resolves() {
+        // Symmetric check that the second handle resolves too.
+        let template = concat!(
+            "%TAG !a! tag:example.com,2000:a/\n",
+            "%TAG !b! tag:example.com,2000:b/\n",
+            "---\n",
+            "Value: !b!foo bar\n",
+        );
+        assert!(parse_yaml(template).is_ok());
+    }
+
     #[test]
     fn test_parse_json_template() {
         let input = r#"{"AWSTemplateFormatVersion": "2010-09-09", "Resources": {"B": {"Type": "AWS::S3::Bucket"}}}"#;
         let node = parse_json(input).unwrap();
         let ctx = Context::from_ast(Arc::new(node));
         assert!(ctx.resources.contains_key("B"));
+    }
+
+    // ── Lenient-parse error recovery ────────────────────────────────────
+
+    #[test]
+    fn test_lenient_recovery_preserves_top_level_sibling() {
+        // C2: `parse_yaml_lenient` recovery must scan for post-error content
+        // starting at the (already 0-based) error line, not one line earlier.
+        // A broken, space-indented region is followed by a clean top-level
+        // `Outputs:` section — recovery must salvage `Resources` (drained) and
+        // the trailing `Outputs` sibling without merging broken-region content.
+        let template = concat!(
+            "Resources:\n",
+            "  Bucket:\n",
+            "    Type: AWS::S3::Bucket\n",
+            "    Properties:\n",
+            "      Name: [a, b}\n", // unterminated flow sequence
+            "Outputs:\n",
+            "  Name:\n",
+            "    Value: hello\n",
+        );
+        let (ast, errors) = parse_yaml_lenient(template);
+        assert!(!errors.is_empty(), "template should have produced an error");
+        let root = ast.expect("recovery should yield a partial AST");
+        let obj = root.as_object().expect("root should be an object");
+        assert!(
+            obj.contains_key("Resources"),
+            "drained Resources should survive"
+        );
+        let outputs = obj
+            .get("Outputs")
+            .and_then(|o| o.as_object())
+            .expect("trailing Outputs sibling should be recovered");
+        let value = outputs
+            .get("Name")
+            .and_then(|o| o.as_object())
+            .and_then(|o| o.get("Value"))
+            .and_then(|v| v.as_str());
+        assert_eq!(
+            value,
+            Some("hello"),
+            "recovered Outputs content must be correct"
+        );
+    }
+
+    #[test]
+    fn test_lenient_recovery_keeps_ancestor_key_above_open_sequence() {
+        // C3: at error time the top of `doc_stack` is an open Array (a block
+        // sequence still being built), while an ancestor Object holds a pending
+        // key (`ListKey`) whose value is that sequence. The drain loop must not
+        // consume the ancestor's pending key from the wrong stack level.
+        // Before the fix, `ListKey` was silently dropped (`Outer` came back
+        // empty); after the fix it survives with its recovered sequence.
+        let template = concat!(
+            "Outer:\n",
+            "  ListKey:\n",
+            "    - one\n",
+            "    - two\n",
+            "\t- badtab\n", // tab indentation aborts the scanner mid-sequence
+        );
+        let (ast, errors) = parse_yaml_lenient(template);
+        assert!(!errors.is_empty(), "template should have produced an error");
+        let root = ast.expect("recovery should yield a partial AST");
+        let outer = root
+            .as_object()
+            .and_then(|o| o.get("Outer"))
+            .and_then(|o| o.as_object())
+            .expect("Outer object should be recovered");
+        assert!(
+            outer.contains_key("ListKey"),
+            "ancestor key above the open sequence must survive recovery; got keys {:?}",
+            outer.keys().collect::<Vec<_>>()
+        );
+        let list = outer.get("ListKey").expect("ListKey must be present");
+        assert!(
+            matches!(list, AstNode::Array(_)),
+            "ListKey value should be the recovered sequence, got {list:?}"
+        );
     }
 }
 
@@ -921,7 +1086,7 @@ fn test_nested_object_spans() {
         );
     }
 
-    use crate::traverse::{node_at_position, object_context_at_position};
+    use crate::traverse::object_context_at_position;
 
     // Line 7 is the blank line between "Status: Enabled" and "Tags:"
     // At col 6 (Properties key indent) -> should get Properties

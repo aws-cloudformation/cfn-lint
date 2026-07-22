@@ -1,0 +1,266 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IsoCountryCode",
+  "/properties/NumberCapabilities",
+  "/properties/NumberType"
+ ],
+ "definitions": {
+  "MandatoryKeyword": {
+   "additionalProperties": false,
+   "description": "A keyword is a word that you can search for on a particular phone number or pool. It is also a specific word or phrase that an end user can send to your number to elicit a response, such as an informational message or a special offer. When your number receives a message that begins with a keyword, AWS End User Messaging SMS and Voice responds with a customizable message. Keywords \"HELP\" and \"STOP\" are mandatory keywords",
+   "properties": {
+    "Message": {
+     "maxLength": 1600,
+     "pattern": "^(?!\\s*$)[\\s\\S]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Message"
+   ],
+   "type": "object"
+  },
+  "OptionalKeyword": {
+   "additionalProperties": false,
+   "description": "A keyword is a word that you can search for on a particular phone number or pool. It is also a specific word or phrase that an end user can send to your number to elicit a response, such as an informational message or a special offer. When your number receives a message that begins with a keyword, AWS End User Messaging SMS and Voice responds with a customizable message.",
+   "properties": {
+    "Action": {
+     "enum": [
+      "AUTOMATIC_RESPONSE",
+      "OPT_OUT",
+      "OPT_IN"
+     ],
+     "type": "string"
+    },
+    "Keyword": {
+     "maxLength": 30,
+     "pattern": "^(?!(?i)(stop|help)$)[ \\S]+",
+     "type": "string"
+    },
+    "Message": {
+     "maxLength": 1600,
+     "pattern": "^(?!\\s*$)[\\s\\S]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Keyword",
+    "Message",
+    "Action"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SMSVOICE::PhoneNumber",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sms-voice:DescribePhoneNumbers",
+    "sms-voice:RequestPhoneNumber",
+    "sms-voice:UpdatePhoneNumber",
+    "sms-voice:DescribeKeywords",
+    "sms-voice:PutKeyword",
+    "sms-voice:TagResource",
+    "sms-voice:ListTagsForResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sms-voice:ReleasePhoneNumber",
+    "sms-voice:DescribePhoneNumbers"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sms-voice:DescribePhoneNumbers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sms-voice:DescribePhoneNumbers",
+    "sms-voice:DescribeKeywords",
+    "sms-voice:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sms-voice:DescribePhoneNumbers",
+    "sms-voice:UpdatePhoneNumber",
+    "sms-voice:DescribeKeywords",
+    "sms-voice:DeleteKeyword",
+    "sms-voice:PutKeyword",
+    "sms-voice:UntagResource",
+    "sms-voice:TagResource",
+    "sms-voice:ListTagsForResource",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PhoneNumberId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "DeletionProtectionEnabled": {
+   "description": "When set to true the sender ID can't be deleted. By default this is set to false.",
+   "type": "boolean"
+  },
+  "IsoCountryCode": {
+   "description": "The two-character code, in ISO 3166-1 alpha-2 format, for the country or region.",
+   "pattern": "^[A-Z]{2}$",
+   "type": "string"
+  },
+  "MandatoryKeywords": {
+   "additionalProperties": false,
+   "description": "A keyword is a word that you can search for on a particular phone number or pool. It is also a specific word or phrase that an end user can send to your number to elicit a response, such as an informational message or a special offer. When your number receives a message that begins with a keyword, AWS End User Messaging SMS and Voice responds with a customizable message. Keywords \"HELP\" and \"STOP\" are mandatory keywords",
+   "properties": {
+    "HELP": {
+     "$ref": "#/definitions/MandatoryKeyword"
+    },
+    "STOP": {
+     "$ref": "#/definitions/MandatoryKeyword"
+    }
+   },
+   "required": [
+    "STOP",
+    "HELP"
+   ],
+   "type": "object"
+  },
+  "NumberCapabilities": {
+   "description": "Indicates if the phone number will be used for text messages, voice messages, or both.",
+   "insertionOrder": false,
+   "items": {
+    "enum": [
+     "SMS",
+     "VOICE",
+     "MMS"
+    ],
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "NumberType": {
+   "description": "The type of phone number to request.",
+   "enum": [
+    "LONG_CODE",
+    "TOLL_FREE",
+    "TEN_DLC",
+    "SIMULATOR"
+   ],
+   "type": "string"
+  },
+  "OptOutListName": {
+   "description": "The name of the OptOutList to associate with the phone number. You can use the OptOutListName or OptOutListArn.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9_:/-]+$",
+   "type": "string"
+  },
+  "OptionalKeywords": {
+   "description": "A keyword is a word that you can search for on a particular phone number or pool. It is also a specific word or phrase that an end user can send to your number to elicit a response, such as an informational message or a special offer. When your number receives a message that begins with a keyword, AWS End User Messaging SMS and Voice responds with a customizable message.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/OptionalKeyword"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "PhoneNumber": {
+   "type": "string"
+  },
+  "PhoneNumberId": {
+   "type": "string"
+  },
+  "SelfManagedOptOutsEnabled": {
+   "description": "By default this is set to false. When an end recipient sends a message that begins with HELP or STOP to one of your dedicated numbers, AWS End User Messaging SMS and Voice automatically replies with a customizable message and adds the end recipient to the OptOutList. When set to true you're responsible for responding to HELP and STOP requests. You're also responsible for tracking and honoring opt-out requests.",
+   "type": "boolean"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TwoWay": {
+   "additionalProperties": false,
+   "description": "When you set up two-way SMS, you can receive incoming messages from your customers. When one of your customers sends a message to your phone number, the message body is sent to an Amazon SNS topic or Amazon Connect for processing.",
+   "properties": {
+    "ChannelArn": {
+     "description": "The Amazon Resource Name (ARN) of the two way channel.",
+     "pattern": "^arn:\\S+$",
+     "type": "string"
+    },
+    "ChannelRole": {
+     "description": "An optional IAM Role Arn for a service to assume, to be able to post inbound SMS messages.",
+     "pattern": "^arn:\\S+$",
+     "type": "string"
+    },
+    "Enabled": {
+     "description": "By default this is set to false. When set to true you can receive incoming text messages from your end recipients.",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/PhoneNumberId",
+  "/properties/PhoneNumber"
+ ],
+ "required": [
+  "IsoCountryCode",
+  "NumberCapabilities",
+  "NumberType",
+  "MandatoryKeywords"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resoource-providers-smsvoice.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "sms-voice:UntagResource",
+   "sms-voice:TagResource",
+   "sms-voice:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SMSVOICE::PhoneNumber"
+}

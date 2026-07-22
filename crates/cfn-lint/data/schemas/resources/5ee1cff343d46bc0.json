@@ -1,0 +1,101 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResponseType",
+  "/properties/RestApiId"
+ ],
+ "description": "The ``AWS::ApiGateway::GatewayResponse`` resource creates a gateway response for your API. When you delete a stack containing this resource, your custom gateway responses are reset. For more information, see [API Gateway Responses](https://docs.aws.amazon.com/apigateway/latest/developerguide/customize-gateway-responses.html#api-gateway-gatewayResponse-definition) in the *API Gateway Developer Guide*.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:PUT",
+    "apigateway:GET"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "RestApiId": {
+      "$ref": "resource-schema.json#/properties/RestApiId"
+     }
+    },
+    "required": [
+     "RestApiId"
+    ]
+   },
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:PUT"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "description": "",
+   "type": "string"
+  },
+  "ResponseParameters": {
+   "additionalProperties": false,
+   "description": "",
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResponseTemplates": {
+   "additionalProperties": false,
+   "description": "",
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResponseType": {
+   "description": "",
+   "type": "string"
+  },
+  "RestApiId": {
+   "description": "",
+   "type": "string"
+  },
+  "StatusCode": {
+   "description": "",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "ResponseType",
+  "RestApiId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ApiGateway::GatewayResponse"
+}

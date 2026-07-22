@@ -1,0 +1,205 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Description",
+  "/properties/ContentType",
+  "/properties/Location"
+ ],
+ "definitions": {
+  "CustomPluginFileDescription": {
+   "additionalProperties": false,
+   "description": "Details about the custom plugin file.",
+   "properties": {
+    "FileMd5": {
+     "description": "The hex-encoded MD5 checksum of the custom plugin file. You can use it to validate the file.",
+     "type": "string"
+    },
+    "FileSize": {
+     "description": "The size in bytes of the custom plugin file. You can use it to validate the file.",
+     "format": "int64",
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "CustomPluginLocation": {
+   "additionalProperties": false,
+   "description": "Information about the location of a custom plugin.",
+   "properties": {
+    "S3Location": {
+     "$ref": "#/definitions/S3Location"
+    }
+   },
+   "required": [
+    "S3Location"
+   ],
+   "type": "object"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "description": "The S3 bucket Amazon Resource Name (ARN), file key, and object version of the plugin file stored in Amazon S3.",
+   "properties": {
+    "BucketArn": {
+     "description": "The Amazon Resource Name (ARN) of an S3 bucket.",
+     "type": "string"
+    },
+    "FileKey": {
+     "description": "The file key for an object in an S3 bucket.",
+     "type": "string"
+    },
+    "ObjectVersion": {
+     "description": "The version of an object in an S3 bucket.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketArn",
+    "FileKey"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "An example resource schema demonstrating some basic constructs and validation rules.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "kafkaconnect:DescribeCustomPlugin",
+    "kafkaconnect:ListTagsForResource",
+    "kafkaconnect:CreateCustomPlugin",
+    "kafkaconnect:TagResource",
+    "s3:GetObject",
+    "s3:GetObjectVersion",
+    "s3:GetObjectAttributes",
+    "s3:GetObjectVersionAttributes"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "kafkaconnect:DeleteCustomPlugin",
+    "kafkaconnect:DescribeCustomPlugin"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "kafkaconnect:ListCustomPlugins"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "kafkaconnect:DescribeCustomPlugin",
+    "kafkaconnect:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "kafkaconnect:DescribeCustomPlugin",
+    "kafkaconnect:ListTagsForResource",
+    "kafkaconnect:TagResource",
+    "kafkaconnect:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CustomPluginArn"
+ ],
+ "properties": {
+  "ContentType": {
+   "description": "The type of the plugin file.",
+   "enum": [
+    "JAR",
+    "ZIP"
+   ],
+   "type": "string"
+  },
+  "CustomPluginArn": {
+   "description": "The Amazon Resource Name (ARN) of the custom plugin to use.",
+   "pattern": "arn:(aws|aws-us-gov|aws-cn):kafkaconnect:.*",
+   "type": "string"
+  },
+  "Description": {
+   "description": "A summary description of the custom plugin.",
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "FileDescription": {
+   "$ref": "#/definitions/CustomPluginFileDescription"
+  },
+  "Location": {
+   "$ref": "#/definitions/CustomPluginLocation"
+  },
+  "Name": {
+   "description": "The name of the custom plugin.",
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Revision": {
+   "description": "The revision of the custom plugin.",
+   "format": "int64",
+   "type": "integer"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CustomPluginArn",
+  "/properties/Revision",
+  "/properties/FileDescription"
+ ],
+ "required": [
+  "Name",
+  "ContentType",
+  "Location"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "kafkaconnect:ListTagsForResource",
+   "kafkaconnect:UntagResource",
+   "kafkaconnect:TagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::KafkaConnect::CustomPlugin"
+}

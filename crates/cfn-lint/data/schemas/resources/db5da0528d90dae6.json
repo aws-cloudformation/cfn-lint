@@ -1,0 +1,264 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Alias",
+  "/properties/Workspace"
+ ],
+ "definitions": {
+  "AnomalyDetectorConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "RandomCutForest": {
+     "$ref": "#/definitions/RandomCutForestConfiguration"
+    }
+   },
+   "required": [
+    "RandomCutForest"
+   ],
+   "type": "object"
+  },
+  "IgnoreNearExpected": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "Amount"
+     ]
+    },
+    {
+     "required": [
+      "Ratio"
+     ]
+    }
+   ],
+   "properties": {
+    "Amount": {
+     "type": "number"
+    },
+    "Ratio": {
+     "type": "number"
+    }
+   }
+  },
+  "Label": {
+   "additionalProperties": false,
+   "description": "A key-value pair to provide meta-data and multi-dimensional data analysis for filtering and aggregation.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "MissingDataAction": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "MarkAsAnomaly"
+     ]
+    },
+    {
+     "required": [
+      "Skip"
+     ]
+    }
+   ],
+   "properties": {
+    "MarkAsAnomaly": {
+     "type": "boolean"
+    },
+    "Skip": {
+     "type": "boolean"
+    }
+   }
+  },
+  "RandomCutForestConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IgnoreNearExpectedFromAbove": {
+     "$ref": "#/definitions/IgnoreNearExpected"
+    },
+    "IgnoreNearExpectedFromBelow": {
+     "$ref": "#/definitions/IgnoreNearExpected"
+    },
+    "Query": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "SampleSize": {
+     "default": 256,
+     "maximum": 1024,
+     "minimum": 256,
+     "type": "integer"
+    },
+    "ShingleSize": {
+     "default": 8,
+     "maximum": 1024,
+     "minimum": 2,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Query"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate a tag level security for the resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "AnomalyDetector schema for cloudformation.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "aps:CreateAnomalyDetector",
+    "aps:DescribeAnomalyDetector",
+    "aps:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "aps:DeleteAnomalyDetector",
+    "aps:DescribeAnomalyDetector"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "Arn": {
+      "$ref": "resource-schema.json#/properties/Workspace"
+     }
+    },
+    "required": [
+     "Arn"
+    ]
+   },
+   "permissions": [
+    "aps:ListAnomalyDetectors",
+    "aps:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "aps:DescribeAnomalyDetector",
+    "aps:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "aps:PutAnomalyDetector",
+    "aps:DescribeAnomalyDetector",
+    "aps:TagResource",
+    "aps:UntagResource",
+    "aps:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Alias": {
+   "description": "The AnomalyDetector alias.",
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Arn": {
+   "description": "The AnomalyDetector ARN.",
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):aps:[a-z0-9-]+:[0-9]+:anomalydetector/[a-zA-Z0-9-]+/[0-9A-Za-z][-.0-9A-Z_a-z]*$",
+   "type": "string"
+  },
+  "Configuration": {
+   "$ref": "#/definitions/AnomalyDetectorConfiguration",
+   "description": "Determines the anomaly detector's algorithm and its configuration."
+  },
+  "EvaluationIntervalInSeconds": {
+   "default": 60,
+   "description": "The AnomalyDetector period of detection and metric generation.",
+   "type": "integer"
+  },
+  "Labels": {
+   "description": "An array of key-value pairs to provide meta-data.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Label"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "MissingDataAction": {
+   "$ref": "#/definitions/MissingDataAction",
+   "description": "The action to perform when running the expression returns no data."
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Workspace": {
+   "description": "Required to identify a specific APS Workspace associated with this Anomaly Detector.",
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):aps:[a-z0-9-]+:[0-9]+:workspace/[a-zA-Z0-9-]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Workspace",
+  "Configuration",
+  "Alias"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-aps",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "aps:TagResource",
+   "aps:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::APS::AnomalyDetector"
+}

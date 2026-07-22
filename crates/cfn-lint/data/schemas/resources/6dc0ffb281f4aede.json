@@ -1,0 +1,203 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ConfigurationObject": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "DefaultValue"
+     ]
+    },
+    {
+     "oneOf": [
+      {
+       "required": [
+        "AllowedValues"
+       ]
+      },
+      {
+       "required": [
+        "MinValue",
+        "MaxValue"
+       ]
+      }
+     ]
+    }
+   ],
+   "properties": {
+    "AllowedValues": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "DefaultValue": {
+     "type": "string"
+    },
+    "MaxValue": {
+     "type": "string"
+    },
+    "MinValue": {
+     "type": "string"
+    }
+   }
+  },
+  "ProfileConfiguration": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "JobConfiguration"
+     ]
+    },
+    {
+     "required": [
+      "SessionConfiguration"
+     ]
+    }
+   ],
+   "properties": {
+    "JobConfiguration": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^.+$": {
+       "$ref": "#/definitions/ConfigurationObject"
+      }
+     }
+    },
+    "SessionConfiguration": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^.+$": {
+       "$ref": "#/definitions/ConfigurationObject"
+      }
+     }
+    }
+   }
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "A key to identify the tag.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "Corresponding tag value for the key.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "This creates a Resource of UsageProfile type.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "glue:CreateUsageProfile",
+    "glue:GetUsageProfile",
+    "glue:GetTags",
+    "glue:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "glue:DeleteUsageProfile",
+    "glue:GetUsageProfile"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "glue:ListUsageProfiles"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "glue:GetUsageProfile",
+    "glue:GetTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "glue:UpdateUsageProfile",
+    "glue:GetUsageProfile",
+    "glue:TagResource",
+    "glue:UntagResource",
+    "glue:GetTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Configuration": {
+   "$ref": "#/definitions/ProfileConfiguration",
+   "description": "UsageProfile configuration for supported service ex: (Jobs, Sessions).",
+   "minItems": 1
+  },
+  "CreatedOn": {
+   "description": "Creation time.",
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the UsageProfile.",
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9\\-\\:\\_]{1,64}",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the UsageProfile.",
+   "maxLength": 128,
+   "minLength": 5,
+   "type": "string"
+  },
+  "Tags": {
+   "description": "The tags to be applied to this UsageProfiles.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedOn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-glue",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "glue:TagResource",
+   "glue:UntagResource",
+   "glue:GetTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Glue::UsageProfile"
+}

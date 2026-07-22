@@ -1,0 +1,66 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ChannelArn",
+  "/properties/ManagedNotificationConfigurationArn"
+ ],
+ "description": "Resource Type definition for AWS::Notifications::ManagedNotificationAdditionalChannelAssociation",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "notifications:AssociateManagedNotificationAdditionalChannel",
+    "notifications:ListManagedNotificationChannelAssociations"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "notifications:DisassociateManagedNotificationAdditionalChannel",
+    "notifications:ListManagedNotificationChannelAssociations"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "NotificationConfigurationArn": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "ManagedNotificationConfigurationArn"
+    ]
+   },
+   "permissions": [
+    "notifications:ListManagedNotificationChannelAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "notifications:ListManagedNotificationChannelAssociations"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ChannelArn",
+  "/properties/ManagedNotificationConfigurationArn"
+ ],
+ "properties": {
+  "ChannelArn": {
+   "description": "ARN identifier of the channel.\nExample: arn:aws:chatbot::123456789012:chat-configuration/slack-channel/security-ops",
+   "pattern": "^arn:[a-z-]{3,10}:(chatbot|consoleapp|notifications-contacts):[a-zA-Z0-9-]*:[0-9]{12}:[a-zA-Z0-9-_.@]+/[a-zA-Z0-9/_.@:-]+$",
+   "type": "string"
+  },
+  "ManagedNotificationConfigurationArn": {
+   "description": "ARN identifier of the Managed Notification.\nExample: arn:aws:notifications::381491923782:managed-notification-configuration/category/AWS-Health/sub-category/Billing",
+   "pattern": "^arn:[a-z-]{3,10}:notifications::([0-9]{12}|):managed-notification-configuration/category/[a-zA-Z0-9\\-]{3,64}/sub-category/[a-zA-Z0-9\\-]{3,64}$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "ChannelArn",
+  "ManagedNotificationConfigurationArn"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Notifications::ManagedNotificationAdditionalChannelAssociation"
+}

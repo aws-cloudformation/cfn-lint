@@ -1,0 +1,141 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StudioId",
+  "/properties/IdentityType",
+  "/properties/IdentityName"
+ ],
+ "definitions": {
+  "IamPolicyArn": {
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "^arn:aws(-(cn|us-gov|iso-f|iso-e))?:iam::([0-9]{12})?:policy\\/[^.]+$",
+   "type": "string"
+  }
+ },
+ "description": "An example resource schema demonstrating some basic constructs and validation rules.",
+ "documentationUrl": "https://docs.aws.amazon.com/cli/latest/reference/emr/create-studio-session-mapping.html",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "elasticmapreduce:CreateStudioSessionMapping",
+    "sso-directory:SearchUsers",
+    "sso-directory:SearchGroups",
+    "sso-directory:DescribeUser",
+    "sso-directory:DescribeGroup",
+    "sso:GetManagedApplicationInstance",
+    "sso:ListDirectoryAssociations",
+    "sso:GetProfile",
+    "sso:ListProfiles",
+    "sso:AssociateProfile",
+    "sso:CreateApplication",
+    "sso:PutApplicationAuthenticationMethod",
+    "sso:PutApplicationGrant",
+    "sso:PutApplicationAccessScope",
+    "sso:PutApplicationAssignmentConfiguration",
+    "sso:DescribeApplication",
+    "sso:DeleteApplication",
+    "sso:DeleteApplicationAuthenticationMethod",
+    "sso:DeleteApplicationAccessScope",
+    "sso:DeleteApplicationGrant",
+    "sso:ListInstances",
+    "sso-directory:CreateUser",
+    "sso-directory:CreateGroup",
+    "sso:CreateApplicationAssignment",
+    "sso:DescribeInstance",
+    "sso:DeleteApplicationAssignment",
+    "sso:ListApplicationAssignments"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "elasticmapreduce:GetStudioSessionMapping",
+    "elasticmapreduce:DeleteStudioSessionMapping",
+    "sso-directory:SearchUsers",
+    "sso-directory:SearchGroups",
+    "sso-directory:DescribeUser",
+    "sso-directory:DescribeGroup",
+    "sso:GetManagedApplicationInstance",
+    "sso:DescribeInstance",
+    "sso:ListDirectoryAssociations",
+    "sso:GetProfile",
+    "sso:ListProfiles",
+    "sso:DisassociateProfile"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "elasticmapreduce:ListStudioSessionMappings"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "elasticmapreduce:GetStudioSessionMapping",
+    "sso-directory:SearchUsers",
+    "sso-directory:SearchGroups",
+    "sso-directory:DescribeUser",
+    "sso-directory:DescribeGroup",
+    "sso:GetManagedApplicationInstance",
+    "sso:DescribeInstance"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "elasticmapreduce:GetStudioSessionMapping",
+    "elasticmapreduce:UpdateStudioSessionMapping",
+    "sso-directory:SearchUsers",
+    "sso-directory:SearchGroups",
+    "sso-directory:DescribeUser",
+    "sso-directory:DescribeGroup",
+    "sso:GetManagedApplicationInstance",
+    "sso:DescribeInstance"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/StudioId",
+  "/properties/IdentityType",
+  "/properties/IdentityName"
+ ],
+ "properties": {
+  "IdentityName": {
+   "description": "The name of the user or group. For more information, see UserName and DisplayName in the AWS SSO Identity Store API Reference. Either IdentityName or IdentityId must be specified.",
+   "maxLength": 256,
+   "minLength": 0,
+   "type": "string"
+  },
+  "IdentityType": {
+   "description": "Specifies whether the identity to map to the Studio is a user or a group.",
+   "enum": [
+    "USER",
+    "GROUP"
+   ],
+   "type": "string"
+  },
+  "SessionPolicyArn": {
+   "$ref": "#/definitions/IamPolicyArn",
+   "description": "The Amazon Resource Name (ARN) for the session policy that will be applied to the user or group. Session policies refine Studio user permissions without the need to use multiple IAM user roles."
+  },
+  "StudioId": {
+   "description": "The ID of the Amazon EMR Studio to which the user or group will be mapped.",
+   "maxLength": 256,
+   "minLength": 4,
+   "pattern": "^es-[0-9A-Z]+",
+   "type": "string"
+  }
+ },
+ "required": [
+  "StudioId",
+  "IdentityName",
+  "IdentityType",
+  "SessionPolicyArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::EMR::StudioSessionMapping"
+}

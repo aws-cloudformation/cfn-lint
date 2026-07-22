@@ -1,0 +1,94 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "PublicKeyConfig": {
+   "additionalProperties": false,
+   "description": "Configuration information about a public key that you can use with [signed URLs and signed cookies](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html), or with [field-level encryption](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/field-level-encryption.html).\n CloudFront supports signed URLs and signed cookies with RSA 2048 or ECDSA 256 key signatures. Field-level encryption is only compatible with RSA 2048 key signatures.",
+   "properties": {
+    "CallerReference": {
+     "description": "A string included in the request to help make sure that the request can't be replayed.",
+     "type": "string"
+    },
+    "Comment": {
+     "description": "A comment to describe the public key. The comment cannot be longer than 128 characters.",
+     "type": "string"
+    },
+    "EncodedKey": {
+     "description": "The public key that you can use with [signed URLs and signed cookies](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html), or with [field-level encryption](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/field-level-encryption.html).",
+     "type": "string"
+    },
+    "Name": {
+     "description": "A name to help identify the public key.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "CallerReference",
+    "Name",
+    "EncodedKey"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "A public key that you can use with [signed URLs and signed cookies](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html), or with [field-level encryption](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/field-level-encryption.html).\n CloudFront supports signed URLs and signed cookies with RSA 2048 or ECDSA 256 key signatures. Field-level encryption is only compatible with RSA 2048 key signatures.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cloudfront:CreatePublicKey"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cloudfront:DeletePublicKey",
+    "cloudfront:GetPublicKey"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cloudfront:ListPublicKeys"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cloudfront:GetPublicKey"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cloudfront:UpdatePublicKey",
+    "cloudfront:GetPublicKey"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "CreatedTime": {
+   "description": "",
+   "type": "string"
+  },
+  "Id": {
+   "description": "",
+   "type": "string"
+  },
+  "PublicKeyConfig": {
+   "$ref": "#/definitions/PublicKeyConfig",
+   "description": "Configuration information about a public key that you can use with [signed URLs and signed cookies](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html), or with [field-level encryption](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/field-level-encryption.html)."
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/CreatedTime"
+ ],
+ "required": [
+  "PublicKeyConfig"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::CloudFront::PublicKey"
+}

@@ -1,0 +1,95 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ISO8601DateString": {
+   "pattern": "^(\\d\\d\\d\\d)-([0][1-9]|[1][0-2])-([0][1-9]|[1-2](\\d)|[3][0-1])[T](?:([0-1](\\d)|[2][0-3]):[0-5](\\d):[0-5](\\d)|23:59:60)(?:\\.(\\d)+)?([Z]|[+-](\\d\\d)(:?(\\d\\d))?)$",
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with the Security Hub V2 resource. You can specify a key that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+   "maxProperties": 50,
+   "patternProperties": {
+    "^(?!aws:)[a-zA-Z+-=._:/]{1,128}$": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "The AWS::SecurityHub::HubV2 resource represents the implementation of the AWS Security Hub V2 service in your account. Only one hubv2 resource can created in each region in which you enable Security Hub V2.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityhub:EnableSecurityHubV2",
+    "securityhub:DescribeSecurityHubV2",
+    "securityhub:TagResource",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securityhub:DescribeSecurityHubV2",
+    "securityhub:DisableSecurityHubV2"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securityhub:DescribeSecurityHubV2",
+    "securityhub:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityhub:DescribeSecurityHubV2",
+    "securityhub:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securityhub:DescribeSecurityHubV2",
+    "securityhub:TagResource",
+    "securityhub:UntagResource",
+    "securityhub:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/HubV2Arn"
+ ],
+ "properties": {
+  "HubV2Arn": {
+   "description": "The Amazon Resource Name of the Security Hub V2 resource.",
+   "pattern": "arn:aws(?:-[a-z]+)*:securityhub:[a-z0-9-]+:\\d{12}:hubv2/[^/](.{0,1022}[^/:])?$",
+   "type": "string"
+  },
+  "SubscribedAt": {
+   "$ref": "#/definitions/ISO8601DateString"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/HubV2Arn",
+  "/properties/SubscribedAt"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "sourceUrl": "https://placeholder.notreal",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "securityhub:ListTagsForResource",
+   "securityhub:TagResource",
+   "securityhub:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityHub::HubV2"
+}

@@ -1,0 +1,68 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/VPCId",
+  "/properties/ResolverRuleId"
+ ],
+ "description": "In the response to an [AssociateResolverRule](https://docs.aws.amazon.com/Route53/latest/APIReference/API_route53resolver_AssociateResolverRule.html), [DisassociateResolverRule](https://docs.aws.amazon.com/Route53/latest/APIReference/API_route53resolver_DisassociateResolverRule.html), or [ListResolverRuleAssociations](https://docs.aws.amazon.com/Route53/latest/APIReference/API_route53resolver_ListResolverRuleAssociations.html) request, provides information about an association between a resolver rule and a VPC. The association determines which DNS queries that originate in the VPC are forwarded to your network.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53resolver:AssociateResolverRule",
+    "route53resolver:GetResolverRuleAssociation",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53resolver:DisassociateResolverRule",
+    "route53resolver:GetResolverRuleAssociation"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53resolver:ListResolverRuleAssociations",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53resolver:GetResolverRuleAssociation"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResolverRuleAssociationId"
+ ],
+ "properties": {
+  "Name": {
+   "description": "The name of an association between a Resolver rule and a VPC.\n The name can be up to 64 characters long and can contain letters (a-z, A-Z), numbers (0-9), hyphens (-), underscores (_), and spaces. The name cannot consist of only numbers.",
+   "type": "string"
+  },
+  "ResolverRuleAssociationId": {
+   "description": "",
+   "type": "string"
+  },
+  "ResolverRuleId": {
+   "description": "The ID of the Resolver rule that you associated with the VPC that is specified by ``VPCId``.",
+   "type": "string"
+  },
+  "VPCId": {
+   "description": "The ID of the VPC that you associated the Resolver rule with.",
+   "format": "AWS::EC2::VPC.Id",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ResolverRuleAssociationId"
+ ],
+ "required": [
+  "VPCId",
+  "ResolverRuleId"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Route53Resolver::ResolverRuleAssociation"
+}

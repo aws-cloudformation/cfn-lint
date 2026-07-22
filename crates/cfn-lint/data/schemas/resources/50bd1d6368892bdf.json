@@ -1,0 +1,270 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/UserPoolId"
+ ],
+ "definitions": {
+  "CustomEmailSender": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaArn": {
+     "format": "AWS::Lambda::Function.Arn",
+     "type": "string"
+    },
+    "LambdaVersion": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CustomSMSSender": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaArn": {
+     "format": "AWS::Lambda::Function.Arn",
+     "type": "string"
+    },
+    "LambdaVersion": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EmailConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ConfigurationSet": {
+     "type": "string"
+    },
+    "EmailSendingAccount": {
+     "type": "string"
+    },
+    "From": {
+     "type": "string"
+    },
+    "ReplyToEmailAddress": {
+     "type": "string"
+    },
+    "SourceArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InboundFederation": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaArn": {
+     "format": "AWS::Lambda::Function.Arn",
+     "type": "string"
+    },
+    "LambdaVersion": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LambdaConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CreateAuthChallenge": {
+     "type": "string"
+    },
+    "CustomEmailSender": {
+     "$ref": "#/definitions/CustomEmailSender"
+    },
+    "CustomMessage": {
+     "type": "string"
+    },
+    "CustomSMSSender": {
+     "$ref": "#/definitions/CustomSMSSender"
+    },
+    "DefineAuthChallenge": {
+     "type": "string"
+    },
+    "InboundFederation": {
+     "$ref": "#/definitions/InboundFederation"
+    },
+    "KMSKeyID": {
+     "type": "string"
+    },
+    "PostAuthentication": {
+     "type": "string"
+    },
+    "PostConfirmation": {
+     "type": "string"
+    },
+    "PreAuthentication": {
+     "type": "string"
+    },
+    "PreSignUp": {
+     "type": "string"
+    },
+    "PreTokenGeneration": {
+     "type": "string"
+    },
+    "PreTokenGenerationConfig": {
+     "$ref": "#/definitions/PreTokenGenerationConfig"
+    },
+    "UserMigration": {
+     "type": "string"
+    },
+    "VerifyAuthChallengeResponse": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PreTokenGenerationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaArn": {
+     "format": "AWS::Lambda::Function.Arn",
+     "type": "string"
+    },
+    "LambdaVersion": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SmsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ExternalId": {
+     "type": "string"
+    },
+    "SnsCallerArn": {
+     "type": "string"
+    },
+    "SnsRegion": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Cognito::UserPoolRegionalConfigurationAttachment",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cognito-idp:DescribeUserPool",
+    "cognito-idp:ListTagsForResource",
+    "cognito-idp:ListUserPoolReplicas",
+    "cognito-idp:TagResource",
+    "cognito-idp:UntagResource",
+    "cognito-idp:UpdateUserPool",
+    "cognito-idp:UpdateUserPoolReplica",
+    "iam:PassRole",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "kms:Decrypt",
+    "kms:Encrypt",
+    "kms:GenerateDataKeyWithoutPlaintext",
+    "kms:ReEncryptFrom",
+    "kms:ReEncryptTo"
+   ],
+   "timeoutInMinutes": 2
+  },
+  "delete": {
+   "permissions": [
+    "cognito-idp:DescribeUserPool",
+    "cognito-idp:ListTagsForResource",
+    "cognito-idp:ListUserPoolReplicas",
+    "cognito-idp:UntagResource",
+    "cognito-idp:UpdateUserPool",
+    "cognito-idp:UpdateUserPoolReplica",
+    "iam:PassRole",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "kms:Decrypt",
+    "kms:Encrypt",
+    "kms:GenerateDataKeyWithoutPlaintext",
+    "kms:ReEncryptFrom",
+    "kms:ReEncryptTo"
+   ],
+   "timeoutInMinutes": 2
+  },
+  "read": {
+   "permissions": [
+    "cognito-idp:DescribeUserPool",
+    "cognito-idp:ListTagsForResource",
+    "cognito-idp:ListUserPoolReplicas",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "kms:Decrypt",
+    "kms:Encrypt",
+    "kms:GenerateDataKeyWithoutPlaintext",
+    "kms:ReEncryptFrom",
+    "kms:ReEncryptTo"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cognito-idp:DescribeUserPool",
+    "cognito-idp:ListTagsForResource",
+    "cognito-idp:ListUserPoolReplicas",
+    "cognito-idp:TagResource",
+    "cognito-idp:UntagResource",
+    "cognito-idp:UpdateUserPool",
+    "cognito-idp:UpdateUserPoolReplica",
+    "iam:PassRole",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "kms:Decrypt",
+    "kms:Encrypt",
+    "kms:GenerateDataKeyWithoutPlaintext",
+    "kms:ReEncryptFrom",
+    "kms:ReEncryptTo"
+   ],
+   "timeoutInMinutes": 2
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/UserPoolId"
+ ],
+ "properties": {
+  "EmailConfiguration": {
+   "$ref": "#/definitions/EmailConfiguration"
+  },
+  "LambdaConfig": {
+   "$ref": "#/definitions/LambdaConfig"
+  },
+  "SmsConfiguration": {
+   "$ref": "#/definitions/SmsConfiguration"
+  },
+  "Status": {
+   "description": "The status of the replica. Set to ACTIVE or INACTIVE.",
+   "type": "string"
+  },
+  "UserPoolId": {
+   "type": "string"
+  },
+  "UserPoolTags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "required": [
+  "UserPoolId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "cognito-idp:ListTagsForResource",
+   "cognito-idp:UntagResource",
+   "cognito-idp:TagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/UserPoolTags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Cognito::UserPoolRegionalConfigurationAttachment"
+}

@@ -44,7 +44,7 @@ impl CfnLintRule for W1100 {
                             p.push("<<".to_string());
                             p
                         },
-                        span: merge_node.span().clone(),
+                        span: merge_node.span(),
                         keyword: String::new(),
                         unknown: false,
                         resolved_from_ref: false,
@@ -64,7 +64,6 @@ mod tests {
     use super::*;
     use crate::ast::*;
     use crate::parser;
-    use indexmap::IndexMap;
 
     #[test]
     fn test_no_merge_key() {
@@ -77,8 +76,7 @@ mod tests {
     #[test]
     fn test_merge_key_detected() {
         // Build AST manually since serde_yaml resolves merge keys
-        let mut merge_props: Vec<ObjectEntry> = Vec::new();
-        merge_props.push(ObjectEntry {
+        let merge_props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "<<".to_string(),
                 span: Span::default(),
@@ -106,34 +104,34 @@ mod tests {
                 },
             }),
             key_span: Span::default(),
-        });
-        let mut res_props: Vec<ObjectEntry> = Vec::new();
-        res_props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode {
-                value: "Type".to_string(),
-                span: Span::default(),
-            }),
-            key: "Type".to_string(),
-            value: AstNode::String(StringNode {
-                value: "AWS::S3::Bucket".to_string(),
-                span: Span::default(),
-            }),
-            key_span: Span::default(),
-        });
-        res_props.push(ObjectEntry {
-            key_node: AstNode::String(StringNode {
-                value: "Properties".to_string(),
-                span: Span::default(),
-            }),
-            key: "Properties".to_string(),
-            value: AstNode::Object(ObjectNode {
-                entries: merge_props,
-                span: Span::default(),
-            }),
-            key_span: Span::default(),
-        });
-        let mut resources: Vec<ObjectEntry> = Vec::new();
-        resources.push(ObjectEntry {
+        }];
+        let res_props: Vec<ObjectEntry> = vec![
+            ObjectEntry {
+                key_node: AstNode::String(StringNode {
+                    value: "Type".to_string(),
+                    span: Span::default(),
+                }),
+                key: "Type".to_string(),
+                value: AstNode::String(StringNode {
+                    value: "AWS::S3::Bucket".to_string(),
+                    span: Span::default(),
+                }),
+                key_span: Span::default(),
+            },
+            ObjectEntry {
+                key_node: AstNode::String(StringNode {
+                    value: "Properties".to_string(),
+                    span: Span::default(),
+                }),
+                key: "Properties".to_string(),
+                value: AstNode::Object(ObjectNode {
+                    entries: merge_props,
+                    span: Span::default(),
+                }),
+                key_span: Span::default(),
+            },
+        ];
+        let resources: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "Bucket".to_string(),
                 span: Span::default(),
@@ -144,9 +142,8 @@ mod tests {
                 span: Span::default(),
             }),
             key_span: Span::default(),
-        });
-        let mut root_props: Vec<ObjectEntry> = Vec::new();
-        root_props.push(ObjectEntry {
+        }];
+        let root_props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "Resources".to_string(),
                 span: Span::default(),
@@ -157,7 +154,7 @@ mod tests {
                 span: Span::default(),
             }),
             key_span: Span::default(),
-        });
+        }];
         let root = AstNode::Object(ObjectNode {
             entries: root_props,
             span: Span::default(),

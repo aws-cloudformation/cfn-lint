@@ -1,0 +1,619 @@
+{
+ "$comment": "Resource Schema for AWS::Athena::WorkGroup. Any changes made to SDK model for WorkGroup should be reflected here.",
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "AclConfiguration": {
+   "additionalProperties": false,
+   "description": "Indicates that an Amazon S3 canned ACL should be set to control ownership of stored query results",
+   "properties": {
+    "S3AclOption": {
+     "$ref": "#/definitions/S3AclOption"
+    }
+   },
+   "required": [
+    "S3AclOption"
+   ],
+   "type": "object"
+  },
+  "AdditionalConfiguration": {
+   "description": "Additional Configuration that are passed to Athena Spark Calculations running in this workgroup",
+   "type": "string"
+  },
+  "BytesScannedCutoffPerQuery": {
+   "description": "The upper data usage limit (cutoff) for the amount of bytes a single query in a workgroup is allowed to scan.",
+   "format": "int64",
+   "minimum": 10000000,
+   "type": "integer"
+  },
+  "Classification": {
+   "additionalProperties": false,
+   "description": "A classification refers to a set of specific configurations.",
+   "properties": {
+    "Name": {
+     "description": "The name of the configuration classification.",
+     "type": "string"
+    },
+    "Properties": {
+     "additionalProperties": false,
+     "description": "A set of properties specified within a configuration classification.",
+     "patternProperties": {
+      "^.+$": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "CloudWatchLoggingConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration settings for delivering logs to Amazon CloudWatch log groups.",
+   "properties": {
+    "Enabled": {
+     "description": "Enables CloudWatch logging.",
+     "type": "boolean"
+    },
+    "LogGroup": {
+     "description": "The name of the log group in Amazon CloudWatch Logs where you want to publish your logs.",
+     "type": "string"
+    },
+    "LogStreamNamePrefix": {
+     "description": "Prefix for the CloudWatch log stream name.",
+     "type": "string"
+    },
+    "LogTypes": {
+     "additionalProperties": false,
+     "description": "The types of logs that you want to publish to CloudWatch.",
+     "patternProperties": {
+      "^.+$": {
+       "items": {
+        "type": "string"
+       },
+       "type": "array"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "CustomerContentEncryptionConfiguration": {
+   "additionalProperties": false,
+   "description": "Indicates the KMS key for encrypting notebook content.",
+   "properties": {
+    "KmsKey": {
+     "$ref": "#/definitions/KmsKey"
+    }
+   },
+   "required": [
+    "KmsKey"
+   ],
+   "type": "object"
+  },
+  "EffectiveEngineVersion": {
+   "description": "Read only. The engine version on which the query runs. If the user requests a valid engine version other than Auto, the effective engine version is the same as the engine version that the user requested. If the user requests Auto, the effective engine version is chosen by Athena. When a request to update the engine version is made by a CreateWorkGroup or UpdateWorkGroup operation, the EffectiveEngineVersion field is ignored.",
+   "type": "string"
+  },
+  "EncryptionConfiguration": {
+   "additionalProperties": false,
+   "description": "If query results are encrypted in Amazon S3, indicates the encryption option used (for example, SSE-KMS or CSE-KMS) and key information.",
+   "properties": {
+    "EncryptionOption": {
+     "$ref": "#/definitions/EncryptionOption"
+    },
+    "KmsKey": {
+     "$ref": "#/definitions/KmsKey"
+    }
+   },
+   "required": [
+    "EncryptionOption"
+   ],
+   "type": "object"
+  },
+  "EncryptionOption": {
+   "description": "Indicates whether Amazon S3 server-side encryption with Amazon S3-managed keys (SSE-S3), server-side encryption with KMS-managed keys (SSE-KMS), or client-side encryption with KMS-managed keys (CSE-KMS) is used.",
+   "enum": [
+    "SSE_S3",
+    "SSE_KMS",
+    "CSE_KMS"
+   ],
+   "type": "string"
+  },
+  "EnforceWorkGroupConfiguration": {
+   "description": "If set to \"true\", the settings for the workgroup override client-side settings. If set to \"false\", client-side settings are used",
+   "type": "boolean"
+  },
+  "EngineConfiguration": {
+   "additionalProperties": false,
+   "description": "The engine configuration for running queries.",
+   "properties": {
+    "AdditionalConfigs": {
+     "additionalProperties": false,
+     "description": "Contains additional notebook engine MAP<string, string> parameter mappings in the form of key-value pairs. To specify an Athena notebook that the Jupyter server will download and serve, specify a value for the StartSessionRequest$NotebookVersion field, and then add a key named NotebookId to AdditionalConfigs that has the value of the Athena notebook ID.",
+     "patternProperties": {
+      "^.+$": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Classifications": {
+     "description": "The configuration classifications that can be specified for the engine.",
+     "items": {
+      "$ref": "#/definitions/Classification"
+     },
+     "type": "array"
+    },
+    "CoordinatorDpuSize": {
+     "description": "The number of DPUs to use for the coordinator. A coordinator is a special executor that orchestrates processing work and manages other executors in a notebook session. The default is 1.",
+     "type": "integer"
+    },
+    "DefaultExecutorDpuSize": {
+     "description": "The default number of DPUs to use for executors. An executor is the smallest unit of compute that a notebook session can request from Athena. The default is 1.",
+     "type": "integer"
+    },
+    "MaxConcurrentDpus": {
+     "description": "The maximum number of DPUs that can run concurrently.",
+     "type": "integer"
+    },
+    "SparkProperties": {
+     "additionalProperties": false,
+     "description": "Specifies custom jar files and Spark properties for use cases like cluster encryption, table formats, and general Spark tuning.",
+     "patternProperties": {
+      "^.+$": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "EngineVersion": {
+   "additionalProperties": false,
+   "description": "The Athena engine version for running queries.",
+   "properties": {
+    "EffectiveEngineVersion": {
+     "$ref": "#/definitions/EffectiveEngineVersion"
+    },
+    "SelectedEngineVersion": {
+     "$ref": "#/definitions/SelectedEngineVersion"
+    }
+   },
+   "type": "object"
+  },
+  "ExecutionRole": {
+   "description": "The ARN of the execution role used to access user resources for Spark sessions and Identity Center enabled workgroups. This property applies only to Spark enabled workgroups and Identity Center enabled workgroups.",
+   "type": "string"
+  },
+  "ExpectedBucketOwner": {
+   "description": "The AWS account ID of the owner of S3 bucket where query results are stored",
+   "type": "string"
+  },
+  "KmsKey": {
+   "description": "For SSE-KMS and CSE-KMS, this is the KMS key ARN or ID. ",
+   "type": "string"
+  },
+  "ManagedLoggingConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration settings for managed log persistence.",
+   "properties": {
+    "Enabled": {
+     "description": "Enables managed log persistence.",
+     "type": "boolean"
+    },
+    "KmsKey": {
+     "description": "The KMS key ARN to encrypt the logs stored in managed log persistence.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ManagedQueryResultsConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration for the managed query results and encryption option. ResultConfiguration and ManagedQueryResultsConfiguration cannot be set at the same time",
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "EncryptionConfiguration": {
+     "$ref": "#/definitions/ManagedStorageEncryptionConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "ManagedStorageEncryptionConfiguration": {
+   "additionalProperties": false,
+   "description": "Indicates the encryption configuration for Athena Managed Storage. If not setting this field, Managed Storage will encrypt the query results with Athena's encryption key",
+   "properties": {
+    "KmsKey": {
+     "$ref": "#/definitions/KmsKey"
+    }
+   },
+   "type": "object"
+  },
+  "MonitoringConfiguration": {
+   "additionalProperties": false,
+   "description": "Contains the configuration settings for managed log persistence, delivering logs to Amazon S3 buckets, Amazon CloudWatch log groups etc.",
+   "properties": {
+    "CloudWatchLoggingConfiguration": {
+     "$ref": "#/definitions/CloudWatchLoggingConfiguration"
+    },
+    "ManagedLoggingConfiguration": {
+     "$ref": "#/definitions/ManagedLoggingConfiguration"
+    },
+    "S3LoggingConfiguration": {
+     "$ref": "#/definitions/S3LoggingConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "OutputLocation": {
+   "description": "The location in Amazon S3 where your query results are stored, such as s3://path/to/query/bucket/. To run the query, you must specify the query results location using one of the ways: either for individual queries using either this setting (client-side), or in the workgroup, using WorkGroupConfiguration",
+   "type": "string"
+  },
+  "PublishCloudWatchMetricsEnabled": {
+   "description": "Indicates that the Amazon CloudWatch metrics are enabled for the workgroup.",
+   "type": "boolean"
+  },
+  "RemoveAclConfiguration": {
+   "type": "boolean"
+  },
+  "RemoveBytesScannedCutoffPerQuery": {
+   "description": "Indicates that the data usage control limit per query is removed.",
+   "type": "boolean"
+  },
+  "RemoveCustomerContentEncryptionConfiguration": {
+   "type": "boolean"
+  },
+  "RemoveEncryptionConfiguration": {
+   "type": "boolean"
+  },
+  "RemoveExpectedBucketOwner": {
+   "type": "boolean"
+  },
+  "RemoveOutputLocation": {
+   "type": "boolean"
+  },
+  "RequesterPaysEnabled": {
+   "description": "If set to true, allows members assigned to a workgroup to reference Amazon S3 Requester Pays buckets in queries. If set to false, workgroup members cannot query data from Requester Pays buckets, and queries that retrieve data from Requester Pays buckets cause an error. ",
+   "type": "boolean"
+  },
+  "ResultConfiguration": {
+   "additionalProperties": false,
+   "description": "The location in Amazon S3 where query results are stored and the encryption option, if any, used for query results. These are known as \"client-side settings\". If workgroup settings override client-side settings, then the query uses the workgroup settings.\n",
+   "properties": {
+    "AclConfiguration": {
+     "$ref": "#/definitions/AclConfiguration"
+    },
+    "EncryptionConfiguration": {
+     "$ref": "#/definitions/EncryptionConfiguration"
+    },
+    "ExpectedBucketOwner": {
+     "$ref": "#/definitions/ExpectedBucketOwner"
+    },
+    "OutputLocation": {
+     "$ref": "#/definitions/OutputLocation"
+    }
+   },
+   "type": "object"
+  },
+  "ResultConfigurationUpdates": {
+   "additionalProperties": false,
+   "description": "The result configuration information about the queries in this workgroup that will be updated. Includes the updated results location and an updated option for encrypting query results. ",
+   "properties": {
+    "AclConfiguration": {
+     "$ref": "#/definitions/AclConfiguration"
+    },
+    "EncryptionConfiguration": {
+     "$ref": "#/definitions/EncryptionConfiguration"
+    },
+    "ExpectedBucketOwner": {
+     "$ref": "#/definitions/ExpectedBucketOwner"
+    },
+    "OutputLocation": {
+     "$ref": "#/definitions/OutputLocation"
+    },
+    "RemoveAclConfiguration": {
+     "$ref": "#/definitions/RemoveAclConfiguration"
+    },
+    "RemoveEncryptionConfiguration": {
+     "$ref": "#/definitions/RemoveEncryptionConfiguration"
+    },
+    "RemoveExpectedBucketOwner": {
+     "$ref": "#/definitions/RemoveExpectedBucketOwner"
+    },
+    "RemoveOutputLocation": {
+     "$ref": "#/definitions/RemoveOutputLocation"
+    }
+   },
+   "type": "object"
+  },
+  "S3AclOption": {
+   "description": "The Amazon S3 canned ACL that Athena should specify when storing query results. Currently the only supported canned ACL is BUCKET_OWNER_FULL_CONTROL",
+   "enum": [
+    "BUCKET_OWNER_FULL_CONTROL"
+   ],
+   "type": "string"
+  },
+  "S3LoggingConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration settings for delivering logs to Amazon S3 buckets.",
+   "properties": {
+    "Enabled": {
+     "description": "Enables S3 log delivery.",
+     "type": "boolean"
+    },
+    "KmsKey": {
+     "description": "The KMS key ARN to encrypt the logs published to the given Amazon S3 destination.",
+     "type": "string"
+    },
+    "LogLocation": {
+     "description": "The Amazon S3 destination URI for log publishing.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SelectedEngineVersion": {
+   "description": "The engine version requested by the user. Possible values are determined by the output of ListEngineVersions, including Auto. The default is Auto.",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "WorkGroupConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdditionalConfiguration": {
+     "$ref": "#/definitions/AdditionalConfiguration"
+    },
+    "BytesScannedCutoffPerQuery": {
+     "$ref": "#/definitions/BytesScannedCutoffPerQuery"
+    },
+    "CustomerContentEncryptionConfiguration": {
+     "$ref": "#/definitions/CustomerContentEncryptionConfiguration"
+    },
+    "EnforceWorkGroupConfiguration": {
+     "$ref": "#/definitions/EnforceWorkGroupConfiguration"
+    },
+    "EngineConfiguration": {
+     "$ref": "#/definitions/EngineConfiguration"
+    },
+    "EngineVersion": {
+     "$ref": "#/definitions/EngineVersion"
+    },
+    "ExecutionRole": {
+     "$ref": "#/definitions/ExecutionRole"
+    },
+    "ManagedQueryResultsConfiguration": {
+     "$ref": "#/definitions/ManagedQueryResultsConfiguration"
+    },
+    "MonitoringConfiguration": {
+     "$ref": "#/definitions/MonitoringConfiguration"
+    },
+    "PublishCloudWatchMetricsEnabled": {
+     "$ref": "#/definitions/PublishCloudWatchMetricsEnabled"
+    },
+    "RequesterPaysEnabled": {
+     "$ref": "#/definitions/RequesterPaysEnabled"
+    },
+    "ResultConfiguration": {
+     "$ref": "#/definitions/ResultConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "WorkGroupConfigurationUpdates": {
+   "additionalProperties": false,
+   "description": "The configuration information that will be updated for this workgroup, which includes the location in Amazon S3 where query results are stored, the encryption option, if any, used for query results, whether the Amazon CloudWatch Metrics are enabled for the workgroup, whether the workgroup settings override the client-side settings, and the data usage limit for the amount of bytes scanned per query, if it is specified. ",
+   "properties": {
+    "AdditionalConfiguration": {
+     "$ref": "#/definitions/AdditionalConfiguration"
+    },
+    "BytesScannedCutoffPerQuery": {
+     "$ref": "#/definitions/BytesScannedCutoffPerQuery"
+    },
+    "CustomerContentEncryptionConfiguration": {
+     "$ref": "#/definitions/CustomerContentEncryptionConfiguration"
+    },
+    "EnforceWorkGroupConfiguration": {
+     "$ref": "#/definitions/EnforceWorkGroupConfiguration"
+    },
+    "EngineConfiguration": {
+     "$ref": "#/definitions/EngineConfiguration"
+    },
+    "EngineVersion": {
+     "$ref": "#/definitions/EngineVersion"
+    },
+    "ExecutionRole": {
+     "$ref": "#/definitions/ExecutionRole"
+    },
+    "ManagedQueryResultsConfiguration": {
+     "$ref": "#/definitions/ManagedQueryResultsConfiguration"
+    },
+    "MonitoringConfiguration": {
+     "$ref": "#/definitions/MonitoringConfiguration"
+    },
+    "PublishCloudWatchMetricsEnabled": {
+     "$ref": "#/definitions/PublishCloudWatchMetricsEnabled"
+    },
+    "RemoveBytesScannedCutoffPerQuery": {
+     "$ref": "#/definitions/RemoveBytesScannedCutoffPerQuery"
+    },
+    "RemoveCustomerContentEncryptionConfiguration": {
+     "$ref": "#/definitions/RemoveCustomerContentEncryptionConfiguration"
+    },
+    "RequesterPaysEnabled": {
+     "$ref": "#/definitions/RequesterPaysEnabled"
+    },
+    "ResultConfigurationUpdates": {
+     "$ref": "#/definitions/ResultConfigurationUpdates"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/WorkGroupConfigurationUpdates"
+ ],
+ "description": "Resource schema for AWS::Athena::WorkGroup",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "athena:CreateWorkGroup",
+    "athena:TagResource",
+    "iam:PassRole",
+    "iam:CreateServiceLinkedRole",
+    "s3:GetBucketLocation",
+    "s3:GetObject",
+    "s3:ListBucket",
+    "s3:ListBucketMultipartUploads",
+    "s3:AbortMultipartUpload",
+    "s3:PutObject",
+    "s3:ListMultipartUploadParts",
+    "kms:Decrypt",
+    "kms:GenerateDataKey"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "athena:DeleteWorkGroup",
+    "athena:GetWorkGroup",
+    "athena:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "athena:ListWorkGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "athena:GetWorkGroup",
+    "athena:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "athena:UpdateWorkGroup",
+    "athena:TagResource",
+    "athena:UntagResource",
+    "iam:PassRole",
+    "s3:GetBucketLocation",
+    "s3:GetObject",
+    "s3:ListBucket",
+    "s3:ListBucketMultipartUploads",
+    "s3:AbortMultipartUpload",
+    "s3:PutObject",
+    "s3:ListMultipartUploadParts",
+    "kms:Decrypt",
+    "kms:GenerateDataKey"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "CreationTime": {
+   "description": "The date and time the workgroup was created.",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The workgroup description.",
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Name": {
+   "description": "The workGroup name.",
+   "pattern": "[a-zA-Z0-9._-]{1,128}",
+   "type": "string"
+  },
+  "RecursiveDeleteOption": {
+   "description": "The option to delete the workgroup and its contents even if the workgroup contains any named queries.",
+   "type": "boolean"
+  },
+  "State": {
+   "description": "The state of the workgroup: ENABLED or DISABLED.",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags",
+   "description": "One or more tags, separated by commas, that you want to attach to the workgroup as you create it"
+  },
+  "WorkGroupConfiguration": {
+   "$ref": "#/definitions/WorkGroupConfiguration",
+   "description": "The workgroup configuration"
+  },
+  "WorkGroupConfigurationUpdates": {
+   "$ref": "#/definitions/WorkGroupConfigurationUpdates",
+   "description": "The workgroup configuration update object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreationTime",
+  "/properties/WorkGroupConfiguration/EngineVersion/EffectiveEngineVersion",
+  "/properties/WorkGroupConfigurationUpdates/EngineVersion/EffectiveEngineVersion"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-athena.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "athena:UntagResource",
+   "athena:TagResource",
+   "athena:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Athena::WorkGroup",
+ "writeOnlyProperties": [
+  "/properties/WorkGroupConfigurationUpdates",
+  "/properties/RecursiveDeleteOption",
+  "/properties/WorkGroupConfiguration/AdditionalConfiguration",
+  "/properties/WorkGroupConfiguration/EngineConfiguration/CoordinatorDpuSize",
+  "/properties/WorkGroupConfiguration/EngineConfiguration/MaxConcurrentDpus",
+  "/properties/WorkGroupConfiguration/EngineConfiguration/DefaultExecutorDpuSize",
+  "/properties/WorkGroupConfiguration/EngineConfiguration/AdditionalConfigs",
+  "/properties/WorkGroupConfiguration/EngineConfiguration/SparkProperties"
+ ]
+}

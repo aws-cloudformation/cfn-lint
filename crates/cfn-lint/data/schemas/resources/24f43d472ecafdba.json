@@ -1,0 +1,893 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "APISchema": {
+   "description": "Contains information about the API Schema for the Action Group",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "S3": {
+       "$ref": "#/definitions/S3Identifier"
+      }
+     },
+     "required": [
+      "S3"
+     ],
+     "title": "S3",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Payload": {
+       "description": "String OpenAPI Payload",
+       "type": "string"
+      }
+     },
+     "required": [
+      "Payload"
+     ],
+     "title": "Payload",
+     "type": "object"
+    }
+   ]
+  },
+  "ActionGroupExecutor": {
+   "description": "Type of Executors for an Action Group",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Lambda": {
+       "description": "ARN of a Lambda.",
+       "maxLength": 2048,
+       "pattern": "^arn:(aws[a-zA-Z-]*)?:lambda:[a-z0-9-]{1,20}:\\d{12}:function:[a-zA-Z0-9-_\\.]+(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "Lambda"
+     ],
+     "title": "Lambda",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CustomControl": {
+       "$ref": "#/definitions/CustomControlMethod"
+      }
+     },
+     "required": [
+      "CustomControl"
+     ],
+     "title": "CustomControl",
+     "type": "object"
+    }
+   ]
+  },
+  "ActionGroupSignature": {
+   "description": "Action Group Signature for a BuiltIn Action",
+   "enum": [
+    "AMAZON.UserInput",
+    "AMAZON.CodeInterpreter"
+   ],
+   "type": "string"
+  },
+  "ActionGroupState": {
+   "description": "State of the action group",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "AdditionalModelRequestFields": {
+   "description": "Additional Model Request Fields for Prompt Configuration",
+   "type": "object"
+  },
+  "AgentActionGroup": {
+   "additionalProperties": false,
+   "description": "Contains the information of an Agent Action Group",
+   "properties": {
+    "ActionGroupExecutor": {
+     "$ref": "#/definitions/ActionGroupExecutor"
+    },
+    "ActionGroupName": {
+     "description": "Name of the action group",
+     "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+     "type": "string"
+    },
+    "ActionGroupState": {
+     "$ref": "#/definitions/ActionGroupState"
+    },
+    "ApiSchema": {
+     "$ref": "#/definitions/APISchema"
+    },
+    "Description": {
+     "description": "Description of action group",
+     "maxLength": 200,
+     "minLength": 1,
+     "type": "string"
+    },
+    "FunctionSchema": {
+     "$ref": "#/definitions/FunctionSchema"
+    },
+    "ParentActionGroupSignature": {
+     "$ref": "#/definitions/ActionGroupSignature"
+    },
+    "SkipResourceInUseCheckOnDelete": {
+     "default": false,
+     "description": "Specifies whether to allow deleting action group while it is in use.",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "ActionGroupName"
+   ],
+   "type": "object"
+  },
+  "AgentCollaboration": {
+   "description": "Agent collaboration state",
+   "enum": [
+    "DISABLED",
+    "SUPERVISOR",
+    "SUPERVISOR_ROUTER"
+   ],
+   "type": "string"
+  },
+  "AgentCollaborator": {
+   "additionalProperties": false,
+   "description": "Agent Collaborator",
+   "properties": {
+    "AgentDescriptor": {
+     "additionalProperties": false,
+     "description": "Agent descriptor for agent collaborator",
+     "properties": {
+      "AliasArn": {
+       "description": "Alias ARN for agent descriptor",
+       "pattern": "^arn:(aws[a-zA-Z-]*)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:agent-alias/[0-9a-zA-Z]{10}/[0-9a-zA-Z]{10}$",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "CollaborationInstruction": {
+     "description": "Agent collaborator instruction",
+     "type": "string"
+    },
+    "CollaboratorName": {
+     "description": "Agent collaborator name",
+     "type": "string"
+    },
+    "RelayConversationHistory": {
+     "$ref": "#/definitions/RelayConversationHistory"
+    }
+   },
+   "required": [
+    "AgentDescriptor",
+    "CollaborationInstruction",
+    "CollaboratorName"
+   ],
+   "type": "object"
+  },
+  "AgentKnowledgeBase": {
+   "additionalProperties": false,
+   "description": "Agent Knowledge Base",
+   "properties": {
+    "Description": {
+     "description": "Description of the Resource.",
+     "maxLength": 200,
+     "minLength": 1,
+     "type": "string"
+    },
+    "KnowledgeBaseId": {
+     "description": "Identifier for a resource.",
+     "pattern": "^[0-9a-zA-Z]{10}$",
+     "type": "string"
+    },
+    "KnowledgeBaseState": {
+     "$ref": "#/definitions/KnowledgeBaseState"
+    }
+   },
+   "required": [
+    "KnowledgeBaseId",
+    "Description"
+   ],
+   "type": "object"
+  },
+  "AgentStatus": {
+   "description": "Schema Type for Action APIs.",
+   "enum": [
+    "CREATING",
+    "PREPARING",
+    "PREPARED",
+    "NOT_PREPARED",
+    "DELETING",
+    "FAILED",
+    "VERSIONING",
+    "UPDATING"
+   ],
+   "type": "string"
+  },
+  "CreationMode": {
+   "description": "Creation Mode for Prompt Configuration.",
+   "enum": [
+    "DEFAULT",
+    "OVERRIDDEN"
+   ],
+   "type": "string"
+  },
+  "CustomControlMethod": {
+   "description": "Custom control of action execution",
+   "enum": [
+    "RETURN_CONTROL"
+   ],
+   "type": "string"
+  },
+  "CustomOrchestration": {
+   "additionalProperties": false,
+   "description": "Structure for custom orchestration",
+   "properties": {
+    "Executor": {
+     "$ref": "#/definitions/OrchestrationExecutor"
+    }
+   },
+   "type": "object"
+  },
+  "EnabledMemoryTypes": {
+   "description": "Types of session storage persisted in memory",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/MemoryType"
+   },
+   "type": "array"
+  },
+  "FoundationModel": {
+   "description": "ARN or name of a Bedrock model.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:(([0-9]{12}:custom-model/[a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}(([:][a-z0-9-]{1,63}){0,2})?/[a-z0-9]{12})|(:foundation-model/([a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.]?[a-z0-9-]{1,63})([:][a-z0-9-]{1,63}){0,2}))|([0-9]{12}:(inference-profile|application-inference-profile)/[a-zA-Z0-9-:.]+))|(([a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.]?[a-z0-9-]{1,63})([:][a-z0-9-]{1,63}){0,2}))|(([0-9a-zA-Z][_-]?)+)$",
+   "type": "string"
+  },
+  "Function": {
+   "additionalProperties": false,
+   "description": "Function definition",
+   "properties": {
+    "Description": {
+     "description": "Description of function",
+     "maxLength": 1200,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "description": "Name for a resource.",
+     "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+     "type": "string"
+    },
+    "Parameters": {
+     "$ref": "#/definitions/ParameterMap"
+    },
+    "RequireConfirmation": {
+     "$ref": "#/definitions/RequireConfirmation"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "FunctionSchema": {
+   "additionalProperties": false,
+   "description": "Schema of Functions",
+   "properties": {
+    "Functions": {
+     "description": "List of Function definitions",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Function"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Functions"
+   ],
+   "title": "Functions",
+   "type": "object"
+  },
+  "GuardrailConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for a guardrail.",
+   "properties": {
+    "GuardrailIdentifier": {
+     "description": "Identifier for the guardrail, could be the id or the arn",
+     "maxLength": 2048,
+     "pattern": "^(([a-z0-9]+)|(arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:guardrail/[a-z0-9]+))$",
+     "type": "string"
+    },
+    "GuardrailVersion": {
+     "description": "Version of the guardrail",
+     "pattern": "^(([0-9]{1,8})|(DRAFT))$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InferenceConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for inference in prompt configuration",
+   "properties": {
+    "MaximumLength": {
+     "description": "Maximum length of output",
+     "maximum": 131072,
+     "minimum": 0,
+     "type": "number"
+    },
+    "StopSequences": {
+     "description": "List of stop sequences",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 4,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Temperature": {
+     "description": "Controls randomness, higher values increase diversity",
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    },
+    "TopK": {
+     "description": "Sample from the k most likely next tokens",
+     "maximum": 500,
+     "minimum": 0,
+     "type": "number"
+    },
+    "TopP": {
+     "description": "Cumulative probability cutoff for token selection",
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "KnowledgeBaseState": {
+   "description": "State of the knowledge base; whether it is enabled or disabled",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "MemoryConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for memory storage",
+   "properties": {
+    "EnabledMemoryTypes": {
+     "$ref": "#/definitions/EnabledMemoryTypes"
+    },
+    "SessionSummaryConfiguration": {
+     "$ref": "#/definitions/SessionSummaryConfiguration"
+    },
+    "StorageDays": {
+     "description": "Maximum number of days to store session details",
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "MemoryType": {
+   "description": "Memory type",
+   "enum": [
+    "SESSION_SUMMARY"
+   ],
+   "type": "string"
+  },
+  "OrchestrationExecutor": {
+   "additionalProperties": false,
+   "description": "Types of executors for custom orchestration strategy",
+   "properties": {
+    "Lambda": {
+     "description": "ARN of a Lambda.",
+     "maxLength": 2048,
+     "pattern": "^arn:(aws[a-zA-Z-]*)?:lambda:[a-z0-9-]{1,20}:\\d{12}:function:[a-zA-Z0-9-_\\.]+(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Lambda"
+   ],
+   "title": "Lambda",
+   "type": "object"
+  },
+  "OrchestrationType": {
+   "description": "Types of orchestration strategy for agents",
+   "enum": [
+    "DEFAULT",
+    "CUSTOM_ORCHESTRATION"
+   ],
+   "type": "string"
+  },
+  "ParameterDetail": {
+   "additionalProperties": false,
+   "description": "Parameter detail",
+   "properties": {
+    "Description": {
+     "description": "Description of function parameter.",
+     "maxLength": 500,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Required": {
+     "description": "Information about if a parameter is required for function call. Default to false.",
+     "type": "boolean"
+    },
+    "Type": {
+     "$ref": "#/definitions/Type"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ParameterMap": {
+   "additionalProperties": false,
+   "description": "A map of parameter name and detail",
+   "patternProperties": {
+    "^([0-9a-zA-Z][_-]?){1,100}$": {
+     "$ref": "#/definitions/ParameterDetail"
+    }
+   },
+   "type": "object"
+  },
+  "PromptConfiguration": {
+   "additionalProperties": false,
+   "description": "BasePromptConfiguration per Prompt Type.",
+   "properties": {
+    "AdditionalModelRequestFields": {
+     "$ref": "#/definitions/AdditionalModelRequestFields"
+    },
+    "BasePromptTemplate": {
+     "description": "Base Prompt Template.",
+     "maxLength": 100000,
+     "minLength": 1,
+     "type": "string"
+    },
+    "FoundationModel": {
+     "$ref": "#/definitions/FoundationModel"
+    },
+    "InferenceConfiguration": {
+     "$ref": "#/definitions/InferenceConfiguration"
+    },
+    "ParserMode": {
+     "$ref": "#/definitions/CreationMode"
+    },
+    "PromptCreationMode": {
+     "$ref": "#/definitions/CreationMode"
+    },
+    "PromptState": {
+     "$ref": "#/definitions/PromptState"
+    },
+    "PromptType": {
+     "$ref": "#/definitions/PromptType"
+    }
+   },
+   "type": "object"
+  },
+  "PromptOverrideConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for prompt override.",
+   "properties": {
+    "OverrideLambda": {
+     "description": "ARN of a Lambda.",
+     "maxLength": 2048,
+     "pattern": "^arn:(aws[a-zA-Z-]*)?:lambda:[a-z0-9-]{1,20}:\\d{12}:function:[a-zA-Z0-9-_\\.]+(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
+     "type": "string"
+    },
+    "PromptConfigurations": {
+     "description": "List of BasePromptConfiguration",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/PromptConfiguration"
+     },
+     "maxItems": 10,
+     "type": "array"
+    }
+   },
+   "required": [
+    "PromptConfigurations"
+   ],
+   "type": "object"
+  },
+  "PromptState": {
+   "description": "Prompt State.",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "PromptType": {
+   "description": "Prompt Type.",
+   "enum": [
+    "PRE_PROCESSING",
+    "ORCHESTRATION",
+    "POST_PROCESSING",
+    "ROUTING_CLASSIFIER",
+    "MEMORY_SUMMARIZATION",
+    "KNOWLEDGE_BASE_RESPONSE_GENERATION"
+   ],
+   "type": "string"
+  },
+  "RelayConversationHistory": {
+   "description": "Relay conversation history state",
+   "enum": [
+    "TO_COLLABORATOR",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "RequireConfirmation": {
+   "description": "ENUM to check if action requires user confirmation",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "S3Identifier": {
+   "additionalProperties": false,
+   "description": "The identifier for the S3 resource.",
+   "properties": {
+    "S3BucketName": {
+     "description": "A bucket in S3.",
+     "format": "AWS::S3::Bucket.Name",
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "^[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]$",
+     "type": "string"
+    },
+    "S3ObjectKey": {
+     "description": "A object key in S3.",
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^[\\.\\-\\!\\*\\_\\'\\(\\)a-zA-Z0-9][\\.\\-\\!\\*\\_\\'\\(\\)\\/a-zA-Z0-9]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SessionSummaryConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for Session Summarization",
+   "properties": {
+    "MaxRecentSessions": {
+     "description": "Maximum number of Sessions to Summarize",
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "description": "A map of tag keys and values",
+   "maxItems": 200,
+   "minItems": 0,
+   "patternProperties": {
+    "^[a-zA-Z0-9\\s._:/=+@-]*$": {
+     "description": "Value of a tag",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Type": {
+   "description": "Parameter Type",
+   "enum": [
+    "string",
+    "number",
+    "integer",
+    "boolean",
+    "array"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "Definition of AWS::Bedrock::Agent Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "bedrock:CreateAgent",
+    "bedrock:GetAgent",
+    "bedrock:PrepareAgent",
+    "bedrock:GetAgentKnowledgeBase",
+    "bedrock:AssociateAgentKnowledgeBase",
+    "bedrock:ListAgentKnowledgeBases",
+    "bedrock:CreateAgentActionGroup",
+    "bedrock:GetAgentActionGroup",
+    "bedrock:ListAgentActionGroups",
+    "bedrock:TagResource",
+    "bedrock:ListTagsForResource",
+    "bedrock:CreateGuardrail",
+    "bedrock:CreateGuardrailVersion",
+    "bedrock:GetGuardrail",
+    "bedrock:AssociateAgentCollaborator",
+    "bedrock:GetAgentCollaborator",
+    "bedrock:ListAgentCollaborators",
+    "iam:PassRole",
+    "kms:GenerateDataKeyWithoutPlainText",
+    "kms:ReEncryptFrom",
+    "kms:ReEncryptTo",
+    "kms:Decrypt",
+    "kms:GenerateDataKey"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "bedrock:GetAgent",
+    "bedrock:DeleteAgent",
+    "bedrock:DeleteGuardrail",
+    "bedrock:GetGuardrail",
+    "kms:Decrypt",
+    "kms:Encrypt",
+    "kms:GenerateDataKey"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "bedrock:ListAgents",
+    "bedrock:ListGuardrails"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bedrock:GetAgent",
+    "bedrock:GetAgentActionGroup",
+    "bedrock:ListAgentActionGroups",
+    "bedrock:GetAgentKnowledgeBase",
+    "bedrock:ListAgentKnowledgeBases",
+    "bedrock:ListTagsForResource",
+    "bedrock:GetGuardrail",
+    "bedrock:GetAgentCollaborator",
+    "bedrock:ListAgentCollaborators",
+    "kms:Decrypt",
+    "kms:GenerateDataKey",
+    "kms:Encrypt"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "bedrock:GetAgent",
+    "bedrock:UpdateAgent",
+    "bedrock:PrepareAgent",
+    "bedrock:GetAgentKnowledgeBase",
+    "bedrock:UpdateAgentKnowledgeBase",
+    "bedrock:AssociateAgentKnowledgeBase",
+    "bedrock:DisassociateAgentKnowledgeBase",
+    "bedrock:ListAgentKnowledgeBases",
+    "bedrock:CreateAgentActionGroup",
+    "bedrock:GetAgentActionGroup",
+    "bedrock:UpdateAgentActionGroup",
+    "bedrock:DeleteAgentActionGroup",
+    "bedrock:ListAgentActionGroups",
+    "bedrock:TagResource",
+    "bedrock:UntagResource",
+    "bedrock:ListTagsForResource",
+    "bedrock:UpdateGuardrail",
+    "bedrock:GetGuardrail",
+    "bedrock:AssociateAgentCollaborator",
+    "bedrock:GetAgentCollaborator",
+    "bedrock:ListAgentCollaborators",
+    "bedrock:DisassociateAgentCollaborator",
+    "bedrock:UpdateAgentCollaborator",
+    "kms:Decrypt",
+    "kms:Encrypt",
+    "kms:GenerateDataKey",
+    "kms:GenerateDataKeyWithoutPlainText",
+    "kms:ReEncryptFrom",
+    "kms:ReEncryptTo",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AgentId"
+ ],
+ "properties": {
+  "ActionGroups": {
+   "description": "List of ActionGroups",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AgentActionGroup"
+   },
+   "type": "array"
+  },
+  "AgentArn": {
+   "description": "Arn representation of the Agent.",
+   "maxLength": 2048,
+   "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:agent/[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "AgentCollaboration": {
+   "$ref": "#/definitions/AgentCollaboration"
+  },
+  "AgentCollaborators": {
+   "description": "List of Agent Collaborators",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AgentCollaborator"
+   },
+   "type": "array"
+  },
+  "AgentId": {
+   "description": "Identifier for a resource.",
+   "pattern": "^[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "AgentName": {
+   "description": "Name for a resource.",
+   "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+   "type": "string"
+  },
+  "AgentResourceRoleArn": {
+   "description": "ARN of a IAM role.",
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "AgentStatus": {
+   "$ref": "#/definitions/AgentStatus"
+  },
+  "AgentVersion": {
+   "description": "Draft Agent Version.",
+   "maxLength": 5,
+   "minLength": 5,
+   "pattern": "^DRAFT$",
+   "type": "string"
+  },
+  "AutoPrepare": {
+   "default": false,
+   "description": "Specifies whether to automatically prepare after creating or updating the agent.",
+   "type": "boolean"
+  },
+  "CreatedAt": {
+   "description": "Time Stamp.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "CustomOrchestration": {
+   "$ref": "#/definitions/CustomOrchestration"
+  },
+  "CustomerEncryptionKeyArn": {
+   "description": "A KMS key ARN",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[^:]+)?:kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
+   "type": "string"
+  },
+  "Description": {
+   "description": "Description of the Resource.",
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FailureReasons": {
+   "description": "Failure Reasons for Error.",
+   "insertionOrder": false,
+   "items": {
+    "description": "Failure Reason for Error.",
+    "maxLength": 2048,
+    "type": "string"
+   },
+   "maxItems": 2048,
+   "type": "array"
+  },
+  "FoundationModel": {
+   "$ref": "#/definitions/FoundationModel"
+  },
+  "GuardrailConfiguration": {
+   "$ref": "#/definitions/GuardrailConfiguration"
+  },
+  "IdleSessionTTLInSeconds": {
+   "description": "Max Session Time.",
+   "maximum": 5400,
+   "minimum": 60,
+   "type": "number"
+  },
+  "Instruction": {
+   "description": "Instruction for the agent.",
+   "minLength": 40,
+   "type": "string"
+  },
+  "KnowledgeBases": {
+   "description": "List of Agent Knowledge Bases",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AgentKnowledgeBase"
+   },
+   "type": "array"
+  },
+  "MemoryConfiguration": {
+   "$ref": "#/definitions/MemoryConfiguration"
+  },
+  "OrchestrationType": {
+   "$ref": "#/definitions/OrchestrationType"
+  },
+  "PreparedAt": {
+   "description": "Time Stamp.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "PromptOverrideConfiguration": {
+   "$ref": "#/definitions/PromptOverrideConfiguration"
+  },
+  "RecommendedActions": {
+   "description": "The recommended actions users can take to resolve an error in failureReasons.",
+   "insertionOrder": false,
+   "items": {
+    "description": "The recommended action users can take to resolve an error in failureReasons.",
+    "maxLength": 2048,
+    "type": "string"
+   },
+   "maxItems": 2048,
+   "type": "array"
+  },
+  "SkipResourceInUseCheckOnDelete": {
+   "default": false,
+   "description": "Specifies whether to allow deleting agent while it is in use.",
+   "type": "boolean"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  },
+  "TestAliasTags": {
+   "$ref": "#/definitions/TagsMap"
+  },
+  "UpdatedAt": {
+   "description": "Time Stamp.",
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AgentArn",
+  "/properties/AgentId",
+  "/properties/AgentStatus",
+  "/properties/AgentVersion",
+  "/properties/CreatedAt",
+  "/properties/FailureReasons",
+  "/properties/PreparedAt",
+  "/properties/RecommendedActions",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "AgentName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "bedrock:TagResource",
+   "bedrock:UntagResource",
+   "bedrock:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Bedrock::Agent",
+ "writeOnlyProperties": [
+  "/properties/AutoPrepare",
+  "/properties/SkipResourceInUseCheckOnDelete",
+  "/properties/ActionGroups/*/SkipResourceInUseCheckOnDelete"
+ ]
+}

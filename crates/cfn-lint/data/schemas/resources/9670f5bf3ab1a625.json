@@ -1,0 +1,256 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AspectRatio": {
+   "additionalProperties": false,
+   "properties": {
+    "Height": {
+     "type": "integer"
+    },
+    "Width": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Height",
+    "Width"
+   ],
+   "type": "object"
+  },
+  "ClippingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CallbackMetadata": {
+     "maxLength": 1024,
+     "pattern": "^[\\w \\-\\.',@:;]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CroppingConfig": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "GetOutput": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "maxLength": 1024,
+     "pattern": "^[\\w \\-\\.',@:;]*$",
+     "type": "string"
+    },
+    "Name": {
+     "pattern": "^[a-zA-Z0-9]([a-zA-Z0-9-_]{0,126}[a-zA-Z0-9])?$",
+     "type": "string"
+    },
+    "OutputConfig": {
+     "$ref": "#/definitions/OutputConfig"
+    },
+    "Status": {
+     "$ref": "#/definitions/OutputStatus"
+    }
+   },
+   "required": [
+    "Name",
+    "OutputConfig",
+    "Status"
+   ],
+   "type": "object"
+  },
+  "OutputConfig": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Cropping": {
+       "$ref": "#/definitions/CroppingConfig"
+      }
+     },
+     "required": [
+      "Cropping"
+     ],
+     "title": "Cropping",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Clipping": {
+       "$ref": "#/definitions/ClippingConfig"
+      }
+     },
+     "required": [
+      "Clipping"
+     ],
+     "title": "Clipping",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Subtitling": {
+       "$ref": "#/definitions/SubtitlingConfig"
+      }
+     },
+     "required": [
+      "Subtitling"
+     ],
+     "title": "Subtitling",
+     "type": "object"
+    }
+   ]
+  },
+  "OutputStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "ProfanityFilterMode": {
+   "enum": [
+    "DISABLED",
+    "CENSOR",
+    "DROP"
+   ],
+   "type": "string"
+  },
+  "SubtitlingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AspectRatio": {
+     "$ref": "#/definitions/AspectRatio"
+    },
+    "Dictionary": {
+     "maxLength": 19,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9]+$",
+     "type": "string"
+    },
+    "Language": {
+     "$ref": "#/definitions/TranscriptionLanguage"
+    },
+    "ProfanityFilter": {
+     "$ref": "#/definitions/ProfanityFilterMode"
+    }
+   },
+   "required": [
+    "Language"
+   ],
+   "type": "object"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TranscriptionLanguage": {
+   "enum": [
+    "eng",
+    "eng-au",
+    "eng-gb",
+    "eng-us",
+    "fra",
+    "ita",
+    "deu",
+    "spa",
+    "por"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "Represents a feed that receives media for inference processing",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "elemental-inference:CreateFeed",
+    "elemental-inference:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "elemental-inference:DeleteFeed",
+    "elemental-inference:GetFeed"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "elemental-inference:ListFeeds"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "elemental-inference:GetFeed",
+    "elemental-inference:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "elemental-inference:UpdateFeed",
+    "elemental-inference:GetFeed",
+    "elemental-inference:TagResource",
+    "elemental-inference:UntagResource",
+    "elemental-inference:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "DataEndpoints": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Id": {
+   "pattern": "^[a-z0-9]{19}$",
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[a-zA-Z0-9]([a-zA-Z0-9-_]{0,126}[a-zA-Z0-9])?$",
+   "type": "string"
+  },
+  "Outputs": {
+   "items": {
+    "$ref": "#/definitions/GetOutput"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/DataEndpoints",
+  "/properties/Id"
+ ],
+ "required": [
+  "Name",
+  "Outputs"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "elemental-inference:ListTagsForResource",
+   "elemental-inference:TagResource",
+   "elemental-inference:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ElementalInference::Feed"
+}

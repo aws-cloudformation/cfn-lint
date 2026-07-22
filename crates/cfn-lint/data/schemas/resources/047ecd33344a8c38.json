@@ -1,0 +1,424 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Criteria": {
+   "additionalProperties": false,
+   "properties": {
+    "EbsVolumeSizeInGib": {
+     "$ref": "#/definitions/IntegerCriteriaConditionList"
+    },
+    "EbsVolumeType": {
+     "$ref": "#/definitions/StringCriteriaConditionList"
+    },
+    "EstimatedMonthlySavings": {
+     "$ref": "#/definitions/DoubleCriteriaConditionList"
+    },
+    "LookBackPeriodInDays": {
+     "$ref": "#/definitions/IntegerCriteriaConditionList"
+    },
+    "Region": {
+     "$ref": "#/definitions/StringCriteriaConditionList"
+    },
+    "ResourceArn": {
+     "$ref": "#/definitions/StringCriteriaConditionList"
+    },
+    "ResourceTag": {
+     "$ref": "#/definitions/ResourceTagsCriteriaConditionList"
+    },
+    "RestartNeeded": {
+     "$ref": "#/definitions/StringCriteriaConditionList"
+    }
+   },
+   "type": "object"
+  },
+  "DoubleCriteriaCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "Comparison": {
+     "enum": [
+      "StringEquals",
+      "StringNotEquals",
+      "StringEqualsIgnoreCase",
+      "StringNotEqualsIgnoreCase",
+      "StringLike",
+      "StringNotLike",
+      "NumericEquals",
+      "NumericNotEquals",
+      "NumericLessThan",
+      "NumericLessThanEquals",
+      "NumericGreaterThan",
+      "NumericGreaterThanEquals"
+     ],
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "type": "number"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "DoubleCriteriaConditionList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DoubleCriteriaCondition"
+   },
+   "type": "array"
+  },
+  "IntegerCriteriaCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "Comparison": {
+     "enum": [
+      "StringEquals",
+      "StringNotEquals",
+      "StringEqualsIgnoreCase",
+      "StringNotEqualsIgnoreCase",
+      "StringLike",
+      "StringNotLike",
+      "NumericEquals",
+      "NumericNotEquals",
+      "NumericLessThan",
+      "NumericLessThanEquals",
+      "NumericGreaterThan",
+      "NumericGreaterThanEquals"
+     ],
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "type": "integer"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "IntegerCriteriaConditionList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IntegerCriteriaCondition"
+   },
+   "type": "array"
+  },
+  "OrganizationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountIds": {
+     "description": "List of account IDs where the organization rule applies",
+     "insertionOrder": false,
+     "items": {
+      "pattern": "^[0-9]{12}$",
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array"
+    },
+    "RuleApplyOrder": {
+     "description": "When the rule should be applied relative to account rules",
+     "enum": [
+      "BeforeAccountRules",
+      "AfterAccountRules"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceTagsCriteriaCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "Comparison": {
+     "enum": [
+      "StringEquals",
+      "StringNotEquals",
+      "StringEqualsIgnoreCase",
+      "StringNotEqualsIgnoreCase",
+      "StringLike",
+      "StringNotLike",
+      "NumericEquals",
+      "NumericNotEquals",
+      "NumericLessThan",
+      "NumericLessThanEquals",
+      "NumericGreaterThan",
+      "NumericGreaterThanEquals"
+     ],
+     "type": "string"
+    },
+    "Key": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[\\w\\s\\.\\-\\:\\/\\=\\+\\@\\*\\?]+$",
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 512,
+      "minLength": 1,
+      "pattern": "^[\\w\\s\\.\\-\\:\\/\\=\\+\\@\\*\\?]+$",
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceTagsCriteriaConditionList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ResourceTagsCriteriaCondition"
+   },
+   "type": "array"
+  },
+  "Schedule": {
+   "additionalProperties": false,
+   "properties": {
+    "ExecutionWindowInMinutes": {
+     "description": "Execution window duration in minutes",
+     "maximum": 1440,
+     "minimum": 60,
+     "type": "integer"
+    },
+    "ScheduleExpression": {
+     "description": "Schedule expression (e.g., cron or rate expression)",
+     "type": "string"
+    },
+    "ScheduleExpressionTimezone": {
+     "description": "IANA timezone identifier",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "StringCriteriaCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "Comparison": {
+     "enum": [
+      "StringEquals",
+      "StringNotEquals",
+      "StringEqualsIgnoreCase",
+      "StringNotEqualsIgnoreCase",
+      "StringLike",
+      "StringNotLike",
+      "NumericEquals",
+      "NumericNotEquals",
+      "NumericLessThan",
+      "NumericLessThanEquals",
+      "NumericGreaterThan",
+      "NumericGreaterThanEquals"
+     ],
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 512,
+      "minLength": 1,
+      "pattern": "^[\\w\\s\\.\\-\\:\\/\\=\\+\\@\\*\\?]+$",
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "StringCriteriaConditionList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/StringCriteriaCondition"
+   },
+   "type": "array"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[\\w\\s\\.\\-\\:\\/\\=\\+\\@]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "^[\\w\\s\\.\\-\\:\\/\\=\\+\\@]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Creates an AWS Compute Optimizer automation rule that automatically implements recommended actions based on your defined criteria and schedule. Automation rules are global resources that manage automated actions across all AWS Regions where Compute Optimizer Automation is available. Organization-level rules can only be created by the management account or delegated administrator.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "aco-automation:CreateAutomationRule",
+    "aco-automation:GetAutomationRule",
+    "aco-automation:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "aco-automation:DeleteAutomationRule",
+    "aco-automation:GetAutomationRule"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "aco-automation:ListAutomationRules"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "aco-automation:GetAutomationRule"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "aco-automation:UpdateAutomationRule",
+    "aco-automation:GetAutomationRule",
+    "aco-automation:TagResource",
+    "aco-automation:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RuleArn"
+ ],
+ "properties": {
+  "AccountId": {
+   "description": "The AWS account ID that owns the automation rule.",
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "CreatedTimestamp": {
+   "description": "The timestamp when the automation rule was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Criteria": {
+   "$ref": "#/definitions/Criteria",
+   "description": "Filter criteria that specify which recommended actions qualify for implementation."
+  },
+  "Description": {
+   "description": "The description of the automation rule.",
+   "maxLength": 1024,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9_\\-\\s@\\.]*$",
+   "type": "string"
+  },
+  "LastUpdatedTimestamp": {
+   "description": "The timestamp when the automation rule was last updated.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the automation rule.",
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9_-]*$",
+   "type": "string"
+  },
+  "OrganizationConfiguration": {
+   "$ref": "#/definitions/OrganizationConfiguration",
+   "description": "Organization configuration for organization rules, including rule apply order and account scope."
+  },
+  "Priority": {
+   "description": "Rule priority within its group",
+   "type": "string"
+  },
+  "RecommendedActionTypes": {
+   "description": "The types of recommended actions this rule will implement.",
+   "insertionOrder": false,
+   "items": {
+    "enum": [
+     "SnapshotAndDeleteUnattachedEbsVolume",
+     "UpgradeEbsVolumeType"
+    ],
+    "type": "string"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "RuleArn": {
+   "description": "The Amazon Resource Name (ARN) of the automation rule.",
+   "type": "string"
+  },
+  "RuleId": {
+   "description": "The unique identifier of the automation rule.",
+   "pattern": "^[0-9A-Za-z]{16}$",
+   "type": "string"
+  },
+  "RuleRevision": {
+   "description": "The revision number of the automation rule.",
+   "type": "string"
+  },
+  "RuleType": {
+   "description": "The type of automation rule.",
+   "enum": [
+    "AccountRule",
+    "OrganizationRule"
+   ],
+   "type": "string"
+  },
+  "Schedule": {
+   "$ref": "#/definitions/Schedule",
+   "description": "The schedule configuration for when the rule runs."
+  },
+  "Status": {
+   "description": "The status of the automation rule.",
+   "enum": [
+    "Active",
+    "Inactive"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Tags associated with the automation rule.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RuleArn",
+  "/properties/RuleId",
+  "/properties/RuleRevision",
+  "/properties/AccountId",
+  "/properties/CreatedTimestamp",
+  "/properties/LastUpdatedTimestamp"
+ ],
+ "required": [
+  "Name",
+  "RuleType",
+  "RecommendedActionTypes",
+  "Schedule",
+  "Status"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "aco-automation:TagResource",
+   "aco-automation:UntagResource",
+   "aco-automation:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ComputeOptimizer::AutomationRule"
+}

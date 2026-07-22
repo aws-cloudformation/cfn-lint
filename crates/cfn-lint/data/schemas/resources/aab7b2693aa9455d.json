@@ -1,0 +1,487 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Networking",
+  "/properties/Size"
+ ],
+ "definitions": {
+  "Accounting": {
+   "description": "The accounting configuration includes configurable settings for Slurm accounting.",
+   "properties": {
+    "DefaultPurgeTimeInDays": {
+     "default": -1,
+     "description": "The default value for all purge settings for `slurmdbd.conf`. For more information, see the [slurmdbd.conf documentation at SchedMD](https://slurm.schedmd.com/slurmdbd.conf.html). The default value is `-1`. A value of `-1` means there is no purge time and records persist as long as the cluster exists.",
+     "maximum": 10000,
+     "minimum": -1,
+     "type": "integer"
+    },
+    "Mode": {
+     "default": "NONE",
+     "description": "The default value is `NONE`. A value of `STANDARD` means that Slurm accounting is enabled.",
+     "enum": [
+      "STANDARD",
+      "NONE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Mode"
+   ],
+   "type": "object"
+  },
+  "AuthKey": {
+   "additionalProperties": false,
+   "description": "The shared Slurm key for authentication, also known as the cluster secret.",
+   "properties": {
+    "SecretArn": {
+     "description": "The Amazon Resource Name (ARN) of the the shared Slurm key.",
+     "type": "string"
+    },
+    "SecretVersion": {
+     "description": "The version of the shared Slurm key.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretArn",
+    "SecretVersion"
+   ],
+   "type": "object"
+  },
+  "CgroupCustomSetting": {
+   "additionalProperties": false,
+   "description": "Additional cgroup configuration settings.",
+   "properties": {
+    "ParameterName": {
+     "description": "The cgroup.conf parameter name.",
+     "type": "string"
+    },
+    "ParameterValue": {
+     "description": "The value for the cgroup.conf parameter.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ParameterName",
+    "ParameterValue"
+   ],
+   "type": "object"
+  },
+  "Endpoint": {
+   "additionalProperties": false,
+   "description": "An endpoint available for interaction with the scheduler.",
+   "properties": {
+    "Ipv6Address": {
+     "description": "The endpoint's IPv6 address.",
+     "type": "string"
+    },
+    "Port": {
+     "description": "The endpoint's connection port number.",
+     "type": "string"
+    },
+    "PrivateIpAddress": {
+     "description": "The endpoint's private IP address.",
+     "type": "string"
+    },
+    "PublicIpAddress": {
+     "description": "The endpoint's public IP address.",
+     "type": "string"
+    },
+    "Type": {
+     "description": "Indicates the type of endpoint running at the specific IP address.",
+     "enum": [
+      "SLURMCTLD",
+      "SLURMDBD",
+      "SLURMRESTD"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Port",
+    "PrivateIpAddress",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ErrorInfo": {
+   "additionalProperties": false,
+   "description": "An error that occurred during resource provisioning.",
+   "properties": {
+    "Code": {
+     "description": "The short-form error code.",
+     "type": "string"
+    },
+    "Message": {
+     "description": "The detailed error information.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "JwtAuth": {
+   "additionalProperties": false,
+   "description": "JWT authentication configuration for Slurm.",
+   "properties": {
+    "JwtKey": {
+     "$ref": "#/definitions/JwtKey"
+    }
+   },
+   "type": "object"
+  },
+  "JwtKey": {
+   "additionalProperties": false,
+   "description": "JWT key configuration.",
+   "properties": {
+    "SecretArn": {
+     "description": "The Amazon Resource Name (ARN) of the JWT key secret.",
+     "type": "string"
+    },
+    "SecretVersion": {
+     "description": "The version of the JWT key secret.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretArn",
+    "SecretVersion"
+   ],
+   "type": "object"
+  },
+  "SecurityGroupId": {
+   "description": "A VPC security group ID.",
+   "format": "AWS::EC2::SecurityGroup.Id",
+   "pattern": "^sg-\\w{8,17}$",
+   "type": "string"
+  },
+  "SlurmCustomSetting": {
+   "additionalProperties": false,
+   "description": "Additional settings that directly map to Slurm settings.",
+   "properties": {
+    "ParameterName": {
+     "description": "AWS PCS supports configuration of the following Slurm parameters for clusters: Prolog, Epilog, and SelectTypeParameters.",
+     "type": "string"
+    },
+    "ParameterValue": {
+     "description": "The value for the configured Slurm setting.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ParameterName",
+    "ParameterValue"
+   ],
+   "type": "object"
+  },
+  "SlurmRest": {
+   "additionalProperties": false,
+   "description": "The SlurmRest configuration includes configurable settings for Slurm Rest.",
+   "properties": {
+    "Mode": {
+     "default": "NONE",
+     "description": "The default value is `NONE`. A value of `STANDARD` means that Slurm Rest is enabled.",
+     "enum": [
+      "STANDARD",
+      "NONE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Mode"
+   ],
+   "type": "object"
+  },
+  "SlurmdbdCustomSetting": {
+   "additionalProperties": false,
+   "description": "Additional slurmdbd configuration settings.",
+   "properties": {
+    "ParameterName": {
+     "description": "The slurmdbd.conf parameter name.",
+     "type": "string"
+    },
+    "ParameterValue": {
+     "description": "The value for the slurmdbd.conf parameter.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ParameterName",
+    "ParameterValue"
+   ],
+   "type": "object"
+  },
+  "SubnetId": {
+   "description": "A VPC subnet ID.",
+   "pattern": "^subnet-\\w{8,17}$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "AWS::PCS::Cluster resource creates an AWS PCS cluster.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateNetworkInterface",
+    "ec2:DescribeVpcs",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups",
+    "ec2:GetSecurityGroupsForVpc",
+    "iam:CreateServiceLinkedRole",
+    "secretsmanager:CreateSecret",
+    "secretsmanager:TagResource",
+    "pcs:CreateCluster",
+    "pcs:GetCluster",
+    "pcs:ListTagsForResource",
+    "pcs:TagResource"
+   ],
+   "timeoutInMinutes": 130
+  },
+  "delete": {
+   "permissions": [
+    "pcs:DeleteCluster",
+    "pcs:GetCluster"
+   ],
+   "timeoutInMinutes": 130
+  },
+  "list": {
+   "permissions": [
+    "pcs:ListClusters"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "pcs:GetCluster",
+    "pcs:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "pcs:GetCluster",
+    "pcs:UpdateCluster",
+    "pcs:ListTagsForResource",
+    "pcs:TagResource",
+    "pcs:UntagResource"
+   ],
+   "timeoutInMinutes": 130
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The unique Amazon Resource Name (ARN) of the cluster.",
+   "type": "string"
+  },
+  "Endpoints": {
+   "description": "The list of endpoints available for interaction with the scheduler.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Endpoint"
+   },
+   "type": "array"
+  },
+  "ErrorInfo": {
+   "description": "The list of errors that occurred during cluster provisioning.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ErrorInfo"
+   },
+   "type": "array"
+  },
+  "Id": {
+   "description": "The generated unique ID of the cluster.",
+   "pattern": "^(pcs_[a-zA-Z0-9]+|[A-Za-z][A-Za-z0-9-]{1,40})$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name that identifies the cluster.",
+   "type": "string"
+  },
+  "Networking": {
+   "additionalProperties": false,
+   "description": "The networking configuration for the cluster's control plane.",
+   "properties": {
+    "NetworkType": {
+     "description": "The IP of the cluster (IPV4 or IPV6)",
+     "enum": [
+      "IPV4",
+      "IPV6"
+     ],
+     "insertionOrder": false,
+     "type": "string"
+    },
+    "SecurityGroupIds": {
+     "description": "The list of security group IDs associated with the Elastic Network Interface (ENI) created in subnets.",
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SecurityGroupId"
+     },
+     "type": "array"
+    },
+    "SubnetIds": {
+     "description": "The list of subnet IDs where AWS PCS creates an Elastic Network Interface (ENI) to enable communication between managed controllers and AWS PCS resources. The subnet must have an available IP address, cannot reside in AWS Outposts, AWS Wavelength, or an AWS Local Zone. AWS PCS currently supports only 1 subnet in this list.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SubnetId"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Scheduler": {
+   "additionalProperties": false,
+   "description": "The cluster management and job scheduling software associated with the cluster.",
+   "properties": {
+    "Type": {
+     "description": "The software AWS PCS uses to manage cluster scaling and job scheduling.",
+     "enum": [
+      "SLURM"
+     ],
+     "type": "string"
+    },
+    "Version": {
+     "description": "The version of the specified scheduling software that AWS PCS uses to manage cluster scaling and job scheduling.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Version"
+   ],
+   "type": "object"
+  },
+  "Size": {
+   "description": "The size of the cluster.",
+   "enum": [
+    "SMALL",
+    "MEDIUM",
+    "LARGE"
+   ],
+   "type": "string"
+  },
+  "SlurmConfiguration": {
+   "additionalProperties": false,
+   "description": "Additional options related to the Slurm scheduler.",
+   "properties": {
+    "Accounting": {
+     "$ref": "#/definitions/Accounting"
+    },
+    "AuthKey": {
+     "$ref": "#/definitions/AuthKey"
+    },
+    "CgroupCustomSettings": {
+     "description": "Additional cgroup-specific configuration that directly maps to cgroup.conf settings.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CgroupCustomSetting"
+     },
+     "type": "array"
+    },
+    "JwtAuth": {
+     "$ref": "#/definitions/JwtAuth"
+    },
+    "ScaleDownIdleTimeInSeconds": {
+     "description": "The time before an idle node is scaled down.",
+     "minimum": 1,
+     "type": "integer"
+    },
+    "SlurmCustomSettings": {
+     "description": "Additional Slurm-specific configuration that directly maps to Slurm settings.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SlurmCustomSetting"
+     },
+     "type": "array"
+    },
+    "SlurmRest": {
+     "$ref": "#/definitions/SlurmRest"
+    },
+    "SlurmdbdCustomSettings": {
+     "description": "Additional slurmdbd-specific configuration that directly maps to slurmdbd.conf settings.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SlurmdbdCustomSetting"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Status": {
+   "description": "The provisioning status of the cluster. The provisioning status doesn't indicate the overall health of the cluster.",
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "UPDATING",
+    "DELETING",
+    "CREATE_FAILED",
+    "DELETE_FAILED",
+    "UPDATE_FAILED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "1 or more tags added to the resource. Each tag consists of a tag key and tag value. The tag value is optional and can be an empty string.",
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   }
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Endpoints",
+  "/properties/ErrorInfo",
+  "/properties/Id",
+  "/properties/Status"
+ ],
+ "required": [
+  "Networking",
+  "Scheduler",
+  "Size"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-pcs.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "pcs:TagResource",
+   "pcs:ListTagsForResource",
+   "pcs:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::PCS::Cluster"
+}

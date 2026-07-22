@@ -1,0 +1,238 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Engine",
+  "/properties/EngineVersion",
+  "/properties/DatabaseInstallationFilesS3BucketName",
+  "/properties/DatabaseInstallationFilesS3Prefix",
+  "/properties/DatabaseInstallationFiles",
+  "/properties/ImageId",
+  "/properties/KMSKeyId",
+  "/properties/Manifest",
+  "/properties/SourceCustomDbEngineVersionIdentifier",
+  "/properties/UseAwsProvidedLatestImage"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "Metadata assigned to an Amazon RDS resource consisting of a key-value pair.\n For more information, see [Tagging Amazon RDS resources](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Tagging.html) in the *Amazon RDS User Guide* or [Tagging Amazon Aurora and Amazon RDS resources](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_Tagging.html) in the *Amazon Aurora User Guide*.",
+   "properties": {
+    "Key": {
+     "description": "A key is the required name of the tag. The string value can be from 1 to 128 Unicode characters in length and can't be prefixed with ``aws:`` or ``rds:``. The string can only contain only the set of Unicode letters, digits, white-space, '_', '.', ':', '/', '=', '+', '-', '@' (Java regex: \"^([\\\\p{L}\\\\p{Z}\\\\p{N}_.:/=+\\\\-@]*)$\").",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "A value is the optional value of the tag. The string value can be from 1 to 256 Unicode characters in length and can't be prefixed with ``aws:`` or ``rds:``. The string can only contain only the set of Unicode letters, digits, white-space, '_', '.', ':', '/', '=', '+', '-', '@' (Java regex: \"^([\\\\p{L}\\\\p{Z}\\\\p{N}_.:/=+\\\\-@]*)$\").",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Creates a custom DB engine version (CEV).",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CopySnapshot",
+    "ec2:DeleteSnapshot",
+    "ec2:DescribeImages",
+    "ec2:DescribeSnapshots",
+    "iam:CreateServiceLinkedRole",
+    "kms:CreateGrant",
+    "kms:Decrypt",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:ReEncrypt",
+    "mediaimport:CreateDatabaseBinarySnapshot",
+    "rds:AddTagsToResource",
+    "rds:CreateCustomDBEngineVersion",
+    "rds:DescribeDBEngineVersions",
+    "rds:ModifyCustomDBEngineVersion",
+    "s3:CreateBucket",
+    "s3:GetObject",
+    "s3:GetObjectAcl",
+    "s3:GetObjectTagging",
+    "s3:ListBucket",
+    "s3:PutBucketObjectLockConfiguration",
+    "s3:PutBucketPolicy",
+    "s3:PutBucketVersioning"
+   ],
+   "timeoutInMinutes": 600
+  },
+  "delete": {
+   "permissions": [
+    "rds:DeleteCustomDBEngineVersion",
+    "rds:DescribeDBEngineVersions"
+   ],
+   "timeoutInMinutes": 600
+  },
+  "list": {
+   "permissions": [
+    "rds:DescribeDBEngineVersions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "rds:DescribeDBEngineVersions"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "rds:AddTagsToResource",
+    "rds:DescribeDBEngineVersions",
+    "rds:ModifyCustomDBEngineVersion",
+    "rds:RemoveTagsFromResource"
+   ],
+   "timeoutInMinutes": 600
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Engine",
+  "/properties/EngineVersion"
+ ],
+ "properties": {
+  "DBEngineVersionArn": {
+   "description": "",
+   "type": "string"
+  },
+  "DatabaseInstallationFiles": {
+   "description": "",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "DatabaseInstallationFilesS3BucketName": {
+   "description": "The name of an Amazon S3 bucket that contains database installation files for your CEV. For example, a valid bucket name is ``my-custom-installation-files``.",
+   "maxLength": 63,
+   "minLength": 3,
+   "type": "string"
+  },
+  "DatabaseInstallationFilesS3Prefix": {
+   "description": "The Amazon S3 directory that contains the database installation files for your CEV. For example, a valid bucket name is ``123456789012/cev1``. If this setting isn't specified, no prefix is assumed.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "description": "An optional description of your CEV.",
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Engine": {
+   "description": "The database engine to use for your custom engine version (CEV).\n Valid values:\n  +   ``custom-oracle-ee`` \n  +   ``custom-oracle-ee-cdb``",
+   "maxLength": 35,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9-]{1,35}$",
+   "type": "string"
+  },
+  "EngineVersion": {
+   "description": "The name of your CEV. The name format is ``major version.customized_string``. For example, a valid CEV name is ``19.my_cev1``. This setting is required for RDS Custom for Oracle, but optional for Amazon RDS. The combination of ``Engine`` and ``EngineVersion`` is unique per customer per Region.\n *Constraints:* Minimum length is 1. Maximum length is 60.\n *Pattern:*``^[a-z0-9_.-]{1,60$``}",
+   "maxLength": 60,
+   "minLength": 1,
+   "pattern": "^[a-z0-9_.-]{1,60}$",
+   "type": "string"
+  },
+  "ImageId": {
+   "description": "A value that indicates the ID of the AMI.",
+   "format": "AWS::EC2::Image.Id",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "KMSKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
+   "description": "The AWS KMS key identifier for an encrypted CEV. A symmetric encryption KMS key is required for RDS Custom, but optional for Amazon RDS.\n If you have an existing symmetric encryption KMS key in your account, you can use it with RDS Custom. No further action is necessary. If you don't already have a symmetric encryption KMS key in your account, follow the instructions in [Creating a symmetric encryption KMS key](https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html#create-symmetric-cmk) in the *Key Management Service Developer Guide*.\n You can choose the same symmetric encryption key when you create a CEV and a DB instance, or choose different keys.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_:\\-\\/]+$",
+   "type": "string"
+  },
+  "Manifest": {
+   "description": "The CEV manifest, which is a JSON document that describes the installation .zip files stored in Amazon S3. Specify the name/value pairs in a file or a quoted string. RDS Custom applies the patches in the order in which they are listed.\n The following JSON fields are valid:\n  + MediaImportTemplateVersion Version of the CEV manifest. The date is in the format YYYY-MM-DD. + databaseInstallationFileNames Ordered list of installation files for the CEV. + opatchFileNames Ordered list of OPatch installers used for the Oracle DB engine. + psuRuPatchFileNames The PSU and RU patches for this CEV. + OtherPatchFileNames The patches that are not in the list of PSU and RU patches. Amazon RDS applies these patches after applying the PSU and RU patches. \n For more information, see [Creating the CEV manifest](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/custom-cev.html#custom-cev.preparing.manifest) in the *Amazon RDS User Guide*.",
+   "maxLength": 51000,
+   "minLength": 1,
+   "pattern": "^[\\s\\S]*$",
+   "type": "string"
+  },
+  "SourceCustomDbEngineVersionIdentifier": {
+   "description": "The ARN of a CEV to use as a source for creating a new CEV. You can specify a different Amazon Machine Imagine (AMI) by using either ``Source`` or ``UseAwsProvidedLatestImage``. You can't specify a different JSON manifest when you specify ``SourceCustomDbEngineVersionIdentifier``.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Status": {
+   "default": "available",
+   "description": "A value that indicates the status of a custom engine version (CEV).",
+   "enum": [
+    "available",
+    "inactive",
+    "inactive-except-restore",
+    "pending-validation"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A list of tags. For more information, see [Tagging Amazon RDS Resources](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Tagging.html) in the *Amazon RDS User Guide.*",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "UseAwsProvidedLatestImage": {
+   "description": "Specifies whether to use the latest service-provided Amazon Machine Image (AMI) for the CEV. If you specify ``UseAwsProvidedLatestImage``, you can't also specify ``ImageId``.",
+   "type": "boolean"
+  }
+ },
+ "propertyTransform": {
+  "/properties/Engine": "$lowercase(Engine)",
+  "/properties/EngineVersion": "$lowercase(EngineVersion)",
+  "/properties/KMSKeyId": "$join([\"arn:.+?:kms:.+?:.+?:key\\/\", KMSKeyId])"
+ },
+ "readOnlyProperties": [
+  "/properties/DBEngineVersionArn"
+ ],
+ "required": [
+  "Engine",
+  "EngineVersion"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "rds:AddTagsToResource",
+   "rds:RemoveTagsFromResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RDS::CustomDBEngineVersion",
+ "writeOnlyProperties": [
+  "/properties/Manifest",
+  "/properties/SourceCustomDbEngineVersionIdentifier",
+  "/properties/UseAwsProvidedLatestImage"
+ ]
+}

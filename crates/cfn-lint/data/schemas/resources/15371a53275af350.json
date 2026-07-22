@@ -1,0 +1,87 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CoreNetworkId",
+  "/properties/PrefixListArn",
+  "/properties/PrefixListAlias"
+ ],
+ "description": "Resource Type definition for AWS::NetworkManager::CoreNetworkPrefixListAssociation which associates a prefix list with a core network.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:ListCoreNetworkPrefixListAssociations",
+    "networkmanager:CreateCoreNetworkPrefixListAssociation",
+    "networkmanager:GetCoreNetwork"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:ListCoreNetworkPrefixListAssociations",
+    "networkmanager:DeleteCoreNetworkPrefixListAssociation",
+    "networkmanager:GetCoreNetwork"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "CoreNetworkId": {
+      "$ref": "resource-schema.json#/properties/CoreNetworkId"
+     }
+    },
+    "required": [
+     "CoreNetworkId"
+    ]
+   },
+   "permissions": [
+    "networkmanager:ListCoreNetworkPrefixListAssociations",
+    "networkmanager:GetCoreNetwork"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:ListCoreNetworkPrefixListAssociations",
+    "networkmanager:GetCoreNetwork"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CoreNetworkId",
+  "/properties/PrefixListArn"
+ ],
+ "properties": {
+  "CoreNetworkId": {
+   "description": "The ID of the core network.",
+   "maxLength": 50,
+   "minLength": 0,
+   "pattern": "^core-network-([0-9a-f]{8,17})$",
+   "type": "string"
+  },
+  "PrefixListAlias": {
+   "description": "The alias of the prefix list",
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "^[\\s\\S]*$",
+   "type": "string"
+  },
+  "PrefixListArn": {
+   "description": "The Amazon Resource Name (ARN) of the prefix list.",
+   "maxLength": 500,
+   "minLength": 0,
+   "pattern": "^arn:[a-z0-9-]+:ec2:[a-z]+-[a-z]+-[0-9]:([0-9]{12}):prefix-list/pl-[a-z0-9]+$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "CoreNetworkId",
+  "PrefixListArn",
+  "PrefixListAlias"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::NetworkManager::CoreNetworkPrefixListAssociation"
+}

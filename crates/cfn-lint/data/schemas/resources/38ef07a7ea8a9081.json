@@ -1,0 +1,239 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IntegrationName",
+  "/properties/SourceArn",
+  "/properties/TargetArn",
+  "/properties/KmsKeyId",
+  "/properties/AdditionalEncryptionContext",
+  "/properties/IntegrationConfig",
+  "/properties/IntegrationConfig/RefreshInterval"
+ ],
+ "definitions": {
+  "IntegrationAdditionalEncryptionContextMap": {
+   "additionalProperties": false,
+   "description": "An optional set of non-secret key value pairs that contains additional contextual information about the data.",
+   "patternProperties": {
+    "^[\\s\\S]*$": {
+     "maxLength": 131072,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "IntegrationConfig": {
+   "additionalProperties": false,
+   "description": "The configuration settings for the integration.",
+   "properties": {
+    "ContinuousSync": {
+     "description": "Enables continuous synchronization for on-demand data extractions.",
+     "type": "boolean"
+    },
+    "RefreshInterval": {
+     "description": "Specifies the frequency at which CDC (Change Data Capture) pulls or incremental loads should occur.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SourceProperties": {
+     "$ref": "#/definitions/SourceProperties"
+    }
+   },
+   "type": "object"
+  },
+  "SourceProperties": {
+   "additionalProperties": false,
+   "description": "A collection of key-value pairs that specify additional properties for the integration source.",
+   "patternProperties": {
+    "^[\\s\\S]*$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "description": "Resource Type definition for AWS::Glue::Integration",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "glue:CreateIntegration",
+    "glue:DescribeIntegrations",
+    "glue:TagResource",
+    "glue:GetTags",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "glue:CreateInboundIntegration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "glue:UntagResource",
+    "glue:DeleteIntegration",
+    "glue:DescribeIntegrations"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "glue:DescribeIntegrations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "glue:DescribeIntegrations",
+    "glue:GetTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "glue:DescribeIntegrations",
+    "glue:ModifyIntegration",
+    "glue:TagResource",
+    "glue:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IntegrationArn",
+  "/properties/IntegrationName"
+ ],
+ "properties": {
+  "AdditionalEncryptionContext": {
+   "$ref": "#/definitions/IntegrationAdditionalEncryptionContextMap"
+  },
+  "CreateTime": {
+   "description": "The time (UTC) when the integration was created.",
+   "type": "string"
+  },
+  "DataFilter": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 0,
+   "pattern": "^[\\S\\s]*$",
+   "type": "string"
+  },
+  "IntegrationArn": {
+   "description": "The Amazon Resource Name (ARN) of the integration.",
+   "pattern": "arn:aws:.*:.*:[0-9]+:.*",
+   "type": "string"
+  },
+  "IntegrationConfig": {
+   "$ref": "#/definitions/IntegrationConfig"
+  },
+  "IntegrationName": {
+   "description": "The name of the integration.",
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
+   "description": "An KMS key identifier for the key to use to encrypt the integration. If you don't specify an encryption key, the default AWS owned KMS key is used.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SourceArn": {
+   "description": "The Amazon Resource Name (ARN) of the database to use as the source for replication",
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "arn:aws:.*:.*:[0-9]+:.*",
+   "type": "string"
+  },
+  "Status": {
+   "description": "The status of the integration.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TargetArn": {
+   "description": "The Amazon Resource Name (ARN) of the Glue data warehouse to use as the target for replication",
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "arn:aws:.*:.*:[0-9]+:.*",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IntegrationArn",
+  "/properties/CreateTime",
+  "/properties/Status"
+ ],
+ "required": [
+  "IntegrationName",
+  "SourceArn",
+  "TargetArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "glue:TagResource",
+   "glue:UntagResource",
+   "glue:GetTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Glue::Integration",
+ "writeOnlyProperties": [
+  "/properties/IntegrationConfig/SourceProperties",
+  "/properties/IntegrationConfig/ContinuousSync"
+ ]
+}

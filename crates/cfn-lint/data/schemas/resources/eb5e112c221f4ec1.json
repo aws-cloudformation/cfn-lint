@@ -1,0 +1,236 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EncryptionConfiguration",
+  "/properties/LibraryName"
+ ],
+ "definitions": {
+  "DataAutomationLibraryStatus": {
+   "description": "Status of DataAutomationLibrary",
+   "enum": [
+    "ACTIVE",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "EncryptionConfiguration": {
+   "additionalProperties": false,
+   "description": "KMS Encryption Configuration",
+   "properties": {
+    "KmsEncryptionContext": {
+     "$ref": "#/definitions/KmsEncryptionContext"
+    },
+    "KmsKeyId": {
+     "anyOf": [
+      {
+       "format": "AWS::KMS::Key.Arn"
+      },
+      {
+       "format": "AWS::KMS::Key.Id"
+      },
+      {
+       "format": "AWS::KMS::Alias.AliasName"
+      }
+     ],
+     "description": "KMS Key Identifier",
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "KmsKeyId"
+   ],
+   "type": "object"
+  },
+  "EntityType": {
+   "description": "Entity types supported in DataAutomationLibraries",
+   "enum": [
+    "VOCABULARY"
+   ],
+   "type": "string"
+  },
+  "EntityTypeInfo": {
+   "additionalProperties": false,
+   "description": "Information about an entity type in the DataAutomationLibrary",
+   "properties": {
+    "EntityMetadata": {
+     "description": "JSON string representing relevant metadata for the entity type",
+     "type": "string"
+    },
+    "EntityType": {
+     "$ref": "#/definitions/EntityType"
+    }
+   },
+   "required": [
+    "EntityType"
+   ],
+   "type": "object"
+  },
+  "KmsEncryptionContext": {
+   "additionalProperties": false,
+   "description": "KMS Encryption Context",
+   "minProperties": 1,
+   "patternProperties": {
+    "^.*\\S.*$": {
+     "description": "Encryption context value.",
+     "maxLength": 2000,
+     "minLength": 1,
+     "pattern": "^.*\\S.*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "Key value pair of a tag",
+   "properties": {
+    "Key": {
+     "description": "Tag key",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "Tag value",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Bedrock::DataAutomationLibrary",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "bedrock:CreateDataAutomationLibrary",
+    "bedrock:GetDataAutomationLibrary",
+    "bedrock:TagResource",
+    "bedrock:UntagResource",
+    "bedrock:ListTagsForResource",
+    "kms:DescribeKey",
+    "kms:Decrypt",
+    "kms:GenerateDataKey",
+    "kms:CreateGrant"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "bedrock:DeleteDataAutomationLibrary",
+    "bedrock:GetDataAutomationLibrary",
+    "kms:DescribeKey",
+    "kms:Decrypt",
+    "kms:GenerateDataKey"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "bedrock:ListDataAutomationLibraries"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bedrock:GetDataAutomationLibrary",
+    "bedrock:ListTagsForResource",
+    "kms:DescribeKey",
+    "kms:Decrypt",
+    "kms:GenerateDataKey"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "bedrock:UpdateDataAutomationLibrary",
+    "bedrock:GetDataAutomationLibrary",
+    "bedrock:TagResource",
+    "bedrock:UntagResource",
+    "bedrock:ListTagsForResource",
+    "kms:DescribeKey",
+    "kms:Decrypt",
+    "kms:GenerateDataKey"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LibraryArn"
+ ],
+ "properties": {
+  "CreationTime": {
+   "description": "Time Stamp",
+   "format": "date-time",
+   "type": "string"
+  },
+  "EncryptionConfiguration": {
+   "$ref": "#/definitions/EncryptionConfiguration"
+  },
+  "EntityTypes": {
+   "description": "List of info for each entity type in the DataAutomationLibrary",
+   "items": {
+    "$ref": "#/definitions/EntityTypeInfo"
+   },
+   "type": "array"
+  },
+  "LibraryArn": {
+   "description": "ARN generated at the server side when a DataAutomationLibrary is created",
+   "maxLength": 128,
+   "pattern": "^arn:aws(|-cn|-iso|-iso-[a-z]|-us-gov):bedrock:[a-zA-Z0-9-]*:[0-9]{12}:data-automation-library/[a-zA-Z0-9-]{12,36}$",
+   "type": "string"
+  },
+  "LibraryDescription": {
+   "description": "Description of the DataAutomationLibrary",
+   "maxLength": 300,
+   "minLength": 0,
+   "type": "string"
+  },
+  "LibraryName": {
+   "description": "Name of the DataAutomationLibrary",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_]+$",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/DataAutomationLibraryStatus"
+  },
+  "Tags": {
+   "description": "List of tags",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreationTime",
+  "/properties/EntityTypes",
+  "/properties/LibraryArn",
+  "/properties/Status"
+ ],
+ "required": [
+  "LibraryName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "bedrock:TagResource",
+   "bedrock:UntagResource",
+   "bedrock:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Bedrock::DataAutomationLibrary"
+}

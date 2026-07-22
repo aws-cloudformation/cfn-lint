@@ -8,7 +8,6 @@ use crate::context::Context;
 use crate::engine::flatten_validation_errors;
 use crate::jsonschema::ValidationError;
 use crate::jsonschema::Validator;
-use crate::rules::Severity;
 
 /// Validate a policy document AstNode against an IAM policy schema.
 /// Skips function nodes. Returns issues tagged with the given rule_id.

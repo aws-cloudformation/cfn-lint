@@ -1,0 +1,81 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName",
+  "/properties/BasePath"
+ ],
+ "description": "The ``AWS::ApiGateway::BasePathMapping`` resource creates a base path that clients who call your API must use in the invocation URL. Supported only for public custom domain names.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST",
+    "apigateway:GET"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "DomainName": {
+      "$ref": "resource-schema.json#/properties/DomainName"
+     }
+    },
+    "required": [
+     "DomainName"
+    ]
+   },
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:DELETE",
+    "apigateway:PATCH"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainName",
+  "/properties/BasePath"
+ ],
+ "properties": {
+  "BasePath": {
+   "description": "",
+   "type": "string"
+  },
+  "DomainName": {
+   "description": "",
+   "type": "string"
+  },
+  "RestApiId": {
+   "description": "",
+   "type": "string"
+  },
+  "Stage": {
+   "description": "",
+   "type": "string"
+  }
+ },
+ "required": [
+  "DomainName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ApiGateway::BasePathMapping"
+}

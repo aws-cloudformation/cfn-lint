@@ -1,0 +1,234 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SubnetId",
+  "/properties/ClientToken",
+  "/properties/PreserveClientIp",
+  "/properties/SecurityGroupIds"
+ ],
+ "definitions": {
+  "InstanceConnectEndpointDnsNames": {
+   "additionalProperties": false,
+   "description": "The DNS names of the endpoint.",
+   "properties": {
+    "DnsName": {
+     "description": "The DNS name of the EC2 Instance Connect Endpoint.",
+     "type": "string"
+    },
+    "FipsDnsName": {
+     "description": "The Federal Information Processing Standards (FIPS) compliant DNS name of the EC2 Instance Connect Endpoint.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceConnectEndpointPublicDnsNames": {
+   "additionalProperties": false,
+   "description": "The public DNS names of the endpoint, including IPv4-only and dualstack DNS names.",
+   "properties": {
+    "Dualstack": {
+     "$ref": "#/definitions/InstanceConnectEndpointDnsNames",
+     "description": "The dualstack DNS name of the EC2 Instance Connect Endpoint. A dualstack DNS name supports connections from both IPv4 and IPv6 clients.",
+     "type": "object"
+    },
+    "Ipv4": {
+     "$ref": "#/definitions/InstanceConnectEndpointDnsNames",
+     "description": "The IPv4-only DNS name of the EC2 Instance Connect Endpoint.",
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "NetworkInterfaceId": {
+   "description": "The ID of the network interface.",
+   "type": "string"
+  },
+  "SecurityGroupId": {
+   "description": "The ID of the security group.",
+   "format": "AWS::EC2::SecurityGroup.Id",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::EC2::InstanceConnectEndpoint",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateInstanceConnectEndpoint",
+    "ec2:DescribeInstanceConnectEndpoints",
+    "ec2:CreateTags",
+    "ec2:CreateNetworkInterface",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteInstanceConnectEndpoint",
+    "ec2:DescribeInstanceConnectEndpoints"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeInstanceConnectEndpoints"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeInstanceConnectEndpoints"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeInstanceConnectEndpoints",
+    "ec2:CreateTags",
+    "ec2:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AvailabilityZone": {
+   "description": "The Availability Zone of the EC2 Instance Connect Endpoint",
+   "type": "string"
+  },
+  "AvailabilityZoneId": {
+   "description": "The ID of the Availability Zone of the EC2 Instance Connect Endpoint",
+   "type": "string"
+  },
+  "ClientToken": {
+   "description": "The client token of the instance connect endpoint.",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "description": "The date and time that the EC2 Instance Connect Endpoint was created",
+   "type": "string"
+  },
+  "Id": {
+   "description": "The ID of the EC2 Instance Connect Endpoint.",
+   "type": "string"
+  },
+  "InstanceConnectEndpointArn": {
+   "description": "The Amazon Resource Name (ARN) of the EC2 Instance Connect Endpoint",
+   "type": "string"
+  },
+  "NetworkInterfaceIds": {
+   "description": "The ID of the elastic network interface that Amazon EC2 automatically created when creating the EC2 Instance Connect Endpoint",
+   "items": {
+    "$ref": "#/definitions/NetworkInterfaceId"
+   },
+   "type": "array"
+  },
+  "OwnerId": {
+   "description": "The ID of the AWS account that created the EC2 Instance Connect Endpoint",
+   "type": "string"
+  },
+  "PreserveClientIp": {
+   "description": "Indicates whether your client's IP address is preserved as the source when you connect to a resource.",
+   "type": "boolean"
+  },
+  "PublicDnsNames": {
+   "$ref": "#/definitions/InstanceConnectEndpointPublicDnsNames",
+   "description": "The public DNS names of the endpoint",
+   "type": "object"
+  },
+  "SecurityGroupIds": {
+   "description": "The security groups associated with the endpoint.",
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SecurityGroupId"
+   },
+   "maxItems": 16,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "State": {
+   "description": "The current state of the EC2 Instance Connect Endpoint",
+   "enum": [
+    "create-in-progress",
+    "create-complete",
+    "create-failed",
+    "delete-in-progress",
+    "delete-complete",
+    "delete-failed",
+    "update-in-progress",
+    "update-complete",
+    "update-failed"
+   ],
+   "type": "string"
+  },
+  "StateMessage": {
+   "description": "The message for the current state of the EC2 Instance Connect Endpoint. Can include a failure message",
+   "type": "string"
+  },
+  "SubnetId": {
+   "description": "The ID of the subnet in which the EC2 Instance Connect Endpoint was created.",
+   "format": "AWS::EC2::Subnet.Id",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "The tags assigned to the EC2 Instance Connect Endpoint.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcId": {
+   "description": "The ID of the VPC in which the EC2 Instance Connect Endpoint was created",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/AvailabilityZone",
+  "/properties/AvailabilityZoneId",
+  "/properties/CreatedAt",
+  "/properties/InstanceConnectEndpointArn",
+  "/properties/NetworkInterfaceIds",
+  "/properties/OwnerId",
+  "/properties/PublicDnsNames",
+  "/properties/State",
+  "/properties/StateMessage",
+  "/properties/VpcId"
+ ],
+ "required": [
+  "SubnetId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "ec2:CreateTags",
+   "ec2:DeleteTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::InstanceConnectEndpoint",
+ "writeOnlyProperties": [
+  "/properties/ClientToken"
+ ]
+}

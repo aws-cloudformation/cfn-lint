@@ -1,0 +1,1509 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Id"
+  ]
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "AdditionalModelRequestFields": {
+   "type": "object"
+  },
+  "AgentFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "description": "Agent flow node configuration",
+   "properties": {
+    "AgentAliasArn": {
+     "description": "Arn representation of the Agent Alias.",
+     "maxLength": 2048,
+     "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:agent-alias/[0-9a-zA-Z]{10}/[0-9a-zA-Z]{10}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AgentAliasArn"
+   ],
+   "type": "object"
+  },
+  "BedrockRerankingModelArn": {
+   "description": "Arn of a Bedrock Reranking model",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^(arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}::foundation-model/(.*))?$",
+   "type": "string"
+  },
+  "CollectorFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "description": "Collector flow node configuration",
+   "type": "object"
+  },
+  "ConditionFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "description": "Condition flow node configuration",
+   "properties": {
+    "Conditions": {
+     "description": "List of conditions in a condition node",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/FlowCondition"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Conditions"
+   ],
+   "type": "object"
+  },
+  "DefinitionSubstitutions": {
+   "additionalProperties": false,
+   "description": "When supplied with DefinitionString or DefinitionS3Location, substrings in the definition matching ${keyname} will be replaced with the associated value from this map",
+   "maxProperties": 500,
+   "minProperties": 1,
+   "patternProperties": {
+    "^[a-zA-Z0-9]+$": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "integer"
+      },
+      {
+       "type": "boolean"
+      }
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "FieldForReranking": {
+   "additionalProperties": false,
+   "description": "Field name for reranking",
+   "properties": {
+    "FieldName": {
+     "description": "Field name for reranking",
+     "maxLength": 2000,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "FieldName"
+   ],
+   "type": "object"
+  },
+  "FieldsForReranking": {
+   "description": "List of Fields For Reranking",
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/FieldForReranking"
+   },
+   "maxItems": 100,
+   "minItems": 1,
+   "type": "array"
+  },
+  "FlowCondition": {
+   "additionalProperties": false,
+   "description": "Condition branch for a condition node",
+   "properties": {
+    "Expression": {
+     "description": "Expression for a condition in a flow",
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "description": "Name of a condition in a flow",
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,50}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "FlowConditionalConnectionConfiguration": {
+   "additionalProperties": false,
+   "description": "Conditional connection configuration",
+   "properties": {
+    "Condition": {
+     "description": "Name of a condition in a flow",
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,50}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Condition"
+   ],
+   "type": "object"
+  },
+  "FlowConnection": {
+   "additionalProperties": false,
+   "description": "Flow connection",
+   "properties": {
+    "Configuration": {
+     "$ref": "#/definitions/FlowConnectionConfiguration"
+    },
+    "Name": {
+     "description": "Name of a connection in a flow",
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,100}$",
+     "type": "string"
+    },
+    "Source": {
+     "description": "Name of a node in a flow",
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,50}$",
+     "type": "string"
+    },
+    "Target": {
+     "description": "Name of a node in a flow",
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,50}$",
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/FlowConnectionType"
+    }
+   },
+   "required": [
+    "Name",
+    "Source",
+    "Target",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "FlowConnectionConfiguration": {
+   "description": "Connection configuration",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Data": {
+       "$ref": "#/definitions/FlowDataConnectionConfiguration"
+      }
+     },
+     "required": [
+      "Data"
+     ],
+     "title": "Data",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Conditional": {
+       "$ref": "#/definitions/FlowConditionalConnectionConfiguration"
+      }
+     },
+     "required": [
+      "Conditional"
+     ],
+     "title": "Conditional",
+     "type": "object"
+    }
+   ]
+  },
+  "FlowConnectionType": {
+   "description": "Connection type",
+   "enum": [
+    "Data",
+    "Conditional"
+   ],
+   "type": "string"
+  },
+  "FlowDataConnectionConfiguration": {
+   "additionalProperties": false,
+   "description": "Data connection configuration",
+   "properties": {
+    "SourceOutput": {
+     "description": "Name of a node output in a flow",
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,50}$",
+     "type": "string"
+    },
+    "TargetInput": {
+     "description": "Name of a node input in a flow",
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,50}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceOutput",
+    "TargetInput"
+   ],
+   "type": "object"
+  },
+  "FlowDefinition": {
+   "additionalProperties": false,
+   "description": "Flow definition",
+   "properties": {
+    "Connections": {
+     "description": "List of connections",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/FlowConnection"
+     },
+     "maxItems": 100,
+     "type": "array"
+    },
+    "Nodes": {
+     "description": "List of nodes in a flow",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/FlowNode"
+     },
+     "maxItems": 40,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "FlowNode": {
+   "additionalProperties": false,
+   "description": "Internal mixin for flow node",
+   "properties": {
+    "Configuration": {
+     "$ref": "#/definitions/FlowNodeConfiguration"
+    },
+    "Inputs": {
+     "description": "List of node inputs in a flow",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/FlowNodeInput"
+     },
+     "maxItems": 20,
+     "type": "array"
+    },
+    "Name": {
+     "description": "Name of a node in a flow",
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,50}$",
+     "type": "string"
+    },
+    "Outputs": {
+     "description": "List of node outputs in a flow",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/FlowNodeOutput"
+     },
+     "maxItems": 5,
+     "type": "array"
+    },
+    "Type": {
+     "$ref": "#/definitions/FlowNodeType"
+    }
+   },
+   "required": [
+    "Name",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "FlowNodeConfiguration": {
+   "description": "Node configuration in a flow",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Input": {
+       "$ref": "#/definitions/InputFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Input"
+     ],
+     "title": "Input",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Output": {
+       "$ref": "#/definitions/OutputFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Output"
+     ],
+     "title": "Output",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "KnowledgeBase": {
+       "$ref": "#/definitions/KnowledgeBaseFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "KnowledgeBase"
+     ],
+     "title": "KnowledgeBase",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Condition": {
+       "$ref": "#/definitions/ConditionFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Condition"
+     ],
+     "title": "Condition",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Lex": {
+       "$ref": "#/definitions/LexFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Lex"
+     ],
+     "title": "Lex",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Prompt": {
+       "$ref": "#/definitions/PromptFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Prompt"
+     ],
+     "title": "Prompt",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "LambdaFunction": {
+       "$ref": "#/definitions/LambdaFunctionFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "LambdaFunction"
+     ],
+     "title": "LambdaFunction",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Agent": {
+       "$ref": "#/definitions/AgentFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Agent"
+     ],
+     "title": "Agent",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Storage": {
+       "$ref": "#/definitions/StorageFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Storage"
+     ],
+     "title": "Storage",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Iterator": {
+       "$ref": "#/definitions/IteratorFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Iterator"
+     ],
+     "title": "Iterator",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Collector": {
+       "$ref": "#/definitions/CollectorFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Collector"
+     ],
+     "title": "Collector",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Retrieval": {
+       "$ref": "#/definitions/RetrievalFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Retrieval"
+     ],
+     "title": "Retrieval",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "InlineCode": {
+       "$ref": "#/definitions/InlineCodeFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "InlineCode"
+     ],
+     "title": "InlineCode",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Loop": {
+       "$ref": "#/definitions/LoopFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Loop"
+     ],
+     "title": "Loop",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "LoopInput": {
+       "$ref": "#/definitions/LoopInputFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "LoopInput"
+     ],
+     "title": "LoopInput",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "LoopController": {
+       "$ref": "#/definitions/LoopControllerFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "LoopController"
+     ],
+     "title": "LoopController",
+     "type": "object"
+    }
+   ]
+  },
+  "FlowNodeIODataType": {
+   "description": "Type of input/output for a node in a flow",
+   "enum": [
+    "String",
+    "Number",
+    "Boolean",
+    "Object",
+    "Array"
+   ],
+   "type": "string"
+  },
+  "FlowNodeInput": {
+   "additionalProperties": false,
+   "description": "Input to a node in a flow",
+   "properties": {
+    "Category": {
+     "$ref": "#/definitions/FlowNodeInputCategory"
+    },
+    "Expression": {
+     "description": "Expression for a node input in a flow",
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "description": "Name of a node input in a flow",
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,50}$",
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/FlowNodeIODataType"
+    }
+   },
+   "required": [
+    "Expression",
+    "Name",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "FlowNodeInputCategory": {
+   "description": "Optional tag to classify input type, currently exclusive to LoopNode",
+   "enum": [
+    "LoopCondition",
+    "ReturnValueToLoopStart",
+    "ExitLoop"
+   ],
+   "type": "string"
+  },
+  "FlowNodeOutput": {
+   "additionalProperties": false,
+   "description": "Output of a node in a flow",
+   "properties": {
+    "Name": {
+     "description": "Name of a node output in a flow",
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,50}$",
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/FlowNodeIODataType"
+    }
+   },
+   "required": [
+    "Name",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "FlowNodeType": {
+   "description": "Flow node types",
+   "enum": [
+    "Input",
+    "Output",
+    "KnowledgeBase",
+    "Condition",
+    "Lex",
+    "Prompt",
+    "LambdaFunction",
+    "Agent",
+    "Storage",
+    "Retrieval",
+    "Iterator",
+    "Collector",
+    "InlineCode",
+    "Loop",
+    "LoopInput",
+    "LoopController"
+   ],
+   "type": "string"
+  },
+  "FlowStatus": {
+   "description": "Schema Type for Flow APIs",
+   "enum": [
+    "Failed",
+    "Prepared",
+    "Preparing",
+    "NotPrepared"
+   ],
+   "type": "string"
+  },
+  "FlowValidation": {
+   "additionalProperties": false,
+   "description": "Validation for Flow",
+   "properties": {
+    "Message": {
+     "description": "validation message",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Message"
+   ],
+   "type": "object"
+  },
+  "FlowValidations": {
+   "description": "List of flow validations",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/FlowValidation"
+   },
+   "type": "array"
+  },
+  "GuardrailConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for a guardrail",
+   "properties": {
+    "GuardrailIdentifier": {
+     "description": "Identifier for the guardrail, could be the id or the arn",
+     "maxLength": 2048,
+     "pattern": "^(([a-z0-9]+)|(arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:guardrail/[a-z0-9]+))$",
+     "type": "string"
+    },
+    "GuardrailVersion": {
+     "description": "Version of the guardrail",
+     "pattern": "^(([0-9]{1,8})|(DRAFT))$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InlineCodeFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "description": "Inline code config strucuture, contains code configs",
+   "properties": {
+    "Code": {
+     "description": "The inline code entered by customers. max size is 5MB.",
+     "maxLength": 5000000,
+     "type": "string"
+    },
+    "Language": {
+     "$ref": "#/definitions/SupportedLanguages"
+    }
+   },
+   "required": [
+    "Code",
+    "Language"
+   ],
+   "type": "object"
+  },
+  "InputFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "description": "Input flow node configuration",
+   "type": "object"
+  },
+  "IteratorFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "description": "Iterator flow node configuration",
+   "type": "object"
+  },
+  "KnowledgeBaseFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "description": "Knowledge base flow node configuration",
+   "properties": {
+    "GuardrailConfiguration": {
+     "$ref": "#/definitions/GuardrailConfiguration"
+    },
+    "InferenceConfiguration": {
+     "$ref": "#/definitions/PromptInferenceConfiguration"
+    },
+    "KnowledgeBaseId": {
+     "description": "Identifier of the KnowledgeBase",
+     "maxLength": 10,
+     "pattern": "^[0-9a-zA-Z]+$",
+     "type": "string"
+    },
+    "ModelId": {
+     "description": "ARN or Id of a Bedrock Foundational Model or Inference Profile, or the ARN of a imported model, or a provisioned throughput ARN for custom models.",
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^(arn:aws(-[^:]{1,12})?:(bedrock|sagemaker):[a-z0-9-]{1,20}:([0-9]{12})?:([a-z-]+/)?)?([a-zA-Z0-9.-]{1,63}){0,2}(([:][a-z0-9-]{1,63}){0,2})?(/[a-z0-9]{1,12})?$",
+     "type": "string"
+    },
+    "NumberOfResults": {
+     "description": "Number Of Results to Retrieve",
+     "maximum": 100,
+     "minimum": 1,
+     "type": "number"
+    },
+    "OrchestrationConfiguration": {
+     "$ref": "#/definitions/KnowledgeBaseOrchestrationConfiguration"
+    },
+    "PromptTemplate": {
+     "$ref": "#/definitions/KnowledgeBasePromptTemplate"
+    },
+    "RerankingConfiguration": {
+     "$ref": "#/definitions/VectorSearchRerankingConfiguration"
+    }
+   },
+   "required": [
+    "KnowledgeBaseId"
+   ],
+   "type": "object"
+  },
+  "KnowledgeBaseOrchestrationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdditionalModelRequestFields": {
+     "$ref": "#/definitions/AdditionalModelRequestFields"
+    },
+    "InferenceConfig": {
+     "$ref": "#/definitions/PromptInferenceConfiguration"
+    },
+    "PerformanceConfig": {
+     "$ref": "#/definitions/PerformanceConfiguration"
+    },
+    "PromptTemplate": {
+     "$ref": "#/definitions/KnowledgeBasePromptTemplate"
+    }
+   },
+   "title": "KnowledgeBaseOrchestrationConfiguration",
+   "type": "object"
+  },
+  "KnowledgeBasePromptTemplate": {
+   "description": "Knowledge Base Prompt template",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "TextPromptTemplate": {
+       "maxLength": 100000,
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "required": [
+      "TextPromptTemplate"
+     ],
+     "title": "Text",
+     "type": "object"
+    }
+   ]
+  },
+  "LambdaFunctionFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "description": "Lambda function flow node configuration",
+   "properties": {
+    "LambdaArn": {
+     "description": "ARN of a Lambda.",
+     "format": "AWS::Lambda::Function.Arn",
+     "maxLength": 2048,
+     "pattern": "^arn:(aws[a-zA-Z-]*)?:lambda:[a-z]{2}(-gov)?-[a-z]+-\\d{1}:\\d{12}:function:[a-zA-Z0-9-_\\.]+(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "LambdaArn"
+   ],
+   "type": "object"
+  },
+  "LexFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "description": "Lex flow node configuration",
+   "properties": {
+    "BotAliasArn": {
+     "description": "ARN of a Lex bot alias",
+     "maxLength": 78,
+     "pattern": "^arn:aws(|-us-gov):lex:[a-z]{2}(-gov)?-[a-z]+-\\d{1}:\\d{12}:bot-alias/[0-9a-zA-Z]+/[0-9a-zA-Z]+$",
+     "type": "string"
+    },
+    "LocaleId": {
+     "description": "Lex bot locale id",
+     "maxLength": 10,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "BotAliasArn",
+    "LocaleId"
+   ],
+   "type": "object"
+  },
+  "LoopControllerFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for the LoopController node, which manages loop execution",
+   "properties": {
+    "ContinueCondition": {
+     "$ref": "#/definitions/FlowCondition"
+    },
+    "MaxIterations": {
+     "default": 10,
+     "description": "Maximum number of iterations the loop can perform",
+     "maximum": 1000,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "ContinueCondition"
+   ],
+   "type": "object"
+  },
+  "LoopFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "description": "Loop node config, contains loop's internal definition",
+   "properties": {
+    "Definition": {
+     "$ref": "#/definitions/FlowDefinition"
+    }
+   },
+   "required": [
+    "Definition"
+   ],
+   "type": "object"
+  },
+  "LoopInputFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for the LoopInput node",
+   "type": "object"
+  },
+  "MetadataConfigurationForReranking": {
+   "additionalProperties": false,
+   "properties": {
+    "SelectionMode": {
+     "$ref": "#/definitions/RerankingMetadataSelectionMode"
+    },
+    "SelectiveModeConfiguration": {
+     "$ref": "#/definitions/RerankingMetadataSelectiveModeConfiguration"
+    }
+   },
+   "required": [
+    "SelectionMode"
+   ],
+   "title": "MetadataConfigurationForReranking",
+   "type": "object"
+  },
+  "OutputFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "description": "Output flow node configuration",
+   "type": "object"
+  },
+  "PerformanceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Latency": {
+     "$ref": "#/definitions/PerformanceConfigurationLatency"
+    }
+   },
+   "title": "PerformanceConfiguration",
+   "type": "object"
+  },
+  "PerformanceConfigurationLatency": {
+   "description": "Performance Configuration Latency",
+   "enum": [
+    "standard",
+    "optimized"
+   ],
+   "type": "string"
+  },
+  "PromptFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "description": "Prompt flow node configuration",
+   "properties": {
+    "GuardrailConfiguration": {
+     "$ref": "#/definitions/GuardrailConfiguration"
+    },
+    "SourceConfiguration": {
+     "$ref": "#/definitions/PromptFlowNodeSourceConfiguration"
+    }
+   },
+   "required": [
+    "SourceConfiguration"
+   ],
+   "type": "object"
+  },
+  "PromptFlowNodeInlineConfiguration": {
+   "additionalProperties": false,
+   "description": "Inline prompt configuration for prompt node",
+   "properties": {
+    "InferenceConfiguration": {
+     "$ref": "#/definitions/PromptInferenceConfiguration"
+    },
+    "ModelId": {
+     "description": "ARN or Id of a Bedrock Foundational Model or Inference Profile, or the ARN of a imported model, or a provisioned throughput ARN for custom models.",
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^(arn:aws(-[^:]{1,12})?:(bedrock|sagemaker):[a-z0-9-]{1,20}:([0-9]{12})?:([a-z-]+/)?)?([a-zA-Z0-9.-]{1,63}){0,2}(([:][a-z0-9-]{1,63}){0,2})?(/[a-z0-9]{1,12})?$",
+     "type": "string"
+    },
+    "TemplateConfiguration": {
+     "$ref": "#/definitions/PromptTemplateConfiguration"
+    },
+    "TemplateType": {
+     "$ref": "#/definitions/PromptTemplateType"
+    }
+   },
+   "required": [
+    "ModelId",
+    "TemplateConfiguration",
+    "TemplateType"
+   ],
+   "type": "object"
+  },
+  "PromptFlowNodeResourceConfiguration": {
+   "additionalProperties": false,
+   "description": "Resource prompt configuration for prompt node",
+   "properties": {
+    "PromptArn": {
+     "description": "ARN of a prompt resource possibly with a version",
+     "pattern": "^(arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:prompt/[0-9a-zA-Z]{10}(?::[0-9]{1,5})?)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "PromptArn"
+   ],
+   "type": "object"
+  },
+  "PromptFlowNodeSourceConfiguration": {
+   "description": "Prompt source configuration for prompt node",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Resource": {
+       "$ref": "#/definitions/PromptFlowNodeResourceConfiguration"
+      }
+     },
+     "required": [
+      "Resource"
+     ],
+     "title": "Resource",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Inline": {
+       "$ref": "#/definitions/PromptFlowNodeInlineConfiguration"
+      }
+     },
+     "required": [
+      "Inline"
+     ],
+     "title": "Inline",
+     "type": "object"
+    }
+   ]
+  },
+  "PromptInferenceConfiguration": {
+   "description": "Model inference configuration",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Text": {
+       "$ref": "#/definitions/PromptModelInferenceConfiguration"
+      }
+     },
+     "required": [
+      "Text"
+     ],
+     "title": "Text",
+     "type": "object"
+    }
+   ]
+  },
+  "PromptInputVariable": {
+   "additionalProperties": false,
+   "description": "Input variable",
+   "properties": {
+    "Name": {
+     "description": "Name for an input variable",
+     "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PromptModelInferenceConfiguration": {
+   "additionalProperties": false,
+   "description": "Prompt model inference configuration",
+   "properties": {
+    "MaxTokens": {
+     "description": "Maximum length of output",
+     "maximum": 4096,
+     "minimum": 0,
+     "type": "number"
+    },
+    "StopSequences": {
+     "description": "List of stop sequences",
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 4,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Temperature": {
+     "description": "Controls randomness, higher values increase diversity",
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    },
+    "TopP": {
+     "description": "Cumulative probability cutoff for token selection",
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "PromptTemplateConfiguration": {
+   "description": "Prompt template configuration",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Text": {
+       "$ref": "#/definitions/TextPromptTemplateConfiguration"
+      }
+     },
+     "required": [
+      "Text"
+     ],
+     "title": "Text",
+     "type": "object"
+    }
+   ]
+  },
+  "PromptTemplateType": {
+   "description": "Prompt template type",
+   "enum": [
+    "TEXT"
+   ],
+   "type": "string"
+  },
+  "RerankingMetadataSelectionMode": {
+   "description": "Reranking Metadata Selection Mode",
+   "enum": [
+    "SELECTIVE",
+    "ALL"
+   ],
+   "type": "string"
+  },
+  "RerankingMetadataSelectiveModeConfiguration": {
+   "description": "Reranking Metadata Selective Mode Configuration",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "FieldsToInclude": {
+       "$ref": "#/definitions/FieldsForReranking"
+      }
+     },
+     "required": [
+      "FieldsToInclude"
+     ],
+     "title": "FieldsToInclude",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "FieldsToExclude": {
+       "$ref": "#/definitions/FieldsForReranking"
+      }
+     },
+     "required": [
+      "FieldsToExclude"
+     ],
+     "title": "FieldsToExclude",
+     "type": "object"
+    }
+   ]
+  },
+  "RetrievalFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "description": "Retrieval flow node configuration",
+   "properties": {
+    "ServiceConfiguration": {
+     "$ref": "#/definitions/RetrievalFlowNodeServiceConfiguration"
+    }
+   },
+   "required": [
+    "ServiceConfiguration"
+   ],
+   "type": "object"
+  },
+  "RetrievalFlowNodeS3Configuration": {
+   "additionalProperties": false,
+   "description": "s3 Retrieval configuration for Retrieval node",
+   "properties": {
+    "BucketName": {
+     "description": "bucket name of an s3 that will be used for Retrieval flow node configuration",
+     "format": "AWS::S3::Bucket.Name",
+     "pattern": "^[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "RetrievalFlowNodeServiceConfiguration": {
+   "description": "Retrieval service configuration for Retrieval node",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "S3": {
+       "$ref": "#/definitions/RetrievalFlowNodeS3Configuration"
+      }
+     },
+     "title": "S3",
+     "type": "object"
+    }
+   ]
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "description": "A bucket, key and optional version pointing to an S3 object containing a UTF-8 encoded JSON string Definition with the same schema as the Definition property of this resource",
+   "properties": {
+    "Bucket": {
+     "description": "A bucket in S3",
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "^[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]$",
+     "type": "string"
+    },
+    "Key": {
+     "description": "A object key in S3",
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Version": {
+     "description": "The version of the the S3 object to use",
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "StorageFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "description": "Storage flow node configuration",
+   "properties": {
+    "ServiceConfiguration": {
+     "$ref": "#/definitions/StorageFlowNodeServiceConfiguration"
+    }
+   },
+   "required": [
+    "ServiceConfiguration"
+   ],
+   "type": "object"
+  },
+  "StorageFlowNodeS3Configuration": {
+   "additionalProperties": false,
+   "description": "s3 storage configuration for storage node",
+   "properties": {
+    "BucketName": {
+     "description": "bucket name of an s3 that will be used for storage flow node configuration",
+     "format": "AWS::S3::Bucket.Name",
+     "pattern": "^[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "StorageFlowNodeServiceConfiguration": {
+   "description": "storage service configuration for storage node",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "S3": {
+       "$ref": "#/definitions/StorageFlowNodeS3Configuration"
+      }
+     },
+     "title": "S3",
+     "type": "object"
+    }
+   ]
+  },
+  "SupportedLanguages": {
+   "description": "Enum encodes the supported language type",
+   "enum": [
+    "Python_3"
+   ],
+   "type": "string"
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "description": "A map of tag keys and values",
+   "maxItems": 200,
+   "minItems": 0,
+   "patternProperties": {
+    "^[a-zA-Z0-9\\s._:/=+@-]*$": {
+     "description": "Value of a tag",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TextPromptTemplateConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for text prompt template",
+   "properties": {
+    "InputVariables": {
+     "description": "List of input variables",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/PromptInputVariable"
+     },
+     "maxItems": 20,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Text": {
+     "description": "Prompt content for String prompt template",
+     "maxLength": 200000,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Text"
+   ],
+   "type": "object"
+  },
+  "VectorSearchBedrockRerankingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MetadataConfiguration": {
+     "$ref": "#/definitions/MetadataConfigurationForReranking"
+    },
+    "ModelConfiguration": {
+     "$ref": "#/definitions/VectorSearchBedrockRerankingModelConfiguration"
+    },
+    "NumberOfRerankedResults": {
+     "description": "Number Of Results For Reranking",
+     "maximum": 100,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "ModelConfiguration"
+   ],
+   "title": "VectorSearchBedrockRerankingConfiguration",
+   "type": "object"
+  },
+  "VectorSearchBedrockRerankingModelConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdditionalModelRequestFields": {
+     "$ref": "#/definitions/AdditionalModelRequestFields"
+    },
+    "ModelArn": {
+     "$ref": "#/definitions/BedrockRerankingModelArn"
+    }
+   },
+   "required": [
+    "ModelArn"
+   ],
+   "title": "VectorSearchBedrockRerankingModelConfiguration",
+   "type": "object"
+  },
+  "VectorSearchRerankingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BedrockRerankingConfiguration": {
+     "$ref": "#/definitions/VectorSearchBedrockRerankingConfiguration"
+    },
+    "Type": {
+     "$ref": "#/definitions/VectorSearchRerankingConfigurationType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "title": "VectorSearchRerankingConfiguration",
+   "type": "object"
+  },
+  "VectorSearchRerankingConfigurationType": {
+   "description": "Enum of Rerank Configuration Types",
+   "enum": [
+    "BEDROCK_RERANKING_MODEL"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "Definition of AWS::Bedrock::Flow Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "bedrock:CreateFlow",
+    "bedrock:GetFlow",
+    "bedrock:PrepareFlow",
+    "iam:PassRole",
+    "s3:GetObject",
+    "s3:GetObjectVersion",
+    "bedrock:TagResource",
+    "bedrock:ListTagsForResource",
+    "kms:GenerateDataKey",
+    "kms:Decrypt",
+    "bedrock:CreateGuardrail",
+    "bedrock:CreateGuardrailVersion",
+    "bedrock:GetGuardrail"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "bedrock:DeleteFlow",
+    "bedrock:GetFlow",
+    "bedrock:DeleteGuardrail",
+    "bedrock:GetGuardrail"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "bedrock:ListFlows",
+    "bedrock:ListGuardrails"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bedrock:GetFlow",
+    "bedrock:ListTagsForResource",
+    "kms:Decrypt",
+    "bedrock:GetGuardrail"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "bedrock:UpdateFlow",
+    "bedrock:GetFlow",
+    "bedrock:PrepareFlow",
+    "iam:PassRole",
+    "s3:GetObject",
+    "s3:GetObjectVersion",
+    "bedrock:TagResource",
+    "bedrock:UntagResource",
+    "bedrock:ListTagsForResource",
+    "kms:GenerateDataKey",
+    "kms:Decrypt",
+    "bedrock:UpdateGuardrail",
+    "bedrock:GetGuardrail"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "Arn representation of the Flow",
+   "maxLength": 1011,
+   "minLength": 20,
+   "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:flow/[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "description": "Time Stamp.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "CustomerEncryptionKeyArn": {
+   "description": "A KMS key ARN",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(|-cn|-us-gov):kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
+   "type": "string"
+  },
+  "Definition": {
+   "$ref": "#/definitions/FlowDefinition"
+  },
+  "DefinitionS3Location": {
+   "$ref": "#/definitions/S3Location"
+  },
+  "DefinitionString": {
+   "description": "A JSON string containing a Definition with the same schema as the Definition property of this resource",
+   "maxLength": 512000,
+   "type": "string"
+  },
+  "DefinitionSubstitutions": {
+   "$ref": "#/definitions/DefinitionSubstitutions"
+  },
+  "Description": {
+   "description": "Description of the flow",
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ExecutionRoleArn": {
+   "description": "ARN of a IAM role",
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "pattern": "^arn:aws(-[^:]+)?:iam::([0-9]{12})?:role/(service-role/)?.+$",
+   "type": "string"
+  },
+  "Id": {
+   "description": "Identifier for a Flow",
+   "pattern": "^[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "Name for the flow",
+   "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/FlowStatus"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  },
+  "TestAliasTags": {
+   "$ref": "#/definitions/TagsMap"
+  },
+  "UpdatedAt": {
+   "description": "Time Stamp.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Validations": {
+   "$ref": "#/definitions/FlowValidations"
+  },
+  "Version": {
+   "description": "Draft Version.",
+   "maxLength": 5,
+   "minLength": 5,
+   "pattern": "^DRAFT$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/Id",
+  "/properties/Status",
+  "/properties/UpdatedAt",
+  "/properties/Version",
+  "/properties/Validations"
+ ],
+ "required": [
+  "ExecutionRoleArn",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-bedrock-flows",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "bedrock:TagResource",
+   "bedrock:UntagResource",
+   "bedrock:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Bedrock::Flow",
+ "writeOnlyProperties": [
+  "/properties/DefinitionString",
+  "/properties/DefinitionS3Location",
+  "/properties/DefinitionSubstitutions"
+ ]
+}

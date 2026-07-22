@@ -1,0 +1,143 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceArn",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Purpose": {
+   "description": "A label allowing customers to categorize a predefined attribute.",
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "StringList": {
+   "description": "Predefined attribute values of type string list.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Value"
+   },
+   "maxItems": 500,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Value": {
+   "description": "Textual or numeric value that describes an attribute.",
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "description": "Resource Type definition for AWS::Connect::PredefinedAttribute",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect:CreatePredefinedAttribute"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect:DeletePredefinedAttribute"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "InstanceArn": {
+      "$ref": "resource-schema.json#/properties/InstanceArn"
+     }
+    },
+    "required": [
+     "InstanceArn"
+    ]
+   },
+   "permissions": [
+    "connect:ListPredefinedAttributes"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect:DescribePredefinedAttribute"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "connect:UpdatePredefinedAttribute"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InstanceArn",
+  "/properties/Name"
+ ],
+ "properties": {
+  "AttributeConfiguration": {
+   "additionalProperties": false,
+   "description": "Custom metadata associated to a Predefined attribute that controls how the attribute behaves when used by upstream services.",
+   "properties": {
+    "EnableValueValidationOnAssociation": {
+     "description": "Enables customers to enforce strict validation on the specific values that this predefined attribute can hold.",
+     "type": "boolean"
+    },
+    "IsReadOnly": {
+     "description": "Allows the predefined attribute to show up and be managed in the Amazon Connect UI.",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceArn": {
+   "description": "The identifier of the Amazon Connect instance.",
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "LastModifiedRegion": {
+   "description": "Last modified region.",
+   "pattern": "[a-z]{2}(-[a-z]+){1,2}(-[0-9])?",
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "description": "Last modified time.",
+   "type": "number"
+  },
+  "Name": {
+   "description": "The name of the predefined attribute.",
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Purposes": {
+   "description": "The assigned purposes of the predefined attribute.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Purpose"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Values": {
+   "additionalProperties": false,
+   "description": "The values of a predefined attribute.",
+   "properties": {
+    "StringList": {
+     "$ref": "#/definitions/StringList"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LastModifiedRegion",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "InstanceArn",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Connect::PredefinedAttribute"
+}

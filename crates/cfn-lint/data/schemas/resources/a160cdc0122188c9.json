@@ -1,0 +1,105 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "description": "Resource Type definition for AWS::Oam::Sink",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "oam:CreateSink",
+    "oam:PutSinkPolicy",
+    "oam:GetSinkPolicy",
+    "oam:GetSink",
+    "oam:TagResource",
+    "oam:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "oam:DeleteSink",
+    "oam:GetSinkPolicy",
+    "oam:GetSink"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "oam:ListSinks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "oam:GetSinkPolicy",
+    "oam:GetSink",
+    "oam:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "oam:PutSinkPolicy",
+    "oam:GetSinkPolicy",
+    "oam:GetSink",
+    "oam:TagResource",
+    "oam:UntagResource",
+    "oam:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon resource name (ARN) of the ObservabilityAccessManager Sink",
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the ObservabilityAccessManager Sink.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_.-]+$",
+   "type": "string"
+  },
+  "Policy": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "Tags to apply to the sink",
+   "patternProperties": {
+    "^(?!aws:.*).{1,128}$": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:.",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^(?!aws:.*).{0,256}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "oam:ListTagsForResource",
+   "oam:UntagResource",
+   "oam:TagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Oam::Sink"
+}

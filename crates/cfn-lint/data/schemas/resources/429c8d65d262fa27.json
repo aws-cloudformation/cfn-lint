@@ -1,0 +1,183 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AlarmName"
+ ],
+ "definitions": {
+  "AlarmActionARN": {
+   "description": "Amazon Resource Name (ARN) of the action",
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "Metadata that you can assign to a composite alarm, Tags can help you organize and categorize your resources.",
+   "properties": {
+    "Key": {
+     "description": "A unique identifier for the tag. The combination of tag keys and values can help you organize and categorize your resources.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the specified tag key.",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The AWS::CloudWatch::CompositeAlarm type specifies an alarm which aggregates the states of other Alarms (Metric or Composite Alarms) as defined by the AlarmRule expression",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cloudwatch:DescribeAlarms",
+    "cloudwatch:PutCompositeAlarm",
+    "cloudwatch:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cloudwatch:DescribeAlarms",
+    "cloudwatch:DeleteAlarms"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cloudwatch:DescribeAlarms"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cloudwatch:DescribeAlarms",
+    "cloudwatch:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cloudwatch:DescribeAlarms",
+    "cloudwatch:PutCompositeAlarm",
+    "cloudwatch:TagResource",
+    "cloudwatch:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AlarmName"
+ ],
+ "properties": {
+  "ActionsEnabled": {
+   "description": "Indicates whether actions should be executed during any changes to the alarm state. The default is TRUE.",
+   "type": "boolean"
+  },
+  "ActionsSuppressor": {
+   "description": "Actions will be suppressed if the suppressor alarm is in the ALARM state. ActionsSuppressor can be an AlarmName or an Amazon Resource Name (ARN) from an existing alarm. ",
+   "maxLength": 1600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ActionsSuppressorExtensionPeriod": {
+   "description": "Actions will be suppressed if WaitPeriod is active. The length of time that actions are suppressed is in seconds.",
+   "minimum": 0,
+   "type": "integer"
+  },
+  "ActionsSuppressorWaitPeriod": {
+   "description": "Actions will be suppressed if ExtensionPeriod is active. The length of time that actions are suppressed is in seconds.",
+   "minimum": 0,
+   "type": "integer"
+  },
+  "AlarmActions": {
+   "description": "The list of actions to execute when this alarm transitions into an ALARM state from any other state. Specify each action as an Amazon Resource Name (ARN).",
+   "items": {
+    "description": "Amazon Resource Name (ARN) of the action",
+    "maxLength": 1024,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 5,
+   "type": "array"
+  },
+  "AlarmDescription": {
+   "description": "The description of the alarm",
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "AlarmName": {
+   "description": "The name of the Composite Alarm",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "AlarmRule": {
+   "description": "Expression which aggregates the state of other Alarms (Metric or Composite Alarms)",
+   "maxLength": 10240,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Arn": {
+   "description": "Amazon Resource Name (ARN) of the alarm",
+   "maxLength": 1600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InsufficientDataActions": {
+   "description": "The actions to execute when this alarm transitions to the INSUFFICIENT_DATA state from any other state. Each action is specified as an Amazon Resource Name (ARN).",
+   "items": {
+    "description": "Amazon Resource Name (ARN) of the action",
+    "maxLength": 1024,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 5,
+   "type": "array"
+  },
+  "OKActions": {
+   "description": "The actions to execute when this alarm transitions to the OK state from any other state. Each action is specified as an Amazon Resource Name (ARN).",
+   "items": {
+    "description": "Amazon Resource Name (ARN) of the action",
+    "maxLength": 1024,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 5,
+   "type": "array"
+  },
+  "Tags": {
+   "description": "A list of key-value pairs to associate with the composite alarm. You can associate as many as 50 tags with an alarm.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "AlarmRule"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudwatch.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "cloudwatch:TagResource",
+   "cloudwatch:UntagResource",
+   "cloudwatch:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudWatch::CompositeAlarm"
+}

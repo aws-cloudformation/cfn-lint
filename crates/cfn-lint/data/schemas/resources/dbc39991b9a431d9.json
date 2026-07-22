@@ -1,0 +1,156 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainIdentifier",
+  "/properties/GroupIdentifier",
+  "/properties/RolePrincipalArn"
+ ],
+ "definitions": {
+  "GroupProfileStatus": {
+   "description": "The status of the group profile.",
+   "enum": [
+    "ASSIGNED",
+    "NOT_ASSIGNED"
+   ],
+   "type": "string"
+  },
+  "GroupType": {
+   "description": "The type of the group.",
+   "enum": [
+    "DATAZONE_SSO_GROUP",
+    "IAM_ROLE_SESSION_GROUP"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "Group profiles represent groups of Amazon DataZone users. Groups can be manually created, or mapped to Active Directory groups of enterprise customers. In Amazon DataZone, groups serve two purposes. First, a group can map to a team of users in the organizational chart, and thus reduce the administrative work of a Amazon DataZone project owner when there are new employees joining or leaving a team. Second, corporate administrators use Active Directory groups to manage and update user statuses and so Amazon DataZone domain administrators can use these group memberships to implement Amazon DataZone domain policies.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "datazone:CreateGroupProfile",
+    "datazone:GetGroupProfile",
+    "datazone:UpdateGroupProfile",
+    "sso:ListProfiles",
+    "sso:GetProfile",
+    "sso:AssociateProfile",
+    "sso:DisassociateProfile",
+    "iam:GetRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "datazone:DeleteGroupProfile",
+    "datazone:GetGroupProfile",
+    "datazone:UpdateGroupProfile",
+    "sso:ListProfiles",
+    "sso:GetProfile",
+    "sso:AssociateProfile",
+    "sso:DisassociateProfile"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "DomainIdentifier": {
+      "$ref": "resource-schema.json#/properties/DomainIdentifier"
+     },
+     "GroupType": {
+      "$ref": "resource-schema.json#/properties/GroupType"
+     }
+    },
+    "required": [
+     "DomainIdentifier"
+    ]
+   },
+   "permissions": [
+    "datazone:SearchGroupProfiles"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "datazone:GetGroupProfile",
+    "iam:GetRole"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "datazone:UpdateGroupProfile",
+    "datazone:GetGroupProfile",
+    "sso:ListProfiles",
+    "sso:GetProfile",
+    "sso:AssociateProfile",
+    "sso:DisassociateProfile"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainId",
+  "/properties/Id"
+ ],
+ "properties": {
+  "DomainId": {
+   "description": "The identifier of the Amazon DataZone domain in which the group profile is created.",
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "DomainIdentifier": {
+   "description": "The identifier of the Amazon DataZone domain in which the group profile would be created.",
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "GroupIdentifier": {
+   "description": "The ID of the group.",
+   "pattern": "(^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$|[\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}\\t\\n\\r  ]+)",
+   "type": "string"
+  },
+  "GroupName": {
+   "description": "The group-name of the Group Profile.",
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z_0-9+=,.@-]+$",
+   "type": "string"
+  },
+  "GroupType": {
+   "$ref": "#/definitions/GroupType"
+  },
+  "Id": {
+   "description": "The ID of the Amazon DataZone group profile.",
+   "pattern": "^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$",
+   "type": "string"
+  },
+  "RolePrincipalArn": {
+   "description": "The ARN of the role principal for the group profile.",
+   "type": "string"
+  },
+  "RolePrincipalId": {
+   "description": "The ID of the role principal for the group profile.",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/GroupProfileStatus"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DomainId",
+  "/properties/GroupName",
+  "/properties/Id",
+  "/properties/RolePrincipalId"
+ ],
+ "required": [
+  "DomainIdentifier"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::DataZone::GroupProfile",
+ "writeOnlyProperties": [
+  "/properties/DomainIdentifier",
+  "/properties/GroupIdentifier",
+  "/properties/RolePrincipalArn",
+  "/properties/GroupType"
+ ]
+}

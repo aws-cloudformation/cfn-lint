@@ -1,0 +1,72 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ResourceId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FirewallFailOpen",
+  "/properties/ResourceId"
+ ],
+ "description": "Configuration of the firewall behavior provided by DNS Firewall for a single VPC from Amazon Virtual Private Cloud (Amazon VPC).",
+ "handlers": {
+  "list": {
+   "permissions": [
+    "route53resolver:ListFirewallConfigs",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53resolver:GetFirewallConfig",
+    "ec2:DescribeVpcs"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The ARN of the firewall configuration.",
+   "type": "string"
+  },
+  "FirewallFailOpen": {
+   "description": "Determines how DNS Firewall operates during failures. By default, fail open is disabled, which means the failure mode is closed. If you enable this option, the failure mode is open. This behavior is only enforced for VPCs that have at least one DNS Firewall rule group association.",
+   "enum": [
+    "ENABLED",
+    "DISABLED",
+    "USE_LOCAL_RESOURCE_SETTING"
+   ],
+   "type": "string"
+  },
+  "Id": {
+   "description": "The ID of the firewall configuration.",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OwnerId": {
+   "description": "The Amazon Web Services account ID of the owner of the VPC that this firewall configuration applies to.",
+   "maxLength": 32,
+   "minLength": 12,
+   "type": "string"
+  },
+  "ResourceId": {
+   "description": "The ID of the VPC that this firewall configuration applies to.",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/OwnerId"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Route53Resolver::FirewallConfig"
+}

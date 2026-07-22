@@ -1,0 +1,197 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CFNActions": {
+   "additionalProperties": false,
+   "properties": {
+    "Tagging": {
+     "$ref": "#/definitions/CFNTagging",
+     "description": "Contains information about tagging status of the Malware Protection plan resource."
+    }
+   },
+   "type": "object"
+  },
+  "CFNProtectedResource": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Bucket": {
+     "additionalProperties": false,
+     "description": "Information about the protected S3 bucket resource.",
+     "format": "AWS::S3::Bucket.Name",
+     "properties": {
+      "BucketName": {
+       "description": "Name of the S3 bucket.",
+       "format": "AWS::S3::Bucket.Name",
+       "type": "string"
+      },
+      "ObjectPrefixes": {
+       "description": "Information about the specified object prefixes. The S3 object will be scanned only if it belongs to any of the specified object prefixes.",
+       "items": {
+        "type": "string"
+       },
+       "maxItems": 5,
+       "minItems": 0,
+       "type": "array"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "S3Bucket"
+   ],
+   "type": "object"
+  },
+  "CFNStatusReasons": {
+   "additionalProperties": false,
+   "properties": {
+    "Code": {
+     "description": "The status code of the Malware Protection plan.",
+     "type": "string"
+    },
+    "Message": {
+     "description": "Issue message that specifies the reason.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CFNTagging": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "description": "Indicates whether or not you chose GuardDuty to add a predefined tag to the scanned S3 object.",
+     "enum": [
+      "DISABLED",
+      "ENABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TagItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::GuardDuty::MalwareProtectionPlan",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "guardduty:CreateMalwareProtectionPlan",
+    "guardduty:GetMalwareProtectionPlan",
+    "guardduty:TagResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "guardduty:DeleteMalwareProtectionPlan",
+    "guardduty:GetMalwareProtectionPlan"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "guardduty:ListMalwareProtectionPlans"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "guardduty:GetMalwareProtectionPlan"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "guardduty:UpdateMalwareProtectionPlan",
+    "guardduty:GetMalwareProtectionPlan",
+    "guardduty:TagResource",
+    "guardduty:UntagResource",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MalwareProtectionPlanId"
+ ],
+ "properties": {
+  "Actions": {
+   "$ref": "#/definitions/CFNActions",
+   "description": "Specifies the action that is to be applied to the Malware Protection plan resource."
+  },
+  "Arn": {
+   "description": "Amazon Resource Name (ARN) of the protected resource.",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "description": "The timestamp when the Malware Protection plan resource was created.",
+   "type": "string"
+  },
+  "MalwareProtectionPlanId": {
+   "description": "A unique identifier associated with Malware Protection plan resource.",
+   "type": "string"
+  },
+  "ProtectedResource": {
+   "$ref": "#/definitions/CFNProtectedResource",
+   "description": "Information about the protected resource. Presently, S3Bucket is the only supported protected resource."
+  },
+  "Role": {
+   "description": "IAM role that includes the permissions required to scan and (optionally) add tags to the associated protected resource.",
+   "type": "string"
+  },
+  "Status": {
+   "description": "Status of the Malware Protection plan resource.",
+   "type": "string"
+  },
+  "StatusReasons": {
+   "description": "Status details associated with the Malware Protection plan resource status.",
+   "items": {
+    "$ref": "#/definitions/CFNStatusReasons"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "description": "The tags to be added to the created Malware Protection plan resource. Each tag consists of a key and an optional value, both of which you need to specify.",
+   "items": {
+    "$ref": "#/definitions/TagItem"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/MalwareProtectionPlanId",
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/Status",
+  "/properties/StatusReasons"
+ ],
+ "required": [
+  "Role",
+  "ProtectedResource"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "guardduty:TagResource",
+   "guardduty:UntagResource",
+   "guardduty:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GuardDuty::MalwareProtectionPlan"
+}

@@ -1,0 +1,74 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AdminAccountId"
+ ],
+ "description": "The ``AWS::SecurityHub::DelegatedAdmin`` resource designates the delegated ASHlong administrator account for an organization. You must enable the integration between ASH and AOlong before you can designate a delegated ASH administrator. Only the management account for an organization can designate the delegated ASH administrator account. For more information, see [Designating the delegated administrator](https://docs.aws.amazon.com/securityhub/latest/userguide/designate-orgs-admin-account.html#designate-admin-instructions) in the *User Guide*.\n To change the delegated administrator account, remove the current delegated administrator account, and then designate the new account.\n To designate multiple delegated administrators in different organizations and AWS-Regions, we recommend using [mappings](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html).\n Tags aren't supported for this resource.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityhub:EnableOrganizationAdminAccount",
+    "organizations:DescribeOrganization",
+    "organizations:EnableAWSServiceAccess",
+    "organizations:RegisterDelegatedAdministrator"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securityhub:DisableOrganizationAdminAccount",
+    "organizations:DescribeOrganization"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securityhub:ListOrganizationAdminAccounts",
+    "organizations:DescribeOrganization"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityhub:ListOrganizationAdminAccounts",
+    "organizations:DescribeOrganization"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DelegatedAdminIdentifier"
+ ],
+ "properties": {
+  "AdminAccountId": {
+   "description": "The AWS-account identifier of the account to designate as the Security Hub CSPM administrator account.",
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "DelegatedAdminIdentifier": {
+   "description": "",
+   "pattern": "^[0-9]{12}/[a-zA-Z0-9-]{1,32}$",
+   "type": "string"
+  },
+  "Status": {
+   "description": "",
+   "enum": [
+    "ENABLED",
+    "DISABLE_IN_PROGRESS"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DelegatedAdminIdentifier",
+  "/properties/Status"
+ ],
+ "required": [
+  "AdminAccountId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::SecurityHub::DelegatedAdmin"
+}

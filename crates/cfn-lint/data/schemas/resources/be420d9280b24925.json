@@ -1,0 +1,180 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ConnectionId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Bandwidth",
+  "/properties/Location",
+  "/properties/ProviderName",
+  "/properties/RequestMACSec"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::DirectConnect::Connection",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "directconnect:DescribeConnections",
+    "directconnect:CreateConnection",
+    "directconnect:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "directconnect:DescribeConnections",
+    "directconnect:DeleteConnection"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "directconnect:DescribeConnections"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "directconnect:DescribeConnections"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "directconnect:AssociateConnectionWithLag",
+    "directconnect:DisassociateConnectionFromLag",
+    "directconnect:DescribeConnections",
+    "directconnect:TagResource",
+    "directconnect:UntagResource",
+    "directconnect:UpdateConnection"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConnectionArn"
+ ],
+ "properties": {
+  "Bandwidth": {
+   "description": "The bandwidth of the connection.",
+   "pattern": "^[1-9][0-9]*(M|G)bps$",
+   "type": "string"
+  },
+  "ConnectionArn": {
+   "description": "The ARN of the connection.",
+   "pattern": "^arn:aws[a-z-]*:directconnect:[a-z0-9-]+:[0-9]{12}:dxcon/dxcon-[a-z0-9]{8,21}$",
+   "type": "string"
+  },
+  "ConnectionId": {
+   "description": "The ID of the connection.",
+   "pattern": "^dxcon-[a-z0-9]{8,21}$",
+   "type": "string"
+  },
+  "ConnectionName": {
+   "description": "The name of the connection.",
+   "pattern": "^[\\w \\-_,\\/]{1,200}$",
+   "type": "string"
+  },
+  "ConnectionState": {
+   "description": "The state of the connection.",
+   "pattern": "^(ordering|requested|pending|available|down|deleting|deleted|rejected|unknown)$",
+   "type": "string"
+  },
+  "LagId": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/LagId",
+      "typeName": "AWS::DirectConnect::Lag"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/LagArn",
+      "typeName": "AWS::DirectConnect::Lag"
+     }
+    }
+   ],
+   "description": "The ID or ARN of the LAG to associate the connection with.",
+   "pattern": "^(arn:aws[a-z-]*:directconnect:[a-z0-9-]+:[0-9]{12}:dxlag/)?dxlag-[a-zA-Z0-9]{8,21}$",
+   "type": "string"
+  },
+  "Location": {
+   "description": "The location of the connection.",
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "ProviderName": {
+   "description": "The name of the service provider associated with the requested connection.",
+   "type": "string"
+  },
+  "RequestMACSec": {
+   "description": "Indicates whether you want the connection to support MAC Security (MACsec).",
+   "type": "boolean"
+  },
+  "Tags": {
+   "description": "The tags associated with the connection.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/LagId": "$lowercase($substringAfter(LagId, \"/\"))",
+  "/properties/Location": "\"^[a-zA-Z0-9-]+$\""
+ },
+ "readOnlyProperties": [
+  "/properties/ConnectionArn",
+  "/properties/ConnectionId",
+  "/properties/ConnectionState"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "Bandwidth",
+  "ConnectionName",
+  "Location"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "directconnect:TagResource",
+   "directconnect:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DirectConnect::Connection",
+ "writeOnlyProperties": [
+  "/properties/RequestMACSec"
+ ]
+}

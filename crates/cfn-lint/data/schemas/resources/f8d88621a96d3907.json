@@ -1,0 +1,267 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KnowledgeBaseArn"
+ ],
+ "definitions": {
+  "ChannelType": {
+   "enum": [
+    "Chat",
+    "Email"
+   ],
+   "maxLength": 10,
+   "minLength": 1,
+   "type": "string"
+  },
+  "GroupingConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration information of the user groups that the quick response is accessible to.",
+   "properties": {
+    "Criteria": {
+     "description": "The criteria used for grouping Amazon Q in Connect users.",
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Values": {
+     "description": "The list of values that define different groups of Amazon Q in Connect users.",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/GroupingValue"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Criteria",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "GroupingValue": {
+   "description": "The value that define the group of Amazon Q in Connect users.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "QuickResponseContentProvider": {
+   "additionalProperties": false,
+   "description": "The container of quick response content.",
+   "properties": {
+    "Content": {
+     "description": "The content of the quick response.",
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "QuickResponseContents": {
+   "additionalProperties": false,
+   "description": "The content of the quick response stored in different media types.",
+   "properties": {
+    "Markdown": {
+     "$ref": "#/definitions/QuickResponseContentProvider"
+    },
+    "PlainText": {
+     "$ref": "#/definitions/QuickResponseContentProvider"
+    }
+   },
+   "type": "object"
+  },
+  "Status": {
+   "description": "The status of the quick response data.",
+   "enum": [
+    "CREATE_IN_PROGRESS",
+    "CREATE_FAILED",
+    "CREATED",
+    "DELETE_IN_PROGRESS",
+    "DELETE_FAILED",
+    "DELETED",
+    "UPDATE_IN_PROGRESS",
+    "UPDATE_FAILED"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Definition of AWS::Wisdom::QuickResponse Resource Type.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "wisdom:CreateQuickResponse",
+    "wisdom:GetQuickResponse",
+    "wisdom:TagResource",
+    "connect:SearchRoutingProfiles",
+    "connect:DescribeRoutingProfile"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "wisdom:DeleteQuickResponse",
+    "wisdom:UntagResource"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "KnowledgeBaseArn": {
+      "$ref": "resource-schema.json#/properties/KnowledgeBaseArn"
+     }
+    },
+    "required": [
+     "KnowledgeBaseArn"
+    ]
+   },
+   "permissions": [
+    "wisdom:ListQuickResponses"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "wisdom:GetQuickResponse"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "wisdom:UpdateQuickResponse",
+    "wisdom:GetQuickResponse",
+    "wisdom:TagResource",
+    "wisdom:UntagResource",
+    "connect:SearchRoutingProfiles",
+    "connect:DescribeRoutingProfile"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/QuickResponseArn"
+ ],
+ "properties": {
+  "Channels": {
+   "description": "The Amazon Connect contact channels this quick response applies to.",
+   "items": {
+    "$ref": "#/definitions/ChannelType"
+   },
+   "type": "array"
+  },
+  "Content": {
+   "$ref": "#/definitions/QuickResponseContentProvider"
+  },
+  "ContentType": {
+   "description": "The media type of the quick response content.\n- Use application/x.quickresponse;format=plain for quick response written in plain text.\n- Use application/x.quickresponse;format=markdown for quick response written in richtext.",
+   "pattern": "^(application/x\\.quickresponse;format=(plain|markdown))$",
+   "type": "string"
+  },
+  "Contents": {
+   "$ref": "#/definitions/QuickResponseContents"
+  },
+  "Description": {
+   "description": "The description of the quick response.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "GroupingConfiguration": {
+   "$ref": "#/definitions/GroupingConfiguration"
+  },
+  "IsActive": {
+   "description": "Whether the quick response is active.",
+   "type": "boolean"
+  },
+  "KnowledgeBaseArn": {
+   "description": "The Amazon Resource Name (ARN) of the knowledge base.",
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}){0,2}$",
+   "type": "string"
+  },
+  "Language": {
+   "description": "The language code value for the language in which the quick response is written. The supported language codes include de_DE, en_US, es_ES, fr_FR, id_ID, it_IT, ja_JP, ko_KR, pt_BR, zh_CN, zh_TW",
+   "maxLength": 5,
+   "minLength": 2,
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the quick response.",
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "QuickResponseArn": {
+   "description": "The Amazon Resource Name (ARN) of the quick response.",
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}){0,2}$",
+   "type": "string"
+  },
+  "QuickResponseId": {
+   "description": "The identifier of the quick response.",
+   "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+   "type": "string"
+  },
+  "ShortcutKey": {
+   "description": "The shortcut key of the quick response. The value should be unique across the knowledge base.",
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/Status"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/QuickResponseId",
+  "/properties/QuickResponseArn",
+  "/properties/Status",
+  "/properties/Contents"
+ ],
+ "replacementStrategy": "create_then_delete",
+ "required": [
+  "KnowledgeBaseArn",
+  "Content",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-wisdom",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "wisdom:TagResource",
+   "wisdom:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Wisdom::QuickResponse"
+}

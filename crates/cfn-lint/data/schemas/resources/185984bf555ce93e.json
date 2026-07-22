@@ -1,0 +1,466 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "EffectiveFrom": {
+   "description": "The date from which the hours of operation override would be effective.",
+   "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+   "type": "string"
+  },
+  "EffectiveTill": {
+   "description": "The date till which the hours of operation override would be effective.",
+   "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+   "type": "string"
+  },
+  "HoursOfOperationConfig": {
+   "additionalProperties": false,
+   "description": "Contains information about the hours of operation.",
+   "properties": {
+    "Day": {
+     "description": "The day that the hours of operation applies to.",
+     "enum": [
+      "SUNDAY",
+      "MONDAY",
+      "TUESDAY",
+      "WEDNESDAY",
+      "THURSDAY",
+      "FRIDAY",
+      "SATURDAY"
+     ],
+     "type": "string"
+    },
+    "EndTime": {
+     "$ref": "#/definitions/HoursOfOperationTimeSlice",
+     "description": "The end time that your contact center closes."
+    },
+    "StartTime": {
+     "$ref": "#/definitions/HoursOfOperationTimeSlice",
+     "description": "The start time that your contact center opens."
+    }
+   },
+   "required": [
+    "Day",
+    "StartTime",
+    "EndTime"
+   ],
+   "type": "object"
+  },
+  "HoursOfOperationOverride": {
+   "additionalProperties": false,
+   "description": "Overrides attached to the hours of operation.",
+   "properties": {
+    "EffectiveFrom": {
+     "$ref": "#/definitions/EffectiveFrom"
+    },
+    "EffectiveTill": {
+     "$ref": "#/definitions/EffectiveTill"
+    },
+    "HoursOfOperationOverrideId": {
+     "$ref": "#/definitions/HoursOfOperationOverrideId"
+    },
+    "OverrideConfig": {
+     "$ref": "#/definitions/OverrideConfig"
+    },
+    "OverrideDescription": {
+     "$ref": "#/definitions/OverrideDescription"
+    },
+    "OverrideName": {
+     "$ref": "#/definitions/OverrideName"
+    },
+    "OverrideType": {
+     "$ref": "#/definitions/OverrideType"
+    },
+    "RecurrenceConfig": {
+     "$ref": "#/definitions/RecurrenceConfig"
+    }
+   },
+   "required": [
+    "OverrideName",
+    "EffectiveFrom",
+    "EffectiveTill",
+    "OverrideConfig"
+   ],
+   "type": "object"
+  },
+  "HoursOfOperationOverrideConfig": {
+   "additionalProperties": false,
+   "description": "Contains information about the hours of operation override.",
+   "properties": {
+    "Day": {
+     "description": "The day that the hours of operation override applies to.",
+     "enum": [
+      "SUNDAY",
+      "MONDAY",
+      "TUESDAY",
+      "WEDNESDAY",
+      "THURSDAY",
+      "FRIDAY",
+      "SATURDAY"
+     ],
+     "type": "string"
+    },
+    "EndTime": {
+     "$ref": "#/definitions/OverrideTimeSlice",
+     "description": "The new end time that your contact center closes for the overriden days."
+    },
+    "StartTime": {
+     "$ref": "#/definitions/OverrideTimeSlice",
+     "description": "The new start time that your contact center opens for the overriden days."
+    }
+   },
+   "required": [
+    "Day",
+    "StartTime",
+    "EndTime"
+   ],
+   "type": "object"
+  },
+  "HoursOfOperationOverrideId": {
+   "description": "The Resource Identifier for the hours of operation override.",
+   "pattern": "^[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "HoursOfOperationTimeSlice": {
+   "additionalProperties": false,
+   "description": "The start time or end time for an hours of operation.",
+   "properties": {
+    "Hours": {
+     "description": "The hours.",
+     "maximum": 23,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "Minutes": {
+     "description": "The minutes.",
+     "maximum": 59,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Hours",
+    "Minutes"
+   ],
+   "type": "object"
+  },
+  "HoursOfOperationsIdentifier": {
+   "additionalProperties": false,
+   "description": "Identifier for hours of operation.",
+   "properties": {
+    "Id": {
+     "description": "The identifier for the hours of operation.",
+     "type": "string"
+    },
+    "Name": {
+     "description": "The name of the hours of operation.",
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "MonthDayList": {
+   "description": "List of month days (-1 to 31) for recurrence pattern.",
+   "items": {
+    "maximum": 31,
+    "minimum": -1,
+    "type": "integer"
+   },
+   "type": "array"
+  },
+  "MonthList": {
+   "description": "List of months (1-12) for recurrence pattern.",
+   "items": {
+    "maximum": 12,
+    "minimum": 1,
+    "type": "integer"
+   },
+   "type": "array"
+  },
+  "OverrideConfig": {
+   "description": "Configuration information for the hours of operation override: day, start time, and end time.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/HoursOfOperationOverrideConfig"
+   },
+   "maxItems": 100,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "OverrideDescription": {
+   "description": "The description of the hours of operation override.",
+   "maxLength": 250,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OverrideName": {
+   "description": "The name of the hours of operation override.",
+   "maxLength": 127,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OverrideTimeSlice": {
+   "additionalProperties": false,
+   "description": "The start time or end time for an an hours of operation override.",
+   "properties": {
+    "Hours": {
+     "description": "The hours.",
+     "maximum": 23,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "Minutes": {
+     "description": "The minutes.",
+     "maximum": 59,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Hours",
+    "Minutes"
+   ],
+   "type": "object"
+  },
+  "OverrideType": {
+   "description": "The type of hours of operation override.",
+   "enum": [
+    "STANDARD",
+    "OPEN",
+    "CLOSED"
+   ],
+   "type": "string"
+  },
+  "RecurrenceConfig": {
+   "additionalProperties": false,
+   "description": "Configuration for recurring hours of operation overrides.",
+   "properties": {
+    "RecurrencePattern": {
+     "$ref": "#/definitions/RecurrencePattern"
+    }
+   },
+   "required": [
+    "RecurrencePattern"
+   ],
+   "type": "object"
+  },
+  "RecurrenceFrequency": {
+   "description": "The frequency of recurrence for hours of operation overrides.",
+   "enum": [
+    "WEEKLY",
+    "MONTHLY",
+    "YEARLY"
+   ],
+   "type": "string"
+  },
+  "RecurrencePattern": {
+   "additionalProperties": false,
+   "description": "Pattern for recurring hours of operation overrides.",
+   "properties": {
+    "ByMonth": {
+     "$ref": "#/definitions/MonthList"
+    },
+    "ByMonthDay": {
+     "$ref": "#/definitions/MonthDayList"
+    },
+    "ByWeekdayOccurrence": {
+     "items": {
+      "maximum": 4,
+      "minimum": -1,
+      "type": "integer"
+     },
+     "maxItems": 1,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Frequency": {
+     "$ref": "#/definitions/RecurrenceFrequency"
+    },
+    "Interval": {
+     "maximum": 6,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is maximum of 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Connect::HoursOfOperation",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect:CreateHoursOfOperation",
+    "connect:TagResource",
+    "connect:CreateHoursOfOperationOverride"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect:DeleteHoursOfOperation",
+    "connect:UntagResource"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "InstanceArn": {
+      "$ref": "resource-schema.json#/properties/InstanceArn"
+     }
+    },
+    "required": [
+     "InstanceArn"
+    ]
+   },
+   "permissions": [
+    "connect:ListHoursOfOperations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect:DescribeHoursOfOperation",
+    "connect:ListHoursOfOperationOverrides",
+    "connect:ListChildHoursOfOperations"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "connect:UpdateHoursOfOperation",
+    "connect:CreateHoursOfOperationOverride",
+    "connect:UpdateHoursOfOperationOverride",
+    "connect:DeleteHoursOfOperationOverride",
+    "connect:ListHoursOfOperationOverrides",
+    "connect:TagResource",
+    "connect:UntagResource",
+    "connect:AssociateHoursOfOperations",
+    "connect:DisassociateHoursOfOperations"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/HoursOfOperationArn"
+ ],
+ "properties": {
+  "ChildHoursOfOperations": {
+   "description": "List of child hours of operations.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/HoursOfOperationsIdentifier"
+   },
+   "type": "array"
+  },
+  "Config": {
+   "description": "Configuration information for the hours of operation: day, start time, and end time.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/HoursOfOperationConfig"
+   },
+   "maxItems": 100,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Description": {
+   "description": "The description of the hours of operation.",
+   "maxLength": 250,
+   "minLength": 1,
+   "pattern": "^[\\P{C}\\r\\n\\t]{1,250}$",
+   "type": "string"
+  },
+  "HoursOfOperationArn": {
+   "description": "The Amazon Resource Name (ARN) for the hours of operation.",
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/operating-hours/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "HoursOfOperationOverrides": {
+   "description": "One or more hours of operation overrides assigned to an hour of operation.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/HoursOfOperationOverride"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "InstanceArn": {
+   "description": "The identifier of the Amazon Connect instance.",
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the hours of operation.",
+   "maxLength": 127,
+   "minLength": 1,
+   "pattern": "^[\\P{C}\\r\\n\\t]{1,127}$",
+   "type": "string"
+  },
+  "ParentHoursOfOperations": {
+   "description": "List of parent hours of operations.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/HoursOfOperationsIdentifier"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "description": "One or more tags.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TimeZone": {
+   "description": "The time zone of the hours of operation.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/HoursOfOperationArn"
+ ],
+ "required": [
+  "InstanceArn",
+  "Name",
+  "TimeZone",
+  "Config"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "connect:TagResource",
+   "connect:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::HoursOfOperation"
+}

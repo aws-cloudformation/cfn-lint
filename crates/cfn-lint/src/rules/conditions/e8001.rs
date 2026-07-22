@@ -103,7 +103,7 @@ impl CfnLintRule for E8001 {
             // Only keep E8xxx/W8xxx errors produced by function handlers.
             if e.keyword.starts_with("E8") || e.keyword.starts_with("W8") {
                 let rule_id = e.keyword.clone();
-                let severity = if rule_id.starts_with('W') {
+                let _severity = if rule_id.starts_with('W') {
                     Severity::Warning
                 } else {
                     Severity::Error

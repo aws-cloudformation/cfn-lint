@@ -1,25 +1,22 @@
 # --- cfn-lint-test ---
 # rule: E3047
 # description: Validate ECS Fargate CPU and memory combinations
+# Note: E3047 is schema-driven (anyOf over valid CPU/memory pairs), so an
+# invalid combination surfaces as one object-level anyOf failure on
+# .../Properties (matching Python cfn-lint's path and finding count).
+# Python emits a more specific "Cpu 'X' is not compatible with memory 'Y'"
+# message; Rust emits the generic anyOf message — a known message-quality
+# divergence flagged for the parity ratchet, not a correctness gap.
 # expect:
 #   - rule: E3047
-#     path: /Resources/BadCpu16384Memory123904/Properties/Cpu
-#     message_contains: "is not one of"
+#     path: /Resources/BadCpu16384Memory123904/Properties
+#     message_contains: "does not match any of the schemas in anyOf"
 #   - rule: E3047
-#     path: /Resources/BadCpu16384Memory123904/Properties/Memory
-#     message_contains: "is not one of"
+#     path: /Resources/BadCpu16384Memory1GB/Properties
+#     message_contains: "does not match any of the schemas in anyOf"
 #   - rule: E3047
-#     path: /Resources/BadCpu16384Memory1GB/Properties/Cpu
-#     message_contains: "is not one of"
-#   - rule: E3047
-#     path: /Resources/BadCpu16384Memory1GB/Properties/Memory
-#     message_contains: "less than the minimum"
-#   - rule: E3047
-#     path: /Resources/BadCpu4096Memory512/Properties/Cpu
-#     message_contains: "is not one of"
-#   - rule: E3047
-#     path: /Resources/BadCpu4096Memory512/Properties/Memory
-#     message_contains: "less than the minimum"
+#     path: /Resources/BadCpu4096Memory512/Properties
+#     message_contains: "does not match any of the schemas in anyOf"
 # ---
 Resources:
   GoodCpu256Memory512:

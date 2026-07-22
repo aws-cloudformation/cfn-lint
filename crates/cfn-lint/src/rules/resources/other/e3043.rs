@@ -93,7 +93,7 @@ impl CfnLintRule for E3043 {
                 let is_conditional = !scenario.is_empty();
                 compare_params(
                     self,
-                    &specified_params,
+                    specified_params,
                     &nested_params,
                     if is_conditional { Some(scenario) } else { None },
                     &path,
@@ -146,11 +146,11 @@ fn compare_params(
                 None => props
                     .get("Parameters")
                     .and_then(|p| p.get(key))
-                    .map(|n| n.span().clone())
+                    .map(|n| n.span())
                     .unwrap_or_default(),
                 Some(_) => props
                     .get("Parameters")
-                    .map(|n| n.span().clone())
+                    .map(|n| n.span())
                     .unwrap_or_default(),
             },
             keyword: String::new(),
@@ -182,7 +182,7 @@ fn compare_params(
                 path: path.to_vec(),
                 span: props
                     .get("Parameters")
-                    .map(|n| n.span().clone())
+                    .map(|n| n.span())
                     .unwrap_or_default(),
                 keyword: String::new(),
                 unknown: false,
@@ -212,40 +212,21 @@ fn scenario_text(scenario: &HashMap<String, bool>) -> String {
 
 /// Expand Fn::If nodes in a Parameters value into leaf scenarios.
 /// Returns vec of (scenario conditions, parameter key set).
+///
+/// Each leaf carries only the conditions encountered on the path from the
+/// root to that leaf (C68). Previously every leaf was backfilled with all
+/// globally collected conditions set to `false`, which produced misleading
+/// "when condition X is False" messages for conditions unrelated to the leaf.
 fn expand_fn_if(node: &AstNode) -> Vec<(HashMap<String, bool>, HashSet<String>)> {
-    // Collect all condition names in the tree first
-    let mut all_conditions = Vec::new();
-    collect_conditions(node, &mut all_conditions);
-
     let mut results = Vec::new();
-    expand_fn_if_inner(node, &HashMap::new(), &all_conditions, &mut results);
+    expand_fn_if_inner(node, &HashMap::new(), &mut results);
     results
-}
-
-/// Recursively collect all Fn::If condition names from the tree.
-fn collect_conditions(node: &AstNode, conditions: &mut Vec<String>) {
-    if let AstNode::Function(func) = node {
-        if func.name == "Fn::If" {
-            if let Some(arr) = func.args.as_array() {
-                if arr.elements.len() == 3 {
-                    if let Some(cond_name) = arr.elements[0].as_str() {
-                        if !conditions.contains(&cond_name.to_string()) {
-                            conditions.push(cond_name.to_string());
-                        }
-                    }
-                    collect_conditions(&arr.elements[1], conditions);
-                    collect_conditions(&arr.elements[2], conditions);
-                }
-            }
-        }
-    }
 }
 
 /// Recursively expand Fn::If into leaf scenarios.
 fn expand_fn_if_inner(
     node: &AstNode,
     current_scenario: &HashMap<String, bool>,
-    all_conditions: &[String],
     results: &mut Vec<(HashMap<String, bool>, HashSet<String>)>,
 ) {
     match node {
@@ -256,42 +237,24 @@ fn expand_fn_if_inner(
                         // True branch
                         let mut true_scenario = current_scenario.clone();
                         true_scenario.insert(cond_name.to_string(), true);
-                        expand_fn_if_inner(
-                            &arr.elements[1],
-                            &true_scenario,
-                            all_conditions,
-                            results,
-                        );
+                        expand_fn_if_inner(&arr.elements[1], &true_scenario, results);
 
                         // False branch
                         let mut false_scenario = current_scenario.clone();
                         false_scenario.insert(cond_name.to_string(), false);
-                        expand_fn_if_inner(
-                            &arr.elements[2],
-                            &false_scenario,
-                            all_conditions,
-                            results,
-                        );
+                        expand_fn_if_inner(&arr.elements[2], &false_scenario, results);
                     }
                 }
             }
         }
         AstNode::Object(obj) => {
-            // Leaf: fill in missing conditions with False
-            let mut scenario = current_scenario.clone();
-            for cond in all_conditions {
-                scenario.entry(cond.clone()).or_insert(false);
-            }
+            // Leaf: carry only the conditions on the path to this leaf.
             let keys: HashSet<String> = obj.keys().map(|s| s.to_string()).collect();
-            results.push((scenario, keys));
+            results.push((current_scenario.clone(), keys));
         }
         _ => {
-            // Non-object, non-Fn::If — treat as empty params
-            let mut scenario = current_scenario.clone();
-            for cond in all_conditions {
-                scenario.entry(cond.clone()).or_insert(false);
-            }
-            results.push((scenario, HashSet::new()));
+            // Non-object, non-Fn::If — treat as empty params.
+            results.push((current_scenario.clone(), HashSet::new()));
         }
     }
 }
@@ -363,6 +326,47 @@ Resources:
         let tmpl = Template::from_ast(&ast).unwrap();
         // No filename set, should return empty
         assert!(E3043.validate_template(&tmpl, &ast).is_empty());
+    }
+
+    // C68: each leaf scenario must carry only the conditions on its own path,
+    // not every condition found anywhere in the tree.
+    #[test]
+    fn test_expand_fn_if_only_carries_ancestor_conditions() {
+        let yaml = br#"
+Root:
+  Fn::If:
+    - CondA
+    - Key1: v
+    - Fn::If:
+        - CondB
+        - Key2: v
+        - Key3: v
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let node = ast.get("Root").unwrap();
+        let scenarios = expand_fn_if(node);
+        assert_eq!(scenarios.len(), 3, "got: {:?}", scenarios);
+
+        // The CondA=true leaf must NOT mention CondB.
+        let cond_a_true = scenarios
+            .iter()
+            .find(|(sc, keys)| keys.contains("Key1") && sc.get("CondA") == Some(&true))
+            .expect("missing CondA=true leaf");
+        assert_eq!(
+            cond_a_true.0.len(),
+            1,
+            "should only carry CondA: {:?}",
+            cond_a_true.0
+        );
+        assert!(!cond_a_true.0.contains_key("CondB"));
+
+        // The deep leaves carry both CondA and CondB.
+        let deep = scenarios
+            .iter()
+            .find(|(_, keys)| keys.contains("Key2"))
+            .expect("missing Key2 leaf");
+        assert_eq!(deep.0.get("CondA"), Some(&false));
+        assert_eq!(deep.0.get("CondB"), Some(&true));
     }
 }
 

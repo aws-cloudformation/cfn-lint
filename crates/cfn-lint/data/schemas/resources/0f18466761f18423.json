@@ -1,0 +1,84 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AcceptLanguage",
+  "/properties/PortfolioId",
+  "/properties/PrincipalARN",
+  "/properties/PrincipalType"
+ ],
+ "description": "Resource Type definition for AWS::ServiceCatalog::PortfolioPrincipalAssociation",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "servicecatalog:AssociatePrincipalWithPortfolio",
+    "servicecatalog:ListPrincipalsForPortfolio",
+    "iam:GetUser",
+    "iam:GetRole",
+    "iam:GetGroup"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "servicecatalog:DisassociatePrincipalFromPortfolio",
+    "servicecatalog:ListPrincipalsForPortfolio",
+    "iam:GetUser",
+    "iam:GetRole",
+    "iam:GetGroup"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "PortfolioId": {
+      "$ref": "resource-schema.json#/properties/PortfolioId"
+     }
+    },
+    "required": [
+     "PortfolioId"
+    ]
+   },
+   "permissions": [
+    "servicecatalog:ListPrincipalsForPortfolio"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "servicecatalog:ListPrincipalsForPortfolio"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PortfolioId",
+  "/properties/PrincipalARN"
+ ],
+ "properties": {
+  "AcceptLanguage": {
+   "description": "The language code.",
+   "type": "string"
+  },
+  "PortfolioId": {
+   "description": "The portfolio identifier.",
+   "type": "string"
+  },
+  "PrincipalARN": {
+   "description": "The ARN of the principal (user, role, or group).",
+   "pattern": "arn:(aws|aws-cn|aws-us-gov):iam::[0-9]*:(role|user|group)\\/.*",
+   "type": "string"
+  },
+  "PrincipalType": {
+   "description": "The principal type. The supported value is IAM if you use a fully defined Amazon Resource Name (ARN), or IAM_PATTERN if you use an ARN with no accountID, with or without wildcard characters.",
+   "type": "string"
+  }
+ },
+ "required": [
+  "PrincipalType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-servicecatalog/tree/master/aws-servicecatalog-portfolioprincipalassociation.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ServiceCatalog::PortfolioPrincipalAssociation",
+ "writeOnlyProperties": [
+  "/properties/AcceptLanguage"
+ ]
+}

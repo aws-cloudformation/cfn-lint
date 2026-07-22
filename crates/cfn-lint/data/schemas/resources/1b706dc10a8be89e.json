@@ -1,0 +1,85 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/MessageTemplateContentSha256"
+ ],
+ "createOnlyProperties": [
+  "/properties/MessageTemplateArn"
+ ],
+ "description": "A version for the specified customer-managed message template within the specified knowledge base.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "wisdom:CreateMessageTemplateVersion",
+    "wisdom:ListMessageTemplateVersions"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "wisdom:DeleteMessageTemplate"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "MessageTemplateArn": {
+      "$ref": "resource-schema.json#/properties/MessageTemplateArn"
+     }
+    },
+    "required": [
+     "MessageTemplateArn"
+    ]
+   },
+   "permissions": [
+    "wisdom:ListMessageTemplateVersions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "wisdom:GetMessageTemplate"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "wisdom:CreateMessageTemplateVersion"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MessageTemplateVersionArn"
+ ],
+ "properties": {
+  "MessageTemplateArn": {
+   "description": "The unqualified Amazon Resource Name (ARN) of the message template.",
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})?$",
+   "type": "string"
+  },
+  "MessageTemplateContentSha256": {
+   "description": "The content SHA256 of the message template.",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MessageTemplateVersionArn": {
+   "description": "The unqualified Amazon Resource Name (ARN) of the message template version.",
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}):[0-9]+?$",
+   "type": "string"
+  },
+  "MessageTemplateVersionNumber": {
+   "description": "Current version number of the message template.",
+   "type": "number"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/MessageTemplateVersionNumber",
+  "/properties/MessageTemplateVersionArn"
+ ],
+ "required": [
+  "MessageTemplateArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Wisdom::MessageTemplateVersion"
+}

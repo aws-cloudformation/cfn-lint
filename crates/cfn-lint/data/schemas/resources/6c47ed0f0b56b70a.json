@@ -1,0 +1,114 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/TableName",
+   "/properties/StreamLabel"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StreamViewType",
+  "/properties/TableName"
+ ],
+ "description": "Resource schema for a DynamoDB Stream, providing read-only visibility into stream metadata.",
+ "handlers": {
+  "list": {
+   "permissions": [
+    "dynamodb:ListStreams"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "dynamodb:DescribeStream"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/StreamArn"
+ ],
+ "properties": {
+  "CreationRequestDateTime": {
+   "description": "The date and time when the request to create this stream was issued.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "KeySchema": {
+   "description": "The key attribute(s) of the stream's DynamoDB table.",
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "AttributeName": {
+      "description": "The name of a key attribute.",
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "KeyType": {
+      "description": "The role that this key attribute will assume.",
+      "enum": [
+       "HASH",
+       "RANGE"
+      ],
+      "type": "string"
+     }
+    },
+    "required": [
+     "AttributeName",
+     "KeyType"
+    ],
+    "type": "object"
+   },
+   "maxItems": 2,
+   "minItems": 1,
+   "type": "array"
+  },
+  "StreamArn": {
+   "description": "The Amazon Resource Name (ARN) for the stream.",
+   "maxLength": 1024,
+   "minLength": 37,
+   "type": "string"
+  },
+  "StreamLabel": {
+   "description": "A timestamp, in ISO 8601 format, for this stream.",
+   "type": "string"
+  },
+  "StreamStatus": {
+   "description": "Indicates the current status of the stream.",
+   "enum": [
+    "ENABLING",
+    "ENABLED",
+    "DISABLING",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "StreamViewType": {
+   "description": "Indicates the format of the records within this stream.",
+   "enum": [
+    "KEYS_ONLY",
+    "NEW_IMAGE",
+    "OLD_IMAGE",
+    "NEW_AND_OLD_IMAGES"
+   ],
+   "type": "string"
+  },
+  "TableName": {
+   "description": "The DynamoDB table with which the stream is associated.",
+   "maxLength": 255,
+   "minLength": 3,
+   "pattern": "^[a-zA-Z0-9_.-]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/StreamArn",
+  "/properties/StreamLabel",
+  "/properties/StreamStatus",
+  "/properties/CreationRequestDateTime",
+  "/properties/KeySchema"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::DynamoDB::Stream"
+}

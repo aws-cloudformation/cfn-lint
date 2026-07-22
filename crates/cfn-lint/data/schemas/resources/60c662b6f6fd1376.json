@@ -1,0 +1,86 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ManagedNotificationConfigurationArn",
+  "/properties/ContactIdentifier"
+ ],
+ "definitions": {
+  "ContactIdentifier": {
+   "description": "This unique identifier for Contact",
+   "enum": [
+    "ACCOUNT_PRIMARY",
+    "ACCOUNT_ALTERNATE_SECURITY",
+    "ACCOUNT_ALTERNATE_OPERATIONS",
+    "ACCOUNT_ALTERNATE_BILLING"
+   ],
+   "type": "string"
+  },
+  "ManagedNotificationConfigurationArn": {
+   "description": "The managed notification configuration ARN, against which the account contact association will be created",
+   "pattern": "^arn:[a-z-]{3,10}:notifications::([0-9]{12}|):managed-notification-configuration/category/[a-zA-Z0-9\\-]{3,64}/sub-category/[a-zA-Z0-9\\-]{3,64}$",
+   "type": "string"
+  }
+ },
+ "description": "Resource Type definition for ManagedNotificationAccountContactAssociation",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "notifications:AssociateManagedNotificationAccountContact",
+    "notifications:ListManagedNotificationChannelAssociations"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "notifications:DisassociateManagedNotificationAccountContact",
+    "notifications:ListManagedNotificationChannelAssociations"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ManagedNotificationConfigurationArn": {
+      "pattern": "^arn:[a-z-]{3,10}:notifications::([0-9]{12}|):managed-notification-configuration/category/[a-zA-Z0-9\\-]{3,64}/sub-category/[a-zA-Z0-9\\-]{3,64}$",
+      "type": "string"
+     }
+    },
+    "required": [
+     "ManagedNotificationConfigurationArn"
+    ]
+   },
+   "permissions": [
+    "notifications:ListManagedNotificationChannelAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "notifications:ListManagedNotificationChannelAssociations"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "notifications:ListManagedNotificationChannelAssociations"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ManagedNotificationConfigurationArn",
+  "/properties/ContactIdentifier"
+ ],
+ "properties": {
+  "ContactIdentifier": {
+   "$ref": "#/definitions/ContactIdentifier"
+  },
+  "ManagedNotificationConfigurationArn": {
+   "$ref": "#/definitions/ManagedNotificationConfigurationArn"
+  }
+ },
+ "required": [
+  "ContactIdentifier",
+  "ManagedNotificationConfigurationArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Notifications::ManagedNotificationAccountContactAssociation"
+}

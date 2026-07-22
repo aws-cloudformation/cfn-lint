@@ -1,0 +1,400 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Auth": {
+   "additionalProperties": false,
+   "properties": {
+    "Authorizers": {
+     "additionalProperties": {
+      "anyOf": [
+       {
+        "$ref": "#/definitions/OAuth2Authorizer"
+       },
+       {
+        "$ref": "#/definitions/LambdaAuthorizer"
+       }
+      ]
+     },
+     "type": "object"
+    },
+    "DefaultAuthorizer": {
+     "type": "string"
+    },
+    "EnableIamAuthorizer": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "DefinitionUri": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Domain": {
+   "additionalProperties": false,
+   "properties": {
+    "BasePath": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "CertificateArn": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "DomainName": {
+     "description": "",
+     "type": "string"
+    },
+    "EndpointConfiguration": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "enum": [
+        "REGIONAL"
+       ],
+       "type": "string"
+      }
+     ]
+    },
+    "MutualTlsAuthentication": {
+     "additionalProperties": false,
+     "description": "",
+     "properties": {
+      "TruststoreUri": {
+       "description": "",
+       "type": "string"
+      },
+      "TruststoreVersion": {
+       "description": "",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "OwnershipVerificationCertificateArn": {
+     "description": "The ARN of the public certificate issued by ACM to validate ownership of your custom domain. Only required when configuring mutual TLS and using an ACM imported or private CA certificate ARN as the RegionalCertificateArn.",
+     "type": "string"
+    },
+    "Route53": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/Route53"
+      }
+     ]
+    },
+    "SecurityPolicy": {
+     "description": "",
+     "type": "string"
+    }
+   },
+   "required": [
+    "CertificateArn",
+    "DomainName"
+   ],
+   "type": "object"
+  },
+  "LambdaAuthorizer": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizerPayloadFormatVersion": {
+     "anyOf": [
+      {
+       "enum": [
+        "1.0",
+        "2.0"
+       ],
+       "type": "string"
+      },
+      {
+       "type": "number"
+      }
+     ]
+    },
+    "EnableFunctionDefaultPermissions": {
+     "type": "boolean"
+    },
+    "EnableSimpleResponses": {
+     "type": "boolean"
+    },
+    "FunctionArn": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "FunctionInvokeRole": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "Identity": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/LambdaAuthorizerIdentity"
+      }
+     ]
+    }
+   },
+   "required": [
+    "AuthorizerPayloadFormatVersion",
+    "FunctionArn"
+   ],
+   "type": "object"
+  },
+  "LambdaAuthorizerIdentity": {
+   "additionalProperties": false,
+   "properties": {
+    "Context": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Headers": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "QueryStrings": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ReauthorizeEvery": {
+     "type": "integer"
+    },
+    "StageVariables": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "OAuth2Authorizer": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationScopes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "IdentitySource": {
+     "type": "string"
+    },
+    "JwtConfiguration": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "PassThroughProp": {},
+  "Route53": {
+   "additionalProperties": false,
+   "properties": {
+    "DistributionDomainName": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "EvaluateTargetHealth": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "HostedZoneId": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "HostedZoneName": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "IpV6": {
+     "type": "boolean"
+    },
+    "Region": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "SetIdentifier": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApiId"
+ ],
+ "properties": {
+  "AccessLogSettings": {
+   "additionalProperties": false,
+   "description": "Settings for logging access in this stage.",
+   "properties": {
+    "DestinationArn": {
+     "type": "string"
+    },
+    "Format": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ApiEndpoint": {
+   "description": "",
+   "type": "string"
+  },
+  "ApiId": {
+   "description": "",
+   "type": "string"
+  },
+  "Auth": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/Auth"
+    }
+   ]
+  },
+  "CorsConfiguration": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   ]
+  },
+  "DefaultRouteSettings": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "DefinitionBody": {
+   "type": "object"
+  },
+  "DefinitionUri": {
+   "anyOf": [
+    {
+     "type": "string"
+    },
+    {
+     "$ref": "#/definitions/DefinitionUri"
+    }
+   ]
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DisableExecuteApiEndpoint": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   ]
+  },
+  "Domain": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/Domain"
+    }
+   ]
+  },
+  "FailOnWarnings": {
+   "description": "Specifies whether to rollback the API creation when a warning is encountered. By default, API creation continues if a warning is encountered.",
+   "type": "boolean"
+  },
+  "Name": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   ]
+  },
+  "PropagateTags": {
+   "type": "boolean"
+  },
+  "RouteSettings": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "StageName": {
+   "description": "The stage name. Stage names can contain only alphanumeric characters, hyphens, and underscores, or be $default. Maximum length is 128 characters.",
+   "type": "string"
+  },
+  "StageVariables": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Tags": {
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ApiId",
+  "/properties/ApiEndpoint"
+ ],
+ "typeName": "AWS::Serverless::HttpApi"
+}

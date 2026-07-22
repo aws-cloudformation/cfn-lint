@@ -1,0 +1,64 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceArn"
+ ],
+ "description": "Resource Type definition for AWS::SMSVOICE::ResourcePolicy",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sms-voice:PutResourcePolicy",
+    "sms-voice:GetResourcePolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sms-voice:GetResourcePolicy",
+    "sms-voice:DeleteResourcePolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sms-voice:DescribePhoneNumbers",
+    "sms-voice:DescribeSenderIds",
+    "sms-voice:DescribePools",
+    "sms-voice:DescribeOptOutLists"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sms-voice:GetResourcePolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sms-voice:DeleteResourcePolicy",
+    "sms-voice:PutResourcePolicy",
+    "sms-voice:GetResourcePolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResourceArn"
+ ],
+ "properties": {
+  "PolicyDocument": {
+   "description": "The JSON formatted resource-based policy to attach.",
+   "type": "object"
+  },
+  "ResourceArn": {
+   "description": "The Amazon Resource Name (ARN) of the AWS End User Messaging SMS and Voice resource to attach the resource-based policy to.",
+   "pattern": "^arn:\\S+$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "ResourceArn",
+  "PolicyDocument"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resoource-providers-smsvoice.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::SMSVOICE::ResourcePolicy"
+}

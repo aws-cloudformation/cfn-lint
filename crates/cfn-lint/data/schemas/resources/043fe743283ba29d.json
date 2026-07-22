@@ -1,0 +1,127 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/DirectConnectGatewayId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AmazonSideAsn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::DirectConnect::DirectConnectGateway",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "directconnect:DescribeDirectConnectGateways",
+    "directconnect:CreateDirectConnectGateway",
+    "directconnect:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "directconnect:DescribeDirectConnectGateways",
+    "directconnect:DeleteDirectConnectGateway"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "directconnect:DescribeDirectConnectGateways"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "directconnect:DescribeDirectConnectGateways"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "directconnect:DescribeDirectConnectGateways",
+    "directconnect:UpdateDirectConnectGateway",
+    "directconnect:TagResource",
+    "directconnect:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DirectConnectGatewayArn"
+ ],
+ "properties": {
+  "AmazonSideAsn": {
+   "description": "The autonomous system number (ASN) for the Amazon side of the connection.",
+   "pattern": "^[1-9][0-9]*$",
+   "type": "string"
+  },
+  "DirectConnectGatewayArn": {
+   "description": "The ARN of the Direct Connect gateway.",
+   "pattern": "^arn:aws[a-z-]*:directconnect::[0-9]{12}:dx-gateway/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "DirectConnectGatewayId": {
+   "description": "The ID of the Direct Connect gateway.",
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "DirectConnectGatewayName": {
+   "description": "The name of the Direct Connect gateway.",
+   "pattern": "^[\\w \\-_,\\/]{1,100}$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "The tags associated with the Direct Connect gateway.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DirectConnectGatewayArn",
+  "/properties/DirectConnectGatewayId"
+ ],
+ "required": [
+  "DirectConnectGatewayName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "directconnect:TagResource",
+   "directconnect:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DirectConnect::DirectConnectGateway"
+}

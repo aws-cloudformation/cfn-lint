@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::Arc;
 
@@ -92,6 +93,29 @@ impl Engine {
         root: &AstNode,
         regions: &[String],
     ) -> Vec<ValidationError> {
+        self.validate_with_parameters(template, root, regions, &HashMap::new())
+    }
+
+    /// Validate a template with a set of parameter values pinned.
+    ///
+    /// Each entry of `parameters` maps a template parameter name to a literal
+    /// value. A `Ref` to a pinned parameter resolves to that value during
+    /// validation instead of expanding the parameter's `AllowedValues` or
+    /// falling back to its `Default`. This mirrors Python cfn-lint's
+    /// `--parameters` / parameter-file (and deployment-file) semantics: pinning
+    /// to a valid value suppresses warnings raised for other allowed values,
+    /// while pinning to an invalid value still surfaces the error.
+    ///
+    /// Only names that are declared template parameters are pinned; unknown
+    /// entries are ignored so they cannot shadow a `Ref` to a resource or
+    /// pseudo-parameter of the same name.
+    pub fn validate_with_parameters(
+        &mut self,
+        template: &Template,
+        root: &AstNode,
+        regions: &[String],
+        parameters: &HashMap<String, String>,
+    ) -> Vec<ValidationError> {
         // E1002: Check template file size limit (1MB)
         let mut issues = Vec::new();
         const MAX_TEMPLATE_SIZE: u64 = 1_000_000;
@@ -121,7 +145,8 @@ impl Engine {
             Arc::clone(&self.keyword_rules),
             self.schema_provider.clone(),
             self.strict_types,
-        );
+        )
+        .with_pinned_parameters(parameters.clone());
         issues.extend(walker.walk(template, root, regions));
 
         // Filter out issues suppressed by metadata directives

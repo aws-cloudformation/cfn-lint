@@ -1,0 +1,132 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "LogGroup": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "[\\.\\-_/#A-Za-z0-9]+",
+   "type": "string"
+  },
+  "QueryParameter": {
+   "additionalProperties": false,
+   "description": "This structure defines a query parameter for a saved CloudWatch Logs Insights query definition. Query parameters are supported only for Logs Insights QL queries. They are placeholder variables that you can reference in a query string using the {{parameterName}} syntax. Each parameter can include a default value and a description.",
+   "properties": {
+    "DefaultValue": {
+     "description": "The default value to use for this query parameter if no value is supplied at execution time.",
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Description": {
+     "description": "A description of the query parameter that explains its purpose or expected values.",
+     "maxLength": 512,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Name": {
+     "description": "The name of the query parameter. A query parameter name must start with a letter or underscore, and contain only letters, digits, and underscores.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The resource schema for AWSLogs QueryDefinition",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "logs:PutQueryDefinition"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "logs:DeleteQueryDefinition"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "logs:DescribeQueryDefinitions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "logs:DescribeQueryDefinitions"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "logs:PutQueryDefinition"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/QueryDefinitionId"
+ ],
+ "properties": {
+  "LogGroupNames": {
+   "description": "Optionally define specific log groups as part of your query definition",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LogGroup",
+    "description": "LogGroup name"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "description": "A name for the saved query definition",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Parameters": {
+   "description": "Use this parameter to include specific query parameters as part of your query definition. Query parameters are supported only for Logs Insights QL queries. Query parameters allow you to use placeholder variables in your query string that are substituted with values at execution time. Use the {{parameterName}} syntax in your query string to reference a parameter.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/QueryParameter"
+   },
+   "maxItems": 20,
+   "minItems": 0,
+   "type": "array"
+  },
+  "QueryDefinitionId": {
+   "description": "Unique identifier of a query definition",
+   "maxLength": 256,
+   "minLength": 0,
+   "type": "string"
+  },
+  "QueryLanguage": {
+   "default": "CWLI",
+   "description": "Query language of the query string. Possible values are CWLI, SQL, PPL, with CWLI being the default.",
+   "enum": [
+    "CWLI",
+    "SQL",
+    "PPL"
+   ],
+   "type": "string"
+  },
+  "QueryString": {
+   "description": "The query string to use for this definition",
+   "maxLength": 10000,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/QueryDefinitionId"
+ ],
+ "required": [
+  "Name",
+  "QueryString"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Logs::QueryDefinition"
+}

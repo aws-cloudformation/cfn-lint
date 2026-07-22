@@ -1,0 +1,191 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TargetIdentifier",
+  "/properties/ControlIdentifier"
+ ],
+ "definitions": {
+  "EnabledControlParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "insertionOrder": false,
+     "items": {
+      "type": [
+       "string",
+       "number",
+       "object",
+       "boolean"
+      ]
+     },
+     "minItems": 1,
+     "type": [
+      "array",
+      "string",
+      "number",
+      "object",
+      "boolean"
+     ]
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Enables a control on a specified target.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "controltower:ListEnabledControls",
+    "controltower:GetEnabledControl",
+    "controltower:GetControlOperation",
+    "controltower:EnableControl",
+    "controltower:TagResource",
+    "organizations:UpdatePolicy",
+    "organizations:CreatePolicy",
+    "organizations:AttachPolicy",
+    "organizations:DetachPolicy",
+    "organizations:ListPoliciesForTarget",
+    "organizations:ListTargetsForPolicy",
+    "organizations:DescribePolicy",
+    "controltower:ListTagsForResource"
+   ],
+   "timeoutInMinutes": 720
+  },
+  "delete": {
+   "permissions": [
+    "controltower:ListEnabledControls",
+    "controltower:GetEnabledControl",
+    "controltower:GetControlOperation",
+    "controltower:DisableControl",
+    "organizations:UpdatePolicy",
+    "organizations:DeletePolicy",
+    "organizations:CreatePolicy",
+    "organizations:AttachPolicy",
+    "organizations:DetachPolicy",
+    "organizations:ListPoliciesForTarget",
+    "organizations:ListTargetsForPolicy",
+    "organizations:DescribePolicy",
+    "controltower:ListTagsForResource"
+   ],
+   "timeoutInMinutes": 720
+  },
+  "list": {
+   "permissions": [
+    "controltower:ListEnabledControls"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "controltower:ListEnabledControls",
+    "controltower:GetEnabledControl",
+    "controltower:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "controltower:ListEnabledControls",
+    "controltower:GetEnabledControl",
+    "controltower:GetControlOperation",
+    "controltower:UpdateEnabledControl",
+    "controltower:UntagResource",
+    "controltower:TagResource",
+    "organizations:UpdatePolicy",
+    "organizations:CreatePolicy",
+    "organizations:AttachPolicy",
+    "organizations:DetachPolicy",
+    "organizations:ListPoliciesForTarget",
+    "organizations:ListTargetsForPolicy",
+    "organizations:DescribePolicy",
+    "controltower:ListTagsForResource"
+   ],
+   "timeoutInMinutes": 720
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TargetIdentifier",
+  "/properties/ControlIdentifier"
+ ],
+ "properties": {
+  "ControlIdentifier": {
+   "description": "Arn of the control.",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[0-9a-zA-Z_\\-:\\/]+$",
+   "type": "string"
+  },
+  "Parameters": {
+   "description": "Parameters to configure the enabled control behavior.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EnabledControlParameter"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "Tags": {
+   "description": "A set of tags to assign to the enabled control.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array"
+  },
+  "TargetIdentifier": {
+   "description": "Arn for Organizational unit to which the control needs to be applied",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[0-9a-zA-Z_\\-:\\/]+$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "TargetIdentifier",
+  "ControlIdentifier"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-controltower",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "controltower:UntagResource",
+   "controltower:TagResource",
+   "controltower:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ControlTower::EnabledControl"
+}

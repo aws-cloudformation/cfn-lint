@@ -1,0 +1,150 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ModelCardName",
+   "/properties/ModelCardExportJobName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ModelCardExportJobName",
+  "/properties/ModelCardName",
+  "/properties/ModelCardVersion",
+  "/properties/OutputConfig"
+ ],
+ "definitions": {
+  "ModelCardExportArtifacts": {
+   "additionalProperties": false,
+   "description": "The artifacts of the model card export job.",
+   "properties": {
+    "S3ExportArtifacts": {
+     "description": "The Amazon S3 URI of the exported model artifacts.",
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3ExportArtifacts"
+   ],
+   "type": "object"
+  },
+  "ModelCardExportOutputConfig": {
+   "additionalProperties": false,
+   "description": "Configure the export output details for an Amazon SageMaker Model Card.",
+   "properties": {
+    "S3OutputPath": {
+     "description": "The Amazon S3 output path to export your model card PDF.",
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3OutputPath"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Definition of AWS::SageMaker::ModelCardExportJob Resource Type",
+ "handlers": {
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ModelCardName": {
+      "maxLength": 63,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+      "type": "string"
+     }
+    },
+    "required": [
+     "ModelCardName"
+    ]
+   },
+   "permissions": [
+    "sagemaker:ListModelCardExportJobs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribeModelCardExportJob"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ModelCardExportJobArn"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "description": "The date and time that the model card export job was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "ExportArtifacts": {
+   "$ref": "#/definitions/ModelCardExportArtifacts",
+   "description": "The exported model card artifacts."
+  },
+  "LastModifiedAt": {
+   "description": "The date and time that the model card export job was last modified.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "ModelCardExportJobArn": {
+   "description": "The Amazon Resource Name (ARN) of the model card export job.",
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "^arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]{9,16}:[0-9]{12}:model-card/[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}/export-job/[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  },
+  "ModelCardExportJobName": {
+   "description": "The name of the model card export job.",
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  },
+  "ModelCardName": {
+   "description": "The name or Amazon Resource Name (ARN) of the model card to export.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^(arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:model-card/.*)?([a-zA-Z0-9](-*[a-zA-Z0-9]){0,62})$",
+   "type": "string"
+  },
+  "ModelCardVersion": {
+   "description": "The version of the model card to export. If a version is not provided, then the latest version of the model card is exported.",
+   "type": "integer"
+  },
+  "OutputConfig": {
+   "$ref": "#/definitions/ModelCardExportOutputConfig",
+   "description": "The model card output configuration that specifies the Amazon S3 path for exporting."
+  },
+  "Status": {
+   "description": "The completion status of the model card export job.",
+   "enum": [
+    "InProgress",
+    "Completed",
+    "Failed"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ModelCardExportJobArn",
+  "/properties/Status",
+  "/properties/CreatedAt",
+  "/properties/LastModifiedAt",
+  "/properties/ExportArtifacts"
+ ],
+ "required": [
+  "ModelCardExportJobName",
+  "ModelCardName",
+  "OutputConfig"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::SageMaker::ModelCardExportJob"
+}

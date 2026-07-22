@@ -1,0 +1,66 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Arn",
+  "/properties/NotificationConfigurationArn"
+ ],
+ "description": "Resource Type definition for AWS::Notifications::ChannelAssociation",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "notifications:AssociateChannel",
+    "notifications:ListChannels"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "notifications:DisassociateChannel"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "NotificationConfigurationArn": {
+      "pattern": "^arn:[a-z-]{3,10}:notifications::[0-9]{12}:configuration/[a-z0-9]{27}$",
+      "type": "string"
+     }
+    },
+    "required": [
+     "NotificationConfigurationArn"
+    ]
+   },
+   "permissions": [
+    "notifications:ListChannels"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "notifications:ListChannels"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn",
+  "/properties/NotificationConfigurationArn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "ARN identifier of the channel.\nExample: arn:aws:chatbot::123456789012:chat-configuration/slack-channel/security-ops",
+   "pattern": "^arn:[a-z-]{3,10}:(chatbot|consoleapp|notifications-contacts):[a-zA-Z0-9-]*:[0-9]{12}:[a-zA-Z0-9-_.@]+/[a-zA-Z0-9/_.@:-]+$",
+   "type": "string"
+  },
+  "NotificationConfigurationArn": {
+   "description": "ARN identifier of the NotificationConfiguration.\nExample: arn:aws:notifications::123456789012:configuration/a01jes88qxwkbj05xv9c967pgm1",
+   "pattern": "^arn:[a-z-]{3,10}:notifications::[0-9]{12}:configuration/[a-z0-9]{27}$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "Arn",
+  "NotificationConfigurationArn"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Notifications::ChannelAssociation"
+}

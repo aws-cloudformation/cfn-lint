@@ -1,0 +1,319 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KeyName"
+ ],
+ "definitions": {
+  "AndroidApp": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateFingerprint": {
+     "maxLength": 59,
+     "minLength": 59,
+     "pattern": "^([A-Fa-f0-9]{2}:){19}[A-Fa-f0-9]{2}$",
+     "type": "string"
+    },
+    "Package": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^([A-Za-z][A-Za-z\\d_]*\\.)+[A-Za-z][A-Za-z\\d_]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "CertificateFingerprint",
+    "Package"
+   ],
+   "type": "object"
+  },
+  "ApiKeyRestrictions": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowActions": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 200,
+      "minLength": 5,
+      "pattern": "^(geo|geo-routes|geo-places|geo-maps):\\w*\\*?$",
+      "type": "string"
+     },
+     "maxItems": 24,
+     "minItems": 1,
+     "type": "array"
+    },
+    "AllowAndroidApps": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/AndroidApp"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array"
+    },
+    "AllowAppleApps": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/AppleApp"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array"
+    },
+    "AllowReferers": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 253,
+      "pattern": "^([\\w!$&()*+,./:;=?@\\x60-]|%([\\dA-Fa-f]{2}|[\\dA-Fa-f]?\\*))+$",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array"
+    },
+    "AllowResources": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 1600,
+      "pattern": "(^arn(:[a-z0-9]+([.-][a-z0-9]+)*):geo(:([a-z0-9]+([.-][a-z0-9]+)*))(:[0-9]+):((\\*)|([-a-z]+[/][*-._\\w]+))$)|(^arn(:[a-z0-9]+([.-][a-z0-9]+)*):(geo-routes|geo-places|geo-maps)(:((\\*)|([a-z0-9]+([.-][a-z0-9]+)*)))::((provider[\\/][*-._\\w]+))$)",
+      "type": "string"
+     },
+     "maxItems": 8,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "AllowActions",
+    "AllowResources"
+   ],
+   "type": "object"
+  },
+  "AppleApp": {
+   "additionalProperties": false,
+   "properties": {
+    "BundleId": {
+     "maxLength": 155,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9\\-]+(\\.[A-Za-z0-9\\-]+)+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BundleId"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[A-Za-z0-9 _=@:.+-/]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "patternProperties": {
+    "^([\\p{L}\\p{Z}\\p{N}_.,:/=+\\-@]*)$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.,:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "iso8601UTC": {
+   "description": "The datetime value in ISO 8601 format. The timezone is always UTC. (YYYY-MM-DDThh:mm:ss.sssZ)",
+   "pattern": "^([0-2]\\d{3})-(0[0-9]|1[0-2])-([0-2]\\d|3[01])T([01]\\d|2[0-4]):([0-5]\\d):([0-6]\\d)((\\.\\d{3})?)Z$",
+   "type": "string"
+  }
+ },
+ "description": "Definition of AWS::Location::APIKey Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "geo:CreateKey",
+    "geo:DescribeKey",
+    "geo:TagResource",
+    "geo:UntagResource",
+    "geo:GetMapTile",
+    "geo:GetMapStyleDescriptor",
+    "geo:GetMapSprites",
+    "geo:GetMapGlyphs",
+    "geo:SearchPlaceIndexForText",
+    "geo:SearchPlaceIndexForPosition",
+    "geo:SearchPlaceIndexForSuggestions",
+    "geo:GetPlace",
+    "geo:CalculateRoute",
+    "geo:CalculateRouteMatrix",
+    "geo-maps:GetTile",
+    "geo-maps:GetStaticMap",
+    "geo-places:Autocomplete",
+    "geo-places:Geocode",
+    "geo-places:GetPlace",
+    "geo-places:ReverseGeocode",
+    "geo-places:SearchNearby",
+    "geo-places:SearchText",
+    "geo-places:Suggest",
+    "geo-routes:CalculateIsolines",
+    "geo-routes:CalculateRouteMatrix",
+    "geo-routes:CalculateRoutes",
+    "geo-routes:OptimizeWaypoints",
+    "geo-routes:SnapToRoads"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "geo:DeleteKey",
+    "geo:DescribeKey"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "geo:ListKeys"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "geo:DescribeKey"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "geo:CreateKey",
+    "geo:DescribeKey",
+    "geo:TagResource",
+    "geo:UntagResource",
+    "geo:GetMapTile",
+    "geo:GetMapStyleDescriptor",
+    "geo:GetMapSprites",
+    "geo:GetMapGlyphs",
+    "geo:SearchPlaceIndexForText",
+    "geo:SearchPlaceIndexForPosition",
+    "geo:SearchPlaceIndexForSuggestions",
+    "geo:GetPlace",
+    "geo:CalculateRoute",
+    "geo:CalculateRouteMatrix",
+    "geo-maps:GetTile",
+    "geo-maps:GetStaticMap",
+    "geo-places:Autocomplete",
+    "geo-places:Geocode",
+    "geo-places:GetPlace",
+    "geo-places:ReverseGeocode",
+    "geo-places:SearchNearby",
+    "geo-places:SearchText",
+    "geo-places:Suggest",
+    "geo-routes:CalculateIsolines",
+    "geo-routes:CalculateRouteMatrix",
+    "geo-routes:CalculateRoutes",
+    "geo-routes:OptimizeWaypoints",
+    "geo-routes:SnapToRoads",
+    "geo:UpdateKey"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/KeyName"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1600,
+   "pattern": "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:([^/].*)?$",
+   "type": "string"
+  },
+  "CreateTime": {
+   "$ref": "#/definitions/iso8601UTC"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ExpireTime": {
+   "$ref": "#/definitions/iso8601UTC"
+  },
+  "ForceDelete": {
+   "type": "boolean"
+  },
+  "ForceUpdate": {
+   "type": "boolean"
+  },
+  "KeyArn": {
+   "maxLength": 1600,
+   "pattern": "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:([^/].*)?$",
+   "type": "string"
+  },
+  "KeyName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[-._\\w]+$",
+   "type": "string"
+  },
+  "NoExpiry": {
+   "type": "boolean"
+  },
+  "Restrictions": {
+   "$ref": "#/definitions/ApiKeyRestrictions"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdateTime": {
+   "$ref": "#/definitions/iso8601UTC"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreateTime",
+  "/properties/Arn",
+  "/properties/KeyArn",
+  "/properties/UpdateTime"
+ ],
+ "required": [
+  "KeyName",
+  "Restrictions"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "geo:TagResource",
+   "geo:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Location::APIKey",
+ "writeOnlyProperties": [
+  "/properties/ForceUpdate",
+  "/properties/ForceDelete",
+  "/properties/NoExpiry"
+ ]
+}

@@ -1,0 +1,230 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/OAuthClientApplicationId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/OAuthClientApplicationId",
+  "/properties/OAuthClientAuthenticationType"
+ ],
+ "definitions": {
+  "IdentityProviderVpcConnectionProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "VpcConnectionArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "VpcConnectionArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Definition of AWS::QuickSight::OAuthClientApplication Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "quicksight:CreateOAuthClientApplication",
+    "quicksight:DescribeOAuthClientApplication",
+    "quicksight:TagResource",
+    "quicksight:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "quicksight:DeleteOAuthClientApplication",
+    "quicksight:DescribeOAuthClientApplication"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "quicksight:ListOAuthClientApplications"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "quicksight:DescribeOAuthClientApplication",
+    "quicksight:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "quicksight:UpdateOAuthClientApplication",
+    "quicksight:DescribeOAuthClientApplication",
+    "quicksight:TagResource",
+    "quicksight:UntagResource",
+    "quicksight:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:[-a-z0-9]*:quicksight:[-a-z0-9]*:[0-9]{12}:oauthclientapplication/.+",
+   "type": "string"
+  },
+  "ClientId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[^\\p{Cc}]+$",
+   "type": "string"
+  },
+  "ClientSecret": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[^\\p{Cc}]+$",
+   "type": "string"
+  },
+  "CreatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DataSourceType": {
+   "enum": [
+    "ADOBE_ANALYTICS",
+    "AMAZON_ELASTICSEARCH",
+    "AMAZON_OPENSEARCH",
+    "ATHENA",
+    "AURORA",
+    "AURORA_POSTGRESQL",
+    "AWS_IOT_ANALYTICS",
+    "BIGQUERY",
+    "CONFLUENCE",
+    "DATABRICKS",
+    "EXASOL",
+    "GITHUB",
+    "GOOGLESHEETS",
+    "GOOGLE_DRIVE",
+    "JIRA",
+    "MARIADB",
+    "MYSQL",
+    "ONE_DRIVE",
+    "ORACLE",
+    "POSTGRESQL",
+    "PRESTO",
+    "QBUSINESS",
+    "REDSHIFT",
+    "S3",
+    "S3_KNOWLEDGE_BASE",
+    "S3_TABLES",
+    "SALESFORCE",
+    "SERVICENOW",
+    "SHAREPOINT",
+    "SNOWFLAKE",
+    "SPARK",
+    "SQLSERVER",
+    "STARBURST",
+    "TERADATA",
+    "TIMESTREAM",
+    "TRINO",
+    "TWITTER",
+    "WEB_CRAWLER"
+   ],
+   "type": "string"
+  },
+  "IdentityProviderVpcConnectionProperties": {
+   "$ref": "#/definitions/IdentityProviderVpcConnectionProperties"
+  },
+  "LastUpdatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OAuthAuthorizationEndpointUrl": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^https://[^\\p{Cc}]+$",
+   "type": "string"
+  },
+  "OAuthClientApplicationId": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[^/][^\\u0000-\\u001f]*",
+   "type": "string"
+  },
+  "OAuthClientAuthenticationType": {
+   "enum": [
+    "TOKEN"
+   ],
+   "type": "string"
+  },
+  "OAuthScopes": {
+   "maxLength": 4096,
+   "minLength": 1,
+   "pattern": "^[^\\p{Cc}]+$",
+   "type": "string"
+  },
+  "OAuthTokenEndpointUrl": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^https://[^\\p{Cc}]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 1,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedTime",
+  "/properties/LastUpdatedTime"
+ ],
+ "required": [
+  "OAuthClientApplicationId",
+  "Name",
+  "OAuthClientAuthenticationType",
+  "OAuthTokenEndpointUrl"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "quicksight:TagResource",
+   "quicksight:UntagResource",
+   "quicksight:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::QuickSight::OAuthClientApplication",
+ "writeOnlyProperties": [
+  "/properties/ClientId",
+  "/properties/ClientSecret"
+ ]
+}

@@ -1,0 +1,62 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/IndexName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IndexName"
+ ],
+ "description": "Represents an AWS IoT fleet index, which enables searching and aggregating IoT device data.",
+ "handlers": {
+  "list": {
+   "permissions": [
+    "iot:ListIndices"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:DescribeIndex"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the index.",
+   "type": "string"
+  },
+  "IndexName": {
+   "description": "The index name.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9:_-]+$",
+   "type": "string"
+  },
+  "IndexStatus": {
+   "description": "The index status.",
+   "enum": [
+    "ACTIVE",
+    "BUILDING",
+    "REBUILDING"
+   ],
+   "type": "string"
+  },
+  "Schema": {
+   "description": "Contains a value that specifies the type of indexing performed.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/IndexStatus",
+  "/properties/Schema"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::IoT::Index"
+}

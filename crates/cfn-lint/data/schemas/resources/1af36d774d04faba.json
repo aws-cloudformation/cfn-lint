@@ -1,0 +1,265 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IpamId",
+  "/properties/AddressFamily"
+ ],
+ "definitions": {
+  "IpamPrefixListResolverRule": {
+   "additionalProperties": false,
+   "description": "CIDR selection rules define the business logic for selecting CIDRs from IPAM.  If a CIDR matches any of the rules, it will be included. If a rule has multiple conditions, the CIDR has to match every condition of that rule. You can create a prefix list resolver without rules, but you'll need to add at least one rule before it can actually automate your prefix list updates.",
+   "properties": {
+    "Conditions": {
+     "description": "Two of the rule types allow you to add conditions to the rules. (1) For IPAM Pool CIDR rules, you can specify an ipamPoolId; if not specified, the rule will apply to all IPAM Pool CIDRs in the scope.  (2) For IPAM Resource CIDR rules, you can specify resourceId, resourceOwner, resourceRegion, cidr, or resourceTag.",
+     "items": {
+      "$ref": "#/definitions/IpamPrefixListResolverRuleCondition"
+     },
+     "type": "array"
+    },
+    "IpamScopeId": {
+     "description": "This rule will only match resources that are in this IPAM Scope.",
+     "type": "string"
+    },
+    "ResourceType": {
+     "description": "The resourceType property only applies to ipam-resource-cidr rules; this property specifies what type of resources this rule will apply to, such as VPCs or Subnets.",
+     "enum": [
+      "vpc",
+      "subnet",
+      "eip",
+      "public-ipv4-pool"
+     ],
+     "type": "string"
+    },
+    "RuleType": {
+     "description": "There are three rule types: (1) Static CIDR: A fixed list of CIDRs that don't change (like a manual list replicated across Regions). (2) IPAM pool CIDR: CIDRs from specific IPAM pools (like all CIDRs from your IPAM production pool).  (3) IPAM resource CIDR: CIDRs for AWS resources like VPCs, subnets, and EIPs within a specific IPAM scope.",
+     "enum": [
+      "static-cidr",
+      "ipam-resource-cidr",
+      "ipam-pool-cidr"
+     ],
+     "type": "string"
+    },
+    "StaticCidr": {
+     "description": "A fixed CIDR that doesn't change",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RuleType"
+   ],
+   "type": "object"
+  },
+  "IpamPrefixListResolverRuleCondition": {
+   "additionalProperties": false,
+   "description": "Two of the rule types allow you to add conditions to the rules. (1) For IPAM Pool CIDR rules, you can specify an ipamPoolId; if not specified, the rule will apply to all IPAM Pool CIDRs in the scope.  (2) For IPAM Resource CIDR rules, you can specify resourceId, resourceOwner, resourceRegion, cidr, or resourceTag.",
+   "oneOf": [
+    {
+     "required": [
+      "Operation",
+      "IpamPoolId"
+     ]
+    },
+    {
+     "required": [
+      "Operation",
+      "ResourceId"
+     ]
+    },
+    {
+     "required": [
+      "Operation",
+      "ResourceOwner"
+     ]
+    },
+    {
+     "required": [
+      "Operation",
+      "ResourceRegion"
+     ]
+    },
+    {
+     "required": [
+      "Operation",
+      "Cidr"
+     ]
+    },
+    {
+     "required": [
+      "Operation",
+      "ResourceTag"
+     ]
+    }
+   ],
+   "properties": {
+    "Cidr": {
+     "description": "Condition for the IPAM Resource CIDR rule type.  CIDR (like 10.24.34.0/23).",
+     "format": "ipv4-network",
+     "type": "string"
+    },
+    "IpamPoolId": {
+     "description": "Condition for the IPAM Pool CIDR rule type.  If not chosen, the resolver applies to all IPAM Pool CIDRs in the scope.",
+     "type": "string"
+    },
+    "Operation": {
+     "description": "Equals, Not equals, or Subnet Of.  The subnet-of operation only applies to cidr conditions.",
+     "enum": [
+      "equals",
+      "not-equals",
+      "subnet-of"
+     ],
+     "type": "string"
+    },
+    "ResourceId": {
+     "description": "Condition for the IPAM Resource CIDR rule type.  The unique ID of a resource (like vpc-1234567890abcdef0).",
+     "type": "string"
+    },
+    "ResourceOwner": {
+     "description": "Condition for the IPAM Resource CIDR rule type.  Resource owner (like 111122223333).",
+     "type": "string"
+    },
+    "ResourceRegion": {
+     "description": "Condition for the IPAM Resource CIDR rule type.  Resource region (like us-east-1).",
+     "type": "string"
+    },
+    "ResourceTag": {
+     "$ref": "#/definitions/Tag",
+     "description": "Condition for the IPAM Resource CIDR rule type.  Resource Tag (like dev-vpc-1)."
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::EC2::IPAMPrefixListResolver",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateIpamPrefixListResolver",
+    "ec2:DescribeIpamPrefixListResolvers",
+    "ec2:GetIpamPrefixListResolverRules",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteIpamPrefixListResolver",
+    "ec2:DescribeIpamPrefixListResolvers",
+    "ec2:DeleteTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeIpamPrefixListResolvers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeIpamPrefixListResolvers",
+    "ec2:GetIpamPrefixListResolverRules"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:ModifyIpamPrefixListResolver",
+    "ec2:DescribeIpamPrefixListResolvers",
+    "ec2:GetIpamPrefixListResolverRules",
+    "ec2:CreateTags",
+    "ec2:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IpamPrefixListResolverId"
+ ],
+ "properties": {
+  "AddressFamily": {
+   "description": "The address family of the address space in this Prefix List Resolver. Either IPv4 or IPv6.",
+   "enum": [
+    "ipv4",
+    "ipv6"
+   ],
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "IpamArn": {
+   "description": "The Amazon Resource Name (ARN) of the IPAM this Prefix List Resolver is a part of.",
+   "type": "string"
+  },
+  "IpamId": {
+   "description": "The Id of the IPAM this Prefix List Resolver is a part of.",
+   "type": "string"
+  },
+  "IpamPrefixListResolverArn": {
+   "description": "The Amazon Resource Name (ARN) of the IPAM Prefix List Resolver",
+   "type": "string"
+  },
+  "IpamPrefixListResolverId": {
+   "description": "Id of the IPAM Prefix List Resolver.",
+   "type": "string"
+  },
+  "Rules": {
+   "description": "Rules define the business logic for selecting CIDRs from IPAM.",
+   "items": {
+    "$ref": "#/definitions/IpamPrefixListResolverRule"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IpamArn",
+  "/properties/IpamPrefixListResolverId",
+  "/properties/IpamPrefixListResolverArn"
+ ],
+ "required": [
+  "AddressFamily"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ipam.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "ec2:DeleteTags",
+   "ec2:CreateTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::IPAMPrefixListResolver",
+ "writeOnlyProperties": [
+  "/properties/IpamId"
+ ]
+}

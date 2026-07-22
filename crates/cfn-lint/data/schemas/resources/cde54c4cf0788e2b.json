@@ -1,0 +1,185 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/SystemId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/KmsKeyId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The tag key.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The tag value.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Creates a system that represents a logical grouping of services.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "resiliencehub:CreateSystem",
+    "resiliencehub:GetSystem",
+    "resiliencehub:TagResource",
+    "resiliencehub:ListTagsForResource",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt",
+    "kms:Encrypt",
+    "kms:CreateGrant",
+    "kms:RetireGrant"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "resiliencehub:DeleteSystem",
+    "resiliencehub:GetSystem",
+    "kms:DescribeKey",
+    "kms:Decrypt",
+    "kms:RetireGrant",
+    "kms:GenerateDataKey",
+    "kms:Encrypt",
+    "kms:CreateGrant"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "resiliencehub:ListSystems"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "resiliencehub:GetSystem",
+    "resiliencehub:ListTagsForResource",
+    "kms:DescribeKey",
+    "kms:Decrypt"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "resiliencehub:UpdateSystem",
+    "resiliencehub:GetSystem",
+    "resiliencehub:TagResource",
+    "resiliencehub:UntagResource",
+    "resiliencehub:ListTagsForResource",
+    "kms:DescribeKey",
+    "kms:Decrypt",
+    "kms:GenerateDataKey",
+    "kms:Encrypt",
+    "kms:CreateGrant",
+    "kms:RetireGrant"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SystemArn"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "description": "The timestamp when the system was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the system.",
+   "maxLength": 500,
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
+   "description": "The KMS key ID for encrypting system data.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^((arn:aws(-[^:]+)?:kms:[a-zA-Z0-9-]*:[0-9]{12}:((key/[a-zA-Z0-9-]{36})|(alias/[a-zA-Z0-9-_/]+)))|([a-zA-Z0-9-]{36})|(alias/[a-zA-Z0-9-_/]+))$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the system.",
+   "pattern": "^[A-Za-z0-9][A-Za-z0-9_\\-]{1,59}$",
+   "type": "string"
+  },
+  "SharingEnabled": {
+   "default": false,
+   "description": "Whether the system is enabled to be shared with other members of the Organization. Only applicable if the system owner is a management account or delegated admin.",
+   "type": "boolean"
+  },
+  "SystemArn": {
+   "description": "The ARN of the system.",
+   "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9/][A-Za-z0-9:_/+.-]{0,1023}$",
+   "type": "string"
+  },
+  "SystemId": {
+   "description": "The system ID.",
+   "pattern": "^\\S{1,255}$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Tags assigned to the system.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "description": "The timestamp when the system was last updated.",
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SystemArn",
+  "/properties/SystemId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "resiliencehub:TagResource",
+   "resiliencehub:UntagResource",
+   "resiliencehub:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ResilienceHubV2::System",
+ "writeOnlyProperties": [
+  "/properties/KmsKeyId"
+ ]
+}

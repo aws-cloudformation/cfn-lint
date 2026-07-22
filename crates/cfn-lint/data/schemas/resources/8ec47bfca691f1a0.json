@@ -1,0 +1,135 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StudioLifecycleConfigAppType",
+  "/properties/StudioLifecycleConfigContent",
+  "/properties/StudioLifecycleConfigName",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SageMaker::StudioLifecycleConfig",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sagemaker:CreateStudioLifecycleConfig",
+    "sagemaker:DescribeStudioLifecycleConfig",
+    "sagemaker:AddTags",
+    "sagemaker:ListTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DeleteStudioLifecycleConfig",
+    "sagemaker:DescribeStudioLifecycleConfig",
+    "sagemaker:DeleteTags",
+    "sagemaker:ListTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sagemaker:ListStudioLifecycleConfigs",
+    "sagemaker:ListTags"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribeStudioLifecycleConfig",
+    "sagemaker:ListTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/StudioLifecycleConfigName"
+ ],
+ "properties": {
+  "StudioLifecycleConfigAppType": {
+   "description": "The App type that the Lifecycle Configuration is attached to.",
+   "enum": [
+    "JupyterServer",
+    "KernelGateway",
+    "CodeEditor",
+    "JupyterLab"
+   ],
+   "type": "string"
+  },
+  "StudioLifecycleConfigArn": {
+   "description": "The Amazon Resource Name (ARN) of the Lifecycle Configuration.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:studio-lifecycle-config/.*",
+   "type": "string"
+  },
+  "StudioLifecycleConfigContent": {
+   "description": "The content of your Amazon SageMaker Studio Lifecycle Configuration script. This content must be base64 encoded.",
+   "maxLength": 16384,
+   "minLength": 1,
+   "pattern": "[\\S\\s]+",
+   "type": "string"
+  },
+  "StudioLifecycleConfigName": {
+   "description": "The name of the Amazon SageMaker Studio Lifecycle Configuration.",
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Tags to be associated with the Lifecycle Configuration. Each tag consists of a key and an optional value. Tag keys must be unique per resource. Tags are searchable using the Search API.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "propertyTransform": {
+  "/properties/StudioLifecycleConfigName": "$lowercase(StudioLifecycleConfigName) $OR StudioLifecycleConfigName"
+ },
+ "readOnlyProperties": [
+  "/properties/StudioLifecycleConfigArn"
+ ],
+ "required": [
+  "StudioLifecycleConfigAppType",
+  "StudioLifecycleConfigContent",
+  "StudioLifecycleConfigName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "sagemaker:AddTags",
+   "sagemaker:ListTags",
+   "sagemaker:DeleteTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::StudioLifecycleConfig"
+}

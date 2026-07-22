@@ -1,0 +1,188 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/HubName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/HubName",
+  "/properties/S3StorageConfig"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource type definition for AWS::SageMaker::Hub",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sagemaker:CreateHub",
+    "sagemaker:DescribeHub",
+    "sagemaker:AddTags",
+    "sagemaker:ListTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DeleteHub",
+    "sagemaker:DescribeHub"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sagemaker:ListHubs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribeHub",
+    "sagemaker:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sagemaker:UpdateHub",
+    "sagemaker:DescribeHub",
+    "sagemaker:AddTags",
+    "sagemaker:DeleteTags",
+    "sagemaker:ListTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/HubArn"
+ ],
+ "properties": {
+  "CreationTime": {
+   "description": "The date and time that the hub was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "HubArn": {
+   "description": "The Amazon Resource Name (ARN) of the hub.",
+   "maxLength": 255,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "HubDescription": {
+   "description": "A description of the hub.",
+   "maxLength": 1023,
+   "minLength": 0,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "HubDisplayName": {
+   "description": "The display name of the hub.",
+   "maxLength": 255,
+   "minLength": 0,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "HubName": {
+   "description": "The name of the hub.",
+   "maxLength": 63,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  },
+  "HubSearchKeywords": {
+   "description": "The searchable keywords for the hub.",
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 255,
+    "minLength": 0,
+    "pattern": "^[^A-Z]*$",
+    "type": "string"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "HubStatus": {
+   "description": "The status of the hub.",
+   "enum": [
+    "InService",
+    "Creating",
+    "Updating",
+    "Deleting",
+    "CreateFailed",
+    "UpdateFailed",
+    "DeleteFailed"
+   ],
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "description": "The date and time that the hub was last modified.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "S3StorageConfig": {
+   "additionalProperties": false,
+   "description": "The Amazon S3 storage configuration for the hub.",
+   "properties": {
+    "S3OutputPath": {
+     "description": "The Amazon S3 bucket prefix for hosting hub content.",
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "description": "Tags to associate with the hub.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/HubArn",
+  "/properties/HubStatus",
+  "/properties/CreationTime",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "HubName",
+  "HubDescription"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "sagemaker:AddTags",
+   "sagemaker:DeleteTags",
+   "sagemaker:ListTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::Hub"
+}

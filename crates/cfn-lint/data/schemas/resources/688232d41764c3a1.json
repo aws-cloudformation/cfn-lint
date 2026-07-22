@@ -1,0 +1,131 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Description",
+  "/properties/Family"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "AWS::Neptune::DBParameterGroup creates a new DB parameter group. This type can be declared in a template and referenced in the DBParameterGroupName parameter of AWS::Neptune::DBInstance",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "rds:AddTagsToResource",
+    "rds:CreateDBParameterGroup",
+    "rds:DescribeDBParameterGroups",
+    "rds:DescribeDBParameters",
+    "rds:DescribeEngineDefaultParameters",
+    "rds:ModifyDBParameterGroup",
+    "rds:ListTagsForResource",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "rds:DeleteDBParameterGroup",
+    "rds:RemoveTagsFromResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "rds:DescribeDBParameterGroups",
+    "rds:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "rds:DescribeDBParameterGroups",
+    "rds:ListTagsForResource",
+    "rds:DescribeDBParameters",
+    "rds:DescribeEngineDefaultParameters"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "rds:AddTagsToResource",
+    "rds:DescribeDBParameterGroups",
+    "rds:DescribeDBParameters",
+    "rds:DescribeEngineDefaultParameters",
+    "rds:ListTagsForResource",
+    "rds:ModifyDBParameterGroup",
+    "rds:ResetDBParameterGroup",
+    "rds:RemoveTagsFromResource",
+    "rds:DescribeDBInstances"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Description": {
+   "description": "Provides the customer-specified description for this DB parameter group.",
+   "type": "string"
+  },
+  "Family": {
+   "description": "Must be `neptune1` for engine versions prior to 1.2.0.0, or `neptune1.2` for engine version `1.2.0.0` and higher.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "Provides the name of the DB parameter group.",
+   "type": "string"
+  },
+  "Parameters": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Tags": {
+   "description": "An optional array of key-value pairs to apply to this DB parameter group.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "propertyTransform": {
+  "/properties/Name": "$lowercase(Name)"
+ },
+ "required": [
+  "Family",
+  "Description",
+  "Parameters"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-neptune",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "rds:AddTagsToResource",
+   "rds:ListTagsForResource",
+   "rds:RemoveTagsFromResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Neptune::DBParameterGroup"
+}

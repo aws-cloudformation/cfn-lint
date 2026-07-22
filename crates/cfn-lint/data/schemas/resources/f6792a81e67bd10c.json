@@ -1,0 +1,400 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AvailabilityZone",
+  "/properties/AvailabilityZoneId",
+  "/properties/Shape",
+  "/properties/DatabaseServerType",
+  "/properties/StorageServerType",
+  "/properties/DisplayName",
+  "/properties/ComputeCount",
+  "/properties/CustomerContactsToSendToOCI",
+  "/properties/StorageCount"
+ ],
+ "definitions": {
+  "CustomerContact": {
+   "additionalProperties": false,
+   "description": "A contact to receive notification from Oracle about maintenance updates for a specific Exadata infrastructure.",
+   "properties": {
+    "Email": {
+     "description": "The email address of the contact.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MaintenanceWindow": {
+   "additionalProperties": false,
+   "description": "The scheduling details for the maintenance window. Patching and system updates take place during the maintenance window.",
+   "properties": {
+    "CustomActionTimeoutInMins": {
+     "description": "The timeout duration for custom actions in minutes.",
+     "maximum": 120,
+     "minimum": 15,
+     "type": "integer"
+    },
+    "DaysOfWeek": {
+     "description": "The days of the week when maintenance can be performed.",
+     "items": {
+      "enum": [
+       "MONDAY",
+       "TUESDAY",
+       "WEDNESDAY",
+       "THURSDAY",
+       "FRIDAY",
+       "SATURDAY",
+       "SUNDAY"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "HoursOfDay": {
+     "description": "The hours of the day when maintenance can be performed.",
+     "items": {
+      "type": "integer"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "IsCustomActionTimeoutEnabled": {
+     "description": "Indicates whether custom action timeout is enabled.",
+     "type": "boolean"
+    },
+    "LeadTimeInWeeks": {
+     "description": "The lead time in weeks before the maintenance window.",
+     "maximum": 4,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Months": {
+     "description": "The months when maintenance can be performed.",
+     "items": {
+      "enum": [
+       "JANUARY",
+       "FEBRUARY",
+       "MARCH",
+       "APRIL",
+       "MAY",
+       "JUNE",
+       "JULY",
+       "AUGUST",
+       "SEPTEMBER",
+       "OCTOBER",
+       "NOVEMBER",
+       "DECEMBER"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "PatchingMode": {
+     "description": "The patching mode for the maintenance window.",
+     "enum": [
+      "NONROLLING",
+      "ROLLING"
+     ],
+     "type": "string"
+    },
+    "Preference": {
+     "description": "The preference for the maintenance window scheduling.",
+     "enum": [
+      "CUSTOM_PREFERENCE",
+      "NO_PREFERENCE"
+     ],
+     "type": "string"
+    },
+    "WeeksOfMonth": {
+     "description": "The weeks of the month when maintenance can be performed.",
+     "items": {
+      "type": "integer"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that's 1 to 128 Unicode characters in length and can't be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., :, /, =, +, @, -, and \".",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that's 1 to 256 characters in length. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The AWS::ODB::CloudExadataInfrastructure resource creates an Exadata Infrastructure",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "odb:CreateCloudExadataInfrastructure",
+    "ec2:DescribeAvailabilityZones",
+    "iam:CreateServiceLinkedRole",
+    "odb:ListCloudExadataInfrastructures",
+    "odb:GetCloudExadataInfrastructure",
+    "odb:ListDbServers",
+    "odb:TagResource",
+    "sts:GetCallerIdentity",
+    "odb:ListTagsForResource"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "delete": {
+   "permissions": [
+    "odb:DeleteCloudExadataInfrastructure",
+    "odb:ListCloudExadataInfrastructures",
+    "odb:GetCloudExadataInfrastructure",
+    "odb:ListDbServers",
+    "sts:GetCallerIdentity",
+    "odb:ListTagsForResource"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "list": {
+   "permissions": [
+    "odb:ListCloudExadataInfrastructures",
+    "sts:GetCallerIdentity",
+    "odb:ListTagsForResource",
+    "odb:ListDbServers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "odb:GetCloudExadataInfrastructure",
+    "odb:ListDbServers",
+    "sts:GetCallerIdentity",
+    "odb:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "odb:UpdateCloudExadataInfrastructure",
+    "odb:TagResource",
+    "odb:UntagResource",
+    "odb:ListCloudExadataInfrastructures",
+    "odb:GetCloudExadataInfrastructure",
+    "odb:ListDbServers",
+    "sts:GetCallerIdentity",
+    "odb:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CloudExadataInfrastructureArn"
+ ],
+ "properties": {
+  "ActivatedStorageCount": {
+   "description": "The number of storage servers requested for the Exadata infrastructure.",
+   "type": "integer"
+  },
+  "AdditionalStorageCount": {
+   "description": "The number of storage servers requested for the Exadata infrastructure.",
+   "type": "integer"
+  },
+  "AvailabilityZone": {
+   "description": "The name of the Availability Zone (AZ) where the Exadata infrastructure is located.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "AvailabilityZoneId": {
+   "description": "The AZ ID of the AZ where the Exadata infrastructure is located.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "AvailableStorageSizeInGBs": {
+   "description": "The amount of available storage, in gigabytes (GB), for the Exadata infrastructure.",
+   "type": "integer"
+  },
+  "CloudExadataInfrastructureArn": {
+   "description": "The Amazon Resource Name (ARN) for the Exadata infrastructure.",
+   "type": "string"
+  },
+  "CloudExadataInfrastructureId": {
+   "description": "The unique identifier for the Exadata infrastructure.",
+   "type": "string"
+  },
+  "ComputeCount": {
+   "description": "The number of database servers for the Exadata infrastructure.",
+   "type": "integer"
+  },
+  "ComputeModel": {
+   "description": "The OCI model compute model used when you create or clone an instance: ECPU or OCPU. An ECPU is an abstracted measure of compute resources. ECPUs are based on the number of cores elastically allocated from a pool of compute and storage servers. An OCPU is a legacy physical measure of compute resources. OCPUs are based on the physical core of a processor with hyper-threading enabled.",
+   "type": "string"
+  },
+  "CpuCount": {
+   "description": "The total number of CPU cores that are allocated to the Exadata infrastructure.",
+   "type": "integer"
+  },
+  "CustomerContactsToSendToOCI": {
+   "description": "The email addresses of contacts to receive notification from Oracle about maintenance updates for the Exadata infrastructure.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CustomerContact"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "DataStorageSizeInTBs": {
+   "description": "The size of the Exadata infrastructure's data disk group, in terabytes (TB).",
+   "type": "number"
+  },
+  "DatabaseServerType": {
+   "description": "The database server model type of the Exadata infrastructure. For the list of valid model names, use the ListDbSystemShapes operation.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_\\/.=-]+$",
+   "type": "string"
+  },
+  "DbNodeStorageSizeInGBs": {
+   "description": "The size of the Exadata infrastructure's local node storage, in gigabytes (GB).",
+   "type": "integer"
+  },
+  "DbServerIds": {
+   "description": "The list of database server identifiers for the Exadata infrastructure.",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "DbServerVersion": {
+   "description": "The software version of the database servers (dom0) in the Exadata infrastructure.",
+   "type": "string"
+  },
+  "DisplayName": {
+   "description": "The user-friendly name for the Exadata infrastructure.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z_](?!.*--)[a-zA-Z0-9_-]*$",
+   "type": "string"
+  },
+  "MaintenanceWindow": {
+   "$ref": "#/definitions/MaintenanceWindow",
+   "description": "The scheduling details for the maintenance window. Patching and system updates take place during the maintenance window."
+  },
+  "MaxCpuCount": {
+   "description": "The total number of CPU cores available on the Exadata infrastructure.",
+   "type": "integer"
+  },
+  "MaxDataStorageInTBs": {
+   "description": "The total amount of data disk group storage, in terabytes (TB), that's available on the Exadata infrastructure.",
+   "type": "number"
+  },
+  "MaxDbNodeStorageSizeInGBs": {
+   "description": "The total amount of local node storage, in gigabytes (GB), that's available on the Exadata infrastructure.",
+   "type": "integer"
+  },
+  "MaxMemoryInGBs": {
+   "description": "The total amount of memory, in gigabytes (GB), that's available on the Exadata infrastructure.",
+   "type": "integer"
+  },
+  "MemorySizeInGBs": {
+   "description": "The amount of memory, in gigabytes (GB), that's allocated on the Exadata infrastructure.",
+   "type": "integer"
+  },
+  "OciResourceAnchorName": {
+   "description": "The name of the OCI resource anchor for the Exadata infrastructure.",
+   "type": "string"
+  },
+  "OciUrl": {
+   "description": "The HTTPS link to the Exadata infrastructure in OCI.",
+   "type": "string"
+  },
+  "Ocid": {
+   "description": "The OCID of the Exadata infrastructure.",
+   "type": "string"
+  },
+  "Shape": {
+   "description": "The model name of the Exadata infrastructure.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_\\/.=-]+$",
+   "type": "string"
+  },
+  "StorageCount": {
+   "description": "The number of storage servers that are activated for the Exadata infrastructure.",
+   "type": "integer"
+  },
+  "StorageServerType": {
+   "description": "The storage server model type of the Exadata infrastructure. For the list of valid model names, use the ListDbSystemShapes operation.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_\\/.=-]+$",
+   "type": "string"
+  },
+  "StorageServerVersion": {
+   "description": "The software version of the storage servers on the Exadata infrastructure.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Tags to assign to the Exadata Infrastructure.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TotalStorageSizeInGBs": {
+   "description": "The total amount of storage, in gigabytes (GB), on the the Exadata infrastructure.",
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ActivatedStorageCount",
+  "/properties/AdditionalStorageCount",
+  "/properties/AvailableStorageSizeInGBs",
+  "/properties/CloudExadataInfrastructureArn",
+  "/properties/CloudExadataInfrastructureId",
+  "/properties/ComputeModel",
+  "/properties/CpuCount",
+  "/properties/DataStorageSizeInTBs",
+  "/properties/DbNodeStorageSizeInGBs",
+  "/properties/DbServerVersion",
+  "/properties/MaxCpuCount",
+  "/properties/MaxDataStorageInTBs",
+  "/properties/MaxDbNodeStorageSizeInGBs",
+  "/properties/MaxMemoryInGBs",
+  "/properties/MemorySizeInGBs",
+  "/properties/OciResourceAnchorName",
+  "/properties/OciUrl",
+  "/properties/Ocid",
+  "/properties/StorageServerVersion",
+  "/properties/TotalStorageSizeInGBs",
+  "/properties/DbServerIds"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "odb:TagResource",
+   "odb:UntagResource",
+   "odb:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ODB::CloudExadataInfrastructure"
+}

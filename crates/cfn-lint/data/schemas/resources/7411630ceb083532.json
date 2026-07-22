@@ -1,0 +1,75 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PolicyName",
+  "/properties/GroupName"
+ ],
+ "description": "Adds or updates an inline policy document that is embedded in the specified IAM group.\n A group can also have managed policies attached to it. To attach a managed policy to a group, use [AWS::IAM::Group](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-group.html). To create a new managed policy, use [AWS::IAM::ManagedPolicy](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-managedpolicy.html). For information about policies, see [Managed policies and inline policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html) in the *IAM User Guide*.\n For information about the maximum number of inline policies that you can embed in a group, see [IAM and quotas](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_iam-quotas.html) in the *IAM User Guide*.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PutGroupPolicy",
+    "iam:GetGroupPolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iam:DeleteGroupPolicy",
+    "iam:GetGroupPolicy"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iam:GetGroupPolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PutGroupPolicy",
+    "iam:GetGroupPolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PolicyName",
+  "/properties/GroupName"
+ ],
+ "properties": {
+  "GroupName": {
+   "description": "The name of the group to associate the policy with.\n This parameter allows (through its [regex pattern](https://docs.aws.amazon.com/http://wikipedia.org/wiki/regex)) a string of characters consisting of upper and lowercase alphanumeric characters with no spaces. You can also include any of the following characters: _+=,.@-.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[\\w+=,.@-]+$",
+   "type": "string"
+  },
+  "PolicyDocument": {
+   "format": "json",
+   "maxLength": 131072,
+   "minLength": 1,
+   "pattern": "^[\\u0009\\u000A\\u000D\\u0020-\\u00FF]+$",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "PolicyName": {
+   "description": "The name of the policy document.\n This parameter allows (through its [regex pattern](https://docs.aws.amazon.com/http://wikipedia.org/wiki/regex)) a string of characters consisting of upper and lowercase alphanumeric characters with no spaces. You can also include any of the following characters: _+=,.@-",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[\\w+=,.@-]+$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "PolicyName",
+  "GroupName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iam.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::IAM::GroupPolicy"
+}

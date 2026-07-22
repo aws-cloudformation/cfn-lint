@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use cfn_lint::engine::Engine;
-use cfn_lint::formatters::{get_formatter, Formatter, ValidationResult};
+use cfn_lint::formatters::{get_formatter, ValidationResult};
 use cfn_lint::jsonschema::ValidationError;
 use cfn_lint::parser;
 use cfn_lint::template::Template;
@@ -70,7 +70,7 @@ fn fixture_templates() {
         .map(|e| e.path())
         .filter(|p| {
             p.extension()
-                .map_or(false, |ext| ext == "yaml" || ext == "json")
+                .is_some_and(|ext| ext == "yaml" || ext == "json")
         })
         .collect();
     templates.sort();

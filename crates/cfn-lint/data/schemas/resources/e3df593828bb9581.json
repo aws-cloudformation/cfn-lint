@@ -1,0 +1,171 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SinkIdentifier",
+  "/properties/LabelTemplate"
+ ],
+ "definitions": {
+  "LinkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroupConfiguration": {
+     "$ref": "#/definitions/LinkFilter"
+    },
+    "MetricConfiguration": {
+     "$ref": "#/definitions/LinkFilter"
+    }
+   },
+   "type": "object"
+  },
+  "LinkFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Filter": {
+     "maxLength": 2000,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Filter"
+   ],
+   "type": "object"
+  },
+  "ResourceType": {
+   "enum": [
+    "AWS::CloudWatch::Metric",
+    "AWS::Logs::LogGroup",
+    "AWS::XRay::Trace",
+    "AWS::ApplicationInsights::Application",
+    "AWS::InternetMonitor::Monitor",
+    "AWS::ApplicationSignals::Service",
+    "AWS::ApplicationSignals::ServiceLevelObjective"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "Definition of AWS::Oam::Link Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "oam:CreateLink",
+    "oam:GetLink",
+    "oam:TagResource",
+    "oam:ListTagsForResource",
+    "cloudwatch:Link",
+    "logs:Link",
+    "xray:Link",
+    "applicationinsights:Link",
+    "internetmonitor:Link",
+    "application-signals:Link"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "oam:DeleteLink",
+    "oam:GetLink"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "oam:ListLinks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "oam:GetLink",
+    "oam:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "oam:GetLink",
+    "oam:UpdateLink",
+    "cloudwatch:Link",
+    "logs:Link",
+    "xray:Link",
+    "applicationinsights:Link",
+    "internetmonitor:Link",
+    "application-signals:Link",
+    "oam:TagResource",
+    "oam:UntagResource",
+    "oam:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "Label": {
+   "type": "string"
+  },
+  "LabelTemplate": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LinkConfiguration": {
+   "$ref": "#/definitions/LinkConfiguration"
+  },
+  "ResourceTypes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ResourceType"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SinkIdentifier": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_:\\.\\-\\/]{0,2047}$",
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "Tags to apply to the link",
+   "patternProperties": {
+    "^(?!aws:.*).{1,128}$": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:.",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^(?!aws:.*).{0,256}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Label"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "ResourceTypes",
+  "SinkIdentifier"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "oam:ListTagsForResource",
+   "oam:UntagResource",
+   "oam:TagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Oam::Link",
+ "writeOnlyProperties": [
+  "/properties/LabelTemplate"
+ ]
+}

@@ -222,7 +222,6 @@ impl CfnLintRule for E0001 {
 mod tests {
     use super::*;
     use crate::ast::{ObjectNode, Span};
-    use indexmap::IndexMap;
 
     fn empty_template() -> (Template, AstNode) {
         let root = AstNode::Object(ObjectNode {

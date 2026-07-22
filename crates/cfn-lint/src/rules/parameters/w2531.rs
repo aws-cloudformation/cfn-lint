@@ -8,6 +8,12 @@ pub struct W2531 {
     runtimes: serde_json::Value,
 }
 
+impl Default for W2531 {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl W2531 {
     pub fn new() -> Self {
         let data = include_str!("../../../data/additional_specs/LmbdRuntimeLifecycle.json");

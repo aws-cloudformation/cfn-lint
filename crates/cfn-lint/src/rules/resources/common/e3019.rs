@@ -67,7 +67,9 @@ impl CfnLintRule for E3019 {
             }
         }
 
-        let mut by_type: HashMap<&str, Vec<(&str, &AstNode, Option<&str>)>> = HashMap::new();
+        // Groups resources by type: type name -> [(logical name, properties node, ref/condition)].
+        type ResourcesByType<'a> = HashMap<&'a str, Vec<(&'a str, &'a AstNode, Option<&'a str>)>>;
+        let mut by_type: ResourcesByType = HashMap::new();
         for (name, resource) in &template.resources {
             let props = root
                 .get("Resources")
@@ -144,7 +146,7 @@ impl CfnLintRule for E3019 {
                                 .get("Resources")
                                 .and_then(|r| r.get(name))
                                 .and_then(|r| r.get("Properties"))
-                                .map(|p| p.span().clone())
+                                .map(|p| p.span())
                                 .unwrap_or_default();
                             issues.push(ValidationError {
                                 rule_id: Some(self.id().to_string()),

@@ -1,0 +1,3578 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AWS::CodeDeploy::DeploymentGroup.TriggerConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "TriggerEvents": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "TriggerName": {
+     "type": "string"
+    },
+    "TriggerTargetArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AWS::Lambda::Alias.ProvisionedConcurrencyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ProvisionedConcurrentExecutions": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "ProvisionedConcurrentExecutions"
+   ],
+   "type": "object"
+  },
+  "AWS::Lambda::EventSourceMapping.DestinationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "OnFailure": {
+     "$ref": "#/definitions/AWS::Lambda::EventSourceMapping.OnFailure"
+    }
+   },
+   "type": "object"
+  },
+  "AWS::Lambda::EventSourceMapping.OnFailure": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AWS::Lambda::Function.DurableConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ExecutionTimeout": {
+     "type": "number"
+    },
+    "RetentionPeriodInDays": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "ExecutionTimeout"
+   ],
+   "type": "object"
+  },
+  "AWS::Lambda::Function.Environment": {
+   "additionalProperties": false,
+   "properties": {
+    "Variables": {
+     "additionalProperties": true,
+     "patternProperties": {
+      "^[a-zA-Z0-9]+$": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "AWS::Lambda::Function.EphemeralStorage": {
+   "additionalProperties": false,
+   "properties": {
+    "Size": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "Size"
+   ],
+   "type": "object"
+  },
+  "AWS::Lambda::Function.FileSystemConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "type": "string"
+    },
+    "LocalMountPath": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Arn",
+    "LocalMountPath"
+   ],
+   "type": "object"
+  },
+  "AWS::Lambda::Function.FunctionScalingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxExecutionEnvironments": {
+     "type": "number"
+    },
+    "MinExecutionEnvironments": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "AWS::Lambda::Function.ImageConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Command": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "EntryPoint": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "WorkingDirectory": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AWS::Lambda::Function.LoggingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationLogLevel": {
+     "type": "string"
+    },
+    "LogFormat": {
+     "type": "string"
+    },
+    "LogGroup": {
+     "type": "string"
+    },
+    "SystemLogLevel": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AWS::Lambda::Function.TenancyConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "TenantIsolationMode": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TenantIsolationMode"
+   ],
+   "type": "object"
+  },
+  "AlexaSkillEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/AlexaSkillEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "AlexaSkill"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "AlexaSkillEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "SkillId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ApiAuth": {
+   "additionalProperties": false,
+   "properties": {
+    "ApiKeyRequired": {
+     "type": "boolean"
+    },
+    "AuthorizationScopes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Authorizer": {
+     "type": "string"
+    },
+    "InvokeRole": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "OverrideApiAuth": {
+     "type": "boolean"
+    },
+    "ResourcePolicy": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/ResourcePolicy"
+      }
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "ApiEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/ApiEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "Api"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "ApiEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Auth": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/ApiAuth"
+      }
+     ]
+    },
+    "Method": {
+     "type": "string"
+    },
+    "Path": {
+     "type": "string"
+    },
+    "RequestModel": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/RequestModel"
+      }
+     ]
+    },
+    "RequestParameters": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "additionalProperties": {
+         "$ref": "#/definitions/RequestParameters"
+        },
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "ResponseTransferMode": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "RestApiId": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "$ref": "#/definitions/Ref"
+      }
+     ]
+    },
+    "TimeoutInMillis": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "Method",
+    "Path"
+   ],
+   "type": "object"
+  },
+  "CapacityProviderConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "ExecutionEnvironmentMemoryGiBPerVCpu": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "integer"
+      },
+      {
+       "type": "number"
+      }
+     ]
+    },
+    "PerExecutionEnvironmentMaxConcurrency": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "integer"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Arn"
+   ],
+   "type": "object"
+  },
+  "CloudWatchEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/CloudWatchEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "CloudWatchEvent"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "CloudWatchEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "EventBusName": {
+     "description": "The name or ARN of the event bus associated with the rule. If you omit this, the default event bus is used.",
+     "maxLength": 1600,
+     "minLength": 1,
+     "pattern": "^(arn:aws[\\w-]*:events:[a-z]{2}-[a-z]+-[\\w-]+:[0-9]{12}:event-bus\\/)?[/\\.\\-_A-Za-z0-9]+$",
+     "type": "string"
+    },
+    "Input": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "InputPath": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "Pattern": {
+     "description": "The event pattern of the rule. For more information, see Events and Event Patterns in the Amazon EventBridge User Guide.",
+     "type": [
+      "string",
+      "object"
+     ]
+    },
+    "State": {
+     "description": "The state of the rule.",
+     "enum": [
+      "DISABLED",
+      "ENABLED",
+      "ENABLED_WITH_ALL_CLOUDTRAIL_MANAGEMENT_EVENTS"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CloudWatchLogsEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/CloudWatchLogsEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "CloudWatchLogs"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "CloudWatchLogsEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "FilterPattern": {
+     "description": "The filtering expressions that restrict what gets delivered to the destination AWS resource. For more information about the filter pattern syntax, see [Filter and Pattern Syntax](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html).",
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "LogGroupName": {
+     "description": "The log group to associate with the subscription filter. All log events that are uploaded to this log group are filtered and delivered to the specified AWS resource if the filter pattern matches the log events.",
+     "format": "AWS::Logs::LogGroup.Name",
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[\\.\\-_/#A-Za-z0-9]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "FilterPattern",
+    "LogGroupName"
+   ],
+   "type": "object"
+  },
+  "CodeUri": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "Key": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "Version": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "CognitoEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/CognitoEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "Cognito"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "CognitoEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Trigger": {
+     "additionalProperties": false,
+     "properties": {
+      "CreateAuthChallenge": {
+       "type": "string"
+      },
+      "CustomEmailSender": {
+       "additionalProperties": false,
+       "properties": {
+        "LambdaArn": {
+         "format": "AWS::Lambda::Function.Arn",
+         "type": "string"
+        },
+        "LambdaVersion": {
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "CustomMessage": {
+       "type": "string"
+      },
+      "CustomSMSSender": {
+       "additionalProperties": false,
+       "properties": {
+        "LambdaArn": {
+         "format": "AWS::Lambda::Function.Arn",
+         "type": "string"
+        },
+        "LambdaVersion": {
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "DefineAuthChallenge": {
+       "type": "string"
+      },
+      "InboundFederation": {
+       "additionalProperties": false,
+       "properties": {
+        "LambdaArn": {
+         "format": "AWS::Lambda::Function.Arn",
+         "type": "string"
+        },
+        "LambdaVersion": {
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "KMSKeyID": {
+       "type": "string"
+      },
+      "PostAuthentication": {
+       "type": "string"
+      },
+      "PostConfirmation": {
+       "type": "string"
+      },
+      "PreAuthentication": {
+       "type": "string"
+      },
+      "PreSignUp": {
+       "type": "string"
+      },
+      "PreTokenGeneration": {
+       "type": "string"
+      },
+      "PreTokenGenerationConfig": {
+       "additionalProperties": false,
+       "properties": {
+        "LambdaArn": {
+         "format": "AWS::Lambda::Function.Arn",
+         "type": "string"
+        },
+        "LambdaVersion": {
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "UserMigration": {
+       "type": "string"
+      },
+      "VerifyAuthChallengeResponse": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "UserPool": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Trigger",
+    "UserPool"
+   ],
+   "type": "object"
+  },
+  "DeadLetterConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "description": "The ARN of the rule, such as arn:aws:events:us-east-2:123456789012:rule/example.",
+     "type": "string"
+    },
+    "QueueLogicalId": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "SQS"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DeadLetterQueue": {
+   "additionalProperties": false,
+   "properties": {
+    "TargetArn": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "SNS",
+      "SQS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "TargetArn",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "DeploymentPreference": {
+   "additionalProperties": false,
+   "properties": {
+    "Alarms": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "items": {
+        "type": "object"
+       },
+       "type": "array"
+      }
+     ]
+    },
+    "Enabled": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "boolean"
+      }
+     ]
+    },
+    "Hooks": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/Hooks"
+      }
+     ]
+    },
+    "PassthroughCondition": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "boolean"
+      }
+     ]
+    },
+    "Role": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "TriggerConfigurations": {
+     "items": {
+      "$ref": "#/definitions/AWS::CodeDeploy::DeploymentGroup.TriggerConfig"
+     },
+     "type": "array"
+    },
+    "Type": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "DocumentDBEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/DocumentDBEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "DocumentDB"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "DocumentDBEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchSize": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "Cluster": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "CollectionName": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "DatabaseName": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "Enabled": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "FilterCriteria": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "FullDocument": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "KmsKeyArn": {
+     "type": "string"
+    },
+    "MaximumBatchingWindowInSeconds": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "SecretsManagerKmsKeyId": {
+     "type": "string"
+    },
+    "SourceAccessConfigurations": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "StartingPosition": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "StartingPositionTimestamp": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Cluster",
+    "DatabaseName",
+    "SourceAccessConfigurations"
+   ],
+   "type": "object"
+  },
+  "DynamoDBEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/DynamoDBEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "DynamoDB"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "DynamoDBEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchSize": {
+     "description": "The maximum number of records in each batch that Lambda pulls from your stream or queue and sends to your function. Lambda passes all of the records in the batch to the function in a single call, up to the payload limit for synchronous invocation (6 MB).\n  +  *Amazon Kinesis* \u2013 Default 100. Max 10,000.\n  +  *Amazon DynamoDB Streams* \u2013 Default 100. Max 10,000.\n  +  *Amazon Simple Queue Service* \u2013 Default 10. For standard queues the max is 10,000. For FIFO queues the max is 10.\n  +  *Amazon Managed Streaming for Apache Kafka* \u2013 Default 100. Max 10,000.\n  +  *Self-managed Apache Kafka* \u2013 Default 100. Max 10,000.\n  +  *Amazon MQ (ActiveMQ and RabbitMQ)* \u2013 Default 100. Max 10,000.\n  +  *DocumentDB* \u2013 Default 100. Max 10,000.",
+     "maximum": 10000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "BisectBatchOnFunctionError": {
+     "description": "(Kinesis and DynamoDB Streams only) If the function returns an error, split the batch in two and retry. The default value is false.\n  When using ``BisectBatchOnFunctionError``, check the ``BatchSize`` parameter in the ``OnFailure`` destination message's metadata. The ``BatchSize`` could be greater than 1 since LAM consolidates failed messages metadata when writing to the ``OnFailure`` destination.",
+     "type": "boolean"
+    },
+    "DestinationConfig": {
+     "additionalProperties": false,
+     "description": "A configuration object that specifies the destination of an event after Lambda processes it. For more information, see [Adding a destination](https://docs.aws.amazon.com/lambda/latest/dg/invocation-async-retain-records.html#invocation-async-destinations).",
+     "properties": {
+      "OnFailure": {
+       "additionalProperties": false,
+       "description": "A destination for events that failed processing. For more information, see [Adding a destination](https://docs.aws.amazon.com/lambda/latest/dg/invocation-async-retain-records.html#invocation-async-destinations).",
+       "properties": {
+        "Destination": {
+         "description": "The Amazon Resource Name (ARN) of the destination resource.\n To retain records of unsuccessful [asynchronous invocations](https://docs.aws.amazon.com/lambda/latest/dg/invocation-async.html#invocation-async-destinations), you can configure an Amazon SNS topic, Amazon SQS queue, Amazon S3 bucket, Lambda function, or Amazon EventBridge event bus as the destination.\n  Amazon SNS destinations have a message size limit of 256 KB. If the combined size of the function request and response payload exceeds the limit, Lambda will drop the payload when sending ``OnFailure`` event to the destination. For details on this behavior, refer to [Retaining records of asynchronous invocations](https://docs.aws.amazon.com/lambda/latest/dg/invocation-async-retain-records.html).\n  To retain records of failed invocations from [Kinesis](https://docs.aws.amazon.com/lambda/latest/dg/with-kinesis.html), [DynamoDB](https://docs.aws.amazon.com/lambda/latest/dg/with-ddb.html), [self-managed Kafka](https://docs.aws.amazon.com/lambda/latest/dg/with-kafka.html#services-smaa-onfailure-destination) or [Amazon MSK](https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html#services-msk-onfailure-destination), you can configure an Amazon SNS topic, Amazon SQS queue, or Amazon S3 bucket as the destination.",
+         "maxLength": 1024,
+         "minLength": 12,
+         "pattern": "^$|kafka://([^.]([a-zA-Z0-9\\-_.]{0,248}))|arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:((eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+         "type": "string"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    },
+    "Enabled": {
+     "description": "When true, the event source mapping is active. When false, Lambda pauses polling and invocation.\n Default: True",
+     "type": "boolean"
+    },
+    "FilterCriteria": {
+     "additionalProperties": false,
+     "description": "An object that contains the filters for an event source.",
+     "properties": {
+      "Filters": {
+       "description": "A list of filters.",
+       "items": {
+        "additionalProperties": false,
+        "description": "A structure within a ``FilterCriteria`` object that defines an event filtering pattern.",
+        "properties": {
+         "Pattern": {
+          "description": "A filter pattern. For more information on the syntax of a filter pattern, see [Filter rule syntax](https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html#filtering-syntax).",
+          "maxLength": 4096,
+          "minLength": 0,
+          "pattern": ".*",
+          "type": "string"
+         }
+        },
+        "type": "object"
+       },
+       "maxItems": 20,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "type": "object"
+    },
+    "FunctionResponseTypes": {
+     "description": "(Kinesis, DynamoDB Streams, and SQS) A list of current response type enums applied to the event source mapping.\n Valid Values: ``ReportBatchItemFailures``",
+     "items": {
+      "enum": [
+       "ReportBatchItemFailures"
+      ],
+      "type": "string"
+     },
+     "maxItems": 1,
+     "maxLength": 1,
+     "minItems": 0,
+     "minLength": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "KmsKeyArn": {
+     "type": "string"
+    },
+    "MaximumBatchingWindowInSeconds": {
+     "description": "The maximum amount of time, in seconds, that Lambda spends gathering records before invoking the function.\n *Default (, , event sources)*: 0\n *Default (, Kafka, , event sources)*: 500 ms\n *Related setting:* For SQS event sources, when you set ``BatchSize`` to a value greater than 10, you must set ``MaximumBatchingWindowInSeconds`` to at least 1.",
+     "maximum": 300,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MaximumRecordAgeInSeconds": {
+     "description": "(Kinesis and DynamoDB Streams only) Discard records older than the specified age. The default value is -1, which sets the maximum age to infinite. When the value is set to infinite, Lambda never discards old records.\n  The minimum valid value for maximum record age is 60s. Although values less than 60 and greater than -1 fall within the parameter's absolute range, they are not allowed",
+     "maximum": 604800,
+     "minimum": -1,
+     "type": "integer"
+    },
+    "MaximumRetryAttempts": {
+     "description": "(Kinesis and DynamoDB Streams only) Discard records after the specified number of retries. The default value is -1, which sets the maximum number of retries to infinite. When MaximumRetryAttempts is infinite, Lambda retries failed records until the record expires in the event source.",
+     "maximum": 10000,
+     "minimum": -1,
+     "type": "integer"
+    },
+    "MetricsConfig": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "ParallelizationFactor": {
+     "description": "(Kinesis and DynamoDB Streams only) The number of batches to process concurrently from each shard. The default value is 1.",
+     "maximum": 10,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "StartingPosition": {
+     "description": "The position in a stream from which to start reading. Required for Amazon Kinesis and Amazon DynamoDB.\n  +  *LATEST* - Read only new records.\n  +  *TRIM_HORIZON* - Process all available records.\n  +  *AT_TIMESTAMP* - Specify a time from which to start reading records.",
+     "maxLength": 12,
+     "minLength": 6,
+     "pattern": "(LATEST|TRIM_HORIZON|AT_TIMESTAMP)+",
+     "type": "string"
+    },
+    "StartingPositionTimestamp": {
+     "description": "With ``StartingPosition`` set to ``AT_TIMESTAMP``, the time from which to start reading, in Unix time seconds. ``StartingPositionTimestamp`` cannot be in the future.",
+     "type": "number"
+    },
+    "Stream": {
+     "description": "The Amazon Resource Name (ARN) of the event source.\n  +  *Amazon Kinesis* \u2013 The ARN of the data stream or a stream consumer.\n  +  *Amazon DynamoDB Streams* \u2013 The ARN of the stream.\n  +  *Amazon Simple Queue Service* \u2013 The ARN of the queue.\n  +  *Amazon Managed Streaming for Apache Kafka* \u2013 The ARN of the cluster or the ARN of the VPC connection (for [cross-account event source mappings](https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html#msk-multi-vpc)).\n  +  *Amazon MQ* \u2013 The ARN of the broker.\n  +  *Amazon DocumentDB* \u2013 The ARN of the DocumentDB change stream.",
+     "maxLength": 1024,
+     "minLength": 12,
+     "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:((eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+     "type": "string"
+    },
+    "TumblingWindowInSeconds": {
+     "description": "(Kinesis and DynamoDB Streams only) The duration in seconds of a processing window for DynamoDB and Kinesis Streams event sources. A value of 0 seconds indicates no tumbling window.",
+     "maximum": 900,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Stream"
+   ],
+   "type": "object"
+  },
+  "EventBridgeRuleEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/EventBridgeRuleEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "EventBridgeRule"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "EventBridgeRuleEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "DeadLetterConfig": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/DeadLetterConfig"
+      }
+     ]
+    },
+    "EventBusName": {
+     "description": "The name or ARN of the event bus associated with the rule. If you omit this, the default event bus is used.",
+     "maxLength": 1600,
+     "minLength": 1,
+     "pattern": "^(arn:aws[\\w-]*:events:[a-z]{2}-[a-z]+-[\\w-]+:[0-9]{12}:event-bus\\/)?[/\\.\\-_A-Za-z0-9]+$",
+     "type": "string"
+    },
+    "Input": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "InputPath": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "InputTransformer": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "Pattern": {
+     "description": "The event pattern of the rule. For more information, see Events and Event Patterns in the Amazon EventBridge User Guide.",
+     "type": [
+      "string",
+      "object"
+     ]
+    },
+    "RetryPolicy": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "RuleName": {
+     "description": "The name of the rule.",
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[\\.\\-_A-Za-z0-9]+$",
+     "type": "string"
+    },
+    "Target": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/EventBridgeRuleTarget"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Pattern"
+   ],
+   "type": "object"
+  },
+  "EventBridgeRuleTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "EventInvokeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationConfig": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/EventInvokeDestinationConfig"
+      }
+     ]
+    },
+    "MaximumEventAgeInSeconds": {
+     "type": "integer"
+    },
+    "MaximumRetryAttempts": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "EventInvokeDestinationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "OnFailure": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/EventInvokeOnFailure"
+      }
+     ]
+    },
+    "OnSuccess": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/EventInvokeOnSuccess"
+      }
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "EventInvokeOnFailure": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "SQS",
+      "SNS",
+      "Lambda",
+      "EventBridge",
+      "S3Bucket"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EventInvokeOnSuccess": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "SQS",
+      "SNS",
+      "Lambda",
+      "EventBridge",
+      "S3Bucket"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EventsScheduleProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "DeadLetterConfig": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/DeadLetterConfig"
+      }
+     ]
+    },
+    "Description": {
+     "description": "The description of the rule.",
+     "maxLength": 512,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "Input": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "Name": {
+     "description": "The name of the rule.",
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[\\.\\-_A-Za-z0-9]+$",
+     "type": "string"
+    },
+    "RetryPolicy": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "Schedule": {
+     "description": "The scheduling expression. For example, \"cron(0 20 * * ? *)\", \"rate(5 minutes)\". For more information, see Creating an Amazon EventBridge rule that runs on a schedule.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    },
+    "State": {
+     "description": "The state of the rule.",
+     "enum": [
+      "DISABLED",
+      "ENABLED",
+      "ENABLED_WITH_ALL_CLOUDTRAIL_MANAGEMENT_EVENTS"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FunctionUrlConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthType": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "Cors": {
+     "additionalProperties": false,
+     "properties": {
+      "AllowCredentials": {
+       "description": "Specifies whether credentials are included in the CORS request.",
+       "type": "boolean"
+      },
+      "AllowHeaders": {
+       "description": "Represents a collection of allowed headers.",
+       "insertionOrder": true,
+       "items": {
+        "maxLength": 1024,
+        "minLength": 1,
+        "type": "string"
+       },
+       "maxItems": 100,
+       "minItems": 1,
+       "type": "array"
+      },
+      "AllowMethods": {
+       "description": "Represents a collection of allowed HTTP methods.",
+       "insertionOrder": true,
+       "items": {
+        "enum": [
+         "GET",
+         "PUT",
+         "HEAD",
+         "POST",
+         "PATCH",
+         "DELETE",
+         "*"
+        ],
+        "maxLength": 6,
+        "minLength": 0,
+        "type": "string"
+       },
+       "maxItems": 6,
+       "minItems": 1,
+       "type": "array"
+      },
+      "AllowOrigins": {
+       "description": "Represents a collection of allowed origins.",
+       "insertionOrder": true,
+       "items": {
+        "maxLength": 253,
+        "minLength": 1,
+        "type": "string"
+       },
+       "maxItems": 100,
+       "minItems": 1,
+       "type": "array"
+      },
+      "ExposeHeaders": {
+       "description": "Represents a collection of exposed headers.",
+       "insertionOrder": true,
+       "items": {
+        "maxLength": 1024,
+        "minLength": 1,
+        "type": "string"
+       },
+       "maxItems": 100,
+       "minItems": 1,
+       "type": "array"
+      },
+      "MaxAge": {
+       "maximum": 86400,
+       "minimum": 0,
+       "type": "integer"
+      }
+     },
+     "type": "object"
+    },
+    "InvokeMode": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    }
+   },
+   "required": [
+    "AuthType"
+   ],
+   "type": "object"
+  },
+  "Hooks": {
+   "additionalProperties": false,
+   "properties": {
+    "PostTraffic": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "PreTraffic": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "HttpApiAuth": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationScopes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Authorizer": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HttpApiEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/HttpApiEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "HttpApi"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "HttpApiEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "ApiId": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "Auth": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/HttpApiAuth"
+      }
+     ]
+    },
+    "Method": {
+     "type": "string"
+    },
+    "Path": {
+     "type": "string"
+    },
+    "PayloadFormatVersion": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "RouteSettings": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "TimeoutInMillis": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "integer"
+      }
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "IoTRuleEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/IoTRuleEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "IoTRule"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "IoTRuleEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsIotSqlVersion": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "Sql": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Sql"
+   ],
+   "type": "object"
+  },
+  "KinesisEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/KinesisEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "Kinesis"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "KinesisEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchSize": {
+     "description": "The maximum number of records in each batch that Lambda pulls from your stream or queue and sends to your function. Lambda passes all of the records in the batch to the function in a single call, up to the payload limit for synchronous invocation (6 MB).\n  +  *Amazon Kinesis* \u2013 Default 100. Max 10,000.\n  +  *Amazon DynamoDB Streams* \u2013 Default 100. Max 10,000.\n  +  *Amazon Simple Queue Service* \u2013 Default 10. For standard queues the max is 10,000. For FIFO queues the max is 10.\n  +  *Amazon Managed Streaming for Apache Kafka* \u2013 Default 100. Max 10,000.\n  +  *Self-managed Apache Kafka* \u2013 Default 100. Max 10,000.\n  +  *Amazon MQ (ActiveMQ and RabbitMQ)* \u2013 Default 100. Max 10,000.\n  +  *DocumentDB* \u2013 Default 100. Max 10,000.",
+     "maximum": 10000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "BisectBatchOnFunctionError": {
+     "description": "(Kinesis and DynamoDB Streams only) If the function returns an error, split the batch in two and retry. The default value is false.\n  When using ``BisectBatchOnFunctionError``, check the ``BatchSize`` parameter in the ``OnFailure`` destination message's metadata. The ``BatchSize`` could be greater than 1 since LAM consolidates failed messages metadata when writing to the ``OnFailure`` destination.",
+     "type": "boolean"
+    },
+    "DestinationConfig": {
+     "additionalProperties": false,
+     "description": "A configuration object that specifies the destination of an event after Lambda processes it. For more information, see [Adding a destination](https://docs.aws.amazon.com/lambda/latest/dg/invocation-async-retain-records.html#invocation-async-destinations).",
+     "properties": {
+      "OnFailure": {
+       "additionalProperties": false,
+       "description": "A destination for events that failed processing. For more information, see [Adding a destination](https://docs.aws.amazon.com/lambda/latest/dg/invocation-async-retain-records.html#invocation-async-destinations).",
+       "properties": {
+        "Destination": {
+         "description": "The Amazon Resource Name (ARN) of the destination resource.\n To retain records of unsuccessful [asynchronous invocations](https://docs.aws.amazon.com/lambda/latest/dg/invocation-async.html#invocation-async-destinations), you can configure an Amazon SNS topic, Amazon SQS queue, Amazon S3 bucket, Lambda function, or Amazon EventBridge event bus as the destination.\n  Amazon SNS destinations have a message size limit of 256 KB. If the combined size of the function request and response payload exceeds the limit, Lambda will drop the payload when sending ``OnFailure`` event to the destination. For details on this behavior, refer to [Retaining records of asynchronous invocations](https://docs.aws.amazon.com/lambda/latest/dg/invocation-async-retain-records.html).\n  To retain records of failed invocations from [Kinesis](https://docs.aws.amazon.com/lambda/latest/dg/with-kinesis.html), [DynamoDB](https://docs.aws.amazon.com/lambda/latest/dg/with-ddb.html), [self-managed Kafka](https://docs.aws.amazon.com/lambda/latest/dg/with-kafka.html#services-smaa-onfailure-destination) or [Amazon MSK](https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html#services-msk-onfailure-destination), you can configure an Amazon SNS topic, Amazon SQS queue, or Amazon S3 bucket as the destination.",
+         "maxLength": 1024,
+         "minLength": 12,
+         "pattern": "^$|kafka://([^.]([a-zA-Z0-9\\-_.]{0,248}))|arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:((eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+         "type": "string"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    },
+    "Enabled": {
+     "description": "When true, the event source mapping is active. When false, Lambda pauses polling and invocation.\n Default: True",
+     "type": "boolean"
+    },
+    "FilterCriteria": {
+     "additionalProperties": false,
+     "description": "An object that contains the filters for an event source.",
+     "properties": {
+      "Filters": {
+       "description": "A list of filters.",
+       "items": {
+        "additionalProperties": false,
+        "description": "A structure within a ``FilterCriteria`` object that defines an event filtering pattern.",
+        "properties": {
+         "Pattern": {
+          "description": "A filter pattern. For more information on the syntax of a filter pattern, see [Filter rule syntax](https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html#filtering-syntax).",
+          "maxLength": 4096,
+          "minLength": 0,
+          "pattern": ".*",
+          "type": "string"
+         }
+        },
+        "type": "object"
+       },
+       "maxItems": 20,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "type": "object"
+    },
+    "FunctionResponseTypes": {
+     "description": "(Kinesis, DynamoDB Streams, and SQS) A list of current response type enums applied to the event source mapping.\n Valid Values: ``ReportBatchItemFailures``",
+     "items": {
+      "enum": [
+       "ReportBatchItemFailures"
+      ],
+      "type": "string"
+     },
+     "maxItems": 1,
+     "maxLength": 1,
+     "minItems": 0,
+     "minLength": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "KmsKeyArn": {
+     "type": "string"
+    },
+    "MaximumBatchingWindowInSeconds": {
+     "description": "The maximum amount of time, in seconds, that Lambda spends gathering records before invoking the function.\n *Default (, , event sources)*: 0\n *Default (, Kafka, , event sources)*: 500 ms\n *Related setting:* For SQS event sources, when you set ``BatchSize`` to a value greater than 10, you must set ``MaximumBatchingWindowInSeconds`` to at least 1.",
+     "maximum": 300,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MaximumRecordAgeInSeconds": {
+     "description": "(Kinesis and DynamoDB Streams only) Discard records older than the specified age. The default value is -1, which sets the maximum age to infinite. When the value is set to infinite, Lambda never discards old records.\n  The minimum valid value for maximum record age is 60s. Although values less than 60 and greater than -1 fall within the parameter's absolute range, they are not allowed",
+     "maximum": 604800,
+     "minimum": -1,
+     "type": "integer"
+    },
+    "MaximumRetryAttempts": {
+     "description": "(Kinesis and DynamoDB Streams only) Discard records after the specified number of retries. The default value is -1, which sets the maximum number of retries to infinite. When MaximumRetryAttempts is infinite, Lambda retries failed records until the record expires in the event source.",
+     "maximum": 10000,
+     "minimum": -1,
+     "type": "integer"
+    },
+    "MetricsConfig": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "ParallelizationFactor": {
+     "description": "(Kinesis and DynamoDB Streams only) The number of batches to process concurrently from each shard. The default value is 1.",
+     "maximum": 10,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "StartingPosition": {
+     "description": "The position in a stream from which to start reading. Required for Amazon Kinesis and Amazon DynamoDB.\n  +  *LATEST* - Read only new records.\n  +  *TRIM_HORIZON* - Process all available records.\n  +  *AT_TIMESTAMP* - Specify a time from which to start reading records.",
+     "maxLength": 12,
+     "minLength": 6,
+     "pattern": "(LATEST|TRIM_HORIZON|AT_TIMESTAMP)+",
+     "type": "string"
+    },
+    "StartingPositionTimestamp": {
+     "description": "With ``StartingPosition`` set to ``AT_TIMESTAMP``, the time from which to start reading, in Unix time seconds. ``StartingPositionTimestamp`` cannot be in the future.",
+     "type": "number"
+    },
+    "Stream": {
+     "description": "The Amazon Resource Name (ARN) of the event source.\n  +  *Amazon Kinesis* \u2013 The ARN of the data stream or a stream consumer.\n  +  *Amazon DynamoDB Streams* \u2013 The ARN of the stream.\n  +  *Amazon Simple Queue Service* \u2013 The ARN of the queue.\n  +  *Amazon Managed Streaming for Apache Kafka* \u2013 The ARN of the cluster or the ARN of the VPC connection (for [cross-account event source mappings](https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html#msk-multi-vpc)).\n  +  *Amazon MQ* \u2013 The ARN of the broker.\n  +  *Amazon DocumentDB* \u2013 The ARN of the DocumentDB change stream.",
+     "maxLength": 1024,
+     "minLength": 12,
+     "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:((eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+     "type": "string"
+    },
+    "TumblingWindowInSeconds": {
+     "description": "(Kinesis and DynamoDB Streams only) The duration in seconds of a processing window for DynamoDB and Kinesis Streams event sources. A value of 0 seconds indicates no tumbling window.",
+     "maximum": 900,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Stream"
+   ],
+   "type": "object"
+  },
+  "MQEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/MQEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "MQ"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "MQEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchSize": {
+     "description": "The maximum number of records in each batch that Lambda pulls from your stream or queue and sends to your function. Lambda passes all of the records in the batch to the function in a single call, up to the payload limit for synchronous invocation (6 MB).\n  +  *Amazon Kinesis* \u2013 Default 100. Max 10,000.\n  +  *Amazon DynamoDB Streams* \u2013 Default 100. Max 10,000.\n  +  *Amazon Simple Queue Service* \u2013 Default 10. For standard queues the max is 10,000. For FIFO queues the max is 10.\n  +  *Amazon Managed Streaming for Apache Kafka* \u2013 Default 100. Max 10,000.\n  +  *Self-managed Apache Kafka* \u2013 Default 100. Max 10,000.\n  +  *Amazon MQ (ActiveMQ and RabbitMQ)* \u2013 Default 100. Max 10,000.\n  +  *DocumentDB* \u2013 Default 100. Max 10,000.",
+     "maximum": 10000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Broker": {
+     "description": "The Amazon Resource Name (ARN) of the event source.\n  +  *Amazon Kinesis* \u2013 The ARN of the data stream or a stream consumer.\n  +  *Amazon DynamoDB Streams* \u2013 The ARN of the stream.\n  +  *Amazon Simple Queue Service* \u2013 The ARN of the queue.\n  +  *Amazon Managed Streaming for Apache Kafka* \u2013 The ARN of the cluster or the ARN of the VPC connection (for [cross-account event source mappings](https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html#msk-multi-vpc)).\n  +  *Amazon MQ* \u2013 The ARN of the broker.\n  +  *Amazon DocumentDB* \u2013 The ARN of the DocumentDB change stream.",
+     "maxLength": 1024,
+     "minLength": 12,
+     "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:((eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+     "type": "string"
+    },
+    "DynamicPolicyName": {
+     "type": "boolean"
+    },
+    "Enabled": {
+     "description": "When true, the event source mapping is active. When false, Lambda pauses polling and invocation.\n Default: True",
+     "type": "boolean"
+    },
+    "FilterCriteria": {
+     "additionalProperties": false,
+     "description": "An object that contains the filters for an event source.",
+     "properties": {
+      "Filters": {
+       "description": "A list of filters.",
+       "items": {
+        "additionalProperties": false,
+        "description": "A structure within a ``FilterCriteria`` object that defines an event filtering pattern.",
+        "properties": {
+         "Pattern": {
+          "description": "A filter pattern. For more information on the syntax of a filter pattern, see [Filter rule syntax](https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html#filtering-syntax).",
+          "maxLength": 4096,
+          "minLength": 0,
+          "pattern": ".*",
+          "type": "string"
+         }
+        },
+        "type": "object"
+       },
+       "maxItems": 20,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "type": "object"
+    },
+    "KmsKeyArn": {
+     "type": "string"
+    },
+    "MaximumBatchingWindowInSeconds": {
+     "description": "The maximum amount of time, in seconds, that Lambda spends gathering records before invoking the function.\n *Default (, , event sources)*: 0\n *Default (, Kafka, , event sources)*: 500 ms\n *Related setting:* For SQS event sources, when you set ``BatchSize`` to a value greater than 10, you must set ``MaximumBatchingWindowInSeconds`` to at least 1.",
+     "maximum": 300,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "Queues": {
+     "description": "(Amazon MQ) The name of the Amazon MQ broker destination queue to consume.",
+     "items": {
+      "maxLength": 1000,
+      "minLength": 1,
+      "pattern": "[\\s\\S]*",
+      "type": "string"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SecretsManagerKmsKeyId": {
+     "type": "string"
+    },
+    "SourceAccessConfigurations": {
+     "description": "An array of the authentication protocol, VPC components, or virtual host to secure and define your event source.",
+     "items": {
+      "additionalProperties": false,
+      "description": "An array of the authentication protocol, VPC components, or virtual host to secure and define your event source.",
+      "properties": {
+       "Type": {
+        "description": "The type of authentication protocol, VPC components, or virtual host for your event source. For example: ``\"Type\":\"SASL_SCRAM_512_AUTH\"``.\n  +  ``BASIC_AUTH`` \u2013 (Amazon MQ) The ASMlong secret that stores your broker credentials.\n  +  ``BASIC_AUTH`` \u2013 (Self-managed Apache Kafka) The Secrets Manager ARN of your secret key used for SASL/PLAIN authentication of your Apache Kafka brokers.\n  +  ``VPC_SUBNET`` \u2013 (Self-managed Apache Kafka) The subnets associated with your VPC. Lambda connects to these subnets to fetch data from your self-managed Apache Kafka cluster.\n  +  ``VPC_SECURITY_GROUP`` \u2013 (Self-managed Apache Kafka) The VPC security group used to manage access to your self-managed Apache Kafka brokers.\n  +  ``SASL_SCRAM_256_AUTH`` \u2013 (Self-managed Apache Kafka) The Secrets Manager ARN of your secret key used for SASL SCRAM-256 authentication of your self-managed Apache Kafka brokers.\n  +  ``SASL_SCRAM_512_AUTH`` \u2013 (Amazon MSK, Self-managed Apache Kafka) The Secrets Manager ARN of your secret key used for SASL SCRAM-512 authentication of your self-managed Apache Kafka brokers.\n  +  ``VIRTUAL_HOST`` \u2013- (RabbitMQ) The name of the virtual host in your RabbitMQ broker. Lambda uses this RabbitMQ host as the event source. This property cannot be specified in an UpdateEventSourceMapping API call.\n  +  ``CLIENT_CERTIFICATE_TLS_AUTH`` \u2013 (Amazon MSK, self-managed Apache Kafka) The Secrets Manager ARN of your secret key containing the certificate chain (X.509 PEM), private key (PKCS#8 PEM), and private key password (optional) used for mutual TLS authentication of your MSK/Apache Kafka brokers.\n  +  ``SERVER_ROOT_CA_CERTIFICATE`` \u2013 (Self-managed Apache Kafka) The Secrets Manager ARN of your secret key containing the root CA certificate (X.509 PEM) used for TLS encryption of your Apache Kafka brokers.",
+        "enum": [
+         "BASIC_AUTH",
+         "VPC_SUBNET",
+         "VPC_SECURITY_GROUP",
+         "SASL_SCRAM_512_AUTH",
+         "SASL_SCRAM_256_AUTH",
+         "VIRTUAL_HOST",
+         "CLIENT_CERTIFICATE_TLS_AUTH",
+         "SERVER_ROOT_CA_CERTIFICATE"
+        ],
+        "type": "string"
+       },
+       "URI": {
+        "description": "The value for your chosen configuration in ``Type``. For example: ``\"URI\": \"arn:aws:secretsmanager:us-east-1:01234567890:secret:MyBrokerSecretName\"``.",
+        "maxLength": 200,
+        "minLength": 1,
+        "pattern": "[a-zA-Z0-9-\\/*:_+=.@-]*",
+        "type": "string"
+       }
+      },
+      "type": "object"
+     },
+     "maxItems": 22,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Broker",
+    "Queues",
+    "SourceAccessConfigurations"
+   ],
+   "type": "object"
+  },
+  "MSKEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/MSKEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "MSK"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "MSKEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchSize": {
+     "type": "number"
+    },
+    "BisectBatchOnFunctionError": {
+     "description": "(Kinesis and DynamoDB Streams only) If the function returns an error, split the batch in two and retry. The default value is false.\n  When using ``BisectBatchOnFunctionError``, check the ``BatchSize`` parameter in the ``OnFailure`` destination message's metadata. The ``BatchSize`` could be greater than 1 since LAM consolidates failed messages metadata when writing to the ``OnFailure`` destination.",
+     "type": "boolean"
+    },
+    "ConsumerGroupId": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "DestinationConfig": {
+     "$ref": "#/definitions/AWS::Lambda::EventSourceMapping.DestinationConfig"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "FilterCriteria": {
+     "additionalProperties": false,
+     "description": "An object that contains the filters for an event source.",
+     "properties": {
+      "Filters": {
+       "description": "A list of filters.",
+       "items": {
+        "additionalProperties": false,
+        "description": "A structure within a ``FilterCriteria`` object that defines an event filtering pattern.",
+        "properties": {
+         "Pattern": {
+          "description": "A filter pattern. For more information on the syntax of a filter pattern, see [Filter rule syntax](https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html#filtering-syntax).",
+          "maxLength": 4096,
+          "minLength": 0,
+          "pattern": ".*",
+          "type": "string"
+         }
+        },
+        "type": "object"
+       },
+       "maxItems": 20,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "type": "object"
+    },
+    "FunctionResponseTypes": {
+     "description": "(Kinesis, DynamoDB Streams, and SQS) A list of current response type enums applied to the event source mapping.\n Valid Values: ``ReportBatchItemFailures``",
+     "items": {
+      "enum": [
+       "ReportBatchItemFailures"
+      ],
+      "type": "string"
+     },
+     "maxItems": 1,
+     "maxLength": 1,
+     "minItems": 0,
+     "minLength": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "KmsKeyArn": {
+     "description": "The ARN of the KMSlong (KMS) customer managed key that Lambda uses to encrypt your function's [filter criteria](https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html#filtering-basics).",
+     "format": "AWS::KMS::Key.Arn",
+     "maxLength": 2048,
+     "minLength": 12,
+     "pattern": "(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()",
+     "type": "string"
+    },
+    "LoggingConfig": {
+     "additionalProperties": false,
+     "description": "The function's Amazon CloudWatch Logs configuration settings.",
+     "properties": {
+      "SystemLogLevel": {
+       "description": "Set this property to filter the system logs for your function that Lambda sends to CloudWatch. Lambda only sends system logs at the selected level of detail and lower, where ``DEBUG`` is the highest level and ``WARN`` is the lowest.",
+       "enum": [
+        "DEBUG",
+        "INFO",
+        "WARN"
+       ],
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "MaximumBatchingWindowInSeconds": {
+     "description": "The maximum amount of time, in seconds, that Lambda spends gathering records before invoking the function.\n *Default (, , event sources)*: 0\n *Default (, Kafka, , event sources)*: 500 ms\n *Related setting:* For SQS event sources, when you set ``BatchSize`` to a value greater than 10, you must set ``MaximumBatchingWindowInSeconds`` to at least 1.",
+     "maximum": 300,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MaximumRecordAgeInSeconds": {
+     "description": "(Kinesis and DynamoDB Streams only) Discard records older than the specified age. The default value is -1, which sets the maximum age to infinite. When the value is set to infinite, Lambda never discards old records.\n  The minimum valid value for maximum record age is 60s. Although values less than 60 and greater than -1 fall within the parameter's absolute range, they are not allowed",
+     "maximum": 604800,
+     "minimum": -1,
+     "type": "integer"
+    },
+    "MaximumRetryAttempts": {
+     "description": "(Kinesis and DynamoDB Streams only) Discard records after the specified number of retries. The default value is -1, which sets the maximum number of retries to infinite. When MaximumRetryAttempts is infinite, Lambda retries failed records until the record expires in the event source.",
+     "maximum": 10000,
+     "minimum": -1,
+     "type": "integer"
+    },
+    "MetricsConfig": {
+     "additionalProperties": false,
+     "description": "The metrics configuration for your event source. Use this configuration object to define which metrics you want your event source mapping to produce.",
+     "properties": {
+      "Metrics": {
+       "description": "The metrics you want your event source mapping to produce. Include ``EventCount`` to receive event source mapping metrics related to the number of events processed by your event source mapping. For more information about these metrics, see [Event source mapping metrics](https://docs.aws.amazon.com/lambda/latest/dg/monitoring-metrics-types.html#event-source-mapping-metrics).",
+       "items": {
+        "enum": [
+         "EventCount",
+         "ErrorCount",
+         "KafkaMetrics"
+        ],
+        "type": "string"
+       },
+       "maxItems": 3,
+       "minItems": 0,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "type": "object"
+    },
+    "ProvisionedPollerConfig": {
+     "additionalProperties": false,
+     "description": "The [provisioned mode](https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventsourcemapping.html#invocation-eventsourcemapping-provisioned-mode) configuration for the event source. Use Provisioned Mode to customize the minimum and maximum number of event pollers for your event source.",
+     "properties": {
+      "MaximumPollers": {
+       "description": "The maximum number of event pollers this event source can scale up to. For Amazon SQS events source mappings, default is 200, and minimum value allowed is 2. For Amazon MSK and self-managed Apache Kafka event source mappings, default is 200, and minimum value allowed is 1.",
+       "maximum": 2000,
+       "minimum": 1,
+       "type": "integer"
+      },
+      "MinimumPollers": {
+       "description": "The minimum number of event pollers this event source can scale down to. For Amazon SQS events source mappings, default is 2, and minimum 2 required. For Amazon MSK and self-managed Apache Kafka event source mappings, default is 1.",
+       "maximum": 200,
+       "minimum": 1,
+       "type": "integer"
+      },
+      "PollerGroupName": {
+       "description": "",
+       "maxLength": 128,
+       "minLength": 0,
+       "pattern": "^[a-zA-Z0-9-_]*$",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "SchemaRegistryConfig": {
+     "additionalProperties": false,
+     "description": "Specific configuration settings for an Amazon Managed Streaming for Apache Kafka (Amazon MSK) event source.",
+     "properties": {
+      "ConsumerGroupId": {
+       "description": "The identifier for the Kafka Consumer Group to join.",
+       "maxLength": 200,
+       "minLength": 1,
+       "pattern": "[a-zA-Z0-9-\\/*:_+=.@-]*",
+       "type": "string"
+      },
+      "SchemaRegistryConfig": {
+       "additionalProperties": false,
+       "description": "Specific configuration settings for a Kafka schema registry.",
+       "properties": {
+        "AccessConfigs": {
+         "description": "An array of access configuration objects that tell Lambda how to authenticate with your schema registry.",
+         "items": {
+          "additionalProperties": false,
+          "description": "Specific access configuration settings that tell Lambda how to authenticate with your schema registry.\n If you're working with an GLU schema registry, don't provide authentication details in this object. Instead, ensure that your execution role has the required permissions for Lambda to access your cluster.\n If you're working with a Confluent schema registry, choose the authentication method in the ``Type`` field, and provide the ASMlong secret ARN in the ``URI`` field.",
+          "properties": {
+           "Type": {
+            "description": "The type of authentication Lambda uses to access your schema registry.",
+            "enum": [
+             "BASIC_AUTH",
+             "CLIENT_CERTIFICATE_TLS_AUTH",
+             "SERVER_ROOT_CA_CERTIFICATE"
+            ],
+            "type": "string"
+           },
+           "URI": {
+            "description": "The URI of the secret (Secrets Manager secret ARN) to authenticate with your schema registry.",
+            "maxLength": 10000,
+            "minLength": 1,
+            "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:((eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+            "type": "string"
+           }
+          },
+          "type": "object"
+         },
+         "maxItems": 2,
+         "type": "array",
+         "uniqueItems": true
+        },
+        "EventRecordFormat": {
+         "description": "The record format that Lambda delivers to your function after schema validation.\n  +  Choose ``JSON`` to have Lambda deliver the record to your function as a standard JSON object.\n  +  Choose ``SOURCE`` to have Lambda deliver the record to your function in its original source format. Lambda removes all schema metadata, such as the schema ID, before sending the record to your function.",
+         "enum": [
+          "JSON",
+          "SOURCE"
+         ],
+         "type": "string"
+        },
+        "SchemaRegistryURI": {
+         "description": "The URI for your schema registry. The correct URI format depends on the type of schema registry you're using.\n  +  For GLU schema registries, use the ARN of the registry.\n  +  For Confluent schema registries, use the URL of the registry.",
+         "maxLength": 10000,
+         "minLength": 1,
+         "pattern": "[a-zA-Z0-9-/*:_+=.@-]*",
+         "type": "string"
+        },
+        "SchemaValidationConfigs": {
+         "description": "An array of schema validation configuration objects, which tell Lambda the message attributes you want to validate and filter using your schema registry.",
+         "items": {
+          "additionalProperties": false,
+          "description": "Specific schema validation configuration settings that tell Lambda the message attributes you want to validate and filter using your schema registry.",
+          "properties": {
+           "Attribute": {
+            "description": "The attributes you want your schema registry to validate and filter for. If you selected ``JSON`` as the ``EventRecordFormat``, Lambda also deserializes the selected message attributes.",
+            "enum": [
+             "KEY",
+             "VALUE"
+            ],
+            "type": "string"
+           }
+          },
+          "type": "object"
+         },
+         "maxItems": 2,
+         "minItems": 1,
+         "type": "array",
+         "uniqueItems": true
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    },
+    "SourceAccessConfigurations": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "StartingPosition": {
+     "description": "The position in a stream from which to start reading. Required for Amazon Kinesis and Amazon DynamoDB.\n  +  *LATEST* - Read only new records.\n  +  *TRIM_HORIZON* - Process all available records.\n  +  *AT_TIMESTAMP* - Specify a time from which to start reading records.",
+     "maxLength": 12,
+     "minLength": 6,
+     "pattern": "(LATEST|TRIM_HORIZON|AT_TIMESTAMP)+",
+     "type": "string"
+    },
+    "StartingPositionTimestamp": {
+     "description": "With ``StartingPosition`` set to ``AT_TIMESTAMP``, the time from which to start reading, in Unix time seconds. ``StartingPositionTimestamp`` cannot be in the future.",
+     "type": "number"
+    },
+    "Stream": {
+     "description": "The Amazon Resource Name (ARN) of the event source.\n  +  *Amazon Kinesis* \u2013 The ARN of the data stream or a stream consumer.\n  +  *Amazon DynamoDB Streams* \u2013 The ARN of the stream.\n  +  *Amazon Simple Queue Service* \u2013 The ARN of the queue.\n  +  *Amazon Managed Streaming for Apache Kafka* \u2013 The ARN of the cluster or the ARN of the VPC connection (for [cross-account event source mappings](https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html#msk-multi-vpc)).\n  +  *Amazon MQ* \u2013 The ARN of the broker.\n  +  *Amazon DocumentDB* \u2013 The ARN of the DocumentDB change stream.",
+     "maxLength": 1024,
+     "minLength": 12,
+     "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:((eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+     "type": "string"
+    },
+    "Topics": {
+     "description": "The name of the Kafka topic.",
+     "items": {
+      "maxLength": 249,
+      "minLength": 1,
+      "pattern": "^[^.]([a-zA-Z0-9\\-_.]+)",
+      "type": "string"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Stream",
+    "Topics"
+   ],
+   "type": "object"
+  },
+  "PassThroughProp": {},
+  "Ref": {
+   "additionalProperties": false,
+   "properties": {
+    "Ref": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Ref"
+   ],
+   "type": "object"
+  },
+  "RequestModel": {
+   "additionalProperties": false,
+   "properties": {
+    "Model": {
+     "type": "string"
+    },
+    "Required": {
+     "type": "boolean"
+    },
+    "ValidateBody": {
+     "type": "boolean"
+    },
+    "ValidateParameters": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Model"
+   ],
+   "type": "object"
+  },
+  "RequestParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Caching": {
+     "type": "boolean"
+    },
+    "Required": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "ResourcePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsAccountBlacklist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "AwsAccountWhitelist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "CustomStatements": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "IntrinsicVpcBlacklist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "IntrinsicVpcWhitelist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "IntrinsicVpceBlacklist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "IntrinsicVpceWhitelist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "IpRangeBlacklist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "IpRangeWhitelist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "SourceVpcBlacklist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "SourceVpcWhitelist": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "S3Event": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/S3EventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "S3"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Properties",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "S3EventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "Events": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "Filter": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Bucket",
+    "Events"
+   ],
+   "type": "object"
+  },
+  "SNSEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/SNSEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "SNS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Properties",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "SNSEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "FilterPolicy": {
+     "description": "The filter policy JSON assigned to the subscription. Enables the subscriber to filter out unwanted messages.",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "FilterPolicyScope": {
+     "type": "string"
+    },
+    "Region": {
+     "description": "For cross-region subscriptions, the region in which the topic resides.If no region is specified, AWS CloudFormation uses the region of the caller as the default.",
+     "type": "string"
+    },
+    "SqsSubscription": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "$ref": "#/definitions/SqsSubscription"
+      }
+     ]
+    },
+    "Topic": {
+     "description": "The ARN of the topic to subscribe to.",
+     "format": "AWS::SNS::Topic.Arn",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Topic"
+   ],
+   "type": "object"
+  },
+  "SQSEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/SQSEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "SQS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "SQSEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchSize": {
+     "description": "The maximum number of records in each batch that Lambda pulls from your stream or queue and sends to your function. Lambda passes all of the records in the batch to the function in a single call, up to the payload limit for synchronous invocation (6 MB).\n  +  *Amazon Kinesis* \u2013 Default 100. Max 10,000.\n  +  *Amazon DynamoDB Streams* \u2013 Default 100. Max 10,000.\n  +  *Amazon Simple Queue Service* \u2013 Default 10. For standard queues the max is 10,000. For FIFO queues the max is 10.\n  +  *Amazon Managed Streaming for Apache Kafka* \u2013 Default 100. Max 10,000.\n  +  *Self-managed Apache Kafka* \u2013 Default 100. Max 10,000.\n  +  *Amazon MQ (ActiveMQ and RabbitMQ)* \u2013 Default 100. Max 10,000.\n  +  *DocumentDB* \u2013 Default 100. Max 10,000.",
+     "maximum": 10000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Enabled": {
+     "description": "When true, the event source mapping is active. When false, Lambda pauses polling and invocation.\n Default: True",
+     "type": "boolean"
+    },
+    "FilterCriteria": {
+     "additionalProperties": false,
+     "description": "An object that contains the filters for an event source.",
+     "properties": {
+      "Filters": {
+       "description": "A list of filters.",
+       "items": {
+        "additionalProperties": false,
+        "description": "A structure within a ``FilterCriteria`` object that defines an event filtering pattern.",
+        "properties": {
+         "Pattern": {
+          "description": "A filter pattern. For more information on the syntax of a filter pattern, see [Filter rule syntax](https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html#filtering-syntax).",
+          "maxLength": 4096,
+          "minLength": 0,
+          "pattern": ".*",
+          "type": "string"
+         }
+        },
+        "type": "object"
+       },
+       "maxItems": 20,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "type": "object"
+    },
+    "FunctionResponseTypes": {
+     "description": "(Kinesis, DynamoDB Streams, and SQS) A list of current response type enums applied to the event source mapping.\n Valid Values: ``ReportBatchItemFailures``",
+     "items": {
+      "enum": [
+       "ReportBatchItemFailures"
+      ],
+      "type": "string"
+     },
+     "maxItems": 1,
+     "maxLength": 1,
+     "minItems": 0,
+     "minLength": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "KmsKeyArn": {
+     "description": "The ARN of the KMSlong (KMS) customer managed key that Lambda uses to encrypt your function's [filter criteria](https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html#filtering-basics).",
+     "format": "AWS::KMS::Key.Arn",
+     "maxLength": 2048,
+     "minLength": 12,
+     "pattern": "(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()",
+     "type": "string"
+    },
+    "MaximumBatchingWindowInSeconds": {
+     "description": "The maximum amount of time, in seconds, that Lambda spends gathering records before invoking the function.\n *Default (, , event sources)*: 0\n *Default (, Kafka, , event sources)*: 500 ms\n *Related setting:* For SQS event sources, when you set ``BatchSize`` to a value greater than 10, you must set ``MaximumBatchingWindowInSeconds`` to at least 1.",
+     "maximum": 300,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MetricsConfig": {
+     "$ref": "#/definitions/PassThroughProp"
+    },
+    "Queue": {
+     "description": "The Amazon Resource Name (ARN) of the event source.\n  +  *Amazon Kinesis* \u2013 The ARN of the data stream or a stream consumer.\n  +  *Amazon DynamoDB Streams* \u2013 The ARN of the stream.\n  +  *Amazon Simple Queue Service* \u2013 The ARN of the queue.\n  +  *Amazon Managed Streaming for Apache Kafka* \u2013 The ARN of the cluster or the ARN of the VPC connection (for [cross-account event source mappings](https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html#msk-multi-vpc)).\n  +  *Amazon MQ* \u2013 The ARN of the broker.\n  +  *Amazon DocumentDB* \u2013 The ARN of the DocumentDB change stream.",
+     "maxLength": 1024,
+     "minLength": 12,
+     "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:((eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+     "type": "string"
+    },
+    "ScalingConfig": {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   },
+   "required": [
+    "Queue"
+   ],
+   "type": "object"
+  },
+  "ScheduleEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/EventsScheduleProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "Schedule"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "ScheduleV2Event": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/ScheduleV2EventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "ScheduleV2"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "ScheduleV2EventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "DeadLetterConfig": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/DeadLetterConfig"
+      }
+     ]
+    },
+    "Description": {
+     "description": "The description of the schedule.",
+     "maxLength": 512,
+     "minLength": 0,
+     "type": "string"
+    },
+    "EndDate": {
+     "description": "The date, in UTC, before which the schedule can invoke its target. Depending on the schedule's recurrence expression, invocations might stop on, or before, the EndDate you specify.",
+     "format": "date-time",
+     "type": "string"
+    },
+    "FlexibleTimeWindow": {
+     "additionalProperties": false,
+     "description": "Flexible time window allows configuration of a window within which a schedule can be invoked",
+     "properties": {
+      "MaximumWindowInMinutes": {
+       "description": "The maximum time window during which a schedule can be invoked.",
+       "maximum": 1440,
+       "minimum": 1,
+       "type": "number"
+      },
+      "Mode": {
+       "description": "Determines whether the schedule is executed within a flexible time window.",
+       "enum": [
+        "OFF",
+        "FLEXIBLE"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "Mode"
+     ],
+     "type": "object"
+    },
+    "GroupName": {
+     "description": "The name of the schedule group to associate with this schedule. If you omit this, the default schedule group is used.",
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[0-9a-zA-Z-_.]+$",
+     "type": "string"
+    },
+    "Input": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "KmsKeyArn": {
+     "description": "The ARN for a KMS Key that will be used to encrypt customer data.",
+     "format": "AWS::KMS::Key.Arn",
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:aws[a-z-]*:kms:[a-z0-9\\-]+:\\d{12}:(key|alias)\\/[0-9a-zA-Z-_]*$",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[0-9a-zA-Z-_.]+$",
+     "type": "string"
+    },
+    "OmitName": {
+     "type": "boolean"
+    },
+    "PermissionsBoundary": {
+     "description": "The ARN of the policy used to set the permissions boundary for the role.\n For more information about permissions boundaries, see [Permissions boundaries for IAM identities](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html) in the *IAM User Guide*.",
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    },
+    "RetryPolicy": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "RoleArn": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "ScheduleExpression": {
+     "description": "The scheduling expression.",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ScheduleExpressionTimezone": {
+     "description": "The timezone in which the scheduling expression is evaluated.",
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "StartDate": {
+     "description": "The date, in UTC, after which the schedule can begin invoking its target. Depending on the schedule's recurrence expression, invocations might occur on, or after, the StartDate you specify.",
+     "format": "date-time",
+     "type": "string"
+    },
+    "State": {
+     "description": "Specifies whether the schedule is enabled or disabled.",
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SelfManagedKafkaEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/SelfManagedKafkaEventProperties"
+      }
+     ]
+    },
+    "Type": {
+     "enum": [
+      "SelfManagedKafka"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Properties"
+   ],
+   "type": "object"
+  },
+  "SelfManagedKafkaEventProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchSize": {
+     "description": "The maximum number of records in each batch that Lambda pulls from your stream or queue and sends to your function. Lambda passes all of the records in the batch to the function in a single call, up to the payload limit for synchronous invocation (6 MB).\n  +  *Amazon Kinesis* \u2013 Default 100. Max 10,000.\n  +  *Amazon DynamoDB Streams* \u2013 Default 100. Max 10,000.\n  +  *Amazon Simple Queue Service* \u2013 Default 10. For standard queues the max is 10,000. For FIFO queues the max is 10.\n  +  *Amazon Managed Streaming for Apache Kafka* \u2013 Default 100. Max 10,000.\n  +  *Self-managed Apache Kafka* \u2013 Default 100. Max 10,000.\n  +  *Amazon MQ (ActiveMQ and RabbitMQ)* \u2013 Default 100. Max 10,000.\n  +  *DocumentDB* \u2013 Default 100. Max 10,000.",
+     "maximum": 10000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "BisectBatchOnFunctionError": {
+     "description": "(Kinesis and DynamoDB Streams only) If the function returns an error, split the batch in two and retry. The default value is false.\n  When using ``BisectBatchOnFunctionError``, check the ``BatchSize`` parameter in the ``OnFailure`` destination message's metadata. The ``BatchSize`` could be greater than 1 since LAM consolidates failed messages metadata when writing to the ``OnFailure`` destination.",
+     "type": "boolean"
+    },
+    "ConsumerGroupId": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "Enabled": {
+     "description": "When true, the event source mapping is active. When false, Lambda pauses polling and invocation.\n Default: True",
+     "type": "boolean"
+    },
+    "FilterCriteria": {
+     "additionalProperties": false,
+     "description": "An object that contains the filters for an event source.",
+     "properties": {
+      "Filters": {
+       "description": "A list of filters.",
+       "items": {
+        "additionalProperties": false,
+        "description": "A structure within a ``FilterCriteria`` object that defines an event filtering pattern.",
+        "properties": {
+         "Pattern": {
+          "description": "A filter pattern. For more information on the syntax of a filter pattern, see [Filter rule syntax](https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html#filtering-syntax).",
+          "maxLength": 4096,
+          "minLength": 0,
+          "pattern": ".*",
+          "type": "string"
+         }
+        },
+        "type": "object"
+       },
+       "maxItems": 20,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "type": "object"
+    },
+    "FunctionResponseTypes": {
+     "description": "(Kinesis, DynamoDB Streams, and SQS) A list of current response type enums applied to the event source mapping.\n Valid Values: ``ReportBatchItemFailures``",
+     "items": {
+      "enum": [
+       "ReportBatchItemFailures"
+      ],
+      "type": "string"
+     },
+     "maxItems": 1,
+     "maxLength": 1,
+     "minItems": 0,
+     "minLength": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "KafkaBootstrapServers": {
+     "items": {
+      "anyOf": [
+       {
+        "type": "object"
+       },
+       {
+        "type": "string"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "KmsKeyArn": {
+     "type": "string"
+    },
+    "LoggingConfig": {
+     "additionalProperties": false,
+     "description": "The function's Amazon CloudWatch Logs configuration settings.",
+     "properties": {
+      "SystemLogLevel": {
+       "description": "Set this property to filter the system logs for your function that Lambda sends to CloudWatch. Lambda only sends system logs at the selected level of detail and lower, where ``DEBUG`` is the highest level and ``WARN`` is the lowest.",
+       "enum": [
+        "DEBUG",
+        "INFO",
+        "WARN"
+       ],
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "MaximumRecordAgeInSeconds": {
+     "description": "(Kinesis and DynamoDB Streams only) Discard records older than the specified age. The default value is -1, which sets the maximum age to infinite. When the value is set to infinite, Lambda never discards old records.\n  The minimum valid value for maximum record age is 60s. Although values less than 60 and greater than -1 fall within the parameter's absolute range, they are not allowed",
+     "maximum": 604800,
+     "minimum": -1,
+     "type": "integer"
+    },
+    "MaximumRetryAttempts": {
+     "description": "(Kinesis and DynamoDB Streams only) Discard records after the specified number of retries. The default value is -1, which sets the maximum number of retries to infinite. When MaximumRetryAttempts is infinite, Lambda retries failed records until the record expires in the event source.",
+     "maximum": 10000,
+     "minimum": -1,
+     "type": "integer"
+    },
+    "MetricsConfig": {
+     "additionalProperties": false,
+     "description": "The metrics configuration for your event source. Use this configuration object to define which metrics you want your event source mapping to produce.",
+     "properties": {
+      "Metrics": {
+       "description": "The metrics you want your event source mapping to produce. Include ``EventCount`` to receive event source mapping metrics related to the number of events processed by your event source mapping. For more information about these metrics, see [Event source mapping metrics](https://docs.aws.amazon.com/lambda/latest/dg/monitoring-metrics-types.html#event-source-mapping-metrics).",
+       "items": {
+        "enum": [
+         "EventCount",
+         "ErrorCount",
+         "KafkaMetrics"
+        ],
+        "type": "string"
+       },
+       "maxItems": 3,
+       "minItems": 0,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "type": "object"
+    },
+    "ProvisionedPollerConfig": {
+     "additionalProperties": false,
+     "description": "The [provisioned mode](https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventsourcemapping.html#invocation-eventsourcemapping-provisioned-mode) configuration for the event source. Use Provisioned Mode to customize the minimum and maximum number of event pollers for your event source.",
+     "properties": {
+      "MaximumPollers": {
+       "description": "The maximum number of event pollers this event source can scale up to. For Amazon SQS events source mappings, default is 200, and minimum value allowed is 2. For Amazon MSK and self-managed Apache Kafka event source mappings, default is 200, and minimum value allowed is 1.",
+       "maximum": 2000,
+       "minimum": 1,
+       "type": "integer"
+      },
+      "MinimumPollers": {
+       "description": "The minimum number of event pollers this event source can scale down to. For Amazon SQS events source mappings, default is 2, and minimum 2 required. For Amazon MSK and self-managed Apache Kafka event source mappings, default is 1.",
+       "maximum": 200,
+       "minimum": 1,
+       "type": "integer"
+      },
+      "PollerGroupName": {
+       "description": "",
+       "maxLength": 128,
+       "minLength": 0,
+       "pattern": "^[a-zA-Z0-9-_]*$",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "SchemaRegistryConfig": {
+     "additionalProperties": false,
+     "description": "Specific configuration settings for a self-managed Apache Kafka event source.",
+     "properties": {
+      "ConsumerGroupId": {
+       "description": "The identifier for the Kafka Consumer Group to join.",
+       "maxLength": 200,
+       "minLength": 1,
+       "pattern": "[a-zA-Z0-9-\\/*:_+=.@-]*",
+       "type": "string"
+      },
+      "SchemaRegistryConfig": {
+       "additionalProperties": false,
+       "description": "Specific configuration settings for a Kafka schema registry.",
+       "properties": {
+        "AccessConfigs": {
+         "description": "An array of access configuration objects that tell Lambda how to authenticate with your schema registry.",
+         "items": {
+          "additionalProperties": false,
+          "description": "Specific access configuration settings that tell Lambda how to authenticate with your schema registry.\n If you're working with an GLU schema registry, don't provide authentication details in this object. Instead, ensure that your execution role has the required permissions for Lambda to access your cluster.\n If you're working with a Confluent schema registry, choose the authentication method in the ``Type`` field, and provide the ASMlong secret ARN in the ``URI`` field.",
+          "properties": {
+           "Type": {
+            "description": "The type of authentication Lambda uses to access your schema registry.",
+            "enum": [
+             "BASIC_AUTH",
+             "CLIENT_CERTIFICATE_TLS_AUTH",
+             "SERVER_ROOT_CA_CERTIFICATE"
+            ],
+            "type": "string"
+           },
+           "URI": {
+            "description": "The URI of the secret (Secrets Manager secret ARN) to authenticate with your schema registry.",
+            "maxLength": 10000,
+            "minLength": 1,
+            "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:((eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+            "type": "string"
+           }
+          },
+          "type": "object"
+         },
+         "maxItems": 2,
+         "type": "array",
+         "uniqueItems": true
+        },
+        "EventRecordFormat": {
+         "description": "The record format that Lambda delivers to your function after schema validation.\n  +  Choose ``JSON`` to have Lambda deliver the record to your function as a standard JSON object.\n  +  Choose ``SOURCE`` to have Lambda deliver the record to your function in its original source format. Lambda removes all schema metadata, such as the schema ID, before sending the record to your function.",
+         "enum": [
+          "JSON",
+          "SOURCE"
+         ],
+         "type": "string"
+        },
+        "SchemaRegistryURI": {
+         "description": "The URI for your schema registry. The correct URI format depends on the type of schema registry you're using.\n  +  For GLU schema registries, use the ARN of the registry.\n  +  For Confluent schema registries, use the URL of the registry.",
+         "maxLength": 10000,
+         "minLength": 1,
+         "pattern": "[a-zA-Z0-9-/*:_+=.@-]*",
+         "type": "string"
+        },
+        "SchemaValidationConfigs": {
+         "description": "An array of schema validation configuration objects, which tell Lambda the message attributes you want to validate and filter using your schema registry.",
+         "items": {
+          "additionalProperties": false,
+          "description": "Specific schema validation configuration settings that tell Lambda the message attributes you want to validate and filter using your schema registry.",
+          "properties": {
+           "Attribute": {
+            "description": "The attributes you want your schema registry to validate and filter for. If you selected ``JSON`` as the ``EventRecordFormat``, Lambda also deserializes the selected message attributes.",
+            "enum": [
+             "KEY",
+             "VALUE"
+            ],
+            "type": "string"
+           }
+          },
+          "type": "object"
+         },
+         "maxItems": 2,
+         "minItems": 1,
+         "type": "array",
+         "uniqueItems": true
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    },
+    "SourceAccessConfigurations": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "StartingPosition": {
+     "description": "The position in a stream from which to start reading. Required for Amazon Kinesis and Amazon DynamoDB.\n  +  *LATEST* - Read only new records.\n  +  *TRIM_HORIZON* - Process all available records.\n  +  *AT_TIMESTAMP* - Specify a time from which to start reading records.",
+     "maxLength": 12,
+     "minLength": 6,
+     "pattern": "(LATEST|TRIM_HORIZON|AT_TIMESTAMP)+",
+     "type": "string"
+    },
+    "StartingPositionTimestamp": {
+     "description": "With ``StartingPosition`` set to ``AT_TIMESTAMP``, the time from which to start reading, in Unix time seconds. ``StartingPositionTimestamp`` cannot be in the future.",
+     "type": "number"
+    },
+    "Topics": {
+     "description": "The name of the Kafka topic.",
+     "items": {
+      "maxLength": 249,
+      "minLength": 1,
+      "pattern": "^[^.]([a-zA-Z0-9\\-_.]+)",
+      "type": "string"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "SourceAccessConfigurations",
+    "Topics"
+   ],
+   "type": "object"
+  },
+  "SqsSubscription": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchSize": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "QueueArn": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "QueuePolicyLogicalId": {
+     "type": "string"
+    },
+    "QueueUrl": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    }
+   },
+   "required": [
+    "QueueArn",
+    "QueueUrl"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FunctionName"
+ ],
+ "properties": {
+  "Architectures": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Arn": {
+   "description": "",
+   "type": "string"
+  },
+  "AssumeRolePolicyDocument": {
+   "type": "object"
+  },
+  "AutoPublishAlias": {
+   "anyOf": [
+    {
+     "type": "object"
+    },
+    {
+     "type": "string"
+    }
+   ]
+  },
+  "AutoPublishAliasAllProperties": {
+   "type": "boolean"
+  },
+  "AutoPublishCodeSha256": {
+   "anyOf": [
+    {
+     "type": "object"
+    },
+    {
+     "type": "string"
+    }
+   ]
+  },
+  "CapacityProviderConfig": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/CapacityProviderConfig"
+    }
+   ]
+  },
+  "CodeSigningConfigArn": {
+   "type": "string"
+  },
+  "CodeUri": {
+   "anyOf": [
+    {
+     "type": "string"
+    },
+    {
+     "$ref": "#/definitions/CodeUri"
+    }
+   ]
+  },
+  "DeadLetterQueue": {
+   "anyOf": [
+    {
+     "type": "object"
+    },
+    {
+     "$ref": "#/definitions/DeadLetterQueue"
+    }
+   ]
+  },
+  "DeploymentPreference": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/DeploymentPreference"
+    }
+   ]
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DurableConfig": {
+   "$ref": "#/definitions/AWS::Lambda::Function.DurableConfig"
+  },
+  "Environment": {
+   "$ref": "#/definitions/AWS::Lambda::Function.Environment"
+  },
+  "EphemeralStorage": {
+   "$ref": "#/definitions/AWS::Lambda::Function.EphemeralStorage"
+  },
+  "EventInvokeConfig": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/EventInvokeConfig"
+    }
+   ]
+  },
+  "Events": {
+   "additionalProperties": {
+    "anyOf": [
+     {
+      "$ref": "#/definitions/S3Event"
+     },
+     {
+      "$ref": "#/definitions/SNSEvent"
+     },
+     {
+      "$ref": "#/definitions/KinesisEvent"
+     },
+     {
+      "$ref": "#/definitions/DynamoDBEvent"
+     },
+     {
+      "$ref": "#/definitions/DocumentDBEvent"
+     },
+     {
+      "$ref": "#/definitions/SQSEvent"
+     },
+     {
+      "$ref": "#/definitions/ApiEvent"
+     },
+     {
+      "$ref": "#/definitions/ScheduleEvent"
+     },
+     {
+      "$ref": "#/definitions/ScheduleV2Event"
+     },
+     {
+      "$ref": "#/definitions/CloudWatchEvent"
+     },
+     {
+      "$ref": "#/definitions/EventBridgeRuleEvent"
+     },
+     {
+      "$ref": "#/definitions/CloudWatchLogsEvent"
+     },
+     {
+      "$ref": "#/definitions/IoTRuleEvent"
+     },
+     {
+      "$ref": "#/definitions/AlexaSkillEvent"
+     },
+     {
+      "$ref": "#/definitions/CognitoEvent"
+     },
+     {
+      "$ref": "#/definitions/HttpApiEvent"
+     },
+     {
+      "$ref": "#/definitions/MSKEvent"
+     },
+     {
+      "$ref": "#/definitions/MQEvent"
+     },
+     {
+      "$ref": "#/definitions/SelfManagedKafkaEvent"
+     }
+    ]
+   },
+   "type": "object"
+  },
+  "FileSystemConfigs": {
+   "items": {
+    "$ref": "#/definitions/AWS::Lambda::Function.FileSystemConfig"
+   },
+   "type": "array"
+  },
+  "FunctionName": {
+   "type": "string"
+  },
+  "FunctionScalingConfig": {
+   "$ref": "#/definitions/AWS::Lambda::Function.FunctionScalingConfig"
+  },
+  "FunctionUrlConfig": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/FunctionUrlConfig"
+    }
+   ]
+  },
+  "Handler": {
+   "type": "string"
+  },
+  "ImageConfig": {
+   "$ref": "#/definitions/AWS::Lambda::Function.ImageConfig"
+  },
+  "ImageUri": {
+   "type": "string"
+  },
+  "InlineCode": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   ]
+  },
+  "KmsKeyArn": {
+   "description": "The ARN of the KMSlong (KMS) customer managed key that's used to encrypt the following resources:\n  +  The function's [environment variables](https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html#configuration-envvars-encryption).\n  +  The function's [Lambda SnapStart](https://docs.aws.amazon.com/lambda/latest/dg/snapstart-security.html) snapshots.\n  +  When used with ``SourceKMSKeyArn``, the unzipped version of the .zip deployment package that's used for function invocations. For more information, see [Specifying a customer managed key for Lambda](https://docs.aws.amazon.com/lambda/latest/dg/encrypt-zip-package.html#enable-zip-custom-encryption).\n  +  The optimized version of the container image that's used for function invocations. Note that this is not the same key that's used to protect your container image in the Amazon Elastic Container Registry (Amazon ECR). For more information, see [Function lifecycle](https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-lifecycle).\n  \n If you don't provide a customer managed key, Lambda uses an [owned key](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-owned-cmk) or an [](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-managed-cmk).",
+   "format": "AWS::KMS::Key.Arn",
+   "maxLength": 10000,
+   "minLength": 0,
+   "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
+   "type": "string"
+  },
+  "Layers": {
+   "description": "A list of [function layers](https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html) to add to the function's execution environment. Specify each layer by its ARN, including the version.",
+   "items": {
+    "minLength": 1,
+    "pattern": "^(arn:[a-zA-Z0-9-]+:lambda:[a-zA-Z0-9-]+:\\d{12}:layer:[a-zA-Z0-9-_]+:[0-9]+|arn:[a-zA-Z0-9-]+:lambda:::awslayer:[a-zA-Z0-9-_]+)$",
+    "type": "string"
+   },
+   "maxItems": 5,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "LoggingConfig": {
+   "$ref": "#/definitions/AWS::Lambda::Function.LoggingConfig"
+  },
+  "MemorySize": {
+   "description": "The amount of [memory available to the function](https://docs.aws.amazon.com/lambda/latest/dg/configuration-function-common.html#configuration-memory-console) at runtime. Increasing the function memory also increases its CPU allocation. The default value is 128 MB. The value can be any multiple of 1 MB. Note that new AWS accounts have reduced concurrency and memory quotas. AWS raises these quotas automatically based on your usage. You can also request a quota increase.",
+   "maximum": 32768,
+   "minimum": 128,
+   "type": "integer"
+  },
+  "PackageType": {
+   "description": "The type of deployment package. Set to ``Image`` for container image and set ``Zip`` for .zip file archive.",
+   "enum": [
+    "Image",
+    "Zip"
+   ],
+   "type": "string"
+  },
+  "PermissionsBoundary": {
+   "type": "string"
+  },
+  "Policies": {
+   "anyOf": [
+    {
+     "type": "string"
+    },
+    {
+     "type": "object"
+    },
+    {
+     "items": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "object"
+       }
+      ]
+     },
+     "type": "array"
+    }
+   ]
+  },
+  "PropagateTags": {
+   "type": "boolean"
+  },
+  "ProvisionedConcurrencyConfig": {
+   "$ref": "#/definitions/AWS::Lambda::Alias.ProvisionedConcurrencyConfiguration"
+  },
+  "PublishToLatestPublished": {
+   "type": "boolean"
+  },
+  "RecursiveLoop": {
+   "type": "string"
+  },
+  "ReservedConcurrentExecutions": {
+   "description": "The number of simultaneous executions to reserve for the function.",
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Role": {
+   "anyOf": [
+    {
+     "type": "object"
+    },
+    {
+     "type": "string"
+    }
+   ]
+  },
+  "RolePath": {
+   "type": "string"
+  },
+  "Runtime": {
+   "type": "string"
+  },
+  "RuntimeManagementConfig": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   ]
+  },
+  "SnapStart": {
+   "additionalProperties": false,
+   "description": "The function's [SnapStart](https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html) setting.",
+   "properties": {
+    "ApplyOn": {
+     "description": "Set ``ApplyOn`` to ``PublishedVersions`` to create a snapshot of the initialized execution environment when you publish a function version.",
+     "enum": [
+      "PublishedVersions",
+      "None"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ApplyOn"
+   ],
+   "type": "object"
+  },
+  "SnapStartResponse": {
+   "additionalProperties": false,
+   "description": "The function's [SnapStart](https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html) setting.",
+   "properties": {
+    "ApplyOn": {
+     "description": "When set to ``PublishedVersions``, Lambda creates a snapshot of the execution environment when you publish a function version.",
+     "enum": [
+      "PublishedVersions",
+      "None"
+     ],
+     "type": "string"
+    },
+    "OptimizationStatus": {
+     "description": "When you provide a [qualified Amazon Resource Name (ARN)](https://docs.aws.amazon.com/lambda/latest/dg/configuration-versions.html#versioning-versions-using), this response element indicates whether SnapStart is activated for the specified function version.",
+     "enum": [
+      "On",
+      "Off"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SourceKMSKeyArn": {
+   "type": "string"
+  },
+  "Tags": {
+   "type": "object"
+  },
+  "TenancyConfig": {
+   "$ref": "#/definitions/AWS::Lambda::Function.TenancyConfig"
+  },
+  "Timeout": {
+   "description": "The amount of time (in seconds) that Lambda allows a function to run before stopping it. The default is 3 seconds. The maximum allowed value is 900 seconds. For more information, see [Lambda execution environment](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-context.html).",
+   "maximum": 5400,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Tracing": {
+   "anyOf": [
+    {
+     "type": "object"
+    },
+    {
+     "enum": [
+      "Active",
+      "PassThrough",
+      "Disabled"
+     ],
+     "type": "string"
+    }
+   ]
+  },
+  "VersionDeletionPolicy": {
+   "anyOf": [
+    {
+     "type": "object"
+    },
+    {
+     "type": "string"
+    },
+    {
+     "type": "boolean"
+    }
+   ]
+  },
+  "VersionDescription": {
+   "description": "A description for the version to override the description in the function configuration. Updates are not supported for this property.",
+   "maxLength": 256,
+   "minLength": 0,
+   "type": "string"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "description": "The VPC security groups and subnets that are attached to a Lambda function. When you connect a function to a VPC, Lambda creates an elastic network interface for each combination of security group and subnet in the function's VPC configuration. The function can only access resources and the internet through that VPC. For more information, see [VPC Settings](https://docs.aws.amazon.com/lambda/latest/dg/configuration-vpc.html).\n  When you delete a function, CFN monitors the state of its network interfaces and waits for Lambda to delete them before proceeding. If the VPC is defined in the same stack, the network interfaces need to be deleted by Lambda before CFN can delete the VPC's resources.\n To monitor network interfaces, CFN needs the ``ec2:DescribeNetworkInterfaces`` permission. It obtains this from the user or role that modifies the stack. If you don't provide this permission, CFN does not wait for network interfaces to be deleted.",
+   "properties": {
+    "Ipv6AllowedForDualStack": {
+     "description": "Allows outbound IPv6 traffic on VPC functions that are connected to dual-stack subnets.",
+     "type": "boolean"
+    },
+    "SecurityGroupIds": {
+     "description": "A list of VPC security group IDs.",
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "maxLength": 1024,
+      "minLength": 0,
+      "pattern": "^sg-[0-9a-zA-Z]*$",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SubnetIds": {
+     "description": "A list of VPC subnet IDs.",
+     "items": {
+      "maxLength": 1024,
+      "minLength": 0,
+      "pattern": "^subnet-[0-9a-z]*$",
+      "type": "string"
+     },
+     "maxItems": 16,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SnapStartResponse",
+  "/properties/SnapStartResponse/ApplyOn",
+  "/properties/SnapStartResponse/OptimizationStatus",
+  "/properties/Arn"
+ ],
+ "typeName": "AWS::Serverless::Function"
+}

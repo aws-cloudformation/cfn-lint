@@ -1,0 +1,138 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName",
+  "/properties/CertificateArn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "An arbitrary set of tags (key-value pairs) for this Domain Name.",
+   "properties": {
+    "Key": {
+     "description": "A string used to identify this tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[ a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "A string containing the value for this tag. You can specify a maximum of 256 characters for a tag value.",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[\\s\\w+-=\\.:/@]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "description": "An arbitrary set of tags (key-value pairs) for this Domain Name.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "description": "Resource Type definition for AWS::AppSync::DomainName",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "appsync:CreateDomainName",
+    "appsync:GetDomainName",
+    "acm:DescribeCertificate",
+    "cloudfront:UpdateDistribution",
+    "appsync:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "appsync:GetDomainName",
+    "appsync:DeleteDomainName",
+    "appsync:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "appsync:ListDomainNames"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "appsync:GetDomainName"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "appsync:UpdateDomainName",
+    "appsync:TagResource",
+    "appsync:UntagResource",
+    "appsync:GetDomainName"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainName"
+ ],
+ "properties": {
+  "AppSyncDomainName": {
+   "type": "string"
+  },
+  "CertificateArn": {
+   "format": "AWS::ACM::Certificate.Arn",
+   "maxLength": 2048,
+   "minLength": 3,
+   "pattern": "^arn:[a-z-]*:acm:[a-z0-9-]*:\\d{12}:certificate/[0-9A-Za-z_/-]*$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 0,
+   "type": "string"
+  },
+  "DomainName": {
+   "maxLength": 253,
+   "minLength": 1,
+   "pattern": "^(\\*[a-z\\d-]*\\.)?([a-z\\d-]+\\.)+[a-z\\d-]+$",
+   "type": "string"
+  },
+  "DomainNameArn": {
+   "description": "The Amazon Resource Name (ARN) for the Domain Name.",
+   "type": "string"
+  },
+  "HostedZoneId": {
+   "format": "AWS::Route53::AliasTarget.HostedZoneId",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AppSyncDomainName",
+  "/properties/HostedZoneId",
+  "/properties/DomainNameArn"
+ ],
+ "required": [
+  "DomainName",
+  "CertificateArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "appsync:TagResource",
+   "appsync:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AppSync::DomainName"
+}

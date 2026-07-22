@@ -1,0 +1,119 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Description"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TrafficMirrorNetworkService": {
+   "description": "The network service traffic that is associated with the traffic mirror filter.",
+   "enum": [
+    "amazon-dns"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "Resource schema for AWS::EC2::TrafficMirrorFilter",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateTrafficMirrorFilter",
+    "ec2:DescribeTrafficMirrorFilters",
+    "ec2:CreateTags",
+    "ec2:ModifyTrafficMirrorFilterNetworkServices",
+    "ec2:DescribeTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DescribeTrafficMirrorFilters",
+    "ec2:DeleteTrafficMirrorFilter",
+    "ec2:DeleteTags",
+    "ec2:DescribeTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeTrafficMirrorFilters",
+    "ec2:DescribeTags"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeTrafficMirrorFilters",
+    "ec2:DescribeTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:ModifyTrafficMirrorFilterNetworkServices",
+    "ec2:DescribeTrafficMirrorFilters",
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "ec2:DescribeTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Description": {
+   "description": "The description of a traffic mirror filter.",
+   "type": "string"
+  },
+  "Id": {
+   "description": "The ID of a traffic mirror filter.",
+   "type": "string"
+  },
+  "NetworkServices": {
+   "description": "The network service that is associated with the traffic mirror filter.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TrafficMirrorNetworkService"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "description": "The tags for a traffic mirror filter.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "ec2:CreateTags",
+   "ec2:DeleteTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::TrafficMirrorFilter"
+}

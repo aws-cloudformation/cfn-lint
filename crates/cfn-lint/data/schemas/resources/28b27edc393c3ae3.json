@@ -1,0 +1,66 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Status": {
+   "description": "Current status of OTel enrichment (RUNNING or STOPPED).",
+   "enum": [
+    "RUNNING",
+    "STOPPED"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "AWS::CloudWatch::OTelEnrichment enables OTel metric enrichment in CloudWatch, allowing CloudWatch vended metrics to be available for PromQL querying enriched with AWS resource tags and metadata.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cloudwatch:StartOTelEnrichment",
+    "cloudwatch:GetOTelEnrichment"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cloudwatch:StopOTelEnrichment",
+    "cloudwatch:GetOTelEnrichment"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cloudwatch:GetOTelEnrichment"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cloudwatch:GetOTelEnrichment"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cloudwatch:StartOTelEnrichment",
+    "cloudwatch:GetOTelEnrichment"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccountId"
+ ],
+ "properties": {
+  "AccountId": {
+   "description": "The AWS account ID. This is the primary identifier for this singleton resource.",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/Status"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccountId",
+  "/properties/Status"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::CloudWatch::OTelEnrichment"
+}

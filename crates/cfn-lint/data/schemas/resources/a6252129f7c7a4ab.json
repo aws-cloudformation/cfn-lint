@@ -1,0 +1,255 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PackageName",
+  "/properties/VersionName"
+ ],
+ "definitions": {
+  "PackageVersionArtifact": {
+   "additionalProperties": false,
+   "description": "The artifact location of the package version",
+   "properties": {
+    "S3Location": {
+     "$ref": "#/definitions/S3Location"
+    }
+   },
+   "required": [
+    "S3Location"
+   ],
+   "type": "object"
+  },
+  "PackageVersionStatus": {
+   "enum": [
+    "DRAFT",
+    "PUBLISHED",
+    "DEPRECATED"
+   ],
+   "type": "string"
+  },
+  "ResourceAttributes": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z0-9:_-]+$": {
+     "minLength": 1,
+     "pattern": "^[^\\p{C}]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "description": "The Amazon S3 location",
+   "properties": {
+    "Bucket": {
+     "description": "The S3 bucket",
+     "minLength": 1,
+     "type": "string"
+    },
+    "Key": {
+     "description": "The S3 key",
+     "minLength": 1,
+     "type": "string"
+    },
+    "Version": {
+     "description": "The S3 version",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key",
+    "Version"
+   ],
+   "type": "object"
+  },
+  "Sbom": {
+   "additionalProperties": false,
+   "description": "The sbom zip archive location of the package version",
+   "properties": {
+    "S3Location": {
+     "$ref": "#/definitions/S3Location"
+    }
+   },
+   "required": [
+    "S3Location"
+   ],
+   "type": "object"
+  },
+  "SbomValidationStatus": {
+   "description": "The validation status of the Sbom file",
+   "enum": [
+    "IN_PROGRESS",
+    "FAILED",
+    "SUCCEEDED",
+    ""
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "resource definition",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iot:CreatePackageVersion",
+    "iot:GetPackageVersion",
+    "iot:ListTagsForResource",
+    "iot:TagResource",
+    "iot:GetIndexingConfiguration",
+    "s3:GetObjectVersion",
+    "iot:AssociateSbomWithPackageVersion"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:DeletePackageVersion",
+    "iot:UpdatePackageVersion",
+    "iot:GetPackageVersion",
+    "iot:GetIndexingConfiguration"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "PackageName": {
+      "$ref": "resource-schema.json#/properties/PackageName"
+     }
+    },
+    "required": [
+     "PackageName"
+    ]
+   },
+   "permissions": [
+    "iot:ListPackageVersions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:GetPackageVersion",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iot:UpdatePackageVersion",
+    "iot:GetPackageVersion",
+    "iot:ListTagsForResource",
+    "iot:TagResource",
+    "iot:UntagResource",
+    "iot:GetIndexingConfiguration",
+    "s3:GetObjectVersion",
+    "iot:AssociateSbomWithPackageVersion",
+    "iot:DisassociateSbomFromPackageVersion"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PackageName",
+  "/properties/VersionName"
+ ],
+ "properties": {
+  "Artifact": {
+   "$ref": "#/definitions/PackageVersionArtifact"
+  },
+  "Attributes": {
+   "$ref": "#/definitions/ResourceAttributes"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "pattern": "^[^\\p{C}]+$",
+   "type": "string"
+  },
+  "ErrorReason": {
+   "type": "string"
+  },
+  "PackageName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_.]+$",
+   "type": "string"
+  },
+  "PackageVersionArn": {
+   "pattern": "^arn:[!-~]+$",
+   "type": "string"
+  },
+  "Recipe": {
+   "description": "The inline json job document associated with a software package version",
+   "maxLength": 3072,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Sbom": {
+   "$ref": "#/definitions/Sbom"
+  },
+  "SbomValidationStatus": {
+   "$ref": "#/definitions/SbomValidationStatus"
+  },
+  "Status": {
+   "$ref": "#/definitions/PackageVersionStatus"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VersionName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_.]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ErrorReason",
+  "/properties/PackageVersionArn",
+  "/properties/Status",
+  "/properties/SbomValidationStatus"
+ ],
+ "required": [
+  "PackageName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "iot:TagResource",
+   "iot:UntagResource",
+   "iot:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::SoftwarePackageVersion"
+}

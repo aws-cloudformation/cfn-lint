@@ -1,0 +1,165 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DeviceArn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TimePeriod": {
+   "additionalProperties": false,
+   "description": "Defines a time range for spending limits, specifying when the limit is active.",
+   "properties": {
+    "EndAt": {
+     "description": "The end date and time for the spending limit period, in ISO 8601 format.",
+     "format": "date-time",
+     "type": "string"
+    },
+    "StartAt": {
+     "description": "The start date and time for the spending limit period, in ISO 8601 format.",
+     "format": "date-time",
+     "type": "string"
+    }
+   },
+   "required": [
+    "StartAt",
+    "EndAt"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Creates a spending limit for a specified quantum device. Spending limits help you control costs by setting maximum amounts that can be spent on quantum computing tasks within a specified time period.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "braket:CreateSpendingLimit",
+    "braket:SearchSpendingLimits",
+    "braket:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "braket:DeleteSpendingLimit",
+    "braket:SearchSpendingLimits"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "braket:SearchSpendingLimits"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "braket:SearchSpendingLimits",
+    "braket:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "braket:UpdateSpendingLimit",
+    "braket:SearchSpendingLimits",
+    "braket:TagResource",
+    "braket:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SpendingLimitArn"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "description": "The date and time when the spending limit was created, in ISO 8601 format.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "DeviceArn": {
+   "description": "The Amazon Resource Name (ARN) of the quantum device to apply the spending limit to.",
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "QueuedSpend": {
+   "description": "The amount currently queued for spending on the device, in USD.",
+   "type": "string"
+  },
+  "SpendingLimit": {
+   "description": "The maximum amount that can be spent on the specified device, in USD.",
+   "minLength": 1,
+   "pattern": "^\\d+(\\.\\d{1,2})?$",
+   "type": "string"
+  },
+  "SpendingLimitArn": {
+   "description": "The Amazon Resource Name (ARN) that uniquely identifies the spending limit.",
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "^arn:aws[a-z\\-]*:braket:[a-z0-9\\-]+:[0-9]{12}:spending-limit/.*$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "The tags to apply to the spending limit.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TimePeriod": {
+   "$ref": "#/definitions/TimePeriod"
+  },
+  "TotalSpend": {
+   "description": "The total amount spent on the device so far during the current time period, in USD.",
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "description": "The date and time when the spending limit was last modified, in ISO 8601 format.",
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SpendingLimitArn",
+  "/properties/QueuedSpend",
+  "/properties/TotalSpend",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "DeviceArn",
+  "SpendingLimit"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "braket:TagResource",
+   "braket:UntagResource",
+   "braket:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Braket::SpendingLimit"
+}

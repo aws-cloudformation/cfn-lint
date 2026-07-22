@@ -1,0 +1,546 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyId"
+ ],
+ "definitions": {
+  "AWSResources": {
+   "additionalProperties": false,
+   "description": "AWS resource configuration",
+   "properties": {
+    "IamRoles": {
+     "description": "IAM role ARNs",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "LambdaFunctionArns": {
+     "description": "Lambda function ARNs used to retrieve tester credentials for pentests",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "LogGroups": {
+     "description": "CloudWatch log group ARNs",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "S3Buckets": {
+     "description": "S3 bucket ARNs",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SecretArns": {
+     "description": "SecretsManager secret ARNs used to store tester credentials for pentests",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Vpcs": {
+     "description": "VPC configurations",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/VpcConfig"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "BitbucketCapabilitiesResource": {
+   "additionalProperties": false,
+   "description": "Bitbucket repository capabilities",
+   "properties": {
+    "LeaveComments": {
+     "description": "Enables Code Review in the repository",
+     "type": "boolean"
+    },
+    "RemediateCode": {
+     "description": "Enables creation of pull requests with automated fixes",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "BitbucketRepositoryResource": {
+   "additionalProperties": false,
+   "description": "Bitbucket repository details",
+   "properties": {
+    "Name": {
+     "description": "Bitbucket repository name",
+     "type": "string"
+    },
+    "Workspace": {
+     "description": "Bitbucket workspace slug owning the repository",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Workspace"
+   ],
+   "type": "object"
+  },
+  "CodeReviewSettings": {
+   "additionalProperties": false,
+   "description": "Details of code review settings",
+   "properties": {
+    "ControlsScanning": {
+     "description": "Whether Controls are utilized for code review analysis",
+     "type": "boolean"
+    },
+    "GeneralPurposeScanning": {
+     "description": "Whether general purpose analysis is performed for code review",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "ControlsScanning",
+    "GeneralPurposeScanning"
+   ],
+   "type": "object"
+  },
+  "ConfluenceCapabilitiesResource": {
+   "additionalProperties": false,
+   "description": "Confluence document capabilities",
+   "properties": {
+    "CreateDocument": {
+     "description": "Enables creation of new Confluence documents in the same space",
+     "type": "boolean"
+    },
+    "FetchDocument": {
+     "description": "Enables read access to the document content",
+     "type": "boolean"
+    },
+    "UpdateDocument": {
+     "description": "Enables updates to the document",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "ConfluenceDocumentResource": {
+   "additionalProperties": false,
+   "description": "Confluence document details",
+   "properties": {
+    "Name": {
+     "description": "Customer-supplied logical name for the Confluence document",
+     "type": "string"
+    },
+    "PageId": {
+     "description": "Confluence page identifier",
+     "type": "string"
+    },
+    "SpaceKey": {
+     "description": "Confluence space key containing the document",
+     "type": "string"
+    },
+    "SpaceTitle": {
+     "description": "Read-only human-readable title of the containing space, populated from service-side metadata",
+     "type": "string"
+    },
+    "Title": {
+     "description": "Read-only human-readable title of the page, populated from service-side metadata",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "SpaceKey",
+    "PageId"
+   ],
+   "type": "object"
+  },
+  "GitHubCapabilitiesResource": {
+   "additionalProperties": false,
+   "description": "GitHub repository capabilities",
+   "properties": {
+    "LeaveComments": {
+     "description": "Enables Code Review in the repository",
+     "type": "boolean"
+    },
+    "RemediateCode": {
+     "description": "Enables creation of pull requests with automated fixes",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "LeaveComments",
+    "RemediateCode"
+   ],
+   "type": "object"
+  },
+  "GitHubRepositoryResource": {
+   "additionalProperties": false,
+   "description": "GitHub repository details",
+   "properties": {
+    "Name": {
+     "description": "GitHub repository name",
+     "type": "string"
+    },
+    "Owner": {
+     "description": "GitHub repository owner (user or organization)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Owner"
+   ],
+   "type": "object"
+  },
+  "GitLabCapabilitiesResource": {
+   "additionalProperties": false,
+   "description": "GitLab repository capabilities",
+   "properties": {
+    "LeaveComments": {
+     "description": "Enables Code Review in the repository",
+     "type": "boolean"
+    },
+    "RemediateCode": {
+     "description": "Enables creation of merge requests with automated fixes",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "GitLabRepositoryResource": {
+   "additionalProperties": false,
+   "description": "GitLab repository details",
+   "properties": {
+    "Name": {
+     "description": "GitLab project name",
+     "type": "string"
+    },
+    "Namespace": {
+     "description": "GitLab project namespace (user, group, or subgroup path)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Namespace"
+   ],
+   "type": "object"
+  },
+  "IntegratedResource": {
+   "additionalProperties": false,
+   "description": "Integrated Resource details",
+   "properties": {
+    "Integration": {
+     "description": "Unique identifier of the Provider Integration",
+     "type": "string"
+    },
+    "ProviderResources": {
+     "description": "List of selected Resources from the Integration",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ProviderResource"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Integration",
+    "ProviderResources"
+   ],
+   "type": "object"
+  },
+  "IntegratedResources": {
+   "description": "Integrated Resources configuration",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IntegratedResource"
+   },
+   "type": "array"
+  },
+  "ProviderResource": {
+   "additionalProperties": false,
+   "allOf": [
+    {
+     "oneOf": [
+      {
+       "required": [
+        "GitHubRepository"
+       ]
+      },
+      {
+       "required": [
+        "GitLabRepository"
+       ]
+      },
+      {
+       "required": [
+        "BitbucketRepository"
+       ]
+      },
+      {
+       "required": [
+        "ConfluenceDocument"
+       ]
+      }
+     ]
+    },
+    {
+     "oneOf": [
+      {
+       "required": [
+        "GitHubCapabilities"
+       ]
+      },
+      {
+       "required": [
+        "GitLabCapabilities"
+       ]
+      },
+      {
+       "required": [
+        "BitbucketCapabilities"
+       ]
+      },
+      {
+       "required": [
+        "ConfluenceCapabilities"
+       ]
+      }
+     ]
+    }
+   ],
+   "description": "Selected Resource (eg: Code Repository, Document) from an Integration",
+   "properties": {
+    "BitbucketCapabilities": {
+     "$ref": "#/definitions/BitbucketCapabilitiesResource"
+    },
+    "BitbucketRepository": {
+     "$ref": "#/definitions/BitbucketRepositoryResource"
+    },
+    "ConfluenceCapabilities": {
+     "$ref": "#/definitions/ConfluenceCapabilitiesResource"
+    },
+    "ConfluenceDocument": {
+     "$ref": "#/definitions/ConfluenceDocumentResource"
+    },
+    "GitHubCapabilities": {
+     "$ref": "#/definitions/GitHubCapabilitiesResource"
+    },
+    "GitHubRepository": {
+     "$ref": "#/definitions/GitHubRepositoryResource"
+    },
+    "GitLabCapabilities": {
+     "$ref": "#/definitions/GitLabCapabilitiesResource"
+    },
+    "GitLabRepository": {
+     "$ref": "#/definitions/GitLabRepositoryResource"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "description": "Customer VPC configuration that the security testing environment accesses",
+   "properties": {
+    "SecurityGroupArns": {
+     "description": "List of security group ARNs in the customer VPC",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SubnetArns": {
+     "description": "List of subnet ARNs in the customer VPC",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "VpcArn": {
+     "description": "ARN of the customer VPC",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SecurityAgent::AgentSpace",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityagent:CreateAgentSpace",
+    "securityagent:BatchGetAgentSpaces",
+    "securityagent:TagResource",
+    "securityagent:ListTagsForResource",
+    "securityagent:UpdateIntegratedResources",
+    "securityagent:ListIntegratedResources",
+    "iam:PassRole",
+    "kms:DescribeKey",
+    "kms:GenerateDataKeyWithoutPlaintext",
+    "kms:Decrypt",
+    "kms:ReEncryptFrom",
+    "kms:ReEncryptTo"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securityagent:DeleteAgentSpace",
+    "securityagent:BatchGetAgentSpaces",
+    "kms:Decrypt"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securityagent:ListAgentSpaces"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityagent:BatchGetAgentSpaces",
+    "securityagent:ListTagsForResource",
+    "kms:Decrypt",
+    "securityagent:ListIntegratedResources"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securityagent:UpdateAgentSpace",
+    "securityagent:BatchGetAgentSpaces",
+    "securityagent:TagResource",
+    "securityagent:UntagResource",
+    "securityagent:ListTagsForResource",
+    "securityagent:UpdateIntegratedResources",
+    "securityagent:ListIntegratedResources",
+    "iam:PassRole",
+    "kms:Decrypt"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AgentSpaceId"
+ ],
+ "properties": {
+  "AgentSpaceId": {
+   "description": "Unique identifier of the agent space",
+   "type": "string"
+  },
+  "AwsResources": {
+   "$ref": "#/definitions/AWSResources"
+  },
+  "CodeReviewSettings": {
+   "$ref": "#/definitions/CodeReviewSettings"
+  },
+  "CreatedAt": {
+   "description": "Timestamp when the agent space was created",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "description": "Description of the agent space",
+   "type": "string"
+  },
+  "IntegratedResources": {
+   "$ref": "#/definitions/IntegratedResources"
+  },
+  "KmsKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
+   "description": "Identifier of the KMS key used to encrypt data. Can be a key ID, key ARN, alias name, or alias ARN. If not specified, an AWS managed key is used.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "description": "Name of the agent space",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Tags for the agent space",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TargetDomainIds": {
+   "description": "List of target domain identifiers registered with the agent space",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "description": "Timestamp when the agent space was last updated",
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AgentSpaceId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/IntegratedResources/*/ProviderResources/*/ConfluenceDocument/Title",
+  "/properties/IntegratedResources/*/ProviderResources/*/ConfluenceDocument/SpaceTitle"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "securityagent:TagResource",
+   "securityagent:UntagResource",
+   "securityagent:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityAgent::AgentSpace"
+}

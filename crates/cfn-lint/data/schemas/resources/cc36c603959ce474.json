@@ -1,0 +1,243 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainIdentifier",
+  "/properties/UserIdentifier",
+  "/properties/UserType"
+ ],
+ "definitions": {
+  "IamUserProfileDetails": {
+   "additionalProperties": false,
+   "description": "The details of the IAM User Profile.",
+   "properties": {
+    "Arn": {
+     "description": "The ARN of the IAM User Profile.",
+     "type": "string"
+    },
+    "GroupProfileId": {
+     "description": "The group profile ID of the IAM User Profile.",
+     "type": "string"
+    },
+    "SessionName": {
+     "description": "The session name of the IAM User Profile.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SsoUserProfileDetails": {
+   "additionalProperties": false,
+   "description": "The details of the SSO User Profile.",
+   "properties": {
+    "FirstName": {
+     "description": "The First Name of the IAM User Profile.",
+     "type": "string"
+    },
+    "LastName": {
+     "description": "The Last Name of the IAM User Profile.",
+     "type": "string"
+    },
+    "Username": {
+     "description": "The username of the SSO User Profile.",
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z_0-9+=,.@-]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "UserProfileDetails": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Iam": {
+       "$ref": "#/definitions/IamUserProfileDetails"
+      }
+     },
+     "required": [
+      "Iam"
+     ],
+     "title": "Iam",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Sso": {
+       "$ref": "#/definitions/SsoUserProfileDetails"
+      }
+     },
+     "required": [
+      "Sso"
+     ],
+     "title": "Sso",
+     "type": "object"
+    }
+   ]
+  },
+  "UserProfileStatus": {
+   "description": "The status of the user profile.",
+   "enum": [
+    "ASSIGNED",
+    "NOT_ASSIGNED",
+    "ACTIVATED",
+    "DEACTIVATED"
+   ],
+   "type": "string"
+  },
+  "UserProfileType": {
+   "description": "The type of the user profile.",
+   "enum": [
+    "IAM",
+    "SSO"
+   ],
+   "type": "string"
+  },
+  "UserType": {
+   "description": "The type of the user.",
+   "enum": [
+    "IAM_USER",
+    "IAM_ROLE",
+    "SSO_USER",
+    "IAM_ROLE_SESSION"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "A user profile represents Amazon DataZone users. Amazon DataZone supports both IAM roles and SSO identities to interact with the Amazon DataZone Management Console and the data portal for different purposes. Domain administrators use IAM roles to perform the initial administrative domain-related work in the Amazon DataZone Management Console, including creating new Amazon DataZone domains, configuring metadata form types, and implementing policies. Data workers use their SSO corporate identities via Identity Center to log into the Amazon DataZone Data Portal and access projects where they have memberships.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "datazone:CreateUserProfile",
+    "datazone:GetUserProfile",
+    "datazone:UpdateUserProfile",
+    "datazone:GetDomain",
+    "sso:ListProfiles",
+    "sso:GetProfile",
+    "sso:AssociateProfile",
+    "sso:DisassociateProfile",
+    "iam:GetRole",
+    "iam:GetUser"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "datazone:DeleteUserProfile",
+    "datazone:GetUserProfile",
+    "datazone:UpdateUserProfile",
+    "sso:ListProfiles",
+    "sso:GetProfile",
+    "sso:AssociateProfile",
+    "sso:DisassociateProfile",
+    "iam:GetRole",
+    "iam:GetUser"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "DomainIdentifier": {
+      "$ref": "resource-schema.json#/properties/DomainIdentifier"
+     },
+     "UserType": {
+      "$ref": "resource-schema.json#/properties/UserType"
+     }
+    },
+    "required": [
+     "DomainIdentifier",
+     "UserType"
+    ]
+   },
+   "permissions": [
+    "datazone:SearchUserProfiles"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "datazone:GetUserProfile"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "datazone:UpdateUserProfile",
+    "datazone:GetUserProfile",
+    "datazone:UpdateUserProfile",
+    "sso:ListProfiles",
+    "sso:GetProfile",
+    "sso:AssociateProfile",
+    "sso:DisassociateProfile",
+    "iam:GetRole",
+    "iam:GetUser"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainId",
+  "/properties/Id"
+ ],
+ "properties": {
+  "Details": {
+   "$ref": "#/definitions/UserProfileDetails"
+  },
+  "DomainId": {
+   "description": "The identifier of the Amazon DataZone domain in which the user profile is created.",
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "DomainIdentifier": {
+   "description": "The identifier of the Amazon DataZone domain in which the user profile would be created.",
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Id": {
+   "description": "The ID of the Amazon DataZone user profile.",
+   "type": "string"
+  },
+  "SessionName": {
+   "description": "The session name of the user profile.",
+   "maxLength": 64,
+   "minLength": 2,
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/UserProfileStatus"
+  },
+  "Type": {
+   "$ref": "#/definitions/UserProfileType"
+  },
+  "UserIdentifier": {
+   "description": "The ID of the user.",
+   "pattern": "(^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$|^[a-zA-Z_0-9+=,.@-]+$|^arn:aws:iam::\\d{12}:.+$)",
+   "type": "string"
+  },
+  "UserType": {
+   "$ref": "#/definitions/UserType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DomainId",
+  "/properties/Type",
+  "/properties/Id",
+  "/properties/Details"
+ ],
+ "required": [
+  "DomainIdentifier",
+  "UserIdentifier"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::DataZone::UserProfile",
+ "writeOnlyProperties": [
+  "/properties/DomainIdentifier",
+  "/properties/UserIdentifier",
+  "/properties/UserType",
+  "/properties/SessionName"
+ ]
+}

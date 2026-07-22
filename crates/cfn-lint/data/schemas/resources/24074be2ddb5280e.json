@@ -1,0 +1,98 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ContactFlowId",
+  "/properties/Description"
+ ],
+ "definitions": {},
+ "description": "Resource Type Definition for ContactFlowVersion",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect:CreateContactFlowVersion",
+    "connect:DescribeContactFlow"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect:DeleteContactFlowVersion"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ContactFlowId": {
+      "$ref": "resource-schema.json#/properties/ContactFlowId"
+     }
+    },
+    "required": [
+     "ContactFlowId"
+    ]
+   },
+   "permissions": [
+    "connect:ListContactFlowVersions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect:DescribeContactFlow"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "connect:DescribeContactFlow"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ContactFlowVersionARN"
+ ],
+ "properties": {
+  "ContactFlowId": {
+   "description": "The ARN of the contact flow this version is tied to.",
+   "maxLength": 500,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]+:[0-9]{12}:instance/[-a-zA-Z0-9]+/contact-flow/[-a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "ContactFlowVersionARN": {
+   "description": "The identifier of the contact flow version (ARN).",
+   "maxLength": 500,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]+:[0-9]{12}:instance/[-a-zA-Z0-9]+/contact-flow/[-a-zA-Z0-9]+:[0-9]+$",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the version.",
+   "maxLength": 500,
+   "type": "string"
+  },
+  "FlowContentSha256": {
+   "description": "Indicates the checksum value of the latest published flow content",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9]{64}$",
+   "type": "string"
+  },
+  "Version": {
+   "description": "The version number of this revision",
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ContactFlowVersionARN",
+  "/properties/Version",
+  "/properties/FlowContentSha256"
+ ],
+ "required": [
+  "ContactFlowId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Connect::ContactFlowVersion"
+}

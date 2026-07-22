@@ -1,0 +1,125 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Location",
+  "/properties/RestApiId"
+ ],
+ "definitions": {
+  "Location": {
+   "additionalProperties": false,
+   "description": "The ``Location`` property specifies the location of the Amazon API Gateway API entity that the documentation applies to. ``Location`` is a property of the [AWS::ApiGateway::DocumentationPart](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-documentationpart.html) resource.\n  For more information about each property, including constraints and valid values, see [DocumentationPart](https://docs.aws.amazon.com/apigateway/latest/api/API_DocumentationPartLocation.html) in the *Amazon API Gateway REST API Reference*.",
+   "properties": {
+    "Method": {
+     "description": "",
+     "type": "string"
+    },
+    "Name": {
+     "description": "",
+     "type": "string"
+    },
+    "Path": {
+     "description": "",
+     "type": "string"
+    },
+    "StatusCode": {
+     "description": "",
+     "type": "string"
+    },
+    "Type": {
+     "description": "",
+     "enum": [
+      "API",
+      "AUTHORIZER",
+      "MODEL",
+      "RESOURCE",
+      "METHOD",
+      "PATH_PARAMETER",
+      "QUERY_PARAMETER",
+      "REQUEST_HEADER",
+      "REQUEST_BODY",
+      "RESPONSE",
+      "RESPONSE_HEADER",
+      "RESPONSE_BODY"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "The ``AWS::ApiGateway::DocumentationPart`` resource creates a documentation part for an API. For more information, see [Representation of API Documentation in API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-documenting-api-content-representation.html) in the *API Gateway Developer Guide*.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:POST"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "RestApiId": {
+      "$ref": "resource-schema.json#/properties/RestApiId"
+     }
+    },
+    "required": [
+     "RestApiId"
+    ]
+   },
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:PATCH"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DocumentationPartId",
+  "/properties/RestApiId"
+ ],
+ "properties": {
+  "DocumentationPartId": {
+   "description": "",
+   "type": "string"
+  },
+  "Location": {
+   "$ref": "#/definitions/Location",
+   "description": ""
+  },
+  "Properties": {
+   "description": "",
+   "type": "string"
+  },
+  "RestApiId": {
+   "description": "",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DocumentationPartId"
+ ],
+ "required": [
+  "Location",
+  "Properties",
+  "RestApiId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ApiGateway::DocumentationPart"
+}

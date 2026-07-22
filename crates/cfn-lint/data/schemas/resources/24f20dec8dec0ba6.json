@@ -1,0 +1,128 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TemplateName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "An object that defines the tags (keys and values) that you want to associate with the tenant.",
+   "properties": {
+    "Key": {
+     "description": "The key of the key-value tag.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value of the key-value tag.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SES::CustomVerificationEmailTemplate.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ses:CreateCustomVerificationEmailTemplate",
+    "ses:GetCustomVerificationEmailTemplate",
+    "ses:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ses:DeleteCustomVerificationEmailTemplate",
+    "ses:GetCustomVerificationEmailTemplate"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ses:ListCustomVerificationEmailTemplates"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ses:GetCustomVerificationEmailTemplate"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ses:UpdateCustomVerificationEmailTemplate",
+    "ses:GetCustomVerificationEmailTemplate",
+    "ses:TagResource",
+    "ses:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TemplateName"
+ ],
+ "properties": {
+  "FailureRedirectionURL": {
+   "description": "The URL that the recipient of the verification email is sent to if his or her address is not successfully verified.",
+   "type": "string"
+  },
+  "FromEmailAddress": {
+   "description": "The email address that the custom verification email is sent from.",
+   "type": "string"
+  },
+  "SuccessRedirectionURL": {
+   "description": "The URL that the recipient of the verification email is sent to if his or her address is successfully verified.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "The tags (keys and values) associated with the tenant.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "TemplateContent": {
+   "description": "The content of the custom verification email. The total size of the email must be less than 10 MB. The message body may contain HTML, with some limitations.",
+   "type": "string"
+  },
+  "TemplateName": {
+   "description": "The name of the custom verification email template.",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "TemplateSubject": {
+   "description": "The subject line of the custom verification email.",
+   "type": "string"
+  }
+ },
+ "required": [
+  "TemplateName",
+  "FromEmailAddress",
+  "TemplateSubject",
+  "TemplateContent",
+  "SuccessRedirectionURL",
+  "FailureRedirectionURL"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "ses:TagResource",
+   "ses:UntagResource",
+   "ses:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SES::CustomVerificationEmailTemplate"
+}

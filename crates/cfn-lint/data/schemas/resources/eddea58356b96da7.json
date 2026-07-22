@@ -1,0 +1,147 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Connections",
+  "/properties/DefaultArguments",
+  "/properties/SecurityConfiguration",
+  "/properties/MaxCapacity",
+  "/properties/WorkerType",
+  "/properties/Timeout",
+  "/properties/Role",
+  "/properties/Command",
+  "/properties/Id",
+  "/properties/NumberOfWorkers",
+  "/properties/RequestOrigin",
+  "/properties/IdleTimeout",
+  "/properties/Description",
+  "/properties/GlueVersion"
+ ],
+ "definitions": {
+  "ConnectionsList": {
+   "additionalProperties": false,
+   "properties": {
+    "Connections": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "SessionCommand": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "PythonVersion": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Glue::Session",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Command": {
+   "$ref": "#/definitions/SessionCommand"
+  },
+  "Connections": {
+   "$ref": "#/definitions/ConnectionsList"
+  },
+  "CreatedOn": {
+   "type": "string"
+  },
+  "DefaultArguments": {
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "GlueVersion": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "IdleTimeout": {
+   "type": "integer"
+  },
+  "MaxCapacity": {
+   "type": "number"
+  },
+  "NumberOfWorkers": {
+   "type": "integer"
+  },
+  "Progress": {
+   "type": "number"
+  },
+  "RequestOrigin": {
+   "type": "string"
+  },
+  "Role": {
+   "type": "string"
+  },
+  "SecurityConfiguration": {
+   "type": "string"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Timeout": {
+   "type": "integer"
+  },
+  "WorkerType": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Progress",
+  "/properties/Id",
+  "/properties/CreatedOn",
+  "/properties/Status",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Role",
+  "Command",
+  "Id"
+ ],
+ "typeName": "AWS::Glue::Session"
+}

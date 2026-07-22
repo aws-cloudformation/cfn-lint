@@ -1,0 +1,533 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AvailabilityZone",
+  "/properties/AvailabilityZoneId",
+  "/properties/BackupSubnetCidr",
+  "/properties/ClientSubnetCidr",
+  "/properties/CustomDomainName",
+  "/properties/DefaultDnsPrefix"
+ ],
+ "definitions": {
+  "CrossRegionS3RestoreSourcesAccess": {
+   "additionalProperties": false,
+   "description": "The configuration access for the cross-Region Amazon S3 database restore source for the ODB network.",
+   "properties": {
+    "Ipv4Addresses": {
+     "description": "The IPv4 addresses allowed for cross-Region Amazon S3 restore access.",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Region": {
+     "description": "The AWS-Region for cross-Region Amazon S3 restore access.",
+     "type": "string"
+    },
+    "Status": {
+     "$ref": "#/definitions/ManagedResourceStatus",
+     "description": "The current status of the cross-Region Amazon S3 restore access configuration."
+    }
+   },
+   "type": "object"
+  },
+  "ManagedResourceStatus": {
+   "description": "The status of the managed resource access.",
+   "enum": [
+    "ENABLED",
+    "ENABLING",
+    "DISABLED",
+    "DISABLING"
+   ],
+   "type": "string"
+  },
+  "ManagedServices": {
+   "additionalProperties": false,
+   "description": "The managed services configuration for the ODB network.",
+   "properties": {
+    "CrossRegionS3RestoreSourcesAccess": {
+     "description": "The access configuration for the cross-Region Amazon S3 database restore source.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CrossRegionS3RestoreSourcesAccess"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "KmsAccess": {
+     "additionalProperties": false,
+     "description": "The AWS Key Management Service (KMS) access configuration.",
+     "properties": {
+      "DomainName": {
+       "description": "The domain name for the AWS KMS access.",
+       "type": "string"
+      },
+      "Ipv4Addresses": {
+       "description": "The IPv4 addresses for the AWS KMS access.",
+       "insertionOrder": false,
+       "items": {
+        "type": "string"
+       },
+       "type": "array",
+       "uniqueItems": false
+      },
+      "KmsPolicyDocument": {
+       "description": "The endpoint policy for the AWS KMS access.",
+       "type": "string"
+      },
+      "Status": {
+       "$ref": "#/definitions/ManagedResourceStatus",
+       "description": "The status of the AWS KMS access."
+      }
+     },
+     "type": "object"
+    },
+    "ManagedS3BackupAccess": {
+     "additionalProperties": false,
+     "description": "The managed Amazon S3 backup access configuration.",
+     "properties": {
+      "Ipv4Addresses": {
+       "description": "The IPv4 addresses for the managed Amazon S3 backup access.",
+       "insertionOrder": false,
+       "items": {
+        "type": "string"
+       },
+       "type": "array",
+       "uniqueItems": false
+      },
+      "Status": {
+       "$ref": "#/definitions/ManagedResourceStatus",
+       "description": "The status of the managed Amazon S3 backup access."
+      }
+     },
+     "type": "object"
+    },
+    "ManagedServicesIpv4Cidrs": {
+     "description": "The IPv4 CIDR blocks for the managed services.",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ResourceGatewayArn": {
+     "description": "The Amazon Resource Name (ARN) of the resource gateway.",
+     "type": "string"
+    },
+    "S3Access": {
+     "additionalProperties": false,
+     "description": "The Amazon S3 access configuration.",
+     "properties": {
+      "DomainName": {
+       "description": "The domain name for the Amazon S3 access.",
+       "type": "string"
+      },
+      "Ipv4Addresses": {
+       "description": "The IPv4 addresses for the Amazon S3 access.",
+       "insertionOrder": false,
+       "items": {
+        "type": "string"
+       },
+       "type": "array",
+       "uniqueItems": false
+      },
+      "S3PolicyDocument": {
+       "description": "The endpoint policy for the Amazon S3 access.",
+       "type": "string"
+      },
+      "Status": {
+       "$ref": "#/definitions/ManagedResourceStatus",
+       "description": "The status of the Amazon S3 access."
+      }
+     },
+     "type": "object"
+    },
+    "ServiceNetworkArn": {
+     "description": "The Amazon Resource Name (ARN) of the service network.",
+     "type": "string"
+    },
+    "ServiceNetworkEndpoint": {
+     "additionalProperties": false,
+     "description": "The service network endpoint configuration.",
+     "properties": {
+      "VpcEndpointId": {
+       "description": "The identifier of the VPC endpoint.",
+       "type": "string"
+      },
+      "VpcEndpointType": {
+       "description": "The type of the VPC endpoint.",
+       "enum": [
+        "SERVICENETWORK"
+       ],
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "StsAccess": {
+     "additionalProperties": false,
+     "description": "The AWS Security Token Service (STS) access configuration.",
+     "properties": {
+      "DomainName": {
+       "description": "The domain name for the AWS STS access.",
+       "type": "string"
+      },
+      "Ipv4Addresses": {
+       "description": "The IPv4 addresses for the AWS STS access.",
+       "insertionOrder": false,
+       "items": {
+        "type": "string"
+       },
+       "type": "array",
+       "uniqueItems": false
+      },
+      "Status": {
+       "$ref": "#/definitions/ManagedResourceStatus",
+       "description": "The status of the AWS STS access."
+      },
+      "StsPolicyDocument": {
+       "description": "The endpoint policy for the AWS STS access.",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "ZeroEtlAccess": {
+     "additionalProperties": false,
+     "description": "The Zero-ETL access configuration.",
+     "properties": {
+      "Cidr": {
+       "description": "The CIDR block for the Zero-ETL access.",
+       "format": "ipv4-network",
+       "type": "string"
+      },
+      "Status": {
+       "$ref": "#/definitions/ManagedResourceStatus",
+       "description": "The status of the Zero-ETL access."
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that's 1 to 128 Unicode characters in length and can't be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., :, /, =, +, @, -, and \".",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that's 1 to 256 characters in length. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The AWS::ODB::OdbNetwork resource creates an ODB Network",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "odb:CreateOdbNetwork",
+    "odb:TagResource",
+    "ec2:DescribeAvailabilityZones",
+    "iam:CreateServiceLinkedRole",
+    "ec2:DescribeVpcs",
+    "ec2:CreateOdbNetworkPeering",
+    "odb:ListTagsForResource",
+    "sts:GetCallerIdentity",
+    "odb:GetOdbNetwork",
+    "odb:ListOdbNetworks",
+    "odb:UpdateOdbNetwork",
+    "vpc-lattice:CreateServiceNetwork",
+    "vpc-lattice:GetServiceNetwork",
+    "vpc-lattice:CreateServiceNetworkResourceAssociation",
+    "vpc-lattice:GetServiceNetworkResourceAssociation",
+    "vpc-lattice:CreateResourceGateway",
+    "vpc-lattice:GetResourceGateway",
+    "vpc-lattice:CreateServiceNetworkVpcEndpointAssociation",
+    "redshiftchannelmanagement:CreateChannel",
+    "ec2:ModifyOdbNetworkPeering",
+    "ec2:DescribeVpcEndpointAssociations",
+    "ec2:CreateVpcEndpoint",
+    "ec2:DescribeVpcEndpoints",
+    "ec2:CreateTags",
+    "ec2:CreatePlacementGroup",
+    "ec2:AttachResourcesToPlacementGroup"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "delete": {
+   "permissions": [
+    "odb:DeleteOdbNetwork",
+    "ec2:DeleteOdbNetworkPeering",
+    "ec2:DescribeVpcs",
+    "odb:ListTagsForResource",
+    "sts:GetCallerIdentity",
+    "odb:GetOdbNetwork",
+    "odb:ListOdbNetworks",
+    "vpc-lattice:DeleteServiceNetwork",
+    "vpc-lattice:GetServiceNetwork",
+    "vpc-lattice:DeleteServiceNetworkResourceAssociation",
+    "vpc-lattice:GetServiceNetworkResourceAssociation",
+    "vpc-lattice:DeleteResourceGateway",
+    "vpc-lattice:GetResourceGateway",
+    "ec2:ModifyOdbNetworkPeering",
+    "ec2:DescribeVpcEndpointAssociations",
+    "ec2:DeleteVpcEndpoints",
+    "ec2:DescribeVpcEndpoints",
+    "ec2:DeletePlacementGroup",
+    "ec2:DetachResourcesFromPlacementGroup"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "list": {
+   "permissions": [
+    "odb:ListOdbNetworks",
+    "odb:ListTagsForResource",
+    "sts:GetCallerIdentity",
+    "vpc-lattice:GetServiceNetwork",
+    "vpc-lattice:GetServiceNetworkResourceAssociation",
+    "vpc-lattice:GetResourceGateway",
+    "ec2:DescribeVpcEndpointAssociations",
+    "ec2:DescribeVpcEndpoints"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "odb:GetOdbNetwork",
+    "odb:ListOdbNetworks",
+    "odb:ListTagsForResource",
+    "sts:GetCallerIdentity",
+    "vpc-lattice:GetServiceNetwork",
+    "vpc-lattice:GetServiceNetworkResourceAssociation",
+    "vpc-lattice:GetResourceGateway",
+    "ec2:DescribeVpcEndpointAssociations",
+    "ec2:DescribeVpcEndpoints"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "odb:UpdateOdbNetwork",
+    "odb:TagResource",
+    "odb:UntagResource",
+    "ec2:DescribeVpcs",
+    "ec2:CreateOdbNetworkPeering",
+    "ec2:DeleteOdbNetworkPeering",
+    "odb:ListTagsForResource",
+    "sts:GetCallerIdentity",
+    "odb:GetOdbNetwork",
+    "odb:ListOdbNetworks",
+    "vpc-lattice:CreateServiceNetworkResourceAssociation",
+    "vpc-lattice:DeleteServiceNetworkResourceAssociation",
+    "vpc-lattice:GetServiceNetwork",
+    "vpc-lattice:GetServiceNetworkResourceAssociation",
+    "vpc-lattice:GetResourceGateway",
+    "ec2:DescribeVpcEndpointAssociations",
+    "ec2:DescribeVpcEndpoints"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/OdbNetworkArn"
+ ],
+ "properties": {
+  "AvailabilityZone": {
+   "description": "The AWS Availability Zone (AZ) where the ODB network is located.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "AvailabilityZoneId": {
+   "description": "The AZ ID of the AZ where the ODB network is located.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "BackupSubnetCidr": {
+   "description": "The CIDR range of the backup subnet in the ODB network.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ClientSubnetCidr": {
+   "description": "The CIDR range of the client subnet in the ODB network.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CrossRegionS3RestoreSources": {
+   "description": "The cross-Region Amazon S3 restore sources for the ODB network.",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CustomDomainName": {
+   "description": "The domain name to use for the resources in the ODB network.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DefaultDnsPrefix": {
+   "description": "The DNS prefix to the default DNS domain name. The default DNS domain name is oraclevcn.com.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DeleteAssociatedResources": {
+   "description": "Specifies whether to delete associated OCI networking resources along with the ODB network.",
+   "type": "boolean"
+  },
+  "DisplayName": {
+   "description": "The user-friendly name of the ODB network.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z_](?!.*--)[a-zA-Z0-9_-]*$",
+   "type": "string"
+  },
+  "Ec2PlacementGroupIds": {
+   "description": "The list of EC2 placement group IDs associated with your ODB network.",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "KmsAccess": {
+   "description": "The AWS Key Management Service (KMS) access configuration for the ODB network.",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "KmsPolicyDocument": {
+   "description": "The AWS Key Management Service (KMS) policy document that defines permissions for key usage within the ODB network.",
+   "maxLength": 20480,
+   "minLength": 3,
+   "type": "string"
+  },
+  "ManagedServices": {
+   "$ref": "#/definitions/ManagedServices"
+  },
+  "OciNetworkAnchorId": {
+   "description": "The unique identifier of the OCI network anchor for the ODB network.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OciResourceAnchorName": {
+   "description": "The name of the OCI resource anchor that's associated with the ODB network.",
+   "type": "string"
+  },
+  "OciVcnUrl": {
+   "description": "The URL for the VCN that's associated with the ODB network.",
+   "type": "string"
+  },
+  "OdbNetworkArn": {
+   "description": "The Amazon Resource Name (ARN) of the ODB network.",
+   "type": "string"
+  },
+  "OdbNetworkId": {
+   "description": "The unique identifier of the ODB network.",
+   "type": "string"
+  },
+  "S3Access": {
+   "description": "Specifies the configuration for Amazon S3 access from the ODB network.",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "S3PolicyDocument": {
+   "description": "Specifies the endpoint policy for Amazon S3 access from the ODB network.",
+   "maxLength": 20480,
+   "minLength": 3,
+   "type": "string"
+  },
+  "StsAccess": {
+   "description": "The AWS Security Token Service (STS) access configuration for the ODB network.",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "StsPolicyDocument": {
+   "description": "The AWS Security Token Service (STS) policy document that defines permissions for token service usage within the ODB network.",
+   "maxLength": 20480,
+   "minLength": 3,
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Tags to assign to the Odb Network.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ZeroEtlAccess": {
+   "description": "Specifies the configuration for Zero-ETL access from the ODB network.",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ManagedServices",
+  "/properties/OciNetworkAnchorId",
+  "/properties/OciResourceAnchorName",
+  "/properties/OciVcnUrl",
+  "/properties/OdbNetworkArn",
+  "/properties/OdbNetworkId",
+  "/properties/Ec2PlacementGroupIds"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "odb:TagResource",
+   "odb:UntagResource",
+   "odb:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ODB::OdbNetwork",
+ "writeOnlyProperties": [
+  "/properties/DeleteAssociatedResources",
+  "/properties/DefaultDnsPrefix",
+  "/properties/S3Access",
+  "/properties/S3PolicyDocument",
+  "/properties/KmsAccess",
+  "/properties/KmsPolicyDocument",
+  "/properties/StsAccess",
+  "/properties/StsPolicyDocument",
+  "/properties/CrossRegionS3RestoreSources",
+  "/properties/ZeroEtlAccess"
+ ]
+}

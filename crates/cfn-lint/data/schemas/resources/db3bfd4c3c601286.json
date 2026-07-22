@@ -1,0 +1,276 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/WorkflowName",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "Action": {
+   "additionalProperties": false,
+   "description": "The actions initiated by this trigger.",
+   "properties": {
+    "Arguments": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "CrawlerName": {
+     "description": "The name of the crawler to be used with this action.",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "JobName": {
+     "description": "The name of a job to be executed.",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "NotificationProperty": {
+     "$ref": "#/definitions/NotificationProperty",
+     "description": "Specifies configuration properties of a job run notification."
+    },
+    "SecurityConfiguration": {
+     "description": "The name of the SecurityConfiguration structure to be used with this action.",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Timeout": {
+     "description": "The JobRun timeout in minutes. This is the maximum time that a job run can consume resources before it is terminated and enters TIMEOUT status. The default is 2,880 minutes (48 hours). This overrides the timeout value set in the parent job.",
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Condition": {
+   "additionalProperties": false,
+   "description": "Defines a condition under which a trigger fires.",
+   "properties": {
+    "CrawlState": {
+     "description": "The state of the crawler to which this condition applies.",
+     "enum": [
+      "CANCELLED",
+      "CANCELLING",
+      "ERROR",
+      "FAILED",
+      "RUNNING",
+      "SUCCEEDED"
+     ],
+     "type": "string"
+    },
+    "CrawlerName": {
+     "description": "The name of the crawler to which this condition applies.",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "JobName": {
+     "description": "The name of the job whose JobRuns this condition applies to, and on which this trigger waits.",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "LogicalOperator": {
+     "description": "A logical operator.",
+     "enum": [
+      "EQUALS"
+     ],
+     "type": "string"
+    },
+    "State": {
+     "description": "The condition state. Currently, the values supported are SUCCEEDED, STOPPED, TIMEOUT, and FAILED.",
+     "enum": [
+      "SUCCEEDED",
+      "STOPPED",
+      "TIMEOUT",
+      "FAILED"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EventBatchingCondition": {
+   "additionalProperties": false,
+   "description": "Batch condition that must be met (specified number of events received or batch time window expired) before EventBridge event trigger fires.",
+   "properties": {
+    "BatchSize": {
+     "description": "Number of events that must be received from Amazon EventBridge before EventBridge event trigger fires.",
+     "maximum": 100,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "BatchWindow": {
+     "description": "Window of time in seconds after which EventBridge event trigger fires. Window starts when first event is received.",
+     "maximum": 900,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "BatchSize"
+   ],
+   "type": "object"
+  },
+  "NotificationProperty": {
+   "additionalProperties": false,
+   "description": "Specifies configuration properties of a job run notification.",
+   "properties": {
+    "NotifyDelayAfter": {
+     "description": "After a job run starts, the number of minutes to wait before sending a job run delay notification",
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Predicate": {
+   "additionalProperties": false,
+   "description": "The predicate of this trigger, which defines when it will fire.",
+   "properties": {
+    "Conditions": {
+     "description": "A list of the conditions that determine when the trigger will fire.",
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "maxItems": 500,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Logical": {
+     "description": "An optional field if only one condition is listed. If multiple conditions are listed, then this field is required.",
+     "enum": [
+      "AND",
+      "ANY"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Glue::Trigger",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "glue:CreateTrigger",
+    "glue:GetTrigger",
+    "glue:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "glue:DeleteTrigger",
+    "glue:GetTrigger"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "glue:ListTriggers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "glue:GetTrigger",
+    "glue:GetTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "glue:UpdateTrigger",
+    "glue:UntagResource",
+    "glue:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Actions": {
+   "description": "The actions initiated by this trigger.",
+   "items": {
+    "$ref": "#/definitions/Action"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Description": {
+   "description": "A description of this trigger.",
+   "maxLength": 2048,
+   "minLength": 0,
+   "type": "string"
+  },
+  "EventBatchingCondition": {
+   "$ref": "#/definitions/EventBatchingCondition",
+   "description": "Batch condition that must be met (specified number of events received or batch time window expired) before EventBridge event trigger fires."
+  },
+  "Name": {
+   "description": "The name of the trigger.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Predicate": {
+   "$ref": "#/definitions/Predicate",
+   "description": "The predicate of this trigger, which defines when it will fire."
+  },
+  "Schedule": {
+   "description": "A cron expression used to specify the schedule.",
+   "type": "string"
+  },
+  "StartOnCreation": {
+   "description": "Set to true to start SCHEDULED and CONDITIONAL triggers when created. True is not supported for ON_DEMAND triggers.",
+   "type": "boolean"
+  },
+  "Tags": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Type": {
+   "description": "The type of trigger that this is.",
+   "enum": [
+    "CONDITIONAL",
+    "EVENT",
+    "ON_DEMAND",
+    "SCHEDULED"
+   ],
+   "type": "string"
+  },
+  "WorkflowName": {
+   "description": "The name of the workflow associated with the trigger.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "required": [
+  "Type",
+  "Actions"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-glue.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "glue:TagResource",
+   "glue:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Glue::Trigger",
+ "writeOnlyProperties": [
+  "/properties/StartOnCreation"
+ ]
+}

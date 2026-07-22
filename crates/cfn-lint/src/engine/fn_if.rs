@@ -1,10 +1,10 @@
 use crate::ast::{ArrayNode, AstNode, FunctionNode, ObjectEntry, ObjectNode};
 use crate::resolver::Resolver;
 
-pub(crate) fn expand_fn_if_branches<'a>(
-    node: &'a AstNode,
+pub(crate) fn expand_fn_if_branches(
+    node: &AstNode,
     base_path: Vec<String>,
-) -> Vec<(&'a AstNode, Vec<String>)> {
+) -> Vec<(&AstNode, Vec<String>)> {
     if let Some(func) = node.as_function() {
         if func.name == "Fn::If" {
             if let Some(arr) = func.args.as_array() {
@@ -27,7 +27,6 @@ pub(crate) fn expand_fn_if_branches<'a>(
     }
     vec![(node, base_path)]
 }
-
 
 pub(crate) fn is_ref_no_value(node: &AstNode) -> bool {
     matches!(node, AstNode::Function(f) if f.name == "Ref" && f.args.as_str() == Some("AWS::NoValue"))
@@ -64,7 +63,7 @@ pub fn resolve_functions(node: &AstNode, resolver: &Resolver) -> AstNode {
             let func_with_resolved_args = AstNode::Function(FunctionNode {
                 name: func.name.clone(),
                 args: Box::new(resolved_args),
-                span: func.span.clone(),
+                span: func.span,
             });
             match resolver.resolve(&func_with_resolved_args) {
                 Some(resolved) => resolved,
@@ -103,7 +102,7 @@ pub fn resolve_functions(node: &AstNode, resolver: &Resolver) -> AstNode {
                 .collect();
             AstNode::Array(ArrayNode {
                 elements,
-                span: arr.span.clone(),
+                span: arr.span,
             })
         }
         _ => node.clone(),

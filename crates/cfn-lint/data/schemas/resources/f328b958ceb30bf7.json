@@ -1,0 +1,347 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/KmsKeyArn",
+  "/properties/Provider/ServiceNow/InstanceName",
+  "/properties/Provider/Azure/AWSConfigConnectorArn"
+ ],
+ "definitions": {
+  "AuthStatus": {
+   "description": "The authorization status of the connector",
+   "enum": [
+    "ACTIVE",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "AzureProviderConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration settings required to establish an integration between AWS Security Hub and Azure",
+   "properties": {
+    "AWSConfigConnectorArn": {
+     "description": "The ARN of the AWS Config connector used for the Azure integration",
+     "type": "string"
+    },
+    "AzureRegions": {
+     "description": "The list of Azure regions to include in the connector scope",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ScopeConfiguration": {
+     "$ref": "#/definitions/AzureScopeConfiguration"
+    }
+   },
+   "required": [
+    "AWSConfigConnectorArn",
+    "ScopeConfiguration",
+    "AzureRegions"
+   ],
+   "type": "object"
+  },
+  "AzureScopeConfiguration": {
+   "additionalProperties": false,
+   "description": "The scope configuration for an Azure connector",
+   "properties": {
+    "ScopeType": {
+     "description": "The scope type for the Azure connector",
+     "enum": [
+      "TENANT",
+      "SUBSCRIPTION"
+     ],
+     "type": "string"
+    },
+    "ScopeValues": {
+     "description": "The list of scope values for the Azure connector",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "ScopeType"
+   ],
+   "type": "object"
+  },
+  "HealthIssue": {
+   "additionalProperties": false,
+   "description": "A health issue associated with the connector",
+   "properties": {
+    "Code": {
+     "description": "The code identifying the type of health issue",
+     "type": "string"
+    },
+    "Message": {
+     "description": "The message describing the health issue",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Code",
+    "Message"
+   ],
+   "type": "object"
+  },
+  "ISO8601DateString": {
+   "description": "The timestamp formatted in ISO8601",
+   "pattern": "^(\\d\\d\\d\\d)-([0][1-9]|[1][0-2])-([0][1-9]|[1-2](\\d)|[3][0-1])[T](?:([0-1](\\d)|[2][0-3]):[0-5](\\d):[0-5](\\d)|23:59:60)(?:\\.(\\d)+)?([Z]|[+-](\\d\\d)(:?(\\d\\d))?)$",
+   "type": "string"
+  },
+  "JiraCloudProviderConfiguration": {
+   "additionalProperties": false,
+   "description": "The initial configuration settings required to establish an integration between Security Hub and Jira Cloud",
+   "properties": {
+    "ProjectKey": {
+     "description": "The project key for a Jira Cloud instance",
+     "maxLength": 10,
+     "minLength": 2,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ProjectKey"
+   ],
+   "type": "object"
+  },
+  "Provider": {
+   "description": "The third-party provider configuration for the connector",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "JiraCloud": {
+       "$ref": "#/definitions/JiraCloudProviderConfiguration"
+      }
+     },
+     "required": [
+      "JiraCloud"
+     ],
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ServiceNow": {
+       "$ref": "#/definitions/ServiceNowProviderConfiguration"
+      }
+     },
+     "required": [
+      "ServiceNow"
+     ],
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Azure": {
+       "$ref": "#/definitions/AzureProviderConfiguration"
+      }
+     },
+     "required": [
+      "Azure"
+     ],
+     "type": "object"
+    }
+   ],
+   "type": "object"
+  },
+  "ServiceNowProviderConfiguration": {
+   "additionalProperties": false,
+   "description": "The initial configuration settings required to establish an integration between Security Hub and ServiceNow ITSM",
+   "properties": {
+    "InstanceName": {
+     "description": "The instance name of ServiceNow ITSM",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SecretArn": {
+     "description": "The Amazon Resource Name (ARN) of the AWS Secrets Manager secret that contains the ServiceNow credentials",
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "InstanceName",
+    "SecretArn"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "patternProperties": {
+    "^(?!aws:)[a-zA-Z+-=._:/]{1,128}$": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::SecurityHub::ConnectorV2",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityhub:CreateConnectorV2",
+    "securityhub:GetConnectorV2",
+    "securityhub:ListConnectorsV2",
+    "securityhub:TagResource",
+    "securityhub:ListTagsForResource",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securityhub:GetConnectorV2",
+    "securityhub:DeleteConnectorV2",
+    "securityhub:ListConnectorsV2"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securityhub:ListConnectorsV2",
+    "securityhub:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityhub:GetConnectorV2",
+    "securityhub:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securityhub:UpdateConnectorV2",
+    "securityhub:GetConnectorV2",
+    "securityhub:ListConnectorsV2",
+    "securityhub:TagResource",
+    "securityhub:UntagResource",
+    "securityhub:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConnectorArn"
+ ],
+ "properties": {
+  "ConnectorArn": {
+   "description": "The ARN of the connector",
+   "pattern": "^arn:aws\\S*:securityhub:[a-z0-9-]+:[0-9]{12}:connectorv2/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "ConnectorId": {
+   "description": "The ID of the connector",
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "ConnectorStatus": {
+   "description": "The status of the connector",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "$ref": "#/definitions/ISO8601DateString"
+  },
+  "Description": {
+   "description": "A description of the connector",
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "EnablementStatus": {
+   "description": "The enablement status of the connector",
+   "type": "string"
+  },
+  "EnablementStatusReason": {
+   "description": "The reason for the enablement status of the connector",
+   "type": "string"
+  },
+  "Issues": {
+   "description": "The list of health issues associated with the connector",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/HealthIssue"
+   },
+   "type": "array"
+  },
+  "KmsKeyArn": {
+   "description": "The ARN of KMS key used for the connector",
+   "format": "AWS::KMS::Key.Arn",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "LastCheckedAt": {
+   "$ref": "#/definitions/ISO8601DateString"
+  },
+  "LastUpdatedAt": {
+   "$ref": "#/definitions/ISO8601DateString"
+  },
+  "Message": {
+   "description": "The message of the connector status change",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the connector",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "Provider": {
+   "$ref": "#/definitions/Provider"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConnectorArn",
+  "/properties/ConnectorId",
+  "/properties/Message",
+  "/properties/ConnectorStatus",
+  "/properties/LastUpdatedAt",
+  "/properties/LastCheckedAt",
+  "/properties/CreatedAt",
+  "/properties/EnablementStatus",
+  "/properties/EnablementStatusReason",
+  "/properties/Issues"
+ ],
+ "required": [
+  "Name",
+  "Provider"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securityhub",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "securityhub:ListTagsForResource",
+   "securityhub:TagResource",
+   "securityhub:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityHub::ConnectorV2"
+}

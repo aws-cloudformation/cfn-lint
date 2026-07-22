@@ -1,0 +1,80 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FleetName",
+  "/properties/StackName"
+ ],
+ "description": "Resource Type definition for AWS::AppStream::StackFleetAssociation",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "appstream:AssociateFleet",
+    "appstream:ListAssociatedStacks"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "appstream:DisassociateFleet",
+    "appstream:ListAssociatedStacks"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "anyOf": [
+     {
+      "required": [
+       "FleetName"
+      ]
+     },
+     {
+      "required": [
+       "StackName"
+      ]
+     }
+    ],
+    "properties": {
+     "FleetName": {
+      "description": "Fleet name to filter associations",
+      "type": "string"
+     },
+     "StackName": {
+      "description": "Stack name to filter associations",
+      "type": "string"
+     }
+    }
+   },
+   "permissions": [
+    "appstream:ListAssociatedStacks",
+    "appstream:ListAssociatedFleets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "appstream:ListAssociatedStacks"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FleetName",
+  "/properties/StackName"
+ ],
+ "properties": {
+  "FleetName": {
+   "description": "The name of the fleet. To associate a fleet with a stack, you must specify a dependency on the fleet resource.",
+   "type": "string"
+  },
+  "StackName": {
+   "description": "The name of the stack. To associate a fleet with a stack, you must specify a dependency on the stack resource.",
+   "type": "string"
+  }
+ },
+ "required": [
+  "FleetName",
+  "StackName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appstream/tree/master/aws-appstream-stackfleetassociation.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::AppStream::StackFleetAssociation"
+}

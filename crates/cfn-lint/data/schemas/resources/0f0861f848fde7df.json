@@ -1,0 +1,121 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Group",
+  "/properties/TagKey",
+  "/properties/TagValue",
+  "/properties/RoleArn"
+ ],
+ "description": "Schema for ResourceGroups::TagSyncTask",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "resource-groups:StartTagSyncTask",
+    "resource-groups:CreateGroup",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "resource-groups:CancelTagSyncTask",
+    "resource-groups:DeleteGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "resource-groups:ListTagSyncTasks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "resource-groups:GetTagSyncTask"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TaskArn"
+ ],
+ "properties": {
+  "Group": {
+   "description": "The Amazon resource name (ARN) or name of the application group for which you want to create a tag-sync task",
+   "maxLength": 1600,
+   "minLength": 12,
+   "pattern": "([a-zA-Z0-9_\\\\.-]{1,150}/[a-z0-9]{26})|(arn:aws(-[a-z]+)*:resource-groups(-(test|beta|gamma))?:[a-z]{2}(-[a-z]+)+-\\d{1}:[0-9]{12}:group/[a-zA-Z0-9_\\\\.-]{1,150}/[a-z0-9]{26})",
+   "type": "string"
+  },
+  "GroupArn": {
+   "description": "The Amazon resource name (ARN) of the ApplicationGroup for which the TagSyncTask is created",
+   "maxLength": 1600,
+   "minLength": 12,
+   "pattern": "arn:aws(-[a-z]+)*:resource-groups(-(test|beta|gamma))?:[a-z]{2}(-[a-z]+)+-\\d{1}:[0-9]{12}:group/[a-zA-Z0-9_\\.-]{1,150}/[a-z0-9]{26}",
+   "type": "string"
+  },
+  "GroupName": {
+   "description": "The Name of the application group for which the TagSyncTask is created",
+   "maxLength": 300,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_\\.-]{1,150}/[a-z0-9]{26}",
+   "type": "string"
+  },
+  "RoleArn": {
+   "description": "The Amazon resource name (ARN) of the role assumed by the service to tag and untag resources on your behalf.",
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+",
+   "type": "string"
+  },
+  "Status": {
+   "description": "The status of the TagSyncTask",
+   "enum": [
+    "ACTIVE",
+    "ERROR"
+   ],
+   "type": "string"
+  },
+  "TagKey": {
+   "description": "The tag key. Resources tagged with this tag key-value pair will be added to the application. If a resource with this tag is later untagged, the tag-sync task removes the resource from the application.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+   "type": "string"
+  },
+  "TagValue": {
+   "description": "The tag value. Resources tagged with this tag key-value pair will be added to the application. If a resource with this tag is later untagged, the tag-sync task removes the resource from the application.",
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+   "type": "string"
+  },
+  "TaskArn": {
+   "description": "The ARN of the TagSyncTask resource",
+   "maxLength": 1600,
+   "minLength": 12,
+   "pattern": "arn:aws(-[a-z]+)*:resource-groups(-(test|beta|gamma))?:[a-z]{2}(-[a-z]+)+-\\d{1}:[0-9]{12}:group/[a-zA-Z0-9_\\.-]{1,150}/[a-z0-9]{26}/tag-sync-task/[a-z0-9]{26}",
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/Group": "$split(Group, \"/\")[1] & \"/\" & $split(Group, \"/\")[2] $OR Group"
+ },
+ "readOnlyProperties": [
+  "/properties/TaskArn",
+  "/properties/Status",
+  "/properties/GroupName",
+  "/properties/GroupArn"
+ ],
+ "required": [
+  "Group",
+  "TagKey",
+  "TagValue",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ResourceGroups::TagSyncTask"
+}

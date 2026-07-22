@@ -1,0 +1,118 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DBSubnetGroupName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "An optional array of key-value pairs to apply to this DB subnet group.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The AWS::Neptune::DBSubnetGroup type creates an Amazon Neptune DB subnet group. Subnet groups must contain at least two subnets in two different Availability Zones in the same AWS Region.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "rds:CreateDBSubnetGroup",
+    "rds:DescribeDBSubnetGroups",
+    "rds:ListTagsForResource",
+    "rds:AddTagsToResource",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "rds:DeleteDBSubnetGroup",
+    "rds:DescribeDBSubnetGroups",
+    "rds:ListTagsForResource",
+    "rds:RemoveTagsFromResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "rds:DescribeDBSubnetGroups",
+    "rds:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "rds:DescribeDBSubnetGroups",
+    "rds:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "rds:ModifyDBSubnetGroup",
+    "rds:DescribeDBSubnetGroups",
+    "rds:AddTagsToResource",
+    "rds:RemoveTagsFromResource",
+    "rds:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DBSubnetGroupName"
+ ],
+ "properties": {
+  "DBSubnetGroupDescription": {
+   "description": "The description for the DB subnet group.",
+   "type": "string"
+  },
+  "DBSubnetGroupName": {
+   "description": "The name for the DB subnet group. This value is stored as a lowercase string.\n\nConstraints: Must contain no more than 255 lowercase alphanumeric characters or hyphens. Must not be \"Default\".\n\nExample: mysubnetgroup\n\n",
+   "type": "string"
+  },
+  "SubnetIds": {
+   "description": "The Amazon EC2 subnet IDs for the DB subnet group.",
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "description": "An optional array of key-value pairs to apply to this DB subnet group.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "propertyTransform": {
+  "/properties/DBSubnetGroupName": "$lowercase(DBSubnetGroupName)"
+ },
+ "required": [
+  "DBSubnetGroupDescription",
+  "SubnetIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-neptune",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "rds:AddTagsToResource",
+   "rds:ListTagsForResource",
+   "rds:RemoveTagsFromResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Neptune::DBSubnetGroup"
+}

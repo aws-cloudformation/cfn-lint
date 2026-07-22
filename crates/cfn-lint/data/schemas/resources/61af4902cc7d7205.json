@@ -1,0 +1,170 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KeyspaceName"
+ ],
+ "definitions": {
+  "RegionList": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^[a-z]{2,}-[a-z]+-[0-9]+$",
+    "type": "string"
+   },
+   "maxItems": 20,
+   "minItems": 2,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ReplicationSpecification": {
+   "additionalProperties": false,
+   "default": {
+    "properties": {
+     "ReplicationStrategy": {
+      "const": "SINGLE_REGION",
+      "type": "string"
+     }
+    }
+   },
+   "dependencies": {
+    "RegionList": [
+     "ReplicationStrategy"
+    ]
+   },
+   "properties": {
+    "RegionList": {
+     "$ref": "#/definitions/RegionList"
+    },
+    "ReplicationStrategy": {
+     "enum": [
+      "SINGLE_REGION",
+      "MULTI_REGION"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::Cassandra::Keyspace",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cassandra:Create",
+    "cassandra:CreateMultiRegionResource",
+    "cassandra:Select",
+    "cassandra:SelectMultiRegionResource",
+    "cassandra:TagResource",
+    "cassandra:TagMultiRegionResource",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cassandra:Drop",
+    "cassandra:DropMultiRegionResource",
+    "cassandra:Select",
+    "cassandra:SelectMultiRegionResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cassandra:Select",
+    "cassandra:SelectMultiRegionResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cassandra:Select",
+    "cassandra:SelectMultiRegionResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cassandra:Alter",
+    "cassandra:AlterMultiRegionResource",
+    "cassandra:Modify",
+    "cassandra:ModifyMultiRegionResource",
+    "cassandra:Select",
+    "cassandra:SelectMultiRegionResource",
+    "cassandra:TagResource",
+    "cassandra:TagMultiRegionResource",
+    "cassandra:UntagResource",
+    "cassandra:UntagMultiRegionResource",
+    "application-autoscaling:RegisterScalableTarget",
+    "application-autoscaling:DeregisterScalableTarget",
+    "application-autoscaling:DescribeScalableTargets",
+    "application-autoscaling:DescribeScalingPolicies",
+    "application-autoscaling:PutScalingPolicy",
+    "cloudwatch:DeleteAlarms",
+    "cloudwatch:DescribeAlarms",
+    "cloudwatch:PutMetricAlarm",
+    "iam:CreateServiceLinkedRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/KeyspaceName"
+ ],
+ "properties": {
+  "ClientSideTimestampsEnabled": {
+   "description": "Indicates whether client-side timestamps are enabled (true) or disabled (false) for all tables in the keyspace. To add a Region to a single-Region keyspace with at least one table, the value must be set to true. After you enabled client-side timestamps for a table, you can\u2019t disable it again.",
+   "type": "boolean"
+  },
+  "KeyspaceName": {
+   "description": "Name for Cassandra keyspace",
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_]{1,47}$",
+   "type": "string"
+  },
+  "ReplicationSpecification": {
+   "$ref": "#/definitions/ReplicationSpecification"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "required": [],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "cassandra:TagResource",
+   "cassandra:TagMultiRegionResource",
+   "cassandra:UntagResource",
+   "cassandra:UntagMultiRegionResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Cassandra::Keyspace",
+ "writeOnlyProperties": [
+  "/properties/ClientSideTimestampsEnabled",
+  "/properties/ReplicationSpecification/RegionList"
+ ]
+}

@@ -1,0 +1,132 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EnvironmentId",
+  "/properties/ApplicationId"
+ ],
+ "description": "Represents a deployment resource of an AWS Mainframe Modernization (M2) application to a specified environment",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "m2:CreateDeployment",
+    "m2:ListDeployments",
+    "m2:GetDeployment",
+    "iam:PassRole",
+    "ec2:DescribeNetworkInterfaces",
+    "elasticloadbalancing:CreateListener",
+    "elasticloadbalancing:CreateLoadBalancer",
+    "elasticloadbalancing:CreateTargetGroup",
+    "elasticloadbalancing:AddTags",
+    "elasticloadbalancing:RegisterTargets",
+    "logs:DescribeResourcePolicies",
+    "logs:DescribeLogGroups",
+    "logs:CreateLogDelivery",
+    "logs:GetLogDelivery",
+    "logs:UpdateLogDelivery",
+    "logs:DeleteLogDelivery",
+    "logs:ListLogDeliveries",
+    "logs:CreateLogGroup",
+    "logs:PutResourcePolicy"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "delete": {
+   "permissions": [
+    "elasticloadbalancing:DeleteListener",
+    "elasticloadbalancing:DeleteTargetGroup",
+    "elasticloadbalancing:DeregisterTargets",
+    "elasticloadbalancing:DeleteLoadBalancer",
+    "logs:DeleteLogDelivery",
+    "m2:ListDeployments",
+    "m2:GetDeployment",
+    "m2:DeleteApplicationFromEnvironment"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ApplicationId": {
+      "$ref": "resource-schema.json#/properties/ApplicationId"
+     }
+    },
+    "required": [
+     "ApplicationId"
+    ]
+   },
+   "permissions": [
+    "m2:ListDeployments"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "m2:ListDeployments",
+    "m2:GetDeployment"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "m2:CreateDeployment",
+    "m2:ListDeployments",
+    "m2:GetDeployment",
+    "elasticloadbalancing:CreateListener",
+    "elasticloadbalancing:CreateLoadBalancer",
+    "elasticloadbalancing:CreateTargetGroup",
+    "elasticloadbalancing:DeleteListener",
+    "elasticloadbalancing:DeleteTargetGroup",
+    "elasticloadbalancing:DeregisterTargets",
+    "elasticloadbalancing:DeleteLoadBalancer",
+    "elasticloadbalancing:AddTags",
+    "elasticloadbalancing:RegisterTargets",
+    "ec2:DescribeNetworkInterfaces"
+   ],
+   "timeoutInMinutes": 60
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationId"
+ ],
+ "properties": {
+  "ApplicationId": {
+   "description": "The application ID.",
+   "pattern": "^\\S{1,80}$",
+   "type": "string"
+  },
+  "ApplicationVersion": {
+   "description": "The version number of the application to deploy",
+   "minimum": 1,
+   "type": "integer"
+  },
+  "DeploymentId": {
+   "description": "The deployment ID.",
+   "pattern": "^\\S{1,80}$",
+   "type": "string"
+  },
+  "EnvironmentId": {
+   "description": "The environment ID.",
+   "pattern": "^\\S{1,80}$",
+   "type": "string"
+  },
+  "Status": {
+   "description": "The status of the deployment.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DeploymentId",
+  "/properties/Status"
+ ],
+ "required": [
+  "EnvironmentId",
+  "ApplicationId",
+  "ApplicationVersion"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-m2.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::M2::Deployment"
+}

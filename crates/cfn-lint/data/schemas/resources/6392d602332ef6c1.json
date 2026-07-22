@@ -1,0 +1,249 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Days": {
+   "description": "Number of days before data expires in the Amazon Security Lake object.",
+   "minimum": 1,
+   "type": "integer"
+  },
+  "EncryptionConfiguration": {
+   "additionalProperties": false,
+   "description": "Provides encryption details of Amazon Security Lake object.",
+   "properties": {
+    "KmsKeyId": {
+     "anyOf": [
+      {
+       "format": "AWS::KMS::Key.Arn"
+      },
+      {
+       "format": "AWS::KMS::Key.Id"
+      },
+      {
+       "format": "AWS::KMS::Alias.AliasName"
+      }
+     ],
+     "description": "The id of KMS encryption key used by Amazon Security Lake to encrypt the Security Lake object.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Expiration": {
+   "additionalProperties": false,
+   "description": "Provides data expiration details of Amazon Security Lake object.",
+   "properties": {
+    "Days": {
+     "$ref": "#/definitions/Days"
+    }
+   },
+   "type": "object"
+  },
+  "LifecycleConfiguration": {
+   "additionalProperties": false,
+   "description": "Provides lifecycle details of Amazon Security Lake object.",
+   "properties": {
+    "Expiration": {
+     "$ref": "#/definitions/Expiration"
+    },
+    "Transitions": {
+     "description": "Provides data storage transition details of Amazon Security Lake object.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Transitions"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "Regions": {
+   "description": "Replication enables automatic, asynchronous copying of objects across Amazon S3 buckets. Amazon S3 buckets that are configured for object replication can be owned by the same AWS account or by different accounts. You can replicate objects to a single destination bucket or to multiple destination buckets. The destination buckets can be in different AWS Regions or within the same Region as the source bucket.",
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^(us(-gov)?|af|ap|ca|eu|me|sa)-(central|north|(north(?:east|west))|south|south(?:east|west)|east|west)-\\d+$",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ReplicationConfiguration": {
+   "additionalProperties": false,
+   "description": "Provides replication details of Amazon Security Lake object.",
+   "properties": {
+    "Regions": {
+     "$ref": "#/definitions/Regions"
+    },
+    "RoleArn": {
+     "description": "Replication settings for the Amazon S3 buckets. This parameter uses the AWS Identity and Access Management (IAM) role you created that is managed by Security Lake, to ensure the replication setting is correct.",
+     "format": "AWS::IAM::Role.Arn",
+     "pattern": "^arn:.*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, `_`, `.`, `/`, `=`, `+`, and `-`.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 characters in length.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Transitions": {
+   "additionalProperties": false,
+   "properties": {
+    "Days": {
+     "description": "Number of days before data transitions to a different S3 Storage Class in the Amazon Security Lake object.",
+     "minimum": 1,
+     "type": "integer"
+    },
+    "StorageClass": {
+     "description": "The range of storage classes that you can choose from based on the data access, resiliency, and cost requirements of your workloads.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SecurityLake::DataLake",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "events:*",
+    "iam:CreateServiceLinkedRole",
+    "iam:GetRole",
+    "iam:ListAttachedRolePolicies",
+    "iam:PutRolePolicy",
+    "iam:PassRole",
+    "glue:*",
+    "organizations:*",
+    "kms:DescribeKey",
+    "kms:CreateGrant",
+    "lakeformation:*",
+    "lambda:*",
+    "s3:*",
+    "securitylake:CreateDataLake",
+    "securitylake:TagResource",
+    "securitylake:List*",
+    "sqs:*"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "organizations:*",
+    "securitylake:DeleteDataLake",
+    "securitylake:List*"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securitylake:List*"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securitylake:List*"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "events:*",
+    "iam:CreateServiceLinkedRole",
+    "iam:DeleteRolePolicy",
+    "iam:GetRole",
+    "iam:PassRole",
+    "iam:PutRolePolicy",
+    "kms:DescribeKey",
+    "kms:CreateGrant",
+    "lakeformation:*",
+    "lambda:*",
+    "organizations:*",
+    "s3:*",
+    "securitylake:List*",
+    "securitylake:TagResource",
+    "securitylake:UntagResource",
+    "securitylake:UpdateDataLake",
+    "sqs:*"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) created by you to provide to the subscriber.",
+   "maxLength": 1011,
+   "minLength": 1,
+   "type": "string"
+  },
+  "EncryptionConfiguration": {
+   "$ref": "#/definitions/EncryptionConfiguration"
+  },
+  "LifecycleConfiguration": {
+   "$ref": "#/definitions/LifecycleConfiguration"
+  },
+  "MetaStoreManagerRoleArn": {
+   "description": "The Amazon Resource Name (ARN) used to index AWS Glue table partitions that are generated by the ingestion and normalization of AWS log sources and custom sources.",
+   "format": "AWS::IAM::Role.Arn",
+   "pattern": "^arn:.*$",
+   "type": "string"
+  },
+  "ReplicationConfiguration": {
+   "$ref": "#/definitions/ReplicationConfiguration"
+  },
+  "S3BucketArn": {
+   "description": "The ARN for the Amazon Security Lake Amazon S3 bucket.",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/S3BucketArn"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securitylake.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "securitylake:TagResource",
+   "securitylake:UntagResource",
+   "securitylake:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityLake::DataLake",
+ "writeOnlyProperties": [
+  "/properties/MetaStoreManagerRoleArn"
+ ]
+}

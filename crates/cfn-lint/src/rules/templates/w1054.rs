@@ -33,8 +33,8 @@ impl W1054 {
                     return;
                 }
                 // Skip resource Type field
-                if path.last().map_or(false, |p| p == "Type")
-                    && path.first().map_or(false, |p| p == "Resources")
+                if path.last().is_some_and(|p| p == "Type")
+                    && path.first().is_some_and(|p| p == "Resources")
                     && path.len() == 3
                 {
                     return;

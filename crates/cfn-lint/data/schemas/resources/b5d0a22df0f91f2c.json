@@ -1,0 +1,253 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ConnectionId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AttachPoint",
+  "/properties/EnvironmentId",
+  "/properties/ActivationKey",
+  "/properties/RemoteAccount"
+ ],
+ "definitions": {
+  "AttachPoint": {
+   "additionalProperties": false,
+   "description": "The logical attachment point in your AWS network where the managed connection will be connected.",
+   "properties": {
+    "Arn": {
+     "description": "The ARN of the resource to attach to.",
+     "type": "string"
+    },
+    "DirectConnectGateway": {
+     "description": "The ID of the Direct Connect Gateway to attach to.",
+     "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Provider": {
+   "additionalProperties": false,
+   "description": "The partner cloud service provider.",
+   "properties": {
+    "CloudServiceProvider": {
+     "description": "The name of the cloud service provider.",
+     "maxLength": 32,
+     "type": "string"
+    },
+    "LastMileProvider": {
+     "description": "The name of the last mile provider.",
+     "maxLength": 32,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/RemoteOwnerAccount"
+ ],
+ "description": "Resource Type definition for AWS::Interconnect::Connection. Creates a managed network connection between AWS and a partner cloud service provider.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "interconnect:CreateConnection",
+    "interconnect:AcceptConnectionProposal",
+    "interconnect:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "interconnect:GetConnection",
+    "interconnect:DeleteConnection"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "interconnect:ListConnections"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "interconnect:GetConnection",
+    "interconnect:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "interconnect:UpdateConnection",
+    "interconnect:GetConnection",
+    "interconnect:TagResource",
+    "interconnect:UntagResource",
+    "interconnect:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "ActivationKey": {
+   "description": "The activation key for accepting a connection proposal from a partner CSP. Mutually exclusive with EnvironmentId.",
+   "type": "string"
+  },
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the connection.",
+   "pattern": "^arn:aws[a-z-]*:interconnect:[^:]+:[0-9]{12}:connection/mcc-[a-z0-9]{8}$",
+   "type": "string"
+  },
+  "AttachPoint": {
+   "$ref": "#/definitions/AttachPoint",
+   "description": "The logical attachment point in your AWS network where the managed connection will be connected."
+  },
+  "Bandwidth": {
+   "description": "The bandwidth of the connection (e.g., 50Mbps, 1Gbps). Required when creating a connection through AWS.",
+   "maxLength": 8,
+   "minLength": 1,
+   "pattern": "^\\d+[MG]bps$",
+   "type": "string"
+  },
+  "BillingTier": {
+   "description": "The billing tier for the connection.",
+   "maximum": 8,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "ConnectionId": {
+   "description": "The unique identifier for the connection.",
+   "pattern": "^mcc-[a-z0-9]{8}$",
+   "type": "string"
+  },
+  "Description": {
+   "description": "A description of the connection.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[-a-zA-Z0-9_ ]+$",
+   "type": "string"
+  },
+  "EnvironmentId": {
+   "description": "The ID of the environment for the connection. Required when creating a connection through AWS. Mutually exclusive with ActivationKey.",
+   "maxLength": 32,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OwnerAccount": {
+   "description": "The AWS account ID of the connection owner.",
+   "type": "string"
+  },
+  "Provider": {
+   "$ref": "#/definitions/Provider",
+   "description": "The partner cloud service provider."
+  },
+  "RemoteAccount": {
+   "additionalProperties": false,
+   "description": "The remote account identifier for the connection. Required when creating a connection through AWS. Replaces RemoteOwnerAccount.",
+   "properties": {
+    "Identifier": {
+     "description": "The identifier of the remote account.",
+     "maxLength": 255,
+     "pattern": "^[-a-zA-Z0-9_@\\.]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Identifier"
+   ],
+   "type": "object"
+  },
+  "RemoteOwnerAccount": {
+   "description": "Deprecated. Use RemoteAccount instead. The account ID of the remote owner. Required when creating a connection through AWS.",
+   "maxLength": 255,
+   "pattern": "^[-a-zA-Z0-9_@\\.]+$",
+   "type": "string"
+  },
+  "SharedId": {
+   "description": "The shared identifier for the connection pairing.",
+   "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+   "type": "string"
+  },
+  "State": {
+   "description": "The current state of the connection.",
+   "enum": [
+    "available",
+    "requested",
+    "pending",
+    "down",
+    "deleting",
+    "deleted",
+    "failed"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "description": "The type of managed connection.",
+   "maxLength": 32,
+   "minLength": 5,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConnectionId",
+  "/properties/Arn",
+  "/properties/Provider",
+  "/properties/Type",
+  "/properties/State",
+  "/properties/SharedId",
+  "/properties/OwnerAccount",
+  "/properties/BillingTier"
+ ],
+ "required": [
+  "AttachPoint"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "interconnect:TagResource",
+   "interconnect:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Interconnect::Connection",
+ "writeOnlyProperties": [
+  "/properties/RemoteOwnerAccount",
+  "/properties/RemoteAccount"
+ ]
+}

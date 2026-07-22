@@ -1,7 +1,6 @@
 use super::*;
 use crate::ast::{
-    ArrayNode, AstNode, BoolNode, NullNode, NumberNode, ObjectEntry, ObjectNode, Position, Span,
-    StringNode,
+    ArrayNode, AstNode, BoolNode, ObjectEntry, ObjectNode, Position, Span, StringNode,
 };
 use crate::parser;
 use serde_json::json;
@@ -52,7 +51,7 @@ fn test_engine_catches_long_description() {
 
 #[test]
 fn test_engine_has_e1003_registered() {
-    let engine = Engine::new();
+    let _engine = Engine::new();
     // Rule E1003 is registered via inventory
 }
 
@@ -222,8 +221,7 @@ fn test_schema_validation_resource_without_properties_skipped() {
     );
 
     // Resource with no Properties section
-    let mut res_props: Vec<ObjectEntry> = Vec::new();
-    res_props.push(ObjectEntry {
+    let res_props: Vec<ObjectEntry> = vec![ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "Type".to_string(),
             span: Span::default(),
@@ -234,9 +232,8 @@ fn test_schema_validation_resource_without_properties_skipped() {
             span: Span::default(),
         }),
         key_span: Span::default(),
-    });
-    let mut resources: Vec<ObjectEntry> = Vec::new();
-    resources.push(ObjectEntry {
+    }];
+    let resources: Vec<ObjectEntry> = vec![ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "Handle".to_string(),
             span: Span::default(),
@@ -247,9 +244,8 @@ fn test_schema_validation_resource_without_properties_skipped() {
             span: Span::default(),
         }),
         key_span: Span::default(),
-    });
-    let mut root_props: Vec<ObjectEntry> = Vec::new();
-    root_props.push(ObjectEntry {
+    }];
+    let root_props: Vec<ObjectEntry> = vec![ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "Resources".to_string(),
             span: Span::default(),
@@ -260,7 +256,7 @@ fn test_schema_validation_resource_without_properties_skipped() {
             span: Span::default(),
         }),
         key_span: Span::default(),
-    });
+    }];
     let root = AstNode::Object(ObjectNode {
         entries: root_props,
         span: Span::default(),
@@ -374,8 +370,7 @@ fn test_unresolvable_ref_left_as_is_no_crash() {
     let mut root_props: Vec<ObjectEntry> = Vec::new();
 
     // Add a parameter with no default
-    let mut param_props: Vec<ObjectEntry> = Vec::new();
-    param_props.push(ObjectEntry {
+    let param_props: Vec<ObjectEntry> = vec![ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "Type".to_string(),
             span: Span::default(),
@@ -386,9 +381,8 @@ fn test_unresolvable_ref_left_as_is_no_crash() {
             span: Span::default(),
         }),
         key_span: Span::default(),
-    });
-    let mut params: Vec<ObjectEntry> = Vec::new();
-    params.push(ObjectEntry {
+    }];
+    let params: Vec<ObjectEntry> = vec![ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "UnknownParam".to_string(),
             span: Span::default(),
@@ -399,7 +393,7 @@ fn test_unresolvable_ref_left_as_is_no_crash() {
             span: Span::default(),
         }),
         key_span: Span::default(),
-    });
+    }];
     root_props.push(ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "Parameters".to_string(),
@@ -427,8 +421,7 @@ fn test_unresolvable_ref_left_as_is_no_crash() {
         }),
         key_span: Span::default(),
     });
-    let mut bucket_props: Vec<ObjectEntry> = Vec::new();
-    bucket_props.push(ObjectEntry {
+    let bucket_props: Vec<ObjectEntry> = vec![ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "BucketName".to_string(),
             span: Span::default(),
@@ -446,7 +439,7 @@ fn test_unresolvable_ref_left_as_is_no_crash() {
             },
         }),
         key_span: Span::default(),
-    });
+    }];
     res_inner.push(ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "Properties".to_string(),
@@ -459,8 +452,7 @@ fn test_unresolvable_ref_left_as_is_no_crash() {
         }),
         key_span: Span::default(),
     });
-    let mut resources: Vec<ObjectEntry> = Vec::new();
-    resources.push(ObjectEntry {
+    let resources: Vec<ObjectEntry> = vec![ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "MyResource".to_string(),
             span: Span::default(),
@@ -471,7 +463,7 @@ fn test_unresolvable_ref_left_as_is_no_crash() {
             span: Span::default(),
         }),
         key_span: Span::default(),
-    });
+    }];
     root_props.push(ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "Resources".to_string(),
@@ -505,31 +497,31 @@ fn make_template_ast(resource_type: &str, properties: serde_json::Value) -> AstN
 }
 
 fn make_template_ast_raw(resource_type: &str, props_node: AstNode) -> AstNode {
-    let mut res_props: Vec<ObjectEntry> = Vec::new();
-    res_props.push(ObjectEntry {
-        key_node: AstNode::String(StringNode {
-            value: "Type".to_string(),
-            span: Span::default(),
-        }),
-        key: "Type".to_string(),
-        value: AstNode::String(StringNode {
-            value: resource_type.to_string(),
-            span: Span::default(),
-        }),
-        key_span: Span::default(),
-    });
-    res_props.push(ObjectEntry {
-        key_node: AstNode::String(StringNode {
-            value: "Properties".to_string(),
-            span: Span::default(),
-        }),
-        key: "Properties".to_string(),
-        value: props_node,
-        key_span: Span::default(),
-    });
+    let res_props: Vec<ObjectEntry> = vec![
+        ObjectEntry {
+            key_node: AstNode::String(StringNode {
+                value: "Type".to_string(),
+                span: Span::default(),
+            }),
+            key: "Type".to_string(),
+            value: AstNode::String(StringNode {
+                value: resource_type.to_string(),
+                span: Span::default(),
+            }),
+            key_span: Span::default(),
+        },
+        ObjectEntry {
+            key_node: AstNode::String(StringNode {
+                value: "Properties".to_string(),
+                span: Span::default(),
+            }),
+            key: "Properties".to_string(),
+            value: props_node,
+            key_span: Span::default(),
+        },
+    ];
 
-    let mut resources: Vec<ObjectEntry> = Vec::new();
-    resources.push(ObjectEntry {
+    let resources: Vec<ObjectEntry> = vec![ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "MyResource".to_string(),
             span: Span::default(),
@@ -540,10 +532,9 @@ fn make_template_ast_raw(resource_type: &str, props_node: AstNode) -> AstNode {
             span: Span::default(),
         }),
         key_span: Span::default(),
-    });
+    }];
 
-    let mut root_props: Vec<ObjectEntry> = Vec::new();
-    root_props.push(ObjectEntry {
+    let root_props: Vec<ObjectEntry> = vec![ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "Resources".to_string(),
             span: Span::default(),
@@ -554,7 +545,7 @@ fn make_template_ast_raw(resource_type: &str, props_node: AstNode) -> AstNode {
             span: Span::default(),
         }),
         key_span: Span::default(),
-    });
+    }];
 
     AstNode::Object(ObjectNode {
         entries: root_props,
@@ -711,8 +702,7 @@ fn make_template_with_metadata(
                 .collect(),
             span: Span::default(),
         });
-        let mut config_props: Vec<ObjectEntry> = Vec::new();
-        config_props.push(ObjectEntry {
+        let config_props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "ignore_checks".to_string(),
                 span: Span::default(),
@@ -720,9 +710,8 @@ fn make_template_with_metadata(
             key: "ignore_checks".to_string(),
             value: ignore_array,
             key_span: Span::default(),
-        });
-        let mut cfn_lint_props: Vec<ObjectEntry> = Vec::new();
-        cfn_lint_props.push(ObjectEntry {
+        }];
+        let cfn_lint_props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "config".to_string(),
                 span: Span::default(),
@@ -733,9 +722,8 @@ fn make_template_with_metadata(
                 span: Span::default(),
             }),
             key_span: Span::default(),
-        });
-        let mut meta_props: Vec<ObjectEntry> = Vec::new();
-        meta_props.push(ObjectEntry {
+        }];
+        let meta_props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "cfn-lint".to_string(),
                 span: Span::default(),
@@ -746,7 +734,7 @@ fn make_template_with_metadata(
                 span: Span::default(),
             }),
             key_span: Span::default(),
-        });
+        }];
         root_props.push(ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "Metadata".to_string(),
@@ -814,8 +802,7 @@ fn make_template_with_metadata(
                         .collect(),
                     span: Span::default(),
                 });
-                let mut config_props: Vec<ObjectEntry> = Vec::new();
-                config_props.push(ObjectEntry {
+                let config_props: Vec<ObjectEntry> = vec![ObjectEntry {
                     key_node: AstNode::String(StringNode {
                         value: "ignore_checks".to_string(),
                         span: Span::default(),
@@ -823,9 +810,8 @@ fn make_template_with_metadata(
                     key: "ignore_checks".to_string(),
                     value: ignore_array,
                     key_span: Span::default(),
-                });
-                let mut cfn_lint_props: Vec<ObjectEntry> = Vec::new();
-                cfn_lint_props.push(ObjectEntry {
+                }];
+                let cfn_lint_props: Vec<ObjectEntry> = vec![ObjectEntry {
                     key_node: AstNode::String(StringNode {
                         value: "config".to_string(),
                         span: Span::default(),
@@ -836,9 +822,8 @@ fn make_template_with_metadata(
                         span: Span::default(),
                     }),
                     key_span: Span::default(),
-                });
-                let mut meta_props: Vec<ObjectEntry> = Vec::new();
-                meta_props.push(ObjectEntry {
+                }];
+                let meta_props: Vec<ObjectEntry> = vec![ObjectEntry {
                     key_node: AstNode::String(StringNode {
                         value: "cfn-lint".to_string(),
                         span: Span::default(),
@@ -849,7 +834,7 @@ fn make_template_with_metadata(
                         span: Span::default(),
                     }),
                     key_span: Span::default(),
-                });
+                }];
                 res_props.push(ObjectEntry {
                     key_node: AstNode::String(StringNode {
                         value: "Metadata".to_string(),
@@ -1255,45 +1240,45 @@ fn test_serverless_resources_no_schema_no_issues() {
         key_span: Span::default(),
     });
 
-    let mut func_props: Vec<ObjectEntry> = Vec::new();
-    func_props.push(ObjectEntry {
-        key_node: AstNode::String(StringNode {
-            value: "Type".to_string(),
-            span: Span::default(),
-        }),
-        key: "Type".to_string(),
-        value: AstNode::String(StringNode {
-            value: "AWS::Serverless::Function".to_string(),
-            span: Span::default(),
-        }),
-        key_span: Span::default(),
-    });
-    func_props.push(ObjectEntry {
-        key_node: AstNode::String(StringNode {
-            value: "Properties".to_string(),
-            span: Span::default(),
-        }),
-        key: "Properties".to_string(),
-        value: AstNode::Object(ObjectNode {
-            entries: vec![ObjectEntry {
-                key_node: AstNode::String(StringNode {
-                    value: "Runtime".to_string(),
-                    span: Span::default(),
-                }),
-                key: "Runtime".to_string(),
-                value: AstNode::String(StringNode {
-                    value: "python3.12".to_string(),
-                    span: Span::default(),
-                }),
-                key_span: Span::default(),
-            }],
-            span: Span::default(),
-        }),
-        key_span: Span::default(),
-    });
+    let func_props: Vec<ObjectEntry> = vec![
+        ObjectEntry {
+            key_node: AstNode::String(StringNode {
+                value: "Type".to_string(),
+                span: Span::default(),
+            }),
+            key: "Type".to_string(),
+            value: AstNode::String(StringNode {
+                value: "AWS::Serverless::Function".to_string(),
+                span: Span::default(),
+            }),
+            key_span: Span::default(),
+        },
+        ObjectEntry {
+            key_node: AstNode::String(StringNode {
+                value: "Properties".to_string(),
+                span: Span::default(),
+            }),
+            key: "Properties".to_string(),
+            value: AstNode::Object(ObjectNode {
+                entries: vec![ObjectEntry {
+                    key_node: AstNode::String(StringNode {
+                        value: "Runtime".to_string(),
+                        span: Span::default(),
+                    }),
+                    key: "Runtime".to_string(),
+                    value: AstNode::String(StringNode {
+                        value: "python3.12".to_string(),
+                        span: Span::default(),
+                    }),
+                    key_span: Span::default(),
+                }],
+                span: Span::default(),
+            }),
+            key_span: Span::default(),
+        },
+    ];
 
-    let mut resources: Vec<ObjectEntry> = Vec::new();
-    resources.push(ObjectEntry {
+    let resources: Vec<ObjectEntry> = vec![ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "MyFunc".to_string(),
             span: Span::default(),
@@ -1304,7 +1289,7 @@ fn test_serverless_resources_no_schema_no_issues() {
             span: Span::default(),
         }),
         key_span: Span::default(),
-    });
+    }];
     root_props.push(ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "Resources".to_string(),
@@ -1851,8 +1836,7 @@ fn test_extension_schema_suppression_via_metadata() {
         })],
         span: Span::default(),
     });
-    let mut config_props: Vec<ObjectEntry> = Vec::new();
-    config_props.push(ObjectEntry {
+    let config_props: Vec<ObjectEntry> = vec![ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "ignore_checks".to_string(),
             span: Span::default(),
@@ -1860,9 +1844,8 @@ fn test_extension_schema_suppression_via_metadata() {
         key: "ignore_checks".to_string(),
         value: ignore_array,
         key_span: Span::default(),
-    });
-    let mut cfn_lint_props: Vec<ObjectEntry> = Vec::new();
-    cfn_lint_props.push(ObjectEntry {
+    }];
+    let cfn_lint_props: Vec<ObjectEntry> = vec![ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "config".to_string(),
             span: Span::default(),
@@ -1873,9 +1856,8 @@ fn test_extension_schema_suppression_via_metadata() {
             span: Span::default(),
         }),
         key_span: Span::default(),
-    });
-    let mut meta_props: Vec<ObjectEntry> = Vec::new();
-    meta_props.push(ObjectEntry {
+    }];
+    let meta_props: Vec<ObjectEntry> = vec![ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "cfn-lint".to_string(),
             span: Span::default(),
@@ -1886,7 +1868,7 @@ fn test_extension_schema_suppression_via_metadata() {
             span: Span::default(),
         }),
         key_span: Span::default(),
-    });
+    }];
     root_props.push(ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "Metadata".to_string(),
@@ -1922,8 +1904,7 @@ fn test_extension_schema_suppression_via_metadata() {
         value: json_to_ast(&json!({"Code": {"ZipFile": "x"}})),
         key_span: Span::default(),
     });
-    let mut resources: Vec<ObjectEntry> = Vec::new();
-    resources.push(ObjectEntry {
+    let resources: Vec<ObjectEntry> = vec![ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "MyResource".to_string(),
             span: Span::default(),
@@ -1934,7 +1915,7 @@ fn test_extension_schema_suppression_via_metadata() {
             span: Span::default(),
         }),
         key_span: Span::default(),
-    });
+    }];
     root_props.push(ObjectEntry {
         key_node: AstNode::String(StringNode {
             value: "Resources".to_string(),
@@ -2215,7 +2196,6 @@ fn test_ref_novalue_properties_level_produces_e3012() {
 }
 
 /// TODO: re-enable once schemas are pre-patched at download time.
-#[test]
 #[test]
 fn test_network_interface_schema_has_groupset_format() {
     use cfn_schema::SchemaProvider;
@@ -2586,31 +2566,4 @@ Resources:
     let issues = engine.validate(&tmpl, &ast, &["us-east-1".to_string()]);
     assert!(!issues.iter().any(|i| i.rule_id.as_deref() == Some("I3011") && i.path.contains(&"Table".to_string())),
         "I3011 should be suppressed for Table resource");
-}
-
-#[test]
-fn debug_e3023_full() {
-    let yaml = std::fs::read("/Users/kddejong/code/github.com/aws-cloudformation/cfn-lint/test/fixtures/templates/bad/route53.yaml").unwrap();
-    let ast = crate::parser::parse(&yaml).unwrap();
-    let tmpl = Template::from_ast(&ast).unwrap();
-    let data_dir = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("data");
-    let mut engine = Engine::with_data_dir(data_dir);
-    let issues = engine.validate(&tmpl, &ast, &["us-east-1".to_string()]);
-    for i in issues
-        .iter()
-        .filter(|i| i.rule_id.as_deref() == Some("E3023"))
-    {
-        eprintln!(
-            "rs {:3} {}",
-            i.span.start.line + 1,
-            i.message.chars().take(90).collect::<String>()
-        );
-    }
-    eprintln!(
-        "Total: {}",
-        issues
-            .iter()
-            .filter(|i| i.rule_id.as_deref() == Some("E3023"))
-            .count()
-    );
 }

@@ -1,0 +1,702 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/CredentialProviderVendor"
+ ],
+ "definitions": {
+  "AtlassianOauth2ProviderConfigInput": {
+   "additionalProperties": false,
+   "description": "Input configuration for an Atlassian OAuth2 provider",
+   "properties": {
+    "ClientId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecret": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecretConfig": {
+     "$ref": "#/definitions/SecretReference"
+    },
+    "ClientSecretSource": {
+     "enum": [
+      "MANAGED",
+      "EXTERNAL"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClientId"
+   ],
+   "type": "object"
+  },
+  "ClientSecretArn": {
+   "additionalProperties": false,
+   "description": "Contains information about a secret in AWS Secrets Manager",
+   "properties": {
+    "SecretArn": {
+     "description": "The ARN of the secret in AWS Secrets Manager",
+     "pattern": "^arn:(aws|aws-us-gov):secretsmanager:[A-Za-z0-9-]{1,64}:[0-9]{12}:secret:[a-zA-Z0-9-_/+=.@!]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretArn"
+   ],
+   "type": "object"
+  },
+  "CustomOauth2ProviderConfigInput": {
+   "additionalProperties": false,
+   "description": "Input configuration for a custom OAuth2 provider",
+   "properties": {
+    "ClientAuthenticationMethod": {
+     "description": "The client authentication method to use when authenticating with the token endpoint",
+     "enum": [
+      "CLIENT_SECRET_BASIC",
+      "CLIENT_SECRET_POST",
+      "AWS_IAM_ID_TOKEN_JWT"
+     ],
+     "type": "string"
+    },
+    "ClientId": {
+     "description": "The client ID for the custom OAuth2 provider",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecret": {
+     "description": "The client secret for the custom OAuth2 provider",
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecretConfig": {
+     "$ref": "#/definitions/SecretReference"
+    },
+    "ClientSecretSource": {
+     "description": "The source of the client secret",
+     "enum": [
+      "MANAGED",
+      "EXTERNAL"
+     ],
+     "type": "string"
+    },
+    "OauthDiscovery": {
+     "$ref": "#/definitions/Oauth2Discovery"
+    },
+    "OnBehalfOfTokenExchangeConfig": {
+     "$ref": "#/definitions/OnBehalfOfTokenExchangeConfig"
+    }
+   },
+   "required": [
+    "OauthDiscovery"
+   ],
+   "type": "object"
+  },
+  "GithubOauth2ProviderConfigInput": {
+   "additionalProperties": false,
+   "description": "Input configuration for a GitHub OAuth2 provider",
+   "properties": {
+    "ClientId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecret": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecretConfig": {
+     "$ref": "#/definitions/SecretReference"
+    },
+    "ClientSecretSource": {
+     "enum": [
+      "MANAGED",
+      "EXTERNAL"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClientId"
+   ],
+   "type": "object"
+  },
+  "GoogleOauth2ProviderConfigInput": {
+   "additionalProperties": false,
+   "description": "Input configuration for a Google OAuth2 provider",
+   "properties": {
+    "ClientId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecret": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecretConfig": {
+     "$ref": "#/definitions/SecretReference"
+    },
+    "ClientSecretSource": {
+     "enum": [
+      "MANAGED",
+      "EXTERNAL"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClientId"
+   ],
+   "type": "object"
+  },
+  "IncludedOauth2ProviderConfigInput": {
+   "additionalProperties": false,
+   "description": "Input configuration for a supported non-custom OAuth2 provider",
+   "properties": {
+    "AuthorizationEndpoint": {
+     "description": "OAuth2 authorization endpoint for your isolated OAuth2 application tenant",
+     "type": "string"
+    },
+    "ClientId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecret": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecretConfig": {
+     "$ref": "#/definitions/SecretReference"
+    },
+    "ClientSecretSource": {
+     "enum": [
+      "MANAGED",
+      "EXTERNAL"
+     ],
+     "type": "string"
+    },
+    "Issuer": {
+     "description": "Token issuer of your isolated OAuth2 application tenant",
+     "type": "string"
+    },
+    "TokenEndpoint": {
+     "description": "OAuth2 token endpoint for your isolated OAuth2 application tenant",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClientId"
+   ],
+   "type": "object"
+  },
+  "LinkedinOauth2ProviderConfigInput": {
+   "additionalProperties": false,
+   "description": "Input configuration for a LinkedIn OAuth2 provider",
+   "properties": {
+    "ClientId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecret": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecretConfig": {
+     "$ref": "#/definitions/SecretReference"
+    },
+    "ClientSecretSource": {
+     "enum": [
+      "MANAGED",
+      "EXTERNAL"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClientId"
+   ],
+   "type": "object"
+  },
+  "MicrosoftOauth2ProviderConfigInput": {
+   "additionalProperties": false,
+   "description": "Input configuration for a Microsoft OAuth2 provider",
+   "properties": {
+    "ClientId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecret": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecretConfig": {
+     "$ref": "#/definitions/SecretReference"
+    },
+    "ClientSecretSource": {
+     "enum": [
+      "MANAGED",
+      "EXTERNAL"
+     ],
+     "type": "string"
+    },
+    "TenantId": {
+     "description": "The Microsoft Entra ID tenant ID",
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClientId"
+   ],
+   "type": "object"
+  },
+  "Oauth2AuthorizationServerMetadata": {
+   "additionalProperties": false,
+   "description": "Authorization server metadata for the OAuth2 provider",
+   "properties": {
+    "AuthorizationEndpoint": {
+     "description": "The authorization endpoint URL",
+     "type": "string"
+    },
+    "Issuer": {
+     "description": "The issuer URL for the OAuth2 authorization server",
+     "type": "string"
+    },
+    "ResponseTypes": {
+     "description": "The supported response types",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "TokenEndpoint": {
+     "description": "The token endpoint URL",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Issuer",
+    "AuthorizationEndpoint",
+    "TokenEndpoint"
+   ],
+   "type": "object"
+  },
+  "Oauth2Discovery": {
+   "additionalProperties": false,
+   "description": "Discovery information for an OAuth2 provider",
+   "properties": {
+    "AuthorizationServerMetadata": {
+     "$ref": "#/definitions/Oauth2AuthorizationServerMetadata"
+    },
+    "DiscoveryUrl": {
+     "description": "The discovery URL for the OAuth2 provider",
+     "pattern": "^.+/\\.well-known/openid-configuration$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Oauth2ProviderConfigInput": {
+   "additionalProperties": false,
+   "description": "Input configuration for an OAuth2 provider",
+   "properties": {
+    "AtlassianOauth2ProviderConfig": {
+     "$ref": "#/definitions/AtlassianOauth2ProviderConfigInput"
+    },
+    "CustomOauth2ProviderConfig": {
+     "$ref": "#/definitions/CustomOauth2ProviderConfigInput"
+    },
+    "GithubOauth2ProviderConfig": {
+     "$ref": "#/definitions/GithubOauth2ProviderConfigInput"
+    },
+    "GoogleOauth2ProviderConfig": {
+     "$ref": "#/definitions/GoogleOauth2ProviderConfigInput"
+    },
+    "IncludedOauth2ProviderConfig": {
+     "$ref": "#/definitions/IncludedOauth2ProviderConfigInput"
+    },
+    "LinkedinOauth2ProviderConfig": {
+     "$ref": "#/definitions/LinkedinOauth2ProviderConfigInput"
+    },
+    "MicrosoftOauth2ProviderConfig": {
+     "$ref": "#/definitions/MicrosoftOauth2ProviderConfigInput"
+    },
+    "SalesforceOauth2ProviderConfig": {
+     "$ref": "#/definitions/SalesforceOauth2ProviderConfigInput"
+    },
+    "SlackOauth2ProviderConfig": {
+     "$ref": "#/definitions/SlackOauth2ProviderConfigInput"
+    }
+   },
+   "type": "object"
+  },
+  "Oauth2ProviderConfigOutput": {
+   "additionalProperties": false,
+   "description": "Output configuration for an OAuth2 provider",
+   "properties": {
+    "ClientAuthenticationMethod": {
+     "description": "The client authentication method used when authenticating with the token endpoint",
+     "enum": [
+      "CLIENT_SECRET_BASIC",
+      "CLIENT_SECRET_POST",
+      "AWS_IAM_ID_TOKEN_JWT"
+     ],
+     "type": "string"
+    },
+    "ClientId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "OauthDiscovery": {
+     "$ref": "#/definitions/Oauth2Discovery"
+    },
+    "OnBehalfOfTokenExchangeConfig": {
+     "$ref": "#/definitions/OnBehalfOfTokenExchangeConfig"
+    }
+   },
+   "type": "object"
+  },
+  "OnBehalfOfTokenExchangeConfig": {
+   "additionalProperties": false,
+   "description": "Configuration for on-behalf-of token exchange",
+   "properties": {
+    "GrantType": {
+     "description": "The grant type for on-behalf-of token exchange",
+     "enum": [
+      "TOKEN_EXCHANGE",
+      "JWT_AUTHORIZATION_GRANT"
+     ],
+     "type": "string"
+    },
+    "TokenExchangeGrantTypeConfig": {
+     "$ref": "#/definitions/TokenExchangeGrantTypeConfig"
+    }
+   },
+   "required": [
+    "GrantType"
+   ],
+   "type": "object"
+  },
+  "SalesforceOauth2ProviderConfigInput": {
+   "additionalProperties": false,
+   "description": "Input configuration for a Salesforce OAuth2 provider",
+   "properties": {
+    "ClientId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecret": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecretConfig": {
+     "$ref": "#/definitions/SecretReference"
+    },
+    "ClientSecretSource": {
+     "enum": [
+      "MANAGED",
+      "EXTERNAL"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClientId"
+   ],
+   "type": "object"
+  },
+  "SecretReference": {
+   "additionalProperties": false,
+   "description": "A reference to a customer-provided secret stored in AWS Secrets Manager",
+   "properties": {
+    "JsonKey": {
+     "description": "The JSON key within the secret that contains the credential value",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SecretId": {
+     "description": "The ID or ARN of the secret in AWS Secrets Manager",
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretId",
+    "JsonKey"
+   ],
+   "type": "object"
+  },
+  "SlackOauth2ProviderConfigInput": {
+   "additionalProperties": false,
+   "description": "Input configuration for a Slack OAuth2 provider",
+   "properties": {
+    "ClientId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecret": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ClientSecretConfig": {
+     "$ref": "#/definitions/SecretReference"
+    },
+    "ClientSecretSource": {
+     "enum": [
+      "MANAGED",
+      "EXTERNAL"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClientId"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TokenExchangeGrantTypeConfig": {
+   "additionalProperties": false,
+   "description": "Configuration for RFC 8693 Token Exchange",
+   "properties": {
+    "ActorTokenContent": {
+     "description": "The actor token content type",
+     "enum": [
+      "NONE",
+      "M2M",
+      "AWS_IAM_ID_TOKEN_JWT"
+     ],
+     "type": "string"
+    },
+    "ActorTokenScopes": {
+     "description": "The actor token scopes. Only valid when ActorTokenContent is M2M.",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "ActorTokenContent"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::BedrockAgentCore::OAuth2CredentialProvider",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "bedrock-agentcore:CreateOauth2CredentialProvider",
+    "bedrock-agentcore:GetOauth2CredentialProvider",
+    "bedrock-agentcore:CreateTokenVault",
+    "bedrock-agentcore:TagResource",
+    "secretsmanager:CreateSecret",
+    "secretsmanager:DescribeSecret",
+    "secretsmanager:GetSecretValue"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "bedrock-agentcore:DeleteOauth2CredentialProvider",
+    "bedrock-agentcore:GetOauth2CredentialProvider",
+    "secretsmanager:DeleteSecret"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "bedrock-agentcore:ListOauth2CredentialProviders"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bedrock-agentcore:GetOauth2CredentialProvider",
+    "bedrock-agentcore:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "bedrock-agentcore:UpdateOauth2CredentialProvider",
+    "bedrock-agentcore:GetOauth2CredentialProvider",
+    "bedrock-agentcore:TagResource",
+    "bedrock-agentcore:UntagResource",
+    "bedrock-agentcore:ListTagsForResource",
+    "secretsmanager:PutSecretValue",
+    "secretsmanager:DescribeSecret",
+    "secretsmanager:GetSecretValue"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CredentialProviderArn"
+ ],
+ "properties": {
+  "CallbackUrl": {
+   "description": "The callback URL for the OAuth2 authorization flow",
+   "type": "string"
+  },
+  "ClientSecretArn": {
+   "$ref": "#/definitions/ClientSecretArn",
+   "description": "The ARN of the client secret in AWS Secrets Manager"
+  },
+  "ClientSecretJsonKey": {
+   "description": "The JSON key within the secret that contains the client secret value",
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ClientSecretSource": {
+   "description": "The source of the client secret",
+   "enum": [
+    "MANAGED",
+    "EXTERNAL"
+   ],
+   "type": "string"
+  },
+  "CreatedTime": {
+   "description": "The timestamp when the credential provider was created",
+   "format": "date-time",
+   "type": "string"
+  },
+  "CredentialProviderArn": {
+   "description": "The Amazon Resource Name (ARN) of the OAuth2 credential provider",
+   "pattern": "^arn:(aws|aws-us-gov):bedrock-agentcore:[A-Za-z0-9-]{1,64}:[0-9]{12}:token-vault/[a-zA-Z0-9-.]+/oauth2credentialprovider/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "CredentialProviderVendor": {
+   "description": "The vendor of the OAuth2 credential provider",
+   "enum": [
+    "GoogleOauth2",
+    "GithubOauth2",
+    "SlackOauth2",
+    "SalesforceOauth2",
+    "MicrosoftOauth2",
+    "CustomOauth2",
+    "AtlassianOauth2",
+    "LinkedinOauth2",
+    "XOauth2",
+    "OktaOauth2",
+    "OneLoginOauth2",
+    "PingOneOauth2",
+    "FacebookOauth2",
+    "YandexOauth2",
+    "RedditOauth2",
+    "ZoomOauth2",
+    "TwitchOauth2",
+    "SpotifyOauth2",
+    "DropboxOauth2",
+    "NotionOauth2",
+    "HubspotOauth2",
+    "CyberArkOauth2",
+    "FusionAuthOauth2",
+    "Auth0Oauth2",
+    "CognitoOauth2"
+   ],
+   "type": "string"
+  },
+  "LastUpdatedTime": {
+   "description": "The timestamp when the credential provider was last updated",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the OAuth2 credential provider",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-_]+$",
+   "type": "string"
+  },
+  "Oauth2ProviderConfigInput": {
+   "$ref": "#/definitions/Oauth2ProviderConfigInput",
+   "description": "The configuration settings for the OAuth2 provider"
+  },
+  "Oauth2ProviderConfigOutput": {
+   "$ref": "#/definitions/Oauth2ProviderConfigOutput",
+   "description": "The output configuration for the OAuth2 provider"
+  },
+  "Tags": {
+   "description": "Tags to assign to the OAuth2 credential provider",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CredentialProviderArn",
+  "/properties/ClientSecretArn",
+  "/properties/ClientSecretJsonKey",
+  "/properties/ClientSecretSource",
+  "/properties/CallbackUrl",
+  "/properties/Oauth2ProviderConfigOutput",
+  "/properties/CreatedTime",
+  "/properties/LastUpdatedTime"
+ ],
+ "required": [
+  "Name",
+  "CredentialProviderVendor"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "bedrock-agentcore:TagResource",
+   "bedrock-agentcore:UntagResource",
+   "bedrock-agentcore:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BedrockAgentCore::OAuth2CredentialProvider",
+ "writeOnlyProperties": [
+  "/properties/Oauth2ProviderConfigInput"
+ ]
+}

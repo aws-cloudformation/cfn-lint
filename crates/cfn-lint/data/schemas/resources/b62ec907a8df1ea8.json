@@ -1,0 +1,106 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SystemIdentifier",
+  "/properties/Name"
+ ],
+ "description": "Creates a user journey within a Resilience Hub system.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "resiliencehub:CreateUserJourney",
+    "resiliencehub:GetUserJourney"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "resiliencehub:DeleteUserJourney"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "SystemIdentifier": {
+      "description": "The system identifier to list user journeys for.",
+      "type": "string"
+     }
+    },
+    "required": [
+     "SystemIdentifier"
+    ]
+   },
+   "permissions": [
+    "resiliencehub:ListUserJourneys"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "resiliencehub:GetUserJourney"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "resiliencehub:UpdateUserJourney",
+    "resiliencehub:GetUserJourney"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SystemIdentifier",
+  "/properties/UserJourneyId"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "description": "The timestamp when the user journey was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the user journey.",
+   "maxLength": 500,
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the user journey.",
+   "pattern": "^[A-Za-z0-9][A-Za-z0-9 _\\-]{1,59}$",
+   "type": "string"
+  },
+  "PolicyArn": {
+   "description": "The ARN of the resilience policy to associate with this user journey.",
+   "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9/][A-Za-z0-9:_/+.-]{0,1023}$",
+   "type": "string"
+  },
+  "SystemIdentifier": {
+   "description": "The system ARN or system ID that owns this user journey.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "description": "The timestamp when the user journey was last updated.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "UserJourneyId": {
+   "description": "The server-generated user journey ID.",
+   "pattern": "^\\S{1,255}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/UserJourneyId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "SystemIdentifier",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ResilienceHubV2::UserJourney"
+}

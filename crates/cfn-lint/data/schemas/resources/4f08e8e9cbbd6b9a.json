@@ -1,0 +1,408 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "CoinbaseCdpConfigurationInput": {
+   "additionalProperties": false,
+   "description": "Coinbase CDP configuration with API credentials",
+   "properties": {
+    "ApiKeyId": {
+     "description": "The Coinbase CDP API key ID",
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ApiKeySecret": {
+     "description": "The Coinbase CDP API key secret",
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ApiKeySecretConfig": {
+     "$ref": "#/definitions/SecretReference"
+    },
+    "ApiKeySecretSource": {
+     "$ref": "#/definitions/SecretSourceType"
+    },
+    "WalletSecret": {
+     "description": "The Coinbase CDP wallet secret",
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "WalletSecretConfig": {
+     "$ref": "#/definitions/SecretReference"
+    },
+    "WalletSecretSource": {
+     "$ref": "#/definitions/SecretSourceType"
+    }
+   },
+   "required": [
+    "ApiKeyId"
+   ],
+   "type": "object"
+  },
+  "CoinbaseCdpConfigurationOutput": {
+   "additionalProperties": false,
+   "description": "Coinbase CDP configuration output with secret ARNs",
+   "properties": {
+    "ApiKeyId": {
+     "description": "The Coinbase CDP API key ID",
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ApiKeySecretArn": {
+     "$ref": "#/definitions/SecretInfo"
+    },
+    "ApiKeySecretJsonKey": {
+     "description": "The JSON key within the secret that contains the API key secret value",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ApiKeySecretSource": {
+     "$ref": "#/definitions/SecretSourceType"
+    },
+    "WalletSecretArn": {
+     "$ref": "#/definitions/SecretInfo"
+    },
+    "WalletSecretJsonKey": {
+     "description": "The JSON key within the secret that contains the wallet secret value",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "WalletSecretSource": {
+     "$ref": "#/definitions/SecretSourceType"
+    }
+   },
+   "required": [
+    "ApiKeyId",
+    "ApiKeySecretArn"
+   ],
+   "type": "object"
+  },
+  "PaymentCredentialProviderVendorType": {
+   "description": "Supported vendor types for payment providers",
+   "enum": [
+    "CoinbaseCDP",
+    "StripePrivy"
+   ],
+   "type": "string"
+  },
+  "PaymentProviderConfigurationInput": {
+   "additionalProperties": false,
+   "description": "Provider configuration input containing secrets for creation/update",
+   "properties": {
+    "CoinbaseCdpConfiguration": {
+     "$ref": "#/definitions/CoinbaseCdpConfigurationInput"
+    },
+    "StripePrivyConfiguration": {
+     "$ref": "#/definitions/StripePrivyConfigurationInput"
+    }
+   },
+   "type": "object"
+  },
+  "PaymentProviderConfigurationOutput": {
+   "additionalProperties": false,
+   "description": "Provider configuration output containing secret ARNs (no raw secrets)",
+   "properties": {
+    "CoinbaseCdpConfiguration": {
+     "$ref": "#/definitions/CoinbaseCdpConfigurationOutput"
+    },
+    "StripePrivyConfiguration": {
+     "$ref": "#/definitions/StripePrivyConfigurationOutput"
+    }
+   },
+   "type": "object"
+  },
+  "SecretInfo": {
+   "additionalProperties": false,
+   "description": "Contains information about a secret in AWS Secrets Manager",
+   "properties": {
+    "SecretArn": {
+     "description": "The ARN of the secret in AWS Secrets Manager",
+     "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b|aws-iso-e|aws-iso-f|aws-eusc):secretsmanager:[A-Za-z0-9-]{1,64}:[0-9]{12}:secret:[a-zA-Z0-9-_/+=.@!]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretArn"
+   ],
+   "type": "object"
+  },
+  "SecretReference": {
+   "additionalProperties": false,
+   "description": "A reference to a customer-provided secret stored in AWS Secrets Manager",
+   "properties": {
+    "JsonKey": {
+     "description": "The JSON key within the secret that contains the credential value",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SecretId": {
+     "description": "The ID or ARN of the secret in AWS Secrets Manager",
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretId",
+    "JsonKey"
+   ],
+   "type": "object"
+  },
+  "SecretSourceType": {
+   "description": "The source of the secret. Use MANAGED for service-managed secrets or EXTERNAL for customer-provided secrets.",
+   "enum": [
+    "MANAGED",
+    "EXTERNAL"
+   ],
+   "type": "string"
+  },
+  "StripePrivyConfigurationInput": {
+   "additionalProperties": false,
+   "description": "Stripe Privy configuration with credentials",
+   "properties": {
+    "AppId": {
+     "description": "The app ID provided by Privy",
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AppSecret": {
+     "description": "The app secret provided by Privy",
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AppSecretConfig": {
+     "$ref": "#/definitions/SecretReference"
+    },
+    "AppSecretSource": {
+     "$ref": "#/definitions/SecretSourceType"
+    },
+    "AuthorizationId": {
+     "description": "The authorization ID for the Stripe Privy integration",
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AuthorizationPrivateKey": {
+     "description": "The authorization private key for the Stripe Privy integration",
+     "maxLength": 4096,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AuthorizationPrivateKeyConfig": {
+     "$ref": "#/definitions/SecretReference"
+    },
+    "AuthorizationPrivateKeySource": {
+     "$ref": "#/definitions/SecretSourceType"
+    }
+   },
+   "required": [
+    "AppId",
+    "AuthorizationId"
+   ],
+   "type": "object"
+  },
+  "StripePrivyConfigurationOutput": {
+   "additionalProperties": false,
+   "description": "Stripe Privy configuration output with secret ARNs",
+   "properties": {
+    "AppId": {
+     "description": "The app ID provided by Privy",
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AppSecretArn": {
+     "$ref": "#/definitions/SecretInfo"
+    },
+    "AppSecretJsonKey": {
+     "description": "The JSON key within the secret that contains the app secret value",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AppSecretSource": {
+     "$ref": "#/definitions/SecretSourceType"
+    },
+    "AuthorizationId": {
+     "description": "The authorization ID for the Stripe Privy integration",
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AuthorizationPrivateKeyArn": {
+     "$ref": "#/definitions/SecretInfo"
+    },
+    "AuthorizationPrivateKeyJsonKey": {
+     "description": "The JSON key within the secret that contains the authorization private key value",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AuthorizationPrivateKeySource": {
+     "$ref": "#/definitions/SecretSourceType"
+    }
+   },
+   "required": [
+    "AppId",
+    "AppSecretArn",
+    "AuthorizationPrivateKeyArn",
+    "AuthorizationId"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::BedrockAgentCore::PaymentCredentialProvider",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "bedrock-agentcore:CreatePaymentCredentialProvider",
+    "bedrock-agentcore:GetPaymentCredentialProvider",
+    "bedrock-agentcore:CreateTokenVault",
+    "bedrock-agentcore:TagResource",
+    "secretsmanager:CreateSecret",
+    "secretsmanager:DescribeSecret",
+    "secretsmanager:GetSecretValue"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "bedrock-agentcore:DeletePaymentCredentialProvider",
+    "bedrock-agentcore:GetPaymentCredentialProvider",
+    "secretsmanager:DeleteSecret"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "bedrock-agentcore:ListPaymentCredentialProviders"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bedrock-agentcore:GetPaymentCredentialProvider",
+    "bedrock-agentcore:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "bedrock-agentcore:UpdatePaymentCredentialProvider",
+    "bedrock-agentcore:GetPaymentCredentialProvider",
+    "bedrock-agentcore:TagResource",
+    "bedrock-agentcore:UntagResource",
+    "bedrock-agentcore:ListTagsForResource",
+    "secretsmanager:PutSecretValue",
+    "secretsmanager:DescribeSecret",
+    "secretsmanager:GetSecretValue"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CredentialProviderArn"
+ ],
+ "properties": {
+  "CreatedTime": {
+   "description": "The timestamp when the credential provider was created",
+   "format": "date-time",
+   "type": "string"
+  },
+  "CredentialProviderArn": {
+   "description": "The Amazon Resource Name (ARN) of the payment credential provider",
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b|aws-iso-e|aws-iso-f|aws-eusc):(acps|bedrock-agentcore):[A-Za-z0-9-]{1,64}:[0-9]{12}:token-vault/[a-zA-Z0-9-.]+/paymentcredentialprovider/[a-zA-Z0-9_.-]+$",
+   "type": "string"
+  },
+  "CredentialProviderVendor": {
+   "$ref": "#/definitions/PaymentCredentialProviderVendorType"
+  },
+  "LastUpdatedTime": {
+   "description": "The timestamp when the credential provider was last updated",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "description": "Unique name for the payment credential provider",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-_]+$",
+   "type": "string"
+  },
+  "ProviderConfigurationInput": {
+   "$ref": "#/definitions/PaymentProviderConfigurationInput"
+  },
+  "ProviderConfigurationOutput": {
+   "$ref": "#/definitions/PaymentProviderConfigurationOutput"
+  },
+  "Tags": {
+   "description": "Tags for the payment credential provider",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CredentialProviderArn",
+  "/properties/ProviderConfigurationOutput",
+  "/properties/CreatedTime",
+  "/properties/LastUpdatedTime"
+ ],
+ "required": [
+  "Name",
+  "CredentialProviderVendor"
+ ],
+ "resourceLink": {
+  "mappings": {
+   "Name": "/Name"
+  },
+  "templateUri": "/bedrock-agentcore/identity/payment/${Name}?region=${awsRegion}"
+ },
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "bedrock-agentcore:TagResource",
+   "bedrock-agentcore:UntagResource",
+   "bedrock-agentcore:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BedrockAgentCore::PaymentCredentialProvider",
+ "writeOnlyProperties": [
+  "/properties/ProviderConfigurationInput"
+ ]
+}

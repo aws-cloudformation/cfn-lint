@@ -1,0 +1,1045 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/AvailabilityZone",
+  "/properties/Source/Name"
+ ],
+ "definitions": {
+  "AudioMonitoringSetting": {
+   "additionalProperties": false,
+   "description": "Specifies the configuration for audio stream metrics monitoring.",
+   "properties": {
+    "SilentAudio": {
+     "$ref": "#/definitions/SilentAudio"
+    }
+   },
+   "type": "object"
+  },
+  "AutomaticEncryptionKeyConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration settings for automatic encryption key management, where MediaConnect handles key creation and rotation.",
+   "type": "object"
+  },
+  "BlackFrames": {
+   "additionalProperties": false,
+   "description": "Configures settings for the BlackFrames metric.",
+   "properties": {
+    "State": {
+     "description": "Indicates whether the BlackFrames metric is enabled or disabled.",
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "ThresholdSeconds": {
+     "description": "Specifies the number of consecutive seconds of black frames that triggers an event or alert.",
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "EncodingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "EncodingProfile": {
+     "$ref": "#/definitions/EncodingProfile"
+    },
+    "VideoMaxBitrate": {
+     "description": "The maximum video bitrate to use when transcoding the NDI source to a Transport Stream. This parameter enables you to override the default video bitrate within the encoding profile's supported range. The supported range is 10,000,000 - 50,000,000 bits per second (bps). If you do not specify a value, MediaConnect uses the default value of 20,000,000 bps.",
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "EncodingProfile": {
+   "description": "The encoding profile to use when transcoding the NDI source to a Transport Stream. You can change this value while a flow is running.",
+   "enum": [
+    "DISTRIBUTION_H264_DEFAULT",
+    "CONTRIBUTION_H264_DEFAULT"
+   ],
+   "type": "string"
+  },
+  "Encryption": {
+   "additionalProperties": false,
+   "description": "Information about the encryption of the flow.",
+   "properties": {
+    "Algorithm": {
+     "description": "The type of algorithm that is used for the encryption (such as aes128, aes192, or aes256).",
+     "enum": [
+      "aes128",
+      "aes192",
+      "aes256"
+     ],
+     "type": "string"
+    },
+    "ConstantInitializationVector": {
+     "description": "A 128-bit, 16-byte hex value represented by a 32-character string, to be used with the key for encrypting content. This parameter is not valid for static key encryption.",
+     "type": "string"
+    },
+    "DeviceId": {
+     "description": "The value of one of the devices that you configured with your digital rights management (DRM) platform key provider. This parameter is required for SPEKE encryption and is not valid for static key encryption.",
+     "type": "string"
+    },
+    "KeyType": {
+     "default": "static-key",
+     "description": "The type of key that is used for the encryption. If no keyType is provided, the service will use the default setting (static-key).",
+     "enum": [
+      "speke",
+      "static-key",
+      "srt-password"
+     ],
+     "type": "string"
+    },
+    "Region": {
+     "description": "The AWS Region that the API Gateway proxy endpoint was created in. This parameter is required for SPEKE encryption and is not valid for static key encryption.",
+     "type": "string"
+    },
+    "ResourceId": {
+     "description": "An identifier for the content. The service sends this value to the key server to identify the current endpoint. The resource ID is also known as the content ID. This parameter is required for SPEKE encryption and is not valid for static key encryption.",
+     "type": "string"
+    },
+    "RoleArn": {
+     "description": "The ARN of the role that you created during setup (when you set up AWS Elemental MediaConnect as a trusted entity).",
+     "format": "AWS::IAM::Role.Arn",
+     "pattern": "^arn:(aws[a-zA-Z-]*):iam::[0-9]{12}:role/[a-zA-Z0-9_+=,.@-]+$",
+     "type": "string"
+    },
+    "SecretArn": {
+     "description": " The ARN of the secret that you created in AWS Secrets Manager to store the encryption key. This parameter is required for static key encryption and is not valid for SPEKE encryption.",
+     "pattern": "^arn:(aws[a-zA-Z-]*):secretsmanager:[a-z0-9-]+:[0-9]{12}:secret:[a-zA-Z0-9/_+=.@-]+$",
+     "type": "string"
+    },
+    "Url": {
+     "description": "The URL from the API Gateway proxy that you set up to talk to your key server. This parameter is required for SPEKE encryption and is not valid for static key encryption.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "FailoverConfig": {
+   "additionalProperties": false,
+   "description": "The settings for source failover",
+   "properties": {
+    "FailoverMode": {
+     "description": "The type of failover you choose for this flow. MERGE combines the source streams into a single stream, allowing graceful recovery from any single-source loss. FAILOVER allows switching between different streams.",
+     "enum": [
+      "MERGE",
+      "FAILOVER"
+     ],
+     "type": "string"
+    },
+    "RecoveryWindow": {
+     "description": "Search window time to look for dash-7 packets",
+     "type": "integer"
+    },
+    "SourcePriority": {
+     "additionalProperties": false,
+     "description": "The priority you want to assign to a source. You can have a primary stream and a backup stream or two equally prioritized streams.",
+     "properties": {
+      "PrimarySource": {
+       "description": "The name of the source you choose as the primary source for this flow.",
+       "type": "string"
+      }
+     },
+     "required": [
+      "PrimarySource"
+     ],
+     "type": "object"
+    },
+    "State": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FlowTransitEncryption": {
+   "additionalProperties": false,
+   "description": "The configuration that defines how content is encrypted during transit between the MediaConnect router and a MediaConnect flow.",
+   "properties": {
+    "EncryptionKeyConfiguration": {
+     "$ref": "#/definitions/FlowTransitEncryptionKeyConfiguration"
+    },
+    "EncryptionKeyType": {
+     "$ref": "#/definitions/FlowTransitEncryptionKeyType"
+    }
+   },
+   "required": [
+    "EncryptionKeyConfiguration"
+   ],
+   "type": "object"
+  },
+  "FlowTransitEncryptionKeyConfiguration": {
+   "description": "Configuration settings for flow transit encryption keys.",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "SecretsManager": {
+       "$ref": "#/definitions/SecretsManagerEncryptionKeyConfiguration"
+      }
+     },
+     "required": [
+      "SecretsManager"
+     ],
+     "title": "SecretsManager",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Automatic": {
+       "$ref": "#/definitions/AutomaticEncryptionKeyConfiguration"
+      }
+     },
+     "required": [
+      "Automatic"
+     ],
+     "title": "Automatic",
+     "type": "object"
+    }
+   ]
+  },
+  "FlowTransitEncryptionKeyType": {
+   "enum": [
+    "SECRETS_MANAGER",
+    "AUTOMATIC"
+   ],
+   "type": "string"
+  },
+  "Fmtp": {
+   "additionalProperties": false,
+   "description": "A set of parameters that define the media stream.",
+   "properties": {
+    "ChannelOrder": {
+     "description": "The format of the audio channel.",
+     "type": "string"
+    },
+    "Colorimetry": {
+     "description": "The format used for the representation of color.",
+     "enum": [
+      "BT601",
+      "BT709",
+      "BT2020",
+      "BT2100",
+      "ST2065-1",
+      "ST2065-3",
+      "XYZ"
+     ],
+     "type": "string"
+    },
+    "ExactFramerate": {
+     "description": "The frame rate for the video stream, in frames/second. For example: 60000/1001.",
+     "type": "string"
+    },
+    "Par": {
+     "description": "The pixel aspect ratio (PAR) of the video.",
+     "type": "string"
+    },
+    "Range": {
+     "description": "The encoding range of the video.",
+     "enum": [
+      "NARROW",
+      "FULL",
+      "FULLPROTECT"
+     ],
+     "type": "string"
+    },
+    "ScanMode": {
+     "description": "The type of compression that was used to smooth the video's appearance.",
+     "enum": [
+      "progressive",
+      "interlace",
+      "progressive-segmented-frame"
+     ],
+     "type": "string"
+    },
+    "Tcs": {
+     "description": "The transfer characteristic system (TCS) that is used in the video.",
+     "enum": [
+      "SDR",
+      "PQ",
+      "HLG",
+      "LINEAR",
+      "BT2100LINPQ",
+      "BT2100LINHLG",
+      "ST2065-1",
+      "ST428-1",
+      "DENSITY"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FrozenFrames": {
+   "additionalProperties": false,
+   "description": "Configures settings for the FrozenFrames metric.",
+   "properties": {
+    "State": {
+     "description": "Indicates whether the FrozenFrames metric is enabled or disabled.",
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "ThresholdSeconds": {
+     "description": "Specifies the number of consecutive seconds of a static image that triggers an event or alert.",
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "GatewayBridgeSource": {
+   "additionalProperties": false,
+   "description": "The source configuration for cloud flows receiving a stream from a bridge.",
+   "properties": {
+    "BridgeArn": {
+     "description": "The ARN of the bridge feeding this flow.",
+     "pattern": "^arn:(aws[a-zA-Z-]*):mediaconnect:[a-z0-9-]+:[0-9]{12}:bridge:[a-zA-Z0-9-]+:[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "VpcInterfaceAttachment": {
+     "$ref": "#/definitions/VpcInterfaceAttachment",
+     "description": "The name of the VPC interface attachment to use for this bridge source."
+    }
+   },
+   "required": [
+    "BridgeArn"
+   ],
+   "type": "object"
+  },
+  "InputConfiguration": {
+   "additionalProperties": false,
+   "description": "The transport parameters associated with an incoming media stream.",
+   "properties": {
+    "InputPort": {
+     "description": "The port that the flow listens on for an incoming media stream.",
+     "type": "integer"
+    },
+    "Interface": {
+     "$ref": "#/definitions/Interface",
+     "description": "The VPC interface where the media stream comes in from."
+    }
+   },
+   "required": [
+    "InputPort",
+    "Interface"
+   ],
+   "type": "object"
+  },
+  "Interface": {
+   "additionalProperties": false,
+   "description": "The VPC interface that you want to use for the media stream associated with the output.",
+   "properties": {
+    "Name": {
+     "description": "The name of the VPC interface that you want to use for the media stream associated with the output.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Maintenance": {
+   "additionalProperties": false,
+   "description": "The maintenance setting of a flow.",
+   "properties": {
+    "MaintenanceDay": {
+     "description": "A day of a week when the maintenance will happen. Use Monday/Tuesday/Wednesday/Thursday/Friday/Saturday/Sunday.",
+     "enum": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+     ],
+     "type": "string"
+    },
+    "MaintenanceStartHour": {
+     "description": "UTC time when the maintenance will happen. Use 24-hour HH:MM format. Minutes must be 00. Example: 13:00. The default value is 02:00.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "MaintenanceDay",
+    "MaintenanceStartHour"
+   ],
+   "type": "object"
+  },
+  "MediaStream": {
+   "additionalProperties": false,
+   "description": "A single track or stream of media that contains video, audio, or ancillary data. After you add a media stream to a flow, you can associate it with sources and outputs on that flow, as long as they use the CDI protocol or the ST 2110 JPEG XS protocol. Each source or output can consist of one or many media streams.",
+   "properties": {
+    "Attributes": {
+     "$ref": "#/definitions/MediaStreamAttributes",
+     "description": "Attributes that are related to the media stream."
+    },
+    "ClockRate": {
+     "description": "The sample rate for the stream. This value in measured in kHz.",
+     "type": "integer"
+    },
+    "Description": {
+     "description": "A description that can help you quickly identify what your media stream is used for.",
+     "type": "string"
+    },
+    "Fmt": {
+     "description": "The format type number (sometimes referred to as RTP payload type) of the media stream. MediaConnect assigns this value to the media stream. For ST 2110 JPEG XS outputs, you need to provide this value to the receiver.",
+     "type": "integer"
+    },
+    "MediaStreamId": {
+     "description": "A unique identifier for the media stream.",
+     "type": "integer"
+    },
+    "MediaStreamName": {
+     "description": "A name that helps you distinguish one media stream from another.",
+     "type": "string"
+    },
+    "MediaStreamType": {
+     "description": "The type of media stream.",
+     "enum": [
+      "video",
+      "audio",
+      "ancillary-data"
+     ],
+     "type": "string"
+    },
+    "Tags": {
+     "description": "Key-value pairs that can be used to tag this media stream.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array"
+    },
+    "VideoFormat": {
+     "description": "The resolution of the video.",
+     "enum": [
+      "2160p",
+      "1080p",
+      "1080i",
+      "720p",
+      "480p"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "MediaStreamId",
+    "MediaStreamType",
+    "MediaStreamName"
+   ],
+   "type": "object"
+  },
+  "MediaStreamAttributes": {
+   "additionalProperties": false,
+   "description": "Attributes that are related to the media stream.",
+   "properties": {
+    "Fmtp": {
+     "$ref": "#/definitions/Fmtp",
+     "description": "A set of parameters that define the media stream."
+    },
+    "Lang": {
+     "description": "The audio language, in a format that is recognized by the receiver.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MediaStreamSourceConfiguration": {
+   "additionalProperties": false,
+   "description": "The media stream that is associated with the source, and the parameters for that association.",
+   "properties": {
+    "EncodingName": {
+     "description": "The format that was used to encode the data. For ancillary data streams, set the encoding name to smpte291. For audio streams, set the encoding name to pcm. For video, 2110 streams, set the encoding name to raw. For video, JPEG XS streams, set the encoding name to jxsv.",
+     "enum": [
+      "jxsv",
+      "raw",
+      "smpte291",
+      "pcm"
+     ],
+     "type": "string"
+    },
+    "InputConfigurations": {
+     "description": "The media streams that you want to associate with the source.",
+     "items": {
+      "$ref": "#/definitions/InputConfiguration"
+     },
+     "type": "array"
+    },
+    "MediaStreamName": {
+     "description": "A name that helps you distinguish one media stream from another.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "EncodingName",
+    "MediaStreamName"
+   ],
+   "type": "object"
+  },
+  "NdiConfig": {
+   "additionalProperties": false,
+   "description": "Specifies the configuration settings for NDI sources and outputs. Required when the flow includes NDI sources or outputs.",
+   "properties": {
+    "MachineName": {
+     "description": "A prefix for the names of the NDI sources that the flow creates. If a custom name isn't specified, MediaConnect generates a unique 12-character ID as the prefix.",
+     "type": "string"
+    },
+    "NdiDiscoveryServers": {
+     "description": "A list of up to three NDI discovery server configurations. While not required by the API, this configuration is necessary for NDI functionality to work properly.",
+     "items": {
+      "$ref": "#/definitions/NdiDiscoveryServerConfig"
+     },
+     "type": "array"
+    },
+    "NdiState": {
+     "$ref": "#/definitions/NdiState",
+     "description": "A setting that controls whether NDI sources or outputs can be used in the flow. The default value is DISABLED. This value must be set as ENABLED for your flow to support NDI sources or outputs."
+    }
+   },
+   "type": "object"
+  },
+  "NdiDiscoveryServerConfig": {
+   "additionalProperties": false,
+   "description": "Specifies the configuration settings for individual NDI discovery servers. A maximum of 3 servers is allowed.",
+   "properties": {
+    "DiscoveryServerAddress": {
+     "description": "The unique network address of the NDI discovery server.",
+     "type": "string"
+    },
+    "DiscoveryServerPort": {
+     "description": "The port for the NDI discovery server. Defaults to 5959 if a custom port isn't specified.",
+     "type": "integer"
+    },
+    "VpcInterfaceAdapter": {
+     "description": "The identifier for the Virtual Private Cloud (VPC) network interface used by the flow.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "DiscoveryServerAddress",
+    "VpcInterfaceAdapter"
+   ],
+   "type": "object"
+  },
+  "NdiSourceSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "SourceName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "NdiState": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "SecretsManagerEncryptionKeyConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration settings for transit encryption of a flow source using AWS Secrets Manager, including the secret ARN and role ARN.",
+   "properties": {
+    "RoleArn": {
+     "description": "The ARN of the IAM role used for transit encryption from the router output using AWS Secrets Manager.",
+     "format": "AWS::IAM::Role.Arn",
+     "pattern": "^arn:(aws[a-zA-Z-]*):iam::[0-9]{12}:role/[a-zA-Z0-9_+=,.@-]+$",
+     "type": "string"
+    },
+    "SecretArn": {
+     "description": "The ARN of the AWS Secrets Manager secret used for transit encryption from the router output.",
+     "pattern": "^arn:(aws[a-zA-Z-]*):secretsmanager:[a-z0-9-]+:[0-9]{12}:secret:[a-zA-Z0-9/_+=.@-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn",
+    "SecretArn"
+   ],
+   "type": "object"
+  },
+  "SilentAudio": {
+   "additionalProperties": false,
+   "description": "Configures settings for the SilentAudio metric.",
+   "properties": {
+    "State": {
+     "description": "Indicates whether the SilentAudio metric is enabled or disabled.",
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "ThresholdSeconds": {
+     "description": "Specifies the number of consecutive seconds of silence that triggers an event or alert.",
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Source": {
+   "additionalProperties": false,
+   "description": "The settings for the source of the flow.",
+   "properties": {
+    "Decryption": {
+     "$ref": "#/definitions/Encryption",
+     "description": "The type of decryption that is used on the content ingested from this source."
+    },
+    "Description": {
+     "description": "A description for the source. This value is not used or seen outside of the current AWS Elemental MediaConnect account.",
+     "type": "string"
+    },
+    "EntitlementArn": {
+     "description": "The ARN of the entitlement that allows you to subscribe to content that comes from another AWS account. The entitlement is set by the content originator and the ARN is generated as part of the originator's flow.",
+     "pattern": "^arn:(aws[a-zA-Z-]*):mediaconnect:[a-z0-9-]+:[0-9]{12}:entitlement:[a-zA-Z0-9-]+:[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "GatewayBridgeSource": {
+     "$ref": "#/definitions/GatewayBridgeSource",
+     "description": "The source configuration for cloud flows receiving a stream from a bridge."
+    },
+    "IngestIp": {
+     "description": "The IP address that the flow will be listening on for incoming content.",
+     "type": "string"
+    },
+    "IngestPort": {
+     "description": "The port that the flow will be listening on for incoming content.",
+     "type": "integer"
+    },
+    "MaxBitrate": {
+     "description": "The smoothing max bitrate for RIST, RTP, and RTP-FEC streams.",
+     "type": "integer"
+    },
+    "MaxLatency": {
+     "description": "The maximum latency in milliseconds. This parameter applies only to RIST-based and Zixi-based streams.",
+     "type": "integer"
+    },
+    "MaxSyncBuffer": {
+     "description": "The size of the buffer (in milliseconds) to use to sync incoming source data.",
+     "type": "integer"
+    },
+    "MediaStreamSourceConfigurations": {
+     "description": "The media stream that is associated with the source, and the parameters for that association.",
+     "items": {
+      "$ref": "#/definitions/MediaStreamSourceConfiguration"
+     },
+     "type": "array"
+    },
+    "MinLatency": {
+     "description": "The minimum latency in milliseconds.",
+     "type": "integer"
+    },
+    "Name": {
+     "description": "The name of the source.",
+     "type": "string"
+    },
+    "NdiSourceSettings": {
+     "$ref": "#/definitions/NdiSourceSettings",
+     "description": "The settings for the NDI flow source. This includes the exact name of the upstream NDI sender that you want to connect to your flow source."
+    },
+    "Protocol": {
+     "description": "The protocol that is used by the source.",
+     "enum": [
+      "zixi-push",
+      "rtp-fec",
+      "rtp",
+      "rist",
+      "srt-listener",
+      "srt-caller",
+      "st2110-jpegxs",
+      "cdi",
+      "ndi-speed-hq"
+     ],
+     "type": "string"
+    },
+    "RouterIntegrationState": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "RouterIntegrationTransitDecryption": {
+     "$ref": "#/definitions/FlowTransitEncryption"
+    },
+    "SenderControlPort": {
+     "description": "The port that the flow uses to send outbound requests to initiate connection with the sender for fujitsu-qos protocol.",
+     "type": "integer"
+    },
+    "SenderIpAddress": {
+     "description": "The IP address that the flow communicates with to initiate connection with the sender for fujitsu-qos protocol.",
+     "type": "string"
+    },
+    "SourceArn": {
+     "description": "The ARN of the source.",
+     "pattern": "^arn:(aws[a-zA-Z-]*):mediaconnect:[a-z0-9-]+:[0-9]{12}:source:[a-zA-Z0-9-]+:[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "SourceIngestPort": {
+     "description": "The port that the flow will be listening on for incoming content.(ReadOnly)",
+     "type": "string"
+    },
+    "SourceListenerAddress": {
+     "description": "Source IP or domain name for SRT-caller protocol.",
+     "type": "string"
+    },
+    "SourceListenerPort": {
+     "description": "Source port for SRT-caller protocol.",
+     "type": "integer"
+    },
+    "StreamId": {
+     "description": "The stream ID that you want to use for this transport. This parameter applies only to Zixi-based streams.",
+     "type": "string"
+    },
+    "Tags": {
+     "description": "Key-value pairs that can be used to tag this source.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array"
+    },
+    "VpcInterfaceName": {
+     "description": "The name of the VPC Interface this Source is configured with.",
+     "type": "string"
+    },
+    "WhitelistCidr": {
+     "description": "The range of IP addresses that should be allowed to contribute content to your source. These IP addresses should be in the form of a Classless Inter-Domain Routing (CIDR) block; for example, 10.0.0.0/16.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SourceMonitoringConfig": {
+   "additionalProperties": false,
+   "description": "The settings for source monitoring.",
+   "properties": {
+    "AudioMonitoringSettings": {
+     "description": "Contains the settings for audio stream metrics monitoring.",
+     "items": {
+      "$ref": "#/definitions/AudioMonitoringSetting"
+     },
+     "type": "array"
+    },
+    "ContentQualityAnalysisState": {
+     "description": "Indicates whether content quality analysis is enabled or disabled.",
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "ThumbnailState": {
+     "description": "The state of thumbnail monitoring.",
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "VideoMonitoringSettings": {
+     "description": "Contains the settings for video stream metrics monitoring.",
+     "items": {
+      "$ref": "#/definitions/VideoMonitoringSetting"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VideoMonitoringSetting": {
+   "additionalProperties": false,
+   "description": "Specifies the configuration for video stream metrics monitoring.",
+   "properties": {
+    "BlackFrames": {
+     "$ref": "#/definitions/BlackFrames"
+    },
+    "FrozenFrames": {
+     "$ref": "#/definitions/FrozenFrames"
+    }
+   },
+   "type": "object"
+  },
+  "VpcInterface": {
+   "additionalProperties": false,
+   "description": "The details of a VPC interface.",
+   "properties": {
+    "Name": {
+     "description": "Immutable and has to be a unique against other VpcInterfaces in this Flow.",
+     "type": "string"
+    },
+    "NetworkInterfaceIds": {
+     "description": "IDs of the network interfaces created in customer's account by MediaConnect.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "NetworkInterfaceType": {
+     "description": "The type of network adapter that you want MediaConnect to use on this interface. If you don't set this value, it defaults to ENA.",
+     "enum": [
+      "ena",
+      "efa"
+     ],
+     "type": "string"
+    },
+    "RoleArn": {
+     "description": "Role Arn MediaConnect can assume to create ENIs in customer's account.",
+     "format": "AWS::IAM::Role.Arn",
+     "pattern": "^arn:(aws[a-zA-Z-]*):iam::[0-9]{12}:role/[a-zA-Z0-9_+=,.@-]+$",
+     "type": "string"
+    },
+    "SecurityGroupIds": {
+     "description": "Security Group IDs to be used on ENI.",
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SubnetId": {
+     "description": "Subnet must be in the AZ of the Flow",
+     "format": "AWS::EC2::Subnet.Id",
+     "type": "string"
+    },
+    "Tags": {
+     "description": "Key-value pairs that can be used to tag this VPC interface.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Name",
+    "RoleArn",
+    "SecurityGroupIds",
+    "SubnetId"
+   ],
+   "type": "object"
+  },
+  "VpcInterfaceAttachment": {
+   "additionalProperties": false,
+   "description": "The settings for attaching a VPC interface to an resource.",
+   "properties": {
+    "VpcInterfaceName": {
+     "description": "The name of the VPC interface to use for this resource.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/Source/SenderIpAddress",
+  "/properties/Source/SenderControlPort",
+  "/properties/Source/Decryption/ResourceId",
+  "/properties/Source/Decryption/ConstantInitializationVector",
+  "/properties/Source/Decryption/DeviceId",
+  "/properties/Source/Decryption/Region",
+  "/properties/Source/Decryption/Url"
+ ],
+ "description": "Resource Type definition for AWS::MediaConnect::Flow",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "mediaconnect:CreateFlow",
+    "mediaconnect:AddFlowMediaStreams",
+    "mediaconnect:AddFlowSources",
+    "mediaconnect:AddFlowVpcInterfaces",
+    "mediaconnect:DescribeFlow",
+    "mediaconnect:TagResource",
+    "mediaconnect:ListTagsForResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "mediaconnect:DescribeFlow",
+    "mediaconnect:DeleteFlow",
+    "mediaconnect:RemoveFlowMediaStream",
+    "mediaconnect:RemoveFlowOutput",
+    "mediaconnect:RemoveFlowSource",
+    "mediaconnect:RemoveFlowVpcInterface",
+    "mediaconnect:RevokeFlowEntitlement"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "mediaconnect:ListFlows"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "mediaconnect:DescribeFlow",
+    "mediaconnect:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "mediaconnect:DescribeFlow",
+    "mediaconnect:UpdateFlow",
+    "mediaconnect:UpdateFlowSource",
+    "mediaconnect:UpdateFlowMediaStream",
+    "mediaconnect:AddFlowMediaStreams",
+    "mediaconnect:RemoveFlowMediaStream",
+    "mediaconnect:AddFlowVpcInterfaces",
+    "mediaconnect:RemoveFlowVpcInterface",
+    "mediaconnect:TagResource",
+    "mediaconnect:UntagResource",
+    "mediaconnect:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FlowArn"
+ ],
+ "properties": {
+  "AvailabilityZone": {
+   "description": "The Availability Zone that you want to create the flow in. These options are limited to the Availability Zones within the current AWS.",
+   "type": "string"
+  },
+  "EgressIp": {
+   "description": "The IP address from which video will be sent to output destinations.",
+   "type": "string"
+  },
+  "EncodingConfig": {
+   "$ref": "#/definitions/EncodingConfig",
+   "description": "The encoding configuration to apply to the NDI source content when transcoding it to a transport stream (TS) for downstream distribution. You can choose between several predefined encoding profiles based on common use cases."
+  },
+  "FlowArn": {
+   "description": "The Amazon Resource Name (ARN), a unique identifier for any AWS resource, of the flow.",
+   "pattern": "^arn:(aws[a-zA-Z-]*):mediaconnect:[a-z0-9-]+:[0-9]{12}:flow:[a-zA-Z0-9-]+:[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "FlowAvailabilityZone": {
+   "description": "The Availability Zone that you want to create the flow in. These options are limited to the Availability Zones within the current AWS.(ReadOnly)",
+   "type": "string"
+  },
+  "FlowNdiMachineName": {
+   "description": "A prefix for the names of the NDI sources that the flow creates.(ReadOnly)",
+   "type": "string"
+  },
+  "FlowSize": {
+   "description": "Determines the processing capacity and feature set of the flow. Set this optional parameter to LARGE if you want to enable NDI sources or outputs on the flow.",
+   "enum": [
+    "MEDIUM",
+    "LARGE",
+    "LARGE_4X"
+   ],
+   "type": "string"
+  },
+  "Maintenance": {
+   "$ref": "#/definitions/Maintenance",
+   "description": "The maintenance settings you want to use for the flow."
+  },
+  "MediaStreams": {
+   "description": "The media streams associated with the flow. You can associate any of these media streams with sources and outputs on the flow.",
+   "items": {
+    "$ref": "#/definitions/MediaStream"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "description": "The name of the flow.",
+   "type": "string"
+  },
+  "NdiConfig": {
+   "$ref": "#/definitions/NdiConfig",
+   "description": "Specifies the configuration settings for NDI sources and outputs. Required when the flow includes NDI sources or outputs."
+  },
+  "Source": {
+   "$ref": "#/definitions/Source",
+   "description": "The source of the flow."
+  },
+  "SourceFailoverConfig": {
+   "$ref": "#/definitions/FailoverConfig",
+   "description": "The source failover config of the flow."
+  },
+  "SourceMonitoringConfig": {
+   "$ref": "#/definitions/SourceMonitoringConfig",
+   "description": "The source monitoring config of the flow."
+  },
+  "Tags": {
+   "description": "Key-value pairs that can be used to tag this flow.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "VpcInterfaces": {
+   "description": "The VPC interfaces that you added to this flow.",
+   "items": {
+    "$ref": "#/definitions/VpcInterface"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/FlowArn",
+  "/properties/FlowAvailabilityZone",
+  "/properties/Source/SourceArn",
+  "/properties/Source/IngestIp",
+  "/properties/Source/SourceIngestPort",
+  "/properties/EgressIp",
+  "/properties/FlowNdiMachineName"
+ ],
+ "required": [
+  "Name",
+  "Source"
+ ],
+ "resourceLink": {
+  "mappings": {
+   "flowArn": "/FlowArn"
+  },
+  "templateUri": "/mediaconnect/home?region=${awsRegion}#/flows/${flowArn}"
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "mediaconnect:ListTagsForResource",
+   "mediaconnect:TagResource",
+   "mediaconnect:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaConnect::Flow"
+}

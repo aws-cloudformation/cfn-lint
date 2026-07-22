@@ -1,0 +1,184 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AvailabilityZone",
+  "/properties/Encrypted",
+  "/properties/Iops",
+  "/properties/KmsKeyId",
+  "/properties/SizeInGB",
+  "/properties/SnapshotId",
+  "/properties/Throughput",
+  "/properties/VolumeType",
+  "/properties/TagSpecifications"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]+)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TagSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceType": {
+     "enum": [
+      "instance",
+      "volume",
+      "spot-instances-request",
+      "network-interface"
+     ],
+     "type": "string"
+    },
+    "Tags": {
+     "description": "The tags to apply to the resource",
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::WorkspacesInstances::Volume - Manages WorkSpaces Volume resources",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "workspaces-instances:CreateVolume",
+    "ec2:CreateVolume",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "workspaces-instances:DeleteVolume",
+    "ec2:DescribeVolumes",
+    "ec2:DeleteVolume"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeVolumes"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeVolumes"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VolumeId"
+ ],
+ "properties": {
+  "AvailabilityZone": {
+   "description": "The Availability Zone in which to create the volume",
+   "maxLength": 64,
+   "minLength": 0,
+   "pattern": "^[a-z]{2}-[a-z]+-\\d[a-z](-[a-z0-9]+)?$",
+   "type": "string"
+  },
+  "Encrypted": {
+   "description": "Indicates whether the volume should be encrypted",
+   "type": "boolean"
+  },
+  "Iops": {
+   "description": "The number of I/O operations per second (IOPS)",
+   "minimum": 0,
+   "type": "integer"
+  },
+  "KmsKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
+   "description": "The identifier of the AWS Key Management Service (AWS KMS) customer master key (CMK) to use for Amazon EBS encryption",
+   "maxLength": 128,
+   "minLength": 0,
+   "type": "string"
+  },
+  "SizeInGB": {
+   "description": "The size of the volume, in GiBs",
+   "minimum": 0,
+   "type": "integer"
+  },
+  "SnapshotId": {
+   "description": "The snapshot from which to create the volume",
+   "pattern": "^snap-[0-9a-zA-Z]{1,63}$",
+   "type": "string"
+  },
+  "TagSpecifications": {
+   "description": "The tags passed to EBS volume",
+   "items": {
+    "$ref": "#/definitions/TagSpecification"
+   },
+   "maxItems": 30,
+   "type": "array"
+  },
+  "Throughput": {
+   "description": "The throughput to provision for a volume, with a maximum of 1,000 MiB/s",
+   "minimum": 0,
+   "type": "integer"
+  },
+  "VolumeId": {
+   "description": "Unique identifier for the volume",
+   "pattern": "^vol-[0-9a-zA-Z]{1,63}$",
+   "type": "string"
+  },
+  "VolumeType": {
+   "description": "The volume type",
+   "enum": [
+    "standard",
+    "io1",
+    "io2",
+    "gp2",
+    "sc1",
+    "st1",
+    "gp3"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VolumeId"
+ ],
+ "required": [
+  "AvailabilityZone"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-schema.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::WorkspacesInstances::Volume"
+}

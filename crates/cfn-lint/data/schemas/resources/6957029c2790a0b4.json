@@ -1,0 +1,318 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/WebAppId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/WebAppEndpointPolicy",
+  "/properties/IdentityProviderDetails/InstanceArn",
+  "/properties/EndpointDetails/Vpc/VpcId",
+  "/properties/EndpointDetails/Vpc/SecurityGroupIds"
+ ],
+ "definitions": {
+  "EndpointDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "Vpc": {
+     "$ref": "#/definitions/Vpc"
+    }
+   },
+   "type": "object"
+  },
+  "IdentityProviderDetails": {
+   "additionalProperties": false,
+   "description": "You can provide a structure that contains the details for the identity provider to use with your web app.",
+   "properties": {
+    "ApplicationArn": {
+     "maxLength": 1224,
+     "minLength": 10,
+     "pattern": "^arn:[\\w-]+:sso::\\d{12}:application/(sso)?ins-[a-zA-Z0-9-.]{16}/apl-[a-zA-Z0-9]{16}$",
+     "type": "string"
+    },
+    "InstanceArn": {
+     "description": "The Amazon Resource Name (ARN) for the IAM Identity Center used for the web app.",
+     "maxLength": 1224,
+     "minLength": 10,
+     "pattern": "^arn:[\\w-]+:sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}$",
+     "type": "string"
+    },
+    "Role": {
+     "description": "The IAM role in IAM Identity Center used for the web app.",
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:[a-z-]+:iam::[0-9]{12}:role[:/]\\S+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "Key-value pair that can be used to group and search for web apps.",
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Vpc": {
+   "additionalProperties": false,
+   "description": "You can provide a structure that contains the details for the VPC endpoint to use with your web app.",
+   "properties": {
+    "IpAddressType": {
+     "description": "The IP address type for the VPC endpoint used by the web app.",
+     "enum": [
+      "IPV4",
+      "DUALSTACK"
+     ],
+     "type": "string"
+    },
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "maxLength": 20,
+      "minLength": 11,
+      "pattern": "^sg-[0-9a-f]{8,17}$",
+      "type": "string"
+     },
+     "maxItems": 10,
+     "type": "array"
+    },
+    "SubnetIds": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 24,
+      "minLength": 15,
+      "pattern": "^subnet-[0-9a-f]{8,17}$",
+      "type": "string"
+     },
+     "maxItems": 10,
+     "type": "array"
+    },
+    "VpcId": {
+     "format": "AWS::EC2::VPC.Id",
+     "maxLength": 21,
+     "minLength": 12,
+     "pattern": "^vpc-[0-9a-f]{8,17}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "WebAppCustomization": {
+   "additionalProperties": false,
+   "properties": {
+    "FaviconFile": {
+     "description": "Specifies a favicon to display in the browser tab.",
+     "maxLength": 20960,
+     "minLength": 1,
+     "type": "string"
+    },
+    "LogoFile": {
+     "description": "Specifies a logo to display on the web app.",
+     "maxLength": 51200,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Title": {
+     "description": "Specifies a title to display on the web app.",
+     "maxLength": 100,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "WebAppEndpointPolicy": {
+   "enum": [
+    "STANDARD",
+    "FIPS"
+   ],
+   "type": "string"
+  },
+  "WebAppUnits": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "description": "A union that contains the value for number of concurrent connections or the user sessions on your web app.",
+     "properties": {
+      "Provisioned": {
+       "minimum": 1,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "Provisioned"
+     ],
+     "title": "Provisioned",
+     "type": "object"
+    }
+   ]
+  }
+ },
+ "description": "Resource Type definition for AWS::Transfer::WebApp",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "transfer:CreateWebApp",
+    "transfer:DescribeWebApp",
+    "transfer:DescribeWebAppCustomization",
+    "transfer:TagResource",
+    "transfer:UpdateWebAppCustomization",
+    "iam:PassRole",
+    "sso:CreateApplication",
+    "sso:DescribeApplication",
+    "sso:ListApplications",
+    "sso:PutApplicationGrant",
+    "sso:GetApplicationGrant",
+    "sso:ListApplicationGrants",
+    "sso:PutApplicationAuthenticationMethod",
+    "sso:GetApplicationAuthenticationMethod",
+    "sso:ListApplicationAuthenticationMethods",
+    "sso:PutApplicationAccessScope",
+    "sso:GetApplicationAccessScope",
+    "sso:ListApplicationAccessScopes",
+    "ec2:CreateVpcEndpoint",
+    "ec2:DescribeVpcEndpoints"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "transfer:DeleteWebApp",
+    "sso:DescribeApplication",
+    "sso:DeleteApplication",
+    "ec2:DescribeVpcEndpoints",
+    "ec2:DeleteVpcEndpoints"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "transfer:ListWebApps"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "transfer:DescribeWebApp",
+    "transfer:DescribeWebAppCustomization"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "transfer:DescribeWebApp",
+    "transfer:DescribeWebAppCustomization",
+    "transfer:UpdateWebApp",
+    "transfer:UpdateWebAppCustomization",
+    "transfer:DeleteWebAppCustomization",
+    "transfer:UnTagResource",
+    "transfer:TagResource",
+    "iam:PassRole",
+    "sso:PutApplicationGrant",
+    "sso:GetApplicationGrant",
+    "sso:ListApplicationGrants",
+    "sso:UpdateApplication",
+    "sso:DescribeApplication",
+    "sso:ListApplications",
+    "ec2:DescribeVpcEndpoints",
+    "ec2:ModifyVpcEndpoint"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AccessEndpoint": {
+   "description": "The AccessEndpoint is the URL that you provide to your users for them to interact with the Transfer Family web app. You can specify a custom URL or use the default value.",
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Arn": {
+   "description": "Specifies the unique Amazon Resource Name (ARN) for the web app.",
+   "maxLength": 1600,
+   "minLength": 20,
+   "pattern": "arn:.*",
+   "type": "string"
+  },
+  "EndpointDetails": {
+   "$ref": "#/definitions/EndpointDetails"
+  },
+  "IdentityProviderDetails": {
+   "$ref": "#/definitions/IdentityProviderDetails"
+  },
+  "Tags": {
+   "description": "Key-value pairs that can be used to group and search for web apps.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array"
+  },
+  "VpcEndpointId": {
+   "maxLength": 22,
+   "minLength": 13,
+   "pattern": "^vpce-[0-9a-f]{8,17}$",
+   "type": "string"
+  },
+  "WebAppCustomization": {
+   "$ref": "#/definitions/WebAppCustomization"
+  },
+  "WebAppEndpointPolicy": {
+   "$ref": "#/definitions/WebAppEndpointPolicy"
+  },
+  "WebAppId": {
+   "description": "A unique identifier for the web app.",
+   "maxLength": 24,
+   "minLength": 24,
+   "pattern": "^webapp-([0-9a-f]{17})$",
+   "type": "string"
+  },
+  "WebAppUnits": {
+   "$ref": "#/definitions/WebAppUnits"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/WebAppId",
+  "/properties/IdentityProviderDetails/ApplicationArn",
+  "/properties/VpcEndpointId"
+ ],
+ "required": [
+  "IdentityProviderDetails"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "transfer:TagResource",
+   "transfer:UnTagResource",
+   "transfer:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Transfer::WebApp",
+ "writeOnlyProperties": [
+  "/properties/EndpointDetails/Vpc/SecurityGroupIds",
+  "/properties/EndpointDetails/Vpc/IpAddressType"
+ ]
+}

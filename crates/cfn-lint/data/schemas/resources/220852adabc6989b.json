@@ -1,0 +1,170 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/MlflowVersion",
+  "/properties/RoleArn"
+ ],
+ "createOnlyProperties": [
+  "/properties/TrackingServerName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SageMaker::MlflowTrackingServer",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sagemaker:CreateMlflowTrackingServer",
+    "sagemaker:DescribeMlflowTrackingServer",
+    "sagemaker:AddTags",
+    "sagemaker:ListTags",
+    "iam:PassRole"
+   ],
+   "timeoutInMinutes": 95
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DeleteMlflowTrackingServer",
+    "sagemaker:DescribeMlflowTrackingServer"
+   ],
+   "timeoutInMinutes": 95
+  },
+  "list": {
+   "permissions": [
+    "sagemaker:ListMlflowTrackingServers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribeMlflowTrackingServer",
+    "sagemaker:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sagemaker:UpdateMlflowTrackingServer",
+    "sagemaker:DescribeMlflowTrackingServer",
+    "sagemaker:ListTags",
+    "sagemaker:AddTags",
+    "sagemaker:DeleteTags",
+    "iam:PassRole"
+   ],
+   "timeoutInMinutes": 65
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TrackingServerName"
+ ],
+ "properties": {
+  "ArtifactStoreUri": {
+   "description": "The Amazon S3 URI for MLFlow Tracking Server artifacts.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^s3:\\/\\/([^\\/]+)\\/?(.*)$",
+   "type": "string"
+  },
+  "AutomaticModelRegistration": {
+   "description": "A flag to enable Automatic SageMaker Model Registration.",
+   "type": "boolean"
+  },
+  "MlflowVersion": {
+   "description": "The MLFlow Version used on the MLFlow Tracking Server.",
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "^\\d+(\\.\\d+)+$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "description": "The Amazon Resource Name (ARN) of an IAM role that enables Amazon SageMaker to perform tasks on behalf of the customer.",
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role\\/?[a-zA-Z_0-9+=,.@\\-_\\/]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array"
+  },
+  "TrackingServerArn": {
+   "description": "The Amazon Resource Name (ARN) of the MLFlow Tracking Server.",
+   "maxLength": 2048,
+   "pattern": "^arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:mlflow-tracking-server/.*$",
+   "type": "string"
+  },
+  "TrackingServerName": {
+   "description": "The name of the MLFlow Tracking Server.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,255}$",
+   "type": "string"
+  },
+  "TrackingServerSize": {
+   "description": "The size of the MLFlow Tracking Server.",
+   "enum": [
+    "Small",
+    "Medium",
+    "Large"
+   ],
+   "type": "string"
+  },
+  "WeeklyMaintenanceWindowStart": {
+   "description": "The start of the time window for maintenance of the MLFlow Tracking Server in UTC time.",
+   "maxLength": 9,
+   "minLength": 0,
+   "pattern": "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun):([01]\\d|2[0-3]):([0-5]\\d)$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TrackingServerArn"
+ ],
+ "required": [
+  "TrackingServerName",
+  "ArtifactStoreUri",
+  "RoleArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "sagemaker:AddTags",
+   "sagemaker:ListTags",
+   "sagemaker:DeleteTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::MlflowTrackingServer"
+}

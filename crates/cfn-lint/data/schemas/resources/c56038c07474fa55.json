@@ -1,0 +1,163 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AppInstanceArn",
+  "/properties/AppInstanceUserId"
+ ],
+ "definitions": {
+  "ExpirationSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "ExpirationCriterion": {
+     "enum": [
+      "CREATED_TIMESTAMP"
+     ],
+     "type": "string"
+    },
+    "ExpirationDays": {
+     "maximum": 5475,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ExpirationDays",
+    "ExpirationCriterion"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Chime::AppInstanceUser",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "chime:CreateAppInstanceUser",
+    "chime:PutAppInstanceUserExpirationSettings",
+    "chime:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "chime:DescribeAppInstanceUser",
+    "chime:DeleteAppInstanceUser"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "AppInstanceArn": {
+      "$ref": "resource-schema.json#/properties/AppInstanceArn"
+     }
+    },
+    "required": [
+     "AppInstanceArn"
+    ]
+   },
+   "permissions": [
+    "chime:ListAppInstanceUsers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "chime:DescribeAppInstanceUser",
+    "chime:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "chime:UpdateAppInstanceUser",
+    "chime:PutAppInstanceUserExpirationSettings",
+    "chime:TagResource",
+    "chime:UntagResource",
+    "chime:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AppInstanceUserArn"
+ ],
+ "properties": {
+  "AppInstanceArn": {
+   "maxLength": 1600,
+   "minLength": 5,
+   "pattern": "^arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
+   "type": "string"
+  },
+  "AppInstanceUserArn": {
+   "maxLength": 1600,
+   "minLength": 5,
+   "pattern": "^arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
+   "type": "string"
+  },
+  "AppInstanceUserId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9]([A-Za-z0-9\\:\\-\\_\\.\\@]{0,62}[A-Za-z0-9])?$",
+   "type": "string"
+  },
+  "ExpirationSettings": {
+   "$ref": "#/definitions/ExpirationSettings"
+  },
+  "Metadata": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "^[\\u0009\\u000A\\u000D\\u0020-\\u007E\\u0085\\u00A0-\\uD7FF\\uE000-\\uFFFD\\u10000-\\u10FFFF]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AppInstanceUserArn"
+ ],
+ "required": [
+  "AppInstanceArn",
+  "AppInstanceUserId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "chime:TagResource",
+   "chime:UntagResource",
+   "chime:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Chime::AppInstanceUser"
+}

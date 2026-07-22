@@ -1,0 +1,149 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AuthenticationStrategy",
+  "/properties/EngineType",
+  "/properties/EngineVersion",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "TagsEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::AmazonMQ::Configuration",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "mq:CreateConfiguration",
+    "mq:CreateTags",
+    "mq:UpdateConfiguration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "mq:DeleteConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "mq:ListConfigurations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "mq:DescribeConfiguration",
+    "mq:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "mq:DescribeConfiguration",
+    "mq:UpdateConfiguration",
+    "mq:CreateTags",
+    "mq:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the Amazon MQ configuration.",
+   "type": "string"
+  },
+  "AuthenticationStrategy": {
+   "description": "The authentication strategy associated with the configuration. The default is SIMPLE.",
+   "enumCaseInsensitive": [
+    "config_managed",
+    "ldap",
+    "simple"
+   ],
+   "type": "string"
+  },
+  "Data": {
+   "description": "The base64-encoded XML configuration.",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the configuration.",
+   "type": "string"
+  },
+  "EngineType": {
+   "description": "The type of broker engine. Note: Currently, Amazon MQ only supports ACTIVEMQ for creating and editing broker configurations.",
+   "enumCaseInsensitive": [
+    "activemq",
+    "rabbitmq"
+   ],
+   "type": "string"
+  },
+  "EngineVersion": {
+   "description": "The version of the broker engine.",
+   "type": "string"
+  },
+  "Id": {
+   "description": "The ID of the Amazon MQ configuration.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the configuration.",
+   "type": "string"
+  },
+  "Revision": {
+   "description": "The revision number of the configuration.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Create tags when creating the configuration.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TagsEntry"
+   },
+   "type": "array"
+  }
+ },
+ "propertyTransform": {
+  "/properties/AuthenticationStrategy": "$uppercase(AuthenticationStrategy)",
+  "/properties/EngineType": "$uppercase(EngineType)"
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/Revision"
+ ],
+ "required": [
+  "EngineType",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "mq:ListTags",
+   "mq:CreateTags",
+   "mq:DeleteTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AmazonMQ::Configuration",
+ "writeOnlyProperties": [
+  "/properties/Data"
+ ]
+}

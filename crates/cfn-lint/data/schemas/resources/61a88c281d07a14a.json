@@ -1,0 +1,235 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Description",
+  "/properties/InferenceProfileName",
+  "/properties/ModelSource"
+ ],
+ "definitions": {
+  "InferenceProfileModel": {
+   "additionalProperties": false,
+   "description": "Model configuration",
+   "properties": {
+    "ModelArn": {
+     "description": "ARN for Foundation Models in Bedrock. These models can be used as base models for model customization jobs",
+     "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}::foundation-model/[a-z0-9-]{1,63}[.]{1}([a-z0-9-]{1,63}[.]){0,2}[a-z0-9-]{1,63}([:][a-z0-9-]{1,63}){0,2}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InferenceProfileModelSource": {
+   "description": "Various ways to encode a list of models in a CreateInferenceProfile request",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CopyFrom": {
+       "description": "Source arns for a custom inference profile to copy its regional load balancing config from. This\ncan either be a foundation model or predefined inference profile ARN.",
+       "maxLength": 2048,
+       "minLength": 1,
+       "pattern": "^arn:aws(|-us-gov|-cn|-iso|-iso-b):bedrock:(|[0-9a-z-]{0,20}):(|[0-9]{12}):(inference-profile|foundation-model)/[a-zA-Z0-9-:.]+$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "CopyFrom"
+     ],
+     "title": "CopyFrom",
+     "type": "object"
+    }
+   ]
+  },
+  "InferenceProfileStatus": {
+   "description": "Status of the Inference Profile",
+   "enum": [
+    "ACTIVE"
+   ],
+   "type": "string"
+  },
+  "InferenceProfileType": {
+   "description": "Type of the Inference Profile",
+   "enum": [
+    "APPLICATION",
+    "SYSTEM_DEFINED"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "Definition of the key/value pair for a tag",
+   "properties": {
+    "Key": {
+     "description": "Tag Key",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "Tag Value",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ "description": "Definition of AWS::Bedrock::ApplicationInferenceProfile Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "bedrock:CreateInferenceProfile",
+    "bedrock:GetInferenceProfile",
+    "bedrock:TagResource",
+    "bedrock:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "bedrock:DeleteInferenceProfile",
+    "bedrock:GetInferenceProfile"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "Type": {
+      "$ref": "resource-schema.json#/properties/Type"
+     }
+    }
+   },
+   "permissions": [
+    "bedrock:ListInferenceProfiles"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bedrock:GetInferenceProfile",
+    "bedrock:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "bedrock:GetInferenceProfile",
+    "bedrock:ListTagsForResource",
+    "bedrock:TagResource",
+    "bedrock:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InferenceProfileIdentifier"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "description": "Time Stamp",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "description": "Description of the inference profile",
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^([0-9a-zA-Z:.][ _-]?)+$",
+   "type": "string"
+  },
+  "InferenceProfileArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(|-us-gov|-cn|-iso|-iso-b):bedrock:(|[0-9a-z-]{0,20}):(|[0-9]{12}):(inference-profile|application-inference-profile)/[a-zA-Z0-9-:.]+$",
+   "type": "string"
+  },
+  "InferenceProfileId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-:.]+$",
+   "type": "string"
+  },
+  "InferenceProfileIdentifier": {
+   "description": "Inference profile identifier. Supports both system-defined inference profile ids, and inference profile ARNs.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^(arn:aws(|-us-gov|-cn|-iso|-iso-b):bedrock:(|[0-9a-z-]{0,20}):(|[0-9]{12}):(inference-profile|application-inference-profile)/)?[a-zA-Z0-9-:.]+$",
+   "type": "string"
+  },
+  "InferenceProfileName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^([0-9a-zA-Z][ _-]?)+$",
+   "type": "string"
+  },
+  "ModelSource": {
+   "$ref": "#/definitions/InferenceProfileModelSource"
+  },
+  "Models": {
+   "description": "List of model configuration",
+   "items": {
+    "$ref": "#/definitions/InferenceProfileModel"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Status": {
+   "$ref": "#/definitions/InferenceProfileStatus"
+  },
+  "Tags": {
+   "description": "List of Tags",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Type": {
+   "$ref": "#/definitions/InferenceProfileType"
+  },
+  "UpdatedAt": {
+   "description": "Time Stamp",
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Models",
+  "/properties/InferenceProfileArn",
+  "/properties/InferenceProfileId",
+  "/properties/InferenceProfileIdentifier",
+  "/properties/Status",
+  "/properties/Type",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "InferenceProfileName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-bedrock-application-inference-profile",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "bedrock:TagResource",
+   "bedrock:UntagResource",
+   "bedrock:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Bedrock::ApplicationInferenceProfile",
+ "writeOnlyProperties": [
+  "/properties/ModelSource"
+ ]
+}

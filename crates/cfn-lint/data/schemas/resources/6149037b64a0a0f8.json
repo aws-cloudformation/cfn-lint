@@ -1,0 +1,133 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TableCatalogId",
+  "/properties/DatabaseName",
+  "/properties/TableName",
+  "/properties/Name",
+  "/properties/RowFilter",
+  "/properties/ColumnNames",
+  "/properties/ColumnWildcard"
+ ],
+ "definitions": {
+  "CatalogIdString": {
+   "description": "A string representing the Catalog Id.",
+   "maxLength": 12,
+   "minLength": 12,
+   "type": "string"
+  },
+  "ColumnNames": {
+   "description": "A list of column names.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/NameString"
+   },
+   "type": "array"
+  },
+  "ColumnWildcard": {
+   "additionalProperties": false,
+   "description": "An object representing the Data Cells Filter's Columns. Either Column Names or a Wildcard is required.",
+   "properties": {
+    "ExcludedColumnNames": {
+     "$ref": "#/definitions/ColumnNames",
+     "description": "A list of column names to be excluded from the Data Cells Filter."
+    }
+   },
+   "type": "object"
+  },
+  "NameString": {
+   "description": "A string representing a resource's name.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RowFilter": {
+   "additionalProperties": false,
+   "description": "An object representing the Data Cells Filter's Row Filter. Either a Filter Expression or a Wildcard is required.",
+   "properties": {
+    "AllRowsWildcard": {
+     "additionalProperties": false,
+     "description": "An empty object representing a row wildcard.",
+     "type": "object"
+    },
+    "FilterExpression": {
+     "description": "A PartiQL predicate.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "A resource schema representing a Lake Formation Data Cells Filter.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lakeformation:CreateDataCellsFilter",
+    "glue:GetTable"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lakeformation:DeleteDataCellsFilter"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "lakeformation:ListDataCellsFilter"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lakeformation:ListDataCellsFilter"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TableCatalogId",
+  "/properties/DatabaseName",
+  "/properties/TableName",
+  "/properties/Name"
+ ],
+ "properties": {
+  "ColumnNames": {
+   "$ref": "#/definitions/ColumnNames",
+   "description": "A list of columns to be included in this Data Cells Filter."
+  },
+  "ColumnWildcard": {
+   "$ref": "#/definitions/ColumnWildcard",
+   "description": "An object representing the Data Cells Filter's Columns. Either Column Names or a Wildcard is required"
+  },
+  "DatabaseName": {
+   "$ref": "#/definitions/NameString",
+   "description": "The name of the Database that the Table resides in."
+  },
+  "Name": {
+   "$ref": "#/definitions/NameString",
+   "description": "The desired name of the Data Cells Filter."
+  },
+  "RowFilter": {
+   "$ref": "#/definitions/RowFilter",
+   "description": "An object representing the Data Cells Filter's Row Filter. Either a Filter Expression or a Wildcard is required"
+  },
+  "TableCatalogId": {
+   "$ref": "#/definitions/CatalogIdString",
+   "description": "The Catalog Id of the Table on which to create a Data Cells Filter."
+  },
+  "TableName": {
+   "$ref": "#/definitions/NameString",
+   "description": "The name of the Table to create a Data Cells Filter for."
+  }
+ },
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "TableCatalogId",
+  "DatabaseName",
+  "TableName",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::LakeFormation::DataCellsFilter"
+}

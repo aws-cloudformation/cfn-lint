@@ -1,0 +1,191 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CountryRule": {
+   "additionalProperties": false,
+   "properties": {
+    "CountryCode": {
+     "description": "The two-letter ISO country code",
+     "pattern": "^[A-Z]{2}$",
+     "type": "string"
+    },
+    "ProtectStatus": {
+     "description": "The types of protection that can be used.",
+     "enum": [
+      "ALLOW",
+      "BLOCK",
+      "MONITOR",
+      "FILTER"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "CountryCode",
+    "ProtectStatus"
+   ],
+   "type": "object"
+  },
+  "CountryRuleSet": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "SMS"
+     ]
+    },
+    {
+     "required": [
+      "VOICE"
+     ]
+    },
+    {
+     "required": [
+      "MMS"
+     ]
+    }
+   ],
+   "properties": {
+    "MMS": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CountryRule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SMS": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CountryRule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "VOICE": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CountryRule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SMSVOICE::ProtectConfiguration",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sms-voice:CreateProtectConfiguration",
+    "sms-voice:UpdateProtectConfigurationCountryRuleSet",
+    "sms-voice:DescribeProtectConfigurations",
+    "sms-voice:GetProtectConfigurationCountryRuleSet",
+    "sms-voice:TagResource",
+    "sms-voice:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sms-voice:DeleteProtectConfiguration",
+    "sms-voice:DescribeProtectConfigurations"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sms-voice:DescribeProtectConfigurations",
+    "sms-voice:GetProtectConfigurationCountryRuleSet"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sms-voice:DescribeProtectConfigurations",
+    "sms-voice:GetProtectConfigurationCountryRuleSet",
+    "sms-voice:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sms-voice:DescribeProtectConfigurations",
+    "sms-voice:GetProtectConfigurationCountryRuleSet",
+    "sms-voice:UpdateProtectConfiguration",
+    "sms-voice:UpdateProtectConfigurationCountryRuleSet",
+    "sms-voice:UntagResource",
+    "sms-voice:TagResource",
+    "sms-voice:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ProtectConfigurationId"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the protect configuration.",
+   "type": "string"
+  },
+  "CountryRuleSet": {
+   "$ref": "#/definitions/CountryRuleSet",
+   "description": "An array of CountryRule containing the rules for the NumberCapability."
+  },
+  "DeletionProtectionEnabled": {
+   "description": "When set to true deletion protection is enabled and protect configuration cannot be deleted. By default this is set to false.",
+   "type": "boolean"
+  },
+  "ProtectConfigurationId": {
+   "description": "The unique identifier for the protect configuration.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ProtectConfigurationId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resoource-providers-smsvoice.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "sms-voice:UntagResource",
+   "sms-voice:TagResource",
+   "sms-voice:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SMSVOICE::ProtectConfiguration"
+}

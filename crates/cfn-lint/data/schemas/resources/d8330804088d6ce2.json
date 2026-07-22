@@ -1,0 +1,193 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/MlflowAppId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/RoleArn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource type definition for AWS::SageMaker::MlflowApp",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sagemaker:CreateMlflowApp",
+    "sagemaker:DescribeMlflowApp",
+    "sagemaker:AddTags",
+    "sagemaker:ListTags",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DeleteMlflowApp",
+    "sagemaker:DescribeMlflowApp"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sagemaker:ListMlflowApps"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribeMlflowApp",
+    "sagemaker:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sagemaker:UpdateMlflowApp",
+    "sagemaker:DescribeMlflowApp",
+    "sagemaker:AddTags",
+    "sagemaker:DeleteTags",
+    "sagemaker:ListTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the MLflow App.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:mlflow-app/.*",
+   "type": "string"
+  },
+  "ArtifactStoreUri": {
+   "description": "The S3 URI for a general purpose bucket to use as the MLflow App artifact store.",
+   "maxLength": 1024,
+   "minLength": 0,
+   "pattern": "(https|s3)://([^/]+)/?(.*)",
+   "type": "string"
+  },
+  "CreationTime": {
+   "description": "The date and time that the MLflow App was created.",
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "description": "The date and time that the MLflow App was last modified.",
+   "type": "string"
+  },
+  "MlflowAppId": {
+   "description": "The server-generated identifier of the MLflow App.",
+   "type": "string"
+  },
+  "MlflowVersion": {
+   "description": "The MLflow version used by the MLflow App.",
+   "maxLength": 16,
+   "minLength": 0,
+   "pattern": "[0-9]*.[0-9]*.[0-9]*",
+   "type": "string"
+  },
+  "ModelRegistrationMode": {
+   "description": "Whether to enable or disable automatic registration of new MLflow models to the SageMaker Model Registry.",
+   "enum": [
+    "AutoModelRegistrationEnabled",
+    "AutoModelRegistrationDisabled"
+   ],
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the MLflow App.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,255}$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "description": "The Amazon Resource Name (ARN) for an IAM role in your account that the MLflow App uses to access the artifact store in Amazon S3.",
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+",
+   "type": "string"
+  },
+  "Status": {
+   "description": "The status of the MLflow App.",
+   "enum": [
+    "Creating",
+    "Created",
+    "CreateFailed",
+    "Updating",
+    "Updated",
+    "UpdateFailed",
+    "Deleting",
+    "DeleteFailed",
+    "Deleted"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Tags to associate with the MLflow App.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "WeeklyMaintenanceWindowStart": {
+   "description": "The day and time of the week in Coordinated Universal Time (UTC) 24-hour standard time that weekly maintenance updates are scheduled. For example: Tue:03:30.",
+   "maxLength": 9,
+   "minLength": 0,
+   "pattern": "(Mon|Tue|Wed|Thu|Fri|Sat|Sun):([01]\\d|2[0-3]):([0-5]\\d)",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/MlflowAppId",
+  "/properties/Status",
+  "/properties/MlflowVersion",
+  "/properties/CreationTime",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "Name",
+  "ArtifactStoreUri",
+  "RoleArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "sagemaker:AddTags",
+   "sagemaker:DeleteTags",
+   "sagemaker:ListTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::MlflowApp"
+}

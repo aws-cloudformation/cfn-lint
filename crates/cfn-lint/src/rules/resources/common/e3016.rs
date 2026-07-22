@@ -72,7 +72,7 @@ impl CfnLintRule for E3016 {
                         res_type
                     ),
                     path: vec!["Resources".into(), name.to_string(), "UpdatePolicy".into()],
-                    span: update_policy.span().clone(),
+                    span: update_policy.span(),
                     keyword: String::new(),
                     unknown: false,
                     resolved_from_ref: false,
@@ -91,7 +91,7 @@ impl CfnLintRule for E3016 {
                     rule_id: Some(self.id().to_string()),
                     message: "UpdatePolicy must be an object".to_string(),
                     path: vec!["Resources".into(), name.to_string(), "UpdatePolicy".into()],
-                    span: update_policy.span().clone(),
+                    span: update_policy.span(),
                     keyword: String::new(),
                     unknown: false,
                     resolved_from_ref: false,

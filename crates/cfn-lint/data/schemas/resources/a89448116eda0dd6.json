@@ -1,0 +1,142 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/MonitoringScheduleName",
+   "/properties/MonitoringAlertName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DatapointsToAlert",
+  "/properties/EvaluationPeriod",
+  "/properties/MonitoringAlertName",
+  "/properties/MonitoringScheduleName"
+ ],
+ "definitions": {
+  "ModelDashboardIndicatorAction": {
+   "additionalProperties": false,
+   "description": "An alert action taken to light up an icon on the Amazon SageMaker Model Dashboard when an alert goes into InAlert status.",
+   "properties": {
+    "Enabled": {
+     "description": "Indicates whether the alert action is turned on.",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "MonitoringAlertActions": {
+   "additionalProperties": false,
+   "description": "A list of alert actions taken in response to an alert going into InAlert status.",
+   "properties": {
+    "ModelDashboardIndicator": {
+     "$ref": "#/definitions/ModelDashboardIndicatorAction"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource type definition for AWS::SageMaker::MonitoringScheduleAlert. A monitoring alert associated with a SageMaker monitoring schedule.",
+ "handlers": {
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "MonitoringScheduleName": {
+      "maxLength": 63,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+      "type": "string"
+     }
+    },
+    "required": [
+     "MonitoringScheduleName"
+    ]
+   },
+   "permissions": [
+    "sagemaker:ListMonitoringAlerts"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:ListMonitoringAlerts"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Actions": {
+   "$ref": "#/definitions/MonitoringAlertActions",
+   "description": "A list of alert actions taken in response to an alert going into InAlert status."
+  },
+  "AlertStatus": {
+   "description": "The current status of the alert.",
+   "enum": [
+    "InAlert",
+    "OK"
+   ],
+   "type": "string"
+  },
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the monitoring schedule alert.",
+   "maxLength": 256,
+   "type": "string"
+  },
+  "CreationTime": {
+   "description": "A timestamp that indicates when the alert was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "DatapointsToAlert": {
+   "description": "Within EvaluationPeriod, how many execution failures will raise an alert.",
+   "maximum": 100,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "EvaluationPeriod": {
+   "description": "The number of most recent monitoring executions to consider when evaluating alert status.",
+   "maximum": 100,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "LastModifiedTime": {
+   "description": "A timestamp that indicates when the alert was last updated.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "MonitoringAlertName": {
+   "description": "The name of the monitoring alert.",
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  },
+  "MonitoringScheduleName": {
+   "description": "The name of the monitoring schedule.",
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/AlertStatus",
+  "/properties/CreationTime",
+  "/properties/LastModifiedTime",
+  "/properties/Actions"
+ ],
+ "required": [
+  "MonitoringScheduleName",
+  "MonitoringAlertName",
+  "DatapointsToAlert",
+  "EvaluationPeriod"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::SageMaker::MonitoringScheduleAlert"
+}

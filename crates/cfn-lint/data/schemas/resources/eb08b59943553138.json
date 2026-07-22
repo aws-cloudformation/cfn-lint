@@ -1,0 +1,156 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/EnvironmentIdentifier"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainIdentifier",
+  "/properties/EnvironmentIdentifier"
+ ],
+ "definitions": {
+  "AwsConsoleLinkParameters": {
+   "additionalProperties": false,
+   "description": "The parameters of the console link specified as part of the environment action",
+   "properties": {
+    "Uri": {
+     "$ref": "#/definitions/EnvironmentActionURI"
+    }
+   },
+   "type": "object"
+  },
+  "EnvironmentActionURI": {
+   "description": "The URI of the console link specified as part of the environment action.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "description": "Definition of AWS::DataZone::EnvironmentActions Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "datazone:CreateEnvironmentAction",
+    "datazone:GetEnvironmentAction",
+    "datazone:DeleteEnvironmentAction"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "datazone:DeleteEnvironmentAction",
+    "datazone:GetEnvironmentAction"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "DomainIdentifier": {
+      "$ref": "resource-schema.json#/properties/DomainIdentifier"
+     },
+     "EnvironmentIdentifier": {
+      "$ref": "resource-schema.json#/properties/EnvironmentIdentifier"
+     }
+    },
+    "required": [
+     "DomainIdentifier",
+     "EnvironmentIdentifier"
+    ]
+   },
+   "permissions": [
+    "datazone:ListEnvironmentActions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "datazone:GetEnvironmentAction"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "datazone:UpdateEnvironmentAction",
+    "datazone:GetEnvironmentAction",
+    "datazone:DeleteEnvironmentAction"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainId",
+  "/properties/EnvironmentId",
+  "/properties/Id"
+ ],
+ "properties": {
+  "Description": {
+   "description": "The description of the Amazon DataZone environment action.",
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "DomainId": {
+   "description": "The identifier of the Amazon DataZone domain in which the environment is created.",
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "DomainIdentifier": {
+   "description": "The identifier of the Amazon DataZone domain in which the environment would be created.",
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "EnvironmentId": {
+   "description": "The identifier of the Amazon DataZone environment in which the action is taking place",
+   "maxLength": 36,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "EnvironmentIdentifier": {
+   "description": "The identifier of the Amazon DataZone environment in which the action is taking place",
+   "maxLength": 36,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Id": {
+   "description": "The ID of the Amazon DataZone environment action.",
+   "maxLength": 36,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Identifier": {
+   "description": "The ID of the Amazon DataZone environment action.",
+   "maxLength": 36,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the environment action.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[\\w -]+$",
+   "type": "string"
+  },
+  "Parameters": {
+   "$ref": "#/definitions/AwsConsoleLinkParameters",
+   "description": "The parameters of the environment action."
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DomainId",
+  "/properties/EnvironmentId",
+  "/properties/Id"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::DataZone::EnvironmentActions",
+ "writeOnlyProperties": [
+  "/properties/EnvironmentIdentifier",
+  "/properties/DomainIdentifier",
+  "/properties/Identifier"
+ ]
+}

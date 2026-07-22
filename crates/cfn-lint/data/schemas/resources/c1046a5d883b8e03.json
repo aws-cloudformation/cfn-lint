@@ -1,0 +1,212 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "IpamOperatingRegion": {
+   "additionalProperties": false,
+   "description": "The regions IPAM is enabled for. Allows pools to be created in these regions, as well as enabling monitoring",
+   "properties": {
+    "RegionName": {
+     "description": "The name of the region.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RegionName"
+   ],
+   "type": "object"
+  },
+  "IpamOrganizationalUnitExclusion": {
+   "additionalProperties": false,
+   "description": "If your IPAM is integrated with AWS Organizations and you add an organizational unit (OU) exclusion, IPAM will not manage the IP addresses in accounts in that OU exclusion.",
+   "properties": {
+    "OrganizationsEntityPath": {
+     "description": "An AWS Organizations entity path. Build the path for the OU(s) using AWS Organizations IDs separated by a '/'. Include all child OUs by ending the path with '/*'.",
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "OrganizationsEntityPath"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Schema of AWS::EC2::IPAM Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateIpam",
+    "iam:CreateServiceLinkedRole",
+    "ec2:CreateTags",
+    "ec2:DescribeIpams",
+    "ec2:DescribeIpamResourceDiscoveries",
+    "ec2:ModifyIpamResourceDiscovery"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteIpam",
+    "ec2:DeleteTags",
+    "ec2:DescribeIpams"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeIpams"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeIpams",
+    "ec2:DescribeIpamResourceDiscoveries"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:ModifyIpam",
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "ec2:DescribeIpams",
+    "ec2:DescribeIpamResourceDiscoveries",
+    "ec2:ModifyIpamResourceDiscovery"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IpamId"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the IPAM.",
+   "type": "string"
+  },
+  "DefaultResourceDiscoveryAssociationId": {
+   "description": "The Id of the default association to the default resource discovery, created with this IPAM.",
+   "type": "string"
+  },
+  "DefaultResourceDiscoveryId": {
+   "description": "The Id of the default resource discovery, created with this IPAM.",
+   "type": "string"
+  },
+  "DefaultResourceDiscoveryOrganizationalUnitExclusions": {
+   "description": "A set of organizational unit (OU) exclusions for the default resource discovery, created with this IPAM.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IpamOrganizationalUnitExclusion"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Description": {
+   "type": "string"
+  },
+  "EnablePrivateGua": {
+   "description": "Enable provisioning of GUA space in private pools.",
+   "type": "boolean"
+  },
+  "IpamId": {
+   "description": "Id of the IPAM.",
+   "type": "string"
+  },
+  "MeteredAccount": {
+   "description": "A metered account is an account that is charged for active IP addresses managed in IPAM",
+   "enum": [
+    "ipam-owner",
+    "resource-owner"
+   ],
+   "type": "string"
+  },
+  "OperatingRegions": {
+   "description": "The regions IPAM is enabled for. Allows pools to be created in these regions, as well as enabling monitoring",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IpamOperatingRegion"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "PrivateDefaultScopeId": {
+   "description": "The Id of the default scope for publicly routable IP space, created with this IPAM.",
+   "type": "string"
+  },
+  "PublicDefaultScopeId": {
+   "description": "The Id of the default scope for publicly routable IP space, created with this IPAM.",
+   "maxLength": 255,
+   "type": "string"
+  },
+  "ResourceDiscoveryAssociationCount": {
+   "description": "The count of resource discoveries associated with this IPAM.",
+   "type": "integer"
+  },
+  "ScopeCount": {
+   "description": "The number of scopes that currently exist in this IPAM.",
+   "type": "integer"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tier": {
+   "description": "The tier of the IPAM.",
+   "enum": [
+    "free",
+    "advanced"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IpamId",
+  "/properties/Arn",
+  "/properties/PublicDefaultScopeId",
+  "/properties/PrivateDefaultScopeId",
+  "/properties/ScopeCount",
+  "/properties/ResourceDiscoveryAssociationCount",
+  "/properties/DefaultResourceDiscoveryId",
+  "/properties/DefaultResourceDiscoveryAssociationId"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ipam.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "ec2:DeleteTags",
+   "ec2:CreateTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::IPAM"
+}

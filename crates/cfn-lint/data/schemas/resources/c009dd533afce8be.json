@@ -1,0 +1,289 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AzureBlobContainerUrl"
+ ],
+ "definitions": {
+  "AzureBlobSasConfiguration": {
+   "additionalProperties": false,
+   "description": "Specifies the shared access signature (SAS) that DataSync uses to access your Azure Blob Storage container.",
+   "properties": {
+    "AzureBlobSasToken": {
+     "description": "Specifies the shared access signature (SAS) token, which indicates the permissions DataSync needs to access your Azure Blob Storage container.",
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "(^.+$)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AzureBlobSasToken"
+   ],
+   "type": "object"
+  },
+  "CmkSecretConfig": {
+   "additionalProperties": false,
+   "description": "Specifies configuration information for a DataSync-managed secret, such as an authentication token or set of credentials that DataSync uses to access a specific transfer location, and a customer-managed AWS KMS key.",
+   "properties": {
+    "KmsKeyArn": {
+     "description": "Specifies the ARN for the customer-managed AWS KMS key used to encrypt the secret specified for SecretArn. DataSync provides this key to AWS Secrets Manager.",
+     "format": "AWS::KMS::Key.Arn",
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):kms:[a-z-0-9]+:[0-9]{12}:key/.*|)$",
+     "type": "string"
+    },
+    "SecretArn": {
+     "description": "Specifies the ARN for an AWS Secrets Manager secret, managed by DataSync.",
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):secretsmanager:[a-z-0-9]+:[0-9]{12}:secret:.*|)$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CustomSecretConfig": {
+   "additionalProperties": false,
+   "description": "Specifies configuration information for a customer-managed secret, such as an authentication token or set of credentials that DataSync uses to access a specific transfer location, and an IAM role that DataSync can assume and access the customer-managed secret.",
+   "properties": {
+    "SecretAccessRoleArn": {
+     "description": "Specifies the ARN for the AWS Identity and Access Management role that DataSync uses to access the secret specified for SecretArn.",
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):iam::[0-9]{12}:role/.*|)$",
+     "type": "string"
+    },
+    "SecretArn": {
+     "description": "Specifies the ARN for a customer created AWS Secrets Manager secret.",
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):secretsmanager:[a-z-0-9]+:[0-9]{12}:secret:.*|)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretArn",
+    "SecretAccessRoleArn"
+   ],
+   "type": "object"
+  },
+  "ManagedSecretConfig": {
+   "additionalProperties": false,
+   "description": "Specifies configuration information for a DataSync-managed secret, such as an authentication token or set of credentials that DataSync uses to access a specific transfer location. DataSync uses the default AWS-managed KMS key to encrypt this secret in AWS Secrets Manager.",
+   "properties": {
+    "SecretArn": {
+     "description": "Specifies the ARN for an AWS Secrets Manager secret.",
+     "maxLength": 2048,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):secretsmanager:[a-z-0-9]+:[0-9]{12}:secret:.*|)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key for an AWS resource tag.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:/-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for an AWS resource tag.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::DataSync::LocationAzureBlob.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "datasync:CreateLocationAzureBlob",
+    "datasync:DescribeLocationAzureBlob",
+    "datasync:TagResource",
+    "datasync:ListTagsForResource",
+    "secretsmanager:CreateSecret",
+    "secretsmanager:PutSecretValue",
+    "secretsmanager:DeleteSecret",
+    "iam:CreateServiceLinkedRole",
+    "iam:PassRole",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:GenerateDataKey"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "datasync:DeleteLocation",
+    "secretsmanager:DeleteSecret"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "datasync:ListLocations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "datasync:DescribeLocationAzureBlob",
+    "datasync:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "datasync:DescribeLocationAzureBlob",
+    "datasync:ListTagsForResource",
+    "datasync:TagResource",
+    "datasync:UntagResource",
+    "datasync:UpdateLocationAzureBlob",
+    "secretsmanager:UpdateSecret",
+    "secretsmanager:DeleteSecret",
+    "secretsmanager:PutSecretValue",
+    "secretsmanager:CreateSecret",
+    "iam:CreateServiceLinkedRole",
+    "iam:PassRole",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:GenerateDataKey"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LocationArn"
+ ],
+ "properties": {
+  "AgentArns": {
+   "description": "Specifies the Amazon Resource Name (ARN) of the DataSync agent that can connect with your Azure Blob Storage container. If you are setting up an agentless cross-cloud transfer, you do not need to specify a value for this parameter.",
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 128,
+    "minLength": 0,
+    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:agent/agent-[0-9a-z]{17}$",
+    "type": "string"
+   },
+   "maxItems": 8,
+   "minItems": 1,
+   "type": "array"
+  },
+  "AzureAccessTier": {
+   "default": "HOT",
+   "description": "Specifies an access tier for the objects you're transferring into your Azure Blob Storage container.",
+   "enum": [
+    "HOT",
+    "COOL",
+    "ARCHIVE"
+   ],
+   "type": "string"
+  },
+  "AzureBlobAuthenticationType": {
+   "default": "SAS",
+   "description": "The specific authentication type that you want DataSync to use to access your Azure Blob Container.",
+   "enum": [
+    "SAS",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "AzureBlobContainerUrl": {
+   "description": "The URL of the Azure Blob container that was described.",
+   "maxLength": 325,
+   "pattern": "^https://[A-Za-z0-9]((.|-+)?[A-Za-z0-9]){0,252}/[a-z0-9](-?[a-z0-9]){2,62}$",
+   "type": "string"
+  },
+  "AzureBlobSasConfiguration": {
+   "$ref": "#/definitions/AzureBlobSasConfiguration"
+  },
+  "AzureBlobType": {
+   "default": "BLOCK",
+   "description": "Specifies a blob type for the objects you're transferring into your Azure Blob Storage container.",
+   "enum": [
+    "BLOCK"
+   ],
+   "type": "string"
+  },
+  "CmkSecretConfig": {
+   "$ref": "#/definitions/CmkSecretConfig"
+  },
+  "CustomSecretConfig": {
+   "$ref": "#/definitions/CustomSecretConfig"
+  },
+  "LocationArn": {
+   "description": "The Amazon Resource Name (ARN) of the Azure Blob Location that is created.",
+   "maxLength": 128,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:location/loc-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "LocationUri": {
+   "description": "The URL of the Azure Blob Location that was described.",
+   "maxLength": 4356,
+   "pattern": "^(azure-blob)://[a-zA-Z0-9./\\-]+$",
+   "type": "string"
+  },
+  "ManagedSecretConfig": {
+   "$ref": "#/definitions/ManagedSecretConfig"
+  },
+  "Subdirectory": {
+   "description": "The subdirectory in the Azure Blob Container that is used to read data from the Azure Blob Source Location.",
+   "maxLength": 1024,
+   "minLength": 0,
+   "pattern": "^[\\p{L}\\p{M}\\p{Z}\\p{S}\\p{N}\\p{P}\\p{C}]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LocationArn",
+  "/properties/LocationUri",
+  "/properties/ManagedSecretConfig",
+  "/properties/CmkSecretConfig/SecretArn"
+ ],
+ "required": [
+  "AzureBlobAuthenticationType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datasync.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "datasync:TagResource",
+   "datasync:UntagResource",
+   "datasync:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataSync::LocationAzureBlob",
+ "writeOnlyProperties": [
+  "/properties/Subdirectory",
+  "/properties/AzureBlobSasConfiguration",
+  "/properties/AzureBlobContainerUrl"
+ ]
+}

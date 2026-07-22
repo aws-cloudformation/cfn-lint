@@ -1,0 +1,210 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TargetDomainName"
+ ],
+ "definitions": {
+  "DnsVerification": {
+   "additionalProperties": false,
+   "description": "Represents DNS TXT verification details",
+   "properties": {
+    "DnsRecordName": {
+     "description": "Record name to be added in DNS for target domain",
+     "type": "string"
+    },
+    "DnsRecordType": {
+     "description": "Type of record to be added in DNS for target domain",
+     "enum": [
+      "TXT"
+     ],
+     "type": "string"
+    },
+    "Token": {
+     "description": "Token used to verify domain ownership",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HttpVerification": {
+   "additionalProperties": false,
+   "description": "Represents HTTP route verification details",
+   "properties": {
+    "RoutePath": {
+     "description": "Route path where verification token should be placed",
+     "type": "string"
+    },
+    "Token": {
+     "description": "Token used to verify domain ownership",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VerificationDetails": {
+   "additionalProperties": false,
+   "description": "Verification details to verify registered target domain",
+   "properties": {
+    "DnsTxt": {
+     "$ref": "#/definitions/DnsVerification"
+    },
+    "HttpRoute": {
+     "$ref": "#/definitions/HttpVerification"
+    },
+    "Method": {
+     "description": "Type of domain ownership verification method",
+     "enum": [
+      "DNS_TXT",
+      "HTTP_ROUTE",
+      "PRIVATE_VPC"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SecurityAgent::TargetDomain",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityagent:CreateTargetDomain",
+    "securityagent:BatchGetTargetDomains",
+    "securityagent:TagResource",
+    "securityagent:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securityagent:DeleteTargetDomain",
+    "securityagent:BatchGetTargetDomains"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securityagent:ListTargetDomains"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityagent:BatchGetTargetDomains",
+    "securityagent:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securityagent:UpdateTargetDomain",
+    "securityagent:BatchGetTargetDomains",
+    "securityagent:TagResource",
+    "securityagent:UntagResource",
+    "securityagent:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TargetDomainId"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "description": "Timestamp when the target domain was registered",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Tags for the target domain",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TargetDomainId": {
+   "description": "Unique identifier of the target domain",
+   "type": "string"
+  },
+  "TargetDomainName": {
+   "description": "Domain name of the target domain",
+   "type": "string"
+  },
+  "VerificationDetails": {
+   "$ref": "#/definitions/VerificationDetails"
+  },
+  "VerificationMethod": {
+   "description": "Verification method for the target domain",
+   "enum": [
+    "DNS_TXT",
+    "HTTP_ROUTE",
+    "PRIVATE_VPC"
+   ],
+   "type": "string"
+  },
+  "VerificationStatus": {
+   "description": "Current verification status of the registered target domain",
+   "enum": [
+    "PENDING",
+    "VERIFIED",
+    "FAILED",
+    "UNREACHABLE"
+   ],
+   "type": "string"
+  },
+  "VerificationStatusReason": {
+   "description": "Reason for the current target domain verification status",
+   "type": "string"
+  },
+  "VerifiedAt": {
+   "description": "Timestamp when the target domain was last successfully verified",
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TargetDomainId",
+  "/properties/VerificationStatus",
+  "/properties/VerificationStatusReason",
+  "/properties/VerificationDetails",
+  "/properties/CreatedAt",
+  "/properties/VerifiedAt"
+ ],
+ "required": [
+  "TargetDomainName",
+  "VerificationMethod"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "securityagent:TagResource",
+   "securityagent:UntagResource",
+   "securityagent:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityAgent::TargetDomain"
+}

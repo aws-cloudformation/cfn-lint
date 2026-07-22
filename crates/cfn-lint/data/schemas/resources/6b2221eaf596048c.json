@@ -1,0 +1,169 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InsecureIngest",
+  "/properties/UserId",
+  "/properties/Name",
+  "/properties/IngestProtocol"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::IVS::IngestConfiguration",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ivs:CreateIngestConfiguration",
+    "ivs:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ivs:DeleteIngestConfiguration",
+    "ivs:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ivs:ListIngestConfigurations",
+    "ivs:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ivs:GetIngestConfiguration",
+    "ivs:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ivs:GetIngestConfiguration",
+    "ivs:UpdateIngestConfiguration",
+    "ivs:TagResource",
+    "ivs:UntagResource",
+    "ivs:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "IngestConfiguration ARN is automatically generated on creation and assigned as the unique identifier.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^arn:aws:ivs:[a-z0-9-]+:[0-9]+:ingest-configuration/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "IngestProtocol": {
+   "default": "RTMPS",
+   "description": "Ingest Protocol.",
+   "enum": [
+    "RTMP",
+    "RTMPS"
+   ],
+   "type": "string"
+  },
+  "InsecureIngest": {
+   "default": false,
+   "description": "Whether ingest configuration allows insecure ingest.",
+   "type": "boolean"
+  },
+  "Name": {
+   "default": "-",
+   "description": "IngestConfiguration",
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9-_]*$",
+   "type": "string"
+  },
+  "ParticipantId": {
+   "description": "Participant Id is automatically generated on creation and assigned.",
+   "maxLength": 64,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9-_]*$",
+   "type": "string"
+  },
+  "StageArn": {
+   "default": "",
+   "description": "Stage ARN. A value other than an empty string indicates that stage is linked to IngestConfiguration. Default: \"\" (recording is disabled).",
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "^arn:aws:ivs:[a-z0-9-]+:[0-9]+:stage/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "State": {
+   "default": "INACTIVE",
+   "description": "State of IngestConfiguration which determines whether IngestConfiguration is in use or not.",
+   "enum": [
+    "ACTIVE",
+    "INACTIVE"
+   ],
+   "type": "string"
+  },
+  "StreamKey": {
+   "description": "Stream-key value.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A list of key-value pairs that contain metadata for the asset model.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UserId": {
+   "description": "User defined indentifier for participant associated with IngestConfiguration.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ParticipantId",
+  "/properties/StreamKey",
+  "/properties/State"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "ivs:TagResource",
+   "ivs:UntagResource",
+   "ivs:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IVS::IngestConfiguration",
+ "writeOnlyProperties": [
+  "/properties/InsecureIngest"
+ ]
+}

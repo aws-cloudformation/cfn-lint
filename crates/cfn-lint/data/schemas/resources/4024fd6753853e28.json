@@ -1,0 +1,137 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceKey"
+ ],
+ "definitions": {
+  "AutomationParameters": {
+   "additionalProperties": false,
+   "description": "Parameters to be passed to the Automation Document",
+   "patternProperties": {
+    "^[a-zA-Z0-9_]+$": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[A-Za-z0-9 +=@_\\/:.-]+$": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9 +=@_\\/:.-]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SSMQuickSetup::LifecycleAutomation that executes SSM Automation documents in response to CloudFormation lifecycle events.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ssm:CreateAssociation",
+    "ssm:DescribeAssociation",
+    "ssm:DescribeAssociationExecutions",
+    "ssm:DescribeAssociationExecutionTargets",
+    "ssm:GetAutomationExecution",
+    "ssm:AddTagsToResource",
+    "ssm:ListTagsForResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ssm:DeleteAssociation",
+    "ssm:UpdateAssociation",
+    "ssm:DescribeAssociation",
+    "ssm:DescribeAssociationExecutions",
+    "ssm:DescribeAssociationExecutionTargets",
+    "ssm:GetAutomationExecution",
+    "iam:PassRole"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ssm:ListAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ssm:DescribeAssociation",
+    "ssm:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ssm:DescribeAssociation",
+    "ssm:UpdateAssociation",
+    "ssm:DescribeAssociationExecutions",
+    "ssm:DescribeAssociationExecutionTargets",
+    "ssm:GetAutomationExecution",
+    "ssm:AddTagsToResource",
+    "ssm:RemoveTagsFromResource",
+    "ssm:ListTagsForResource",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AssociationId"
+ ],
+ "properties": {
+  "AssociationId": {
+   "description": "The id from the association that is returned when creating the association",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "AutomationDocument": {
+   "description": "The name of the Automation document to execute",
+   "maxLength": 500,
+   "minLength": 1,
+   "pattern": "^\\S+$",
+   "type": "string"
+  },
+  "AutomationParameters": {
+   "$ref": "#/definitions/AutomationParameters"
+  },
+  "ResourceKey": {
+   "description": "A unique identifier used for generating a unique logical ID for the custom resource",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssociationId"
+ ],
+ "required": [
+  "AutomationDocument",
+  "ResourceKey",
+  "AutomationParameters"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "ssm:AddTagsToResource",
+   "ssm:RemoveTagsFromResource",
+   "ssm:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SSMQuickSetup::LifecycleAutomation"
+}

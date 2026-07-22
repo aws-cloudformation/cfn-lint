@@ -106,7 +106,7 @@ impl CfnLintRule for E3022 {
                             .and_then(|r| r.get(resource_name))
                             .and_then(|r| r.get("Properties"))
                             .and_then(|p| p.get("SubnetId"))
-                            .map(|n| n.span().clone())
+                            .map(|n| n.span())
                             .unwrap_or_default(),
                         keyword: String::new(),
                         unknown: false,

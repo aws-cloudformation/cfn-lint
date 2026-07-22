@@ -1,0 +1,312 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IdNamespaceName"
+ ],
+ "definitions": {
+  "AttributeName": {
+   "maxLength": 255,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z_0-9- \\t]*$",
+   "type": "string"
+  },
+  "EntityName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z_0-9-]*$",
+   "type": "string"
+  },
+  "IdNamespaceIdMappingWorkflowProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "IdMappingType": {
+     "enum": [
+      "PROVIDER",
+      "RULE_BASED"
+     ],
+     "type": "string"
+    },
+    "ProviderProperties": {
+     "$ref": "#/definitions/NamespaceProviderProperties"
+    },
+    "RuleBasedProperties": {
+     "$ref": "#/definitions/NamespaceRuleBasedProperties"
+    }
+   },
+   "required": [
+    "IdMappingType"
+   ],
+   "type": "object"
+  },
+  "IdNamespaceInputSource": {
+   "additionalProperties": false,
+   "properties": {
+    "InputSourceARN": {
+     "pattern": "^arn:(aws|aws-us-gov|aws-cn):entityresolution:[a-z]{2}-[a-z]{1,10}-[0-9]:[0-9]{12}:(matchingworkflow/[a-zA-Z_0-9-]{1,255})$|^arn:(aws|aws-us-gov|aws-cn):glue:[a-z]{2}-[a-z]{1,10}-[0-9]:[0-9]{12}:(table/[a-zA-Z_0-9-]{1,255}/[a-zA-Z_0-9-]{1,255})$",
+     "type": "string"
+    },
+    "SchemaName": {
+     "$ref": "#/definitions/EntityName"
+    }
+   },
+   "required": [
+    "InputSourceARN"
+   ],
+   "type": "object"
+  },
+  "NamespaceProviderProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "ProviderConfiguration": {
+     "additionalProperties": false,
+     "description": "Additional Provider configuration that would be required for the provider service. The Configuration must be in JSON string format.",
+     "patternProperties": {
+      "^.+$": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "ProviderServiceArn": {
+     "$ref": "#/definitions/ProviderServiceArn"
+    }
+   },
+   "required": [
+    "ProviderServiceArn"
+   ],
+   "type": "object"
+  },
+  "NamespaceRuleBasedProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "AttributeMatchingModel": {
+     "enum": [
+      "ONE_TO_ONE",
+      "MANY_TO_MANY"
+     ],
+     "type": "string"
+    },
+    "RecordMatchingModels": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/RecordMatchingModel"
+     },
+     "type": "array"
+    },
+    "RuleDefinitionTypes": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/RuleDefinitionType"
+     },
+     "type": "array"
+    },
+    "Rules": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Rule"
+     },
+     "maxItems": 25,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ProviderServiceArn": {
+   "maxLength": 255,
+   "minLength": 20,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):(entityresolution):([a-z]{2}-[a-z]{1,10}-[0-9])::providerservice/([a-zA-Z0-9_-]{1,255})/([a-zA-Z0-9_-]{1,255})$",
+   "type": "string"
+  },
+  "RecordMatchingModel": {
+   "enum": [
+    "ONE_SOURCE_TO_ONE_TARGET",
+    "MANY_SOURCE_TO_ONE_TARGET"
+   ],
+   "type": "string"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "properties": {
+    "MatchingKeys": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/AttributeName"
+     },
+     "maxItems": 25,
+     "minItems": 1,
+     "type": "array"
+    },
+    "RuleName": {
+     "maxLength": 255,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z_0-9- \\t]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RuleName",
+    "MatchingKeys"
+   ],
+   "type": "object"
+  },
+  "RuleDefinitionType": {
+   "enum": [
+    "SOURCE",
+    "TARGET"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "IdNamespace defined in AWS Entity Resolution service",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "entityresolution:CreateIdNamespace",
+    "entityresolution:TagResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "entityresolution:DeleteIdNamespace",
+    "entityresolution:GetIdNamespace",
+    "entityresolution:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "entityresolution:ListIdNamespaces"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "entityresolution:GetIdNamespace",
+    "entityresolution:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "entityresolution:UpdateIdNamespace",
+    "entityresolution:ListTagsForResource",
+    "entityresolution:TagResource",
+    "entityresolution:UntagResource",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IdNamespaceName"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "description": "The date and time when the IdNamespace was created",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 0,
+   "type": "string"
+  },
+  "IdMappingWorkflowProperties": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IdNamespaceIdMappingWorkflowProperties"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
+  },
+  "IdNamespaceArn": {
+   "description": "The arn associated with the IdNamespace",
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):entityresolution:[a-z]{2}-[a-z]{1,10}-[0-9]:[0-9]{12}:(idnamespace/[a-zA-Z_0-9-]{1,255})$",
+   "type": "string"
+  },
+  "IdNamespaceName": {
+   "$ref": "#/definitions/EntityName"
+  },
+  "InputSourceConfig": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IdNamespaceInputSource"
+   },
+   "maxItems": 20,
+   "minItems": 0,
+   "type": "array"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 512,
+   "minLength": 32,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "enum": [
+    "SOURCE",
+    "TARGET"
+   ],
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "description": "The date and time when the IdNamespace was updated",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IdNamespaceArn",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "IdNamespaceName",
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-entity-resolution.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "entityresolution:TagResource",
+   "entityresolution:UntagResource",
+   "entityresolution:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EntityResolution::IdNamespace"
+}

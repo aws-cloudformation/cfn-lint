@@ -1,0 +1,107 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AmazonSideAsn",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "Specifies a tag. For more information, see [Resource tags](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html).",
+   "properties": {
+    "Key": {
+     "description": "The tag key.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The tag value.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Specifies a virtual private gateway. A virtual private gateway is the endpoint on the VPC side of your VPN connection. You can create a virtual private gateway before creating the VPC itself.\n For more information, see [](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html) in the *User Guide*.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateVpnGateway",
+    "ec2:DescribeVpnGateways",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteVpnGateway",
+    "ec2:DescribeVpnGateways"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeVpnGateways"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeVpnGateways"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeVpnGateways",
+    "ec2:CreateTags",
+    "ec2:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VPNGatewayId"
+ ],
+ "properties": {
+  "AmazonSideAsn": {
+   "description": "The private Autonomous System Number (ASN) for the Amazon side of a BGP session.",
+   "format": "int64",
+   "type": "integer"
+  },
+  "Tags": {
+   "description": "Any tags assigned to the virtual private gateway.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Type": {
+   "description": "The type of VPN connection the virtual private gateway supports.",
+   "type": "string"
+  },
+  "VPNGatewayId": {
+   "description": "",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VPNGatewayId"
+ ],
+ "required": [
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "ec2:CreateTags",
+   "ec2:DeleteTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::VPNGateway"
+}

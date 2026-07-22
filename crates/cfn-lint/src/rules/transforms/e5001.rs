@@ -55,7 +55,7 @@ impl CfnLintRule for E5001 {
             }
 
             for policy in &["CreationPolicy", "UpdatePolicy"] {
-                if obj.contains_key(*policy) {
+                if obj.contains_key(policy) {
                     issues.push(ValidationError {
                         rule_id: Some(self.id().to_string()),
                         message: format!("{} is not permitted within Modules", policy),
@@ -99,7 +99,7 @@ impl CfnLintRule for E5001 {
                 v.as_object()
                     .and_then(|o| o.get("Type"))
                     .and_then(|t| t.as_str())
-                    .map_or(false, |t| t.ends_with("::MODULE"))
+                    .is_some_and(|t| t.ends_with("::MODULE"))
             })
             .map(|(n, _)| n)
             .collect();

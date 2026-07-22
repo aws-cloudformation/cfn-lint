@@ -1,0 +1,100 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/CommonControlId"
+  ]
+ ],
+ "additionalProperties": false,
+ "description": "Returns information about a common control in the AWS Control Catalog.",
+ "handlers": {
+  "list": {
+   "permissions": [
+    "controlcatalog:ListCommonControls"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "controlcatalog:ListCommonControls"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) that identifies the common control.",
+   "maxLength": 2048,
+   "minLength": 41,
+   "pattern": "^arn:(aws(?:[-a-z]*)?):controlcatalog:::common-control/[0-9a-z]+$",
+   "type": "string"
+  },
+  "CommonControlId": {
+   "description": "The unique identifier of the common control.",
+   "pattern": "^[0-9a-z]+$",
+   "type": "string"
+  },
+  "CreateTime": {
+   "description": "The time when the common control was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the common control.",
+   "type": "string"
+  },
+  "Domain": {
+   "additionalProperties": false,
+   "description": "The domain that the common control belongs to.",
+   "properties": {
+    "Arn": {
+     "description": "The Amazon Resource Name (ARN) of the related domain.",
+     "type": "string"
+    },
+    "Name": {
+     "description": "The name of the related domain.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LastUpdateTime": {
+   "description": "The time when the common control was most recently updated.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the common control.",
+   "type": "string"
+  },
+  "Objective": {
+   "additionalProperties": false,
+   "description": "The objective that the common control belongs to.",
+   "properties": {
+    "Arn": {
+     "description": "The Amazon Resource Name (ARN) of the related objective.",
+     "type": "string"
+    },
+    "Name": {
+     "description": "The name of the related objective.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CommonControlId",
+  "/properties/Name",
+  "/properties/Description",
+  "/properties/Domain",
+  "/properties/Objective",
+  "/properties/CreateTime",
+  "/properties/LastUpdateTime"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ControlCatalog::CommonControl"
+}

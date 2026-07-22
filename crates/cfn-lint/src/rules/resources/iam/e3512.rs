@@ -4,7 +4,6 @@ use std::sync::{Arc, LazyLock};
 use crate::ast::AstNode;
 use crate::context::Context;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::jsonschema::ValidationError;
 use crate::rules::iam_helpers::validate_policy_doc;
 use crate::rules::Severity;
 use crate::template::Template;

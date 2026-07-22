@@ -1,0 +1,224 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "EntryPoint": {
+   "additionalProperties": false,
+   "description": "The Entry Point associated with the test case",
+   "properties": {
+    "ChatEntryPointParameters": {
+     "additionalProperties": false,
+     "description": "The chat entry point parameters for the test case",
+     "properties": {
+      "FlowId": {
+       "description": "The flow id used for the TestCase",
+       "maxLength": 256,
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Type": {
+     "description": "The type of the Entry Point",
+     "enum": [
+      "VOICE_CALL",
+      "CHAT"
+     ],
+     "type": "string"
+    },
+    "VoiceCallEntryPointParameters": {
+     "additionalProperties": false,
+     "description": "The voice call entry point parameters for the test case",
+     "properties": {
+      "DestinationPhoneNumber": {
+       "description": "The destination phonenumber of the EntryPoint",
+       "pattern": "^\\\\+[1-9]\\\\d{1,14}$",
+       "type": "string"
+      },
+      "FlowId": {
+       "description": "The flow id used for the TestCase",
+       "maxLength": 500,
+       "minLength": 0,
+       "type": "string"
+      },
+      "SourcePhoneNumber": {
+       "description": "The source phonenumber of the EntryPoint",
+       "pattern": "^\\\\+[1-9]\\\\d{1,14}$",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is maximum of 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Timestamp": {
+   "description": "A epoch time stamp field used for test case operations.",
+   "type": "number"
+  }
+ },
+ "description": "Resource Type definition for AWS::Connect::TestCase",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect:CreateTestCase",
+    "connect:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect:DeleteTestCase",
+    "connect:UntagResource"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "InstanceArn": {
+      "$ref": "resource-schema.json#/properties/InstanceArn"
+     }
+    },
+    "required": [
+     "InstanceArn"
+    ]
+   },
+   "permissions": [
+    "connect:ListTestCases"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect:DescribeTestCase"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "connect:UpdateTestCase",
+    "connect:TagResource",
+    "connect:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TestCaseArn"
+ ],
+ "properties": {
+  "Content": {
+   "description": "The content of the test case.",
+   "maxLength": 256000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the test case.",
+   "maxLength": 500,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "EntryPoint": {
+   "$ref": "#/definitions/EntryPoint",
+   "description": "Entry point for Testcase."
+  },
+  "InitializationData": {
+   "description": "The initialization data of the test case.",
+   "maxLength": 256000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InstanceArn": {
+   "description": "The identifier of the Amazon Connect instance.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "LastModifiedRegion": {
+   "description": "Last modified region.",
+   "pattern": "[a-z]{2}(-[a-z]+){1,2}(-[0-9])?",
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "$ref": "#/definitions/Timestamp",
+   "description": "Last modified time."
+  },
+  "Name": {
+   "description": "The name of the test case.",
+   "maxLength": 127,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "Status": {
+   "description": "The status of the test case.",
+   "enum": [
+    "SAVED",
+    "PUBLISHED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "description": "One or more tags.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TestCaseArn": {
+   "description": "The identifier of the test case.",
+   "maxLength": 500,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/test-case/[-a-zA-Z0-9]*$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TestCaseArn",
+  "/properties/LastModifiedRegion",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "InstanceArn",
+  "Name",
+  "Content"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "connect:ListTagsForResource",
+   "connect:UntagResource",
+   "connect:TagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::TestCase"
+}

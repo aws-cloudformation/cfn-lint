@@ -1,0 +1,214 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceArn",
+  "/properties/ApplicationProviderArn"
+ ],
+ "definitions": {
+  "PortalOptionsConfiguration": {
+   "additionalProperties": false,
+   "description": "A structure that describes the options for the access portal associated with an application",
+   "properties": {
+    "SignInOptions": {
+     "$ref": "#/definitions/SignInOptions",
+     "description": "A structure that describes the sign-in options for the access portal"
+    },
+    "Visibility": {
+     "description": "Indicates whether this application is visible in the access portal",
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "SignInOptions": {
+   "additionalProperties": false,
+   "description": "A structure that describes the sign-in options for an application portal",
+   "properties": {
+    "ApplicationUrl": {
+     "description": "The URL that accepts authentication requests for an application, this is a required parameter if the Origin parameter is APPLICATION",
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^http(s)?:\\/\\/[-a-zA-Z0-9+&@#\\/%?=~_|!:,.;]*[-a-zA-Z0-9+&bb@#\\/%?=~_|]$",
+     "type": "string"
+    },
+    "Origin": {
+     "description": "This determines how IAM Identity Center navigates the user to the target application",
+     "enum": [
+      "IDENTITY_CENTER",
+      "APPLICATION"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Origin"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "The metadata that you apply to the Identity Center (SSO) Application to help you categorize and organize them.",
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[\\w+=,.@-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[\\w+=,.@-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for Identity Center (SSO) Application",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sso:CreateApplication",
+    "sso:DescribeApplication",
+    "sso:TagResource",
+    "sso:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sso:DeleteApplication"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "InstanceArn": {
+      "$ref": "resource-schema.json#/properties/InstanceArn"
+     }
+    },
+    "required": [
+     "InstanceArn"
+    ]
+   },
+   "permissions": [
+    "sso:ListApplications",
+    "sso:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sso:DescribeApplication",
+    "sso:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sso:UpdateApplication",
+    "sso:TagResource",
+    "sso:UntagResource",
+    "sso:ListTagsForResource",
+    "sso:DescribeApplication"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationArn"
+ ],
+ "properties": {
+  "ApplicationArn": {
+   "description": "The Application ARN that is returned upon creation of the Identity Center (SSO) Application",
+   "maxLength": 1224,
+   "minLength": 10,
+   "pattern": "^arn:aws(-[a-z]{1,5}){0,3}:sso::\\d{12}:application/(sso)?ins-[a-zA-Z0-9-.]{16}/apl-[a-zA-Z0-9]{16}$",
+   "type": "string"
+  },
+  "ApplicationProviderArn": {
+   "description": "The ARN of the application provider under which the operation will run",
+   "maxLength": 1224,
+   "minLength": 10,
+   "pattern": "^arn:aws(-[a-z]{1,5}){0,3}:sso::aws:applicationProvider/[a-zA-Z0-9-/]+$",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description information for the Identity Center (SSO) Application",
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "IdentityStoreArn": {
+   "description": "The ARN of the identity store associated with the Identity Center instance",
+   "maxLength": 1224,
+   "minLength": 10,
+   "pattern": "^arn:aws(-[a-z]{1,5}){0,3}:identitystore::\\d{12}:identitystore/d-[0-9a-f]{10}$",
+   "type": "string"
+  },
+  "InstanceArn": {
+   "description": "The ARN of the instance of IAM Identity Center under which the operation will run",
+   "maxLength": 1224,
+   "minLength": 10,
+   "pattern": "^arn:aws(-[a-z]{1,5}){0,3}:sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name you want to assign to this Identity Center (SSO) Application",
+   "maxLength": 255,
+   "minLength": 0,
+   "pattern": "^[\\w+=,.@-]+$",
+   "type": "string"
+  },
+  "PortalOptions": {
+   "$ref": "#/definitions/PortalOptionsConfiguration",
+   "description": "A structure that describes the options for the portal associated with an application"
+  },
+  "Status": {
+   "description": "Specifies whether the application is enabled or disabled",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag",
+    "description": "Specifies tags to be attached to the application"
+   },
+   "maxItems": 75,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ApplicationArn",
+  "/properties/IdentityStoreArn"
+ ],
+ "required": [
+  "Name",
+  "InstanceArn",
+  "ApplicationProviderArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sso/aws-sso-application",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "sso:TagResource",
+   "sso:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SSO::Application"
+}

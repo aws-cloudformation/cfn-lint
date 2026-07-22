@@ -1,0 +1,142 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName",
+  "/properties/SecurityPolicy",
+  "/properties/EndpointConfiguration"
+ ],
+ "definitions": {
+  "EndpointConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IpAddressType": {
+     "type": "string"
+    },
+    "Types": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::ApiGateway::DomainNameV2.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST",
+    "apigateway:GET",
+    "apigateway:UpdateDomainNamePolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE",
+    "apigateway:GET",
+    "apigateway:UpdateDomainNamePolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:PUT",
+    "apigateway:PATCH",
+    "apigateway:UpdateDomainNamePolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainNameArn"
+ ],
+ "properties": {
+  "CertificateArn": {
+   "format": "AWS::ACM::Certificate.Arn",
+   "type": "string"
+  },
+  "DomainName": {
+   "type": "string"
+  },
+  "DomainNameArn": {
+   "description": "The amazon resource name (ARN) of the domain name resource.",
+   "type": "string"
+  },
+  "DomainNameId": {
+   "type": "string"
+  },
+  "EndpointAccessMode": {
+   "type": "string"
+  },
+  "EndpointConfiguration": {
+   "$ref": "#/definitions/EndpointConfiguration"
+  },
+  "Policy": {
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "RoutingMode": {
+   "default": "BASE_PATH_MAPPING_ONLY",
+   "description": "The valid routing modes are [BASE_PATH_MAPPING_ONLY], [ROUTING_RULE_THEN_BASE_PATH_MAPPING] and [ROUTING_RULE_ONLY]. All other inputs are invalid.",
+   "enum": [
+    "BASE_PATH_MAPPING_ONLY",
+    "ROUTING_RULE_THEN_BASE_PATH_MAPPING",
+    "ROUTING_RULE_ONLY"
+   ],
+   "type": "string"
+  },
+  "SecurityPolicy": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DomainNameId",
+  "/properties/DomainNameArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "apigateway:PUT",
+   "apigateway:PATCH",
+   "apigateway:DELETE",
+   "apigateway:GET",
+   "apigateway:POST"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ApiGateway::DomainNameV2"
+}

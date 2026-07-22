@@ -1,0 +1,121 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ServiceArn"
+ ],
+ "description": "Creates a service function within a Resilience Hub service.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "resiliencehub:CreateServiceFunction",
+    "resiliencehub:ListServiceFunctions"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "resiliencehub:DeleteServiceFunction"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ServiceArn": {
+      "description": "The service ARN to list service functions for.",
+      "type": "string"
+     }
+    },
+    "required": [
+     "ServiceArn"
+    ]
+   },
+   "permissions": [
+    "resiliencehub:ListServiceFunctions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "resiliencehub:ListServiceFunctions"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "resiliencehub:UpdateServiceFunction",
+    "resiliencehub:ListServiceFunctions"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ServiceArn",
+  "/properties/ServiceFunctionId"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "description": "The timestamp when the service function was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Criticality": {
+   "description": "The criticality of the service function.",
+   "enum": [
+    "PRIMARY",
+    "SUPPLEMENTAL"
+   ],
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the service function.",
+   "maxLength": 500,
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the service function.",
+   "pattern": "^[A-Za-z0-9][A-Za-z0-9_\\-]{1,59}$",
+   "type": "string"
+  },
+  "ResourceCount": {
+   "description": "The number of resources associated with this function.",
+   "type": "integer"
+  },
+  "ServiceArn": {
+   "description": "The ARN of the parent service.",
+   "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9/][A-Za-z0-9:_/+.-]{0,1023}$",
+   "type": "string"
+  },
+  "ServiceFunctionId": {
+   "description": "The server-generated service function ID.",
+   "type": "string"
+  },
+  "Source": {
+   "description": "The source of the service function.",
+   "enum": [
+    "AI_GENERATED",
+    "USER"
+   ],
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "description": "The timestamp when the service function was last updated.",
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ServiceFunctionId",
+  "/properties/ResourceCount",
+  "/properties/Source",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "ServiceArn",
+  "Name",
+  "Criticality"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ResilienceHubV2::ServiceFunction"
+}

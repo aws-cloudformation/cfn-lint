@@ -1,0 +1,894 @@
+{
+ "additionalProperties": false,
+ "allOf": [
+  {
+   "if": {
+    "properties": {
+     "LocalSecondaryIndexes": {
+      "minItems": 1,
+      "type": "array"
+     }
+    },
+    "required": [
+     "LocalSecondaryIndexes"
+    ],
+    "type": "object"
+   },
+   "then": {
+    "properties": {
+     "AttributeDefinitions": {
+      "minItems": 2
+     },
+     "KeySchema": {
+      "minItems": 2
+     }
+    },
+    "type": "object"
+   }
+  }
+ ],
+ "conditionalCreateOnlyProperties": [
+  "/properties/KeySchema"
+ ],
+ "createOnlyProperties": [
+  "/properties/TableName",
+  "/properties/ImportSourceSpecification"
+ ],
+ "definitions": {
+  "AttributeDefinition": {
+   "additionalProperties": false,
+   "description": "Represents an attribute for describing the schema for the table and indexes.",
+   "properties": {
+    "AttributeName": {
+     "description": "A name for the attribute.",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AttributeType": {
+     "description": "The data type for the attribute, where:\n  +  ``S`` - the attribute is of type String\n  +  ``N`` - the attribute is of type Number\n  +  ``B`` - the attribute is of type Binary",
+     "enum": [
+      "B",
+      "N",
+      "S"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "AttributeName",
+    "AttributeType"
+   ],
+   "type": "object"
+  },
+  "ContributorInsightsSpecification": {
+   "additionalProperties": false,
+   "description": "Configures contributor insights settings for a table or one of its indexes.",
+   "properties": {
+    "Enabled": {
+     "description": "Indicates whether CloudWatch Contributor Insights are to be enabled (true) or disabled (false).",
+     "type": "boolean"
+    },
+    "Mode": {
+     "description": "Specifies the CloudWatch Contributor Insights mode for a table. Valid values are ``ACCESSED_AND_THROTTLED_KEYS`` (tracks all access and throttled events) or ``THROTTLED_KEYS`` (tracks only throttled events). This setting determines what type of contributor insights data is collected for the table.",
+     "enum": [
+      "ACCESSED_AND_THROTTLED_KEYS",
+      "THROTTLED_KEYS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "Csv": {
+   "additionalProperties": false,
+   "description": "The options for imported source files in CSV format. The values are Delimiter and HeaderList.",
+   "properties": {
+    "Delimiter": {
+     "description": "The delimiter used for separating items in the CSV file being imported.",
+     "type": "string"
+    },
+    "HeaderList": {
+     "description": "List of the headers used to specify a common header for all source CSV files being imported. If this field is specified then the first line of each CSV file is treated as data instead of the header. If this field is not specified the the first line of each CSV file is treated as the header.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "DeprecatedHashKeyElement": {
+   "additionalProperties": false,
+   "description": "",
+   "properties": {
+    "AttributeName": {
+     "type": "string"
+    },
+    "AttributeType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AttributeType",
+    "AttributeName"
+   ],
+   "type": "object"
+  },
+  "DeprecatedKeySchema": {
+   "additionalProperties": false,
+   "description": "",
+   "properties": {
+    "HashKeyElement": {
+     "$ref": "#/definitions/DeprecatedHashKeyElement"
+    }
+   },
+   "required": [
+    "HashKeyElement"
+   ],
+   "type": "object"
+  },
+  "GlobalSecondaryIndex": {
+   "additionalProperties": false,
+   "description": "Represents the properties of a global secondary index.",
+   "properties": {
+    "ContributorInsightsSpecification": {
+     "$ref": "#/definitions/ContributorInsightsSpecification",
+     "description": "The settings used to specify whether to enable CloudWatch Contributor Insights for the global table and define which events to monitor."
+    },
+    "IndexName": {
+     "description": "The name of the global secondary index. The name must be unique among all other indexes on this table.",
+     "maxLength": 255,
+     "minLength": 3,
+     "pattern": "^[a-zA-Z0-9_.-]+$",
+     "type": "string"
+    },
+    "KeySchema": {
+     "items": {
+      "additionalProperties": false,
+      "properties": {
+       "AttributeName": {
+        "type": "string"
+       },
+       "KeyType": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "KeyType",
+       "AttributeName"
+      ],
+      "type": "object"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true,
+     "uniqueKeys": [
+      "AttributeName"
+     ]
+    },
+    "OnDemandThroughput": {
+     "$ref": "#/definitions/OnDemandThroughput",
+     "description": "The maximum number of read and write units for the specified global secondary index. If you use this parameter, you must specify ``MaxReadRequestUnits``, ``MaxWriteRequestUnits``, or both. You must use either ``OnDemandThroughput`` or ``ProvisionedThroughput`` based on your table's capacity mode."
+    },
+    "Projection": {
+     "$ref": "#/definitions/Projection",
+     "description": "Represents attributes that are copied (projected) from the table into the global secondary index. These are in addition to the primary key attributes and index key attributes, which are automatically projected."
+    },
+    "ProvisionedThroughput": {
+     "$ref": "#/definitions/ProvisionedThroughput",
+     "description": "Represents the provisioned throughput settings for the specified global secondary index. You must use either ``OnDemandThroughput`` or ``ProvisionedThroughput`` based on your table's capacity mode.\n For current minimum and maximum provisioned throughput values, see [Service, Account, and Table Quotas](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html) in the *Amazon DynamoDB Developer Guide*."
+    },
+    "WarmThroughput": {
+     "$ref": "#/definitions/WarmThroughput",
+     "description": "Represents the warm throughput value (in read units per second and write units per second) for the specified secondary index. If you use this parameter, you must specify ``ReadUnitsPerSecond``, ``WriteUnitsPerSecond``, or both."
+    }
+   },
+   "required": [
+    "IndexName",
+    "Projection",
+    "KeySchema"
+   ],
+   "type": "object"
+  },
+  "ImportSourceSpecification": {
+   "additionalProperties": false,
+   "description": "Specifies the properties of data being imported from the S3 bucket source to the table.",
+   "properties": {
+    "InputCompressionType": {
+     "description": "Type of compression to be used on the input coming from the imported table.",
+     "type": "string"
+    },
+    "InputFormat": {
+     "description": "The format of the source data. Valid values for ``ImportFormat`` are ``CSV``, ``DYNAMODB_JSON`` or ``ION``.",
+     "type": "string"
+    },
+    "InputFormatOptions": {
+     "$ref": "#/definitions/InputFormatOptions",
+     "description": "Additional properties that specify how the input is formatted,"
+    },
+    "S3BucketSource": {
+     "$ref": "#/definitions/S3BucketSource",
+     "description": "The S3 bucket that provides the source for the import."
+    }
+   },
+   "required": [
+    "S3BucketSource",
+    "InputFormat"
+   ],
+   "type": "object"
+  },
+  "InputFormatOptions": {
+   "additionalProperties": false,
+   "description": "The format options for the data that was imported into the target table. There is one value, CsvOption.",
+   "properties": {
+    "Csv": {
+     "$ref": "#/definitions/Csv",
+     "description": "The options for imported source files in CSV format. The values are Delimiter and HeaderList."
+    }
+   },
+   "type": "object"
+  },
+  "KeySchema": {
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "AttributeName": {
+      "type": "string"
+     },
+     "KeyType": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "KeyType",
+     "AttributeName"
+    ],
+    "type": "object"
+   },
+   "prefixItems": [
+    {
+     "properties": {
+      "KeyType": {
+       "const": "HASH",
+       "type": "string"
+      }
+     },
+     "required": [
+      "KeyType"
+     ],
+     "type": "object"
+    },
+    {
+     "properties": {
+      "KeyType": {
+       "const": "RANGE",
+       "type": "string"
+      }
+     },
+     "required": [
+      "KeyType"
+     ],
+     "type": "object"
+    }
+   ],
+   "properties": {
+    "AttributeName": {
+     "maxLength": 255,
+     "minLength": 1
+    },
+    "KeyType": {
+     "enum": [
+      "HASH",
+      "RANGE"
+     ]
+    }
+   },
+   "type": "array",
+   "uniqueItems": true,
+   "uniqueKeys": [
+    "AttributeName"
+   ]
+  },
+  "KinesisStreamSpecification": {
+   "additionalProperties": false,
+   "description": "The Kinesis Data Streams configuration for the specified table.",
+   "properties": {
+    "ApproximateCreationDateTimePrecision": {
+     "description": "The precision for the time and date that the stream was created.",
+     "enum": [
+      "MICROSECOND",
+      "MILLISECOND"
+     ],
+     "type": "string"
+    },
+    "StreamArn": {
+     "description": "The ARN for a specific Kinesis data stream.\n Length Constraints: Minimum length of 37. Maximum length of 1024.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "StreamArn"
+   ],
+   "type": "object"
+  },
+  "LocalSecondaryIndex": {
+   "additionalProperties": false,
+   "description": "Represents the properties of a local secondary index. A local secondary index can only be created when its parent table is created.",
+   "properties": {
+    "IndexName": {
+     "description": "The name of the local secondary index. The name must be unique among all other indexes on this table.",
+     "maxLength": 255,
+     "minLength": 3,
+     "pattern": "^[a-zA-Z0-9_.-]+$",
+     "type": "string"
+    },
+    "KeySchema": {
+     "$ref": "#/definitions/KeySchema",
+     "maxItems": 2,
+     "minItems": 2
+    },
+    "Projection": {
+     "$ref": "#/definitions/Projection",
+     "description": "Represents attributes that are copied (projected) from the table into the local secondary index. These are in addition to the primary key attributes and index key attributes, which are automatically projected."
+    }
+   },
+   "required": [
+    "IndexName",
+    "Projection",
+    "KeySchema"
+   ],
+   "type": "object"
+  },
+  "OnDemandThroughput": {
+   "additionalProperties": false,
+   "description": "Sets the maximum number of read and write units for the specified on-demand table. If you use this property, you must specify ``MaxReadRequestUnits``, ``MaxWriteRequestUnits``, or both.",
+   "properties": {
+    "MaxReadRequestUnits": {
+     "description": "Maximum number of read request units for the specified table.\n To specify a maximum ``OnDemandThroughput`` on your table, set the value of ``MaxReadRequestUnits`` as greater than or equal to 1. To remove the maximum ``OnDemandThroughput`` that is currently set on your table, set the value of ``MaxReadRequestUnits`` to -1.",
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MaxWriteRequestUnits": {
+     "description": "Maximum number of write request units for the specified table.\n To specify a maximum ``OnDemandThroughput`` on your table, set the value of ``MaxWriteRequestUnits`` as greater than or equal to 1. To remove the maximum ``OnDemandThroughput`` that is currently set on your table, set the value of ``MaxWriteRequestUnits`` to -1.",
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "PointInTimeRecoverySpecification": {
+   "additionalProperties": false,
+   "dependencies": {
+    "RecoveryPeriodInDays": [
+     "PointInTimeRecoveryEnabled"
+    ]
+   },
+   "description": "The settings used to enable point in time recovery.",
+   "properties": {
+    "PointInTimeRecoveryEnabled": {
+     "description": "Indicates whether point in time recovery is enabled (true) or disabled (false) on the table.",
+     "type": "boolean"
+    },
+    "RecoveryPeriodInDays": {
+     "description": "The number of preceding days for which continuous backups are taken and maintained. Your table data is only recoverable to any point-in-time from within the configured recovery period. This parameter is optional. If no value is provided, the value will default to 35.",
+     "maximum": 35,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Projection": {
+   "additionalProperties": false,
+   "description": "Represents attributes that are copied (projected) from the table into an index. These are in addition to the primary key attributes and index key attributes, which are automatically projected.",
+   "properties": {
+    "NonKeyAttributes": {
+     "description": "Represents the non-key attribute names which will be projected into the index.\n For global and local secondary indexes, the total count of ``NonKeyAttributes`` summed across all of the secondary indexes, must not exceed 100. If you project the same attribute into two different indexes, this counts as two distinct attributes when determining the total. This limit only applies when you specify the ProjectionType of ``INCLUDE``. You still can specify the ProjectionType of ``ALL`` to project all attributes from the source table, even if the table has more than 100 attributes.",
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ProjectionType": {
+     "description": "The set of attributes that are projected into the index:\n  +  ``KEYS_ONLY`` - Only the index and primary keys are projected into the index.\n  +  ``INCLUDE`` - In addition to the attributes described in ``KEYS_ONLY``, the secondary index will include other non-key attributes that you specify.\n  +  ``ALL`` - All of the table attributes are projected into the index.\n  \n When using the DynamoDB console, ``ALL`` is selected by default.",
+     "enum": [
+      "ALL",
+      "INCLUDE",
+      "KEYS_ONLY"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ProvisionedThroughput": {
+   "additionalProperties": false,
+   "description": "Throughput for the specified table, which consists of values for ``ReadCapacityUnits`` and ``WriteCapacityUnits``. For more information about the contents of a provisioned throughput structure, see [Table ProvisionedThroughput](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_ProvisionedThroughput.html).",
+   "properties": {
+    "ReadCapacityUnits": {
+     "description": "The maximum number of strongly consistent reads consumed per second before DynamoDB returns a ``ThrottlingException``. For more information, see [Specifying Read and Write Requirements](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ProvisionedThroughput.html) in the *Amazon DynamoDB Developer Guide*.\n If read/write capacity mode is ``PAY_PER_REQUEST`` the value is set to 0.",
+     "type": "integer"
+    },
+    "WriteCapacityUnits": {
+     "description": "The maximum number of writes consumed per second before DynamoDB returns a ``ThrottlingException``. For more information, see [Specifying Read and Write Requirements](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ProvisionedThroughput.html) in the *Amazon DynamoDB Developer Guide*.\n If read/write capacity mode is ``PAY_PER_REQUEST`` the value is set to 0.",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "WriteCapacityUnits",
+    "ReadCapacityUnits"
+   ],
+   "type": "object"
+  },
+  "ResourcePolicy": {
+   "additionalProperties": false,
+   "description": "Creates or updates a resource-based policy document that contains the permissions for DDB resources, such as a table, its indexes, and stream. Resource-based policies let you define access permissions by specifying who has access to each resource, and the actions they are allowed to perform on each resource.\n In a CFNshort template, you can provide the policy in JSON or YAML format because CFNshort converts YAML to JSON before submitting it to DDB. For more information about resource-based policies, see [Using resource-based policies for](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/access-control-resource-based.html) and [Resource-based policy examples](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/rbac-examples.html).\n While defining resource-based policies in your CFNshort templates, the following considerations apply:\n  +  The maximum size supported for a resource-based policy document in JSON format is 20 KB. DDB counts whitespaces when calculating the size of a policy against this limit. \n  +  Resource-based policies don't support [drift detection](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift.html#). If you update a policy outside of the CFNshort stack template, you'll need to update the CFNshort stack with the changes.\n  +  Resource-based policies don't support out-of-band changes. If you add, update, or delete a policy outside of the CFNshort template, the change won't be overwritten if there are no changes to the policy within the template.\n For example, say that your template contains a resource-based policy, which you later update outside of the template. If you don't make any changes to the policy in the template, the updated policy in DDB won\u2019t be synced with the policy in the template.\n Conversely, say that your template doesn\u2019t contain a resource-based policy, but you add a policy outside of the template. This policy won\u2019t be removed from DDB as long as you don\u2019t add it to the template. When you add a policy to the template and update the stack, the existing policy in DDB will be updated to match the one defined in the template.\n  \n For a full list of all considerations, see [Resource-based policy considerations](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/rbac-considerations.html).",
+   "properties": {
+    "PolicyDocument": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    }
+   },
+   "required": [
+    "PolicyDocument"
+   ],
+   "type": "object"
+  },
+  "S3BucketSource": {
+   "additionalProperties": false,
+   "description": "The S3 bucket that is being imported from.",
+   "properties": {
+    "S3Bucket": {
+     "description": "The S3 bucket that is being imported from.",
+     "format": "AWS::S3::Bucket.Name",
+     "type": "string"
+    },
+    "S3BucketOwner": {
+     "description": "The account number of the S3 bucket that is being imported from. If the bucket is owned by the requester this is optional.",
+     "type": "string"
+    },
+    "S3KeyPrefix": {
+     "description": "The key prefix shared by all S3 Objects that are being imported.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3Bucket"
+   ],
+   "type": "object"
+  },
+  "SSESpecification": {
+   "additionalProperties": false,
+   "dependentRequired": {
+    "KMSMasterKeyId": [
+     "SSEType"
+    ]
+   },
+   "description": "Represents the settings used to enable server-side encryption.",
+   "properties": {
+    "KMSMasterKeyId": {
+     "anyOf": [
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/Arn",
+        "typeName": "AWS::KMS::Key"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/KeyId",
+        "typeName": "AWS::KMS::Key"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/AliasName",
+        "typeName": "AWS::KMS::Alias"
+       }
+      }
+     ],
+     "description": "The KMS key that should be used for the KMS encryption. To specify a key, use its key ID, Amazon Resource Name (ARN), alias name, or alias ARN. Note that you should only provide this parameter if the key is different from the default DynamoDB key ``alias/aws/dynamodb``.",
+     "type": "string"
+    },
+    "SSEEnabled": {
+     "description": "Indicates whether server-side encryption is done using an AWS managed key or an AWS owned key. If enabled (true), server-side encryption type is set to ``KMS`` and an AWS managed key is used (KMS charges apply). If disabled (false) or not specified, server-side encryption is set to AWS owned key.",
+     "type": "boolean"
+    },
+    "SSEType": {
+     "description": "Server-side encryption type. The only supported value is:\n  +  ``KMS`` - Server-side encryption that uses KMSlong. The key is stored in your account and is managed by KMS (KMS charges apply).",
+     "enum": [
+      "KMS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "SSEEnabled"
+   ],
+   "type": "object"
+  },
+  "StreamSpecification": {
+   "additionalProperties": false,
+   "description": "Represents the DynamoDB Streams configuration for a table in DynamoDB.",
+   "properties": {
+    "ResourcePolicy": {
+     "$ref": "#/definitions/ResourcePolicy",
+     "description": "Creates or updates a resource-based policy document that contains the permissions for DDB resources, such as a table's streams. Resource-based policies let you define access permissions by specifying who has access to each resource, and the actions they are allowed to perform on each resource.\n  When you remove the ``StreamSpecification`` property from the template, DynamoDB disables the stream but retains any attached resource policy until the stream is deleted after 24 hours. When you modify the ``StreamViewType`` property, DynamoDB creates a new stream and retains the old stream's resource policy. The old stream and its resource policy are deleted after the 24-hour retention period.\n  In a CFNshort template, you can provide the policy in JSON or YAML format because CFNshort converts YAML to JSON before submitting it to DDB. For more information about resource-based policies, see [Using resource-based policies for](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/access-control-resource-based.html) and [Resource-based policy examples](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/rbac-examples.html)."
+    },
+    "StreamViewType": {
+     "description": "When an item in the table is modified, ``StreamViewType`` determines what information is written to the stream for this table. Valid values for ``StreamViewType`` are:\n  +  ``KEYS_ONLY`` - Only the key attributes of the modified item are written to the stream.\n  +  ``NEW_IMAGE`` - The entire item, as it appears after it was modified, is written to the stream.\n  +  ``OLD_IMAGE`` - The entire item, as it appeared before it was modified, is written to the stream.\n  +  ``NEW_AND_OLD_IMAGES`` - Both the new and the old item images of the item are written to the stream.",
+     "enum": [
+      "KEYS_ONLY",
+      "NEW_AND_OLD_IMAGES",
+      "NEW_IMAGE",
+      "OLD_IMAGE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "StreamViewType"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "Describes a tag. A tag is a key-value pair. You can add up to 50 tags to a single DynamoDB table. \n AWS-assigned tag names and values are automatically assigned the ``aws:`` prefix, which the user cannot assign. AWS-assigned tag names do not count towards the tag limit of 50. User-assigned tag names have the prefix ``user:`` in the Cost Allocation Report. You cannot backdate the application of a tag.\n For an overview on tagging DynamoDB resources, see [Tagging for DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tagging.html) in the *Amazon DynamoDB Developer Guide*.",
+   "properties": {
+    "Key": {
+     "description": "The key of the tag. Tag keys are case sensitive. Each DynamoDB table can only have up to one tag with the same key. If you try to add an existing tag (same key), the existing tag value will be updated to the new value.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value of the tag. Tag values are case-sensitive and can be null.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TimeToLiveSpecification": {
+   "additionalProperties": false,
+   "description": "Represents the settings used to enable or disable Time to Live (TTL) for the specified table.",
+   "properties": {
+    "AttributeName": {
+     "description": "The name of the TTL attribute used to store the expiration time for items in the table.\n   +  The ``AttributeName`` property is required when enabling the TTL, or when TTL is already enabled.\n  +  To update this property, you must first disable TTL and then enable TTL with the new attribute name.",
+     "type": "string"
+    },
+    "Enabled": {
+     "description": "Indicates whether TTL is to be enabled (true) or disabled (false) on the table.",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "WarmThroughput": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "ReadUnitsPerSecond"
+     ]
+    },
+    {
+     "required": [
+      "WriteUnitsPerSecond"
+     ]
+    }
+   ],
+   "description": "Provides visibility into the number of read and write operations your table or secondary index can instantaneously support. The settings can be modified using the ``UpdateTable`` operation to meet the throughput requirements of an upcoming peak event.",
+   "properties": {
+    "ReadUnitsPerSecond": {
+     "description": "Represents the number of read operations your base table can instantaneously support.",
+     "minimum": 1,
+     "type": "integer"
+    },
+    "WriteUnitsPerSecond": {
+     "description": "Represents the number of write operations your base table can instantaneously support.",
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "The ``AWS::DynamoDB::Table`` resource creates a DDB table. For more information, see [CreateTable](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_CreateTable.html) in the *API Reference*.\n You should be aware of the following behaviors when working with DDB tables:\n  +  CFNlong typically creates DDB tables in parallel. However, if your template includes multiple DDB tables with indexes, you must declare dependencies so that the tables are created sequentially. DDBlong limits the number of tables with secondary indexes that are in the creating state. If you create multiple tables with indexes at the same time, DDB returns an error and the stack operation fails. For an example, see [DynamoDB Table with a DependsOn Attribute](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#aws-resource-dynamodb-table--examples--DynamoDB_Table_with_a_DependsOn_Attribute).\n  \n   Our guidance is to use the latest schema documented for your CFNlong templates. This schema supports the provisioning of all table settings below. When using this schema in your CFNlong templates, please ensure that your Identity and Access Management (IAM) policies are updated with appropriate permissions to allow for the authorization of these setting changes.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "dynamodb:CreateTable",
+    "dynamodb:DescribeImport",
+    "dynamodb:DescribeTable",
+    "dynamodb:DescribeTimeToLive",
+    "dynamodb:UpdateTimeToLive",
+    "dynamodb:UpdateContributorInsights",
+    "dynamodb:UpdateContinuousBackups",
+    "dynamodb:DescribeContinuousBackups",
+    "dynamodb:DescribeContributorInsights",
+    "dynamodb:EnableKinesisStreamingDestination",
+    "dynamodb:DisableKinesisStreamingDestination",
+    "dynamodb:DescribeKinesisStreamingDestination",
+    "dynamodb:ImportTable",
+    "dynamodb:ListTagsOfResource",
+    "dynamodb:TagResource",
+    "dynamodb:UpdateTable",
+    "dynamodb:GetResourcePolicy",
+    "dynamodb:PutResourcePolicy",
+    "dynamodb:CreateTableReplica",
+    "dynamodb:Scan",
+    "dynamodb:Query",
+    "dynamodb:UpdateItem",
+    "dynamodb:PutItem",
+    "dynamodb:GetItem",
+    "dynamodb:DeleteItem",
+    "dynamodb:BatchWriteItem",
+    "dynamodb:AssociateTableReplica",
+    "kinesis:DescribeStream",
+    "kinesis:PutRecords",
+    "iam:CreateServiceLinkedRole",
+    "kms:CreateGrant",
+    "kms:Decrypt",
+    "kms:DescribeKey",
+    "kms:ListAliases",
+    "kms:Encrypt",
+    "kms:RevokeGrant",
+    "logs:CreateLogGroup",
+    "logs:CreateLogStream",
+    "logs:DescribeLogGroups",
+    "logs:DescribeLogStreams",
+    "logs:PutLogEvents",
+    "logs:PutRetentionPolicy",
+    "s3:GetObject",
+    "s3:GetObjectMetadata",
+    "s3:ListBucket"
+   ],
+   "timeoutInMinutes": 720
+  },
+  "delete": {
+   "permissions": [
+    "dynamodb:DeleteTable",
+    "dynamodb:DescribeTable"
+   ],
+   "timeoutInMinutes": 720
+  },
+  "list": {
+   "permissions": [
+    "dynamodb:ListTables"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "dynamodb:DescribeTable",
+    "dynamodb:DescribeContinuousBackups",
+    "dynamodb:DescribeContributorInsights",
+    "dynamodb:DescribeKinesisStreamingDestination",
+    "dynamodb:ListTagsOfResource",
+    "dynamodb:GetResourcePolicy",
+    "dynamodb:DescribeTimeToLive"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "dynamodb:UpdateTable",
+    "dynamodb:DescribeTable",
+    "dynamodb:DescribeTimeToLive",
+    "dynamodb:UpdateTimeToLive",
+    "dynamodb:UpdateContinuousBackups",
+    "dynamodb:UpdateContributorInsights",
+    "dynamodb:UpdateKinesisStreamingDestination",
+    "dynamodb:DescribeContinuousBackups",
+    "dynamodb:DescribeKinesisStreamingDestination",
+    "dynamodb:ListTagsOfResource",
+    "dynamodb:TagResource",
+    "dynamodb:UntagResource",
+    "dynamodb:DescribeContributorInsights",
+    "dynamodb:EnableKinesisStreamingDestination",
+    "dynamodb:DisableKinesisStreamingDestination",
+    "dynamodb:GetResourcePolicy",
+    "dynamodb:PutResourcePolicy",
+    "dynamodb:DeleteResourcePolicy",
+    "dynamodb:CreateTable",
+    "dynamodb:CreateTableReplica",
+    "dynamodb:Scan",
+    "dynamodb:Query",
+    "dynamodb:UpdateItem",
+    "dynamodb:PutItem",
+    "dynamodb:GetItem",
+    "dynamodb:DeleteItem",
+    "dynamodb:BatchWriteItem",
+    "dynamodb:AssociateTableReplica",
+    "kinesis:DescribeStream",
+    "kinesis:PutRecords",
+    "iam:CreateServiceLinkedRole",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "kms:ListAliases",
+    "kms:RevokeGrant"
+   ],
+   "timeoutInMinutes": 720
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TableName"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "",
+   "type": "string"
+  },
+  "AttributeDefinitions": {
+   "description": "A list of attributes that describe the key schema for the table and indexes.\n This property is required to create a DDB table.\n Update requires: [Some interruptions](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-some-interrupt). Replacement if you edit an existing AttributeDefinition.",
+   "items": {
+    "$ref": "#/definitions/AttributeDefinition"
+   },
+   "type": "array",
+   "uniqueItems": true,
+   "uniqueKeys": [
+    "AttributeName"
+   ]
+  },
+  "BillingMode": {
+   "description": "Specify how you are charged for read and write throughput and how you manage capacity.\n Valid values include:\n  +  ``PAY_PER_REQUEST`` - We recommend using ``PAY_PER_REQUEST`` for most DynamoDB workloads. ``PAY_PER_REQUEST`` sets the billing mode to [On-demand capacity mode](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/on-demand-capacity-mode.html). \n  +  ``PROVISIONED`` - We recommend using ``PROVISIONED`` for steady workloads with predictable growth where capacity requirements can be reliably forecasted. ``PROVISIONED`` sets the billing mode to [Provisioned capacity mode](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/provisioned-capacity-mode.html).\n  \n If not specified, the default is ``PROVISIONED``.",
+   "enum": [
+    "PAY_PER_REQUEST",
+    "PROVISIONED"
+   ],
+   "type": "string"
+  },
+  "ContributorInsightsSpecification": {
+   "$ref": "#/definitions/ContributorInsightsSpecification",
+   "description": "The settings used to specify whether to enable CloudWatch Contributor Insights for the table and define which events to monitor."
+  },
+  "DeletionProtectionEnabled": {
+   "description": "Determines if a table is protected from deletion. When enabled, the table cannot be deleted by any user or process. This setting is disabled by default. For more information, see [Using deletion protection](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/WorkingWithTables.Basics.html#WorkingWithTables.Basics.DeletionProtection) in the *Developer Guide*.",
+   "type": "boolean"
+  },
+  "GlobalSecondaryIndexes": {
+   "description": "Global secondary indexes to be created on the table. You can create up to 20 global secondary indexes.\n  If you update a table to include a new global secondary index, CFNlong initiates the index creation and then proceeds with the stack update. CFNlong doesn't wait for the index to complete creation because the backfilling phase can take a long time, depending on the size of the table. You can't use the index or update the table until the index's status is ``ACTIVE``. You can track its status by using the DynamoDB [DescribeTable](https://docs.aws.amazon.com/cli/latest/reference/dynamodb/describe-table.html) command.\n If you add or delete an index during an update, we recommend that you don't update any other resources. If your stack fails to update and is rolled back while adding a new index, you must manually delete the index. \n Updates are not supported. The following are exceptions:\n  +  If you update either the contributor insights specification or the provisioned throughput values of global secondary indexes, you can update the table without interruption.\n  +  You can delete or add one global secondary index without interruption. If you do both in the same update (for example, by changing the index's logical ID), the update fails.",
+   "items": {
+    "$ref": "#/definitions/GlobalSecondaryIndex"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ImportSourceSpecification": {
+   "$ref": "#/definitions/ImportSourceSpecification",
+   "description": "Specifies the properties of data being imported from the S3 bucket source to the\" table.\n  If you specify the ``ImportSourceSpecification`` property, and also specify either the ``StreamSpecification``, the ``TableClass`` property, the ``DeletionProtectionEnabled`` property, or the ``WarmThroughput`` property, the IAM entity creating/updating stack must have ``UpdateTable`` permission."
+  },
+  "KeySchema": {
+   "description": "Specifies the attributes that make up the primary key for the table. The attributes in the ``KeySchema`` property must also be defined in the ``AttributeDefinitions`` property.",
+   "minItems": 1,
+   "oneOf": [
+    {
+     "$ref": "#/definitions/KeySchema",
+     "maxItems": 2,
+     "minItems": 1
+    },
+    {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    }
+   ]
+  },
+  "KinesisStreamSpecification": {
+   "$ref": "#/definitions/KinesisStreamSpecification",
+   "description": "The Kinesis Data Streams configuration for the specified table."
+  },
+  "LocalSecondaryIndexes": {
+   "description": "Local secondary indexes to be created on the table. You can create up to 5 local secondary indexes. Each index is scoped to a given hash key value. The size of each hash key can be up to 10 gigabytes.",
+   "items": {
+    "$ref": "#/definitions/LocalSecondaryIndex"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "OnDemandThroughput": {
+   "$ref": "#/definitions/OnDemandThroughput",
+   "description": "Sets the maximum number of read and write units for the specified on-demand table. If you use this property, you must specify ``MaxReadRequestUnits``, ``MaxWriteRequestUnits``, or both."
+  },
+  "PointInTimeRecoverySpecification": {
+   "$ref": "#/definitions/PointInTimeRecoverySpecification",
+   "description": "The settings used to enable point in time recovery."
+  },
+  "ProvisionedThroughput": {
+   "$ref": "#/definitions/ProvisionedThroughput",
+   "description": "Throughput for the specified table, which consists of values for ``ReadCapacityUnits`` and ``WriteCapacityUnits``. For more information about the contents of a provisioned throughput structure, see [Amazon DynamoDB Table ProvisionedThroughput](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_ProvisionedThroughput.html). \n If you set ``BillingMode`` as ``PROVISIONED``, you must specify this property. If you set ``BillingMode`` as ``PAY_PER_REQUEST``, you cannot specify this property."
+  },
+  "ResourcePolicy": {
+   "$ref": "#/definitions/ResourcePolicy",
+   "description": "An AWS resource-based policy document in JSON format that will be attached to the table.\n When you attach a resource-based policy while creating a table, the policy application is *strongly consistent*.\n The maximum size supported for a resource-based policy document is 20 KB. DynamoDB counts whitespaces when calculating the size of a policy against this limit. For a full list of all considerations that apply for resource-based policies, see [Resource-based policy considerations](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/rbac-considerations.html).\n  You need to specify the ``CreateTable`` and ``PutResourcePolicy`` IAM actions for authorizing a user to create a table with a resource-based policy."
+  },
+  "SSESpecification": {
+   "$ref": "#/definitions/SSESpecification",
+   "description": "Specifies the settings to enable server-side encryption."
+  },
+  "StreamArn": {
+   "description": "",
+   "type": "string"
+  },
+  "StreamSpecification": {
+   "$ref": "#/definitions/StreamSpecification",
+   "description": "The settings for the DDB table stream, which captures changes to items stored in the table. Including this property in your CFNlong template automatically enables streaming."
+  },
+  "TableClass": {
+   "description": "The table class of the new table. Valid values are ``STANDARD`` and ``STANDARD_INFREQUENT_ACCESS``.",
+   "enum": [
+    "STANDARD",
+    "STANDARD_INFREQUENT_ACCESS"
+   ],
+   "type": "string"
+  },
+  "TableName": {
+   "description": "A name for the table. If you don't specify a name, CFNlong generates a unique physical ID and uses that ID for the table name. For more information, see [Name Type](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-name.html).\n  If you specify a name, you cannot perform updates that require replacement of this resource. You can perform updates that require no or some interruption. If you must replace the resource, specify a new name.",
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.\n For more information, see [Tag](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html).",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TimeToLiveSpecification": {
+   "$ref": "#/definitions/TimeToLiveSpecification",
+   "description": "Specifies the Time to Live (TTL) settings for the table.\n  For detailed information about the limits in DynamoDB, see [Limits in Amazon DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html) in the Amazon DynamoDB Developer Guide."
+  },
+  "WarmThroughput": {
+   "$ref": "#/definitions/WarmThroughput",
+   "description": "Represents the warm throughput (in read units per second and write units per second) for creating a table."
+  }
+ },
+ "propertyTransform": {
+  "/properties/SSESpecification/KMSMasterKeyId": "$join([\"arn:aws(-[a-z]{1,4}){0,2}:kms:[a-z]{2,4}(-[a-z]{1,4})?-[a-z]{1,10}-[0-9]:[0-9]{12}:key\\/\", SSESpecification.KMSMasterKeyId]) $OR $join([\"arn:aws(-[a-z]{1,4}){0,2}:kms:[a-z]{2,4}(-[a-z]{1,4})?-[a-z]{1,10}-[0-9]:[0-9]{12}:key\\/\", KMSMasterKeyId])"
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/StreamArn"
+ ],
+ "required": [
+  "KeySchema"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "dynamodb:TagResource",
+   "dynamodb:UntagResource",
+   "dynamodb:ListTagsOfResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DynamoDB::Table",
+ "writeOnlyProperties": [
+  "/properties/ImportSourceSpecification"
+ ]
+}

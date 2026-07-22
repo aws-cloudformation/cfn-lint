@@ -1,0 +1,147 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PolicyName",
+  "/properties/PolicyType"
+ ],
+ "description": "The AWS::Logs::AccountPolicy resource specifies a CloudWatch Logs AccountPolicy.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "logs:PutAccountPolicy",
+    "logs:PutIndexPolicy",
+    "logs:PutDataProtectionPolicy",
+    "logs:DescribeAccountPolicies",
+    "logs:CreateLogDelivery",
+    "s3:REST.PUT.OBJECT",
+    "firehose:TagDeliveryStream",
+    "logs:PutSubscriptionFilter",
+    "logs:DeleteSubscriptionFilter",
+    "logs:PutTransformer",
+    "logs:PutMetricExtractionPolicy",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "logs:DeleteAccountPolicy",
+    "logs:DeleteIndexPolicy",
+    "logs:DeleteDataProtectionPolicy",
+    "logs:DescribeAccountPolicies",
+    "logs:DeleteSubscriptionFilter",
+    "logs:DeleteTransformer",
+    "logs:DeleteMetricExtractionPolicy",
+    "iam:PassRole"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "PolicyType": {
+      "$ref": "resource-schema.json#/properties/PolicyType"
+     }
+    },
+    "required": [
+     "PolicyType"
+    ]
+   },
+   "permissions": [
+    "logs:DescribeAccountPolicies",
+    "logs:GetTransformer",
+    "logs:GetMetricExtractionPolicy"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "logs:DescribeAccountPolicies",
+    "logs:GetTransformer",
+    "logs:GetMetricExtractionPolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "logs:PutAccountPolicy",
+    "logs:PutIndexPolicy",
+    "logs:PutDataProtectionPolicy",
+    "logs:DescribeAccountPolicies",
+    "logs:DeleteAccountPolicy",
+    "logs:DeleteIndexPolicy",
+    "logs:DeleteDataProtectionPolicy",
+    "logs:CreateLogDelivery",
+    "logs:PutSubscriptionFilter",
+    "logs:DeleteSubscriptionFilter",
+    "logs:PutTransformer",
+    "logs:DeleteTransformer",
+    "logs:PutMetricExtractionPolicy",
+    "logs:DeleteMetricExtractionPolicy",
+    "s3:REST.PUT.OBJECT",
+    "firehose:TagDeliveryStream",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccountId",
+  "/properties/PolicyType",
+  "/properties/PolicyName"
+ ],
+ "properties": {
+  "AccountId": {
+   "description": "User account id",
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "PolicyDocument": {
+   "description": "The body of the policy document you want to use for this topic.\n\nYou can only add one policy per PolicyType.\n\nThe policy must be in JSON string format.\n\nLength Constraints: Maximum length of 30720",
+   "maxLength": 30720,
+   "minLength": 1,
+   "type": "string"
+  },
+  "PolicyName": {
+   "description": "The name of the account policy",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[^:*]{1,256}$",
+   "type": "string"
+  },
+  "PolicyType": {
+   "description": "Type of the policy.",
+   "enum": [
+    "DATA_PROTECTION_POLICY",
+    "SUBSCRIPTION_FILTER_POLICY",
+    "FIELD_INDEX_POLICY",
+    "TRANSFORMER_POLICY",
+    "METRIC_EXTRACTION_POLICY"
+   ],
+   "type": "string"
+  },
+  "Scope": {
+   "description": "Scope for policy application",
+   "enum": [
+    "ALL"
+   ],
+   "type": "string"
+  },
+  "SelectionCriteria": {
+   "description": "Log group  selection criteria to apply policy only to a subset of log groups. SelectionCriteria string can be up to 25KB and cloudwatchlogs determines the length of selectionCriteria by using its UTF-8 bytes",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccountId"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "PolicyName",
+  "PolicyType",
+  "PolicyDocument"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Logs::AccountPolicy"
+}

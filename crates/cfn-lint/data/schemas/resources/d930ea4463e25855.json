@@ -1,0 +1,75 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PolicyName",
+  "/properties/RoleName"
+ ],
+ "description": "Adds or updates an inline policy document that is embedded in the specified IAM role.\n When you embed an inline policy in a role, the inline policy is used as part of the role's access (permissions) policy. The role's trust policy is created at the same time as the role, using [CreateRole](https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateRole.html). You can update a role's trust policy using [UpdateAssumeRolePolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_UpdateAssumeRolePolicy.html). For information about roles, see [roles](https://docs.aws.amazon.com/IAM/latest/UserGuide/roles-toplevel.html) in the *IAM User Guide*.\n A role can also have a managed policy attached to it. To attach a managed policy to a role, use [AWS::IAM::Role](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html). To create a new managed policy, use [AWS::IAM::ManagedPolicy](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-managedpolicy.html). For information about policies, see [Managed policies and inline policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html) in the *IAM User Guide*.\n For information about the maximum number of inline policies that you can embed with a role, see [IAM and quotas](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_iam-quotas.html) in the *IAM User Guide*.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PutRolePolicy",
+    "iam:GetRolePolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iam:DeleteRolePolicy",
+    "iam:GetRolePolicy"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iam:GetRolePolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PutRolePolicy",
+    "iam:GetRolePolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PolicyName",
+  "/properties/RoleName"
+ ],
+ "properties": {
+  "PolicyDocument": {
+   "format": "json",
+   "maxLength": 131072,
+   "minLength": 1,
+   "pattern": "^[\\u0009\\u000A\\u000D\\u0020-\\u00FF]+$",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "PolicyName": {
+   "description": "The name of the policy document.\n This parameter allows (through its [regex pattern](https://docs.aws.amazon.com/http://wikipedia.org/wiki/regex)) a string of characters consisting of upper and lowercase alphanumeric characters with no spaces. You can also include any of the following characters: _+=,.@-",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[\\w+=,.@-]+$",
+   "type": "string"
+  },
+  "RoleName": {
+   "description": "The name of the role to associate the policy with.\n This parameter allows (through its [regex pattern](https://docs.aws.amazon.com/http://wikipedia.org/wiki/regex)) a string of characters consisting of upper and lowercase alphanumeric characters with no spaces. You can also include any of the following characters: _+=,.@-",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[\\w+=,.@-]+$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "PolicyName",
+  "RoleName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iam.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::IAM::RolePolicy"
+}

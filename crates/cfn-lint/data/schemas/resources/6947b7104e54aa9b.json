@@ -1,0 +1,257 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainId"
+ ],
+ "definitions": {
+  "BasicLayout": {
+   "additionalProperties": false,
+   "description": "Defines the field layout for the agent's case interface. Configures which fields appear in the top panel (immediately visible) and More Info tab (expandable section) of the case view, allowing customization of the agent experience.",
+   "properties": {
+    "MoreInfo": {
+     "$ref": "#/definitions/LayoutSections"
+    },
+    "TopPanel": {
+     "$ref": "#/definitions/LayoutSections"
+    }
+   },
+   "type": "object"
+  },
+  "FieldGroup": {
+   "additionalProperties": false,
+   "description": "Consists of a group of fields and associated properties.",
+   "properties": {
+    "Fields": {
+     "description": "An ordered list of fields to display in this group. The order determines the sequence in which fields appear in the agent interface. Each field is referenced by its unique field ID.",
+     "items": {
+      "$ref": "#/definitions/FieldItem"
+     },
+     "maxItems": 220,
+     "type": "array"
+    },
+    "Name": {
+     "description": "A descriptive name for the field group. Helps organize related fields together in the layout interface.",
+     "maxLength": 100,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Fields"
+   ],
+   "type": "object"
+  },
+  "FieldItem": {
+   "additionalProperties": false,
+   "description": "Field specific properties.",
+   "properties": {
+    "Id": {
+     "description": "The unique identifier of a field.",
+     "maxLength": 500,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "LayoutContent": {
+   "description": "Defines the layout structure and field organization for the case interface. Specifies which fields appear in the top panel and More Info tab, and their display order.",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Basic": {
+       "$ref": "#/definitions/BasicLayout"
+      }
+     },
+     "required": [
+      "Basic"
+     ],
+     "title": "Basic",
+     "type": "object"
+    }
+   ]
+  },
+  "LayoutSections": {
+   "additionalProperties": false,
+   "description": "Sections within a panel or tab of the page layout.",
+   "properties": {
+    "Sections": {
+     "description": "Defines the sections within a panel or tab. Contains field groups that organize related fields together.",
+     "items": {
+      "$ref": "#/definitions/Section"
+     },
+     "maxItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Section": {
+   "description": "A section can be a grouped list of fields.",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "FieldGroup": {
+       "$ref": "#/definitions/FieldGroup"
+      }
+     },
+     "required": [
+      "FieldGroup"
+     ],
+     "title": "FieldGroup",
+     "type": "object"
+    }
+   ]
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "description": "The tags that you attach to this layout.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "description": "A layout in the Cases domain. Layouts define the following configuration in the top section and More Info tab of the Cases user interface: Fields to display to the users and Field ordering.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cases:CreateLayout",
+    "cases:GetLayout",
+    "cases:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cases:DeleteLayout",
+    "cases:UntagResource"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "DomainId": {
+      "$ref": "resource-schema.json#/properties/DomainId"
+     }
+    },
+    "required": [
+     "DomainId"
+    ]
+   },
+   "permissions": [
+    "cases:ListLayouts"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cases:GetLayout"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cases:UpdateLayout",
+    "cases:TagResource",
+    "cases:UntagResource",
+    "cases:GetLayout"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LayoutArn"
+ ],
+ "properties": {
+  "Content": {
+   "$ref": "#/definitions/LayoutContent"
+  },
+  "CreatedTime": {
+   "description": "The time at which the layout was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "DomainId": {
+   "description": "The unique identifier of the Cases domain.",
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "description": "The time at which the layout was created or last modified.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "LayoutArn": {
+   "description": "The Amazon Resource Name (ARN) of the layout.",
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LayoutId": {
+   "description": "The unique identifier of the layout.",
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "description": "A descriptive name for the layout. Must be unique within the Cases domain and should clearly indicate the layout's purpose and field organization.",
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^.*[\\S]$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedTime",
+  "/properties/LastModifiedTime",
+  "/properties/LayoutArn",
+  "/properties/LayoutId"
+ ],
+ "required": [
+  "Content",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "cases:GetLayout",
+   "cases:TagResource",
+   "cases:UntagResource"
+  ],
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Cases::Layout"
+}

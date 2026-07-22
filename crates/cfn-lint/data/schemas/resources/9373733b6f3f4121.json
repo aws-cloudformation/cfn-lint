@@ -1,0 +1,206 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "CaCertificatesBundleS3Location": {
+   "additionalProperties": false,
+   "description": "The CA certificates bundle location in Amazon S3.",
+   "properties": {
+    "Bucket": {
+     "description": "The S3 bucket.",
+     "type": "string"
+    },
+    "Key": {
+     "description": "The location's key.",
+     "type": "string"
+    },
+    "Region": {
+     "description": "The location's Region.",
+     "type": "string"
+    },
+    "Version": {
+     "description": "The location's version.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key",
+    "Region"
+   ],
+   "type": "object"
+  },
+  "CaCertificatesBundleSource": {
+   "additionalProperties": false,
+   "description": "A CA certificates bundle source.",
+   "properties": {
+    "CaCertificatesBundleS3Location": {
+     "$ref": "#/definitions/CaCertificatesBundleS3Location",
+     "description": "The CA certificates bundle location in Amazon S3."
+    }
+   },
+   "required": [
+    "CaCertificatesBundleS3Location"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A complex type that contains ``Tag`` key and ``Tag`` value.",
+   "properties": {
+    "Key": {
+     "description": "A string that contains ``Tag`` key.\n The string length should be between 1 and 128 characters. Valid characters include ``a-z``, ``A-Z``, ``0-9``, space, and the special characters ``_ - . : / = + @``.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "A string that contains an optional ``Tag`` value.\n The string length should be between 0 and 256 characters. Valid characters include ``a-z``, ``A-Z``, ``0-9``, space, and the special characters ``_ - . : / = + @``.",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "A trust store.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cloudfront:CreateTrustStore",
+    "cloudfront:GetTrustStore",
+    "cloudfront:TagResource",
+    "cloudfront:ListTagsForResource",
+    "s3:GetObjectVersion",
+    "s3:GetObject",
+    "s3:ListBucket"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cloudfront:DeleteTrustStore",
+    "cloudfront:GetTrustStore"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cloudfront:ListTrustStores",
+    "cloudfront:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cloudfront:GetTrustStore",
+    "cloudfront:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cloudfront:GetTrustStore",
+    "cloudfront:UpdateTrustStore",
+    "cloudfront:TagResource",
+    "cloudfront:UntagResource",
+    "cloudfront:ListTagsForResource",
+    "s3:GetObjectVersion",
+    "s3:GetObject",
+    "s3:ListBucket"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "",
+   "pattern": "^arn:aws:cloudfront::[0-9]{12}:trust-store/[A-Za-z0-9_]+$",
+   "type": "string"
+  },
+  "CaCertificatesBundleSource": {
+   "$ref": "#/definitions/CaCertificatesBundleSource",
+   "description": "A CA certificates bundle source."
+  },
+  "ETag": {
+   "description": "",
+   "type": "string"
+  },
+  "Id": {
+   "description": "",
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "description": "",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The trust store's name.",
+   "type": "string"
+  },
+  "NumberOfCaCertificates": {
+   "description": "",
+   "type": "integer"
+  },
+  "Status": {
+   "description": "",
+   "enum": [
+    "PENDING",
+    "ACTIVE",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A complex type that contains zero or more ``Tag`` elements.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "UseClientCertificateOCSPEndpoint": {
+   "description": "A boolean. When true, performs real-time certificate revocation checks by querying the OCSP endpoint specified within the client certificate.",
+   "type": "boolean"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/Status",
+  "/properties/ETag",
+  "/properties/LastModifiedTime",
+  "/properties/NumberOfCaCertificates"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "cloudfront:TagResource",
+   "cloudfront:UntagResource",
+   "cloudfront:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudFront::TrustStore",
+ "writeOnlyProperties": [
+  "/properties/CaCertificatesBundleSource"
+ ]
+}

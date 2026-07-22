@@ -96,7 +96,7 @@ impl CfnLintRule for E3703 {
                                 span: action
                                     .get("Configuration")
                                     .and_then(|c| c.get("TemplatePath"))
-                                    .map(|n| n.span().clone())
+                                    .map(|n| n.span())
                                     .unwrap_or_default(),
                                 keyword: String::new(),
                                 unknown: false,
@@ -126,7 +126,7 @@ impl CfnLintRule for E3703 {
                                 span: action
                                     .get("Configuration")
                                     .and_then(|c| c.get("RoleArn"))
-                                    .map(|n| n.span().clone())
+                                    .map(|n| n.span())
                                     .unwrap_or_default(),
                                 keyword: String::new(),
                                 unknown: false,

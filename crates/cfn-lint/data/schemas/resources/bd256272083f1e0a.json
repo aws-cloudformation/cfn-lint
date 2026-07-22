@@ -1,0 +1,61 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/WorkspaceArn"
+ ],
+ "description": "Resource Type definition for AWS::APS::ResourcePolicy",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "aps:PutResourcePolicy",
+    "aps:DescribeResourcePolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "aps:DeleteResourcePolicy",
+    "aps:DescribeResourcePolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "aps:DescribeResourcePolicy",
+    "aps:ListWorkspaces"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "aps:DescribeResourcePolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "aps:PutResourcePolicy",
+    "aps:DescribeResourcePolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WorkspaceArn"
+ ],
+ "properties": {
+  "PolicyDocument": {
+   "description": "The JSON to use as the Resource-based Policy.",
+   "type": "string"
+  },
+  "WorkspaceArn": {
+   "description": "The Arn of an APS Workspace that the PolicyDocument will be attached to.",
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):aps:[a-z0-9-]+:[0-9]+:workspace/[a-zA-Z0-9-]+$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "WorkspaceArn",
+  "PolicyDocument"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-aps",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::APS::ResourcePolicy"
+}

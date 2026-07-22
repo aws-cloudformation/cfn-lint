@@ -58,7 +58,6 @@ impl CfnLintRule for W3045 {
 }
 
 #[cfg(test)]
-
 mod tests {
     use super::*;
     use crate::parser;

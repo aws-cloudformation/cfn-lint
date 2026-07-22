@@ -1,0 +1,188 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TransitGatewayAttachmentId",
+  "/properties/ConnectPeerConfiguration",
+  "/properties/ConnectPeerConfiguration/PeerAddress",
+  "/properties/ConnectPeerConfiguration/InsideCidrBlocks",
+  "/properties/ConnectPeerConfiguration/TransitGatewayAddress",
+  "/properties/ConnectPeerConfiguration/BgpConfigurations/*/PeerAsn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The key of the tag. Constraints: Tag keys are case-sensitive and accept a maximum of 127 Unicode characters. May not begin with aws: .",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value of the tag. Constraints: Tag values are case-sensitive and accept a maximum of 256 Unicode characters.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TransitGatewayAttachmentBgpConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BgpStatus": {
+     "description": "The BGP status.",
+     "type": "string"
+    },
+    "PeerAddress": {
+     "description": "The interior BGP peer IP address for the appliance.",
+     "type": "string"
+    },
+    "PeerAsn": {
+     "description": "The peer Autonomous System Number (ASN).",
+     "type": "number"
+    },
+    "TransitGatewayAddress": {
+     "description": "The interior BGP peer IP address for the transit gateway.",
+     "type": "string"
+    },
+    "TransitGatewayAsn": {
+     "description": "The transit gateway Autonomous System Number (ASN).",
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "TransitGatewayConnectPeerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BgpConfigurations": {
+     "description": "The BGP configuration details.",
+     "items": {
+      "$ref": "#/definitions/TransitGatewayAttachmentBgpConfiguration"
+     },
+     "type": "array"
+    },
+    "InsideCidrBlocks": {
+     "description": "The range of interior BGP peer IP addresses.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "PeerAddress": {
+     "description": "The peer IP address (GRE outer IP address) on the appliance side of the Connect peer.",
+     "type": "string"
+    },
+    "Protocol": {
+     "description": "The tunnel protocol.",
+     "type": "string"
+    },
+    "TransitGatewayAddress": {
+     "description": "The Connect peer IP address on the transit gateway side of the tunnel.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "PeerAddress",
+    "InsideCidrBlocks"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::EC2::TransitGatewayConnectPeer",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateTransitGatewayConnectPeer",
+    "ec2:DescribeTransitGatewayConnectPeers",
+    "ec2:CreateTags",
+    "ec2:DescribeTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteTransitGatewayConnectPeer",
+    "ec2:DescribeTransitGatewayConnectPeers",
+    "ec2:DeleteTags",
+    "ec2:DescribeTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayConnectPeers",
+    "ec2:DescribeTags"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayConnectPeers",
+    "ec2:DescribeTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayConnectPeers",
+    "ec2:DeleteTags",
+    "ec2:CreateTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TransitGatewayConnectPeerId"
+ ],
+ "properties": {
+  "ConnectPeerConfiguration": {
+   "$ref": "#/definitions/TransitGatewayConnectPeerConfiguration",
+   "description": "The Connect peer details."
+  },
+  "CreationTime": {
+   "description": "The creation time.",
+   "type": "string"
+  },
+  "State": {
+   "description": "The state of the Connect peer.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "The tags for the Connect Peer.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "TransitGatewayAttachmentId": {
+   "description": "The ID of the Connect attachment.",
+   "type": "string"
+  },
+  "TransitGatewayConnectPeerId": {
+   "description": "The ID of the Connect peer.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TransitGatewayConnectPeerId",
+  "/properties/ConnectPeerConfiguration/Protocol",
+  "/properties/ConnectPeerConfiguration/BgpConfigurations",
+  "/properties/ConnectPeerConfiguration/BgpConfigurations/*/TransitGatewayAddress",
+  "/properties/ConnectPeerConfiguration/BgpConfigurations/*/BgpStatus",
+  "/properties/ConnectPeerConfiguration/BgpConfigurations/*/PeerAddress",
+  "/properties/ConnectPeerConfiguration/BgpConfigurations/*/TransitGatewayAsn",
+  "/properties/State",
+  "/properties/CreationTime"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "TransitGatewayAttachmentId",
+  "ConnectPeerConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-myservice",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "ec2:CreateTags",
+   "ec2:DeleteTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::TransitGatewayConnectPeer"
+}

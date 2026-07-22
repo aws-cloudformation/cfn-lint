@@ -1,0 +1,277 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/BundleId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BundleName"
+ ],
+ "definitions": {
+  "ComponentConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration for a component within a configuration bundle.",
+   "properties": {
+    "Configuration": {
+     "description": "The configuration values as a flexible JSON document.",
+     "type": "object"
+    }
+   },
+   "required": [
+    "Configuration"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A tag consisting of a key-value pair.",
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VersionCreatedBySource": {
+   "additionalProperties": false,
+   "description": "The source that created a configuration bundle version.",
+   "properties": {
+    "Arn": {
+     "description": "The Amazon Resource Name (ARN) of the source, if applicable.",
+     "type": "string"
+    },
+    "Name": {
+     "description": "The name of the source (for example, user, optimization-job, or system).",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "VersionLineageMetadata": {
+   "additionalProperties": false,
+   "description": "The version lineage metadata that tracks parent versions and creation source.",
+   "properties": {
+    "BranchName": {
+     "description": "The branch name for this version.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z][a-zA-Z0-9_/-]{0,127}$",
+     "type": "string"
+    },
+    "CommitMessage": {
+     "description": "A commit message describing the changes in this version.",
+     "maxLength": 500,
+     "minLength": 1,
+     "type": "string"
+    },
+    "CreatedBy": {
+     "$ref": "#/definitions/VersionCreatedBySource"
+    },
+    "ParentVersionIds": {
+     "description": "A list of parent version identifiers.",
+     "items": {
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Definition of AWS::BedrockAgentCore::ConfigurationBundle Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "bedrock-agentcore:CreateConfigurationBundle",
+    "bedrock-agentcore:GetConfigurationBundle",
+    "bedrock-agentcore:TagResource",
+    "bedrock-agentcore:ListTagsForResource",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:ReEncryptFrom",
+    "kms:ReEncryptTo",
+    "kms:GenerateDataKey",
+    "kms:GenerateDataKeyWithoutPlaintext",
+    "kms:DescribeKey",
+    "kms:CreateGrant",
+    "kms:RetireGrant"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "bedrock-agentcore:DeleteConfigurationBundle",
+    "bedrock-agentcore:GetConfigurationBundle",
+    "kms:Decrypt",
+    "kms:DescribeKey",
+    "kms:RetireGrant"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "bedrock-agentcore:ListConfigurationBundles"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bedrock-agentcore:GetConfigurationBundle",
+    "bedrock-agentcore:ListTagsForResource",
+    "kms:Decrypt",
+    "kms:DescribeKey"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "bedrock-agentcore:UpdateConfigurationBundle",
+    "bedrock-agentcore:GetConfigurationBundle",
+    "bedrock-agentcore:TagResource",
+    "bedrock-agentcore:UntagResource",
+    "bedrock-agentcore:ListTagsForResource",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:ReEncryptFrom",
+    "kms:ReEncryptTo",
+    "kms:GenerateDataKey",
+    "kms:GenerateDataKeyWithoutPlaintext",
+    "kms:DescribeKey",
+    "kms:CreateGrant",
+    "kms:RetireGrant"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BundleArn"
+ ],
+ "properties": {
+  "BranchName": {
+   "description": "The branch name for version tracking.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z][a-zA-Z0-9_/-]{0,127}$",
+   "type": "string"
+  },
+  "BundleArn": {
+   "description": "The Amazon Resource Name (ARN) of the configuration bundle.",
+   "pattern": "^arn:aws:bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:configuration-bundle/[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+   "type": "string"
+  },
+  "BundleId": {
+   "description": "The unique identifier of the configuration bundle.",
+   "pattern": "^[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+   "type": "string"
+  },
+  "BundleName": {
+   "description": "The name for the configuration bundle. Names must be unique within your account.",
+   "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,99}$",
+   "type": "string"
+  },
+  "CommitMessage": {
+   "description": "A commit message describing the version of the configuration bundle.",
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Components": {
+   "additionalProperties": false,
+   "description": "A map of component identifiers to their configurations.",
+   "patternProperties": {
+    "^[a-zA-Z][a-zA-Z0-9_:/.\\-]{0,2047}$": {
+     "$ref": "#/definitions/ComponentConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "CreatedAt": {
+   "description": "The timestamp when the configuration bundle was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "CreatedBy": {
+   "$ref": "#/definitions/VersionCreatedBySource"
+  },
+  "Description": {
+   "description": "The description for the configuration bundle.",
+   "maxLength": 500,
+   "minLength": 1,
+   "pattern": "^.+$",
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "description": "The ARN of the KMS key used to encrypt component configurations.",
+   "format": "AWS::KMS::Key.Arn",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(|-cn|-us-gov):kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
+   "type": "string"
+  },
+  "LineageMetadata": {
+   "$ref": "#/definitions/VersionLineageMetadata"
+  },
+  "Tags": {
+   "description": "Tags to assign to the configuration bundle.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "description": "The timestamp when the configuration bundle was last updated.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "VersionId": {
+   "description": "The version identifier of the configuration bundle.",
+   "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/BundleArn",
+  "/properties/BundleId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/LineageMetadata",
+  "/properties/VersionId"
+ ],
+ "required": [
+  "BundleName",
+  "Components"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "bedrock-agentcore:TagResource",
+   "bedrock-agentcore:UntagResource",
+   "bedrock-agentcore:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BedrockAgentCore::ConfigurationBundle",
+ "writeOnlyProperties": [
+  "/properties/CommitMessage",
+  "/properties/CreatedBy",
+  "/properties/BranchName"
+ ]
+}

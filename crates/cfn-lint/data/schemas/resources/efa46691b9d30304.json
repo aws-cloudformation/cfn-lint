@@ -1,0 +1,202 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RelationalDatabaseSnapshotName",
+  "/properties/RelationalDatabaseName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Lightsail::DatabaseSnapshot",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lightsail:CreateRelationalDatabaseSnapshot",
+    "lightsail:GetRelationalDatabaseSnapshot",
+    "lightsail:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lightsail:DeleteRelationalDatabaseSnapshot",
+    "lightsail:GetRelationalDatabaseSnapshot"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "lightsail:GetRelationalDatabaseSnapshots"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lightsail:GetRelationalDatabaseSnapshot"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "lightsail:GetRelationalDatabaseSnapshot",
+    "lightsail:TagResource",
+    "lightsail:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RelationalDatabaseSnapshotName"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the database snapshot.",
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "description": "The timestamp when the database snapshot was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Engine": {
+   "description": "The software of the database snapshot (for example, MySQL).",
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "EngineVersion": {
+   "description": "The database engine version for the database snapshot (for example, 5.7.23).",
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "FromRelationalDatabaseArn": {
+   "description": "The Amazon Resource Name (ARN) of the database from which the database snapshot was created.",
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "FromRelationalDatabaseBlueprintId": {
+   "description": "The blueprint ID of the database from which the database snapshot was created. A blueprint describes the major engine version of a database.",
+   "type": "string"
+  },
+  "FromRelationalDatabaseBundleId": {
+   "description": "The bundle ID of the database from which the database snapshot was created.",
+   "type": "string"
+  },
+  "FromRelationalDatabaseName": {
+   "description": "The name of the source database from which the database snapshot was created.",
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "Location": {
+   "additionalProperties": false,
+   "description": "The Region name and Availability Zone where the database snapshot is located.",
+   "properties": {
+    "AvailabilityZone": {
+     "description": "The Availability Zone where the database snapshot was created.",
+     "type": "string"
+    },
+    "RegionName": {
+     "description": "The AWS Region where the database snapshot was created.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Name": {
+   "description": "The name of the database snapshot.",
+   "pattern": "^\\w[\\w\\-]*\\w$",
+   "type": "string"
+  },
+  "RelationalDatabaseName": {
+   "description": "The name of the database on which to base your new snapshot.",
+   "pattern": "^\\w[\\w\\-]*\\w$",
+   "type": "string"
+  },
+  "RelationalDatabaseSnapshotName": {
+   "description": "The name for your new database snapshot.",
+   "maxLength": 255,
+   "minLength": 2,
+   "pattern": "^\\w[\\w\\-]*\\w$",
+   "type": "string"
+  },
+  "ResourceType": {
+   "description": "The Lightsail resource type.",
+   "enum": [
+    "RelationalDatabaseSnapshot"
+   ],
+   "type": "string"
+  },
+  "SizeInGb": {
+   "description": "The size of the disk in GB (for example, 32) for the database snapshot.",
+   "type": "integer"
+  },
+  "State": {
+   "description": "The state of the database snapshot.",
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "SupportCode": {
+   "description": "The support code for the database snapshot. Include this code in your email to support when you have questions about a database snapshot in Lightsail. This code enables our support team to look up your Lightsail information more easily.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/Engine",
+  "/properties/EngineVersion",
+  "/properties/FromRelationalDatabaseArn",
+  "/properties/FromRelationalDatabaseBlueprintId",
+  "/properties/FromRelationalDatabaseBundleId",
+  "/properties/FromRelationalDatabaseName",
+  "/properties/Location",
+  "/properties/Name",
+  "/properties/ResourceType",
+  "/properties/SizeInGb",
+  "/properties/State",
+  "/properties/SupportCode"
+ ],
+ "required": [
+  "RelationalDatabaseSnapshotName",
+  "RelationalDatabaseName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "lightsail:TagResource",
+   "lightsail:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Lightsail::DatabaseSnapshot"
+}

@@ -1,0 +1,589 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AllowedOperators": {
+   "description": "The logical operator used to combine multiple conditions",
+   "enum": [
+    "AND",
+    "OR"
+   ],
+   "type": "string"
+  },
+  "AutomationRulesActionV2": {
+   "additionalProperties": false,
+   "description": "Allows you to configure automated responses",
+   "properties": {
+    "ExternalIntegrationConfiguration": {
+     "$ref": "#/definitions/ExternalIntegrationConfiguration"
+    },
+    "FindingFieldsUpdate": {
+     "$ref": "#/definitions/AutomationRulesFindingFieldsUpdateV2"
+    },
+    "Type": {
+     "description": "The category of action to be executed by the automation rule",
+     "enum": [
+      "FINDING_FIELDS_UPDATE",
+      "EXTERNAL_INTEGRATION"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "AutomationRulesFindingFieldsUpdateV2": {
+   "additionalProperties": false,
+   "description": "The changes to be applied to fields in a security finding when an automation rule is triggered",
+   "properties": {
+    "Comment": {
+     "description": "Notes or contextual information for findings that are modified by the automation rule",
+     "pattern": ".*\\S.*",
+     "type": "string"
+    },
+    "SeverityId": {
+     "description": "The severity level to be assigned to findings that match the automation rule criteria",
+     "type": "integer"
+    },
+    "StatusId": {
+     "description": "The status to be applied to findings that match automation rule criteria",
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "BooleanFilter": {
+   "additionalProperties": false,
+   "description": "Boolean filter for querying findings",
+   "properties": {
+    "Value": {
+     "description": "The value of the boolean",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Value"
+   ],
+   "type": "object"
+  },
+  "CompositeFilter": {
+   "additionalProperties": false,
+   "description": "Enables the creation of filtering criteria for security findings",
+   "properties": {
+    "BooleanFilters": {
+     "description": "Enables filtering based on boolean field values",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/OcsfBooleanFilter"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "DateFilters": {
+     "description": "Enables filtering based on date and timestamp fields",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/OcsfDateFilter"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "MapFilters": {
+     "description": "Enables filtering based on map field value",
+     "items": {
+      "$ref": "#/definitions/OcsfMapFilter"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array"
+    },
+    "NumberFilters": {
+     "description": "Enables filtering based on numerical field values",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/OcsfNumberFilter"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Operator": {
+     "$ref": "#/definitions/AllowedOperators"
+    },
+    "StringFilters": {
+     "description": "Enables filtering based on string field values",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/OcsfStringFilter"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Criteria": {
+   "additionalProperties": false,
+   "description": "Defines the parameters and conditions used to evaluate and filter security findings",
+   "properties": {
+    "OcsfFindingCriteria": {
+     "$ref": "#/definitions/OcsfFindingFilters"
+    }
+   },
+   "type": "object"
+  },
+  "DateFilter": {
+   "additionalProperties": false,
+   "description": "A date filter for querying findings",
+   "properties": {
+    "DateRange": {
+     "$ref": "#/definitions/DateRange"
+    },
+    "End": {
+     "$ref": "#/definitions/ISO8601DateString"
+    },
+    "Start": {
+     "$ref": "#/definitions/ISO8601DateString"
+    }
+   },
+   "type": "object"
+  },
+  "DateRange": {
+   "additionalProperties": false,
+   "description": "A date range for the date filter",
+   "properties": {
+    "Unit": {
+     "description": "A date range unit for the date filter",
+     "enum": [
+      "DAYS"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "description": "A date range value for the date filter",
+     "type": "number"
+    }
+   },
+   "required": [
+    "Unit",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "ExternalIntegrationConfiguration": {
+   "additionalProperties": false,
+   "description": "The settings for integrating automation rule actions with external systems or service",
+   "properties": {
+    "ConnectorArn": {
+     "description": "The ARN of the connector that establishes the integration",
+     "pattern": ".*\\S.*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ISO8601DateString": {
+   "description": "The timestamp formatted in ISO8601",
+   "pattern": "^(\\d\\d\\d\\d)-([0][1-9]|[1][0-2])-([0][1-9]|[1-2](\\d)|[3][0-1])[T](?:([0-1](\\d)|[2][0-3]):[0-5](\\d):[0-5](\\d)|23:59:60)(?:\\.(\\d)+)?([Z]|[+-](\\d\\d)(:?(\\d\\d))?)$",
+   "type": "string"
+  },
+  "MapFilter": {
+   "additionalProperties": false,
+   "description": "A map filter for filtering findings",
+   "properties": {
+    "Comparison": {
+     "description": "The condition to apply to the key value when filtering findings with a map filter",
+     "enum": [
+      "EQUALS",
+      "NOT_EQUALS"
+     ],
+     "type": "string"
+    },
+    "Key": {
+     "description": "The key of the map filter",
+     "maxLength": 4096,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the key in the map filter",
+     "maxLength": 4096,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Comparison",
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "NumberFilter": {
+   "additionalProperties": false,
+   "description": "A number filter for querying findings",
+   "properties": {
+    "Eq": {
+     "description": "The equal-to condition to be applied to a single field when querying for findings",
+     "type": "number"
+    },
+    "Gte": {
+     "description": "The greater-than-equal condition to be applied to a single field when querying for findings",
+     "type": "number"
+    },
+    "Lte": {
+     "description": "The less-than-equal condition to be applied to a single field when querying for findings",
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "OcsfBooleanFilter": {
+   "additionalProperties": false,
+   "description": "Enables filtering of security findings based on boolean field values in OCSF",
+   "properties": {
+    "FieldName": {
+     "description": "The name of the field",
+     "enum": [
+      "compliance.assessments.meets_criteria",
+      "vulnerabilities.is_exploit_available",
+      "vulnerabilities.is_fix_available"
+     ],
+     "type": "string"
+    },
+    "Filter": {
+     "$ref": "#/definitions/BooleanFilter"
+    }
+   },
+   "required": [
+    "FieldName",
+    "Filter"
+   ],
+   "type": "object"
+  },
+  "OcsfDateFilter": {
+   "additionalProperties": false,
+   "description": "Enables filtering of security findings based on date and timestamp fields in OCSF",
+   "properties": {
+    "FieldName": {
+     "description": "The name of the field",
+     "enum": [
+      "finding_info.created_time_dt",
+      "finding_info.first_seen_time_dt",
+      "finding_info.last_seen_time_dt",
+      "finding_info.modified_time_dt"
+     ],
+     "type": "string"
+    },
+    "Filter": {
+     "$ref": "#/definitions/DateFilter"
+    }
+   },
+   "required": [
+    "FieldName",
+    "Filter"
+   ],
+   "type": "object"
+  },
+  "OcsfFindingFilters": {
+   "additionalProperties": false,
+   "description": "The filtering conditions that align with OCSF standards",
+   "properties": {
+    "CompositeFilters": {
+     "description": "Enables the creation of complex filtering conditions by combining filter",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/CompositeFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "CompositeOperator": {
+     "$ref": "#/definitions/AllowedOperators"
+    }
+   },
+   "type": "object"
+  },
+  "OcsfMapFilter": {
+   "additionalProperties": false,
+   "description": "Enables filtering of security findings based on map field values in OCSF",
+   "properties": {
+    "FieldName": {
+     "description": "The name of the field",
+     "enum": [
+      "resources.tags"
+     ],
+     "type": "string"
+    },
+    "Filter": {
+     "$ref": "#/definitions/MapFilter"
+    }
+   },
+   "required": [
+    "FieldName",
+    "Filter"
+   ],
+   "type": "object"
+  },
+  "OcsfNumberFilter": {
+   "additionalProperties": false,
+   "description": "Enables filtering of security findings based on numerical field values in OCSF",
+   "properties": {
+    "FieldName": {
+     "description": "The name of the field",
+     "enum": [
+      "activity_id",
+      "compliance.status_id",
+      "confidence_score",
+      "finding_info.related_events_count",
+      "vendor_attributes.severity_id"
+     ],
+     "type": "string"
+    },
+    "Filter": {
+     "$ref": "#/definitions/NumberFilter"
+    }
+   },
+   "required": [
+    "FieldName",
+    "Filter"
+   ],
+   "type": "object"
+  },
+  "OcsfStringField": {
+   "description": "The name of the field",
+   "enum": [
+    "activity_name",
+    "cloud.account.name",
+    "cloud.account.uid",
+    "cloud.provider",
+    "cloud.region",
+    "compliance.assessments.category",
+    "compliance.assessments.name",
+    "compliance.control",
+    "compliance.status",
+    "compliance.standards",
+    "finding_info.desc",
+    "finding_info.src_url",
+    "finding_info.title",
+    "finding_info.types",
+    "finding_info.uid",
+    "finding_info.related_events.uid",
+    "finding_info.related_events.product.uid",
+    "finding_info.related_events.title",
+    "metadata.product.feature.uid",
+    "metadata.product.name",
+    "metadata.product.uid",
+    "metadata.product.vendor_name",
+    "remediation.desc",
+    "remediation.references",
+    "resources.cloud_partition",
+    "resources.name",
+    "resources.region",
+    "resources.type",
+    "resources.uid",
+    "vulnerabilities.fix_coverage",
+    "class_name",
+    "vendor_attributes.severity"
+   ],
+   "type": "string"
+  },
+  "OcsfStringFilter": {
+   "additionalProperties": false,
+   "description": "Enables filtering of security findings based on string field values in OCSF",
+   "properties": {
+    "FieldName": {
+     "$ref": "#/definitions/OcsfStringField"
+    },
+    "Filter": {
+     "$ref": "#/definitions/StringFilter"
+    }
+   },
+   "required": [
+    "FieldName",
+    "Filter"
+   ],
+   "type": "object"
+  },
+  "StringFilter": {
+   "additionalProperties": false,
+   "description": "A string filter for filtering findings",
+   "properties": {
+    "Comparison": {
+     "description": "The condition to apply to a string value when filtering findings",
+     "enum": [
+      "EQUALS",
+      "PREFIX",
+      "NOT_EQUALS",
+      "PREFIX_NOT_EQUALS",
+      "CONTAINS"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "description": "The string filter value",
+     "maxLength": 4096,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Comparison"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "patternProperties": {
+    "^(?!aws:)[a-zA-Z+-=._:/]{1,128}$": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::SecurityHub::AutomationRuleV2",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityhub:CreateAutomationRuleV2",
+    "securityhub:GetAutomationRuleV2",
+    "securityhub:TagResource",
+    "securityhub:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securityhub:GetAutomationRuleV2",
+    "securityhub:DeleteAutomationRuleV2"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securityhub:ListAutomationRulesV2",
+    "securityhub:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityhub:GetAutomationRuleV2",
+    "securityhub:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securityhub:UpdateAutomationRuleV2",
+    "securityhub:GetAutomationRuleV2",
+    "securityhub:TagResource",
+    "securityhub:UntagResource",
+    "securityhub:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RuleArn"
+ ],
+ "properties": {
+  "Actions": {
+   "description": "A list of actions to be performed when the rule criteria is met",
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/AutomationRulesActionV2"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CreatedAt": {
+   "$ref": "#/definitions/ISO8601DateString"
+  },
+  "Criteria": {
+   "$ref": "#/definitions/Criteria"
+  },
+  "Description": {
+   "description": "A description of the automation rule",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "RuleArn": {
+   "description": "The ARN of the automation rule",
+   "pattern": "^arn:aws\\S*:securityhub:[a-z0-9-]+:[0-9]{12}:automation-rulev2/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "RuleId": {
+   "description": "The ID of the automation rule",
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "RuleName": {
+   "description": "The name of the automation rule",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "RuleOrder": {
+   "description": "The value for the rule priority",
+   "maximum": 1000.0,
+   "minimum": 1.0,
+   "type": "number"
+  },
+  "RuleStatus": {
+   "description": "The status of the automation rule",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "UpdatedAt": {
+   "$ref": "#/definitions/ISO8601DateString"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RuleArn",
+  "/properties/RuleId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "RuleName",
+  "Description",
+  "RuleOrder",
+  "Criteria",
+  "Actions"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securityhub",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "securityhub:ListTagsForResource",
+   "securityhub:TagResource",
+   "securityhub:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityHub::AutomationRuleV2"
+}

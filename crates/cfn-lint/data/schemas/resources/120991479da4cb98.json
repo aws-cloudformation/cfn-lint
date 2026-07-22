@@ -1,0 +1,120 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceId"
+ ],
+ "definitions": {
+  "HaStatus": {
+   "description": "The SQL Server high availability status of the EC2 instance.",
+   "enum": [
+    "processing",
+    "active",
+    "standby",
+    "invalid"
+   ],
+   "type": "string"
+  },
+  "InstanceId": {
+   "description": "The ID of the EC2 instance to enable for SQL Server high availability standby detection.",
+   "pattern": "^i-[0-9a-f]{8,17}$",
+   "type": "string"
+  },
+  "LastUpdatedTime": {
+   "description": "The timestamp when the EC2 instance's SQL Server high availability status was last updated.",
+   "type": "string"
+  },
+  "SqlServerCredentials": {
+   "description": "The ARN of the AWS Secrets Manager secret containing SQL Server access credentials to the EC2 instance. If not specified, AWS Systems Manager agent will use default local user credentials.",
+   "pattern": "^(?=.{20,2048}$)arn:aws[a-z-]*:secretsmanager:[a-z0-9-]+:\\d{12}:secret:[a-zA-Z0-9/_+=.@-]+$",
+   "type": "string"
+  },
+  "SqlServerLicenseUsage": {
+   "description": "The SQL Server license type of the EC2 instance.",
+   "enum": [
+    "full",
+    "waived"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "Resource Type definition for AWS::EC2::SqlHaStandbyDetectedInstance",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:CreateServiceLinkedRole",
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "secretsmanager:DescribeSecret",
+    "secretsmanager:TagResource",
+    "secretsmanager:UntagResource",
+    "ec2:EnableInstanceSqlHaStandbyDetections",
+    "ec2:DescribeInstanceSqlHaStates"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "secretsmanager:TagResource",
+    "secretsmanager:UntagResource",
+    "ec2:DisableInstanceSqlHaStandbyDetections",
+    "ec2:DescribeInstanceSqlHaStates"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeInstanceSqlHaStates"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeInstanceSqlHaStates"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:CreateServiceLinkedRole",
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "secretsmanager:DescribeSecret",
+    "secretsmanager:TagResource",
+    "secretsmanager:UntagResource",
+    "ec2:EnableInstanceSqlHaStandbyDetections",
+    "ec2:DescribeInstanceSqlHaStates"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InstanceId"
+ ],
+ "properties": {
+  "HaStatus": {
+   "$ref": "#/definitions/HaStatus"
+  },
+  "InstanceId": {
+   "$ref": "#/definitions/InstanceId"
+  },
+  "LastUpdatedTime": {
+   "$ref": "#/definitions/LastUpdatedTime"
+  },
+  "SqlServerCredentials": {
+   "$ref": "#/definitions/SqlServerCredentials"
+  },
+  "SqlServerLicenseUsage": {
+   "$ref": "#/definitions/SqlServerLicenseUsage"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/HaStatus",
+  "/properties/SqlServerLicenseUsage",
+  "/properties/LastUpdatedTime"
+ ],
+ "required": [
+  "InstanceId"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/sql-server-ec2/latest/userguide/sql-high-availability.html",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::SqlHaStandbyDetectedInstance"
+}

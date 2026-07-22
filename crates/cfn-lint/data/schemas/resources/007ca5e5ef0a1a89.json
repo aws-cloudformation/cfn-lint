@@ -1,0 +1,179 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AccessPolicyIdentity": {
+   "additionalProperties": false,
+   "description": "The identity for this access policy. Choose either an SSO user or group or an IAM user or role.",
+   "properties": {
+    "IamRole": {
+     "$ref": "#/definitions/IamRole"
+    },
+    "IamUser": {
+     "$ref": "#/definitions/IamUser"
+    },
+    "User": {
+     "$ref": "#/definitions/User"
+    }
+   },
+   "type": "object"
+  },
+  "AccessPolicyResource": {
+   "additionalProperties": false,
+   "description": "The AWS IoT SiteWise Monitor resource for this access policy. Choose either portal or project but not both.",
+   "properties": {
+    "Portal": {
+     "$ref": "#/definitions/Portal"
+    },
+    "Project": {
+     "$ref": "#/definitions/Project"
+    }
+   },
+   "type": "object"
+  },
+  "IamRole": {
+   "additionalProperties": false,
+   "description": "Contains information for an IAM role identity in an access policy.",
+   "properties": {
+    "arn": {
+     "description": "The ARN of the IAM role.",
+     "maxLength": 1600,
+     "minLength": 1,
+     "pattern": "^arn:aws(-cn|-us-gov)?:[a-zA-Z0-9-:\\/_\\.\\+=,@]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "IamUser": {
+   "additionalProperties": false,
+   "description": "Contains information for an IAM user identity in an access policy.",
+   "properties": {
+    "arn": {
+     "description": "The ARN of the IAM user.",
+     "maxLength": 1600,
+     "minLength": 1,
+     "pattern": "^arn:aws(-cn|-us-gov)?:[a-zA-Z0-9-:\\/_\\.\\+=,@]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Portal": {
+   "additionalProperties": false,
+   "description": "A portal resource.",
+   "properties": {
+    "id": {
+     "description": "The ID of the portal.",
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^(?!00000000-0000-0000-0000-000000000000)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Project": {
+   "additionalProperties": false,
+   "description": "A project resource.",
+   "properties": {
+    "id": {
+     "description": "The ID of the project.",
+     "maxLength": 36,
+     "minLength": 36,
+     "pattern": "^(?!00000000-0000-0000-0000-000000000000)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "User": {
+   "additionalProperties": false,
+   "description": "Contains information for a user identity in an access policy.",
+   "properties": {
+    "id": {
+     "description": "The AWS SSO ID of the user.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^\\S+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::IoTSiteWise::AccessPolicy",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iotsitewise:CreateAccessPolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iotsitewise:DescribeAccessPolicy",
+    "iotsitewise:DeleteAccessPolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iotsitewise:ListAccessPolicies",
+    "iotsitewise:ListProjects",
+    "iotsitewise:ListPortals"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iotsitewise:DescribeAccessPolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iotsitewise:DescribeAccessPolicy",
+    "iotsitewise:UpdateAccessPolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccessPolicyId"
+ ],
+ "properties": {
+  "AccessPolicyArn": {
+   "description": "The ARN of the access policy.",
+   "type": "string"
+  },
+  "AccessPolicyId": {
+   "description": "The ID of the access policy.",
+   "type": "string"
+  },
+  "AccessPolicyIdentity": {
+   "$ref": "#/definitions/AccessPolicyIdentity",
+   "description": "The identity for this access policy. Choose either a user or a group but not both."
+  },
+  "AccessPolicyPermission": {
+   "description": "The permission level for this access policy. Valid values are ADMINISTRATOR or VIEWER.",
+   "enum": [
+    "ADMINISTRATOR",
+    "VIEWER"
+   ],
+   "type": "string"
+  },
+  "AccessPolicyResource": {
+   "$ref": "#/definitions/AccessPolicyResource",
+   "description": "The AWS IoT SiteWise Monitor resource for this access policy. Choose either portal or project but not both."
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccessPolicyArn",
+  "/properties/AccessPolicyId"
+ ],
+ "required": [
+  "AccessPolicyIdentity",
+  "AccessPolicyPermission",
+  "AccessPolicyResource"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-IoTSiteWise.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::IoTSiteWise::AccessPolicy"
+}

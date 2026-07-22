@@ -1,0 +1,164 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StageName",
+  "/properties/ApiId"
+ ],
+ "definitions": {
+  "AccessLogSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationArn": {
+     "type": "string"
+    },
+    "Format": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RouteSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "DataTraceEnabled": {
+     "type": "boolean"
+    },
+    "DetailedMetricsEnabled": {
+     "type": "boolean"
+    },
+    "LoggingLevel": {
+     "type": "string"
+    },
+    "ThrottlingBurstLimit": {
+     "type": "integer"
+    },
+    "ThrottlingRateLimit": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::ApiGatewayV2::Stage",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST",
+    "apigateway:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ApiId": {
+      "$ref": "resource-schema.json#/properties/ApiId"
+     }
+    },
+    "required": [
+     "ApiId"
+    ]
+   },
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:PATCH",
+    "apigateway:POST",
+    "apigateway:DELETE",
+    "apigateway:TagResource",
+    "apigateway:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApiId",
+  "/properties/StageName"
+ ],
+ "properties": {
+  "AccessLogSettings": {
+   "$ref": "#/definitions/AccessLogSettings",
+   "description": "Settings for logging access in this stage."
+  },
+  "ApiId": {
+   "description": "The API identifier.",
+   "type": "string"
+  },
+  "AutoDeploy": {
+   "description": "Specifies whether updates to an API automatically trigger a new deployment. The default value is false.",
+   "type": "boolean"
+  },
+  "ClientCertificateId": {
+   "description": "The identifier of a client certificate for a Stage. Supported only for WebSocket APIs.",
+   "type": "string"
+  },
+  "DefaultRouteSettings": {
+   "$ref": "#/definitions/RouteSettings",
+   "description": "The default route settings for the stage."
+  },
+  "DeploymentId": {
+   "description": "The deployment identifier for the API stage. Can't be updated if autoDeploy is enabled.",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description for the API stage.",
+   "type": "string"
+  },
+  "RouteSettings": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "StageName": {
+   "description": "The stage name. Stage names can contain only alphanumeric characters, hyphens, and underscores, or be $default. Maximum length is 128 characters.",
+   "type": "string"
+  },
+  "StageVariables": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".*": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "required": [
+  "StageName",
+  "ApiId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigatewayv2/tree/master/aws-apigatewayv2-stage.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "apigateway:POST",
+   "apigateway:TagResource",
+   "apigateway:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ApiGatewayV2::Stage"
+}

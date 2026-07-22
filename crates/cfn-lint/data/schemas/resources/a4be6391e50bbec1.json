@@ -1,0 +1,141 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ExperimentName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ExperimentName"
+ ],
+ "description": "Resource type definition for AWS::SageMaker::Experiment. An experiment is a collection of related trials used to organize and track machine learning workflows.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sagemaker:CreateExperiment",
+    "sagemaker:DescribeExperiment",
+    "sagemaker:AddTags",
+    "sagemaker:ListTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DeleteExperiment",
+    "sagemaker:DescribeExperiment",
+    "sagemaker:ListTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sagemaker:ListExperiments"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribeExperiment",
+    "sagemaker:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sagemaker:UpdateExperiment",
+    "sagemaker:DescribeExperiment",
+    "sagemaker:AddTags",
+    "sagemaker:DeleteTags",
+    "sagemaker:ListTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the experiment.",
+   "maxLength": 256,
+   "pattern": "^arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:experiment/",
+   "type": "string"
+  },
+  "CreationTime": {
+   "description": "When the experiment was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the experiment.",
+   "maxLength": 3072,
+   "minLength": 0,
+   "type": "string"
+  },
+  "DisplayName": {
+   "description": "The name of the experiment as displayed. The name does not need to be unique.",
+   "maxLength": 120,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,119}$",
+   "type": "string"
+  },
+  "ExperimentName": {
+   "description": "The name of the experiment. Must be unique in your AWS account and is not case-sensitive.",
+   "maxLength": 120,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,119}$",
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "description": "When the experiment was last modified.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A list of tags to associate with the experiment.",
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "Key": {
+      "description": "The tag key.",
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+      "type": "string"
+     },
+     "Value": {
+      "description": "The tag value.",
+      "maxLength": 256,
+      "minLength": 0,
+      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+      "type": "string"
+     }
+    },
+    "required": [
+     "Key",
+     "Value"
+    ],
+    "type": "object"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationTime",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "ExperimentName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "sagemaker:AddTags",
+   "sagemaker:DeleteTags",
+   "sagemaker:ListTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::Experiment"
+}

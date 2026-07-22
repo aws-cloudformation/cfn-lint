@@ -1,0 +1,200 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainNameArn"
+ ],
+ "definitions": {
+  "Action": {
+   "description": "Represents a routing rule action. The only supported action is ``invokeApi``.",
+   "properties": {
+    "InvokeApi": {
+     "$ref": "#/definitions/ActionInvokeApi",
+     "description": "Represents an InvokeApi action."
+    }
+   },
+   "required": [
+    "InvokeApi"
+   ],
+   "type": "object"
+  },
+  "ActionInvokeApi": {
+   "description": "Represents an InvokeApi action.",
+   "properties": {
+    "ApiId": {
+     "description": "The API identifier of the target API.",
+     "type": "string"
+    },
+    "Stage": {
+     "description": "The name of the target stage.",
+     "type": "string"
+    },
+    "StripBasePath": {
+     "description": "The strip base path setting. When true, API Gateway strips the incoming matched base path when forwarding the request to the target API.",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "ApiId",
+    "Stage"
+   ],
+   "type": "object"
+  },
+  "Condition": {
+   "description": "Represents a condition. Conditions can contain up to two ``matchHeaders`` conditions and one ``matchBasePaths`` conditions. API Gateway evaluates header conditions and base path conditions together. You can only use AND between header and base path conditions.",
+   "properties": {
+    "MatchBasePaths": {
+     "$ref": "#/definitions/MatchBasePaths",
+     "description": "The base path to be matched."
+    },
+    "MatchHeaders": {
+     "$ref": "#/definitions/MatchHeaders",
+     "description": "The headers to be matched."
+    }
+   },
+   "type": "object"
+  },
+  "MatchBasePaths": {
+   "description": "Represents a ``MatchBasePaths`` condition.",
+   "properties": {
+    "AnyOf": {
+     "description": "The string of the case sensitive base path to be matched.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "AnyOf"
+   ],
+   "type": "object"
+  },
+  "MatchHeaderValue": {
+   "description": "Represents a ``MatchHeaderValue``.",
+   "properties": {
+    "Header": {
+     "description": "The case insensitive header name to be matched. The header name must be less than 40 characters and the only allowed characters are ``a-z``, ``A-Z``, ``0-9``, and the following special characters: ``*?-!#$%&'.^_`|~.``.",
+     "type": "string"
+    },
+    "ValueGlob": {
+     "description": "The case sensitive header glob value to be matched against entire header value. The header glob value must be less than 128 characters and the only allowed characters are ``a-z``, ``A-Z``, ``0-9``, and the following special characters: ``*?-!#$%&'.^_`|~``. Wildcard matching is supported for header glob values but must be for ``*prefix-match``, ``suffix-match*``, or ``*infix*-match``.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Header",
+    "ValueGlob"
+   ],
+   "type": "object"
+  },
+  "MatchHeaders": {
+   "description": "Represents a ``MatchHeaders`` condition.",
+   "properties": {
+    "AnyOf": {
+     "description": "The header name and header value glob to be matched. The matchHeaders condition is matched if any of the header name and header value globs are matched.",
+     "items": {
+      "$ref": "#/definitions/MatchHeaderValue"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "AnyOf"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Represents a routing rule. When the incoming request to a domain name matches the conditions for a rule, API Gateway invokes a stage of a target API. Supported only for REST APIs.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:CreateRoutingRule"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DeleteRoutingRule"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "DomainNameArn": {
+      "$ref": "resource-schema.json#/properties/DomainNameArn"
+     }
+    },
+    "required": [
+     "DomainNameArn"
+    ]
+   },
+   "permissions": [
+    "apigateway:ListRoutingRules"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GetRoutingRule"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:UpdateRoutingRule"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RoutingRuleArn"
+ ],
+ "properties": {
+  "Actions": {
+   "description": "The resulting action based on matching a routing rules condition. Only InvokeApi is supported.",
+   "items": {
+    "$ref": "#/definitions/Action"
+   },
+   "type": "array"
+  },
+  "Conditions": {
+   "description": "The conditions of the routing rule.",
+   "items": {
+    "$ref": "#/definitions/Condition"
+   },
+   "type": "array"
+  },
+  "DomainNameArn": {
+   "description": "The ARN of the domain name.",
+   "type": "string"
+  },
+  "Priority": {
+   "description": "The order in which API Gateway evaluates a rule. Priority is evaluated from the lowest value to the highest value. Rules can't have the same priority. Priority values 1-1,000,000 are supported.",
+   "maximum": 1000000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "RoutingRuleArn": {
+   "description": "",
+   "type": "string"
+  },
+  "RoutingRuleId": {
+   "description": "",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RoutingRuleArn",
+  "/properties/RoutingRuleId"
+ ],
+ "required": [
+  "DomainNameArn",
+  "Priority",
+  "Conditions",
+  "Actions"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigatewayv2.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ApiGatewayV2::RoutingRule"
+}

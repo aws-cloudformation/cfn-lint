@@ -1,0 +1,296 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ConnectionsList": {
+   "additionalProperties": false,
+   "properties": {
+    "Connections": {
+     "description": "A list of connections used by the job.",
+     "items": {
+      "maxLength": 255,
+      "minLength": 0,
+      "type": "string"
+     },
+     "maxItems": 1000,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "DefaultArguments": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ExecutionProperty": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxConcurrentRuns": {
+     "description": "The maximum number of concurrent runs allowed for the job.",
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "JobCommand": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "description": "The name of the job command",
+     "type": "string"
+    },
+    "PythonVersion": {
+     "description": "The Python version being used to execute a Python shell job.",
+     "pattern": "^([2-3]|3[.]9)$",
+     "type": "string"
+    },
+    "Runtime": {
+     "description": "Runtime is used to specify the versions of Ray, Python and additional libraries available in your environment",
+     "maxLength": 64,
+     "minLength": 0,
+     "type": "string"
+    },
+    "ScriptLocation": {
+     "description": "Specifies the Amazon Simple Storage Service (Amazon S3) path to a script that executes a job",
+     "maxLength": 400000,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "NonOverridableArguments": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "NotificationProperty": {
+   "additionalProperties": false,
+   "properties": {
+    "NotifyDelayAfter": {
+     "description": "It is the number of minutes to wait before sending a job run delay notification after a job run starts",
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Glue::Job",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:GetRole",
+    "iam:PassRole",
+    "glue:CreateJob",
+    "glue:GetJob",
+    "glue:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "glue:DeleteJob",
+    "glue:GetJob",
+    "glue:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "glue:ListJobs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "glue:GetJob",
+    "glue:GetTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:GetRole",
+    "iam:PassRole",
+    "glue:UpdateJob",
+    "glue:UntagResource",
+    "glue:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "AllocatedCapacity": {
+   "description": "The number of capacity units that are allocated to this job.",
+   "type": "number"
+  },
+  "Command": {
+   "$ref": "#/definitions/JobCommand",
+   "description": "The code that executes a job."
+  },
+  "Connections": {
+   "$ref": "#/definitions/ConnectionsList",
+   "description": "Specifies the connections used by a job"
+  },
+  "DefaultArguments": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Description": {
+   "description": "A description of the job.",
+   "maxLength": 2048,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ExecutionClass": {
+   "description": "Indicates whether the job is run with a standard or flexible execution class.",
+   "enum": [
+    "FLEX",
+    "STANDARD"
+   ],
+   "type": "string"
+  },
+  "ExecutionProperty": {
+   "$ref": "#/definitions/ExecutionProperty",
+   "description": "The maximum number of concurrent runs that are allowed for this job."
+  },
+  "GlueVersion": {
+   "description": "Glue version determines the versions of Apache Spark and Python that AWS Glue supports.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^(\\w+\\.)+\\w+$",
+   "type": "string"
+  },
+  "JobMode": {
+   "description": "Property description not available.",
+   "enum": [
+    "NOTEBOOK",
+    "SCRIPT",
+    "VISUAL"
+   ],
+   "type": "string"
+  },
+  "JobRunQueuingEnabled": {
+   "description": "Property description not available.",
+   "type": "boolean"
+  },
+  "LogUri": {
+   "description": "This field is reserved for future use.",
+   "type": "string"
+  },
+  "MaintenanceWindow": {
+   "description": "Property description not available.",
+   "pattern": "^(Sun|Mon|Tue|Wed|Thu|Fri|Sat):([01]?[0-9]|2[0-3])$",
+   "type": "string"
+  },
+  "MaxCapacity": {
+   "description": "The number of AWS Glue data processing units (DPUs) that can be allocated when this job runs.",
+   "type": "number"
+  },
+  "MaxRetries": {
+   "description": "The maximum number of times to retry this job after a JobRun fails",
+   "type": "number"
+  },
+  "Name": {
+   "description": "The name you assign to the job definition",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "NonOverridableArguments": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "NotificationProperty": {
+   "$ref": "#/definitions/NotificationProperty",
+   "description": "Specifies configuration properties of a notification."
+  },
+  "NumberOfWorkers": {
+   "description": "The number of workers of a defined workerType that are allocated when a job runs.",
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Role": {
+   "description": "The name or Amazon Resource Name (ARN) of the IAM role associated with this job.",
+   "type": "string"
+  },
+  "SecurityConfiguration": {
+   "description": "The name of the SecurityConfiguration structure to be used with this job.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Timeout": {
+   "description": "The maximum time that a job run can consume resources before it is terminated and enters TIMEOUT status.",
+   "minimum": 1,
+   "type": "integer"
+  },
+  "WorkerType": {
+   "description": "TThe type of predefined worker that is allocated when a job runs.",
+   "enum": [
+    "Standard",
+    "G.1X",
+    "G.2X",
+    "G.025X",
+    "G.4X",
+    "G.8X",
+    "Z.2X",
+    "G.12X",
+    "G.16X",
+    "R.1X",
+    "R.2X",
+    "R.4X",
+    "R.8X"
+   ],
+   "type": "string"
+  }
+ },
+ "required": [
+  "Role",
+  "Command"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-glue.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "glue:TagResource",
+   "glue:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Glue::Job"
+}

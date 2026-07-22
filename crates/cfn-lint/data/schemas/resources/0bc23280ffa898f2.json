@@ -1,0 +1,169 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ReservedDBInstanceId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DBInstanceCount"
+ ],
+ "definitions": {
+  "RecurringCharge": {
+   "additionalProperties": false,
+   "properties": {
+    "RecurringChargeAmount": {
+     "description": "The amount of the recurring charge.",
+     "type": "number"
+    },
+    "RecurringChargeFrequency": {
+     "description": "The frequency of the recurring charge.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The key of the tag.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value of the tag.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Represents an Amazon RDS Reserved DB Instance. Reserved DB Instances provide a discounted hourly rate compared to on-demand DB instance pricing.",
+ "handlers": {
+  "list": {
+   "permissions": [
+    "rds:DescribeReservedDBInstances"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "rds:DescribeReservedDBInstances",
+    "rds:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ReservedDBInstanceArn"
+ ],
+ "properties": {
+  "CurrencyCode": {
+   "description": "The currency code for the reserved DB instance.",
+   "type": "string"
+  },
+  "DBInstanceClass": {
+   "description": "The DB instance class for the reserved DB instance.",
+   "type": "string"
+  },
+  "DBInstanceCount": {
+   "description": "The number of reserved DB instances.",
+   "type": "integer"
+  },
+  "Duration": {
+   "description": "The duration of the reservation in seconds.",
+   "type": "integer"
+  },
+  "FixedPrice": {
+   "description": "The fixed price charged for this reserved DB instance.",
+   "type": "number"
+  },
+  "MultiAZ": {
+   "description": "Indicates whether the reservation applies to Multi-AZ deployments.",
+   "type": "boolean"
+  },
+  "OfferingType": {
+   "description": "The offering type of this reserved DB instance.",
+   "type": "string"
+  },
+  "ProductDescription": {
+   "description": "The description of the reserved DB instance.",
+   "type": "string"
+  },
+  "RecurringCharges": {
+   "description": "The recurring price charged to run this reserved DB instance.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RecurringCharge"
+   },
+   "type": "array"
+  },
+  "ReservedDBInstanceArn": {
+   "description": "The Amazon Resource Name (ARN) for the reserved DB instance.",
+   "type": "string"
+  },
+  "ReservedDBInstanceId": {
+   "description": "The unique identifier for the reservation.",
+   "type": "string"
+  },
+  "ReservedDBInstancesOfferingId": {
+   "description": "The offering identifier.",
+   "type": "string"
+  },
+  "StartTime": {
+   "description": "The time the reservation started.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "State": {
+   "description": "The state of the reserved DB instance.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A list of tags.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "UsagePrice": {
+   "description": "The hourly price charged for this reserved DB instance.",
+   "type": "number"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ReservedDBInstanceArn",
+  "/properties/ReservedDBInstanceId",
+  "/properties/ReservedDBInstancesOfferingId",
+  "/properties/DBInstanceClass",
+  "/properties/StartTime",
+  "/properties/Duration",
+  "/properties/FixedPrice",
+  "/properties/UsagePrice",
+  "/properties/CurrencyCode",
+  "/properties/ProductDescription",
+  "/properties/OfferingType",
+  "/properties/MultiAZ",
+  "/properties/State",
+  "/properties/RecurringCharges",
+  "/properties/Tags"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "rds:ListTagsForResource"
+  ],
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::RDS::ReservedDBInstance"
+}

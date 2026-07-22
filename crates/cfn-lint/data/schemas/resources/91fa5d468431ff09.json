@@ -1,0 +1,157 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConnectorConfiguration"
+ ],
+ "definitions": {
+  "AzureConnectorConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for connecting to Microsoft Azure.",
+   "properties": {
+    "ClientIdentifier": {
+     "description": "The Azure client (application) identifier.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TenantIdentifier": {
+     "description": "The Azure tenant identifier.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "TenantIdentifier",
+    "ClientIdentifier"
+   ],
+   "type": "object"
+  },
+  "ConnectorConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration for the connector. Specify the third-party cloud provider configuration.",
+   "properties": {
+    "Azure": {
+     "$ref": "#/definitions/AzureConnectorConfiguration",
+     "description": "The configuration for connecting to Microsoft Azure."
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Config::Connector",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "config:PutConnector",
+    "config:GetConnector",
+    "config:TagResource",
+    "config:ListTagsForResource",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "config:DeleteConnector"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "config:ListConnectors"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "config:GetConnector",
+    "config:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "config:GetConnector",
+    "config:TagResource",
+    "config:UntagResource",
+    "config:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the connector.",
+   "type": "string"
+  },
+  "ConnectorConfiguration": {
+   "$ref": "#/definitions/ConnectorConfiguration",
+   "description": "The configuration for the connector that specifies the third-party cloud provider connection details."
+  },
+  "CreatedTime": {
+   "description": "The time at which the connector was created.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the connector. AWS Config automatically assigns the name when creating the Connector.",
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "description": "The tags for the connector.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Name",
+  "/properties/CreatedTime"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "ConnectorConfiguration"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "config:TagResource",
+   "config:UntagResource",
+   "config:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Config::Connector"
+}

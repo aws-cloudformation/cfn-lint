@@ -1,0 +1,176 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Engine",
+  "/properties/EngineVersion",
+  "/properties/GlobalClusterIdentifier",
+  "/properties/SourceDBClusterIdentifier",
+  "/properties/StorageEncrypted"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with an Amazon DocumentDB resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The AWS::DocDB::GlobalCluster resource represents an Amazon DocumentDB Global Cluster.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "rds:CreateGlobalCluster",
+    "rds:DescribeGlobalClusters",
+    "rds:DescribeDBClusters",
+    "rds:AddTagsToResource",
+    "rds:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "rds:DeleteGlobalCluster",
+    "rds:DescribeGlobalClusters",
+    "rds:RemoveFromGlobalCluster",
+    "rds:DescribeDBClusters"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "rds:DescribeGlobalClusters",
+    "rds:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "rds:DescribeGlobalClusters",
+    "rds:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "rds:ModifyGlobalCluster",
+    "rds:DescribeGlobalClusters",
+    "rds:AddTagsToResource",
+    "rds:ListTagsForResource",
+    "rds:RemoveTagsFromResource"
+   ]
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "Engine"
+   ]
+  },
+  {
+   "required": [
+    "SourceDBClusterIdentifier"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/GlobalClusterIdentifier"
+ ],
+ "properties": {
+  "DeletionProtection": {
+   "description": "Indicates whether the global cluster has deletion protection enabled. The global cluster can't be deleted when deletion protection is enabled.",
+   "type": "boolean"
+  },
+  "Engine": {
+   "default": "docdb",
+   "description": "The database engine to use for this global cluster.",
+   "enum": [
+    "docdb"
+   ],
+   "type": "string"
+  },
+  "EngineVersion": {
+   "description": "The engine version to use for this global cluster.",
+   "type": "string"
+  },
+  "GlobalClusterArn": {
+   "description": "The Amazon Resource Name (ARN) for the global cluster.",
+   "type": "string"
+  },
+  "GlobalClusterIdentifier": {
+   "description": "The cluster identifier of the global cluster.",
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  },
+  "GlobalClusterResourceId": {
+   "description": "The AWS Region-unique, immutable identifier for the global database cluster. This identifier is found in AWS CloudTrail log entries whenever the AWS KMS key for the DB cluster is accessed.",
+   "type": "string"
+  },
+  "SourceDBClusterIdentifier": {
+   "description": "The Amazon Resource Name (ARN) to use as the primary cluster of the global cluster. You may also choose to instead specify the DBClusterIdentifier. If you provide a value for this parameter, don't specify values for the following settings because Amazon DocumentDB uses the values from the specified source DB cluster: Engine, EngineVersion, StorageEncrypted",
+   "oneOf": [
+    {
+     "pattern": "^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"
+    },
+    {
+     "pattern": "^(?=.{40,128}$)arn.*"
+    }
+   ],
+   "type": "string"
+  },
+  "StorageEncrypted": {
+   "description": "Indicates whether the global cluster has storage encryption enabled.",
+   "type": "boolean"
+  },
+  "Tags": {
+   "description": "The tags to be assigned to the Amazon DocumentDB resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/GlobalClusterIdentifier": "$lowercase(GlobalClusterIdentifier)"
+ },
+ "readOnlyProperties": [
+  "/properties/GlobalClusterArn",
+  "/properties/GlobalClusterResourceId"
+ ],
+ "required": [
+  "GlobalClusterIdentifier"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "rds:AddTagsToResource",
+   "rds:ListTagsForResource",
+   "rds:RemoveTagsFromResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DocDB::GlobalCluster",
+ "writeOnlyProperties": [
+  "/properties/SourceDBClusterIdentifier"
+ ]
+}

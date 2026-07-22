@@ -1,0 +1,236 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GatewayPlatform",
+  "/properties/GatewayVersion"
+ ],
+ "definitions": {
+  "CapabilityConfiguration": {
+   "description": "The JSON document that defines the gateway capability's configuration.",
+   "type": "string"
+  },
+  "CapabilityNamespace": {
+   "description": "The namespace of the capability configuration.",
+   "type": "string"
+  },
+  "GatewayCapabilitySummary": {
+   "additionalProperties": false,
+   "description": "Contains a summary of a gateway capability configuration.",
+   "properties": {
+    "CapabilityConfiguration": {
+     "$ref": "#/definitions/CapabilityConfiguration"
+    },
+    "CapabilityNamespace": {
+     "$ref": "#/definitions/CapabilityNamespace"
+    }
+   },
+   "required": [
+    "CapabilityNamespace"
+   ],
+   "type": "object"
+  },
+  "GatewayPlatform": {
+   "additionalProperties": false,
+   "description": "Contains a gateway's platform information.",
+   "oneOf": [
+    {
+     "required": [
+      "GreengrassV2"
+     ]
+    },
+    {
+     "required": [
+      "SiemensIE"
+     ]
+    }
+   ],
+   "properties": {
+    "GreengrassV2": {
+     "$ref": "#/definitions/GreengrassV2",
+     "description": "A gateway that runs on AWS IoT Greengrass V2."
+    },
+    "SiemensIE": {
+     "$ref": "#/definitions/SiemensIE",
+     "description": "A gateway that runs on Siemens Industrial Edge."
+    }
+   },
+   "type": "object"
+  },
+  "GatewayVersion": {
+   "description": "The version of the gateway you want to create.",
+   "type": "string"
+  },
+  "GreengrassV2": {
+   "additionalProperties": false,
+   "description": "Contains the CoreDeviceThingName of AWS IoT Greengrass Group V2 that the gateway runs on.",
+   "properties": {
+    "CoreDeviceOperatingSystem": {
+     "description": "The operating system of the core device in AWS IoT Greengrass V2.",
+     "enum": [
+      "LINUX_AARCH64",
+      "LINUX_AMD64",
+      "WINDOWS_AMD64"
+     ],
+     "type": "string"
+    },
+    "CoreDeviceThingName": {
+     "description": "The name of the CoreDevice in GreenGrass V2.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9:_-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "CoreDeviceThingName"
+   ],
+   "type": "object"
+  },
+  "SiemensIE": {
+   "additionalProperties": false,
+   "description": "Contains the IotCoreThingName of AWS IoT Thing that the gateway runs on.",
+   "properties": {
+    "IotCoreThingName": {
+     "description": "The name of the IoT Core Thing.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9:_-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "IotCoreThingName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "To add or update tag, provide both key and value. To delete tag, provide only tag key to be deleted",
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::IoTSiteWise::Gateway",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iotsitewise:CreateGateway",
+    "iotsitewise:DescribeGateway",
+    "iotsitewise:DescribeGatewayCapabilityConfiguration",
+    "iotsitewise:UpdateGatewayCapabilityConfiguration",
+    "iam:PassRole",
+    "iam:GetRole",
+    "iotsitewise:ListTagsForResource",
+    "iotsitewise:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iotsitewise:DescribeGateway",
+    "iotsitewise:DescribeGatewayCapabilityConfiguration",
+    "iotsitewise:DeleteGateway"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iotsitewise:ListGateways",
+    "iotsitewise:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iotsitewise:DescribeGateway",
+    "iotsitewise:DescribeGatewayCapabilityConfiguration",
+    "iotsitewise:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iotsitewise:UpdateGateway",
+    "iotsitewise:UpdateGatewayCapabilityConfiguration",
+    "iotsitewise:TagResource",
+    "iotsitewise:UntagResource",
+    "iotsitewise:DescribeGateway",
+    "iotsitewise:DescribeGatewayCapabilityConfiguration",
+    "iotsitewise:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GatewayId"
+ ],
+ "properties": {
+  "GatewayCapabilitySummaries": {
+   "description": "A list of gateway capability summaries that each contain a namespace and status.",
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/GatewayCapabilitySummary"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "GatewayId": {
+   "description": "The ID of the gateway device.",
+   "type": "string"
+  },
+  "GatewayName": {
+   "description": "A unique, friendly name for the gateway.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
+   "type": "string"
+  },
+  "GatewayPlatform": {
+   "$ref": "#/definitions/GatewayPlatform",
+   "description": "The gateway's platform. You can only specify one platform in a gateway."
+  },
+  "GatewayVersion": {
+   "description": "The version of the gateway you want to create.",
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^[0-9]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A list of key-value pairs that contain metadata for the gateway.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/GatewayId"
+ ],
+ "required": [
+  "GatewayName",
+  "GatewayPlatform"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-IoTSiteWise.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "iotsitewise:TagResource",
+   "iotsitewise:UntagResource",
+   "iotsitewise:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTSiteWise::Gateway"
+}

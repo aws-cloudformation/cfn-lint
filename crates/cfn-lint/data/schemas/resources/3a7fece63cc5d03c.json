@@ -1,0 +1,191 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CertificateTags"
+ ],
+ "definitions": {
+  "CertificateAuthority": {
+   "additionalProperties": false,
+   "description": "The certificate authority configuration for the ACME endpoint.",
+   "properties": {
+    "PublicCertificateAuthority": {
+     "$ref": "#/definitions/PublicCertificateAuthority"
+    }
+   },
+   "required": [
+    "PublicCertificateAuthority"
+   ],
+   "type": "object"
+  },
+  "PublicCertificateAuthority": {
+   "additionalProperties": false,
+   "description": "Configuration for the public certificate authority.",
+   "properties": {
+    "AllowedKeyAlgorithms": {
+     "description": "The allowed key algorithms for certificates issued via this endpoint.",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag.",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::CertificateManager::AcmeEndpoint",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "acm:CreateAcmeEndpoint",
+    "acm:DescribeAcmeEndpoint",
+    "acm:TagResource",
+    "acm:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "acm:DeleteAcmeEndpoint",
+    "acm:DescribeAcmeEndpoint"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "acm:ListAcmeEndpoints"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "acm:DescribeAcmeEndpoint",
+    "acm:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "acm:UpdateAcmeEndpoint",
+    "acm:DescribeAcmeEndpoint",
+    "acm:TagResource",
+    "acm:UntagResource",
+    "acm:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AcmeEndpointArn"
+ ],
+ "properties": {
+  "AcmeEndpointArn": {
+   "description": "The Amazon Resource Name (ARN) of the ACME endpoint.",
+   "type": "string"
+  },
+  "AuthorizationBehavior": {
+   "description": "The authorization behavior for the ACME endpoint.",
+   "enum": [
+    "PRE_APPROVED"
+   ],
+   "type": "string"
+  },
+  "CertificateAuthority": {
+   "$ref": "#/definitions/CertificateAuthority"
+  },
+  "CertificateTags": {
+   "description": "Tags applied to certificates issued via this endpoint.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Contact": {
+   "description": "Whether contact information is required for the ACME endpoint.",
+   "enum": [
+    "NOT_REQUIRED",
+    "REQUIRED"
+   ],
+   "type": "string"
+  },
+  "EndpointUrl": {
+   "description": "The ACME directory URL for the endpoint.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Tags associated with the ACME endpoint.",
+   "insertionOrder": false,
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "Key": {
+      "description": "The key name of the tag.",
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+      "type": "string"
+     },
+     "Value": {
+      "description": "The value for the tag.",
+      "maxLength": 256,
+      "minLength": 0,
+      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+      "type": "string"
+     }
+    },
+    "required": [
+     "Key",
+     "Value"
+    ],
+    "type": "object"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AcmeEndpointArn",
+  "/properties/EndpointUrl"
+ ],
+ "required": [
+  "AuthorizationBehavior",
+  "CertificateAuthority"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "acm:TagResource",
+   "acm:UntagResource",
+   "acm:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CertificateManager::AcmeEndpoint"
+}

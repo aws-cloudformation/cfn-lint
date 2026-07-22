@@ -1,0 +1,233 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Bucket",
+  "/properties/BucketAccountId",
+  "/properties/VpcConfiguration"
+ ],
+ "definitions": {
+  "Arn": {
+   "description": "the Amazon Resource Name (ARN) of the specified accesspoint.",
+   "type": "string"
+  },
+  "PublicAccessBlockConfiguration": {
+   "properties": {
+    "BlockPublicAcls": {
+     "description": "Specifies whether Amazon S3 should block public access control lists (ACLs) for buckets in this account. Setting this element to TRUE causes the following behavior:\n- PUT Bucket acl and PUT Object acl calls fail if the specified ACL is public.\n - PUT Object calls fail if the request includes a public ACL.\n. - PUT Bucket calls fail if the request includes a public ACL.\nEnabling this setting doesn't affect existing policies or ACLs.",
+     "type": "boolean"
+    },
+    "BlockPublicPolicy": {
+     "description": "Specifies whether Amazon S3 should block public bucket policies for buckets in this account. Setting this element to TRUE causes Amazon S3 to reject calls to PUT Bucket policy if the specified bucket policy allows public access. Enabling this setting doesn't affect existing bucket policies.",
+     "type": "boolean"
+    },
+    "IgnorePublicAcls": {
+     "description": "Specifies whether Amazon S3 should ignore public ACLs for buckets in this account. Setting this element to TRUE causes Amazon S3 to ignore all public ACLs on buckets in this account and any objects that they contain. Enabling this setting doesn't affect the persistence of any existing ACLs and doesn't prevent new public ACLs from being set.",
+     "type": "boolean"
+    },
+    "RestrictPublicBuckets": {
+     "description": "Specifies whether Amazon S3 should restrict public bucket policies for this bucket. Setting this element to TRUE restricts access to this bucket to only AWS services and authorized users within this account if the bucket has a public policy.\nEnabling this setting doesn't affect previously stored bucket policies, except that public and cross-account access within any public bucket policy, including non-public delegation to specific accounts, is blocked.",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "Scope": {
+   "properties": {
+    "Permissions": {
+     "description": "You can include one or more API operations as permissions",
+     "insertionOrder": false,
+     "items": {
+      "enum": [
+       "GetObject",
+       "GetObjectAttributes",
+       "ListMultipartUploadParts",
+       "ListBucket",
+       "ListBucketMultipartUploads",
+       "PutObject",
+       "DeleteObject",
+       "AbortMultipartUpload"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Prefixes": {
+     "description": "You can specify any amount of pre\ufb01xes, but the total length of characters of all pre\ufb01xes must be less than 256 bytes in size.",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:.*)([\\p{L}\\p{Z}\\p{N}_.:=+\\/\\-@%]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:=+\\/\\-@%]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VpcConfiguration": {
+   "description": "The Virtual Private Cloud (VPC) configuration for a bucket access point.",
+   "properties": {
+    "VpcId": {
+     "description": "If this field is specified, this access point will only allow connections from the specified VPC ID.",
+     "format": "AWS::EC2::VPC.Id",
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "The AWS::S3Express::AccessPoint resource is an Amazon S3 resource type that you can use to access buckets.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3express:CreateAccessPoint",
+    "s3express:PutAccessPointPolicy",
+    "s3express:GetAccessPoint",
+    "s3express:PutAccessPointScope",
+    "s3express:GetAccessPointScope",
+    "s3express:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "s3express:DeleteAccessPointPolicy",
+    "s3express:DeleteAccessPoint",
+    "s3express:DeleteAccessPointScope"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "s3express:ListAccessPointsForDirectoryBuckets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "s3express:GetAccessPoint",
+    "s3express:GetAccessPointPolicy",
+    "s3express:GetAccessPointScope",
+    "s3express:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "s3express:PutAccessPointPolicy",
+    "s3express:DeleteAccessPointPolicy",
+    "s3express:PutAccessPointScope",
+    "s3express:DeleteAccessPointScope",
+    "s3express:TagResource",
+    "s3express:UntagResource",
+    "s3express:GetAccessPoint",
+    "s3express:GetAccessPointPolicy",
+    "s3express:GetAccessPointScope",
+    "s3express:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn",
+   "description": "The Amazon Resource Name (ARN) of the specified accesspoint.",
+   "examples": [
+    "arn:aws:s3express:us-west-2:123456789012:accesspoint/my-accesspoint--usw2-az1--xa-s3"
+   ]
+  },
+  "Bucket": {
+   "description": "The name of the bucket that you want to associate this Access Point with.",
+   "maxLength": 255,
+   "minLength": 3,
+   "type": "string"
+  },
+  "BucketAccountId": {
+   "description": "The AWS account ID associated with the S3 bucket associated with this access point.",
+   "maxLength": 64,
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name you want to assign to this Access Point. If you don't specify a name, AWS CloudFormation generates a unique ID and uses that ID for the access point name. For directory buckets, the access point name must consist of a base name that you provide and su\ufb03x that includes the ZoneID (AWS Availability Zone or Local Zone) of your bucket location, followed by --xa-s3.",
+   "maxLength": 50,
+   "minLength": 3,
+   "pattern": "^[a-z0-9]([a-z0-9\\-]*[a-z0-9])?$",
+   "type": "string"
+  },
+  "NetworkOrigin": {
+   "description": "Indicates whether this Access Point allows access from the public Internet. If VpcConfiguration is specified for this Access Point, then NetworkOrigin is VPC, and the Access Point doesn't allow access from the public Internet. Otherwise, NetworkOrigin is Internet, and the Access Point allows access from the public Internet, subject to the Access Point and bucket access policies.",
+   "enum": [
+    "Internet",
+    "VPC"
+   ],
+   "type": "string"
+  },
+  "Policy": {
+   "description": "The Access Point Policy you want to apply to this access point.",
+   "type": "object"
+  },
+  "PublicAccessBlockConfiguration": {
+   "$ref": "#/definitions/PublicAccessBlockConfiguration",
+   "description": "The PublicAccessBlock configuration that you want to apply to this Access Point."
+  },
+  "Scope": {
+   "$ref": "#/definitions/Scope",
+   "description": "For directory buckets, you can \ufb01lter access control to speci\ufb01c pre\ufb01xes, API operations, or a combination of both."
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VpcConfiguration": {
+   "$ref": "#/definitions/VpcConfiguration",
+   "description": "If you include this field, Amazon S3 restricts access to this Access Point to requests from the specified Virtual Private Cloud (VPC)."
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/NetworkOrigin",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Bucket"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "s3express:TagResource",
+   "s3express:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::S3Express::AccessPoint"
+}

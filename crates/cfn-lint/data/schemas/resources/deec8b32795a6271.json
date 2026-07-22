@@ -1,0 +1,318 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EndpointName"
+ ],
+ "definitions": {
+  "Alarm": {
+   "additionalProperties": false,
+   "properties": {
+    "AlarmName": {
+     "description": "The name of the CloudWatch alarm.",
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^(?!\\s*$).+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AlarmName"
+   ],
+   "type": "object"
+  },
+  "AutoRollbackConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Alarms": {
+     "description": "List of CloudWatch alarms to monitor during the deployment. If any alarm goes off, the deployment is rolled back.",
+     "items": {
+      "$ref": "#/definitions/Alarm"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Alarms"
+   ],
+   "type": "object"
+  },
+  "BlueGreenUpdatePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "MaximumExecutionTimeoutInSeconds": {
+     "description": "The maximum time allowed for the blue/green update, in seconds.",
+     "maximum": 28800,
+     "minimum": 600,
+     "type": "integer"
+    },
+    "TerminationWaitInSeconds": {
+     "description": "The wait time before terminating the old endpoint during a blue/green deployment.",
+     "maximum": 3600,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "TrafficRoutingConfiguration": {
+     "$ref": "#/definitions/TrafficRoutingConfig",
+     "description": "The traffic routing configuration for the blue/green deployment."
+    }
+   },
+   "required": [
+    "TrafficRoutingConfiguration"
+   ],
+   "type": "object"
+  },
+  "CapacitySize": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "description": "Specifies whether the `Value` is an instance count or a capacity unit.",
+     "enum": [
+      "CAPACITY_PERCENT",
+      "INSTANCE_COUNT"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value representing either the number of instances or the number of capacity units.",
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Type",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "DeploymentConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoRollbackConfiguration": {
+     "$ref": "#/definitions/AutoRollbackConfig",
+     "description": "Configuration for automatic rollback if an error occurs during deployment."
+    },
+    "BlueGreenUpdatePolicy": {
+     "$ref": "#/definitions/BlueGreenUpdatePolicy",
+     "description": "Configuration for blue-green update deployment policies."
+    },
+    "RollingUpdatePolicy": {
+     "$ref": "#/definitions/RollingUpdatePolicy",
+     "description": "Configuration for rolling update deployment policies."
+    }
+   },
+   "type": "object"
+  },
+  "RollingUpdatePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "MaximumBatchSize": {
+     "$ref": "#/definitions/CapacitySize",
+     "description": "Specifies the maximum batch size for each rolling update."
+    },
+    "MaximumExecutionTimeoutInSeconds": {
+     "description": "The maximum time allowed for the rolling update, in seconds.",
+     "maximum": 28800,
+     "minimum": 600,
+     "type": "integer"
+    },
+    "RollbackMaximumBatchSize": {
+     "$ref": "#/definitions/CapacitySize",
+     "description": "The maximum batch size for rollback during an update failure."
+    },
+    "WaitIntervalInSeconds": {
+     "description": "The time to wait between steps during the rolling update, in seconds.",
+     "maximum": 3600,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaximumBatchSize",
+    "WaitIntervalInSeconds"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The key of the tag.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value of the tag.",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TrafficRoutingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CanarySize": {
+     "$ref": "#/definitions/CapacitySize",
+     "description": "Specifies the size of the canary traffic in a canary deployment."
+    },
+    "LinearStepSize": {
+     "$ref": "#/definitions/CapacitySize",
+     "description": "Specifies the step size for linear traffic routing."
+    },
+    "Type": {
+     "description": "Specifies the type of traffic routing (e.g., 'AllAtOnce', 'Canary', 'Linear').",
+     "enum": [
+      "ALL_AT_ONCE",
+      "CANARY",
+      "LINEAR"
+     ],
+     "type": "string"
+    },
+    "WaitIntervalInSeconds": {
+     "description": "Specifies the wait interval between traffic shifts, in seconds.",
+     "maximum": 3600,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "VariantProperty": {
+   "additionalProperties": false,
+   "properties": {
+    "VariantPropertyType": {
+     "description": "The type of variant property (e.g., 'DesiredInstanceCount', 'DesiredWeight', 'DataCaptureConfig').",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SageMaker::Endpoint",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sagemaker:CreateEndpoint",
+    "sagemaker:DescribeEndpoint",
+    "sagemaker:AddTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DeleteEndpoint",
+    "sagemaker:DescribeEndpoint"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sagemaker:ListEndpoints"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribeEndpoint",
+    "sagemaker:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sagemaker:UpdateEndpoint",
+    "sagemaker:DescribeEndpoint",
+    "sagemaker:AddTags",
+    "sagemaker:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EndpointArn"
+ ],
+ "properties": {
+  "DeploymentConfig": {
+   "$ref": "#/definitions/DeploymentConfig",
+   "description": "Specifies deployment configuration for updating the SageMaker endpoint. Includes rollback and update policies."
+  },
+  "EndpointArn": {
+   "description": "The Amazon Resource Name (ARN) of the endpoint.",
+   "type": "string"
+  },
+  "EndpointConfigName": {
+   "description": "The name of the endpoint configuration for the SageMaker endpoint. This is a required property.",
+   "maxLength": 63,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  },
+  "EndpointName": {
+   "description": "The name of the SageMaker endpoint. This name must be unique within an AWS Region.",
+   "maxLength": 63,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  },
+  "ExcludeRetainedVariantProperties": {
+   "description": "Specifies a list of variant properties that you want to exclude when updating an endpoint.",
+   "items": {
+    "$ref": "#/definitions/VariantProperty"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "RetainAllVariantProperties": {
+   "description": "When set to true, retains all variant properties for an endpoint when it is updated.",
+   "type": "boolean"
+  },
+  "RetainDeploymentConfig": {
+   "description": "When set to true, retains the deployment configuration during endpoint updates.",
+   "type": "boolean"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/EndpointArn",
+  "/properties/EndpointName"
+ ],
+ "required": [
+  "EndpointConfigName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "sagemaker:AddTags",
+   "sagemaker:DeleteTags",
+   "sagemaker:ListTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::Endpoint",
+ "writeOnlyProperties": [
+  "/properties/ExcludeRetainedVariantProperties",
+  "/properties/RetainAllVariantProperties",
+  "/properties/RetainDeploymentConfig"
+ ]
+}

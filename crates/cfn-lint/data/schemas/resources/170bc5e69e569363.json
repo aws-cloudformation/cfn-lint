@@ -1,0 +1,185 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AcmeEndpointArn",
+  "/properties/RoleArn",
+  "/properties/Expiration"
+ ],
+ "definitions": {
+  "Expiration": {
+   "additionalProperties": false,
+   "description": "The expiration configuration for the external account binding.",
+   "properties": {
+    "Type": {
+     "description": "The time unit for the expiration value.",
+     "enum": [
+      "DAYS",
+      "HOURS",
+      "MINUTES"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "description": "The expiration value.",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Value",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::CertificateManager::AcmeExternalAccountBinding",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "acm:CreateAcmeExternalAccountBinding",
+    "acm:DescribeAcmeExternalAccountBinding",
+    "acm:TagResource",
+    "acm:ListTagsForResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "acm:DeleteAcmeExternalAccountBinding",
+    "acm:DescribeAcmeExternalAccountBinding"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "AcmeEndpointArn": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "AcmeEndpointArn"
+    ]
+   },
+   "permissions": [
+    "acm:ListAcmeExternalAccountBindings"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "acm:DescribeAcmeExternalAccountBinding",
+    "acm:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "acm:DescribeAcmeExternalAccountBinding",
+    "acm:TagResource",
+    "acm:UntagResource",
+    "acm:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AcmeExternalAccountBindingArn"
+ ],
+ "properties": {
+  "AcmeEndpointArn": {
+   "description": "The ARN of the ACME endpoint this binding is associated with.",
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^arn:aws[a-z-]*:acm:[a-z0-9-]+:[0-9]{12}:acme-endpoint/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "AcmeExternalAccountBindingArn": {
+   "description": "The Amazon Resource Name (ARN) of the external account binding.",
+   "type": "string"
+  },
+  "Expiration": {
+   "$ref": "#/definitions/Expiration"
+  },
+  "RoleArn": {
+   "description": "The IAM role ARN for cross-account access.",
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws[a-z-]*:iam::[0-9]{12}:role/.+$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Tags associated with the external account binding.",
+   "insertionOrder": false,
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "Key": {
+      "description": "The key name of the tag.",
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+      "type": "string"
+     },
+     "Value": {
+      "description": "The value for the tag.",
+      "maxLength": 256,
+      "minLength": 0,
+      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+      "type": "string"
+     }
+    },
+    "required": [
+     "Key",
+     "Value"
+    ],
+    "type": "object"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AcmeExternalAccountBindingArn"
+ ],
+ "required": [
+  "AcmeEndpointArn",
+  "RoleArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "acm:TagResource",
+   "acm:UntagResource",
+   "acm:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CertificateManager::AcmeExternalAccountBinding",
+ "writeOnlyProperties": [
+  "/properties/Expiration"
+ ]
+}

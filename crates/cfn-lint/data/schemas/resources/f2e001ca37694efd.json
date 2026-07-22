@@ -1,0 +1,163 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/LagId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConnectionsBandwidth",
+  "/properties/Location",
+  "/properties/ProviderName",
+  "/properties/RequestMACSec"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::DirectConnect::Lag",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "directconnect:CreateLag",
+    "directconnect:DeleteConnection",
+    "directconnect:DescribeLags",
+    "directconnect:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "directconnect:DeleteLag",
+    "directconnect:DescribeLags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "directconnect:DescribeLags"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "directconnect:DescribeLags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "directconnect:DescribeLags",
+    "directconnect:TagResource",
+    "directconnect:UntagResource",
+    "directconnect:UpdateLag"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LagArn"
+ ],
+ "properties": {
+  "ConnectionsBandwidth": {
+   "description": "The bandwidth of the individual physical dedicated connections bundled by the LAG.",
+   "pattern": "^[1-9][0-9]*(M|G)bps$",
+   "type": "string"
+  },
+  "LagArn": {
+   "description": "The ARN of the LAG.",
+   "pattern": "^arn:aws[a-z-]*:directconnect:[a-z0-9-]+:[0-9]{12}:dxlag/dxlag-[a-z0-9]{8,21}$",
+   "type": "string"
+  },
+  "LagId": {
+   "description": "The ID of the LAG.",
+   "pattern": "^dxlag-[a-z0-9]{8,21}$",
+   "type": "string"
+  },
+  "LagName": {
+   "description": "The name of the LAG.",
+   "pattern": "^[\\w \\-_,\\/]{1,200}$",
+   "type": "string"
+  },
+  "LagState": {
+   "description": "The state of the LAG.",
+   "pattern": "^(requested|pending|available|down|deleting|deleted|unknown)$",
+   "type": "string"
+  },
+  "Location": {
+   "description": "The location for the LAG.",
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "MinimumLinks": {
+   "description": "The minimum number of physical dedicated connections that must be operational for the LAG itself to be operational.",
+   "type": "integer"
+  },
+  "ProviderName": {
+   "description": "The name of the service provider associated with the requested LAG.",
+   "type": "string"
+  },
+  "RequestMACSec": {
+   "description": "Indicates whether you want the LAG to support MAC Security (MACsec).",
+   "type": "boolean"
+  },
+  "Tags": {
+   "description": "The tags associated with the LAG.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/Location": "\"^[a-zA-Z0-9-]+$\""
+ },
+ "readOnlyProperties": [
+  "/properties/LagArn",
+  "/properties/LagId",
+  "/properties/LagState"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "LagName",
+  "Location",
+  "ConnectionsBandwidth"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "directconnect:TagResource",
+   "directconnect:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DirectConnect::Lag",
+ "writeOnlyProperties": [
+  "/properties/RequestMACSec"
+ ]
+}

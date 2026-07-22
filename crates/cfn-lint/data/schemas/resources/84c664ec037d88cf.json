@@ -1,0 +1,154 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A complex type that contains ``Tag`` key and ``Tag`` value.",
+   "properties": {
+    "Key": {
+     "description": "A string that contains ``Tag`` key.\n The string length should be between 1 and 128 characters. Valid characters include ``a-z``, ``A-Z``, ``0-9``, space, and the special characters ``_ - . : / = + @``.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "A string that contains an optional ``Tag`` value.\n The string length should be between 0 and 256 characters. Valid characters include ``a-z``, ``A-Z``, ``0-9``, space, and the special characters ``_ - . : / = + @``.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The connection group for your distribution tenants. When you first create a distribution tenant and you don't specify a connection group, CloudFront will automatically create a default connection group for you. When you create a new distribution tenant and don't specify a connection group, the default one will be associated with your distribution tenant.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cloudfront:CreateConnectionGroup",
+    "cloudfront:GetConnectionGroup",
+    "cloudfront:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cloudfront:DeleteConnectionGroup",
+    "cloudfront:GetConnectionGroup",
+    "cloudfront:UpdateConnectionGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cloudfront:ListConnectionGroups",
+    "cloudfront:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cloudfront:GetConnectionGroup",
+    "cloudfront:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cloudfront:GetConnectionGroup",
+    "cloudfront:UpdateConnectionGroup",
+    "cloudfront:ListTagsForResource",
+    "cloudfront:TagResource",
+    "cloudfront:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AnycastIpListId": {
+   "description": "The ID of the Anycast static IP list.",
+   "type": "string"
+  },
+  "Arn": {
+   "description": "",
+   "type": "string"
+  },
+  "CreatedTime": {
+   "description": "",
+   "format": "date-time",
+   "type": "string"
+  },
+  "ETag": {
+   "description": "",
+   "type": "string"
+  },
+  "Enabled": {
+   "description": "Whether the connection group is enabled.",
+   "type": "boolean"
+  },
+  "Id": {
+   "description": "",
+   "type": "string"
+  },
+  "Ipv6Enabled": {
+   "description": "IPv6 is enabled for the connection group.",
+   "type": "boolean"
+  },
+  "IsDefault": {
+   "description": "",
+   "type": "boolean"
+  },
+  "LastModifiedTime": {
+   "description": "",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the connection group.",
+   "type": "string"
+  },
+  "RoutingEndpoint": {
+   "description": "",
+   "type": "string"
+  },
+  "Status": {
+   "description": "",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A complex type that contains zero or more ``Tag`` elements.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/CreatedTime",
+  "/properties/LastModifiedTime",
+  "/properties/RoutingEndpoint",
+  "/properties/Status",
+  "/properties/IsDefault",
+  "/properties/ETag"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "cloudfront:TagResource",
+   "cloudfront:ListTagsForResource",
+   "cloudfront:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudFront::ConnectionGroup"
+}

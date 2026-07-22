@@ -1,0 +1,474 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CapacityType",
+  "/properties/NodegroupName",
+  "/properties/RemoteAccess",
+  "/properties/NodeRole",
+  "/properties/ClusterName",
+  "/properties/InstanceTypes",
+  "/properties/DiskSize",
+  "/properties/AmiType",
+  "/properties/Subnets"
+ ],
+ "definitions": {
+  "LaunchTemplateSpecification": {
+   "additionalProperties": false,
+   "description": "An object representing a launch template specification for AWS EKS Nodegroup.",
+   "properties": {
+    "Id": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "Version": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "NodeRepairConfig": {
+   "additionalProperties": false,
+   "description": "The node auto repair configuration for node group.",
+   "properties": {
+    "Enabled": {
+     "description": "Set this value to true to enable node auto repair for the node group.",
+     "type": "boolean"
+    },
+    "MaxParallelNodesRepairedCount": {
+     "description": "Specify the maximum number of nodes that can be repaired concurrently or in parallel, expressed as a count of unhealthy nodes. This gives you finer-grained control over the pace of node replacements. When using this, you cannot also set MaxParallelNodesRepairedPercentage at the same time.",
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MaxParallelNodesRepairedPercentage": {
+     "description": "Specify the maximum number of nodes that can be repaired concurrently or in parallel, expressed as a percentage of unhealthy nodes. This gives you finer-grained control over the pace of node replacements. When using this, you cannot also set MaxParallelNodesRepairedCount at the same time.",
+     "maximum": 100,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MaxUnhealthyNodeThresholdCount": {
+     "description": "Specify a count threshold of unhealthy nodes, above which node auto repair actions will stop. When using this, you cannot also set MaxUnhealthyNodeThresholdPercentage at the same time.",
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MaxUnhealthyNodeThresholdPercentage": {
+     "description": "Specify a percentage threshold of unhealthy nodes, above which node auto repair actions will stop. When using this, you cannot also set MaxUnhealthyNodeThresholdCount at the same time.",
+     "maximum": 100,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "NodeRepairConfigOverrides": {
+     "description": "Specify granular overrides for specific repair actions. These overrides control the repair action and the repair delay time before a node is considered eligible for repair. If you use this, you must specify all the values.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/NodeRepairConfigOverrides"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "NodeRepairConfigOverrides": {
+   "additionalProperties": false,
+   "description": "Specify granular overrides for specific repair actions. These overrides control the repair action and the repair delay time before a node is considered eligible for repair. If you use this, you must specify all the values.",
+   "properties": {
+    "MinRepairWaitTimeMins": {
+     "description": "Specify the minimum time in minutes to wait before attempting to repair a node with this specific NodeMonitoringCondition and NodeUnhealthyReason.",
+     "minimum": 1,
+     "type": "integer"
+    },
+    "NodeMonitoringCondition": {
+     "description": "Specify an unhealthy condition reported by the node monitoring agent that this override would apply to.",
+     "type": "string"
+    },
+    "NodeUnhealthyReason": {
+     "description": "Specify a reason reported by the node monitoring agent that this override would apply to.",
+     "type": "string"
+    },
+    "RepairAction": {
+     "description": "Specify the repair action to take for nodes when all of the specified conditions are met.",
+     "enum": [
+      "Replace",
+      "Reboot",
+      "NoAction"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RemoteAccess": {
+   "additionalProperties": false,
+   "description": "An object representing a remote access configuration specification for AWS EKS Nodegroup.",
+   "properties": {
+    "Ec2SshKey": {
+     "type": "string"
+    },
+    "SourceSecurityGroups": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Ec2SshKey"
+   ],
+   "type": "object"
+  },
+  "ScalingConfig": {
+   "additionalProperties": false,
+   "description": "An object representing a auto scaling group specification for AWS EKS Nodegroup.",
+   "properties": {
+    "DesiredSize": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MaxSize": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MinSize": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Taint": {
+   "additionalProperties": false,
+   "description": "An object representing a Taint specification for AWS EKS Nodegroup.",
+   "properties": {
+    "Effect": {
+     "enum": [
+      "NO_EXECUTE",
+      "NO_SCHEDULE",
+      "PREFER_NO_SCHEDULE"
+     ],
+     "minLength": 1,
+     "type": "string"
+    },
+    "Key": {
+     "maxLength": 63,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 63,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "UpdateConfig": {
+   "additionalProperties": false,
+   "description": "The node group update configuration.",
+   "properties": {
+    "MaxUnavailable": {
+     "description": "The maximum number of nodes unavailable at once during a version update. Nodes will be updated in parallel. This value or maxUnavailablePercentage is required to have a value.The maximum number is 100. ",
+     "minimum": 1,
+     "type": "number"
+    },
+    "MaxUnavailablePercentage": {
+     "description": "The maximum percentage of nodes unavailable during a version update. This percentage of nodes will be updated in parallel, up to 100 nodes at once. This value or maxUnavailable is required to have a value.",
+     "maximum": 100,
+     "minimum": 1,
+     "type": "number"
+    },
+    "UpdateStrategy": {
+     "description": "The configuration for the behavior to follow during an node group version update of this managed node group. You choose between two possible strategies for replacing nodes during an UpdateNodegroupVersion action.",
+     "enum": [
+      "DEFAULT",
+      "MINIMAL"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "WarmPoolConfig": {
+   "additionalProperties": false,
+   "description": "The warm pool configuration for the node group.",
+   "properties": {
+    "Enabled": {
+     "description": "Enable or disable warm pool for the node group.",
+     "type": "boolean"
+    },
+    "MaxGroupPreparedCapacity": {
+     "description": "The maximum number of instances that are allowed to be in the warm pool.",
+     "minimum": -1,
+     "type": "integer"
+    },
+    "MinSize": {
+     "description": "The minimum number of instances to maintain in the warm pool.",
+     "minimum": 0,
+     "type": "integer"
+    },
+    "PoolState": {
+     "description": "The desired state of warm pool instances.",
+     "enum": [
+      "HIBERNATED",
+      "RUNNING",
+      "STOPPED"
+     ],
+     "type": "string"
+    },
+    "ReuseOnScaleIn": {
+     "description": "Whether to return instances to the warm pool during scale-in instead of terminating them.",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::EKS::Nodegroup",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "eks:CreateNodegroup",
+    "eks:DescribeNodegroup",
+    "eks:TagResource",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcs",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeKeyPairs",
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "ec2:DescribeRouteTables",
+    "ec2:DescribeLaunchTemplates",
+    "ec2:DescribeLaunchTemplateVersions",
+    "ec2:RunInstances",
+    "iam:CreateServiceLinkedRole",
+    "iam:GetRole",
+    "iam:PassRole",
+    "iam:ListAttachedRolePolicies"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "eks:DeleteNodegroup",
+    "eks:DescribeNodegroup"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ClusterName": {
+      "$ref": "resource-schema.json#/properties/ClusterName"
+     }
+    },
+    "required": [
+     "ClusterName"
+    ]
+   },
+   "permissions": [
+    "eks:ListNodegroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "eks:DescribeNodegroup"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:GetRole",
+    "iam:PassRole",
+    "eks:DescribeNodegroup",
+    "eks:DescribeUpdate",
+    "eks:ListUpdates",
+    "eks:TagResource",
+    "eks:UntagResource",
+    "eks:UpdateNodegroupConfig",
+    "eks:UpdateNodegroupVersion",
+    "ec2:DescribeLaunchTemplateVersions",
+    "ec2:RunInstances"
+   ],
+   "timeoutInMinutes": 2160
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AmiType": {
+   "description": "The AMI type for your node group.",
+   "enum": [
+    "AL2023_ARM_64_NVIDIA",
+    "AL2023_ARM_64_STANDARD",
+    "AL2023_x86_64_NEURON",
+    "AL2023_x86_64_NVIDIA",
+    "AL2023_x86_64_STANDARD",
+    "AL2_ARM_64",
+    "AL2_x86_64",
+    "AL2_x86_64_GPU",
+    "BOTTLEROCKET_ARM_64",
+    "BOTTLEROCKET_ARM_64_FIPS",
+    "BOTTLEROCKET_ARM_64_NVIDIA",
+    "BOTTLEROCKET_ARM_64_NVIDIA_FIPS",
+    "BOTTLEROCKET_x86_64",
+    "BOTTLEROCKET_x86_64_FIPS",
+    "BOTTLEROCKET_x86_64_NVIDIA",
+    "BOTTLEROCKET_x86_64_NVIDIA_FIPS",
+    "CUSTOM",
+    "WINDOWS_CORE_2019_x86_64",
+    "WINDOWS_CORE_2022_x86_64",
+    "WINDOWS_CORE_2025_x86_64",
+    "WINDOWS_FULL_2019_x86_64",
+    "WINDOWS_FULL_2022_x86_64",
+    "WINDOWS_FULL_2025_x86_64"
+   ],
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "CapacityType": {
+   "description": "The capacity type of your managed node group.",
+   "enum": [
+    "CAPACITY_BLOCK",
+    "ON_DEMAND",
+    "SPOT"
+   ],
+   "type": "string"
+  },
+  "ClusterName": {
+   "description": "Name of the cluster to create the node group in.",
+   "minLength": 1,
+   "type": "string"
+  },
+  "DiskSize": {
+   "description": "The root device disk size (in GiB) for your node group instances.",
+   "type": "integer"
+  },
+  "ForceUpdateEnabled": {
+   "default": false,
+   "description": "Force the update if the existing node group's pods are unable to be drained due to a pod disruption budget issue.",
+   "type": "boolean"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InstanceTypes": {
+   "description": "Specify the instance types for a node group.",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Labels": {
+   "additionalProperties": false,
+   "description": "The Kubernetes labels to be applied to the nodes in the node group when they are created.",
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LaunchTemplate": {
+   "$ref": "#/definitions/LaunchTemplateSpecification",
+   "description": "An object representing a node group's launch template specification."
+  },
+  "NodeRepairConfig": {
+   "$ref": "#/definitions/NodeRepairConfig",
+   "description": "The node auto repair configuration for node group."
+  },
+  "NodeRole": {
+   "description": "The Amazon Resource Name (ARN) of the IAM role to associate with your node group.",
+   "type": "string"
+  },
+  "NodegroupName": {
+   "description": "The unique name to give your node group.",
+   "minLength": 1,
+   "type": "string"
+  },
+  "ReleaseVersion": {
+   "description": "The AMI version of the Amazon EKS-optimized AMI to use with your node group.",
+   "type": "string"
+  },
+  "RemoteAccess": {
+   "$ref": "#/definitions/RemoteAccess",
+   "description": "The remote access (SSH) configuration to use with your node group."
+  },
+  "ScalingConfig": {
+   "$ref": "#/definitions/ScalingConfig",
+   "description": "The scaling configuration details for the Auto Scaling group that is created for your node group."
+  },
+  "Subnets": {
+   "description": "The subnets to use for the Auto Scaling group that is created for your node group.",
+   "format": "AWS::EC2::Subnet.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::Subnet.Id",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "The metadata, as key-value pairs, to apply to the node group to assist with categorization and organization. Follows same schema as Labels for consistency.",
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Taints": {
+   "description": "The Kubernetes taints to be applied to the nodes in the node group when they are created.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Taint"
+   },
+   "type": "array"
+  },
+  "UpdateConfig": {
+   "$ref": "#/definitions/UpdateConfig",
+   "description": "The node group update configuration."
+  },
+  "Version": {
+   "description": "The Kubernetes version to use for your managed nodes.",
+   "type": "string"
+  },
+  "WarmPoolConfig": {
+   "$ref": "#/definitions/WarmPoolConfig",
+   "description": "The warm pool configuration details for the Auto Scaling group that is created for the node group."
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "ClusterName",
+  "NodeRole",
+  "Subnets"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "eks:TagResource",
+   "eks:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EKS::Nodegroup",
+ "writeOnlyProperties": [
+  "/properties/ForceUpdateEnabled"
+ ]
+}

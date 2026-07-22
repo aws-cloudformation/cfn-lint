@@ -1,0 +1,233 @@
+{
+ "additionalProperties": false,
+ "anyOf": [
+  {
+   "properties": {
+    "AccountGrouping": {
+     "required": [
+      "LinkedAccountIds"
+     ]
+    }
+   },
+   "required": [
+    "PrimaryAccountId"
+   ]
+  },
+  {
+   "properties": {
+    "AccountGrouping": {
+     "required": [
+      "ResponsibilityTransferArn"
+     ]
+    }
+   },
+   "required": [
+    "AccountGrouping"
+   ]
+  }
+ ],
+ "createOnlyProperties": [
+  "/properties/PrimaryAccountId"
+ ],
+ "definitions": {
+  "AccountGrouping": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoAssociate": {
+     "type": "boolean"
+    },
+    "LinkedAccountIds": {
+     "insertionOrder": false,
+     "items": {
+      "pattern": "[0-9]{12}",
+      "type": "string"
+     },
+     "maxItems": 30,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ResponsibilityTransferArn": {
+     "pattern": "arn:[a-z0-9][a-z0-9-.]{0,62}:organizations::[0-9]{12}:transfer/o-[a-z0-9]{10,32}/(billing)/(inbound|outbound)/rt-[0-9a-z]{8,32}",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "BillingGroupStatus": {
+   "enum": [
+    "ACTIVE",
+    "PRIMARY_ACCOUNT_MISSING"
+   ],
+   "type": "string"
+  },
+  "ComputationPreference": {
+   "additionalProperties": false,
+   "properties": {
+    "PricingPlanArn": {
+     "description": "ARN of the attached pricing plan",
+     "pattern": "arn:aws(-cn)?:billingconductor::(aws|[0-9]{12}):pricingplan/(BasicPricingPlan|Passthrough|[a-zA-Z0-9]{10})",
+     "type": "string"
+    }
+   },
+   "required": [
+    "PricingPlanArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "A billing group is a set of linked account which belong to the same end customer. It can be seen as a virtual consolidated billing family.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "billingconductor:CreateBillingGroup",
+    "billingconductor:AssociateAccounts",
+    "billingconductor:ListBillingGroups",
+    "billingconductor:TagResource",
+    "billingconductor:ListTagsForResource",
+    "organizations:DescribeResponsibilityTransfer"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "billingconductor:DeleteBillingGroup",
+    "billingconductor:ListBillingGroups",
+    "billingconductor:UntagResource",
+    "billingconductor:UpdateBillingGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "billingconductor:ListBillingGroups",
+    "billingconductor:ListAccountAssociations",
+    "organizations:ListAccounts",
+    "billingconductor:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "billingconductor:ListBillingGroups",
+    "billingconductor:ListAccountAssociations",
+    "organizations:ListAccounts",
+    "billingconductor:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "billingconductor:UpdateBillingGroup",
+    "billingconductor:ListAccountAssociations",
+    "organizations:ListAccounts",
+    "billingconductor:AssociateAccounts",
+    "billingconductor:DisassociateAccounts",
+    "billingconductor:ListBillingGroups",
+    "billingconductor:TagResource",
+    "billingconductor:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AccountGrouping": {
+   "$ref": "#/definitions/AccountGrouping"
+  },
+  "Arn": {
+   "description": "Billing Group ARN",
+   "pattern": "arn:aws(-cn)?:billingconductor::[0-9]{12}:billinggroup/?[a-zA-Z0-9]{10,12}",
+   "type": "string"
+  },
+  "ComputationPreference": {
+   "$ref": "#/definitions/ComputationPreference"
+  },
+  "CreationTime": {
+   "description": "Creation timestamp in UNIX epoch time format",
+   "type": "integer"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "description": "Latest modified timestamp in UNIX epoch time format",
+   "type": "integer"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_\\+=\\.\\-@]+",
+   "type": "string"
+  },
+  "PrimaryAccountId": {
+   "description": "This account will act as a virtual payer account of the billing group",
+   "pattern": "[0-9]{12}",
+   "type": "string"
+  },
+  "Size": {
+   "description": "Number of accounts in the billing group",
+   "type": "integer"
+  },
+  "Status": {
+   "$ref": "#/definitions/BillingGroupStatus"
+  },
+  "StatusReason": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Size",
+  "/properties/Status",
+  "/properties/StatusReason",
+  "/properties/CreationTime",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "Name",
+  "AccountGrouping",
+  "ComputationPreference"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-billing-conductor.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "billingconductor:ListTagsForResource",
+   "billingconductor:TagResource",
+   "billingconductor:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BillingConductor::BillingGroup"
+}

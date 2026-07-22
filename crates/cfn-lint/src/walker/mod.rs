@@ -1,10 +1,11 @@
 mod function_types;
 
+use std::collections::HashMap;
 use std::sync::{Arc, LazyLock};
 
 use regex::Regex;
 
-use crate::ast::{AstNode, FunctionNode};
+use crate::ast::{AstNode, FunctionNode, Span, StringNode};
 use crate::context::Context;
 use crate::engine::{
     build_resource_properties_schema, expand_fn_if_branches, flatten_validation_errors,
@@ -22,6 +23,11 @@ pub struct TemplateWalker {
     keyword_rules: Arc<KeywordRuleRegistry>,
     schema_provider: Option<Arc<dyn cfn_schema::SchemaProvider>>,
     strict_types: bool,
+    /// Parameter values pinned by the caller (e.g. a `--parameters` map or a
+    /// CloudFormation parameter file). A `Ref` to one of these parameters
+    /// resolves to the pinned literal instead of expanding `AllowedValues`
+    /// (mirrors Python cfn-lint's parameter-file / deployment-file semantics).
+    pinned_parameters: HashMap<String, String>,
 }
 
 impl TemplateWalker {
@@ -34,7 +40,17 @@ impl TemplateWalker {
             keyword_rules,
             schema_provider,
             strict_types,
+            pinned_parameters: HashMap::new(),
         }
+    }
+
+    /// Pin parameter values so `Ref`s to them resolve to the supplied literal
+    /// during validation instead of expanding `AllowedValues` / falling back to
+    /// the `Default`.
+    #[must_use]
+    pub fn with_pinned_parameters(mut self, params: HashMap<String, String>) -> Self {
+        self.pinned_parameters = params;
+        self
     }
 
     pub fn walk(
@@ -65,6 +81,23 @@ impl TemplateWalker {
         ctx.sat_conditions = Some(Arc::new(crate::conditions::Conditions::from_template(
             &tmpl_arc,
         )));
+        // Seed pinned parameter values so `Ref`s to them resolve to the pinned
+        // literal. `resolve_ref` consults `ref_values` (step 2) before expanding a
+        // parameter's `AllowedValues` (step 3), so this both suppresses warnings for
+        // other allowed values and surfaces errors for an explicitly-pinned value.
+        // Only declared parameters are pinned, so a stray entry can't shadow a `Ref`
+        // to a resource/pseudo-parameter of the same name.
+        for (name, value) in &self.pinned_parameters {
+            if tmpl_arc.parameters.contains_key(name) {
+                ctx.ref_values.insert(
+                    name.clone(),
+                    AstNode::String(StringNode {
+                        value: value.clone(),
+                        span: Span::default(),
+                    }),
+                );
+            }
+        }
         let ctx = if region != "us-east-1" {
             ctx.evolve(crate::context::ContextOptions {
                 regions: Some(regions.to_vec()),
@@ -167,7 +200,7 @@ impl TemplateWalker {
                                 v.strict_types = true;
                             }
                             errors.extend(v.validate(
-                                *branch_node,
+                                branch_node,
                                 &resource_schema_val,
                                 branch_path,
                             ));
@@ -339,14 +372,7 @@ impl TemplateWalker {
             }
             AstNode::Function(func) if func.name == "Fn::If" => {
                 // Dispatch to Fn/If for any registered rules
-                self.dispatch(
-                    validator,
-                    "Fn/If",
-                    node,
-                    instance_path,
-                    schema_raw,
-                    issues,
-                );
+                self.dispatch(validator, "Fn/If", node, instance_path, schema_raw, issues);
 
                 self.walk_fn_if(
                     validator,
@@ -441,9 +467,9 @@ impl TemplateWalker {
         schema: &serde_json::Value,
         issues: &mut Vec<ValidationError>,
     ) {
-        for mut err in self
-            .keyword_rules
-            .dispatch(validator, path_keyword, node, schema, instance_path)
+        for mut err in
+            self.keyword_rules
+                .dispatch(validator, path_keyword, node, schema, instance_path)
         {
             // Fix up rule_id if needed
             if err.rule_id.is_none() {

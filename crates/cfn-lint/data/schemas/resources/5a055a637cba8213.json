@@ -1,0 +1,222 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Arn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/KmsKeyArn"
+ ],
+ "definitions": {
+  "AppConfig": {
+   "additionalProperties": false,
+   "description": "A key-value pair of AppConfig",
+   "properties": {
+    "Key": {
+     "$ref": "#/definitions/AppConfigType",
+     "description": "The configuration key"
+    },
+    "Value": {
+     "description": "The configuration value.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "AppConfigType": {
+   "description": "AppConfig type values.",
+   "enum": [
+    "opensearchDashboards.dashboardAdmin.users",
+    "opensearchDashboards.dashboardAdmin.groups"
+   ],
+   "type": "string"
+  },
+  "DataSource": {
+   "additionalProperties": false,
+   "description": "Datasource arn and description",
+   "properties": {
+    "DataSourceArn": {
+     "$ref": "#/properties/Arn",
+     "description": "The ARN of the data source."
+    },
+    "DataSourceDescription": {
+     "description": "Description of the data source.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "DataSourceArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair metadata associated with resource",
+   "properties": {
+    "Key": {
+     "description": "The key in the key-value pair",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value in the key-value pair",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Amazon OpenSearchService application resource",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "es:CreateApplication",
+    "es:GetApplication",
+    "es:AddTags",
+    "es:ListTags",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "es:GetApplication",
+    "es:DeleteApplication"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "es:ListApplications"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "es:GetApplication",
+    "es:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "es:UpdateApplication",
+    "es:GetApplication",
+    "es:AddTags",
+    "es:RemoveTags",
+    "es:ListTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "AppConfigs": {
+   "description": "List of application configurations.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AppConfig"
+   },
+   "type": "array"
+  },
+  "Arn": {
+   "description": "Amazon Resource Name (ARN) format.",
+   "type": "string"
+  },
+  "DataSources": {
+   "description": "List of data sources.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DataSource"
+   },
+   "type": "array"
+  },
+  "Endpoint": {
+   "description": "The endpoint for the application.",
+   "type": "string"
+  },
+  "IamIdentityCenterOptions": {
+   "additionalProperties": false,
+   "description": "Options for configuring IAM Identity Center",
+   "properties": {
+    "Enabled": {
+     "description": "Whether IAM Identity Center is enabled.",
+     "type": "boolean"
+    },
+    "IamIdentityCenterInstanceArn": {
+     "$ref": "#/properties/Arn",
+     "description": "The ARN of the IAM Identity Center instance."
+    },
+    "IamRoleForIdentityCenterApplicationArn": {
+     "description": "The ARN of the IAM role for Identity Center application.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Id": {
+   "description": "The identifier of the application.",
+   "maxLength": 40,
+   "minLength": 3,
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "description": "The ARN of the KMS key used to encrypt the application.",
+   "format": "AWS::KMS::Key.Arn",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws(-[a-z]+)*:kms:[a-z0-9-]+:\\d{12}:key/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the application.",
+   "maxLength": 40,
+   "minLength": 3,
+   "pattern": "[a-z][a-z0-9\\-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An arbitrary set of tags (key-value pairs) for this application.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "es:AddTags",
+   "es:RemoveTags",
+   "es:ListTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::OpenSearchService::Application",
+ "writeOnlyProperties": [
+  "/properties/KmsKeyArn"
+ ]
+}

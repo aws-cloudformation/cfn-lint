@@ -1,0 +1,1157 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KnowledgeBaseId",
+  "/properties/VectorIngestionConfiguration/ChunkingConfiguration",
+  "/properties/VectorIngestionConfiguration/ParsingConfiguration",
+  "/properties/DataSourceConfiguration/Type"
+ ],
+ "definitions": {
+  "AudioExtractionConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for audio extraction.",
+   "properties": {
+    "AudioExtractionStatus": {
+     "$ref": "#/definitions/EnabledOrDisabledState"
+    }
+   },
+   "required": [
+    "AudioExtractionStatus"
+   ],
+   "type": "object"
+  },
+  "BedrockDataAutomationConfiguration": {
+   "additionalProperties": false,
+   "description": "Settings for a Bedrock Data Automation used to parse documents for a data source.",
+   "properties": {
+    "ParsingModality": {
+     "$ref": "#/definitions/ParsingModality"
+    }
+   },
+   "type": "object"
+  },
+  "BedrockFoundationModelConfiguration": {
+   "additionalProperties": false,
+   "description": "Settings for a foundation model used to parse documents for a data source.",
+   "properties": {
+    "ModelArn": {
+     "$ref": "#/definitions/ModelArn"
+    },
+    "ParsingModality": {
+     "$ref": "#/definitions/ParsingModality"
+    },
+    "ParsingPrompt": {
+     "$ref": "#/definitions/ParsingPrompt"
+    }
+   },
+   "required": [
+    "ModelArn"
+   ],
+   "type": "object"
+  },
+  "BedrockFoundationModelContextEnrichmentConfiguration": {
+   "additionalProperties": false,
+   "description": "Bedrock Foundation Model configuration to be used for Context Enrichment.",
+   "properties": {
+    "EnrichmentStrategyConfiguration": {
+     "$ref": "#/definitions/EnrichmentStrategyConfiguration"
+    },
+    "ModelArn": {
+     "$ref": "#/definitions/ModelArn"
+    }
+   },
+   "required": [
+    "EnrichmentStrategyConfiguration",
+    "ModelArn"
+   ],
+   "type": "object"
+  },
+  "ChunkingConfiguration": {
+   "additionalProperties": false,
+   "description": "Details about how to chunk the documents in the data source. A chunk refers to an excerpt from a data source that is returned when the knowledge base that it belongs to is queried.",
+   "properties": {
+    "ChunkingStrategy": {
+     "$ref": "#/definitions/ChunkingStrategy"
+    },
+    "FixedSizeChunkingConfiguration": {
+     "$ref": "#/definitions/FixedSizeChunkingConfiguration"
+    },
+    "HierarchicalChunkingConfiguration": {
+     "$ref": "#/definitions/HierarchicalChunkingConfiguration"
+    },
+    "SemanticChunkingConfiguration": {
+     "$ref": "#/definitions/SemanticChunkingConfiguration"
+    }
+   },
+   "required": [
+    "ChunkingStrategy"
+   ],
+   "type": "object"
+  },
+  "ChunkingStrategy": {
+   "description": "Knowledge base can split your source data into chunks. A chunk refers to an excerpt from a data source that is returned when the knowledge base that it belongs to is queried. You have the following options for chunking your data. If you opt for NONE, then you may want to pre-process your files by splitting them up such that each file corresponds to a chunk.",
+   "enum": [
+    "FIXED_SIZE",
+    "NONE",
+    "HIERARCHICAL",
+    "SEMANTIC"
+   ],
+   "type": "string"
+  },
+  "ConfluenceCrawlerConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration of the Confluence content. For example, configuring specific types of Confluence content.",
+   "properties": {
+    "FilterConfiguration": {
+     "$ref": "#/definitions/CrawlFilterConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "ConfluenceDataSourceConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration information to connect to Confluence as your data source.",
+   "properties": {
+    "CrawlerConfiguration": {
+     "$ref": "#/definitions/ConfluenceCrawlerConfiguration"
+    },
+    "SourceConfiguration": {
+     "$ref": "#/definitions/ConfluenceSourceConfiguration"
+    }
+   },
+   "required": [
+    "SourceConfiguration"
+   ],
+   "type": "object"
+  },
+  "ConfluenceSourceConfiguration": {
+   "additionalProperties": false,
+   "description": "The endpoint information to connect to your Confluence data source.",
+   "properties": {
+    "AuthType": {
+     "description": "The supported authentication type to authenticate and connect to your Confluence instance.",
+     "enum": [
+      "BASIC",
+      "OAUTH2_CLIENT_CREDENTIALS"
+     ],
+     "type": "string"
+    },
+    "CredentialsSecretArn": {
+     "description": "The Amazon Resource Name of an AWS Secrets Manager secret that stores your authentication credentials for your Confluence instance URL. For more information on the key-value pairs that must be included in your secret, depending on your authentication type, see Confluence connection configuration.",
+     "pattern": "^arn:aws(|-cn|-us-gov):secretsmanager:[a-z0-9-]{1,20}:([0-9]{12}|):secret:[a-zA-Z0-9!/_+=.@-]{1,512}$",
+     "type": "string"
+    },
+    "HostType": {
+     "description": "The supported host type, whether online/cloud or server/on-premises.",
+     "enum": [
+      "SAAS"
+     ],
+     "type": "string"
+    },
+    "HostUrl": {
+     "description": "The Confluence host URL or instance URL.",
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^https://[A-Za-z0-9][^\\s]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "HostUrl",
+    "HostType",
+    "AuthType",
+    "CredentialsSecretArn"
+   ],
+   "type": "object"
+  },
+  "ContextEnrichmentConfiguration": {
+   "additionalProperties": false,
+   "description": "Additional Enrichment Configuration for example when using GraphRag.",
+   "properties": {
+    "BedrockFoundationModelConfiguration": {
+     "$ref": "#/definitions/BedrockFoundationModelContextEnrichmentConfiguration"
+    },
+    "Type": {
+     "$ref": "#/definitions/ContextEnrichmentType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ContextEnrichmentType": {
+   "description": "Enrichment type to be used for the vector database.",
+   "enum": [
+    "BEDROCK_FOUNDATION_MODEL"
+   ],
+   "type": "string"
+  },
+  "CrawlFilterConfiguration": {
+   "additionalProperties": false,
+   "description": "The type of filtering that you want to apply to certain objects or content of the data source. For example, the PATTERN type is regular expression patterns you can apply to filter your content.",
+   "properties": {
+    "PatternObjectFilter": {
+     "$ref": "#/definitions/PatternObjectFilterConfiguration"
+    },
+    "Type": {
+     "description": "The crawl filter type.",
+     "enum": [
+      "PATTERN"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "CustomTransformationConfiguration": {
+   "additionalProperties": false,
+   "description": "Settings for customizing steps in the data source content ingestion pipeline.",
+   "properties": {
+    "IntermediateStorage": {
+     "$ref": "#/definitions/IntermediateStorage"
+    },
+    "Transformations": {
+     "description": "A list of Lambda functions that process documents.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Transformation"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "IntermediateStorage",
+    "Transformations"
+   ],
+   "type": "object"
+  },
+  "DataDeletionPolicy": {
+   "description": "The deletion policy for the data source.",
+   "enum": [
+    "RETAIN",
+    "DELETE"
+   ],
+   "type": "string"
+  },
+  "DataSourceConfiguration": {
+   "additionalProperties": false,
+   "description": "Specifies a raw data source location to ingest.",
+   "properties": {
+    "ConfluenceConfiguration": {
+     "$ref": "#/definitions/ConfluenceDataSourceConfiguration"
+    },
+    "ManagedKnowledgeBaseConnectorConfiguration": {
+     "$ref": "#/definitions/ManagedKnowledgeBaseConnectorConfiguration"
+    },
+    "S3Configuration": {
+     "$ref": "#/definitions/S3DataSourceConfiguration"
+    },
+    "SalesforceConfiguration": {
+     "$ref": "#/definitions/SalesforceDataSourceConfiguration"
+    },
+    "SharePointConfiguration": {
+     "$ref": "#/definitions/SharePointDataSourceConfiguration"
+    },
+    "Type": {
+     "$ref": "#/definitions/DataSourceType"
+    },
+    "WebConfiguration": {
+     "$ref": "#/definitions/WebDataSourceConfiguration"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "DataSourceStatus": {
+   "description": "The status of a data source.",
+   "enum": [
+    "AVAILABLE",
+    "DELETING",
+    "DELETE_UNSUCCESSFUL",
+    "CREATING",
+    "UPDATING",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "DataSourceType": {
+   "description": "The type of the data source location.",
+   "enum": [
+    "S3",
+    "CONFLUENCE",
+    "SALESFORCE",
+    "SHAREPOINT",
+    "WEB",
+    "CUSTOM",
+    "REDSHIFT_METADATA",
+    "MANAGED_KNOWLEDGE_BASE_CONNECTOR"
+   ],
+   "type": "string"
+  },
+  "DeletionProtectionConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for deletion protection.",
+   "properties": {
+    "DeletionProtectionStatus": {
+     "$ref": "#/definitions/EnabledOrDisabledState"
+    },
+    "DeletionProtectionThreshold": {
+     "default": 15,
+     "description": "Threshold for deletion protection.",
+     "maximum": 100,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "DeletionProtectionStatus"
+   ],
+   "type": "object"
+  },
+  "EnabledOrDisabledState": {
+   "description": "Indicates whether a feature is enabled or disabled.",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "EnrichmentStrategyConfiguration": {
+   "additionalProperties": false,
+   "description": "Strategy to be used when using Bedrock Foundation Model for Context Enrichment.",
+   "properties": {
+    "Method": {
+     "$ref": "#/definitions/EnrichmentStrategyMethod"
+    }
+   },
+   "required": [
+    "Method"
+   ],
+   "type": "object"
+  },
+  "EnrichmentStrategyMethod": {
+   "description": "Enrichment Strategy method.",
+   "enum": [
+    "CHUNK_ENTITY_EXTRACTION"
+   ],
+   "type": "string"
+  },
+  "FilterList": {
+   "description": "A set of regular expression filter patterns for a type of object.",
+   "insertionOrder": false,
+   "items": {
+    "description": "A list of one or more inclusion/exclusion regular expression patterns to include certain object types that adhere to the pattern. If you specify an inclusion and exclusion filter/pattern and both match a document, the exclusion filter takes precedence and the document isn't crawled.",
+    "maxLength": 1000,
+    "type": "string"
+   },
+   "maxItems": 25,
+   "minItems": 1,
+   "type": "array"
+  },
+  "FixedSizeChunkingConfiguration": {
+   "additionalProperties": false,
+   "description": "Configurations for when you choose fixed-size chunking. If you set the chunkingStrategy as NONE, exclude this field.",
+   "properties": {
+    "MaxTokens": {
+     "description": "The maximum number of tokens to include in a chunk.",
+     "minimum": 1,
+     "type": "integer"
+    },
+    "OverlapPercentage": {
+     "description": "The percentage of overlap between adjacent chunks of a data source.",
+     "maximum": 99,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxTokens",
+    "OverlapPercentage"
+   ],
+   "type": "object"
+  },
+  "HierarchicalChunkingConfiguration": {
+   "additionalProperties": false,
+   "description": "Configurations for when you choose hierarchical chunking. If you set the chunkingStrategy as NONE, exclude this field.",
+   "properties": {
+    "LevelConfigurations": {
+     "description": "Token settings for each layer.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/HierarchicalChunkingLevelConfiguration"
+     },
+     "maxItems": 2,
+     "minItems": 2,
+     "type": "array"
+    },
+    "OverlapTokens": {
+     "description": "The number of tokens to repeat across chunks in the same layer.",
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "LevelConfigurations",
+    "OverlapTokens"
+   ],
+   "type": "object"
+  },
+  "HierarchicalChunkingLevelConfiguration": {
+   "additionalProperties": false,
+   "description": "Token settings for a layer in a hierarchical chunking configuration.",
+   "properties": {
+    "MaxTokens": {
+     "description": "The maximum number of tokens that a chunk can contain in this layer.",
+     "maximum": 8192,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxTokens"
+   ],
+   "type": "object"
+  },
+  "ImageExtractionConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for image extraction.",
+   "properties": {
+    "ImageExtractionStatus": {
+     "$ref": "#/definitions/EnabledOrDisabledState"
+    }
+   },
+   "required": [
+    "ImageExtractionStatus"
+   ],
+   "type": "object"
+  },
+  "IntermediateStorage": {
+   "additionalProperties": false,
+   "description": "A location for storing content from data sources temporarily as it is processed by custom components in the ingestion pipeline.",
+   "properties": {
+    "S3Location": {
+     "$ref": "#/definitions/S3Location"
+    }
+   },
+   "required": [
+    "S3Location"
+   ],
+   "type": "object"
+  },
+  "ManagedKnowledgeBaseConnectorConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for managed knowledge base connector data sources.",
+   "properties": {
+    "ConnectorParameters": {
+     "description": "Connector-specific parameters.",
+     "type": "object"
+    },
+    "DeletionProtectionConfiguration": {
+     "$ref": "#/definitions/DeletionProtectionConfiguration"
+    },
+    "MediaExtractionConfiguration": {
+     "$ref": "#/definitions/MediaExtractionConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "MediaExtractionConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for media extraction settings.",
+   "properties": {
+    "AudioExtractionConfiguration": {
+     "$ref": "#/definitions/AudioExtractionConfiguration"
+    },
+    "ImageExtractionConfiguration": {
+     "$ref": "#/definitions/ImageExtractionConfiguration"
+    },
+    "VideoExtractionConfiguration": {
+     "$ref": "#/definitions/VideoExtractionConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "ModelArn": {
+   "description": "The model's ARN.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^(arn:aws(-cn|-us-gov|-eusc|-iso(-[b-f])?)?:(bedrock):[a-z0-9-]{1,20}:([0-9]{12})?:([a-z-]+/)?)?([a-zA-Z0-9.-]{1,63}){0,2}(([:][a-z0-9-]{1,63}){0,2})?(/[a-z0-9]{1,12})?$",
+   "type": "string"
+  },
+  "ParsingConfiguration": {
+   "additionalProperties": false,
+   "description": "Settings for parsing document contents",
+   "properties": {
+    "BedrockDataAutomationConfiguration": {
+     "$ref": "#/definitions/BedrockDataAutomationConfiguration"
+    },
+    "BedrockFoundationModelConfiguration": {
+     "$ref": "#/definitions/BedrockFoundationModelConfiguration"
+    },
+    "ParsingStrategy": {
+     "$ref": "#/definitions/ParsingStrategy"
+    }
+   },
+   "required": [
+    "ParsingStrategy"
+   ],
+   "type": "object"
+  },
+  "ParsingModality": {
+   "description": "Determine how will parsed content be stored.",
+   "enum": [
+    "MULTIMODAL"
+   ],
+   "type": "string"
+  },
+  "ParsingPrompt": {
+   "additionalProperties": false,
+   "description": "Instructions for interpreting the contents of a document.",
+   "properties": {
+    "ParsingPromptText": {
+     "description": "Instructions for interpreting the contents of a document.",
+     "maxLength": 10000,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ParsingPromptText"
+   ],
+   "type": "object"
+  },
+  "ParsingStrategy": {
+   "description": "The parsing strategy for the data source.",
+   "enum": [
+    "BEDROCK_FOUNDATION_MODEL",
+    "BEDROCK_DATA_AUTOMATION",
+    "SMART_PARSING"
+   ],
+   "type": "string"
+  },
+  "PatternObjectFilter": {
+   "additionalProperties": false,
+   "description": "The specific filters applied to your data source content. You can filter out or include certain content.",
+   "properties": {
+    "ExclusionFilters": {
+     "$ref": "#/definitions/FilterList"
+    },
+    "InclusionFilters": {
+     "$ref": "#/definitions/FilterList"
+    },
+    "ObjectType": {
+     "description": "The supported object type or content type of the data source.",
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ObjectType"
+   ],
+   "type": "object"
+  },
+  "PatternObjectFilterConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration of specific filters applied to your data source content. You can filter out or include certain content.",
+   "properties": {
+    "Filters": {
+     "$ref": "#/definitions/PatternObjectFilterList"
+    }
+   },
+   "required": [
+    "Filters"
+   ],
+   "type": "object"
+  },
+  "PatternObjectFilterList": {
+   "description": "Contains information",
+   "items": {
+    "$ref": "#/definitions/PatternObjectFilter"
+   },
+   "maxItems": 25,
+   "minItems": 1,
+   "type": "array"
+  },
+  "S3DataSourceConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration information to connect to Amazon S3 as your data source.",
+   "properties": {
+    "BucketArn": {
+     "description": "The ARN of the bucket that contains the data source.",
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:aws(-cn|-us-gov|-eusc|-iso(-[b-f])?)?:s3:::[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$",
+     "type": "string"
+    },
+    "BucketOwnerAccountId": {
+     "description": "The account ID for the owner of the S3 bucket.",
+     "maxLength": 12,
+     "minLength": 12,
+     "pattern": "^[0-9]{12}$",
+     "type": "string"
+    },
+    "InclusionPrefixes": {
+     "description": "A list of S3 prefixes that define the object containing the data sources.",
+     "insertionOrder": false,
+     "items": {
+      "description": "Prefix for s3 object.",
+      "maxLength": 300,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "BucketArn"
+   ],
+   "type": "object"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "description": "An Amazon S3 location.",
+   "properties": {
+    "URI": {
+     "description": "The location's URI",
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^s3://.{1,128}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "URI"
+   ],
+   "type": "object"
+  },
+  "SalesforceCrawlerConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration of filtering the Salesforce content. For example, configuring regular expression patterns to include or exclude certain content.",
+   "properties": {
+    "FilterConfiguration": {
+     "$ref": "#/definitions/CrawlFilterConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "SalesforceDataSourceConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration information to connect to Salesforce as your data source.",
+   "properties": {
+    "CrawlerConfiguration": {
+     "$ref": "#/definitions/SalesforceCrawlerConfiguration"
+    },
+    "SourceConfiguration": {
+     "$ref": "#/definitions/SalesforceSourceConfiguration"
+    }
+   },
+   "required": [
+    "SourceConfiguration"
+   ],
+   "type": "object"
+  },
+  "SalesforceSourceConfiguration": {
+   "additionalProperties": false,
+   "description": "The endpoint information to connect to your Salesforce data source.",
+   "properties": {
+    "AuthType": {
+     "description": "The supported authentication type to authenticate and connect to your Salesforce instance.",
+     "enum": [
+      "OAUTH2_CLIENT_CREDENTIALS"
+     ],
+     "type": "string"
+    },
+    "CredentialsSecretArn": {
+     "description": "The Amazon Resource Name of an AWS Secrets Manager secret that stores your authentication credentials for your Salesforce instance URL. For more information on the key-value pairs that must be included in your secret, depending on your authentication type, see Salesforce connection configuration.",
+     "pattern": "^arn:aws(|-cn|-us-gov):secretsmanager:[a-z0-9-]{1,20}:([0-9]{12}|):secret:[a-zA-Z0-9!/_+=.@-]{1,512}$",
+     "type": "string"
+    },
+    "HostUrl": {
+     "description": "The Salesforce host URL or instance URL.",
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^https://[A-Za-z0-9][^\\s]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "HostUrl",
+    "AuthType",
+    "CredentialsSecretArn"
+   ],
+   "type": "object"
+  },
+  "SeedUrl": {
+   "additionalProperties": false,
+   "description": "A seed url object.",
+   "properties": {
+    "Url": {
+     "description": "A web url.",
+     "pattern": "^https?://[A-Za-z0-9][^\\s]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Url"
+   ],
+   "type": "object"
+  },
+  "SeedUrls": {
+   "description": "A list of web urls.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SeedUrl"
+   },
+   "maxItems": 100,
+   "minItems": 1,
+   "type": "array"
+  },
+  "SemanticChunkingConfiguration": {
+   "additionalProperties": false,
+   "description": "Configurations for when you choose semantic chunking. If you set the chunkingStrategy as NONE, exclude this field.",
+   "properties": {
+    "BreakpointPercentileThreshold": {
+     "description": "The dissimilarity threshold for splitting chunks.",
+     "maximum": 99,
+     "minimum": 50,
+     "type": "integer"
+    },
+    "BufferSize": {
+     "description": "The buffer size.",
+     "maximum": 1,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MaxTokens": {
+     "description": "The maximum number of tokens that a chunk can contain.",
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "BreakpointPercentileThreshold",
+    "BufferSize",
+    "MaxTokens"
+   ],
+   "type": "object"
+  },
+  "ServerSideEncryptionConfiguration": {
+   "additionalProperties": false,
+   "description": "Contains details about the server-side encryption for the data source.",
+   "properties": {
+    "KmsKeyArn": {
+     "description": "The ARN of the AWS KMS key used to encrypt the resource.",
+     "format": "AWS::KMS::Key.Arn",
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:aws(-cn|-us-gov|-eusc|-iso(-[b-f])?)?:kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SharePointCrawlerConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration of the SharePoint content. For example, configuring specific types of SharePoint content.",
+   "properties": {
+    "FilterConfiguration": {
+     "$ref": "#/definitions/CrawlFilterConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "SharePointDataSourceConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration information to connect to SharePoint as your data source.",
+   "properties": {
+    "CrawlerConfiguration": {
+     "$ref": "#/definitions/SharePointCrawlerConfiguration"
+    },
+    "SourceConfiguration": {
+     "$ref": "#/definitions/SharePointSourceConfiguration"
+    }
+   },
+   "required": [
+    "SourceConfiguration"
+   ],
+   "type": "object"
+  },
+  "SharePointSourceConfiguration": {
+   "additionalProperties": false,
+   "description": "The endpoint information to connect to your SharePoint data source.",
+   "properties": {
+    "AuthType": {
+     "description": "The supported authentication type to authenticate and connect to your SharePoint site/sites.",
+     "enum": [
+      "OAUTH2_CLIENT_CREDENTIALS",
+      "OAUTH2_SHAREPOINT_APP_ONLY_CLIENT_CREDENTIALS"
+     ],
+     "type": "string"
+    },
+    "CredentialsSecretArn": {
+     "description": "The Amazon Resource Name of an AWS Secrets Manager secret that stores your authentication credentials for your SharePoint site/sites. For more information on the key-value pairs that must be included in your secret, depending on your authentication type, see SharePoint connection configuration.",
+     "pattern": "^arn:aws(|-cn|-us-gov):secretsmanager:[a-z0-9-]{1,20}:([0-9]{12}|):secret:[a-zA-Z0-9!/_+=.@-]{1,512}$",
+     "type": "string"
+    },
+    "Domain": {
+     "description": "The domain of your SharePoint instance or site URL/URLs.",
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "HostType": {
+     "description": "The supported host type, whether online/cloud or server/on-premises.",
+     "enum": [
+      "ONLINE"
+     ],
+     "type": "string"
+    },
+    "SiteUrls": {
+     "description": "A list of one or more SharePoint site URLs.",
+     "insertionOrder": false,
+     "items": {
+      "description": "A forced-HTTPS web url.",
+      "pattern": "^https://[A-Za-z0-9][^\\s]*$",
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array"
+    },
+    "TenantId": {
+     "description": "The identifier of your Microsoft 365 tenant.",
+     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Domain",
+    "SiteUrls",
+    "HostType",
+    "AuthType",
+    "CredentialsSecretArn"
+   ],
+   "type": "object"
+  },
+  "Transformation": {
+   "additionalProperties": false,
+   "description": "A Lambda function that processes documents.",
+   "properties": {
+    "StepToApply": {
+     "description": "When the service applies the transformation.",
+     "enum": [
+      "POST_CHUNKING"
+     ],
+     "type": "string"
+    },
+    "TransformationFunction": {
+     "$ref": "#/definitions/TransformationFunction"
+    }
+   },
+   "required": [
+    "StepToApply",
+    "TransformationFunction"
+   ],
+   "type": "object"
+  },
+  "TransformationFunction": {
+   "additionalProperties": false,
+   "description": "A Lambda function that processes documents.",
+   "properties": {
+    "TransformationLambdaConfiguration": {
+     "$ref": "#/definitions/TransformationLambdaConfiguration"
+    }
+   },
+   "required": [
+    "TransformationLambdaConfiguration"
+   ],
+   "type": "object"
+  },
+  "TransformationLambdaConfiguration": {
+   "additionalProperties": false,
+   "description": "A Lambda function that processes documents.",
+   "properties": {
+    "LambdaArn": {
+     "description": "The function's ARN identifier.",
+     "format": "AWS::Lambda::Function.Arn",
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "^arn:(aws[a-zA-Z-]*)?:lambda:[a-z]{2}(-gov)?-[a-z]+-\\d{1}:\\d{12}:function:[a-zA-Z0-9-_\\.]+(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "LambdaArn"
+   ],
+   "type": "object"
+  },
+  "UrlConfiguration": {
+   "additionalProperties": false,
+   "description": "A url configuration.",
+   "properties": {
+    "SeedUrls": {
+     "$ref": "#/definitions/SeedUrls"
+    }
+   },
+   "required": [
+    "SeedUrls"
+   ],
+   "type": "object"
+  },
+  "VectorIngestionConfiguration": {
+   "additionalProperties": false,
+   "description": "Details about how to chunk the documents in the data source. A chunk refers to an excerpt from a data source that is returned when the knowledge base that it belongs to is queried.",
+   "properties": {
+    "ChunkingConfiguration": {
+     "$ref": "#/definitions/ChunkingConfiguration"
+    },
+    "ContextEnrichmentConfiguration": {
+     "$ref": "#/definitions/ContextEnrichmentConfiguration"
+    },
+    "CustomTransformationConfiguration": {
+     "$ref": "#/definitions/CustomTransformationConfiguration"
+    },
+    "ParsingConfiguration": {
+     "$ref": "#/definitions/ParsingConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "VideoExtractionConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for video extraction.",
+   "properties": {
+    "VideoExtractionStatus": {
+     "$ref": "#/definitions/EnabledOrDisabledState"
+    }
+   },
+   "required": [
+    "VideoExtractionStatus"
+   ],
+   "type": "object"
+  },
+  "WebCrawlerConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for the web crawler.",
+   "properties": {
+    "CrawlerLimits": {
+     "$ref": "#/definitions/WebCrawlerLimits"
+    },
+    "ExclusionFilters": {
+     "$ref": "#/definitions/FilterList"
+    },
+    "InclusionFilters": {
+     "$ref": "#/definitions/FilterList"
+    },
+    "Scope": {
+     "$ref": "#/definitions/WebScopeType"
+    },
+    "UserAgent": {
+     "description": "The suffix that will be included in the user agent header.",
+     "maxLength": 40,
+     "minLength": 15,
+     "type": "string"
+    },
+    "UserAgentHeader": {
+     "description": "The full user agent header, including UUID and suffix.",
+     "maxLength": 86,
+     "minLength": 61,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "WebCrawlerLimits": {
+   "additionalProperties": false,
+   "description": "Limit settings for the web crawler.",
+   "properties": {
+    "MaxPages": {
+     "description": "Maximum number of pages the crawler can crawl.",
+     "minimum": 1,
+     "type": "integer"
+    },
+    "RateLimit": {
+     "description": "Rate of web URLs retrieved per minute.",
+     "maximum": 300,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "WebDataSourceConfiguration": {
+   "additionalProperties": false,
+   "description": "Configures a web data source location.",
+   "properties": {
+    "CrawlerConfiguration": {
+     "$ref": "#/definitions/WebCrawlerConfiguration"
+    },
+    "SourceConfiguration": {
+     "$ref": "#/definitions/WebSourceConfiguration"
+    }
+   },
+   "required": [
+    "SourceConfiguration"
+   ],
+   "type": "object"
+  },
+  "WebScopeType": {
+   "description": "The scope that a web crawl job will be restricted to.",
+   "enum": [
+    "HOST_ONLY",
+    "SUBDOMAINS"
+   ],
+   "type": "string"
+  },
+  "WebSourceConfiguration": {
+   "additionalProperties": false,
+   "description": "A web source configuration.",
+   "properties": {
+    "UrlConfiguration": {
+     "$ref": "#/definitions/UrlConfiguration"
+    }
+   },
+   "required": [
+    "UrlConfiguration"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Definition of AWS::Bedrock::DataSource Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "bedrock:CreateDataSource",
+    "bedrock:GetDataSource",
+    "bedrock:GetKnowledgeBase",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "bedrock:GetDataSource",
+    "bedrock:DeleteDataSource"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "KnowledgeBaseId": {
+      "$ref": "resource-schema.json#/properties/KnowledgeBaseId"
+     }
+    },
+    "required": [
+     "KnowledgeBaseId"
+    ]
+   },
+   "permissions": [
+    "bedrock:ListDataSources"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bedrock:GetDataSource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "bedrock:GetDataSource",
+    "bedrock:UpdateDataSource",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/KnowledgeBaseId",
+  "/properties/DataSourceId"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "description": "The time at which the data source was created.",
+   "type": "string"
+  },
+  "DataDeletionPolicy": {
+   "$ref": "#/definitions/DataDeletionPolicy"
+  },
+  "DataSourceConfiguration": {
+   "$ref": "#/definitions/DataSourceConfiguration"
+  },
+  "DataSourceId": {
+   "description": "Identifier for a resource.",
+   "pattern": "^[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "DataSourceStatus": {
+   "$ref": "#/definitions/DataSourceStatus"
+  },
+  "Description": {
+   "description": "Description of the Resource.",
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FailureReasons": {
+   "description": "The details of the failure reasons related to the data source.",
+   "insertionOrder": false,
+   "items": {
+    "description": "Failure Reason for Error.",
+    "maxLength": 2048,
+    "type": "string"
+   },
+   "maxItems": 2048,
+   "type": "array"
+  },
+  "KnowledgeBaseId": {
+   "description": "The unique identifier of the knowledge base to which to add the data source.",
+   "pattern": "^[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the data source.",
+   "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+   "type": "string"
+  },
+  "ServerSideEncryptionConfiguration": {
+   "$ref": "#/definitions/ServerSideEncryptionConfiguration"
+  },
+  "UpdatedAt": {
+   "description": "The time at which the knowledge base was last updated.",
+   "type": "string"
+  },
+  "VectorIngestionConfiguration": {
+   "$ref": "#/definitions/VectorIngestionConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DataSourceId",
+  "/properties/DataSourceStatus",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/FailureReasons",
+  "/properties/DataSourceConfiguration/WebConfiguration/CrawlerConfiguration/UserAgentHeader"
+ ],
+ "required": [
+  "DataSourceConfiguration",
+  "Name",
+  "KnowledgeBaseId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-aps",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Bedrock::DataSource"
+}

@@ -1,0 +1,61 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RouteServerId",
+  "/properties/VpcId"
+ ],
+ "definitions": {},
+ "description": "VPC Route Server Association",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:AssociateRouteServer",
+    "ec2:GetRouteServerAssociations"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:GetRouteServerAssociations",
+    "ec2:DisassociateRouteServer"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeRouteServers",
+    "ec2:GetRouteServerAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:GetRouteServerAssociations"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RouteServerId",
+  "/properties/VpcId"
+ ],
+ "properties": {
+  "RouteServerId": {
+   "description": "Route Server ID",
+   "type": "string"
+  },
+  "VpcId": {
+   "description": "VPC ID",
+   "format": "AWS::EC2::VPC.Id",
+   "type": "string"
+  }
+ },
+ "required": [
+  "RouteServerId",
+  "VpcId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::RouteServerAssociation"
+}

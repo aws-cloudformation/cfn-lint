@@ -1,0 +1,81 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Location": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationId": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    },
+    "SemanticVersion": {
+     "anyOf": [
+      {
+       "type": "object"
+      },
+      {
+       "type": "string"
+      }
+     ]
+    }
+   },
+   "required": [
+    "ApplicationId",
+    "SemanticVersion"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/StackId"
+ ],
+ "properties": {
+  "Location": {
+   "anyOf": [
+    {
+     "type": "string"
+    },
+    {
+     "$ref": "#/definitions/Location"
+    }
+   ]
+  },
+  "NotificationARNs": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Parameters": {
+   "additionalProperties": true,
+   "patternProperties": {
+    "^[a-zA-Z0-9]+$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "StackId": {
+   "type": "string"
+  },
+  "Tags": {
+   "type": "object"
+  },
+  "TimeoutInMinutes": {
+   "type": "number"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/StackId"
+ ],
+ "required": [
+  "Location"
+ ],
+ "typeName": "AWS::Serverless::Application"
+}

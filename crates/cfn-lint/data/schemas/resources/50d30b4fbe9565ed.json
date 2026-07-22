@@ -1,0 +1,181 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ConfigOwner": {
+   "description": "Configuration owner type",
+   "enum": [
+    "ACCOUNT",
+    "ORGANIZATION"
+   ],
+   "type": "string"
+  },
+  "ModelEnforcement": {
+   "additionalProperties": false,
+   "description": "Model-specific information for the enforced guardrail configuration. If not present, the configuration is enforced on all models",
+   "properties": {
+    "ExcludedModels": {
+     "description": "Models to exclude from enforcement. If a model is in both lists, it is excluded",
+     "items": {
+      "description": "Model identifier to exclude",
+      "pattern": "^([a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63})([:][a-z0-9-]{1,63}){0,2}(/[a-z0-9]{12}){0,1}$",
+      "type": "string"
+     },
+     "minItems": 0,
+     "type": "array"
+    },
+    "IncludedModels": {
+     "description": "Models to enforce the guardrail on",
+     "items": {
+      "description": "Model identifier or ALL",
+      "pattern": "^(ALL|([a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63})([:][a-z0-9-]{1,63}){0,2}(/[a-z0-9]{12}){0,1})$",
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "IncludedModels",
+    "ExcludedModels"
+   ],
+   "type": "object"
+  },
+  "SelectiveContentGuarding": {
+   "additionalProperties": false,
+   "description": "Selective content guarding controls for enforced guardrails",
+   "properties": {
+    "Messages": {
+     "description": "Selective guarding mode for user messages",
+     "enum": [
+      "SELECTIVE",
+      "COMPREHENSIVE"
+     ],
+     "type": "string"
+    },
+    "System": {
+     "description": "Selective guarding mode for system prompts",
+     "enum": [
+      "SELECTIVE",
+      "COMPREHENSIVE"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Definition of AWS::Bedrock::EnforcedGuardrailConfiguration Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "bedrock:PutEnforcedGuardrailConfiguration",
+    "bedrock:ListEnforcedGuardrailsConfiguration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "bedrock:DeleteEnforcedGuardrailConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "bedrock:ListEnforcedGuardrailsConfiguration"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bedrock:ListEnforcedGuardrailsConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "bedrock:PutEnforcedGuardrailConfiguration",
+    "bedrock:ListEnforcedGuardrailsConfiguration"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConfigId"
+ ],
+ "properties": {
+  "ConfigId": {
+   "description": "Unique ID for the account enforced configuration",
+   "pattern": "^[a-z0-9]+$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "description": "Timestamp when the configuration was created",
+   "format": "date-time",
+   "type": "string"
+  },
+  "CreatedBy": {
+   "description": "The ARN of the role used to create the configuration",
+   "type": "string"
+  },
+  "GuardrailArn": {
+   "description": "ARN representation for the guardrail",
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:guardrail/[a-z0-9]+$",
+   "type": "string"
+  },
+  "GuardrailId": {
+   "description": "Unique ID for the guardrail",
+   "maxLength": 64,
+   "minLength": 0,
+   "pattern": "^[a-z0-9]+$",
+   "type": "string"
+  },
+  "GuardrailIdentifier": {
+   "description": "Identifier for the guardrail, could be the ID or the ARN",
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "^(([a-z0-9]+)|(arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:guardrail/[a-z0-9]+))$",
+   "type": "string"
+  },
+  "GuardrailVersion": {
+   "description": "Numerical guardrail version (not DRAFT)",
+   "pattern": "^[1-9][0-9]{0,7}$",
+   "type": "string"
+  },
+  "ModelEnforcement": {
+   "$ref": "#/definitions/ModelEnforcement"
+  },
+  "Owner": {
+   "$ref": "#/definitions/ConfigOwner"
+  },
+  "SelectiveContentGuarding": {
+   "$ref": "#/definitions/SelectiveContentGuarding"
+  },
+  "UpdatedAt": {
+   "description": "Timestamp when the configuration was last updated",
+   "format": "date-time",
+   "type": "string"
+  },
+  "UpdatedBy": {
+   "description": "The ARN of the role used to update the configuration",
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/GuardrailIdentifier": "$substringAfter(GuardrailIdentifier, \"/\") $OR GuardrailIdentifier"
+ },
+ "readOnlyProperties": [
+  "/properties/ConfigId",
+  "/properties/GuardrailArn",
+  "/properties/GuardrailId",
+  "/properties/CreatedAt",
+  "/properties/CreatedBy",
+  "/properties/UpdatedAt",
+  "/properties/UpdatedBy",
+  "/properties/Owner"
+ ],
+ "required": [
+  "GuardrailIdentifier",
+  "GuardrailVersion"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Bedrock::EnforcedGuardrailConfiguration"
+}

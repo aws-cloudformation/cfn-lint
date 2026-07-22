@@ -1,0 +1,123 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KeyspaceName",
+  "/properties/TypeName",
+  "/properties/Fields"
+ ],
+ "definitions": {
+  "Field": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldName": {
+     "type": "string"
+    },
+    "FieldType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "FieldName",
+    "FieldType"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::Cassandra::Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cassandra:Create",
+    "cassandra:Select"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cassandra:Drop",
+    "cassandra:Select"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cassandra:Select"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cassandra:Select"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/KeyspaceName",
+  "/properties/TypeName"
+ ],
+ "properties": {
+  "DirectParentTypes": {
+   "description": "List of parent User-Defined Types that directly reference the User-Defined Type in their fields.",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DirectReferringTables": {
+   "description": "List of Tables that directly reference the User-Defined Type in their columns.",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Fields": {
+   "description": "Field definitions of the User-Defined Type",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Field"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "KeyspaceArn": {
+   "description": "ARN of the Keyspace which contains the User-Defined Type.",
+   "type": "string"
+  },
+  "KeyspaceName": {
+   "description": "Name of the Keyspace which contains the User-Defined Type.",
+   "type": "string"
+  },
+  "LastModifiedTimestamp": {
+   "description": "Timestamp of the last time the User-Defined Type's meta data was modified.",
+   "type": "number"
+  },
+  "MaxNestingDepth": {
+   "description": "Maximum nesting depth of the User-Defined Type across the field types.",
+   "type": "integer"
+  },
+  "TypeName": {
+   "description": "Name of the User-Defined Type.",
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/Fields/*/FieldType": "$lowercase(FieldType)"
+ },
+ "readOnlyProperties": [
+  "/properties/DirectReferringTables",
+  "/properties/DirectParentTypes",
+  "/properties/MaxNestingDepth",
+  "/properties/LastModifiedTimestamp",
+  "/properties/KeyspaceArn"
+ ],
+ "required": [
+  "KeyspaceName",
+  "TypeName",
+  "Fields"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Cassandra::Type"
+}

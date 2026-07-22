@@ -1,0 +1,104 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceArn"
+ ],
+ "definitions": {},
+ "description": "Resource Type definition for AWS::Glue::IdentityCenterConfiguration",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "glue:CreateGlueIdentityCenterConfiguration",
+    "glue:GetGlueIdentityCenterConfiguration",
+    "sso:CreateApplication",
+    "sso:ListInstances",
+    "sso:ListApplications",
+    "sso:PutApplicationAuthenticationMethod",
+    "sso:PutApplicationGrant",
+    "sso:PutApplicationAccessScope",
+    "sso:PutApplicationAssignmentConfiguration",
+    "sso:PutApplicationSessionConfiguration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "glue:DeleteGlueIdentityCenterConfiguration",
+    "glue:GetGlueIdentityCenterConfiguration",
+    "sso:DeleteApplication"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "glue:GetGlueIdentityCenterConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "glue:UpdateGlueIdentityCenterConfiguration",
+    "glue:GetGlueIdentityCenterConfiguration",
+    "sso:PutApplicationAuthenticationMethod",
+    "sso:PutApplicationGrant",
+    "sso:PutApplicationAccessScope",
+    "sso:PutApplicationAssignmentConfiguration",
+    "sso:DeleteApplicationAccessScope",
+    "sso:PutApplicationSessionConfiguration"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccountId"
+ ],
+ "properties": {
+  "AccountId": {
+   "description": "The identifier for the specified AWS account.",
+   "type": "string"
+  },
+  "ApplicationArn": {
+   "description": "The Glue IAM identity center application arn",
+   "maxLength": 1224,
+   "minLength": 10,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso::\\d{12}:application/(sso)?ins-[a-zA-Z0-9-.]{16}/apl-[a-zA-Z0-9]{16}$",
+   "type": "string"
+  },
+  "InstanceArn": {
+   "description": "The IAM identity center instance arn",
+   "maxLength": 1224,
+   "minLength": 10,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}$",
+   "type": "string"
+  },
+  "Scopes": {
+   "description": "The downstream scopes that Glue identity center configuration can access",
+   "insertionOrder": true,
+   "items": {
+    "maxLength": 50,
+    "minLength": 0,
+    "type": "string"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UserBackgroundSessionsEnabled": {
+   "description": "Enable or disable user background sessions for Glue Identity Center",
+   "type": "boolean"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ApplicationArn",
+  "/properties/AccountId"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "InstanceArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-glue.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Glue::IdentityCenterConfiguration"
+}

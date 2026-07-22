@@ -1,0 +1,125 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "JobName": {
+   "description": "Job name",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::DataBrew::Schedule.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "databrew:CreateSchedule",
+    "databrew:DescribeSchedule",
+    "databrew:TagResource",
+    "databrew:UntagResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "databrew:DeleteSchedule"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "databrew:ListSchedules",
+    "databrew:ListTagsForResource",
+    "iam:ListRoles"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "databrew:DescribeSchedule",
+    "iam:ListRoles"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "databrew:UpdateSchedule",
+    "databrew:TagResource",
+    "databrew:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "CronExpression": {
+   "description": "Schedule cron",
+   "maxLength": 512,
+   "minLength": 1,
+   "type": "string"
+  },
+  "JobNames": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/JobName"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Name": {
+   "description": "Schedule Name",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "required": [
+  "Name",
+  "CronExpression"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-databrew.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "databrew:TagResource",
+   "databrew:UntagResource",
+   "databrew:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataBrew::Schedule"
+}

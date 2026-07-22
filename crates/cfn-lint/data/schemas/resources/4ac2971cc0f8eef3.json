@@ -1,0 +1,320 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/SiteId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/OperatingAddress",
+  "/properties/ShippingAddress"
+ ],
+ "definitions": {
+  "Address": {
+   "additionalProperties": false,
+   "properties": {
+    "AddressLine1": {
+     "maxLength": 180,
+     "minLength": 1,
+     "pattern": "^\\S[\\S ]*$",
+     "type": "string"
+    },
+    "AddressLine2": {
+     "maxLength": 60,
+     "minLength": 0,
+     "pattern": "^\\S[\\S ]*$",
+     "type": "string"
+    },
+    "AddressLine3": {
+     "maxLength": 60,
+     "minLength": 0,
+     "pattern": "^\\S[\\S ]*$",
+     "type": "string"
+    },
+    "City": {
+     "maxLength": 50,
+     "minLength": 1,
+     "pattern": "^\\S[\\S ]*$",
+     "type": "string"
+    },
+    "ContactName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^\\S[\\S ]*$",
+     "type": "string"
+    },
+    "ContactPhoneNumber": {
+     "maxLength": 20,
+     "minLength": 1,
+     "pattern": "^[\\S ]+$",
+     "type": "string"
+    },
+    "CountryCode": {
+     "maxLength": 2,
+     "minLength": 2,
+     "pattern": "^[A-Z]{2}$",
+     "type": "string"
+    },
+    "DistrictOrCounty": {
+     "maxLength": 60,
+     "minLength": 1,
+     "pattern": "^\\S[\\S ]*$",
+     "type": "string"
+    },
+    "Municipality": {
+     "maxLength": 180,
+     "minLength": 0,
+     "pattern": "^\\S[\\S ]*$",
+     "type": "string"
+    },
+    "PostalCode": {
+     "maxLength": 20,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9 -]+$",
+     "type": "string"
+    },
+    "StateOrRegion": {
+     "maxLength": 50,
+     "minLength": 1,
+     "pattern": "^\\S[\\S ]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ContactName",
+    "ContactPhoneNumber",
+    "AddressLine1",
+    "City",
+    "StateOrRegion",
+    "PostalCode",
+    "CountryCode"
+   ],
+   "type": "object"
+  },
+  "RackPhysicalProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "FiberOpticCableType": {
+     "enum": [
+      "SINGLE_MODE",
+      "MULTI_MODE"
+     ],
+     "type": "string"
+    },
+    "MaximumSupportedWeightLbs": {
+     "enum": [
+      "NO_LIMIT",
+      "MAX_1400_LBS",
+      "MAX_1600_LBS",
+      "MAX_1800_LBS",
+      "MAX_2000_LBS"
+     ],
+     "type": "string"
+    },
+    "OpticalStandard": {
+     "enum": [
+      "OPTIC_10GBASE_SR",
+      "OPTIC_10GBASE_IR",
+      "OPTIC_10GBASE_LR",
+      "OPTIC_40GBASE_SR",
+      "OPTIC_40GBASE_ESR",
+      "OPTIC_40GBASE_IR4_LR4L",
+      "OPTIC_40GBASE_LR4",
+      "OPTIC_100GBASE_SR4",
+      "OPTIC_100GBASE_CWDM4",
+      "OPTIC_100GBASE_LR4",
+      "OPTIC_100G_PSM4_MSA",
+      "OPTIC_1000BASE_LX",
+      "OPTIC_1000BASE_SX"
+     ],
+     "type": "string"
+    },
+    "PowerConnector": {
+     "enum": [
+      "L6_30P",
+      "IEC309",
+      "AH530P7W",
+      "AH532P6W",
+      "CS8365C"
+     ],
+     "type": "string"
+    },
+    "PowerDrawKva": {
+     "enum": [
+      "POWER_5_KVA",
+      "POWER_10_KVA",
+      "POWER_15_KVA",
+      "POWER_30_KVA"
+     ],
+     "type": "string"
+    },
+    "PowerFeedDrop": {
+     "enum": [
+      "ABOVE_RACK",
+      "BELOW_RACK"
+     ],
+     "type": "string"
+    },
+    "PowerPhase": {
+     "enum": [
+      "SINGLE_PHASE",
+      "THREE_PHASE"
+     ],
+     "type": "string"
+    },
+    "UplinkCount": {
+     "enum": [
+      "UPLINK_COUNT_1",
+      "UPLINK_COUNT_2",
+      "UPLINK_COUNT_3",
+      "UPLINK_COUNT_4",
+      "UPLINK_COUNT_5",
+      "UPLINK_COUNT_6",
+      "UPLINK_COUNT_7",
+      "UPLINK_COUNT_8",
+      "UPLINK_COUNT_12",
+      "UPLINK_COUNT_16"
+     ],
+     "type": "string"
+    },
+    "UplinkGbps": {
+     "enum": [
+      "UPLINK_1G",
+      "UPLINK_10G",
+      "UPLINK_40G",
+      "UPLINK_100G"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[\\S \\n]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Definition of AWS::Outposts::Site Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "outposts:CreateSite",
+    "outposts:GetSite",
+    "outposts:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "outposts:DeleteSite"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "outposts:ListSites"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "outposts:GetSite",
+    "outposts:GetSiteAddress"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "outposts:UpdateSite",
+    "outposts:GetSite",
+    "outposts:UpdateSiteRackPhysicalProperties",
+    "outposts:TagResource",
+    "outposts:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SiteArn"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 1001,
+   "minLength": 1,
+   "pattern": "^[\\S ]+$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "pattern": "^[\\S ]+$",
+   "type": "string"
+  },
+  "Notes": {
+   "maxLength": 2000,
+   "minLength": 1,
+   "pattern": "^[\\S \\n]+$",
+   "type": "string"
+  },
+  "OperatingAddress": {
+   "$ref": "#/definitions/Address"
+  },
+  "RackPhysicalProperties": {
+   "$ref": "#/definitions/RackPhysicalProperties"
+  },
+  "ShippingAddress": {
+   "$ref": "#/definitions/Address"
+  },
+  "SiteArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^arn:aws([a-z-]+)?:outposts:[a-z\\d-]+:\\d{12}:site/(os-[a-f0-9]{17})$",
+   "type": "string"
+  },
+  "SiteId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^(arn:aws([a-z-]+)?:outposts:[a-z\\d-]+:\\d{12}:site/)?(os-[a-f0-9]{17})$",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SiteId",
+  "/properties/SiteArn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-outposts",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "outposts:TagResource",
+   "outposts:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Outposts::Site"
+}

@@ -1,0 +1,105 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConnectorArn"
+ ],
+ "definitions": {
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ "description": "Represents a SCEP Challenge that is used for certificate enrollment",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "pca-connector-scep:CreateChallenge",
+    "pca-connector-scep:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "pca-connector-scep:GetChallengeMetadata",
+    "pca-connector-scep:DeleteChallenge",
+    "pca-connector-scep:UntagResource"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ConnectorArn": {
+      "$ref": "resource-schema.json#/properties/ConnectorArn"
+     }
+    },
+    "required": [
+     "ConnectorArn"
+    ]
+   },
+   "permissions": [
+    "pca-connector-scep:ListChallengeMetadata"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "pca-connector-scep:ListTagsForResource",
+    "pca-connector-scep:GetChallengeMetadata"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "pca-connector-scep:ListTagsForResource",
+    "pca-connector-scep:TagResource",
+    "pca-connector-scep:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ChallengeArn"
+ ],
+ "properties": {
+  "ChallengeArn": {
+   "maxLength": 200,
+   "minLength": 5,
+   "pattern": "^arn:aws(-[a-z]+)*:pca-connector-scep:[a-z]+(-[a-z]+)+-[1-9]\\d*:\\d{12}:connector\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}\\/challenge\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "ConnectorArn": {
+   "maxLength": 200,
+   "minLength": 5,
+   "pattern": "^arn:aws(-[a-z]+)*:pca-connector-scep:[a-z]+(-[a-z]+)+-[1-9]\\d*:\\d{12}:connector\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ChallengeArn"
+ ],
+ "required": [
+  "ConnectorArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-pcaconnectorscep",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "pca-connector-scep:ListTagsForResource",
+   "pca-connector-scep:TagResource",
+   "pca-connector-scep:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::PCAConnectorSCEP::Challenge"
+}

@@ -1,7 +1,8 @@
-pub mod e0000;
+// Anchor rules are consolidated here and registered via inventory; the module
+// is private (not `pub mod`) so it is not pulled into `rules::*` glob
+// re-exports (which would collide with the conditions anchors module).
+mod anchors;
 pub mod e0001;
-pub mod e0002;
-pub mod e0003;
 pub mod e0100;
 pub mod e0200;
 pub mod e1001;
@@ -20,18 +21,6 @@ pub mod e1033;
 pub mod e1040;
 pub mod e1041;
 pub mod e1050;
-pub mod e1101;
-pub mod e1103;
-pub mod e1150;
-pub mod e1151;
-pub mod e1152;
-pub mod e1153;
-pub mod e1154;
-pub mod e1155;
-pub mod e1156;
-pub mod e1700;
-pub mod e1701;
-pub mod e1702;
 pub mod i1002;
 pub mod i1003;
 pub mod i1022;
@@ -40,13 +29,6 @@ pub mod w1011;
 pub mod w1019;
 pub mod w1020;
 pub mod w1028;
-pub mod w1030;
-pub mod w1031;
-pub mod w1032;
-pub mod w1033;
-pub mod w1034;
-pub mod w1035;
-pub mod w1036;
 pub mod w1040;
 pub mod w1053;
 pub mod w1054;

@@ -70,7 +70,7 @@ impl Engine {
                         .and_then(|r| r.get(name))
                         .and_then(|r| r.get("Properties"))
                         .and_then(|p| p.get(prop_name))
-                        .map(|n| n.span().clone())
+                        .map(|n| n.span())
                         .unwrap_or_default();
                     issues.push(ValidationError {
                         rule_id: Some("E3040".to_string()),

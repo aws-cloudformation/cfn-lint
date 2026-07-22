@@ -1,0 +1,212 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/ClusterId"
+ ],
+ "definitions": {
+  "ComputeNodeGroupConfiguration": {
+   "additionalProperties": false,
+   "description": "The compute node group configuration for a queue.",
+   "properties": {
+    "ComputeNodeGroupId": {
+     "description": "The compute node group ID for the compute node group configuration.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ErrorInfo": {
+   "additionalProperties": false,
+   "description": "An error that occurred during resource provisioning.",
+   "properties": {
+    "Code": {
+     "description": "The short-form error code.",
+     "type": "string"
+    },
+    "Message": {
+     "description": "The detailed error information.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SlurmCustomSetting": {
+   "additionalProperties": false,
+   "description": "Additional settings that directly map to Slurm settings.",
+   "properties": {
+    "ParameterName": {
+     "description": "AWS PCS supports configuration of the Slurm parameters for queues:.",
+     "type": "string"
+    },
+    "ParameterValue": {
+     "description": "The value for the configured Slurm setting.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ParameterName",
+    "ParameterValue"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "AWS::PCS::Queue resource creates an AWS PCS queue.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateNetworkInterface",
+    "ec2:DescribeVpcs",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups",
+    "ec2:GetSecurityGroupsForVpc",
+    "iam:CreateServiceLinkedRole",
+    "secretsmanager:CreateSecret",
+    "secretsmanager:TagResource",
+    "pcs:CreateQueue",
+    "pcs:GetQueue",
+    "pcs:ListTagsForResource",
+    "pcs:TagResource"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "delete": {
+   "permissions": [
+    "pcs:DeleteQueue",
+    "pcs:GetQueue"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ClusterId": {
+      "$ref": "resource-schema.json#/properties/ClusterId"
+     }
+    },
+    "required": [
+     "ClusterId"
+    ]
+   },
+   "permissions": [
+    "pcs:ListClusters",
+    "pcs:ListQueues"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "pcs:GetQueue",
+    "pcs:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "pcs:GetQueue",
+    "pcs:UpdateQueue",
+    "pcs:ListTagsForResource",
+    "pcs:TagResource",
+    "pcs:UntagResource"
+   ],
+   "timeoutInMinutes": 60
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The unique Amazon Resource Name (ARN) of the queue.",
+   "pattern": "^(.*?)",
+   "type": "string"
+  },
+  "ClusterId": {
+   "description": "The ID of the cluster of the queue.",
+   "type": "string"
+  },
+  "ComputeNodeGroupConfigurations": {
+   "description": "The list of compute node group configurations associated with the queue. Queues assign jobs to associated compute node groups.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ComputeNodeGroupConfiguration"
+   },
+   "type": "array"
+  },
+  "ErrorInfo": {
+   "description": "The list of errors that occurred during queue provisioning.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ErrorInfo"
+   },
+   "type": "array"
+  },
+  "Id": {
+   "description": "The generated unique ID of the queue.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name that identifies the queue.",
+   "type": "string"
+  },
+  "SlurmConfiguration": {
+   "additionalProperties": false,
+   "description": "The Slurm configuration for the queue.",
+   "properties": {
+    "SlurmCustomSettings": {
+     "description": "Custom Slurm parameters that directly map to Slurm configuration settings.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SlurmCustomSetting"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Status": {
+   "description": "The provisioning status of the queue. The provisioning status doesn't indicate the overall health of the queue.",
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "UPDATING",
+    "DELETING",
+    "CREATE_FAILED",
+    "DELETE_FAILED",
+    "UPDATE_FAILED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "1 or more tags added to the resource. Each tag consists of a tag key and tag value. The tag value is optional and can be an empty string.",
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ErrorInfo",
+  "/properties/Id",
+  "/properties/Status"
+ ],
+ "required": [
+  "ClusterId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-pcs.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "pcs:TagResource",
+   "pcs:ListTagsForResource",
+   "pcs:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::PCS::Queue"
+}

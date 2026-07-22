@@ -1,0 +1,130 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/AssetBundleImportJobId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AssetBundleImportJobId",
+  "/properties/AssetBundleImportSource",
+  "/properties/AwsAccountId",
+  "/properties/FailureAction",
+  "/properties/OverrideValidationStrategy"
+ ],
+ "definitions": {
+  "AssetBundleImportJobOverrideValidationStrategy": {
+   "additionalProperties": false,
+   "properties": {
+    "StrictModeForAllResources": {
+     "description": "A Boolean value that indicates whether to import all analyses and dashboards under strict or lenient mode.",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "AssetBundleImportJobResourceIdOverrideConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "PrefixForAllResources": {
+     "description": "An option to request a prefix to be prepended to each resource's ID before import.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AssetBundleImportSourceDescription": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Uri": {
+     "description": "The Amazon S3 URI for the asset bundle import file.",
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Represents a QuickSight asset bundle import job.",
+ "handlers": {
+  "list": {
+   "permissions": [
+    "quicksight:ListAssetBundleImportJobs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "quicksight:DescribeAssetBundleImportJob"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) for the import job.",
+   "type": "string"
+  },
+  "AssetBundleImportJobId": {
+   "description": "The ID of the import job.",
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^[\\w\\-]+$",
+   "type": "string"
+  },
+  "AssetBundleImportSource": {
+   "$ref": "#/definitions/AssetBundleImportSourceDescription",
+   "description": "The source of the asset bundle zip file."
+  },
+  "AwsAccountId": {
+   "description": "The ID of the Amazon Web Services account to import assets into.",
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "CreatedTime": {
+   "description": "The time that the import job was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "FailureAction": {
+   "description": "The failure action for the import job.",
+   "enum": [
+    "DO_NOTHING",
+    "ROLLBACK"
+   ],
+   "type": "string"
+  },
+  "JobStatus": {
+   "description": "Indicates the status of the import job.",
+   "enum": [
+    "QUEUED_FOR_IMMEDIATE_EXECUTION",
+    "IN_PROGRESS",
+    "SUCCESSFUL",
+    "FAILED",
+    "FAILED_ROLLBACK_IN_PROGRESS",
+    "FAILED_ROLLBACK_COMPLETED",
+    "FAILED_ROLLBACK_ERROR"
+   ],
+   "type": "string"
+  },
+  "OverrideValidationStrategy": {
+   "$ref": "#/definitions/AssetBundleImportJobOverrideValidationStrategy",
+   "description": "An optional validation strategy override for all analyses and dashboards."
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/JobStatus",
+  "/properties/CreatedTime"
+ ],
+ "required": [
+  "AssetBundleImportJobId"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::QuickSight::AssetBundleImportJob"
+}

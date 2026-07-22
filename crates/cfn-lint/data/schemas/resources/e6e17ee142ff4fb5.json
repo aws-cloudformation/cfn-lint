@@ -1,0 +1,88 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ContentUri": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "PassThroughProp": {}
+ },
+ "primaryIdentifier": [
+  "/properties/LayerVersionArn"
+ ],
+ "properties": {
+  "CompatibleArchitectures": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "CompatibleRuntimes": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ContentUri": {
+   "anyOf": [
+    {
+     "type": "string"
+    },
+    {
+     "$ref": "#/definitions/ContentUri"
+    }
+   ]
+  },
+  "Description": {
+   "type": "string"
+  },
+  "LayerName": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/PassThroughProp"
+    }
+   ]
+  },
+  "LayerVersionArn": {
+   "type": "string"
+  },
+  "LicenseInfo": {
+   "type": "string"
+  },
+  "PublishLambdaVersion": {
+   "type": "boolean"
+  },
+  "RetentionPolicy": {
+   "anyOf": [
+    {
+     "type": "object"
+    },
+    {
+     "type": "string"
+    }
+   ]
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LayerVersionArn"
+ ],
+ "required": [
+  "ContentUri"
+ ],
+ "typeName": "AWS::Serverless::LayerVersion"
+}

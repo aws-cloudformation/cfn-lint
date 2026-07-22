@@ -1,0 +1,211 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Id"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/VpcIdentifier",
+  "/properties/SubnetIds",
+  "/properties/IpAddressType",
+  "/properties/Name",
+  "/properties/ResourceConfigDnsResolution"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Creates a resource gateway for a service.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "vpc-lattice:CreateResourceGateway",
+    "vpc-lattice:GetResourceGateway",
+    "vpc-lattice:TagResource",
+    "vpc-lattice:ListTagsForResource",
+    "ec2:DescribeVpcs",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "vpc-lattice:DeleteResourceGateway",
+    "vpc-lattice:GetResourceGateway",
+    "vpc-lattice:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "vpc-lattice:ListResourceGateways"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "vpc-lattice:GetResourceGateway",
+    "vpc-lattice:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "vpc-lattice:UpdateResourceGateway",
+    "vpc-lattice:GetResourceGateway",
+    "vpc-lattice:TagResource",
+    "vpc-lattice:UntagResource",
+    "vpc-lattice:ListTagsForResource",
+    "ec2:DescribeVpcs",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:resourcegateway/rgw-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 2048,
+   "minLength": 17,
+   "pattern": "^((rgw-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:resourcegateway/rgw-[0-9a-z]{17}))$",
+   "type": "string"
+  },
+  "IpAddressType": {
+   "enum": [
+    "IPV4",
+    "IPV6",
+    "DUALSTACK"
+   ],
+   "type": "string"
+  },
+  "Ipv4AddressesPerEni": {
+   "description": "The number of IPv4 addresses to allocate per ENI for the resource gateway",
+   "maximum": 62,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Name": {
+   "maxLength": 40,
+   "minLength": 3,
+   "pattern": "^(?!rgw-)(?![-])(?!.*[-]$)(?!.*[-]{2})[a-z0-9-]+$",
+   "type": "string"
+  },
+  "ResourceConfigDnsResolution": {
+   "enum": [
+    "IN_VPC",
+    "PUBLIC"
+   ],
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "description": "The ID of one or more security groups to associate with the endpoint network interface.",
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "anyOf": [
+     {
+      "relationshipRef": {
+       "propertyPath": "/properties/GroupId",
+       "typeName": "AWS::EC2::SecurityGroup"
+      }
+     },
+     {
+      "relationshipRef": {
+       "propertyPath": "/properties/Id",
+       "typeName": "AWS::EC2::SecurityGroup"
+      }
+     },
+     {
+      "relationshipRef": {
+       "propertyPath": "/properties/DefaultSecurityGroup",
+       "typeName": "AWS::EC2::VPC"
+      }
+     }
+    ],
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "maxLength": 200,
+    "minLength": 5,
+    "pattern": "^sg-(([0-9a-z]{8})|([0-9a-z]{17}))$",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SubnetIds": {
+   "description": "The ID of one or more subnets in which to create an endpoint network interface.",
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 200,
+    "minLength": 5,
+    "relationshipRef": {
+     "propertyPath": "/properties/SubnetId",
+     "typeName": "AWS::EC2::Subnet"
+    },
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VpcIdentifier": {
+   "maxLength": 50,
+   "minLength": 5,
+   "pattern": "^vpc-(([0-9a-z]{8})|([0-9a-z]{17}))$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "VpcIdentifier",
+  "SubnetIds"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "vpc-lattice:UntagResource",
+   "vpc-lattice:TagResource",
+   "vpc-lattice:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::VpcLattice::ResourceGateway"
+}

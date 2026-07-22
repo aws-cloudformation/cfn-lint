@@ -1,0 +1,98 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "PassThroughProp": {},
+  "ResourceReference": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Name": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "Qualifier": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "QueueUrl": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "ResourceId": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "RoleName": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/PassThroughProp"
+      }
+     ]
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "properties": {
+  "Destination": {
+   "anyOf": [
+    {
+     "$ref": "#/definitions/ResourceReference"
+    },
+    {
+     "items": {
+      "$ref": "#/definitions/ResourceReference"
+     },
+     "type": "array"
+    }
+   ]
+  },
+  "Permissions": {
+   "items": {
+    "enum": [
+     "Read",
+     "Write"
+    ],
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Source": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/ResourceReference"
+    }
+   ]
+  }
+ },
+ "required": [
+  "Source",
+  "Destination",
+  "Permissions"
+ ],
+ "typeName": "AWS::Serverless::Connector"
+}

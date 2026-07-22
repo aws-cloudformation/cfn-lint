@@ -1,0 +1,113 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "DictionaryLanguage": {
+   "enum": [
+    "eng",
+    "fra",
+    "ita",
+    "deu",
+    "spa",
+    "por"
+   ],
+   "type": "string"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Represents a custom dictionary for improving transcription accuracy",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "elemental-inference:CreateDictionary",
+    "elemental-inference:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "elemental-inference:DeleteDictionary",
+    "elemental-inference:GetDictionary"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "elemental-inference:ListDictionaries"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "elemental-inference:GetDictionary",
+    "elemental-inference:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "elemental-inference:UpdateDictionary",
+    "elemental-inference:GetDictionary",
+    "elemental-inference:TagResource",
+    "elemental-inference:UntagResource",
+    "elemental-inference:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Entries": {
+   "maxLength": 40960,
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 19,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "Language": {
+   "$ref": "#/definitions/DictionaryLanguage"
+  },
+  "Name": {
+   "pattern": "^[a-zA-Z0-9]([a-zA-Z0-9-_]{0,126}[a-zA-Z0-9])?$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "Language",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "elemental-inference:ListTagsForResource",
+   "elemental-inference:TagResource",
+   "elemental-inference:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ElementalInference::Dictionary",
+ "writeOnlyProperties": [
+  "/properties/Entries"
+ ]
+}

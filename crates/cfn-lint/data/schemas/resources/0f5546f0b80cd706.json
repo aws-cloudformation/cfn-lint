@@ -1,0 +1,209 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyId"
+ ],
+ "definitions": {
+  "SecurityRequirement": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "description": "Description of the security requirement",
+     "maxLength": 500,
+     "type": "string"
+    },
+    "Domain": {
+     "description": "Security domain this requirement belongs to",
+     "maxLength": 10000,
+     "type": "string"
+    },
+    "Evaluation": {
+     "description": "How to evaluate compliance with this requirement",
+     "maxLength": 10000,
+     "type": "string"
+    },
+    "Name": {
+     "description": "Name of the security requirement",
+     "maxLength": 80,
+     "type": "string"
+    },
+    "Remediation": {
+     "description": "How to remediate non-compliance",
+     "maxLength": 10000,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Description",
+    "Domain",
+    "Evaluation"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SecurityAgent::SecurityRequirementPack",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityagent:CreateSecurityRequirementPack",
+    "securityagent:GetSecurityRequirementPack",
+    "securityagent:BatchCreateSecurityRequirements",
+    "securityagent:BatchGetSecurityRequirements",
+    "securityagent:ListSecurityRequirements",
+    "securityagent:TagResource",
+    "securityagent:ListTagsForResource",
+    "kms:DescribeKey",
+    "kms:Encrypt",
+    "kms:GenerateDataKeyWithoutPlaintext",
+    "kms:Decrypt",
+    "kms:ReEncryptFrom",
+    "kms:ReEncryptTo"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securityagent:GetSecurityRequirementPack",
+    "securityagent:ListSecurityRequirements",
+    "securityagent:BatchDeleteSecurityRequirements",
+    "kms:Decrypt",
+    "securityagent:DeleteSecurityRequirementPack"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securityagent:ListSecurityRequirementPacks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityagent:GetSecurityRequirementPack",
+    "securityagent:ListSecurityRequirements",
+    "securityagent:BatchGetSecurityRequirements",
+    "securityagent:ListTagsForResource",
+    "kms:Decrypt"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securityagent:UpdateSecurityRequirementPack",
+    "securityagent:GetSecurityRequirementPack",
+    "securityagent:BatchCreateSecurityRequirements",
+    "securityagent:BatchGetSecurityRequirements",
+    "securityagent:BatchUpdateSecurityRequirements",
+    "securityagent:BatchDeleteSecurityRequirements",
+    "securityagent:ListSecurityRequirements",
+    "securityagent:TagResource",
+    "securityagent:UntagResource",
+    "securityagent:ListTagsForResource",
+    "kms:Decrypt"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PackId"
+ ],
+ "properties": {
+  "Description": {
+   "description": "Description of the pack",
+   "maxLength": 500,
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "anyOf": [
+    {
+     "format": "AWS::KMS::Key.Arn"
+    },
+    {
+     "format": "AWS::KMS::Key.Id"
+    },
+    {
+     "format": "AWS::KMS::Alias.AliasName"
+    }
+   ],
+   "description": "KMS key for client-side encryption of pack contents",
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "Name": {
+   "description": "Name of the security requirement pack",
+   "maxLength": 120,
+   "minLength": 1,
+   "type": "string"
+  },
+  "PackId": {
+   "description": "Unique identifier of the security requirement pack",
+   "maxLength": 64,
+   "minLength": 8,
+   "pattern": "^(srp)-(am|cm)-[a-zA-Z0-9\\-]+$",
+   "type": "string"
+  },
+  "SecurityRequirements": {
+   "description": "Security requirements within this pack",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SecurityRequirement"
+   },
+   "type": "array"
+  },
+  "Status": {
+   "description": "Whether the pack is enabled or disabled",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Tags for the security requirement pack",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PackId"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "securityagent:TagResource",
+   "securityagent:UntagResource",
+   "securityagent:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityAgent::SecurityRequirementPack"
+}

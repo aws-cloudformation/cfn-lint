@@ -1,12 +1,12 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::jsonschema::ValidationError;
 use crate::rules::Severity;
 use crate::template::Template;
 
-/// E6002: Outputs must be objects.
+/// E6002: Outputs have required properties.
 ///
-/// Now handled by the parent schema rule (E6001) via type.
+/// Now handled by the parent schema rule (E6001) via the `required` keyword,
+/// matching Python cfn-lint's E6002 ("Outputs have required properties").
 pub struct E6002;
 
 impl CfnLintRule for E6002 {
@@ -14,10 +14,10 @@ impl CfnLintRule for E6002 {
         "E6002"
     }
     fn short_description(&self) -> &str {
-        "Outputs must have unique Export names"
+        "Outputs have required properties"
     }
     fn description(&self) -> &str {
-        "Check that no two outputs share the same Export Name value"
+        "Making sure the outputs have required properties"
     }
     fn severity(&self) -> Severity {
         Severity::Error

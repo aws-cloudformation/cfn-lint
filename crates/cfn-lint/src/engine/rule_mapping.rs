@@ -134,7 +134,7 @@ pub(crate) fn check_equals_comma_delimited(
                                                 ref_name
                                             ),
                                             path: vec![],
-                                            span: elem.span().clone(),
+                                            span: elem.span(),
                                             keyword: String::new(),
                                             unknown: false,
                                             resolved_from_ref: false,

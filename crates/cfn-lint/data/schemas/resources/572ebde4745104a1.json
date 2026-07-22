@@ -1,0 +1,158 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The name of the tag.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value of the tag.",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource type definition for AWS::SSM::MaintenanceWindow",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ssm:CreateMaintenanceWindow",
+    "ssm:AddTagsToResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ssm:DeleteMaintenanceWindow",
+    "ssm:GetMaintenanceWindow"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ssm:DescribeMaintenanceWindows"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ssm:GetMaintenanceWindow",
+    "ssm:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ssm:UpdateMaintenanceWindow",
+    "ssm:AddTagsToResource",
+    "ssm:RemoveTagsFromResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WindowId"
+ ],
+ "properties": {
+  "AllowUnassociatedTargets": {
+   "description": "Enables a maintenance window task to run on managed instances, even if you have not registered those instances as targets. If enabled, then you must specify the unregistered instances (by instance ID) when you register a task with the maintenance window.",
+   "type": "boolean"
+  },
+  "Cutoff": {
+   "description": "The number of hours before the end of the maintenance window that AWS Systems Manager stops scheduling new tasks for execution.",
+   "maximum": 23,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Description": {
+   "description": "A description of the maintenance window.",
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Duration": {
+   "description": "The duration of the maintenance window in hours.",
+   "maximum": 24,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "EndDate": {
+   "description": "The date and time, in ISO-8601 Extended format, for when the maintenance window is scheduled to become inactive.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the maintenance window.",
+   "maxLength": 128,
+   "minLength": 3,
+   "pattern": "^[a-zA-Z0-9_\\-.]{3,128}$",
+   "type": "string"
+  },
+  "Schedule": {
+   "description": "The schedule of the maintenance window in the form of a cron or rate expression.",
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ScheduleOffset": {
+   "description": "The number of days to wait to run a maintenance window after the scheduled cron expression date and time.",
+   "maximum": 6,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ScheduleTimezone": {
+   "description": "The time zone that the scheduled maintenance window executions are based on, in Internet Assigned Numbers Authority (IANA) format.",
+   "type": "string"
+  },
+  "StartDate": {
+   "description": "The date and time, in ISO-8601 Extended format, for when the maintenance window is scheduled to become active. StartDate allows you to delay activation of the maintenance window until the specified future date.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Optional metadata that you assign to a resource in the form of an arbitrary set of tags (key-value pairs). Tags enable you to categorize a resource in different ways, such as by purpose, owner, or environment. For example, you might want to tag a maintenance window to identify the type of tasks it will run, the types of targets, and the environment it will run in.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 1000,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "WindowId": {
+   "description": "The ID of the maintenance window.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/WindowId"
+ ],
+ "required": [
+  "AllowUnassociatedTargets",
+  "Cutoff",
+  "Schedule",
+  "Duration",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "ssm:ListTagsForResource",
+   "ssm:AddTagsToResource",
+   "ssm:RemoveTagsFromResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SSM::MaintenanceWindow"
+}

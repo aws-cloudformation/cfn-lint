@@ -1,0 +1,203 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/AutoMinorVersionUpgrade",
+  "/properties/DBParameterGroupName",
+  "/properties/PreferredMaintenanceWindow"
+ ],
+ "createOnlyProperties": [
+  "/properties/AvailabilityZone",
+  "/properties/DBClusterIdentifier",
+  "/properties/DBInstanceIdentifier",
+  "/properties/DBSnapshotIdentifier",
+  "/properties/DBSubnetGroupName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/DBSnapshotIdentifier"
+ ],
+ "description": "The AWS::Neptune::DBInstance resource creates an Amazon Neptune DB instance.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeInternetGateways",
+    "iam:GetRole",
+    "iam:ListRoles",
+    "iam:PassRole",
+    "rds:AddTagsToResource",
+    "rds:CreateDBInstance",
+    "rds:DescribeDBInstances",
+    "rds:DescribeEvents",
+    "rds:ListTagsForResource",
+    "rds:ModifyDBInstance",
+    "rds:RebootDBInstance",
+    "iam:CreateServiceLinkedRole"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "delete": {
+   "permissions": [
+    "rds:AddTagsToResource",
+    "rds:CreateDBSnapshot",
+    "rds:DeleteDBInstance",
+    "rds:DescribeDBInstances"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "list": {
+   "permissions": [
+    "rds:DescribeDBInstances",
+    "rds:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeInternetGateways",
+    "rds:DescribeDBInstances",
+    "rds:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeInternetGateways",
+    "iam:GetRole",
+    "iam:ListRoles",
+    "iam:PassRole",
+    "rds:AddTagsToResource",
+    "rds:DescribeDBClusters",
+    "rds:DescribeDBInstances",
+    "rds:DescribeDBParameterGroups",
+    "rds:DescribeEvents",
+    "rds:ListTagsForResource",
+    "rds:ModifyDBInstance",
+    "rds:RebootDBInstance",
+    "rds:RemoveTagsFromResource"
+   ],
+   "timeoutInMinutes": 2160
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DBInstanceIdentifier"
+ ],
+ "properties": {
+  "AllowMajorVersionUpgrade": {
+   "description": "Indicates that major version upgrades are allowed. Changing this parameter doesn't result in an outage and the change is asynchronously applied as soon as possible. This parameter must be set to true when specifying a value for the EngineVersion parameter that is a different major version than the DB instance's current version.",
+   "type": "boolean"
+  },
+  "AutoMinorVersionUpgrade": {
+   "description": "Indicates that minor version patches are applied automatically.\n\nWhen updating this property, some interruptions may occur.",
+   "type": "boolean"
+  },
+  "AvailabilityZone": {
+   "description": "Specifies the name of the Availability Zone the DB instance is located in.",
+   "type": "string"
+  },
+  "DBClusterIdentifier": {
+   "description": "If the DB instance is a member of a DB cluster, contains the name of the DB cluster that the DB instance is a member of.",
+   "type": "string"
+  },
+  "DBInstanceClass": {
+   "description": "Contains the name of the compute and memory capacity class of the DB instance.\n\nIf you update this property, some interruptions may occur.",
+   "type": "string"
+  },
+  "DBInstanceIdentifier": {
+   "description": "Contains a user-supplied database identifier. This identifier is the unique key that identifies a DB instance.",
+   "type": "string"
+  },
+  "DBParameterGroupName": {
+   "description": "The name of an existing DB parameter group or a reference to an AWS::Neptune::DBParameterGroup resource created in the template. If any of the data members of the referenced parameter group are changed during an update, the DB instance might need to be restarted, which causes some interruption. If the parameter group contains static parameters, whether they were changed or not, an update triggers a reboot.",
+   "type": "string"
+  },
+  "DBSnapshotIdentifier": {
+   "description": "This parameter is not supported.\n\n`AWS::Neptune::DBInstance` does not support restoring from snapshots.\n\n`AWS::Neptune::DBCluster` does support restoring from snapshots.\n\n",
+   "type": "string"
+  },
+  "DBSubnetGroupName": {
+   "description": "A DB subnet group to associate with the DB instance. If you update this value, the new subnet group must be a subnet group in a new virtual private cloud (VPC).",
+   "type": "string"
+  },
+  "Endpoint": {
+   "description": "The connection endpoint for the database. For example: `mystack-mydb-1apw1j4phylrk.cg034hpkmmjt.us-east-2.rds.amazonaws.com`.",
+   "type": "string"
+  },
+  "Port": {
+   "description": "The port number on which the database accepts connections. For example: `8182`.",
+   "type": "string"
+  },
+  "PreferredMaintenanceWindow": {
+   "description": "Specifies the weekly time range during which system maintenance can occur, in Universal Coordinated Time (UTC).",
+   "type": "string"
+  },
+  "PubliclyAccessible": {
+   "description": "Indicates that public accessibility is enabled. This should be enabled in combination with IAM Auth enabled on the DBCluster",
+   "type": "boolean"
+  },
+  "Tags": {
+   "description": "An arbitrary set of tags (key-value pairs) for this DB instance.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/DBClusterIdentifier": "$lowercase(DBClusterIdentifier)",
+  "/properties/DBInstanceIdentifier": "$lowercase(DBInstanceIdentifier)",
+  "/properties/DBParameterGroupName": "$lowercase(DBParameterGroupName)",
+  "/properties/DBSnapshotIdentifier": "$lowercase(DBSnapshotIdentifier)",
+  "/properties/DBSubnetGroupName": "$lowercase(DBSubnetGroupName)"
+ },
+ "readOnlyProperties": [
+  "/properties/Endpoint",
+  "/properties/Port"
+ ],
+ "required": [
+  "DBInstanceClass"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "rds:AddTagsToResource",
+   "rds:ListTagsForResource",
+   "rds:RemoveTagsFromResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Neptune::DBInstance",
+ "writeOnlyProperties": [
+  "/properties/DBSnapshotIdentifier",
+  "/properties/AllowMajorVersionUpgrade"
+ ]
+}

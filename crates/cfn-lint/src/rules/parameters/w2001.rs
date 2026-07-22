@@ -60,7 +60,7 @@ impl CfnLintRule for W2001 {
             .map(|name| {
                 let pos = params_node
                     .and_then(|p| p.get(name.as_str()))
-                    .map(|n| n.span().clone())
+                    .map(|n| n.span())
                     .unwrap_or_default();
                 ValidationError {
                     rule_id: Some(self.id().to_string()),

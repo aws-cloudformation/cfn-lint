@@ -1,0 +1,156 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/VectorBucketName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/VectorBucketName",
+  "/properties/EncryptionConfiguration"
+ ],
+ "definitions": {
+  "CreationTime": {
+   "description": "Date and time when the vector bucket was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "EncryptionConfiguration": {
+   "additionalProperties": false,
+   "description": "The encryption configuration for the vector bucket.",
+   "properties": {
+    "KmsKeyArn": {
+     "description": "AWS Key Management Service (KMS) customer managed key ID to use for the encryption configuration. This parameter is allowed if and only if sseType is set to aws:kms",
+     "format": "AWS::KMS::Key.Arn",
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^(arn:aws[-a-z0-9]*:kms:[-a-z0-9]*:[0-9]{12}:key/.+)$",
+     "type": "string"
+    },
+    "SseType": {
+     "default": "AES256",
+     "description": "The server-side encryption type to use for the encryption configuration of the vector bucket. By default, if you don't specify, all new vectors in Amazon S3 vector buckets use server-side encryption with Amazon S3 managed keys (SSE-S3), specifically AES256.",
+     "enum": [
+      "AES256",
+      "aws:kms"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "Tag key must be between 1 to 128 characters in length. Tag key cannot start with 'aws:' and can only contain alphanumeric characters, spaces, _, ., /, =, +, -, and @.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "Tag value must be between 0 to 256 characters in length. Tag value can only contain alphanumeric characters, spaces, _, ., /, =, +, -, and @.",
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VectorBucketArn": {
+   "description": "The Amazon Resource Name (ARN) of the vector bucket.",
+   "examples": [
+    "arn:aws:s3vectors:us-east-1:123456789012:bucket/myvectorbucket"
+   ],
+   "type": "string"
+  },
+  "VectorBucketName": {
+   "description": "The name of the vector bucket.",
+   "maxLength": 63,
+   "minLength": 3,
+   "type": "string"
+  }
+ },
+ "description": "Resource Type definition for AWS::S3Vectors::VectorBucket",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3vectors:GetVectorBucket",
+    "s3vectors:CreateVectorBucket",
+    "s3vectors:TagResource",
+    "kms:GenerateDataKey"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "s3vectors:GetVectorBucket",
+    "s3vectors:DeleteVectorBucket"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "s3vectors:ListVectorBuckets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "s3vectors:GetVectorBucket",
+    "s3vectors:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "s3vectors:GetVectorBucket",
+    "s3vectors:TagResource",
+    "s3vectors:UntagResource",
+    "s3vectors:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VectorBucketArn"
+ ],
+ "properties": {
+  "CreationTime": {
+   "$ref": "#/definitions/CreationTime"
+  },
+  "EncryptionConfiguration": {
+   "$ref": "#/definitions/EncryptionConfiguration"
+  },
+  "Tags": {
+   "description": "User tags (key-value pairs) to associate with the vector bucket.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VectorBucketArn": {
+   "$ref": "#/definitions/VectorBucketArn"
+  },
+  "VectorBucketName": {
+   "$ref": "#/definitions/VectorBucketName"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VectorBucketArn",
+  "/properties/CreationTime"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "s3vectors:TagResource",
+   "s3vectors:UntagResource",
+   "s3vectors:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::S3Vectors::VectorBucket"
+}

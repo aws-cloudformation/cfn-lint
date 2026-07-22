@@ -1,0 +1,270 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Direction",
+  "/properties/OutpostArn",
+  "/properties/PreferredInstanceType",
+  "/properties/SecurityGroupIds"
+ ],
+ "definitions": {
+  "IpAddressRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Ip": {
+     "description": "The IPv4 address that you want to use for DNS queries.",
+     "maxLength": 36,
+     "minLength": 7,
+     "type": "string"
+    },
+    "Ipv6": {
+     "description": "The IPv6 address that you want to use for DNS queries.",
+     "maxLength": 39,
+     "minLength": 7,
+     "type": "string"
+    },
+    "SubnetId": {
+     "description": "The ID of the subnet that contains the IP address.",
+     "format": "AWS::EC2::Subnet.Id",
+     "maxLength": 32,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "SubnetId"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The name for the tag. For example, if you want to associate Resolver resources with the account IDs of your customers for billing purposes, the value of Key might be account-id.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. For example, if Key is account-id, then Value might be the ID of the customer account that you're creating the resource for.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource type definition for AWS::Route53Resolver::ResolverEndpoint",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53resolver:CreateResolverEndpoint",
+    "route53resolver:GetResolverEndpoint",
+    "route53resolver:ListResolverEndpointIpAddresses",
+    "route53resolver:ListTagsForResource",
+    "route53resolver:TagResource",
+    "route53resolver:UntagResource",
+    "ec2:CreateNetworkInterface",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53resolver:DeleteResolverEndpoint",
+    "route53resolver:GetResolverEndpoint",
+    "ec2:DeleteNetworkInterface",
+    "ec2:DescribeNetworkInterfaces"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53resolver:ListResolverEndpoints"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53resolver:GetResolverEndpoint",
+    "route53resolver:ListResolverEndpointIpAddresses",
+    "route53resolver:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "route53resolver:AssociateResolverEndpointIpAddress",
+    "route53resolver:DisassociateResolverEndpointIpAddress",
+    "route53resolver:GetResolverEndpoint",
+    "route53resolver:ListResolverEndpointIpAddresses",
+    "route53resolver:ListTagsForResource",
+    "route53resolver:TagResource",
+    "route53resolver:UntagResource",
+    "route53resolver:UpdateResolverEndpoint",
+    "ec2:AssignIpv6Addresses",
+    "ec2:CreateNetworkInterface",
+    "ec2:DeleteNetworkInterface",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcs",
+    "ec2:ModifyNetworkInterfaceAttribute",
+    "ec2:UnassignIpv6Addresses"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResolverEndpointId"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the resolver endpoint, such as arn:aws:route53resolver:us-east-1:123456789012:resolver-endpoint/resolver-endpoint-a1bzhi.",
+   "type": "string"
+  },
+  "Direction": {
+   "description": "Indicates whether the Resolver endpoint allows inbound or outbound DNS queries:\n- INBOUND: allows DNS queries to your VPC from your network \n- OUTBOUND: allows DNS queries from your VPC to your network \n- INBOUND_DELEGATION: allows DNS queries to your VPC from your network with authoritative answers from private hosted zones",
+   "enumCaseInsensitive": [
+    "inbound",
+    "inbound_delegation",
+    "outbound"
+   ],
+   "type": "string"
+  },
+  "Dns64Enabled": {
+   "description": "Specifies whether DNS64 is enabled for the Inbound Resolver Endpoint. When set to true, if a DNS AAAA query is made for a domain that has only an A (IPv4) record, the resolver automatically synthesizes an AAAA (IPv6) response by embedding the IPv4 address into the well-known prefix 64:ff9b::/96. Default is false.",
+   "type": "boolean"
+  },
+  "HostVPCId": {
+   "description": "The ID of the VPC that you want to create the resolver endpoint in.",
+   "type": "string"
+  },
+  "IpAddressCount": {
+   "description": "The number of IP addresses that the resolver endpoint can use for DNS queries.",
+   "type": "string"
+  },
+  "IpAddresses": {
+   "description": "The subnets and IP addresses in your VPC that DNS queries originate from (for outbound endpoints) or that you forward DNS queries to (for inbound endpoints). The subnet ID uniquely identifies a VPC.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IpAddressRequest"
+   },
+   "maxItems": 20,
+   "minItems": 2,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Ipv6InternetAccessEnabled": {
+   "description": "Specifies whether IPv6 Internet Gateway access is enabled through the Outbound Resolver Endpoint. When set to true, this property allows your Endpoint ENIs to reach public IPv6 target nameservers through an internet gateway. Default is false.",
+   "type": "boolean"
+  },
+  "Name": {
+   "description": "A friendly name that lets you easily find a configuration in the Resolver dashboard in the Route 53 console.",
+   "maxLength": 64,
+   "minLength": 0,
+   "pattern": "^(?!^[0-9]+$)([a-zA-Z0-9\\-_' ']+)$",
+   "type": "string"
+  },
+  "OutpostArn": {
+   "description": "The ARN (Amazon Resource Name) for the Outpost.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^arn:aws([a-z-]+)?:outposts:[a-z\\d-]+:\\d{12}:outpost/op-[a-f0-9]{17}$",
+   "type": "string"
+  },
+  "PreferredInstanceType": {
+   "description": "The Amazon EC2 instance type.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Protocols": {
+   "description": "Protocols used for the endpoint. DoH-FIPS is applicable for inbound endpoints only.",
+   "insertionOrder": false,
+   "items": {
+    "enumCaseInsensitive": [
+     "do53",
+     "doh",
+     "doh-fips"
+    ],
+    "type": "string"
+   },
+   "maxItems": 2,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ResolverEndpointId": {
+   "description": "The ID of the resolver endpoint.",
+   "type": "string"
+  },
+  "ResolverEndpointType": {
+   "description": "The Resolver endpoint IP address type.",
+   "enumCaseInsensitive": [
+    "dualstack",
+    "ipv4",
+    "ipv6"
+   ],
+   "type": "string"
+  },
+  "RniEnhancedMetricsEnabled": {
+   "description": "Specifies whether RNI enhanced metrics are enabled for the Resolver Endpoints. When set to true, one-minute granular metrics are published in CloudWatch for each RNI associated with this endpoint. When set to false, metrics are not published. Default is false.",
+   "type": "boolean"
+  },
+  "SecurityGroupIds": {
+   "description": "The ID of one or more security groups that control access to this VPC. The security group must include one or more inbound rules (for inbound endpoints) or outbound rules (for outbound endpoints). Inbound and outbound rules must allow TCP and UDP access. For inbound access, open port 53. For outbound access, open the port that you're using for DNS queries on your network.",
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "maxLength": 64,
+    "minLength": 1,
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TargetNameServerMetricsEnabled": {
+   "description": "Specifies whether target name server metrics are enabled for the Outbound Resolver Endpoint. When set to true, one-minute granular metrics are published in CloudWatch for each target name server associated with this endpoint. When set to false, metrics are not published. Default is false.",
+   "type": "boolean"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/HostVPCId",
+  "/properties/IpAddressCount",
+  "/properties/ResolverEndpointId"
+ ],
+ "required": [
+  "Direction",
+  "IpAddresses",
+  "SecurityGroupIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53resolver",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "route53resolver:TagResource",
+   "route53resolver:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Route53Resolver::ResolverEndpoint"
+}

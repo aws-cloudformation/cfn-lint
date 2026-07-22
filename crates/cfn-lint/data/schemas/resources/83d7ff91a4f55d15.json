@@ -1,0 +1,152 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TransitGatewayMeteringPolicyId",
+  "/properties/PolicyRuleNumber",
+  "/properties/MeteredAccount",
+  "/properties/SourceTransitGatewayAttachmentId",
+  "/properties/SourceTransitGatewayAttachmentType",
+  "/properties/SourceCidrBlock",
+  "/properties/SourcePortRange",
+  "/properties/DestinationTransitGatewayAttachmentId",
+  "/properties/DestinationTransitGatewayAttachmentType",
+  "/properties/DestinationCidrBlock",
+  "/properties/DestinationPortRange",
+  "/properties/Protocol"
+ ],
+ "definitions": {
+  "TransitGatewayAttachmentResourceType": {
+   "enum": [
+    "vpc",
+    "vpn",
+    "direct-connect-gateway",
+    "peering",
+    "network-function",
+    "vpn-concentrator",
+    "client-vpn"
+   ],
+   "type": "string"
+  },
+  "TransitGatewayMeteringPayerType": {
+   "enum": [
+    "source-attachment-owner",
+    "destination-attachment-owner",
+    "transit-gateway-owner"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "AWS::EC2::TransitGatewayMeteringPolicyEntry Resource Definition",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:GetTransitGatewayMeteringPolicyEntries",
+    "ec2:CreateTransitGatewayMeteringPolicyEntry"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:GetTransitGatewayMeteringPolicyEntries",
+    "ec2:DeleteTransitGatewayMeteringPolicyEntry"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "TransitGatewayMeteringPolicyId": {
+      "$ref": "resource-schema.json#/properties/TransitGatewayMeteringPolicyId"
+     }
+    },
+    "required": [
+     "TransitGatewayMeteringPolicyId"
+    ]
+   },
+   "permissions": [
+    "ec2:GetTransitGatewayMeteringPolicyEntries"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:GetTransitGatewayMeteringPolicyEntries"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TransitGatewayMeteringPolicyId",
+  "/properties/PolicyRuleNumber"
+ ],
+ "properties": {
+  "DestinationCidrBlock": {
+   "description": "The list of IP addresses of the instances receiving traffic from the transit gateway",
+   "format": "ipv4-network",
+   "type": "string"
+  },
+  "DestinationPortRange": {
+   "description": "The list of ports on destination instances receiving traffic from the transit gateway",
+   "type": "string"
+  },
+  "DestinationTransitGatewayAttachmentId": {
+   "description": "The ID of the source attachment through which traffic leaves a transit gateway",
+   "type": "string"
+  },
+  "DestinationTransitGatewayAttachmentType": {
+   "$ref": "#/definitions/TransitGatewayAttachmentResourceType",
+   "description": "The type of the attachment through which traffic leaves a transit gateway"
+  },
+  "MeteredAccount": {
+   "$ref": "#/definitions/TransitGatewayMeteringPayerType",
+   "description": "The resource owner information responsible for paying default billable charges for the traffic flow"
+  },
+  "PolicyRuleNumber": {
+   "description": "The rule number of the metering policy entry",
+   "type": "integer"
+  },
+  "Protocol": {
+   "description": "The protocol of the traffic",
+   "type": "string"
+  },
+  "SourceCidrBlock": {
+   "description": "The list of IP addresses of the instances sending traffic to the transit gateway for which the metering policy entry is applicable",
+   "format": "ipv4-network",
+   "type": "string"
+  },
+  "SourcePortRange": {
+   "description": "The list of ports on source instances sending traffic to the transit gateway",
+   "type": "string"
+  },
+  "SourceTransitGatewayAttachmentId": {
+   "description": "The ID of the source attachment through which traffic enters a transit gateway",
+   "type": "string"
+  },
+  "SourceTransitGatewayAttachmentType": {
+   "$ref": "#/definitions/TransitGatewayAttachmentResourceType",
+   "description": "The type of the attachment through which traffic enters a  transit gateway"
+  },
+  "State": {
+   "description": "State of the transit gateway metering policy",
+   "type": "string"
+  },
+  "TransitGatewayMeteringPolicyId": {
+   "description": "The ID of the transit gateway metering policy for which the entry is being created",
+   "type": "string"
+  },
+  "UpdateEffectiveAt": {
+   "description": "The timestamp at which the latest action performed on the metering policy entry will become effective",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/UpdateEffectiveAt",
+  "/properties/State"
+ ],
+ "required": [
+  "TransitGatewayMeteringPolicyId",
+  "PolicyRuleNumber",
+  "MeteredAccount"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::TransitGatewayMeteringPolicyEntry"
+}

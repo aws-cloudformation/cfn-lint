@@ -3,8 +3,8 @@ use super::super::Validator;
 use super::helpers::*;
 use super::*;
 use crate::ast::{
-    ArrayNode, AstNode, BoolNode, FunctionNode, NumberNode, ObjectEntry, ObjectNode, Position,
-    Span, StringNode,
+    ArrayNode, AstNode, FunctionNode, NumberNode, ObjectEntry, ObjectNode, Position, Span,
+    StringNode,
 };
 
 fn pos() -> Span {
@@ -732,4 +732,207 @@ Resources:
         for _e in &errs {}
         assert!(!errs.is_empty(), "Should reject GetAtt inside FindInMap");
     }
+}
+
+// ===== C19: minLength/maxLength count Unicode code points, not bytes =====
+
+#[test]
+fn test_min_length_unicode_counts_code_points() {
+    // '日本' is 2 code points but 6 UTF-8 bytes.
+    let v = make_validator();
+    let node = str_node("日本");
+    // len()==6 would satisfy minLength 3; chars().count()==2 must not.
+    let errs = validate_min_length(
+        &v,
+        &node,
+        &serde_json::json!(3),
+        &serde_json::json!({}),
+        &[],
+    );
+    assert_eq!(errs.len(), 1);
+    assert_eq!(errs[0].keyword, "minLength");
+    assert!(
+        errs[0].message.contains("found: 2"),
+        "msg: {}",
+        errs[0].message
+    );
+}
+
+#[test]
+fn test_min_length_unicode_exactly_meets() {
+    let v = make_validator();
+    let node = str_node("日本");
+    assert!(validate_min_length(
+        &v,
+        &node,
+        &serde_json::json!(2),
+        &serde_json::json!({}),
+        &[]
+    )
+    .is_empty());
+}
+
+#[test]
+fn test_max_length_unicode_counts_code_points() {
+    // 2 code points is within maxLength 2, even though it is 6 bytes.
+    let v = make_validator();
+    let node = str_node("日本");
+    assert!(validate_max_length(
+        &v,
+        &node,
+        &serde_json::json!(2),
+        &serde_json::json!({}),
+        &[]
+    )
+    .is_empty());
+}
+
+#[test]
+fn test_max_length_unicode_exceeded() {
+    let v = make_validator();
+    let node = str_node("日本");
+    let errs = validate_max_length(
+        &v,
+        &node,
+        &serde_json::json!(1),
+        &serde_json::json!({}),
+        &[],
+    );
+    assert_eq!(errs.len(), 1);
+    assert_eq!(errs[0].keyword, "maxLength");
+    assert!(
+        errs[0].message.contains("found: 2"),
+        "msg: {}",
+        errs[0].message
+    );
+}
+
+// ===== C23: const/enum number equality is exact, not epsilon-based =====
+
+#[test]
+fn test_const_equality_distinct_near_zero_values_differ() {
+    // Distinct near-zero values must NOT compare equal. An epsilon comparison
+    // (< f64::EPSILON) wrongly treats these as equal.
+    assert!(!ast_matches_json(
+        &num_node(1e-20),
+        &serde_json::json!(2e-20)
+    ));
+}
+
+#[test]
+fn test_const_equality_identical_near_zero_values_match() {
+    assert!(ast_matches_json(
+        &num_node(1e-20),
+        &serde_json::json!(1e-20)
+    ));
+}
+
+#[test]
+fn test_const_equality_large_integer_matches_itself() {
+    // Large integers must still match exactly.
+    let big = 1_000_000_000_000_000f64; // 1e15
+    assert!(ast_matches_json(
+        &num_node(big),
+        &serde_json::json!(1_000_000_000_000_000i64)
+    ));
+}
+
+#[test]
+fn test_const_equality_distinct_large_integers_differ() {
+    let a = 1_000_000_000_000_000f64;
+    assert!(!ast_matches_json(
+        &num_node(a),
+        &serde_json::json!(1_000_000_000_000_001i64)
+    ));
+}
+
+// ===== C22: fractional bounds are rendered as-is in error messages =====
+
+#[test]
+fn test_minimum_message_fractional_bound() {
+    let v = make_validator();
+    let errs = validate_minimum(
+        &v,
+        &num_node(1.0),
+        &serde_json::json!(1.5),
+        &serde_json::json!({}),
+        &[],
+    );
+    assert_eq!(errs.len(), 1);
+    assert!(
+        errs[0].message.contains("minimum of 1.5"),
+        "msg: {}",
+        errs[0].message
+    );
+}
+
+#[test]
+fn test_minimum_message_integer_bound_no_decimal() {
+    let v = make_validator();
+    let errs = validate_minimum(
+        &v,
+        &num_node(3.0),
+        &serde_json::json!(5),
+        &serde_json::json!({}),
+        &[],
+    );
+    assert_eq!(errs.len(), 1);
+    assert!(
+        errs[0].message.contains("minimum of 5") && !errs[0].message.contains("5.0"),
+        "msg: {}",
+        errs[0].message
+    );
+}
+
+#[test]
+fn test_maximum_message_fractional_bound() {
+    let v = make_validator();
+    let errs = validate_maximum(
+        &v,
+        &num_node(3.0),
+        &serde_json::json!(2.5),
+        &serde_json::json!({}),
+        &[],
+    );
+    assert_eq!(errs.len(), 1);
+    assert!(
+        errs[0].message.contains("maximum of 2.5"),
+        "msg: {}",
+        errs[0].message
+    );
+}
+
+// ===== C27: cached pattern compilation preserves match semantics =====
+
+#[test]
+fn test_pattern_cached_match_and_nonmatch() {
+    let v = make_validator();
+    let pat = serde_json::json!("^[a-z]+$");
+    // Invoke twice to exercise both the compile and cache-hit paths.
+    assert!(validate_pattern(&v, &str_node("abc"), &pat, &serde_json::json!({}), &[]).is_empty());
+    let errs = validate_pattern(&v, &str_node("ABC"), &pat, &serde_json::json!({}), &[]);
+    assert_eq!(errs.len(), 1);
+    assert_eq!(errs[0].keyword, "pattern");
+    // Second matching call after a cache entry exists still works.
+    assert!(validate_pattern(&v, &str_node("xyz"), &pat, &serde_json::json!({}), &[]).is_empty());
+}
+
+#[test]
+fn test_pattern_invalid_regex_skipped() {
+    // A pattern that neither engine can compile yields no error (skipped).
+    let v = make_validator();
+    let pat = serde_json::json!("[");
+    assert!(
+        validate_pattern(&v, &str_node("anything"), &pat, &serde_json::json!({}), &[]).is_empty()
+    );
+}
+
+#[test]
+fn test_compile_pattern_cache_returns_consistent_result() {
+    // Same pattern compiled twice returns a usable regex both times.
+    let re1 = compile_pattern("^foo$").expect("valid");
+    assert!(re1.is_match("foo"));
+    let re2 = compile_pattern("^foo$").expect("cached");
+    assert!(re2.is_match("foo"));
+    assert!(!re2.is_match("bar"));
 }

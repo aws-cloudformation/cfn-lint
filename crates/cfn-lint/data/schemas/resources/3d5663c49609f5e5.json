@@ -1,0 +1,157 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AllowedPublishers": {
+   "additionalProperties": false,
+   "description": "When the CodeSigningConfig is later on attached to a function, the function code will be expected to be signed by profiles from this list",
+   "properties": {
+    "SigningProfileVersionArns": {
+     "description": "List of Signing profile version Arns",
+     "items": {
+      "maxLength": 1024,
+      "minLength": 12,
+      "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:((eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+      "type": "string"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "SigningProfileVersionArns"
+   ],
+   "type": "object"
+  },
+  "CodeSigningPolicies": {
+   "additionalProperties": false,
+   "description": "Policies to control how to act if a signature is invalid",
+   "properties": {
+    "UntrustedArtifactOnDeployment": {
+     "default": "Warn",
+     "description": "Indicates how Lambda operations involve updating the code artifact will operate. Default to Warn if not provided",
+     "enum": [
+      "Warn",
+      "Enforce"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "UntrustedArtifactOnDeployment"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Lambda::CodeSigningConfig.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lambda:CreateCodeSigningConfig",
+    "lambda:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lambda:DeleteCodeSigningConfig"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "lambda:ListCodeSigningConfigs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lambda:GetCodeSigningConfig",
+    "lambda:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "lambda:UpdateCodeSigningConfig",
+    "lambda:TagResource",
+    "lambda:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CodeSigningConfigArn"
+ ],
+ "properties": {
+  "AllowedPublishers": {
+   "$ref": "#/definitions/AllowedPublishers",
+   "description": "When the CodeSigningConfig is later on attached to a function, the function code will be expected to be signed by profiles from this list"
+  },
+  "CodeSigningConfigArn": {
+   "description": "A unique Arn for CodeSigningConfig resource",
+   "pattern": "arn:(aws[a-zA-Z-]*)?:lambda:(eusc-)?[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:\\d{12}:code-signing-config:csc-[a-z0-9]{17}",
+   "type": "string"
+  },
+  "CodeSigningConfigId": {
+   "description": "A unique identifier for CodeSigningConfig resource",
+   "pattern": "csc-[a-zA-Z0-9-_\\.]{17}",
+   "type": "string"
+  },
+  "CodeSigningPolicies": {
+   "$ref": "#/definitions/CodeSigningPolicies",
+   "description": "Policies to control how to act if a signature is invalid"
+  },
+  "Description": {
+   "description": "A description of the CodeSigningConfig",
+   "maxLength": 256,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A list of tags to apply to CodeSigningConfig resource",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CodeSigningConfigId",
+  "/properties/CodeSigningConfigArn"
+ ],
+ "required": [
+  "AllowedPublishers"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "lambda:ListTags",
+   "lambda:TagResource",
+   "lambda:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Lambda::CodeSigningConfig"
+}

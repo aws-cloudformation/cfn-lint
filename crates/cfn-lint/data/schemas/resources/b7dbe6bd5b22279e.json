@@ -1,0 +1,91 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Region"
+ ],
+ "definitions": {
+  "NotificationHubStatus": {
+   "enum": [
+    "ACTIVE",
+    "REGISTERING",
+    "DEREGISTERING",
+    "INACTIVE"
+   ],
+   "type": "string"
+  },
+  "NotificationHubStatusSummary": {
+   "additionalProperties": false,
+   "properties": {
+    "NotificationHubStatus": {
+     "$ref": "#/definitions/NotificationHubStatus"
+    },
+    "NotificationHubStatusReason": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "NotificationHubStatus",
+    "NotificationHubStatusReason"
+   ],
+   "type": "object"
+  },
+  "Region": {
+   "description": "Region that NotificationHub is present in.",
+   "maxLength": 25,
+   "minLength": 2,
+   "type": "string"
+  }
+ },
+ "description": "Resource Type definition for AWS::Notifications::NotificationHub",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "notifications:RegisterNotificationHub",
+    "notifications:ListNotificationHubs",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "notifications:DeregisterNotificationHub",
+    "notifications:ListNotificationHubs"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "notifications:ListNotificationHubs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "notifications:ListNotificationHubs"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Region"
+ ],
+ "properties": {
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "NotificationHubStatusSummary": {
+   "$ref": "#/definitions/NotificationHubStatusSummary"
+  },
+  "Region": {
+   "$ref": "#/definitions/Region"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreationTime",
+  "/properties/NotificationHubStatusSummary"
+ ],
+ "required": [
+  "Region"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Notifications::NotificationHub"
+}

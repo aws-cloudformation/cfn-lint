@@ -1,0 +1,57 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/BrowserId"
+  ]
+ ],
+ "additionalProperties": false,
+ "description": "Definition of AWS::BedrockAgentCore::Browser Resource Type. This is a read-only resource representing the default service-managed browser.",
+ "handlers": {
+  "list": {
+   "permissions": [
+    "bedrock-agentcore:ListBrowsers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bedrock-agentcore:GetBrowser"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BrowserArn"
+ ],
+ "properties": {
+  "BrowserArn": {
+   "description": "The Amazon Resource Name (ARN) of the browser.",
+   "pattern": "^arn:[a-z0-9-]+:bedrock-agentcore:[a-z0-9-]+:(aws|[0-9]{12}):browser/aws\\.browser\\.v1$",
+   "type": "string"
+  },
+  "BrowserId": {
+   "description": "The unique identifier of the browser.",
+   "pattern": "^aws\\.browser\\.v1$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the browser.",
+   "type": "string"
+  },
+  "Status": {
+   "description": "The current status of the browser.",
+   "enum": [
+    "READY"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/BrowserArn",
+  "/properties/BrowserId",
+  "/properties/Name",
+  "/properties/Status"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::BedrockAgentCore::Browser"
+}

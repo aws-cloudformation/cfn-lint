@@ -1,0 +1,566 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TableBucketARN",
+  "/properties/OpenTableFormat",
+  "/properties/IcebergMetadata",
+  "/properties/WithoutMetadata",
+  "/properties/StorageClassConfiguration"
+ ],
+ "definitions": {
+  "Compaction": {
+   "additionalProperties": false,
+   "description": "Settings governing the Compaction maintenance action. Contains details about the compaction settings for an Iceberg table.",
+   "properties": {
+    "Status": {
+     "description": "Indicates whether the Compaction maintenance action is enabled.",
+     "enum": [
+      "enabled",
+      "disabled"
+     ],
+     "type": "string"
+    },
+    "TargetFileSizeMB": {
+     "description": "The target file size for the table in MB.",
+     "minimum": 64,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "IcebergMetadata": {
+   "additionalProperties": false,
+   "description": "Contains details about the metadata for an Iceberg table. Specify either IcebergSchema (for simple flat schemas with primitive types only) or IcebergSchemaV2 (for schemas with nested types like struct, list, map), but not both.",
+   "properties": {
+    "IcebergPartitionSpec": {
+     "$ref": "#/definitions/IcebergPartitionSpec"
+    },
+    "IcebergSchema": {
+     "$ref": "#/definitions/IcebergSchema",
+     "description": "Schema definition for flat tables with primitive types only. Mutually exclusive with IcebergSchemaV2."
+    },
+    "IcebergSchemaV2": {
+     "$ref": "#/definitions/IcebergSchemaV2",
+     "description": "Schema definition that supports Apache Iceberg nested types (struct, list, map) and primitive types. Mutually exclusive with IcebergSchema."
+    },
+    "IcebergSortOrder": {
+     "$ref": "#/definitions/IcebergSortOrder"
+    },
+    "TableProperties": {
+     "$ref": "#/definitions/TableProperties"
+    }
+   },
+   "type": "object"
+  },
+  "IcebergPartitionField": {
+   "additionalProperties": false,
+   "description": "A partition field specification for an Iceberg table",
+   "properties": {
+    "FieldId": {
+     "description": "The partition field ID (auto-assigned starting from 1000 if not specified)",
+     "type": "integer"
+    },
+    "Name": {
+     "description": "The name of the partition field",
+     "type": "string"
+    },
+    "SourceId": {
+     "description": "The source column ID to partition on",
+     "type": "integer"
+    },
+    "Transform": {
+     "description": "The partition transform function (identity, bucket[N], truncate[N], year, month, day, hour)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceId",
+    "Transform",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "IcebergPartitionFieldList": {
+   "description": "List of partition fields for an Iceberg table",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IcebergPartitionField"
+   },
+   "type": "array"
+  },
+  "IcebergPartitionSpec": {
+   "additionalProperties": false,
+   "description": "Partition specification for an Iceberg table",
+   "properties": {
+    "Fields": {
+     "$ref": "#/definitions/IcebergPartitionFieldList",
+     "description": "List of partition fields"
+    },
+    "SpecId": {
+     "description": "The partition spec ID (defaults to 0 if not specified)",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Fields"
+   ],
+   "type": "object"
+  },
+  "IcebergSchema": {
+   "additionalProperties": false,
+   "description": "Contains details about the schema for an Iceberg table",
+   "properties": {
+    "SchemaFieldList": {
+     "$ref": "#/definitions/SchemaFieldList"
+    }
+   },
+   "required": [
+    "SchemaFieldList"
+   ],
+   "type": "object"
+  },
+  "IcebergSchemaV2": {
+   "additionalProperties": false,
+   "description": "Contains details about the schema version 2 (V2) for an Iceberg table that supports Apache Iceberg Nested Types (struct, list, map). Primitive types are also supported.",
+   "properties": {
+    "IdentifierFieldIds": {
+     "description": "A list of field IDs that are used as the identifier fields for the table. Identifier fields uniquely identify a row in the table.",
+     "insertionOrder": false,
+     "items": {
+      "type": "integer"
+     },
+     "type": "array"
+    },
+    "SchemaId": {
+     "description": "An optional unique identifier for the schema",
+     "type": "integer"
+    },
+    "SchemaV2FieldList": {
+     "$ref": "#/definitions/SchemaV2FieldList",
+     "description": "The schema fields for the table"
+    },
+    "SchemaV2FieldType": {
+     "description": "The type of the top-level schema, which is always 'struct'",
+     "enum": [
+      "struct"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "SchemaV2FieldList",
+    "SchemaV2FieldType"
+   ],
+   "type": "object"
+  },
+  "IcebergSortField": {
+   "additionalProperties": false,
+   "description": "A sort field specification for an Iceberg table",
+   "properties": {
+    "Direction": {
+     "description": "Sort direction (asc or desc)",
+     "enum": [
+      "asc",
+      "desc"
+     ],
+     "type": "string"
+    },
+    "NullOrder": {
+     "description": "Null value ordering (nulls-first or nulls-last)",
+     "enum": [
+      "nulls-first",
+      "nulls-last"
+     ],
+     "type": "string"
+    },
+    "SourceId": {
+     "description": "The source column ID to sort on",
+     "type": "integer"
+    },
+    "Transform": {
+     "description": "The sort transform function",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceId",
+    "Transform",
+    "Direction",
+    "NullOrder"
+   ],
+   "type": "object"
+  },
+  "IcebergSortFieldList": {
+   "description": "List of sort fields for an Iceberg table",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IcebergSortField"
+   },
+   "type": "array"
+  },
+  "IcebergSortOrder": {
+   "additionalProperties": false,
+   "description": "Sort order specification for an Iceberg table",
+   "properties": {
+    "Fields": {
+     "$ref": "#/definitions/IcebergSortFieldList",
+     "description": "List of sort fields"
+    },
+    "OrderId": {
+     "description": "The sort order ID (defaults to 1 if not specified, 0 is reserved for unsorted)",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Fields"
+   ],
+   "type": "object"
+  },
+  "Namespace": {
+   "description": "The namespace that the table belongs to.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[0-9a-z_]*$",
+   "type": "string"
+  },
+  "OpenTableFormat": {
+   "description": "Format of the table.",
+   "enum": [
+    "ICEBERG"
+   ],
+   "type": "string"
+  },
+  "SchemaField": {
+   "additionalProperties": false,
+   "description": "Contains details about the schema for an Iceberg table",
+   "properties": {
+    "Id": {
+     "description": "The unique identifier for the field",
+     "type": "integer"
+    },
+    "Name": {
+     "description": "The name of the field",
+     "type": "string"
+    },
+    "Required": {
+     "description": "A Boolean value that specifies whether values are required for each row in this field",
+     "type": "boolean"
+    },
+    "Type": {
+     "description": "The field type",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "SchemaFieldList": {
+   "description": "Contains details about the schema for an Iceberg table",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SchemaField"
+   },
+   "type": "array"
+  },
+  "SchemaV2Field": {
+   "additionalProperties": false,
+   "description": "Contains details about a schema field for an Iceberg table that supports nested types (struct, list, map)",
+   "properties": {
+    "Doc": {
+     "description": "Optional documentation for the field",
+     "type": "string"
+    },
+    "Id": {
+     "description": "The unique identifier for the field",
+     "type": "integer"
+    },
+    "Name": {
+     "description": "The name of the field",
+     "type": "string"
+    },
+    "Required": {
+     "description": "A Boolean value that specifies whether values are required for each row in this field",
+     "type": "boolean"
+    },
+    "Type": {
+     "description": "The field type. For primitive types, use a string (e.g., 'int', 'string', 'long'). For nested types, use an object (e.g., {'type': 'struct', 'fields': [...]} for struct, {'type': 'list', 'element-id': N, 'element': 'type'} for list, {'type': 'map', 'key-id': N, 'key': 'type', 'value-id': N, 'value': 'type'} for map).",
+     "oneOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "object"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Id",
+    "Name",
+    "Type",
+    "Required"
+   ],
+   "type": "object"
+  },
+  "SchemaV2FieldList": {
+   "description": "List of schema fields that support nested types",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SchemaV2Field"
+   },
+   "type": "array"
+  },
+  "SnapshotManagement": {
+   "additionalProperties": false,
+   "description": "Contains details about the snapshot management settings for an Iceberg table. A snapshot is expired when it exceeds MinSnapshotsToKeep and MaxSnapshotAgeHours.",
+   "properties": {
+    "MaxSnapshotAgeHours": {
+     "description": "The maximum age of a snapshot before it can be expired.",
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MinSnapshotsToKeep": {
+     "description": "The minimum number of snapshots to keep.",
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Status": {
+     "description": "Indicates whether the SnapshotManagement maintenance action is enabled.",
+     "enum": [
+      "enabled",
+      "disabled"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "StorageClassConfiguration": {
+   "additionalProperties": false,
+   "description": "Specifies storage class settings for the table",
+   "properties": {
+    "StorageClass": {
+     "description": "The storage class for the table",
+     "enum": [
+      "STANDARD",
+      "INTELLIGENT_TIERING"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TableARN": {
+   "description": "The Amazon Resource Name (ARN) of the specified table.",
+   "examples": [
+    "arn:aws:s3tables:us-west-2:123456789012:bucket/mytablebucket/table/813aadd1-a378-4d0f-8467-e3247306f309"
+   ],
+   "type": "string"
+  },
+  "TableBucketARN": {
+   "description": "The Amazon Resource Name (ARN) of the specified table bucket.",
+   "examples": [
+    "arn:aws:s3tables:us-west-2:123456789012:bucket/mytablebucket"
+   ],
+   "pattern": "^(arn:aws[-a-z0-9]*:[a-z0-9]+:[-a-z0-9]*:[0-9]{12}:bucket/[a-z0-9_-]{3,63})$",
+   "type": "string"
+  },
+  "TableName": {
+   "description": "The name for the table.",
+   "type": "string"
+  },
+  "TableProperties": {
+   "additionalProperties": false,
+   "description": "Iceberg table properties (e.g., format-version, write.parquet.compression-codec)",
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "Tag key must be between 1 to 128 characters in length. Tag key cannot start with 'aws:' and can only contain alphanumeric characters, spaces, _, ., /, =, +, -, and @.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "Tag value must be between 0 to 256 characters in length. Tag value can only contain alphanumeric characters, spaces, _, ., /, =, +, -, and @.",
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VersionToken": {
+   "description": "The version token of the table",
+   "type": "string"
+  },
+  "WarehouseLocation": {
+   "description": "The warehouse location of the table.",
+   "type": "string"
+  },
+  "WithoutMetadata": {
+   "description": "Indicates that you don't want to specify a schema for the table. This property is mutually exclusive to 'IcebergMetadata', and its only possible value is 'Yes'.",
+   "enum": [
+    "Yes"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "Resource Type definition for AWS::S3Tables::Table",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3tables:CreateTable",
+    "s3tables:PutTableData",
+    "s3tables:GetTable",
+    "s3tables:PutTableMaintenanceConfiguration",
+    "s3tables:GetTableMaintenanceConfiguration",
+    "s3tables:PutTableStorageClass",
+    "s3tables:GetTableStorageClass",
+    "s3tables:TagResource",
+    "s3tables:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "s3tables:GetTable",
+    "s3tables:DeleteTable"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "Namespace": {
+      "description": "The namespace that the table belongs to.",
+      "type": "string"
+     },
+     "TableBucketARN": {
+      "description": "The Amazon Resource Name (ARN) of the specified table bucket.",
+      "examples": [
+       "arn:aws:s3tables:us-west-2:123456789012:bucket/mytablebucket"
+      ],
+      "type": "string"
+     }
+    },
+    "required": [
+     "TableBucketARN"
+    ]
+   },
+   "permissions": [
+    "s3tables:ListTables",
+    "s3tables:ListTableBuckets",
+    "s3tables:ListNamespaces"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "s3tables:GetTable",
+    "s3tables:GetTableMaintenanceConfiguration",
+    "s3tables:GetTableStorageClass",
+    "s3tables:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "s3tables:GetTable",
+    "s3tables:RenameTable",
+    "s3tables:PutTableMaintenanceConfiguration",
+    "s3tables:GetTableMaintenanceConfiguration",
+    "s3tables:TagResource",
+    "s3tables:UntagResource",
+    "s3tables:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TableARN"
+ ],
+ "properties": {
+  "Compaction": {
+   "$ref": "#/definitions/Compaction"
+  },
+  "IcebergMetadata": {
+   "$ref": "#/definitions/IcebergMetadata"
+  },
+  "Namespace": {
+   "$ref": "#/definitions/Namespace"
+  },
+  "OpenTableFormat": {
+   "$ref": "#/definitions/OpenTableFormat"
+  },
+  "SnapshotManagement": {
+   "$ref": "#/definitions/SnapshotManagement"
+  },
+  "StorageClassConfiguration": {
+   "$ref": "#/definitions/StorageClassConfiguration"
+  },
+  "TableARN": {
+   "$ref": "#/definitions/TableARN"
+  },
+  "TableBucketARN": {
+   "$ref": "#/definitions/TableBucketARN"
+  },
+  "TableName": {
+   "$ref": "#/definitions/TableName"
+  },
+  "Tags": {
+   "description": "User tags (key-value pairs) to associate with the table.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VersionToken": {
+   "$ref": "#/definitions/VersionToken"
+  },
+  "WarehouseLocation": {
+   "$ref": "#/definitions/WarehouseLocation"
+  },
+  "WithoutMetadata": {
+   "$ref": "#/definitions/WithoutMetadata"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TableARN",
+  "/properties/WarehouseLocation",
+  "/properties/VersionToken"
+ ],
+ "required": [
+  "TableBucketARN",
+  "Namespace",
+  "TableName",
+  "OpenTableFormat"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "s3tables:TagResource",
+   "s3tables:UntagResource",
+   "s3tables:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::S3Tables::Table",
+ "writeOnlyProperties": [
+  "/properties/IcebergMetadata",
+  "/properties/WithoutMetadata"
+ ]
+}

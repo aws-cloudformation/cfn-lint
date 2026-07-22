@@ -1,0 +1,168 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "^arn:aws[a-zA-Z-]*:[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "An example resource schema demonstrating some basic constructs and validation rules.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "license-manager:CreateGrant",
+    "license-manager:CreateGrantVersion",
+    "license-manager:GetGrant",
+    "license-manager:TagResource",
+    "license-manager:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "license-manager:DeleteGrant",
+    "license-manager:GetGrant",
+    "license-manager:ListTagsForResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "license-manager:ListDistributedGrants"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "license-manager:GetGrant",
+    "license-manager:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "license-manager:CreateGrantVersion",
+    "license-manager:GetGrant",
+    "license-manager:TagResource",
+    "license-manager:UntagResource",
+    "license-manager:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GrantArn"
+ ],
+ "properties": {
+  "AllowedOperations": {
+   "items": {
+    "enum": [
+     "CheckInLicense",
+     "CheckoutBorrowLicense",
+     "CheckoutLicense",
+     "CreateGrant",
+     "CreateToken",
+     "ExtendConsumptionLicense",
+     "ListPurchasedLicenses"
+    ],
+    "type": "string"
+   },
+   "maxItems": 8,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "GrantArn": {
+   "$ref": "#/definitions/Arn",
+   "description": "Arn of the grant."
+  },
+  "GrantName": {
+   "description": "Name for the created Grant.",
+   "type": "string"
+  },
+  "HomeRegion": {
+   "description": "Home region for the created grant.",
+   "type": "string"
+  },
+  "LicenseArn": {
+   "$ref": "#/definitions/Arn",
+   "description": "License Arn for the grant."
+  },
+  "Principals": {
+   "items": {
+    "$ref": "#/definitions/Arn"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Status": {
+   "enum": [
+    "ACTIVE",
+    "DELETED",
+    "DISABLED",
+    "FAILED_WORKFLOW",
+    "PENDING_ACCEPT",
+    "PENDING_DELETE",
+    "PENDING_WORKFLOW",
+    "REJECTED",
+    "WORKFLOW_COMPLETED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A list of tags to attach.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Version": {
+   "description": "The version of the grant.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/GrantArn",
+  "/properties/Version"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "license-manager:TagResource",
+   "license-manager:UntagResource",
+   "license-manager:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::LicenseManager::Grant",
+ "writeOnlyProperties": [
+  "/properties/Principals",
+  "/properties/AllowedOperations",
+  "/properties/Status"
+ ]
+}

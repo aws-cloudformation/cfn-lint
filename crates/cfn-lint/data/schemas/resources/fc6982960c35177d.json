@@ -1,0 +1,279 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IpCount",
+  "/properties/Name",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "AnycastIpList": {
+   "additionalProperties": false,
+   "description": "An Anycast static IP list. For more information, see [Request Anycast static IPs to use for allowlisting](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/request-static-ips.html) in the *Amazon CloudFront Developer Guide*.",
+   "properties": {
+    "AnycastIps": {
+     "description": "The static IP addresses that are allocated to the Anycast static IP list.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Arn": {
+     "description": "The Amazon Resource Name (ARN) of the Anycast static IP list.",
+     "type": "string"
+    },
+    "Id": {
+     "description": "The ID of the Anycast static IP list.",
+     "type": "string"
+    },
+    "IpAddressType": {
+     "$ref": "#/definitions/IpAddressType",
+     "description": "The IP address type for the Anycast static IP list."
+    },
+    "IpCount": {
+     "description": "The number of IP addresses in the Anycast static IP list.",
+     "type": "integer"
+    },
+    "IpamCidrConfigResults": {
+     "$ref": "#/definitions/IpamCidrConfigResults",
+     "description": "The results for the IPAM CIDRs that defines a specific IP address range, IPAM pool, and associated Anycast IP address."
+    },
+    "LastModifiedTime": {
+     "description": "The last time the Anycast static IP list was modified.",
+     "format": "date-time",
+     "type": "string"
+    },
+    "Name": {
+     "description": "The name of the Anycast static IP list.",
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-_]{1,64}$",
+     "type": "string"
+    },
+    "Status": {
+     "description": "The status of the Anycast static IP list. Valid values: ``Deployed``, ``Deploying``, or ``Failed``.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AnycastIps",
+    "Arn",
+    "Id",
+    "IpCount",
+    "LastModifiedTime",
+    "Name",
+    "Status"
+   ],
+   "type": "object"
+  },
+  "IpAddressType": {
+   "enum": [
+    "ipv4",
+    "dualstack"
+   ],
+   "type": "string"
+  },
+  "IpamCidrConfig": {
+   "additionalProperties": false,
+   "description": "Configuration for an IPAM CIDR that defines a specific IP address range, IPAM pool, and associated Anycast IP address.",
+   "properties": {
+    "Cidr": {
+     "description": "The CIDR that specifies the IP address range for this IPAM configuration.",
+     "format": "ipv4-network",
+     "type": "string"
+    },
+    "IpamPoolArn": {
+     "description": "The Amazon Resource Name (ARN) of the IPAM pool that the CIDR block is assigned to.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Cidr",
+    "IpamPoolArn"
+   ],
+   "type": "object"
+  },
+  "IpamCidrConfigResult": {
+   "additionalProperties": false,
+   "description": "The result for the IPAM CIDR that defines a specific IP address range, IPAM pool, and associated Anycast IP address.",
+   "properties": {
+    "AnycastIp": {
+     "description": "The specified Anycast IP address allocated from the IPAM pool for this CIDR configuration.",
+     "type": "string"
+    },
+    "Cidr": {
+     "description": "The CIDR that specifies the IP address range for this IPAM configuration.",
+     "format": "ipv4-network",
+     "type": "string"
+    },
+    "IpamPoolArn": {
+     "description": "The Amazon Resource Name (ARN) of the IPAM pool that the CIDR block is assigned to.",
+     "type": "string"
+    },
+    "Status": {
+     "description": "The current status of the IPAM CIDR configuration.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "IpamCidrConfigResults": {
+   "additionalProperties": false,
+   "items": {
+    "$ref": "#/definitions/IpamCidrConfigResult"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "IpamCidrConfigs": {
+   "additionalProperties": false,
+   "items": {
+    "$ref": "#/definitions/IpamCidrConfig"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A complex type that contains ``Tag`` key and ``Tag`` value.",
+   "properties": {
+    "Key": {
+     "description": "A string that contains ``Tag`` key.\n The string length should be between 1 and 128 characters. Valid characters include ``a-z``, ``A-Z``, ``0-9``, space, and the special characters ``_ - . : / = + @``.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "A string that contains an optional ``Tag`` value.\n The string length should be between 0 and 256 characters. Valid characters include ``a-z``, ``A-Z``, ``0-9``, space, and the special characters ``_ - . : / = + @``.",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "A complex type that contains zero or more ``Tag`` elements.",
+   "properties": {
+    "Items": {
+     "description": "A complex type that contains ``Tag`` elements.",
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "An Anycast static IP list. For more information, see [Request Anycast static IPs to use for allowlisting](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/request-static-ips.html) in the *Amazon CloudFront Developer Guide*.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cloudfront:CreateAnycastIpList",
+    "cloudfront:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cloudfront:DeleteAnycastIpList",
+    "cloudfront:GetAnycastIpList"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cloudfront:ListAnycastIpLists"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cloudfront:GetAnycastIpList",
+    "cloudfront:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cloudfront:UpdateAnycastIpList",
+    "cloudfront:GetAnycastIpList",
+    "cloudfront:ListTagsForResource",
+    "cloudfront:TagResource",
+    "cloudfront:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AnycastIpList": {
+   "$ref": "#/definitions/AnycastIpList",
+   "description": ""
+  },
+  "ETag": {
+   "description": "",
+   "type": "string"
+  },
+  "Id": {
+   "description": "",
+   "type": "string"
+  },
+  "IpAddressType": {
+   "$ref": "#/definitions/IpAddressType",
+   "description": "The IP address type for the Anycast static IP list."
+  },
+  "IpCount": {
+   "description": "The number of IP addresses in the Anycast static IP list.",
+   "type": "integer"
+  },
+  "IpamCidrConfigResults": {
+   "$ref": "#/definitions/IpamCidrConfigResults",
+   "description": ""
+  },
+  "IpamCidrConfigs": {
+   "$ref": "#/definitions/IpamCidrConfigs",
+   "description": "A list of IPAM CIDR configurations that define the IP address ranges, IPAM pools, and associated Anycast IP addresses."
+  },
+  "Name": {
+   "description": "The name of the Anycast static IP list.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_]{1,64}$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags",
+   "description": "A complex type that contains zero or more ``Tag`` elements."
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AnycastIpList",
+  "/properties/ETag",
+  "/properties/Id",
+  "/properties/IpamCidrConfigResults"
+ ],
+ "required": [
+  "IpCount",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "cloudfront:TagResource",
+   "cloudfront:UntagResource",
+   "cloudfront:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudFront::AnycastIpList",
+ "writeOnlyProperties": [
+  "/properties/IpamCidrConfigs"
+ ]
+}

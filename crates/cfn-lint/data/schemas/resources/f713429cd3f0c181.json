@@ -1,0 +1,409 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ExecutionRoleArn",
+  "/properties/EnableNetworkIsolation",
+  "/properties/InferenceExecutionConfig",
+  "/properties/PrimaryContainer",
+  "/properties/ModelName",
+  "/properties/VpcConfig",
+  "/properties/Containers"
+ ],
+ "definitions": {
+  "ContainerDefinition": {
+   "additionalProperties": false,
+   "description": "Describes the container, as part of model definition.",
+   "properties": {
+    "ContainerHostname": {
+     "description": "This parameter is ignored for models that contain only a PrimaryContainer.\n\nWhen a ContainerDefinition is part of an inference pipeline, the value of the parameter uniquely identifies the container for the purposes of logging and metrics. For information, see [Use Logs and Metrics to Monitor an Inference Pipeline](https://docs.aws.amazon.com/sagemaker/latest/dg/inference-pipeline-logs-metrics.html). If you don't specify a value for this parameter for a ContainerDefinition that is part of an inference pipeline, a unique name is automatically assigned based on the position of the ContainerDefinition in the pipeline. If you specify a value for the ContainerHostName for any ContainerDefinition that is part of an inference pipeline, you must specify a value for the ContainerHostName parameter of every ContainerDefinition in that pipeline.",
+     "maxLength": 63,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+     "type": "string"
+    },
+    "Environment": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "Image": {
+     "description": "The path where inference code is stored. This can be either in Amazon EC2 Container Registry or in a Docker registry that is accessible from the same VPC that you configure for your endpoint. If you are using your own custom algorithm instead of an algorithm provided by SageMaker, the inference code must meet SageMaker requirements. SageMaker supports both registry/repository[:tag] and registry/repository[@digest] image path formats. For more information, see [Using Your Own Algorithms with Amazon SageMaker](https://docs.aws.amazon.com/sagemaker/latest/dg/your-algorithms.html).",
+     "maxLength": 255,
+     "minLength": 0,
+     "pattern": "^[\\S]+$",
+     "type": "string"
+    },
+    "ImageConfig": {
+     "$ref": "#/definitions/ImageConfig"
+    },
+    "InferenceSpecificationName": {
+     "description": "The inference specification name in the model package version.",
+     "maxLength": 63,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+     "type": "string"
+    },
+    "Mode": {
+     "description": "Whether the container hosts a single model or multiple models.",
+     "enum": [
+      "SingleModel",
+      "MultiModel"
+     ],
+     "type": "string"
+    },
+    "ModelDataSource": {
+     "$ref": "#/definitions/ModelDataSource"
+    },
+    "ModelDataUrl": {
+     "description": "The S3 path where the model artifacts, which result from model training, are stored. This path must point to a single gzip compressed tar archive (.tar.gz suffix). The S3 path is required for SageMaker built-in algorithms, but not if you use your own algorithms. For more information on built-in algorithms, see [Common Parameters](https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-algo-docker-registry-paths.html).\n\nIf you provide a value for this parameter, SageMaker uses AWS Security Token Service to download model artifacts from the S3 path you provide. AWS STS is activated in your AWS account by default. If you previously deactivated AWS STS for a region, you need to reactivate AWS STS for that region. For more information, see [Activating and Deactivating AWS STS in an AWS Region](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_enable-regions.html) in the AWS Identity and Access Management User Guide",
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    },
+    "ModelPackageName": {
+     "description": "The name or Amazon Resource Name (ARN) of the model package to use to create the model.",
+     "maxLength": 176,
+     "minLength": 1,
+     "pattern": "^(arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:[a-z\\-]*\\/)?([a-zA-Z0-9]([a-zA-Z0-9-]){0,62})(?<!-)(\\/[0-9]{1,9})?$",
+     "type": "string"
+    },
+    "MultiModelConfig": {
+     "$ref": "#/definitions/MultiModelConfig"
+    }
+   },
+   "type": "object"
+  },
+  "HubAccessConfig": {
+   "additionalProperties": false,
+   "description": "Configuration information specifying which hub contents have accessible deployment options.",
+   "properties": {
+    "HubContentArn": {
+     "description": "The ARN of the hub content for which deployment access is allowed.",
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "HubContentArn"
+   ],
+   "type": "object"
+  },
+  "ImageConfig": {
+   "additionalProperties": false,
+   "description": "Specifies whether the model container is in Amazon ECR or a private Docker registry accessible from your Amazon Virtual Private Cloud (VPC).",
+   "properties": {
+    "RepositoryAccessMode": {
+     "description": "Set this to one of the following values: Platform - The model image is hosted in Amazon ECR. Vpc - The model image is hosted in a private Docker registry in your VPC.",
+     "enum": [
+      "Platform",
+      "Vpc"
+     ],
+     "type": "string"
+    },
+    "RepositoryAuthConfig": {
+     "$ref": "#/definitions/RepositoryAuthConfig"
+    }
+   },
+   "required": [
+    "RepositoryAccessMode"
+   ],
+   "type": "object"
+  },
+  "InferenceExecutionConfig": {
+   "additionalProperties": false,
+   "description": "Specifies details about how containers in a multi-container endpoint are run.",
+   "properties": {
+    "Mode": {
+     "description": "How containers in a multi-container are run.",
+     "enum": [
+      "Serial",
+      "Direct"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Mode"
+   ],
+   "type": "object"
+  },
+  "ModelAccessConfig": {
+   "additionalProperties": false,
+   "description": "The access configuration file to control access to the ML model. You can explicitly accept the model end-user license agreement (EULA) within the `ModelAccessConfig`.",
+   "properties": {
+    "AcceptEula": {
+     "description": "Specifies agreement to the model end-user license agreement (EULA). The `AcceptEula` value must be explicitly defined as `True` in order to accept the EULA that this model requires. You are responsible for reviewing and complying with any applicable license terms and making sure they are acceptable for your use case before downloading or using a model.",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "AcceptEula"
+   ],
+   "type": "object"
+  },
+  "ModelDataSource": {
+   "additionalProperties": false,
+   "description": "Specifies the location of ML model data to deploy. If specified, you must specify one and only one of the available data sources.",
+   "properties": {
+    "S3DataSource": {
+     "$ref": "#/definitions/S3DataSource"
+    }
+   },
+   "required": [
+    "S3DataSource"
+   ],
+   "type": "object"
+  },
+  "MultiModelConfig": {
+   "additionalProperties": false,
+   "description": "Specifies additional configuration for multi-model endpoints.",
+   "properties": {
+    "ModelCacheSetting": {
+     "description": "Whether to cache models for a multi-model endpoint. By default, multi-model endpoints cache models so that a model does not have to be loaded into memory each time it is invoked. Some use cases do not benefit from model caching. For example, if an endpoint hosts a large number of models that are each invoked infrequently, the endpoint might perform better if you disable model caching. To disable model caching, set the value of this parameter to `Disabled`.",
+     "enum": [
+      "Enabled",
+      "Disabled"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RepositoryAuthConfig": {
+   "additionalProperties": false,
+   "description": "Specifies an authentication configuration for the private docker registry where your model image is hosted. Specify a value for this property only if you specified `Vpc` as the value for the `RepositoryAccessMode` field of the `ImageConfig` object that you passed to a call to `CreateModel` and the private Docker registry where the model image is hosted requires authentication.",
+   "properties": {
+    "RepositoryCredentialsProviderArn": {
+     "description": "The Amazon Resource Name (ARN) of an AWS Lambda function that provides credentials to authenticate to the private Docker registry where your model image is hosted. For information about how to create an AWS Lambda function, see [Create a Lambda function with the console](https://docs.aws.amazon.com/lambda/latest/dg/getting-started-create-function.html) in the AWS Lambda Developer Guide",
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "RepositoryCredentialsProviderArn"
+   ],
+   "type": "object"
+  },
+  "S3DataSource": {
+   "additionalProperties": false,
+   "description": "Specifies the S3 location of ML model data to deploy.",
+   "properties": {
+    "CompressionType": {
+     "description": "Specifies how the ML model data is prepared.",
+     "enum": [
+      "None",
+      "Gzip"
+     ],
+     "type": "string"
+    },
+    "HubAccessConfig": {
+     "$ref": "#/definitions/HubAccessConfig"
+    },
+    "ModelAccessConfig": {
+     "$ref": "#/definitions/ModelAccessConfig"
+    },
+    "S3DataType": {
+     "description": "Specifies the type of ML model data to deploy.",
+     "enum": [
+      "S3Prefix",
+      "S3Object"
+     ],
+     "type": "string"
+    },
+    "S3Uri": {
+     "description": "Specifies the S3 path of ML model data to deploy.",
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "CompressionType",
+    "S3DataType",
+    "S3Uri"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The tag value.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The tag key. Tag keys must be unique per resource.",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "description": "Specifies an Amazon Virtual Private Cloud (VPC) that your SageMaker jobs, hosted models, and compute resources have access to. You can control access to and from your resources by configuring a VPC. For more information, see [Give SageMaker Access to Resources in your Amazon VPC](https://docs.aws.amazon.com/sagemaker/latest/dg/infrastructure-give-access.html).",
+   "properties": {
+    "SecurityGroupIds": {
+     "description": "The VPC security group IDs, in the form `sg-xxxxxxxx`. Specify the security groups for the VPC that is specified in the `Subnets` field.",
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "maxLength": 32,
+      "minLength": 0,
+      "pattern": "^[-0-9a-zA-Z]+$",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Subnets": {
+     "description": "The ID of the subnets in the VPC to which you want to connect your training job or model. For information about the availability of specific instance types, see [Supported Instance Types and Availability Zones](https://docs.aws.amazon.com/sagemaker/latest/dg/instance-types-az.html).",
+     "format": "AWS::EC2::Subnet.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::Subnet.Id",
+      "maxLength": 32,
+      "minLength": 0,
+      "pattern": "^[-0-9a-zA-Z]+$",
+      "type": "string"
+     },
+     "maxItems": 16,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Subnets",
+    "SecurityGroupIds"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource type definition for AWS::SageMaker::Model",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "sagemaker:AddTags",
+    "sagemaker:CreateModel"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DeleteModel"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sagemaker:ListModels"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribeModel",
+    "sagemaker:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sagemaker:AddTags",
+    "sagemaker:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ModelArn"
+ ],
+ "properties": {
+  "Containers": {
+   "description": "Specifies the containers in the inference pipeline.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ContainerDefinition"
+   },
+   "maxItems": 15,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "EnableNetworkIsolation": {
+   "description": "Isolates the model container. No inbound or outbound network calls can be made to or from the model container.",
+   "type": "boolean"
+  },
+  "ExecutionRoleArn": {
+   "description": "The Amazon Resource Name (ARN) of the IAM role that you specified for the model.",
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "InferenceExecutionConfig": {
+   "$ref": "#/definitions/InferenceExecutionConfig"
+  },
+  "ModelArn": {
+   "description": "The Amazon Resource Name (ARN) of the model.",
+   "type": "string"
+  },
+  "ModelName": {
+   "description": "The name of the new model.",
+   "maxLength": 63,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9]([\\-a-zA-Z0-9]*[a-zA-Z0-9])?$",
+   "type": "string"
+  },
+  "PrimaryContainer": {
+   "$ref": "#/definitions/ContainerDefinition"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs. You can use tags to categorize your AWS resources in different ways, for example, by purpose, owner, or environment. For more information, see [Tagging AWS Resources](https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcConfig": {
+   "$ref": "#/definitions/VpcConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ModelArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sagemaker",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "sagemaker:ListTags",
+   "sagemaker:AddTags",
+   "sagemaker:DeleteTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::Model"
+}

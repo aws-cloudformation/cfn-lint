@@ -1,0 +1,88 @@
+{
+ "additionalProperties": false,
+ "definitions": {},
+ "description": "Resource schema for managing AWS account-level UX customization settings, including account color, visible services, and visible regions.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "uxc:UpdateAccountCustomizations",
+    "uxc:GetAccountCustomizations"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "uxc:UpdateAccountCustomizations",
+    "uxc:GetAccountCustomizations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "uxc:GetAccountCustomizations"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "uxc:UpdateAccountCustomizations",
+    "uxc:GetAccountCustomizations"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccountId"
+ ],
+ "properties": {
+  "AccountColor": {
+   "description": "The color theme assigned to the account for visual identification in the AWS Console.",
+   "enum": [
+    "none",
+    "pink",
+    "purple",
+    "darkBlue",
+    "lightBlue",
+    "teal",
+    "green",
+    "yellow",
+    "orange",
+    "red"
+   ],
+   "type": "string"
+  },
+  "AccountId": {
+   "description": "The AWS account ID that this customization belongs to. This is automatically determined from the caller's identity.",
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "VisibleRegions": {
+   "description": "A list of AWS region identifiers visible to the account in the AWS Console.",
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^[a-z]{2}(-[a-z]{1,10}){1,2}-[1-9]$",
+    "type": "string"
+   },
+   "maxItems": 100,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VisibleServices": {
+   "description": "A list of AWS service identifiers visible to the account in the AWS Console.",
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 64,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 500,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccountId"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "sourceUrl": "https://code.amazon.com/packages/AWSCloudFormationResourceProvidersUserExperienceCustomization",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::UXC::AccountCustomization"
+}

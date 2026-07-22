@@ -1,0 +1,385 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ExecutionRole",
+  "/properties/Alias"
+ ],
+ "definitions": {
+  "Action": {
+   "description": "Target actions are the type of operation hooks will be executed at.",
+   "enum": [
+    "CREATE",
+    "UPDATE",
+    "DELETE"
+   ],
+   "type": "string"
+  },
+  "HookTarget": {
+   "additionalProperties": false,
+   "description": "Hook targets are the destination where hooks will be invoked against.",
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/Action"
+    },
+    "InvocationPoint": {
+     "$ref": "#/definitions/InvocationPoint"
+    },
+    "TargetName": {
+     "$ref": "#/definitions/TargetName"
+    }
+   },
+   "required": [
+    "TargetName",
+    "Action",
+    "InvocationPoint"
+   ],
+   "type": "object"
+  },
+  "InvocationPoint": {
+   "description": "Invocation points are the point in provisioning workflow where hooks will be executed.",
+   "enum": [
+    "PRE_PROVISION"
+   ],
+   "type": "string"
+  },
+  "Role": {
+   "description": "IAM Role ARN",
+   "maxLength": 256,
+   "pattern": "arn:.+:iam::[0-9]{12}:role/.+",
+   "type": "string"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "description": "S3 Source Location for the Guard files.",
+   "properties": {
+    "Uri": {
+     "description": "S3 uri of Guard files.",
+     "type": "string"
+    },
+    "VersionId": {
+     "description": "S3 object version",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Uri"
+   ],
+   "type": "object"
+  },
+  "StackName": {
+   "description": "CloudFormation Stack name",
+   "maxLength": 128,
+   "pattern": "^[a-zA-Z*?][-a-zA-Z0-9*?]*$",
+   "type": "string"
+  },
+  "StackRole": {
+   "anyOf": [
+    {
+     "pattern": "arn:.+:iam::[0-9]{12}:role/.+"
+    },
+    {
+     "pattern": "^(arn:.+:iam::((?!\\*|\\?)[0-9]{12}|(?=.*\\*)[0-9*?]{1,12}|[0-9?]{12}):role/.+|\\*)$"
+    }
+   ],
+   "description": "IAM Stack Role ARN filter",
+   "maxLength": 256,
+   "type": "string"
+  },
+  "TargetName": {
+   "description": "Type name of hook target. Hook targets are the destination where hooks will be invoked against.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^(?!.*\\*\\?).*$",
+   "type": "string"
+  },
+  "TargetOperation": {
+   "description": "Which operations should this Hook run against? Resource changes, stacks or change sets.",
+   "enum": [
+    "RESOURCE",
+    "STACK",
+    "CHANGE_SET",
+    "CLOUD_CONTROL"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "This is a CloudFormation resource for activating the first-party AWS::Hooks::GuardHook.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cloudformation:ActivateType",
+    "cloudformation:DescribeType",
+    "cloudformation:ListTypes",
+    "cloudformation:SetTypeConfiguration",
+    "cloudformation:BatchDescribeTypeConfigurations",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cloudformation:BatchDescribeTypeConfigurations",
+    "cloudformation:DescribeType",
+    "cloudformation:DeactivateType",
+    "cloudformation:SetTypeConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cloudformation:ListTypes",
+    "cloudformation:DescribeType",
+    "cloudformation:BatchDescribeTypeConfigurations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cloudformation:DescribeType",
+    "cloudformation:BatchDescribeTypeConfigurations"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cloudformation:BatchDescribeTypeConfigurations",
+    "cloudformation:DescribeType",
+    "cloudformation:SetTypeConfiguration",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/HookArn"
+ ],
+ "properties": {
+  "Alias": {
+   "description": "The typename alias for the hook.",
+   "pattern": "^(?!(?i)aws)[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}$",
+   "type": "string"
+  },
+  "ExecutionRole": {
+   "$ref": "#/definitions/Role",
+   "description": "The execution role ARN assumed by hooks to read Guard rules from S3 and write Guard outputs to S3."
+  },
+  "FailureMode": {
+   "default": "WARN",
+   "description": "Attribute to specify CloudFormation behavior on hook failure.",
+   "enum": [
+    "FAIL",
+    "WARN"
+   ],
+   "type": "string"
+  },
+  "HookArn": {
+   "description": "The Amazon Resource Name (ARN) of the activated hook",
+   "pattern": "^arn:aws[A-Za-z0-9-]{0,64}:cloudformation:[A-Za-z0-9-]{1,64}:([0-9]{12})?:type/hook/.+$",
+   "type": "string"
+  },
+  "HookStatus": {
+   "default": "DISABLED",
+   "description": "Attribute to specify which stacks this hook applies to or should get invoked for",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "LogBucket": {
+   "description": "S3 Bucket where the guard validate report will be uploaded to",
+   "type": "string"
+  },
+  "Options": {
+   "additionalProperties": false,
+   "properties": {
+    "InputParams": {
+     "description": "Specifies the S3 location of input parameter files for your Guard rules. You can specify either a single S3 location or an array of up to 10 S3 locations.",
+     "oneOf": [
+      {
+       "$ref": "#/definitions/S3Location"
+      },
+      {
+       "items": {
+        "$ref": "#/definitions/S3Location"
+       },
+       "maxItems": 10,
+       "minItems": 1,
+       "type": "array"
+      }
+     ]
+    }
+   },
+   "required": []
+  },
+  "RuleLocation": {
+   "$ref": "#/definitions/S3Location"
+  },
+  "StackFilters": {
+   "additionalProperties": false,
+   "description": "Filters to allow hooks to target specific stack attributes",
+   "properties": {
+    "FilteringCriteria": {
+     "default": "ALL",
+     "description": "Attribute to specify the filtering behavior. ANY will make the Hook pass if one filter matches. ALL will make the Hook pass if all filters match",
+     "enum": [
+      "ALL",
+      "ANY"
+     ],
+     "type": "string"
+    },
+    "StackNames": {
+     "additionalProperties": false,
+     "description": "List of stack names as filters",
+     "minProperties": 1,
+     "properties": {
+      "Exclude": {
+       "description": "List of stack names that the hook is going to be excluded from",
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/StackName"
+       },
+       "maxItems": 50,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      },
+      "Include": {
+       "description": "List of stack names that the hook is going to target",
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/StackName"
+       },
+       "maxItems": 50,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "type": "object"
+    },
+    "StackRoles": {
+     "additionalProperties": false,
+     "description": "List of stack roles that are performing the stack operations.",
+     "minProperties": 1,
+     "properties": {
+      "Exclude": {
+       "description": "List of stack roles that the hook is going to be excluded from",
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/StackRole"
+       },
+       "maxItems": 50,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      },
+      "Include": {
+       "description": "List of stack roles that the hook is going to target",
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/StackRole"
+       },
+       "maxItems": 50,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "FilteringCriteria"
+   ],
+   "type": "object"
+  },
+  "TargetFilters": {
+   "description": "Attribute to specify which targets should invoke the hook",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "minProperties": 1,
+     "properties": {
+      "Actions": {
+       "description": "List of actions that the hook is going to target",
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/Action"
+       },
+       "maxItems": 50,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      },
+      "InvocationPoints": {
+       "description": "List of invocation points that the hook is going to target",
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/InvocationPoint"
+       },
+       "maxItems": 50,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      },
+      "TargetNames": {
+       "description": "List of type names that the hook is going to target",
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/TargetName"
+       },
+       "maxItems": 50,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Targets": {
+       "description": "List of hook targets",
+       "items": {
+        "$ref": "#/definitions/HookTarget"
+       },
+       "maxItems": 50,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "required": [
+      "Targets"
+     ],
+     "type": "object"
+    }
+   ],
+   "type": "object"
+  },
+  "TargetOperations": {
+   "description": "Which operations should this Hook run against? Resource changes, stacks or change sets.",
+   "items": {
+    "$ref": "#/definitions/TargetOperation"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/HookArn"
+ ],
+ "required": [
+  "RuleLocation",
+  "HookStatus",
+  "TargetOperations",
+  "FailureMode",
+  "Alias",
+  "ExecutionRole"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::CloudFormation::GuardHook"
+}

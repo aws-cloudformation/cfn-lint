@@ -1,0 +1,775 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DetectorModelName",
+  "/properties/Key"
+ ],
+ "definitions": {
+  "Action": {
+   "additionalProperties": false,
+   "description": "An action to be performed when the ``condition`` is TRUE.",
+   "properties": {
+    "ClearTimer": {
+     "$ref": "#/definitions/ClearTimer",
+     "description": "Information needed to clear the timer."
+    },
+    "DynamoDB": {
+     "$ref": "#/definitions/DynamoDB",
+     "description": "Writes to the DynamoDB table that you created. The default action payload contains all attribute-value pairs that have the information about the detector model instance and the event that triggered the action. You can customize the [payload](https://docs.aws.amazon.com/iotevents/latest/apireference/API_Payload.html). One column of the DynamoDB table receives all attribute-value pairs in the payload that you specify. For more information, see [Actions](https://docs.aws.amazon.com/iotevents/latest/developerguide/iotevents-event-actions.html) in *Developer Guide*."
+    },
+    "DynamoDBv2": {
+     "$ref": "#/definitions/DynamoDBv2",
+     "description": "Writes to the DynamoDB table that you created. The default action payload contains all attribute-value pairs that have the information about the detector model instance and the event that triggered the action. You can customize the [payload](https://docs.aws.amazon.com/iotevents/latest/apireference/API_Payload.html). A separate column of the DynamoDB table receives one attribute-value pair in the payload that you specify. For more information, see [Actions](https://docs.aws.amazon.com/iotevents/latest/developerguide/iotevents-event-actions.html) in *Developer Guide*."
+    },
+    "Firehose": {
+     "$ref": "#/definitions/Firehose",
+     "description": "Sends information about the detector model instance and the event that triggered the action to an Amazon Kinesis Data Firehose delivery stream."
+    },
+    "IotEvents": {
+     "$ref": "#/definitions/IotEvents",
+     "description": "Sends ITE input, which passes information about the detector model instance and the event that triggered the action."
+    },
+    "IotSiteWise": {
+     "$ref": "#/definitions/IotSiteWise",
+     "description": "Sends information about the detector model instance and the event that triggered the action to an asset property in ITSW ."
+    },
+    "IotTopicPublish": {
+     "$ref": "#/definitions/IotTopicPublish",
+     "description": "Publishes an MQTT message with the given topic to the IoT message broker."
+    },
+    "Lambda": {
+     "$ref": "#/definitions/Lambda",
+     "description": "Calls a Lambda function, passing in information about the detector model instance and the event that triggered the action."
+    },
+    "ResetTimer": {
+     "$ref": "#/definitions/ResetTimer",
+     "description": "Information needed to reset the timer."
+    },
+    "SetTimer": {
+     "$ref": "#/definitions/SetTimer",
+     "description": "Information needed to set the timer."
+    },
+    "SetVariable": {
+     "$ref": "#/definitions/SetVariable",
+     "description": "Sets a variable to a specified value."
+    },
+    "Sns": {
+     "$ref": "#/definitions/Sns",
+     "description": "Sends an Amazon SNS message."
+    },
+    "Sqs": {
+     "$ref": "#/definitions/Sqs",
+     "description": "Sends an Amazon SNS message."
+    }
+   },
+   "type": "object"
+  },
+  "AssetPropertyTimestamp": {
+   "additionalProperties": false,
+   "description": "A structure that contains timestamp information. For more information, see [TimeInNanos](https://docs.aws.amazon.com/iot-sitewise/latest/APIReference/API_TimeInNanos.html) in the *API Reference*.\n You must use expressions for all parameters in ``AssetPropertyTimestamp``. The expressions accept literals, operators, functions, references, and substitution templates.\n  **Examples**\n +  For literal values, the expressions must contain single quotes. For example, the value for the ``timeInSeconds`` parameter can be ``'1586400675'``.\n  +  For references, you must specify either variables or input values. For example, the value for the ``offsetInNanos`` parameter can be ``$variable.time``.\n  +  For a substitution template, you must use ``${}``, and the template must be in single quotes. A substitution template can also contain a combination of literals, operators, functions, references, and substitution templates.\n In the following example, the value for the ``timeInSeconds`` parameter uses a substitution template.\n  ``'${$input.TemperatureInput.sensorData.timestamp / 1000}'`` \n  \n For more information, see [Expressions](https://docs.aws.amazon.com/iotevents/latest/developerguide/iotevents-expressions.html) in the *Developer Guide*.",
+   "properties": {
+    "OffsetInNanos": {
+     "description": "The nanosecond offset converted from ``timeInSeconds``. The valid range is between 0-999999999.",
+     "type": "string"
+    },
+    "TimeInSeconds": {
+     "description": "The timestamp, in seconds, in the Unix epoch format. The valid range is between 1-31556889864403199.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TimeInSeconds"
+   ],
+   "type": "object"
+  },
+  "AssetPropertyValue": {
+   "additionalProperties": false,
+   "description": "A structure that contains value information. For more information, see [AssetPropertyValue](https://docs.aws.amazon.com/iot-sitewise/latest/APIReference/API_AssetPropertyValue.html) in the *API Reference*.\n You must use expressions for all parameters in ``AssetPropertyValue``. The expressions accept literals, operators, functions, references, and substitution templates.\n  **Examples**\n +  For literal values, the expressions must contain single quotes. For example, the value for the ``quality`` parameter can be ``'GOOD'``.\n  +  For references, you must specify either variables or input values. For example, the value for the ``quality`` parameter can be ``$input.TemperatureInput.sensorData.quality``.\n  \n For more information, see [Expressions](https://docs.aws.amazon.com/iotevents/latest/developerguide/iotevents-expressions.html) in the *Developer Guide*.",
+   "properties": {
+    "Quality": {
+     "description": "The quality of the asset property value. The value must be ``'GOOD'``, ``'BAD'``, or ``'UNCERTAIN'``.",
+     "type": "string"
+    },
+    "Timestamp": {
+     "$ref": "#/definitions/AssetPropertyTimestamp",
+     "description": "The timestamp associated with the asset property value. The default is the current event time."
+    },
+    "Value": {
+     "$ref": "#/definitions/AssetPropertyVariant",
+     "description": "The value to send to an asset property."
+    }
+   },
+   "required": [
+    "Value"
+   ],
+   "type": "object"
+  },
+  "AssetPropertyVariant": {
+   "additionalProperties": false,
+   "description": "A structure that contains an asset property value. For more information, see [Variant](https://docs.aws.amazon.com/iot-sitewise/latest/APIReference/API_Variant.html) in the *API Reference*.\n You must use expressions for all parameters in ``AssetPropertyVariant``. The expressions accept literals, operators, functions, references, and substitution templates.\n  **Examples**\n +  For literal values, the expressions must contain single quotes. For example, the value for the ``integerValue`` parameter can be ``'100'``.\n  +  For references, you must specify either variables or parameters. For example, the value for the ``booleanValue`` parameter can be ``$variable.offline``.\n  +  For a substitution template, you must use ``${}``, and the template must be in single quotes. A substitution template can also contain a combination of literals, operators, functions, references, and substitution templates. \n In the following example, the value for the ``doubleValue`` parameter uses a substitution template. \n  ``'${$input.TemperatureInput.sensorData.temperature * 6 / 5 + 32}'`` \n  \n For more information, see [Expressions](https://docs.aws.amazon.com/iotevents/latest/developerguide/iotevents-expressions.html) in the *Developer Guide*.\n You must specify one of the following value types, depending on the ``dataType`` of the specified asset property. For more information, see [AssetProperty](https://docs.aws.amazon.com/iot-sitewise/latest/APIReference/API_AssetProperty.html) in the *API Reference*.",
+   "properties": {
+    "BooleanValue": {
+     "description": "The asset property value is a Boolean value that must be ``'TRUE'`` or ``'FALSE'``. You must use an expression, and the evaluated result should be a Boolean value.",
+     "type": "string"
+    },
+    "DoubleValue": {
+     "description": "The asset property value is a double. You must use an expression, and the evaluated result should be a double.",
+     "type": "string"
+    },
+    "IntegerValue": {
+     "description": "The asset property value is an integer. You must use an expression, and the evaluated result should be an integer.",
+     "type": "string"
+    },
+    "StringValue": {
+     "description": "The asset property value is a string. You must use an expression, and the evaluated result should be a string.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ClearTimer": {
+   "additionalProperties": false,
+   "description": "Information needed to clear the timer.",
+   "properties": {
+    "TimerName": {
+     "description": "The name of the timer to clear.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "TimerName"
+   ],
+   "type": "object"
+  },
+  "DetectorModelDefinition": {
+   "additionalProperties": false,
+   "description": "Information that defines how a detector operates.",
+   "properties": {
+    "InitialStateName": {
+     "description": "The state that is entered at the creation of each detector (instance).",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "States": {
+     "description": "Information about the states of the detector.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/State"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "States",
+    "InitialStateName"
+   ],
+   "type": "object"
+  },
+  "DynamoDB": {
+   "additionalProperties": false,
+   "description": "Defines an action to write to the Amazon DynamoDB table that you created. The standard action payload contains all the information about the detector model instance and the event that triggered the action. You can customize the [payload](https://docs.aws.amazon.com/iotevents/latest/apireference/API_Payload.html). One column of the DynamoDB table receives all attribute-value pairs in the payload that you specify.\n You must use expressions for all parameters in ``DynamoDBAction``. The expressions accept literals, operators, functions, references, and substitution templates.\n  **Examples**\n +  For literal values, the expressions must contain single quotes. For example, the value for the ``hashKeyType`` parameter can be ``'STRING'``.\n  +  For references, you must specify either variables or input values. For example, the value for the ``hashKeyField`` parameter can be ``$input.GreenhouseInput.name``.\n  +  For a substitution template, you must use ``${}``, and the template must be in single quotes. A substitution template can also contain a combination of literals, operators, functions, references, and substitution templates.\n In the following example, the value for the ``hashKeyValue`` parameter uses a substitution template. \n  ``'${$input.GreenhouseInput.temperature * 6 / 5 + 32} in Fahrenheit'`` \n  +  For a string concatenation, you must use ``+``. A string concatenation can also contain a combination of literals, operators, functions, references, and substitution templates.\n In the following example, the value for the ``tableName`` parameter uses a string concatenation. \n  ``'GreenhouseTemperatureTable ' + $input.GreenhouseInput.date`` \n  \n For more information, see [Expressions](https://docs.aws.amazon.com/iotevents/latest/developerguide/iotevents-expressions.html) in the *Developer Guide*.\n If the defined payload type is a string, ``DynamoDBAction`` writes non-JSON data to the DynamoDB table as binary data. The DynamoDB console displays the data as Base64-encoded text. The value for the ``payloadField`` parameter is ``<payload-field>_raw``.",
+   "properties": {
+    "HashKeyField": {
+     "description": "The name of the hash key (also called the partition key). The ``hashKeyField`` value must match the partition key of the target DynamoDB table.",
+     "type": "string"
+    },
+    "HashKeyType": {
+     "description": "The data type for the hash key (also called the partition key). You can specify the following values:\n  +  ``'STRING'`` - The hash key is a string.\n  +  ``'NUMBER'`` - The hash key is a number.\n  \n If you don't specify ``hashKeyType``, the default value is ``'STRING'``.",
+     "type": "string"
+    },
+    "HashKeyValue": {
+     "description": "The value of the hash key (also called the partition key).",
+     "type": "string"
+    },
+    "Operation": {
+     "description": "The type of operation to perform. You can specify the following values: \n  +  ``'INSERT'`` - Insert data as a new item into the DynamoDB table. This item uses the specified hash key as a partition key. If you specified a range key, the item uses the range key as a sort key.\n  +  ``'UPDATE'`` - Update an existing item of the DynamoDB table with new data. This item's partition key must match the specified hash key. If you specified a range key, the range key must match the item's sort key.\n  +  ``'DELETE'`` - Delete an existing item of the DynamoDB table. This item's partition key must match the specified hash key. If you specified a range key, the range key must match the item's sort key.\n  \n If you don't specify this parameter, ITE triggers the ``'INSERT'`` operation.",
+     "type": "string"
+    },
+    "Payload": {
+     "$ref": "#/definitions/Payload",
+     "description": "Information needed to configure the payload.\n By default, ITE generates a standard payload in JSON for any action. This action payload contains all attribute-value pairs that have the information about the detector model instance and the event triggered the action. To configure the action payload, you can use ``contentExpression``."
+    },
+    "PayloadField": {
+     "description": "The name of the DynamoDB column that receives the action payload.\n If you don't specify this parameter, the name of the DynamoDB column is ``payload``.",
+     "type": "string"
+    },
+    "RangeKeyField": {
+     "description": "The name of the range key (also called the sort key). The ``rangeKeyField`` value must match the sort key of the target DynamoDB table.",
+     "type": "string"
+    },
+    "RangeKeyType": {
+     "description": "The data type for the range key (also called the sort key), You can specify the following values:\n  +  ``'STRING'`` - The range key is a string.\n  +  ``'NUMBER'`` - The range key is number.\n  \n If you don't specify ``rangeKeyField``, the default value is ``'STRING'``.",
+     "type": "string"
+    },
+    "RangeKeyValue": {
+     "description": "The value of the range key (also called the sort key).",
+     "type": "string"
+    },
+    "TableName": {
+     "description": "The name of the DynamoDB table. The ``tableName`` value must match the table name of the target DynamoDB table.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "HashKeyField",
+    "HashKeyValue",
+    "TableName"
+   ],
+   "type": "object"
+  },
+  "DynamoDBv2": {
+   "additionalProperties": false,
+   "description": "Defines an action to write to the Amazon DynamoDB table that you created. The default action payload contains all the information about the detector model instance and the event that triggered the action. You can customize the [payload](https://docs.aws.amazon.com/iotevents/latest/apireference/API_Payload.html). A separate column of the DynamoDB table receives one attribute-value pair in the payload that you specify.\n You must use expressions for all parameters in ``DynamoDBv2Action``. The expressions accept literals, operators, functions, references, and substitution templates.\n  **Examples**\n +  For literal values, the expressions must contain single quotes. For example, the value for the ``tableName`` parameter can be ``'GreenhouseTemperatureTable'``.\n  +  For references, you must specify either variables or input values. For example, the value for the ``tableName`` parameter can be ``$variable.ddbtableName``.\n  +  For a substitution template, you must use ``${}``, and the template must be in single quotes. A substitution template can also contain a combination of literals, operators, functions, references, and substitution templates.\n In the following example, the value for the ``contentExpression`` parameter in ``Payload`` uses a substitution template. \n  ``'{\\\"sensorID\\\": \\\"${$input.GreenhouseInput.sensor_id}\\\", \\\"temperature\\\": \\\"${$input.GreenhouseInput.temperature * 9 / 5 + 32}\\\"}'`` \n  +  For a string concatenation, you must use ``+``. A string concatenation can also contain a combination of literals, operators, functions, references, and substitution templates.\n In the following example, the value for the ``tableName`` parameter uses a string concatenation. \n  ``'GreenhouseTemperatureTable ' + $input.GreenhouseInput.date`` \n  \n For more information, see [Expressions](https://docs.aws.amazon.com/iotevents/latest/developerguide/iotevents-expressions.html) in the *Developer Guide*.\n The value for the ``type`` parameter in ``Payload`` must be ``JSON``.",
+   "properties": {
+    "Payload": {
+     "$ref": "#/definitions/Payload",
+     "description": "Information needed to configure the payload.\n By default, ITE generates a standard payload in JSON for any action. This action payload contains all attribute-value pairs that have the information about the detector model instance and the event triggered the action. To configure the action payload, you can use ``contentExpression``."
+    },
+    "TableName": {
+     "description": "The name of the DynamoDB table.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TableName"
+   ],
+   "type": "object"
+  },
+  "Event": {
+   "additionalProperties": false,
+   "description": "Specifies the ``actions`` to be performed when the ``condition`` evaluates to TRUE.",
+   "properties": {
+    "Actions": {
+     "description": "The actions to be performed.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Action"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Condition": {
+     "description": "Optional. The Boolean expression that, when TRUE, causes the ``actions`` to be performed. If not present, the actions are performed (=TRUE). If the expression result is not a Boolean value, the actions are not performed (=FALSE).",
+     "maxLength": 512,
+     "type": "string"
+    },
+    "EventName": {
+     "description": "The name of the event.",
+     "maxLength": 128,
+     "type": "string"
+    }
+   },
+   "required": [
+    "EventName"
+   ],
+   "type": "object"
+  },
+  "Firehose": {
+   "additionalProperties": false,
+   "description": "Sends information about the detector model instance and the event that triggered the action to an Amazon Kinesis Data Firehose delivery stream.",
+   "properties": {
+    "DeliveryStreamName": {
+     "description": "The name of the Kinesis Data Firehose delivery stream where the data is written.",
+     "type": "string"
+    },
+    "Payload": {
+     "$ref": "#/definitions/Payload",
+     "description": "You can configure the action payload when you send a message to an Amazon Data Firehose delivery stream."
+    },
+    "Separator": {
+     "description": "A character separator that is used to separate records written to the Kinesis Data Firehose delivery stream. Valid values are: '\\n' (newline), '\\t' (tab), '\\r\\n' (Windows newline), ',' (comma).",
+     "pattern": "([\\n\\t])|(\\r\\n)|(,)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "DeliveryStreamName"
+   ],
+   "type": "object"
+  },
+  "IotEvents": {
+   "additionalProperties": false,
+   "description": "Sends an ITE input, passing in information about the detector model instance and the event that triggered the action.",
+   "properties": {
+    "InputName": {
+     "description": "The name of the ITE input where the data is sent.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
+     "type": "string"
+    },
+    "Payload": {
+     "$ref": "#/definitions/Payload",
+     "description": "You can configure the action payload when you send a message to an ITE input."
+    }
+   },
+   "required": [
+    "InputName"
+   ],
+   "type": "object"
+  },
+  "IotSiteWise": {
+   "additionalProperties": false,
+   "description": "Sends information about the detector model instance and the event that triggered the action to a specified asset property in ITSW.\n You must use expressions for all parameters in ``IotSiteWiseAction``. The expressions accept literals, operators, functions, references, and substitutions templates.\n  **Examples**\n +  For literal values, the expressions must contain single quotes. For example, the value for the ``propertyAlias`` parameter can be ``'/company/windfarm/3/turbine/7/temperature'``.\n  +  For references, you must specify either variables or input values. For example, the value for the ``assetId`` parameter can be ``$input.TurbineInput.assetId1``.\n  +  For a substitution template, you must use ``${}``, and the template must be in single quotes. A substitution template can also contain a combination of literals, operators, functions, references, and substitution templates.\n In the following example, the value for the ``propertyAlias`` parameter uses a substitution template. \n  ``'company/windfarm/${$input.TemperatureInput.sensorData.windfarmID}/turbine/ ${$input.TemperatureInput.sensorData.turbineID}/temperature'`` \n  \n You must specify either ``propertyAlias`` or both ``assetId`` and ``propertyId`` to identify the target asset property in ITSW.\n For more information, see [Expressions](https://docs.aws.amazon.com/iotevents/latest/developerguide/iotevents-expressions.html) in the *Developer Guide*.",
+   "properties": {
+    "AssetId": {
+     "description": "The ID of the asset that has the specified property.",
+     "type": "string"
+    },
+    "EntryId": {
+     "description": "A unique identifier for this entry. You can use the entry ID to track which data entry causes an error in case of failure. The default is a new unique identifier.",
+     "type": "string"
+    },
+    "PropertyAlias": {
+     "description": "The alias of the asset property.",
+     "type": "string"
+    },
+    "PropertyId": {
+     "description": "The ID of the asset property.",
+     "type": "string"
+    },
+    "PropertyValue": {
+     "$ref": "#/definitions/AssetPropertyValue",
+     "description": "The value to send to the asset property. This value contains timestamp, quality, and value (TQV) information."
+    }
+   },
+   "required": [
+    "PropertyValue"
+   ],
+   "type": "object"
+  },
+  "IotTopicPublish": {
+   "additionalProperties": false,
+   "description": "Information required to publish the MQTT message through the IoT message broker.",
+   "properties": {
+    "MqttTopic": {
+     "description": "The MQTT topic of the message. You can use a string expression that includes variables (``$variable.<variable-name>``) and input values (``$input.<input-name>.<path-to-datum>``) as the topic string.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Payload": {
+     "$ref": "#/definitions/Payload",
+     "description": "You can configure the action payload when you publish a message to an IoTCore topic."
+    }
+   },
+   "required": [
+    "MqttTopic"
+   ],
+   "type": "object"
+  },
+  "Lambda": {
+   "additionalProperties": false,
+   "description": "Calls a Lambda function, passing in information about the detector model instance and the event that triggered the action.",
+   "properties": {
+    "FunctionArn": {
+     "description": "The ARN of the Lambda function that is executed.",
+     "format": "AWS::Lambda::Function.Arn",
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Payload": {
+     "$ref": "#/definitions/Payload",
+     "description": "You can configure the action payload when you send a message to a Lambda function."
+    }
+   },
+   "required": [
+    "FunctionArn"
+   ],
+   "type": "object"
+  },
+  "OnEnter": {
+   "additionalProperties": false,
+   "description": "When entering this state, perform these ``actions`` if the ``condition`` is TRUE.",
+   "properties": {
+    "Events": {
+     "description": "Specifies the actions that are performed when the state is entered and the ``condition`` is ``TRUE``.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Event"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "OnExit": {
+   "additionalProperties": false,
+   "description": "When exiting this state, perform these ``actions`` if the specified ``condition`` is ``TRUE``.",
+   "properties": {
+    "Events": {
+     "description": "Specifies the ``actions`` that are performed when the state is exited and the ``condition`` is ``TRUE``.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Event"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "OnInput": {
+   "additionalProperties": false,
+   "description": "Specifies the actions performed when the ``condition`` evaluates to TRUE.",
+   "properties": {
+    "Events": {
+     "description": "Specifies the actions performed when the ``condition`` evaluates to TRUE.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Event"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "TransitionEvents": {
+     "description": "Specifies the actions performed, and the next state entered, when a ``condition`` evaluates to TRUE.",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/TransitionEvent"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "Payload": {
+   "additionalProperties": false,
+   "description": "Information needed to configure the payload.\n By default, ITE generates a standard payload in JSON for any action. This action payload contains all attribute-value pairs that have the information about the detector model instance and the event triggered the action. To configure the action payload, you can use ``contentExpression``.",
+   "properties": {
+    "ContentExpression": {
+     "description": "The content of the payload. You can use a string expression that includes quoted strings (``'<string>'``), variables (``$variable.<variable-name>``), input values (``$input.<input-name>.<path-to-datum>``), string concatenations, and quoted strings that contain ``${}`` as the content. The recommended maximum size of a content expression is 1 KB.",
+     "minLength": 1,
+     "type": "string"
+    },
+    "Type": {
+     "description": "The value of the payload type can be either ``STRING`` or ``JSON``.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ContentExpression",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ResetTimer": {
+   "additionalProperties": false,
+   "description": "Information required to reset the timer. The timer is reset to the previously evaluated result of the duration. The duration expression isn't reevaluated when you reset the timer.",
+   "properties": {
+    "TimerName": {
+     "description": "The name of the timer to reset.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "TimerName"
+   ],
+   "type": "object"
+  },
+  "SetTimer": {
+   "additionalProperties": false,
+   "description": "Information needed to set the timer.",
+   "properties": {
+    "DurationExpression": {
+     "description": "The duration of the timer, in seconds. You can use a string expression that includes numbers, variables (``$variable.<variable-name>``), and input values (``$input.<input-name>.<path-to-datum>``) as the duration. The range of the duration is 1-31622400 seconds. To ensure accuracy, the minimum duration is 60 seconds. The evaluated result of the duration is rounded down to the nearest whole number.",
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Seconds": {
+     "description": "The number of seconds until the timer expires. The minimum value is 60 seconds to ensure accuracy. The maximum value is 31622400 seconds.",
+     "maximum": 31622400,
+     "minimum": 60,
+     "type": "integer"
+    },
+    "TimerName": {
+     "description": "The name of the timer.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "TimerName"
+   ],
+   "type": "object"
+  },
+  "SetVariable": {
+   "additionalProperties": false,
+   "description": "Information about the variable and its new value.",
+   "properties": {
+    "Value": {
+     "description": "The new value of the variable.",
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "VariableName": {
+     "description": "The name of the variable.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "VariableName"
+   ],
+   "type": "object"
+  },
+  "Sns": {
+   "additionalProperties": false,
+   "description": "Information required to publish the Amazon SNS message.",
+   "properties": {
+    "Payload": {
+     "$ref": "#/definitions/Payload",
+     "description": "You can configure the action payload when you send a message as an Amazon SNS push notification."
+    },
+    "TargetArn": {
+     "description": "The ARN of the Amazon SNS target where the message is sent.",
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "TargetArn"
+   ],
+   "type": "object"
+  },
+  "Sqs": {
+   "additionalProperties": false,
+   "description": "Sends information about the detector model instance and the event that triggered the action to an Amazon SQS queue.",
+   "properties": {
+    "Payload": {
+     "$ref": "#/definitions/Payload",
+     "description": "You can configure the action payload when you send a message to an Amazon SQS queue."
+    },
+    "QueueUrl": {
+     "description": "The URL of the SQS queue where the data is written.",
+     "type": "string"
+    },
+    "UseBase64": {
+     "description": "Set this to TRUE if you want the data to be base-64 encoded before it is written to the queue. Otherwise, set this to FALSE.",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "QueueUrl"
+   ],
+   "type": "object"
+  },
+  "State": {
+   "additionalProperties": false,
+   "description": "Information that defines a state of a detector.",
+   "properties": {
+    "OnEnter": {
+     "$ref": "#/definitions/OnEnter",
+     "description": "When entering this state, perform these ``actions`` if the ``condition`` is TRUE."
+    },
+    "OnExit": {
+     "$ref": "#/definitions/OnExit",
+     "description": "When exiting this state, perform these ``actions`` if the specified ``condition`` is ``TRUE``."
+    },
+    "OnInput": {
+     "$ref": "#/definitions/OnInput",
+     "description": "When an input is received and the ``condition`` is TRUE, perform the specified ``actions``."
+    },
+    "StateName": {
+     "description": "The name of the state.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "StateName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "Metadata that can be used to manage the resource.",
+   "properties": {
+    "Key": {
+     "description": "The tag's key.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The tag's value.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TransitionEvent": {
+   "additionalProperties": false,
+   "description": "Specifies the actions performed and the next state entered when a ``condition`` evaluates to TRUE.",
+   "properties": {
+    "Actions": {
+     "description": "The actions to be performed.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Action"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Condition": {
+     "description": "Required. A Boolean expression that when TRUE causes the actions to be performed and the ``nextState`` to be entered.",
+     "maxLength": 512,
+     "type": "string"
+    },
+    "EventName": {
+     "description": "The name of the transition event.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "NextState": {
+     "description": "The next state to enter.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Condition",
+    "EventName",
+    "NextState"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The AWS::IoTEvents::DetectorModel resource creates a detector model. You create a *detector model* (a model of your equipment or process) using *states*. For each state, you define conditional (Boolean) logic that evaluates the incoming inputs to detect significant events. When an event is detected, it can change the state or trigger custom-built or predefined actions using other AWS services. You can define additional events that trigger actions when entering or exiting a state and, optionally, when a condition is met. For more information, see [How to Use](https://docs.aws.amazon.com/iotevents/latest/developerguide/how-to-use-iotevents.html) in the *Developer Guide*.\n  When you successfully update a detector model (using the ITE console, ITE API or CLI commands, or CFN) all detector instances created by the model are reset to their initial states. (The detector's ``state``, and the values of any variables and timers are reset.)\n When you successfully update a detector model (using the ITE console, ITE API or CLI commands, or CFN) the version number of the detector model is incremented. (A detector model with version number 1 before the update has version number 2 after the update succeeds.)\n If you attempt to update a detector model using CFN and the update does not succeed, the system may, in some cases, restore the original detector model. When this occurs, the detector model's version is incremented twice (for example, from version 1 to version 3) and the detector instances are reset.\n Also, be aware that if you attempt to update several detector models at once using CFN, some updates may succeed and others fail. In this case, the effects on each detector model's detector instances and version number depend on whether the update succeeded or failed, with the results as stated.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iotevents:CreateDetectorModel",
+    "iotevents:UpdateInputRouting",
+    "iotevents:DescribeDetectorModel",
+    "iotevents:ListTagsForResource",
+    "iotevents:TagResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iotevents:DeleteDetectorModel",
+    "iotevents:DescribeDetectorModel"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iotevents:ListDetectorModels"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iotevents:DescribeDetectorModel",
+    "iotevents:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iotevents:UpdateDetectorModel",
+    "iotevents:UpdateInputRouting",
+    "iotevents:DescribeDetectorModel",
+    "iotevents:ListTagsForResource",
+    "iotevents:UntagResource",
+    "iotevents:TagResource",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "lifecycle": {
+  "date": "2026-05-20",
+  "status": "shutdown"
+ },
+ "primaryIdentifier": [
+  "/properties/DetectorModelName"
+ ],
+ "properties": {
+  "DetectorModelDefinition": {
+   "$ref": "#/definitions/DetectorModelDefinition",
+   "description": "Information that defines how a detector operates."
+  },
+  "DetectorModelDescription": {
+   "description": "A brief description of the detector model.",
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "DetectorModelName": {
+   "description": "The name of the detector model.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "EvaluationMethod": {
+   "description": "Information about the order in which events are evaluated and how actions are executed.",
+   "enum": [
+    "BATCH",
+    "SERIAL"
+   ],
+   "type": "string"
+  },
+  "Key": {
+   "description": "The value used to identify a detector instance. When a device or system sends input, a new detector instance with a unique key value is created. ITE can continue to route input to its corresponding detector instance based on this identifying information. \n This parameter uses a JSON-path expression to select the attribute-value pair in the message payload that is used for identification. To route the message to the correct detector instance, the device must send a message payload that contains the same attribute-value.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^((`[\\w\\- ]+`)|([\\w\\-]+))(\\.((`[\\w\\- ]+`)|([\\w\\-]+)))*$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "description": "The ARN of the role that grants permission to ITE to perform its operations.",
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.\n For more information, see [Tag](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html).",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "required": [
+  "DetectorModelDefinition",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "iotevents:UntagResource",
+   "iotevents:TagResource",
+   "iotevents:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTEvents::DetectorModel"
+}

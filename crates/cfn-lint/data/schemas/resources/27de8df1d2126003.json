@@ -1,0 +1,159 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Ipv4Address",
+  "/properties/Ipv6Address",
+  "/properties/IpAddressType",
+  "/properties/SubnetId",
+  "/properties/FileSystemId"
+ ],
+ "description": "Resource Type definition for AWS::S3Files::MountTarget",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3files:CreateMountTarget",
+    "s3files:GetMountTarget",
+    "s3files:ListMountTargets",
+    "ec2:DescribeSubnets",
+    "ec2:CreateNetworkInterface"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "s3files:GetMountTarget",
+    "s3files:DeleteMountTarget",
+    "ec2:DeleteNetworkInterface"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "FileSystemId": {
+      "$ref": "resource-schema.json#/properties/FileSystemId"
+     }
+    },
+    "required": [
+     "FileSystemId"
+    ]
+   },
+   "permissions": [
+    "s3files:ListMountTargets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "s3files:GetMountTarget"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "s3files:GetMountTarget",
+    "s3files:UpdateMountTarget",
+    "ec2:ModifyNetworkInterfaceAttribute"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MountTargetId"
+ ],
+ "properties": {
+  "AvailabilityZoneId": {
+   "type": "string"
+  },
+  "FileSystemId": {
+   "maxLength": 128,
+   "pattern": "^(arn:aws[-a-z]*:s3files:[0-9a-z-:]+:file-system/fs-[0-9a-f]{17,40}|fs-[0-9a-f]{17,40})$",
+   "type": "string"
+  },
+  "IpAddressType": {
+   "enum": [
+    "IPV4_ONLY",
+    "IPV6_ONLY",
+    "DUAL_STACK"
+   ],
+   "type": "string"
+  },
+  "Ipv4Address": {
+   "maxLength": 15,
+   "minLength": 7,
+   "pattern": "^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$",
+   "type": "string"
+  },
+  "Ipv6Address": {
+   "maxLength": 39,
+   "minLength": 3,
+   "type": "string"
+  },
+  "MountTargetId": {
+   "maxLength": 45,
+   "minLength": 22,
+   "pattern": "^fsmt-[0-9a-f]{17,40}$",
+   "type": "string"
+  },
+  "NetworkInterfaceId": {
+   "type": "string"
+  },
+  "OwnerId": {
+   "maxLength": 12,
+   "pattern": "^((\\d{12})|(\\d{4}-\\d{4}-\\d{4}))$",
+   "type": "string"
+  },
+  "SecurityGroups": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "maxLength": 43,
+    "minLength": 11,
+    "pattern": "^(sg-[0-9a-f]{8,40})$",
+    "type": "string"
+   },
+   "maxItems": 100,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Status": {
+   "enum": [
+    "available",
+    "creating",
+    "updating",
+    "deleting",
+    "deleted",
+    "error"
+   ],
+   "type": "string"
+  },
+  "StatusMessage": {
+   "type": "string"
+  },
+  "SubnetId": {
+   "format": "AWS::EC2::Subnet.Id",
+   "maxLength": 47,
+   "minLength": 15,
+   "pattern": "^subnet-[0-9a-f]{8,40}$",
+   "type": "string"
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/MountTargetId",
+  "/properties/AvailabilityZoneId",
+  "/properties/OwnerId",
+  "/properties/NetworkInterfaceId",
+  "/properties/VpcId",
+  "/properties/Status",
+  "/properties/StatusMessage"
+ ],
+ "required": [
+  "FileSystemId",
+  "SubnetId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::S3Files::MountTarget"
+}

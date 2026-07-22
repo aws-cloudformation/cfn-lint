@@ -1,0 +1,249 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "QueryParameter": {
+   "description": "The value of the QueryParameter. Possible values: $StartTime$, $EndTime$, $Period$.",
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "RefreshSchedule": {
+   "additionalProperties": false,
+   "description": "Configures the automatic refresh schedule for the dashboard. Includes the frequency unit (DAYS or HOURS) and value, as well as the status (ENABLED or DISABLED) of the refresh schedule.",
+   "properties": {
+    "Frequency": {
+     "additionalProperties": false,
+     "properties": {
+      "Unit": {
+       "description": "The frequency unit. Supported values are HOURS and DAYS.",
+       "enum": [
+        "HOURS",
+        "DAYS"
+       ],
+       "type": "string"
+      },
+      "Value": {
+       "description": "The frequency value.",
+       "type": "integer"
+      }
+     },
+     "required": [
+      "Unit",
+      "Value"
+     ],
+     "type": "object"
+    },
+    "Status": {
+     "description": "The status of the schedule. Supported values are ENABLED and DISABLED.",
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "TimeOfDay": {
+     "description": "StartTime of the automatic schedule refresh.",
+     "pattern": "^[0-9]{2}:[0-9]{2}",
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "An arbitrary set of tags (key-value pairs) for this dashboard.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Timestamp": {
+   "type": "string"
+  },
+  "Widget": {
+   "additionalProperties": false,
+   "description": "The dashboard widget",
+   "properties": {
+    "QueryParameters": {
+     "description": "The placeholder keys in the QueryStatement. For example: $StartTime$, $EndTime$, $Period$.",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/QueryParameter"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "QueryStatement": {
+     "description": "The SQL query statement on one or more event data stores.",
+     "maxLength": 10000,
+     "minLength": 1,
+     "pattern": "(?s).*",
+     "type": "string"
+    },
+    "ViewProperties": {
+     "additionalProperties": false,
+     "description": "The view properties of the widget.",
+     "patternProperties": {
+      "^[a-zA-Z0-9._-]{3,128}$": {
+       "maxLength": 128,
+       "minLength": 1,
+       "pattern": "^[a-zA-Z0-9._\\- ]+$",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "QueryStatement"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The Amazon CloudTrail dashboard resource allows customers to manage managed dashboards and create custom dashboards. You can manually refresh custom and managed dashboards. For custom dashboards, you can also set up an automatic refresh schedule and modify dashboard widgets.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "CloudTrail:CreateDashboard",
+    "CloudTrail:AddTags",
+    "CloudTrail:StartQuery",
+    "CloudTrail:StartDashboardRefresh"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "CloudTrail:DeleteDashboard",
+    "CloudTrail:UpdateDashboard"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "CloudTrail:ListDashboards",
+    "CloudTrail:GetDashboard",
+    "CloudTrail:ListTags"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "CloudTrail:GetDashboard",
+    "CloudTrail:ListDashboards",
+    "CloudTrail:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "CloudTrail:UpdateDashboard",
+    "CloudTrail:AddTags",
+    "CloudTrail:RemoveTags",
+    "CloudTrail:StartQuery",
+    "CloudTrail:StartDashboardRefresh"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DashboardArn"
+ ],
+ "properties": {
+  "CreatedTimestamp": {
+   "$ref": "#/definitions/Timestamp",
+   "description": "The timestamp of the dashboard creation."
+  },
+  "DashboardArn": {
+   "description": "The ARN of the dashboard.",
+   "pattern": "^[a-zA-Z0-9._/\\-:]+$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the dashboard.",
+   "maxLength": 128,
+   "minLength": 3,
+   "pattern": "^[a-zA-Z0-9_\\-]+$",
+   "type": "string"
+  },
+  "RefreshSchedule": {
+   "$ref": "#/definitions/RefreshSchedule",
+   "description": "Configures the automatic refresh schedule for the dashboard. Includes the frequency unit (DAYS or HOURS) and value, as well as the status (ENABLED or DISABLED) of the refresh schedule."
+  },
+  "Status": {
+   "description": "The status of the dashboard. Values are CREATING, CREATED, UPDATING, UPDATED and DELETING.",
+   "enum": [
+    "CREATING",
+    "CREATED",
+    "UPDATING",
+    "UPDATED",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TerminationProtectionEnabled": {
+   "description": "Indicates whether the dashboard is protected from termination.",
+   "type": "boolean"
+  },
+  "Type": {
+   "description": "The type of the dashboard. Values are CUSTOM and MANAGED.",
+   "enum": [
+    "MANAGED",
+    "CUSTOM"
+   ],
+   "type": "string"
+  },
+  "UpdatedTimestamp": {
+   "$ref": "#/definitions/Timestamp",
+   "description": "The timestamp showing when the dashboard was updated, if applicable. UpdatedTimestamp is always either the same or newer than the time shown in CreatedTimestamp."
+  },
+  "Widgets": {
+   "description": "List of widgets on the dashboard",
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Widget"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DashboardArn",
+  "/properties/CreatedTimestamp",
+  "/properties/UpdatedTimestamp",
+  "/properties/Status",
+  "/properties/Type"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudtrail.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "CloudTrail:AddTags",
+   "CloudTrail:RemoveTags",
+   "CloudTrail:ListTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudTrail::Dashboard"
+}

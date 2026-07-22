@@ -1,0 +1,305 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/GatewayId",
+   "/properties/LinkId",
+   "/properties/RuleId"
+  ]
+ ],
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/GatewayId",
+  "/properties/LinkId"
+ ],
+ "definitions": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws:rtbfabric:[a-zA-Z0-9_-]+:[0-9]{12}:gateway/[a-zA-Z0-9-]+/link/[a-zA-Z0-9-]+/routing-rule/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "CreatedTimestamp": {
+   "type": "string"
+  },
+  "GatewayId": {
+   "pattern": "^rtb-gw-[a-z0-9-]{1,25}$",
+   "type": "string"
+  },
+  "LinkId": {
+   "pattern": "^link-[a-z0-9-]{1,25}$",
+   "type": "string"
+  },
+  "QueryStringKeyValuePair": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "Query string key \u2014 RFC 3986 unreserved characters.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9._~-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "Query string value \u2014 RFC 3986 unreserved characters.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9._~-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "RuleCondition": {
+   "additionalProperties": false,
+   "dependencies": {
+    "HostHeader": {
+     "oneOf": [
+      {
+       "required": [
+        "HostHeaderWildcard"
+       ]
+      },
+      {}
+     ]
+    },
+    "PathPrefix": {
+     "oneOf": [
+      {
+       "required": [
+        "PathExact"
+       ]
+      },
+      {}
+     ]
+    },
+    "QueryStringEquals": {
+     "oneOf": [
+      {
+       "required": [
+        "QueryStringExists"
+       ]
+      },
+      {}
+     ]
+    }
+   },
+   "description": "Conditions for a routing rule. All non-null fields must match (AND logic). At least one field must be set. HostHeader and HostHeaderWildcard are mutually exclusive. PathPrefix and PathExact are mutually exclusive.",
+   "properties": {
+    "HostHeader": {
+     "description": "Exact host match \u2014 RFC 3986 unreserved characters. Mutually exclusive with HostHeaderWildcard.",
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9._~-]+$",
+     "type": "string"
+    },
+    "HostHeaderWildcard": {
+     "description": "Wildcard host pattern (e.g., *.example.com) \u2014 RFC 3986 unreserved characters plus *. Mutually exclusive with HostHeader.",
+     "maxLength": 255,
+     "minLength": 3,
+     "pattern": "^[A-Za-z0-9._~*-]+$",
+     "type": "string"
+    },
+    "PathExact": {
+     "description": "Exact path match \u2014 must start with /. Mutually exclusive with PathPrefix.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^/[A-Za-z0-9._~/-]*$",
+     "type": "string"
+    },
+    "PathPrefix": {
+     "description": "Path prefix matching \u2014 strict starts-with, must start with /. Mutually exclusive with PathExact.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^/[A-Za-z0-9._~/-]*$",
+     "type": "string"
+    },
+    "QueryStringEquals": {
+     "$ref": "#/definitions/QueryStringKeyValuePair",
+     "description": "Query string key=value pair match (single pair)."
+    },
+    "QueryStringExists": {
+     "description": "Query string key presence check (any value accepted).",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9._~-]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RuleId": {
+   "pattern": "^rule-[a-z0-9-]{1,25}$",
+   "type": "string"
+  },
+  "RulePriority": {
+   "maximum": 1000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "RuleStatus": {
+   "enum": [
+    "CREATION_IN_PROGRESS",
+    "ACTIVE",
+    "UPDATE_IN_PROGRESS",
+    "DELETION_IN_PROGRESS",
+    "DELETED",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "description": "Tags to assign to the LinkRoutingRule.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdatedTimestamp": {
+   "type": "string"
+  }
+ },
+ "description": "Resource Type definition for AWS::RTBFabric::LinkRoutingRule. A routing rule on a link within RTB Fabric that controls request routing based on conditions such as host headers, path matching, and query string parameters.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "rtbfabric:CreateLinkRoutingRule",
+    "rtbfabric:GetLinkRoutingRule",
+    "rtbfabric:TagResource",
+    "rtbfabric:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "rtbfabric:DeleteLinkRoutingRule",
+    "rtbfabric:GetLinkRoutingRule"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "GatewayId": {
+      "pattern": "^rtb-gw-[a-z0-9-]{1,25}$",
+      "type": "string"
+     },
+     "LinkId": {
+      "pattern": "^link-[a-z0-9-]{1,25}$",
+      "type": "string"
+     }
+    },
+    "required": [
+     "GatewayId",
+     "LinkId"
+    ]
+   },
+   "permissions": [
+    "rtbfabric:ListLinkRoutingRules"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "rtbfabric:GetLinkRoutingRule",
+    "rtbfabric:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "rtbfabric:UpdateLinkRoutingRule",
+    "rtbfabric:GetLinkRoutingRule",
+    "rtbfabric:TagResource",
+    "rtbfabric:UntagResource",
+    "rtbfabric:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "Conditions": {
+   "$ref": "#/definitions/RuleCondition"
+  },
+  "CreatedTimestamp": {
+   "$ref": "#/definitions/CreatedTimestamp"
+  },
+  "GatewayId": {
+   "$ref": "#/definitions/GatewayId"
+  },
+  "LinkId": {
+   "$ref": "#/definitions/LinkId"
+  },
+  "Priority": {
+   "$ref": "#/definitions/RulePriority"
+  },
+  "RuleId": {
+   "$ref": "#/definitions/RuleId"
+  },
+  "Status": {
+   "$ref": "#/definitions/RuleStatus"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "UpdatedTimestamp": {
+   "$ref": "#/definitions/UpdatedTimestamp"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RuleId",
+  "/properties/Arn",
+  "/properties/Status",
+  "/properties/CreatedTimestamp",
+  "/properties/UpdatedTimestamp"
+ ],
+ "required": [
+  "GatewayId",
+  "LinkId",
+  "Priority",
+  "Conditions"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "rtbfabric:TagResource",
+   "rtbfabric:UntagResource",
+   "rtbfabric:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RTBFabric::LinkRoutingRule"
+}

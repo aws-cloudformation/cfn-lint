@@ -1,0 +1,84 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/RestApiId"
+ ],
+ "description": "The ``AWS::ApiGateway::RequestValidator`` resource sets up basic validation rules for incoming requests to your API. For more information, see [Enable Basic Request Validation for an API in API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-method-request-validation.html) in the *API Gateway Developer Guide*.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST",
+    "apigateway:GET"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "RestApiId": {
+      "$ref": "resource-schema.json#/properties/RestApiId"
+     }
+    },
+    "required": [
+     "RestApiId"
+    ]
+   },
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:PATCH",
+    "apigateway:GET"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RestApiId",
+  "/properties/RequestValidatorId"
+ ],
+ "properties": {
+  "Name": {
+   "description": "",
+   "type": "string"
+  },
+  "RequestValidatorId": {
+   "description": "",
+   "type": "string"
+  },
+  "RestApiId": {
+   "description": "",
+   "type": "string"
+  },
+  "ValidateRequestBody": {
+   "description": "",
+   "type": "boolean"
+  },
+  "ValidateRequestParameters": {
+   "description": "",
+   "type": "boolean"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RequestValidatorId"
+ ],
+ "required": [
+  "RestApiId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ApiGateway::RequestValidator"
+}

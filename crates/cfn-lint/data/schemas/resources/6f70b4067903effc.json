@@ -1,0 +1,330 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/AnalyzerConfiguration"
+ ],
+ "createOnlyProperties": [
+  "/properties/AnalyzerName",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "AnalysisRuleCriteria": {
+   "additionalProperties": false,
+   "description": "The criteria for an analysis rule for an analyzer.",
+   "properties": {
+    "AccountIds": {
+     "description": "A list of AWS account IDs to apply to the analysis rule criteria. The accounts cannot include the organization analyzer owner account. Account IDs can only be applied to the analysis rule criteria for organization-level analyzers.",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ResourceTags": {
+     "description": "An array of key-value pairs to match for your resources. You can use the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.\n\nFor the tag key, you can specify a value that is 1 to 128 characters in length and cannot be prefixed with aws:.\n\nFor the tag value, you can specify a value that is 0 to 256 characters in length. If the specified tag value is 0 characters, the rule is applied to all principals with the specified tag key.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tags"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ArchiveRule": {
+   "additionalProperties": false,
+   "description": "An Access Analyzer archive rule. Archive rules automatically archive new findings that meet the criteria you define when you create the rule.",
+   "properties": {
+    "Filter": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Filter"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "RuleName": {
+     "description": "The archive rule name",
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Filter",
+    "RuleName"
+   ],
+   "type": "object"
+  },
+  "Filter": {
+   "additionalProperties": false,
+   "properties": {
+    "Contains": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Eq": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Exists": {
+     "type": "boolean"
+    },
+    "Neq": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Property": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Property"
+   ],
+   "type": "object"
+  },
+  "InternalAccessAnalysisRuleCriteria": {
+   "additionalProperties": false,
+   "description": "The criteria for an analysis rule for an internal access analyzer.",
+   "properties": {
+    "AccountIds": {
+     "description": "A list of AWS account IDs to apply to the internal access analysis rule criteria. Account IDs can only be applied to the analysis rule criteria for organization-level analyzers and cannot include the organization owner account.",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ResourceArns": {
+     "description": "A list of resource ARNs to apply to the internal access analysis rule criteria. The analyzer will only generate findings for resources that match these ARNs.",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ResourceTypes": {
+     "description": "A list of resource types to apply to the internal access analysis rule criteria. The analyzer will only generate findings for resources of these types.",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "InternalAccessConfiguration": {
+   "additionalProperties": false,
+   "description": "Specifies the configuration of an internal access analyzer for an AWS organization or account. This configuration determines how the analyzer evaluates internal access within your AWS environment.",
+   "properties": {
+    "InternalAccessAnalysisRule": {
+     "additionalProperties": false,
+     "description": "Contains information about analysis rules for the internal access analyzer. Analysis rules determine which entities will generate findings based on the criteria you define when you create the rule.",
+     "properties": {
+      "Inclusions": {
+       "description": "A list of rules for the internal access analyzer containing criteria to include in analysis. Only resources that meet the rule criteria will generate findings.",
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/InternalAccessAnalysisRuleCriteria"
+       },
+       "type": "array"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UnusedAccessConfiguration": {
+   "additionalProperties": false,
+   "description": "The Configuration for Unused Access Analyzer",
+   "properties": {
+    "AnalysisRule": {
+     "additionalProperties": false,
+     "description": "Contains information about rules for the analyzer.",
+     "properties": {
+      "Exclusions": {
+       "description": "A list of rules for the analyzer containing criteria to exclude from analysis. Entities that meet the rule criteria will not generate findings.",
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/AnalysisRuleCriteria"
+       },
+       "type": "array"
+      }
+     },
+     "type": "object"
+    },
+    "UnusedAccessAge": {
+     "description": "The specified access age in days for which to generate findings for unused access. For example, if you specify 90 days, the analyzer will generate findings for IAM entities within the accounts of the selected organization for any access that hasn't been used in 90 or more days since the analyzer's last scan. You can choose a value between 1 and 365 days.",
+     "maximum": 365,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "The AWS::AccessAnalyzer::Analyzer type specifies an analyzer of the user's account",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "access-analyzer:CreateAnalyzer",
+    "access-analyzer:TagResource",
+    "iam:CreateServiceLinkedRole",
+    "organizations:ListAWSServiceAccessForOrganization",
+    "organizations:ListDelegatedAdministrators"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "access-analyzer:DeleteAnalyzer"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "access-analyzer:ListAnalyzers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "access-analyzer:ListAnalyzers",
+    "access-analyzer:GetAnalyzer",
+    "access-analyzer:ListArchiveRules"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "access-analyzer:CreateArchiveRule",
+    "access-analyzer:DeleteArchiveRule",
+    "access-analyzer:ListAnalyzers",
+    "access-analyzer:TagResource",
+    "access-analyzer:UntagResource",
+    "access-analyzer:UpdateAnalyzer",
+    "access-analyzer:UpdateArchiveRule"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AnalyzerConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration for the analyzer",
+   "properties": {
+    "InternalAccessConfiguration": {
+     "$ref": "#/definitions/InternalAccessConfiguration"
+    },
+    "UnusedAccessConfiguration": {
+     "$ref": "#/definitions/UnusedAccessConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "AnalyzerName": {
+   "description": "Analyzer name",
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^[A-Za-z_][A-Za-z0-9_.-]*$",
+   "type": "string"
+  },
+  "ArchiveRules": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ArchiveRule"
+   },
+   "type": "array"
+  },
+  "Arn": {
+   "description": "Amazon Resource Name (ARN) of the analyzer",
+   "maxLength": 1600,
+   "minLength": 1,
+   "pattern": "^arn:[^:]+:access-analyzer(-beta|-gamma)?:[^:]*:[^:]*:analyzer/.+$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "description": "The type of the analyzer, must be one of ACCOUNT, ORGANIZATION, ACCOUNT_INTERNAL_ACCESS, ORGANIZATION_INTERNAL_ACCESS, ACCOUNT_UNUSED_ACCESS and ORGANIZATION_UNUSED_ACCESS",
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Type"
+ ],
+ "resourceLink": {
+  "mappings": {
+   "AnalyzerName": "/AnalyzerName"
+  },
+  "templateUri": "/access-analyzer/home?region=${awsRegion}#/analyzer/${AnalyzerName}"
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-accessanalyzer.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "access-analyzer:UntagResource",
+   "access-analyzer:TagResource",
+   "access-analyzer:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AccessAnalyzer::Analyzer"
+}

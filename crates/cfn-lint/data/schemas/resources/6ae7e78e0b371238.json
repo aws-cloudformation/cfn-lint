@@ -1,0 +1,469 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/OnlineEvaluationConfigId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/OnlineEvaluationConfigName"
+ ],
+ "definitions": {
+  "CloudWatchLogsInputConfig": {
+   "additionalProperties": false,
+   "description": "The configuration for reading agent traces from CloudWatch logs.",
+   "properties": {
+    "LogGroupNames": {
+     "description": "The list of CloudWatch log group names to monitor for agent traces.",
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 512,
+      "minLength": 1,
+      "pattern": "^[.\\-_/#A-Za-z0-9]+$",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    },
+    "ServiceNames": {
+     "description": "The list of service names to filter traces within the specified log groups.",
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9._-]+$",
+      "type": "string"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "LogGroupNames",
+    "ServiceNames"
+   ],
+   "type": "object"
+  },
+  "CloudWatchOutputConfig": {
+   "additionalProperties": false,
+   "description": "The CloudWatch configuration for writing evaluation results.",
+   "properties": {
+    "LogGroupName": {
+     "description": "The CloudWatch log group name for evaluation results.",
+     "format": "AWS::Logs::LogGroup.Name",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ClusteringConfig": {
+   "additionalProperties": false,
+   "description": "The configuration for clustering analysis of evaluation results.",
+   "properties": {
+    "Frequencies": {
+     "description": "The list of frequencies at which clustering reports are generated.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ClusteringFrequency"
+     },
+     "maxItems": 3,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Frequencies"
+   ],
+   "type": "object"
+  },
+  "ClusteringFrequency": {
+   "description": "The frequency at which clustering reports are generated.",
+   "enum": [
+    "DAILY",
+    "WEEKLY",
+    "MONTHLY"
+   ],
+   "type": "string"
+  },
+  "DataSourceConfig": {
+   "additionalProperties": false,
+   "description": "The configuration that specifies where to read agent traces for online evaluation.",
+   "properties": {
+    "CloudWatchLogs": {
+     "$ref": "#/definitions/CloudWatchLogsInputConfig"
+    }
+   },
+   "required": [
+    "CloudWatchLogs"
+   ],
+   "type": "object"
+  },
+  "EvaluatorReference": {
+   "additionalProperties": false,
+   "description": "The reference to an evaluator used in online evaluation configurations.",
+   "properties": {
+    "EvaluatorId": {
+     "description": "The unique identifier of the evaluator.",
+     "pattern": "^(Builtin\\.[a-zA-Z0-9_-]+|[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10})$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "EvaluatorId"
+   ],
+   "type": "object"
+  },
+  "ExecutionStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Filter": {
+   "additionalProperties": false,
+   "description": "The filter that applies conditions to agent traces during online evaluation.",
+   "properties": {
+    "Key": {
+     "description": "The key or field name to filter on within the agent trace data.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9._-]+$",
+     "type": "string"
+    },
+    "Operator": {
+     "description": "The comparison operator to use for filtering.",
+     "enum": [
+      "Equals",
+      "NotEquals",
+      "GreaterThan",
+      "LessThan",
+      "GreaterThanOrEqual",
+      "LessThanOrEqual",
+      "Contains",
+      "NotContains"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "$ref": "#/definitions/FilterValue"
+    }
+   },
+   "required": [
+    "Key",
+    "Operator",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "FilterValue": {
+   "additionalProperties": false,
+   "description": "The value used in filter comparisons.",
+   "properties": {
+    "BooleanValue": {
+     "description": "The boolean value for true/false filtering conditions.",
+     "type": "boolean"
+    },
+    "DoubleValue": {
+     "description": "The numeric value for numerical filtering.",
+     "type": "number"
+    },
+    "StringValue": {
+     "description": "The string value for text-based filtering.",
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Insight": {
+   "additionalProperties": false,
+   "description": "An insight configuration for failure analysis.",
+   "properties": {
+    "InsightId": {
+     "description": "The unique identifier of the insight.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z][a-zA-Z0-9._]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "InsightId"
+   ],
+   "type": "object"
+  },
+  "OnlineEvaluationConfigStatus": {
+   "enum": [
+    "ACTIVE",
+    "CREATING",
+    "CREATE_FAILED",
+    "UPDATING",
+    "UPDATE_FAILED",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "OutputConfig": {
+   "additionalProperties": false,
+   "description": "The configuration that specifies where evaluation results should be written.",
+   "properties": {
+    "CloudWatchConfig": {
+     "$ref": "#/definitions/CloudWatchOutputConfig"
+    }
+   },
+   "type": "object"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "description": "The evaluation rule that defines sampling configuration, filtering criteria, and session detection settings.",
+   "properties": {
+    "Filters": {
+     "description": "The list of filters that determine which agent traces should be included in the evaluation.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Filter"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array"
+    },
+    "SamplingConfig": {
+     "$ref": "#/definitions/SamplingConfig"
+    },
+    "SessionConfig": {
+     "$ref": "#/definitions/SessionConfig"
+    }
+   },
+   "required": [
+    "SamplingConfig"
+   ],
+   "type": "object"
+  },
+  "SamplingConfig": {
+   "additionalProperties": false,
+   "description": "The configuration that controls what percentage of agent traces are sampled for evaluation.",
+   "properties": {
+    "SamplingPercentage": {
+     "description": "The percentage of agent traces to sample for evaluation.",
+     "maximum": 100,
+     "minimum": 0.01,
+     "type": "number"
+    }
+   },
+   "required": [
+    "SamplingPercentage"
+   ],
+   "type": "object"
+  },
+  "SessionConfig": {
+   "additionalProperties": false,
+   "description": "The configuration that defines how agent sessions are detected.",
+   "properties": {
+    "SessionTimeoutMinutes": {
+     "description": "The number of minutes of inactivity after which an agent session is considered complete.",
+     "maximum": 1440,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "SessionTimeoutMinutes"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::BedrockAgentCore::OnlineEvaluationConfig - Creates an online evaluation configuration for continuous monitoring of agent performance.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "bedrock-agentcore:CreateOnlineEvaluationConfig",
+    "bedrock-agentcore:GetOnlineEvaluationConfig",
+    "bedrock-agentcore:TagResource",
+    "iam:PassRole",
+    "lambda:GetFunction",
+    "lambda:InvokeFunction",
+    "logs:DescribeLogGroups",
+    "logs:DescribeIndexPolicies",
+    "logs:PutIndexPolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "bedrock-agentcore:DeleteOnlineEvaluationConfig",
+    "bedrock-agentcore:GetOnlineEvaluationConfig"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "bedrock-agentcore:ListOnlineEvaluationConfigs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bedrock-agentcore:GetOnlineEvaluationConfig",
+    "bedrock-agentcore:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "bedrock-agentcore:UpdateOnlineEvaluationConfig",
+    "bedrock-agentcore:GetOnlineEvaluationConfig",
+    "bedrock-agentcore:TagResource",
+    "bedrock-agentcore:UntagResource",
+    "iam:PassRole",
+    "lambda:GetFunction",
+    "lambda:InvokeFunction",
+    "logs:DescribeLogGroups",
+    "logs:DescribeIndexPolicies",
+    "logs:PutIndexPolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/OnlineEvaluationConfigArn"
+ ],
+ "properties": {
+  "ClusteringConfig": {
+   "$ref": "#/definitions/ClusteringConfig",
+   "description": "The configuration for clustering analysis of evaluation results."
+  },
+  "CreatedAt": {
+   "description": "The timestamp when the online evaluation configuration was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "DataSourceConfig": {
+   "$ref": "#/definitions/DataSourceConfig",
+   "description": "The data source configuration that specifies CloudWatch log groups and service names to monitor."
+  },
+  "Description": {
+   "description": "The description of the online evaluation configuration.",
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "EvaluationExecutionRoleArn": {
+   "description": "The Amazon Resource Name (ARN) of the IAM role that grants permissions for evaluation.",
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[^:]+)?:iam::([0-9]{12})?:role/.+$",
+   "type": "string"
+  },
+  "Evaluators": {
+   "description": "The list of evaluators to apply during online evaluation.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EvaluatorReference"
+   },
+   "maxItems": 10,
+   "minItems": 0,
+   "type": "array"
+  },
+  "ExecutionStatus": {
+   "$ref": "#/definitions/ExecutionStatus",
+   "description": "The execution status indicating whether the online evaluation is currently running."
+  },
+  "Insights": {
+   "description": "The list of insights to enable for failure analysis.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Insight"
+   },
+   "maxItems": 10,
+   "minItems": 0,
+   "type": "array"
+  },
+  "OnlineEvaluationConfigArn": {
+   "description": "The Amazon Resource Name (ARN) of the online evaluation configuration.",
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov):bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:online-evaluation-config/[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+   "type": "string"
+  },
+  "OnlineEvaluationConfigId": {
+   "description": "The unique identifier of the online evaluation configuration.",
+   "pattern": "^[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+   "type": "string"
+  },
+  "OnlineEvaluationConfigName": {
+   "description": "The name of the online evaluation configuration. Must be unique within your account.",
+   "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,47}$",
+   "type": "string"
+  },
+  "OutputConfig": {
+   "$ref": "#/definitions/OutputConfig",
+   "description": "The configuration that specifies where evaluation results should be written."
+  },
+  "Rule": {
+   "$ref": "#/definitions/Rule",
+   "description": "The evaluation rule that defines sampling configuration, filters, and session detection settings."
+  },
+  "Status": {
+   "$ref": "#/definitions/OnlineEvaluationConfigStatus",
+   "description": "The status of the online evaluation configuration."
+  },
+  "Tags": {
+   "description": "A list of tags to assign to the online evaluation configuration.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "description": "The timestamp when the online evaluation configuration was last updated.",
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/OnlineEvaluationConfigId",
+  "/properties/OnlineEvaluationConfigArn",
+  "/properties/Status",
+  "/properties/OutputConfig",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "OnlineEvaluationConfigName",
+  "DataSourceConfig",
+  "EvaluationExecutionRoleArn",
+  "Rule"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "bedrock-agentcore:TagResource",
+   "bedrock-agentcore:UntagResource",
+   "bedrock-agentcore:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BedrockAgentCore::OnlineEvaluationConfig"
+}

@@ -1,0 +1,988 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConnectInstanceId"
+ ],
+ "definitions": {
+  "AgentAction": {
+   "description": "Actions that can performed on a contact by an agent",
+   "enum": [
+    "DISCARD"
+   ],
+   "type": "string"
+  },
+  "AgentActions": {
+   "description": "Actions that can be performed by agent during preview phase",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AgentAction"
+   },
+   "type": "array"
+  },
+  "AgentlessConfig": {
+   "additionalProperties": false,
+   "description": "Agentless config",
+   "required": [],
+   "type": "object"
+  },
+  "AnswerMachineDetectionConfig": {
+   "additionalProperties": false,
+   "description": "The configuration used for answering machine detection during outbound calls",
+   "properties": {
+    "AwaitAnswerMachinePrompt": {
+     "description": "Enables detection of prompts (e.g., beep after after a voicemail greeting)",
+     "type": "boolean"
+    },
+    "EnableAnswerMachineDetection": {
+     "description": "Flag to decided whether outbound calls should have answering machine detection enabled or not",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "EnableAnswerMachineDetection"
+   ],
+   "type": "object"
+  },
+  "Arn": {
+   "description": "Arn",
+   "maxLength": 500,
+   "minLength": 20,
+   "pattern": "^arn:.*$",
+   "type": "string"
+  },
+  "BandwidthAllocation": {
+   "description": "The bandwidth allocation of a queue resource.",
+   "maximum": 1,
+   "minimum": 0,
+   "type": "number"
+  },
+  "CampaignName": {
+   "description": "Campaign name",
+   "maxLength": 127,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CampaignType": {
+   "description": "Campaign type",
+   "enum": [
+    "MANAGED",
+    "JOURNEY"
+   ],
+   "type": "string"
+  },
+  "Capacity": {
+   "description": "Allocates outbound capacity for the specific channel of this campaign between multiple active campaigns",
+   "maximum": 1,
+   "minimum": 0.01,
+   "type": "number"
+  },
+  "ChannelSubtypeConfig": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "Telephony"
+     ]
+    },
+    {
+     "required": [
+      "Sms"
+     ]
+    },
+    {
+     "required": [
+      "Email"
+     ]
+    },
+    {
+     "required": [
+      "WhatsApp"
+     ]
+    }
+   ],
+   "description": "The possible types of channel subtype config parameters",
+   "properties": {
+    "Email": {
+     "$ref": "#/definitions/EmailChannelSubtypeConfig"
+    },
+    "Sms": {
+     "$ref": "#/definitions/SmsChannelSubtypeConfig"
+    },
+    "Telephony": {
+     "$ref": "#/definitions/TelephonyChannelSubtypeConfig"
+    },
+    "WhatsApp": {
+     "$ref": "#/definitions/WhatsAppChannelSubtypeConfig"
+    }
+   },
+   "type": "object"
+  },
+  "CommunicationLimit": {
+   "additionalProperties": false,
+   "description": "Communication Limit",
+   "properties": {
+    "Frequency": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MaxCountPerRecipient": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Unit": {
+     "$ref": "#/definitions/CommunicationLimitTimeUnit"
+    }
+   },
+   "required": [
+    "MaxCountPerRecipient",
+    "Frequency",
+    "Unit"
+   ],
+   "type": "object"
+  },
+  "CommunicationLimitList": {
+   "description": "List of communication limit",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CommunicationLimit"
+   },
+   "type": "array"
+  },
+  "CommunicationLimitTimeUnit": {
+   "description": "The communication limit time unit",
+   "enum": [
+    "DAY"
+   ],
+   "type": "string"
+  },
+  "CommunicationLimits": {
+   "additionalProperties": false,
+   "description": "Communication limits",
+   "properties": {
+    "CommunicationLimitList": {
+     "$ref": "#/definitions/CommunicationLimitList"
+    }
+   },
+   "type": "object"
+  },
+  "CommunicationLimitsConfig": {
+   "additionalProperties": false,
+   "description": "Communication limits config",
+   "properties": {
+    "AllChannelsSubtypes": {
+     "$ref": "#/definitions/CommunicationLimits"
+    },
+    "InstanceLimitsHandling": {
+     "$ref": "#/definitions/InstanceLimitsHandling"
+    }
+   },
+   "type": "object"
+  },
+  "CommunicationTimeConfig": {
+   "additionalProperties": false,
+   "description": "Campaign communication time config",
+   "properties": {
+    "Email": {
+     "$ref": "#/definitions/TimeWindow"
+    },
+    "LocalTimeZoneConfig": {
+     "$ref": "#/definitions/LocalTimeZoneConfig"
+    },
+    "Sms": {
+     "$ref": "#/definitions/TimeWindow"
+    },
+    "Telephony": {
+     "$ref": "#/definitions/TimeWindow"
+    },
+    "WhatsApp": {
+     "$ref": "#/definitions/TimeWindow"
+    }
+   },
+   "required": [
+    "LocalTimeZoneConfig"
+   ],
+   "type": "object"
+  },
+  "ContactFlowId": {
+   "description": "The identifier of the contact flow for the outbound call",
+   "maxLength": 500,
+   "type": "string"
+  },
+  "DailyHour": {
+   "additionalProperties": false,
+   "description": "Daily Hour",
+   "properties": {
+    "Key": {
+     "$ref": "#/definitions/DayOfWeek"
+    },
+    "Value": {
+     "$ref": "#/definitions/TimeRangeList"
+    }
+   },
+   "type": "object"
+  },
+  "DailyHours": {
+   "description": "Daily Hours map",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DailyHour"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DayOfWeek": {
+   "description": "Day of week",
+   "enum": [
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
+    "SUNDAY"
+   ],
+   "type": "string"
+  },
+  "EmailAddress": {
+   "description": "Email address used for Email messages",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[\\w-\\.\\+]+@([\\w-]+\\.)+[\\w-]{2,4}$",
+   "type": "string"
+  },
+  "EmailChannelSubtypeConfig": {
+   "additionalProperties": false,
+   "description": "Email Channel Subtype config",
+   "properties": {
+    "Capacity": {
+     "$ref": "#/definitions/Capacity"
+    },
+    "DefaultOutboundConfig": {
+     "$ref": "#/definitions/EmailOutboundConfig"
+    },
+    "OutboundMode": {
+     "$ref": "#/definitions/EmailOutboundMode"
+    }
+   },
+   "required": [
+    "OutboundMode",
+    "DefaultOutboundConfig"
+   ],
+   "type": "object"
+  },
+  "EmailOutboundConfig": {
+   "additionalProperties": false,
+   "description": "Default Email outbound config",
+   "properties": {
+    "ConnectSourceEmailAddress": {
+     "$ref": "#/definitions/EmailAddress"
+    },
+    "SourceEmailAddressDisplayName": {
+     "$ref": "#/definitions/SourceEmailAddressDisplayName"
+    },
+    "WisdomTemplateArn": {
+     "$ref": "#/definitions/Arn"
+    }
+   },
+   "required": [
+    "ConnectSourceEmailAddress",
+    "WisdomTemplateArn"
+   ],
+   "type": "object"
+  },
+  "EmailOutboundMode": {
+   "additionalProperties": false,
+   "description": "Email Outbound Mode",
+   "properties": {
+    "AgentlessConfig": {
+     "$ref": "#/definitions/AgentlessConfig"
+    }
+   },
+   "type": "object"
+  },
+  "EntryLimitsConfig": {
+   "additionalProperties": false,
+   "description": "Entry limits config for a campaign",
+   "properties": {
+    "MaxEntryCount": {
+     "description": "Maximum number of entries per participant. 0 indicates unlimited entries.",
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MinEntryInterval": {
+     "$ref": "#/definitions/Iso8601Duration",
+     "description": "Minimum time interval between entries for the same participant in ISO 8601 duration format"
+    }
+   },
+   "required": [
+    "MaxEntryCount",
+    "MinEntryInterval"
+   ],
+   "type": "object"
+  },
+  "EventTrigger": {
+   "additionalProperties": false,
+   "description": "The event trigger of the campaign",
+   "properties": {
+    "CustomerProfilesDomainArn": {
+     "$ref": "#/definitions/Arn"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceId": {
+   "description": "Amazon Connect Instance Id",
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9_\\-.]*$",
+   "type": "string"
+  },
+  "InstanceLimitsHandling": {
+   "description": "Enumeration of Instance Limits handling in a Campaign",
+   "enum": [
+    "OPT_IN",
+    "OPT_OUT"
+   ],
+   "type": "string"
+  },
+  "Iso8601Date": {
+   "description": "Date in ISO 8601 format, e.g. 2024-01-01",
+   "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+   "type": "string"
+  },
+  "Iso8601Duration": {
+   "description": "Time duration in ISO 8601 format",
+   "maxLength": 50,
+   "minLength": 0,
+   "pattern": "^P(?:([-+]?[0-9]+)D)?(T(?:([-+]?[0-9]+)H)?(?:([-+]?[0-9]+)M)?(?:([-+]?[0-9]+)(?:[.,]([0-9]{0,9}))?S)?)?$",
+   "type": "string"
+  },
+  "Iso8601Time": {
+   "description": "Time in ISO 8601 format, e.g. T23:11",
+   "pattern": "^T\\d{2}:\\d{2}$",
+   "type": "string"
+  },
+  "LocalTimeZoneConfig": {
+   "additionalProperties": false,
+   "description": "Local time zone config",
+   "properties": {
+    "DefaultTimeZone": {
+     "$ref": "#/definitions/TimeZone"
+    },
+    "LocalTimeZoneDetection": {
+     "$ref": "#/definitions/LocalTimeZoneDetection"
+    },
+    "LocalTimeZoneDetectionScope": {
+     "$ref": "#/definitions/LocalTimeZoneDetectionScope"
+    }
+   },
+   "type": "object"
+  },
+  "LocalTimeZoneDetection": {
+   "description": "Local TimeZone Detection method list",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LocalTimeZoneDetectionType"
+   },
+   "type": "array"
+  },
+  "LocalTimeZoneDetectionScope": {
+   "description": "Local TimeZone Detection scope",
+   "enum": [
+    "PRIMARY_ONLY",
+    "ALL_AVAILABLE"
+   ],
+   "type": "string"
+  },
+  "LocalTimeZoneDetectionType": {
+   "description": "Local TimeZone Detection method",
+   "enum": [
+    "ZIP_CODE",
+    "AREA_CODE"
+   ],
+   "type": "string"
+  },
+  "OpenHours": {
+   "additionalProperties": false,
+   "description": "Open Hours config",
+   "properties": {
+    "DailyHours": {
+     "$ref": "#/definitions/DailyHours"
+    }
+   },
+   "required": [
+    "DailyHours"
+   ],
+   "type": "object"
+  },
+  "PredictiveConfig": {
+   "additionalProperties": false,
+   "description": "Predictive config",
+   "properties": {
+    "BandwidthAllocation": {
+     "$ref": "#/definitions/BandwidthAllocation"
+    }
+   },
+   "required": [
+    "BandwidthAllocation"
+   ],
+   "type": "object"
+  },
+  "PreviewConfig": {
+   "additionalProperties": false,
+   "description": "Preview config",
+   "properties": {
+    "AgentActions": {
+     "$ref": "#/definitions/AgentActions"
+    },
+    "BandwidthAllocation": {
+     "$ref": "#/definitions/BandwidthAllocation"
+    },
+    "TimeoutConfig": {
+     "$ref": "#/definitions/TimeoutConfig"
+    }
+   },
+   "required": [
+    "BandwidthAllocation",
+    "TimeoutConfig"
+   ],
+   "type": "object"
+  },
+  "ProgressiveConfig": {
+   "additionalProperties": false,
+   "description": "Progressive config",
+   "properties": {
+    "BandwidthAllocation": {
+     "$ref": "#/definitions/BandwidthAllocation"
+    }
+   },
+   "required": [
+    "BandwidthAllocation"
+   ],
+   "type": "object"
+  },
+  "QueueId": {
+   "description": "The queue for the call",
+   "maxLength": 500,
+   "type": "string"
+  },
+  "RestrictedPeriod": {
+   "additionalProperties": false,
+   "description": "Restricted period",
+   "properties": {
+    "EndDate": {
+     "$ref": "#/definitions/Iso8601Date"
+    },
+    "Name": {
+     "description": "The name of a restricted period",
+     "maxLength": 127,
+     "type": "string"
+    },
+    "StartDate": {
+     "$ref": "#/definitions/Iso8601Date"
+    }
+   },
+   "required": [
+    "StartDate",
+    "EndDate"
+   ],
+   "type": "object"
+  },
+  "RestrictedPeriodList": {
+   "description": "List of restricted period",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RestrictedPeriod"
+   },
+   "type": "array"
+  },
+  "RestrictedPeriods": {
+   "additionalProperties": false,
+   "description": "Restricted period config",
+   "oneOf": [
+    {
+     "required": [
+      "RestrictedPeriodList"
+     ]
+    }
+   ],
+   "properties": {
+    "RestrictedPeriodList": {
+     "$ref": "#/definitions/RestrictedPeriodList"
+    }
+   },
+   "type": "object"
+  },
+  "RingTimeout": {
+   "description": "Maximum ring time for outbound calls in seconds",
+   "maximum": 60,
+   "minimum": 15,
+   "type": "integer"
+  },
+  "Schedule": {
+   "additionalProperties": false,
+   "description": "Campaign schedule",
+   "properties": {
+    "EndTime": {
+     "$ref": "#/definitions/TimeStamp"
+    },
+    "RefreshFrequency": {
+     "$ref": "#/definitions/Iso8601Duration"
+    },
+    "StartTime": {
+     "$ref": "#/definitions/TimeStamp"
+    }
+   },
+   "required": [
+    "StartTime",
+    "EndTime"
+   ],
+   "type": "object"
+  },
+  "SmsChannelSubtypeConfig": {
+   "additionalProperties": false,
+   "description": "SMS Channel Subtype config",
+   "properties": {
+    "Capacity": {
+     "$ref": "#/definitions/Capacity"
+    },
+    "DefaultOutboundConfig": {
+     "$ref": "#/definitions/SmsOutboundConfig"
+    },
+    "OutboundMode": {
+     "$ref": "#/definitions/SmsOutboundMode"
+    }
+   },
+   "required": [
+    "OutboundMode",
+    "DefaultOutboundConfig"
+   ],
+   "type": "object"
+  },
+  "SmsOutboundConfig": {
+   "additionalProperties": false,
+   "description": "Default SMS outbound config",
+   "properties": {
+    "ConnectSourcePhoneNumberArn": {
+     "$ref": "#/definitions/Arn"
+    },
+    "WisdomTemplateArn": {
+     "$ref": "#/definitions/Arn"
+    }
+   },
+   "required": [
+    "ConnectSourcePhoneNumberArn",
+    "WisdomTemplateArn"
+   ],
+   "type": "object"
+  },
+  "SmsOutboundMode": {
+   "additionalProperties": false,
+   "description": "SMS Outbound Mode",
+   "properties": {
+    "AgentlessConfig": {
+     "$ref": "#/definitions/AgentlessConfig"
+    }
+   },
+   "type": "object"
+  },
+  "Source": {
+   "additionalProperties": false,
+   "description": "The possible source of the campaign",
+   "oneOf": [
+    {
+     "required": [
+      "CustomerProfilesSegmentArn"
+     ]
+    },
+    {
+     "required": [
+      "EventTrigger"
+     ]
+    }
+   ],
+   "properties": {
+    "CustomerProfilesSegmentArn": {
+     "$ref": "#/definitions/Arn"
+    },
+    "EventTrigger": {
+     "$ref": "#/definitions/EventTrigger"
+    }
+   },
+   "type": "object"
+  },
+  "SourceEmailAddressDisplayName": {
+   "description": "The name of the source email address display name",
+   "maxLength": 256,
+   "minLength": 0,
+   "type": "string"
+  },
+  "SourcePhoneNumber": {
+   "description": "The phone number associated with the Amazon Connect instance, in E.164 format. If you do not specify a source phone number, you must specify a queue.",
+   "maxLength": 100,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TelephonyChannelSubtypeConfig": {
+   "additionalProperties": false,
+   "description": "Telephony Channel Subtype config",
+   "properties": {
+    "Capacity": {
+     "$ref": "#/definitions/Capacity"
+    },
+    "ConnectQueueId": {
+     "$ref": "#/definitions/QueueId"
+    },
+    "DefaultOutboundConfig": {
+     "$ref": "#/definitions/TelephonyOutboundConfig"
+    },
+    "OutboundMode": {
+     "$ref": "#/definitions/TelephonyOutboundMode"
+    }
+   },
+   "required": [
+    "OutboundMode",
+    "DefaultOutboundConfig"
+   ],
+   "type": "object"
+  },
+  "TelephonyOutboundConfig": {
+   "additionalProperties": false,
+   "description": "Default Telephone Outbound config",
+   "properties": {
+    "AnswerMachineDetectionConfig": {
+     "$ref": "#/definitions/AnswerMachineDetectionConfig"
+    },
+    "ConnectContactFlowId": {
+     "$ref": "#/definitions/ContactFlowId"
+    },
+    "ConnectSourcePhoneNumber": {
+     "$ref": "#/definitions/SourcePhoneNumber"
+    },
+    "RingTimeout": {
+     "$ref": "#/definitions/RingTimeout"
+    }
+   },
+   "required": [
+    "ConnectContactFlowId"
+   ],
+   "type": "object"
+  },
+  "TelephonyOutboundMode": {
+   "additionalProperties": false,
+   "description": "Telephony Outbound Mode",
+   "oneOf": [
+    {
+     "required": [
+      "ProgressiveConfig"
+     ]
+    },
+    {
+     "required": [
+      "PredictiveConfig"
+     ]
+    },
+    {
+     "required": [
+      "AgentlessConfig"
+     ]
+    },
+    {
+     "required": [
+      "PreviewConfig"
+     ]
+    }
+   ],
+   "properties": {
+    "AgentlessConfig": {
+     "$ref": "#/definitions/AgentlessConfig"
+    },
+    "PredictiveConfig": {
+     "$ref": "#/definitions/PredictiveConfig"
+    },
+    "PreviewConfig": {
+     "$ref": "#/definitions/PreviewConfig"
+    },
+    "ProgressiveConfig": {
+     "$ref": "#/definitions/ProgressiveConfig"
+    }
+   },
+   "type": "object"
+  },
+  "TimeRange": {
+   "additionalProperties": false,
+   "description": "Time range in 24 hour format",
+   "properties": {
+    "EndTime": {
+     "$ref": "#/definitions/Iso8601Time"
+    },
+    "StartTime": {
+     "$ref": "#/definitions/Iso8601Time"
+    }
+   },
+   "required": [
+    "StartTime",
+    "EndTime"
+   ],
+   "type": "object"
+  },
+  "TimeRangeList": {
+   "description": "List of time range",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TimeRange"
+   },
+   "type": "array"
+  },
+  "TimeStamp": {
+   "description": "Timestamp with no UTC offset or timezone",
+   "maxLength": 100,
+   "type": "string"
+  },
+  "TimeWindow": {
+   "additionalProperties": false,
+   "description": "Time window config",
+   "properties": {
+    "OpenHours": {
+     "$ref": "#/definitions/OpenHours"
+    },
+    "RestrictedPeriods": {
+     "$ref": "#/definitions/RestrictedPeriods"
+    }
+   },
+   "required": [
+    "OpenHours"
+   ],
+   "type": "object"
+  },
+  "TimeZone": {
+   "description": "Time Zone Id in the IANA format",
+   "maxLength": 50,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9_\\-/]*$",
+   "type": "string"
+  },
+  "TimeoutConfig": {
+   "description": "Timeout Config for preview contacts",
+   "properties": {
+    "DurationInSeconds": {
+     "$ref": "#/definitions/TimeoutDuration"
+    }
+   },
+   "type": "object"
+  },
+  "TimeoutDuration": {
+   "description": "Timeout duration for a preview contact in seconds",
+   "maximum": 300,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "WhatsAppChannelSubtypeConfig": {
+   "additionalProperties": false,
+   "description": "WhatsApp Channel Subtype config",
+   "properties": {
+    "Capacity": {
+     "$ref": "#/definitions/Capacity"
+    },
+    "DefaultOutboundConfig": {
+     "$ref": "#/definitions/WhatsAppOutboundConfig"
+    },
+    "OutboundMode": {
+     "$ref": "#/definitions/WhatsAppOutboundMode"
+    }
+   },
+   "required": [
+    "OutboundMode",
+    "DefaultOutboundConfig"
+   ],
+   "type": "object"
+  },
+  "WhatsAppOutboundConfig": {
+   "additionalProperties": false,
+   "description": "Default WhatsApp outbound config",
+   "properties": {
+    "ConnectSourcePhoneNumberArn": {
+     "$ref": "#/definitions/Arn"
+    },
+    "WisdomTemplateArn": {
+     "$ref": "#/definitions/Arn"
+    }
+   },
+   "required": [
+    "ConnectSourcePhoneNumberArn",
+    "WisdomTemplateArn"
+   ],
+   "type": "object"
+  },
+  "WhatsAppOutboundMode": {
+   "additionalProperties": false,
+   "description": "WhatsApp Outbound Mode",
+   "properties": {
+    "AgentlessConfig": {
+     "$ref": "#/definitions/AgentlessConfig"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Definition of AWS::ConnectCampaignsV2::Campaign Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect-campaigns:CreateCampaign",
+    "connect-campaigns:DescribeCampaign",
+    "connect-campaigns:TagResource",
+    "connect:DescribeContactFlow",
+    "connect:DescribeEmailAddress",
+    "connect:DescribeInstance",
+    "connect:DescribePhoneNumber",
+    "connect:DescribeQueue",
+    "profile:GetSegmentDefinition",
+    "wisdom:GetMessageTemplate"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect-campaigns:DeleteCampaign",
+    "connect-campaigns:DeleteCampaignChannelSubtypeConfig",
+    "connect-campaigns:DeleteCampaignCommunicationLimits",
+    "connect-campaigns:DeleteCampaignCommunicationTime",
+    "connect-campaigns:DeleteCampaignEntryLimits"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ConnectInstanceId": {
+      "$ref": "resource-schema.json#/properties/ConnectInstanceId"
+     }
+    },
+    "required": [
+     "ConnectInstanceId"
+    ]
+   },
+   "permissions": [
+    "connect-campaigns:ListCampaigns"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect-campaigns:DescribeCampaign"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "connect-campaigns:DeleteCampaignChannelSubtypeConfig",
+    "connect-campaigns:DeleteCampaignCommunicationLimits",
+    "connect-campaigns:DeleteCampaignCommunicationTime",
+    "connect-campaigns:DeleteCampaignEntryLimits",
+    "connect-campaigns:UpdateCampaignChannelSubtypeConfig",
+    "connect-campaigns:UpdateCampaignCommunicationLimits",
+    "connect-campaigns:UpdateCampaignCommunicationTime",
+    "connect-campaigns:UpdateCampaignEntryLimits",
+    "connect-campaigns:UpdateCampaignName",
+    "connect-campaigns:UpdateCampaignFlowAssociation",
+    "connect-campaigns:UpdateCampaignSchedule",
+    "connect-campaigns:UpdateCampaignSource",
+    "connect-campaigns:TagResource",
+    "connect-campaigns:UntagResource",
+    "connect-campaigns:DescribeCampaign",
+    "connect:DescribeContactFlow",
+    "connect:DescribeEmailAddress",
+    "connect:DescribePhoneNumber",
+    "connect:DescribeQueue",
+    "profile:GetSegmentDefinition",
+    "wisdom:GetMessageTemplate"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "Amazon Connect Campaign Arn",
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "^arn:aws[-a-z0-9]*:connect-campaigns:[-a-z0-9]*:[0-9]{12}:campaign/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "ChannelSubtypeConfig": {
+   "$ref": "#/definitions/ChannelSubtypeConfig"
+  },
+  "CommunicationLimitsOverride": {
+   "$ref": "#/definitions/CommunicationLimitsConfig"
+  },
+  "CommunicationTimeConfig": {
+   "$ref": "#/definitions/CommunicationTimeConfig"
+  },
+  "ConnectCampaignFlowArn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "ConnectInstanceId": {
+   "$ref": "#/definitions/InstanceId"
+  },
+  "EntryLimitsConfig": {
+   "$ref": "#/definitions/EntryLimitsConfig"
+  },
+  "Name": {
+   "$ref": "#/definitions/CampaignName"
+  },
+  "Schedule": {
+   "$ref": "#/definitions/Schedule"
+  },
+  "Source": {
+   "$ref": "#/definitions/Source"
+  },
+  "Tags": {
+   "description": "One or more tags.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "$ref": "#/definitions/CampaignType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "ConnectInstanceId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect-campaigns",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "connect-campaigns:UntagResource",
+   "connect-campaigns:TagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ConnectCampaignsV2::Campaign"
+}

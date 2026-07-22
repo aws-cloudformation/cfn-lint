@@ -1,0 +1,108 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ClusterArn",
+   "/properties/TopicName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterArn",
+  "/properties/TopicName",
+  "/properties/ReplicationFactor"
+ ],
+ "description": "Resource Type definition for AWS::MSK::Topic",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "kafka-cluster:Connect",
+    "kafka-cluster:DescribeTopic",
+    "kafka-cluster:DescribeTopicDynamicConfiguration",
+    "kafka-cluster:CreateTopic"
+   ],
+   "timeoutInMinutes": 5
+  },
+  "delete": {
+   "permissions": [
+    "kafka-cluster:Connect",
+    "kafka-cluster:DescribeTopic",
+    "kafka-cluster:DescribeTopicDynamicConfiguration",
+    "kafka-cluster:DeleteTopic"
+   ],
+   "timeoutInMinutes": 5
+  },
+  "list": {
+   "permissions": [
+    "kafka-cluster:Connect",
+    "kafka-cluster:DescribeTopic"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "kafka-cluster:Connect",
+    "kafka-cluster:DescribeTopic",
+    "kafka-cluster:DescribeTopicDynamicConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "kafka-cluster:Connect",
+    "kafka-cluster:DescribeTopic",
+    "kafka-cluster:AlterTopic",
+    "kafka-cluster:AlterTopicDynamicConfiguration"
+   ],
+   "timeoutInMinutes": 5
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TopicArn"
+ ],
+ "properties": {
+  "ClusterArn": {
+   "description": "The Amazon Resource Name (ARN) of the MSK cluster",
+   "type": "string"
+  },
+  "Configs": {
+   "description": "Base64 encoded configuration properties of the topic",
+   "type": "string"
+  },
+  "PartitionCount": {
+   "description": "The number of partitions for the topic",
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ReplicationFactor": {
+   "description": "The replication factor for the topic",
+   "minimum": 1,
+   "type": "integer"
+  },
+  "TopicArn": {
+   "description": "The Amazon Resource Name (ARN) of the topic",
+   "type": "string"
+  },
+  "TopicName": {
+   "description": "The name of the topic",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TopicArn"
+ ],
+ "required": [
+  "ClusterArn",
+  "TopicName",
+  "PartitionCount",
+  "ReplicationFactor"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::MSK::Topic",
+ "writeOnlyProperties": [
+  "/properties/Configs"
+ ]
+}

@@ -1,0 +1,333 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ApiName": {
+   "description": "The name of the AppSync API.",
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "[A-Za-z0-9_\\-\\ ]+",
+   "type": "string"
+  },
+  "AuthMode": {
+   "additionalProperties": false,
+   "description": "An auth mode.",
+   "properties": {
+    "AuthType": {
+     "$ref": "#/definitions/AuthenticationType"
+    }
+   },
+   "type": "object"
+  },
+  "AuthModes": {
+   "description": "A list of auth modes for the AppSync API.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AuthMode"
+   },
+   "type": "array"
+  },
+  "AuthProvider": {
+   "additionalProperties": false,
+   "description": "An auth provider for the AppSync API.",
+   "properties": {
+    "AuthType": {
+     "$ref": "#/definitions/AuthenticationType"
+    },
+    "CognitoConfig": {
+     "$ref": "#/definitions/CognitoConfig"
+    },
+    "LambdaAuthorizerConfig": {
+     "$ref": "#/definitions/LambdaAuthorizerConfig"
+    },
+    "OpenIDConnectConfig": {
+     "$ref": "#/definitions/OpenIDConnectConfig"
+    }
+   },
+   "required": [
+    "AuthType"
+   ],
+   "type": "object"
+  },
+  "AuthProviders": {
+   "description": "A list of auth providers for the AppSync API.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AuthProvider"
+   },
+   "type": "array"
+  },
+  "AuthenticationType": {
+   "description": "Security configuration for your AppSync API.",
+   "enum": [
+    "AMAZON_COGNITO_USER_POOLS",
+    "AWS_IAM",
+    "API_KEY",
+    "OPENID_CONNECT",
+    "AWS_LAMBDA"
+   ],
+   "type": "string"
+  },
+  "CognitoConfig": {
+   "additionalProperties": false,
+   "description": "Optional authorization configuration for using Amazon Cognito user pools with your API endpoint.",
+   "properties": {
+    "AppIdClientRegex": {
+     "type": "string"
+    },
+    "AwsRegion": {
+     "type": "string"
+    },
+    "UserPoolId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "UserPoolId",
+    "AwsRegion"
+   ],
+   "type": "object"
+  },
+  "DnsMap": {
+   "additionalProperties": false,
+   "description": "A map of DNS names for the AppSync API.",
+   "properties": {
+    "Http": {
+     "type": "string"
+    },
+    "Realtime": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EventConfig": {
+   "additionalProperties": false,
+   "description": "The configuration for an Event Api",
+   "properties": {
+    "AuthProviders": {
+     "$ref": "#/definitions/AuthProviders"
+    },
+    "ConnectionAuthModes": {
+     "$ref": "#/definitions/AuthModes"
+    },
+    "DefaultPublishAuthModes": {
+     "$ref": "#/definitions/AuthModes"
+    },
+    "DefaultSubscribeAuthModes": {
+     "$ref": "#/definitions/AuthModes"
+    },
+    "LogConfig": {
+     "$ref": "#/definitions/EventLogConfig"
+    }
+   },
+   "required": [
+    "AuthProviders",
+    "ConnectionAuthModes",
+    "DefaultPublishAuthModes",
+    "DefaultSubscribeAuthModes"
+   ],
+   "type": "object"
+  },
+  "EventLogConfig": {
+   "additionalProperties": false,
+   "description": "The log config for the AppSync API.",
+   "properties": {
+    "CloudWatchLogsRoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "type": "string"
+    },
+    "LogLevel": {
+     "$ref": "#/definitions/EventLogLevel"
+    }
+   },
+   "required": [
+    "LogLevel",
+    "CloudWatchLogsRoleArn"
+   ],
+   "type": "object"
+  },
+  "EventLogLevel": {
+   "description": "Logging level for the AppSync API.",
+   "enum": [
+    "NONE",
+    "ERROR",
+    "ALL",
+    "INFO",
+    "DEBUG"
+   ],
+   "type": "string"
+  },
+  "LambdaAuthorizerConfig": {
+   "additionalProperties": false,
+   "description": "A LambdaAuthorizerConfig holds configuration on how to authorize AWS AppSync API access when using the AWS_LAMBDA authorizer mode. Be aware that an AWS AppSync API may have only one Lambda authorizer configured at a time.",
+   "properties": {
+    "AuthorizerResultTtlInSeconds": {
+     "maximum": 3600,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "AuthorizerUri": {
+     "type": "string"
+    },
+    "IdentityValidationExpression": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AuthorizerUri"
+   ],
+   "type": "object"
+  },
+  "OpenIDConnectConfig": {
+   "additionalProperties": false,
+   "description": "The OpenID Connect configuration.",
+   "properties": {
+    "AuthTTL": {
+     "type": "number"
+    },
+    "ClientId": {
+     "type": "string"
+    },
+    "IatTTL": {
+     "type": "number"
+    },
+    "Issuer": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Issuer"
+   ],
+   "type": "object"
+  },
+  "OwnerContact": {
+   "description": "The owner contact information for an API resource.",
+   "maxLength": 250,
+   "minLength": 1,
+   "pattern": "[A-Za-z0-9_\\-\\ \\.]+",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "An arbitrary set of tags (key-value pairs) for this AppSync API.",
+   "properties": {
+    "Key": {
+     "description": "A string used to identify this tag. You can specify a maximum of 128 characters for a tag key.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[ a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "A string containing the value for this tag. You can specify a maximum of 256 characters for a tag value.",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[\\s\\w+-=\\.:/@]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "description": "An arbitrary set of tags (key-value pairs) for this AppSync API.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "description": "Resource schema for AppSync Api",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "appsync:CreateApi",
+    "appsync:TagResource",
+    "appsync:GetApi",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "appsync:DeleteApi",
+    "appsync:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "appsync:ListApis"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "appsync:GetApi",
+    "appsync:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "appsync:UpdateApi",
+    "appsync:TagResource",
+    "appsync:UntagResource",
+    "appsync:GetApi",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApiArn"
+ ],
+ "properties": {
+  "ApiArn": {
+   "description": "The Amazon Resource Name (ARN) of the AppSync Api",
+   "type": "string"
+  },
+  "ApiId": {
+   "description": "The unique identifier for the AppSync Api generated by the service",
+   "type": "string"
+  },
+  "Dns": {
+   "$ref": "#/definitions/DnsMap"
+  },
+  "EventConfig": {
+   "$ref": "#/definitions/EventConfig"
+  },
+  "Name": {
+   "$ref": "#/definitions/ApiName"
+  },
+  "OwnerContact": {
+   "$ref": "#/definitions/OwnerContact"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ApiId",
+  "/properties/Dns",
+  "/properties/Dns/Realtime",
+  "/properties/Dns/Http",
+  "/properties/ApiArn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "appsync:TagResource",
+   "appsync:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AppSync::Api"
+}

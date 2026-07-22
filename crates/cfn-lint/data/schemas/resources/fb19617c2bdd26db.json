@@ -1,0 +1,141 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/KeyPairId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KeyName",
+  "/properties/KeyType",
+  "/properties/KeyFormat",
+  "/properties/PublicKeyMaterial",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "Specifies a tag. For more information, see [Resource tags](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html).",
+   "properties": {
+    "Key": {
+     "description": "The tag key.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The tag value.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Specifies a key pair for use with an EC2long instance as follows:\n  +  To import an existing key pair, include the ``PublicKeyMaterial`` property.\n  +  To create a new key pair, omit the ``PublicKeyMaterial`` property.\n  \n When you import an existing key pair, you specify the public key material for the key. We assume that you have the private key material for the key. CFNlong does not create or return the private key material when you import a key pair.\n When you create a new key pair, the private key is saved to SYSlong Parameter Store, using a parameter with the following name: ``/ec2/keypair/{key_pair_id}``. For more information about retrieving private key, and the required permissions, see [Create a key pair using](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-key-pairs.html#create-key-pair-cloudformation) in the *User Guide*.\n When CFN deletes a key pair that was created or imported by a stack, it also deletes the parameter that was used to store the private key material in Parameter Store.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateKeyPair",
+    "ec2:ImportKeyPair",
+    "ec2:CreateTags",
+    "ssm:PutParameter"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteKeyPair",
+    "ssm:DeleteParameter",
+    "ec2:DescribeKeyPairs"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeKeyPairs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeKeyPairs"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/KeyName"
+ ],
+ "properties": {
+  "KeyFingerprint": {
+   "description": "",
+   "type": "string"
+  },
+  "KeyFormat": {
+   "default": "pem",
+   "description": "The format of the key pair.\n Default: ``pem``",
+   "enum": [
+    "pem",
+    "ppk"
+   ],
+   "type": "string"
+  },
+  "KeyName": {
+   "description": "A unique name for the key pair.\n Constraints: Up to 255 ASCII characters",
+   "type": "string"
+  },
+  "KeyPairId": {
+   "description": "",
+   "type": "string"
+  },
+  "KeyType": {
+   "default": "rsa",
+   "description": "The type of key pair. Note that ED25519 keys are not supported for Windows instances.\n If the ``PublicKeyMaterial`` property is specified, the ``KeyType`` property is ignored, and the key type is inferred from the ``PublicKeyMaterial`` value.\n Default: ``rsa``",
+   "enum": [
+    "rsa",
+    "ed25519"
+   ],
+   "type": "string"
+  },
+  "PublicKeyMaterial": {
+   "description": "The public key material. The ``PublicKeyMaterial`` property is used to import a key pair. If this property is not specified, then a new key pair will be created.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "The tags to apply to the key pair.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/PublicKeyMaterial": "$join([PublicKeyMaterial, \"\n\"])"
+ },
+ "readOnlyProperties": [
+  "/properties/KeyPairId",
+  "/properties/KeyFingerprint"
+ ],
+ "required": [
+  "KeyName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "ec2:CreateTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::KeyPair",
+ "writeOnlyProperties": [
+  "/properties/KeyFormat"
+ ]
+}

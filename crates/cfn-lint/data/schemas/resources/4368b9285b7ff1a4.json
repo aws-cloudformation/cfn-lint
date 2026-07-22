@@ -1,0 +1,126 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/AssetBundleExportJobId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AssetBundleExportJobId",
+  "/properties/AwsAccountId",
+  "/properties/ExportFormat",
+  "/properties/IncludeAllDependencies",
+  "/properties/IncludeFolderMembers",
+  "/properties/IncludeFolderMemberships",
+  "/properties/IncludePermissions",
+  "/properties/IncludeTags",
+  "/properties/ResourceArns"
+ ],
+ "description": "Represents a QuickSight asset bundle export job.",
+ "handlers": {
+  "list": {
+   "permissions": [
+    "quicksight:ListAssetBundleExportJobs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "quicksight:DescribeAssetBundleExportJob"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) for the export job.",
+   "type": "string"
+  },
+  "AssetBundleExportJobId": {
+   "description": "The ID of the export job.",
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^[\\w\\-]+$",
+   "type": "string"
+  },
+  "AwsAccountId": {
+   "description": "The ID of the Amazon Web Services account to export assets from.",
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "CreatedTime": {
+   "description": "The time that the export job was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "ExportFormat": {
+   "description": "The export data format.",
+   "enum": [
+    "CLOUDFORMATION_JSON",
+    "QUICKSIGHT_JSON"
+   ],
+   "type": "string"
+  },
+  "IncludeAllDependencies": {
+   "description": "A Boolean that determines whether all dependencies of each resource ARN are recursively exported with the job.",
+   "type": "boolean"
+  },
+  "IncludeFolderMembers": {
+   "description": "A setting that indicates whether you want to include folder assets.",
+   "enum": [
+    "RECURSE",
+    "ONE_LEVEL",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "IncludeFolderMemberships": {
+   "description": "A Boolean that determines if the exported asset carries over information about the folders that the asset is a member of.",
+   "type": "boolean"
+  },
+  "IncludePermissions": {
+   "description": "A Boolean that determines whether all permissions for each resource ARN are exported with the job.",
+   "type": "boolean"
+  },
+  "IncludeTags": {
+   "description": "A Boolean that determines whether all tags for each resource ARN are exported with the job.",
+   "type": "boolean"
+  },
+  "JobStatus": {
+   "description": "Indicates the status of a job through its queuing and execution.",
+   "enum": [
+    "QUEUED_FOR_IMMEDIATE_EXECUTION",
+    "IN_PROGRESS",
+    "SUCCESSFUL",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "ResourceArns": {
+   "description": "An array of resource ARNs to export.",
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 100,
+   "minItems": 1,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/JobStatus",
+  "/properties/CreatedTime"
+ ],
+ "required": [
+  "AssetBundleExportJobId",
+  "ResourceArns",
+  "ExportFormat"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::QuickSight::AssetBundleExportJob"
+}

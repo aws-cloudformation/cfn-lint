@@ -1,0 +1,536 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AuthenticationMaterial",
+  "/properties/AuthenticationMaterialType",
+  "/properties/Role",
+  "/properties/SerialNumber"
+ ],
+ "definitions": {
+  "AuthMaterialType": {
+   "description": "Represent the type of authentication material provided",
+   "enum": [
+    "WIFI_SETUP_QR_BAR_CODE",
+    "ZWAVE_QR_BAR_CODE",
+    "ZIGBEE_QR_BAR_CODE"
+   ],
+   "type": "string"
+  },
+  "CapabilityReport": {
+   "additionalProperties": false,
+   "description": "Report of all capabilities supported by the device.",
+   "properties": {
+    "Endpoints": {
+     "description": "Endpoints used in Capability Report.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CapabilityReportEndpoint"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array"
+    },
+    "NodeId": {
+     "description": "Numeric identifier of the node.",
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9=_.,@\\+\\-/]+$",
+     "type": "string"
+    },
+    "Version": {
+     "description": "Version of Capability Report",
+     "maxLength": 10,
+     "minLength": 1,
+     "pattern": "^1\\.0\\.0$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Endpoints",
+    "Version"
+   ],
+   "type": "object"
+  },
+  "CapabilityReportCapability": {
+   "additionalProperties": false,
+   "description": "Capability used in Capability Report.",
+   "properties": {
+    "Actions": {
+     "description": "Capability actions used in Capability Report.",
+     "insertionOrder": false,
+     "items": {
+      "description": "Name for the AWS capability action.",
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[/a-zA-Z0-9\\._ ]+$",
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Events": {
+     "description": "Capability events used in Capability Report.",
+     "insertionOrder": false,
+     "items": {
+      "description": "Name for the AWS capability event.",
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[/a-zA-Z0-9\\._ ]+$",
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Id": {
+     "description": "Identifier of a SchemaVersion",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9.\\/]+(@(\\d+\\.\\d+|\\$latest))?$",
+     "type": "string"
+    },
+    "Name": {
+     "description": "Name for the AWS capability.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[/a-zA-Z0-9\\._ ]+$",
+     "type": "string"
+    },
+    "Properties": {
+     "description": "Capability properties used in Capability Report.",
+     "insertionOrder": false,
+     "items": {
+      "description": "Name for the AWS capability property.",
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[/a-zA-Z0-9\\._ ]+$",
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Version": {
+     "description": "Version for the AWS capability.",
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^(0|[1-9][0-9]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Actions",
+    "Events",
+    "Id",
+    "Name",
+    "Properties",
+    "Version"
+   ],
+   "type": "object"
+  },
+  "CapabilityReportEndpoint": {
+   "additionalProperties": false,
+   "description": "Endpoint used in Capability Report.",
+   "properties": {
+    "Capabilities": {
+     "description": "Capabilities used in Capability Report.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CapabilityReportCapability"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array"
+    },
+    "DeviceTypes": {
+     "description": "The type of device..",
+     "insertionOrder": false,
+     "items": {
+      "description": "The type of device.",
+      "maxLength": 256,
+      "pattern": "^[a-zA-Z0-9=_. ,@\\+\\-/]+$",
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Id": {
+     "description": "Numeric identifier of the endpoint",
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[0-9a-zA-Z]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Capabilities",
+    "DeviceTypes",
+    "Id"
+   ],
+   "type": "object"
+  },
+  "HubNetworkMode": {
+   "description": "Network Mode setting of Hub",
+   "enum": [
+    "STANDARD",
+    "NETWORK_WIDE_EXCLUSION"
+   ],
+   "type": "string"
+  },
+  "MetaData": {
+   "additionalProperties": false,
+   "description": "Meta data associated with the managedThing",
+   "maxProperties": 50,
+   "minProperties": 1,
+   "patternProperties": {
+    "[a-zA-Z0-9_.,@/:#-]+": {
+     "maxLength": 800,
+     "pattern": "[a-zA-Z0-9_.,@/:#-]*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ProvisioningStatus": {
+   "description": "Status of a managed thing",
+   "enum": [
+    "UNASSOCIATED",
+    "PRE_ASSOCIATED",
+    "DISCOVERED",
+    "ACTIVATED",
+    "DELETION_FAILED",
+    "DELETE_IN_PROGRESS",
+    "ISOLATED",
+    "DELETED"
+   ],
+   "type": "string"
+  },
+  "Role": {
+   "description": "Represent the role of a managed thing",
+   "enum": [
+    "CONTROLLER",
+    "DEVICE"
+   ],
+   "type": "string"
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "description": "Tags associated with the resource",
+   "maxProperties": 50,
+   "minProperties": 0,
+   "patternProperties": {
+    ".+": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "WiFiSimpleSetupConfiguration": {
+   "additionalProperties": false,
+   "description": "The Wi-Fi Simple Setup configuration for the managed thing, which defines provisioning capabilities and timeout settings.",
+   "properties": {
+    "EnableAsProvisionee": {
+     "description": "Indicates whether the device can act as a provisionee in Wi-Fi Simple Setup, allowing it to be configured by other devices.",
+     "type": "boolean"
+    },
+    "EnableAsProvisioner": {
+     "description": "Indicates whether the device can act as a provisioner in Wi-Fi Simple Setup, allowing it to configure other devices.",
+     "type": "boolean"
+    },
+    "TimeoutInMinutes": {
+     "maximum": 15,
+     "minimum": 5,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/ActivatedAt",
+  "/properties/AdvertisedProductId",
+  "/properties/ConnectorDeviceId",
+  "/properties/ConnectorPolicyId",
+  "/properties/DeviceSpecificKey",
+  "/properties/InternationalArticleNumber",
+  "/properties/MacAddress",
+  "/properties/ParentControllerId",
+  "/properties/HubNetworkMode"
+ ],
+ "description": "Resource Type definition for AWS::IoTManagedIntegrations::ManagedThing Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iotmanagedintegrations:CreateManagedThing",
+    "iotmanagedintegrations:GetManagedThing",
+    "iotmanagedintegrations:GetManagedThingCapabilities",
+    "iotmanagedintegrations:GetManagedThingMetaData",
+    "iotmanagedintegrations:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iotmanagedintegrations:DeleteManagedThing",
+    "iotmanagedintegrations:GetManagedThing",
+    "iotmanagedintegrations:GetManagedThingCapabilities",
+    "iotmanagedintegrations:GetManagedThingMetaData"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iotmanagedintegrations:ListManagedThings",
+    "iotmanagedintegrations:GetManagedThingCapabilities",
+    "iotmanagedintegrations:GetManagedThingMetaData"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iotmanagedintegrations:GetManagedThing",
+    "iotmanagedintegrations:GetManagedThingCapabilities",
+    "iotmanagedintegrations:GetManagedThingMetaData",
+    "iotmanagedintegrations:GetManagedThingCertificate",
+    "iotmanagedintegrations:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iotmanagedintegrations:UpdateManagedThing",
+    "iotmanagedintegrations:GetManagedThing",
+    "iotmanagedintegrations:GetManagedThingCapabilities",
+    "iotmanagedintegrations:GetManagedThingMetaData",
+    "iotmanagedintegrations:TagResource",
+    "iotmanagedintegrations:ListTagsForResource",
+    "iotmanagedintegrations:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Identifier"
+ ],
+ "properties": {
+  "ActivatedAt": {
+   "description": "Timestamp of the managed thing was fully setup and has connectivity",
+   "format": "date-time",
+   "type": "string"
+  },
+  "AdvertisedProductId": {
+   "description": "The advertised product ID (APID) that's used for pre-production and production applications. Used with the manufacturing toolkit to define the bar code. Please refer to the manufacturing handbook",
+   "maxLength": 5,
+   "minLength": 5,
+   "pattern": "^([A-Za-z0-9!#$%&()*\\+\\-;<=>?@^_`{|}~])+$",
+   "type": "string"
+  },
+  "Arn": {
+   "description": "ARN of a managed thing",
+   "maxLength": 1011,
+   "minLength": 32,
+   "pattern": "^arn:aws(-[^:]+)?:iotmanagedintegrations:[0-9a-zA-Z-]+:[0-9]+:managed-thing/([0-9a-zA-Z:_-])+$",
+   "type": "string"
+  },
+  "AuthenticationMaterial": {
+   "description": "String used to identify a managed thing and start the connectivity setup. This is usually a bar code that can be found on the box",
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^[0-9A-Za-z!#$%&()*\\+\\-;<=>?@^_`{|}~\\/: ]+$",
+   "type": "string"
+  },
+  "AuthenticationMaterialType": {
+   "$ref": "#/definitions/AuthMaterialType"
+  },
+  "Brand": {
+   "description": "Brand of the managed thing",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9-_ ]+$",
+   "type": "string"
+  },
+  "CapabilityReport": {
+   "$ref": "#/definitions/CapabilityReport"
+  },
+  "CertificatePem": {
+   "description": "The certificate data, in PEM format.",
+   "maxLength": 65536,
+   "minLength": 1,
+   "pattern": "^[\\s\\S]*$",
+   "type": "string"
+  },
+  "Classification": {
+   "description": "Metadata identifying the type of the device, follows device type from Matter specification.",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ConnectorDeviceId": {
+   "description": "ID of a connector device",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_.,@-]+$",
+   "type": "string"
+  },
+  "ConnectorPolicyId": {
+   "description": "Identifier of a connector-policy.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9-_]+$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "description": "Timestamp the managed thing was first created",
+   "format": "date-time",
+   "type": "string"
+  },
+  "CredentialLockerId": {
+   "description": "ID of a CredentialLocker entry and is generated by IoT SmartHome.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "DeviceSpecificKey": {
+   "description": "Z-Wave device specific key",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9=_.,@\\+\\-]+$",
+   "type": "string"
+  },
+  "HubNetworkMode": {
+   "$ref": "#/definitions/HubNetworkMode"
+  },
+  "Id": {
+   "description": "Unique Id of a Managed Thing.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9:_-]*$",
+   "type": "string"
+  },
+  "Identifier": {
+   "description": "Unique Id of a Managed Thing.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9:_-]*$",
+   "type": "string"
+  },
+  "InternationalArticleNumber": {
+   "description": "Managed thing International Article Number (EAN)",
+   "maxLength": 13,
+   "minLength": 8,
+   "pattern": "^[0-9]+$",
+   "type": "string"
+  },
+  "MacAddress": {
+   "description": "Zigbee mac address",
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MetaData": {
+   "$ref": "#/definitions/MetaData"
+  },
+  "Model": {
+   "description": "Model of the managed thing",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9-_ ]+$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "Friendly name for a given managed thing, when provided.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[A-Za-z]+$",
+   "type": "string"
+  },
+  "Owner": {
+   "description": "A per customer AWS account and region unique identifier (string) for an abstract entity that a Iot SmartHome solution associates devices to. IoT SmartHome treats devices registered under the same owner as \"belonging together\" and as indication to \"who the devices belong to\" (usually an owner is an end user). This value should not contain Personal Identifiable Information (PII)",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_.,@-]+$",
+   "type": "string"
+  },
+  "ParentControllerId": {
+   "description": "ID of the parent controller for this managed thing entry",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9]+$",
+   "type": "string"
+  },
+  "ProvisioningStatus": {
+   "$ref": "#/definitions/ProvisioningStatus"
+  },
+  "Role": {
+   "$ref": "#/definitions/Role"
+  },
+  "SerialNumber": {
+   "description": "Managed thing serial number",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9-_ ]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  },
+  "UniversalProductCode": {
+   "description": "Managed thing Universal Product Code (UPC)",
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[0-9]+$",
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "description": "Timestamp the managed thing was last updated",
+   "format": "date-time",
+   "type": "string"
+  },
+  "WiFiSimpleSetupConfiguration": {
+   "$ref": "#/definitions/WiFiSimpleSetupConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ActivatedAt",
+  "/properties/AdvertisedProductId",
+  "/properties/Arn",
+  "/properties/CertificatePem",
+  "/properties/ConnectorDeviceId",
+  "/properties/ConnectorPolicyId",
+  "/properties/CreatedAt",
+  "/properties/DeviceSpecificKey",
+  "/properties/HubNetworkMode",
+  "/properties/Id",
+  "/properties/Identifier",
+  "/properties/InternationalArticleNumber",
+  "/properties/MacAddress",
+  "/properties/ParentControllerId",
+  "/properties/ProvisioningStatus",
+  "/properties/UniversalProductCode",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "Role"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "iotmanagedintegrations:TagResource",
+   "iotmanagedintegrations:ListTagsForResource",
+   "iotmanagedintegrations:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTManagedIntegrations::ManagedThing",
+ "writeOnlyProperties": [
+  "/properties/AuthenticationMaterial",
+  "/properties/AuthenticationMaterialType"
+ ]
+}

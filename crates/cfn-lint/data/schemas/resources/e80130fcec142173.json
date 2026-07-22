@@ -1,0 +1,179 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TransitGatewayId",
+  "/properties/SubnetIds",
+  "/properties/VpcId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::EC2::TransitGatewayVpcAttachment",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayVpcAttachments",
+    "ec2:CreateTransitGatewayVpcAttachment",
+    "ec2:CreateTags",
+    "ec2:DescribeTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayVpcAttachments",
+    "ec2:DeleteTransitGatewayVpcAttachment",
+    "ec2:DeleteTags",
+    "ec2:DescribeTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayVpcAttachments",
+    "ec2:DescribeTags"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayVpcAttachments",
+    "ec2:DescribeTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayVpcAttachments",
+    "ec2:DescribeTags",
+    "ec2:CreateTransitGatewayVpcAttachment",
+    "ec2:CreateTags",
+    "ec2:DeleteTransitGatewayVpcAttachment",
+    "ec2:DeleteTags",
+    "ec2:ModifyTransitGatewayVpcAttachment"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AddSubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Options": {
+   "additionalProperties": false,
+   "description": "The options for the transit gateway vpc attachment.",
+   "properties": {
+    "ApplianceModeSupport": {
+     "description": "Indicates whether to enable Ipv6 Support for Vpc Attachment. Valid Values: enable | disable",
+     "enum": [
+      "disable",
+      "enable"
+     ],
+     "type": "string"
+    },
+    "DnsSupport": {
+     "description": "Indicates whether to enable DNS Support for Vpc Attachment. Valid Values: enable | disable",
+     "enum": [
+      "disable",
+      "enable"
+     ],
+     "type": "string"
+    },
+    "Ipv6Support": {
+     "description": "Indicates whether to enable Ipv6 Support for Vpc Attachment. Valid Values: enable | disable",
+     "enum": [
+      "disable",
+      "enable"
+     ],
+     "type": "string"
+    },
+    "SecurityGroupReferencingSupport": {
+     "description": "Indicates whether to enable Security Group referencing support for Vpc Attachment. Valid values: enable | disable",
+     "enum": [
+      "disable",
+      "enable"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RemoveSubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TransitGatewayId": {
+   "type": "string"
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "SubnetIds",
+  "VpcId",
+  "TransitGatewayId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transitgateway",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "ec2:CreateTags",
+   "ec2:DeleteTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::TransitGatewayVpcAttachment",
+ "writeOnlyProperties": [
+  "/properties/AddSubnetIds",
+  "/properties/RemoveSubnetIds"
+ ]
+}

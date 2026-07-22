@@ -1,0 +1,191 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource type definition for AWS::Events::EventBus",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "events:CreateEventBus",
+    "events:DescribeEventBus",
+    "events:PutPermission",
+    "events:ListTagsForResource",
+    "events:TagResource",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt",
+    "kms:GenerateDataKeyWithoutPlaintext",
+    "kms:ReEncrypt",
+    "kms:ReEncryptFrom",
+    "kms:ReEncryptTo",
+    "kms:Encrypt"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "events:DescribeEventBus",
+    "events:UpdateEventBus",
+    "events:ListTagsForResource",
+    "events:UntagResource",
+    "events:RemovePermission",
+    "events:DeleteEventBus"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "events:ListEventBuses",
+    "events:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "events:DescribeEventBus",
+    "events:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "events:TagResource",
+    "events:UntagResource",
+    "events:PutPermission",
+    "events:DescribeEventBus",
+    "events:UpdateEventBus",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt",
+    "kms:GenerateDataKeyWithoutPlaintext",
+    "kms:ReEncrypt",
+    "kms:ReEncryptFrom",
+    "kms:ReEncryptTo",
+    "kms:Encrypt"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) for the event bus.",
+   "type": "string"
+  },
+  "DeadLetterConfig": {
+   "additionalProperties": false,
+   "description": "Dead Letter Queue for the event bus.",
+   "properties": {
+    "Arn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Description": {
+   "description": "The description of the event bus.",
+   "type": "string"
+  },
+  "EventSourceName": {
+   "description": "If you are creating a partner event bus, this specifies the partner event source that the new event bus will be matched with.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^aws\\.partner(/[\\.\\-_A-Za-z0-9]+){2,}$",
+   "type": "string"
+  },
+  "KmsKeyIdentifier": {
+   "description": "Kms Key Identifier used to encrypt events at rest in the event bus.",
+   "type": "string"
+  },
+  "LogConfig": {
+   "additionalProperties": false,
+   "description": "The logging configuration settings for vended logs.",
+   "properties": {
+    "IncludeDetail": {
+     "description": "Configures whether or not to include event detail, input transformer details, target properties, and target input in the applicable log messages.",
+     "enum": [
+      "FULL",
+      "NONE"
+     ],
+     "type": "string"
+    },
+    "Level": {
+     "description": "Configures the log level of the EventBus and determines which log messages are sent to Ingestion Hub for delivery.",
+     "enum": [
+      "INFO",
+      "ERROR",
+      "TRACE",
+      "OFF"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Name": {
+   "description": "The name of the event bus.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[/\\.\\-_A-Za-z0-9]+$",
+   "type": "string"
+  },
+  "Policy": {
+   "description": "A JSON string that describes the permission policy statement for the event bus.",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Tags": {
+   "description": "Any tags assigned to the event bus.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-events",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "events:UntagResource",
+   "events:TagResource",
+   "events:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Events::EventBus",
+ "writeOnlyProperties": [
+  "/properties/EventSourceName"
+ ]
+}

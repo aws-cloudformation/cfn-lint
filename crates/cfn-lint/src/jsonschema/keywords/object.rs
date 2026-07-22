@@ -1,7 +1,6 @@
 use super::super::{ValidationError, Validator};
-use super::helpers::err;
+use super::helpers::{compile_pattern, err};
 use crate::ast::AstNode;
-use regex::Regex;
 use std::collections::HashSet;
 
 pub fn validate_properties(
@@ -95,13 +94,9 @@ pub fn validate_additional_properties(
         // Non-string keys (numbers, bools) cannot match string patterns
         if !obj.is_non_string_key(key) {
             let matches_pattern = pattern_strings.iter().any(|pat| {
-                if let Ok(re) = Regex::new(pat) {
-                    re.is_match(key)
-                } else if let Ok(re) = fancy_regex::Regex::new(pat) {
-                    re.is_match(key).unwrap_or(false)
-                } else {
-                    false
-                }
+                compile_pattern(pat)
+                    .map(|re| re.is_match(key))
+                    .unwrap_or(false)
             });
             if matches_pattern {
                 continue;
@@ -159,25 +154,17 @@ pub fn validate_pattern_properties(
     };
     let mut errors = Vec::new();
     for (pattern, prop_schema) in patterns {
-        let re_std = Regex::new(pattern).ok();
-        let re_fancy = if re_std.is_none() {
-            fancy_regex::Regex::new(pattern).ok()
-        } else {
-            None
+        // A pattern that neither engine can compile matches nothing.
+        let re = match compile_pattern(pattern) {
+            Some(re) => re,
+            None => continue,
         };
         for (key, value) in obj.iter() {
             // Non-string keys cannot match string patterns
             if obj.is_non_string_key(key) {
                 continue;
             }
-            let matched = if let Some(ref re) = re_std {
-                re.is_match(key)
-            } else if let Some(ref re) = re_fancy {
-                re.is_match(key).unwrap_or(false)
-            } else {
-                continue;
-            };
-            if matched {
+            if re.is_match(key) {
                 let mut child_path = path.to_vec();
                 child_path.push(key.to_string());
                 errors.extend(validator.validate_schema(value, prop_schema, &child_path));
@@ -347,7 +334,7 @@ pub fn validate_required_xor(
         .iter()
         .filter_map(|v| v.as_str())
         .filter(|name| {
-            obj.get(*name).map_or(false, |v| {
+            obj.get(name).is_some_and(|v| {
                 // Ref AWS::NoValue means absent
                 !matches!(v, AstNode::Function(f) if f.name == "Ref" && f.args.as_str() == Some("AWS::NoValue"))
             })
@@ -394,7 +381,7 @@ pub fn validate_required_or(
         .iter()
         .filter_map(|v| v.as_str())
         .any(|name| {
-            obj.get(name).map_or(false, |v| {
+            obj.get(name).is_some_and(|v| {
                 !matches!(v, AstNode::Function(f) if f.name == "Ref" && f.args.as_str() == Some("AWS::NoValue"))
             })
         });

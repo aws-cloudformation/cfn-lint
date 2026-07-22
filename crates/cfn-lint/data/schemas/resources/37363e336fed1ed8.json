@@ -1,0 +1,749 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PromptArn",
+  "/properties/Description",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "AdditionalModelRequestFields": {
+   "description": "Contains model-specific configurations",
+   "type": "object"
+  },
+  "AnyToolChoice": {
+   "additionalProperties": false,
+   "description": "Any Tool choice",
+   "type": "object"
+  },
+  "AutoToolChoice": {
+   "additionalProperties": false,
+   "description": "Auto Tool choice",
+   "type": "object"
+  },
+  "CachePointBlock": {
+   "additionalProperties": false,
+   "description": "CachePointBlock",
+   "properties": {
+    "Type": {
+     "$ref": "#/definitions/CachePointType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "CachePointType": {
+   "description": "CachePoint types for CachePointBlock",
+   "enum": [
+    "default"
+   ],
+   "type": "string"
+  },
+  "ChatPromptTemplateConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for chat prompt template",
+   "properties": {
+    "InputVariables": {
+     "description": "List of input variables",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/PromptInputVariable"
+     },
+     "maxItems": 20,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Messages": {
+     "description": "List of messages for chat prompt template",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Message"
+     },
+     "minItems": 0,
+     "type": "array"
+    },
+    "System": {
+     "description": "Configuration for chat prompt template",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/SystemContentBlock"
+     },
+     "minItems": 0,
+     "type": "array"
+    },
+    "ToolConfiguration": {
+     "$ref": "#/definitions/ToolConfiguration"
+    }
+   },
+   "required": [
+    "Messages"
+   ],
+   "type": "object"
+  },
+  "ContentBlock": {
+   "description": "Configuration for chat prompt template",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Text": {
+       "description": "Configuration for chat prompt template",
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "required": [
+      "Text"
+     ],
+     "title": "Text",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CachePoint": {
+       "$ref": "#/definitions/CachePointBlock"
+      }
+     },
+     "required": [
+      "CachePoint"
+     ],
+     "title": "CachePoint",
+     "type": "object"
+    }
+   ]
+  },
+  "ConversationRole": {
+   "description": "Conversation roles for the chat prompt",
+   "enum": [
+    "user",
+    "assistant"
+   ],
+   "type": "string"
+  },
+  "Message": {
+   "additionalProperties": false,
+   "description": "Chat prompt Message",
+   "properties": {
+    "Content": {
+     "description": "List of Content Blocks",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ContentBlock"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "Role": {
+     "$ref": "#/definitions/ConversationRole"
+    }
+   },
+   "required": [
+    "Role",
+    "Content"
+   ],
+   "type": "object"
+  },
+  "PromptAgentResource": {
+   "additionalProperties": false,
+   "description": "Target Agent to invoke with Prompt",
+   "properties": {
+    "AgentIdentifier": {
+     "description": "Arn representation of the Agent Alias.",
+     "maxLength": 2048,
+     "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:agent-alias/[0-9a-zA-Z]{10}/[0-9a-zA-Z]{10}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AgentIdentifier"
+   ],
+   "type": "object"
+  },
+  "PromptGenAiResource": {
+   "description": "Target resource to invoke with Prompt",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Agent": {
+       "$ref": "#/definitions/PromptAgentResource"
+      }
+     },
+     "required": [
+      "Agent"
+     ],
+     "title": "Agent",
+     "type": "object"
+    }
+   ]
+  },
+  "PromptInferenceConfiguration": {
+   "description": "Model inference configuration",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Text": {
+       "$ref": "#/definitions/PromptModelInferenceConfiguration"
+      }
+     },
+     "required": [
+      "Text"
+     ],
+     "title": "Text",
+     "type": "object"
+    }
+   ]
+  },
+  "PromptInputVariable": {
+   "additionalProperties": false,
+   "description": "Input variable",
+   "properties": {
+    "Name": {
+     "description": "Name for an input variable",
+     "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PromptMetadataEntry": {
+   "additionalProperties": false,
+   "description": "Contains a key-value pair that defines a metadata tag and value to attach to a prompt variant.",
+   "properties": {
+    "Key": {
+     "$ref": "#/definitions/PromptMetadataKey"
+    },
+    "Value": {
+     "$ref": "#/definitions/PromptMetadataValue"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "PromptMetadataKey": {
+   "description": "The key of a metadata tag for a prompt variant.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+   "type": "string"
+  },
+  "PromptMetadataList": {
+   "description": "List of metadata to associate with the prompt variant.",
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/PromptMetadataEntry"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "PromptMetadataValue": {
+   "description": "The value of a metadata tag for a prompt variant.",
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+   "type": "string"
+  },
+  "PromptModelInferenceConfiguration": {
+   "additionalProperties": false,
+   "description": "Prompt model inference configuration",
+   "properties": {
+    "MaxTokens": {
+     "description": "Maximum length of output",
+     "maximum": 4096,
+     "minimum": 0,
+     "type": "number"
+    },
+    "StopSequences": {
+     "description": "List of stop sequences",
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 4,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Temperature": {
+     "description": "Controls randomness, higher values increase diversity",
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    },
+    "TopP": {
+     "description": "Cumulative probability cutoff for token selection",
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "PromptTemplateConfiguration": {
+   "description": "Prompt template configuration",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Text": {
+       "$ref": "#/definitions/TextPromptTemplateConfiguration"
+      }
+     },
+     "required": [
+      "Text"
+     ],
+     "title": "Text",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Chat": {
+       "$ref": "#/definitions/ChatPromptTemplateConfiguration"
+      }
+     },
+     "required": [
+      "Chat"
+     ],
+     "title": "Chat",
+     "type": "object"
+    }
+   ]
+  },
+  "PromptTemplateType": {
+   "description": "Prompt template type",
+   "enum": [
+    "TEXT",
+    "CHAT"
+   ],
+   "type": "string"
+  },
+  "PromptVariant": {
+   "additionalProperties": false,
+   "description": "Prompt variant",
+   "properties": {
+    "AdditionalModelRequestFields": {
+     "$ref": "#/definitions/AdditionalModelRequestFields"
+    },
+    "GenAiResource": {
+     "$ref": "#/definitions/PromptGenAiResource"
+    },
+    "InferenceConfiguration": {
+     "$ref": "#/definitions/PromptInferenceConfiguration"
+    },
+    "Metadata": {
+     "$ref": "#/definitions/PromptMetadataList"
+    },
+    "ModelId": {
+     "description": "ARN or Id of a Bedrock Foundational Model or Inference Profile, or the ARN of a imported model, or a provisioned throughput ARN for custom models.",
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^(arn:aws(-[^:]{1,12})?:(bedrock|sagemaker):[a-z0-9-]{1,20}:([0-9]{12})?:([a-z-]+/)?)?([a-zA-Z0-9.-]{1,63}){0,2}(([:][a-z0-9-]{1,63}){0,2})?(/[a-z0-9]{1,12})?$",
+     "type": "string"
+    },
+    "Name": {
+     "description": "Name for a variant.",
+     "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+     "type": "string"
+    },
+    "TemplateConfiguration": {
+     "$ref": "#/definitions/PromptTemplateConfiguration"
+    },
+    "TemplateType": {
+     "$ref": "#/definitions/PromptTemplateType"
+    }
+   },
+   "required": [
+    "Name",
+    "TemplateType",
+    "TemplateConfiguration"
+   ],
+   "type": "object"
+  },
+  "SpecificToolChoice": {
+   "additionalProperties": false,
+   "description": "Specific Tool choice",
+   "properties": {
+    "Name": {
+     "description": "Tool name",
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "SystemContentBlock": {
+   "description": "Configuration for chat prompt template",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Text": {
+       "description": "Configuration for chat prompt template",
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "required": [
+      "Text"
+     ],
+     "title": "Text",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CachePoint": {
+       "$ref": "#/definitions/CachePointBlock"
+      }
+     },
+     "required": [
+      "CachePoint"
+     ],
+     "title": "CachePoint",
+     "type": "object"
+    }
+   ]
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "description": "A map of tag keys and values",
+   "patternProperties": {
+    "^[a-zA-Z0-9\\s._:/=+@-]*$": {
+     "description": "Value of a tag",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TextPromptTemplateConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for text prompt template",
+   "properties": {
+    "CachePoint": {
+     "$ref": "#/definitions/CachePointBlock"
+    },
+    "InputVariables": {
+     "description": "List of input variables",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/PromptInputVariable"
+     },
+     "maxItems": 20,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Text": {
+     "description": "Prompt content for String prompt template",
+     "maxLength": 200000,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Text"
+   ],
+   "type": "object"
+  },
+  "Tool": {
+   "description": "Tool details",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ToolSpec": {
+       "$ref": "#/definitions/ToolSpecification"
+      }
+     },
+     "required": [
+      "ToolSpec"
+     ],
+     "title": "ToolSpec",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CachePoint": {
+       "$ref": "#/definitions/CachePointBlock"
+      }
+     },
+     "required": [
+      "CachePoint"
+     ],
+     "title": "CachePoint",
+     "type": "object"
+    }
+   ]
+  },
+  "ToolChoice": {
+   "description": "Tool choice",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Auto": {
+       "$ref": "#/definitions/AutoToolChoice"
+      }
+     },
+     "required": [
+      "Auto"
+     ],
+     "title": "Auto",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Any": {
+       "$ref": "#/definitions/AnyToolChoice"
+      }
+     },
+     "required": [
+      "Any"
+     ],
+     "title": "Any",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Tool": {
+       "$ref": "#/definitions/SpecificToolChoice"
+      }
+     },
+     "required": [
+      "Tool"
+     ],
+     "title": "Tool",
+     "type": "object"
+    }
+   ]
+  },
+  "ToolConfiguration": {
+   "additionalProperties": false,
+   "description": "Tool configuration",
+   "properties": {
+    "ToolChoice": {
+     "$ref": "#/definitions/ToolChoice"
+    },
+    "Tools": {
+     "description": "List of Tools",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Tool"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Tools"
+   ],
+   "type": "object"
+  },
+  "ToolInputSchema": {
+   "description": "Tool input schema",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "description": "Tool input schema json",
+     "properties": {
+      "Json": {
+       "type": "object"
+      }
+     },
+     "required": [
+      "Json"
+     ],
+     "title": "Json",
+     "type": "object"
+    }
+   ]
+  },
+  "ToolSpecification": {
+   "additionalProperties": false,
+   "description": "Tool specification",
+   "properties": {
+    "Description": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "InputSchema": {
+     "$ref": "#/definitions/ToolInputSchema"
+    },
+    "Name": {
+     "description": "Tool name",
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "InputSchema"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Definition of AWS::Bedrock::PromptVersion Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "bedrock:CreatePromptVersion",
+    "bedrock:GetPrompt",
+    "bedrock:TagResource",
+    "bedrock:ListTagsForResource",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "bedrock:DeletePrompt",
+    "bedrock:GetPrompt"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "PromptArn": {
+      "$ref": "resource-schema.json#/properties/PromptArn"
+     }
+    },
+    "required": [
+     "PromptArn"
+    ]
+   },
+   "permissions": [
+    "bedrock:ListPrompts"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bedrock:GetPrompt",
+    "bedrock:ListTagsForResource",
+    "kms:Decrypt"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "ARN of a prompt version resource",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^(arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:prompt/[0-9a-zA-Z]{10}:[0-9]{1,20})$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "description": "Time Stamp.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "CustomerEncryptionKeyArn": {
+   "description": "A KMS key ARN",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(|-cn|-us-gov):kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
+   "type": "string"
+  },
+  "DefaultVariant": {
+   "description": "Name for a variant.",
+   "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+   "type": "string"
+  },
+  "Description": {
+   "description": "Description for a prompt version resource.",
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "description": "Name for a prompt resource.",
+   "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+   "type": "string"
+  },
+  "PromptArn": {
+   "description": "ARN of a prompt resource possibly with a version",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^(arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:prompt/[0-9a-zA-Z]{10})$",
+   "type": "string"
+  },
+  "PromptId": {
+   "description": "Identifier for a Prompt",
+   "pattern": "^[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  },
+  "UpdatedAt": {
+   "description": "Time Stamp.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Variants": {
+   "description": "List of prompt variants",
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/PromptVariant"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Version": {
+   "description": "Version.",
+   "maxLength": 5,
+   "minLength": 1,
+   "pattern": "^(DRAFT|[0-9]{0,4}[1-9][0-9]{0,4})$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/PromptId",
+  "/properties/UpdatedAt",
+  "/properties/Version",
+  "/properties/Name",
+  "/properties/DefaultVariant",
+  "/properties/Variants",
+  "/properties/CustomerEncryptionKeyArn"
+ ],
+ "required": [
+  "PromptArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-bedrock-prompts",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "bedrock:TagResource",
+   "bedrock:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::Bedrock::PromptVersion"
+}

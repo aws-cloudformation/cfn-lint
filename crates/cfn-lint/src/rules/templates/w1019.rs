@@ -1,11 +1,8 @@
 use crate::ast::AstNode;
+use crate::helpers::SUB_VARIABLE_REGEX;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
 use crate::jsonschema::{ValidationError, Validator};
 use crate::rules::Severity;
-use regex::Regex;
-use std::sync::LazyLock;
-
-static RE_SUB_VARS: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\$\{([^}]+)\}").unwrap());
 
 pub struct W1019;
 
@@ -52,9 +49,9 @@ impl CfnLintRule for W1019 {
             None => return vec![],
         };
 
-        let used_vars: Vec<&str> = RE_SUB_VARS
+        let used_vars: Vec<&str> = SUB_VARIABLE_REGEX
             .captures_iter(template_str)
-            .filter_map(|c| c.get(1).map(|m| m.as_str()))
+            .filter_map(|c| c.get(1).map(|m| m.as_str().trim()))
             .collect();
 
         let mut issues = Vec::new();

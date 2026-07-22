@@ -5,26 +5,37 @@ pub fn walk<F>(node: &AstNode, path: &[String], visitor: &mut F)
 where
     F: FnMut(&AstNode, &[String]) -> bool,
 {
-    if !visitor(node, path) {
+    // Convert the caller-supplied prefix to an owned accumulator once, then
+    // push/pop per level instead of cloning the whole path at every recursion
+    // step (which was O(depth^2) in allocations).
+    let mut path = path.to_vec();
+    walk_inner(node, &mut path, visitor);
+}
+
+fn walk_inner<F>(node: &AstNode, path: &mut Vec<String>, visitor: &mut F)
+where
+    F: FnMut(&AstNode, &[String]) -> bool,
+{
+    if !visitor(node, path.as_slice()) {
         return;
     }
     match node {
         AstNode::Object(obj) => {
             for entry in &obj.entries {
-                let mut child_path = path.to_vec();
-                child_path.push(entry.key.clone());
-                walk(&entry.value, &child_path, visitor);
+                path.push(entry.key.clone());
+                walk_inner(&entry.value, path, visitor);
+                path.pop();
             }
         }
         AstNode::Array(arr) => {
             for (i, elem) in arr.elements.iter().enumerate() {
-                let mut child_path = path.to_vec();
-                child_path.push(i.to_string());
-                walk(elem, &child_path, visitor);
+                path.push(i.to_string());
+                walk_inner(elem, path, visitor);
+                path.pop();
             }
         }
         AstNode::Function(func) => {
-            walk(&func.args, path, visitor);
+            walk_inner(&func.args, path, visitor);
         }
         _ => {}
     }
@@ -35,7 +46,7 @@ pub fn node_at_position(root: &AstNode, line: u32, col: u32) -> Option<(&AstNode
     let mut best: Option<(&AstNode, Vec<String>)> = None;
     fn search<'a>(
         node: &'a AstNode,
-        path: &[String],
+        path: &mut Vec<String>,
         line: u32,
         col: u32,
         best: &mut Option<(&'a AstNode, Vec<String>)>,
@@ -43,27 +54,29 @@ pub fn node_at_position(root: &AstNode, line: u32, col: u32) -> Option<(&AstNode
         if !span_contains(node.span(), line, col) {
             return;
         }
-        *best = Some((node, path.to_vec()));
+        // Clone only at the capture point, not at every recursion level.
+        *best = Some((node, path.clone()));
         match node {
             AstNode::Object(obj) => {
                 for entry in &obj.entries {
-                    let mut p = path.to_vec();
-                    p.push(entry.key.clone());
-                    search(&entry.value, &p, line, col, best);
+                    path.push(entry.key.clone());
+                    search(&entry.value, path, line, col, best);
+                    path.pop();
                 }
             }
             AstNode::Array(arr) => {
                 for (i, elem) in arr.elements.iter().enumerate() {
-                    let mut p = path.to_vec();
-                    p.push(i.to_string());
-                    search(elem, &p, line, col, best);
+                    path.push(i.to_string());
+                    search(elem, path, line, col, best);
+                    path.pop();
                 }
             }
             AstNode::Function(func) => search(&func.args, path, line, col, best),
             _ => {}
         }
     }
-    search(root, &[], line, col, &mut best);
+    let mut path = Vec::new();
+    search(root, &mut path, line, col, &mut best);
     best
 }
 
@@ -225,4 +238,79 @@ fn span_contains(span: Span, line: u32, col: u32) -> bool {
         line > span.start.line || (line == span.start.line && col >= span.start.column);
     let before_end = line < span.end.line || (line == span.end.line && col <= span.end.column);
     after_start && before_end
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::parser::parse_yaml;
+
+    fn collect_paths(root: &AstNode, prefix: &[String]) -> Vec<Vec<String>> {
+        let mut paths: Vec<Vec<String>> = Vec::new();
+        walk(root, prefix, &mut |_node, path| {
+            paths.push(path.to_vec());
+            true
+        });
+        paths
+    }
+
+    #[test]
+    fn test_walk_collects_nested_paths() {
+        let yaml = "Resources:\n  MyBucket:\n    Type: AWS::S3::Bucket\n";
+        let root = parse_yaml(yaml).unwrap();
+        let paths = collect_paths(&root, &[]);
+        // Root is visited with an empty path.
+        assert!(paths.contains(&Vec::<String>::new()));
+        // The deep, correctly-ordered path to the Type value is present.
+        assert!(
+            paths.contains(&vec![
+                "Resources".to_string(),
+                "MyBucket".to_string(),
+                "Type".to_string(),
+            ]),
+            "missing nested path, got: {paths:?}"
+        );
+    }
+
+    #[test]
+    fn test_walk_pops_path_between_siblings() {
+        // Sibling keys must not leak path segments into each other — this is
+        // what the push/pop accumulator (replacing per-level cloning) must
+        // preserve.
+        let yaml = "A:\n  x: 1\nB:\n  y: 2\n";
+        let root = parse_yaml(yaml).unwrap();
+        let paths = collect_paths(&root, &[]);
+        assert!(paths.contains(&vec!["A".to_string(), "x".to_string()]));
+        assert!(paths.contains(&vec!["B".to_string(), "y".to_string()]));
+        // No cross-contamination.
+        assert!(!paths
+            .iter()
+            .any(|p| p == &vec!["A".to_string(), "B".to_string()]));
+        assert!(!paths
+            .iter()
+            .any(|p| p == &vec!["A".to_string(), "x".to_string(), "y".to_string()]));
+    }
+
+    #[test]
+    fn test_walk_respects_caller_prefix() {
+        let yaml = "x: 1\n";
+        let root = parse_yaml(yaml).unwrap();
+        let paths = collect_paths(&root, &["root".to_string()]);
+        assert!(paths.contains(&vec!["root".to_string()]));
+        assert!(paths.contains(&vec!["root".to_string(), "x".to_string()]));
+    }
+
+    #[test]
+    fn test_node_at_position_builds_correct_path() {
+        let yaml = "Resources:\n  MyBucket:\n    Type: AWS::S3::Bucket\n";
+        let root = parse_yaml(yaml).unwrap();
+        // Line index 2 (0-based) is "    Type: AWS::S3::Bucket"; column 14 sits
+        // inside the value.
+        let found = node_at_position(&root, 2, 14);
+        let (_node, path) = found.expect("expected a node at the Type value position");
+        assert!(
+            path.starts_with(&["Resources".to_string(), "MyBucket".to_string()]),
+            "unexpected path: {path:?}"
+        );
+    }
 }

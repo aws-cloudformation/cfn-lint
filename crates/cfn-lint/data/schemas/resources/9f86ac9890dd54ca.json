@@ -1,0 +1,216 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceId",
+  "/properties/IntegrationArn",
+  "/properties/IntegrationType"
+ ],
+ "definitions": {
+  "InstanceId": {
+   "description": "Amazon Connect instance identifier",
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "IntegrationArn": {
+   "description": "ARN of Integration being associated with the instance",
+   "maxLength": 140,
+   "minLength": 1,
+   "type": "string"
+  },
+  "IntegrationAssociationId": {
+   "description": "Identifier of the association with Connect Instance",
+   "type": "string"
+  },
+  "IntegrationType": {
+   "description": "Specifies the integration type to be associated with the instance",
+   "enum": [
+    "LEX_BOT",
+    "LAMBDA_FUNCTION",
+    "APPLICATION",
+    "CASES_DOMAIN",
+    "WISDOM_ASSISTANT",
+    "WISDOM_KNOWLEDGE_BASE",
+    "WISDOM_QUICK_RESPONSES",
+    "FILE_SCANNER",
+    "MESSAGE_PROCESSOR",
+    "Q_MESSAGE_TEMPLATES",
+    "SES_IDENTITY"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Connect::IntegrationAssociation",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect:DescribeInstance",
+    "ds:DescribeDirectories",
+    "app-integrations:CreateEventIntegrationAssociation",
+    "mobiletargeting:GetApp",
+    "cases:GetDomain",
+    "wisdom:GetAssistant",
+    "wisdom:GetKnowledgeBase",
+    "wisdom:GetQuickResponse",
+    "wisdom:GetMessageTemplate",
+    "wisdom:TagResource",
+    "voiceid:DescribeDomain",
+    "events:PutTargets",
+    "ses:GetIdentityVerificationAttributes",
+    "events:PutRule",
+    "connect:AssociateBot",
+    "connect:AssociateLambdaFunction",
+    "connect:CreateIntegrationAssociation",
+    "connect:TagResource",
+    "connect:ListBots",
+    "connect:ListLambdaFunctions",
+    "connect:ListIntegrationAssociations",
+    "lambda:addPermission",
+    "lex:GetBot",
+    "lex:DescribeBotAlias",
+    "lex:CreateResourcePolicy",
+    "lex:UpdateResourcePolicy",
+    "lex:CreateResourcePolicyStatement",
+    "lambda:AddPermission",
+    "app-integrations:GetApplication",
+    "app-integrations:CreateApplicationAssociation",
+    "iam:AttachRolePolicy",
+    "iam:CreateServiceLinkedRole",
+    "iam:GetRolePolicy",
+    "iam:PutRolePolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect:DescribeInstance",
+    "ds:DescribeDirectories",
+    "app-integrations:DeleteEventIntegrationAssociation",
+    "app-integrations:DeleteApplicationAssociation",
+    "events:ListTargetsByRule",
+    "events:RemoveTargets",
+    "events:DeleteRule",
+    "connect:DisassociateBot",
+    "connect:DisassociateLambdaFunction",
+    "connect:DeleteIntegrationAssociation",
+    "connect:ListBots",
+    "connect:ListLambdaFunctions",
+    "connect:ListIntegrationAssociations",
+    "lex:DeleteResourcePolicy",
+    "lex:DeleteResourcePolicyStatement",
+    "lambda:RemovePermission",
+    "iam:GetRolePolicy",
+    "iam:DeleteRolePolicy",
+    "iam:PutRolePolicy"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "InstanceId": {
+      "$ref": "resource-schema.json#/properties/InstanceId"
+     }
+    },
+    "required": [
+     "InstanceId"
+    ]
+   },
+   "permissions": [
+    "connect:ListBots",
+    "connect:ListLambdaFunctions",
+    "connect:ListIntegrationAssociations",
+    "connect:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect:ListBots",
+    "connect:ListLambdaFunctions",
+    "connect:ListIntegrationAssociations",
+    "connect:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "connect:TagResource",
+    "connect:UntagResource",
+    "connect:ListTagsForResource",
+    "connect:ListIntegrationAssociations"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InstanceId",
+  "/properties/IntegrationType",
+  "/properties/IntegrationArn"
+ ],
+ "properties": {
+  "InstanceId": {
+   "$ref": "#/definitions/InstanceId"
+  },
+  "IntegrationArn": {
+   "$ref": "#/definitions/IntegrationArn"
+  },
+  "IntegrationAssociationId": {
+   "$ref": "#/definitions/IntegrationAssociationId"
+  },
+  "IntegrationType": {
+   "$ref": "#/definitions/IntegrationType"
+  },
+  "Tags": {
+   "description": "The tags used to organize, track, or control access for this resource.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IntegrationAssociationId"
+ ],
+ "required": [
+  "InstanceId",
+  "IntegrationType",
+  "IntegrationArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "connect:TagResource",
+   "connect:UntagResource",
+   "connect:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::IntegrationAssociation"
+}

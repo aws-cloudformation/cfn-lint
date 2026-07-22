@@ -1,0 +1,267 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConfigurationSetName"
+ ],
+ "definitions": {
+  "CloudWatchLogsDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "IamRoleArn": {
+     "description": "The Amazon Resource Name (ARN) of an AWS Identity and Access Management role that is able to write event data to an Amazon CloudWatch destination.",
+     "format": "AWS::IAM::Role.Arn",
+     "pattern": "^arn:\\S+$",
+     "type": "string"
+    },
+    "LogGroupArn": {
+     "description": "The name of the Amazon CloudWatch log group that you want to record events in.",
+     "pattern": "^arn:\\S+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "IamRoleArn",
+    "LogGroupArn"
+   ],
+   "type": "object"
+  },
+  "EventDestination": {
+   "additionalProperties": false,
+   "description": "An event destination is a location where you send message events. The event options are Amazon CloudWatch, Amazon Data Firehose, or Amazon SNS. For example, when a message is delivered successfully, you can send information about that event to an event destination, or send notifications to endpoints that are subscribed to an Amazon SNS topic.",
+   "oneOf": [
+    {
+     "required": [
+      "CloudWatchLogsDestination"
+     ]
+    },
+    {
+     "required": [
+      "KinesisFirehoseDestination"
+     ]
+    },
+    {
+     "required": [
+      "SnsDestination"
+     ]
+    }
+   ],
+   "properties": {
+    "CloudWatchLogsDestination": {
+     "$ref": "#/definitions/CloudWatchLogsDestination",
+     "description": "An object that contains IamRoleArn and LogGroupArn associated with an Amazon CloudWatch event destination."
+    },
+    "Enabled": {
+     "description": "When set to true events will be logged. By default this is set to true",
+     "type": "boolean"
+    },
+    "EventDestinationName": {
+     "description": "The name that identifies the event destination.",
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9_-]+$",
+     "type": "string"
+    },
+    "KinesisFirehoseDestination": {
+     "$ref": "#/definitions/KinesisFirehoseDestination",
+     "description": "An object that contains IamRoleArn and DeliveryStreamArn associated with an Amazon Kinesis Firehose event destination."
+    },
+    "MatchingEventTypes": {
+     "description": "An array of event types that determine which events to log. If 'ALL' is used, then AWS End User Messaging SMS and Voice logs every event type.",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SnsDestination": {
+     "$ref": "#/definitions/SnsDestination",
+     "description": "An object that contains SNS TopicArn event destination."
+    }
+   },
+   "required": [
+    "EventDestinationName",
+    "Enabled",
+    "MatchingEventTypes"
+   ],
+   "type": "object"
+  },
+  "KinesisFirehoseDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "DeliveryStreamArn": {
+     "description": "The Amazon Resource Name (ARN) of the delivery stream.",
+     "pattern": "^arn:\\S+$",
+     "type": "string"
+    },
+    "IamRoleArn": {
+     "description": "The Amazon Resource Name (ARN) of an AWS Identity and Access Management role that is able to write event data to an Amazon CloudWatch destination.",
+     "format": "AWS::IAM::Role.Arn",
+     "pattern": "^arn:\\S+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "IamRoleArn",
+    "DeliveryStreamArn"
+   ],
+   "type": "object"
+  },
+  "SnsDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "TopicArn": {
+     "description": "The Amazon Resource Name (ARN) of the Amazon SNS topic that you want to publish events to.",
+     "format": "AWS::SNS::Topic.Arn",
+     "pattern": "^arn:\\S+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TopicArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SMSVOICE::ConfigurationSet",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sms-voice:CreateConfigurationSet",
+    "sms-voice:DescribeConfigurationSets",
+    "sms-voice:SetDefaultSenderId",
+    "sms-voice:SetDefaultMessageFeedbackEnabled",
+    "sms-voice:AssociateProtectConfiguration",
+    "sms-voice:CreateEventDestination",
+    "sms-voice:UpdateEventDestination",
+    "sms-voice:TagResource",
+    "sms-voice:ListTagsForResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sms-voice:DescribeConfigurationSets",
+    "sms-voice:DeleteConfigurationSet"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sms-voice:DescribeConfigurationSets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sms-voice:DescribeConfigurationSets",
+    "sms-voice:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sms-voice:DescribeConfigurationSets",
+    "sms-voice:CreateEventDestination",
+    "sms-voice:UpdateEventDestination",
+    "sms-voice:DeleteEventDestination",
+    "sms-voice:DeleteDefaultSenderId",
+    "sms-voice:SetDefaultSenderId",
+    "sms-voice:DeleteDefaultMessageFeedbackEnabled",
+    "sms-voice:SetDefaultMessageFeedbackEnabled",
+    "sms-voice:DisassociateProtectConfiguration",
+    "sms-voice:AssociateProtectConfiguration",
+    "sms-voice:UntagResource",
+    "sms-voice:TagResource",
+    "sms-voice:ListTagsForResource",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConfigurationSetName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ConfigurationSetName": {
+   "description": "The name to use for the configuration set.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9_-]+$",
+   "type": "string"
+  },
+  "DefaultSenderId": {
+   "description": "The default sender ID to set for the ConfigurationSet.",
+   "pattern": "^[A-Za-z0-9_-]+$",
+   "type": "string"
+  },
+  "EventDestinations": {
+   "description": "An event destination is a location where you send message events.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EventDestination"
+   },
+   "maxItems": 5,
+   "type": "array"
+  },
+  "MessageFeedbackEnabled": {
+   "description": "Set to true to enable message feedback.",
+   "type": "boolean"
+  },
+  "ProtectConfigurationId": {
+   "description": "The unique identifier for the protect configuration to be associated to the configuration set.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9_:/-]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resoource-providers-smsvoice.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "sms-voice:UntagResource",
+   "sms-voice:TagResource",
+   "sms-voice:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SMSVOICE::ConfigurationSet"
+}

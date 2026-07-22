@@ -1,0 +1,97 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AutoScalingGroupName"
+ ],
+ "definitions": {
+  "InstanceReusePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "ReuseOnScaleIn": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::AutoScaling::WarmPool.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "autoscaling:PutWarmPool",
+    "autoscaling:DescribeWarmPool",
+    "autoscaling:DescribeAutoScalingGroups"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "autoscaling:DeleteWarmPool",
+    "autoscaling:DescribeWarmPool"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "AutoScalingGroupName": {
+      "$ref": "resource-schema.json#/properties/AutoScalingGroupName"
+     }
+    },
+    "required": [
+     "AutoScalingGroupName"
+    ]
+   },
+   "permissions": [
+    "autoscaling:DescribeWarmPool"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "autoscaling:DescribeWarmPool"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "autoscaling:PutWarmPool",
+    "autoscaling:DescribeWarmPool",
+    "autoscaling:DescribeAutoScalingGroups"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AutoScalingGroupName"
+ ],
+ "properties": {
+  "AutoScalingGroupName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InstanceReusePolicy": {
+   "$ref": "#/definitions/InstanceReusePolicy"
+  },
+  "MaxGroupPreparedCapacity": {
+   "minimum": -1,
+   "type": "integer"
+  },
+  "MinSize": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "PoolState": {
+   "enum": [
+    "Hibernated",
+    "Running",
+    "Stopped"
+   ],
+   "type": "string"
+  }
+ },
+ "required": [
+  "AutoScalingGroupName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-autoscaling",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::AutoScaling::WarmPool"
+}

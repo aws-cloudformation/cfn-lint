@@ -1,0 +1,105 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AuthenticationType",
+  "/properties/UserName",
+  "/properties/MessageAction",
+  "/properties/FirstName",
+  "/properties/LastName"
+ ],
+ "description": "Resource Type definition for AWS::AppStream::User",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "appstream:CreateUser",
+    "appstream:DescribeUsers"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "appstream:DeleteUser"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "AuthenticationType": {
+      "$ref": "resource-schema.json#/properties/AuthenticationType"
+     }
+    }
+   },
+   "permissions": [
+    "appstream:DescribeUsers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "appstream:DescribeUsers"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/UserName",
+  "/properties/AuthenticationType"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "Returns the Amazon Resource Name (ARN) for the Amazon AppStream User resource.",
+   "pattern": "^arn:.*",
+   "type": "string"
+  },
+  "AuthenticationType": {
+   "description": "The authentication type for the user.",
+   "enum": [
+    "API",
+    "AWS_AD",
+    "SAML",
+    "USERPOOL"
+   ],
+   "type": "string"
+  },
+  "FirstName": {
+   "description": "The first name, or given name, of the user.",
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "^[A-Za-z0-9_\\-\\s]+$",
+   "type": "string"
+  },
+  "LastName": {
+   "description": "The last name, or surname, of the user.",
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "^[A-Za-z0-9_\\-\\s]+$",
+   "type": "string"
+  },
+  "MessageAction": {
+   "description": "The action to take for the welcome email that is sent to a user after the user is created in the user pool. If you specify SUPPRESS, no email is sent. If you specify RESEND, do not specify the first name or last name of the user. If the value is null, the email is sent.",
+   "enum": [
+    "RESEND",
+    "SUPPRESS"
+   ],
+   "type": "string"
+  },
+  "UserName": {
+   "description": "The email address of the user.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "UserName",
+  "AuthenticationType"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::AppStream::User",
+ "writeOnlyProperties": [
+  "/properties/MessageAction"
+ ]
+}

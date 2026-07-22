@@ -1,0 +1,282 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BucketName"
+ ],
+ "definitions": {
+  "CmkSecretConfig": {
+   "additionalProperties": false,
+   "description": "Specifies configuration information for a DataSync-managed secret, such as an authentication token or set of credentials that DataSync uses to access a specific transfer location, and a customer-managed AWS KMS key.",
+   "properties": {
+    "KmsKeyArn": {
+     "description": "Specifies the ARN for the customer-managed AWS KMS key used to encrypt the secret specified for SecretArn. DataSync provides this key to AWS Secrets Manager.",
+     "format": "AWS::KMS::Key.Arn",
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):kms:[a-z-0-9]+:[0-9]{12}:key/.*|)$",
+     "type": "string"
+    },
+    "SecretArn": {
+     "description": "Specifies the ARN for an AWS Secrets Manager secret, managed by DataSync.",
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):secretsmanager:[a-z-0-9]+:[0-9]{12}:secret:.*|)$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CustomSecretConfig": {
+   "additionalProperties": false,
+   "description": "Specifies configuration information for a customer-managed secret, such as an authentication token or set of credentials that DataSync uses to access a specific transfer location, and an IAM role that DataSync can assume and access the customer-managed secret.",
+   "properties": {
+    "SecretAccessRoleArn": {
+     "description": "Specifies the ARN for the AWS Identity and Access Management role that DataSync uses to access the secret specified for SecretArn.",
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):iam::[0-9]{12}:role/.*|)$",
+     "type": "string"
+    },
+    "SecretArn": {
+     "description": "Specifies the ARN for a customer created AWS Secrets Manager secret.",
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):secretsmanager:[a-z-0-9]+:[0-9]{12}:secret:.*|)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretArn",
+    "SecretAccessRoleArn"
+   ],
+   "type": "object"
+  },
+  "ManagedSecretConfig": {
+   "additionalProperties": false,
+   "description": "Specifies configuration information for a DataSync-managed secret, such as an authentication token or set of credentials that DataSync uses to access a specific transfer location. DataSync uses the default AWS-managed KMS key to encrypt this secret in AWS Secrets Manager.",
+   "properties": {
+    "SecretArn": {
+     "description": "Specifies the ARN for an AWS Secrets Manager secret.",
+     "maxLength": 2048,
+     "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):secretsmanager:[a-z-0-9]+:[0-9]{12}:secret:.*|)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key for an AWS resource tag.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:/-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for an AWS resource tag.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::DataSync::LocationObjectStorage.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "datasync:CreateLocationObjectStorage",
+    "datasync:DescribeLocationObjectStorage",
+    "datasync:ListTagsForResource",
+    "datasync:TagResource",
+    "secretsmanager:CreateSecret",
+    "secretsmanager:PutSecretValue",
+    "secretsmanager:DeleteSecret",
+    "iam:CreateServiceLinkedRole",
+    "iam:PassRole",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:GenerateDataKey"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "datasync:DeleteLocation",
+    "secretsmanager:DeleteSecret"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "datasync:ListLocations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "datasync:DescribeLocationObjectStorage",
+    "datasync:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "datasync:DescribeLocationObjectStorage",
+    "datasync:ListTagsForResource",
+    "datasync:TagResource",
+    "datasync:UntagResource",
+    "datasync:UpdateLocationObjectStorage",
+    "secretsmanager:UpdateSecret",
+    "secretsmanager:DeleteSecret",
+    "secretsmanager:PutSecretValue",
+    "secretsmanager:CreateSecret",
+    "iam:CreateServiceLinkedRole",
+    "iam:PassRole",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:GenerateDataKey"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LocationArn"
+ ],
+ "properties": {
+  "AccessKey": {
+   "description": "Optional. The access key is used if credentials are required to access the self-managed object storage server.",
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^.+$",
+   "type": "string"
+  },
+  "AgentArns": {
+   "description": "Specifies the Amazon Resource Names (ARNs) of the DataSync agents that can connect with your object storage system. If you are setting up an agentless cross-cloud transfer, you do not need to specify a value for this parameter.",
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 128,
+    "minLength": 0,
+    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:agent/agent-[0-9a-z]{17}$",
+    "type": "string"
+   },
+   "maxItems": 8,
+   "minItems": 1,
+   "type": "array"
+  },
+  "BucketName": {
+   "description": "The name of the bucket on the self-managed object storage server.",
+   "format": "AWS::S3::Bucket.Name",
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "^[a-zA-Z0-9_\\-\\+\\./\\(\\)\\$\\p{Zs}]+$",
+   "type": "string"
+  },
+  "CmkSecretConfig": {
+   "$ref": "#/definitions/CmkSecretConfig"
+  },
+  "CustomSecretConfig": {
+   "$ref": "#/definitions/CustomSecretConfig"
+  },
+  "LocationArn": {
+   "description": "The Amazon Resource Name (ARN) of the location that is created.",
+   "maxLength": 128,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:location/loc-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "LocationUri": {
+   "description": "The URL of the object storage location that was described.",
+   "maxLength": 4356,
+   "pattern": "^(efs|nfs|s3|smb|fsxw|object-storage)://[a-zA-Z0-9./\\-]+$",
+   "type": "string"
+  },
+  "ManagedSecretConfig": {
+   "$ref": "#/definitions/ManagedSecretConfig"
+  },
+  "SecretKey": {
+   "description": "Optional. The secret key is used if credentials are required to access the self-managed object storage server.",
+   "maxLength": 200,
+   "minLength": 8,
+   "pattern": "^.+$",
+   "type": "string"
+  },
+  "ServerCertificate": {
+   "description": "X.509 PEM content containing a certificate authority or chain to trust.",
+   "maxLength": 32768,
+   "type": "string"
+  },
+  "ServerHostname": {
+   "description": "The name of the self-managed object storage server. This value is the IP address or Domain Name Service (DNS) name of the object storage server.",
+   "maxLength": 255,
+   "minLength": 0,
+   "pattern": "^(([a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9\\-]*[A-Za-z0-9])$",
+   "type": "string"
+  },
+  "ServerPort": {
+   "description": "The port that your self-managed server accepts inbound network traffic on.",
+   "maximum": 65536,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ServerProtocol": {
+   "description": "The protocol that the object storage server uses to communicate.",
+   "enum": [
+    "HTTPS",
+    "HTTP"
+   ],
+   "type": "string"
+  },
+  "Subdirectory": {
+   "description": "The subdirectory in the self-managed object storage server that is used to read data from.",
+   "maxLength": 4096,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9_\\-\\+\\./\\(\\)\\p{Zs}]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LocationArn",
+  "/properties/LocationUri",
+  "/properties/ManagedSecretConfig",
+  "/properties/CmkSecretConfig/SecretArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datasync.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "datasync:TagResource",
+   "datasync:UntagResource",
+   "datasync:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataSync::LocationObjectStorage",
+ "writeOnlyProperties": [
+  "/properties/SecretKey",
+  "/properties/BucketName",
+  "/properties/ServerHostname",
+  "/properties/Subdirectory"
+ ]
+}

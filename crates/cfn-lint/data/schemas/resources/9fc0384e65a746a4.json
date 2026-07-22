@@ -1,0 +1,107 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ContactFlowModuleId"
+ ],
+ "definitions": {},
+ "description": "Resource Type definition for ContactFlowModuleAlias",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect:CreateContactFlowModuleAlias",
+    "connect:DescribeContactFlowModuleAlias"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect:DeleteContactFlowModuleAlias"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ContactFlowModuleId": {
+      "$ref": "resource-schema.json#/properties/ContactFlowModuleId"
+     }
+    },
+    "required": [
+     "ContactFlowModuleId"
+    ]
+   },
+   "permissions": [
+    "connect:ListContactFlowModuleAliases"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect:DescribeContactFlowModuleAlias"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "connect:UpdateContactFlowModuleAlias",
+    "connect:DescribeContactFlowModuleAlias"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ContactFlowModuleAliasARN"
+ ],
+ "properties": {
+  "AliasId": {
+   "description": "The unique identifier of the alias.",
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ContactFlowModuleAliasARN": {
+   "description": "The identifier of the contact flow module alias (ARN). This is constructed from the ContactFlowModuleArn and AliasId.",
+   "maxLength": 500,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]+:[0-9]{12}:instance/[-a-zA-Z0-9]+/flow-module/[-a-zA-Z0-9]+:[-a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "ContactFlowModuleId": {
+   "description": "The identifier of the contact flow module (ARN) this alias is tied to.",
+   "maxLength": 500,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]+:[0-9]{12}:instance/[-a-zA-Z0-9]+/flow-module/[-a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "ContactFlowModuleVersion": {
+   "description": "The version number of the contact flow module this alias points to.",
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Description": {
+   "description": "The description of the alias.",
+   "maxLength": 500,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the alias.",
+   "maxLength": 127,
+   "minLength": 1,
+   "pattern": "^([$0-9a-zA-Z][_-]?)+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ContactFlowModuleAliasARN",
+  "/properties/AliasId"
+ ],
+ "required": [
+  "ContactFlowModuleId",
+  "ContactFlowModuleVersion",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Connect::ContactFlowModuleAlias"
+}

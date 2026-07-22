@@ -1,0 +1,118 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RestApiId"
+ ],
+ "description": "The ``AWS::ApiGateway::Authorizer`` resource creates an authorization layer that API Gateway activates for methods that have authorization enabled. API Gateway activates the authorizer when a client calls those methods.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "RestApiId": {
+      "$ref": "resource-schema.json#/properties/RestApiId"
+     }
+    },
+    "required": [
+     "RestApiId"
+    ]
+   },
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:PATCH",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RestApiId",
+  "/properties/AuthorizerId"
+ ],
+ "properties": {
+  "AuthType": {
+   "description": "",
+   "type": "string"
+  },
+  "AuthorizerCredentials": {
+   "description": "",
+   "type": "string"
+  },
+  "AuthorizerId": {
+   "description": "",
+   "type": "string"
+  },
+  "AuthorizerResultTtlInSeconds": {
+   "description": "",
+   "type": "integer"
+  },
+  "AuthorizerUri": {
+   "description": "",
+   "type": "string"
+  },
+  "IdentitySource": {
+   "description": "",
+   "type": "string"
+  },
+  "IdentityValidationExpression": {
+   "description": "",
+   "type": "string"
+  },
+  "Name": {
+   "description": "",
+   "type": "string"
+  },
+  "ProviderARNs": {
+   "description": "",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RestApiId": {
+   "description": "",
+   "type": "string"
+  },
+  "Type": {
+   "description": "",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AuthorizerId"
+ ],
+ "required": [
+  "RestApiId",
+  "Type",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ApiGateway::Authorizer"
+}

@@ -1,0 +1,472 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/WorkgroupName",
+  "/properties/NamespaceName"
+ ],
+ "definitions": {
+  "ConfigParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "ParameterKey": {
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    },
+    "ParameterValue": {
+     "maxLength": 15000,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Endpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "integer"
+    },
+    "VpcEndpoints": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/VpcEndpoint"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "NetworkInterface": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "type": "string"
+    },
+    "NetworkInterfaceId": {
+     "type": "string"
+    },
+    "PrivateIpAddress": {
+     "type": "string"
+    },
+    "SubnetId": {
+     "format": "AWS::EC2::Subnet.Id",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PerformanceTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "Level": {
+     "maximum": 100,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Status": {
+     "$ref": "#/definitions/PerformanceTargetStatus"
+    }
+   },
+   "type": "object"
+  },
+  "PerformanceTargetStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VpcEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "NetworkInterfaces": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/NetworkInterface"
+     },
+     "type": "array"
+    },
+    "VpcEndpointId": {
+     "type": "string"
+    },
+    "VpcId": {
+     "format": "AWS::EC2::VPC.Id",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Workgroup": {
+   "additionalProperties": false,
+   "properties": {
+    "BaseCapacity": {
+     "type": "integer"
+    },
+    "ConfigParameters": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ConfigParameter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "CreationDate": {
+     "type": "string"
+    },
+    "Endpoint": {
+     "$ref": "#/definitions/Endpoint"
+    },
+    "EnhancedVpcRouting": {
+     "type": "boolean"
+    },
+    "MaxCapacity": {
+     "type": "integer"
+    },
+    "NamespaceName": {
+     "maxLength": 64,
+     "minLength": 3,
+     "pattern": "^[a-z0-9-]+$",
+     "type": "string"
+    },
+    "PricePerformanceTarget": {
+     "$ref": "#/definitions/PerformanceTarget"
+    },
+    "PubliclyAccessible": {
+     "type": "boolean"
+    },
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "maxLength": 255,
+      "minLength": 0,
+      "pattern": "^sg-[0-9a-fA-F]{8,}$",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Status": {
+     "$ref": "#/definitions/WorkgroupStatus"
+    },
+    "SubnetIds": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 255,
+      "minLength": 0,
+      "pattern": "^subnet-[0-9a-fA-F]{8,}$",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "TrackName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_]+$",
+     "type": "string"
+    },
+    "WorkgroupArn": {
+     "type": "string"
+    },
+    "WorkgroupId": {
+     "type": "string"
+    },
+    "WorkgroupName": {
+     "maxLength": 64,
+     "minLength": 3,
+     "pattern": "^[a-z0-9-]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "WorkgroupStatus": {
+   "enum": [
+    "CREATING",
+    "AVAILABLE",
+    "MODIFYING",
+    "DELETING"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "Definition of AWS::RedshiftServerless::Workgroup Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAvailabilityZones",
+    "redshift-serverless:CreateNamespace",
+    "redshift-serverless:CreateWorkgroup",
+    "redshift-serverless:GetWorkgroup",
+    "redshift-serverless:GetNamespace",
+    "redshift-serverless:ListTagsForResource",
+    "redshift-serverless:TagResource",
+    "redshift-serverless:RestoreFromSnapshot",
+    "redshift-serverless:RestoreFromRecoveryPoint"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAvailabilityZones",
+    "redshift-serverless:GetWorkgroup",
+    "redshift-serverless:GetNamespace",
+    "redshift-serverless:DeleteWorkgroup",
+    "redshift-serverless:ListTagsForResource",
+    "redshift-serverless:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAvailabilityZones",
+    "redshift-serverless:ListWorkgroups",
+    "redshift-serverless:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAvailabilityZones",
+    "redshift-serverless:GetWorkgroup",
+    "redshift-serverless:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAvailabilityZones",
+    "redshift-serverless:ListTagsForResource",
+    "redshift-serverless:TagResource",
+    "redshift-serverless:UntagResource",
+    "redshift-serverless:GetWorkgroup",
+    "redshift-serverless:UpdateWorkgroup",
+    "redshift-serverless:ListTagsForResource",
+    "redshift-serverless:TagResource",
+    "redshift-serverless:UntagResource",
+    "redshift-serverless:RestoreFromSnapshot",
+    "redshift-serverless:RestoreFromRecoveryPoint"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WorkgroupName"
+ ],
+ "properties": {
+  "BaseCapacity": {
+   "description": "The base compute capacity of the workgroup in Redshift Processing Units (RPUs).",
+   "type": "integer"
+  },
+  "ConfigParameters": {
+   "description": "A list of parameters to set for finer control over a database. Available options are datestyle, enable_user_activity_logging, query_group, search_path, max_query_execution_time, and require_ssl.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ConfigParameter"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "EnhancedVpcRouting": {
+   "default": false,
+   "description": "The value that specifies whether to enable enhanced virtual private cloud (VPC) routing, which forces Amazon Redshift Serverless to route traffic through your VPC.",
+   "type": "boolean"
+  },
+  "MaxCapacity": {
+   "description": "The max compute capacity of the workgroup in Redshift Processing Units (RPUs).",
+   "type": "integer"
+  },
+  "NamespaceName": {
+   "description": "The namespace the workgroup is associated with.",
+   "maxLength": 64,
+   "minLength": 3,
+   "pattern": "^(?=^[a-z0-9-]+$).{3,64}$",
+   "type": "string"
+  },
+  "Port": {
+   "description": "The custom port to use when connecting to a workgroup. Valid port ranges are 5431-5455 and 8191-8215. The default is 5439.",
+   "type": "integer"
+  },
+  "PricePerformanceTarget": {
+   "$ref": "#/definitions/PerformanceTarget",
+   "description": "A property that represents the price performance target settings for the workgroup.",
+   "type": "object"
+  },
+  "PubliclyAccessible": {
+   "default": false,
+   "description": "A value that specifies whether the workgroup can be accessible from a public network.",
+   "type": "boolean"
+  },
+  "RecoveryPointId": {
+   "description": "The identifier of the recovery point to restore the namespace from. When this resource is first created, the namespace is restored from this recovery point. On subsequent updates, a restore occurs only when RecoveryPointId changes from its previous value. If the value is unchanged or removed, no restore takes place and existing data is preserved.",
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "description": "A list of security group IDs to associate with the workgroup.",
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "maxLength": 255,
+    "minLength": 0,
+    "pattern": "^sg-[0-9a-fA-F]{8,}$",
+    "type": "string"
+   },
+   "maxItems": 32,
+   "minItems": 1,
+   "type": "array"
+  },
+  "SnapshotArn": {
+   "description": "The Amazon Resource Name (ARN) of the snapshot to restore the namespace from. Specify either SnapshotArn or SnapshotName, but not both. When this resource is first created, the namespace is restored from this snapshot. On subsequent updates, a restore occurs only when SnapshotArn changes from its previous value. If the value is unchanged or removed, no restore takes place and existing data is preserved.",
+   "type": "string"
+  },
+  "SnapshotName": {
+   "description": "The name of the snapshot to restore the namespace from. Because snapshot names are unique only within an account, also specify SnapshotOwnerAccount when restoring from a snapshot owned by a different account. Specify either SnapshotName or SnapshotArn, but not both. When this resource is first created, the namespace is restored from this snapshot. On subsequent updates, a restore occurs only when SnapshotName or SnapshotOwnerAccount changes from its previous value. If both values are unchanged or SnapshotName is removed, no restore takes place and existing data is preserved.",
+   "type": "string"
+  },
+  "SnapshotOwnerAccount": {
+   "description": "The AWS account ID that owns the snapshot. Required when restoring from a snapshot shared by another account. Used in combination with SnapshotName. On updates, changing this value while SnapshotName is set triggers a restore from the newly referenced snapshot. If the value is unchanged, no restore takes place and existing data is preserved.",
+   "type": "string"
+  },
+  "SubnetIds": {
+   "description": "A list of subnet IDs the workgroup is associated with.",
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 255,
+    "minLength": 0,
+    "pattern": "^subnet-[0-9a-fA-F]{8,}$",
+    "type": "string"
+   },
+   "maxItems": 32,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Tags": {
+   "description": "The map of the key-value pairs used to tag the workgroup.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "TrackName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_]+$",
+   "type": "string"
+  },
+  "Workgroup": {
+   "$ref": "#/definitions/Workgroup",
+   "description": "Definition for workgroup resource"
+  },
+  "WorkgroupName": {
+   "description": "The name of the workgroup.",
+   "maxLength": 64,
+   "minLength": 3,
+   "pattern": "^(?=^[a-z0-9-]+$).{3,64}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Workgroup/WorkgroupId",
+  "/properties/Workgroup/WorkgroupArn",
+  "/properties/Workgroup/WorkgroupName",
+  "/properties/Workgroup/NamespaceName",
+  "/properties/Workgroup/BaseCapacity",
+  "/properties/Workgroup/MaxCapacity",
+  "/properties/Workgroup/EnhancedVpcRouting",
+  "/properties/Workgroup/ConfigParameters",
+  "/properties/Workgroup/SecurityGroupIds",
+  "/properties/Workgroup/SubnetIds",
+  "/properties/Workgroup/TrackName",
+  "/properties/Workgroup/Status",
+  "/properties/Workgroup/Endpoint/Address",
+  "/properties/Workgroup/Endpoint/Port",
+  "/properties/Workgroup/Endpoint/VpcEndpoints/*/VpcEndpointId",
+  "/properties/Workgroup/Endpoint/VpcEndpoints/*/VpcId",
+  "/properties/Workgroup/Endpoint/VpcEndpoints/*/NetworkInterfaces/*/NetworkInterfaceId",
+  "/properties/Workgroup/Endpoint/VpcEndpoints/*/NetworkInterfaces/*/SubnetId",
+  "/properties/Workgroup/Endpoint/VpcEndpoints/*/NetworkInterfaces/*/PrivateIpAddress",
+  "/properties/Workgroup/Endpoint/VpcEndpoints/*/NetworkInterfaces/*/AvailabilityZone",
+  "/properties/Workgroup/PubliclyAccessible",
+  "/properties/Workgroup/CreationDate"
+ ],
+ "required": [
+  "WorkgroupName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-redshift-serverless",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "redshift-serverless:ListTagsForResource",
+   "redshift-serverless:TagResource",
+   "redshift-serverless:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RedshiftServerless::Workgroup",
+ "writeOnlyProperties": [
+  "/properties/ConfigParameters",
+  "/properties/SecurityGroupIds",
+  "/properties/SubnetIds",
+  "/properties/SnapshotArn",
+  "/properties/SnapshotName",
+  "/properties/SnapshotOwnerAccount",
+  "/properties/RecoveryPointId"
+ ]
+}

@@ -1,0 +1,307 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ParameterConfiguration": {
+   "additionalProperties": false,
+   "description": "An object that provides the current value of a security control parameter and identifies whether it has been customized.",
+   "properties": {
+    "Value": {
+     "$ref": "#/definitions/ParameterValue"
+    },
+    "ValueType": {
+     "description": "Identifies whether a control parameter uses a custom user-defined value or subscribes to the default AWS Security Hub behavior.",
+     "enum": [
+      "DEFAULT",
+      "CUSTOM"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ValueType"
+   ],
+   "type": "object"
+  },
+  "ParameterValue": {
+   "additionalProperties": false,
+   "description": "An object that includes the data type of a security control parameter and its current value.",
+   "maxProperties": 1,
+   "minProperties": 1,
+   "properties": {
+    "Boolean": {
+     "description": "A control parameter that is a boolean.",
+     "type": "boolean"
+    },
+    "Double": {
+     "description": "A control parameter that is a double.",
+     "type": "number"
+    },
+    "Enum": {
+     "description": "A control parameter that is an enum.",
+     "maxLength": 2048,
+     "type": "string"
+    },
+    "EnumList": {
+     "description": "A control parameter that is a list of enums.",
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 2048,
+      "type": "string"
+     },
+     "maxItems": 100,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Integer": {
+     "description": "A control parameter that is an integer.",
+     "type": "integer"
+    },
+    "IntegerList": {
+     "description": "A control parameter that is a list of integers.",
+     "insertionOrder": true,
+     "items": {
+      "type": "integer"
+     },
+     "maxItems": 100,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "String": {
+     "description": "A control parameter that is a string.",
+     "maxLength": 2048,
+     "type": "string"
+    },
+    "StringList": {
+     "description": "A control parameter that is a list of strings.",
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 2048,
+      "type": "string"
+     },
+     "maxItems": 100,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Policy": {
+   "additionalProperties": false,
+   "description": "An object that defines how Security Hub is configured.",
+   "properties": {
+    "SecurityHub": {
+     "$ref": "#/definitions/SecurityHubPolicy"
+    }
+   },
+   "type": "object"
+  },
+  "SecurityControlCustomParameter": {
+   "additionalProperties": false,
+   "description": "An object of security control and control parameter value that are included in a configuration policy.",
+   "properties": {
+    "Parameters": {
+     "additionalProperties": false,
+     "description": "An object that specifies parameter values for a control in a configuration policy.",
+     "minProperties": 1,
+     "patternProperties": {
+      "^[-_+=.:/@\\w\\s]{1,128}$": {
+       "$ref": "#/definitions/ParameterConfiguration"
+      }
+     },
+     "type": "object"
+    },
+    "SecurityControlId": {
+     "description": "The ID of the security control.",
+     "maxLength": 2048,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SecurityControlsConfiguration": {
+   "additionalProperties": false,
+   "description": "An object that defines which security controls are enabled in an AWS Security Hub configuration policy.",
+   "properties": {
+    "DisabledSecurityControlIdentifiers": {
+     "description": "A list of security controls that are disabled in the configuration policy",
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 2048,
+      "type": "string"
+     },
+     "maxItems": 1000,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "EnabledSecurityControlIdentifiers": {
+     "description": "A list of security controls that are enabled in the configuration policy.",
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 2048,
+      "type": "string"
+     },
+     "maxItems": 1000,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SecurityControlCustomParameters": {
+     "description": "A list of security controls and control parameter values that are included in a configuration policy.",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/SecurityControlCustomParameter"
+     },
+     "maxItems": 1000,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "SecurityHubPolicy": {
+   "additionalProperties": false,
+   "description": "An object that defines how AWS Security Hub is configured.",
+   "properties": {
+    "EnabledStandardIdentifiers": {
+     "description": "A list that defines which security standards are enabled in the configuration policy.",
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 2048,
+      "type": "string"
+     },
+     "maxItems": 1000,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SecurityControlsConfiguration": {
+     "$ref": "#/definitions/SecurityControlsConfiguration"
+    },
+    "ServiceEnabled": {
+     "description": "Indicates whether Security Hub is enabled in the policy.",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "patternProperties": {
+    "^(?!aws:)[a-zA-Z+-=._:/]{1,128}$": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "The AWS::SecurityHub::ConfigurationPolicy resource represents the Central Configuration Policy in your account.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityhub:CreateConfigurationPolicy",
+    "securityhub:TagResource",
+    "securityhub:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securityhub:GetConfigurationPolicy",
+    "securityhub:DeleteConfigurationPolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securityhub:ListConfigurationPolicies",
+    "securityhub:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityhub:GetConfigurationPolicy",
+    "securityhub:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securityhub:UpdateConfigurationPolicy",
+    "securityhub:TagResource",
+    "securityhub:UntagResource",
+    "securityhub:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the configuration policy.",
+   "pattern": "^arn:aws\\S*:securityhub:[a-z0-9-]+:[0-9]{12}:configuration-policy/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "ConfigurationPolicy": {
+   "$ref": "#/definitions/Policy"
+  },
+  "CreatedAt": {
+   "description": "The date and time, in UTC and ISO 8601 format.",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the configuration policy.",
+   "maxLength": 512,
+   "minLength": 0,
+   "pattern": "\\S",
+   "type": "string"
+  },
+  "Id": {
+   "description": "The universally unique identifier (UUID) of the configuration policy.",
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the configuration policy.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "\\S",
+   "type": "string"
+  },
+  "ServiceEnabled": {
+   "description": "Indicates whether the service that the configuration policy applies to is enabled in the policy.",
+   "type": "boolean"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "UpdatedAt": {
+   "description": "The date and time, in UTC and ISO 8601 format.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/ServiceEnabled"
+ ],
+ "required": [
+  "ConfigurationPolicy",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securityhub",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "securityhub:ListTagsForResource",
+   "securityhub:TagResource",
+   "securityhub:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityHub::ConfigurationPolicy"
+}

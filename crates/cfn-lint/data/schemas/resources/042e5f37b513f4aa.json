@@ -1,0 +1,102 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PortfolioId",
+  "/properties/ProductId"
+ ],
+ "description": "Resource type definition for AWS::ServiceCatalog::ResourceUpdateConstraint",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "servicecatalog:CreateConstraint",
+    "servicecatalog:DescribeConstraint"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "servicecatalog:DeleteConstraint"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "PortfolioId": {
+      "$ref": "resource-schema.json#/properties/PortfolioId"
+     }
+    },
+    "required": [
+     "PortfolioId"
+    ]
+   },
+   "permissions": [
+    "servicecatalog:ListConstraintsForPortfolio"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "servicecatalog:DescribeConstraint"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "servicecatalog:UpdateConstraint",
+    "servicecatalog:DescribeConstraint"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AcceptLanguage": {
+   "description": "The language code",
+   "maxLength": 100,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the constraint",
+   "maxLength": 2000,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Id": {
+   "description": "Unique identifier for the constraint",
+   "type": "string"
+  },
+  "PortfolioId": {
+   "description": "The portfolio identifier",
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_\\-]*$",
+   "type": "string"
+  },
+  "ProductId": {
+   "description": "The product identifier",
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_\\-]*$",
+   "type": "string"
+  },
+  "TagUpdateOnProvisionedProduct": {
+   "description": "ALLOWED or NOT_ALLOWED, to permit or prevent changes to the tags on provisioned instances of the specified portfolio / product combination",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "TagUpdateOnProvisionedProduct",
+  "PortfolioId",
+  "ProductId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-servicecatalog/tree/master/aws-servicecatalog-resourceupdateconstraint.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ServiceCatalog::ResourceUpdateConstraint",
+ "writeOnlyProperties": [
+  "/properties/AcceptLanguage"
+ ]
+}

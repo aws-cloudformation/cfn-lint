@@ -1,0 +1,185 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ],
+  [
+   "/properties/Arn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/StandbyReplicas",
+  "/properties/Generation"
+ ],
+ "definitions": {
+  "CapacityLimits": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxIndexingCapacityInOcu": {
+     "description": "The maximum indexing capacity for collections in the group.",
+     "minimum": 1,
+     "multipleOf": 0.5,
+     "type": "number"
+    },
+    "MaxSearchCapacityInOcu": {
+     "description": "The maximum search capacity for collections in the group.",
+     "minimum": 1,
+     "multipleOf": 0.5,
+     "type": "number"
+    },
+    "MinIndexingCapacityInOcu": {
+     "description": "The minimum indexing capacity for collections in the group.",
+     "minimum": 0,
+     "multipleOf": 0.5,
+     "type": "number"
+    },
+    "MinSearchCapacityInOcu": {
+     "description": "The minimum search capacity for collections in the group.",
+     "minimum": 0,
+     "multipleOf": 0.5,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A map of key-value pairs associated with the collection group.",
+   "properties": {
+    "Key": {
+     "description": "The key in the key-value pair",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value in the key-value pair",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::OpenSearchServerless::CollectionGroup",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "aoss:CreateCollectionGroup",
+    "aoss:BatchGetCollectionGroup",
+    "aoss:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "aoss:DeleteCollectionGroup",
+    "aoss:BatchGetCollectionGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "aoss:ListCollectionGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "aoss:BatchGetCollectionGroup",
+    "aoss:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "aoss:UpdateCollectionGroup",
+    "aoss:BatchGetCollectionGroup",
+    "aoss:TagResource",
+    "aoss:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the collection group.",
+   "type": "string"
+  },
+  "CapacityLimits": {
+   "$ref": "#/definitions/CapacityLimits"
+  },
+  "Description": {
+   "description": "The description of the collection group.",
+   "maxLength": 1000,
+   "type": "string"
+  },
+  "Generation": {
+   "description": "The generation of Amazon OpenSearch Serverless for the collection group. Valid values are CLASSIC and NEXTGEN.",
+   "enum": [
+    "CLASSIC",
+    "NEXTGEN"
+   ],
+   "type": "string"
+  },
+  "Id": {
+   "description": "The unique identifier of the collection group.",
+   "maxLength": 40,
+   "minLength": 3,
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the collection group.",
+   "maxLength": 32,
+   "minLength": 3,
+   "pattern": "^[a-z][a-z0-9-]{2,31}$",
+   "type": "string"
+  },
+  "StandbyReplicas": {
+   "description": "Indicates whether standby replicas are used for the collection group.",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "StandbyReplicas"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-opensearchserverless",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "aoss:TagResource",
+   "aoss:UntagResource",
+   "aoss:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::OpenSearchServerless::CollectionGroup"
+}

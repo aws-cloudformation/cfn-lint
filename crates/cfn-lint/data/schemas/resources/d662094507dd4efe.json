@@ -1,0 +1,148 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterId"
+ ],
+ "definitions": {
+  "ChannelPlacementGroupState": {
+   "description": "The current state of the ChannelPlacementGroupState",
+   "enum": [
+    "UNASSIGNED",
+    "ASSIGNING",
+    "ASSIGNED",
+    "DELETING",
+    "DELETED",
+    "UNASSIGNING"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Definition of AWS::MediaLive::ChannelPlacementGroup Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "medialive:CreateChannelPlacementGroup",
+    "medialive:DescribeChannelPlacementGroup",
+    "medialive:CreateTags",
+    "medialive:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "medialive:DeleteChannelPlacementGroup",
+    "medialive:DescribeChannelPlacementGroup"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ClusterId": {
+      "$ref": "resource-schema.json#/properties/ClusterId"
+     }
+    },
+    "required": [
+     "ClusterId"
+    ]
+   },
+   "permissions": [
+    "medialive:ListChannelPlacementGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "medialive:DescribeChannelPlacementGroup",
+    "medialive:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "medialive:UpdateChannelPlacementGroup",
+    "medialive:DescribeChannelPlacementGroup",
+    "medialive:CreateTags",
+    "medialive:DeleteTags",
+    "medialive:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id",
+  "/properties/ClusterId"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The ARN of the channel placement group.",
+   "type": "string"
+  },
+  "Channels": {
+   "description": "List of channel IDs added to the channel placement group.",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ClusterId": {
+   "description": "The ID of the cluster the node is on.",
+   "type": "string"
+  },
+  "Id": {
+   "description": "Unique internal identifier.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the channel placement group.",
+   "type": "string"
+  },
+  "Nodes": {
+   "description": "List of nodes added to the channel placement group",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "State": {
+   "$ref": "#/definitions/ChannelPlacementGroupState"
+  },
+  "Tags": {
+   "description": "A collection of key-value pairs.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tags"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Channels",
+  "/properties/Id",
+  "/properties/State"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-medialive.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "medialive:CreateTags",
+   "medialive:DeleteTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaLive::ChannelPlacementGroup"
+}

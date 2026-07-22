@@ -1,0 +1,204 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SecretId"
+ ],
+ "definitions": {
+  "ExternalSecretRotationMetadataItem": {
+   "additionalProperties": false,
+   "description": "The metadata needed to successfully rotate a managed external secret. Each metadata item is a key and value pair of strings in a JSON text string.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the metadata item. You can specify a value that's 1 to 256 characters in length.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the metadata item. You can specify a value that's 1 to 2048 characters in length.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "HostedRotationLambda": {
+   "additionalProperties": false,
+   "properties": {
+    "ExcludeCharacters": {
+     "description": "A string of the characters that you don't want in the password.",
+     "type": "string"
+    },
+    "KmsKeyArn": {
+     "description": "The ARN of the KMS key that Secrets Manager uses to encrypt the secret. If you don't specify this value, then Secrets Manager uses the key aws/secretsmanager. If aws/secretsmanager doesn't yet exist, then Secrets Manager creates it for you automatically the first time it encrypts the secret value.",
+     "format": "AWS::KMS::Key.Arn",
+     "type": "string"
+    },
+    "MasterSecretArn": {
+     "description": "The ARN of the secret that contains superuser credentials, if you use the alternating users rotation strategy. CloudFormation grants the execution role for the Lambda rotation function GetSecretValue permission to the secret in this property.",
+     "type": "string"
+    },
+    "MasterSecretKmsKeyArn": {
+     "description": "The ARN of the KMS key that Secrets Manager used to encrypt the superuser secret, if you use the alternating users strategy and the superuser secret is encrypted with a customer managed key. You don't need to specify this property if the superuser secret is encrypted using the key aws/secretsmanager. CloudFormation grants the execution role for the Lambda rotation function Decrypt, DescribeKey, and GenerateDataKey permission to the key in this property.",
+     "type": "string"
+    },
+    "RotationLambdaName": {
+     "description": "The name of the Lambda rotation function.",
+     "type": "string"
+    },
+    "RotationType": {
+     "description": "The type of rotation template to use",
+     "type": "string"
+    },
+    "Runtime": {
+     "description": "The python runtime associated with the Lambda function",
+     "type": "string"
+    },
+    "SuperuserSecretArn": {
+     "description": "The ARN of the secret that contains superuser credentials, if you use the alternating users rotation strategy. CloudFormation grants the execution role for the Lambda rotation function GetSecretValue permission to the secret in this property.",
+     "type": "string"
+    },
+    "SuperuserSecretKmsKeyArn": {
+     "description": "The ARN of the KMS key that Secrets Manager used to encrypt the superuser secret, if you use the alternating users strategy and the superuser secret is encrypted with a customer managed key. You don't need to specify this property if the superuser secret is encrypted using the key aws/secretsmanager. CloudFormation grants the execution role for the Lambda rotation function Decrypt, DescribeKey, and GenerateDataKey permission to the key in this property.",
+     "type": "string"
+    },
+    "VpcSecurityGroupIds": {
+     "description": "A comma-separated list of security group IDs applied to the target database.",
+     "type": "string"
+    },
+    "VpcSubnetIds": {
+     "description": "A comma separated list of VPC subnet IDs of the target database network. The Lambda rotation function is in the same subnet group.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RotationType"
+   ],
+   "type": "object"
+  },
+  "RotationRules": {
+   "additionalProperties": false,
+   "properties": {
+    "AutomaticallyAfterDays": {
+     "description": "The number of days between automatic scheduled rotations of the secret. You can use this value to check that your secret meets your compliance guidelines for how often secrets must be rotated.",
+     "type": "integer"
+    },
+    "Duration": {
+     "description": "The length of the rotation window in hours, for example 3h for a three hour window. Secrets Manager rotates your secret at any time during this window. The window must not extend into the next rotation window or the next UTC day. The window starts according to the ScheduleExpression. If you don't specify a Duration, for a ScheduleExpression in hours, the window automatically closes after one hour. For a ScheduleExpression in days, the window automatically closes at the end of the UTC day.",
+     "type": "string"
+    },
+    "ScheduleExpression": {
+     "description": "A cron() or rate() expression that defines the schedule for rotating your secret. Secrets Manager rotation schedules use UTC time zone.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SecretsManager::RotationSchedule",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "secretsmanager:RotateSecret",
+    "secretsmanager:DescribeSecret",
+    "lambda:InvokeFunction",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "secretsmanager:CancelRotateSecret",
+    "secretsmanager:DescribeSecret"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "secretsmanager:DescribeSecret",
+    "secretsmanager:ListSecrets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "secretsmanager:DescribeSecret"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "secretsmanager:RotateSecret",
+    "secretsmanager:DescribeSecret",
+    "lambda:InvokeFunction",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ExternalSecretRotationMetadata": {
+   "description": "The list of metadata needed to successfully rotate a managed external secret.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ExternalSecretRotationMetadataItem"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ExternalSecretRotationRoleArn": {
+   "description": "The ARN of the IAM role that is used by Secrets Manager to rotate a managed external secret.",
+   "format": "AWS::IAM::Role.Arn",
+   "type": "string"
+  },
+  "HostedRotationLambda": {
+   "$ref": "#/definitions/HostedRotationLambda",
+   "description": "Creates a new Lambda rotation function based on one of the Secrets Manager rotation function templates. To use a rotation function that already exists, specify RotationLambdaARN instead."
+  },
+  "Id": {
+   "description": "The ARN of the secret.",
+   "type": "string"
+  },
+  "RotateImmediatelyOnUpdate": {
+   "description": "Specifies whether to rotate the secret immediately or wait until the next scheduled rotation window.",
+   "type": "boolean"
+  },
+  "RotationLambdaARN": {
+   "description": "The ARN of an existing Lambda rotation function. To specify a rotation function that is also defined in this template, use the Ref function.",
+   "type": "string"
+  },
+  "RotationRules": {
+   "$ref": "#/definitions/RotationRules",
+   "description": "A structure that defines the rotation configuration for this secret."
+  },
+  "SecretId": {
+   "description": "The ARN or name of the secret to rotate.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "SecretId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-secretsmanager",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::SecretsManager::RotationSchedule",
+ "writeOnlyProperties": [
+  "/properties/RotateImmediatelyOnUpdate",
+  "/properties/HostedRotationLambda",
+  "/properties/HostedRotationLambda/ExcludeCharacters",
+  "/properties/HostedRotationLambda/KmsKeyArn",
+  "/properties/HostedRotationLambda/MasterSecretArn",
+  "/properties/HostedRotationLambda/MasterSecretKmsKeyArn",
+  "/properties/HostedRotationLambda/RotationLambdaName",
+  "/properties/HostedRotationLambda/RotationType",
+  "/properties/HostedRotationLambda/Runtime",
+  "/properties/HostedRotationLambda/SuperuserSecretArn",
+  "/properties/HostedRotationLambda/SuperuserSecretKmsKeyArn",
+  "/properties/HostedRotationLambda/VpcSecurityGroupIds",
+  "/properties/HostedRotationLambda/VpcSubnetIds"
+ ]
+}

@@ -1,0 +1,190 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName"
+ ],
+ "definitions": {
+  "DomainEntry": {
+   "additionalProperties": false,
+   "description": "Describes the domain recordset entry (e.g., A record, CNAME record, TXT record, etc.)",
+   "properties": {
+    "Id": {
+     "description": "The ID of the domain recordset entry.",
+     "type": "string"
+    },
+    "IsAlias": {
+     "description": "When true, specifies whether the domain entry is an alias used by the Lightsail load balancer, Lightsail container service, Lightsail content delivery network (CDN) distribution, or another AWS resource. You can include an alias (A type) record in your request, which points to the DNS name of a load balancer, container service, CDN distribution, or other AWS resource and routes traffic to that resource.",
+     "type": "boolean"
+    },
+    "Name": {
+     "description": "The name of the domain entry.",
+     "type": "string"
+    },
+    "Target": {
+     "description": "The target AWS name server (e.g., ns-111.awsdns-11.com).",
+     "type": "string"
+    },
+    "Type": {
+     "description": "The type of domain entry (e.g., A, CNAME, MX, NS, SOA, SRV, TXT).",
+     "enum": [
+      "A",
+      "AAAA",
+      "CNAME",
+      "MX",
+      "NS",
+      "SOA",
+      "SRV",
+      "TXT"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Type",
+    "Target"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Lightsail::Domain",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lightsail:CreateDomain",
+    "lightsail:GetDomain",
+    "lightsail:CreateDomainEntry",
+    "lightsail:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lightsail:DeleteDomain",
+    "lightsail:GetDomain"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "lightsail:GetDomains"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lightsail:GetDomain"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "lightsail:GetDomain",
+    "lightsail:CreateDomainEntry",
+    "lightsail:DeleteDomainEntry",
+    "lightsail:TagResource",
+    "lightsail:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainName"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the domain (read-only).",
+   "pattern": "^arn:.+:lightsail:[a-z0-9-]+:[0-9]{12}:Domain/[a-zA-Z0-9][a-zA-Z0-9-_.]{0,253}[a-zA-Z0-9]$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "description": "The timestamp when the domain was created (read-only).",
+   "type": "string"
+  },
+  "DomainEntries": {
+   "description": "An array of key-value pairs containing information about the domain entries.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DomainEntry"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DomainName": {
+   "description": "The name of the domain to manage in Lightsail.",
+   "type": "string"
+  },
+  "Location": {
+   "additionalProperties": false,
+   "description": "The AWS Region and Availability Zone where the domain was created (read-only).",
+   "properties": {
+    "AvailabilityZone": {
+     "description": "The Availability Zone.",
+     "type": "string"
+    },
+    "RegionName": {
+     "description": "The AWS Region name.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceType": {
+   "description": "The Lightsail resource type (read-only).",
+   "enum": [
+    "Domain"
+   ],
+   "type": "string"
+  },
+  "SupportCode": {
+   "description": "The support code. Include this code in your email to support when you have questions (read-only).",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/SupportCode",
+  "/properties/CreatedAt",
+  "/properties/Location",
+  "/properties/ResourceType",
+  "/properties/DomainEntries/*/Id"
+ ],
+ "required": [
+  "DomainName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "lightsail:TagResource",
+   "lightsail:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Lightsail::Domain"
+}

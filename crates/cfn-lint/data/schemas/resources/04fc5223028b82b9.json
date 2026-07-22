@@ -1,0 +1,243 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Description",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Arn": {
+   "pattern": "arn:aws[a-z-]*:(billing)::[0-9]{12}:billingview/[a-zA-Z0-9/:_\\+=\\.\\-@]{0,75}[a-zA-Z0-9]",
+   "type": "string"
+  },
+  "BillingViewType": {
+   "enum": [
+    "PRIMARY",
+    "BILLING_GROUP",
+    "CUSTOM"
+   ],
+   "type": "string"
+  },
+  "DimensionKey": {
+   "enum": [
+    "LINKED_ACCOUNT"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a Billing View.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Timestamp": {
+   "description": "The time in ISO 8601 format, UTC time (YYYY-MM-DDTHH:MM:SSZ).",
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "description": "A billing view is a container of cost & usage metadata.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "billing:CreateBillingView",
+    "billing:AssociateSourceViews",
+    "billing:TagResource",
+    "billing:ListTagsForResource",
+    "billing:GetBillingView",
+    "billing:ListSourceViewsForBillingView",
+    "billing:UseSourceView"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "billing:GetBillingView",
+    "billing:DeleteBillingView"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "billing:ListBillingViews"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "billing:GetBillingView",
+    "billing:ListTagsForResource",
+    "billing:ListSourceViewsForBillingView"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "billing:UpdateBillingView",
+    "billing:DisassociateSourceViews",
+    "billing:AssociateSourceViews",
+    "billing:GetBillingView",
+    "billing:ListTagsForResource",
+    "billing:TagResource",
+    "billing:UntagResource",
+    "billing:UseSourceView",
+    "billing:ListSourceViewsForBillingView"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "BillingViewType": {
+   "$ref": "#/definitions/BillingViewType"
+  },
+  "CreatedAt": {
+   "description": "The time when the billing view was created.",
+   "type": "number"
+  },
+  "DataFilterExpression": {
+   "additionalProperties": false,
+   "properties": {
+    "Dimensions": {
+     "additionalProperties": false,
+     "properties": {
+      "Key": {
+       "$ref": "#/definitions/DimensionKey"
+      },
+      "Values": {
+       "items": {
+        "maxLength": 1024,
+        "minLength": 0,
+        "pattern": "[\\S\\s]*",
+        "type": "string"
+       },
+       "maxItems": 200,
+       "minItems": 1,
+       "type": "array"
+      }
+     },
+     "type": "object"
+    },
+    "Tags": {
+     "additionalProperties": false,
+     "properties": {
+      "Key": {
+       "maxLength": 1024,
+       "minLength": 0,
+       "pattern": "[\\S\\s]*",
+       "type": "string"
+      },
+      "Values": {
+       "items": {
+        "maxLength": 1024,
+        "minLength": 0,
+        "pattern": "[\\S\\s]*",
+        "type": "string"
+       },
+       "maxItems": 200,
+       "minItems": 1,
+       "type": "array"
+      }
+     },
+     "type": "object"
+    },
+    "TimeRange": {
+     "additionalProperties": false,
+     "properties": {
+      "BeginDateInclusive": {
+       "$ref": "#/definitions/Timestamp"
+      },
+      "EndDateInclusive": {
+       "$ref": "#/definitions/Timestamp"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "pattern": "^([ a-zA-Z0-9_\\+=\\.\\-@]+)?$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_\\+=\\.\\-@]+",
+   "type": "string"
+  },
+  "OwnerAccountId": {
+   "pattern": "[0-9]{12}",
+   "type": "string"
+  },
+  "SourceViews": {
+   "description": "An array of strings that define the billing view's source.",
+   "insertionOrder": false,
+   "items": {
+    "pattern": "arn:aws[a-z-]*:(billing)::[0-9]{12}:billingview/[a-zA-Z0-9_+=.@-]{1,75}",
+    "type": "string"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "description": "An array of key-value pairs associated to the billing view being created.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdatedAt": {
+   "description": "The time when the billing view was last updated.",
+   "type": "number"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/OwnerAccountId",
+  "/properties/BillingViewType"
+ ],
+ "required": [
+  "Name",
+  "SourceViews"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-billing-billing-view.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "billing:TagResource",
+   "billing:UntagResource",
+   "billing:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Billing::BillingView"
+}

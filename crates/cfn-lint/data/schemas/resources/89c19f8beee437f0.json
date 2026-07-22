@@ -1,0 +1,635 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DestinationLocationArn",
+  "/properties/SourceLocationArn",
+  "/properties/TaskMode"
+ ],
+ "definitions": {
+  "DestinationNetworkInterfaceArns": {
+   "description": "The Amazon Resource Names (ARNs) of the destination ENIs (Elastic Network Interfaces) that were created for your subnet.",
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^arn:aws[\\-a-z]{0,}:ec2:[a-z\\-0-9]*:[0-9]{12}:network-interface/eni-[0-9a-f]+$",
+    "type": "string"
+   },
+   "maxItems": 128,
+   "type": "array"
+  },
+  "FilterRule": {
+   "additionalProperties": false,
+   "description": "Specifies which files folders and objects to include or exclude when transferring files from source to destination.",
+   "properties": {
+    "FilterType": {
+     "description": "The type of filter rule to apply. AWS DataSync only supports the SIMPLE_PATTERN rule type.",
+     "enum": [
+      "SIMPLE_PATTERN"
+     ],
+     "maxLength": 128,
+     "pattern": "^[A-Z0-9_]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "A single filter string that consists of the patterns to include or exclude. The patterns are delimited by \"|\".",
+     "maxLength": 409600,
+     "minLength": 0,
+     "pattern": "^[^\\x00]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ManifestConfig": {
+   "additionalProperties": false,
+   "description": "Configures a manifest, which is a list of files or objects that you want DataSync to transfer.",
+   "properties": {
+    "Action": {
+     "description": "Specifies what DataSync uses the manifest for.",
+     "enum": [
+      "TRANSFER"
+     ],
+     "type": "string"
+    },
+    "Format": {
+     "description": "Specifies the file format of your manifest.",
+     "enum": [
+      "CSV"
+     ],
+     "type": "string"
+    },
+    "Source": {
+     "additionalProperties": false,
+     "description": "Specifies the manifest that you want DataSync to use and where it's hosted.",
+     "properties": {
+      "S3": {
+       "$ref": "#/definitions/ManifestConfigSourceS3"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "Source"
+   ],
+   "type": "object"
+  },
+  "ManifestConfigSourceS3": {
+   "additionalProperties": false,
+   "description": "Specifies the S3 bucket where you're hosting the manifest that you want AWS DataSync to use.",
+   "properties": {
+    "BucketAccessRoleArn": {
+     "description": "Specifies the AWS Identity and Access Management (IAM) role that allows DataSync to access your manifest.",
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):iam::[0-9]{12}:role/.*$",
+     "type": "string"
+    },
+    "ManifestObjectPath": {
+     "description": "Specifies the Amazon S3 object key of your manifest.",
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^[\\p{L}\\p{M}\\p{Z}\\p{S}\\p{N}\\p{P}\\p{C}]*$",
+     "type": "string"
+    },
+    "ManifestObjectVersionId": {
+     "description": "Specifies the object version ID of the manifest that you want DataSync to use.",
+     "maxLength": 100,
+     "minLength": 1,
+     "pattern": "^.+$",
+     "type": "string"
+    },
+    "S3BucketArn": {
+     "description": "Specifies the Amazon Resource Name (ARN) of the S3 bucket where you're hosting your manifest.",
+     "maxLength": 156,
+     "minLength": 0,
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):(s3|s3-outposts):[a-z\\-0-9]*:[0-9]*:.*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Options": {
+   "additionalProperties": false,
+   "description": "Represents the options that are available to control the behavior of a StartTaskExecution operation.",
+   "properties": {
+    "Atime": {
+     "description": "A file metadata value that shows the last time a file was accessed (that is, when the file was read or written to).",
+     "enum": [
+      "NONE",
+      "BEST_EFFORT"
+     ],
+     "type": "string"
+    },
+    "BytesPerSecond": {
+     "description": "A value that limits the bandwidth used by AWS DataSync.",
+     "format": "int64",
+     "minimum": -1,
+     "type": "integer"
+    },
+    "Gid": {
+     "description": "The group ID (GID) of the file's owners.",
+     "enum": [
+      "NONE",
+      "INT_VALUE",
+      "NAME",
+      "BOTH"
+     ],
+     "type": "string"
+    },
+    "LogLevel": {
+     "description": "A value that determines the types of logs that DataSync publishes to a log stream in the Amazon CloudWatch log group that you provide.",
+     "enum": [
+      "OFF",
+      "BASIC",
+      "TRANSFER"
+     ],
+     "type": "string"
+    },
+    "Mtime": {
+     "description": "A value that indicates the last time that a file was modified (that is, a file was written to) before the PREPARING phase.",
+     "enum": [
+      "NONE",
+      "PRESERVE"
+     ],
+     "type": "string"
+    },
+    "ObjectTags": {
+     "description": "A value that determines whether object tags should be read from the source object store and written to the destination object store.",
+     "enum": [
+      "PRESERVE",
+      "NONE"
+     ],
+     "type": "string"
+    },
+    "OverwriteMode": {
+     "description": "A value that determines whether files at the destination should be overwritten or preserved when copying files.",
+     "enum": [
+      "ALWAYS",
+      "NEVER"
+     ],
+     "type": "string"
+    },
+    "PosixPermissions": {
+     "description": "A value that determines which users or groups can access a file for a specific purpose such as reading, writing, or execution of the file.",
+     "enum": [
+      "NONE",
+      "PRESERVE"
+     ],
+     "type": "string"
+    },
+    "PreserveDeletedFiles": {
+     "description": "A value that specifies whether files in the destination that don't exist in the source file system should be preserved.",
+     "enum": [
+      "PRESERVE",
+      "REMOVE"
+     ],
+     "type": "string"
+    },
+    "PreserveDevices": {
+     "description": "A value that determines whether AWS DataSync should preserve the metadata of block and character devices in the source file system, and recreate the files with that device name and metadata on the destination.",
+     "enum": [
+      "NONE",
+      "PRESERVE"
+     ],
+     "type": "string"
+    },
+    "SecurityDescriptorCopyFlags": {
+     "description": "A value that determines which components of the SMB security descriptor are copied during transfer.",
+     "enum": [
+      "NONE",
+      "OWNER_DACL",
+      "OWNER_DACL_SACL"
+     ],
+     "type": "string"
+    },
+    "TaskQueueing": {
+     "description": "A value that determines whether tasks should be queued before executing the tasks.",
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "TransferMode": {
+     "description": "A value that determines whether DataSync transfers only the data and metadata that differ between the source and the destination location, or whether DataSync transfers all the content from the source, without comparing to the destination location.",
+     "enum": [
+      "CHANGED",
+      "ALL"
+     ],
+     "type": "string"
+    },
+    "Uid": {
+     "description": "The user ID (UID) of the file's owner.",
+     "enum": [
+      "NONE",
+      "INT_VALUE",
+      "NAME",
+      "BOTH"
+     ],
+     "type": "string"
+    },
+    "VerifyMode": {
+     "description": "A value that determines whether a data integrity verification should be performed at the end of a task execution after all data and metadata have been transferred.",
+     "enum": [
+      "POINT_IN_TIME_CONSISTENT",
+      "ONLY_FILES_TRANSFERRED",
+      "NONE"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SourceNetworkInterfaceArns": {
+   "description": "The Amazon Resource Names (ARNs) of the source ENIs (Elastic Network Interfaces) that were created for your subnet.",
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^arn:aws[\\-a-z]{0,}:ec2:[a-z\\-0-9]*:[0-9]{12}:network-interface/eni-[0-9a-f]+$",
+    "type": "string"
+   },
+   "maxItems": 128,
+   "type": "array"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key for an AWS resource tag.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:/-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for an AWS resource tag.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TaskReportConfig": {
+   "additionalProperties": false,
+   "description": "Specifies how you want to configure a task report, which provides detailed information about for your Datasync transfer.",
+   "properties": {
+    "Destination": {
+     "additionalProperties": false,
+     "description": "Specifies where DataSync uploads your task report.",
+     "properties": {
+      "S3": {
+       "$ref": "#/definitions/TaskReportConfigDestinationS3"
+      }
+     },
+     "type": "object"
+    },
+    "ObjectVersionIds": {
+     "description": "Specifies whether your task report includes the new version of each object transferred into an S3 bucket, this only applies if you enable versioning on your bucket.",
+     "enum": [
+      "INCLUDE",
+      "NONE"
+     ],
+     "type": "string"
+    },
+    "OutputType": {
+     "description": "Specifies the type of task report that you want.",
+     "enum": [
+      "SUMMARY_ONLY",
+      "STANDARD"
+     ],
+     "type": "string"
+    },
+    "Overrides": {
+     "additionalProperties": false,
+     "description": "Customizes the reporting level for aspects of your task report. For example, your report might generally only include errors, but you could specify that you want a list of successes and errors just for the files that Datasync attempted to delete in your destination location.",
+     "properties": {
+      "Deleted": {
+       "additionalProperties": false,
+       "description": "Specifies the level of reporting for the files, objects, and directories that Datasync attempted to delete in your destination location. This only applies if you configure your task to delete data in the destination that isn't in the source.",
+       "properties": {
+        "ReportLevel": {
+         "description": "Specifies whether you want your task report to include only what went wrong with your transfer or a list of what succeeded and didn't.",
+         "enum": [
+          "ERRORS_ONLY",
+          "SUCCESSES_AND_ERRORS"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "Skipped": {
+       "additionalProperties": false,
+       "description": "Specifies the level of reporting for the files, objects, and directories that Datasync attempted to skip during your transfer.",
+       "properties": {
+        "ReportLevel": {
+         "description": "Specifies whether you want your task report to include only what went wrong with your transfer or a list of what succeeded and didn't.",
+         "enum": [
+          "ERRORS_ONLY",
+          "SUCCESSES_AND_ERRORS"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "Transferred": {
+       "additionalProperties": false,
+       "description": "Specifies the level of reporting for the files, objects, and directories that Datasync attempted to transfer.",
+       "properties": {
+        "ReportLevel": {
+         "description": "Specifies whether you want your task report to include only what went wrong with your transfer or a list of what succeeded and didn't.",
+         "enum": [
+          "ERRORS_ONLY",
+          "SUCCESSES_AND_ERRORS"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "Verified": {
+       "additionalProperties": false,
+       "description": "Specifies the level of reporting for the files, objects, and directories that Datasync attempted to verify at the end of your transfer. This only applies if you configure your task to verify data during and after the transfer (which Datasync does by default)",
+       "properties": {
+        "ReportLevel": {
+         "description": "Specifies whether you want your task report to include only what went wrong with your transfer or a list of what succeeded and didn't.",
+         "enum": [
+          "ERRORS_ONLY",
+          "SUCCESSES_AND_ERRORS"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    },
+    "ReportLevel": {
+     "description": "Specifies whether you want your task report to include only what went wrong with your transfer or a list of what succeeded and didn't.",
+     "enum": [
+      "ERRORS_ONLY",
+      "SUCCESSES_AND_ERRORS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Destination",
+    "OutputType"
+   ],
+   "type": "object"
+  },
+  "TaskReportConfigDestinationS3": {
+   "additionalProperties": false,
+   "description": "Specifies the Amazon S3 bucket where DataSync uploads your task report.",
+   "properties": {
+    "BucketAccessRoleArn": {
+     "description": "Specifies the Amazon Resource Name (ARN) of the IAM policy that allows Datasync to upload a task report to your S3 bucket.",
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):iam::[0-9]{12}:role/.*$",
+     "type": "string"
+    },
+    "S3BucketArn": {
+     "description": "Specifies the ARN of the S3 bucket where Datasync uploads your report.",
+     "maxLength": 156,
+     "minLength": 0,
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):(s3|s3-outposts):[a-z\\-0-9]*:[0-9]*:.*$",
+     "type": "string"
+    },
+    "Subdirectory": {
+     "description": "Specifies a bucket prefix for your report.",
+     "maxLength": 4096,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9_\\-\\+\\./\\(\\)\\p{Zs}]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TaskSchedule": {
+   "additionalProperties": false,
+   "description": "Specifies the schedule you want your task to use for repeated executions.",
+   "properties": {
+    "ScheduleExpression": {
+     "description": "A cron expression that specifies when AWS DataSync initiates a scheduled transfer from a source to a destination location",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\ \\_\\*\\?\\,\\|\\^\\-\\/\\#\\s\\(\\)\\+]*$",
+     "type": "string"
+    },
+    "Status": {
+     "description": "Specifies status of a schedule.",
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::DataSync::Task.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "datasync:CreateTask",
+    "datasync:DescribeTask",
+    "datasync:ListTagsForResource",
+    "datasync:TagResource",
+    "s3:ListAllMyBuckets",
+    "s3:ListBucket",
+    "s3:GetObject",
+    "s3:GetObjectVersion",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:CreateNetworkInterface",
+    "ec2:DeleteNetworkInterface",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:CreateNetworkInterfacePermission",
+    "fsx:DescribeFileSystems",
+    "elasticfilesystem:DescribeFileSystems",
+    "elasticfilesystem:DescribeMountTargets",
+    "logs:DescribeLogGroups",
+    "iam:GetRole",
+    "iam:PassRole",
+    "iam:AssumeRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "datasync:DeleteTask",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:DeleteNetworkInterface",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "fsx:DescribeFileSystems",
+    "elasticfilesystem:DescribeFileSystems",
+    "elasticfilesystem:DescribeMountTargets",
+    "iam:GetRole"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "datasync:ListTasks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "datasync:DescribeTask",
+    "datasync:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "datasync:UpdateTask",
+    "datasync:DescribeTask",
+    "datasync:ListTagsForResource",
+    "datasync:TagResource",
+    "datasync:UntagResource",
+    "logs:DescribeLogGroups",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TaskArn"
+ ],
+ "properties": {
+  "CloudWatchLogGroupArn": {
+   "description": "The ARN of the Amazon CloudWatch log group that is used to monitor and log events in the task.",
+   "maxLength": 562,
+   "minLength": 0,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):logs:[a-z\\-0-9]*:[0-9]{12}:log-group:([^:\\*]*)(:\\*)?$",
+   "type": "string"
+  },
+  "DestinationLocationArn": {
+   "description": "The ARN of an AWS storage resource's location.",
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:location/loc-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "DestinationNetworkInterfaceArns": {
+   "$ref": "#/definitions/DestinationNetworkInterfaceArns"
+  },
+  "Excludes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/FilterRule"
+   },
+   "maxItems": 1,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Includes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/FilterRule"
+   },
+   "maxItems": 1,
+   "minItems": 0,
+   "type": "array"
+  },
+  "ManifestConfig": {
+   "$ref": "#/definitions/ManifestConfig"
+  },
+  "Name": {
+   "description": "The name of a task. This value is a text reference that is used to identify the task in the console.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
+   "type": "string"
+  },
+  "Options": {
+   "$ref": "#/definitions/Options"
+  },
+  "Schedule": {
+   "$ref": "#/definitions/TaskSchedule"
+  },
+  "SourceLocationArn": {
+   "description": "The ARN of the source location for the task.",
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:location/loc-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "SourceNetworkInterfaceArns": {
+   "$ref": "#/definitions/SourceNetworkInterfaceArns"
+  },
+  "Status": {
+   "description": "The status of the task that was described.",
+   "enum": [
+    "AVAILABLE",
+    "CREATING",
+    "QUEUED",
+    "RUNNING",
+    "UNAVAILABLE"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TaskArn": {
+   "description": "The ARN of the task.",
+   "maxLength": 128,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-eusc|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]*:[0-9]{12}:task/task-[0-9a-f]{17}$",
+   "type": "string"
+  },
+  "TaskMode": {
+   "description": "Specifies the task mode for the task.",
+   "enum": [
+    "BASIC",
+    "ENHANCED"
+   ],
+   "type": "string"
+  },
+  "TaskReportConfig": {
+   "$ref": "#/definitions/TaskReportConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TaskArn",
+  "/properties/Status",
+  "/properties/SourceNetworkInterfaceArns",
+  "/properties/DestinationNetworkInterfaceArns"
+ ],
+ "required": [
+  "DestinationLocationArn",
+  "SourceLocationArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datasync.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "datasync:TagResource",
+   "datasync:UntagResource",
+   "datasync:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataSync::Task"
+}
