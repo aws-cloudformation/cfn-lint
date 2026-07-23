@@ -1,6 +1,6 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::jsonschema::{ValidationError, Validator};
+use crate::jsonschema::ValidationError;
 use crate::rules::Severity;
 use crate::template::Template;
 use regex::Regex;

@@ -9,7 +9,6 @@
 /// This rule struct exists solely to provide metadata for `--list-rules`.
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::jsonschema::ValidationError;
 use crate::rules::Severity;
 use crate::template::Template;
 

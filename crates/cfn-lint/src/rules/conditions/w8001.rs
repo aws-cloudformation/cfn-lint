@@ -46,7 +46,7 @@ impl CfnLintRule for W8001 {
                         self.id()
                     ),
                     path: vec!["Conditions".to_string()],
-                    span: conds_node.span().clone(),
+                    span: conds_node.span(),
                     keyword: String::new(),
                     unknown: false,
                     resolved_from_ref: false,

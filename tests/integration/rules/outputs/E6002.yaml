@@ -1,16 +1,19 @@
 # --- cfn-lint-test ---
 # rule: E6002
-# description: Output entries must be objects
+# description: Outputs must have the required Value property
 # expect:
 #   - rule: E6002
-#     path: /Outputs/BadOutput
-#     message_contains: "type"
+#     path: /Outputs/MissingValue
+#     message_contains: "required"
 # ---
-AWSTemplateFormatVersion: "2010-09-09"
-Resources:
-  Placeholder:
-    Type: AWS::CloudFormation::WaitConditionHandle
 Outputs:
   GoodOutput:
     Value: some-value
-  BadOutput: not-an-object
+    Description: Has required Value
+
+  MissingValue:
+    Description: "This output has no Value"
+
+Resources:
+  Placeholder:
+    Type: AWS::CloudFormation::WaitConditionHandle

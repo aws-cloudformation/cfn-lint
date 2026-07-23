@@ -85,30 +85,27 @@ impl CfnLintRule for E3601 {
 
                 if let Some(s) = val.as_str() {
                     // Parse JSON string into AstNode for schema validation
-                    match crate::parser::parse_json(s.as_bytes()) {
-                        Ok(parsed) => {
-                            let errors = validator.validate(&parsed, &schema, &base_path);
-                            issues.extend(errors.into_iter().map(|err| ValidationError {
-                                rule_id: Some(self.id().to_string()),
-                                message: err.message,
-                                path: err.path,
-                                span: val.span().clone(),
-                                keyword: String::new(),
-                                unknown: false,
-                                resolved_from_ref: false,
-                                context: vec![],
-                                schema_id: None,
-                            }));
-                        }
-                        Err(_) => {} // Not valid JSON — skip
+                    if let Ok(parsed) = crate::parser::parse_json(s.as_bytes()) {
+                        let errors = validator.validate(&parsed, schema, &base_path);
+                        issues.extend(errors.into_iter().map(|err| ValidationError {
+                            rule_id: Some(self.id().to_string()),
+                            message: err.message,
+                            path: err.path,
+                            span: val.span(),
+                            keyword: String::new(),
+                            unknown: false,
+                            resolved_from_ref: false,
+                            context: vec![],
+                            schema_id: None,
+                        }));
                     }
                 } else if val.as_object().is_some() {
-                    let errors = validator.validate(val, &schema, &base_path);
+                    let errors = validator.validate(val, schema, &base_path);
                     issues.extend(errors.into_iter().map(|err| ValidationError {
                         rule_id: Some(self.id().to_string()),
                         message: err.message,
                         path: err.path,
-                        span: val.span().clone(),
+                        span: val.span(),
                         keyword: String::new(),
                         unknown: false,
                         resolved_from_ref: false,

@@ -4,14 +4,10 @@
 //! and checks whether referenced resources are guaranteed to exist given conditions.
 
 use std::collections::{HashMap, HashSet};
-use std::sync::LazyLock;
-
-use regex::Regex;
 
 use crate::ast::{self, AstNode};
+use crate::helpers::SUB_VARIABLE_REGEX;
 use crate::template::Template;
-
-static RE_SUB_VARS: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\$\{([^}!]+)\}").unwrap());
 
 /// Type of dependency edge.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -165,8 +161,8 @@ fn collect_ref_edges_with_source(
                         None
                     };
                     if let Some(s) = sub_str {
-                        for cap in RE_SUB_VARS.captures_iter(&s) {
-                            let var = &cap[1];
+                        for cap in SUB_VARIABLE_REGEX.captures_iter(&s) {
+                            let var = cap[1].trim();
                             let name = var.split('.').next().unwrap_or(var);
                             if template.resources.contains_key(name) {
                                 edges.push(Edge {
@@ -390,10 +386,10 @@ pub fn is_resource_available(
     vec![result]
 }
 
-/// Check if a set of condition states implies that another condition must be true.
-///
-/// This handles common patterns:
-/// - Same condition name
+// Check if a set of condition states implies that another condition must be true.
+//
+// This handles common patterns:
+// - Same condition name
 
 #[cfg(test)]
 mod tests {

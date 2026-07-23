@@ -5,14 +5,46 @@
 //! `(resolved_value, context)` pairs representing all possible
 //! resolved values with their evolved contexts.
 
-use std::sync::LazyLock;
-
-use regex::Regex;
+use std::cell::Cell;
 
 use crate::ast::{ArrayNode, AstNode, Span, StringNode};
 use crate::context::Context;
+use crate::helpers::SUB_VARIABLE_REGEX;
 
-static RE_SUB_VARS: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\$\{([^!].*?)\}").unwrap());
+/// Maximum depth of recursive value resolution. Nested `Fn::If` (and other
+/// intrinsics that recurse into `resolve_value`) branch into 2^N scenarios; an
+/// adversarially deep nesting would otherwise overflow the stack. Beyond this
+/// cap a value is treated as unresolvable (empty scenario list).
+const MAX_RESOLVE_DEPTH: usize = 32;
+
+thread_local! {
+    /// Current recursion depth of `resolve_value` on this thread.
+    static RESOLVE_DEPTH: Cell<usize> = const { Cell::new(0) };
+}
+
+/// RAII guard incrementing the thread-local resolve depth on entry and
+/// decrementing it on drop. `enter` returns `None` once the cap is reached.
+struct ResolveDepthGuard;
+
+impl ResolveDepthGuard {
+    fn enter() -> Option<Self> {
+        RESOLVE_DEPTH.with(|d| {
+            let cur = d.get();
+            if cur >= MAX_RESOLVE_DEPTH {
+                None
+            } else {
+                d.set(cur + 1);
+                Some(ResolveDepthGuard)
+            }
+        })
+    }
+}
+
+impl Drop for ResolveDepthGuard {
+    fn drop(&mut self) {
+        RESOLVE_DEPTH.with(|d| d.set(d.get().saturating_sub(1)));
+    }
+}
 
 /// A resolved value with its evolved context.
 pub struct Resolved {
@@ -23,6 +55,13 @@ pub struct Resolved {
 /// Resolve an AstNode to all possible concrete values.
 /// Non-function nodes yield themselves. Functions dispatch to their resolver.
 pub fn resolve_value(ctx: &Context, node: &AstNode) -> Vec<Resolved> {
+    // Bound recursion depth: nested Fn::If (etc.) can otherwise overflow the
+    // stack. Beyond the cap the value is unresolvable, so return no scenarios.
+    let _depth_guard = match ResolveDepthGuard::enter() {
+        Some(g) => g,
+        None => return vec![],
+    };
+
     if let Some(func) = node.as_function() {
         // In unresolvable_function_mode, no intrinsic function resolves. This is the
         // second chokepoint (alongside `Context::resolve_ref`): it also catches
@@ -213,7 +252,7 @@ fn resolve_split(ctx: &Context, args: &AstNode) -> Vec<Resolved> {
                 Some(s) => s.to_string(),
                 None => continue,
             };
-            let parts: Vec<AstNode> = src.split(&delim).map(|s| str_node(s)).collect();
+            let parts: Vec<AstNode> = src.split(&delim).map(str_node).collect();
             results.push(Resolved {
                 value: AstNode::Array(ArrayNode {
                     elements: parts,
@@ -243,7 +282,7 @@ fn resolve_sub(ctx: &Context, args: &AstNode) -> Vec<Resolved> {
         } else {
             None
         }
-        .unwrap_or_else(|| return (String::new(), None)),
+        .unwrap_or_else(|| (String::new(), None)),
     };
 
     if template_str.is_empty() {
@@ -278,7 +317,7 @@ fn resolve_sub(ctx: &Context, args: &AstNode) -> Vec<Resolved> {
     let mut failed = false;
 
     // Collect match positions and variable names first
-    let matches: Vec<(usize, usize, String)> = RE_SUB_VARS
+    let matches: Vec<(usize, usize, String)> = SUB_VARIABLE_REGEX
         .captures_iter(&template_str)
         .map(|cap| {
             let m = cap.get(0).unwrap();
@@ -724,5 +763,77 @@ mod tests {
         let results = resolve_value(&ctx, val);
         assert_eq!(results.len(), 1);
         assert_eq!(results[0].value.as_str(), Some("prod-app"));
+    }
+
+    // ── C15: recursion depth limit (adversarial nesting) ──
+
+    /// Run `f` on a worker thread and fail if it does not finish within `secs`.
+    /// A regressed recursion limit would hang here instead of blocking CI forever.
+    fn run_with_timeout<F: FnOnce() + Send + 'static>(secs: u64, f: F) {
+        use std::sync::mpsc::{channel, RecvTimeoutError};
+        use std::time::Duration;
+        let (tx, rx) = channel();
+        let handle = std::thread::spawn(move || {
+            f();
+            let _ = tx.send(());
+        });
+        match rx.recv_timeout(Duration::from_secs(secs)) {
+            Ok(()) => handle.join().unwrap(),
+            Err(RecvTimeoutError::Timeout) => {
+                panic!("did not finish within {secs}s — resolve depth limit likely regressed")
+            }
+            Err(RecvTimeoutError::Disconnected) => handle.join().unwrap(),
+        }
+    }
+
+    fn func(name: &str, args: AstNode) -> AstNode {
+        AstNode::Function(crate::ast::FunctionNode {
+            name: name.to_string(),
+            args: Box::new(args),
+            span: Span::default(),
+        })
+    }
+
+    #[test]
+    fn test_deep_nested_base64_is_depth_bounded() {
+        run_with_timeout(10, || {
+            // Fn::Base64 is a passthrough that recurses straight into resolve_value,
+            // so 100 levels would recurse 100 deep without the guard. The depth cap
+            // makes resolution unresolvable (empty) past the limit instead.
+            let (_, ctx) = ctx_from(b"AWSTemplateFormatVersion: '2010-09-09'\n");
+            let mut node = str_node("leaf");
+            for _ in 0..100 {
+                node = func("Fn::Base64", node);
+            }
+            let results = resolve_value(&ctx, &node);
+            assert!(
+                results.is_empty(),
+                "depth guard should truncate resolution to unresolvable"
+            );
+        });
+    }
+
+    #[test]
+    fn test_deep_nested_fn_if_terminates() {
+        run_with_timeout(10, || {
+            // 100-deep nested Fn::If. Without a depth bound this recurses through
+            // resolve_if -> resolve_value repeatedly; the cap keeps it bounded and
+            // the output small (no 2^N scenario blowup).
+            let (_, ctx) = ctx_from(b"AWSTemplateFormatVersion: '2010-09-09'\n");
+            let mut node = str_node("leaf");
+            for _ in 0..100 {
+                let args = AstNode::Array(ArrayNode {
+                    elements: vec![str_node("C"), node.clone(), str_node("fallback")],
+                    span: Span::default(),
+                });
+                node = func("Fn::If", args);
+            }
+            let results = resolve_value(&ctx, &node);
+            assert!(
+                results.len() <= 8,
+                "expected a bounded number of scenarios, got {}",
+                results.len()
+            );
+        });
     }
 }

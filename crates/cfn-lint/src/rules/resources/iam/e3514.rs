@@ -132,7 +132,7 @@ impl E3514 {
                             stmt_idx.to_string(),
                             "Resource".into(),
                         ],
-                        span: s.span.clone(),
+                        span: s.span,
                         keyword: String::new(),
                         unknown: false,
                         resolved_from_ref: false,

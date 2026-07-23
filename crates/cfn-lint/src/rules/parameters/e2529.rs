@@ -62,14 +62,14 @@ impl CfnLintRule for E2529 {
         }
 
         let mut issues = Vec::new();
-        for (_, resources) in &log_group_map {
+        for resources in log_group_map.values() {
             if resources.len() > SUBSCRIPTION_FILTER_LIMIT {
                 if let Some(res_name) = resources.get(SUBSCRIPTION_FILTER_LIMIT) {
                     let pos = template
                         .resources
                         .get(res_name)
                         .and_then(|r| r.properties.as_ref())
-                        .map(|p| p.span().clone())
+                        .map(|p| p.span())
                         .unwrap_or_default();
                     issues.push(ValidationError {
                         rule_id: Some(self.id().to_string()),

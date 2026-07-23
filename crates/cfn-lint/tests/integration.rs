@@ -407,18 +407,14 @@ Resources:
         assert!(item.get("filename").is_some(), "missing filename");
         assert!(item.get("rule_id").is_some(), "missing rule_id");
         assert!(item.get("message").is_some(), "missing message");
-        assert!(item.get("location").is_some(), "missing location");
+        // The JSON formatter emits a flat structure with line/column
+        // (see JsonIssue in src/formatters.rs), matching the checked-in
+        // tests/fixtures/results/*.json expectations.
+        assert!(item.get("line").is_some(), "missing line, got: {}", item);
         assert!(
-            item["location"].get("start").is_some(),
-            "missing location.start"
-        );
-        assert!(
-            item["location"].get("end").is_some(),
-            "missing location.end"
-        );
-        assert!(
-            item["location"].get("path").is_some(),
-            "missing location.path"
+            item.get("column").is_some(),
+            "missing column, got: {}",
+            item
         );
         assert!(item.get("severity").is_some(), "missing severity");
     }
@@ -545,6 +541,53 @@ Outputs:
         .filter(|i| i.rule_id.as_deref() == Some("E6002"))
         .collect();
     assert_eq!(e6002.len(), 1);
+}
+
+// Regression: E6002/E6003 rule-id mapping must match Python cfn-lint.
+// Python assigns the `required` keyword (missing Value) to E6002 and the
+// `type` keyword (output not an object) to E6003. These were previously
+// transposed in the E6001 dispatcher.
+#[test]
+fn output_rule_id_mapping_matches_python() {
+    // Missing Value -> `required` -> E6002 (NOT E6003).
+    let missing_value = br#"
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+Outputs:
+  BadOutput:
+    Description: Missing value property
+"#;
+    let issues = validate_yaml(missing_value);
+    let rule_ids: Vec<&str> = issues.iter().filter_map(|i| i.rule_id.as_deref()).collect();
+    assert!(
+        rule_ids.contains(&"E6002"),
+        "missing output Value must produce E6002, got: {:?}",
+        rule_ids
+    );
+    assert!(
+        !rule_ids.contains(&"E6003"),
+        "missing output Value must not produce E6003 (type), got: {:?}",
+        rule_ids
+    );
+
+    // Output that is a scalar instead of an object -> `type` -> E6003.
+    let wrong_type = br#"
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+Outputs:
+  BadOutput: just-a-string
+"#;
+    let issues = validate_yaml(wrong_type);
+    let rule_ids: Vec<&str> = issues.iter().filter_map(|i| i.rule_id.as_deref()).collect();
+    assert!(
+        rule_ids.contains(&"E6003"),
+        "non-object output must produce E6003 (type), got: {:?}",
+        rule_ids
+    );
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -843,17 +886,16 @@ Resources:
 // Parameter file / Deployment file integration tests
 // ═══════════════════════════════════════════════════════════════════════
 
-/// Helper: validate with parameter values pinned.
-/// TODO: Engine::validate_with_parameters not yet implemented — falls back to
-/// basic validate (params are ignored for now).
+/// Helper: validate with parameter values pinned via
+/// [`Engine::validate_with_parameters`].
 fn validate_yaml_with_parameters(
     yaml: &[u8],
-    _params: std::collections::HashMap<String, String>,
+    params: std::collections::HashMap<String, String>,
 ) -> Vec<cfn_lint::jsonschema::ValidationError> {
     let ast = parser::parse(yaml).expect("parse failed");
     let tmpl = Template::from_ast(&ast).expect("template failed");
     let mut engine = Engine::with_data_dir(data_dir());
-    engine.validate(&tmpl, &ast, &["us-east-1".to_string()])
+    engine.validate_with_parameters(&tmpl, &ast, &["us-east-1".to_string()], &params)
 }
 
 #[test]
@@ -969,7 +1011,7 @@ Resources:
 fn recursive_schema_ref_does_not_stack_overflow() {
     // A resource schema with a recursive $ref (definition references itself).
     // Before the fix, this would stack overflow. Now it terminates cleanly.
-    let yaml = br#"
+    let _yaml = br#"
 AWSTemplateFormatVersion: '2010-09-09'
 Resources:
   Bucket:
@@ -1003,7 +1045,7 @@ Resources:
     let v = Validator::new(recursive_schema.clone());
     let prop_schema = serde_json::json!({"$ref": "#/definitions/Recursive"});
     // This should terminate without stack overflow
-    let errors = v.validate_schema(&node, &prop_schema, &vec!["Test".to_string()]);
+    let errors = v.validate_schema(&node, &prop_schema, &["Test".to_string()]);
     // We don't care about the specific errors — just that it didn't crash
     let _ = errors;
 }
@@ -1062,39 +1104,39 @@ fn parse_front_matter(content: &str) -> Option<TestFrontMatter> {
     let mapping = doc.as_mapping()?;
 
     let rule = mapping
-        .get(&serde_yaml::Value::String("rule".into()))?
+        .get(serde_yaml::Value::String("rule".into()))?
         .as_str()?
         .to_string();
 
     let description = mapping
-        .get(&serde_yaml::Value::String("description".into()))?
+        .get(serde_yaml::Value::String("description".into()))?
         .as_str()?
         .to_string();
 
-    let expect_val = mapping.get(&serde_yaml::Value::String("expect".into()))?;
+    let expect_val = mapping.get(serde_yaml::Value::String("expect".into()))?;
     let expect = match expect_val {
         serde_yaml::Value::Sequence(seq) => seq
             .iter()
             .filter_map(|item| {
                 let m = item.as_mapping()?;
                 let r = m
-                    .get(&serde_yaml::Value::String("rule".into()))?
+                    .get(serde_yaml::Value::String("rule".into()))?
                     .as_str()?
                     .to_string();
                 let p = m
-                    .get(&serde_yaml::Value::String("path".into()))?
+                    .get(serde_yaml::Value::String("path".into()))?
                     .as_str()?
                     .to_string();
                 let mc = m
-                    .get(&serde_yaml::Value::String("message_contains".into()))
+                    .get(serde_yaml::Value::String("message_contains".into()))
                     .and_then(|v| v.as_str())
                     .map(|s| s.to_string());
                 let mcv = m
-                    .get(&serde_yaml::Value::String("message_contains_value".into()))
+                    .get(serde_yaml::Value::String("message_contains_value".into()))
                     .and_then(|v| v.as_str())
                     .map(|s| s.to_string());
                 let mnc = m
-                    .get(&serde_yaml::Value::String("message_not_contains".into()))
+                    .get(serde_yaml::Value::String("message_not_contains".into()))
                     .and_then(|v| v.as_str())
                     .map(|s| s.to_string());
                 Some(ExpectedFinding {
@@ -1111,7 +1153,7 @@ fn parse_front_matter(content: &str) -> Option<TestFrontMatter> {
     };
 
     let regions = mapping
-        .get(&serde_yaml::Value::String("regions".into()))
+        .get(serde_yaml::Value::String("regions".into()))
         .and_then(|v| v.as_sequence())
         .map(|seq| {
             seq.iter()
@@ -1189,7 +1231,7 @@ fn rule_integration_tests() {
         .filter(|e| {
             e.path()
                 .extension()
-                .map_or(false, |ext| ext == "yaml" || ext == "yml")
+                .is_some_and(|ext| ext == "yaml" || ext == "yml")
         })
     {
         let path = entry.path();
@@ -1546,4 +1588,96 @@ fn rule_keywords_are_reachable() {
     //     "Found {} unreachable keywords",
     //     unreachable_keywords.len()
     // );
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// W8003 (Fn::Equals is useful) message parity — pins the verdict wording to
+// Python cfn-lint 1.53.1 (src/cfnlint/rules/conditions/EqualsIsUseful.py).
+//
+// Python checks structural (json.dumps) equality FIRST and returns
+// "True or False" for it; only the else branch does the scalar str compare.
+// Therefore:
+//   - identical scalars  (["x","x"])        -> "True or False"
+//   - identical non-scalars (two same !Ref) -> "True or False"
+//   - cross-type str-equal ([42,"42"])      -> "True"   (json differs, str equal)
+//   - differing scalars  (["a","b"])        -> "False"
+//
+// A prior review finding (C7) claimed identical scalars should say "True";
+// that would DIVERGE from Python parity, so the original Rust order (structural
+// equality first) is correct and is locked here.
+// ═══════════════════════════════════════════════════════════════════════
+
+#[test]
+fn w8003_equals_message_parity() {
+    let yaml = br#"
+AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  IdenticalScalar:
+    Fn::Equals: ["samevalue", "samevalue"]
+  CrossTypeEqual:
+    Fn::Equals: [42, "42"]
+  DifferingScalar:
+    Fn::Equals: ["leftval", "rightval"]
+  IdenticalRef:
+    Fn::Equals: [!Ref AWS::Region, !Ref AWS::Region]
+Resources:
+  R1:
+    Type: AWS::CloudFormation::WaitConditionHandle
+    Condition: IdenticalScalar
+  R2:
+    Type: AWS::CloudFormation::WaitConditionHandle
+    Condition: CrossTypeEqual
+  R3:
+    Type: AWS::CloudFormation::WaitConditionHandle
+    Condition: DifferingScalar
+  R4:
+    Type: AWS::CloudFormation::WaitConditionHandle
+    Condition: IdenticalRef
+"#;
+    let issues = validate_yaml_with_schemas(yaml);
+    let w8003: Vec<&str> = issues
+        .iter()
+        .filter(|i| i.rule_id.as_deref() == Some("W8003"))
+        .map(|i| i.message.as_str())
+        .collect();
+
+    assert_eq!(
+        w8003.len(),
+        4,
+        "expected exactly four W8003 findings, got: {w8003:?}"
+    );
+
+    // Extract the verdict (the text after "will always return ") from the one
+    // W8003 message whose json-array prefix contains `needle`.
+    let verdict = |needle: &str| -> String {
+        let msg = w8003
+            .iter()
+            .find(|m| m.contains(needle))
+            .unwrap_or_else(|| panic!("no W8003 message containing {needle:?}; got {w8003:?}"));
+        msg.split("will always return ")
+            .nth(1)
+            .unwrap_or_else(|| panic!("W8003 message missing verdict: {msg:?}"))
+            .to_string()
+    };
+
+    assert_eq!(
+        verdict("samevalue"),
+        "True or False",
+        "identical scalars must match Python's structural-equality-first branch"
+    );
+    assert_eq!(
+        verdict("42"),
+        "True",
+        "cross-type str-equal [42,\"42\"] must say True"
+    );
+    assert_eq!(
+        verdict("leftval"),
+        "False",
+        "differing scalars must say False"
+    );
+    assert_eq!(
+        verdict("Ref"),
+        "True or False",
+        "identical non-scalar (!Ref) expressions must say True or False"
+    );
 }

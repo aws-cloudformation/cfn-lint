@@ -103,7 +103,6 @@ const APIGW_CHILD_TYPES: &[&str] = &[
 ];
 
 #[cfg(test)]
-
 mod tests {
     use super::*;
     use crate::parser;

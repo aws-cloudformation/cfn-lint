@@ -62,7 +62,6 @@ impl CfnLintRule for I2003 {
 }
 
 #[cfg(test)]
-
 mod tests {
     use super::*;
     use crate::parser;

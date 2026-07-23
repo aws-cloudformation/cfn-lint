@@ -11,13 +11,27 @@ use crate::ast::AstNode;
 
 use super::sat::Expr;
 
-/// Compute a SHA1 hash of an AstNode for consistent identity.
-/// Mirrors Python's `get_hash()`.
-pub fn get_hash(node: &AstNode) -> String {
-    let s = ast_to_canonical(node);
+/// Hash a canonical string into an identifier that is stable **only within this
+/// process**.
+///
+/// This uses the standard library's [`DefaultHasher`] — currently SipHash-1-3, a
+/// 64-bit hash — **not** SHA1, as an earlier doc comment incorrectly claimed. The
+/// algorithm and its seed are process-local and are explicitly documented by std
+/// as *not* guaranteed to be stable across Rust versions or builds. These hashes
+/// are therefore used solely as in-memory identity keys within a single
+/// `Conditions` build and SAT solve; they MUST NOT be persisted, serialized, or
+/// compared across processes.
+fn hash_canonical(s: &str) -> String {
     let mut hasher = DefaultHasher::new();
     s.hash(&mut hasher);
     format!("{:016x}", hasher.finish())
+}
+
+/// Compute a content hash of an `AstNode` for consistent in-memory identity.
+/// Fills the same role as Python's `get_hash()`, but the hash algorithm differs
+/// (see [`hash_canonical`] — it is process-local and must not be persisted).
+pub fn get_hash(node: &AstNode) -> String {
+    hash_canonical(&ast_to_canonical(node))
 }
 
 /// Canonical string representation for hashing.
@@ -100,16 +114,11 @@ impl Equal {
         let right_side = init_side(sorted_r);
 
         // Hash the sorted pair
-        let hash = {
-            let s = format!(
-                "[{}, {}]",
-                ast_to_canonical(sorted_l),
-                ast_to_canonical(sorted_r)
-            );
-            let mut hasher = DefaultHasher::new();
-            s.hash(&mut hasher);
-            format!("{:016x}", hasher.finish())
-        };
+        let hash = hash_canonical(&format!(
+            "[{}, {}]",
+            ast_to_canonical(sorted_l),
+            ast_to_canonical(sorted_r)
+        ));
 
         let is_static = match (&left_side, &right_side) {
             (EqualSide::Literal(_, h1), EqualSide::Literal(_, h2)) => Some(h1 == h2),

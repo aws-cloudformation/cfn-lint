@@ -109,7 +109,7 @@ impl CfnLintRule for E3702 {
                                 input_count, constraint.min_input, repr
                             ),
                             path,
-                            span: action.span().clone(),
+                            span: action.span(),
                             keyword: String::new(),
                             unknown: false,
                             resolved_from_ref: false,
@@ -127,7 +127,7 @@ impl CfnLintRule for E3702 {
                                 input_count, constraint.max_input, repr
                             ),
                             path,
-                            span: action.span().clone(),
+                            span: action.span(),
                             keyword: String::new(),
                             unknown: false,
                             resolved_from_ref: false,
@@ -145,7 +145,7 @@ impl CfnLintRule for E3702 {
                                 output_count, constraint.min_output, repr
                             ),
                             path,
-                            span: action.span().clone(),
+                            span: action.span(),
                             keyword: String::new(),
                             unknown: false,
                             resolved_from_ref: false,
@@ -163,7 +163,7 @@ impl CfnLintRule for E3702 {
                                 output_count, constraint.max_output, repr
                             ),
                             path,
-                            span: action.span().clone(),
+                            span: action.span(),
                             keyword: String::new(),
                             unknown: false,
                             resolved_from_ref: false,

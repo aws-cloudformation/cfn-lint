@@ -1,6 +1,6 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::jsonschema::{ValidationError, Validator};
+use crate::jsonschema::ValidationError;
 use crate::rules::Severity;
 use crate::template::Template;
 
@@ -33,7 +33,7 @@ impl CfnLintRule for W6001 {
                 if has_import_value(value) {
                     issues.push(ValidationError {
                         rule_id: Some(self.id().to_string()),
-                        message: format!("The output value is an import from another output"),
+                        message: "The output value is an import from another output".to_string(),
                         path: vec!["Outputs".to_string(), name.to_string(), "Value".to_string()],
                         span: value.span(),
                         ..Default::default()
@@ -46,10 +46,7 @@ impl CfnLintRule for W6001 {
 }
 
 fn has_import_value(node: &AstNode) -> bool {
-    match node.as_function() {
-        Some(f) if f.name == "Fn::ImportValue" => true,
-        _ => false,
-    }
+    matches!(node.as_function(), Some(f) if f.name == "Fn::ImportValue")
 }
 
 crate::register_cfn_lint_rule!(W6001);

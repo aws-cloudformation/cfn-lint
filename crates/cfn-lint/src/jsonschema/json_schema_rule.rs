@@ -100,7 +100,7 @@ fn validate_schema_matches(
                     keyword: format!("cfnLint:{}", id),
                     message: ctx_err.message.clone(),
                     path: ctx_err.path.clone(),
-                    span: ctx_err.span.clone(),
+                    span: ctx_err.span,
                     unknown: false,
                     resolved_from_ref: false,
                     context: vec![],
@@ -129,7 +129,7 @@ fn validate_schema_matches(
                         keyword: format!("cfnLint:{}", id),
                         message: ctx_err.message.clone(),
                         path: ctx_err.path.clone(),
-                        span: ctx_err.span.clone(),
+                        span: ctx_err.span,
                         unknown: false,
                         resolved_from_ref: false,
                         context: vec![],
@@ -159,7 +159,7 @@ fn validate_schema_matches(
 /// is validated independently.
 pub fn validate_regional(
     id: &str,
-    short_desc: &str,
+    _short_desc: &str,
     validator: &Validator,
     instance: &AstNode,
     schema: &serde_json::Value,
@@ -185,7 +185,11 @@ pub fn validate_regional(
             errors.push(ValidationError {
                 rule_id: None,
                 keyword: format!("cfnLint:{}", id),
-                message: format!("{} in {:?}", short_desc, region),
+                // Match Python cfn-lint's CfnLintJsonSchemaRegional: emit the
+                // underlying schema error message with a single-quoted region
+                // suffix (e.g. `'x' is not one of [...] in 'us-east-1'`),
+                // rather than the rule's short description.
+                message: format!("{} in '{}'", best.message, region),
                 path: best.path,
                 span: best.span,
                 unknown: false,

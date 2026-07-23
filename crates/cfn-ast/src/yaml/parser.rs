@@ -435,9 +435,7 @@ impl<T: Iterator<Item = char>> Parser<T> {
                 recv.on_event(first_ev, mark);
                 self.load_mapping(recv)
             }
-            _ => {
-                return Err(ScanError::new(mark, "unexpected event in document"));
-            }
+            _ => Err(ScanError::new(mark, "unexpected event in document")),
         }
     }
 
@@ -562,8 +560,13 @@ impl<T: Iterator<Item = char>> Parser<T> {
 
     fn parser_process_directives(&mut self) -> Result<(), ScanError> {
         let mut version_directive_received = false;
+        // Accumulate tag directives across the whole directive block. Seed from
+        // the parser's existing tags so that with `keep_tags` enabled (where
+        // `document_end` does not clear them) directives from earlier documents
+        // are preserved and new ones are added on top. With `keep_tags` disabled
+        // `document_end` clears `self.tags` between documents, so this starts empty.
+        let mut tags = std::mem::take(&mut self.tags);
         loop {
-            let mut tags = HashMap::new();
             match self.peek_token()? {
                 Token(mark, TokenType::VersionDirective(_, _)) => {
                     // XXX parsing with warning according to spec
@@ -584,9 +587,9 @@ impl<T: Iterator<Item = char>> Parser<T> {
                 }
                 _ => break,
             }
-            self.tags = tags;
             self.skip();
         }
+        self.tags = tags;
         Ok(())
     }
 

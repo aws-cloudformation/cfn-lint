@@ -48,7 +48,7 @@ impl CfnLintRule for W2501 {
         let ssm_ref = Regex::new(r"\{\{resolve:ssm:").unwrap();
         let mut issues = Vec::new();
 
-        for (name, _resource) in &template.resources {
+        for name in template.resources.keys() {
             let props = match root
                 .get("Resources")
                 .and_then(|r| r.get(name))
@@ -105,7 +105,7 @@ impl W2501 {
                                 path.join("/")
                             ),
                             path: path.clone(),
-                            span: s.span.clone(),
+                            span: s.span,
                             keyword: String::new(),
                             unknown: false,
                             resolved_from_ref: false,
@@ -118,7 +118,7 @@ impl W2501 {
                         rule_id: Some(self.id().to_string()),
                         message: format!("Password shouldn't be hardcoded for {}", path.join("/")),
                         path,
-                        span: s.span.clone(),
+                        span: s.span,
                         keyword: String::new(),
                         unknown: false,
                         resolved_from_ref: false,
@@ -138,7 +138,7 @@ impl W2501 {
                                     param_name, pwd_prop
                                 ),
                                 path: vec!["Parameters".into(), param_name.to_string()],
-                                span: func.span.clone(),
+                                span: func.span,
                                 keyword: String::new(),
                                 unknown: false,
                                 resolved_from_ref: false,

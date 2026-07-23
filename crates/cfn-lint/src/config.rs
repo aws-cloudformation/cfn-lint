@@ -43,9 +43,13 @@ pub struct Config {
 
 impl Default for Config {
     fn default() -> Self {
-        // Match Python cfn-lint: AWS_REGION takes priority, then AWS_DEFAULT_REGION
-        let default_region = std::env::var("AWS_REGION")
-            .or_else(|_| std::env::var("AWS_DEFAULT_REGION"))
+        // C33: Match Python cfn-lint, which gives AWS_DEFAULT_REGION priority
+        // over AWS_REGION when choosing the default region. This intentionally
+        // differs from the AWS SDK / boto3 precedence (which checks AWS_REGION
+        // first) so default-region resolution stays consistent with cfn-lint v1
+        // for migrating users.
+        let default_region = std::env::var("AWS_DEFAULT_REGION")
+            .or_else(|_| std::env::var("AWS_REGION"))
             .unwrap_or_else(|_| "us-east-1".to_string());
 
         Config {
@@ -79,7 +83,7 @@ impl Config {
         let mut config = Config::default();
 
         // Find and merge config files (user then project)
-        let config_path = overrides.config_file.clone().or_else(|| find_config_file());
+        let config_path = overrides.config_file.clone().or_else(find_config_file);
         if let Some(path) = config_path {
             if path.exists() {
                 config.merge_file(&path)?;
@@ -263,11 +267,15 @@ impl Config {
         if !o.regions.is_empty() {
             self.regions = o.regions;
         }
+        // C32: Python cfn-lint UNIONS CLI include/ignore checks with the values
+        // from the config file rather than replacing them. Extend instead of
+        // assigning so a `-i`/`-c` on the command line adds to (does not wipe
+        // out) the checks configured in .cfnlintrc.
         if !o.include_checks.is_empty() {
-            self.include_checks = o.include_checks;
+            self.include_checks.extend(o.include_checks);
         }
         if !o.ignore_checks.is_empty() {
-            self.ignore_checks = o.ignore_checks;
+            self.ignore_checks.extend(o.ignore_checks);
         }
         if let Some(v) = o.include_experimental {
             self.include_experimental = v;
@@ -295,6 +303,12 @@ impl Config {
         if let Some(s) = o.override_spec {
             self.override_spec = Some(s);
         }
+        // C37: allow the CLI to override the config-file custom_rules path.
+        // (When no CLI value is given, the value merged from .cfnlintrc is kept,
+        // so custom rules configured only in .cfnlintrc are still loaded.)
+        if let Some(c) = o.custom_rules {
+            self.custom_rules = Some(c);
+        }
     }
 }
 
@@ -315,6 +329,7 @@ pub struct ConfigOverrides {
     pub ignore_templates: Vec<String>,
     pub non_zero_exit_code: Option<String>,
     pub override_spec: Option<String>,
+    pub custom_rules: Option<String>,
 }
 
 /// Find .cfnlintrc in the current directory.
@@ -404,15 +419,43 @@ mod tests {
         })
         .unwrap();
 
+        // regions still replace (single-value semantics)
         assert_eq!(config.regions, vec!["ap-southeast-1"]);
-        assert_eq!(config.ignore_checks, vec!["W2001"]);
+        // C32: ignore_checks are UNIONED — the config-file value is preserved
+        // and the CLI value is appended (matches Python cfn-lint).
+        assert_eq!(config.ignore_checks, vec!["E3001", "W2001"]);
+    }
+
+    #[test]
+    fn test_cli_checks_extend_config_file() {
+        // C32: both include_checks and ignore_checks from the CLI must be
+        // unioned with the config-file values, never replace them.
+        let mut file = NamedTempFile::new().unwrap();
+        writeln!(
+            file,
+            "ignore_checks:\n  - E3001\n  - E3002\ninclude_checks:\n  - I1001"
+        )
+        .unwrap();
+
+        let config = Config::load(ConfigOverrides {
+            config_file: Some(file.path().to_path_buf()),
+            ignore_checks: vec!["W2001".to_string()],
+            include_checks: vec!["I3011".to_string()],
+            ..Default::default()
+        })
+        .unwrap();
+
+        assert_eq!(config.ignore_checks, vec!["E3001", "E3002", "W2001"]);
+        assert_eq!(config.include_checks, vec!["I1001", "I3011"]);
     }
 
     #[test]
     fn test_is_ignored() {
-        let mut config = Config::default();
-        config.ignore_checks = vec!["E3012".to_string(), "W".to_string()];
-        config.mandatory_checks = vec!["E3012".to_string()];
+        let config = Config {
+            ignore_checks: vec!["E3012".to_string(), "W".to_string()],
+            mandatory_checks: vec!["E3012".to_string()],
+            ..Default::default()
+        };
 
         assert!(!config.is_ignored("E3012")); // mandatory overrides ignore
         assert!(config.is_ignored("W2001")); // W prefix matches
@@ -459,16 +502,20 @@ mod tests {
         })
         .unwrap();
 
-        // With merge_configs, CLI overrides replace (current behavior)
-        // The merge_configs flag is stored for consumers to use
+        // C32: CLI include/ignore checks now always union with config-file
+        // values (Python parity), regardless of merge_configs. The
+        // merge_configs flag is stored for consumers to use.
         assert!(config.merge_configs);
+        assert_eq!(config.ignore_checks, vec!["E3001", "E3002", "W2001"]);
     }
 
     #[test]
     fn test_mandatory_checks_override_ignore() {
-        let mut config = Config::default();
-        config.ignore_checks = vec!["E3012".to_string()];
-        config.mandatory_checks = vec!["E3012".to_string()];
+        let mut config = Config {
+            ignore_checks: vec!["E3012".to_string()],
+            mandatory_checks: vec!["E3012".to_string()],
+            ..Default::default()
+        };
 
         // Mandatory checks can't be ignored
         assert!(!config.is_ignored("E3012"));
@@ -492,8 +539,10 @@ mod tests {
 
     #[test]
     fn test_include_checks_specific() {
-        let mut config = Config::default();
-        config.include_checks = vec!["I".to_string()];
+        let config = Config {
+            include_checks: vec!["I".to_string()],
+            ..Default::default()
+        };
 
         // Explicitly included via include_checks — always included
         assert!(config.is_included("I9001", false));
@@ -607,7 +656,7 @@ configure_rules:
     #[test]
     fn test_empty_config_file() {
         let mut file = NamedTempFile::new().unwrap();
-        writeln!(file, "").unwrap();
+        writeln!(file).unwrap();
 
         // Empty file should not error — just use defaults
         let result = Config::load(ConfigOverrides {
@@ -620,11 +669,80 @@ configure_rules:
 
     #[test]
     fn test_ignore_prefix_matching() {
-        let mut config = Config::default();
-        config.ignore_checks = vec!["W".to_string()]; // ignore all warnings
+        let config = Config {
+            ignore_checks: vec!["W".to_string()], // ignore all warnings
+            ..Default::default()
+        };
 
         assert!(config.is_ignored("W2001"));
         assert!(config.is_ignored("W3001"));
         assert!(!config.is_ignored("E3001")); // errors not ignored
+    }
+
+    #[test]
+    fn test_mandatory_check_not_suppressed_by_cli_ignore() {
+        // C34: a mandatory check must remain enabled even when the same rule is
+        // added to ignore_checks via the CLI (which now unions, C32). This is
+        // the config-level guarantee the CLI filter relies on.
+        let mut file = NamedTempFile::new().unwrap();
+        writeln!(file, "mandatory_checks:\n  - E3012").unwrap();
+
+        let config = Config::load(ConfigOverrides {
+            config_file: Some(file.path().to_path_buf()),
+            ignore_checks: vec!["E3012".to_string()],
+            ..Default::default()
+        })
+        .unwrap();
+
+        // E3012 is present in ignore_checks...
+        assert!(config.ignore_checks.contains(&"E3012".to_string()));
+        // ...but is_ignored still returns false because it is mandatory.
+        assert!(!config.is_ignored("E3012"));
+    }
+
+    #[test]
+    fn test_default_region_prefers_aws_default_region() {
+        // C33: AWS_DEFAULT_REGION takes priority over AWS_REGION (Python parity).
+        // Guard with a lock-free serial check: only assert the branch that
+        // matches the current environment to avoid mutating process-global env
+        // vars (which would race other tests).
+        let config = Config::default();
+        let expected = std::env::var("AWS_DEFAULT_REGION")
+            .or_else(|_| std::env::var("AWS_REGION"))
+            .unwrap_or_else(|_| "us-east-1".to_string());
+        assert_eq!(config.regions, vec![expected]);
+    }
+
+    #[test]
+    fn test_custom_rules_from_config_file_loaded() {
+        // C37: custom_rules set ONLY in the config file must survive into the
+        // merged config (previously main.rs read the raw CLI value and dropped
+        // the file value entirely).
+        let mut file = NamedTempFile::new().unwrap();
+        writeln!(file, "custom_rules: /path/to/rules.txt").unwrap();
+
+        let config = Config::load(ConfigOverrides {
+            config_file: Some(file.path().to_path_buf()),
+            ..Default::default()
+        })
+        .unwrap();
+
+        assert_eq!(config.custom_rules.as_deref(), Some("/path/to/rules.txt"));
+    }
+
+    #[test]
+    fn test_custom_rules_cli_overrides_config_file() {
+        // C37: an explicit CLI custom_rules path wins over the config-file value.
+        let mut file = NamedTempFile::new().unwrap();
+        writeln!(file, "custom_rules: /from/config.txt").unwrap();
+
+        let config = Config::load(ConfigOverrides {
+            config_file: Some(file.path().to_path_buf()),
+            custom_rules: Some("/from/cli.txt".to_string()),
+            ..Default::default()
+        })
+        .unwrap();
+
+        assert_eq!(config.custom_rules.as_deref(), Some("/from/cli.txt"));
     }
 }

@@ -1,0 +1,13 @@
+# Normalize text files to LF in the working tree on every platform.
+#
+# Several tests assert absolute byte offsets in parser error output (e.g.
+# the yaml_syntax_error fixture). Under Windows' default CRLF checkout each
+# preceding line added one byte, shifting those offsets and breaking the
+# tests. Forcing LF keeps byte offsets deterministic across platforms.
+* text=auto eol=lf
+
+# Binary assets must never be line-ending normalized.
+*.gz binary
+*.zip binary
+*.png binary
+*.ico binary

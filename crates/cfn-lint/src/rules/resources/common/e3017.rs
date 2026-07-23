@@ -1,6 +1,5 @@
 use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
-use crate::jsonschema::ValidationError;
 use crate::rules::Severity;
 use crate::template::Template;
 
@@ -45,8 +44,7 @@ crate::register_cfn_lint_rule!(E3017);
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::{ObjectNode, Position, Span};
-    use indexmap::IndexMap;
+    use crate::ast::{ObjectNode, Span};
 
     #[test]
     fn test_metadata() {

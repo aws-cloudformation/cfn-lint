@@ -158,13 +158,24 @@ fn fresh(num_vars: &mut usize) -> usize {
     v
 }
 
+/// Maximum number of DPLL decisions (branching steps) before the solver bails.
+/// A pathological formula has 2^N worst-case behavior; once the budget is
+/// exhausted we conservatively report the formula satisfiable so callers never
+/// prune a scenario they cannot actually rule out.
+const DPLL_DECISION_BUDGET: usize = 100_000;
+
 /// DPLL SAT solver.
 fn dpll(clauses: &[Vec<(usize, bool)>], num_vars: usize) -> bool {
     let mut assignment: Vec<Option<bool>> = vec![None; num_vars];
-    dpll_inner(clauses, &mut assignment)
+    let mut budget = DPLL_DECISION_BUDGET;
+    dpll_inner(clauses, &mut assignment, &mut budget)
 }
 
-fn dpll_inner(clauses: &[Vec<(usize, bool)>], assignment: &mut Vec<Option<bool>>) -> bool {
+fn dpll_inner(
+    clauses: &[Vec<(usize, bool)>],
+    assignment: &mut Vec<Option<bool>>,
+    budget: &mut usize,
+) -> bool {
     // Unit propagation
     loop {
         let mut changed = false;
@@ -250,17 +261,24 @@ fn dpll_inner(clauses: &[Vec<(usize, bool)>], assignment: &mut Vec<Option<bool>>
         None => return false,
     };
 
+    // Budget exhausted: bail out conservatively. Reporting "satisfiable" is the
+    // safe direction — it never lets a caller discard a scenario incorrectly.
+    if *budget == 0 {
+        return true;
+    }
+    *budget -= 1;
+
     // Try true
     let saved: Vec<Option<bool>> = assignment.clone();
     assignment[var] = Some(true);
-    if dpll_inner(clauses, assignment) {
+    if dpll_inner(clauses, assignment, budget) {
         return true;
     }
 
     // Try false
     *assignment = saved;
     assignment[var] = Some(false);
-    dpll_inner(clauses, assignment)
+    dpll_inner(clauses, assignment, budget)
 }
 
 #[cfg(test)]
@@ -360,6 +378,81 @@ mod tests {
         // NOT B
         cnf.add_clause(vec![(b, false)]);
         // Should be unsatisfiable (A=true, A=>B, ~B is contradiction)
+        assert!(!cnf.is_satisfiable());
+    }
+
+    // ── C40: DPLL decision budget prevents 2^N worst-case hangs ──
+
+    fn run_bool_with_timeout<F: FnOnce() -> bool + Send + 'static>(secs: u64, f: F) -> bool {
+        use std::sync::mpsc::{channel, RecvTimeoutError};
+        use std::time::Duration;
+        let (tx, rx) = channel();
+        let handle = std::thread::spawn(move || {
+            let _ = tx.send(f());
+        });
+        match rx.recv_timeout(Duration::from_secs(secs)) {
+            Ok(v) => {
+                handle.join().unwrap();
+                v
+            }
+            Err(RecvTimeoutError::Timeout) => {
+                panic!("did not finish within {secs}s — DPLL decision budget likely regressed")
+            }
+            Err(RecvTimeoutError::Disconnected) => {
+                handle.join().unwrap();
+                unreachable!("worker thread disconnected without producing a result")
+            }
+        }
+    }
+
+    #[test]
+    fn test_dpll_decision_budget_bails_on_pigeonhole() {
+        // Pigeonhole: 11 pigeons into 10 holes is UNSATISFIABLE, but naive DPLL
+        // (no clause learning / symmetry breaking) needs far more than the decision
+        // budget to prove it. The budget makes the solver bail out and conservatively
+        // report the formula satisfiable rather than exploring 2^N assignments.
+        let sat = run_bool_with_timeout(30, || {
+            let mut cnf = CnfFormula::new();
+            let pigeons = 11usize;
+            let holes = 10usize;
+            let vars: Vec<Vec<usize>> = (0..pigeons)
+                .map(|i| {
+                    (0..holes)
+                        .map(|j| cnf.get_or_create_var(&format!("p_{i}_{j}")))
+                        .collect()
+                })
+                .collect();
+            // Each pigeon occupies at least one hole.
+            for row in &vars {
+                cnf.add_clause(row.iter().map(|&v| (v, true)).collect());
+            }
+            // No two pigeons share a hole.
+            // `j` indexes the hole (inner) dimension across several pigeon rows
+            // (vars[i1][j], vars[i2][j]), so it can't be rewritten as a single
+            // iterator over `vars`.
+            #[allow(clippy::needless_range_loop)]
+            for j in 0..holes {
+                for i1 in 0..pigeons {
+                    for i2 in (i1 + 1)..pigeons {
+                        cnf.add_clause(vec![(vars[i1][j], false), (vars[i2][j], false)]);
+                    }
+                }
+            }
+            cnf.is_satisfiable()
+        });
+        assert!(
+            sat,
+            "budget exhaustion should conservatively report satisfiable"
+        );
+    }
+
+    #[test]
+    fn test_small_unsat_still_correct_under_budget() {
+        // A small UNSAT instance is well under budget, so correctness is preserved.
+        let mut cnf = CnfFormula::new();
+        let a = cnf.get_or_create_var("a");
+        cnf.add_clause(vec![(a, true)]);
+        cnf.add_clause(vec![(a, false)]);
         assert!(!cnf.is_satisfiable());
     }
 }

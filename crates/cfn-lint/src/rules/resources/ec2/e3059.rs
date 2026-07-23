@@ -94,7 +94,7 @@ impl CfnLintRule for E3059 {
                     ],
                     span: subnet_props
                         .get("CidrBlock")
-                        .map(|n| n.span().clone())
+                        .map(|n| n.span())
                         .unwrap_or_default(),
                     keyword: String::new(),
                     unknown: false,

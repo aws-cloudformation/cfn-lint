@@ -1,6 +1,6 @@
 use super::super::{ValidationError, Validator};
 use super::functions::validate_function_structure;
-use super::helpers::{err, unknown_err};
+use super::helpers::unknown_err;
 use crate::ast::AstNode;
 
 pub fn validate_fn_resolvable(

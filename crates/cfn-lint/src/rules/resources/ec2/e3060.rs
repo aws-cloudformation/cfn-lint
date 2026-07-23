@@ -66,7 +66,7 @@ impl CfnLintRule for E3060 {
                                 resource_name: name.to_string(),
                                 cidr: cidr_str.to_string(),
                                 network: net,
-                                span: props.get(key).map(|n| n.span().clone()).unwrap_or_default(),
+                                span: props.get(key).map(|n| n.span()).unwrap_or_default(),
                                 condition: res.condition.clone(),
                             });
                     }
@@ -75,7 +75,7 @@ impl CfnLintRule for E3060 {
         }
 
         let mut issues = Vec::new();
-        for (_vpc, subnets) in &vpc_subnets {
+        for subnets in vpc_subnets.values() {
             for j in 1..subnets.len() {
                 for i in 0..j {
                     // Skip if different conditions that are mutually exclusive
@@ -96,7 +96,7 @@ impl CfnLintRule for E3060 {
                                 subnets[j].resource_name.clone(),
                                 "Properties".to_string(),
                             ],
-                            span: subnets[j].span.clone(),
+                            span: subnets[j].span,
                             keyword: String::new(),
                             unknown: false,
                             resolved_from_ref: false,

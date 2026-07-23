@@ -112,7 +112,7 @@ fn collect_ref_issues(
                         rule_id: Some("E1020".to_string()),
                         message: format!("'{}' is not one of {:?}", ref_name, valid_refs),
                         path: vec![],
-                        span: func.span.clone(),
+                        span: func.span,
                         keyword: String::new(),
                         unknown: false,
                         resolved_from_ref: false,
@@ -134,7 +134,7 @@ fn collect_ref_issues(
         AstNode::Function(func) if func.name == "Fn::If" => {
             // Check if the condition name exists
             if let Some(arr) = func.args.as_array() {
-                if arr.elements.len() >= 1 {
+                if !arr.elements.is_empty() {
                     let cond_name = arr.elements[0].as_str().unwrap_or("");
                     let cond_unknown = !condition_names.contains(cond_name);
                     // Walk branches with updated condition awareness
@@ -201,7 +201,6 @@ fn collect_ref_issues(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::*;
 
     #[test]
     fn test_rule_metadata() {

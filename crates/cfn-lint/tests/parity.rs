@@ -58,21 +58,124 @@ use std::path::{Path, PathBuf};
 use cfn_lint::engine::Engine;
 use cfn_lint::jsonschema::ValidationError;
 use cfn_lint::parser;
-use cfn_lint::rules::Severity;
 use cfn_lint::template::Template;
 
-fn python_fixtures_dir() -> Option<PathBuf> {
-    std::env::var("CFN_LINT_FIXTURES_DIR")
-        .ok()
-        .map(PathBuf::from)
-        .filter(|p| p.is_dir())
+/// Resolve the Python cfn-lint fixtures directory (contains `templates/` and
+/// `results/`).
+///
+/// The fixture-dependent parity tests are `#[ignore]`d, so a bare `cargo test`
+/// reports them as *ignored* — a visible skip — instead of the old silent
+/// early-return that counted as a pass. They run in the CI `parity` job, which
+/// provisions the fixtures and sets this env var. We **panic** when the var is
+/// missing rather than returning early: once a run opts into the ignored tests
+/// (`--include-ignored`), absent fixtures are a setup failure, never a vacuous
+/// pass. (C80)
+fn require_python_fixtures_dir() -> PathBuf {
+    let raw = std::env::var("CFN_LINT_FIXTURES_DIR").unwrap_or_else(|_| {
+        panic!(
+            "CFN_LINT_FIXTURES_DIR is not set. Fixture-dependent parity tests are \
+             #[ignore]d for local runs; provision the Python cfn-lint fixtures and \
+             set the env var (see the `parity` job in .github/workflows/ci.yml) \
+             before running with `--include-ignored`."
+        )
+    });
+    let dir = PathBuf::from(&raw);
+    assert!(
+        dir.is_dir(),
+        "CFN_LINT_FIXTURES_DIR={raw:?} does not point to a directory"
+    );
+    dir
 }
 
-fn sam_translator_dir() -> Option<PathBuf> {
-    std::env::var("SAM_TRANSLATOR_DIR")
-        .ok()
-        .map(PathBuf::from)
-        .filter(|p| p.is_dir())
+/// Resolve the serverless-application-model checkout used by the SAM parity test.
+/// Same `#[ignore]` + panic contract as [`require_python_fixtures_dir`]. (C80)
+fn require_sam_translator_dir() -> PathBuf {
+    let raw = std::env::var("SAM_TRANSLATOR_DIR").unwrap_or_else(|_| {
+        panic!(
+            "SAM_TRANSLATOR_DIR is not set. The SAM parity test is #[ignore]d for \
+             local runs; clone aws/serverless-application-model and set the env var \
+             (see the `parity` job in .github/workflows/ci.yml) before running with \
+             `--include-ignored`."
+        )
+    });
+    let dir = PathBuf::from(&raw);
+    assert!(
+        dir.is_dir(),
+        "SAM_TRANSLATOR_DIR={raw:?} does not point to a directory"
+    );
+    dir
+}
+
+fn ratchet_path() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/parity_ratchet.json")
+}
+
+fn load_ratchet() -> serde_json::Value {
+    let path = ratchet_path();
+    let content = std::fs::read_to_string(&path)
+        .unwrap_or_else(|e| panic!("failed to read parity ratchet {}: {e}", path.display()));
+    serde_json::from_str(&content)
+        .unwrap_or_else(|e| panic!("failed to parse parity ratchet {}: {e}", path.display()))
+}
+
+/// Enforce a parity floor — or, under `CFN_LINT_UPDATE_RATCHET=1`, refresh it.
+///
+/// `matched` must never drop below the checked-in floor and `rust_only` must
+/// never rise above the checked-in ceiling. `expected` (when supplied) guards
+/// against a vacuous pass: if fewer findings than the floor were even compared,
+/// the fixtures were almost certainly not provisioned and we refuse to report
+/// success.
+///
+/// A PR that intentionally changes parity re-runs the suite with
+/// `CFN_LINT_UPDATE_RATCHET=1 cargo test --test parity -- --include-ignored
+/// --test-threads=1` and commits the updated `tests/parity_ratchet.json`, making
+/// every parity movement an explicit, reviewable diff. (C81)
+fn ratchet_gate(group: &str, matched: usize, rust_only: usize, expected: Option<usize>) {
+    if std::env::var("CFN_LINT_UPDATE_RATCHET").is_ok() {
+        let mut v = load_ratchet();
+        v[group]["min_matched"] = serde_json::json!(matched);
+        v[group]["max_rust_only"] = serde_json::json!(rust_only);
+        if let Some(e) = expected {
+            v[group]["min_expected"] = serde_json::json!(e);
+        }
+        std::fs::write(
+            ratchet_path(),
+            format!("{}\n", serde_json::to_string_pretty(&v).unwrap()),
+        )
+        .expect("failed to write updated parity ratchet");
+        eprintln!("[ratchet] updated {group}: min_matched={matched} max_rust_only={rust_only}");
+        return;
+    }
+
+    let r = load_ratchet();
+    let g = &r[group];
+    let min_matched = g["min_matched"]
+        .as_u64()
+        .unwrap_or_else(|| panic!("parity ratchet is missing {group}/min_matched"))
+        as usize;
+    assert!(
+        matched >= min_matched,
+        "PARITY REGRESSION [{group}]: matched {matched} dropped below the ratchet \
+         floor {min_matched}. If this change intentionally alters parity, re-run \
+         with CFN_LINT_UPDATE_RATCHET=1 (--test-threads=1) and commit \
+         tests/parity_ratchet.json."
+    );
+    if let Some(max_ro) = g["max_rust_only"].as_u64() {
+        assert!(
+            rust_only as u64 <= max_ro,
+            "PARITY REGRESSION [{group}]: rust-only findings rose to {rust_only} \
+             (ceiling {max_ro}) — likely new false positives. Fix the rule, or \
+             update the ratchet intentionally."
+        );
+    }
+    if let (Some(exp), Some(min_exp)) = (expected, g["min_expected"].as_u64()) {
+        assert!(
+            exp as u64 >= min_exp,
+            "PARITY [{group}]: only {exp} findings were compared (floor {min_exp}). \
+             The fixtures are probably missing or misresolved — refusing to report \
+             a vacuous pass."
+        );
+    }
 }
 
 fn data_dir() -> PathBuf {
@@ -189,14 +292,9 @@ fn relative_name(fixtures_dir: &Path, path: &Path) -> String {
 
 /// Good templates should produce 0 Error-severity issues.
 #[test]
+#[ignore = "requires CFN_LINT_FIXTURES_DIR; run via the CI `parity` job or with --include-ignored"]
 fn parity_good_templates_no_errors() {
-    let fixtures_dir = match python_fixtures_dir() {
-        Some(d) => d,
-        None => {
-            eprintln!("Skipping: set CFN_LINT_FIXTURES_DIR to enable");
-            return;
-        }
-    };
+    let fixtures_dir = require_python_fixtures_dir();
 
     let templates = collect_templates(&fixtures_dir, "good");
     if templates.is_empty() {
@@ -208,14 +306,22 @@ fn parity_good_templates_no_errors() {
     println!("GOOD TEMPLATES — comparing against Python's actual output");
     println!("{}\n", "=".repeat(100));
 
-    // Load Python's pre-generated results for good templates
+    // Load Python's pre-generated results for good templates. A corrupt or
+    // missing baseline must fail loudly, not degrade to an empty map (which
+    // would make every comparison vacuously "match"). (C89)
     let results_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("tests")
         .join("python_good_results.json");
-    let python_results: HashMap<String, Vec<String>> = std::fs::read_to_string(&results_path)
-        .ok()
-        .and_then(|c| serde_json::from_str(&c).ok())
-        .unwrap_or_default();
+    let python_results: HashMap<String, Vec<String>> = {
+        let content = std::fs::read_to_string(&results_path)
+            .unwrap_or_else(|e| panic!("failed to read baseline {}: {e}", results_path.display()));
+        serde_json::from_str(&content).unwrap_or_else(|e| {
+            panic!(
+                "corrupt baseline {} (C89 guard — refusing a vacuous 100%): {e}",
+                results_path.display()
+            )
+        })
+    };
 
     let mut total = 0;
     let mut matched = 0;
@@ -282,22 +388,21 @@ fn parity_good_templates_no_errors() {
         matched as f64 / total as f64 * 100.0
     );
     println!("{}", "=".repeat(100));
+
+    // `matched` is the number of good templates whose full rule-ID set exactly
+    // matches Python. `total` is how many were compared (vacuous-pass guard). (C81)
+    ratchet_gate("parity_good", matched, 0, Some(total));
 }
 
 /// Bad templates — run and report what we find vs Python.
 #[test]
+#[ignore = "requires CFN_LINT_FIXTURES_DIR; run via the CI `parity` job or with --include-ignored"]
 fn parity_bad_templates_report() {
     parity_bad_templates_report_inner();
 }
 
 fn parity_bad_templates_report_inner() {
-    let fixtures_dir = match python_fixtures_dir() {
-        Some(d) => d,
-        None => {
-            eprintln!("Skipping: set CFN_LINT_FIXTURES_DIR to enable");
-            return;
-        }
-    };
+    let fixtures_dir = require_python_fixtures_dir();
 
     let templates = collect_templates(&fixtures_dir, "bad");
     if templates.is_empty() {
@@ -367,18 +472,18 @@ fn parity_bad_templates_report_inner() {
         println!("  {}: {}", rule_id, count);
     }
     println!("{}", "=".repeat(100));
+
+    // `with_issues` is how many bad templates v2 flagged at all; `total` guards
+    // against a vacuous pass. A regression that stops detecting a bad template
+    // drops `with_issues` below the floor. (C81)
+    ratchet_gate("parity_bad", with_issues, 0, Some(total));
 }
 
 /// Run against Python's quickstart fixture results for exact comparison.
 #[test]
+#[ignore = "requires CFN_LINT_FIXTURES_DIR; run via the CI `parity` job or with --include-ignored"]
 fn parity_quickstart_fixtures() {
-    let fixtures_dir = match python_fixtures_dir() {
-        Some(d) => d,
-        None => {
-            eprintln!("Skipping: set CFN_LINT_FIXTURES_DIR to enable");
-            return;
-        }
-    };
+    let fixtures_dir = require_python_fixtures_dir();
 
     let results_dir = fixtures_dir.join("results/quickstart");
     if !results_dir.exists() {
@@ -392,20 +497,33 @@ fn parity_quickstart_fixtures() {
 
     let mut total_expected = 0usize;
     let mut total_matched = 0usize;
+    let mut total_actual = 0usize;
     let mut engine = Engine::with_data_dir(data_dir());
     // Python quickstart tests run with configure_rules={"E3012": {"strict": True}}
     engine.strict_types = true;
 
     for entry in std::fs::read_dir(&results_dir).unwrap().flatten() {
         let result_path = entry.path();
-        if result_path.extension().map_or(true, |e| e != "json") {
+        if result_path.extension().is_none_or(|e| e != "json") {
             continue;
         }
 
+        // Python names quickstart result files "<template>_<ext>.json" (e.g.
+        // `cis_benchmark_yaml.json` for `cis_benchmark.yaml`). Recover the
+        // template path by stripping that trailing extension marker. The old
+        // code looked for "<stem>.yaml" verbatim, so nothing ever matched and
+        // this test was a permanent 0/0 = vacuous 100% pass. (C81)
         let stem = result_path.file_stem().unwrap().to_string_lossy();
+        let (base, ext) = if let Some(b) = stem.strip_suffix("_yaml") {
+            (b.to_string(), "yaml")
+        } else if let Some(b) = stem.strip_suffix("_json") {
+            (b.to_string(), "json")
+        } else {
+            (stem.to_string(), "yaml")
+        };
         let template_path = fixtures_dir
             .join("templates/quickstart")
-            .join(format!("{}.yaml", stem));
+            .join(format!("{base}.{ext}"));
 
         if !template_path.exists() {
             continue;
@@ -432,6 +550,7 @@ fn parity_quickstart_fixtures() {
 
         total_expected += expected.len();
         total_matched += matched;
+        total_actual += actual.len();
 
         let pct = if expected.is_empty() {
             100.0
@@ -458,11 +577,28 @@ fn parity_quickstart_fixtures() {
         total_matched, total_expected, overall
     );
     println!("{}", "=".repeat(100));
+
+    // `min_expected` in the ratchet guards against the historical failure where
+    // result files never resolved to templates (0/0 = fake 100%). (C81)
+    ratchet_gate(
+        "quickstart",
+        total_matched,
+        total_actual.saturating_sub(total_matched),
+        Some(total_expected),
+    );
 }
 
 fn load_expected_results(path: &Path) -> Vec<String> {
-    let content = std::fs::read_to_string(path).unwrap_or_default();
-    let arr: serde_json::Value = serde_json::from_str(&content).unwrap_or_default();
+    // A corrupt/unreadable quickstart baseline must fail loudly, not silently
+    // parse to an empty array (which would make the file "match" vacuously). (C89)
+    let content = std::fs::read_to_string(path)
+        .unwrap_or_else(|e| panic!("failed to read quickstart baseline {}: {e}", path.display()));
+    let arr: serde_json::Value = serde_json::from_str(&content).unwrap_or_else(|e| {
+        panic!(
+            "corrupt quickstart baseline {} (C89 guard): {e}",
+            path.display()
+        )
+    });
     arr.as_array()
         .map(|a| {
             a.iter()
@@ -479,18 +615,13 @@ fn load_expected_results(path: &Path) -> Vec<String> {
 /// Compare Rust output against actual Python cfn-lint output on good+bad templates.
 /// Python results are pre-generated in tests/python_{good,bad}_results.json.
 #[test]
+#[ignore = "requires CFN_LINT_FIXTURES_DIR; run via the CI `parity` job or with --include-ignored"]
 fn parity_vs_python() {
     parity_vs_python_inner();
 }
 
 fn parity_vs_python_inner() {
-    let fixtures_dir = match python_fixtures_dir() {
-        Some(d) => d,
-        None => {
-            eprintln!("Skipping: set CFN_LINT_FIXTURES_DIR to enable");
-            return;
-        }
-    };
+    let fixtures_dir = require_python_fixtures_dir();
 
     let test_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests");
     let templates_base = fixtures_dir.join("templates");
@@ -515,8 +646,15 @@ fn parity_vs_python_inner() {
             continue;
         }
 
-        let content = std::fs::read_to_string(&results_file).unwrap();
-        let py_results: HashMap<String, Vec<String>> = serde_json::from_str(&content).unwrap();
+        let content = std::fs::read_to_string(&results_file)
+            .unwrap_or_else(|e| panic!("failed to read baseline {}: {e}", results_file.display()));
+        let py_results: HashMap<String, Vec<String>> = serde_json::from_str(&content)
+            .unwrap_or_else(|e| {
+                panic!(
+                    "corrupt baseline {} (C89 guard): {e}",
+                    results_file.display()
+                )
+            });
 
         println!(
             "--- {} templates ({} files) ---",
@@ -639,17 +777,22 @@ fn parity_vs_python_inner() {
         }
     }
     println!("{}", "=".repeat(100));
+
+    // The comprehensive gate: matched findings must not drop, rust-only findings
+    // (potential false positives) must not rise, and we must have compared a
+    // non-trivial number of Python findings. (C81)
+    ratchet_gate(
+        "parity_vs_python",
+        total_matched,
+        total_rs_only,
+        Some(total_py_rules),
+    );
 }
 
 #[test]
+#[ignore = "debug probe; requires CFN_LINT_FIXTURES_DIR and local /tmp/e1021probe fixtures"]
 fn parity_e1021_debug() {
-    let fixtures_dir = match python_fixtures_dir() {
-        Some(d) => d,
-        None => {
-            eprintln!("Skipping: set CFN_LINT_FIXTURES_DIR to enable");
-            return;
-        }
-    };
+    let fixtures_dir = require_python_fixtures_dir();
     let _ = &fixtures_dir;
     let mut engine = Engine::with_data_dir(data_dir());
     let probe = PathBuf::from("/tmp/e1021probe/templates");
@@ -674,10 +817,8 @@ fn parity_e1021_debug() {
 
     // Directly probe base64 function structure validation
     use cfn_lint::jsonschema::Validator;
-    let base64_schema: serde_json::Value = serde_json::from_str(include_str!(
-        "../data/schemas/other/functions/base64.json"
-    ))
-    .unwrap();
+    let base64_schema: serde_json::Value =
+        serde_json::from_str(include_str!("../data/schemas/other/functions/base64.json")).unwrap();
     println!("\n##### direct validate_schema: list vs base64 schema #####");
     let yaml = "Fn::Base64:\n- Random String\n";
     let ast = cfn_lint::parser::parse(yaml.as_bytes()).unwrap();
@@ -687,19 +828,19 @@ fn parity_e1021_debug() {
     // validate the whole {Fn::Base64: [..]} against base64 schema
     let errs = v.validate(&ast, &base64_schema, &[]);
     for e in &errs {
-        println!("  ROOT-ERR {} [{}] :: {}", e.rule_id.as_deref().unwrap_or("?"), e.keyword, e.message);
+        println!(
+            "  ROOT-ERR {} [{}] :: {}",
+            e.rule_id.as_deref().unwrap_or("?"),
+            e.keyword,
+            e.message
+        );
     }
 }
 
 #[test]
+#[ignore = "requires SAM_TRANSLATOR_DIR; run via the CI `parity` job or with --include-ignored"]
 fn parity_sam_translator() {
-    let sam_base = match sam_translator_dir() {
-        Some(d) => d,
-        None => {
-            eprintln!("Skipping: set SAM_TRANSLATOR_DIR to enable");
-            return;
-        }
-    };
+    let sam_base = require_sam_translator_dir();
 
     let test_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests");
     let results_file = test_dir.join("python_sam_results.json");
@@ -708,11 +849,59 @@ fn parity_sam_translator() {
         return;
     }
 
-    let content = std::fs::read_to_string(&results_file).unwrap();
-    let py_results: HashMap<String, Vec<String>> = serde_json::from_str(&content).unwrap();
+    let content = std::fs::read_to_string(&results_file).unwrap_or_else(|e| {
+        panic!(
+            "failed to read SAM baseline {}: {e}",
+            results_file.display()
+        )
+    });
+    let py_results: HashMap<String, Vec<String>> =
+        serde_json::from_str(&content).unwrap_or_else(|e| {
+            panic!(
+                "corrupt SAM baseline {} (C89 guard): {e}",
+                results_file.display()
+            )
+        });
 
+    // Rules excluded from the SAM-translator parity gate. Each is a *known,
+    // tracked* divergence between Python v1 and Rust v2 on SAM-transformed
+    // output — documented here so the exclusions are not silent fudges.
+    //
+    // Category A — Lambda runtime end-of-life checks (inherently time-dependent).
+    // Each engine ships its own runtime-deprecation table; the tables age at
+    // different rates, so parity on these rules drifts with the calendar and the
+    // build date rather than with code correctness. Gating on them would make
+    // the suite flaky over time.
+    //   E2531 "Validate if lambda runtime is deprecated"
+    //         (rules/resources/lmbd/DeprecatedRuntimeCreate.py)
+    //   E2533 "Check if Lambda Function Runtimes are updatable"
+    //         (rules/resources/lmbd/DeprecatedRuntimeUpdate.py)
+    //   W2531 "Check if EOL Lambda Function Runtimes are used"
+    //         (rules/resources/lmbd/DeprecatedRuntimeEol.py)
+    //   Tracking: https://github.com/aws-cloudformation/cfn-lint/issues
+    //             ("SAM parity: align Lambda runtime EOL tables between v1/v2")
+    //
+    // Category B — structural/coverage divergences on SAM-expanded templates.
+    //   W2001 "Check if Parameters are Used": the SAM transform routinely emits
+    //         synthetic parameters that are unused in the expanded output; v1/v2
+    //         account for them differently.
+    //   E3001 "Basic CloudFormation Resource Check": v1/v2 differ on a handful of
+    //         resource-configuration checks against transformed resources.
+    //   E3006 "Validate the CloudFormation resource type": divergence when v2's
+    //         bundled provider-schema coverage differs from v1's spec (region/
+    //         spec drift), not a real template defect.
+    //   W3037 "Check IAM Permission configuration": v1/v2 use different IAM
+    //         action/permission reference data.
+    //   Tracking: https://github.com/aws-cloudformation/cfn-lint/issues
+    //             ("SAM parity: reconcile E3001/E3006/W2001/W3037 on transformed output")
+    //
+    // When a divergence above is closed, drop the rule from this set and re-run
+    // with CFN_LINT_UPDATE_RATCHET=1 to tighten the ratchet.
     let ignored_rules: std::collections::HashSet<&str> = [
-        "E2531", "E2533", "W2531", "E3001", "W2001", "E3006", "W3037",
+        // (A) time-dependent Lambda runtime EOL checks
+        "E2531", "E2533", "W2531", //
+        // (B) SAM-transform output divergences
+        "E3001", "W2001", "E3006", "W3037",
     ]
     .into();
 
@@ -732,8 +921,10 @@ fn parity_sam_translator() {
 
     let active_file = test_dir.join("sam_active_templates.json");
     let active_templates: Vec<String> = if active_file.exists() {
-        let content = std::fs::read_to_string(&active_file).unwrap();
-        serde_json::from_str(&content).unwrap()
+        let content = std::fs::read_to_string(&active_file)
+            .unwrap_or_else(|e| panic!("failed to read {} : {e}", active_file.display()));
+        serde_json::from_str(&content)
+            .unwrap_or_else(|e| panic!("corrupt {} (C89 guard): {e}", active_file.display()))
     } else {
         println!("No SAM active templates file, skipping");
         return;
@@ -834,4 +1025,7 @@ fn parity_sam_translator() {
         }
     }
     println!("{}", "=".repeat(100));
+
+    // SAM-transform parity gate (ignored rules already filtered out above). (C81)
+    ratchet_gate("sam_translator", total_matched, rs_only, Some(total_py));
 }

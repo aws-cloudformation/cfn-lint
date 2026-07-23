@@ -1,6 +1,5 @@
-use regex::Regex;
-
 use crate::ast::AstNode;
+use crate::helpers::SUB_VARIABLE_REGEX;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
 use crate::jsonschema::ValidationError;
 use crate::rules::Severity;
@@ -117,7 +116,7 @@ fn find_refs_recursive(
                                 param_name, section_label
                             ),
                             path: path.to_vec(),
-                            span: func.span.clone(),
+                            span: func.span,
                             keyword: String::new(),
                             unknown: false,
                             resolved_from_ref: false,
@@ -128,7 +127,6 @@ fn find_refs_recursive(
                 }
             } else if func.name == "Fn::Sub" {
                 // Check Fn::Sub template strings for ${NoEchoParam} references
-                let re = Regex::new(r"\$\{([^}!]+)\}").unwrap();
                 let template_str = match func.args.as_ref() {
                     AstNode::String(s) => Some(s.value.as_str()),
                     AstNode::Array(arr) if !arr.elements.is_empty() => arr.elements[0].as_str(),
@@ -148,7 +146,7 @@ fn find_refs_recursive(
                     vec![]
                 };
                 if let Some(tmpl) = template_str {
-                    for cap in re.captures_iter(tmpl) {
+                    for cap in SUB_VARIABLE_REGEX.captures_iter(tmpl) {
                         let var_name = cap[1].trim();
                         if var_name.contains('.') || local_keys.contains(&var_name) {
                             continue;
@@ -161,7 +159,7 @@ fn find_refs_recursive(
                                     var_name, section_label
                                 ),
                                 path: path.to_vec(),
-                                span: func.span.clone(),
+                                span: func.span,
                                 keyword: String::new(),
                                 unknown: false,
                                 resolved_from_ref: false,
@@ -194,3 +192,64 @@ fn find_refs_recursive(
 }
 
 crate::register_cfn_lint_rule!(W2010);
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::parser;
+
+    // C58: after hoisting the regex to a static, Fn::Sub detection of a NoEcho
+    // parameter in Outputs must still work.
+    #[test]
+    fn test_noecho_in_sub_output_flagged() {
+        let yaml = br#"
+Parameters:
+  Secret:
+    Type: String
+    NoEcho: true
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+Outputs:
+  Leak:
+    Value: !Sub "value-${Secret}"
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = W2010.validate_template(&tmpl, &ast);
+        assert_eq!(issues.len(), 1, "got: {:?}", issues);
+        assert!(issues[0].message.contains("Secret"));
+    }
+
+    #[test]
+    fn test_noecho_direct_ref_in_output_flagged() {
+        let yaml = br#"
+Parameters:
+  Secret:
+    Type: String
+    NoEcho: true
+Outputs:
+  Leak:
+    Value: !Ref Secret
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = W2010.validate_template(&tmpl, &ast);
+        assert_eq!(issues.len(), 1, "got: {:?}", issues);
+    }
+
+    #[test]
+    fn test_no_noecho_params_no_issue() {
+        let yaml = br#"
+Parameters:
+  Public:
+    Type: String
+Outputs:
+  Out:
+    Value: !Ref Public
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        assert!(W2010.validate_template(&tmpl, &ast).is_empty());
+    }
+}

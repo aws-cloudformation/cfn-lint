@@ -1,8 +1,45 @@
+use std::cell::Cell;
 use std::sync::Arc;
 
 use crate::ast::AstNode;
 
 use super::{ValidationError, Validator, SKIP_KEYWORDS};
+
+/// Maximum depth of chained `$ref` resolution. Circular `$ref`s (which occur in
+/// real provider schemas with recursive definitions) would otherwise recurse
+/// forever through `validate_schema -> resolve_ref -> validate_schema` and
+/// overflow the stack. Legitimate `$ref` chains are shallow, so this cap only
+/// trips on cycles or pathological nesting.
+const MAX_REF_DEPTH: usize = 64;
+
+thread_local! {
+    /// Number of `$ref` resolutions currently active on the call stack.
+    static REF_DEPTH: Cell<usize> = const { Cell::new(0) };
+}
+
+/// RAII guard that increments the thread-local `$ref` depth on entry and
+/// decrements it on drop. `enter` returns `None` once the depth cap is reached.
+struct RefDepthGuard;
+
+impl RefDepthGuard {
+    fn enter() -> Option<Self> {
+        REF_DEPTH.with(|d| {
+            let cur = d.get();
+            if cur >= MAX_REF_DEPTH {
+                None
+            } else {
+                d.set(cur + 1);
+                Some(RefDepthGuard)
+            }
+        })
+    }
+}
+
+impl Drop for RefDepthGuard {
+    fn drop(&mut self) {
+        REF_DEPTH.with(|d| d.set(d.get().saturating_sub(1)));
+    }
+}
 
 impl Validator {
     /// Top-level validate: sets root schema and returns a ValidationResult.
@@ -46,6 +83,23 @@ impl Validator {
         // Handle $ref: resolve and validate, then also validate sibling keywords
         if let Some(ref_val) = schema_obj.get("$ref") {
             if let Some(ref_str) = ref_val.as_str() {
+                // Guard against circular / pathologically deep $ref chains. The
+                // guard is held for the duration of resolving and validating this
+                // ref (and its transitive refs); it drops when this branch returns.
+                let _ref_guard = match RefDepthGuard::enter() {
+                    Some(g) => g,
+                    None => {
+                        return vec![ValidationError::schema_error(
+                            "$ref",
+                            format!(
+                                "$ref resolution exceeded maximum depth ({}); possible circular reference at \"{}\"",
+                                MAX_REF_DEPTH, ref_str
+                            ),
+                            path.to_vec(),
+                            node.span(),
+                        )];
+                    }
+                };
                 match self.resolve_ref(ref_str) {
                     Ok(resolved) => {
                         let mut errors = self.validate_schema(node, &resolved, path);
@@ -135,7 +189,7 @@ impl Validator {
                 }
                 if let Some(validator_fn) = v.validators.get(keyword) {
                     let keyword_errors =
-                        validator_fn(v, instance, constraint, &modified_schema, path);
+                        validator_fn(v, instance, constraint, modified_schema, path);
                     errors.extend(keyword_errors);
                 }
             }
@@ -221,5 +275,72 @@ fn rewrite_local_refs(value: &mut serde_json::Value, schema_name: &str) {
             }
         }
         _ => {}
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    /// Run `f` on a worker thread and fail if it does not finish within `secs`.
+    fn run_with_timeout<F: FnOnce() + Send + 'static>(secs: u64, f: F) {
+        use std::sync::mpsc::{channel, RecvTimeoutError};
+        use std::time::Duration;
+        let (tx, rx) = channel();
+        let handle = std::thread::spawn(move || {
+            f();
+            let _ = tx.send(());
+        });
+        match rx.recv_timeout(Duration::from_secs(secs)) {
+            Ok(()) => handle.join().unwrap(),
+            Err(RecvTimeoutError::Timeout) => {
+                panic!("did not finish within {secs}s — $ref cycle guard likely regressed")
+            }
+            Err(RecvTimeoutError::Disconnected) => handle.join().unwrap(),
+        }
+    }
+
+    fn str_node(s: &str) -> AstNode {
+        AstNode::String(crate::ast::StringNode {
+            value: s.to_string(),
+            span: crate::ast::Span::default(),
+        })
+    }
+
+    #[test]
+    fn test_circular_ref_does_not_overflow() {
+        run_with_timeout(10, || {
+            // A <-> B mutually reference each other, an unbroken $ref cycle that
+            // occurs in real recursive provider-schema definitions.
+            let schema = json!({
+                "definitions": {
+                    "A": {"$ref": "#/definitions/B"},
+                    "B": {"$ref": "#/definitions/A"}
+                },
+                "$ref": "#/definitions/A"
+            });
+            let v = Validator::new(schema.clone());
+            let errs = v.validate_schema(&str_node("hello"), &schema, &[]);
+            // Must terminate and report the cycle rather than overflow the stack.
+            assert!(
+                errs.iter()
+                    .any(|e| e.keyword == "$ref" && e.message.contains("maximum depth")),
+                "expected a $ref depth error, got: {errs:?}"
+            );
+        });
+    }
+
+    #[test]
+    fn test_self_referential_ref_does_not_overflow() {
+        run_with_timeout(10, || {
+            let schema = json!({
+                "definitions": {"Node": {"$ref": "#/definitions/Node"}},
+                "$ref": "#/definitions/Node"
+            });
+            let v = Validator::new(schema.clone());
+            let errs = v.validate_schema(&str_node("x"), &schema, &[]);
+            assert!(errs.iter().any(|e| e.keyword == "$ref"));
+        });
     }
 }

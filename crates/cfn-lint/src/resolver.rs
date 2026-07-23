@@ -204,8 +204,7 @@ Resources:
         let ctx = make_ctx(b"AWSTemplateFormatVersion: '2010-09-09'\n");
         let r = Resolver::new(&ctx);
 
-        let mut map_props: Vec<ObjectEntry> = Vec::new();
-        map_props.push(ObjectEntry {
+        let map_props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "MyVar".to_string(),
                 span: Span::default(),
@@ -213,7 +212,7 @@ Resources:
             key: "MyVar".to_string(),
             value: str_node("custom-value"),
             key_span: Span::default(),
-        });
+        }];
         let map_node = AstNode::Object(ObjectNode {
             entries: map_props,
             span: Span::default(),

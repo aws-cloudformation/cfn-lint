@@ -1,47 +1,14 @@
 # --- cfn-lint-test ---
 # rule: E3049
-# description: ECS awsvpc HostPort must equal ContainerPort (cross-resource)
+# description: ECS service with a dynamic host port (HostPort 0) associated to an ELB must use a traffic-port target group health check
 # expect:
 #   - rule: E3049
-#     path: /Resources/BadTaskDef/Properties/ContainerDefinitions/0/PortMappings/0/HostPort
-#     message_contains: "HostPort"
+#     path: /Resources/BadTargetGroup/Properties/HealthCheckPort
+#     message_contains: "traffic-port"
 # ---
 Resources:
+  # GOOD: dynamic host port, target group health check uses 'traffic-port'
   GoodTaskDef:
-    Type: AWS::ECS::TaskDefinition
-    Properties:
-      NetworkMode: awsvpc
-      ContainerDefinitions:
-        - Name: app
-          Image: nginx
-          PortMappings:
-            - ContainerPort: 8080
-              HostPort: 8080
-
-  GoodService:
-    Type: AWS::ECS::Service
-    Properties:
-      TaskDefinition: !Ref GoodTaskDef
-      LaunchType: FARGATE
-
-  BadTaskDef:
-    Type: AWS::ECS::TaskDefinition
-    Properties:
-      NetworkMode: awsvpc
-      ContainerDefinitions:
-        - Name: app
-          Image: nginx
-          PortMappings:
-            - ContainerPort: 8080
-              HostPort: 0
-
-  BadService:
-    Type: AWS::ECS::Service
-    Properties:
-      TaskDefinition: !Ref BadTaskDef
-      LaunchType: FARGATE
-
-  BridgeTaskDef:
     Type: AWS::ECS::TaskDefinition
     Properties:
       NetworkMode: bridge
@@ -52,7 +19,74 @@ Resources:
             - ContainerPort: 8080
               HostPort: 0
 
-  BridgeService:
+  GoodTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckPort: traffic-port
+      Port: 80
+      Protocol: HTTP
+
+  GoodService:
     Type: AWS::ECS::Service
     Properties:
-      TaskDefinition: !Ref BridgeTaskDef
+      TaskDefinition: !Ref GoodTaskDef
+      LoadBalancers:
+        - TargetGroupArn: !Ref GoodTargetGroup
+          ContainerName: app
+          ContainerPort: 8080
+
+  # BAD: dynamic host port, but target group health check port is not 'traffic-port'
+  BadTaskDef:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      NetworkMode: bridge
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          PortMappings:
+            - ContainerPort: 8080
+              HostPort: 0
+
+  BadTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckPort: "3000"
+      Port: 80
+      Protocol: HTTP
+
+  BadService:
+    Type: AWS::ECS::Service
+    Properties:
+      TaskDefinition: !Ref BadTaskDef
+      LoadBalancers:
+        - TargetGroupArn: !Ref BadTargetGroup
+          ContainerName: app
+          ContainerPort: 8080
+
+  # NEUTRAL: non-dynamic host port — no E3049 regardless of health check port
+  StaticTaskDef:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      NetworkMode: bridge
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+          PortMappings:
+            - ContainerPort: 8080
+              HostPort: 8080
+
+  StaticTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckPort: "3000"
+      Port: 80
+      Protocol: HTTP
+
+  StaticService:
+    Type: AWS::ECS::Service
+    Properties:
+      TaskDefinition: !Ref StaticTaskDef
+      LoadBalancers:
+        - TargetGroupArn: !Ref StaticTargetGroup
+          ContainerName: app
+          ContainerPort: 8080

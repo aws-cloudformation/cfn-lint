@@ -29,7 +29,7 @@ impl I1002 {
                     byte_size, TEMPLATE_BODY_LIMIT
                 ),
                 path: vec!["Template".to_string()],
-                span: root.span().clone(),
+                span: root.span(),
                 keyword: String::new(),
                 unknown: false,
                 resolved_from_ref: false,

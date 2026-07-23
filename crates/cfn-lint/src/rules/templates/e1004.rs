@@ -41,7 +41,7 @@ impl CfnLintRule for E1004 {
                         desc.node_type()
                     ),
                     path: vec!["Description".to_string()],
-                    span: desc.span().clone(),
+                    span: desc.span(),
                     keyword: String::new(),
                     unknown: false,
                     resolved_from_ref: false,
@@ -64,8 +64,7 @@ mod tests {
 
     #[test]
     fn test_valid_string_description() {
-        let mut props: Vec<ObjectEntry> = Vec::new();
-        props.push(ObjectEntry {
+        let props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "Description".to_string(),
                 span: Span::default(),
@@ -76,7 +75,7 @@ mod tests {
                 span: Span::default(),
             }),
             key_span: Span::default(),
-        });
+        }];
         let root = AstNode::Object(ObjectNode {
             entries: props,
             span: Span::default(),
@@ -87,8 +86,7 @@ mod tests {
 
     #[test]
     fn test_number_description() {
-        let mut props: Vec<ObjectEntry> = Vec::new();
-        props.push(ObjectEntry {
+        let props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "Description".to_string(),
                 span: Span::default(),
@@ -102,7 +100,7 @@ mod tests {
                 },
             }),
             key_span: Span::default(),
-        });
+        }];
         let root = AstNode::Object(ObjectNode {
             entries: props,
             span: Span::default(),

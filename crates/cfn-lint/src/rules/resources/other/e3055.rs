@@ -68,7 +68,7 @@ impl CfnLintRule for E3055 {
                         name.to_string(),
                         "CreationPolicy".to_string(),
                     ],
-                    span: policy_node.span().clone(),
+                    span: policy_node.span(),
                     keyword: String::new(),
                     unknown: false,
                     resolved_from_ref: false,
@@ -106,10 +106,7 @@ impl CfnLintRule for E3055 {
                             "CreationPolicy".to_string(),
                             key.to_string(),
                         ],
-                        span: policy_obj
-                            .get(key)
-                            .map(|n| n.span().clone())
-                            .unwrap_or_default(),
+                        span: policy_obj.get(key).map(|n| n.span()).unwrap_or_default(),
                         keyword: String::new(),
                         unknown: false,
                         resolved_from_ref: false,
@@ -140,7 +137,7 @@ impl CfnLintRule for E3055 {
                                     "AutoScalingCreationPolicy".to_string(),
                                     key.to_string(),
                                 ],
-                                span: asc.get(key).map(|n| n.span().clone()).unwrap_or_default(),
+                                span: asc.get(key).map(|n| n.span()).unwrap_or_default(),
                                 keyword: String::new(),
                                 unknown: false,
                                 resolved_from_ref: false,
@@ -166,7 +163,7 @@ impl CfnLintRule for E3055 {
                                 "ResourceSignal".to_string(),
                                 key.to_string(),
                             ],
-                            span: rs.get(key).map(|n| n.span().clone()).unwrap_or_default(),
+                            span: rs.get(key).map(|n| n.span()).unwrap_or_default(),
                             keyword: String::new(),
                             unknown: false,
                             resolved_from_ref: false,

@@ -1,6 +1,7 @@
 use regex::Regex;
 
 use crate::ast::AstNode;
+use crate::helpers::SUB_VARIABLE_REGEX;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
 use crate::jsonschema::ValidationError;
 use crate::rules::Severity;
@@ -35,9 +36,8 @@ impl CfnLintRule for W1020 {
         if crate::transform::is_sam_template(root) {
             return vec![];
         }
-        let re = Regex::new(r"\$\{\s*[^!\s].*?\s*\}").unwrap();
         let mut issues = Vec::new();
-        find_sub_no_vars(root, &[], &re, &mut issues);
+        find_sub_no_vars(root, &[], &SUB_VARIABLE_REGEX, &mut issues);
         issues
     }
 }
@@ -63,7 +63,7 @@ fn find_sub_no_vars(
                             message: "'Fn::Sub' isn't needed because there are no variables"
                                 .to_string(),
                             path: path.to_vec(),
-                            span: func.span.clone(),
+                            span: func.span,
                             keyword: String::new(),
                             unknown: false,
                             resolved_from_ref: false,

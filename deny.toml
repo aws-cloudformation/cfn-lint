@@ -1,20 +1,40 @@
 [advisories]
-vulnerability = "deny"
-unmaintained = "warn"
+# Vulnerabilities and unsound advisories are always denied by current
+# cargo-deny. Scope the unmaintained check to crates reachable from the
+# workspace dependency graph; yanked crates warn rather than fail.
+unmaintained = "workspace"
 yanked = "warn"
+ignore = []
 
 [licenses]
-unlicensed = "deny"
+# Only these SPDX licenses are permitted; any dependency with a different or
+# missing license fails the check. "Apache-2.0 WITH LLVM-exception" is strictly
+# more permissive than Apache-2.0 (already allowed) and is the primary license
+# across the rustix / wasm / wit-bindgen ecosystem.
 allow = [
     "MIT",
     "MIT-0",
     "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
     "BSD-2-Clause",
     "BSD-3-Clause",
     "ISC",
     "Unicode-3.0",
     "Unicode-DFS-2016",
 ]
+confidence-threshold = 0.8
+
+# Per-crate license exceptions, scoped as tightly as possible.
+# option-ext (MPL-2.0, weak file-level copyleft) is pulled in transitively via
+# `dirs` -> `dirs-sys`. webpki-roots (CDLA-Permissive-2.0, permissive) ships the
+# Mozilla CA bundle used by `ureq`.
+[[licenses.exceptions]]
+allow = ["MPL-2.0"]
+name = "option-ext"
+
+[[licenses.exceptions]]
+allow = ["CDLA-Permissive-2.0"]
+name = "webpki-roots"
 
 [bans]
 multiple-versions = "warn"

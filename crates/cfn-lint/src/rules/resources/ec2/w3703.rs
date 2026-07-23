@@ -62,10 +62,10 @@ impl CfnLintRule for W3703 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::AstNode;
+
     use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
     use crate::parser;
-    use crate::rules::Issue;
+
     use crate::template::Template;
 
     #[test]
@@ -78,7 +78,7 @@ Resources:
       Type: other
 "#;
         let ast = parser::parse(yaml).unwrap();
-        let tmpl = Template::from_ast(&ast).unwrap();
+        let _tmpl = Template::from_ast(&ast).unwrap();
         // Simulate keyword dispatch: get the node at the keyword path
         let instance = ast
             .get("Resources")

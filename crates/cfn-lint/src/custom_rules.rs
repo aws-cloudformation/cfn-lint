@@ -83,17 +83,17 @@ impl CfnLintRule for CustomRule {
             let prop_value = resource
                 .properties
                 .as_ref()
-                .and_then(|p| p.get(&self.property));
+                .and_then(|p| get_nested(p, &self.property));
 
-            let path = vec![
+            let mut path = vec![
                 "Resources".to_string(),
                 name.clone(),
                 "Properties".to_string(),
-                self.property.clone(),
             ];
+            path.extend(self.property.split('.').map(|s| s.to_string()));
             let pos = prop_value
-                .map(|v| v.span().clone())
-                .or_else(|| resource.properties.as_ref().map(|p| p.span().clone()))
+                .map(|v| v.span())
+                .or_else(|| resource.properties.as_ref().map(|p| p.span()))
                 .unwrap_or_default();
 
             let violation = match &self.operator {
@@ -120,21 +120,29 @@ impl CfnLintRule for CustomRule {
                     None => true,
                 },
                 Operator::GreaterThan(threshold) => match prop_value.and_then(|v| v.as_f64()) {
-                    Some(n) => !(n > *threshold),
+                    Some(n) => {
+                        !matches!(n.partial_cmp(threshold), Some(std::cmp::Ordering::Greater))
+                    }
                     None => true,
                 },
                 Operator::GreaterThanOrEqual(threshold) => {
                     match prop_value.and_then(|v| v.as_f64()) {
-                        Some(n) => !(n >= *threshold),
+                        Some(n) => !matches!(
+                            n.partial_cmp(threshold),
+                            Some(std::cmp::Ordering::Greater | std::cmp::Ordering::Equal)
+                        ),
                         None => true,
                     }
                 }
                 Operator::LessThan(threshold) => match prop_value.and_then(|v| v.as_f64()) {
-                    Some(n) => !(n < *threshold),
+                    Some(n) => !matches!(n.partial_cmp(threshold), Some(std::cmp::Ordering::Less)),
                     None => true,
                 },
                 Operator::LessThanOrEqual(threshold) => match prop_value.and_then(|v| v.as_f64()) {
-                    Some(n) => !(n <= *threshold),
+                    Some(n) => !matches!(
+                        n.partial_cmp(threshold),
+                        Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
+                    ),
                     None => true,
                 },
             };
@@ -167,14 +175,34 @@ pub fn load_custom_rules(path: &Path) -> Result<Vec<Arc<dyn CfnLintRule>>, Custo
     parse_custom_rules(&content)
 }
 
+/// Resolve a (possibly dotted) property path against a node (C54).
+///
+/// Each `.`-separated segment is resolved either as an object key or, when the
+/// current node is an array and the segment parses as an index, as an array
+/// index. A plain (dot-free) property behaves exactly like a single object
+/// lookup, so existing rules are unaffected.
+fn get_nested<'a>(node: &'a AstNode, property: &str) -> Option<&'a AstNode> {
+    let mut current = node;
+    for segment in property.split('.') {
+        current = match current {
+            AstNode::Array(arr) => {
+                let idx: usize = segment.parse().ok()?;
+                arr.elements.get(idx)?
+            }
+            _ => current.get(segment)?,
+        };
+    }
+    Some(current)
+}
+
 /// Extract a quoted string from the end of the remaining text.
 /// Returns (remaining_text_before_quote, extracted_message).
 fn extract_quoted_message(text: &str) -> (String, Option<String>) {
     let trimmed = text.trim_end();
-    if trimmed.ends_with('"') {
+    if let Some(stripped) = trimmed.strip_suffix('"') {
         // Find the opening quote (scan backwards from the closing quote)
-        if let Some(open_idx) = trimmed[..trimmed.len() - 1].rfind('"') {
-            let message = trimmed[open_idx + 1..trimmed.len() - 1].to_string();
+        if let Some(open_idx) = stripped.rfind('"') {
+            let message = stripped[open_idx + 1..].to_string();
             let before = trimmed[..open_idx].trim_end().to_string();
             return (before, Some(message));
         }
@@ -182,19 +210,45 @@ fn extract_quoted_message(text: &str) -> (String, Option<String>) {
     (trimmed.to_string(), None)
 }
 
-/// Extract an optional severity keyword (WARN or ERROR) from the end of text.
-/// Returns (remaining_text, severity).
-fn extract_severity(text: &str) -> (&str, Severity) {
-    let trimmed = text.trim_end();
-    if trimmed.ends_with(" WARN") || trimmed == "WARN" {
-        let end = trimmed.len() - 4;
-        (trimmed[..end].trim_end(), Severity::Warning)
-    } else if trimmed.ends_with(" ERROR") || trimmed == "ERROR" {
-        let end = trimmed.len() - 5;
-        (trimmed[..end].trim_end(), Severity::Error)
-    } else {
-        (trimmed, Severity::Error)
+/// Split the text following an operator into its value and an optional
+/// trailing severity keyword.
+///
+/// Severity (`WARN`/`ERROR`) is only recognised as a *standalone trailing
+/// token that follows a value* (C55). This prevents a value that legitimately
+/// equals "ERROR"/"WARN" (e.g. `Tag EQUALS ERROR`) from being misparsed as an
+/// empty value with that severity.
+///
+/// For operators that take no value (`IS_DEFINED`/`NOT_DEFINED`), a lone
+/// `WARN`/`ERROR` token is treated as the severity.
+fn split_value_severity(rest: &str, takes_value: bool) -> (String, Severity) {
+    let rest = rest.trim();
+
+    if !takes_value {
+        return match rest {
+            "WARN" => (String::new(), Severity::Warning),
+            "ERROR" => (String::new(), Severity::Error),
+            _ => (rest.to_string(), Severity::Error),
+        };
     }
+
+    let tokens: Vec<&str> = rest.split_whitespace().collect();
+    // Only strip a trailing severity token when a value precedes it.
+    if tokens.len() >= 2 {
+        let last = tokens[tokens.len() - 1];
+        if last == "WARN" || last == "ERROR" {
+            let severity = if last == "WARN" {
+                Severity::Warning
+            } else {
+                Severity::Error
+            };
+            // Remove the trailing severity token (its last occurrence).
+            let cut = rest.rfind(last).unwrap_or(rest.len());
+            let value = rest[..cut].trim_end().to_string();
+            return (value, severity);
+        }
+    }
+
+    (rest.to_string(), Severity::Error)
 }
 
 fn parse_custom_rules(content: &str) -> Result<Vec<Arc<dyn CfnLintRule>>, CustomRuleError> {
@@ -210,10 +264,8 @@ fn parse_custom_rules(content: &str) -> Result<Vec<Arc<dyn CfnLintRule>>, Custom
         // First extract the optional quoted message from the end
         let (after_msg, custom_message) = extract_quoted_message(line);
 
-        // Then extract the optional severity keyword from what remains
-        let (core, severity) = extract_severity(&after_msg);
-
-        // Now parse the core: ResourceType Property Operator [Value]
+        // Now parse the core: ResourceType Property Operator [Value] [Severity]
+        let core = after_msg.trim();
         let parts: Vec<&str> = core.splitn(4, ' ').collect();
         if parts.len() < 3 {
             return Err(CustomRuleError::ParseError {
@@ -228,7 +280,13 @@ fn parse_custom_rules(content: &str) -> Result<Vec<Arc<dyn CfnLintRule>>, Custom
         let resource_type = parts[0].to_string();
         let property = parts[1].to_string();
         let op_str = parts[2];
-        let value_str = parts.get(3).copied().unwrap_or("").trim();
+        let rest = parts.get(3).copied().unwrap_or("").trim();
+
+        // Severity is only a trailing token after the value, so it must be
+        // split with knowledge of whether the operator expects a value.
+        let takes_value = !matches!(op_str, "IS_DEFINED" | "NOT_DEFINED");
+        let (value_owned, severity) = split_value_severity(rest, takes_value);
+        let value_str = value_owned.as_str();
 
         let operator = match op_str {
             "IS_DEFINED" => Operator::IsDefined,
@@ -398,33 +456,33 @@ mod tests {
                 key_span: Span::default(),
             });
         }
-        let mut res_inner: Vec<ObjectEntry> = Vec::new();
-        res_inner.push(ObjectEntry {
-            key_node: AstNode::String(StringNode {
-                value: "Type".to_string(),
-                span: Span::default(),
-            }),
-            key: "Type".to_string(),
-            value: AstNode::String(StringNode {
-                value: resource_type.to_string(),
-                span: Span::default(),
-            }),
-            key_span: Span::default(),
-        });
-        res_inner.push(ObjectEntry {
-            key_node: AstNode::String(StringNode {
-                value: "Properties".to_string(),
-                span: Span::default(),
-            }),
-            key: "Properties".to_string(),
-            value: AstNode::Object(ObjectNode {
-                entries: prop_map,
-                span: Span::default(),
-            }),
-            key_span: Span::default(),
-        });
-        let mut resources: Vec<ObjectEntry> = Vec::new();
-        resources.push(ObjectEntry {
+        let res_inner: Vec<ObjectEntry> = vec![
+            ObjectEntry {
+                key_node: AstNode::String(StringNode {
+                    value: "Type".to_string(),
+                    span: Span::default(),
+                }),
+                key: "Type".to_string(),
+                value: AstNode::String(StringNode {
+                    value: resource_type.to_string(),
+                    span: Span::default(),
+                }),
+                key_span: Span::default(),
+            },
+            ObjectEntry {
+                key_node: AstNode::String(StringNode {
+                    value: "Properties".to_string(),
+                    span: Span::default(),
+                }),
+                key: "Properties".to_string(),
+                value: AstNode::Object(ObjectNode {
+                    entries: prop_map,
+                    span: Span::default(),
+                }),
+                key_span: Span::default(),
+            },
+        ];
+        let resources: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "MyResource".to_string(),
                 span: Span::default(),
@@ -435,9 +493,8 @@ mod tests {
                 span: Span::default(),
             }),
             key_span: Span::default(),
-        });
-        let mut root_props: Vec<ObjectEntry> = Vec::new();
-        root_props.push(ObjectEntry {
+        }];
+        let root_props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "Resources".to_string(),
                 span: Span::default(),
@@ -448,7 +505,7 @@ mod tests {
                 span: Span::default(),
             }),
             key_span: Span::default(),
-        });
+        }];
         let root = AstNode::Object(ObjectNode {
             entries: root_props,
             span: Span::default(),
@@ -758,8 +815,7 @@ AWS::Lambda::Function Runtime IN nodejs20.x
         prop_name: &str,
         value: f64,
     ) -> (Template, AstNode) {
-        let mut prop_map: Vec<ObjectEntry> = Vec::new();
-        prop_map.push(ObjectEntry {
+        let prop_map: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: prop_name.to_string(),
                 span: Span::default(),
@@ -773,34 +829,34 @@ AWS::Lambda::Function Runtime IN nodejs20.x
                 },
             }),
             key_span: Span::default(),
-        });
-        let mut res_inner: Vec<ObjectEntry> = Vec::new();
-        res_inner.push(ObjectEntry {
-            key_node: AstNode::String(StringNode {
-                value: "Type".to_string(),
-                span: Span::default(),
-            }),
-            key: "Type".to_string(),
-            value: AstNode::String(StringNode {
-                value: resource_type.to_string(),
-                span: Span::default(),
-            }),
-            key_span: Span::default(),
-        });
-        res_inner.push(ObjectEntry {
-            key_node: AstNode::String(StringNode {
-                value: "Properties".to_string(),
-                span: Span::default(),
-            }),
-            key: "Properties".to_string(),
-            value: AstNode::Object(ObjectNode {
-                entries: prop_map,
-                span: Span::default(),
-            }),
-            key_span: Span::default(),
-        });
-        let mut resources: Vec<ObjectEntry> = Vec::new();
-        resources.push(ObjectEntry {
+        }];
+        let res_inner: Vec<ObjectEntry> = vec![
+            ObjectEntry {
+                key_node: AstNode::String(StringNode {
+                    value: "Type".to_string(),
+                    span: Span::default(),
+                }),
+                key: "Type".to_string(),
+                value: AstNode::String(StringNode {
+                    value: resource_type.to_string(),
+                    span: Span::default(),
+                }),
+                key_span: Span::default(),
+            },
+            ObjectEntry {
+                key_node: AstNode::String(StringNode {
+                    value: "Properties".to_string(),
+                    span: Span::default(),
+                }),
+                key: "Properties".to_string(),
+                value: AstNode::Object(ObjectNode {
+                    entries: prop_map,
+                    span: Span::default(),
+                }),
+                key_span: Span::default(),
+            },
+        ];
+        let resources: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "MyResource".to_string(),
                 span: Span::default(),
@@ -811,9 +867,8 @@ AWS::Lambda::Function Runtime IN nodejs20.x
                 span: Span::default(),
             }),
             key_span: Span::default(),
-        });
-        let mut root_props: Vec<ObjectEntry> = Vec::new();
-        root_props.push(ObjectEntry {
+        }];
+        let root_props: Vec<ObjectEntry> = vec![ObjectEntry {
             key_node: AstNode::String(StringNode {
                 value: "Resources".to_string(),
                 span: Span::default(),
@@ -824,7 +879,7 @@ AWS::Lambda::Function Runtime IN nodejs20.x
                 span: Span::default(),
             }),
             key_span: Span::default(),
-        });
+        }];
         let root = AstNode::Object(ObjectNode {
             entries: root_props,
             span: Span::default(),
@@ -1127,5 +1182,119 @@ AWS::S3::Bucket BucketEncryption IS_DEFINED WARN
         assert_eq!(rules[2].severity(), Severity::Error);
         assert_eq!(rules[2].short_description(), "t2.micro is deprecated");
         assert_eq!(rules[3].severity(), Severity::Warning);
+    }
+
+    // --- C55: value ending in a severity keyword ---
+
+    #[test]
+    fn test_parse_value_equals_error_keyword() {
+        // "ERROR" here is the VALUE, not a severity keyword.
+        let rules = parse_custom_rules("AWS::EC2::Instance Tag EQUALS ERROR\n").unwrap();
+        assert_eq!(rules.len(), 1);
+        assert_eq!(rules[0].severity(), Severity::Error);
+        // The value must be "ERROR": a resource whose Tag == ERROR passes.
+        let (tmpl, root) = make_template("AWS::EC2::Instance", vec![("Tag", "ERROR")]);
+        assert!(rules[0].validate_template(&tmpl, &root).is_empty());
+        // A resource whose Tag != ERROR violates.
+        let (tmpl2, root2) = make_template("AWS::EC2::Instance", vec![("Tag", "other")]);
+        assert_eq!(rules[0].validate_template(&tmpl2, &root2).len(), 1);
+    }
+
+    #[test]
+    fn test_parse_value_equals_warn_keyword() {
+        let rules = parse_custom_rules("AWS::EC2::Instance Tag EQUALS WARN\n").unwrap();
+        assert_eq!(rules.len(), 1);
+        assert_eq!(rules[0].severity(), Severity::Error);
+        let (tmpl, root) = make_template("AWS::EC2::Instance", vec![("Tag", "WARN")]);
+        assert!(rules[0].validate_template(&tmpl, &root).is_empty());
+    }
+
+    #[test]
+    fn test_parse_value_then_trailing_severity_still_works() {
+        // Value "foo" followed by a real trailing severity token.
+        let rules = parse_custom_rules("AWS::EC2::Instance Tag EQUALS foo WARN\n").unwrap();
+        assert_eq!(rules.len(), 1);
+        assert_eq!(rules[0].severity(), Severity::Warning);
+        let (tmpl, root) = make_template("AWS::EC2::Instance", vec![("Tag", "foo")]);
+        assert!(rules[0].validate_template(&tmpl, &root).is_empty());
+        let (tmpl2, root2) = make_template("AWS::EC2::Instance", vec![("Tag", "bar")]);
+        assert_eq!(rules[0].validate_template(&tmpl2, &root2).len(), 1);
+    }
+
+    // --- C54: dotted property paths ---
+
+    #[test]
+    fn test_dotted_property_is_defined_resolves() {
+        let rules =
+            parse_custom_rules("AWS::EC2::Instance NetworkInterfaces.0.SubnetId IS_DEFINED\n")
+                .unwrap();
+        let yaml = br#"
+Resources:
+  Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      NetworkInterfaces:
+        - DeviceIndex: "0"
+          SubnetId: subnet-123
+"#;
+        let ast = crate::parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        // The dotted path resolves to a defined value -> no violation.
+        assert!(rules[0].validate_template(&tmpl, &ast).is_empty());
+    }
+
+    #[test]
+    fn test_dotted_property_missing_reports_violation_with_segmented_path() {
+        let rules =
+            parse_custom_rules("AWS::EC2::Instance NetworkInterfaces.0.PrivateIp IS_DEFINED\n")
+                .unwrap();
+        let yaml = br#"
+Resources:
+  Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      NetworkInterfaces:
+        - DeviceIndex: "0"
+          SubnetId: subnet-123
+"#;
+        let ast = crate::parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = rules[0].validate_template(&tmpl, &ast);
+        assert_eq!(issues.len(), 1, "got: {:?}", issues);
+        assert_eq!(
+            issues[0].path,
+            vec![
+                "Resources",
+                "Instance",
+                "Properties",
+                "NetworkInterfaces",
+                "0",
+                "PrivateIp"
+            ]
+        );
+    }
+
+    #[test]
+    fn test_get_nested_plain_property_backwards_compatible() {
+        let yaml = br#"
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-bucket
+"#;
+        let ast = crate::parser::parse(yaml).unwrap();
+        let props = ast
+            .get("Resources")
+            .unwrap()
+            .get("Bucket")
+            .unwrap()
+            .get("Properties")
+            .unwrap();
+        assert_eq!(
+            get_nested(props, "BucketName").and_then(|n| n.as_str()),
+            Some("my-bucket")
+        );
+        assert!(get_nested(props, "Missing").is_none());
     }
 }

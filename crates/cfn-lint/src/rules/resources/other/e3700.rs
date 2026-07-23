@@ -95,7 +95,7 @@ impl CfnLintRule for E3700 {
                                 span: action
                                     .get("ActionTypeId")
                                     .and_then(|a| a.get("Category"))
-                                    .map(|n| n.span().clone())
+                                    .map(|n| n.span())
                                     .unwrap_or_default(),
                                 keyword: String::new(),
                                 unknown: false,
@@ -124,7 +124,7 @@ impl CfnLintRule for E3700 {
                                 span: action
                                     .get("ActionTypeId")
                                     .and_then(|a| a.get("Category"))
-                                    .map(|n| n.span().clone())
+                                    .map(|n| n.span())
                                     .unwrap_or_default(),
                                 keyword: String::new(),
                                 unknown: false,

@@ -70,7 +70,6 @@ impl CfnLintRule for E3697 {
 }
 
 #[cfg(test)]
-
 mod tests {
     use super::*;
     use crate::parser;

@@ -1,3 +1,5 @@
+use std::sync::LazyLock;
+
 use regex::Regex;
 
 use crate::ast::AstNode;
@@ -7,6 +9,11 @@ use crate::rules::Severity;
 use crate::template::Template;
 
 pub struct E1029;
+
+/// Matches `${...}` substitution variables. Hoisted to a static so the regex
+/// is compiled once rather than on every call to `validate_template` (C58).
+static SUB_VAR_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"\$\{[A-Za-z0-9_:\.]+\}").unwrap());
 
 const PSEUDO_PARAMS: &[&str] = &[
     "AWS::AccountId",
@@ -45,9 +52,8 @@ impl CfnLintRule for E1029 {
         template: &Template,
         root: &AstNode,
     ) -> Vec<crate::jsonschema::ValidationError> {
-        let re = Regex::new(r"\$\{[A-Za-z0-9_:\.]+\}").unwrap();
         let mut issues = Vec::new();
-        self.check_node(root, &[], &re, template, root, &mut issues);
+        self.check_node(root, &[], &SUB_VAR_RE, template, root, &mut issues);
         issues
     }
 }
@@ -112,8 +118,33 @@ impl E1029 {
     ) {
         match node {
             AstNode::Function(func) => {
-                // Don't descend into Fn::Sub — it handles its own variables
+                // Fn::Sub handles the variables in its own template string, but
+                // the values of its substitution map must still be checked
+                // (C61). For the array form ["template", {map}], recurse into
+                // the map values (element [1]); the template string (element
+                // [0]) is intentionally skipped.
                 if func.name == "Fn::Sub" {
+                    if let AstNode::Array(arr) = func.args.as_ref() {
+                        if arr.elements.len() == 2 {
+                            // Array form is [template_string, substitution_map].
+                            // The template string's ${...} are legitimate Sub
+                            // variables and are skipped; only the substitution
+                            // map's VALUES need checking (C61). Identify the map
+                            // by TYPE rather than position: the SAM translator
+                            // (and some hand-authored templates) emit the two
+                            // elements in either order, so a fixed index [1]
+                            // wrongly scanned the template string and flagged
+                            // its pseudo-params as embedded parameters.
+                            for (i, elem) in arr.elements.iter().enumerate() {
+                                if matches!(elem, AstNode::Object(_)) {
+                                    let mut child_path = path.to_vec();
+                                    child_path.push(func.name.clone());
+                                    child_path.push(i.to_string());
+                                    self.check_node(elem, &child_path, re, template, root, issues);
+                                }
+                            }
+                        }
+                    }
                     return;
                 }
                 // Include function name in path (matches Python's _match_values which sees dict keys)
@@ -123,7 +154,7 @@ impl E1029 {
             }
             AstNode::String(s) => {
                 // Skip TemplateBody exception
-                if path.last().map_or(false, |p| p == "TemplateBody") {
+                if path.last().is_some_and(|p| p == "TemplateBody") {
                     return;
                 }
                 for m in re.find_iter(&s.value) {
@@ -152,7 +183,7 @@ impl E1029 {
                                 path.join("/")
                             ),
                             path: path.to_vec(),
-                            span: s.span.clone(),
+                            span: s.span,
                             keyword: String::new(),
                             unknown: false,
                             resolved_from_ref: false,
@@ -304,6 +335,97 @@ Resources:
         let tmpl = Template::from_ast(&ast).unwrap();
         let issues = E1029.validate_template(&tmpl, &ast);
         assert_eq!(issues.len(), 1);
+        assert!(issues[0].message.contains("${MyBucket}"));
+    }
+
+    // C61: an embedded variable in an Fn::Sub substitution-map VALUE (not the
+    // template string) must still be flagged.
+    #[test]
+    fn test_embedded_var_in_sub_map_value_flagged() {
+        let yaml = br#"
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+  Other:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName:
+        Fn::Sub:
+          - "${Prefix}-bucket"
+          - Prefix: "${MyBucket}"
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = E1029.validate_template(&tmpl, &ast);
+        assert_eq!(issues.len(), 1, "got: {:?}", issues);
+        assert!(issues[0].message.contains("${MyBucket}"));
+    }
+
+    // C61: the Fn::Sub template string itself is still not flagged (local
+    // substitution variables are legitimately declared there).
+    #[test]
+    fn test_sub_template_string_not_flagged() {
+        let yaml = br#"
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+  Other:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName:
+        Fn::Sub:
+          - "${MyBucket}-bucket"
+          - Prefix: static
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        assert!(E1029.validate_template(&tmpl, &ast).is_empty());
+    }
+    // The Fn::Sub array form may be authored/generated with the elements in
+    // either order. The SAM translator emits [substitution_map, template_string]
+    // (map first). The template string's pseudo-params are legitimate Sub
+    // variables and must NOT be flagged; the map is located by type, not index.
+    #[test]
+    fn test_sub_array_map_first_order_not_flagged() {
+        let yaml = br#"
+Resources:
+  MyApi:
+    Type: AWS::ApiGatewayV2::Api
+  Perm:
+    Type: AWS::Lambda::Permission
+    Properties:
+      SourceArn:
+        Fn::Sub:
+          - __Stage__: "*"
+            __ApiId__: !Ref MyApi
+          - "arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/x"
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = E1029.validate_template(&tmpl, &ast);
+        assert!(issues.is_empty(), "expected no E1029, got: {:?}", issues);
+    }
+
+    // The same map-first order must still catch a genuine embedded known ref in
+    // a substitution-map VALUE (the map is checked regardless of its position).
+    #[test]
+    fn test_sub_array_map_first_order_map_value_flagged() {
+        let yaml = br#"
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+  Other:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName:
+        Fn::Sub:
+          - Prefix: "${MyBucket}"
+          - "${Prefix}-bucket"
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = E1029.validate_template(&tmpl, &ast);
+        assert_eq!(issues.len(), 1, "got: {:?}", issues);
         assert!(issues[0].message.contains("${MyBucket}"));
     }
 }

@@ -38,7 +38,7 @@ impl CfnLintRule for I1003 {
                         desc.value.len()
                     ),
                     path: vec!["Description".to_string()],
-                    span: desc.span.clone(),
+                    span: desc.span,
                     keyword: String::new(),
                     unknown: false,
                     resolved_from_ref: false,

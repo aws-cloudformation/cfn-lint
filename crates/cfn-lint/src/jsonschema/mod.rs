@@ -1055,6 +1055,55 @@ mod tests {
         assert!(!v.validate(&invalid, &schema, &[]).is_empty());
     }
 
+    #[test]
+    fn test_pattern_properties_fancy_regex_cached() {
+        // A negative lookahead requires the fancy_regex fallback: the standard
+        // `regex` engine rejects look-around, so this exercises the cached
+        // fancy path in `compile_pattern`.
+        let schema = json!({
+            "patternProperties": {
+                "^(?!aws:).+$": {"type": "string"}
+            }
+        });
+        let v = Validator::new_strict(schema.clone());
+
+        // "custom" does not start with "aws:" → matches → value must be a string.
+        let valid = obj_node(vec![("custom", str_node("ok"))]);
+        assert!(v.validate(&valid, &schema, &[]).is_empty());
+
+        let invalid = obj_node(vec![("custom", num_node(42.0))]);
+        assert!(!v.validate(&invalid, &schema, &[]).is_empty());
+        // Re-validate to confirm the cached compiled pattern behaves identically.
+        assert!(!v.validate(&invalid, &schema, &[]).is_empty());
+    }
+
+    #[test]
+    fn test_additional_properties_fancy_regex_cached() {
+        // additionalProperties gating on a fancy-regex patternProperties key,
+        // routed through the shared compiled-pattern cache.
+        let schema = json!({
+            "properties": {
+                "Name": {"type": "string"}
+            },
+            "patternProperties": {
+                "^(?!aws:).+$": {}
+            },
+            "additionalProperties": false
+        });
+        let v = Validator::new(schema.clone());
+
+        // "custom" matches the lookahead pattern → permitted as additional.
+        let valid = obj_node(vec![("Name", str_node("t")), ("custom", str_node("ok"))]);
+        assert!(v.validate(&valid, &schema, &[]).is_empty());
+
+        // "aws:internal" fails the negative lookahead → unmatched → not allowed.
+        let invalid = obj_node(vec![
+            ("Name", str_node("t")),
+            ("aws:internal", str_node("bad")),
+        ]);
+        assert!(!v.validate(&invalid, &schema, &[]).is_empty());
+    }
+
     // ===== Integration tests for new keywords =====
 
     #[test]
@@ -1373,7 +1422,7 @@ mod tests {
             .validate(&num_node(42.0), &json!({"type": "integer"}), &[])
             .is_empty());
         assert!(v
-            .validate(&num_node(3.14), &json!({"type": "number"}), &[])
+            .validate(&num_node(3.5), &json!({"type": "number"}), &[])
             .is_empty());
         assert!(v
             .validate(&bool_node(true), &json!({"type": "boolean"}), &[])

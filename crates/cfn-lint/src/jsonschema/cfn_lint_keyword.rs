@@ -74,6 +74,12 @@ fn first_segment(keyword: &str) -> &str {
     keyword.split('/').next().unwrap_or("")
 }
 
+impl Default for KeywordRuleRegistry {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl KeywordRuleRegistry {
     pub fn new() -> Self {
         Self {

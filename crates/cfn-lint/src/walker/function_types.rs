@@ -55,8 +55,8 @@ impl TemplateWalker {
         region: &str,
         issues: &mut Vec<ValidationError>,
     ) {
-        match node {
-            AstNode::Function(func) => match func.name.as_str() {
+        if let AstNode::Function(func) = node {
+            match func.name.as_str() {
                 "Fn::GetAtt" => {
                     if let Some((resource_name, attribute)) =
                         crate::rules::e3015::parse_getatt_args(func)
@@ -78,7 +78,7 @@ impl TemplateWalker {
                                         attribute, valid_attrs, region
                                     ),
                                     p,
-                                    func.span.clone(),
+                                    func.span,
                                 ));
                                 return;
                             }
@@ -97,7 +97,7 @@ impl TemplateWalker {
                                         resource_name, attribute
                                     ),
                                     p,
-                                    func.span.clone(),
+                                    func.span,
                                 ));
                             }
                         }
@@ -127,11 +127,11 @@ impl TemplateWalker {
                                                             "Fn::GetAtt".into(),
                                                         ]);
                                                         issues.push(ValidationError::new(
-                                                            "E6101",
-                                                            format!("{{'Fn::GetAtt': ['{}', '{}']}} is not of type 'string'", rn, attr),
-                                                            p,
-                                                            inner_func.span.clone(),
-                                                        ));
+                                                        "E6101",
+                                                        format!("{{'Fn::GetAtt': ['{}', '{}']}} is not of type 'string'", rn, attr),
+                                                        p,
+                                                        inner_func.span,
+                                                    ));
                                                     }
                                                 }
                                             }
@@ -179,7 +179,7 @@ impl TemplateWalker {
                                             "E6101",
                                             format!("'{}' is not of type 'string'", var),
                                             p,
-                                            func.span.clone(),
+                                            func.span,
                                         ));
                                     }
                                 } else if let Some(resource) = template.resources.get(rn) {
@@ -200,7 +200,7 @@ impl TemplateWalker {
                                                 attr, valid_attrs, region
                                             ),
                                             p,
-                                            func.span.clone(),
+                                            func.span,
                                         ));
                                     }
                                 }
@@ -231,11 +231,11 @@ impl TemplateWalker {
                                                             "Fn::GetAtt".into(),
                                                         ]);
                                                         issues.push(ValidationError::new(
-                                                            "E6101",
-                                                            format!("{{'Fn::GetAtt': ['{}', '{}']}} is not of type 'string'", rn, attr),
-                                                            p,
-                                                            inner_func.span.clone(),
-                                                        ));
+                                                        "E6101",
+                                                        format!("{{'Fn::GetAtt': ['{}', '{}']}} is not of type 'string'", rn, attr),
+                                                        p,
+                                                        inner_func.span,
+                                                    ));
                                                     }
                                                 }
                                             }
@@ -247,8 +247,7 @@ impl TemplateWalker {
                     }
                 }
                 _ => {}
-            },
-            _ => {}
+            }
         }
     }
 
@@ -404,7 +403,7 @@ impl TemplateWalker {
                                         resource_name, attribute, dest_t
                                     ),
                                     path.clone(),
-                                    func.span.clone(),
+                                    func.span,
                                 ));
                                 continue; // Don't also check format if type mismatches
                             }
@@ -426,7 +425,7 @@ impl TemplateWalker {
                                     "E1040",
                                     format!("{{'Fn::GetAtt': ['{}', '{}']}} with formats ['{}'] does not match destination format of '{}'", resource_name, attribute, src_fmt, dest_fmt),
                                     path.clone(),
-                                    func.span.clone(),
+                                    func.span,
                                 ));
                             }
                             None => {
@@ -435,7 +434,7 @@ impl TemplateWalker {
                                     "E1040",
                                     format!("{{'Fn::GetAtt': ['{}', '{}']}} does not match destination format of '{}'", resource_name, attribute, dest_fmt),
                                     path.clone(),
-                                    func.span.clone(),
+                                    func.span,
                                 ));
                             }
                         }
@@ -503,12 +502,7 @@ impl TemplateWalker {
                                 ref_name, effective_formats, dest_fmt
                             )
                         };
-                        issues.push(ValidationError::new(
-                            "E1041",
-                            msg,
-                            path.clone(),
-                            func.span.clone(),
-                        ));
+                        issues.push(ValidationError::new("E1041", msg, path.clone(), func.span));
                     }
                 }
                 _ => {}

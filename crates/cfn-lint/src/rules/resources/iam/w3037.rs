@@ -97,7 +97,7 @@ impl CfnLintRule for W3037 {
                                 action_str
                             ),
                             path: prepend_resource_path(name, &action_path),
-                            span: action_pos.clone(),
+                            span: *action_pos,
                             keyword: String::new(),
                             unknown: false,
                             resolved_from_ref: false,
@@ -118,7 +118,7 @@ impl CfnLintRule for W3037 {
                                 rule_id: Some(self.id().to_string()),
                                 message: format!("'{}' is not one of {:?}", service, allowed),
                                 path: prepend_resource_path(name, &action_path),
-                                span: action_pos.clone(),
+                                span: *action_pos,
                                 keyword: String::new(),
                                 unknown: false,
                                 resolved_from_ref: false,
@@ -134,8 +134,13 @@ impl CfnLintRule for W3037 {
                             continue;
                         }
                         if permission.contains('*') || permission.contains('?') {
+                            // Escape regex metacharacters in the permission so that
+                            // literal characters (e.g. '.' in "s3:Get.bject") are not
+                            // treated as wildcards, then re-expand the IAM wildcards
+                            // '*' and '?' into their regex equivalents.
+                            let escaped = regex::escape(&permission);
                             let pattern =
-                                format!("^{}$", permission.replace('*', ".*").replace('?', "."));
+                                format!("^{}$", escaped.replace("\\*", ".*").replace("\\?", "."));
                             if let Ok(re) = regex::Regex::new(&pattern) {
                                 if !enums.iter().any(|e| re.is_match(e)) {
                                     issues.push(ValidationError {
@@ -145,7 +150,7 @@ impl CfnLintRule for W3037 {
                                             permission
                                         ),
                                         path: prepend_resource_path(name, &action_path),
-                                        span: action_pos.clone(),
+                                        span: *action_pos,
                                         keyword: String::new(),
                                         unknown: false,
                                         resolved_from_ref: false,
@@ -162,7 +167,7 @@ impl CfnLintRule for W3037 {
                                     permission, service
                                 ),
                                 path: prepend_resource_path(name, &action_path),
-                                span: action_pos.clone(),
+                                span: *action_pos,
                                 keyword: String::new(),
                                 unknown: false,
                                 resolved_from_ref: false,
@@ -175,7 +180,7 @@ impl CfnLintRule for W3037 {
                             rule_id: Some(self.id().to_string()),
                             message: format!("'{}' is not a valid IAM service", service),
                             path: prepend_resource_path(name, &action_path),
-                            span: action_pos.clone(),
+                            span: *action_pos,
                             keyword: String::new(),
                             unknown: false,
                             resolved_from_ref: false,
@@ -232,6 +237,9 @@ fn find_statements<'a>(props: &'a AstNode, resource_type: &str) -> Vec<(&'a AstN
             vec!["Policies", "*", "PolicyDocument", "Statement"],
         ],
         "AWS::IAM::ManagedPolicy" => vec![vec!["PolicyDocument", "Statement"]],
+        "AWS::IAM::User" | "AWS::IAM::Group" => {
+            vec![vec!["Policies", "*", "PolicyDocument", "Statement"]]
+        }
         "AWS::S3::BucketPolicy" | "AWS::SQS::QueuePolicy" | "AWS::SNS::TopicPolicy" => {
             vec![vec!["PolicyDocument", "Statement"]]
         }
@@ -282,13 +290,13 @@ fn collect_statements_at_path<'a>(
 
 fn collect_actions(node: &AstNode) -> Vec<(String, Span)> {
     match node {
-        AstNode::String(s) => vec![(s.value.clone(), s.span.clone())],
+        AstNode::String(s) => vec![(s.value.clone(), s.span)],
         AstNode::Array(arr) => arr
             .elements
             .iter()
             .filter_map(|e| {
                 if let AstNode::String(s) = e {
-                    Some((s.value.clone(), s.span.clone()))
+                    Some((s.value.clone(), s.span))
                 } else {
                     None
                 }
@@ -348,6 +356,103 @@ Resources:
         let issues = W3037.validate_template(&tmpl, &ast);
         assert_eq!(issues.len(), 1);
         assert!(issues[0].message.contains("not a valid action"));
+    }
+
+    // C65: regex metacharacters in the action must be escaped so a literal
+    // '.' does not match arbitrary characters (false negative).
+    #[test]
+    fn test_regex_metacharacters_escaped() {
+        let yaml = br#"
+Resources:
+  MyPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: test
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: "s3:Get.bject"
+            Resource: "*"
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = W3037.validate_template(&tmpl, &ast);
+        // "s3:Get.bject" has no '*'/'?' wildcard, so it is treated as an exact
+        // (case-insensitive) action name which does not exist -> one issue.
+        assert_eq!(issues.len(), 1, "got: {:?}", issues);
+        assert!(issues[0].message.contains("not a valid action"));
+    }
+
+    // C65: a wildcard action containing a literal '.' must only match actions
+    // that actually contain that character in that position.
+    #[test]
+    fn test_wildcard_literal_dot_not_over_matching() {
+        let yaml = br#"
+Resources:
+  MyPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: test
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: "s3:Get.*"
+            Resource: "*"
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = W3037.validate_template(&tmpl, &ast);
+        // No s3 action literally contains "get." so this matches nothing.
+        assert_eq!(issues.len(), 1, "got: {:?}", issues);
+        assert!(issues[0]
+            .message
+            .contains("does not match any known actions"));
+    }
+
+    // C71: inline Policies on AWS::IAM::User must be inspected.
+    #[test]
+    fn test_iam_user_inline_policy_checked() {
+        let yaml = br#"
+Resources:
+  MyUser:
+    Type: AWS::IAM::User
+    Properties:
+      Policies:
+        - PolicyName: inline
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action: NotAValidActionFormat
+                Resource: "*"
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = W3037.validate_template(&tmpl, &ast);
+        assert_eq!(issues.len(), 1, "got: {:?}", issues);
+        assert!(issues[0].message.contains("not a valid action"));
+    }
+
+    // C71: inline Policies on AWS::IAM::Group must be inspected.
+    #[test]
+    fn test_iam_group_inline_policy_checked() {
+        let yaml = br#"
+Resources:
+  MyGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      Policies:
+        - PolicyName: inline
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action: notaservice:DoThing
+                Resource: "*"
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = W3037.validate_template(&tmpl, &ast);
+        assert_eq!(issues.len(), 1, "got: {:?}", issues);
+        assert!(issues[0].message.contains("not a valid IAM service"));
     }
 }
 

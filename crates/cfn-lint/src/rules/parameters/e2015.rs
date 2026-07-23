@@ -131,7 +131,7 @@ impl CfnLintRule for E2015 {
                 if let (Some(min_val), Some(default_val)) =
                     (min_node.as_f64(), default_node.as_f64())
                 {
-                    if (default_val as i64) < (min_val as i64) {
+                    if default_val < min_val {
                         issues.push(self.make_issue(
                             name,
                             default_node,
@@ -146,7 +146,7 @@ impl CfnLintRule for E2015 {
                 if let (Some(max_val), Some(default_val)) =
                     (max_node.as_f64(), default_node.as_f64())
                 {
-                    if (default_val as i64) > (max_val as i64) {
+                    if default_val > max_val {
                         issues.push(self.make_issue(
                             name,
                             default_node,
@@ -278,6 +278,63 @@ Parameters:
   Env:
     Type: String
     Default: anything
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        assert!(E2015.validate_template(&tmpl, &ast).is_empty());
+    }
+
+    // C59: a fractional Default below a fractional MinValue must be caught.
+    // Previously both were truncated to i64 (4 vs 4), missing the violation.
+    #[test]
+    fn test_fractional_default_below_min_value() {
+        let yaml = br#"
+Parameters:
+  Ratio:
+    Type: Number
+    Default: 4.2
+    MinValue: 4.5
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = E2015.validate_template(&tmpl, &ast);
+        assert_eq!(issues.len(), 1, "got: {:?}", issues);
+        assert_eq!(
+            issues[0].message,
+            "Default should be equal to or higher than MinValue"
+        );
+    }
+
+    // C59: a fractional Default above a fractional MaxValue must be caught.
+    #[test]
+    fn test_fractional_default_above_max_value() {
+        let yaml = br#"
+Parameters:
+  Ratio:
+    Type: Number
+    Default: 4.8
+    MaxValue: 4.5
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = E2015.validate_template(&tmpl, &ast);
+        assert_eq!(issues.len(), 1, "got: {:?}", issues);
+        assert_eq!(
+            issues[0].message,
+            "Default should be less than or equal to MaxValue"
+        );
+    }
+
+    // C59: fractional values within range produce no issue.
+    #[test]
+    fn test_fractional_default_within_range() {
+        let yaml = br#"
+Parameters:
+  Ratio:
+    Type: Number
+    Default: 4.6
+    MinValue: 4.5
+    MaxValue: 4.9
 "#;
         let ast = parser::parse(yaml).unwrap();
         let tmpl = Template::from_ast(&ast).unwrap();

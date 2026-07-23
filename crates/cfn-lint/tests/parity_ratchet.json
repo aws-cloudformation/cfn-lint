@@ -1,0 +1,32 @@
+{
+  "_comment": "Parity ratchet (C81). These floors must never decrease and rust-only ceilings must never increase. The CI `parity` job runs the #[ignore]d parity tests against the pinned fixtures below and fails if any gate regresses. A PR that intentionally changes parity must re-run `CFN_LINT_UPDATE_RATCHET=1 cargo test --test parity -- --include-ignored --test-threads=1` and commit this file, so every parity movement is an explicit, reviewable diff. min_expected guards against a vacuous pass (fixtures missing => nothing compared => fake 100%).",
+  "fixture_refs": {
+    "python_cfn_lint": "v1.53.1",
+    "serverless_application_model": "v1.100.0"
+  },
+  "parity_bad": {
+    "max_rust_only": 0,
+    "min_expected": 90,
+    "min_matched": 87
+  },
+  "parity_good": {
+    "max_rust_only": 0,
+    "min_expected": 84,
+    "min_matched": 49
+  },
+  "parity_vs_python": {
+    "max_rust_only": 3,
+    "min_expected": 679,
+    "min_matched": 678
+  },
+  "quickstart": {
+    "max_rust_only": 5,
+    "min_expected": 418,
+    "min_matched": 416
+  },
+  "sam_translator": {
+    "max_rust_only": 36,
+    "min_expected": 468,
+    "min_matched": 460
+  }
+}

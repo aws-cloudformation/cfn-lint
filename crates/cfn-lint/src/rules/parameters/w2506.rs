@@ -38,7 +38,7 @@ impl CfnLintRule for W2506 {
         _keyword: &str,
         instance: &AstNode,
         _schema: &serde_json::Value,
-        path: &[String],
+        _path: &[String],
     ) -> Vec<ValidationError> {
         // Extract parameter name from Ref function node
         let param_name = match instance {
@@ -92,7 +92,6 @@ const VALID_IMAGE_TYPES: &[&str] = &[
 ];
 
 #[cfg(test)]
-
 mod tests {
     use super::*;
     use crate::parser;

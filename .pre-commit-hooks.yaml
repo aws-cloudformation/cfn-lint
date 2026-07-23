@@ -2,5 +2,8 @@
   name: cfn-lint
   language: python
   entry: cfn-lint
+  # Single filter (C79): `files` and `types_or` are ANDed by pre-commit, so a
+  # `types_or: [json, yaml]` filter would silently exclude `.template` files
+  # (identified as `text`, not json/yaml). The extension regex alone captures
+  # the intended CloudFormation template coverage.
   files: \.(json|yaml|yml|template)$
-  types_or: [json, yaml]

@@ -83,10 +83,7 @@ impl CfnLintRule for E3701 {
                                             oa_idx.to_string(),
                                             "Name".into(),
                                         ],
-                                        span: oa
-                                            .get("Name")
-                                            .map(|n| n.span().clone())
-                                            .unwrap_or_default(),
+                                        span: oa.get("Name").map(|n| n.span()).unwrap_or_default(),
                                         keyword: String::new(),
                                         unknown: false,
                                         resolved_from_ref: false,
@@ -121,10 +118,7 @@ impl CfnLintRule for E3701 {
                                             ia_idx.to_string(),
                                             "Name".into(),
                                         ],
-                                        span: ia
-                                            .get("Name")
-                                            .map(|n| n.span().clone())
-                                            .unwrap_or_default(),
+                                        span: ia.get("Name").map(|n| n.span()).unwrap_or_default(),
                                         keyword: String::new(),
                                         unknown: false,
                                         resolved_from_ref: false,

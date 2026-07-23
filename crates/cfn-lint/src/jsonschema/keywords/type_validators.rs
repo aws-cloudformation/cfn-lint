@@ -1,5 +1,5 @@
 use super::super::{ValidationError, Validator};
-use super::helpers::{err, matches_type};
+use super::helpers::{ast_to_json_value, err, matches_type, python_repr};
 use crate::ast::AstNode;
 
 pub fn validate_type(
@@ -63,15 +63,32 @@ pub fn validate_type(
 
     let valid = match constraint {
         serde_json::Value::String(s) => type_ok(s),
-        serde_json::Value::Array(arr) => arr.iter().any(|t| t.as_str().is_some_and(|s| type_ok(s))),
+        serde_json::Value::Array(arr) => arr.iter().any(|t| t.as_str().is_some_and(&type_ok)),
         _ => true,
     };
     if valid {
         vec![]
     } else {
+        // Match Python cfn-lint's `type` message: the offending value rendered
+        // with Python repr, followed by the accepted types as comma-separated
+        // single-quoted names (no brackets). e.g.
+        //   {'Nested': 'object'} is not of type 'string', 'boolean'
+        let value_repr = ast_to_json_value(node)
+            .map(|v| python_repr(&v))
+            .unwrap_or_else(|| node_type.to_string());
+        let types_repr = match constraint {
+            serde_json::Value::Array(arr) => arr
+                .iter()
+                .filter_map(|t| t.as_str())
+                .map(|t| format!("'{}'", t))
+                .collect::<Vec<_>>()
+                .join(", "),
+            serde_json::Value::String(s) => format!("'{}'", s),
+            other => format!("{}", other),
+        };
         vec![err(
             "type",
-            format!("{} is not of type {}", node_type, constraint),
+            format!("{} is not of type {}", value_repr, types_repr),
             path,
             node,
         )]

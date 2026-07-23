@@ -40,21 +40,29 @@ pub struct Conditions {
     solver_params: HashMap<String, usize>,
     static_equals: HashMap<String, bool>,
     max_scenarios: usize,
+    /// Conditions that could not be parsed into the SAT model, paired with the
+    /// reason. These are excluded from SAT pruning (they become unconstrained),
+    /// which silently degrades scenario narrowing — so we retain them for
+    /// observability instead of swallowing the error. See `parse_failures`.
+    parse_failures: Vec<(String, String)>,
 }
 
 impl Conditions {
     /// Build from a parsed Template.
     pub fn from_template(template: &Template) -> Self {
         let mut conditions: HashMap<String, ConditionNamed> = HashMap::new();
+        let mut parse_failures: Vec<(String, String)> = Vec::new();
 
-        for (k, _) in &template.conditions {
+        for k in template.conditions.keys() {
             match ConditionNamed::new(k, &template.conditions) {
                 Ok(c) => {
                     conditions.insert(k.clone(), c);
                 }
-                Err(_) => {
+                Err(e) => {
                     // Condition uses unsupported functions or malformed structure —
-                    // excluded from SAT model (becomes unconstrained)
+                    // excluded from the SAT model (becomes unconstrained). Record the
+                    // reason so degraded pruning is observable rather than silent.
+                    parse_failures.push((k.clone(), e));
                 }
             }
         }
@@ -69,11 +77,25 @@ impl Conditions {
             solver_params,
             static_equals,
             max_scenarios: 128,
+            parse_failures,
         }
     }
 
     pub fn get(&self, name: &str) -> Option<&ConditionNamed> {
         self.conditions.get(name)
+    }
+
+    /// Conditions that failed to parse into the SAT model, paired with the reason.
+    /// A non-empty result means condition-based scenario pruning is degraded for
+    /// those conditions (they are treated as unconstrained). Exposed for
+    /// observability / diagnostics.
+    pub fn parse_failures(&self) -> &[(String, String)] {
+        &self.parse_failures
+    }
+
+    /// Number of conditions excluded from the SAT model due to parse failures.
+    pub fn parse_failure_count(&self) -> usize {
+        self.parse_failures.len()
     }
 
     /// Check if a set of condition true/false assignments is satisfiable
@@ -156,14 +178,23 @@ impl Conditions {
 
         let mut results = Vec::new();
         let n = variable_names.len();
-        let max = std::cmp::min(1usize << n, self.max_scenarios);
+        // `1usize << n` panics in debug (wraps to 0 in release) once `n >= usize::BITS`.
+        // Since this is the DoS scenario cap itself, guard the shift: for `n` at or
+        // above the pointer width the full combination count exceeds `usize`, so fall
+        // back to the configured cap directly.
+        let max = 1usize
+            .checked_shl(n as u32)
+            .map_or(self.max_scenarios, |v| v.min(self.max_scenarios));
 
         for i in 0..max {
             let mut cnf = base_cnf.clone();
             let mut params: HashMap<String, bool> = HashMap::new();
 
             for (j, name) in variable_names.iter().enumerate() {
-                let val = (i >> (n - 1 - j)) & 1 == 0;
+                // `i >> (n - 1 - j)` shifts by `>= usize::BITS` when `n` exceeds the
+                // pointer width, which panics in debug. Bits at those positions are
+                // always 0 for the capped `i`, so `checked_shr` yields the correct value.
+                let val = (i.checked_shr((n - 1 - j) as u32).unwrap_or(0)) & 1 == 0;
                 params.insert(name.clone(), val);
                 if let Some(cond) = self.conditions.get(name) {
                     let expr = cond.build_expr(&self.solver_params, &self.static_equals);
@@ -299,14 +330,14 @@ fn build_cnf(
     for (param_name, param) in &template.parameters {
         if let Some(ref av) = param.allowed_values {
             let rh = equals::ref_hash(param_name);
-            let hashes: Vec<String> = av.iter().map(|v| equals::get_hash(v)).collect();
+            let hashes: Vec<String> = av.iter().map(equals::get_hash).collect();
             allowed_values.insert(rh, hashes);
         }
     }
 
     if !allowed_values.is_empty() {
         // Remove used values
-        for (_, eq) in &equals_map {
+        for eq in equals_map.values() {
             for param in eq.parameters() {
                 if let Some(av) = allowed_values.get_mut(&param.hash) {
                     if let Some(static_hash) = eq.static_value_hash() {
@@ -324,7 +355,7 @@ fn build_cnf(
         for (allowed_hash, remaining) in &allowed_values {
             if remaining.is_empty() {
                 let mut relevant_vars = Vec::new();
-                for (_, eq) in &equals_map {
+                for eq in equals_map.values() {
                     for param in eq.parameters() {
                         if &param.hash == allowed_hash {
                             let var = cnf.get_or_create_var(&eq.hash);
@@ -570,6 +601,43 @@ Resources:
         assert!(scenarios.len() <= 4);
     }
 
+    /// Regression: `build_scenarios` must not panic when the number of variable
+    /// conditions reaches or exceeds the pointer width. Both the outer combination
+    /// count (`1usize << n`) and the inner per-variable bit extraction
+    /// (`i >> (n - 1 - j)`) shift by `n`-derived amounts; unguarded, either panics
+    /// in debug (wraps in release) once `n >= usize::BITS`. `n = 70` exercises both
+    /// shift sites past the 64-bit boundary. See C1 (DoS scenario cap overflow).
+    #[test]
+    fn test_build_scenarios_no_shift_overflow() {
+        const N: usize = 70;
+        // Build a template with N independent Equals conditions on distinct params.
+        let mut yaml = String::from("Conditions:\n");
+        for i in 0..N {
+            yaml.push_str(&format!(
+                "  Cond{i}:\n    Fn::Equals:\n      - !Ref P{i}\n      - v{i}\n"
+            ));
+        }
+        yaml.push_str("Parameters:\n");
+        for i in 0..N {
+            yaml.push_str(&format!("  P{i}:\n    Type: String\n"));
+        }
+        yaml.push_str("Resources:\n  D:\n    Type: AWS::SNS::Topic\n");
+
+        let t = make_template(yaml.as_bytes());
+        let c = Conditions::from_template(&t);
+
+        // Request both truth values for every condition so all N become variables.
+        let mut conds = HashMap::new();
+        for i in 0..N {
+            conds.insert(format!("Cond{i}"), [true, false].into());
+        }
+
+        // Must not panic. The conditions are mutually independent, so every sampled
+        // scenario is satisfiable and the result is capped at `max_scenarios` (128).
+        let scenarios = c.build_scenarios(&conds);
+        assert_eq!(scenarios.len(), 128);
+    }
+
     #[test]
     fn test_is_condition_set_satisfiable() {
         let t = make_template(
@@ -637,5 +705,67 @@ Resources:
             c.is_condition_set_satisfiable(&s),
             "MultiAZ=false should be satisfiable"
         );
+    }
+
+    #[test]
+    fn test_parse_failure_is_observable() {
+        // C49: a condition using an unsupported function can't be modeled in SAT.
+        // Previously the error was swallowed silently; now it's recorded so the
+        // degraded pruning is observable.
+        let t = make_template(
+            br#"
+Conditions:
+  Good:
+    Fn::Equals:
+      - !Ref Env
+      - prod
+  Bad:
+    Fn::FindInMap:
+      - MyMap
+      - Key
+      - Value
+Parameters:
+  Env:
+    Type: String
+Resources:
+  D:
+    Type: AWS::SNS::Topic
+"#,
+        );
+        let c = Conditions::from_template(&t);
+
+        // The good condition is still modeled.
+        assert!(c.get("Good").is_some());
+        // The bad one is excluded but recorded.
+        assert!(c.get("Bad").is_none());
+        assert_eq!(c.parse_failure_count(), 1);
+        let (name, reason) = &c.parse_failures()[0];
+        assert_eq!(name, "Bad");
+        assert!(
+            reason.contains("Fn::FindInMap"),
+            "reason should name the unsupported function, got: {reason}"
+        );
+    }
+
+    #[test]
+    fn test_no_parse_failures_for_valid_conditions() {
+        let t = make_template(
+            br#"
+Conditions:
+  IsProd:
+    Fn::Equals:
+      - !Ref Env
+      - prod
+Parameters:
+  Env:
+    Type: String
+Resources:
+  D:
+    Type: AWS::SNS::Topic
+"#,
+        );
+        let c = Conditions::from_template(&t);
+        assert_eq!(c.parse_failure_count(), 0);
+        assert!(c.parse_failures().is_empty());
     }
 }

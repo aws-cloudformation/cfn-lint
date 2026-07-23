@@ -11,6 +11,11 @@ use crate::ast::AstNode;
 use super::equals::Equal;
 use super::sat::Expr;
 
+/// Maximum structural nesting depth for a condition expression tree. Guards
+/// against stack overflow from adversarially deep Fn::And/Or/Not nesting that
+/// the named-cycle `visited` set cannot detect.
+const MAX_CONDITION_DEPTH: usize = 50;
+
 /// A condition tree node.
 #[derive(Debug, Clone)]
 pub enum ConditionNode {
@@ -30,14 +35,24 @@ impl ConditionNode {
         all_conditions: &HashMap<String, AstNode>,
     ) -> Result<Self, String> {
         let mut visited = std::collections::HashSet::new();
-        Self::parse_inner(node, all_conditions, &mut visited)
+        Self::parse_inner(node, all_conditions, &mut visited, 0)
     }
 
     fn parse_inner(
         node: &AstNode,
         all_conditions: &HashMap<String, AstNode>,
         visited: &mut std::collections::HashSet<String>,
+        depth: usize,
     ) -> Result<Self, String> {
+        // The `visited` set only catches *named* condition cycles. Structural
+        // nesting (deeply nested Fn::And/Or/Not with no named conditions) would
+        // still overflow the stack, so cap the structural depth as well.
+        if depth > MAX_CONDITION_DEPTH {
+            return Err(format!(
+                "Condition nesting exceeded maximum depth ({MAX_CONDITION_DEPTH})"
+            ));
+        }
+
         // Function node form (cfn-ast parses Fn::Equals, Condition, etc. as Function)
         if let AstNode::Function(func) = node {
             return match func.name.as_str() {
@@ -62,7 +77,7 @@ impl ConditionNode {
                     let children: Result<Vec<_>, _> = arr
                         .elements
                         .iter()
-                        .map(|v| ConditionNode::parse_inner(v, all_conditions, visited))
+                        .map(|v| ConditionNode::parse_inner(v, all_conditions, visited, depth + 1))
                         .collect();
                     Ok(ConditionNode::And(children?))
                 }
@@ -74,7 +89,7 @@ impl ConditionNode {
                     let children: Result<Vec<_>, _> = arr
                         .elements
                         .iter()
-                        .map(|v| ConditionNode::parse_inner(v, all_conditions, visited))
+                        .map(|v| ConditionNode::parse_inner(v, all_conditions, visited, depth + 1))
                         .collect();
                     Ok(ConditionNode::Or(children?))
                 }
@@ -90,6 +105,7 @@ impl ConditionNode {
                         &arr.elements[0],
                         all_conditions,
                         visited,
+                        depth + 1,
                     )?)))
                 }
                 "Condition" => {
@@ -105,7 +121,12 @@ impl ConditionNode {
                         .ok_or(format!("Condition {name} not found"))?;
                     let result = ConditionNode::Named(
                         name.to_string(),
-                        Box::new(ConditionNode::parse_inner(sub, all_conditions, visited)?),
+                        Box::new(ConditionNode::parse_inner(
+                            sub,
+                            all_conditions,
+                            visited,
+                            depth + 1,
+                        )?),
                     );
                     visited.remove(name);
                     Ok(result)
@@ -141,7 +162,7 @@ impl ConditionNode {
                 let children: Result<Vec<_>, _> = arr
                     .elements
                     .iter()
-                    .map(|v| ConditionNode::parse_inner(v, all_conditions, visited))
+                    .map(|v| ConditionNode::parse_inner(v, all_conditions, visited, depth + 1))
                     .collect();
                 Ok(ConditionNode::And(children?))
             }
@@ -150,7 +171,7 @@ impl ConditionNode {
                 let children: Result<Vec<_>, _> = arr
                     .elements
                     .iter()
-                    .map(|v| ConditionNode::parse_inner(v, all_conditions, visited))
+                    .map(|v| ConditionNode::parse_inner(v, all_conditions, visited, depth + 1))
                     .collect();
                 Ok(ConditionNode::Or(children?))
             }
@@ -163,6 +184,7 @@ impl ConditionNode {
                     &arr.elements[0],
                     all_conditions,
                     visited,
+                    depth + 1,
                 )?)))
             }
             "Condition" => {
@@ -175,7 +197,12 @@ impl ConditionNode {
                     .ok_or(format!("Condition {name} not found"))?;
                 let result = ConditionNode::Named(
                     name.to_string(),
-                    Box::new(ConditionNode::parse_inner(sub, all_conditions, visited)?),
+                    Box::new(ConditionNode::parse_inner(
+                        sub,
+                        all_conditions,
+                        visited,
+                        depth + 1,
+                    )?),
                 );
                 visited.remove(name);
                 Ok(result)
@@ -255,7 +282,8 @@ impl ConditionNamed {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::*;
+
+    use crate::ast::{ArrayNode, FunctionNode, Span, StringNode};
     use crate::parser;
 
     fn parse_conditions(yaml: &[u8]) -> HashMap<String, AstNode> {
@@ -339,5 +367,118 @@ Either:
         );
         let c = ConditionNamed::new("Either", &conds).unwrap();
         assert_eq!(c.equals().len(), 2);
+    }
+
+    // ── C42: structural depth limit for adversarially nested conditions ──
+
+    fn run_with_timeout<F: FnOnce() + Send + 'static>(secs: u64, f: F) {
+        use std::sync::mpsc::{channel, RecvTimeoutError};
+        use std::time::Duration;
+        let (tx, rx) = channel();
+        let handle = std::thread::spawn(move || {
+            f();
+            let _ = tx.send(());
+        });
+        match rx.recv_timeout(Duration::from_secs(secs)) {
+            Ok(()) => handle.join().unwrap(),
+            Err(RecvTimeoutError::Timeout) => {
+                panic!("did not finish within {secs}s — condition depth guard likely regressed")
+            }
+            Err(RecvTimeoutError::Disconnected) => handle.join().unwrap(),
+        }
+    }
+
+    fn func(name: &str, args: AstNode) -> AstNode {
+        AstNode::Function(FunctionNode {
+            name: name.to_string(),
+            args: Box::new(args),
+            span: Span::default(),
+        })
+    }
+
+    fn str_node(s: &str) -> AstNode {
+        AstNode::String(StringNode {
+            value: s.to_string(),
+            span: Span::default(),
+        })
+    }
+
+    #[test]
+    fn test_deeply_nested_and_errors_not_overflow() {
+        run_with_timeout(10, || {
+            // Start from a valid Fn::Equals, then wrap it in 100 layers of Fn::And.
+            // The `visited` set only catches named cycles, so without a structural
+            // depth cap this overflows the stack.
+            let mut node = func(
+                "Fn::Equals",
+                AstNode::Array(ArrayNode {
+                    elements: vec![str_node("a"), str_node("a")],
+                    span: Span::default(),
+                }),
+            );
+            for _ in 0..100 {
+                node = func(
+                    "Fn::And",
+                    AstNode::Array(ArrayNode {
+                        elements: vec![node],
+                        span: Span::default(),
+                    }),
+                );
+            }
+            let conds: HashMap<String, AstNode> = HashMap::new();
+            let err = ConditionNode::parse(&node, &conds).unwrap_err();
+            assert!(
+                err.contains("maximum depth"),
+                "expected a depth-limit error, got: {err}"
+            );
+        });
+    }
+
+    #[test]
+    fn test_deeply_nested_not_errors_not_overflow() {
+        run_with_timeout(10, || {
+            let mut node = func(
+                "Fn::Equals",
+                AstNode::Array(ArrayNode {
+                    elements: vec![str_node("a"), str_node("a")],
+                    span: Span::default(),
+                }),
+            );
+            for _ in 0..100 {
+                node = func(
+                    "Fn::Not",
+                    AstNode::Array(ArrayNode {
+                        elements: vec![node],
+                        span: Span::default(),
+                    }),
+                );
+            }
+            let conds: HashMap<String, AstNode> = HashMap::new();
+            let err = ConditionNode::parse(&node, &conds).unwrap_err();
+            assert!(err.contains("maximum depth"), "got: {err}");
+        });
+    }
+
+    #[test]
+    fn test_shallow_nesting_still_parses() {
+        // A modestly nested condition (below the cap) must still parse fine.
+        let mut node = func(
+            "Fn::Equals",
+            AstNode::Array(ArrayNode {
+                elements: vec![str_node("a"), str_node("a")],
+                span: Span::default(),
+            }),
+        );
+        for _ in 0..5 {
+            node = func(
+                "Fn::And",
+                AstNode::Array(ArrayNode {
+                    elements: vec![node],
+                    span: Span::default(),
+                }),
+            );
+        }
+        let conds: HashMap<String, AstNode> = HashMap::new();
+        assert!(ConditionNode::parse(&node, &conds).is_ok());
     }
 }

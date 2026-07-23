@@ -1335,7 +1335,19 @@ impl<T: Iterator<Item = char>> Scanner<T> {
                         ));
                     }
                 };
-                code = octet;
+                // Extract the significant bits of the leading byte. The number
+                // of leading-bit flags depends on the sequence width:
+                //   2-byte: 110xxxxx -> & 0x1F
+                //   3-byte: 1110xxxx -> & 0x0F
+                //   4-byte: 11110xxx -> & 0x07
+                //   1-byte (ASCII): 0xxxxxxx -> keep all bits
+                code = match width {
+                    2 => octet & 0x1F,
+                    3 => octet & 0x0F,
+                    4 => octet & 0x07,
+                    // width == 1 (ASCII) — no leading flag bits to mask off.
+                    _ => octet,
+                };
             } else {
                 if octet & 0xc0 != 0x80 {
                     return Err(ScanError::new(
@@ -1343,7 +1355,9 @@ impl<T: Iterator<Item = char>> Scanner<T> {
                         "while parsing a tag, found an incorrect trailing UTF-8 octet",
                     ));
                 }
-                code = (code << 8) + octet;
+                // Continuation byte: 10xxxxxx. Shift accumulated bits left by 6
+                // and append the low 6 bits of this octet.
+                code = (code << 6) | (octet & 0x3F);
             }
 
             self.skip_n_non_blank(3);
@@ -2474,7 +2488,7 @@ impl<T: Iterator<Item = char>> Scanner<T> {
             && self
                 .indents
                 .last()
-                .map_or(false, |indent| indent.needs_block_end)
+                .is_some_and(|indent| indent.needs_block_end)
         {
             self.indents.push(Indent {
                 indent: self.indent,
@@ -2500,7 +2514,7 @@ impl<T: Iterator<Item = char>> Scanner<T> {
         if self.simple_key_allowed {
             let required = self.flow_level == 0
                 && self.indent == (self.mark.col as isize)
-                && self.indents.last().map_or(false, |i| i.needs_block_end);
+                && self.indents.last().is_some_and(|i| i.needs_block_end);
             let mut sk = SimpleKey::new(self.mark);
             sk.possible = true;
             sk.required = required;
@@ -2608,9 +2622,59 @@ pub enum Chomping {
 
 #[cfg(test)]
 mod test {
+    use super::{Scanner, TokenType};
+
     #[test]
     fn test_is_anchor_char() {
         use super::is_anchor_char;
         assert!(is_anchor_char('x'));
+    }
+
+    /// Collect the combined `handle + suffix` of every `Tag` token produced
+    /// while scanning `input`.
+    fn scan_tags(input: &str) -> String {
+        Scanner::new(input.chars())
+            .filter_map(|tok| match tok.1 {
+                TokenType::Tag(handle, suffix) => Some(format!("{handle}{suffix}")),
+                _ => None,
+            })
+            .collect()
+    }
+
+    /// Regression test for C1: `%`-escaped octets in a tag URI must be decoded
+    /// as UTF-8, not concatenated as raw big-endian bytes. `%C3%A9` is the
+    /// UTF-8 encoding of `é` (U+00E9); the old `code = (code << 8) + octet`
+    /// logic produced U+C3A9 instead.
+    #[test]
+    fn test_scan_uri_escapes_decodes_two_byte_utf8() {
+        let combined = scan_tags("key: !tag%C3%A9 value");
+        assert!(
+            combined.contains('\u{00E9}'),
+            "tag should contain decoded 'é' (U+00E9), got: {combined:?}"
+        );
+        assert!(
+            !combined.contains('\u{C3A9}'),
+            "tag must not contain the buggy raw-byte codepoint U+C3A9, got: {combined:?}"
+        );
+    }
+
+    /// A 3-byte sequence: `%E2%82%AC` is the euro sign `€` (U+20AC).
+    #[test]
+    fn test_scan_uri_escapes_decodes_three_byte_utf8() {
+        let combined = scan_tags("key: !tag%E2%82%AC value");
+        assert!(
+            combined.contains('\u{20AC}'),
+            "tag should contain decoded '€' (U+20AC), got: {combined:?}"
+        );
+    }
+
+    /// A 4-byte sequence: `%F0%9F%98%80` is the grinning-face emoji (U+1F600).
+    #[test]
+    fn test_scan_uri_escapes_decodes_four_byte_utf8() {
+        let combined = scan_tags("key: !tag%F0%9F%98%80 value");
+        assert!(
+            combined.contains('\u{1F600}'),
+            "tag should contain decoded emoji (U+1F600), got: {combined:?}"
+        );
     }
 }

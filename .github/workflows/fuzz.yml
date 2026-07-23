@@ -1,0 +1,69 @@
+name: Fuzz
+
+# Short, scheduled fuzz pass over the cfn-ast parser. This is a smoke-level
+# run meant to catch shallow regressions; deep campaigns should be run locally
+# or via a dedicated fuzzing service.
+on:
+  schedule:
+    # 06:00 UTC every Monday.
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      max_total_time:
+        description: "Seconds to run each fuzz target"
+        default: "300"
+        required: false
+
+# Concurrent runs on the same ref are queued (not cancelled) to avoid
+# killing a fuzz campaign mid-run.
+concurrency:
+  group: fuzz-${{ github.ref }}
+  cancel-in-progress: false
+
+# Least privilege by default; grant per-job minimums below (C86).
+permissions: {}
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  fuzz:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [ast_parse, template_parse]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install nightly toolchain
+        uses: dtolnay/rust-toolchain@nightly
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: fuzz
+
+      - name: Install cargo-fuzz
+        run: cargo install cargo-fuzz --locked
+
+      - name: Seed corpus
+        run: ./fuzz/seed-corpus.sh
+
+      - name: Fuzz ${{ matrix.target }}
+        env:
+          MAX_TIME: ${{ github.event.inputs.max_total_time || '300' }}
+        run: |
+          cargo fuzz run "${{ matrix.target }}" -- \
+            -max_total_time="$MAX_TIME" \
+            -timeout=25 \
+            -rss_limit_mb=4096
+
+      - name: Upload crash artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-artifacts-${{ matrix.target }}
+          path: fuzz/artifacts/${{ matrix.target }}/
+          if-no-files-found: ignore

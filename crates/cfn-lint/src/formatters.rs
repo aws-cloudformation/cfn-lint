@@ -154,6 +154,17 @@ fn xml_escape(s: &str) -> String {
             '<' => out.push_str("&lt;"),
             '>' => out.push_str("&gt;"),
             '"' => out.push_str("&quot;"),
+            '\'' => out.push_str("&apos;"),
+            // Tab, newline, and carriage return are the only control
+            // characters permitted by XML 1.0; keep them verbatim.
+            '\t' | '\n' | '\r' => out.push(ch),
+            // Strip the remaining XML-1.0-forbidden control characters
+            // (0x00–0x08, 0x0B, 0x0C, 0x0E–0x1F). These cannot appear in a
+            // well-formed XML document even as numeric character references,
+            // so escaping is impossible — they must be dropped. Such bytes
+            // can leak from template content into rule messages and would
+            // otherwise produce output that JUnit parsers reject.
+            c if (c as u32) < 0x20 => {}
             _ => out.push(ch),
         }
     }
@@ -166,12 +177,9 @@ impl Formatter for JUnitFormatter {
         let failures = results
             .iter()
             .filter(|r| {
-                r.issues.iter().any(|i| {
-                    matches!(
-                        severity_from_rule_id(i.rule_id.as_deref()),
-                        Severity::Error
-                    )
-                })
+                r.issues
+                    .iter()
+                    .any(|i| matches!(severity_from_rule_id(i.rule_id.as_deref()), Severity::Error))
             })
             .count();
 
@@ -198,12 +206,9 @@ impl Formatter for JUnitFormatter {
                     let rule_id = i.rule_id.as_deref().unwrap_or("");
                     let line = i.span.start.line as usize;
                     let col = i.span.start.column as usize;
-                    let message_attr = xml_escape(&format!(
-                        "{} at {}:{}:{}",
-                        rule_id, r.filename, line, col
-                    ));
-                    let message_text =
-                        xml_escape(&format!("{}: {}", rule_id, i.message));
+                    let message_attr =
+                        xml_escape(&format!("{} at {}:{}:{}", rule_id, r.filename, line, col));
+                    let message_text = xml_escape(&format!("{}: {}", rule_id, i.message));
                     out.push_str(&format!(
                         "      <failure message=\"{}\" type=\"{}\">{}</failure>\n",
                         message_attr,
@@ -568,6 +573,57 @@ mod tests {
     }
 
     #[test]
+    fn test_junit_formatter_apostrophes_and_control_chars() {
+        // Message contains single quotes plus a mix of XML-forbidden control
+        // characters (0x00, 0x08, 0x0B, 0x0C, 0x1F) and legal whitespace
+        // control characters (\t, \n, \r) that must be preserved.
+        let message = "It's a 'value' \u{0}\u{8}\u{b}\u{c}\u{1f}with\tctrl\nchars\r".to_string();
+        let results = vec![ValidationResult {
+            // Apostrophe in the filename exercises escaping in the name attr.
+            filename: "it's.yaml".to_string(),
+            issues: vec![ValidationError {
+                rule_id: Some("E9999".to_string()),
+                message,
+                path: vec![],
+                span: Span {
+                    start: Position { line: 1, column: 1 },
+                    end: Position { line: 1, column: 1 },
+                },
+                keyword: String::new(),
+                unknown: false,
+                resolved_from_ref: false,
+                context: vec![],
+                schema_id: None,
+            }],
+        }];
+        let out = JUnitFormatter.format(&results);
+
+        // Single quotes are escaped as &apos;
+        assert!(out.contains("It&apos;s a &apos;value&apos;"));
+        assert!(out.contains("<testcase name=\"it&apos;s.yaml\">"));
+        assert!(!out.contains("It's"));
+
+        // XML-1.0-forbidden control characters are stripped entirely.
+        for forbidden in ['\u{0}', '\u{8}', '\u{b}', '\u{c}', '\u{1f}'] {
+            assert!(
+                !out.contains(forbidden),
+                "forbidden control char {:#x} should be stripped",
+                forbidden as u32
+            );
+        }
+        // Numeric-reference escapes are not used for forbidden chars either.
+        assert!(!out.contains("&#0;"));
+        assert!(!out.contains("&#x0;"));
+
+        // Legal whitespace control characters survive.
+        assert!(out.contains("with\tctrl\nchars\r"));
+
+        // The full document must parse as well-formed XML. roxmltree enforces
+        // XML 1.0 character-range rules, so any leaked control char fails here.
+        roxmltree::Document::parse(&out).expect("JUnit output should be well-formed XML");
+    }
+
+    #[test]
     fn test_get_formatter_junit() {
         let f = get_formatter("junit");
         let out = f.format(&sample_results());
@@ -582,7 +638,10 @@ mod tests {
 
         // Top-level structure
         assert_eq!(parsed["version"], "2.1.0");
-        assert!(parsed["$schema"].as_str().unwrap().contains("sarif-schema-2.1.0.json"));
+        assert!(parsed["$schema"]
+            .as_str()
+            .unwrap()
+            .contains("sarif-schema-2.1.0.json"));
 
         let run = &parsed["runs"][0];
 
@@ -700,7 +759,11 @@ mod tests {
         let rules = parsed["runs"][0]["tool"]["driver"]["rules"]
             .as_array()
             .unwrap();
-        assert_eq!(rules.len(), 1, "duplicate rule_id should produce one rule entry");
+        assert_eq!(
+            rules.len(),
+            1,
+            "duplicate rule_id should produce one rule entry"
+        );
         assert_eq!(parsed["runs"][0]["results"].as_array().unwrap().len(), 2);
     }
 

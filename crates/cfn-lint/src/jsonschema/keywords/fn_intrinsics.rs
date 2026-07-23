@@ -1,8 +1,7 @@
 use super::super::{ValidationError, Validator};
 use super::functions::validate_function_structure;
-use super::helpers::{err, unknown_err};
+use super::helpers::{compile_getatt_regex, err, unknown_err};
 use crate::ast::AstNode;
-use regex::Regex;
 use std::sync::Arc;
 
 pub fn validate_fn_getatt(
@@ -85,7 +84,7 @@ pub fn validate_fn_getatt(
                 || a.contains('?')
                 || a.contains('{')
             {
-                Regex::new(a)
+                compile_getatt_regex(a)
                     .map(|re| re.is_match(&attribute))
                     .unwrap_or(false)
             } else {
@@ -130,7 +129,7 @@ pub fn validate_ref(
     };
 
     if ref_name == "AWS::NoValue" {
-        let at_properties_level = path.last().map_or(false, |p| p == "Properties");
+        let at_properties_level = path.last().is_some_and(|p| p == "Properties");
         if !at_properties_level {
             return vec![];
         }
@@ -294,9 +293,7 @@ pub fn validate_fn_if(
 
         // The constraint is {"fn_if": <inner_schema>} — validate branch against
         // the inner schema so that maxItems, minItems, pattern etc. are checked.
-        let inner_schema = constraint
-            .get("fn_if")
-            .unwrap_or(constraint);
+        let inner_schema = constraint.get("fn_if").unwrap_or(constraint);
         let branch_errors = evolved.validate_schema(branch, inner_schema, path);
         if condition_undefined {
             // Condition doesn't exist — mark branch errors as unknown so only
@@ -354,7 +351,7 @@ pub fn validate_fn_sub(
                 .as_object()
                 .map(|o| o.keys().collect())
                 .unwrap_or_default();
-            let has_invalid_ref = arr.elements[1].as_object().map_or(false, |o| {
+            let has_invalid_ref = arr.elements[1].as_object().is_some_and(|o| {
                 let valid_refs_check: std::collections::HashSet<&str> = ctx
                     .template
                     .parameters

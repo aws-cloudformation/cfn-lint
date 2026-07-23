@@ -54,8 +54,12 @@ impl CfnLintRule for E6001 {
                     "maxProperties" => "E6010",
                     "propertyNames" | "maxLength" | "minLength" => "E6011",
                     "additionalProperties" => "E6004",
-                    "required" => "E6003",
-                    "type" => "E6002",
+                    // Match Python cfn-lint's rule-id assignment: E6002 is
+                    // "Outputs have required properties" (the `required`
+                    // keyword) and E6003 is "Check the type of Outputs" (the
+                    // `type` keyword). These were previously transposed.
+                    "required" => "E6002",
+                    "type" => "E6003",
                     _ => "E6001",
                 };
                 ValidationError {

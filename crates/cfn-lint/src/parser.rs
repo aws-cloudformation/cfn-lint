@@ -113,10 +113,13 @@ fn detect_duplicate_keys_yaml(text: &str) -> Vec<crate::jsonschema::ValidationEr
     use cfn_ast::yaml::scanner::Marker;
     use std::collections::HashMap;
 
+    /// Per-mapping-level entry: (keys_seen → (marker, already_reported_as_dup), expecting_key).
+    type MappingLevel = (HashMap<String, (Marker, bool)>, bool);
+
     struct DupDetector {
         /// Stack of (keys_seen, expecting_key) per mapping level.
         /// keys_seen maps key_name -> (marker, already_reported_as_dup)
-        stack: Vec<(HashMap<String, (Marker, bool)>, bool)>,
+        stack: Vec<MappingLevel>,
         issues: Vec<crate::jsonschema::ValidationError>,
         /// Track nesting for sequences to know we're not in a mapping
         in_sequence: Vec<bool>,
@@ -165,16 +168,20 @@ fn detect_duplicate_keys_yaml(text: &str) -> Vec<crate::jsonschema::ValidationEr
                                 if !existing.1 {
                                     // First time seeing a dup of this key — report original too
                                     let orig_mark = existing.0;
+                                    // yaml-rust2 Marker lines are 1-based; the
+                                    // main parser (cfn-ast `marker_to_pos`) stores
+                                    // 0-based lines via `.saturating_sub(1)`.
+                                    // Columns are already 0-based in the scanner.
                                     self.issues.push(make_issue(
                                         key,
-                                        orig_mark.line() as u32,
+                                        orig_mark.line().saturating_sub(1) as u32,
                                         orig_mark.col() as u32,
                                     ));
                                     existing.1 = true;
                                 }
                                 self.issues.push(make_issue(
                                     key,
-                                    mark.line() as u32,
+                                    mark.line().saturating_sub(1) as u32,
                                     mark.col() as u32,
                                 ));
                             } else {
@@ -208,11 +215,16 @@ fn detect_duplicate_keys_json(text: &str) -> Vec<crate::jsonschema::ValidationEr
     let bytes = text.as_bytes();
     let len = bytes.len();
     let mut i = 0;
-    let mut line: u32 = 1;
-    let mut col: u32 = 1;
+    // 0-based on both axes to match the main parser (cfn-ast `LineIndex::position`
+    // reports 0-based line and column). `col` is reset to 0 (not 1) on every
+    // newline below for the same reason.
+    let mut line: u32 = 0;
+    let mut col: u32 = 0;
 
-    // Stack entry: Some(map) for objects, None for arrays
-    let mut stack: Vec<Option<HashMap<String, (u32, u32, bool)>>> = Vec::new();
+    // Stack entry: Some(map) for objects, None for arrays.
+    // Map value: (line, column, already_reported_as_dup).
+    type ObjectKeyStack = Vec<Option<HashMap<String, (u32, u32, bool)>>>;
+    let mut stack: ObjectKeyStack = Vec::new();
     let mut issues = Vec::new();
     let mut expect_key = false;
 
@@ -265,7 +277,7 @@ fn detect_duplicate_keys_json(text: &str) -> Vec<crate::jsonschema::ValidationEr
                     } else {
                         if bytes[i] == b'\n' {
                             line += 1;
-                            col = 1;
+                            col = 0;
                         } else {
                             col += 1;
                         }
@@ -294,12 +306,12 @@ fn detect_duplicate_keys_json(text: &str) -> Vec<crate::jsonschema::ValidationEr
             }
             b'\n' => {
                 line += 1;
-                col = 1;
+                col = 0;
                 i += 1;
             }
             b'\r' => {
                 line += 1;
-                col = 1;
+                col = 0;
                 i += 1;
                 if i < len && bytes[i] == b'\n' {
                     i += 1;
@@ -313,4 +325,118 @@ fn detect_duplicate_keys_json(text: &str) -> Vec<crate::jsonschema::ValidationEr
     }
 
     issues
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{detect_duplicate_keys, parse, parse_json};
+    use crate::jsonschema::ValidationError;
+    use cfn_ast::node::{AstNode, Position};
+
+    /// Start positions of every top-level object entry whose key matches
+    /// `key`, in source order — the exact positions the MAIN parser records
+    /// for that key's span. `ObjectNode::entries` preserves duplicates.
+    fn parser_key_positions(ast: &AstNode, key: &str) -> Vec<Position> {
+        match ast {
+            AstNode::Object(obj) => obj
+                .entries
+                .iter()
+                .filter(|e| e.key == key)
+                .map(|e| e.key_span.start)
+                .collect(),
+            _ => Vec::new(),
+        }
+    }
+
+    fn detector_positions(issues: &[ValidationError]) -> Vec<Position> {
+        issues.iter().map(|i| i.span.start).collect()
+    }
+
+    // C4: yaml-rust2 `Marker` lines are 1-based; the duplicate-key detector must
+    // report 0-based lines to match cfn-ast `marker_to_pos`
+    // (`line().saturating_sub(1)`, column left as the already-0-based `col()`).
+    #[test]
+    fn yaml_duplicate_key_positions_match_parser_convention() {
+        // Byte layout (0-based lines; yaml columns are 0-based):
+        //   line 0: `Dup: 1`    -> key `Dup` at (line 0, col 0)
+        //   line 1: `Other: 2`
+        //   line 2: `Dup: 3`    -> key `Dup` at (line 2, col 0)
+        let template = b"Dup: 1\nOther: 2\nDup: 3\n";
+
+        let issues = detect_duplicate_keys(template);
+        assert_eq!(issues.len(), 2, "expected original + duplicate reports");
+        for issue in &issues {
+            assert_eq!(issue.rule_id.as_deref(), Some("E0000"));
+            assert!(issue.message.contains("Duplicate found"));
+        }
+
+        // Concrete 0-based expectations. Before the C4 fix the lines were 1 and 3
+        // (one line too low).
+        let got = detector_positions(&issues);
+        assert_eq!(got[0], Position { line: 0, column: 0 }); // first occurrence
+        assert_eq!(got[1], Position { line: 2, column: 0 }); // duplicate
+
+        // Cross-check: identical to the positions the MAIN parser records for
+        // the key's span.
+        let ast = parse(template).expect("template parses");
+        for p in parser_key_positions(&ast, "Dup") {
+            assert!(
+                got.contains(&p),
+                "detector positions {:?} must include main-parser key span start {:?}",
+                got,
+                p
+            );
+        }
+    }
+
+    // C5: the JSON scanner tracked 1-based line/col; the detector must report
+    // 0-based on both axes to match cfn-ast `LineIndex::position`.
+    #[test]
+    fn json_duplicate_key_positions_match_parser_convention() {
+        // Byte layout (0-based lines and columns, per cfn-ast `LineIndex`):
+        //   line 0: `{`
+        //   line 1: `  "Dup": 1,`    -> key opening quote at (line 1, col 2)
+        //   line 2: `  "Other": 2,`
+        //   line 3: `  "Dup": 3`     -> key opening quote at (line 3, col 2)
+        //   line 4: `}`
+        let template = b"{\n  \"Dup\": 1,\n  \"Other\": 2,\n  \"Dup\": 3\n}";
+
+        let issues = detect_duplicate_keys(template);
+        assert_eq!(issues.len(), 2, "expected original + duplicate reports");
+        for issue in &issues {
+            assert_eq!(issue.rule_id.as_deref(), Some("E0000"));
+            assert!(issue.message.contains("Duplicate found"));
+        }
+
+        // Concrete 0-based expectations. Before the C5 fix these were (2,3) and
+        // (4,3) — one too high on both axes.
+        let got = detector_positions(&issues);
+        assert_eq!(got[0], Position { line: 1, column: 2 }); // first occurrence
+        assert_eq!(got[1], Position { line: 3, column: 2 }); // duplicate
+
+        // The main JSON parser (serde) rejects duplicate keys outright, so we
+        // cannot pull two key spans from one parse. Instead verify the detector
+        // agrees with the main parser on a VALID template whose `"Dup"` key sits
+        // at the identical byte layout (line 1, col 2).
+        let valid = b"{\n  \"Dup\": 1\n}";
+        let ast = parse_json(valid).expect("valid template parses");
+        assert_eq!(
+            parser_key_positions(&ast, "Dup"),
+            vec![got[0]],
+            "detector first-occurrence position must match main parser key span"
+        );
+    }
+
+    // Guard the column reset: a duplicate key that is NOT on the first line must
+    // still get a 0-based column (regression for the `col = 1` newline resets).
+    #[test]
+    fn json_duplicate_key_column_is_zero_based_after_newline() {
+        // line 1: `    "K": 1,`  -> quote at col 4 (four leading spaces)
+        // line 2: `    "K": 2`   -> quote at col 4
+        let template = b"{\n    \"K\": 1,\n    \"K\": 2\n}";
+        let issues = detect_duplicate_keys(template);
+        let got = detector_positions(&issues);
+        assert_eq!(got[0], Position { line: 1, column: 4 });
+        assert_eq!(got[1], Position { line: 2, column: 4 });
+    }
 }

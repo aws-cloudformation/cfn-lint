@@ -209,7 +209,7 @@ pub fn validate_fn_structure_only(
 }
 
 pub fn validate_dynamic_reference(
-    validator: &Validator,
+    _validator: &Validator,
     node: &AstNode,
     _constraint: &serde_json::Value,
     _schema: &serde_json::Value,

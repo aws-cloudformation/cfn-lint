@@ -63,7 +63,7 @@ impl CfnLintRule for E1001 {
         let validator = Validator::new(schema.clone());
         issues.extend(
             validator
-                .validate(root, schema, &vec![])
+                .validate(root, schema, &[])
                 .into_iter()
                 .filter(|err| {
                     // Allow "Globals" section in SAM templates

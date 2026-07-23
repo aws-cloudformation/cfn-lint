@@ -1,5 +1,5 @@
 use super::super::{ValidationError, Validator};
-use super::helpers::{ast_matches_json, err};
+use super::helpers::{ast_matches_json, ast_to_json_value, err, python_repr};
 use crate::ast::AstNode;
 
 fn format_enum_values(constraint: &serde_json::Value) -> String {
@@ -87,9 +87,16 @@ pub fn validate_enum(
     if matched {
         vec![]
     } else {
+        let value_repr = ast_to_json_value(node)
+            .map(|v| python_repr(&v))
+            .unwrap_or_else(|| format!("{}", node));
         vec![err(
             "enum",
-            format!("{} is not one of {}", node, format_enum_values(constraint)),
+            format!(
+                "{} is not one of {}",
+                value_repr,
+                format_enum_values(constraint)
+            ),
             path,
             node,
         )]
@@ -146,11 +153,14 @@ pub fn validate_enum_case_insensitive(
     if matched {
         vec![]
     } else {
+        let value_repr = ast_to_json_value(node)
+            .map(|v| python_repr(&v))
+            .unwrap_or_else(|| format!("{}", node));
         vec![err(
             "enumCaseInsensitive",
             format!(
                 "{} is not one of {} (case-insensitive)",
-                node,
+                value_repr,
                 format_enum_values(constraint)
             ),
             path,
@@ -181,7 +191,7 @@ pub fn validate_const(
             } else {
                 return vec![err(
                     "const",
-                    format!("{} was expected", constraint),
+                    format!("{} was expected", python_repr(constraint)),
                     path,
                     node,
                 )];
@@ -201,7 +211,7 @@ pub fn validate_const(
     } else {
         vec![err(
             "const",
-            format!("Value {} does not match const {}", node, constraint),
+            format!("{} was expected", python_repr(constraint)),
             path,
             node,
         )]

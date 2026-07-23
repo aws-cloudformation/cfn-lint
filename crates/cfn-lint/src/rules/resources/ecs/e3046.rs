@@ -51,7 +51,7 @@ impl CfnLintRule for E3046 {
         let mut errors = Vec::new();
 
         for required in &["awslogs-group", "awslogs-region"] {
-            let has_option = options.map(|o| o.contains_key(*required)).unwrap_or(false);
+            let has_option = options.map(|o| o.contains_key(required)).unwrap_or(false);
             if !has_option {
                 let mut options_path = path.to_vec();
                 options_path.push("Options".to_string());

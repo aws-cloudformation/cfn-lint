@@ -39,7 +39,7 @@ impl CfnLintRule for E1002 {
                 rule_id: Some(self.id().to_string()),
                 message: format!("Template root must be an object, got {}", root.node_type()),
                 path: vec![],
-                span: root.span().clone(),
+                span: root.span(),
                 keyword: String::new(),
                 unknown: false,
                 resolved_from_ref: false,
@@ -54,7 +54,6 @@ impl CfnLintRule for E1002 {
 mod tests {
     use super::*;
     use crate::ast::*;
-    use indexmap::IndexMap;
 
     #[test]
     fn test_valid_object_root() {

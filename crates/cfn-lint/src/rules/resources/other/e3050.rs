@@ -85,7 +85,7 @@ impl CfnLintRule for E3050 {
                             "Properties".to_string(),
                             key.to_string(),
                         ],
-                        span: props.get(key).unwrap().span().clone(),
+                        span: props.get(key).unwrap().span(),
                         keyword: String::new(),
                         unknown: false,
                         resolved_from_ref: false,

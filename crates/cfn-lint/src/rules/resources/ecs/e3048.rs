@@ -38,14 +38,13 @@ impl CfnLintRule for E3048 {
             None => return vec![],
         };
 
-        // Check if this is a Fargate task
-        let requires_compat = props
+        // Check if this is a Fargate task. RequiresCompatibilities may be a
+        // plain array or wrapped in Fn::If, so descend into conditional
+        // branches rather than giving up when as_array() returns None (C70).
+        let is_fargate = props
             .get("RequiresCompatibilities")
-            .and_then(|n| n.as_array());
-        let is_fargate = match requires_compat {
-            Some(arr) => arr.elements.iter().any(|e| e.as_str() == Some("FARGATE")),
-            None => false,
-        };
+            .map(mentions_fargate)
+            .unwrap_or(false);
         if !is_fargate {
             return vec![];
         }
@@ -166,7 +165,24 @@ impl CfnLintRule for E3048 {
     }
 }
 
-const VALID_FARGATE_CPU: &[&str] = &["256", "512", "1024", "2048", "4096"];
+const VALID_FARGATE_CPU: &[&str] = &["256", "512", "1024", "2048", "4096", "8192", "16384"];
+
+/// Determine whether `RequiresCompatibilities` requests FARGATE, descending
+/// into `Fn::If` branches so a conditional value does not silently disable
+/// the rule (C70). Both the True (index 1) and False (index 2) branches of
+/// each `Fn::If` are inspected.
+fn mentions_fargate(node: &AstNode) -> bool {
+    match node {
+        AstNode::String(s) => s.value == "FARGATE",
+        AstNode::Array(arr) => arr.elements.iter().any(mentions_fargate),
+        AstNode::Function(func) if func.name == "Fn::If" => match func.args.as_array() {
+            // Skip the condition name (index 0); check both branches.
+            Some(arr) => arr.elements.iter().skip(1).any(mentions_fargate),
+            None => false,
+        },
+        _ => false,
+    }
+}
 
 #[cfg(test)]
 mod tests {
@@ -254,6 +270,100 @@ Resources:
         );
         assert_eq!(errors.len(), 1);
         assert!(errors[0].message.contains("PlacementConstraints"));
+    }
+
+    // C69: 8 vCPU (8192) and 16 vCPU (16384) are valid Fargate CPU values.
+    #[test]
+    fn test_valid_fargate_high_cpu_values() {
+        for cpu in ["8192", "16384"] {
+            let yaml = format!(
+                r#"
+Resources:
+  Task:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      NetworkMode: awsvpc
+      Cpu: "{}"
+      Memory: "32768"
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+"#,
+                cpu
+            );
+            let ast = parser::parse(yaml.as_bytes()).unwrap();
+            let instance = ast
+                .get("Resources")
+                .unwrap()
+                .get("Task")
+                .unwrap()
+                .get("Properties")
+                .unwrap();
+            let path = vec![
+                "Resources".to_string(),
+                "Task".to_string(),
+                "Properties".to_string(),
+            ];
+            let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
+            let errors = E3048.validate(
+                &validator,
+                "Resources/AWS::ECS::TaskDefinition/Properties",
+                instance,
+                &serde_json::json!({}),
+                &path,
+            );
+            assert!(
+                errors.is_empty(),
+                "cpu {} should be valid, got: {:?}",
+                cpu,
+                errors
+            );
+        }
+    }
+
+    // C70: Fn::If in RequiresCompatibilities must not silently disable the
+    // rule. With FARGATE in a branch, the required-property checks still run.
+    #[test]
+    fn test_fargate_via_fn_if_still_validated() {
+        let yaml = br#"
+Resources:
+  Task:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        Fn::If:
+          - UseFargate
+          - - FARGATE
+          - - EC2
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Task")
+            .unwrap()
+            .get("Properties")
+            .unwrap();
+        let path = vec![
+            "Resources".to_string(),
+            "Task".to_string(),
+            "Properties".to_string(),
+        ];
+        let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
+        let errors = E3048.validate(
+            &validator,
+            "Resources/AWS::ECS::TaskDefinition/Properties",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
+        // NetworkMode, Cpu, and Memory are all missing -> three errors.
+        assert_eq!(errors.len(), 3, "got: {:?}", errors);
     }
 }
 

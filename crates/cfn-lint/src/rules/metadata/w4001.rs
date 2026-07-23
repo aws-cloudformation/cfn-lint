@@ -101,7 +101,6 @@ impl CfnLintRule for W4001 {
 }
 
 #[cfg(test)]
-
 mod tests {
     use super::*;
     use crate::parser;

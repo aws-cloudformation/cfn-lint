@@ -6,6 +6,10 @@
 //! - Wildcard for custom/serverless/module types
 //! - Additional attributes from `EXCEPTIONS`
 
+/// Maximum recursion depth when collecting nested GetAtt properties. Guards
+/// against stack overflow from circular `$ref`s in provider schemas.
+const MAX_GETATT_DEPTH: usize = 64;
+
 /// Resource types that expose ALL their properties as GetAtt attributes.
 static ALL_PROPERTY_TYPES: &[&str] = &[
     "AWS::Amplify::Branch",
@@ -139,12 +143,25 @@ fn pointer_to_attr(pointer: &str) -> Option<String> {
 /// Recursively collect all property names from a schema object for
 /// `ALL_PROPERTY_TYPES` resources. Traverses nested objects and produces
 /// dotted paths (e.g. `Foo.Bar`).
+///
+/// `depth` bounds recursion: circular `$ref`s (e.g. a definition that refers
+/// back to itself) would otherwise recurse forever and overflow the stack.
 fn collect_all_properties(
     obj: &serde_json::Value,
     schema_root: &serde_json::Value,
     prefix: &str,
     out: &mut Vec<String>,
+    depth: usize,
 ) {
+    // Stop descending on pathological / circular schemas. Treat the current
+    // node as a leaf so we still record the path reached so far.
+    if depth > MAX_GETATT_DEPTH {
+        if !prefix.is_empty() {
+            out.push(prefix.to_string());
+        }
+        return;
+    }
+
     let types = match obj.get("type") {
         Some(serde_json::Value::String(s)) => vec![s.as_str()],
         Some(serde_json::Value::Array(arr)) => arr.iter().filter_map(|v| v.as_str()).collect(),
@@ -152,7 +169,7 @@ fn collect_all_properties(
             // Check for $ref
             if let Some(serde_json::Value::String(ref_path)) = obj.get("$ref") {
                 if let Some(resolved) = resolve_ref(ref_path, schema_root) {
-                    collect_all_properties(resolved, schema_root, prefix, out);
+                    collect_all_properties(resolved, schema_root, prefix, out, depth + 1);
                 }
             } else {
                 // No type info — treat as leaf
@@ -172,7 +189,7 @@ fn collect_all_properties(
                 } else {
                     format!("{}.{}", prefix, name)
                 };
-                collect_all_properties(value, schema_root, &path, out);
+                collect_all_properties(value, schema_root, &path, out, depth + 1);
             }
         }
     } else if types.contains(&"array") {
@@ -243,7 +260,7 @@ pub fn get_valid_attributes(schema: &serde_json::Value, resource_type: &str) -> 
         let mut attrs = Vec::new();
         if let Some(serde_json::Value::Object(props)) = schema.get("properties") {
             for (name, value) in props {
-                collect_all_properties(value, schema, name, &mut attrs);
+                collect_all_properties(value, schema, name, &mut attrs, 0);
             }
         }
         return attrs;
@@ -771,5 +788,53 @@ mod tests {
             }
         });
         assert!(get_property_schema(&schema, &["Missing"]).is_none());
+    }
+
+    // ── C50: circular $ref in an ALL_PROPERTY_TYPES schema must not overflow ──
+
+    fn run_with_timeout<F: FnOnce() + Send + 'static>(secs: u64, f: F) {
+        use std::sync::mpsc::{channel, RecvTimeoutError};
+        use std::time::Duration;
+        let (tx, rx) = channel();
+        let handle = std::thread::spawn(move || {
+            f();
+            let _ = tx.send(());
+        });
+        match rx.recv_timeout(Duration::from_secs(secs)) {
+            Ok(()) => handle.join().unwrap(),
+            Err(RecvTimeoutError::Timeout) => {
+                panic!("did not finish within {secs}s — getatts depth guard likely regressed")
+            }
+            Err(RecvTimeoutError::Disconnected) => handle.join().unwrap(),
+        }
+    }
+
+    #[test]
+    fn test_collect_all_properties_circular_ref_terminates() {
+        run_with_timeout(10, || {
+            // A recursive definition that references itself. AWS::SNS::Topic is an
+            // ALL_PROPERTY_TYPES resource, so collect_all_properties walks the tree
+            // and would recurse forever on this cycle without the depth cap.
+            let schema = json!({
+                "definitions": {
+                    "Node": {
+                        "type": "object",
+                        "properties": {
+                            "Next": {"$ref": "#/definitions/Node"}
+                        }
+                    }
+                },
+                "properties": {
+                    "Root": {"$ref": "#/definitions/Node"}
+                }
+            });
+            let attrs = get_valid_attributes(&schema, "AWS::SNS::Topic");
+            // Bounded output (a single deep dotted path), and — crucially — it returned.
+            assert!(
+                attrs.len() <= 4,
+                "expected bounded attributes, got {}",
+                attrs.len()
+            );
+        });
     }
 }

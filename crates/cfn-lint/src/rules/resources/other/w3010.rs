@@ -53,7 +53,11 @@ impl CfnLintRule for W3010 {
         // Skip for CDK templates — CDK synthesizes AZs and they can't be parameterized
         if let Some(ctx) = &validator.context {
             if ctx.template.resources.contains_key("CDKMetadata")
-                || ctx.template.resources.values().any(|r| r.resource_type == "AWS::CDK::Metadata")
+                || ctx
+                    .template
+                    .resources
+                    .values()
+                    .any(|r| r.resource_type == "AWS::CDK::Metadata")
             {
                 return vec![];
             }
@@ -101,7 +105,6 @@ impl CfnLintRule for W3010 {
 }
 
 #[cfg(test)]
-
 mod tests {
     use super::*;
     use crate::parser;

@@ -65,7 +65,6 @@ impl CfnLintRule for E3056 {
 }
 
 #[cfg(test)]
-
 mod tests {
     use super::*;
     use crate::parser;

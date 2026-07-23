@@ -43,7 +43,7 @@ impl CfnLintRule for E3007 {
             if template.parameters.contains_key(resource_name) {
                 let pos = resources_node
                     .and_then(|r| r.get(resource_name))
-                    .map(|n| n.span().clone())
+                    .map(|n| n.span())
                     .unwrap_or_default();
                 issues.push(ValidationError {
                     rule_id: Some(self.id().to_string()),
