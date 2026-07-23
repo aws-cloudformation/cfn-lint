@@ -1,3 +1,13 @@
+### v1.53.2
+## What's Changed
+* Compute Context.module_names lazily to avoid rescan on every evolve() by @sir-sigurd in https://github.com/aws-cloudformation/cfn-lint/pull/4586
+* Update CloudFormation schemas to 2026-07-23 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4583
+
+## New Contributors
+* @sir-sigurd made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4586
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.53.1...v1.53.2
+
 ### v1.53.1
 ## What's Changed
 * Update snapshot script results file naming so that templates with sam… by @satyakigh in https://github.com/aws-cloudformation/cfn-lint/pull/4575
