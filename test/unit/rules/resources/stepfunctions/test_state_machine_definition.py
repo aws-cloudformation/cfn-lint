@@ -455,7 +455,23 @@ def rule():
                     },
                 }
             },
-            [],
+            [
+                ValidationError(
+                    "Missing transition target 'NextState' at /States/Public/Next",
+                    rule=StateMachineDefinition(),
+                    path=deque(["Definition", "States", "Public", "Next"]),
+                ),
+                ValidationError(
+                    "Missing transition target 'NextState' at /States/ValueIsZero/Next",
+                    rule=StateMachineDefinition(),
+                    path=deque(["Definition", "States", "ValueIsZero", "Next"]),
+                ),
+                ValidationError(
+                    "Missing transition target 'NextState' at /States/ValueInTwenties/Next",
+                    rule=StateMachineDefinition(),
+                    path=deque(["Definition", "States", "ValueInTwenties", "Next"]),
+                ),
+            ],
         ),
         (
             "Invalid configuration",
@@ -523,6 +539,11 @@ def rule():
                         ]
                     ),
                     path=deque(["Definition", "States", "__SucceedEntryPoint__"]),
+                ),
+                ValidationError(
+                    "State 'NoType' is not reachable at /States/NoType",
+                    rule=StateMachineDefinition(),
+                    path=deque(["Definition", "States", "NoType"]),
                 ),
             ],
         ),
@@ -1075,6 +1096,31 @@ def rule():
                     ),
                     path=deque(["Definition", "States", "Choices3", "Choices", 0]),
                 ),
+                ValidationError(
+                    "State 'Submit Batch Job 2' is not reachable at /States/Submit Batch Job 2",
+                    rule=StateMachineDefinition(),
+                    path=deque(["Definition", "States", "Submit Batch Job 2"]),
+                ),
+                ValidationError(
+                    "State 'Submit Batch Job 3' is not reachable at /States/Submit Batch Job 3",
+                    rule=StateMachineDefinition(),
+                    path=deque(["Definition", "States", "Submit Batch Job 3"]),
+                ),
+                ValidationError(
+                    "State 'Choices1' is not reachable at /States/Choices1",
+                    rule=StateMachineDefinition(),
+                    path=deque(["Definition", "States", "Choices1"]),
+                ),
+                ValidationError(
+                    "State 'Choices2' is not reachable at /States/Choices2",
+                    rule=StateMachineDefinition(),
+                    path=deque(["Definition", "States", "Choices2"]),
+                ),
+                ValidationError(
+                    "State 'Choices3' is not reachable at /States/Choices3",
+                    rule=StateMachineDefinition(),
+                    path=deque(["Definition", "States", "Choices3"]),
+                ),
             ],
         ),
         (
@@ -1352,6 +1398,26 @@ def rule():
                         ["Definition", "States", "Notify Failure", "Parameters"]
                     ),
                 ),
+                ValidationError(
+                    "State 'Submit Batch Job 2' is not reachable at /States/Submit Batch Job 2",
+                    rule=StateMachineDefinition(),
+                    path=deque(["Definition", "States", "Submit Batch Job 2"]),
+                ),
+                ValidationError(
+                    "State 'Submit Batch Job 3' is not reachable at /States/Submit Batch Job 3",
+                    rule=StateMachineDefinition(),
+                    path=deque(["Definition", "States", "Submit Batch Job 3"]),
+                ),
+                ValidationError(
+                    "State 'Choices1' is not reachable at /States/Choices1",
+                    rule=StateMachineDefinition(),
+                    path=deque(["Definition", "States", "Choices1"]),
+                ),
+                ValidationError(
+                    "State 'Choices2' is not reachable at /States/Choices2",
+                    rule=StateMachineDefinition(),
+                    path=deque(["Definition", "States", "Choices2"]),
+                ),
             ],
         ),
         (
@@ -1372,7 +1438,7 @@ def rule():
             },
             [
                 ValidationError(
-                    "Missing 'Next' target 'FAIL' at /StartAt",
+                    "Missing 'StartAt' target 'FAIL' at /StartAt",
                     rule=StateMachineDefinition(),
                     path=deque(["Definition", "StartAt"]),
                 ),
@@ -1404,7 +1470,7 @@ def rule():
             },
             [
                 ValidationError(
-                    "Missing 'Next' target 'FAIL' at /States/ParallelState/Branches/0/StartAt",
+                    "Missing 'StartAt' target 'FAIL' at /States/ParallelState/Branches/0/StartAt",
                     rule=StateMachineDefinition(),
                     path=deque(
                         [
@@ -1460,7 +1526,7 @@ def rule():
             },
             [
                 ValidationError(
-                    "Missing 'Next' target 'FAIL' at /States/ParallelExecution/Branches/1/States/TestMap/ItemProcessor/StartAt",
+                    "Missing 'StartAt' target 'FAIL' at /States/ParallelExecution/Branches/1/States/TestMap/ItemProcessor/StartAt",
                     rule=StateMachineDefinition(),
                     path=deque(
                         [
@@ -1502,7 +1568,7 @@ def rule():
             },
             [
                 ValidationError(
-                    "Missing 'Next' target 'FAIL' at /States/MapState/ItemProcessor/StartAt",
+                    "Missing 'StartAt' target 'FAIL' at /States/MapState/ItemProcessor/StartAt",
                     rule=StateMachineDefinition(),
                     path=deque(
                         ["Definition", "States", "MapState", "ItemProcessor", "StartAt"]
@@ -1534,7 +1600,7 @@ def rule():
             },
             [
                 ValidationError(
-                    "Missing 'Next' target 'FAIL' at /States/MapState/Iterator/StartAt",
+                    "Missing 'StartAt' target 'FAIL' at /States/MapState/Iterator/StartAt",
                     rule=StateMachineDefinition(),
                     path=deque(
                         ["Definition", "States", "MapState", "Iterator", "StartAt"]
@@ -1555,6 +1621,170 @@ def rule():
                             "Arguments": '{% $merge([{"Bucket": "my-bucket"}]) %}',
                             "End": True,
                         },
+                    },
+                }
+            },
+            [],
+        ),
+        (
+            "Unreachable state at top level",
+            {
+                "Definition": {
+                    "StartAt": "Pass One",
+                    "States": {
+                        "Pass One": {
+                            "Type": "Pass",
+                            "Next": "Success",
+                        },
+                        "Unreachable pass": {
+                            "Type": "Pass",
+                            "Next": "Success",
+                        },
+                        "Success": {
+                            "Type": "Succeed",
+                        },
+                    },
+                }
+            },
+            [
+                ValidationError(
+                    "State 'Unreachable pass' is not reachable at /States/Unreachable pass",
+                    rule=StateMachineDefinition(),
+                    path=deque(["Definition", "States", "Unreachable pass"]),
+                ),
+            ],
+        ),
+        (
+            "All states reachable via Choice transitions",
+            {
+                "Definition": {
+                    "StartAt": "Choice",
+                    "States": {
+                        "Choice": {
+                            "Type": "Choice",
+                            "Choices": [
+                                {
+                                    "Variable": "$.x",
+                                    "NumericEquals": 1,
+                                    "Next": "Branch A",
+                                }
+                            ],
+                            "Default": "Branch B",
+                        },
+                        "Branch A": {"Type": "Succeed"},
+                        "Branch B": {"Type": "Succeed"},
+                    },
+                }
+            },
+            [],
+        ),
+        (
+            "Unreachable state in Parallel branch",
+            {
+                "Definition": {
+                    "StartAt": "ParallelState",
+                    "States": {
+                        "ParallelState": {
+                            "Type": "Parallel",
+                            "Branches": [
+                                {
+                                    "StartAt": "BranchStart",
+                                    "States": {
+                                        "BranchStart": {
+                                            "Type": "Pass",
+                                            "End": True,
+                                        },
+                                        "UnreachableBranch": {
+                                            "Type": "Pass",
+                                            "End": True,
+                                        },
+                                    },
+                                }
+                            ],
+                            "End": True,
+                        }
+                    },
+                }
+            },
+            [
+                ValidationError(
+                    "State 'UnreachableBranch' is not reachable at /States/ParallelState/Branches/0/States/UnreachableBranch",
+                    rule=StateMachineDefinition(),
+                    path=deque(
+                        [
+                            "Definition",
+                            "States",
+                            "ParallelState",
+                            "Branches",
+                            0,
+                            "States",
+                            "UnreachableBranch",
+                        ]
+                    ),
+                ),
+            ],
+        ),
+        (
+            "Unreachable state in Map ItemProcessor",
+            {
+                "Definition": {
+                    "StartAt": "MapState",
+                    "States": {
+                        "MapState": {
+                            "Type": "Map",
+                            "ItemProcessor": {
+                                "StartAt": "ProcessItem",
+                                "States": {
+                                    "ProcessItem": {
+                                        "Type": "Pass",
+                                        "End": True,
+                                    },
+                                    "UnreachableItem": {
+                                        "Type": "Pass",
+                                        "End": True,
+                                    },
+                                },
+                            },
+                            "End": True,
+                        },
+                    },
+                }
+            },
+            [
+                ValidationError(
+                    "State 'UnreachableItem' is not reachable at /States/MapState/ItemProcessor/States/UnreachableItem",
+                    rule=StateMachineDefinition(),
+                    path=deque(
+                        [
+                            "Definition",
+                            "States",
+                            "MapState",
+                            "ItemProcessor",
+                            "States",
+                            "UnreachableItem",
+                        ]
+                    ),
+                ),
+            ],
+        ),
+        (
+            "State reachable only via Catch is not unreachable",
+            {
+                "Definition": {
+                    "StartAt": "TaskState",
+                    "States": {
+                        "TaskState": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::lambda:invoke",
+                            "Catch": [
+                                {
+                                    "ErrorEquals": ["States.ALL"],
+                                    "Next": "ErrorHandler",
+                                }
+                            ],
+                            "End": True,
+                        },
+                        "ErrorHandler": {"Type": "Succeed"},
                     },
                 }
             },
