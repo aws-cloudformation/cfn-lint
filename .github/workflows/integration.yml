@@ -26,5 +26,14 @@ jobs:
 
       - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
 
+      - name: Download schemas
+        shell: bash
+        run: |
+          curl -sL https://github.com/aws-cloudformation/resource-provider-enhanced-schemas/releases/download/latest/schemas-cfn-lint.zip -o /tmp/schemas.zip
+          cd crates/cfn-lint/data/schemas
+          unzip -qo /tmp/schemas.zip
+          cd providers
+          for f in *-*.json; do mv "$f" "$(echo $f | tr '-' '_')" 2>/dev/null; done
+
       - name: Run integration tests
         run: cargo test --test integration
