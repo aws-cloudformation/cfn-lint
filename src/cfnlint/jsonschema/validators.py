@@ -22,7 +22,13 @@ import logging
 from collections import deque
 from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
+from functools import lru_cache
 from typing import Any, Callable
+
+
+@lru_cache(maxsize=None)
+def _init_field_names(cls) -> tuple:
+    return tuple(f.name for f in fields(cls) if f.init)
 
 from cfnlint.conditions import UnknownSatisfisfaction
 from cfnlint.context import Context
@@ -340,9 +346,8 @@ def create(
             StandardValidator(schema={'type': 'number'}, format_checker=None)
             """
             cls = self.__class__
-            for f in fields(Validator):
-                if f.init:
-                    kwargs.setdefault(f.name, getattr(self, f.name))
+            for name in _init_field_names(Validator):
+                kwargs.setdefault(name, getattr(self, name))
 
             return cls(**kwargs)
 
