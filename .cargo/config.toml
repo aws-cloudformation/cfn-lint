@@ -1,0 +1,17 @@
+# cfn-lint-py is a PyO3 extension module (crate-type = ["cdylib"], pyo3
+# feature "extension-module"). It intentionally does not link libpython —
+# the Python interpreter resolves those symbols when it loads the module.
+#
+# A plain `cargo build --workspace` on macOS otherwise fails to link with
+# "Undefined symbols for architecture arm64: _Py..." because the Mach-O
+# linker rejects unresolved symbols by default. Tell the Apple linkers to
+# defer them to load time via `-undefined dynamic_lookup` (the same thing
+# maturin does when building wheels).
+#
+# Linux permits undefined symbols in shared objects, and Windows links
+# against pythonXX.lib, so neither target needs this.
+[target.x86_64-apple-darwin]
+rustflags = ["-C", "link-arg=-undefined", "-C", "link-arg=dynamic_lookup"]
+
+[target.aarch64-apple-darwin]
+rustflags = ["-C", "link-arg=-undefined", "-C", "link-arg=dynamic_lookup"]
