@@ -147,3 +147,15 @@ class TestModuleNames(unittest.TestCase):
         self.assertEqual(resources.items_calls, 1)
         self.assertEqual(evolved.module_names, ("MyModule",))
         self.assertEqual(resources.items_calls, 1)
+
+    def test_module_names_recomputed_when_resources_replaced(self):
+        context = Context(
+            resources={
+                "MyModule": Resource({"Type": "My::Organization::Custom::MODULE"}),
+            }
+        )
+        self.assertEqual(context.module_names, ("MyModule",))
+        replaced = context.evolve(
+            resources={"MyBucket": Resource({"Type": "AWS::S3::Bucket"})}
+        )
+        self.assertEqual(replaced.module_names, ())
