@@ -19,6 +19,7 @@ import json
 import logging
 import os
 import sys
+from functools import lru_cache
 from io import BytesIO
 from typing import Any, Sequence
 from urllib.request import Request, urlopen, urlretrieve
@@ -773,3 +774,9 @@ def ensure_list(instance: Any) -> list[Any]:
     if isinstance(instance, (list, tuple)):
         return list(instance)
     return [instance]
+
+
+@lru_cache(maxsize=None)
+def init_field_names(cls) -> tuple[str, ...]:
+    """Return the names of a dataclass's init fields (cached per class)"""
+    return tuple(f.name for f in dataclasses.fields(cls) if f.init)

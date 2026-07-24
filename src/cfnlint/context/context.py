@@ -15,11 +15,6 @@ from typing import TYPE_CHECKING, Any, Deque, Iterator, Set, Tuple
 
 import regex as re
 
-
-@lru_cache(maxsize=None)
-def _init_field_names(cls) -> tuple[str, ...]:
-    return tuple(f.name for f in fields(cls) if f.init)
-
 from cfnlint.context._mappings import Mappings
 from cfnlint.context.conditions._conditions import Conditions
 from cfnlint.context.parameters import ParameterSet
@@ -31,6 +26,7 @@ from cfnlint.helpers import (
     REGION_PRIMARY,
     TRANSFORM_LANGUAGE_EXTENSION,
     TRANSFORM_SAM,
+    init_field_names,
 )
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, AttributeDict
 
@@ -216,7 +212,7 @@ class Context:
             new_ref_values.update(kwargs["ref_values"])
             kwargs["ref_values"] = new_ref_values
 
-        for name in _init_field_names(Context):
+        for name in init_field_names(Context):
             kwargs.setdefault(name, getattr(self, name))
 
         return cls(**kwargs)
