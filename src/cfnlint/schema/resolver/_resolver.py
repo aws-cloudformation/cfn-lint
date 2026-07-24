@@ -64,6 +64,7 @@ class RefResolver:
     _urljoin_cache: Any = field(init=True, default=None)
     _cache: Any = field(init=True, default=None)
     _cache_cfn_pointer: Any = field(init=True, default=None)
+    _subschemas_cache: Any = field(init=False, default=None)
     store: Any = field(init=True, default=None)
 
     def __post_init__(self):
@@ -296,12 +297,15 @@ class RefResolver:
         return document
 
     def _get_subschemas_cache(self):
+        if self._subschemas_cache is not None:
+            return self._subschemas_cache
         cache = {key: [] for key in _SUBSCHEMAS_KEYWORDS}
         for keyword, subschema in _search_schema(
             self.referrer,
             _match_subschema_keywords,
         ):
             cache[keyword].append(subschema)
+        self._subschemas_cache = cache
         return cache
 
     def _find_in_subschemas(self, url):
