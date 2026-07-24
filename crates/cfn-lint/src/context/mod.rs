@@ -326,6 +326,30 @@ impl Context {
         }
     }
 
+    /// Check whether a set of condition true/false assignments is jointly
+    /// satisfiable, layered on top of the current `condition_state`. Later
+    /// entries in `assignments` win over the inherited state on key collisions.
+    ///
+    /// This is the multi-condition analogue of [`is_condition_satisfiable`] and
+    /// mirrors Python's `cfn.is_resource_available`, which asks whether there is
+    /// a scenario where one resource is present while another is not — i.e. it
+    /// constrains *several* conditions at once (e.g. owner-true AND target-false)
+    /// rather than testing a single condition in isolation.
+    pub fn are_conditions_satisfiable(
+        &self,
+        assignments: &std::collections::HashMap<String, bool>,
+    ) -> bool {
+        if let Some(sat) = &self.sat_conditions {
+            let mut state = self.condition_state.clone();
+            for (name, &value) in assignments {
+                state.insert(name.clone(), value);
+            }
+            sat.is_condition_set_satisfiable(&state)
+        } else {
+            true
+        }
+    }
+
     /// Try to resolve a node to a concrete value without a full Resolver.
     /// Handles Ref to pseudo-params and ref_values, and passes through literals.
     pub fn resolve_value(&self, node: &AstNode) -> Option<AstNode> {
