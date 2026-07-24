@@ -905,6 +905,40 @@ fn parity_sam_translator() {
     ]
     .into();
 
+    // Residual divergences after the 1.53.1 baseline refresh (matched 493,
+    // rust-only 1, python-only 7). These are NOT filtered from the gate; they
+    // are the honest remainder, tracked here so the numbers are explainable:
+    //
+    // RUST-ONLY (1) -- v2 is more precise than Python, kept intentionally:
+    //   W1028 x1 (function_with_custom_conditional_codedeploy_deployment_preference):
+    //     a nested `Fn::If [IsDevEnv2, ...]` sitting inside the true branch of
+    //     `Fn::If [IsDevEnv, ...]`, where IsDevEnv = (EnvType == "dev") and
+    //     IsDevEnv2 = (EnvType == "prod") are mutually exclusive. v2 tracks the
+    //     enclosing condition and correctly flags the unreachable branch; Python
+    //     v1's W1028 does not consider parent-If context and misses it.
+    //
+    // PYTHON-ONLY (7) -- genuine v2 under-reports (features not yet ported) or a
+    // Python defect; each needs its own focused change with cross-suite parity
+    // validation, so they are deliberately left for follow-up:
+    //   E1019 x3 (http_api_existing_openapi*): Python validates `Fn::Sub`
+    //     variables embedded inside an ApiGateway `Body`/OpenAPI blob (a
+    //     schemaless sub-tree); v2 does not yet walk intrinsics there.
+    //   E6101 x1 (function_with_resource_refs): a `Ref` to an undefined target
+    //     ("FunctionWithoutAlias.Version") in an Output. v2 does not yet validate
+    //     Ref-target existence (also the E1020 case in resource properties).
+    //   E3660 x1 (connector_hardcoded_props): a RestApi with NO Properties at
+    //     all; Python applies the `Name`-required if/else treating absent
+    //     Properties as `{}`. Porting this has broad blast radius across every
+    //     property-less resource, so it is scoped separately.
+    //   W1032 x1 (intrinsic_functions): Python resolves an `Fn::Join` runtime
+    //     value and re-validates it (JoinResolved.py); v2 has no Join-resolution
+    //     re-validation pass.
+    //   E3510 x1 (function_with_event_dest): NOT a real finding -- Python emits
+    //     `Exception "'event-busv2'" raised while validating` (an internal
+    //     crash in its IAM policy validator). v2 validates the same input
+    //     cleanly; reproducing this would mean emulating a Python bug (see the
+    //     module-level `functions_join.yaml` note). Accepted divergence.
+
     println!("\n{}", "=".repeat(100));
     println!(
         "SAM TRANSLATOR PARITY ({} templates with Python issues)",
