@@ -30,7 +30,7 @@ class PipelineArtifactNames(CfnLintKeyword):
                 "Resources/AWS::CodePipeline::Pipeline/Properties/Stages/*/Actions/*/OutputArtifacts/*/Name",
             ],
         )
-        self._output_artifact_names: dict[str, list[tuple[str, dict]]] = {}
+        self._output_artifact_names: dict[str, list[tuple[str, dict, tuple]]] = {}
 
     def initialize(self, cfn):
         self._output_artifact_names = {}
@@ -49,11 +49,14 @@ class PipelineArtifactNames(CfnLintKeyword):
         if resource_name not in self._output_artifact_names:
             self._output_artifact_names[resource_name] = []
 
+        path = tuple(validator.context.path.path)
         if "OutputArtifacts" in validator.context.path.path:
-            for output_name, output_condition in self._output_artifact_names[
-                resource_name
-            ]:
-                if output_name != instance:
+            for (
+                output_name,
+                output_condition,
+                output_path,
+            ) in self._output_artifact_names[resource_name]:
+                if output_name != instance or output_path == path:
                     continue
                 try:
                     validator.evolve(
@@ -72,10 +75,10 @@ class PipelineArtifactNames(CfnLintKeyword):
                     pass
 
             self._output_artifact_names[resource_name].append(
-                (instance, validator.context.conditions.status)
+                (instance, validator.context.conditions.status, path)
             )
         elif "InputArtifacts" in validator.context.path.path:
-            for output_name, output_condition in self._output_artifact_names[
+            for output_name, output_condition, _ in self._output_artifact_names[
                 resource_name
             ]:
                 if output_name != instance:

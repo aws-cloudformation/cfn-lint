@@ -273,6 +273,43 @@ def _append_queues(queue1: Iterable, queue2: Iterable) -> deque:
                 ),
             ],
         ),
+        (
+            [
+                (
+                    "Foo",
+                    _append_queues(
+                        _standard_path,
+                        [0, "Actions", 0, "OutputArtifacts", 0, "Name", "Fn::If", 1],
+                    ),
+                    {"IsUsEast1": True},
+                ),
+                (
+                    "Foo",
+                    _append_queues(
+                        _standard_path,
+                        [0, "Actions", 0, "OutputArtifacts", 0, "Name", "Fn::If", 1],
+                    ),
+                    {"IsUsEast1": True},
+                ),
+                (
+                    "Bar",
+                    _append_queues(
+                        _standard_path,
+                        [0, "Actions", 0, "OutputArtifacts", 0, "Name", "Fn::If", 2],
+                    ),
+                    {"IsUsEast1": False},
+                ),
+                (
+                    "Bar",
+                    _append_queues(
+                        _standard_path,
+                        [0, "Actions", 0, "OutputArtifacts", 0, "Name", "Fn::If", 2],
+                    ),
+                    {"IsUsEast1": False},
+                ),
+            ],
+            [],
+        ),
     ],
 )
 def test_validate(instances, expected, rule, validator):
