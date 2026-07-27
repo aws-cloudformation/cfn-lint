@@ -67,6 +67,68 @@ def _append_queues(queue1: Iterable, queue2: Iterable) -> deque:
             ],
             [],
         ),
+        # Issue #4584: Fn::If for OutputArtifacts Name should not be a false positive.
+        # When the validator processes Fn::If branches, it may call the rule twice for
+        # the same resolved value (same path + same conditions). This should not be
+        # treated as a duplicate.
+        (
+            [
+                # First call for SourceGit (Fn::If branch 1)
+                (
+                    "SourceGit",
+                    _append_queues(
+                        _standard_path,
+                        [0, "Actions", 0, "OutputArtifacts", 0, "Name", "Fn::If", 1],
+                    ),
+                    {"IsUsEast1": True},
+                ),
+                # Second call for same SourceGit (validator calls twice)
+                (
+                    "SourceGit",
+                    _append_queues(
+                        _standard_path,
+                        [0, "Actions", 0, "OutputArtifacts", 0, "Name", "Fn::If", 1],
+                    ),
+                    {"IsUsEast1": True},
+                ),
+                # First call for SourceZip (Fn::If branch 2)
+                (
+                    "SourceZip",
+                    _append_queues(
+                        _standard_path,
+                        [0, "Actions", 0, "OutputArtifacts", 0, "Name", "Fn::If", 2],
+                    ),
+                    {"IsUsEast1": False},
+                ),
+                # Second call for same SourceZip (validator calls twice)
+                (
+                    "SourceZip",
+                    _append_queues(
+                        _standard_path,
+                        [0, "Actions", 0, "OutputArtifacts", 0, "Name", "Fn::If", 2],
+                    ),
+                    {"IsUsEast1": False},
+                ),
+                # InputArtifacts with Fn::If
+                (
+                    "SourceGit",
+                    _append_queues(
+                        _standard_path,
+                        [1, "Actions", 0, "InputArtifacts", 0, "Name", "Fn::If", 1],
+                    ),
+                    {"IsUsEast1": True},
+                ),
+                (
+                    "SourceZip",
+                    _append_queues(
+                        _standard_path,
+                        [1, "Actions", 0, "InputArtifacts", 0, "Name", "Fn::If", 2],
+                    ),
+                    {"IsUsEast1": False},
+                ),
+            ],
+            [],  # No errors expected
+        ),
         (
             [
                 (
