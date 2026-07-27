@@ -72,15 +72,29 @@ impl CfnLintRule for E1020 {
         let condition_names: std::collections::HashSet<&str> =
             template.conditions.keys().map(|s| s.as_str()).collect();
 
-        // Walk the AST looking for Ref functions
-        collect_ref_issues(
-            root,
-            &valid_refs,
-            &module_prefixes,
-            &condition_names,
-            false,
-            &mut issues,
-        );
+        // Refs are validated everywhere, but a Ref that lives in an Output value
+        // is attributed to E6101 (the Outputs-value rule) to match Python
+        // cfn-lint, while Refs elsewhere are E1020. Walk the two regions with the
+        // matching rule id; `Outputs` is handled separately from the rest of the
+        // template so the rest keeps reporting E1020.
+        if let Some(root_obj) = root.as_object() {
+            for (section, node) in root_obj.iter() {
+                let rule_id = if section == "Outputs" {
+                    "E6101"
+                } else {
+                    "E1020"
+                };
+                collect_ref_issues(
+                    node,
+                    &valid_refs,
+                    &module_prefixes,
+                    &condition_names,
+                    false,
+                    rule_id,
+                    &mut issues,
+                );
+            }
+        }
         issues
     }
 }
@@ -91,25 +105,26 @@ fn collect_ref_issues(
     module_prefixes: &[String],
     condition_names: &std::collections::HashSet<&str>,
     in_unknown_condition: bool,
+    rule_id: &str,
     issues: &mut Vec<ValidationError>,
 ) {
     match node {
         AstNode::Function(func) if func.name == "Ref" => {
             if let Some(ref_name) = func.args.as_str() {
-                // Skip Refs with dots (e.g. "Resource.Version" - SAM artifact)
-                if ref_name.contains('.') {
-                    return;
-                }
                 // Skip if inside an Fn::If with unknown condition
                 if in_unknown_condition {
                     return;
                 }
+                // A dotted Ref (e.g. `Resource.Attr`) is only legitimate for a
+                // MODULE/Serverless resource output; the `is_module_sub` prefix
+                // check below covers that. Any other dotted Ref is genuinely
+                // invalid and Python reports it, so it is NOT skipped here.
                 let is_module_sub = module_prefixes
                     .iter()
                     .any(|p| ref_name.starts_with(p.as_str()));
                 if !is_module_sub && valid_refs.binary_search(&ref_name).is_err() {
                     issues.push(ValidationError {
-                        rule_id: Some("E1020".to_string()),
+                        rule_id: Some(rule_id.to_string()),
                         message: format!("'{}' is not one of {:?}", ref_name, valid_refs),
                         path: vec![],
                         span: func.span,
@@ -128,6 +143,7 @@ fn collect_ref_issues(
                 module_prefixes,
                 condition_names,
                 in_unknown_condition,
+                rule_id,
                 issues,
             );
         }
@@ -145,6 +161,7 @@ fn collect_ref_issues(
                             module_prefixes,
                             condition_names,
                             in_unknown_condition || cond_unknown,
+                            rule_id,
                             issues,
                         );
                     }
@@ -157,6 +174,7 @@ fn collect_ref_issues(
                 module_prefixes,
                 condition_names,
                 in_unknown_condition,
+                rule_id,
                 issues,
             );
         }
@@ -167,6 +185,7 @@ fn collect_ref_issues(
                 module_prefixes,
                 condition_names,
                 in_unknown_condition,
+                rule_id,
                 issues,
             );
         }
@@ -178,6 +197,7 @@ fn collect_ref_issues(
                     module_prefixes,
                     condition_names,
                     in_unknown_condition,
+                    rule_id,
                     issues,
                 );
             }
@@ -190,6 +210,7 @@ fn collect_ref_issues(
                     module_prefixes,
                     condition_names,
                     in_unknown_condition,
+                    rule_id,
                     issues,
                 );
             }
@@ -272,6 +293,45 @@ Resources:
         assert_eq!(issues.len(), 1);
         assert_eq!(issues[0].rule_id.as_deref(), Some("E1020"));
         assert!(issues[0].message.contains("DoesNotExist"));
+    }
+
+    // A Ref in an Output value is attributed to E6101 (the Outputs-value rule),
+    // matching Python cfn-lint, while a Ref in a resource property is E1020.
+    #[test]
+    fn test_output_ref_is_e6101() {
+        let yaml = r#"
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+Outputs:
+  Out:
+    Value: !Ref DoesNotExist
+"#;
+        let ast = crate::parser::parse(yaml.as_bytes()).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = E1020.validate_template(&tmpl, &ast);
+        assert_eq!(issues.len(), 1);
+        assert_eq!(issues[0].rule_id.as_deref(), Some("E6101"));
+    }
+
+    // A dotted Ref value (`Resource.Attr`) is invalid CloudFormation and is now
+    // reported (previously skipped wholesale). In an Output it surfaces as E6101.
+    #[test]
+    fn test_dotted_ref_in_output_reported() {
+        let yaml = r#"
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+Outputs:
+  Out:
+    Value: !Ref MyBucket.Arn
+"#;
+        let ast = crate::parser::parse(yaml.as_bytes()).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = E1020.validate_template(&tmpl, &ast);
+        assert_eq!(issues.len(), 1);
+        assert_eq!(issues[0].rule_id.as_deref(), Some("E6101"));
+        assert!(issues[0].message.contains("MyBucket.Arn"));
     }
 }
 
