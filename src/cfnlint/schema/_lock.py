@@ -84,7 +84,11 @@ def _acquire_lock_windows(
     while True:
         try:
             # Lock byte 0 with exclusive lock (non-blocking)
-            msvcrt.locking(lock_file.fileno(), msvcrt.LK_NBLCK, 1)
+            msvcrt.locking(  # type: ignore[attr-defined]
+                lock_file.fileno(),
+                msvcrt.LK_NBLCK,  # type: ignore[attr-defined]
+                1,
+            )
             LOGGER.debug("Acquired schema cache lock")
             return
         except OSError:
@@ -102,7 +106,11 @@ def _release_lock(lock_file: IO[str]) -> None:
         import msvcrt
 
         try:
-            msvcrt.locking(lock_file.fileno(), msvcrt.LK_UNLCK, 1)
+            msvcrt.locking(  # type: ignore[attr-defined]
+                lock_file.fileno(),
+                msvcrt.LK_UNLCK,  # type: ignore[attr-defined]
+                1,
+            )
         except OSError:
             pass  # Already unlocked or file closed
     else:
