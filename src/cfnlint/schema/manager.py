@@ -9,7 +9,9 @@ import json
 import logging
 import os
 import re
+import shutil
 import sys
+import tempfile
 import zipfile
 from functools import lru_cache
 from pathlib import Path
@@ -24,6 +26,7 @@ from cfnlint.helpers import (
 )
 from cfnlint.schema._exceptions import ResourceNotFoundError
 from cfnlint.schema._getatts import AttributeDict
+from cfnlint.schema._lock import file_lock
 from cfnlint.schema._schema import Schema
 
 if TYPE_CHECKING:
@@ -298,8 +301,9 @@ class ProviderSchemaManager:
     def update(self, force: bool) -> int:
         """Update schemas from the enhanced schemas repository.
 
-        Writes to the user cache directory. After update, switches
-        to reading from the cache so the fresh schemas are used.
+        Uses file locking to prevent concurrent processes from corrupting the
+        cache. Extracts to a temporary directory and atomically replaces the
+        active cache directories.
 
         Args:
             force (bool): force the schemas to be downloaded
@@ -310,40 +314,75 @@ class ProviderSchemaManager:
             LOGGER.info("Schemas are up to date")
             return 0
 
+        _cache = Path(get_cache_dir())
+        lock_path = _cache / ".update.lock"
+
+        try:
+            with file_lock(lock_path):
+                return self._update_locked(_cache, force)
+        except TimeoutError as e:
+            LOGGER.error("Schema update lock timeout: %s", e)
+            return 2
+        except Exception as e:
+            LOGGER.error("Failed to acquire schema cache lock: %s", e)
+            return 2
+
+    def _update_locked(self, cache_dir: Path, force: bool) -> int:
+        """Perform the actual update while holding the lock.
+
+        Extracts schemas to a temporary directory, then atomically replaces
+        the live providers/ and resources/ directories.
+
+        Args:
+            cache_dir: The cache directory root
+            force: Whether the update was forced
+        Returns:
+            int: exit code (0=success, 2=failure)
+        """
+        # Re-check version under lock in case another process just updated
+        if not force and not url_has_newer_version(_ENHANCED_SCHEMAS_URL):
+            LOGGER.info("Schemas were updated by another process")
+            return 0
+
         try:
             filehandle = get_url_retrieve(_ENHANCED_SCHEMAS_URL, caching=True)
         except Exception as e:
             LOGGER.error("Failed to download enhanced schemas: %s", e)
             return 2
 
-        _cache = Path(get_cache_dir())
-        providers_dir = _cache / "providers"
-        resources_dir = _cache / "resources"
+        providers_dir = cache_dir / "providers"
+        resources_dir = cache_dir / "resources"
 
-        with zipfile.ZipFile(filehandle, "r") as zip_ref:
-            providers_dir.mkdir(parents=True, exist_ok=True)
-            resources_dir.mkdir(parents=True, exist_ok=True)
+        # Extract to a temporary directory, then atomically swap
+        with tempfile.TemporaryDirectory(dir=cache_dir) as tmpdir:
+            tmp_path = Path(tmpdir)
+            tmp_providers = tmp_path / "providers"
+            tmp_resources = tmp_path / "resources"
+            tmp_providers.mkdir()
+            tmp_resources.mkdir()
 
-            for f in providers_dir.glob("*.json"):
-                f.unlink()
-            for f in resources_dir.glob("*.json"):
-                f.unlink()
+            with zipfile.ZipFile(filehandle, "r") as zip_ref:
+                for name in zip_ref.namelist():
+                    if not name.endswith(".json"):
+                        continue
+                    if name.startswith("providers/"):
+                        dest = tmp_providers / Path(name).name
+                        with zip_ref.open(name) as src, open(dest, "wb") as dst:
+                            dst.write(src.read())
+                    elif name.startswith("resources/"):
+                        dest = tmp_resources / Path(name).name
+                        with zip_ref.open(name) as src, open(dest, "wb") as dst:
+                            dst.write(src.read())
 
-            for name in zip_ref.namelist():
-                if not name.endswith(".json"):
-                    continue
-                if name.startswith("providers/"):
-                    dest = providers_dir / Path(name).name
-                    with zip_ref.open(name) as src, open(dest, "wb") as dst:
-                        dst.write(src.read())
-                elif name.startswith("resources/"):
-                    dest = resources_dir / Path(name).name
-                    with zip_ref.open(name) as src, open(dest, "wb") as dst:
-                        dst.write(src.read())
+            # Atomic replacement: remove old, rename new
+            # On POSIX, rename() is atomic if src and dst are on the same filesystem
+            # We use the same parent dir (cache_dir) to guarantee this
+            self._atomic_replace_dir(tmp_providers, providers_dir)
+            self._atomic_replace_dir(tmp_resources, resources_dir)
 
         try:
             version_content = get_url_content(_VERSION_URL)
-            with open(_cache / "version.json", "w", encoding="utf-8") as vf:
+            with open(cache_dir / "version.json", "w", encoding="utf-8") as vf:
                 vf.write(version_content)
         except Exception:
             LOGGER.debug("Could not download version.json")
@@ -353,6 +392,42 @@ class ProviderSchemaManager:
         LOGGER.info("Schemas updated successfully")
         self.reset()
         return 0
+
+    @staticmethod
+    def _atomic_replace_dir(src: Path, dst: Path) -> None:
+        """Atomically replace dst directory with src.
+
+        Renames any existing dst to a backup, renames src to dst,
+        then removes the backup. If rename fails (cross-device),
+        falls back to shutil.move.
+
+        Args:
+            src: Source directory (will be moved)
+            dst: Destination directory (will be replaced)
+        """
+        backup = dst.with_suffix(".bak")
+
+        # Remove any stale backup from a previous failed update
+        if backup.exists():
+            shutil.rmtree(backup, ignore_errors=True)
+
+        # Move existing dst out of the way
+        if dst.exists():
+            try:
+                dst.rename(backup)
+            except OSError:
+                # Cross-device or other issue; use shutil
+                shutil.move(str(dst), str(backup))
+
+        # Move new dir into place
+        try:
+            src.rename(dst)
+        except OSError:
+            shutil.move(str(src), str(dst))
+
+        # Clean up backup
+        if backup.exists():
+            shutil.rmtree(backup, ignore_errors=True)
 
     def patch(self, patch: SchemaPatch, region: str) -> None:
         """Patch the schemas as needed
