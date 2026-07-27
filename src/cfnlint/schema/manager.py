@@ -313,8 +313,10 @@ class ProviderSchemaManager:
         # url_has_newer_version() performs a network HEAD request. URLError is
         # an OSError subclass, so wrap it here — otherwise a network failure
         # would surface later as a misleading lock-acquisition error.
+        # `force` is evaluated first so a --force update bypasses the network
+        # check entirely (matches the short-circuit order in _update_locked).
         try:
-            if not (url_has_newer_version(_ENHANCED_SCHEMAS_URL) or force):
+            if not (force or url_has_newer_version(_ENHANCED_SCHEMAS_URL)):
                 LOGGER.info("Schemas are up to date")
                 return 0
         except OSError as e:

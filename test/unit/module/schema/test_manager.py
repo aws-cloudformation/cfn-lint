@@ -907,12 +907,53 @@ class TestUpdateWithLocking(BaseTestCase):
 
         with tempfile.TemporaryDirectory() as tmpdir:
             mock_cache_dir.return_value = tmpdir
-            result = self.manager.update(force=True)
+            result = self.manager.update(force=False)
 
         self.assertEqual(result, 2)
         logged = " ".join(str(c) for c in mock_logger.error.call_args_list)
         self.assertNotIn("lock", logged.lower())
         self.assertIn("Failed to check schema version", logged)
+
+    @patch("cfnlint.schema.manager.get_url_content")
+    @patch("cfnlint.schema.manager.url_has_newer_version")
+    @patch("cfnlint.schema.manager.get_url_retrieve")
+    @patch("cfnlint.schema.manager.get_cache_dir")
+    def test_update_force_bypasses_version_check(
+        self, mock_cache_dir, mock_get_url, mock_url_newer, mock_get_content
+    ):
+        """force=True downloads without calling the version check at all"""
+        import tempfile
+        import urllib.error
+
+        # Any version-check call would fail; force must bypass it entirely
+        mock_url_newer.side_effect = urllib.error.URLError("network down")
+        mock_get_content.side_effect = urllib.error.URLError("network down")
+
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, "w") as zf:
+            zf.writestr(
+                "providers/us-east-1.json",
+                json.dumps({"AWS::S3::Bucket": "abc123"}),
+            )
+            zf.writestr(
+                "resources/abc123.json",
+                json.dumps({"typeName": "AWS::S3::Bucket", "properties": {}}),
+            )
+        zip_buffer.seek(0)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mock_cache_dir.return_value = tmpdir
+
+            with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as tmp:
+                tmp.write(zip_buffer.getvalue())
+                tmp.flush()
+                mock_get_url.return_value = tmp.name
+
+                result = self.manager.update(force=True)
+
+        self.assertEqual(result, 0)
+        # force must short-circuit — the version check is never invoked
+        mock_url_newer.assert_not_called()
 
     @patch("cfnlint.schema.manager.LOGGER")
     @patch("cfnlint.schema.manager.url_has_newer_version")
