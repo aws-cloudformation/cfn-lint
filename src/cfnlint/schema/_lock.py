@@ -62,7 +62,10 @@ def _acquire_lock_unix(lock_file: IO[str], timeout: float) -> None:
     start = time.monotonic()
     while True:
         try:
-            fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            fcntl.flock(  # type: ignore[attr-defined]
+                lock_file.fileno(),
+                fcntl.LOCK_EX | fcntl.LOCK_NB,  # type: ignore[attr-defined]
+            )
             LOGGER.debug("Acquired schema cache lock")
             return
         except (BlockingIOError, OSError):
@@ -117,7 +120,10 @@ def _release_lock(lock_file: IO[str]) -> None:
         import fcntl
 
         try:
-            fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
+            fcntl.flock(  # type: ignore[attr-defined]
+                lock_file.fileno(),
+                fcntl.LOCK_UN,  # type: ignore[attr-defined]
+            )
         except OSError:  # pragma: no cover
             pass  # Already unlocked or file closed
     LOGGER.debug("Released schema cache lock")
