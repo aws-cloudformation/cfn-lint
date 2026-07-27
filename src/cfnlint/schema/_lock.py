@@ -50,7 +50,7 @@ def file_lock(lock_path: Path, timeout: float = 300.0) -> Iterator[IO[str]]:
 
 def _acquire_lock(lock_file: IO[str], timeout: float) -> None:
     """Platform-specific lock acquisition with retry loop."""
-    if sys.platform == "win32":
+    if sys.platform == "win32":  # pragma: no cover
         _acquire_lock_windows(lock_file, timeout)
     else:
         _acquire_lock_unix(lock_file, timeout)
@@ -75,7 +75,7 @@ def _acquire_lock_unix(lock_file: IO[str], timeout: float) -> None:
             time.sleep(0.1)
 
 
-def _acquire_lock_windows(lock_file: IO[str], timeout: float) -> None:
+def _acquire_lock_windows(lock_file: IO[str], timeout: float) -> None:  # pragma: no cover
     """Acquire lock on Windows using msvcrt.locking()."""
     import msvcrt
 
@@ -97,7 +97,7 @@ def _acquire_lock_windows(lock_file: IO[str], timeout: float) -> None:
 
 def _release_lock(lock_file: IO[str]) -> None:
     """Platform-specific lock release."""
-    if sys.platform == "win32":
+    if sys.platform == "win32":  # pragma: no cover
         import msvcrt
 
         try:
@@ -109,6 +109,6 @@ def _release_lock(lock_file: IO[str]) -> None:
 
         try:
             fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
-        except OSError:
+        except OSError:  # pragma: no cover
             pass  # Already unlocked or file closed
     LOGGER.debug("Released schema cache lock")
