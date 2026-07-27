@@ -310,9 +310,16 @@ class ProviderSchemaManager:
         Returns:
             int: exit code (0=success, 2=failure)
         """
-        if not (url_has_newer_version(_ENHANCED_SCHEMAS_URL) or force):
-            LOGGER.info("Schemas are up to date")
-            return 0
+        # url_has_newer_version() performs a network HEAD request. URLError is
+        # an OSError subclass, so wrap it here — otherwise a network failure
+        # would surface later as a misleading lock-acquisition error.
+        try:
+            if not (url_has_newer_version(_ENHANCED_SCHEMAS_URL) or force):
+                LOGGER.info("Schemas are up to date")
+                return 0
+        except OSError as e:
+            LOGGER.error("Failed to check schema version: %s", e)
+            return 2
 
         _cache = Path(get_cache_dir())
         lock_path = _cache / ".update.lock"
@@ -343,10 +350,18 @@ class ProviderSchemaManager:
         Returns:
             int: exit code (0=success, 2=failure)
         """
-        # Re-check version under lock in case another process just updated
-        if not force and not url_has_newer_version(_ENHANCED_SCHEMAS_URL):
-            LOGGER.info("Schemas were updated by another process")
-            return 0
+        # Re-check version under lock in case another process just updated.
+        # url_has_newer_version() makes a network request; URLError subclasses
+        # OSError, so handle it here rather than letting it propagate to the
+        # caller's lock-acquisition handler. This keeps the invariant that
+        # _update_locked never raises — it always returns an exit code.
+        try:
+            if not force and not url_has_newer_version(_ENHANCED_SCHEMAS_URL):
+                LOGGER.info("Schemas were updated by another process")
+                return 0
+        except OSError as e:
+            LOGGER.error("Failed to check schema version: %s", e)
+            return 2
 
         try:
             filehandle = get_url_retrieve(_ENHANCED_SCHEMAS_URL, caching=True)

@@ -893,6 +893,49 @@ class TestUpdateWithLocking(BaseTestCase):
         # Should not have tried to download
         mock_get_url.assert_not_called()
 
+    @patch("cfnlint.schema.manager.LOGGER")
+    @patch("cfnlint.schema.manager.url_has_newer_version")
+    @patch("cfnlint.schema.manager.get_cache_dir")
+    def test_update_initial_version_check_network_error(
+        self, mock_cache_dir, mock_url_newer, mock_logger
+    ):
+        """A network error on the initial version check is not a lock error"""
+        import tempfile
+        import urllib.error
+
+        mock_url_newer.side_effect = urllib.error.URLError("network down")
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mock_cache_dir.return_value = tmpdir
+            result = self.manager.update(force=True)
+
+        self.assertEqual(result, 2)
+        logged = " ".join(str(c) for c in mock_logger.error.call_args_list)
+        self.assertNotIn("lock", logged.lower())
+        self.assertIn("Failed to check schema version", logged)
+
+    @patch("cfnlint.schema.manager.LOGGER")
+    @patch("cfnlint.schema.manager.url_has_newer_version")
+    @patch("cfnlint.schema.manager.get_cache_dir")
+    def test_update_recheck_version_network_error_not_labeled_as_lock(
+        self, mock_cache_dir, mock_url_newer, mock_logger
+    ):
+        """A network error on the under-lock version re-check is not a lock error"""
+        import tempfile
+        import urllib.error
+
+        # First check (pre-lock) succeeds; re-check under lock raises URLError
+        mock_url_newer.side_effect = [True, urllib.error.URLError("network down")]
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mock_cache_dir.return_value = tmpdir
+            result = self.manager.update(force=False)
+
+        self.assertEqual(result, 2)
+        logged = " ".join(str(c) for c in mock_logger.error.call_args_list)
+        self.assertNotIn("lock", logged.lower())
+        self.assertIn("Failed to check schema version", logged)
+
 
 class TestConcurrentUpdate(BaseTestCase):
     """Test concurrent update() calls don't corrupt the cache"""
