@@ -764,13 +764,14 @@ class TestUpdateWithLocking(BaseTestCase):
             self.assertEqual(lock_path, Path(tmpdir) / ".update.lock")
             mock_update_locked.assert_called_once()
 
+    @patch("cfnlint.schema.manager.LOGGER")
     @patch("cfnlint.schema.manager.file_lock")
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_cache_dir")
     def test_update_handles_lock_timeout(
-        self, mock_cache_dir, mock_url_newer, mock_file_lock
+        self, mock_cache_dir, mock_url_newer, mock_file_lock, mock_logger
     ):
-        """update() returns error code when lock times out"""
+        """update() returns 2 and logs a timeout-specific message on lock timeout"""
         import tempfile
 
         mock_url_newer.return_value = True
@@ -781,14 +782,17 @@ class TestUpdateWithLocking(BaseTestCase):
             result = self.manager.update(force=True)
 
         self.assertEqual(result, 2)
+        logged = " ".join(str(c) for c in mock_logger.error.call_args_list)
+        self.assertIn("Timed out waiting", logged)
 
+    @patch("cfnlint.schema.manager.LOGGER")
     @patch("cfnlint.schema.manager.file_lock")
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_cache_dir")
     def test_update_handles_lock_oserror(
-        self, mock_cache_dir, mock_url_newer, mock_file_lock
+        self, mock_cache_dir, mock_url_newer, mock_file_lock, mock_logger
     ):
-        """update() returns error code on generic lock failure"""
+        """update() returns 2 and logs a lock-acquisition message on OSError"""
         import tempfile
 
         mock_url_newer.return_value = True
@@ -799,6 +803,74 @@ class TestUpdateWithLocking(BaseTestCase):
             result = self.manager.update(force=True)
 
         self.assertEqual(result, 2)
+        logged = " ".join(str(c) for c in mock_logger.error.call_args_list)
+        self.assertIn("Failed to acquire schema cache lock", logged)
+
+    @patch("cfnlint.schema.manager.LOGGER")
+    @patch("cfnlint.schema.manager.url_has_newer_version")
+    @patch("cfnlint.schema.manager.get_url_retrieve")
+    @patch("cfnlint.schema.manager.get_cache_dir")
+    def test_update_extract_failure_not_labeled_as_lock_error(
+        self, mock_cache_dir, mock_get_url, mock_url_newer, mock_logger
+    ):
+        """A corrupt download (BadZipFile) logs an extraction error, not a lock error"""
+        import tempfile
+        from pathlib import Path
+
+        mock_url_newer.return_value = True
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mock_cache_dir.return_value = tmpdir
+
+            # Write a non-zip file to trigger BadZipFile during extraction
+            bad_file = Path(tmpdir) / "corrupt.zip"
+            bad_file.write_text("this is not a zip file")
+            mock_get_url.return_value = str(bad_file)
+
+            result = self.manager.update(force=True)
+
+        self.assertEqual(result, 2)
+        logged = " ".join(str(c) for c in mock_logger.error.call_args_list)
+        # Must NOT be mislabeled as a lock failure
+        self.assertNotIn("lock", logged.lower())
+        self.assertIn("extract and install", logged)
+
+    @patch("cfnlint.schema.manager.LOGGER")
+    @patch("cfnlint.schema.manager.ProviderSchemaManager._atomic_replace_dir")
+    @patch("cfnlint.schema.manager.url_has_newer_version")
+    @patch("cfnlint.schema.manager.get_url_retrieve")
+    @patch("cfnlint.schema.manager.get_cache_dir")
+    def test_update_atomic_replace_failure_not_labeled_as_lock_error(
+        self, mock_cache_dir, mock_get_url, mock_url_newer, mock_replace, mock_logger
+    ):
+        """An OSError during atomic replace logs an install error, not a lock error"""
+        import tempfile
+
+        mock_url_newer.return_value = True
+        mock_replace.side_effect = OSError("Disk full")
+
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, "w") as zf:
+            zf.writestr(
+                "providers/us-east-1.json",
+                json.dumps({"AWS::S3::Bucket": "abc123"}),
+            )
+        zip_buffer.seek(0)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mock_cache_dir.return_value = tmpdir
+
+            with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as tmp:
+                tmp.write(zip_buffer.getvalue())
+                tmp.flush()
+                mock_get_url.return_value = tmp.name
+
+                result = self.manager.update(force=True)
+
+        self.assertEqual(result, 2)
+        logged = " ".join(str(c) for c in mock_logger.error.call_args_list)
+        self.assertNotIn("lock", logged.lower())
+        self.assertIn("extract and install", logged)
 
     @patch("cfnlint.schema.manager.get_url_content")
     @patch("cfnlint.schema.manager.url_has_newer_version")

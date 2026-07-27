@@ -321,10 +321,14 @@ class ProviderSchemaManager:
             with file_lock(lock_path):
                 return self._update_locked(_cache, force)
         except TimeoutError as e:
-            LOGGER.error("Schema update lock timeout: %s", e)
+            LOGGER.error("Timed out waiting for schema cache lock: %s", e)
             return 2
-        except Exception as e:
+        except OSError as e:
+            # Raised by file_lock while creating/locking the lock file
             LOGGER.error("Failed to acquire schema cache lock: %s", e)
+            return 2
+        except Exception as e:  # pragma: no cover
+            LOGGER.error("Schema update failed: %s", e)
             return 2
 
     def _update_locked(self, cache_dir: Path, force: bool) -> int:
@@ -354,31 +358,35 @@ class ProviderSchemaManager:
         resources_dir = cache_dir / "resources"
 
         # Extract to a temporary directory, then atomically swap
-        with tempfile.TemporaryDirectory(dir=cache_dir) as tmpdir:
-            tmp_path = Path(tmpdir)
-            tmp_providers = tmp_path / "providers"
-            tmp_resources = tmp_path / "resources"
-            tmp_providers.mkdir()
-            tmp_resources.mkdir()
+        try:
+            with tempfile.TemporaryDirectory(dir=cache_dir) as tmpdir:
+                tmp_path = Path(tmpdir)
+                tmp_providers = tmp_path / "providers"
+                tmp_resources = tmp_path / "resources"
+                tmp_providers.mkdir()
+                tmp_resources.mkdir()
 
-            with zipfile.ZipFile(filehandle, "r") as zip_ref:
-                for name in zip_ref.namelist():
-                    if not name.endswith(".json"):
-                        continue
-                    if name.startswith("providers/"):
-                        dest = tmp_providers / Path(name).name
-                        with zip_ref.open(name) as src, open(dest, "wb") as dst:
-                            dst.write(src.read())
-                    elif name.startswith("resources/"):
-                        dest = tmp_resources / Path(name).name
-                        with zip_ref.open(name) as src, open(dest, "wb") as dst:
-                            dst.write(src.read())
+                with zipfile.ZipFile(filehandle, "r") as zip_ref:
+                    for name in zip_ref.namelist():
+                        if not name.endswith(".json"):
+                            continue
+                        if name.startswith("providers/"):
+                            dest = tmp_providers / Path(name).name
+                            with zip_ref.open(name) as src, open(dest, "wb") as dst:
+                                dst.write(src.read())
+                        elif name.startswith("resources/"):
+                            dest = tmp_resources / Path(name).name
+                            with zip_ref.open(name) as src, open(dest, "wb") as dst:
+                                dst.write(src.read())
 
-            # Atomic replacement: remove old, rename new
-            # On POSIX, rename() is atomic if src and dst are on the same filesystem
-            # We use the same parent dir (cache_dir) to guarantee this
-            self._atomic_replace_dir(tmp_providers, providers_dir)
-            self._atomic_replace_dir(tmp_resources, resources_dir)
+                # Atomic replacement: remove old, rename new. On POSIX, rename()
+                # is atomic when src and dst share a filesystem, which is
+                # guaranteed here by extracting under the same cache_dir.
+                self._atomic_replace_dir(tmp_providers, providers_dir)
+                self._atomic_replace_dir(tmp_resources, resources_dir)
+        except (OSError, zipfile.BadZipFile) as e:
+            LOGGER.error("Failed to extract and install schema cache: %s", e)
+            return 2
 
         try:
             version_content = get_url_content(_VERSION_URL)
