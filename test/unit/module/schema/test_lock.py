@@ -105,8 +105,6 @@ class TestFileLockUnixSpecific(BaseTestCase):
 
     def test_lock_works_on_current_platform(self):
         """Basic lock/unlock works on the current platform"""
-        import sys
-
         with tempfile.TemporaryDirectory() as tmpdir:
             lock_path = Path(tmpdir) / "test.lock"
 

@@ -8,7 +8,6 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 import logging
-import os
 import sys
 import time
 from contextlib import contextmanager
@@ -75,7 +74,9 @@ def _acquire_lock_unix(lock_file: IO[str], timeout: float) -> None:
             time.sleep(0.1)
 
 
-def _acquire_lock_windows(lock_file: IO[str], timeout: float) -> None:  # pragma: no cover
+def _acquire_lock_windows(
+    lock_file: IO[str], timeout: float
+) -> None:  # pragma: no cover
     """Acquire lock on Windows using msvcrt.locking()."""
     import msvcrt
 

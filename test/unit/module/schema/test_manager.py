@@ -716,7 +716,9 @@ class TestAtomicDirectoryReplace(BaseTestCase):
 
             # Force all renames to fail
             with patch.object(Path, "rename", side_effect=OSError("Cross-device")):
-                with patch("cfnlint.schema.manager.shutil.move", side_effect=tracking_move):
+                with patch(
+                    "cfnlint.schema.manager.shutil.move", side_effect=tracking_move
+                ):
                     ProviderSchemaManager._atomic_replace_dir(src, dst)
 
             # Both moves should have been called via shutil
@@ -735,9 +737,7 @@ class TestUpdateWithLocking(BaseTestCase):
     @patch("cfnlint.schema.manager.file_lock")
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_cache_dir")
-    def test_update_acquires_lock(
-        self, mock_cache_dir, mock_url_newer, mock_file_lock
-    ):
+    def test_update_acquires_lock(self, mock_cache_dir, mock_url_newer, mock_file_lock):
         """update() acquires file lock before modifying cache"""
         import tempfile
         from pathlib import Path
@@ -745,7 +745,9 @@ class TestUpdateWithLocking(BaseTestCase):
 
         mock_url_newer.return_value = True
         mock_lock_context = MagicMock()
-        mock_file_lock.return_value.__enter__ = MagicMock(return_value=mock_lock_context)
+        mock_file_lock.return_value.__enter__ = MagicMock(
+            return_value=mock_lock_context
+        )
         mock_file_lock.return_value.__exit__ = MagicMock(return_value=False)
 
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -805,7 +807,7 @@ class TestUpdateWithLocking(BaseTestCase):
     def test_update_rechecks_version_under_lock(
         self, mock_cache_dir, mock_get_url, mock_url_newer, mock_get_content
     ):
-        """update() re-checks version after acquiring lock (another process may have updated)"""
+        """update() re-checks version under lock (another process may have updated)"""
         import tempfile
 
         # First check returns True (needs update), second check under lock returns False
@@ -963,7 +965,9 @@ class TestConcurrentUpdate(BaseTestCase):
                                 content = provider_file.read_text()
                                 # Content should be valid JSON (not partial)
                                 data = json.loads(content)
-                                read_results.append((reader_id, "ok", list(data.keys())))
+                                read_results.append(
+                                    (reader_id, "ok", list(data.keys()))
+                                )
                             time.sleep(0.01)
                     except json.JSONDecodeError as e:
                         read_errors.append((reader_id, "json_error", str(e)))
@@ -974,7 +978,9 @@ class TestConcurrentUpdate(BaseTestCase):
                         read_errors.append((reader_id, "error", str(e)))
 
                 threads = [threading.Thread(target=updater)]
-                threads += [threading.Thread(target=reader, args=(i,)) for i in range(3)]
+                threads += [
+                    threading.Thread(target=reader, args=(i,)) for i in range(3)
+                ]
 
                 for t in threads:
                     t.start()
