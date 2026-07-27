@@ -30,7 +30,7 @@ class PipelineArtifactNames(CfnLintKeyword):
                 "Resources/AWS::CodePipeline::Pipeline/Properties/Stages/*/Actions/*/OutputArtifacts/*/Name",
             ],
         )
-        self._output_artifact_names: dict[str, list[tuple[str, dict]]] = {}
+        self._output_artifact_names: dict[str, list[tuple[str, dict, tuple]]] = {}
 
     def initialize(self, cfn):
         self._output_artifact_names = {}
@@ -50,11 +50,24 @@ class PipelineArtifactNames(CfnLintKeyword):
             self._output_artifact_names[resource_name] = []
 
         if "OutputArtifacts" in validator.context.path.path:
-            for output_name, output_condition in self._output_artifact_names[
-                resource_name
-            ]:
+            current_status = validator.context.conditions.status
+            current_path = tuple(validator.context.path.path)
+
+            for (
+                output_name,
+                output_condition,
+                output_path,
+            ) in self._output_artifact_names[resource_name]:
                 if output_name != instance:
                     continue
+
+                # Skip if this is the exact same path with the same conditions.
+                # This happens when the validator processes the same Fn::If branch
+                # multiple times (once per scenario iteration). We only want to
+                # flag duplicates from different paths (i.e., different actions).
+                if output_path == current_path and output_condition == current_status:
+                    return
+
                 try:
                     validator.evolve(
                         context=validator.context.evolve(
@@ -72,10 +85,10 @@ class PipelineArtifactNames(CfnLintKeyword):
                     pass
 
             self._output_artifact_names[resource_name].append(
-                (instance, validator.context.conditions.status)
+                (instance, current_status, current_path)
             )
         elif "InputArtifacts" in validator.context.path.path:
-            for output_name, output_condition in self._output_artifact_names[
+            for output_name, output_condition, _ in self._output_artifact_names[
                 resource_name
             ]:
                 if output_name != instance:
