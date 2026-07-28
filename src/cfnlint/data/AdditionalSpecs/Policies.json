@@ -7140,6 +7140,11 @@
     ]
    },
    "putaccountsettings": {},
+   "putcomplianceinquiryfeedback": {
+    "Resources": [
+     "compliance-inquiry"
+    ]
+   },
    "tagresource": {
     "Resources": [
      "compliance-inquiry"
@@ -11898,6 +11903,11 @@
  },
  "bedrock-agentcore": {
   "Actions": {
+   "adddatasetexamples": {
+    "Resources": [
+     "dataset"
+    ]
+   },
    "allowvendedlogdeliveryforresource": {
     "Resources": [
      "memory",
@@ -11952,6 +11962,12 @@
    "createbrowserprofile": {},
    "createcodeinterpreter": {},
    "createconfigurationbundle": {},
+   "createdataset": {},
+   "createdatasetversion": {
+    "Resources": [
+     "dataset"
+    ]
+   },
    "createevaluator": {},
    "createevent": {
     "Resources": [
@@ -12068,6 +12084,16 @@
    "deleteconfigurationbundle": {
     "Resources": [
      "configuration-bundle"
+    ]
+   },
+   "deletedataset": {
+    "Resources": [
+     "dataset"
+    ]
+   },
+   "deletedatasetexamples": {
+    "Resources": [
+     "dataset"
     ]
    },
    "deleteevaluator": {
@@ -12281,6 +12307,11 @@
    "getconfigurationbundleversion": {
     "Resources": [
      "configuration-bundle"
+    ]
+   },
+   "getdataset": {
+    "Resources": [
+     "dataset"
     ]
    },
    "getevaluator": {
@@ -12573,6 +12604,17 @@
    "listconfigurationbundleversions": {
     "Resources": [
      "configuration-bundle"
+    ]
+   },
+   "listdatasetexamples": {
+    "Resources": [
+     "dataset"
+    ]
+   },
+   "listdatasets": {},
+   "listdatasetversions": {
+    "Resources": [
+     "dataset"
     ]
    },
    "listevaluators": {},
@@ -12883,6 +12925,16 @@
      "configuration-bundle"
     ]
    },
+   "updatedataset": {
+    "Resources": [
+     "dataset"
+    ]
+   },
+   "updatedatasetexamples": {
+    "Resources": [
+     "dataset"
+    ]
+   },
    "updateevaluator": {
     "Resources": [
      "evaluator"
@@ -13041,6 +13093,14 @@
    "configuration-bundle": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:configuration-bundle/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "dataset": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:dataset/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -24421,6 +24481,11 @@
      "agent-status"
     ]
    },
+   "describeattachedfilesconfiguration": {
+    "Resources": [
+     "instance"
+    ]
+   },
    "describeauthenticationprofile": {
     "Resources": [
      "authentication-profile"
@@ -24804,6 +24869,11 @@
    "listassociatedcontacts": {
     "Resources": [
      "contact"
+    ]
+   },
+   "listattachedfilesconfigurations": {
+    "Resources": [
+     "instance"
     ]
    },
    "listauthenticationprofiles": {
@@ -25519,6 +25589,11 @@
      "agent-status"
     ]
    },
+   "updateattachedfilesconfiguration": {
+    "Resources": [
+     "instance"
+    ]
+   },
    "updateauthenticationprofile": {
     "Resources": [
      "authentication-profile"
@@ -25865,6 +25940,9 @@
    "authentication-profile": {
     "ARNFormats": [
      "arn:${Partition}:connect:${Region}:${Account}:instance/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "aws-managed-view": {
@@ -25875,6 +25953,9 @@
    "contact": {
     "ARNFormats": [
      "arn:${Partition}:connect:${Region}:${Account}:instance/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "contact-evaluation": {
@@ -27685,6 +27766,7 @@
    "getnotebook": {},
    "getnotebookcompute": {},
    "getnotebookexport": {},
+   "getnotebookrun": {},
    "getproject": {},
    "getprojectprofile": {},
    "getrule": {},
@@ -27728,6 +27810,7 @@
     ]
    },
    "listmetadatagenerationruns": {},
+   "listnotebookruns": {},
    "listnotebooks": {},
    "listnotifications": {},
    "listpolicygrants": {},
@@ -27781,10 +27864,12 @@
    "startnotebookcompute": {},
    "startnotebookexport": {},
    "startnotebookimport": {},
+   "startnotebookrun": {},
    "startnotebooksync": {},
    "stopcompute": {},
    "stopmetadatagenerationrun": {},
    "stopnotebookcompute": {},
+   "stopnotebookrun": {},
    "tagresource": {
     "Resources": [
      "domain"
@@ -74168,6 +74253,11 @@
     ]
    },
    "putsellingsystemsettings": {},
+   "querydataset": {
+    "Resources": [
+     "Dataset"
+    ]
+   },
    "recallbenefitapplication": {
     "Resources": [
      "BenefitApplication"
@@ -74255,6 +74345,7 @@
     "Resources": [
      "BenefitApplication",
      "ChannelHandshake",
+     "Dataset",
      "MarketplaceRevenueShare",
      "Opportunity",
      "Partner",
@@ -74268,6 +74359,7 @@
     "Resources": [
      "BenefitApplication",
      "ChannelHandshake",
+     "Dataset",
      "MarketplaceRevenueShare",
      "Opportunity",
      "Partner",
@@ -74360,6 +74452,14 @@
    "dashboard": {
     "ARNFormats": [
      "arn:${Partition}:partnercentral::${Account}:catalog/.*"
+    ]
+   },
+   "dataset": {
+    "ARNFormats": [
+     "arn:${Partition}:partnercentral::${Account}:catalog/AWS/ReportingData/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "engagement": {
@@ -78917,6 +79017,11 @@
      "analysis"
     ]
    },
+   "deleteapp": {
+    "Resources": [
+     "app"
+    ]
+   },
    "deletebrand": {
     "Resources": [
      "brand"
@@ -79111,6 +79216,16 @@
    "describeanalysispermissions": {
     "Resources": [
      "analysis"
+    ]
+   },
+   "describeapp": {
+    "Resources": [
+     "app"
+    ]
+   },
+   "describeapppermissions": {
+    "Resources": [
+     "app"
     ]
    },
    "describeassetbundleexportjob": {
@@ -79413,6 +79528,11 @@
      "analysis"
     ]
    },
+   "listapps": {
+    "Resources": [
+     "app"
+    ]
+   },
    "listassetbundleexportjobs": {
     "Resources": [
      "assetBundleExportJob"
@@ -79518,6 +79638,7 @@
     "Resources": [
      "actionconnector",
      "analysis",
+     "app",
      "brand",
      "customization",
      "custompermissions",
@@ -79631,6 +79752,11 @@
      "analysis"
     ]
    },
+   "searchapps": {
+    "Resources": [
+     "app"
+    ]
+   },
    "searchautomationgroups": {},
    "searchdashboards": {
     "Resources": [
@@ -79702,6 +79828,7 @@
     "Resources": [
      "actionconnector",
      "analysis",
+     "app",
      "brand",
      "customization",
      "custompermissions",
@@ -79731,6 +79858,7 @@
     "Resources": [
      "actionconnector",
      "analysis",
+     "app",
      "brand",
      "customization",
      "custompermissions",
@@ -79788,6 +79916,11 @@
     ]
    },
    "updateapplicationwithtokenexchangegrant": {},
+   "updateapppermissions": {
+    "Resources": [
+     "app"
+    ]
+   },
    "updateautomationgrouppermissions": {
     "Resources": [
      "automationGroup"
@@ -80038,6 +80171,14 @@
      "aws:ResourceTag/${TagKey}"
     ]
    },
+   "app": {
+    "ARNFormats": [
+     "arn:${Partition}:quicksight:${Region}:${Account}:app/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "approvalpolicy": {
     "ARNFormats": [
      "arn:${Partition}:quicksight:${Region}:${Account}:approval-policy/.*"
@@ -80182,9 +80323,6 @@
    "limitsprofile": {
     "ARNFormats": [
      "arn:${Partition}:quicksight:${Region}:${Account}:limits-profile/.*"
-    ],
-    "ConditionKeys": [
-     "aws:ResourceTag/${TagKey}"
     ]
    },
    "namespace": {
@@ -82536,6 +82674,7 @@
      "workgroup"
     ]
    },
+   "listsessions": {},
    "liststatements": {},
    "listtables": {
     "Resources": [
