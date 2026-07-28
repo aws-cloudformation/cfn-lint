@@ -46,6 +46,38 @@ def rule():
         ),
         (
             {
+                "IpProtocol": "icmpv6",
+                "FromPort": -1,
+                "ToPort": -1,
+            },
+            [],
+        ),
+        (
+            {
+                "IpProtocol": "ICMPv6",
+                "FromPort": 8,
+                "ToPort": 0,
+            },
+            [],
+        ),
+        (
+            {
+                "IpProtocol": 58,
+                "FromPort": -1,
+                "ToPort": -1,
+            },
+            [],
+        ),
+        (
+            {
+                "IpProtocol": "58",
+                "FromPort": -1,
+                "ToPort": -1,
+            },
+            [],
+        ),
+        (
+            {
                 "IpProtocol": -1,
                 "FromPort": -1,
                 "ToPort": -1,
