@@ -27,7 +27,13 @@ class DeprecatedRuntimeUpdate(CfnLintKeyword):
 
     def __init__(self):
         """Init"""
-        super().__init__(["Resources/AWS::Lambda::Function/Properties/Runtime"])
+        super().__init__(
+            [
+                "Resources/AWS::Lambda::Function/Properties/Runtime",
+                "Resources/AWS::Serverless::Function/Properties/Runtime",
+                "Globals/Function/Runtime",
+            ]
+        )
         self.deprecated_runtimes = load_resource(
             AdditionalSpecs, "LmbdRuntimeLifecycle.json"
         )

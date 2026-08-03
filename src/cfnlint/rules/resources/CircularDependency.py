@@ -31,6 +31,16 @@ class CircularDependency(CloudFormationLintRule):
                 cfn.graph.graph.nodes[source].get("type") == "Resource"
                 and cfn.graph.graph.nodes[target].get("type") == "Resource"
             ):
+                # SAM resources get split into multiple CFN resources during
+                # transform, which can break apparent cycles. Skip cycles
+                # where either resource is a SAM type.
+                source_rt = cfn.graph.graph.nodes[source].get("resource_type", "")
+                target_rt = cfn.graph.graph.nodes[target].get("resource_type", "")
+                if source_rt.startswith("AWS::Serverless::") or target_rt.startswith(
+                    "AWS::Serverless::"
+                ):
+                    continue
+
                 message = (
                     f"Circular Dependencies for resource {source}. Circular dependency"
                     f" with [{target}]"
