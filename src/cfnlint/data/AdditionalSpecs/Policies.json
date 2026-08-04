@@ -658,6 +658,11 @@
      "accountInOrganization"
     ]
    },
+   "getprimaryemailupdatestatus": {
+    "Resources": [
+     "accountInOrganization"
+    ]
+   },
    "getregionoptstatus": {
     "Resources": [
      "account",
@@ -1551,6 +1556,11 @@
      "aws:ResourceTag/${TagKey}"
     ]
    },
+   "asset": {
+    "ARNFormats": [
+     "arn:${Partition}:aidevops:${Region}:${Account}:agentspace/.*"
+    ]
+   },
    "associations": {
     "ARNFormats": [
      "arn:${Partition}:aidevops:${Region}:${Account}:agentspace/.*"
@@ -1570,6 +1580,11 @@
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "trigger": {
+    "ARNFormats": [
+     "arn:${Partition}:aidevops:${Region}:${Account}:agentspace/.*"
     ]
    }
   }
@@ -10456,7 +10471,13 @@
      "foundation-model"
     ]
    },
-   "createadvancedpromptoptimizationjob": {},
+   "createadvancedpromptoptimizationjob": {
+    "Resources": [
+     "application-inference-profile",
+     "foundation-model",
+     "inference-profile"
+    ]
+   },
    "createagent": {},
    "createagentactiongroup": {
     "Resources": [
@@ -12636,6 +12657,7 @@
    },
    "listharnessendpoints": {},
    "listharnesses": {},
+   "listharnessversions": {},
    "listmemories": {},
    "listmemoryextractionjobs": {
     "Resources": [
@@ -13475,6 +13497,28 @@
    }
   }
  },
+ "bedrock-websearch": {
+  "Actions": {
+   "externalwebaccess": {},
+   "invokefetch": {
+    "Resources": [
+     "tool"
+    ]
+   },
+   "invokesearch": {
+    "Resources": [
+     "tool"
+    ]
+   }
+  },
+  "Resources": {
+   "tool": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-websearch:${Region}:aws:tool/.*"
+    ]
+   }
+  }
+ },
  "billing": {
   "Actions": {
    "associatesourceviews": {
@@ -13527,6 +13571,8 @@
    "getcontractinformation": {},
    "getcreditallocationhistory": {},
    "getcredits": {},
+   "getenterprisesupportchargesummary": {},
+   "getenterprisesupportcontractdetails": {},
    "getiamaccesspreference": {},
    "getresourcepolicy": {
     "Resources": [
@@ -13535,6 +13581,7 @@
    },
    "getsellerofrecord": {},
    "listbillingviews": {},
+   "listenterprisesupportlinkedaccountcharges": {},
    "listsourceviewsforbillingview": {
     "Resources": [
      "billingview"
@@ -29744,6 +29791,11 @@
      "dxlag"
     ]
    },
+   "listvirtualinterfaceroutes": {
+    "Resources": [
+     "dxvif"
+    ]
+   },
    "listvirtualinterfacetesthistory": {
     "Resources": [
      "dxvif"
@@ -32886,7 +32938,6 @@
    },
    "createroute": {
     "Resources": [
-     "instance",
      "route-table"
     ]
    },
@@ -35383,7 +35434,6 @@
    },
    "replaceroute": {
     "Resources": [
-     "instance",
      "route-table"
     ]
    },
@@ -41681,6 +41731,11 @@
      "domain"
     ]
    },
+   "getmigration": {
+    "Resources": [
+     "application"
+    ]
+   },
    "getpackageversionhistory": {},
    "getupgradehistory": {
     "Resources": [
@@ -41733,6 +41788,11 @@
     ]
    },
    "listinstancetypedetails": {},
+   "listmigrations": {
+    "Resources": [
+     "application"
+    ]
+   },
    "listpackagesfordomain": {
     "Resources": [
      "domain"
@@ -41794,6 +41854,11 @@
    "startelasticsearchservicesoftwareupdate": {
     "Resources": [
      "domain"
+    ]
+   },
+   "startmigration": {
+    "Resources": [
+     "application"
     ]
    },
    "startservicesoftwareupdate": {
@@ -44654,6 +44719,7 @@
    "createvolume": {
     "Resources": [
      "snapshot",
+     "storage-virtual-machine",
      "volume"
     ]
    },
@@ -45465,6 +45531,12 @@
      "stream group"
     ]
    },
+   "createstreamurl": {
+    "Resources": [
+     "application",
+     "stream group"
+    ]
+   },
    "deleteapplication": {
     "Resources": [
      "application"
@@ -45501,7 +45573,17 @@
      "stream group"
     ]
    },
+   "getstreamurl": {
+    "Resources": [
+     "stream group"
+    ]
+   },
    "listapplications": {},
+   "listapplicationshadercaches": {
+    "Resources": [
+     "application"
+    ]
+   },
    "liststreamgroups": {},
    "liststreamsessions": {
     "Resources": [
@@ -45509,6 +45591,7 @@
     ]
    },
    "liststreamsessionsbyaccount": {},
+   "liststreamurls": {},
    "listtagsforresource": {
     "Resources": [
      "application",
@@ -45516,6 +45599,11 @@
     ]
    },
    "removestreamgrouplocations": {
+    "Resources": [
+     "stream group"
+    ]
+   },
+   "revokestreamurl": {
     "Resources": [
      "stream group"
     ]
@@ -52345,6 +52433,8 @@
    "listinvoicesummaries": {},
    "listinvoiceunits": {},
    "listprocurementportalpreferences": {},
+   "listprocurementportals": {},
+   "listprocurementportalsuppliers": {},
    "listtagsforresource": {
     "Resources": [
      "invoice-unit",
@@ -55009,9 +55099,27 @@
      "time-series"
     ]
    },
+   "batchassociatedatasegmentstodataset": {
+    "Resources": [
+     "dataset",
+     "workspace"
+    ]
+   },
    "batchassociateprojectassets": {
     "Resources": [
      "project"
+    ]
+   },
+   "batchdeletedatasetdatasegments": {
+    "Resources": [
+     "dataset",
+     "workspace"
+    ]
+   },
+   "batchdisassociatedatasegmentsfromdataset": {
+    "Resources": [
+     "dataset",
+     "workspace"
     ]
    },
    "batchdisassociateprojectassets": {
@@ -55043,12 +55151,28 @@
      "time-series"
     ]
    },
+   "cancelenrichmentjob": {
+    "Resources": [
+     "workspace"
+    ]
+   },
+   "cancelpipelineexecution": {
+    "Resources": [
+     "pipeline"
+    ]
+   },
+   "cancelquery": {
+    "Resources": [
+     "workspace"
+    ]
+   },
    "createaccesspolicy": {
     "Resources": [
      "portal",
      "project"
     ]
    },
+   "createapplication": {},
    "createasset": {
     "Resources": [
      "asset-model"
@@ -55060,7 +55184,12 @@
      "asset-model"
     ]
    },
-   "createbulkimportjob": {},
+   "createbulkimportjob": {
+    "Resources": [
+     "dataset",
+     "workspace"
+    ]
+   },
    "createcomputationmodel": {
     "Resources": [
      "asset",
@@ -55072,17 +55201,42 @@
      "project"
     ]
    },
-   "createdataset": {},
+   "createdataset": {
+    "Resources": [
+     "workspace"
+    ]
+   },
+   "createdatasetexportjob": {
+    "Resources": [
+     "dataset",
+     "time-series",
+     "workspace"
+    ]
+   },
+   "createenrichmentjob": {
+    "Resources": [
+     "dataset",
+     "workspace"
+    ]
+   },
    "creategateway": {},
+   "createpipeline": {},
    "createportal": {},
    "createproject": {
     "Resources": [
      "portal"
     ]
    },
+   "createtask": {},
+   "createworkspace": {},
    "deleteaccesspolicy": {
     "Resources": [
      "access-policy"
+    ]
+   },
+   "deleteapplication": {
+    "Resources": [
+     "application"
     ]
    },
    "deleteasset": {
@@ -55117,12 +55271,18 @@
    },
    "deletedataset": {
     "Resources": [
-     "dataset"
+     "dataset",
+     "workspace"
     ]
    },
    "deletegateway": {
     "Resources": [
      "gateway"
+    ]
+   },
+   "deletepipeline": {
+    "Resources": [
+     "pipeline"
     ]
    },
    "deleteportal": {
@@ -55135,10 +55295,21 @@
      "project"
     ]
    },
+   "deletetask": {
+    "Resources": [
+     "task"
+    ]
+   },
    "deletetimeseries": {
     "Resources": [
      "asset",
-     "time-series"
+     "time-series",
+     "workspace"
+    ]
+   },
+   "deleteworkspace": {
+    "Resources": [
+     "workspace"
     ]
    },
    "describeaccesspolicy": {
@@ -55150,6 +55321,11 @@
     "Resources": [
      "asset",
      "computation-model"
+    ]
+   },
+   "describeapplication": {
+    "Resources": [
+     "application"
     ]
    },
    "describeasset": {
@@ -55182,7 +55358,12 @@
      "asset"
     ]
    },
-   "describebulkimportjob": {},
+   "describebulkimportjob": {
+    "Resources": [
+     "dataset",
+     "workspace"
+    ]
+   },
    "describecomputationmodel": {
     "Resources": [
      "computation-model"
@@ -55201,10 +55382,21 @@
    },
    "describedataset": {
     "Resources": [
-     "dataset"
+     "dataset",
+     "workspace"
+    ]
+   },
+   "describedatasetexportjob": {
+    "Resources": [
+     "workspace"
     ]
    },
    "describedefaultencryptionconfiguration": {},
+   "describeenrichmentjob": {
+    "Resources": [
+     "workspace"
+    ]
+   },
    "describeexecution": {},
    "describegateway": {
     "Resources": [
@@ -55217,6 +55409,16 @@
     ]
    },
    "describeloggingoptions": {},
+   "describepipeline": {
+    "Resources": [
+     "pipeline"
+    ]
+   },
+   "describepipelineexecution": {
+    "Resources": [
+     "pipeline"
+    ]
+   },
    "describeportal": {
     "Resources": [
      "portal"
@@ -55227,11 +55429,32 @@
      "project"
     ]
    },
+   "describequery": {
+    "Resources": [
+     "workspace"
+    ]
+   },
+   "describesearch": {
+    "Resources": [
+     "workspace"
+    ]
+   },
    "describestorageconfiguration": {},
+   "describetask": {
+    "Resources": [
+     "task"
+    ]
+   },
    "describetimeseries": {
     "Resources": [
      "asset",
-     "time-series"
+     "time-series",
+     "workspace"
+    ]
+   },
+   "describeworkspace": {
+    "Resources": [
+     "workspace"
     ]
    },
    "disassociateassets": {
@@ -55271,10 +55494,26 @@
      "time-series"
     ]
    },
+   "getcapturedata": {
+    "Resources": [
+     "time-series",
+     "workspace"
+    ]
+   },
    "getinterpolatedassetpropertyvalues": {
     "Resources": [
      "asset",
      "time-series"
+    ]
+   },
+   "getqueryresults": {
+    "Resources": [
+     "workspace"
+    ]
+   },
+   "getsearchresults": {
+    "Resources": [
+     "workspace"
     ]
    },
    "invokeassistant": {},
@@ -55290,6 +55529,7 @@
      "computation-model"
     ]
    },
+   "listapplications": {},
    "listassetmodelcompositemodels": {
     "Resources": [
      "asset-model"
@@ -55321,7 +55561,11 @@
      "asset"
     ]
    },
-   "listbulkimportjobs": {},
+   "listbulkimportjobs": {
+    "Resources": [
+     "workspace"
+    ]
+   },
    "listcompositionrelationships": {
     "Resources": [
      "asset-model"
@@ -55344,7 +55588,34 @@
      "project"
     ]
    },
-   "listdatasets": {},
+   "listdatasetdatasegmentrelationships": {
+    "Resources": [
+     "dataset",
+     "workspace"
+    ]
+   },
+   "listdatasetdatasegments": {
+    "Resources": [
+     "dataset",
+     "workspace"
+    ]
+   },
+   "listdatasetexportjobs": {
+    "Resources": [
+     "workspace"
+    ]
+   },
+   "listdatasets": {
+    "Resources": [
+     "workspace"
+    ]
+   },
+   "listenrichmentjobs": {
+    "Resources": [
+     "dataset",
+     "workspace"
+    ]
+   },
    "listexecutions": {
     "Resources": [
      "asset",
@@ -55357,6 +55628,12 @@
      "asset-model"
     ]
    },
+   "listpipelineexecutions": {
+    "Resources": [
+     "pipeline"
+    ]
+   },
+   "listpipelines": {},
    "listportals": {},
    "listprojectassets": {
     "Resources": [
@@ -55368,25 +55645,42 @@
      "portal"
     ]
    },
+   "listqueries": {
+    "Resources": [
+     "workspace"
+    ]
+   },
+   "listsearches": {
+    "Resources": [
+     "workspace"
+    ]
+   },
    "listtagsforresource": {
     "Resources": [
      "access-policy",
+     "application",
      "asset",
      "asset-model",
      "computation-model",
      "dashboard",
      "dataset",
      "gateway",
+     "pipeline",
      "portal",
      "project",
-     "time-series"
+     "task",
+     "time-series",
+     "workspace"
     ]
    },
+   "listtasks": {},
    "listtimeseries": {
     "Resources": [
-     "asset"
+     "asset",
+     "workspace"
     ]
    },
+   "listworkspaces": {},
    "putassetmodelinterfacerelationship": {
     "Resources": [
      "asset-model"
@@ -55395,32 +55689,55 @@
    "putdefaultencryptionconfiguration": {},
    "putloggingoptions": {},
    "putstorageconfiguration": {},
+   "startpipelineexecution": {
+    "Resources": [
+     "pipeline"
+    ]
+   },
+   "startquery": {
+    "Resources": [
+     "workspace"
+    ]
+   },
+   "startsearch": {
+    "Resources": [
+     "workspace"
+    ]
+   },
    "tagresource": {
     "Resources": [
      "access-policy",
+     "application",
      "asset",
      "asset-model",
      "computation-model",
      "dashboard",
      "dataset",
      "gateway",
+     "pipeline",
      "portal",
      "project",
-     "time-series"
+     "task",
+     "time-series",
+     "workspace"
     ]
    },
    "untagresource": {
     "Resources": [
      "access-policy",
+     "application",
      "asset",
      "asset-model",
      "computation-model",
      "dashboard",
      "dataset",
      "gateway",
+     "pipeline",
      "portal",
      "project",
-     "time-series"
+     "task",
+     "time-series",
+     "workspace"
     ]
    },
    "updateaccesspolicy": {
@@ -55467,7 +55784,8 @@
    },
    "updatedataset": {
     "Resources": [
-     "dataset"
+     "dataset",
+     "workspace"
     ]
    },
    "updategateway": {
@@ -55480,6 +55798,11 @@
      "gateway"
     ]
    },
+   "updatepipeline": {
+    "Resources": [
+     "pipeline"
+    ]
+   },
    "updateportal": {
     "Resources": [
      "portal"
@@ -55489,12 +55812,30 @@
     "Resources": [
      "project"
     ]
+   },
+   "updatetask": {
+    "Resources": [
+     "task"
+    ]
+   },
+   "updateworkspace": {
+    "Resources": [
+     "workspace"
+    ]
    }
   },
   "Resources": {
    "access-policy": {
     "ARNFormats": [
      "arn:${Partition}:iotsitewise:${Region}:${Account}:access-policy/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "application": {
+    "ARNFormats": [
+     "arn:${Partition}:iotsitewise:${Region}:${Account}:workspace/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -55548,6 +55889,14 @@
      "aws:ResourceTag/${TagKey}"
     ]
    },
+   "pipeline": {
+    "ARNFormats": [
+     "arn:${Partition}:iotsitewise:${Region}:${Account}:workspace/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "portal": {
     "ARNFormats": [
      "arn:${Partition}:iotsitewise:${Region}:${Account}:portal/.*"
@@ -55564,9 +55913,25 @@
      "aws:ResourceTag/${TagKey}"
     ]
    },
+   "task": {
+    "ARNFormats": [
+     "arn:${Partition}:iotsitewise:${Region}:${Account}:workspace/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "time-series": {
     "ARNFormats": [
      "arn:${Partition}:iotsitewise:${Region}:${Account}:time-series/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "workspace": {
+    "ARNFormats": [
+     "arn:${Partition}:iotsitewise:${Region}:${Account}:workspace/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -57455,6 +57820,11 @@
      "cluster"
     ]
    },
+   "createchannel": {
+    "Resources": [
+     "cluster"
+    ]
+   },
    "createcluster": {
     "Resources": [
      "cluster"
@@ -57486,6 +57856,12 @@
      "vpc-connection"
     ]
    },
+   "deletechannel": {
+    "Resources": [
+     "channel",
+     "cluster"
+    ]
+   },
    "deletecluster": {
     "Resources": [
      "cluster"
@@ -57514,6 +57890,12 @@
    "deletevpcconnection": {
     "Resources": [
      "vpc-connection"
+    ]
+   },
+   "describechannel": {
+    "Resources": [
+     "channel",
+     "cluster"
     ]
    },
    "describecluster": {
@@ -57565,6 +57947,11 @@
     ]
    },
    "getcompatiblekafkaversions": {},
+   "listchannels": {
+    "Resources": [
+     "cluster"
+    ]
+   },
    "listclientvpcconnections": {
     "Resources": [
      "cluster"
@@ -57654,6 +58041,12 @@
      "cluster"
     ]
    },
+   "updatechannel": {
+    "Resources": [
+     "channel",
+     "cluster"
+    ]
+   },
    "updateclusterconfiguration": {
     "Resources": [
      "cluster",
@@ -57707,6 +58100,14 @@
    }
   },
   "Resources": {
+   "channel": {
+    "ARNFormats": [
+     "arn:${Partition}:kafka:${Region}:${Account}:channel/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "cluster": {
     "ARNFormats": [
      "arn:${Partition}:kafka:${Region}:${Account}:cluster/.*"
@@ -59977,6 +60378,9 @@
    "durable execution": {
     "ARNFormats": [
      "arn:${Partition}:lambda:${Region}:${Account}:function:.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "eventsourcemapping": {
@@ -71746,6 +72150,7 @@
     ]
    },
    "listdbsystemshapes": {},
+   "listflexcomponents": {},
    "listgiversions": {},
    "listodbnetworks": {},
    "listodbpeeringconnections": {
@@ -73152,7 +73557,11 @@
      "root"
     ]
    },
-   "createpolicy": {},
+   "createpolicy": {
+    "Resources": [
+     "policy"
+    ]
+   },
    "declinehandshake": {
     "Resources": [
      "handshake"
@@ -74253,11 +74662,6 @@
     ]
    },
    "putsellingsystemsettings": {},
-   "querydataset": {
-    "Resources": [
-     "Dataset"
-    ]
-   },
    "recallbenefitapplication": {
     "Resources": [
      "BenefitApplication"
@@ -74345,7 +74749,6 @@
     "Resources": [
      "BenefitApplication",
      "ChannelHandshake",
-     "Dataset",
      "MarketplaceRevenueShare",
      "Opportunity",
      "Partner",
@@ -74359,7 +74762,6 @@
     "Resources": [
      "BenefitApplication",
      "ChannelHandshake",
-     "Dataset",
      "MarketplaceRevenueShare",
      "Opportunity",
      "Partner",
@@ -74452,14 +74854,6 @@
    "dashboard": {
     "ARNFormats": [
      "arn:${Partition}:partnercentral::${Account}:catalog/.*"
-    ]
-   },
-   "dataset": {
-    "ARNFormats": [
-     "arn:${Partition}:partnercentral::${Account}:catalog/AWS/ReportingData/.*"
-    ],
-    "ConditionKeys": [
-     "aws:ResourceTag/${TagKey}"
     ]
    },
    "engagement": {
@@ -75926,6 +76320,7 @@
  },
  "pricingplanmanager": {
   "Actions": {
+   "approvepaidsubscription": {},
    "associateresourcestosubscription": {},
    "cancelsubscription": {},
    "cancelsubscriptionchange": {},
@@ -79710,6 +80105,11 @@
    "passdatasource": {
     "Resources": [
      "datasource"
+    ]
+   },
+   "passtopic": {
+    "Resources": [
+     "topic"
     ]
    },
    "predictqaresults": {
@@ -83639,6 +84039,11 @@
      "system"
     ]
    },
+   "createtest": {
+    "Resources": [
+     "service"
+    ]
+   },
    "createuserjourney": {
     "Resources": [
      "policy",
@@ -83713,6 +84118,16 @@
    "deletesystem": {
     "Resources": [
      "system"
+    ]
+   },
+   "deletetest": {
+    "Resources": [
+     "service"
+    ]
+   },
+   "deletetestsources": {
+    "Resources": [
+     "service"
     ]
    },
    "deleteuserjourney": {
@@ -83791,6 +84206,17 @@
      "system"
     ]
    },
+   "gettest": {
+    "Resources": [
+     "service"
+    ]
+   },
+   "gettestrun": {
+    "Resources": [
+     "service"
+    ]
+   },
+   "gettesttemplate": {},
    "getuserjourney": {
     "Resources": [
      "system"
@@ -83899,6 +84325,11 @@
     ]
    },
    "listresiliencypolicies": {},
+   "listresolvedtestruntargetresources": {
+    "Resources": [
+     "service"
+    ]
+   },
    "listresourcegroupingrecommendations": {
     "Resources": [
      "application"
@@ -83953,6 +84384,32 @@
      "application"
     ]
    },
+   "listtestrunevents": {
+    "Resources": [
+     "service"
+    ]
+   },
+   "listtestruns": {
+    "Resources": [
+     "service"
+    ]
+   },
+   "listtestrunsources": {
+    "Resources": [
+     "service"
+    ]
+   },
+   "listtests": {
+    "Resources": [
+     "service"
+    ]
+   },
+   "listtestsources": {
+    "Resources": [
+     "service"
+    ]
+   },
+   "listtesttemplates": {},
    "listunsupportedappversionresources": {
     "Resources": [
      "application"
@@ -83971,6 +84428,11 @@
    "putdraftappversiontemplate": {
     "Resources": [
      "application"
+    ]
+   },
+   "puttestsources": {
+    "Resources": [
+     "service"
     ]
    },
    "rejectresourcegroupingrecommendations": {
@@ -84002,6 +84464,16 @@
    "startresourcegroupingrecommendationtask": {
     "Resources": [
      "application"
+    ]
+   },
+   "starttestrun": {
+    "Resources": [
+     "service"
+    ]
+   },
+   "stoptestrun": {
+    "Resources": [
+     "service"
     ]
    },
    "tagresource": {
@@ -84088,6 +84560,11 @@
      "system"
     ]
    },
+   "updatetest": {
+    "Resources": [
+     "service"
+    ]
+   },
    "updateuserjourney": {
     "Resources": [
      "policy",
@@ -84150,6 +84627,11 @@
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "test-template": {
+    "ARNFormats": [
+     "arn:${Partition}:resiliencehub:${Region}:${Account}:test-template/.*"
     ]
    }
   }
@@ -95374,6 +95856,7 @@
    "listverifiedemailaddresses": {},
    "putaccountdedicatedipwarmupattributes": {},
    "putaccountdetails": {},
+   "putaccountpricingattributes": {},
    "putaccountsendingattributes": {},
    "putaccountsuppressionattributes": {},
    "putaccountvdmattributes": {},
@@ -101411,6 +101894,11 @@
  },
  "timestream-influxdb": {
   "Actions": {
+   "createdbbackup": {
+    "Resources": [
+     "db-backup"
+    ]
+   },
    "createdbcluster": {
     "Resources": [
      "db-parameter-group"
@@ -101422,6 +101910,11 @@
     ]
    },
    "createdbparametergroup": {},
+   "deletedbbackup": {
+    "Resources": [
+     "db-backup"
+    ]
+   },
    "deletedbcluster": {
     "Resources": [
      "db-cluster"
@@ -101430,6 +101923,11 @@
    "deletedbinstance": {
     "Resources": [
      "db-instance"
+    ]
+   },
+   "getdbbackup": {
+    "Resources": [
+     "db-backup"
     ]
    },
    "getdbcluster": {
@@ -101447,6 +101945,7 @@
      "db-parameter-group"
     ]
    },
+   "listdbbackups": {},
    "listdbclusters": {},
    "listdbinstances": {},
    "listdbinstancesforcluster": {
@@ -101457,6 +101956,7 @@
    "listdbparametergroups": {},
    "listtagsforresource": {
     "Resources": [
+     "db-backup",
      "db-cluster",
      "db-instance",
      "db-parameter-group"
@@ -101473,8 +101973,14 @@
      "db-instance"
     ]
    },
+   "restorefromdbbackup": {
+    "Resources": [
+     "db-backup"
+    ]
+   },
    "tagresource": {
     "Resources": [
+     "db-backup",
      "db-cluster",
      "db-instance",
      "db-parameter-group"
@@ -101482,6 +101988,7 @@
    },
    "untagresource": {
     "Resources": [
+     "db-backup",
      "db-cluster",
      "db-instance",
      "db-parameter-group"
@@ -101501,6 +102008,14 @@
    }
   },
   "Resources": {
+   "db-backup": {
+    "ARNFormats": [
+     "arn:${Partition}:timestream-influxdb:${Region}:${Account}:db-backup/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "db-cluster": {
     "ARNFormats": [
      "arn:${Partition}:timestream-influxdb:${Region}:${Account}:db-cluster/.*"
@@ -102901,6 +103416,7 @@
    "listorganizationrecommendations": {},
    "listrecommendationresources": {},
    "listrecommendations": {},
+   "listrecommendationsforresource": {},
    "listroots": {},
    "refreshcheck": {
     "Resources": [
