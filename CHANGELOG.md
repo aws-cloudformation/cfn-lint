@@ -1,3 +1,11 @@
+### v1.54.0
+## What's Changed
+* fix(ec2): Allow FromPort/ToPort for ICMPv6 in W3687 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4600
+* Remove SAM translator dependency, validate SAM templates via schemas by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4491
+* Update CloudFormation schemas to `2026-08-04` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4601
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.53.3...v1.54.0
+
 ### v1.53.3
 ## What's Changed
 * Cache `RefResolver` subschemas lookup per instance by @sir-sigurd in https://github.com/aws-cloudformation/cfn-lint/pull/4590
