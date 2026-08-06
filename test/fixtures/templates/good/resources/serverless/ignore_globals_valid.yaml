@@ -1,0 +1,36 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  Function:
+    Runtime: nodejs20.x
+    Timeout: 30
+Resources:
+  ValidIgnoreFunction:
+    Type: AWS::Serverless::Function
+    IgnoreGlobals:
+      - Timeout  # Valid - matches Globals.Function.Timeout
+    Properties:
+      Handler: index.handler
+      CodeUri: 's3://test-bucket/mySourceCode.zip'
+  IgnoreAllFunction:
+    Type: AWS::Serverless::Function
+    IgnoreGlobals: "*"
+    Properties:
+      Runtime: nodejs22.x
+      Handler: index.handler
+      CodeUri: 's3://test-bucket/mySourceCode.zip'
+  IgnoreBothFunction:
+    Type: AWS::Serverless::Function
+    IgnoreGlobals:
+      - Runtime
+      - Timeout
+    Properties:
+      Runtime: nodejs22.x
+      Handler: index.handler
+      CodeUri: 's3://test-bucket/mySourceCode.zip'
+  NoIgnoreFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      CodeUri: 's3://test-bucket/mySourceCode.zip'
