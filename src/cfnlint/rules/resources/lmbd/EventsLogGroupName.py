@@ -3,6 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 import json
 
 from cfnlint._typing import RuleMatches
@@ -28,7 +30,7 @@ class EventsLogGroupName(CloudFormationLintRule):
     tags = ["resources", "lambda"]
     limit = 2
 
-    def check_events_subscription_duplicated(self, cfn):
+    def check_events_subscription_duplicated(self, cfn: Template) -> RuleMatches:
         """Check if Lambda Events Subscription is duplicated"""
         matches = []
         message = (
@@ -37,22 +39,74 @@ class EventsLogGroupName(CloudFormationLintRule):
         )
 
         log_group_paths = self.__get_log_group_name_list(cfn)
-        for _, c in log_group_paths.items():
-            if len(c) > self.limit:
-                matches.append(RuleMatch(["Resources", c[2]], message))
+        for _, paths in log_group_paths.items():
+            if len(paths) > self.limit:
+                matches.append(RuleMatch(paths[2], message))
 
         return matches
 
-    def __get_log_group_name_list(self, cfn):
-        log_group_paths = {}
-        for value in cfn.get_resources("AWS::Logs::SubscriptionFilter").items():
-            prop = value[1].get("Properties")
+    def __get_log_group_name_list(
+        self,
+        cfn: Template,
+    ) -> dict[str, list[list[str | int]]]:
+        log_group_paths: dict[str, list[list[str | int]]] = {}
+
+        # Enumerate AWS::Logs::SubscriptionFilter resources
+        for resource_name, resource in cfn.get_resources(
+            "AWS::Logs::SubscriptionFilter"
+        ).items():
+            prop = resource.get("Properties")
+            if not isinstance(prop, dict):
+                continue
             log_group_name = json.dumps(prop.get("LogGroupName"))
 
             if log_group_name not in log_group_paths:
                 log_group_paths[log_group_name] = []
 
-            log_group_paths[log_group_name].append(value[0])
+            log_group_paths[log_group_name].append(
+                ["Resources", resource_name, "Properties", "LogGroupName"],
+            )
+
+        # Enumerate AWS::Serverless::Function CloudWatchLogs events
+        for resource_name, resource in cfn.get_resources(
+            "AWS::Serverless::Function"
+        ).items():
+            props = resource.get("Properties")
+            if not isinstance(props, dict):
+                continue
+            events = props.get("Events")
+            if not isinstance(events, dict):
+                continue
+
+            for event_id, event in events.items():
+                if not isinstance(event, dict):
+                    continue
+                if event.get("Type") != "CloudWatchLogs":
+                    continue
+                event_props = event.get("Properties")
+                if not isinstance(event_props, dict):
+                    continue
+                log_group_name_value = event_props.get("LogGroupName")
+                if log_group_name_value is None:
+                    continue
+
+                log_group_name = json.dumps(log_group_name_value)
+
+                if log_group_name not in log_group_paths:
+                    log_group_paths[log_group_name] = []
+
+                log_group_paths[log_group_name].append(
+                    [
+                        "Resources",
+                        resource_name,
+                        "Properties",
+                        "Events",
+                        event_id,
+                        "Properties",
+                        "LogGroupName",
+                    ],
+                )
+
         return log_group_paths
 
     def match(self, cfn: Template) -> RuleMatches:
