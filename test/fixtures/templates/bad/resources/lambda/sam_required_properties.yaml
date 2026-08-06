@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SAM Functions missing Handler/Runtime for Zip deployments.
+Resources:
+  MissingBoth: # Missing Handler and Runtime
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://my-bucket/function.zip
+#      Handler: index.handler
+#      Runtime: python3.9
+  MissingRuntime: # Missing Runtime only
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      CodeUri: s3://my-bucket/function.zip
+#      Runtime: python3.9
+  MissingHandler: # Missing Handler only
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: python3.9
+      InlineCode: |
+        def handler(event, context):
+          pass
+#      Handler: index.handler
+  ZipWithStrayImageUri: # PackageType: Zip is authoritative even with ImageUri present
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Zip
+      ImageUri: 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-repo:latest
+#      Handler: index.handler
+#      Runtime: python3.9
