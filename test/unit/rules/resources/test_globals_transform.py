@@ -10,6 +10,7 @@ from collections import deque
 import pytest
 
 from cfnlint.rules.resources.GlobalsTransform import GlobalsTransform
+from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
@@ -51,6 +52,292 @@ def rule():
     ],
     indirect=["template", "path"],
 )
-def test_validate(name, instance, template, path, expected, rule, validator):
+def test_validate_globals(name, instance, template, path, expected, rule, validator):
     errors = list(rule.validate(validator, False, instance, {}))
     assert len(errors) == expected, f"Test {name!r} got {errors!r}"
+
+
+class TestIgnoreGlobalsMatch:
+    """Test IgnoreGlobals validation via match method."""
+
+    def test_valid_ignore_globals(self, rule):
+        """Valid IgnoreGlobals entry should produce no matches."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": {"Function": {"Timeout": 30, "Runtime": "python3.12"}},
+                "Resources": {
+                    "MyFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "IgnoreGlobals": ["Timeout"],
+                        "Properties": {"Handler": "index.handler"},
+                    }
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_ignore_globals_wildcard(self, rule):
+        """IgnoreGlobals: '*' should always be valid."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": {"Function": {"Timeout": 30}},
+                "Resources": {
+                    "MyFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "IgnoreGlobals": "*",
+                        "Properties": {"Handler": "index.handler"},
+                    }
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_ignore_globals_typo(self, rule):
+        """Typo in IgnoreGlobals should produce a match."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": {"Function": {"Timeout": 30}},
+                "Resources": {
+                    "MyFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "IgnoreGlobals": ["Timeot"],
+                        "Properties": {"Handler": "index.handler"},
+                    }
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 1
+        assert "'Timeot' is not a valid global property" in matches[0].message
+        assert matches[0].path == ["Resources", "MyFunction", "IgnoreGlobals", 0]
+
+    def test_ignore_globals_multiple_entries_mixed(self, rule):
+        """Multiple entries with one invalid should produce one match."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": {"Function": {"Timeout": 30, "Runtime": "python3.12"}},
+                "Resources": {
+                    "MyFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "IgnoreGlobals": ["InvalidKey", "Runtime"],
+                        "Properties": {"Handler": "index.handler"},
+                    }
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 1
+        assert "'InvalidKey' is not a valid global property" in matches[0].message
+        assert matches[0].path == ["Resources", "MyFunction", "IgnoreGlobals", 0]
+
+    def test_ignore_globals_no_matching_globals_section(self, rule):
+        """No Globals for resource type should produce no match."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": {"Api": {"TracingEnabled": True}},
+                "Resources": {
+                    "MyFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "IgnoreGlobals": ["Timeout"],
+                        "Properties": {"Handler": "index.handler"},
+                    }
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_ignore_globals_for_api_resource(self, rule):
+        """Valid IgnoreGlobals for Api resource should produce no match."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": {"Api": {"TracingEnabled": True}},
+                "Resources": {
+                    "MyApi": {
+                        "Type": "AWS::Serverless::Api",
+                        "IgnoreGlobals": ["TracingEnabled"],
+                        "Properties": {"StageName": "prod"},
+                    }
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_ignore_globals_for_api_with_typo(self, rule):
+        """Typo in IgnoreGlobals for Api resource should produce a match."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": {"Api": {"TracingEnabled": True}},
+                "Resources": {
+                    "MyApi": {
+                        "Type": "AWS::Serverless::Api",
+                        "IgnoreGlobals": ["TracingEnable"],
+                        "Properties": {"StageName": "prod"},
+                    }
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 1
+        assert "'TracingEnable' is not a valid global property" in matches[0].message
+
+    def test_ignore_globals_without_sam_transform(self, rule):
+        """No SAM transform means no IgnoreGlobals validation."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Globals": {"Function": {"Timeout": 30}},
+                "Resources": {
+                    "MyFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "IgnoreGlobals": ["InvalidKey"],
+                        "Properties": {"Handler": "index.handler"},
+                    }
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_ignore_globals_non_sam_resource(self, rule):
+        """Non-SAM resource types should be skipped."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": {"Function": {"Timeout": 30}},
+                "Resources": {
+                    "MyFunction": {
+                        "Type": "AWS::Lambda::Function",
+                        "IgnoreGlobals": ["InvalidKey"],
+                        "Properties": {"Handler": "index.handler"},
+                    }
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_ignore_globals_intrinsic_entry(self, rule):
+        """Intrinsic function entry in IgnoreGlobals should be skipped."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": {"Function": {"Timeout": 30}},
+                "Resources": {
+                    "MyFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "IgnoreGlobals": [{"Ref": "SomeParam"}],
+                        "Properties": {"Handler": "index.handler"},
+                    }
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_ignore_globals_http_api(self, rule):
+        """Valid IgnoreGlobals for HttpApi should produce no match."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": {"HttpApi": {"Auth": {}}},
+                "Resources": {
+                    "MyHttpApi": {
+                        "Type": "AWS::Serverless::HttpApi",
+                        "IgnoreGlobals": ["Auth"],
+                        "Properties": {},
+                    }
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_ignore_globals_globals_not_dict(self, rule):
+        """Globals section not a dict should produce no match."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": "not-a-dict",
+                "Resources": {
+                    "MyFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "IgnoreGlobals": ["Timeout"],
+                        "Properties": {"Handler": "index.handler"},
+                    }
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_ignore_globals_multiple_resources(self, rule):
+        """Multiple resources with invalid IgnoreGlobals produce multiple matches."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": {"Function": {"Timeout": 30}},
+                "Resources": {
+                    "Func1": {
+                        "Type": "AWS::Serverless::Function",
+                        "IgnoreGlobals": ["Typo1"],
+                        "Properties": {"Handler": "index.handler"},
+                    },
+                    "Func2": {
+                        "Type": "AWS::Serverless::Function",
+                        "IgnoreGlobals": ["Typo2"],
+                        "Properties": {"Handler": "index.handler"},
+                    },
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 2
