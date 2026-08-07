@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SAM Functions with proper Handler/Runtime for Zip deployments.
+Resources:
+  ZipFunctionWithCodeUri: # Zip deployment with CodeUri
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: python3.9
+      CodeUri: s3://my-bucket/function.zip
+  ZipFunctionWithInlineCode: # Zip deployment with InlineCode
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs22.x
+      InlineCode: |
+        exports.handler = function(event, context) {}
+  ZipFunctionExplicitPackageType: # Explicit Zip PackageType
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: python3.12
+      CodeUri: s3://my-bucket/function.zip
+      PackageType: Zip
+  ImageFunction: # Image deployment - no Handler/Runtime needed
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+    Metadata:
+      DockerTag: latest
+      DockerContext: ./hello-world
+      Dockerfile: Dockerfile
+  ImageFunctionWithImageUri: # Image deployment via ImageUri - no Handler/Runtime needed
+    Type: AWS::Serverless::Function
+    Properties:
+      ImageUri: 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-repo:latest

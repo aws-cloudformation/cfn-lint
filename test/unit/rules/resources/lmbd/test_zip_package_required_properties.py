@@ -17,7 +17,8 @@ class TestZipPackageRequiredProperties(BaseRuleTestCase):
         super(TestZipPackageRequiredProperties, self).setUp()
         self.collection.register(ZipPackageRequiredProperties())
         self.success_templates = [
-            "test/fixtures/templates/good/resources/lambda/required_properties.yaml"
+            "test/fixtures/templates/good/resources/lambda/required_properties.yaml",
+            "test/fixtures/templates/good/resources/lambda/sam_required_properties.yaml",
         ]
 
     def test_file_positive(self):
@@ -27,4 +28,10 @@ class TestZipPackageRequiredProperties(BaseRuleTestCase):
         self.helper_file_negative(
             "test/fixtures/templates/bad/resources/lambda/required_properties.yaml",
             err_count=3,
+        )
+
+    def test_file_negative_sam(self):
+        self.helper_file_negative(
+            "test/fixtures/templates/bad/resources/lambda/sam_required_properties.yaml",
+            err_count=4,
         )
