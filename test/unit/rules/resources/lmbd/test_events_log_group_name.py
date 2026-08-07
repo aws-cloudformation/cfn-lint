@@ -5,7 +5,10 @@ SPDX-License-Identifier: MIT-0
 
 from test.unit.rules import BaseRuleTestCase
 
+import pytest
+
 from cfnlint.rules.resources.lmbd.EventsLogGroupName import EventsLogGroupName
+from cfnlint.template import Template
 
 
 class TestEventsLogGroupName(BaseRuleTestCase):
@@ -25,9 +28,407 @@ class TestEventsLogGroupName(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        # SAM event sources (CloudWatchLogs) are no longer transformed into
-        # AWS::Logs::SubscriptionFilter resources. The rule can only check
-        # explicitly declared subscription filters, not SAM-generated ones.
+        # The bad fixture has 3 CloudWatchLogs events pointing to FunctionALogGroup
+        # which exceeds the limit of 2
         self.helper_file_negative(
-            "test/fixtures/templates/bad/some_logs_stream_lambda.yaml", 0
+            "test/fixtures/templates/bad/some_logs_stream_lambda.yaml",
+            1,
         )
+
+
+@pytest.fixture(scope="module")
+def rule():
+    return EventsLogGroupName()
+
+
+class TestEventsLogGroupNameUnit:
+    """Unit tests for E2529 rule"""
+
+    def test_sam_events_exceeds_limit(self, rule):
+        """Test that >2 SAM CloudWatchLogs events on one log group fails"""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "MyLogGroup": {
+                        "Type": "AWS::Logs::LogGroup",
+                        "Properties": {"LogGroupName": "/aws/lambda/my-function"},
+                    },
+                    "LogSubscriptionFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "Properties": {
+                            "CodeUri": "hello_world/",
+                            "Handler": "app.lambda_handler",
+                            "Runtime": "python3.9",
+                            "Events": {
+                                "Event1": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {
+                                        "LogGroupName": {"Ref": "MyLogGroup"},
+                                        "FilterPattern": "",
+                                    },
+                                },
+                                "Event2": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {
+                                        "LogGroupName": {"Ref": "MyLogGroup"},
+                                        "FilterPattern": "",
+                                    },
+                                },
+                                "Event3": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {
+                                        "LogGroupName": {"Ref": "MyLogGroup"},
+                                        "FilterPattern": "",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        )
+        matches = rule.match(template)
+        assert len(matches) == 1
+        # Verify path points to the SAM function's event
+        assert matches[0].path[0] == "Resources"
+        assert matches[0].path[1] == "LogSubscriptionFunction"
+        assert matches[0].path[3] == "Events"
+
+    def test_sam_events_within_limit(self, rule):
+        """Test that <=2 SAM CloudWatchLogs events on one log group passes"""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "MyLogGroup": {
+                        "Type": "AWS::Logs::LogGroup",
+                        "Properties": {"LogGroupName": "/aws/lambda/my-function"},
+                    },
+                    "LogSubscriptionFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "Properties": {
+                            "CodeUri": "hello_world/",
+                            "Handler": "app.lambda_handler",
+                            "Runtime": "python3.9",
+                            "Events": {
+                                "Event1": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {
+                                        "LogGroupName": {"Ref": "MyLogGroup"},
+                                        "FilterPattern": "",
+                                    },
+                                },
+                                "Event2": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {
+                                        "LogGroupName": {"Ref": "MyLogGroup"},
+                                        "FilterPattern": "",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_sam_events_unique_log_groups(self, rule):
+        """Test that SAM events on unique log groups passes"""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "LogGroup1": {
+                        "Type": "AWS::Logs::LogGroup",
+                        "Properties": {"LogGroupName": "/aws/lambda/function1"},
+                    },
+                    "LogGroup2": {
+                        "Type": "AWS::Logs::LogGroup",
+                        "Properties": {"LogGroupName": "/aws/lambda/function2"},
+                    },
+                    "LogGroup3": {
+                        "Type": "AWS::Logs::LogGroup",
+                        "Properties": {"LogGroupName": "/aws/lambda/function3"},
+                    },
+                    "LogSubscriptionFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "Properties": {
+                            "CodeUri": "hello_world/",
+                            "Handler": "app.lambda_handler",
+                            "Runtime": "python3.9",
+                            "Events": {
+                                "Event1": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {
+                                        "LogGroupName": {"Ref": "LogGroup1"},
+                                        "FilterPattern": "",
+                                    },
+                                },
+                                "Event2": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {
+                                        "LogGroupName": {"Ref": "LogGroup2"},
+                                        "FilterPattern": "",
+                                    },
+                                },
+                                "Event3": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {
+                                        "LogGroupName": {"Ref": "LogGroup3"},
+                                        "FilterPattern": "",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_mixed_explicit_filter_and_sam_events(self, rule):
+        """Test mixed explicit SubscriptionFilter and SAM events exceeding limit"""
+        dest_arn = "arn:aws:lambda:us-east-1:123456789012:function:f"
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "MyLogGroup": {
+                        "Type": "AWS::Logs::LogGroup",
+                        "Properties": {"LogGroupName": "/aws/lambda/my-function"},
+                    },
+                    "ExplicitFilter1": {
+                        "Type": "AWS::Logs::SubscriptionFilter",
+                        "Properties": {
+                            "LogGroupName": {"Ref": "MyLogGroup"},
+                            "FilterPattern": "",
+                            "DestinationArn": dest_arn,
+                        },
+                    },
+                    "ExplicitFilter2": {
+                        "Type": "AWS::Logs::SubscriptionFilter",
+                        "Properties": {
+                            "LogGroupName": {"Ref": "MyLogGroup"},
+                            "FilterPattern": "",
+                            "DestinationArn": dest_arn,
+                        },
+                    },
+                    "LogSubscriptionFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "Properties": {
+                            "CodeUri": "hello_world/",
+                            "Handler": "app.lambda_handler",
+                            "Runtime": "python3.9",
+                            "Events": {
+                                "Event1": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {
+                                        "LogGroupName": {"Ref": "MyLogGroup"},
+                                        "FilterPattern": "",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        )
+        # 2 explicit filters + 1 SAM event = 3, exceeds limit of 2
+        matches = rule.match(template)
+        assert len(matches) == 1
+
+    def test_explicit_filters_only_exceeds_limit(self, rule):
+        """Test explicit SubscriptionFilters exceeding limit"""
+        dest_arn = "arn:aws:lambda:us-east-1:123456789012:function:f"
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Resources": {
+                    "MyLogGroup": {
+                        "Type": "AWS::Logs::LogGroup",
+                        "Properties": {"LogGroupName": "/aws/lambda/my-function"},
+                    },
+                    "ExplicitFilter1": {
+                        "Type": "AWS::Logs::SubscriptionFilter",
+                        "Properties": {
+                            "LogGroupName": {"Ref": "MyLogGroup"},
+                            "FilterPattern": "",
+                            "DestinationArn": dest_arn,
+                        },
+                    },
+                    "ExplicitFilter2": {
+                        "Type": "AWS::Logs::SubscriptionFilter",
+                        "Properties": {
+                            "LogGroupName": {"Ref": "MyLogGroup"},
+                            "FilterPattern": "",
+                            "DestinationArn": dest_arn,
+                        },
+                    },
+                    "ExplicitFilter3": {
+                        "Type": "AWS::Logs::SubscriptionFilter",
+                        "Properties": {
+                            "LogGroupName": {"Ref": "MyLogGroup"},
+                            "FilterPattern": "",
+                            "DestinationArn": dest_arn,
+                        },
+                    },
+                },
+            },
+        )
+        matches = rule.match(template)
+        assert len(matches) == 1
+
+    def test_non_dict_events_no_crash(self, rule):
+        """Test that non-dict Events does not crash"""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "LogSubscriptionFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "Properties": {
+                            "CodeUri": "hello_world/",
+                            "Handler": "app.lambda_handler",
+                            "Runtime": "python3.9",
+                            "Events": {
+                                "Fn::If": ["Cond", {"Event1": {}}, {"Event2": {}}],
+                            },
+                        },
+                    },
+                },
+            },
+        )
+        # Should not crash, and should not produce matches
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_non_dict_event_no_crash(self, rule):
+        """Test that non-dict individual event does not crash"""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "LogSubscriptionFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "Properties": {
+                            "CodeUri": "hello_world/",
+                            "Handler": "app.lambda_handler",
+                            "Runtime": "python3.9",
+                            "Events": {
+                                "Event1": {"Ref": "SomeParameter"},
+                            },
+                        },
+                    },
+                },
+            },
+        )
+        # Should not crash
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_non_dict_event_properties_no_crash(self, rule):
+        """Test that non-dict event Properties does not crash"""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "LogSubscriptionFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "Properties": {
+                            "CodeUri": "hello_world/",
+                            "Handler": "app.lambda_handler",
+                            "Runtime": "python3.9",
+                            "Events": {
+                                "Event1": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {"Fn::If": ["Cond", {}, {}]},
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        )
+        # Should not crash
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_missing_loggroupname_no_crash(self, rule):
+        """Test that missing LogGroupName does not crash"""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "LogSubscriptionFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "Properties": {
+                            "CodeUri": "hello_world/",
+                            "Handler": "app.lambda_handler",
+                            "Runtime": "python3.9",
+                            "Events": {
+                                "Event1": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {"FilterPattern": ""},
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        )
+        # Should not crash
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_non_cloudwatchlogs_event_ignored(self, rule):
+        """Test that non-CloudWatchLogs event types are ignored"""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "LogSubscriptionFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "Properties": {
+                            "CodeUri": "hello_world/",
+                            "Handler": "app.lambda_handler",
+                            "Runtime": "python3.9",
+                            "Events": {
+                                "ApiEvent": {
+                                    "Type": "Api",
+                                    "Properties": {"Path": "/hello", "Method": "get"},
+                                },
+                                "ScheduleEvent": {
+                                    "Type": "Schedule",
+                                    "Properties": {"Schedule": "rate(1 minute)"},
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
