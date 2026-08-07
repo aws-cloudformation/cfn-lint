@@ -3,7 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 import os
+from typing import Any
 
 import regex as re
 
@@ -30,19 +33,32 @@ class NestedStackParameters(CloudFormationLintRule):
         """Init"""
         super().__init__()
         self.resource_property_types.append("AWS::CloudFormation::Stack")
+        self.resource_property_types.append("AWS::Serverless::Application")
 
-    def __get_template_parameters(self, filename):
+    def _get_template_parameters(
+        self,
+        filename: str,
+    ) -> dict[str, Any] | None:
         try:
             (tmp, matches) = decode(filename)
         except:  # noqa: E722
             return None
         if matches:
             return None
+        if tmp is None:
+            return None
 
-        return tmp.get("Parameters", {})
+        params: dict[str, Any] = tmp.get("Parameters", {})
+        return params
 
-    def __compare_objects(self, template_parameters, nested_parameters, scenario, path):
-        matches = []
+    def _compare_objects(
+        self,
+        template_parameters: dict[str, Any],
+        nested_parameters: dict[str, Any],
+        scenario: dict[str, bool] | None,
+        path: list[str | int],
+    ) -> RuleMatches:
+        matches: RuleMatches = []
         for key in set(template_parameters.keys()) - set(nested_parameters.keys()):
             if scenario is None:
                 message = (
@@ -65,7 +81,7 @@ class NestedStackParameters(CloudFormationLintRule):
                 )
                 matches.append(RuleMatch(path, message.format(key, scenario_text)))
         for key in set(nested_parameters.keys()) - set(template_parameters.keys()):
-            if nested_parameters.get(key).get("Default") is None:
+            if nested_parameters.get(key, {}).get("Default") is None:
                 if scenario is None:
                     message = (
                         'Nested stack template parameter "{0}" is not specified at {1}'
@@ -84,53 +100,115 @@ class NestedStackParameters(CloudFormationLintRule):
 
         return matches
 
+    def _is_local_path(self, location: str) -> bool:
+        """Check if a location string is a local file path (not a URL)."""
+        return not (
+            location.startswith("http://")
+            or location.startswith("https://")
+            or location.startswith("s3://")
+        )
+
+    def _validate_nested_parameters(
+        self,
+        cfn: Template,
+        resource_name: str,
+        properties: dict[str, Any],
+        location_key: str,
+        base_dir: str,
+    ) -> RuleMatches:
+        """
+        Validate parameters for a nested stack or serverless application.
+
+        Args:
+            cfn: The template being validated
+            resource_name: Name of the resource
+            properties: Resource properties dict
+            location_key: Property name containing the template location
+                          ('TemplateURL' for Stack, 'Location' for Application)
+            base_dir: Base directory for resolving relative paths
+        """
+        matches: RuleMatches = []
+
+        parameter_groups = cfn.get_object_without_conditions(
+            obj=properties,
+            property_names=[location_key, "Parameters"],
+        )
+
+        for parameter_group in parameter_groups:
+            obj = parameter_group.get("Object")
+            template_location = obj.get(location_key)
+
+            # For Serverless::Application, Location can be a dict (SAR reference)
+            # In that case, skip validation
+            if isinstance(template_location, dict):
+                continue
+
+            if isinstance(template_location, str):
+                if self._is_local_path(template_location):
+                    template_path = os.path.normpath(
+                        os.path.join(base_dir, template_location)
+                    )
+                    if re.match(REGEX_DYN_REF, template_path):
+                        continue
+                    nested_parameters = self._get_template_parameters(template_path)
+                    template_parameters = obj.get("Parameters")
+                    if isinstance(nested_parameters, dict) and isinstance(
+                        template_parameters, dict
+                    ):
+                        matches.extend(
+                            self._compare_objects(
+                                template_parameters=template_parameters,
+                                nested_parameters=nested_parameters,
+                                path=[
+                                    "Resources",
+                                    resource_name,
+                                    "Properties",
+                                    "Parameters",
+                                ],
+                                scenario=parameter_group.get("Scenario"),
+                            )
+                        )
+
+        return matches
+
     def match(self, cfn: Template) -> RuleMatches:
         """Check CloudFormation Properties"""
-        matches = []
-        resources = cfn.get_resources("AWS::CloudFormation::Stack")
-        for resource_name, attributes in resources.items():
+        matches: RuleMatches = []
+
+        # Skip if template is passed via stdin (filename is None)
+        if not cfn.filename:
+            return matches
+
+        base_dir = os.path.dirname(os.path.abspath(cfn.filename))
+
+        # Validate AWS::CloudFormation::Stack resources
+        for resource_name, attributes in cfn.get_resources(
+            "AWS::CloudFormation::Stack"
+        ).items():
             properties = attributes.get("Properties", {})
-            # when template is passed via cat (or equivalent filename is none)
-            if cfn.filename:
-                base_dir = os.path.dirname(os.path.abspath(cfn.filename))
-
-                parameter_groups = cfn.get_object_without_conditions(
-                    obj=properties, property_names=["TemplateURL", "Parameters"]
+            matches.extend(
+                self._validate_nested_parameters(
+                    cfn=cfn,
+                    resource_name=resource_name,
+                    properties=properties,
+                    location_key="TemplateURL",
+                    base_dir=base_dir,
                 )
+            )
 
-                for parameter_group in parameter_groups:
-                    obj = parameter_group.get("Object")
-                    template_url = obj.get("TemplateURL")
-                    if isinstance(template_url, str):
-                        if not (
-                            template_url.startswith("http://")
-                            or template_url.startswith("https://")
-                            or template_url.startswith("s3://")
-                        ):
-                            template_path = os.path.normpath(
-                                os.path.join(base_dir, template_url)
-                            )
-                            if re.match(REGEX_DYN_REF, template_path):
-                                continue
-                            nested_parameters = self.__get_template_parameters(
-                                template_path
-                            )
-                            template_parameters = obj.get("Parameters")
-                            if isinstance(nested_parameters, dict) and isinstance(
-                                template_parameters, dict
-                            ):
-                                matches.extend(
-                                    self.__compare_objects(
-                                        template_parameters=template_parameters,
-                                        nested_parameters=nested_parameters,
-                                        path=[
-                                            "Resources",
-                                            resource_name,
-                                            "Properties",
-                                            "Parameters",
-                                        ],
-                                        scenario=parameter_group.get("Scenario"),
-                                    )
-                                )
+        # Validate AWS::Serverless::Application resources
+        for resource_name, attributes in cfn.get_resources(
+            "AWS::Serverless::Application"
+        ).items():
+            properties = attributes.get("Properties", {})
+            matches.extend(
+                self._validate_nested_parameters(
+                    cfn=cfn,
+                    resource_name=resource_name,
+                    properties=properties,
+                    location_key="Location",
+                    base_dir=base_dir,
+                )
+            )
 
         return matches

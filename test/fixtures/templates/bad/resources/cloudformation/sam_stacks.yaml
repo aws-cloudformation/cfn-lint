@@ -1,0 +1,50 @@
+Transform: AWS::Serverless-2016-10-31
+Conditions:
+  IsUsEast1: !Equals [!Ref 'AWS::Region', 'us-east-1']
+  IsUsWest2: !Equals [!Ref 'AWS::Region', 'us-west-2']
+Resources:
+  # Error: Specifies unknown parameter 'UnknownParam'
+  # Error: Missing required parameter 'Environment' (no default)
+  AppUnknownParam:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./sam_app_nested.yaml
+      Parameters:
+        AppName: my-app
+        UnknownParam: bad-value
+
+  # Error: Missing required parameters 'AppName' and 'Environment'
+  AppMissingRequired:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./sam_app_nested.yaml
+      Parameters:
+        Optional: just-optional
+
+  # Error: Multiple unknown parameters
+  AppMultipleUnknown:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./sam_app_nested.yaml
+      Parameters:
+        AppName: my-app
+        Environment: prod
+        BadParam1: value1
+        BadParam2: value2
+
+  # Error: Conditional with unknown parameters in some branches
+  AppConditionalBad:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./sam_app_nested.yaml
+      Parameters:
+        Fn::If:
+          - IsUsEast1
+          - AppName: east-app
+            WrongParam: wrong
+          - Fn::If:
+            - IsUsWest2
+            - Environment: west
+              AnotherWrong: bad
+            - AppName: fallback
+              StillWrong: value
