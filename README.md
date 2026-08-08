@@ -91,6 +91,10 @@ There are IDE plugins available to get direct linter feedback from you favorite 
 
 ### [GitHub Action](https://github.com/marketplace/actions/cfn-lint-action)
 
+### [MegaLinter](https://megalinter.io/)
+
+[MegaLinter](https://megalinter.io/) is an open-source linters aggregator for CI that runs cfn-lint on CloudFormation templates out of the box ([documentation](https://megalinter.io/latest/descriptors/cloudformation_cfn_lint/)).
+
 ### [Online demo](https://github.com/PatMyron/cfn-lint-online)
 
 ## Basic Usage
