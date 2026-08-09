@@ -9,7 +9,28 @@ import cfnlint.data.schemas.other.resources
 import cfnlint.helpers
 from cfnlint.jsonschema import ValidationResult, Validator
 from cfnlint.jsonschema._keywords import patternProperties
+from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
+
+
+class ServerlessAdditionalProperties(CloudFormationLintRule):
+    """Warn when SAM resource attributes are ignored"""
+
+    id = "W3001"
+    shortdesc = "SAM resource-level properties are ignored"
+    description = (
+        "Unknown resource-level properties on AWS::Serverless resources are ignored "
+        "by the SAM transform. Move supported resource properties under Properties."
+    )
+    source_url = (
+        "https://docs.aws.amazon.com/serverless-application-model/latest/"
+        "developerguide/sam-specification.html"
+    )
+    tags = ["resources", "serverless"]
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.parent_rules = ["E3001"]
 
 
 class Configuration(CfnLintJsonSchema):
@@ -41,6 +62,7 @@ class Configuration(CfnLintJsonSchema):
             "propertyNames": "E3011",
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
+        self.child_rules["W3001"] = ServerlessAdditionalProperties()
 
     def _pattern_properties(
         self, validator: Validator, aP: Any, instance: Any, schema: Any
@@ -56,6 +78,21 @@ class Configuration(CfnLintJsonSchema):
 
         yield from patternProperties(validator, aP, instance, schema)
 
+    def _is_serverless_additional_property(self, err: Any) -> bool:
+        if err.validator != "additionalProperties":
+            return False
+
+        if len(err.path) < 2:
+            return False
+
+        if not isinstance(err.instance, dict):
+            return False
+
+        resource_type = err.instance.get("Type")
+        return isinstance(resource_type, str) and resource_type.startswith(
+            "AWS::Serverless::"
+        )
+
     def validate(
         self, validator: Validator, keywords: Any, instance: Any, schema: Any
     ) -> ValidationResult:
@@ -65,4 +102,11 @@ class Configuration(CfnLintJsonSchema):
             context=validator.context.evolve(),
         )
 
-        yield from self._iter_errors(cfn_validator, instance)
+        for err in self._iter_errors(cfn_validator, instance):
+            if self._is_serverless_additional_property(err):
+                err.message = err.message.replace(
+                    "Additional properties are not allowed",
+                    "Additional resource properties are ignored by the SAM transform",
+                )
+                err.rule = self.child_rules["W3001"]
+            yield err
