@@ -291,116 +291,6 @@ class TestEventsLogGroupNameUnit:
         matches = rule.match(template)
         assert len(matches) == 1
 
-    def test_non_dict_events_no_crash(self, rule):
-        """Test that non-dict Events does not crash"""
-        template = Template(
-            "",
-            {
-                "AWSTemplateFormatVersion": "2010-09-09",
-                "Transform": "AWS::Serverless-2016-10-31",
-                "Resources": {
-                    "LogSubscriptionFunction": {
-                        "Type": "AWS::Serverless::Function",
-                        "Properties": {
-                            "CodeUri": "hello_world/",
-                            "Handler": "app.lambda_handler",
-                            "Runtime": "python3.9",
-                            "Events": {
-                                "Fn::If": ["Cond", {"Event1": {}}, {"Event2": {}}],
-                            },
-                        },
-                    },
-                },
-            },
-        )
-        # Should not crash, and should not produce matches
-        matches = rule.match(template)
-        assert len(matches) == 0
-
-    def test_non_dict_event_no_crash(self, rule):
-        """Test that non-dict individual event does not crash"""
-        template = Template(
-            "",
-            {
-                "AWSTemplateFormatVersion": "2010-09-09",
-                "Transform": "AWS::Serverless-2016-10-31",
-                "Resources": {
-                    "LogSubscriptionFunction": {
-                        "Type": "AWS::Serverless::Function",
-                        "Properties": {
-                            "CodeUri": "hello_world/",
-                            "Handler": "app.lambda_handler",
-                            "Runtime": "python3.9",
-                            "Events": {
-                                "Event1": {"Ref": "SomeParameter"},
-                            },
-                        },
-                    },
-                },
-            },
-        )
-        # Should not crash
-        matches = rule.match(template)
-        assert len(matches) == 0
-
-    def test_non_dict_event_properties_no_crash(self, rule):
-        """Test that non-dict event Properties does not crash"""
-        template = Template(
-            "",
-            {
-                "AWSTemplateFormatVersion": "2010-09-09",
-                "Transform": "AWS::Serverless-2016-10-31",
-                "Resources": {
-                    "LogSubscriptionFunction": {
-                        "Type": "AWS::Serverless::Function",
-                        "Properties": {
-                            "CodeUri": "hello_world/",
-                            "Handler": "app.lambda_handler",
-                            "Runtime": "python3.9",
-                            "Events": {
-                                "Event1": {
-                                    "Type": "CloudWatchLogs",
-                                    "Properties": {"Fn::If": ["Cond", {}, {}]},
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        )
-        # Should not crash
-        matches = rule.match(template)
-        assert len(matches) == 0
-
-    def test_missing_loggroupname_no_crash(self, rule):
-        """Test that missing LogGroupName does not crash"""
-        template = Template(
-            "",
-            {
-                "AWSTemplateFormatVersion": "2010-09-09",
-                "Transform": "AWS::Serverless-2016-10-31",
-                "Resources": {
-                    "LogSubscriptionFunction": {
-                        "Type": "AWS::Serverless::Function",
-                        "Properties": {
-                            "CodeUri": "hello_world/",
-                            "Handler": "app.lambda_handler",
-                            "Runtime": "python3.9",
-                            "Events": {
-                                "Event1": {
-                                    "Type": "CloudWatchLogs",
-                                    "Properties": {"FilterPattern": ""},
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        )
-        # Should not crash
-        matches = rule.match(template)
-        assert len(matches) == 0
-
     def test_non_cloudwatchlogs_event_ignored(self, rule):
         """Test that non-CloudWatchLogs event types are ignored"""
         template = Template(
@@ -430,5 +320,194 @@ class TestEventsLogGroupNameUnit:
                 },
             },
         )
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+
+class TestEventsLogGroupNameGuardBranches:
+    """Tests that exercise defensive guard branches for coverage"""
+
+    def test_subscription_filter_non_dict_properties(self, rule):
+        """Test SubscriptionFilter with non-dict Properties (line 60)"""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Resources": {
+                    "BadFilter": {
+                        "Type": "AWS::Logs::SubscriptionFilter",
+                        # Properties is a string instead of dict
+                        "Properties": "not-a-dict",
+                    },
+                },
+            },
+        )
+        # Should skip the resource and not crash
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_sam_function_non_dict_properties(self, rule):
+        """Test SAM Function with non-dict Properties (line 76)"""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "BadFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        # Properties is a string instead of dict
+                        "Properties": "not-a-dict",
+                    },
+                },
+            },
+        )
+        # Should skip the resource and not crash
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_sam_function_non_dict_events(self, rule):
+        """Test SAM Function with non-dict Events value (line 79)"""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "FunctionWithBadEvents": {
+                        "Type": "AWS::Serverless::Function",
+                        "Properties": {
+                            "CodeUri": "hello_world/",
+                            "Handler": "app.lambda_handler",
+                            "Runtime": "python3.9",
+                            # Events is a string instead of dict
+                            "Events": "not-a-dict",
+                        },
+                    },
+                },
+            },
+        )
+        # Should skip the Events and not crash
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_sam_function_non_dict_event_entry(self, rule):
+        """Test SAM Function with non-dict individual event (line 83)"""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "FunctionWithBadEvent": {
+                        "Type": "AWS::Serverless::Function",
+                        "Properties": {
+                            "CodeUri": "hello_world/",
+                            "Handler": "app.lambda_handler",
+                            "Runtime": "python3.9",
+                            "Events": {
+                                # Event value is a string instead of dict
+                                "BadEvent": "not-a-dict",
+                            },
+                        },
+                    },
+                },
+            },
+        )
+        # Should skip the event and not crash
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_sam_cloudwatchlogs_non_dict_event_properties(self, rule):
+        """Test CloudWatchLogs event with non-dict Properties (line 88)"""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "FunctionWithBadEventProps": {
+                        "Type": "AWS::Serverless::Function",
+                        "Properties": {
+                            "CodeUri": "hello_world/",
+                            "Handler": "app.lambda_handler",
+                            "Runtime": "python3.9",
+                            "Events": {
+                                "BadCloudWatchEvent": {
+                                    "Type": "CloudWatchLogs",
+                                    # Properties is a string instead of dict
+                                    "Properties": "not-a-dict",
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        )
+        # Should skip the event and not crash
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_sam_cloudwatchlogs_missing_loggroupname(self, rule):
+        """Test CloudWatchLogs event with missing LogGroupName (line 91)"""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "FunctionWithMissingLogGroup": {
+                        "Type": "AWS::Serverless::Function",
+                        "Properties": {
+                            "CodeUri": "hello_world/",
+                            "Handler": "app.lambda_handler",
+                            "Runtime": "python3.9",
+                            "Events": {
+                                "IncompleteEvent": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {
+                                        # LogGroupName is missing
+                                        "FilterPattern": "",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        )
+        # Should skip the event and not crash
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_sam_cloudwatchlogs_null_loggroupname(self, rule):
+        """Test CloudWatchLogs event with explicit null LogGroupName (line 91)"""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "FunctionWithNullLogGroup": {
+                        "Type": "AWS::Serverless::Function",
+                        "Properties": {
+                            "CodeUri": "hello_world/",
+                            "Handler": "app.lambda_handler",
+                            "Runtime": "python3.9",
+                            "Events": {
+                                "NullLogGroupEvent": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {
+                                        "LogGroupName": None,
+                                        "FilterPattern": "",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        )
+        # Should skip the event and not crash
         matches = rule.match(template)
         assert len(matches) == 0
