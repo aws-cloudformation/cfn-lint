@@ -1,0 +1,85 @@
+Transform: AWS::Serverless-2016-10-31
+Conditions:
+  IsUsEast1: !Equals [!Ref 'AWS::Region', 'us-east-1']
+Resources:
+  # Valid: local path with correct parameters (Optional has default, not required)
+  AppValid:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./sam_app_nested.yaml
+      Parameters:
+        AppName: my-app
+        Environment: prod
+
+  # Valid: local path with all parameters including optional
+  AppValidWithOptional:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./sam_app_nested.yaml
+      Parameters:
+        AppName: my-app
+        Environment: dev
+        Optional: custom-value
+
+  # Valid: SAR reference (dict Location) - should be skipped
+  AppSarReference:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location:
+        ApplicationId: arn:aws:serverlessrepo:us-east-1:123456789012:applications/my-app
+        SemanticVersion: 1.0.0
+      Parameters:
+        SomeUnknownParam: value
+
+  # Valid: S3 URL - should be skipped
+  AppS3Url:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: s3://my-bucket/template.yaml
+      Parameters:
+        SomeUnknownParam: value
+
+  # Valid: HTTPS URL - should be skipped
+  AppHttpsUrl:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: https://s3.amazonaws.com/my-bucket/template.yaml
+      Parameters:
+        SomeUnknownParam: value
+
+  # Valid: Location using intrinsic function
+  AppIntrinsicLocation:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: !Sub "${AWS::Region}/template.yaml"
+      Parameters:
+        AppName: intrinsic-app
+
+  # Valid: Invalid local path (template not found) - should not crash
+  AppInvalidPath:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./nonexistent_template.yaml
+      Parameters:
+        SomeParam: value
+
+  # Valid: Conditional parameters
+  AppConditional:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./sam_app_nested.yaml
+      Parameters:
+        Fn::If:
+          - IsUsEast1
+          - AppName: east-app
+            Environment: prod
+          - AppName: west-app
+            Environment: dev
+
+  # Valid: Dynamic reference in Location
+  AppDynamicRef:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: "{{resolve:ssm:/my/template/path:1}}"
+      Parameters:
+        SomeParam: value
