@@ -331,10 +331,116 @@ class TestSnapStartSamEdgeCases:
         errs = list(rule.validate(validator, "", "PublishedVersions", {}))
         assert errs == []
 
-    def test_sam_with_non_dict_resources(self, rule, validator):
-        """Non-dict Resources should not cause errors"""
+    def test_sam_with_intrinsic_resources(self, rule, validator):
+        """Resources as intrinsic function should bail out without error"""
         template = {
             "Resources": {"Ref": "SomeRef"},
+        }
+        validator = validator.evolve(
+            cfn=Template("", template),
+            context=Context(
+                path=Path(
+                    path=deque(
+                        [
+                            "Resources",
+                            "MyFunction",
+                            "Properties",
+                            "SnapStart",
+                            "ApplyOn",
+                        ]
+                    ),
+                    cfn_path=deque(
+                        [
+                            "Resources",
+                            "AWS::Serverless::Function",
+                            "Properties",
+                            "SnapStart",
+                            "ApplyOn",
+                        ]
+                    ),
+                )
+            ),
+        )
+        errs = list(rule.validate(validator, "", "PublishedVersions", {}))
+        assert errs == []
+
+    def test_sam_with_string_resources(self, rule, validator):
+        """Resources as string should bail out without error (line 52)"""
+        template = {
+            "Resources": "not-a-dict",
+        }
+        validator = validator.evolve(
+            cfn=Template("", template),
+            context=Context(
+                path=Path(
+                    path=deque(
+                        [
+                            "Resources",
+                            "MyFunction",
+                            "Properties",
+                            "SnapStart",
+                            "ApplyOn",
+                        ]
+                    ),
+                    cfn_path=deque(
+                        [
+                            "Resources",
+                            "AWS::Serverless::Function",
+                            "Properties",
+                            "SnapStart",
+                            "ApplyOn",
+                        ]
+                    ),
+                )
+            ),
+        )
+        errs = list(rule.validate(validator, "", "PublishedVersions", {}))
+        assert errs == []
+
+    def test_sam_with_string_resource(self, rule, validator):
+        """Resource as string should bail out without error (line 61)"""
+        template = {
+            "Resources": {
+                "MyFunction": "not-a-dict",
+            }
+        }
+        validator = validator.evolve(
+            cfn=Template("", template),
+            context=Context(
+                path=Path(
+                    path=deque(
+                        [
+                            "Resources",
+                            "MyFunction",
+                            "Properties",
+                            "SnapStart",
+                            "ApplyOn",
+                        ]
+                    ),
+                    cfn_path=deque(
+                        [
+                            "Resources",
+                            "AWS::Serverless::Function",
+                            "Properties",
+                            "SnapStart",
+                            "ApplyOn",
+                        ]
+                    ),
+                )
+            ),
+        )
+        errs = list(rule.validate(validator, "", "PublishedVersions", {}))
+        assert errs == []
+
+    def test_sam_with_string_properties(self, rule, validator):
+        """Properties as string should bail out without error (line 70)"""
+        template = {
+            "Resources": {
+                "MyFunction": {
+                    "Type": "AWS::Serverless::Function",
+                    "Properties": "not-a-dict",
+                },
+            }
         }
         validator = validator.evolve(
             cfn=Template("", template),
