@@ -341,3 +341,161 @@ class TestIgnoreGlobalsMatch:
         )
         matches = rule.match(template)
         assert len(matches) == 2
+
+    def test_ignore_globals_globals_section_is_intrinsic(self, rule):
+        """Globals section that is an intrinsic should be skipped."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": {"Fn::If": ["Cond", {"Function": {"Timeout": 30}}, {}]},
+                "Resources": {
+                    "MyFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "IgnoreGlobals": ["InvalidKey"],
+                        "Properties": {"Handler": "index.handler"},
+                    }
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_ignore_globals_resources_not_dict(self, rule):
+        """Resources section not a dict should be skipped."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": {"Function": {"Timeout": 30}},
+                "Resources": "not-a-dict",
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_ignore_globals_resource_not_dict(self, rule):
+        """Resource that is not a dict should be skipped."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": {"Function": {"Timeout": 30}},
+                "Resources": {
+                    "MyFunction": "not-a-dict",
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_ignore_globals_resource_type_not_string(self, rule):
+        """Resource Type not a string should be skipped."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": {"Function": {"Timeout": 30}},
+                "Resources": {
+                    "MyFunction": {
+                        "Type": {"Ref": "SomeParam"},
+                        "IgnoreGlobals": ["InvalidKey"],
+                        "Properties": {"Handler": "index.handler"},
+                    }
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_ignore_globals_global_props_is_intrinsic(self, rule):
+        """Global props for resource type that is an intrinsic should be skipped."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": {"Function": {"Fn::If": ["Cond", {"Timeout": 30}, {}]}},
+                "Resources": {
+                    "MyFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "IgnoreGlobals": ["InvalidKey"],
+                        "Properties": {"Handler": "index.handler"},
+                    }
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_ignore_globals_entry_not_string(self, rule):
+        """IgnoreGlobals entry that is not a string (e.g. number) should be skipped."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": {"Function": {"Timeout": 30}},
+                "Resources": {
+                    "MyFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "IgnoreGlobals": [123, "Timeout"],
+                        "Properties": {"Handler": "index.handler"},
+                    }
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        # Only the number entry is skipped; "Timeout" is valid so no error
+        assert len(matches) == 0
+
+    def test_ignore_globals_missing_globals_section(self, rule):
+        """Missing Globals section should produce no match."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "MyFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "IgnoreGlobals": ["Timeout"],
+                        "Properties": {"Handler": "index.handler"},
+                    }
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_ignore_globals_not_list_or_wildcard(self, rule):
+        """IgnoreGlobals that is not a list and not '*' should be skipped."""
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Globals": {"Function": {"Timeout": 30}},
+                "Resources": {
+                    "MyFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "IgnoreGlobals": "Timeout",  # string but not "*"
+                        "Properties": {"Handler": "index.handler"},
+                    }
+                },
+            },
+            ["us-east-1"],
+        )
+        matches = rule.match(template)
+        assert len(matches) == 0
