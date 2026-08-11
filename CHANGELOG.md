@@ -1,3 +1,17 @@
+### v1.55.0
+## What's Changed
+* Update [E3043](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3043) for Serverless::Application by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4617
+* Update [W2533](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W2533) Handler/Runtime on Zip Serverless::Function by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4618
+* Update [W2530](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W2530) SnapStart support for Serverless::Function by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4616
+* Update [E3724](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3724) to validate IgnoreGlobals keys by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4615
+* Update [E2529](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2529) count SAM CloudWatchLogs events by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4614
+* Validate `Fn::Select` negative indexes by @0xTaoZ in https://github.com/aws-cloudformation/cfn-lint/pull/4622
+* New rule [W3001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3001) to warn for ignored SAM resource attributes by @0xTaoZ in https://github.com/aws-cloudformation/cfn-lint/pull/4620
+* test([W3001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3001)): cover guard branches and remove dead code by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4624
+* Update CloudFormation schemas to `2026-08-11` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4602
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.54.0...v1.55.0
+
 ### v1.54.0
 ## What's Changed
 * fix(ec2): Allow FromPort/ToPort for ICMPv6 in W3687 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4600
