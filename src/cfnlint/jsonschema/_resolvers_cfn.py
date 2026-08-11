@@ -368,6 +368,8 @@ def select(validator: Validator, instance: Any) -> ResolutionResult:
                 continue
             if not validator.is_type(obj, "array"):
                 continue
+            if i < 0:
+                continue
             if len(obj) <= i:
                 continue
             yield from obj_v.resolve_value(obj[i])

@@ -115,6 +115,11 @@ def test_resolvers_ref(name, instance, response):
             [],
         ),
         (
+            "Invalid Select with a negative index",
+            {"Fn::Select": [-1, ["a", "b"]]},
+            [],
+        ),
+        (
             "Invalid Split with an invalid type",
             {"Fn::Split": {"foo": "bar"}},
             [],
