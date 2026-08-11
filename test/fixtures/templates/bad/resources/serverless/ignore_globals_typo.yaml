@@ -1,0 +1,23 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  Function:
+    Runtime: nodejs20.x
+    Timeout: 30
+Resources:
+  TypoFunction:
+    Type: AWS::Serverless::Function
+    IgnoreGlobals:
+      - Timeot  # Typo - should be 'Timeout'
+    Properties:
+      Handler: index.handler
+      CodeUri: 's3://test-bucket/mySourceCode.zip'
+  AnotherTypoFunction:
+    Type: AWS::Serverless::Function
+    IgnoreGlobals:
+      - InvalidKey  # Not a valid global
+      - Runtime  # Valid
+    Properties:
+      Handler: index.handler
+      CodeUri: 's3://test-bucket/mySourceCode.zip'
