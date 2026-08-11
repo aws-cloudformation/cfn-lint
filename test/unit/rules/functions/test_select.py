@@ -55,6 +55,30 @@ def template():
             ],
         ),
         (
+            "Invalid Fn::Select with a negative index",
+            {"Fn::Select": [-1, ["foo", "bar"]]},
+            {"type": "string"},
+            [
+                ValidationError(
+                    "-1 is less than the minimum of 0",
+                    path=deque(["Fn::Select", 0]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "else",
+                            "prefixItems",
+                            0,
+                            "cfnContext",
+                            "schema",
+                            "minimum",
+                        ]
+                    ),
+                    validator="fn_select",
+                ),
+            ],
+        ),
+        (
             "Invalid Fn::Length using an invalid function for index",
             {"Fn::Select": [{"Fn::Length": [1, 2]}, ["bar"]]},
             {"type": "string"},
