@@ -47,6 +47,57 @@ class TestResourceConfiguration(BaseRuleTestCase):
             errors,
         )
 
+    def test_serverless_additional_properties_are_warnings(self):
+        validator = CfnTemplateValidator({})
+
+        errors = list(
+            self.rule.validate(
+                validator,
+                "cfnResources",
+                {
+                    "Function": {
+                        "Type": "AWS::Serverless::Function",
+                        "Description": "Wrong level",
+                        "Properties": {
+                            "CodeUri": "src/",
+                            "Handler": "app.handler",
+                            "Runtime": "python3.12",
+                        },
+                    }
+                },
+                {},
+            )
+        )
+
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0].rule.id, "W3001")
+        self.assertEqual(
+            errors[0].message,
+            "Additional resource properties are ignored by the SAM transform "
+            "('Description' was unexpected)",
+        )
+
+    def test_standard_resource_additional_properties_are_errors(self):
+        validator = CfnTemplateValidator({})
+
+        errors = list(
+            self.rule.validate(
+                validator,
+                "cfnResources",
+                {
+                    "Bucket": {
+                        "Type": "AWS::S3::Bucket",
+                        "Description": "Wrong level",
+                        "Properties": {},
+                    }
+                },
+                {},
+            )
+        )
+
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0].rule.id, "E3001")
+
         errors = list(
             self.rule.validate(validator, "cfnResources", {"foo": {"Type": []}}, {})
         )
