@@ -85,9 +85,6 @@ class Configuration(CfnLintJsonSchema):
         if len(err.path) < 2:
             return False
 
-        if not isinstance(err.instance, dict):
-            return False
-
         resource_type = err.instance.get("Type")
         return isinstance(resource_type, str) and resource_type.startswith(
             "AWS::Serverless::"
