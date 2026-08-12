@@ -56,32 +56,24 @@ def context(cfn):
             [],
         ),
         (
+            "Valid Fn::FindInMap with DefaultValue",
+            {"Fn::FindInMap": ["A", "B", "C", {"DefaultValue": "D"}]},
+            {"type": "string"},
+            {},
+            None,
+            [],
+        ),
+        (
             "Invalid Fn::FindInMap too long",
-            {"Fn::FindInMap": ["foo", "bar", "key", "key2"]},
+            {"Fn::FindInMap": ["foo", "bar", "key", {"DefaultValue": "D"}, "key2"]},
             {"type": "string"},
             {},
             None,
             [
                 ValidationError(
-                    "expected maximum item count: 3, found: 4",
+                    "expected maximum item count: 4, found: 5",
                     path=deque(["Fn::FindInMap"]),
-                    schema_path=deque(["cfnContext", "schema", "else", "maxItems"]),
-                    validator="fn_findinmap",
-                ),
-                ValidationError(
-                    "'key2' is not of type 'object'",
-                    path=deque(["Fn::FindInMap", 3]),
-                    schema_path=deque(
-                        [
-                            "cfnContext",
-                            "schema",
-                            "prefixItems",
-                            3,
-                            "cfnContext",
-                            "schema",
-                            "type",
-                        ]
-                    ),
+                    schema_path=deque(["cfnContext", "schema", "maxItems"]),
                     validator="fn_findinmap",
                 ),
             ],
