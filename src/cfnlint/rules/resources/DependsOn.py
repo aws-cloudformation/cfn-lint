@@ -25,6 +25,15 @@ class DependsOn(CfnLintKeyword):
         if not validator.is_type(instance, "string"):
             return
 
+        # Skip validation for SAM/MODULE sub-resources (e.g. MyFuncAliaslive
+        # for MyFunc of type AWS::Serverless::Function). SAM generates many
+        # resources with dynamic names that we can't fully enumerate.
+        if any(
+            instance.startswith(m) and instance != m
+            for m in validator.context.module_names
+        ):
+            return
+
         resources = list(validator.context.resources.keys())
 
         if len(validator.context.path.path) > 1:
