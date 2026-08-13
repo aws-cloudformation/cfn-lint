@@ -34,6 +34,7 @@ pub mod e3058;
 pub mod i3010;
 pub mod i3012;
 pub mod i3037;
+pub mod w3001;
 pub mod w3005;
 pub mod w3011;
 pub mod w3034;

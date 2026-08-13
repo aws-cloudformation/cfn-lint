@@ -23,7 +23,10 @@ impl CfnLintRule for E3697 {
     }
 
     fn keywords(&self) -> &[&str] {
-        &["Resources/AWS::Lambda::Function/Properties/Environment/Variables"]
+        &[
+            "Resources/AWS::Lambda::Function/Properties/Environment/Variables",
+            "Resources/AWS::Serverless::Function/Properties/Environment/Variables",
+        ]
     }
 
     fn validate(
@@ -81,6 +84,22 @@ mod tests {
 Resources:
   MyFunction:
     Type: AWS::Lambda::Function
+    Properties:
+      Environment:
+        Variables:
+          KEY1: value1
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        assert!(E3697.validate_template(&tmpl, &ast).is_empty());
+    }
+
+    #[test]
+    fn test_serverless_function_env_vars_ok() {
+        let yaml = br#"
+Resources:
+  MyFunction:
+    Type: AWS::Serverless::Function
     Properties:
       Environment:
         Variables:

@@ -116,6 +116,37 @@ impl Engine {
         regions: &[String],
         parameters: &HashMap<String, String>,
     ) -> Vec<ValidationError> {
+        // SAM Globals merge: merge Globals properties into SAM resources before validation
+        let root = crate::sam_globals::merge_globals(root);
+
+        // Re-parse template from merged AST for the walker
+        let template = match Template::from_ast(&root) {
+            Ok(t) => {
+                let mut t = t;
+                t.filename = template.filename.clone();
+                t
+            }
+            Err(_) => {
+                // If parsing fails, fall back to original template
+                return self.validate_with_parameters_inner(
+                    template,
+                    &template.root,
+                    regions,
+                    parameters,
+                );
+            }
+        };
+
+        self.validate_with_parameters_inner(&template, &root, regions, parameters)
+    }
+
+    fn validate_with_parameters_inner(
+        &mut self,
+        template: &Template,
+        root: &AstNode,
+        regions: &[String],
+        parameters: &HashMap<String, String>,
+    ) -> Vec<ValidationError> {
         // E1002: Check template file size limit (1MB)
         let mut issues = Vec::new();
         const MAX_TEMPLATE_SIZE: u64 = 1_000_000;

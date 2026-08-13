@@ -2,6 +2,7 @@ use crate::ast::AstNode;
 use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
 use crate::jsonschema::ValidationError;
 use crate::rules::Severity;
+use crate::sam::collect_sam_implicit_resources;
 use crate::template::Template;
 
 const PSEUDO_PARAMETERS: &[&str] = &[
@@ -43,11 +44,11 @@ impl CfnLintRule for E1020 {
         template: &Template,
         root: &AstNode,
     ) -> Vec<crate::jsonschema::ValidationError> {
-        // SAM templates create implicit resources we can't predict
-        if crate::transform::is_sam_template(root) {
-            return vec![];
-        }
         let mut issues = Vec::new();
+
+        // Collect SAM implicit resources (empty for non-SAM templates)
+        let synthetic_resources = collect_sam_implicit_resources(root);
+
         // Build the set of valid ref targets
         let mut valid_refs: Vec<&str> = Vec::new();
         // Collect MODULE and Serverless resource names for prefix matching
@@ -66,6 +67,24 @@ impl CfnLintRule for E1020 {
         for p in PSEUDO_PARAMETERS {
             valid_refs.push(p);
         }
+
+        // Add SAM synthetic resources to valid refs
+        // Store owned strings separately to extend lifetimes
+        let synthetic_ids: Vec<String> = synthetic_resources
+            .iter()
+            .map(|s| s.logical_id.clone())
+            .collect();
+        for id in &synthetic_ids {
+            valid_refs.push(id.as_str());
+            // Synthetic Serverless resources also support prefix matching
+            if synthetic_resources
+                .iter()
+                .any(|s| s.logical_id == *id && s.resource_type.starts_with("AWS::Serverless::"))
+            {
+                module_prefixes.push(id.clone());
+            }
+        }
+
         valid_refs.sort_unstable();
 
         // Build set of valid condition names
@@ -332,6 +351,182 @@ Outputs:
         assert_eq!(issues.len(), 1);
         assert_eq!(issues[0].rule_id.as_deref(), Some("E6101"));
         assert!(issues[0].message.contains("MyBucket.Arn"));
+    }
+
+    // ── SAM implicit resource tests ──
+
+    /// SAM Function implicit Role should be a valid Ref target
+    #[test]
+    fn test_sam_function_implicit_role_valid() {
+        let yaml = r#"
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  MyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: python3.9
+  MyPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: test
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement: []
+      Roles:
+        - !Ref MyFunctionRole
+"#;
+        let ast = crate::parser::parse(yaml.as_bytes()).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = E1020.validate_template(&tmpl, &ast);
+        assert!(
+            issues.is_empty(),
+            "Ref to MyFunctionRole should be valid: {:?}",
+            issues
+        );
+    }
+
+    /// SAM Function with AutoPublishAlias - Version/Alias should be valid (dotted refs)
+    #[test]
+    fn test_sam_function_version_alias_valid() {
+        let yaml = r#"
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  MyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: python3.9
+      AutoPublishAlias: live
+Outputs:
+  VersionArn:
+    Value: !Ref MyFunction.Version
+  AliasArn:
+    Value: !Ref MyFunction.Alias
+"#;
+        let ast = crate::parser::parse(yaml.as_bytes()).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = E1020.validate_template(&tmpl, &ast);
+        assert!(
+            issues.is_empty(),
+            "Refs to MyFunction.Version and MyFunction.Alias should be valid: {:?}",
+            issues
+        );
+    }
+
+    /// SAM implicit ServerlessRestApi should be valid
+    #[test]
+    fn test_sam_implicit_rest_api_valid() {
+        let yaml = r#"
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  MyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: python3.9
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /hello
+            Method: get
+Outputs:
+  ApiId:
+    Value: !Ref ServerlessRestApi
+"#;
+        let ast = crate::parser::parse(yaml.as_bytes()).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = E1020.validate_template(&tmpl, &ast);
+        assert!(
+            issues.is_empty(),
+            "Ref to ServerlessRestApi should be valid: {:?}",
+            issues
+        );
+    }
+
+    /// Invalid Ref in SAM template should still be reported
+    #[test]
+    fn test_sam_invalid_ref_still_errors() {
+        let yaml = r#"
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  MyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: python3.9
+      Role: !Ref NonExistentRole
+"#;
+        let ast = crate::parser::parse(yaml.as_bytes()).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = E1020.validate_template(&tmpl, &ast);
+        assert_eq!(
+            issues.len(),
+            1,
+            "Invalid Ref should still error: {:?}",
+            issues
+        );
+        assert!(issues[0].message.contains("NonExistentRole"));
+    }
+
+    /// SAM StateMachine implicit Role should be valid
+    #[test]
+    fn test_sam_state_machine_implicit_role_valid() {
+        let yaml = r#"
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  MyStateMachine:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      Definition:
+        StartAt: Hello
+        States:
+          Hello:
+            Type: Pass
+            End: true
+  MyPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: test
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement: []
+      Roles:
+        - !Ref MyStateMachineRole
+"#;
+        let ast = crate::parser::parse(yaml.as_bytes()).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = E1020.validate_template(&tmpl, &ast);
+        assert!(
+            issues.is_empty(),
+            "Ref to MyStateMachineRole should be valid: {:?}",
+            issues
+        );
+    }
+
+    /// SAM API Stage should be valid
+    #[test]
+    fn test_sam_api_stage_valid() {
+        let yaml = r#"
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  MyApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+Outputs:
+  StageArn:
+    Value: !Ref MyApiStage
+"#;
+        let ast = crate::parser::parse(yaml.as_bytes()).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let issues = E1020.validate_template(&tmpl, &ast);
+        assert!(
+            issues.is_empty(),
+            "Ref to MyApiStage should be valid: {:?}",
+            issues
+        );
     }
 }
 

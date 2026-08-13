@@ -55,6 +55,10 @@ pub mod helpers;
 #[doc(hidden)]
 pub mod resolver;
 #[doc(hidden)]
+pub mod sam;
+#[doc(hidden)]
+pub mod sam_globals;
+#[doc(hidden)]
 pub mod transform;
 #[doc(hidden)]
 pub mod walker;

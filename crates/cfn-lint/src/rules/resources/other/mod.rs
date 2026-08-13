@@ -7,6 +7,7 @@ pub mod e3055;
 pub mod e3056;
 pub mod e3057;
 pub mod e3063;
+pub mod e3066;
 pub mod e3503;
 pub mod e3504;
 pub mod e3601;

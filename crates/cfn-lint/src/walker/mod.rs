@@ -66,6 +66,14 @@ impl TemplateWalker {
 
         let region = regions.first().map(|s| s.as_str()).unwrap_or("us-east-1");
 
+        // Determine if CFN provider schemas exist for this region (as opposed to only SAM schemas).
+        // This affects whether E3006 fires for unknown resource types.
+        let has_cfn_schemas = self
+            .schema_provider
+            .as_ref()
+            .map(|sp| sp.has_cfn_schemas(region))
+            .unwrap_or(false);
+
         // Build a context for inline function resolution (shared by walker + schema validation)
         let mut tmpl_for_ctx = template.clone();
         // Pre-compute valid GetAtt attributes for each resource
@@ -245,6 +253,7 @@ impl TemplateWalker {
                 &type_base,
                 None,
                 resource_schema,
+                has_cfn_schemas,
                 &mut issues,
             );
         }
@@ -262,6 +271,7 @@ impl TemplateWalker {
                         &type_path,
                         None,
                         None,
+                        has_cfn_schemas,
                         &mut issues,
                     );
                 }
@@ -281,6 +291,7 @@ impl TemplateWalker {
                         &type_path,
                         None,
                         None,
+                        has_cfn_schemas,
                         &mut issues,
                     );
                 }
@@ -294,6 +305,7 @@ impl TemplateWalker {
         issues
     }
 
+    #[allow(clippy::too_many_arguments)]
     fn walk_node(
         &self,
         validator: &Validator,
@@ -302,6 +314,7 @@ impl TemplateWalker {
         type_path: &[String],
         schema_node: Option<&cfn_schema::SchemaNode>,
         resource_schema: Option<&cfn_schema::ResourceSchema>,
+        has_cfn_schemas: bool,
         issues: &mut Vec<ValidationError>,
     ) {
         static EMPTY_SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| serde_json::json!({}));
@@ -309,7 +322,7 @@ impl TemplateWalker {
         let schema_raw = schema_node
             .map(|s| &s.raw)
             .or_else(|| resource_schema.map(|rs| &rs.raw))
-            .unwrap_or(if self.schema_provider.is_some() {
+            .unwrap_or(if has_cfn_schemas {
                 &serde_json::Value::Null
             } else {
                 &EMPTY_SCHEMA
@@ -346,6 +359,7 @@ impl TemplateWalker {
                         &child_type,
                         child_schema,
                         resource_schema,
+                        has_cfn_schemas,
                         issues,
                     );
                 }
@@ -366,6 +380,7 @@ impl TemplateWalker {
                         &child_type,
                         items_schema,
                         resource_schema,
+                        has_cfn_schemas,
                         issues,
                     );
                 }
@@ -381,6 +396,7 @@ impl TemplateWalker {
                     type_path,
                     schema_node,
                     resource_schema,
+                    has_cfn_schemas,
                     issues,
                 );
             }
@@ -403,6 +419,7 @@ impl TemplateWalker {
         }
     }
 
+    #[allow(clippy::too_many_arguments)]
     fn walk_fn_if(
         &self,
         validator: &Validator,
@@ -411,6 +428,7 @@ impl TemplateWalker {
         type_path: &[String],
         schema_node: Option<&cfn_schema::SchemaNode>,
         resource_schema: Option<&cfn_schema::ResourceSchema>,
+        has_cfn_schemas: bool,
         issues: &mut Vec<ValidationError>,
     ) {
         let arr = match func.args.as_array() {
@@ -453,6 +471,7 @@ impl TemplateWalker {
                 type_path,
                 schema_node,
                 resource_schema,
+                has_cfn_schemas,
                 issues,
             );
         }

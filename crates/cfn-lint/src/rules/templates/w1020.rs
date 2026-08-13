@@ -33,9 +33,8 @@ impl CfnLintRule for W1020 {
         _template: &Template,
         root: &AstNode,
     ) -> Vec<crate::jsonschema::ValidationError> {
-        if crate::transform::is_sam_template(root) {
-            return vec![];
-        }
+        // W1020 checks for Fn::Sub without variables - this works the same for
+        // SAM templates since it's purely syntactic (doesn't involve Ref targets).
         let mut issues = Vec::new();
         find_sub_no_vars(root, &[], &SUB_VARIABLE_REGEX, &mut issues);
         issues

@@ -214,6 +214,57 @@ macro_rules! extension_schema_rule {
 
         $crate::register_cfn_lint_rule!($struct_name);
     };
+    // Multi-keyword variant with regional flag for non-regional schemas
+    (
+        $struct_name:ident,
+        id: $id:expr,
+        description: $desc:expr,
+        severity: $sev:expr,
+        schema_path: $schema_path:expr,
+        regional: $regional:expr,
+        keywords: [$($kw:expr),+ $(,)?]
+    ) => {
+        pub struct $struct_name;
+
+        impl $crate::jsonschema::cfn_lint_keyword::CfnLintRule for $struct_name {
+            fn id(&self) -> &str { $id }
+            fn short_description(&self) -> &str { $desc }
+            fn description(&self) -> &str { $desc }
+            fn severity(&self) -> $crate::rules::Severity { $sev }
+            fn keywords(&self) -> &[&str] {
+                &[$($kw),+]
+            }
+            fn validate(
+                &self,
+                validator: &$crate::jsonschema::Validator,
+                _keyword: &str,
+                instance: &$crate::ast::AstNode,
+                _schema: &serde_json::Value,
+                path: &[String],
+            ) -> Vec<$crate::jsonschema::ValidationError> {
+                use std::sync::LazyLock;
+                static SCHEMA: LazyLock<serde_json::Value> = LazyLock::new(|| {
+                    serde_json::from_str(include_str!($schema_path)).unwrap_or_default()
+                });
+
+                if instance.as_function().is_some() {
+                    return vec![];
+                }
+
+                if $regional {
+                    $crate::jsonschema::json_schema_rule::validate_regional(
+                        $id, $desc, validator, instance, &SCHEMA, path
+                    )
+                } else {
+                    $crate::jsonschema::json_schema_rule::validate_schema(
+                        $id, $desc, validator, instance, &SCHEMA, path
+                    )
+                }
+            }
+        }
+
+        $crate::register_cfn_lint_rule!($struct_name);
+    };
 }
 
 /// Declarative macro for "anchor" rules: no-op metadata holders whose actual
