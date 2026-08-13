@@ -1,3 +1,13 @@
+### v1.55.1
+## What's Changed
+* chore(deps): bump setuptools from 83.0.0 to 84.0.0 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4630
+* [E3005](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3005): skip `DependsOn` validation for SAM/MODULE sub-resources by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4632
+* fix(functions): allow `FindInMap` `DefaultValue` without transform by @0xTaoZ in https://github.com/aws-cloudformation/cfn-lint/pull/4628
+* fix(schema): retry transient network errors when downloading schemas by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4633
+* Update CloudFormation schemas to `2026-08-13` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4626
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.55.0...v1.55.1
+
 ### v1.55.0
 ## What's Changed
 * Update [E3043](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3043) for Serverless::Application by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4617
