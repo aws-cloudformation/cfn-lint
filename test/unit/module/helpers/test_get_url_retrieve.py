@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import MagicMock, patch
+from urllib.error import HTTPError, URLError
 
 import cfnlint.helpers
 
@@ -49,3 +50,53 @@ class TestGetUrlRetrieve(BaseTestCase):
         mock_load_metadata.assert_called_once()
         mock_save_metadata.assert_called_once()
         self.assertEqual(result, "file/path")
+
+    @patch("cfnlint.helpers.time.sleep")
+    @patch("cfnlint.helpers.urlretrieve")
+    def test_get_url_retrieve_retries_transient_error(
+        self, mocked_urlretrieve, mocked_sleep
+    ):
+        """A transient connection reset is retried and then succeeds"""
+        url = "http://foo.com"
+        mocked_urlretrieve.side_effect = [
+            URLError("Remote end closed connection without response"),
+            ("file/path", None),
+        ]
+
+        result = cfnlint.helpers.get_url_retrieve(url)
+
+        self.assertEqual(result, "file/path")
+        self.assertEqual(mocked_urlretrieve.call_count, 2)
+        mocked_sleep.assert_called_once()
+
+    @patch("cfnlint.helpers.time.sleep")
+    @patch("cfnlint.helpers.urlretrieve")
+    def test_get_url_retrieve_raises_after_exhausting_retries(
+        self, mocked_urlretrieve, mocked_sleep
+    ):
+        """A persistent transient error is retried up to the limit then raised"""
+        url = "http://foo.com"
+        mocked_urlretrieve.side_effect = URLError("connection reset")
+
+        with self.assertRaises(URLError):
+            cfnlint.helpers.get_url_retrieve(url)
+
+        self.assertEqual(mocked_urlretrieve.call_count, 3)
+        self.assertEqual(mocked_sleep.call_count, 2)
+
+    @patch("cfnlint.helpers.time.sleep")
+    @patch("cfnlint.helpers.urlretrieve")
+    def test_get_url_retrieve_does_not_retry_client_error(
+        self, mocked_urlretrieve, mocked_sleep
+    ):
+        """A deterministic HTTP 404 is not retried"""
+        url = "http://foo.com"
+        mocked_urlretrieve.side_effect = HTTPError(
+            url, 404, "Not Found", hdrs=None, fp=None
+        )
+
+        with self.assertRaises(HTTPError):
+            cfnlint.helpers.get_url_retrieve(url)
+
+        mocked_urlretrieve.assert_called_once()
+        mocked_sleep.assert_not_called()
