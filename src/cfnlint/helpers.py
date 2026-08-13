@@ -19,8 +19,10 @@ import json
 import logging
 import os
 import sys
+import time
 from io import BytesIO
-from typing import Any, Sequence
+from typing import Any, Callable, Sequence, TypeVar
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen, urlretrieve
 
 import regex as re
@@ -437,6 +439,58 @@ def get_metadata_filename(url):
     return metadata_filename
 
 
+# Schema specs are downloaded from GitHub release assets served through a CDN
+# that intermittently resets connections under load ("Remote end closed
+# connection without response"). A single reset would otherwise fail the whole
+# `--update-specs` run, so transient network errors are retried with backoff.
+_URL_RETRY_ATTEMPTS = 3
+_URL_RETRY_BASE_DELAY = 0.5
+
+_T = TypeVar("_T")
+
+
+def _is_retryable_url_error(exc: OSError) -> bool:
+    """Return True for transient network errors worth retrying.
+
+    Deterministic HTTP client errors (4xx other than 429) are not retried;
+    429, 5xx, connection resets, and timeouts are.
+    """
+    if isinstance(exc, HTTPError):
+        return exc.code == 429 or exc.code >= 500
+    # URLError, ConnectionError (incl. RemoteDisconnected / ConnectionReset),
+    # and socket timeouts are all OSError subclasses.
+    return True
+
+
+def _retry_url_operation(operation: Callable[[], _T], description: str) -> _T:
+    """Run a network operation, retrying transient failures with backoff.
+
+    Args:
+        operation: A zero-argument callable that performs the network request.
+        description: Human-readable description used in retry log messages.
+    Returns:
+        Whatever ``operation`` returns on the first successful attempt.
+    """
+    delay = _URL_RETRY_BASE_DELAY
+    for attempt in range(1, _URL_RETRY_ATTEMPTS + 1):
+        try:
+            return operation()
+        except OSError as exc:
+            if attempt >= _URL_RETRY_ATTEMPTS or not _is_retryable_url_error(exc):
+                raise
+            LOGGER.warning(
+                "Transient error while %s (attempt %d/%d): %s; retrying in %.1fs",
+                description,
+                attempt,
+                _URL_RETRY_ATTEMPTS,
+                exc,
+                delay,
+            )
+            time.sleep(delay)
+            delay *= 2
+    raise RuntimeError("unreachable retry state")  # pragma: no cover
+
+
 def url_has_newer_version(url):
     """Checks to see if a newer version of the resource at the URL is available
     Always returns true if using Python2.7 due to lack of HEAD request support,
@@ -458,7 +512,8 @@ def url_has_newer_version(url):
     try:
         # Make an initial HEAD request
         req = Request(url, method="HEAD")
-        with urlopen(req) as res:
+        response = _retry_url_operation(lambda: urlopen(req), f"checking {url}")
+        with response as res:
             # If we have an ETag value stored and it matches the returned one,
             # then we already have a copy of the most recent version of the
             # resource, so don't bother fetching it again
@@ -486,7 +541,8 @@ def url_has_newer_version(url):
 def get_url_content(url, caching=False):
     """Get the contents of a spec file"""
 
-    with urlopen(url) as res:
+    response = _retry_url_operation(lambda: urlopen(url), f"fetching {url}")
+    with response as res:
         if caching and res.info().get("ETag"):
             metadata_filename = get_metadata_filename(url)
             # Load in all existing values
@@ -528,7 +584,10 @@ def get_url_retrieve(url: str, caching: bool = False) -> str:
                 metadata["url"] = url  # To make it obvious which url the Tag relates to
                 save_metadata(metadata, metadata_filename)
 
-    fileobject, _ = urlretrieve(url)
+    fileobject, _ = _retry_url_operation(
+        lambda: urlretrieve(url),
+        f"downloading {url}",
+    )
 
     return fileobject
 
