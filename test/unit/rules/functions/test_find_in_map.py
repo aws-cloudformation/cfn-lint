@@ -64,6 +64,32 @@ def context(cfn):
             [],
         ),
         (
+            "Invalid Fn::FindInMap 4th item not a DefaultValue object"
+            " without transform",
+            {"Fn::FindInMap": ["A", "B", "C", "notanobject"]},
+            {"type": "string"},
+            {},
+            None,
+            [
+                ValidationError(
+                    "'notanobject' is not of type 'object'",
+                    path=deque(["Fn::FindInMap", 3]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            3,
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
+                    validator="fn_findinmap",
+                ),
+            ],
+        ),
+        (
             "Invalid Fn::FindInMap too long",
             {"Fn::FindInMap": ["foo", "bar", "key", {"DefaultValue": "D"}, "key2"]},
             {"type": "string"},
