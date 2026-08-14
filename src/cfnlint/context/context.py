@@ -470,8 +470,18 @@ def _nested_stack_get_atts(filename: str, template_url: str) -> None | Attribute
     ):
         return None
 
+    # Block absolute paths specified directly in the template
+    if os.path.isabs(template_url):
+        return None
+
     base_dir = os.path.dirname(os.path.abspath(filename))
     template_path = os.path.normpath(os.path.join(base_dir, template_url))
+
+    # Ensure resolved path stays within current working directory
+    # to prevent path traversal attacks (e.g., ../../../../etc/passwd)
+    cwd = os.path.abspath(os.getcwd())
+    if not (template_path.startswith(cwd + os.sep) or template_path == cwd):
+        return None
 
     if re.match(REGEX_DYN_REF, template_path):
         return None
