@@ -1,0 +1,56 @@
+Parameters:
+  P:
+    Type: String
+  Batch:
+    Type: Number
+    Default: 1
+Conditions:
+  IsProd: !Equals [!Ref "AWS::Region", "us-east-1"]
+Resources:
+  LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        ImageId: ami-1234567890abcdef0
+        InstanceType: t3.micro
+  # Valid: object literal with a nested Ref
+  ValidObject:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    UpdatePolicy:
+      AutoScalingRollingUpdate:
+        MaxBatchSize: !Ref Batch
+        MinInstancesInService: 0
+    Properties:
+      MinSize: "0"
+      MaxSize: "0"
+      AvailabilityZones: !GetAZs ""
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplate
+        Version: !GetAtt LaunchTemplate.LatestVersionNumber
+  # Valid: Fn::If resolving to objects
+  ValidIf:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    UpdatePolicy: !If
+      - IsProd
+      - AutoScalingRollingUpdate:
+          MaxBatchSize: 1
+      - AutoScalingRollingUpdate:
+          MaxBatchSize: 2
+    Properties:
+      MinSize: "0"
+      MaxSize: "0"
+      AvailabilityZones: !GetAZs ""
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplate
+        Version: !GetAtt LaunchTemplate.LatestVersionNumber
+  # Invalid: a bare intrinsic cannot stand in for the object
+  BareRef:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    UpdatePolicy: !Ref P
+    Properties:
+      MinSize: "0"
+      MaxSize: "0"
+      AvailabilityZones: !GetAZs ""
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplate
+        Version: !GetAtt LaunchTemplate.LatestVersionNumber

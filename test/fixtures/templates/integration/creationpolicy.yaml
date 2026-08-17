@@ -1,0 +1,40 @@
+Parameters:
+  P:
+    Type: String
+  SignalCount:
+    Type: Number
+    Default: 1
+Conditions:
+  IsProd: !Equals [!Ref "AWS::Region", "us-east-1"]
+Resources:
+  # Valid: object literal with a nested Ref
+  ValidObject:
+    Type: AWS::CloudFormation::WaitCondition
+    CreationPolicy:
+      ResourceSignal:
+        Count: !Ref SignalCount
+        Timeout: PT15M
+  # Valid: Fn::If resolving to objects
+  ValidIf:
+    Type: AWS::CloudFormation::WaitCondition
+    CreationPolicy: !If
+      - IsProd
+      - ResourceSignal:
+          Count: 1
+          Timeout: PT15M
+      - ResourceSignal:
+          Count: 2
+          Timeout: PT15M
+  # Invalid: a bare intrinsic cannot stand in for the object
+  BareRefParam:
+    Type: AWS::CloudFormation::WaitCondition
+    CreationPolicy: !Ref P
+  BareRefResource:
+    Type: AWS::CloudFormation::WaitCondition
+    CreationPolicy: !Ref ValidObject
+  BareRefPseudo:
+    Type: AWS::CloudFormation::WaitCondition
+    CreationPolicy: !Ref "AWS::Region"
+  BareSub:
+    Type: AWS::CloudFormation::WaitCondition
+    CreationPolicy: !Sub "${P}"

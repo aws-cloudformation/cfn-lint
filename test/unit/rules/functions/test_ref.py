@@ -138,6 +138,56 @@ def context(cfn):
                 ),
             ],
         ),
+        (
+            "Pseudo parameter (string) is not an object",
+            {"Ref": "AWS::Region"},
+            {"type": "object"},
+            {},
+            [
+                ValidationError(
+                    "{'Ref': 'AWS::Region'} is not of type 'object'",
+                ),
+            ],
+        ),
+        (
+            "Pseudo parameter (list) does not satisfy a scalar schema",
+            {"Ref": "AWS::NotificationARNs"},
+            {"type": "string"},
+            {},
+            [
+                ValidationError(
+                    "{'Ref': 'AWS::NotificationARNs'} is not of type 'string'",
+                ),
+            ],
+        ),
+        (
+            "Pseudo parameter (string) satisfies a string schema",
+            {"Ref": "AWS::Region"},
+            {"type": "string"},
+            {},
+            [],
+        ),
+        (
+            "Pseudo parameter (list) satisfies an array schema",
+            {"Ref": "AWS::NotificationARNs"},
+            {"type": "array"},
+            {},
+            [],
+        ),
+        (
+            "Pseudo parameter with no schema type is not validated",
+            {"Ref": "AWS::Region"},
+            {},
+            {},
+            [],
+        ),
+        (
+            "Pseudo parameter (string) satisfies a string/array schema",
+            {"Ref": "AWS::Region"},
+            {"type": ["string", "array"]},
+            {},
+            [],
+        ),
     ],
 )
 def test_validate(name, instance, schema, context_evolve, expected, rule, context, cfn):
