@@ -1656,6 +1656,25 @@ def rule():
                 ),
             ],
         ),
+        (
+            "Literal '.$' field is allowed under QueryLanguage JSONata",
+            {
+                "Definition": {
+                    "QueryLanguage": "JSONata",
+                    "StartAt": "Pass",
+                    "States": {
+                        "Pass": {
+                            "Type": "Pass",
+                            "Assign": {
+                                "foo.$": "plainliteral",
+                            },
+                            "End": True,
+                        },
+                    },
+                }
+            },
+            [],
+        ),
     ],
 )
 def test_validate(

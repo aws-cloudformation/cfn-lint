@@ -109,10 +109,10 @@ class StateMachineDefinition(CfnLintJsonSchema):
             validator, instance, deque(["QueryLanguage"])
         ):
             if ql is None or ql == "JSONPath":
-                yield self.schema, ql_validator
+                yield self.schema, ql_validator, True
 
             if ql == "JSONata":
-                yield self._convert_schema_to_jsonata(), ql_validator
+                yield self._convert_schema_to_jsonata(), ql_validator, False
 
     def _validate_start_at(
         self,
@@ -207,6 +207,9 @@ class StateMachineDefinition(CfnLintJsonSchema):
             return True
         if stripped.startswith("$"):
             return True
+        # Intentionally loose: this accepts a malformed intrinsic such as
+        # "States.Foo bar)" as valid. Erring toward a false negative here is
+        # preferable to falsely flagging a genuine intrinsic function call.
         if stripped.startswith("States.") and stripped.endswith(")"):
             return True
         return False
@@ -266,6 +269,7 @@ class StateMachineDefinition(CfnLintJsonSchema):
         value: Any,
         add_path_to_message: bool,
         k: str,
+        is_jsonpath: bool = True,
     ) -> ValidationResult:
         for err in validator.iter_errors(value):
             if validator.is_type(err.instance, "string"):
@@ -294,8 +298,11 @@ class StateMachineDefinition(CfnLintJsonSchema):
         yield from self._validate_start_at(value, k, add_path_to_message)
 
         # Validate that ".$" payload template fields reference a JSONPath or
-        # an intrinsic function
-        yield from self._validate_reference_paths(value, k)
+        # an intrinsic function. The ".$" convention is specific to JSONPath;
+        # under QueryLanguage: JSONata a literal ".$" field name is legal and
+        # carries no JSONPath semantics, so this check is skipped there.
+        if is_jsonpath:
+            yield from self._validate_reference_paths(value, k)
 
     def validate(
         self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
@@ -324,7 +331,7 @@ class StateMachineDefinition(CfnLintJsonSchema):
                 try:
                     value = json.loads(value)
                     add_path_to_message = True
-                    for schema, schema_validator in self._clean_schema(
+                    for schema, schema_validator, is_jsonpath in self._clean_schema(
                         validator, value
                     ):
                         resolver = RefResolver.from_schema(schema, store=self.store)
@@ -337,17 +344,29 @@ class StateMachineDefinition(CfnLintJsonSchema):
                         )
 
                         yield from self._validate_step(
-                            step_validator, substitutions, value, add_path_to_message, k
+                            step_validator,
+                            substitutions,
+                            value,
+                            add_path_to_message,
+                            k,
+                            is_jsonpath,
                         )
                 except json.JSONDecodeError:
                     return
             else:
-                for schema, schema_validator in self._clean_schema(validator, value):
+                for schema, schema_validator, is_jsonpath in self._clean_schema(
+                    validator, value
+                ):
                     resolver = RefResolver.from_schema(schema, store=self.store)
                     step_validator = schema_validator.evolve(
                         resolver=resolver,
                         schema=schema,
                     )
                     yield from self._validate_step(
-                        step_validator, substitutions, value, add_path_to_message, k
+                        step_validator,
+                        substitutions,
+                        value,
+                        add_path_to_message,
+                        k,
+                        is_jsonpath,
                     )
