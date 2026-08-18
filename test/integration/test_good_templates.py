@@ -159,6 +159,14 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results": [],
             "exit_code": 0,
         },
+        {
+            "filename": (
+                "test/fixtures/templates/good/functions/"
+                "getatt_serverless_function_version.yaml"
+            ),
+            "results": [],
+            "exit_code": 0,
+        },
     ]
 
     def test_templates(self):

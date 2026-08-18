@@ -154,6 +154,24 @@ class GetAtt(BaseFn):
         if keyword in rule.keywords or "*" in rule.keywords:  # type: ignore
             yield from rule.validate(validator, s, value, s)  # type: ignore
 
+    def _resolve_sam_getatt(self, value: list[Any], validator: Validator) -> list[Any]:
+        # A GetAtt is split on the first "." into [logical id, attribute],
+        # either by the decoder (``!GetAtt Foo.Bar``) or below (JSON string
+        # form). SAM generated resources (a function's ``Version``/``Alias``,
+        # for example) are modeled as synthetic resources whose logical id
+        # itself contains a "." (``MyFn.Version``). Re-associate the longest
+        # logical-id prefix that matches a known resource so
+        # ``!GetAtt MyFn.Version.FunctionArn`` resolves against the synthetic
+        # ``MyFn.Version`` resource instead of the function itself.
+        if len(value) != 2 or not all(validator.is_type(v, "string") for v in value):
+            return value
+        parts = ".".join(value).split(".")
+        for i in range(len(parts) - 1, 1, -1):
+            name = ".".join(parts[:i])
+            if name in validator.context.resources:
+                return [name, ".".join(parts[i:])]
+        return value
+
     def fn_getatt(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
@@ -164,6 +182,9 @@ class GetAtt(BaseFn):
         if validator.is_type(value, "string"):
             paths = [None, None]
             value = value.split(".", 1)
+
+        if validator.is_type(value, "array"):
+            value = self._resolve_sam_getatt(value, validator)
 
         if errs:
             if any(getattr(e, "unknown", False) for e in errs):
