@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+
+# Regression test for https://github.com/aws-cloudformation/cfn-lint/issues/4644
+# When a SAM function has AutoPublishAlias, SAM generates an
+# ``AWS::Lambda::Version`` resource that is referenceable via
+# ``!GetAtt <Function>.Version.FunctionArn``. The logical id of that synthetic
+# resource contains a ".", so GetAtt resolution must keep it intact instead of
+# splitting on the first ".".
+Resources:
+  Lambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      InlineCode: "exports.handler = async () => {}"
+      Handler: index.handler
+      Runtime: nodejs22.x
+      AutoPublishAlias: live
+
+  CloudFront:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        DefaultCacheBehavior:
+          ViewerProtocolPolicy: redirect-to-https
+          TargetOriginId: Dummy
+          LambdaFunctionAssociations:
+            - EventType: 'origin-request'
+              IncludeBody: false
+              LambdaFunctionARN: !GetAtt Lambda.Version.FunctionArn
+        Enabled: 'true'

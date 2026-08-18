@@ -276,3 +276,62 @@ def test_validate(name, instance, schema, child_rules, expected, validator, rule
     rule.child_rules = child_rules
     errs = list(rule.fn_getatt(validator, schema, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"
+
+
+_sam_template = {
+    "Transform": "AWS::Serverless-2016-10-31",
+    "Resources": {
+        "Lambda": {
+            "Type": "AWS::Serverless::Function",
+            "Properties": {"AutoPublishAlias": "live"},
+        },
+    },
+}
+
+
+@pytest.mark.parametrize(
+    "name,template,value,expected",
+    [
+        (
+            "SAM synthetic Version resource keeps the dotted logical id together",
+            _sam_template,
+            ["Lambda", "Version.FunctionArn"],
+            ["Lambda.Version", "FunctionArn"],
+        ),
+        (
+            "SAM synthetic Alias resource keeps the dotted logical id together",
+            _sam_template,
+            ["Lambda", "Alias.Arn"],
+            ["Lambda.Alias", "Arn"],
+        ),
+        (
+            "List form with the dotted logical id already intact is unchanged",
+            _sam_template,
+            ["Lambda.Version", "FunctionArn"],
+            ["Lambda.Version", "FunctionArn"],
+        ),
+        (
+            "A plain attribute on the function itself is unchanged",
+            _sam_template,
+            ["Lambda", "Arn"],
+            ["Lambda", "Arn"],
+        ),
+        (
+            "No matching synthetic resource leaves the split unchanged",
+            _template,
+            ["MyBucket", "Foo.Bar"],
+            ["MyBucket", "Foo.Bar"],
+        ),
+        (
+            "A resolved (non string) resource name is left untouched",
+            _sam_template,
+            [{"Ref": "Lambda"}, "Version.FunctionArn"],
+            [{"Ref": "Lambda"}, "Version.FunctionArn"],
+        ),
+    ],
+    indirect=["template"],
+)
+def test_resolve_sam_getatt(name, value, expected, validator, rule):
+    assert rule._resolve_sam_getatt(value, validator) == expected, (
+        f"Test {name!r} got {rule._resolve_sam_getatt(value, validator)!r}"
+    )
