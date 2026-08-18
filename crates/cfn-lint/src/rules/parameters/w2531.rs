@@ -83,7 +83,11 @@ impl CfnLintRule for W2531 {
     }
 
     fn keywords(&self) -> &[&str] {
-        &["Resources/AWS::Lambda::Function/Properties/Runtime"]
+        &[
+            "Resources/AWS::Lambda::Function/Properties/Runtime",
+            "Resources/AWS::Serverless::Function/Properties/Runtime",
+            "Globals/Function/Runtime",
+        ]
     }
 
     fn validate(
@@ -219,6 +223,74 @@ Resources:
         let errors = W2531::new().validate(
             &validator,
             "Resources/AWS::Lambda::Function/Properties/Runtime",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
+        assert!(errors.is_empty());
+    }
+
+    #[test]
+    fn test_serverless_current_runtime_ok() {
+        let yaml = br#"
+Resources:
+  Func:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let instance = ast
+            .get("Resources")
+            .unwrap()
+            .get("Func")
+            .unwrap()
+            .get("Properties")
+            .unwrap()
+            .get("Runtime")
+            .unwrap();
+        let path = vec![
+            "Resources".to_string(),
+            "Func".to_string(),
+            "Properties".to_string(),
+            "Runtime".to_string(),
+        ];
+        let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
+        let errors = W2531::new().validate(
+            &validator,
+            "Resources/AWS::Serverless::Function/Properties/Runtime",
+            instance,
+            &serde_json::json!({}),
+            &path,
+        );
+        assert!(errors.is_empty());
+    }
+
+    #[test]
+    fn test_globals_function_runtime_ok() {
+        let yaml = br#"
+Globals:
+  Function:
+    Runtime: python3.12
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let instance = ast
+            .get("Globals")
+            .unwrap()
+            .get("Function")
+            .unwrap()
+            .get("Runtime")
+            .unwrap();
+        let path = vec![
+            "Globals".to_string(),
+            "Function".to_string(),
+            "Runtime".to_string(),
+        ];
+        let validator = crate::jsonschema::Validator::new(serde_json::json!({}));
+        let errors = W2531::new().validate(
+            &validator,
+            "Globals/Function/Runtime",
             instance,
             &serde_json::json!({}),
             &path,

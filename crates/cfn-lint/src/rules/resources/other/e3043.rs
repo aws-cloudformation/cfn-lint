@@ -7,7 +7,10 @@ use crate::jsonschema::ValidationError;
 use crate::rules::Severity;
 use crate::template::Template;
 
-/// E3043: Validate parameters for a nested stack.
+/// E3043: Validate parameters for a nested stack or Serverless Application.
+///
+/// Checks that parameters specified in AWS::CloudFormation::Stack or
+/// AWS::Serverless::Application match the parameters defined in the nested template.
 pub struct E3043;
 
 impl CfnLintRule for E3043 {
@@ -18,8 +21,8 @@ impl CfnLintRule for E3043 {
         "Validate parameters for in a nested stack"
     }
     fn description(&self) -> &str {
-        "Evaluate if parameters for a nested stack are specified and \
-         if parameters are specified for a nested stack that aren't required"
+        "Evaluate if parameters for a nested stack or serverless application are \
+         specified and if parameters are specified that aren't required"
     }
     fn severity(&self) -> Severity {
         Severity::Error
@@ -44,64 +47,110 @@ impl CfnLintRule for E3043 {
         };
 
         let mut issues = Vec::new();
+
+        // Validate AWS::CloudFormation::Stack resources
         for (name, resource) in &template.resources {
-            if resource.resource_type != "AWS::CloudFormation::Stack" {
-                continue;
-            }
-            let props = match root
-                .get("Resources")
-                .and_then(|r| r.get(name))
-                .and_then(|r| r.get("Properties"))
-            {
-                Some(p) => p,
-                None => continue,
-            };
+            if resource.resource_type == "AWS::CloudFormation::Stack" {
+                let props = match root
+                    .get("Resources")
+                    .and_then(|r| r.get(name))
+                    .and_then(|r| r.get("Properties"))
+                {
+                    Some(p) => p,
+                    None => continue,
+                };
 
-            let template_url = match props.get("TemplateURL").and_then(|n| n.as_str()) {
-                Some(u) => u,
-                None => continue,
-            };
-
-            if template_url.starts_with("http://")
-                || template_url.starts_with("https://")
-                || template_url.starts_with("s3://")
-            {
-                continue;
-            }
-
-            let nested_params = match load_nested_parameters(&base_dir, template_url) {
-                Some(p) => p,
-                None => continue,
-            };
-
-            let path = vec![
-                "Resources".to_string(),
-                name.to_string(),
-                "Properties".to_string(),
-                "Parameters".to_string(),
-            ];
-
-            let params_node = props.get("Parameters");
-
-            // Expand Fn::If scenarios in the Parameters node
-            let scenarios = match params_node {
-                Some(node) => expand_fn_if(node),
-                None => vec![(HashMap::new(), HashSet::new())],
-            };
-
-            for (scenario, specified_params) in &scenarios {
-                let is_conditional = !scenario.is_empty();
-                compare_params(
-                    self,
-                    specified_params,
-                    &nested_params,
-                    if is_conditional { Some(scenario) } else { None },
-                    &path,
+                issues.extend(self.validate_nested_parameters(
+                    &base_dir,
+                    name,
                     props,
-                    &mut issues,
-                );
+                    "TemplateURL",
+                ));
+            } else if resource.resource_type == "AWS::Serverless::Application" {
+                let props = match root
+                    .get("Resources")
+                    .and_then(|r| r.get(name))
+                    .and_then(|r| r.get("Properties"))
+                {
+                    Some(p) => p,
+                    None => continue,
+                };
+
+                issues.extend(self.validate_nested_parameters(&base_dir, name, props, "Location"));
             }
         }
+
+        issues
+    }
+}
+
+impl E3043 {
+    /// Validate parameters for a nested stack or serverless application.
+    fn validate_nested_parameters(
+        &self,
+        base_dir: &Path,
+        resource_name: &str,
+        props: &AstNode,
+        location_key: &str,
+    ) -> Vec<ValidationError> {
+        let mut issues = Vec::new();
+
+        let location = match props.get(location_key) {
+            Some(l) => l,
+            None => return vec![],
+        };
+
+        // For Serverless::Application, Location can be a dict (SAR reference)
+        // In that case, skip validation
+        if location.as_object().is_some() {
+            return vec![];
+        }
+
+        let template_url = match location.as_str() {
+            Some(u) => u,
+            None => return vec![],
+        };
+
+        if template_url.starts_with("http://")
+            || template_url.starts_with("https://")
+            || template_url.starts_with("s3://")
+        {
+            return vec![];
+        }
+
+        let nested_params = match load_nested_parameters(base_dir, template_url) {
+            Some(p) => p,
+            None => return vec![],
+        };
+
+        let path = vec![
+            "Resources".to_string(),
+            resource_name.to_string(),
+            "Properties".to_string(),
+            "Parameters".to_string(),
+        ];
+
+        let params_node = props.get("Parameters");
+
+        // Expand Fn::If scenarios in the Parameters node
+        let scenarios = match params_node {
+            Some(node) => expand_fn_if(node),
+            None => vec![(HashMap::new(), HashSet::new())],
+        };
+
+        for (scenario, specified_params) in &scenarios {
+            let is_conditional = !scenario.is_empty();
+            compare_params(
+                self,
+                specified_params,
+                &nested_params,
+                if is_conditional { Some(scenario) } else { None },
+                &path,
+                props,
+                &mut issues,
+            );
+        }
+
         issues
     }
 }
@@ -367,6 +416,76 @@ Root:
             .expect("missing Key2 leaf");
         assert_eq!(deep.0.get("CondA"), Some(&false));
         assert_eq!(deep.0.get("CondB"), Some(&true));
+    }
+
+    #[test]
+    fn test_serverless_application_with_url_skipped() {
+        let yaml = br#"
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  App:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: https://s3.amazonaws.com/mybucket/mytemplate.yaml
+      Parameters:
+        Env: prod
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        assert!(E3043.validate_template(&tmpl, &ast).is_empty());
+    }
+
+    #[test]
+    fn test_serverless_application_with_sar_reference_skipped() {
+        // SAR reference is a dict, not a string URL
+        let yaml = br#"
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  App:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location:
+        ApplicationId: arn:aws:serverlessrepo:us-east-1:123456789012:applications/my-app
+        SemanticVersion: 1.0.0
+      Parameters:
+        Env: prod
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        assert!(E3043.validate_template(&tmpl, &ast).is_empty());
+    }
+
+    #[test]
+    fn test_serverless_application_no_location_skipped() {
+        let yaml = br#"
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  App:
+    Type: AWS::Serverless::Application
+    Properties:
+      Parameters:
+        Env: prod
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        assert!(E3043.validate_template(&tmpl, &ast).is_empty());
+    }
+
+    #[test]
+    fn test_serverless_application_with_s3_url_skipped() {
+        let yaml = br#"
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  App:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: s3://mybucket/mytemplate.yaml
+      Parameters:
+        Env: prod
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        assert!(E3043.validate_template(&tmpl, &ast).is_empty());
     }
 }
 

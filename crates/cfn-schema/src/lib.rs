@@ -150,6 +150,12 @@ pub trait SchemaProvider: Send + Sync {
     fn get_other_schema(&self, _path: &str) -> Option<&serde_json::Value> {
         None
     }
+
+    /// Returns true if this provider has CloudFormation provider schemas (not just SAM schemas).
+    /// Used to determine whether to fire E3006 for unknown resource types.
+    fn has_cfn_schemas(&self, _region: &str) -> bool {
+        true
+    }
 }
 
 /// Reads pre-patched schemas from disk. No patching at runtime.
@@ -171,12 +177,18 @@ pub struct BundledSchemaProvider {
 impl BundledSchemaProvider {
     pub fn new(data_dir: PathBuf) -> Option<Self> {
         let providers_dir = data_dir.join("schemas").join("providers");
-        if !providers_dir.is_dir() {
+        let sam_provider_path = data_dir.join("schemas").join("sam").join("provider.json");
+
+        // Allow initialization if either providers dir exists OR SAM schemas exist
+        let has_providers = providers_dir.is_dir();
+        let has_sam = sam_provider_path.is_file();
+
+        if !has_providers && !has_sam {
             return None;
         }
 
         let mut registry = HashMap::new();
-        for entry in std::fs::read_dir(&providers_dir).ok()? {
+        for entry in std::fs::read_dir(&providers_dir).into_iter().flatten() {
             let entry = match entry {
                 Ok(e) => e,
                 Err(_) => continue,
@@ -283,13 +295,18 @@ impl BundledSchemaProvider {
     }
 
     fn get_cached_schema(&self, resource_type: &str, region: &str) -> Option<&ResourceSchema> {
-        let hash = self.registry.get(region)?.get(resource_type).or_else(|| {
-            if resource_type.starts_with("AWS::Serverless::") {
-                self.sam_registry.get(resource_type)
-            } else {
-                None
-            }
-        })?;
+        // First try the region-specific registry, then fall back to SAM registry
+        let hash = self
+            .registry
+            .get(region)
+            .and_then(|m| m.get(resource_type))
+            .or_else(|| {
+                if resource_type.starts_with("AWS::Serverless::") {
+                    self.sam_registry.get(resource_type)
+                } else {
+                    None
+                }
+            })?;
         if let Some(schema) = self.cache.get(hash) {
             return Some(schema);
         }
@@ -439,6 +456,11 @@ impl SchemaProvider for BundledSchemaProvider {
                 Some((schema, region_list))
             })
             .collect()
+    }
+
+    fn has_cfn_schemas(&self, region: &str) -> bool {
+        // Returns true only if the providers directory had schemas for this region
+        self.registry.contains_key(region)
     }
 }
 
@@ -1221,6 +1243,12 @@ impl SchemaProvider for CacheProvider {
     fn get_other_schema(&self, path: &str) -> Option<&serde_json::Value> {
         self.inner.as_ref()?.get_other_schema(path)
     }
+    fn has_cfn_schemas(&self, region: &str) -> bool {
+        self.inner
+            .as_ref()
+            .map(|p| p.has_cfn_schemas(region))
+            .unwrap_or(false)
+    }
 }
 
 /// Downloads schemas from the public CloudFormation schema endpoint.
@@ -1454,6 +1482,9 @@ impl SchemaProvider for S3Provider {
     ) -> Vec<(&'a ResourceSchema, Vec<&'a str>)> {
         self.cache.schemas_for_regions(resource_type, regions)
     }
+    fn has_cfn_schemas(&self, region: &str) -> bool {
+        self.cache.has_cfn_schemas(region)
+    }
 }
 
 /// Tries multiple providers in order. Returns the first successful result.
@@ -1501,6 +1532,9 @@ impl SchemaProvider for ChainProvider {
             }
         }
         vec![]
+    }
+    fn has_cfn_schemas(&self, region: &str) -> bool {
+        self.providers.iter().any(|p| p.has_cfn_schemas(region))
     }
 }
 

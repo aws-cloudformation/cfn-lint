@@ -101,3 +101,268 @@ impl CfnLintRule for E3722 {
 }
 
 crate::register_cfn_lint_rule!(E3722);
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::jsonschema::cfn_lint_keyword::CfnLintRule;
+    use crate::parser;
+
+    #[test]
+    fn test_globals_without_sam_transform() {
+        let yaml = br#"
+Globals:
+  Function:
+    Timeout: 30
+Resources:
+  MyFunction:
+    Type: AWS::Lambda::Function
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let errors = E3722.validate_template(&tmpl, &ast);
+        assert_eq!(errors.len(), 1);
+        assert!(errors[0].message.contains("serverless transform"));
+    }
+
+    #[test]
+    fn test_globals_with_sam_transform_valid() {
+        let yaml = br#"
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: python3.9
+Resources:
+  MyFunction:
+    Type: AWS::Serverless::Function
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let errors = E3722.validate_template(&tmpl, &ast);
+        assert!(errors.is_empty(), "unexpected errors: {:?}", errors);
+    }
+
+    #[test]
+    fn test_globals_with_sam_transform_in_array() {
+        let yaml = br#"
+Transform:
+  - AWS::Serverless-2016-10-31
+  - AWS::LanguageExtensions
+Globals:
+  Function:
+    Timeout: 30
+Resources:
+  MyFunction:
+    Type: AWS::Serverless::Function
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let errors = E3722.validate_template(&tmpl, &ast);
+        assert!(errors.is_empty(), "unexpected errors: {:?}", errors);
+    }
+
+    #[test]
+    fn test_globals_api_section_valid() {
+        let yaml = br#"
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  Api:
+    TracingEnabled: true
+    CacheClusterEnabled: false
+    Name: MyApi
+Resources:
+  MyApi:
+    Type: AWS::Serverless::Api
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let errors = E3722.validate_template(&tmpl, &ast);
+        assert!(errors.is_empty(), "unexpected errors: {:?}", errors);
+    }
+
+    #[test]
+    fn test_globals_http_api_section_valid() {
+        let yaml = br#"
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  HttpApi:
+    PropagateTags: true
+Resources:
+  MyHttpApi:
+    Type: AWS::Serverless::HttpApi
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let errors = E3722.validate_template(&tmpl, &ast);
+        assert!(errors.is_empty(), "unexpected errors: {:?}", errors);
+    }
+
+    #[test]
+    fn test_globals_simple_table_section_valid() {
+        let yaml = br#"
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  SimpleTable:
+    SSESpecification: {}
+Resources:
+  MyTable:
+    Type: AWS::Serverless::SimpleTable
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let errors = E3722.validate_template(&tmpl, &ast);
+        assert!(errors.is_empty(), "unexpected errors: {:?}", errors);
+    }
+
+    #[test]
+    fn test_globals_state_machine_section_valid() {
+        let yaml = br#"
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  StateMachine:
+    PropagateTags: true
+Resources:
+  MyStateMachine:
+    Type: AWS::Serverless::StateMachine
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let errors = E3722.validate_template(&tmpl, &ast);
+        assert!(errors.is_empty(), "unexpected errors: {:?}", errors);
+    }
+
+    #[test]
+    fn test_globals_layer_version_section_valid() {
+        let yaml = br#"
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  LayerVersion:
+    PublishLambdaVersion: true
+Resources:
+  MyLayer:
+    Type: AWS::Serverless::LayerVersion
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let errors = E3722.validate_template(&tmpl, &ast);
+        assert!(errors.is_empty(), "unexpected errors: {:?}", errors);
+    }
+
+    #[test]
+    fn test_globals_capacity_provider_section_valid() {
+        let yaml = br#"
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  CapacityProvider:
+    PropagateTags: true
+    KmsKeyArn: arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+Resources:
+  MyCapacityProvider:
+    Type: AWS::Serverless::CapacityProvider
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let errors = E3722.validate_template(&tmpl, &ast);
+        assert!(errors.is_empty(), "unexpected errors: {:?}", errors);
+    }
+
+    #[test]
+    fn test_globals_websocket_api_section_valid() {
+        let yaml = br#"
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  WebSocketApi:
+    PropagateTags: true
+    DisableExecuteApiEndpoint: false
+    RouteSelectionExpression: $request.body.action
+Resources:
+  MyWebSocketApi:
+    Type: AWS::Serverless::WebSocketApi
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let errors = E3722.validate_template(&tmpl, &ast);
+        assert!(errors.is_empty(), "unexpected errors: {:?}", errors);
+    }
+
+    #[test]
+    fn test_globals_all_sections_valid() {
+        let yaml = br#"
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: python3.9
+  Api:
+    TracingEnabled: true
+  HttpApi:
+    PropagateTags: true
+  SimpleTable:
+    SSESpecification: {}
+  StateMachine:
+    PropagateTags: true
+  LayerVersion:
+    PublishLambdaVersion: true
+  CapacityProvider:
+    PropagateTags: true
+  WebSocketApi:
+    PropagateTags: true
+Resources:
+  MyFunction:
+    Type: AWS::Serverless::Function
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let errors = E3722.validate_template(&tmpl, &ast);
+        assert!(errors.is_empty(), "unexpected errors: {:?}", errors);
+    }
+
+    #[test]
+    fn test_globals_invalid_section() {
+        let yaml = br#"
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  InvalidSection:
+    SomeProperty: value
+Resources:
+  MyFunction:
+    Type: AWS::Serverless::Function
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let errors = E3722.validate_template(&tmpl, &ast);
+        assert!(!errors.is_empty(), "expected error for invalid section");
+    }
+
+    #[test]
+    fn test_globals_invalid_property_in_function() {
+        let yaml = br#"
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  Function:
+    NotAValidProperty: value
+Resources:
+  MyFunction:
+    Type: AWS::Serverless::Function
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let errors = E3722.validate_template(&tmpl, &ast);
+        assert!(!errors.is_empty(), "expected error for invalid property");
+    }
+
+    #[test]
+    fn test_no_globals_section() {
+        let yaml = br#"
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  MyFunction:
+    Type: AWS::Serverless::Function
+"#;
+        let ast = parser::parse(yaml).unwrap();
+        let tmpl = Template::from_ast(&ast).unwrap();
+        let errors = E3722.validate_template(&tmpl, &ast);
+        assert!(errors.is_empty(), "no errors expected when Globals absent");
+    }
+}
