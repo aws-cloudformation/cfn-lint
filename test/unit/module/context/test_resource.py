@@ -122,3 +122,48 @@ def test_nested_stacks(name, instance, filename, decode_results, expected_getatt
         assert expected_getatts == resource.get_atts(region), (
             f"{name!r} test got {resource.get_atts(region)}"
         )
+
+
+@pytest.mark.parametrize(
+    "name,template_url",
+    [
+        (
+            "Absolute path",
+            "/etc/passwd",
+        ),
+        (
+            "Absolute path with Windows style",
+            "C:\\Windows\\System32\\config\\SAM",
+        ),
+        (
+            "Path traversal escaping cwd",
+            "../../../../etc/passwd",
+        ),
+        (
+            "Path traversal to root",
+            "../../../../../../../etc/passwd",
+        ),
+    ],
+)
+def test_nested_stack_path_traversal_blocked(name, template_url):
+    """
+    Test that path traversal attempts are blocked and decode is never called.
+    This prevents reading arbitrary files outside the current working directory.
+    """
+    region = "us-east-1"
+    instance = {
+        "Type": "AWS::CloudFormation::Stack",
+        "Properties": {"TemplateURL": template_url},
+    }
+    # Use a filename within the cwd
+    filename = "templates/main.yaml"
+
+    with patch("cfnlint.decode.decode") as mock_decode:
+        # decode should never be called for traversal attempts
+        mock_decode.side_effect = AssertionError("decode should not be called")
+
+        resource = Resource(instance, filename)
+
+        # Should fall back to default GetAtts pattern (no file read)
+        expected = AttributeDict({"Outputs\\..*": "/properties/CfnLintStringType"})
+        assert expected == resource.get_atts(region), f"{name!r} should block traversal"
