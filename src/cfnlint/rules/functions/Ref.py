@@ -7,7 +7,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from cfnlint.helpers import VALID_PARAMETER_TYPES, VALID_PARAMETER_TYPES_LIST
+from cfnlint.helpers import (
+    PSEUDOPARAMS_MULTIPLE,
+    PSEUDOPARAMS_SINGLE,
+    VALID_PARAMETER_TYPES,
+    VALID_PARAMETER_TYPES_LIST,
+)
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.rules.functions._BaseFn import BaseFn, all_types
 
@@ -65,6 +70,29 @@ class Ref(BaseFn):
                     for x in VALID_PARAMETER_TYPES
                     if x not in VALID_PARAMETER_TYPES_LIST
                 ]:
+                    yield ValidationError(f"{instance!r} is not of type {reprs}")
+                    return
+
+        elif value in PSEUDOPARAMS_SINGLE or value in PSEUDOPARAMS_MULTIPLE:
+            # Pseudo parameters resolve to a known type: the SINGLE set are
+            # strings, PSEUDOPARAMS_MULTIPLE (AWS::NotificationARNs) is a list.
+            # Validate that resolved type against the schema, the same way we
+            # do for named parameters.
+            schema_types = self.resolve_type(validator, subschema)
+            if not schema_types:
+                return
+            reprs = ", ".join(repr(type) for type in schema_types)
+            is_list = value in PSEUDOPARAMS_MULTIPLE
+
+            if all(
+                st not in ["string", "boolean", "integer", "number"]
+                for st in schema_types
+            ):
+                if not is_list:
+                    yield ValidationError(f"{instance!r} is not of type {reprs}")
+                    return
+            elif all(st not in ["array"] for st in schema_types):
+                if is_list:
                     yield ValidationError(f"{instance!r} is not of type {reprs}")
                     return
 

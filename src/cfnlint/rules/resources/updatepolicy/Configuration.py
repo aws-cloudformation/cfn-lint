@@ -6,7 +6,6 @@ SPDX-License-Identifier: MIT-0
 from typing import Any
 
 import cfnlint.data.schemas.other.resources
-import cfnlint.helpers
 from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
@@ -36,6 +35,7 @@ class Configuration(CfnLintJsonSchema):
         validator = validator.evolve(
             context=validator.context.evolve(
                 functions=list(FUNCTIONS),
+                resources={},
                 strict_types=False,
             ),
             schema=self._schema,
