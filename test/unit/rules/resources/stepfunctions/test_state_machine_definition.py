@@ -1560,6 +1560,121 @@ def rule():
             },
             [],
         ),
+        (
+            "Valid JSONPath and intrinsic function reference paths",
+            {
+                "Definition": {
+                    "StartAt": "Pass",
+                    "States": {
+                        "Pass": {
+                            "Type": "Pass",
+                            "Assign": {
+                                "JsonPathVar.$": "$.input.value",
+                                "ContextVar.$": "$$.Execution.Id",
+                                "IntrinsicVar.$": "States.Format('{}', $.name)",
+                                "LiteralVar": "a plain literal is fine",
+                                "Nested": {
+                                    "InnerPath.$": "$.a.b",
+                                },
+                            },
+                            "Parameters": {
+                                "Comment.$": "$.comment",
+                            },
+                            "End": True,
+                        },
+                    },
+                }
+            },
+            [],
+        ),
+        (
+            "Invalid literal value for a reference path field",
+            {
+                "Definition": {
+                    "StartAt": "Pass",
+                    "States": {
+                        "Pass": {
+                            "Type": "Pass",
+                            "Assign": {
+                                "Variable.$": "Test",
+                            },
+                            "Next": "Success",
+                        },
+                        "Success": {
+                            "Type": "Succeed",
+                        },
+                    },
+                }
+            },
+            [
+                ValidationError(
+                    "'Test' is not a valid JSONPath string or intrinsic "
+                    "function for 'Variable.$' at "
+                    "/States/Pass/Assign/Variable.$",
+                    rule=StateMachineDefinition(),
+                    path=deque(
+                        ["Definition", "States", "Pass", "Assign", "Variable.$"]
+                    ),
+                ),
+            ],
+        ),
+        (
+            "Invalid reference path nested inside Parameters",
+            {
+                "Definition": {
+                    "StartAt": "Task",
+                    "States": {
+                        "Task": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::lambda:invoke",
+                            "Parameters": {
+                                "Payload": {
+                                    "Value.$": "not-a-path",
+                                },
+                            },
+                            "End": True,
+                        },
+                    },
+                }
+            },
+            [
+                ValidationError(
+                    "'not-a-path' is not a valid JSONPath string or intrinsic "
+                    "function for 'Value.$' at "
+                    "/States/Task/Parameters/Payload/Value.$",
+                    rule=StateMachineDefinition(),
+                    path=deque(
+                        [
+                            "Definition",
+                            "States",
+                            "Task",
+                            "Parameters",
+                            "Payload",
+                            "Value.$",
+                        ]
+                    ),
+                ),
+            ],
+        ),
+        (
+            "Literal '.$' field is allowed under QueryLanguage JSONata",
+            {
+                "Definition": {
+                    "QueryLanguage": "JSONata",
+                    "StartAt": "Pass",
+                    "States": {
+                        "Pass": {
+                            "Type": "Pass",
+                            "Assign": {
+                                "foo.$": "plainliteral",
+                            },
+                            "End": True,
+                        },
+                    },
+                }
+            },
+            [],
+        ),
     ],
 )
 def test_validate(
