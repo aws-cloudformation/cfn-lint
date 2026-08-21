@@ -17,10 +17,11 @@ SPDX-License-Identifier: MIT-0
 # All rules are warnings (advisory, never blocking). Each accepts a 'severity'
 # config option (--configure-rule W4010:severity=error) so CI can escalate.
 #
-# missing-context (W4010) is OFF by default -- *requiring* a Context block is a
-# team policy choice, so enable it with --configure-rule W4010:require_context=true.
-# The validate-supplied rules (W4011, W4012) are on by default but only fire when
-# an author has actually written a Context block, so they are silent otherwise.
+# missing-context (W4010) is OFF by default -- requiring a Context block is a
+# project-level convention, not a universal lint. Enable with
+# --configure-rule W4010:require_context=true. The validate-supplied rules
+# (W4011, W4012) are on by default but only fire when an author has actually
+# written a Context block, so they are silent otherwise.
 #
 # Targeting follows a shared exclusion set: incidental/framework resources
 # (matched against the canonical incidental pattern set on logical IDs and the
@@ -55,8 +56,8 @@ from cfnlint.rules import CloudFormationLintRule, RuleMatch
 # Canonical location of the Context block (aws/aws-cdk#38381).
 CONTEXT_KEY = "com.aws.cloudformation.Context"
 
-# Human-facing display of the block's location. Dotted form matches the
-# production diagnostic copy validated by the W9100 benchmark.
+# Human-facing display of the block's location. Dotted form is concise and
+# consistent with cfn-lint path conventions in diagnostic messages.
 _CONTEXT_DISPLAY = "Metadata.com.aws.cloudformation.Context"
 
 _SCHEMA = load_resource(cfnlint.data.schemas.other.metadata, "context.json")
@@ -111,8 +112,8 @@ _OPT_OUT_MARKER = "context intentionally omitted"
 # on these (W4010); any context an author supplies is still validated
 # (W4011-W4012). Extend via the 'additional_low_value_types' config option.
 #
-# Significance-policy choice (W9100 benchmark): the benchmark offered two LogGroup
-# policies -- (a) exempt every AWS::Logs::LogGroup by type, or (b) exempt only
+# Significance-policy choice: two LogGroup policies were considered --
+# (a) exempt every AWS::Logs::LogGroup by type, or (b) exempt only
 # mechanically-subordinate LogGroups while still requiring context on
 # independently-significant audit/logging groups. This rule takes (a) for a low
 # false-positive rate. Tradeoff: a genuinely standalone audit LogGroup is also
@@ -498,17 +499,15 @@ class ContextMissing(_ContextRuleMixin, CloudFormationLintRule):
         " types (e.g. AWS::Logs::LogGroup) are not required to carry context."
         " Rationale written as YAML comments is not visible to cfn-lint;"
         " suppress this rule on templates that document context that way."
-        " Disabled by default; set require_context=true to require Context"
-        " metadata."
+        " Disabled by default; set require_context=true to enable."
     )
     source_url = "https://github.com/aws/aws-cdk/pull/38381"
     tags = ["metadata", "context"]
 
     def __init__(self) -> None:
         super().__init__()
-        # missing-context is a team policy opt-in: requiring a Context block is a
-        # convention a repo adopts, not a universal lint. Off by default so it does
-        # not fire on templates that have not adopted the convention; enable with
+        # missing-context is off by default -- requiring a Context block is a
+        # convention a project adopts, not a universal lint. Enable with
         # --configure-rule W4010:require_context=true (or a .cfnlintrc). The
         # validate-supplied rules (W4011/W4012) need no such gate -- they only fire
         # when an author has already written a Context block.

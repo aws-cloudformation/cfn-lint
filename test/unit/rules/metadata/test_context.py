@@ -23,7 +23,7 @@ def _match(rule, template_str):
 
 
 def _missing_rule():
-    """ContextMissing with the opt-in requirement enabled (off by default)."""
+    """ContextMissing with require_context enabled (off by default)."""
     rule = ContextMissing()
     rule.config["require_context"] = True
     return rule
@@ -198,7 +198,7 @@ class TestContextSchemaRules(BaseTestCase):
         self.assertIn("array of strings", matches[0].message)
 
     def test_supplied_context_on_low_value_is_still_validated(self):
-        # Benchmark contract: require missing context selectively, but VALIDATE
+        # Design contract: require missing context selectively, but VALIDATE
         # supplied context everywhere. A LogGroup is exempt from W4010, yet a
         # malformed Context block an author wrote on it is still flagged.
         template = (
