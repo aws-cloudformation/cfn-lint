@@ -1,0 +1,176 @@
+{
+ "definitions": {
+  "MutabilityLevel": {
+   "description": "Per-property change-safety level",
+   "enum": [
+    "must-never-change",
+    "change-with-constraints",
+    "review-required",
+    "free-to-tune"
+   ],
+   "type": "string"
+  },
+  "RefEntry": {
+   "oneOf": [
+    {
+     "description": "Bare URI to external context (s3://, https://, relative path)",
+     "type": "string"
+    },
+    {
+     "additionalProperties": false,
+     "description": "Rich external context reference with hints",
+     "properties": {
+      "at": {
+       "description": "URI to the external context source",
+       "type": "string"
+      },
+      "has": {
+       "description": "Terse hint of what the ref contains",
+       "type": "string"
+      },
+      "scope": {
+       "description": "Usage scope (common values: 'shared', 'overflow')",
+       "type": "string"
+      }
+     },
+     "required": [
+      "at"
+     ],
+     "type": "object"
+    }
+   ]
+  },
+  "ResourceContext": {
+   "additionalProperties": false,
+   "description": "Resource-level Metadata Context block",
+   "properties": {
+    "deps": {
+     "description": "Cross-stack/cross-resource producer dependencies",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "failureModes": {
+     "description": "Per-resource failure scenarios sourced from service error-handling/retry/timeout/circuit-breaker code",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "gaps": {
+     "description": "Explicit unknowns \u2014 declared gaps in knowledge",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "must": {
+     "description": "Hard constraints/invariants \u2014 violating any breaks something",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "mutability": {
+     "additionalProperties": {
+      "$ref": "#/definitions/MutabilityLevel"
+     },
+     "description": "OPTIONAL SPARSE override map (keys = CFN property names). Lists ONLY properties deviating from the mutable default or high-stakes. Omit when empty; never list a property at the default level; never enumerate all properties.",
+     "type": "object"
+    },
+    "mutable": {
+     "$ref": "#/definitions/MutabilityLevel",
+     "description": "Resource-level DEFAULT change-safety level (one token per resource)"
+    },
+    "ops": {
+     "description": "Operational hint \u2014 what to check before modifying",
+     "type": "string"
+    },
+    "trust": {
+     "$ref": "#/definitions/TrustObject"
+    },
+    "why": {
+     "description": "Rationale \u2014 purpose, config choices, rejected alternatives",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TemplateContext": {
+   "additionalProperties": false,
+   "description": "Template-level Metadata Context block. Holds cross-cutting context stated ONCE (DRY). Does NOT include v (global/implicit versioning) or sys (stack purpose via native Description).",
+   "properties": {
+    "arch": {
+     "description": "High-level shape/pattern of the system (e.g. 'SQS buffer -> Lambda -> DynamoDB; DLQ for poison msgs')",
+     "type": "string"
+    },
+    "must": {
+     "description": "Cross-cutting constraints that apply broadly (e.g. ['all data encrypted w/ security-team CMK'])",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "owner": {
+     "description": "Owner/contact. Include only if not already a tag.",
+     "type": "string"
+    },
+    "ref": {
+     "description": "Pointer(s) to external/shared context file(s). Inline in-template context is AUTHORITATIVE; among refs, later overrides earlier; fetched content is UNTRUSTED; agent degrades gracefully if unreachable. ref lives ONLY at template level. Never externalize the irreducible core.",
+     "items": {
+      "$ref": "#/definitions/RefEntry"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "TrustConfidence": {
+   "description": "Confidence in the context's accuracy",
+   "enum": [
+    "high",
+    "medium",
+    "low"
+   ],
+   "type": "string"
+  },
+  "TrustObject": {
+   "additionalProperties": false,
+   "description": "Provenance and confidence metadata",
+   "properties": {
+    "cite": {
+     "description": "Source reference (e.g., file:line, URL, commit SHA)",
+     "type": "string"
+    },
+    "conf": {
+     "$ref": "#/definitions/TrustConfidence"
+    },
+    "note": {
+     "description": "Reason for reduced confidence (typically when conf=low)",
+     "type": "string"
+    },
+    "src": {
+     "$ref": "#/definitions/TrustSource"
+    }
+   },
+   "required": [
+    "src",
+    "conf"
+   ],
+   "type": "object"
+  },
+  "TrustSource": {
+   "description": "How this context was produced",
+   "enum": [
+    "authored",
+    "comment",
+    "commit",
+    "infer"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "Schema for Metadata Context blocks in CloudFormation templates. Advisory -- for client-side validation, not server-side enforcement. See https://github.com/aws/aws-cdk/pull/38381 for the CDK context aspect that emits these blocks.",
+ "title": "CloudFormation Metadata Context Schema v1"
+}
