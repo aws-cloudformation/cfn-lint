@@ -1,5 +1,8 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: A sample template
+Metadata:
+  com.aws.cloudformation.Context:
+    arch: "Test fixture exercising cfn-lint rule coverage across resource types"
 Parameters:
   WebServerPort:
     Type: String
@@ -30,8 +33,14 @@ Conditions:
 Resources:
   MyModule:
     Type: "My::Organization::Custom::MODULE"
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: "Custom module for organization-specific logic"
   RootRole:
     Type: "AWS::IAM::Role"
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: "EC2 instance role for root access"
     Properties:
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
@@ -53,6 +62,9 @@ Resources:
                 Resource: "*"
   RolePolicies:
     Type: "AWS::IAM::Policy"
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: "Inline policy granting root-level access to the role"
     Properties:
       PolicyName: "root"
       PolicyDocument:
@@ -65,12 +77,18 @@ Resources:
         - Ref: "RootRole"
   RootInstanceProfile:
     Type: "AWS::IAM::InstanceProfile"
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: "Instance profile binding the role to EC2 instances"
     Properties:
       Path: "/"
       Roles:
         - Ref: "RootRole"
   MyEC2Instance:
     Type: "AWS::EC2::Instance"
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: "Primary compute instance with EBS and user data"
     Properties:
       ImageId: "ami-2f726546"
       InstanceType: t3.micro
@@ -89,8 +107,14 @@ Resources:
         yum install ${ Package}
   mySnsTopic:
     Type: AWS::SNS::Topic
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: "Notification topic for alerts"
   MyEC2Instance1:
     Type: "AWS::EC2::Instance"
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: "Secondary compute instance with conditional volume sizing"
     Properties:
       ImageId: "ami-2f726546"
       InstanceType: t3.micro
@@ -116,10 +140,16 @@ Resources:
           - myPackage: !Ref Package1
   ElasticIP:
     Type: "AWS::EC2::EIP"
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: "Static IP for the load balancer"
     Properties:
       Domain: "vpc"
   ElasticLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: "HTTP load balancer distributing traffic to EC2 instances"
     Properties:
       AvailabilityZones:
         Fn::GetAZs: ""
@@ -141,6 +171,9 @@ Resources:
     DeletionPolicy: Delete
     UpdateReplacePolicy: Delete
     Type: "AWS::CloudFormation::Stack"
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: "Nested stack for IAM deployment pipeline"
     Properties:
       TemplateURL: !Sub "https://s3.${ AWS::Region}.amazonaws.com/ss-vsts-codepipeline-${AWS::Region}/vsts/${AWS::AccountId}/templates/vsts-pipeline/pipeline.yaml"
       Parameters:
@@ -148,17 +181,26 @@ Resources:
         Deploy: "auto"
   CustomResource:
     Type: Custom::Function
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: "Custom resource invoking a Lambda-backed provider"
     Version: "1.0"
     Properties:
       ServiceToken: anArn
   WaitCondition:
     Type: AWS::CloudFormation::WaitCondition
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: "Blocks until instance signals readiness"
     CreationPolicy:
       ResourceSignal:
         Timeout: PT15M
         Count: 1
   LambdaFunction:
     Type: AWS::Lambda::Function
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: "Hello World function for testing Lambda integration"
     Properties:
       Code:
         ZipFile: |
