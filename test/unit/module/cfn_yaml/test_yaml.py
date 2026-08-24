@@ -23,11 +23,11 @@ class TestYamlParse(BaseTestCase):
         self.filenames = {
             "config_rule": {
                 "filename": "test/fixtures/templates/public/lambda-poller.yaml",
-                "failures": 1,
+                "failures": 7,
             },
             "generic_bad": {
                 "filename": "test/fixtures/templates/bad/generic.yaml",
-                "failures": 38,
+                "failures": 58,
             },
         }
 

@@ -1,6 +1,32 @@
 [
     {
         "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "c1f58553-e185-4180-c398-a9558a07fdf7",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 9,
+                "LineNumber": 12
+            },
+            "Path": [
+                "Metadata"
+            ],
+            "Start": {
+                "ColumnNumber": 1,
+                "LineNumber": 12
+            }
+        },
+        "Message": "This template is missing a top-level Metadata.com.aws.cloudformation.Context block describing its architecture. Add top-level Metadata.com.aws.cloudformation.Context and set 'arch' to a concise summary of the template's high-level resource and data flow. Add 'must' as a list only for known cross-cutting constraints; otherwise omit it. Do not guess or invent constraints.",
+        "ParentId": null,
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
         "Id": "398631e7-677e-4c84-249d-39f5c8dc779b",
         "Level": "Warning",
         "Location": {
@@ -24,6 +50,33 @@
             "Id": "W3011",
             "ShortDescription": "Check resources with UpdateReplacePolicy/DeletionPolicy have both",
             "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 21,
+                "LineNumber": 41
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 41
+            }
+        },
+        "Message": "These architecture-relevant resources are missing Metadata.com.aws.cloudformation.Context: rArchiveLogsBucket (AWS::S3::Bucket), rArchiveLogsBucketPolicy (AWS::S3::BucketPolicy), rCloudTrailBucket (AWS::S3::Bucket), rCloudTrailChange (AWS::Logs::MetricFilter), rCloudTrailChangeAlarm (AWS::CloudWatch::Alarm), rCloudTrailLoggingLocal (AWS::CloudTrail::Trail), rCloudTrailProfile (AWS::IAM::InstanceProfile), rCloudTrailRole (AWS::IAM::Role), rCloudTrailS3Policy (AWS::S3::BucketPolicy), rCloudWatchLogsRole (AWS::IAM::Role), rIAMCreateAccessKey (AWS::Logs::MetricFilter), rIAMCreateAccessKeyAlarm (AWS::CloudWatch::Alarm), rIAMPolicyChangesAlarm (AWS::CloudWatch::Alarm), rIAMPolicyChangesMetricFilter (AWS::Logs::MetricFilter), rIAMRootActivity (AWS::Logs::MetricFilter), rNetworkAclChangesAlarm (AWS::CloudWatch::Alarm), rNetworkAclChangesMetricFilter (AWS::Logs::MetricFilter), rRootActivityAlarm (AWS::CloudWatch::Alarm), rSecurityAlarmTopic (AWS::SNS::Topic), rSecurityGroupChangesAlarm (AWS::CloudWatch::Alarm), rSecurityGroupChangesMetricFilter (AWS::Logs::MetricFilter), rUnauthorizedAttemptAlarm (AWS::CloudWatch::Alarm), rUnauthorizedAttempts (AWS::Logs::MetricFilter). For each listed resource, add Metadata.com.aws.cloudformation.Context. Set 'why' to the resource's purpose or design rationale. If the rationale is not documented, set 'gaps' to [\"rationale not documented\"] instead of guessing. Add 'must' as a list only for known constraints whose violation would break the system; otherwise omit it. Leave unlisted resources unchanged.",
+        "ParentId": null,
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
         }
     },
     {
@@ -146,6 +199,34 @@
             "Id": "E3012",
             "ShortDescription": "Check resource properties values",
             "Source": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#type"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "50595c66-13b7-9b02-f204-f70d53019ac4",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 27,
+                "LineNumber": 60
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rArchiveLogsBucketPolicy"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 60
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
         }
     },
     {
@@ -289,6 +370,34 @@
     },
     {
         "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "55ca3434-2689-824d-99d5-e6ad107b733c",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 20,
+                "LineNumber": 119
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rCloudTrailBucket"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 119
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
         "Id": "9cf035ba-037a-57fe-8287-7737ca7cd1eb",
         "Level": "Warning",
         "Location": {
@@ -314,6 +423,62 @@
             "Id": "W3045",
             "ShortDescription": "Controlling access to an S3 bucket should be done with bucket policies",
             "Source": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/about-object-ownership.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "6086879a-d368-ed5f-14a9-67339201989c",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 20,
+                "LineNumber": 130
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rCloudTrailChange"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 130
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "36178a90-717c-3a99-6fc0-b1859c6ae2d6",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 25,
+                "LineNumber": 142
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rCloudTrailChangeAlarm"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 142
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
         }
     },
     {
@@ -488,6 +653,62 @@
     },
     {
         "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "07d14640-4364-5fb1-63b8-931619f5f72b",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 26,
+                "LineNumber": 162
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rCloudTrailLoggingLocal"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 162
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "7fb8aaf5-f14d-414f-dd23-101dd392db5c",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 21,
+                "LineNumber": 179
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rCloudTrailProfile"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 179
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
         "Id": "f8a94a42-6d14-2cf9-70c4-9ed6dc428a51",
         "Level": "Warning",
         "Location": {
@@ -512,6 +733,62 @@
             "Id": "W3005",
             "ShortDescription": "Check obsolete DependsOn configuration for Resources",
             "Source": "https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "9053e426-8beb-a4ce-7819-7640d442e7f8",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 18,
+                "LineNumber": 186
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rCloudTrailRole"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 186
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "3d99b6ba-7730-9f96-c000-8e05749fb918",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 22,
+                "LineNumber": 231
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rCloudTrailS3Policy"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 231
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
         }
     },
     {
@@ -684,6 +961,90 @@
     },
     {
         "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "d2700602-9d45-044b-b62f-07b57b2b102a",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 22,
+                "LineNumber": 324
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rCloudWatchLogsRole"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 324
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "888fa219-5466-da36-f1c8-199b408ff40d",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 22,
+                "LineNumber": 379
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rIAMCreateAccessKey"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 379
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "6674e9ca-2fda-5a87-9fde-19a951042996",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 27,
+                "LineNumber": 390
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rIAMCreateAccessKeyAlarm"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 390
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
         "Id": "d0dc7d38-a4bb-f344-529d-75f382244acc",
         "Level": "Error",
         "Location": {
@@ -767,6 +1128,34 @@
             "Id": "E3012",
             "ShortDescription": "Check resource properties values",
             "Source": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#type"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "e93642af-e400-acb6-923c-0c119b6faf37",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 25,
+                "LineNumber": 406
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rIAMPolicyChangesAlarm"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 406
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
         }
     },
     {
@@ -858,6 +1247,90 @@
     },
     {
         "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "4cf046d9-700a-24f8-0c14-223ba1d2adc9",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 32,
+                "LineNumber": 421
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rIAMPolicyChangesMetricFilter"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 421
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "7d6a4b90-a3a3-3ba1-b16a-4481b50aeb4a",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 19,
+                "LineNumber": 431
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rIAMRootActivity"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 431
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "a22dbcd7-f616-4183-878b-b994afea011e",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 26,
+                "LineNumber": 442
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rNetworkAclChangesAlarm"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 442
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
         "Id": "4987f015-df3d-c036-b056-68d2d268367d",
         "Level": "Error",
         "Location": {
@@ -941,6 +1414,62 @@
             "Id": "E3012",
             "ShortDescription": "Check resource properties values",
             "Source": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#type"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "6eeddf40-39e1-9dc1-2588-780743dce164",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 33,
+                "LineNumber": 457
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rNetworkAclChangesMetricFilter"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 457
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "eb78da9c-d7f9-972e-c2f0-29fa75e2aab4",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 21,
+                "LineNumber": 470
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rRootActivityAlarm"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 470
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
         }
     },
     {
@@ -1032,6 +1561,62 @@
     },
     {
         "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "a23f9371-12fc-d07b-fe23-901f6b005395",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 22,
+                "LineNumber": 485
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rSecurityAlarmTopic"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 485
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "a9428d96-24a8-ed33-14a1-9e2ccae36c0b",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 29,
+                "LineNumber": 492
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rSecurityGroupChangesAlarm"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 492
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
         "Id": "1ad7f934-c28f-8ca7-574d-6cc2e54e0cc5",
         "Level": "Error",
         "Location": {
@@ -1119,6 +1704,62 @@
     },
     {
         "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "897b80d1-df54-32a5-02bf-a48fc0500200",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 36,
+                "LineNumber": 508
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rSecurityGroupChangesMetricFilter"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 508
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "db4364a9-2602-5637-6ccd-c331c77a7716",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 28,
+                "LineNumber": 521
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rUnauthorizedAttemptAlarm"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 521
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
         "Id": "f3af30e2-e95a-86b0-27c9-0785b09df2f5",
         "Level": "Error",
         "Location": {
@@ -1202,6 +1843,34 @@
             "Id": "E3012",
             "ShortDescription": "Check resource properties values",
             "Source": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#type"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
+        "Id": "43fb9935-d740-c137-2c1c-6ac24852da57",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 24,
+                "LineNumber": 536
+            },
+            "Path": [
+                "Resources",
+                "rArchiveLogsBucket",
+                "rUnauthorizedAttempts"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 536
+            }
+        },
+        "Message": "This resource is missing Metadata.com.aws.cloudformation.Context.",
+        "ParentId": "f3a37662-03b1-b5db-1dae-1cc5671e3eff",
+        "Rule": {
+            "Description": "Flags a template whose top-level Metadata has no Metadata.com.aws.cloudformation.Context block, and significant resources missing a Metadata.com.aws.cloudformation.Context block. Incidental/framework resources and subordinate low-value types (e.g. AWS::Logs::LogGroup) are not required to carry context. Rationale written as YAML comments is not visible to cfn-lint; disable this rule (ignore_checks W4010) on templates that document context that way or do not adopt the Context convention.",
+            "Id": "W4010",
+            "ShortDescription": "Template or significant resource has no Context block",
+            "Source": "https://github.com/aws/aws-cdk/pull/38381"
         }
     }
 ]

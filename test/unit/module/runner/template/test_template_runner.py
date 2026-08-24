@@ -79,7 +79,7 @@ class TestRunner(BaseTestCase):
                 rules=self.rules,
             )
         )
-        self.assertEqual(len(failures), 4, "Got failures {}".format(failures))
+        self.assertEqual(len(failures), 7, "Got failures {}".format(failures))
 
     def test_runner_mandatory_rules(self):
         """Success test"""
@@ -95,7 +95,7 @@ class TestRunner(BaseTestCase):
                 rules=self.rules,
             )
         )
-        self.assertEqual(len(failures), 5, "Got failures {}".format(failures))
+        self.assertEqual(len(failures), 8, "Got failures {}".format(failures))
 
         failures = list(
             run_template_by_data(
@@ -109,4 +109,4 @@ class TestRunner(BaseTestCase):
                 rules=self.rules,
             )
         )
-        self.assertEqual(len(failures), 4, "Got failures {}".format(failures))
+        self.assertEqual(len(failures), 7, "Got failures {}".format(failures))
