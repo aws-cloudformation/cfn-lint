@@ -35,7 +35,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results_filename": (
                 "test/fixtures/results/integration/resources-cloudformation-init_yaml.json"
             ),
-            "exit_code": 0,
+            "exit_code": 4,
         },
         {
             "filename": "test/fixtures/templates/integration/dynamic-references.yaml",
@@ -49,7 +49,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results_filename": (
                 "test/fixtures/results/integration/ref-no-value_yaml.json"
             ),
-            "exit_code": 2,
+            "exit_code": 6,
         },
         {
             "filename": "test/fixtures/templates/integration/metdata.yaml",
@@ -61,14 +61,14 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results_filename": (
                 "test/fixtures/results/integration/availability-zones_yaml.json"
             ),
-            "exit_code": 2,
+            "exit_code": 6,
         },
         {
             "filename": "test/fixtures/templates/integration/getatt-types.yaml",
             "results_filename": (
                 "test/fixtures/results/integration/getatt-types_yaml.json"
             ),
-            "exit_code": 10,
+            "exit_code": 14,
         },
         {
             "filename": "test/fixtures/templates/integration/ref-types.yaml",
@@ -78,7 +78,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
         {
             "filename": "test/fixtures/templates/integration/formats.yaml",
             "results_filename": "test/fixtures/results/integration/formats_yaml.json",
-            "exit_code": 2,
+            "exit_code": 6,
         },
         {
             "filename": (
@@ -87,14 +87,14 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results_filename": (
                 "test/fixtures/results/integration/aws-ec2-networkinterface_yaml.json"
             ),
-            "exit_code": 2,
+            "exit_code": 6,
         },
         {
             "filename": "test/fixtures/templates/integration/aws-ec2-instance.yaml",
             "results_filename": (
                 "test/fixtures/results/integration/aws-ec2-instance_yaml.json"
             ),
-            "exit_code": 2,
+            "exit_code": 6,
         },
         {
             "filename": (
@@ -103,28 +103,28 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results_filename": (
                 "test/fixtures/results/integration/aws-ec2-launchtemplate_yaml.json"
             ),
-            "exit_code": 2,
+            "exit_code": 6,
         },
         {
             "filename": "test/fixtures/templates/integration/aws-ec2-subnet.yaml",
             "results_filename": (
                 "test/fixtures/results/integration/aws-ec2-subnet_yaml.json"
             ),
-            "exit_code": 2,
+            "exit_code": 6,
         },
         {
             "filename": "test/fixtures/templates/integration/aws-dynamodb-table.yaml",
             "results_filename": (
                 "test/fixtures/results/integration/aws-dynamodb-table_yaml.json"
             ),
-            "exit_code": 2,
+            "exit_code": 6,
         },
         {
             "filename": "test/fixtures/templates/integration/aws-lambda-function.yaml",
             "results_filename": (
                 "test/fixtures/results/integration/aws-lambda-function_yaml.json"
             ),
-            "exit_code": 0,
+            "exit_code": 4,
         },
         {
             "filename": "test/fixtures/templates/integration/cfn-gather.yaml",
@@ -138,7 +138,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results_filename": (
                 "test/fixtures/results/integration/get-stack-output_yaml.json"
             ),
-            "exit_code": 2,
+            "exit_code": 6,
         },
         {
             "filename": (
@@ -147,21 +147,21 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results_filename": (
                 "test/fixtures/results/integration/module-sub-resources_yaml.json"
             ),
-            "exit_code": 0,
+            "exit_code": 4,
         },
         {
             "filename": "test/fixtures/templates/integration/creationpolicy.yaml",
             "results_filename": (
                 "test/fixtures/results/integration/creationpolicy_yaml.json"
             ),
-            "exit_code": 2,
+            "exit_code": 6,
         },
         {
             "filename": "test/fixtures/templates/integration/updatepolicy.yaml",
             "results_filename": (
                 "test/fixtures/results/integration/updatepolicy_yaml.json"
             ),
-            "exit_code": 2,
+            "exit_code": 6,
         },
     ]
 

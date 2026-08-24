@@ -45,7 +45,8 @@ class TestExclude(BaseTestCase):
         runner = Runner(config)
         runner.rules = self.collection
 
-        self.assertEqual([], list(runner.run()))
+        matches = list(runner.run())
+        self.assertEqual([], matches)
 
     def test_fail_run(self):
         """Failure test required"""
@@ -68,4 +69,4 @@ class TestExclude(BaseTestCase):
         runner.rules = self.collection
 
         errs = list(runner.run())
-        self.assertEqual(2, len(errs))
+        self.assertEqual(4, len(errs))

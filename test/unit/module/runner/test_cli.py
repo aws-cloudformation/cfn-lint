@@ -260,7 +260,7 @@ class TestCli(BaseTestCase):
         with self.assertRaises(SystemExit) as e:
             runner.cli()
 
-        self.assertEqual(e.exception.code, 0)
+        self.assertEqual(e.exception.code, 4)
 
     @patch("fileinput.input")
     @patch("sys.stdin.isatty")

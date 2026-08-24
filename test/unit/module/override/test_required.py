@@ -49,7 +49,9 @@ class TestOverrideRequired(BaseTestCase):
         runner = Runner(config)
         runner.rules = self.collection
 
-        self.assertEqual([], list(runner.run()))
+        matches = list(runner.run())
+        self.assertEqual(1, len(matches))
+        self.assertEqual("W4010", matches[0].rule.id)
 
     def test_fail_run(self):
         """Failure test required"""

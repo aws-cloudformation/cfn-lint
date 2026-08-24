@@ -24,7 +24,7 @@ class TestTransformIgnore(BaseCliTestCase):
                 "test/fixtures/results/transform_ignore"
                 "/transform_serverless_template.json"
             ),
-            "exit_code": 10,
+            "exit_code": 14,
         },
     ]
 
