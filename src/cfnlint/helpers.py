@@ -577,26 +577,19 @@ def get_url_metadata(url: str) -> tuple[dict[str, Any], str] | None:
         return metadata, metadata_filename
 
 
-def get_url_retrieve(url: str, caching: bool = False) -> str:
-    """Get the contents of a zip file and returns
-    a string representing the file
+def get_url_retrieve(url: str) -> str:
+    """Download a URL with retries and return the local file path.
 
     Args:
         url (str): The url to retrieve
-        caching (bool): If we can cache the results (default: False)
     Returns:
         str: A string representing the file object that was retrieved
     """
-
-    pending_metadata = get_url_metadata(url) if caching else None
 
     fileobject, _ = _retry_url_operation(
         lambda: urlretrieve(url),
         f"downloading {url}",
     )
-
-    if pending_metadata:
-        save_metadata(*pending_metadata)
 
     return fileobject
 
