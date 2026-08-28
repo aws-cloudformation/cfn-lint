@@ -3,7 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import json
 from collections import deque
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -100,3 +102,54 @@ def test_validate(name, instance, patches, expected, rule, validator):
         )
     else:
         schema_manager.get_resource_schemas_by_regions.assert_not_called()
+
+
+def test_launch_template_network_performance_options_patch(rule, validator):
+    schema = Schema(
+        {
+            "typeName": "AWS::EC2::LaunchTemplate",
+            "properties": {
+                "LaunchTemplateData": {
+                    "$ref": "#/definitions/LaunchTemplateData",
+                },
+            },
+            "definitions": {
+                "LaunchTemplateData": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "ImageId": {"type": "string"},
+                    },
+                },
+            },
+        }
+    )
+    patch_path = Path(
+        "src/cfnlint/data/schemas/patches/extensions/all/"
+        "aws_ec2_launchtemplate/network_performance_options.json"
+    )
+    with patch_path.open(encoding="utf-8") as fh:
+        schema.patch(json.load(fh))
+
+    schema_manager = MagicMock()
+    schema_manager.get_resource_schemas_by_regions.return_value = [
+        (["us-east-1"], schema)
+    ]
+
+    instance = {
+        "Type": "AWS::EC2::LaunchTemplate",
+        "Properties": {
+            "LaunchTemplateData": {
+                "ImageId": "ami-1234567890abcdef0",
+                "NetworkPerformanceOptions": {
+                    "BandwidthWeighting": "vpc-1",
+                },
+            },
+        },
+    }
+
+    with patch(
+        "cfnlint.rules.resources.properties.Properties.PROVIDER_SCHEMA_MANAGER",
+        schema_manager,
+    ):
+        assert list(rule.validate(validator, {}, instance, {})) == []
