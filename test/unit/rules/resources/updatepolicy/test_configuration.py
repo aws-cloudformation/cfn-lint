@@ -114,6 +114,40 @@ def rule():
             [],
         ),
         (
+            "Invalid with both instance refresh and rolling update",
+            {
+                "Type": "AWS::AutoScaling::AutoScalingGroup",
+                "UpdatePolicy": {
+                    "AutoScalingInstanceRefresh": {"Strategy": "Rolling"},
+                    "AutoScalingRollingUpdate": {"MaxBatchSize": 1},
+                },
+            },
+            [
+                ValidationError(
+                    "'AutoScalingRollingUpdate' should not be included with "
+                    "'AutoScalingInstanceRefresh'",
+                    path=["UpdatePolicy", "AutoScalingRollingUpdate"],
+                    rule=Configuration(),
+                    instance={
+                        "AutoScalingInstanceRefresh": {"Strategy": "Rolling"},
+                        "AutoScalingRollingUpdate": {"MaxBatchSize": 1},
+                    },
+                    validator="dependentExcluded",
+                    validator_value={
+                        "AutoScalingInstanceRefresh": ["AutoScalingRollingUpdate"]
+                    },
+                    schema_path=[
+                        "allOf",
+                        0,
+                        "then",
+                        "properties",
+                        "UpdatePolicy",
+                        "dependentExcluded",
+                    ],
+                )
+            ],
+        ),
+        (
             "Valid with lambda function",
             {
                 "Type": "AWS::Lambda::Alias",
