@@ -3,6 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import json
+import tempfile
+from pathlib import Path
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import MagicMock, patch
 from urllib.error import HTTPError, URLError
@@ -50,6 +53,38 @@ class TestGetUrlRetrieve(BaseTestCase):
         mock_load_metadata.assert_called_once()
         mock_save_metadata.assert_called_once()
         self.assertEqual(result, "file/path")
+
+    @patch("cfnlint.helpers.get_metadata_filename")
+    @patch("cfnlint.helpers.urlopen")
+    @patch("cfnlint.helpers.urlretrieve")
+    def test_failed_cached_download_does_not_advance_etag(
+        self, mocked_urlretrieve, mocked_urlopen, mock_get_metadata_filename
+    ):
+        """A failed download leaves the prior ETag available for the next update"""
+        old_etag = "ETAG_ONE"
+        new_etag = "ETAG_TWO"
+        url = "http://foo.com"
+
+        cm = MagicMock()
+        cm.info.return_value = {"ETag": new_etag}
+        cm.__enter__.return_value = cm
+        mocked_urlopen.return_value = cm
+        mocked_urlretrieve.side_effect = HTTPError(
+            url, 403, "Forbidden", hdrs=None, fp=None
+        )
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            metadata_file = Path(tmpdir) / "metadata.json"
+            metadata_file.write_text(json.dumps({"etag": old_etag}))
+            mock_get_metadata_filename.return_value = str(metadata_file)
+
+            with self.assertRaises(HTTPError):
+                cfnlint.helpers.get_url_retrieve(url, caching=True)
+
+            self.assertEqual(json.loads(metadata_file.read_text()), {"etag": old_etag})
+            self.assertTrue(cfnlint.helpers.url_has_newer_version(url))
+
+        mocked_urlretrieve.assert_called_once_with(url)
 
     @patch("cfnlint.helpers.time.sleep")
     @patch("cfnlint.helpers.urlretrieve")

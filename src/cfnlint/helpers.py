@@ -562,6 +562,21 @@ def get_url_content(url, caching=False):
     return content
 
 
+def get_url_metadata(url: str) -> tuple[dict[str, Any], str] | None:
+    """Get updated cache metadata for a URL without persisting it."""
+    req = Request(url, method="HEAD")
+    with urlopen(req) as res:
+        etag = res.info().get("ETag")
+        if not etag:
+            return None
+
+        metadata_filename = get_metadata_filename(url)
+        metadata = load_metadata(metadata_filename)
+        metadata["etag"] = etag
+        metadata["url"] = url
+        return metadata, metadata_filename
+
+
 def get_url_retrieve(url: str, caching: bool = False) -> str:
     """Get the contents of a zip file and returns
     a string representing the file
@@ -573,21 +588,15 @@ def get_url_retrieve(url: str, caching: bool = False) -> str:
         str: A string representing the file object that was retrieved
     """
 
-    if caching:
-        req = Request(url, method="HEAD")
-        with urlopen(req) as res:
-            if res.info().get("ETag"):
-                metadata_filename = get_metadata_filename(url)
-                # Load in all existing values
-                metadata = load_metadata(metadata_filename)
-                metadata["etag"] = res.info().get("ETag")
-                metadata["url"] = url  # To make it obvious which url the Tag relates to
-                save_metadata(metadata, metadata_filename)
+    pending_metadata = get_url_metadata(url) if caching else None
 
     fileobject, _ = _retry_url_operation(
         lambda: urlretrieve(url),
         f"downloading {url}",
     )
+
+    if pending_metadata:
+        save_metadata(*pending_metadata)
 
     return fileobject
 
