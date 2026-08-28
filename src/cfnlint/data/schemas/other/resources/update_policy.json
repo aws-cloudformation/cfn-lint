@@ -154,6 +154,9 @@
   "AutoScalingGroupUpdatePolicy": {
    "additionalProperties": false,
    "properties": {
+    "AutoScalingInstanceRefresh": {
+     "$ref": "#/definitions/AutoScalingInstanceRefresh"
+    },
     "AutoScalingReplacingUpdate": {
      "$ref": "#/definitions/AutoScalingReplacingUpdate"
     },
@@ -162,6 +165,96 @@
     },
     "AutoScalingScheduledAction": {
      "$ref": "#/definitions/AutoScalingScheduledAction"
+    }
+   },
+   "type": "object"
+  },
+  "AutoScalingInstanceRefresh": {
+   "additionalProperties": false,
+   "properties": {
+    "Preferences": {
+     "$ref": "#/definitions/AutoScalingInstanceRefreshPreferences"
+    },
+    "Strategy": {
+     "enum": [
+      "ReplaceRootVolume",
+      "Rolling"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Strategy"
+   ],
+   "type": "object"
+  },
+  "AutoScalingInstanceRefreshAlarmSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Alarms": {
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 10,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "AutoScalingInstanceRefreshPreferences": {
+   "additionalProperties": false,
+   "properties": {
+    "AlarmSpecification": {
+     "$ref": "#/definitions/AutoScalingInstanceRefreshAlarmSpecification"
+    },
+    "BakeTime": {
+     "maximum": 172800,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "CheckpointDelay": {
+     "maximum": 172800,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "CheckpointPercentages": {
+     "items": {
+      "type": "integer"
+     },
+     "type": "array"
+    },
+    "InstanceWarmup": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MaxHealthyPercentage": {
+     "maximum": 200,
+     "minimum": 100,
+     "type": "integer"
+    },
+    "MinHealthyPercentage": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "ScaleInProtectedInstances": {
+     "enum": [
+      "Ignore",
+      "Refresh",
+      "Wait"
+     ],
+     "type": "string"
+    },
+    "SkipMatching": {
+     "type": "boolean"
+    },
+    "StandbyInstances": {
+     "enum": [
+      "Ignore",
+      "Terminate",
+      "Wait"
+     ],
+     "type": "string"
     }
    },
    "type": "object"
