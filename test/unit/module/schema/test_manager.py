@@ -73,15 +73,28 @@ class TestUpdateResourceSchemas(BaseTestCase):
         result = self.manager.update(force=False)
         self.assertEqual(result, 0)
 
+    @patch("cfnlint.schema.manager.LOGGER")
+    @patch("cfnlint.schema.manager.save_metadata")
+    @patch("cfnlint.schema.manager.get_url_metadata")
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
     @patch("cfnlint.schema.manager.get_cache_dir")
-    def test_update_force(self, mock_cache_dir, mock_get_url, mock_url_newer):
+    def test_update_force(
+        self,
+        mock_cache_dir,
+        mock_get_url,
+        mock_url_newer,
+        mock_get_metadata,
+        mock_save_metadata,
+        mock_logger,
+    ):
         """Force download even if cached"""
         import tempfile
         from pathlib import Path
 
         mock_url_newer.return_value = False
+        pending_metadata = ({"etag": "ETAG_TWO"}, "metadata.json")
+        mock_get_metadata.return_value = pending_metadata
 
         zip_buffer = io.BytesIO()
         with zipfile.ZipFile(zip_buffer, "w") as zf:
@@ -109,16 +122,90 @@ class TestUpdateResourceSchemas(BaseTestCase):
             mock_get_url.assert_called_once()
             self.assertTrue((Path(tmpdir) / "providers" / "us-east-1.json").exists())
             self.assertTrue((Path(tmpdir) / "resources" / "abc123.json").exists())
+            mock_save_metadata.assert_called_once_with(*pending_metadata)
+            mock_logger.debug.assert_called_with(
+                "Schema cache metadata updated after installation"
+            )
 
+    @patch("cfnlint.schema.manager.save_metadata")
+    @patch("cfnlint.schema.manager.get_url_metadata")
+    @patch("cfnlint.schema.manager.LOGGER")
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
-    def test_update_download_failure(self, mock_get_url, mock_url_newer):
+    @patch("cfnlint.schema.manager.get_cache_dir")
+    def test_update_download_failure(
+        self,
+        mock_cache_dir,
+        mock_get_url,
+        mock_url_newer,
+        mock_logger,
+        mock_get_metadata,
+        mock_save_metadata,
+    ):
         """Returns 2 on download failure"""
+        import tempfile
+
         mock_url_newer.return_value = True
+        mock_get_metadata.return_value = ({"etag": "ETAG_TWO"}, "metadata.json")
         mock_get_url.side_effect = Exception("Network error")
 
-        result = self.manager.update(force=False)
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mock_cache_dir.return_value = tmpdir
+            result = self.manager.update(force=False)
+
         self.assertEqual(result, 2)
+        mock_save_metadata.assert_not_called()
+        logged = " ".join(str(c) for c in mock_logger.error.call_args_list)
+        self.assertIn("metadata was not updated", logged)
+
+    @patch("cfnlint.schema.manager.LOGGER")
+    @patch("cfnlint.schema.manager.save_metadata")
+    @patch("cfnlint.schema.manager.get_url_metadata")
+    @patch("cfnlint.schema.manager.url_has_newer_version")
+    @patch("cfnlint.schema.manager.get_url_retrieve")
+    @patch("cfnlint.schema.manager.get_cache_dir")
+    def test_update_metadata_failure_after_install(
+        self,
+        mock_cache_dir,
+        mock_get_url,
+        mock_url_newer,
+        mock_get_metadata,
+        mock_save_metadata,
+        mock_logger,
+    ):
+        """Metadata write failures are reported after schemas are installed"""
+        import tempfile
+        from pathlib import Path
+
+        mock_url_newer.return_value = True
+        mock_get_metadata.return_value = ({"etag": "ETAG_TWO"}, "metadata.json")
+        mock_save_metadata.side_effect = OSError("Disk full")
+
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, "w") as zf:
+            zf.writestr(
+                "providers/us-east-1.json",
+                json.dumps({"AWS::S3::Bucket": "abc123"}),
+            )
+            zf.writestr(
+                "resources/abc123.json",
+                json.dumps({"typeName": "AWS::S3::Bucket", "properties": {}}),
+            )
+        zip_buffer.seek(0)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mock_cache_dir.return_value = tmpdir
+            with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as tmp:
+                tmp.write(zip_buffer.getvalue())
+                tmp.flush()
+                mock_get_url.return_value = tmp.name
+                result = self.manager.update(force=True)
+
+            self.assertTrue((Path(tmpdir) / "providers" / "us-east-1.json").exists())
+
+        self.assertEqual(result, 2)
+        logged = " ".join(str(c) for c in mock_logger.error.call_args_list)
+        self.assertIn("Schemas installed but failed to update", logged)
 
 
 class TestSamModuleLoading(BaseTestCase):
@@ -179,6 +266,7 @@ class TestSamModuleLoading(BaseTestCase):
             self.assertEqual(result["AWS::S3::Bucket"], "abc123")
             self.assertEqual(result["AWS::Serverless::Function"], "sam123")
 
+    @patch("cfnlint.schema.manager.get_url_metadata", lambda _: None)
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
     @patch("cfnlint.schema.manager.get_cache_dir")
@@ -510,6 +598,7 @@ class TestUpdateDownloadsVersionJson(BaseTestCase):
         super().setUp()
         self.manager = _make_manager()
 
+    @patch("cfnlint.schema.manager.get_url_metadata", lambda _: None)
     @patch("cfnlint.schema.manager.get_url_content")
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
@@ -553,6 +642,7 @@ class TestUpdateDownloadsVersionJson(BaseTestCase):
                 data = json.load(f)
             self.assertEqual(data["schema_date"], "2026-07-07T14:23:15Z")
 
+    @patch("cfnlint.schema.manager.get_url_metadata", lambda _: None)
     @patch("cfnlint.schema.manager.get_url_content")
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
@@ -806,18 +896,27 @@ class TestUpdateWithLocking(BaseTestCase):
         logged = " ".join(str(c) for c in mock_logger.error.call_args_list)
         self.assertIn("Failed to acquire schema cache lock", logged)
 
+    @patch("cfnlint.schema.manager.save_metadata")
+    @patch("cfnlint.schema.manager.get_url_metadata")
     @patch("cfnlint.schema.manager.LOGGER")
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
     @patch("cfnlint.schema.manager.get_cache_dir")
     def test_update_extract_failure_not_labeled_as_lock_error(
-        self, mock_cache_dir, mock_get_url, mock_url_newer, mock_logger
+        self,
+        mock_cache_dir,
+        mock_get_url,
+        mock_url_newer,
+        mock_logger,
+        mock_get_metadata,
+        mock_save_metadata,
     ):
         """A corrupt download (BadZipFile) logs an extraction error, not a lock error"""
         import tempfile
         from pathlib import Path
 
         mock_url_newer.return_value = True
+        mock_get_metadata.return_value = ({"etag": "ETAG_TWO"}, "metadata.json")
 
         with tempfile.TemporaryDirectory() as tmpdir:
             mock_cache_dir.return_value = tmpdir
@@ -834,19 +933,31 @@ class TestUpdateWithLocking(BaseTestCase):
         # Must NOT be mislabeled as a lock failure
         self.assertNotIn("lock", logged.lower())
         self.assertIn("extract and install", logged)
+        self.assertIn("metadata was not updated", logged)
+        mock_save_metadata.assert_not_called()
 
+    @patch("cfnlint.schema.manager.save_metadata")
+    @patch("cfnlint.schema.manager.get_url_metadata")
     @patch("cfnlint.schema.manager.LOGGER")
     @patch("cfnlint.schema.manager.ProviderSchemaManager._atomic_replace_dir")
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
     @patch("cfnlint.schema.manager.get_cache_dir")
     def test_update_atomic_replace_failure_not_labeled_as_lock_error(
-        self, mock_cache_dir, mock_get_url, mock_url_newer, mock_replace, mock_logger
+        self,
+        mock_cache_dir,
+        mock_get_url,
+        mock_url_newer,
+        mock_replace,
+        mock_logger,
+        mock_get_metadata,
+        mock_save_metadata,
     ):
         """An OSError during atomic replace logs an install error, not a lock error"""
         import tempfile
 
         mock_url_newer.return_value = True
+        mock_get_metadata.return_value = ({"etag": "ETAG_TWO"}, "metadata.json")
         mock_replace.side_effect = OSError("Disk full")
 
         zip_buffer = io.BytesIO()
@@ -871,7 +982,10 @@ class TestUpdateWithLocking(BaseTestCase):
         logged = " ".join(str(c) for c in mock_logger.error.call_args_list)
         self.assertNotIn("lock", logged.lower())
         self.assertIn("extract and install", logged)
+        self.assertIn("metadata was not updated", logged)
+        mock_save_metadata.assert_not_called()
 
+    @patch("cfnlint.schema.manager.get_url_metadata", lambda _: None)
     @patch("cfnlint.schema.manager.get_url_content")
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
@@ -914,6 +1028,7 @@ class TestUpdateWithLocking(BaseTestCase):
         self.assertNotIn("lock", logged.lower())
         self.assertIn("Failed to check schema version", logged)
 
+    @patch("cfnlint.schema.manager.get_url_metadata", lambda _: None)
     @patch("cfnlint.schema.manager.get_url_content")
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
@@ -981,6 +1096,7 @@ class TestUpdateWithLocking(BaseTestCase):
 class TestConcurrentUpdate(BaseTestCase):
     """Test concurrent update() calls don't corrupt the cache"""
 
+    @patch("cfnlint.schema.manager.get_url_metadata", lambda _: None)
     @patch("cfnlint.schema.manager.get_url_content")
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
@@ -1051,6 +1167,7 @@ class TestConcurrentUpdate(BaseTestCase):
             self.assertTrue((providers_dir / "us-east-1.json").exists())
             self.assertTrue((resources_dir / "abc123.json").exists())
 
+    @patch("cfnlint.schema.manager.get_url_metadata", lambda _: None)
     @patch("cfnlint.schema.manager.get_url_content")
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")

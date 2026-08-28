@@ -21,7 +21,9 @@ from cfnlint.helpers import (
     REGIONS,
     get_cache_dir,
     get_url_content,
+    get_url_metadata,
     get_url_retrieve,
+    save_metadata,
     url_has_newer_version,
 )
 from cfnlint.schema._exceptions import ResourceNotFoundError
@@ -366,9 +368,13 @@ class ProviderSchemaManager:
             return 2
 
         try:
-            filehandle = get_url_retrieve(_ENHANCED_SCHEMAS_URL, caching=True)
+            pending_metadata = get_url_metadata(_ENHANCED_SCHEMAS_URL)
+            filehandle = get_url_retrieve(_ENHANCED_SCHEMAS_URL)
         except Exception as e:
-            LOGGER.error("Failed to download enhanced schemas: %s", e)
+            LOGGER.error(
+                "Failed to download enhanced schemas; metadata was not updated: %s",
+                e,
+            )
             return 2
 
         providers_dir = cache_dir / "providers"
@@ -402,8 +408,24 @@ class ProviderSchemaManager:
                 self._atomic_replace_dir(tmp_providers, providers_dir)
                 self._atomic_replace_dir(tmp_resources, resources_dir)
         except (OSError, zipfile.BadZipFile) as e:
-            LOGGER.error("Failed to extract and install schema cache: %s", e)
+            LOGGER.error(
+                "Failed to extract and install schemas; metadata was not updated: %s",
+                e,
+            )
             return 2
+
+        if pending_metadata:
+            try:
+                save_metadata(*pending_metadata)
+                LOGGER.debug("Schema cache metadata updated after installation")
+            except OSError as e:
+                LOGGER.error(
+                    "Schemas installed but failed to update schema cache metadata: %s",
+                    e,
+                )
+                return 2
+        else:
+            LOGGER.debug("No schema ETag returned; cache metadata was not updated")
 
         try:
             version_content = get_url_content(_VERSION_URL)
