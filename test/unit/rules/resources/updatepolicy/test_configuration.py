@@ -90,6 +90,30 @@ def rule():
             [],
         ),
         (
+            "Valid with autoscaling group instance refresh",
+            {
+                "Type": "AWS::AutoScaling::AutoScalingGroup",
+                "UpdatePolicy": {
+                    "AutoScalingInstanceRefresh": {
+                        "Strategy": "Rolling",
+                        "Preferences": {
+                            "AlarmSpecification": {"Alarms": ["my-alarm"]},
+                            "BakeTime": 600,
+                            "CheckpointDelay": 300,
+                            "CheckpointPercentages": [50, 100],
+                            "InstanceWarmup": 300,
+                            "MaxHealthyPercentage": 200,
+                            "MinHealthyPercentage": 100,
+                            "ScaleInProtectedInstances": "Ignore",
+                            "SkipMatching": True,
+                            "StandbyInstances": "Terminate",
+                        },
+                    },
+                },
+            },
+            [],
+        ),
+        (
             "Valid with lambda function",
             {
                 "Type": "AWS::Lambda::Alias",
