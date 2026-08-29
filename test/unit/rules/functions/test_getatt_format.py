@@ -28,6 +28,7 @@ def template():
             "MyProvisionedProduct": {
                 "Type": "AWS::ServiceCatalog::CloudFormationProvisionedProduct"
             },
+            "MyServerlessApplication": {"Type": "AWS::Serverless::Application"},
             "MySSMParameter": {"Type": "AWS::SSM::Parameter"},
         },
     }
@@ -58,6 +59,12 @@ def template():
             "Valid GetAtt to a provisioned product ",
             ["MyProvisionedProduct", "Outputs.VpcId"],
             {"format": "AWS::EC2::VPC.Id"},
+            [],
+        ),
+        (
+            "Valid GetAtt to a serverless application output",
+            ["MyServerlessApplication", "Outputs.TopicArn"],
+            {"format": "AWS::SNS::Topic.TopicArn"},
             [],
         ),
         (
