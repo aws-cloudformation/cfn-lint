@@ -258,7 +258,10 @@ class GetAtts:
                     f"/properties/{name}"
                 )
 
-        if schema.type_name == "AWS::CloudFormation::Stack":
+        if schema.type_name in [
+            "AWS::CloudFormation::Stack",
+            "AWS::Serverless::Application",
+        ]:
             self._attrs["Outputs\\..*"] = "/properties/CfnLintStringType"
             return
 

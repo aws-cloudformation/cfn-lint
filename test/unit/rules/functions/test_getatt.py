@@ -23,6 +23,7 @@ _template = {
         "MyBucket": {"Type": "AWS::S3::Bucket"},
         "MyCodePipeline": {"Type": "AWS::CodePipeline::Pipeline"},
         "DocDBCluster": {"Type": "AWS::DocDB::DBCluster"},
+        "MyServerlessApplication": {"Type": "AWS::Serverless::Application"},
     },
     "Parameters": {
         "MyResourceParameter": {"Type": "String", "Default": "MyBucket"},
@@ -102,7 +103,8 @@ class _Fail(CfnLintKeyword):
             [
                 ValidationError(
                     "'Foo' is not one of ['MyBucket', "
-                    "'MyCodePipeline', 'DocDBCluster']",
+                    "'MyCodePipeline', 'DocDBCluster', "
+                    "'MyServerlessApplication']",
                     path=deque(["Fn::GetAtt", 0]),
                     schema_path=deque(["enum"]),
                     validator="fn_getatt",
@@ -199,6 +201,14 @@ class _Fail(CfnLintKeyword):
             [],
         ),
         (
+            "Valid GetAtt to a serverless application output",
+            {"Fn::GetAtt": "MyServerlessApplication.Outputs.TopicArn"},
+            {"type": "string"},
+            _template,
+            {},
+            [],
+        ),
+        (
             "Valid Ref in GetAtt for resource",
             {"Fn::GetAtt": [{"Ref": "MyResourceParameter"}, "Arn"]},
             {"type": "string"},
@@ -249,7 +259,8 @@ class _Fail(CfnLintKeyword):
             [
                 ValidationError(
                     "'Arn' is not one of ['MyBucket', "
-                    "'MyCodePipeline', 'DocDBCluster'] when "
+                    "'MyCodePipeline', 'DocDBCluster', "
+                    "'MyServerlessApplication'] when "
                     "{'Ref': 'MyAttributeParameter'} is resolved",
                     path=deque(["Fn::GetAtt", 0]),
                     schema_path=deque(["enum"]),
