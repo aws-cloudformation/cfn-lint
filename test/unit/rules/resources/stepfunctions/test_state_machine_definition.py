@@ -1675,6 +1675,25 @@ def rule():
             },
             [],
         ),
+        (
+            "Literal '.$' in a Pass Result and a state named after a "
+            "payload field are not flagged",
+            {
+                "Definition": {
+                    "StartAt": "Parameters",
+                    "States": {
+                        "Parameters": {
+                            "Type": "Pass",
+                            "Result": {
+                                "literalKey.$": "literal data",
+                            },
+                            "End": True,
+                        },
+                    },
+                }
+            },
+            [],
+        ),
     ],
 )
 def test_validate(

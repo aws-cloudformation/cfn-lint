@@ -214,30 +214,24 @@ class StateMachineDefinition(CfnLintJsonSchema):
             return True
         return False
 
-    def _validate_reference_paths(
+    def _validate_payload(
         self,
         instance: Any,
         k: str,
-        path: deque | None = None,
-        in_payload: bool = False,
+        path: deque,
     ) -> ValidationResult:
         """
-        Per the Amazon States Language specification, inside a payload template
-        a field whose name ends with '.$' must have a value that is a valid
-        JSONPath (beginning with '$') or an intrinsic function call.
-
-        Reference: https://states-language.net/spec.html#payload-template
+        Recurse through a payload template value. Every field inside a payload
+        template inherits the payload semantics, so a nested field whose name
+        ends with '.$' must resolve to a valid JSONPath or intrinsic function.
         """
-        path = deque() if path is None else path
-
         if isinstance(instance, dict):
             for key, value in instance.items():
                 child_path = deque(path)
                 child_path.append(key)
 
                 if (
-                    in_payload
-                    and isinstance(key, str)
+                    isinstance(key, str)
                     and key.endswith(".$")
                     and not self._is_jsonpath_or_intrinsic(value)
                 ):
@@ -250,17 +244,68 @@ class StateMachineDefinition(CfnLintJsonSchema):
                     error_path.extend(child_path)
                     yield ValidationError(message, path=error_path, rule=self)
 
-                child_in_payload = in_payload or key in self._payload_template_fields
-                yield from self._validate_reference_paths(
-                    value, k, child_path, child_in_payload
-                )
+                yield from self._validate_payload(value, k, child_path)
         elif isinstance(instance, list):
             for idx, item in enumerate(instance):
                 child_path = deque(path)
                 child_path.append(idx)
-                yield from self._validate_reference_paths(
-                    item, k, child_path, in_payload
-                )
+                yield from self._validate_payload(item, k, child_path)
+
+    def _validate_reference_paths(
+        self,
+        instance: Any,
+        k: str,
+        path: deque | None = None,
+    ) -> ValidationResult:
+        """
+        Per the Amazon States Language specification, inside a payload template
+        a field whose name ends with '.$' must have a value that is a valid
+        JSONPath (beginning with '$') or an intrinsic function call.
+
+        Payload detection is scoped structurally: only the payload template
+        fields that appear as a direct field of a state are validated. This
+        keeps literal data (such as a Pass 'Result') and any state that merely
+        shares a name with a payload field from being flagged.
+
+        Reference: https://states-language.net/spec.html#payload-template
+        """
+        path = deque() if path is None else path
+
+        if not isinstance(instance, dict):
+            return
+
+        states = instance.get("States")
+        if not isinstance(states, dict):
+            return
+
+        for state_name, state in states.items():
+            if not isinstance(state, dict):
+                continue
+
+            state_path = deque(path)
+            state_path.extend(["States", state_name])
+
+            for field in self._payload_template_fields:
+                if field in state:
+                    field_path = deque(state_path)
+                    field_path.append(field)
+                    yield from self._validate_payload(state[field], k, field_path)
+
+            # Recurse into nested state machines so their payload templates are
+            # validated with the same structural scoping.
+            branches = state.get("Branches")
+            if isinstance(branches, list):
+                for idx, branch in enumerate(branches):
+                    branch_path = deque(state_path)
+                    branch_path.extend(["Branches", idx])
+                    yield from self._validate_reference_paths(branch, k, branch_path)
+
+            for nested_key in ("ItemProcessor", "Iterator"):
+                nested = state.get(nested_key)
+                if isinstance(nested, dict):
+                    nested_path = deque(state_path)
+                    nested_path.append(nested_key)
+                    yield from self._validate_reference_paths(nested, k, nested_path)
 
     def _validate_step(
         self,
