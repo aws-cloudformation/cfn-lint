@@ -1,3 +1,27 @@
+### v1.56.0
+## What's Changed
+* test(functions): assert `FindInMap` rejects non-DefaultValue 4th item without transform by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4639
+* fix: Prevent path traversal in nested stack `TemplateURL` resolution by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4640
+* fix: Require object for `CreationPolicy` and `UpdatePolicy` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4641
+* Fix [E1010](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1010) resolve `GetAtt` to SAM generated resources by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4646
+* chore(deps): bump pyinstaller from 6.21.0 to 6.22.1 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4647
+* docs: add inspect.software health badge by @Nayjest in https://github.com/aws-cloudformation/cfn-lint/pull/4648
+* Add `AutoScalingInstanceRefresh` to the `UpdatePolicy` schema by @ktrysmt in https://github.com/aws-cloudformation/cfn-lint/pull/4656
+* chore(deps): bump pyinstaller from 6.22.1 to 6.22.2 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4650
+* Update CloudFormation schemas to `2026-08-28` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4637
+* Fix [E3016](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3016): Reject `AutoScalingInstanceRefresh` with `AutoScalingRollingUpdate` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4661
+* fix: Defer schema metadata updates until install succeeds by @Fail-Safe in https://github.com/aws-cloudformation/cfn-lint/pull/4662
+* chore: Remove unused caching path from `get_url_retrieve` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4663
+* Allow `GetAtt` outputs on SAM applications by @0xTaoZ in https://github.com/aws-cloudformation/cfn-lint/pull/4665
+* Update CloudFormation schemas to `2026-08-31` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4664
+
+## New Contributors
+* @Nayjest made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4648
+* @ktrysmt made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4656
+* @Fail-Safe made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4662
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.55.1...v1.56.0
+
 ### v1.55.1
 ## What's Changed
 * chore(deps): bump setuptools from 83.0.0 to 84.0.0 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4630
