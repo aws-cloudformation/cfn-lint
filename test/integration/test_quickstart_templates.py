@@ -15,12 +15,12 @@ class TestQuickStartTemplates(BaseCliTestCase):
         {
             "filename": "test/fixtures/templates/public/lambda-poller.yaml",
             "results_filename": "test/fixtures/results/public/lambda-poller_yaml.json",
-            "exit_code": 2,
+            "exit_code": 6,
         },
         {
             "filename": "test/fixtures/templates/public/watchmaker.json",
             "results_filename": "test/fixtures/results/public/watchmaker_json.json",
-            "exit_code": 8,
+            "exit_code": 12,
         },
         {
             "filename": "test/fixtures/templates/quickstart/nist_high_main.yaml",
@@ -74,7 +74,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results_filename": (
                 "test/fixtures/results/quickstart/openshift_master_yaml.json"
             ),
-            "exit_code": 8,
+            "exit_code": 12,
         },
         {
             "filename": "test/fixtures/templates/quickstart/openshift.yaml",
