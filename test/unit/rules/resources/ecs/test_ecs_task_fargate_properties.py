@@ -92,6 +92,15 @@ def rule():
             {
                 "NetworkMode": "awsvpc",
                 "RequiresCompatibilities": ["FARGATE"],
+                "Cpu": "32768",
+                "Memory": "61440",
+            },
+            [],
+        ),
+        (
+            {
+                "NetworkMode": "awsvpc",
+                "RequiresCompatibilities": ["FARGATE"],
                 "Cpu": {"Ref": "MyParameter"},
                 "Memory": "512",
             },
@@ -107,7 +116,7 @@ def rule():
             [
                 ValidationError(
                     "128 is not one of ['256', '512', '1024', '2048', "
-                    "'4096', '8192', '16384']",
+                    "'4096', '8192', '16384', '32768']",
                     rule=TaskFargateProperties(),
                     path=deque(["Cpu"]),
                     validator="enum",

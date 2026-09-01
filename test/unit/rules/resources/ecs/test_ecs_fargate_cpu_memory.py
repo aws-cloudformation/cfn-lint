@@ -95,6 +95,46 @@ def rule():
         (
             {
                 "RequiresCompatibilities": ["FARGATE"],
+                "Cpu": 32768,
+                "Memory": 61440,
+            },
+            [],
+        ),
+        (
+            {
+                "RequiresCompatibilities": ["FARGATE"],
+                "Cpu": "32 vCPU",
+                "Memory": "120 GB",
+            },
+            [],
+        ),
+        (
+            {
+                "RequiresCompatibilities": ["FARGATE"],
+                "Cpu": "32768",
+                "Memory": 249856,
+            },
+            [],
+        ),
+        (
+            {
+                "RequiresCompatibilities": ["FARGATE"],
+                "Cpu": 32768,
+                "Memory": 131072,
+            },
+            [
+                ValidationError(
+                    "Cpu 32768 is not compatible with memory 131072",
+                    rule=FargateCpuMemory(),
+                    path=deque([]),
+                    validator="anyOf",
+                    schema_path=deque(["then", "anyOf"]),
+                )
+            ],
+        ),
+        (
+            {
+                "RequiresCompatibilities": ["FARGATE"],
                 "Cpu": 16384,
                 "Memory": 123904,
             },
