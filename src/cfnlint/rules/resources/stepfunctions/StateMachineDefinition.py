@@ -256,6 +256,7 @@ class StateMachineDefinition(CfnLintJsonSchema):
         instance: Any,
         k: str,
         path: deque | None = None,
+        inherited_query_language: str = "JSONPath",
     ) -> ValidationResult:
         """
         Per the Amazon States Language specification, inside a payload template
@@ -266,6 +267,11 @@ class StateMachineDefinition(CfnLintJsonSchema):
         fields that appear as a direct field of a state are validated. This
         keeps literal data (such as a Pass 'Result') and any state that merely
         shares a name with a payload field from being flagged.
+
+        QueryLanguage is resolved per state: a state may set its own
+        QueryLanguage to adopt JSONata incrementally, and the '.$' convention
+        does not apply to a JSONata state, so those states (and any nested
+        state machines that inherit JSONata) are skipped.
 
         Reference: https://states-language.net/spec.html#payload-template
         """
@@ -285,27 +291,37 @@ class StateMachineDefinition(CfnLintJsonSchema):
             state_path = deque(path)
             state_path.extend(["States", state_name])
 
-            for field in self._payload_template_fields:
-                if field in state:
-                    field_path = deque(state_path)
-                    field_path.append(field)
-                    yield from self._validate_payload(state[field], k, field_path)
+            state_ql = state.get("QueryLanguage")
+            if not isinstance(state_ql, str):
+                state_ql = inherited_query_language
+
+            if state_ql != "JSONata":
+                for field in self._payload_template_fields:
+                    if field in state:
+                        field_path = deque(state_path)
+                        field_path.append(field)
+                        yield from self._validate_payload(state[field], k, field_path)
 
             # Recurse into nested state machines so their payload templates are
-            # validated with the same structural scoping.
+            # validated with the same structural scoping, carrying the resolved
+            # QueryLanguage down as the inherited default.
             branches = state.get("Branches")
             if isinstance(branches, list):
                 for idx, branch in enumerate(branches):
                     branch_path = deque(state_path)
                     branch_path.extend(["Branches", idx])
-                    yield from self._validate_reference_paths(branch, k, branch_path)
+                    yield from self._validate_reference_paths(
+                        branch, k, branch_path, state_ql
+                    )
 
             for nested_key in ("ItemProcessor", "Iterator"):
                 nested = state.get(nested_key)
                 if isinstance(nested, dict):
                     nested_path = deque(state_path)
                     nested_path.append(nested_key)
-                    yield from self._validate_reference_paths(nested, k, nested_path)
+                    yield from self._validate_reference_paths(
+                        nested, k, nested_path, state_ql
+                    )
 
     def _validate_step(
         self,

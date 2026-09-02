@@ -1694,6 +1694,32 @@ def rule():
             },
             [],
         ),
+        (
+            "Per-state JSONata in a JSONPath machine allows a literal '.$'",
+            {
+                "Definition": {
+                    "StartAt": "JsonPathPass",
+                    "States": {
+                        "JsonPathPass": {
+                            "Type": "Pass",
+                            "Assign": {
+                                "Good.$": "$.input.value",
+                            },
+                            "Next": "JsonataPass",
+                        },
+                        "JsonataPass": {
+                            "Type": "Pass",
+                            "QueryLanguage": "JSONata",
+                            "Assign": {
+                                "foo.$": "plainliteral",
+                            },
+                            "End": True,
+                        },
+                    },
+                }
+            },
+            [],
+        ),
     ],
 )
 def test_validate(
