@@ -359,7 +359,13 @@ def loads(yaml_string, fname=None):
         # Convert an empty file to an empty dict
         if template is None:
             template = dict_node({}, Mark(0, 0), Mark(0, 0))
-        _guard_alias_expansion(template, fname)
+        # A YAML alias ("*x") is only valid if a matching anchor ("&x") is
+        # defined, so a source with no "&" cannot contain aliases and needs no
+        # expansion check.  This keeps the guard off the hot path for the vast
+        # majority of templates (which define no anchors) -- only templates
+        # that actually use anchors pay for the walk.
+        if isinstance(yaml_string, str) and "&" in yaml_string:
+            _guard_alias_expansion(template, fname)
         return template
     except CfnParseError:
         raise
