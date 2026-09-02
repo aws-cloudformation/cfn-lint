@@ -14,6 +14,22 @@ class TestQuickStartTemplates(BaseCliTestCase):
     scenarios = [
         {
             "filename": (
+                "test/fixtures/templates/integration/yaml-alias-amplification.yaml"
+            ),
+            "results_filename": (
+                "test/fixtures/results/integration/yaml-alias-amplification_yaml.json"
+            ),
+            "exit_code": 2,
+        },
+        {
+            "filename": "test/fixtures/templates/integration/yaml-alias.yaml",
+            "results_filename": (
+                "test/fixtures/results/integration/yaml-alias_yaml.json"
+            ),
+            "exit_code": 4,
+        },
+        {
+            "filename": (
                 "test/fixtures/templates/integration/resources-cloudformation-init.yaml"
             ),
             "results_filename": (
