@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 import pytest
 
+from cfnlint.core import get_rules, run_checks
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.updatepolicy.Configuration import Configuration
 
@@ -185,3 +186,54 @@ def rule():
 def test_update_policy_configuration(name, instance, expected, rule, validator):
     errors = list(rule.validate(validator, {}, instance, {}))
     assert errors == expected, f"Test {name!r} got {errors!r}"
+
+
+def test_update_policy_allows_refs_to_template_resources():
+    template = {
+        "Resources": {
+            "MyApp": {
+                "Type": "AWS::CodeDeploy::Application",
+                "Properties": {"ComputePlatform": "Lambda"},
+            },
+            "MyDeploymentGroup": {
+                "Type": "AWS::CodeDeploy::DeploymentGroup",
+                "Properties": {
+                    "ApplicationName": {"Ref": "MyApp"},
+                    "ServiceRoleArn": "arn:aws:iam::123456789012:role/CodeDeployRole",
+                },
+            },
+            "MyFunction": {
+                "Type": "AWS::Lambda::Function",
+                "Properties": {
+                    "Code": {"ZipFile": "def handler(e, c): pass"},
+                    "Handler": "index.handler",
+                    "Role": "arn:aws:iam::123456789012:role/LambdaRole",
+                    "Runtime": "python3.13",
+                },
+            },
+            "MyVersion": {
+                "Type": "AWS::Lambda::Version",
+                "Properties": {"FunctionName": {"Ref": "MyFunction"}},
+            },
+            "MyAlias": {
+                "Type": "AWS::Lambda::Alias",
+                "Properties": {
+                    "FunctionName": {"Ref": "MyFunction"},
+                    "FunctionVersion": {"Fn::GetAtt": ["MyVersion", "Version"]},
+                    "Name": "live",
+                },
+                "UpdatePolicy": {
+                    "CodeDeployLambdaAliasUpdate": {
+                        "ApplicationName": {"Ref": "MyApp"},
+                        "DeploymentGroupName": {"Ref": "MyDeploymentGroup"},
+                    }
+                },
+            },
+        }
+    }
+
+    matches = run_checks(
+        "test.yaml", template, get_rules([], [], ["E1020", "E3016"]), ["us-east-1"]
+    )
+
+    assert matches == []
