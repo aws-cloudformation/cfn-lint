@@ -96,6 +96,25 @@ class Ref(BaseFn):
                     yield ValidationError(f"{instance!r} is not of type {reprs}")
                     return
 
+        elif value in validator.context.resources:
+            # A Ref to a resource always resolves to a string (the resource's
+            # physical id/name), so it can satisfy a scalar slot but never an
+            # object or array slot. Validate that against the schema the same
+            # way we do for named and pseudo parameters. This catches a bare
+            # Ref to a resource standing in for a whole object (e.g. an
+            # UpdatePolicy/CreationPolicy value) without blanking the resource
+            # map, which would break legitimate leaf Refs to resources.
+            schema_types = self.resolve_type(validator, subschema)
+            if not schema_types:
+                return
+            reprs = ", ".join(repr(type) for type in schema_types)
+            if all(
+                st not in ["string", "boolean", "integer", "number"]
+                for st in schema_types
+            ):
+                yield ValidationError(f"{instance!r} is not of type {reprs}")
+                return
+
         for rule_id in self._all_refs:
             rule = self.child_rules.get(rule_id)
             if rule:
