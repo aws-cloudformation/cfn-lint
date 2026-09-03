@@ -33,6 +33,13 @@ from cfnlint.rules.errors import ParseError
 UNCONVERTED_SUFFIXES = ["Ref", "Condition"]
 FN_PREFIX = "Fn::"
 
+# CloudFormation rejects YAML aliases; the AWS CLI "package" command and SAM
+# resolve them client-side, so cfn-lint resolves them too.  A small template
+# using nested aliases ("billion laughs") can expand to an exponentially large
+# structure that exhausts CPU in any consumer that walks the template.  Reject
+# templates whose alias-resolved size exceeds this many nodes.
+_MAX_EXPANDED_NODES = 250_000
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -290,6 +297,56 @@ def multi_constructor(loader: CfnFullLoader, tag_suffix, node):
     raise Exception(f"Bad tag: !{tag_suffix}")
 
 
+def _guard_alias_expansion(template, filename):
+    """Reject templates whose YAML aliases resolve to an excessive size.
+
+    Computes the alias-resolved (flattened) node count in O(distinct nodes)
+    using memoization on object identity, and raises CfnParseError if it
+    exceeds _MAX_EXPANDED_NODES.  This bounds YAML alias amplification at the
+    single point where the template is loaded, protecting every downstream
+    consumer that walks the template.
+    """
+    size_memo: dict[int, int] = {}
+
+    def size(node):
+        nid = id(node)
+        cached = size_memo.get(nid)
+        if cached is not None:
+            return cached
+        if isinstance(node, dict):
+            children = node.values()
+        elif isinstance(node, list):
+            children = node
+        else:
+            size_memo[nid] = 1
+            return 1
+        total = 1
+        for child in children:
+            total += size(child)
+            if total > _MAX_EXPANDED_NODES:
+                raise CfnParseError(
+                    filename,
+                    [
+                        build_match(
+                            filename=filename,
+                            message=(
+                                "Template resolves to more than "
+                                f"{_MAX_EXPANDED_NODES} nodes once YAML aliases "
+                                "are expanded; this is not supported and may "
+                                "indicate YAML alias amplification"
+                            ),
+                            line_number=0,
+                            column_number=0,
+                            key="",
+                        )
+                    ],
+                )
+        size_memo[nid] = total
+        return total
+
+    size(template)
+
+
 def loads(yaml_string, fname=None):
     """
     Load the given YAML string
@@ -302,6 +359,13 @@ def loads(yaml_string, fname=None):
         # Convert an empty file to an empty dict
         if template is None:
             template = dict_node({}, Mark(0, 0), Mark(0, 0))
+        # A YAML alias ("*x") is only valid if a matching anchor ("&x") is
+        # defined, so a source with no "&" cannot contain aliases and needs no
+        # expansion check.  This keeps the guard off the hot path for the vast
+        # majority of templates (which define no anchors) -- only templates
+        # that actually use anchors pay for the walk.
+        if isinstance(yaml_string, str) and "&" in yaml_string:
+            _guard_alias_expansion(template, fname)
         return template
     except CfnParseError:
         raise
