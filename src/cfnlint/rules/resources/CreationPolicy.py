@@ -86,7 +86,6 @@ class CreationPolicy(CfnLintJsonSchema):
         validator = validator.evolve(
             context=validator.context.evolve(
                 functions=list(FUNCTIONS),
-                resources={},
                 strict_types=False,
             ),
             schema=self._get_schema(resource_type),

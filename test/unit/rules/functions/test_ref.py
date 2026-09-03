@@ -188,6 +188,35 @@ def context(cfn):
             {},
             [],
         ),
+        (
+            "Resource ref (string) is not an object",
+            {"Ref": "MyVolume"},
+            {"type": "object"},
+            {},
+            [
+                ValidationError(
+                    "{'Ref': 'MyVolume'} is not of type 'object'",
+                ),
+            ],
+        ),
+        (
+            "Resource ref (string) does not satisfy an array schema",
+            {"Ref": "MyVolume"},
+            {"type": "array"},
+            {},
+            [
+                ValidationError(
+                    "{'Ref': 'MyVolume'} is not of type 'array'",
+                ),
+            ],
+        ),
+        (
+            "Resource ref (string) satisfies a string schema",
+            {"Ref": "MyInstance"},
+            {"type": "string"},
+            {},
+            [],
+        ),
     ],
 )
 def test_validate(name, instance, schema, context_evolve, expected, rule, context, cfn):
