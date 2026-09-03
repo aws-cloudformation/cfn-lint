@@ -60,9 +60,9 @@ class TestAliasExpansion(BaseTestCase):
 
     def test_guard_function_directly(self):
         from cfnlint.decode.cfn_yaml import (
+            _MAX_EXPANDED_NODES,
             CfnParseError,
             _guard_alias_expansion,
-            _MAX_EXPANDED_NODES,
         )
 
         # Under the budget: passes silently
