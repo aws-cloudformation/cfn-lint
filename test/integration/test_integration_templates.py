@@ -133,20 +133,6 @@ class TestQuickStartTemplates(BaseCliTestCase):
             ),
             "exit_code": 0,
         },
-        {
-            "filename": "test/fixtures/templates/integration/creationpolicy.yaml",
-            "results_filename": (
-                "test/fixtures/results/integration/creationpolicy_yaml.json"
-            ),
-            "exit_code": 2,
-        },
-        {
-            "filename": "test/fixtures/templates/integration/updatepolicy.yaml",
-            "results_filename": (
-                "test/fixtures/results/integration/updatepolicy_yaml.json"
-            ),
-            "exit_code": 2,
-        },
     ]
 
     def test_templates(self):

@@ -7,7 +7,6 @@ from __future__ import annotations
 
 from typing import Any
 
-from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 
@@ -85,8 +84,13 @@ class CreationPolicy(CfnLintJsonSchema):
 
         validator = validator.evolve(
             context=validator.context.evolve(
-                functions=list(FUNCTIONS),
-                resources={},
+                functions=[
+                    "Fn::Sub",
+                    "Fn::Select",
+                    "Fn::FindInMap",
+                    "Fn::If",
+                    "Ref",
+                ],
                 strict_types=False,
             ),
             schema=self._get_schema(resource_type),

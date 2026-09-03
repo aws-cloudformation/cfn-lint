@@ -83,16 +83,36 @@ def additionalProperties(
 def allOf(
     validator: Validator, allOf: Any, instance: Any, schema: dict[str, Any]
 ) -> ValidationResult:
-    # allOf is conjunctive: every subschema must hold and there is no branch to
-    # select, so an unresolvable intrinsic function creates no ambiguity here
-    # (unlike anyOf/oneOf/if). Validate each subschema and yield all errors.
     validator = validator.evolve(
         function_filter=validator.function_filter.evolve(
             add_cfn_lint_keyword=False,
         ),
+        context=validator.context.evolve(
+            unresolvable_function_mode=True,
+        ),
     )
+    has_unknown = False
+    known_errors = []
+
     for index, subschema in enumerate(allOf):
-        yield from validator.descend(instance, subschema, schema_path=index)
+        errs = list(validator.descend(instance, subschema, schema_path=index))
+
+        if any(getattr(err, "unknown", False) for err in errs):
+            has_unknown = True
+        else:
+            known_errors.extend(errs)
+
+    # If we have unknown branches, we can't determine if allOf is satisfied
+    if has_unknown:
+        yield ValidationError(
+            f"Cannot determine allOf for {instance!r}",
+            unknown=True,
+        )
+        return
+
+    # Yield all known errors
+    for err in known_errors:
+        yield err
 
 
 def anyOf(
