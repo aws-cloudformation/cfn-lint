@@ -535,6 +535,17 @@ class CliArgs:
             choices=["quiet", "parseable", "json", "junit", "pretty", "sarif"],
         )
         standard.add_argument(
+            "--convert",
+            type=str,
+            default=None,
+            choices=["json"],
+            help=(
+                "Write the template out in the specified format instead of linting"
+                " it. Short form intrinsic functions are converted to their long"
+                " form. Accepts one template, or reads from stdin"
+            ),
+        )
+        standard.add_argument(
             "-l",
             "--list-rules",
             dest="listrules",
@@ -1141,6 +1152,10 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
     @property
     def build_graph(self):
         return self._get_argument_value("build_graph", False, False)
+
+    @property
+    def convert(self):
+        return self._get_argument_value("convert", False, False)
 
     @property
     def output_file(self):
