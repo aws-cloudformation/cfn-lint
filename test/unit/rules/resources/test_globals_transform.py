@@ -49,6 +49,34 @@ def rule():
             {"cfn_path": deque(["Globals"])},
             1,
         ),
+        (
+            # https://github.com/aws-cloudformation/cfn-lint/issues/4680
+            "Intrinsic in a type-constrained global (PermissionsBoundary)",
+            {
+                "Function": {
+                    "PermissionsBoundary": {
+                        "Fn::ImportValue": {"Fn::Sub": "my-boundary-arn"}
+                    }
+                }
+            },
+            {"Transform": ["AWS::Serverless-2016-10-31"]},
+            {"cfn_path": deque(["Globals"])},
+            0,
+        ),
+        (
+            "Intrinsic Ref in a type-constrained global (Runtime)",
+            {"Function": {"Runtime": {"Ref": "AWS::Region"}}},
+            {"Transform": ["AWS::Serverless-2016-10-31"]},
+            {"cfn_path": deque(["Globals"])},
+            0,
+        ),
+        (
+            "Non-intrinsic object still rejected for a string global",
+            {"Function": {"PermissionsBoundary": {"Foo": "bar"}}},
+            {"Transform": ["AWS::Serverless-2016-10-31"]},
+            {"cfn_path": deque(["Globals"])},
+            1,
+        ),
     ],
     indirect=["template", "path"],
 )
