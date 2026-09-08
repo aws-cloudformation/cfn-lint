@@ -9,8 +9,9 @@ from typing import Any
 
 import cfnlint.data.schemas.other.sam
 from cfnlint._typing import RuleMatches
-from cfnlint.helpers import TRANSFORM_SAM, is_function
+from cfnlint.helpers import FUNCTIONS, TRANSFORM_SAM, is_function
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
+from cfnlint.jsonschema._keywords_cfn import cfn_type
 from cfnlint.rules import RuleMatch
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 from cfnlint.template import Template
@@ -66,11 +67,27 @@ class GlobalsTransform(CfnLintJsonSchema):
             )
             return
 
-        # Validate the Globals section structure against the schema
+        # Validate the Globals section structure against the schema.
+        # Globals values accept the same intrinsic functions as the
+        # underlying resource properties (Ref, Fn::ImportValue, Fn::Sub,
+        # ...). Enable functions and intrinsic-aware type checking so a
+        # type-constrained global (e.g. Function.PermissionsBoundary) is
+        # not rejected for holding an intrinsic that CloudFormation
+        # accepts.
         cfn_validator = self.extend_validator(
-            validator=validator,
+            validator=validator.evolve(
+                function_filter=validator.function_filter.evolve(
+                    validate_dynamic_references=False,
+                    add_cfn_lint_keyword=False,
+                )
+            ),
             schema=self._schema,
-            context=validator.context.evolve(),
+            context=validator.context.evolve(
+                functions=list(FUNCTIONS),
+                strict_types=False,
+                unresolvable_function_mode=True,
+            ),
+            validators={"type": cfn_type},
         )
         yield from self._iter_errors(cfn_validator, instance)
 
