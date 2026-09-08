@@ -1,3 +1,12 @@
+### v1.56.1
+## What's Changed
+* fix(ecs): Support 32 vCPU Fargate task definitions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4668
+* Guard against YAML alias amplification (billion laughs) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4670
+* fix: Type-check resource Refs in `UpdatePolicy`/`CreationPolicy` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4676
+* Update CloudFormation schemas to `2026-09-08` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4667
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.56.0...v1.56.1
+
 ### v1.56.0
 ## What's Changed
 * test(functions): assert `FindInMap` rejects non-DefaultValue 4th item without transform by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4639
