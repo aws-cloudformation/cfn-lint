@@ -42,6 +42,27 @@ class TestMaxProperties(BaseRuleTestCase):
         self.assertIsNone(errs[0].rule)
 
         errs = list(self.rule.maxProperties(validator, 1, {"foo": True}, {}))
+        self.assertEqual(len(errs), 0)
+
+        errs = list(
+            self.rule.maxProperties(
+                validator,
+                10,
+                {
+                    "foo0": True,
+                    "foo1": True,
+                    "foo2": True,
+                    "foo3": True,
+                    "foo4": True,
+                    "foo5": True,
+                    "foo6": True,
+                    "foo7": True,
+                    "foo8": True,
+                    "foo9": True,
+                },
+                {},
+            )
+        )
         self.assertEqual(len(errs), 1)
         self.assertEqual(errs[0].rule.id, "ChildMaxProperties")
 
@@ -71,7 +92,25 @@ class TestMaxPropertiesWithFunction(BaseRuleTestCase):
     def test_property_names(self):
         validator = CfnTemplateValidator({})
 
-        errs = list(self.rule.maxProperties(validator, 1, {"foo": True}, {}))
+        errs = list(
+            self.rule.maxProperties(
+                validator,
+                10,
+                {
+                    "foo0": True,
+                    "foo1": True,
+                    "foo2": True,
+                    "foo3": True,
+                    "foo4": True,
+                    "foo5": True,
+                    "foo6": True,
+                    "foo7": True,
+                    "foo8": True,
+                    "foo9": True,
+                },
+                {},
+            )
+        )
         self.assertEqual(len(errs), 2)
         self.assertEqual(errs[0].rule.id, "ChildMaxPropertiesWithFunction")
 
