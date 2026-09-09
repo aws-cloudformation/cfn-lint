@@ -37,9 +37,33 @@ def template():
     [
         (
             "Valid Fn::Select with array",
-            {"Fn::Select": [1, ["bar"]]},
+            {"Fn::Select": [0, ["bar"]]},
             {"type": "string"},
             [],
+        ),
+        (
+            "Invalid Fn::Select with an out of bounds index",
+            {"Fn::Select": [1, ["bar"]]},
+            {"type": "string"},
+            [
+                ValidationError(
+                    "1 is not a valid index for a list of length 1",
+                    path=deque(["Fn::Select", 0]),
+                    validator="fn_select",
+                ),
+            ],
+        ),
+        (
+            "Invalid Fn::Select with an out of bounds index and functions",
+            {"Fn::Select": [5, [{"Ref": "AWS::Region"}, "bar"]]},
+            {"type": "string"},
+            [
+                ValidationError(
+                    "5 is not a valid index for a list of length 2",
+                    path=deque(["Fn::Select", 0]),
+                    validator="fn_select",
+                ),
+            ],
         ),
         (
             "Invalid Fn::Select is NOT a array",
