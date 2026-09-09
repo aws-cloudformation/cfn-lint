@@ -1,3 +1,13 @@
+### v1.56.2
+## What's Changed
+* fix: Allow intrinsics in SAM Globals properties by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4683
+* add [E3717](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3717): Lambda Timeout limit based on CapacityProviderConfig by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4685
+* fix [E2529](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2529): Raise CloudWatch Logs subscription filter limit to 5 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4688
+* Avoid `maxProperties` warnings for single-property schemas by @0xTaoZ in https://github.com/aws-cloudformation/cfn-lint/pull/4686
+* Allow `Fn::GetAZs` in `Fn::Join` values by @0xTaoZ in https://github.com/aws-cloudformation/cfn-lint/pull/4677
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.56.1...v1.56.2
+
 ### v1.56.1
 ## What's Changed
 * fix(ecs): Support 32 vCPU Fargate task definitions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4668
