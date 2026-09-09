@@ -185,3 +185,48 @@ def validator(cfn, context):
 def test_validate(name, instance, schema, expected, rule, validator):
     errs = list(rule.fn_if(validator, schema, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"
+
+
+@pytest.mark.parametrize(
+    "name,assumed,expected",
+    [
+        (
+            # The condition was pinned by condition-scenario enumeration
+            # (assumed), e.g. a schema if/then.  The contradicting branch is
+            # still reachable in its own scenario, so W1028 must not fire.
+            # Regression test for issue #4673.
+            "Condition pinned by scenario enumeration is not unreachable",
+            True,
+            [],
+        ),
+        (
+            # The condition is a forced fact (e.g. a resource-level Condition
+            # or an enclosing Fn::If), so the branch that contradicts it is
+            # truly dead.
+            "Condition pinned as a fact is unreachable",
+            False,
+            [
+                ValidationError(
+                    "['Fn::If', 1] is not reachable. When setting condition "
+                    "'IsUsEast1' to True from current status False",
+                    path=deque(["Fn::If", 1]),
+                ),
+            ],
+        ),
+    ],
+)
+def test_validate_pinned_condition(name, assumed, expected, rule, validator):
+    # Pin IsUsEast1 to False, mirroring how the walk arrives at an Fn::If with
+    # a condition already fixed.  When the pin is only assumed (enumeration)
+    # the contradicting branch stays reachable; when it is a fact the branch is
+    # unreachable.
+    pinned_validator = validator.evolve(
+        context=validator.context.evolve(
+            conditions=validator.context.conditions.evolve(
+                {"IsUsEast1": False}, assumed=assumed
+            ),
+        )
+    )
+    instance = {"Fn::If": ["IsUsEast1", "foo", "bar"]}
+    errs = list(rule.fn_if(pinned_validator, {"type": "string"}, instance, {}))
+    assert errs == expected, f"Test {name!r} got {errs!r}"

@@ -73,11 +73,24 @@ class If(BaseFn):
                     err.path.appendleft(key)
                     yield err
             except Unsatisfiable as e:
-                yield ValidationError(
-                    f"{[key, i]!r} is not reachable. {e.message}",
-                    path=deque([key, i]),
-                    rule=self.child_rules["W1028"],
-                )
+                # The branch could not be evolved under the current conditions.
+                # Only report it as unreachable when the condition truly cannot
+                # take this value given the forced facts (resource/output
+                # Condition, an enclosing Fn::If, parameter and condition
+                # definitions).  When the condition was merely pinned by
+                # condition-scenario enumeration (e.g. a schema if/then that
+                # walks this subtree once per scenario), the other value is
+                # still reachable in its own scenario, so reporting it would be
+                # a tautology rather than a reachability finding.
+                # See https://github.com/aws-cloudformation/cfn-lint/issues/4673
+                if not validator.context.conditions.is_reachable(
+                    value[0], True if i == 1 else False
+                ):
+                    yield ValidationError(
+                        f"{[key, i]!r} is not reachable. {e.message}",
+                        path=deque([key, i]),
+                        rule=self.child_rules["W1028"],
+                    )
                 element_validator = validator.evolve(
                     context=validator.context.evolve(
                         path=validator.context.path.descend(
