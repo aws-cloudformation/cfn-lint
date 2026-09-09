@@ -29,6 +29,14 @@ if TYPE_CHECKING:
 class Conditions:
     conditions: dict[str, Condition] = field(init=True, default_factory=dict)
     cnf: EncodedCNF = field(init=True, default_factory=EncodedCNF, compare=False)
+    # hard_cnf mirrors cnf but excludes pins that were only *assumed* by
+    # condition-scenario enumeration (see evolve(assumed=True)).  It therefore
+    # represents the conditions that are actually forced at this point in the
+    # template (resource/output Condition, enclosing Fn::If, parameter and
+    # condition definitions).  Reachability questions (W1028) must be answered
+    # against hard_cnf so that a value merely being explored by enumeration is
+    # not mistaken for an impossible one.
+    hard_cnf: EncodedCNF = field(init=True, default_factory=EncodedCNF, compare=False)
     _condition_symbols: dict[str, Symbol] = field(
         init=True, default_factory=dict, compare=False
     )
@@ -86,9 +94,23 @@ class Conditions:
             if not allowed_values and equals_cnfs:
                 cnf.add_prop(Or(*[c for c, _ in equals_cnfs]))
 
-        return cls(conditions=obj, cnf=cnf, _condition_symbols=condition_symbols)
+        return cls(
+            conditions=obj,
+            cnf=cnf,
+            hard_cnf=cnf.copy(),
+            _condition_symbols=condition_symbols,
+        )
 
-    def evolve(self, status: dict[str, bool]) -> "Conditions":
+    def evolve(self, status: dict[str, bool], assumed: bool = False) -> "Conditions":
+        """Pin one or more conditions to a value.
+
+        When ``assumed`` is True the pin is recorded only in ``cnf`` (used for
+        pruning impossible scenarios) and not in ``hard_cnf``.  This is used by
+        condition-scenario enumeration, which explores both values of a
+        condition; those values are hypotheses, not facts, so a branch that
+        merely disagrees with the scenario currently being enumerated must not
+        be reported as unreachable.
+        """
         cls = self.__class__
 
         if not status:
@@ -107,13 +129,22 @@ class Conditions:
 
         conditions: dict[str, Condition] = {}
         cnf = self.cnf.copy()
+        hard_cnf = self.hard_cnf.copy()
         for condition, value in self.conditions.items():
             s = status.get(condition, value.status)
             try:
                 conditions[condition] = value.evolve(status=s)
                 if s is not None and condition in self._condition_symbols:
                     sym = self._condition_symbols[condition]
-                    cnf.add_prop(sym if s else Not(sym))
+                    prop = sym if s else Not(sym)
+                    cnf.add_prop(prop)
+                    # Only the conditions being pinned by *this* call, and only
+                    # when they are facts (not enumeration hypotheses), belong
+                    # in hard_cnf.  Conditions carried over from a prior evolve
+                    # are already present in the copied hard_cnf if they were
+                    # facts, and must stay out of it if they were assumptions.
+                    if not assumed and condition in status:
+                        hard_cnf.add_prop(prop)
             except ValueError as e:
                 raise Unsatisfiable(
                     new_status=status,
@@ -129,15 +160,30 @@ class Conditions:
         return cls(
             conditions=conditions,
             cnf=cnf,
+            hard_cnf=hard_cnf,
             _condition_symbols=self._condition_symbols,
         )
+
+    def is_reachable(self, name: str, value: bool) -> bool:
+        """Return whether ``name`` can take ``value`` given the forced facts.
+
+        This is answered against ``hard_cnf`` so that a condition merely being
+        explored by scenario enumeration is not treated as impossible.  An
+        unknown condition is conservatively considered reachable.
+        """
+        if name not in self._condition_symbols:
+            return True
+        cnf = self.hard_cnf.copy()
+        sym = self._condition_symbols[name]
+        cnf.add_prop(sym if value else Not(sym))
+        return bool(satisfiable(cnf))
 
     def _build_conditions(self, conditions: set[str]) -> Iterator["Conditions"]:
         scenarios_attempted = 0
         for product in itertools.product([True, False], repeat=len(conditions)):
             params = dict(zip(conditions, product))
             try:
-                yield self.evolve(params)
+                yield self.evolve(params, assumed=True)
             except Unsatisfiable:
                 pass
 

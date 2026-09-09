@@ -65,9 +65,6 @@ class If(BaseFn):
                         conditions=validator.context.conditions.evolve(
                             {value[0]: True if i == 1 else False}
                         ),
-                        fn_if_conditions=(
-                            validator.context.fn_if_conditions | {value[0]}
-                        ),
                     )
                 )
                 for err in element_validator.descend(
@@ -76,14 +73,19 @@ class If(BaseFn):
                     err.path.appendleft(key)
                     yield err
             except Unsatisfiable as e:
-                # A branch is only truly unreachable when the condition was
-                # pinned by an enclosing Fn::If (structural nesting).  If it was
-                # pinned by condition-scenario enumeration (e.g. a schema
-                # if/then that walks this subtree once per scenario), the other
-                # value is still satisfiable in its own scenario, so reporting
-                # it here would be a tautology, not a reachability finding.
+                # The branch could not be evolved under the current conditions.
+                # Only report it as unreachable when the condition truly cannot
+                # take this value given the forced facts (resource/output
+                # Condition, an enclosing Fn::If, parameter and condition
+                # definitions).  When the condition was merely pinned by
+                # condition-scenario enumeration (e.g. a schema if/then that
+                # walks this subtree once per scenario), the other value is
+                # still reachable in its own scenario, so reporting it would be
+                # a tautology rather than a reachability finding.
                 # See https://github.com/aws-cloudformation/cfn-lint/issues/4673
-                if value[0] in validator.context.fn_if_conditions:
+                if not validator.context.conditions.is_reachable(
+                    value[0], True if i == 1 else False
+                ):
                     yield ValidationError(
                         f"{[key, i]!r} is not reachable. {e.message}",
                         path=deque([key, i]),

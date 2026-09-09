@@ -191,12 +191,6 @@ class Context:
     # exceptions will affect the results.
     allow_exceptions: bool = field(init=True, default=True)
 
-    # Conditions that have been pinned to a value by an enclosing Fn::If as we
-    # descend into one of its branches.  This is distinct from conditions pinned
-    # by condition-scenario enumeration (e.g. a schema if/then).  Only a branch
-    # that contradicts a condition pinned here is truly unreachable (W1028).
-    fn_if_conditions: frozenset[str] = field(init=True, default_factory=frozenset)
-
     @cached_property
     def module_names(self) -> tuple[str, ...]:
         """Logical IDs of MODULE-type resources (lazily computed and cached)"""
