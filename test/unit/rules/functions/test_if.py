@@ -185,3 +185,46 @@ def validator(cfn, context):
 def test_validate(name, instance, schema, expected, rule, validator):
     errs = list(rule.fn_if(validator, schema, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"
+
+
+@pytest.mark.parametrize(
+    "name,fn_if_conditions,expected",
+    [
+        (
+            # The condition was pinned by condition-scenario enumeration
+            # (e.g. a schema if/then), not by an enclosing Fn::If.  The
+            # contradicting branch is still satisfiable in its own scenario,
+            # so W1028 must not fire.  Regression test for issue #4673.
+            "Condition pinned by scenario enumeration is not unreachable",
+            frozenset(),
+            [],
+        ),
+        (
+            # The condition was pinned by an enclosing Fn::If descending into
+            # its branch, so the branch that contradicts it is truly dead.
+            "Condition pinned by an enclosing Fn::If is unreachable",
+            frozenset(["IsUsEast1"]),
+            [
+                ValidationError(
+                    "['Fn::If', 1] is not reachable. When setting condition "
+                    "'IsUsEast1' to True from current status False",
+                    path=deque(["Fn::If", 1]),
+                ),
+            ],
+        ),
+    ],
+)
+def test_validate_pinned_condition(name, fn_if_conditions, expected, rule, validator):
+    # Pin IsUsEast1 to False, mirroring how the walk arrives at an Fn::If
+    # with a condition already fixed.  fn_if_conditions records whether that
+    # pin came from an enclosing Fn::If (structural) or from scenario
+    # enumeration (ambient).
+    pinned_validator = validator.evolve(
+        context=validator.context.evolve(
+            conditions=validator.context.conditions.evolve({"IsUsEast1": False}),
+            fn_if_conditions=fn_if_conditions,
+        )
+    )
+    instance = {"Fn::If": ["IsUsEast1", "foo", "bar"]}
+    errs = list(rule.fn_if(pinned_validator, {"type": "string"}, instance, {}))
+    assert errs == expected, f"Test {name!r} got {errs!r}"
