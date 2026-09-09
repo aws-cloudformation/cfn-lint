@@ -128,6 +128,12 @@ def rule():
             [],
         ),
         (
+            "Valid Fn::Join with Fn::GetAZs",
+            {"Fn::Join": [",", {"Fn::GetAZs": ""}]},
+            {"type": "string"},
+            [],
+        ),
+        (
             "Valid Fn::Join with a valid item function",
             {"Fn::Join": ["-", [{"Fn::Sub": "bar"}]]},
             {"type": "string"},
