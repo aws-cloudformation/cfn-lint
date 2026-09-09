@@ -17,18 +17,18 @@ class EventsLogGroupName(CloudFormationLintRule):
 
     id = "E2529"
     shortdesc = (
-        "Check for SubscriptionFilters have beyond 2 attachments to a CloudWatch Log"
+        "Check for SubscriptionFilters have beyond 5 attachments to a CloudWatch Log"
         " Group"
     )
     description = (
-        "The current limit for a CloudWatch Log Group is they can have 2 subscription"
+        "The current limit for a CloudWatch Log Group is they can have 5 subscription"
         " filters. We will look for duplicate LogGroupNames inside Subscription Filters"
-        " and make sure they are within 2. This doesn't account for any other"
+        " and make sure they are within 5. This doesn't account for any other"
         " subscription filters getting set."
     )
-    source_url = "https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#user-content-cloudwatchlogs"
+    source_url = "https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/cloudwatch_limits_cwl.html"
     tags = ["resources", "lambda"]
-    limit = 2
+    limit = 5
 
     def check_events_subscription_duplicated(self, cfn: Template) -> RuleMatches:
         """Check if Lambda Events Subscription is duplicated"""

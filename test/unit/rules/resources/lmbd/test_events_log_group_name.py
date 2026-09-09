@@ -28,8 +28,8 @@ class TestEventsLogGroupName(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        # The bad fixture has 3 CloudWatchLogs events pointing to FunctionALogGroup
-        # which exceeds the limit of 2
+        # The bad fixture has 6 CloudWatchLogs events pointing to FunctionALogGroup
+        # which exceeds the limit of 5
         self.helper_file_negative(
             "test/fixtures/templates/bad/some_logs_stream_lambda.yaml",
             1,
@@ -45,7 +45,7 @@ class TestEventsLogGroupNameUnit:
     """Unit tests for E2529 rule"""
 
     def test_sam_events_exceeds_limit(self, rule):
-        """Test that >2 SAM CloudWatchLogs events on one log group fails"""
+        """Test that >5 SAM CloudWatchLogs events on one log group fails"""
         template = Template(
             "",
             {
@@ -84,6 +84,27 @@ class TestEventsLogGroupNameUnit:
                                         "FilterPattern": "",
                                     },
                                 },
+                                "Event4": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {
+                                        "LogGroupName": {"Ref": "MyLogGroup"},
+                                        "FilterPattern": "",
+                                    },
+                                },
+                                "Event5": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {
+                                        "LogGroupName": {"Ref": "MyLogGroup"},
+                                        "FilterPattern": "",
+                                    },
+                                },
+                                "Event6": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {
+                                        "LogGroupName": {"Ref": "MyLogGroup"},
+                                        "FilterPattern": "",
+                                    },
+                                },
                             },
                         },
                     },
@@ -98,7 +119,7 @@ class TestEventsLogGroupNameUnit:
         assert matches[0].path[3] == "Events"
 
     def test_sam_events_within_limit(self, rule):
-        """Test that <=2 SAM CloudWatchLogs events on one log group passes"""
+        """Test that <=5 SAM CloudWatchLogs events on one log group passes"""
         template = Template(
             "",
             {
@@ -124,6 +145,27 @@ class TestEventsLogGroupNameUnit:
                                     },
                                 },
                                 "Event2": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {
+                                        "LogGroupName": {"Ref": "MyLogGroup"},
+                                        "FilterPattern": "",
+                                    },
+                                },
+                                "Event3": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {
+                                        "LogGroupName": {"Ref": "MyLogGroup"},
+                                        "FilterPattern": "",
+                                    },
+                                },
+                                "Event4": {
+                                    "Type": "CloudWatchLogs",
+                                    "Properties": {
+                                        "LogGroupName": {"Ref": "MyLogGroup"},
+                                        "FilterPattern": "",
+                                    },
+                                },
+                                "Event5": {
                                     "Type": "CloudWatchLogs",
                                     "Properties": {
                                         "LogGroupName": {"Ref": "MyLogGroup"},
@@ -225,6 +267,30 @@ class TestEventsLogGroupNameUnit:
                             "DestinationArn": dest_arn,
                         },
                     },
+                    "ExplicitFilter3": {
+                        "Type": "AWS::Logs::SubscriptionFilter",
+                        "Properties": {
+                            "LogGroupName": {"Ref": "MyLogGroup"},
+                            "FilterPattern": "",
+                            "DestinationArn": dest_arn,
+                        },
+                    },
+                    "ExplicitFilter4": {
+                        "Type": "AWS::Logs::SubscriptionFilter",
+                        "Properties": {
+                            "LogGroupName": {"Ref": "MyLogGroup"},
+                            "FilterPattern": "",
+                            "DestinationArn": dest_arn,
+                        },
+                    },
+                    "ExplicitFilter5": {
+                        "Type": "AWS::Logs::SubscriptionFilter",
+                        "Properties": {
+                            "LogGroupName": {"Ref": "MyLogGroup"},
+                            "FilterPattern": "",
+                            "DestinationArn": dest_arn,
+                        },
+                    },
                     "LogSubscriptionFunction": {
                         "Type": "AWS::Serverless::Function",
                         "Properties": {
@@ -245,7 +311,7 @@ class TestEventsLogGroupNameUnit:
                 },
             },
         )
-        # 2 explicit filters + 1 SAM event = 3, exceeds limit of 2
+        # 5 explicit filters + 1 SAM event = 6, exceeds limit of 5
         matches = rule.match(template)
         assert len(matches) == 1
 
@@ -278,6 +344,30 @@ class TestEventsLogGroupNameUnit:
                         },
                     },
                     "ExplicitFilter3": {
+                        "Type": "AWS::Logs::SubscriptionFilter",
+                        "Properties": {
+                            "LogGroupName": {"Ref": "MyLogGroup"},
+                            "FilterPattern": "",
+                            "DestinationArn": dest_arn,
+                        },
+                    },
+                    "ExplicitFilter4": {
+                        "Type": "AWS::Logs::SubscriptionFilter",
+                        "Properties": {
+                            "LogGroupName": {"Ref": "MyLogGroup"},
+                            "FilterPattern": "",
+                            "DestinationArn": dest_arn,
+                        },
+                    },
+                    "ExplicitFilter5": {
+                        "Type": "AWS::Logs::SubscriptionFilter",
+                        "Properties": {
+                            "LogGroupName": {"Ref": "MyLogGroup"},
+                            "FilterPattern": "",
+                            "DestinationArn": dest_arn,
+                        },
+                    },
+                    "ExplicitFilter6": {
                         "Type": "AWS::Logs::SubscriptionFilter",
                         "Properties": {
                             "LogGroupName": {"Ref": "MyLogGroup"},
