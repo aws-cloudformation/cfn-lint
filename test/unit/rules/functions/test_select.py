@@ -47,8 +47,20 @@ def template():
             {"type": "string"},
             [
                 ValidationError(
-                    "1 is not a valid index for a list of length 1",
+                    "1 is greater than the maximum of 0",
                     path=deque(["Fn::Select", 0]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "else",
+                            "prefixItems",
+                            0,
+                            "cfnContext",
+                            "schema",
+                            "maximum",
+                        ]
+                    ),
                     validator="fn_select",
                 ),
             ],
@@ -59,8 +71,20 @@ def template():
             {"type": "string"},
             [
                 ValidationError(
-                    "5 is not a valid index for a list of length 2",
+                    "5 is greater than the maximum of 1",
                     path=deque(["Fn::Select", 0]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "else",
+                            "prefixItems",
+                            0,
+                            "cfnContext",
+                            "schema",
+                            "maximum",
+                        ]
+                    ),
                     validator="fn_select",
                 ),
             ],

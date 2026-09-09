@@ -5,10 +5,10 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from collections import deque
+from copy import deepcopy
 from typing import Any
 
-from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
+from cfnlint.jsonschema import Validator
 from cfnlint.rules.functions._BaseFn import BaseFn, all_types
 
 
@@ -29,56 +29,23 @@ class Select(BaseFn):
         )
         self.fn_select = self.validate
 
-    def _index_out_of_bounds(
-        self, validator: Validator, instance: Any
-    ) -> ValidationResult:
-        """Flag a literal index that is out of bounds for a literal list.
-
-        CloudFormation fails ``CreateStack``/``UpdateStack`` at deploy time
-        with "Fn::Select cannot select nonexistent value at index N" when the
-        index is a hardcoded integer that is greater than or equal to the
-        length of a hardcoded list. The length of a literal list is fixed at
-        template authoring time (functions used as list *items* still each
-        count as a single element), so this is always a definite error.
-        """
+    def schema(self, validator: Validator, instance: Any) -> dict[str, Any]:
+        # When the list is hardcoded its length is fixed at authoring time
+        # (a function used as a list *item* still counts as one element), so
+        # the index has a known upper bound. Inject it as a ``maximum`` next
+        # to the existing ``minimum`` and let the standard keyword validators
+        # report an out-of-bounds index. Without this an out-of-bounds
+        # ``Fn::Select`` passes linting and fails at deploy with
+        # "Fn::Select cannot select nonexistent value at index N".
         _, value = self.key_value(instance)
         if not validator.is_type(value, "array") or len(value) != 2:
-            return
+            return self._schema
+        if not validator.is_type(value[1], "array"):
+            return self._schema
 
-        index, obj = value[0], value[1]
-
-        # Only a hardcoded, non-negative integer index is a definite failure.
-        # A negative index is handled by the schema (minimum: 0) and a
-        # function/Ref index can resolve to anything at deploy time.
-        if validator.is_type(index, "string"):
-            try:
-                index = int(index)
-            except ValueError:
-                return
-        if not validator.is_type(index, "integer") or index < 0:
-            return
-
-        # The list must be hardcoded for its length to be known statically.
-        if not validator.is_type(obj, "array"):
-            return
-
-        if index >= len(obj):
-            yield ValidationError(
-                f"{index!r} is not a valid index for a list of length {len(obj)!r}",
-                validator=self.fn.py,
-                path=deque([self.fn.name, 0]),
-            )
-
-    def validate(
-        self,
-        validator: Validator,
-        s: Any,
-        instance: Any,
-        schema: Any,
-    ) -> ValidationResult:
-        errs = list(self._index_out_of_bounds(validator, instance))
-        if errs:
-            yield from iter(errs)
-            return
-
-        yield from super().validate(validator, s, instance, schema)
+        schema = deepcopy(self._schema)
+        maximum = len(value[1]) - 1
+        for branch in ("then", "else"):
+            index_schema = schema["cfnContext"]["schema"][branch]["prefixItems"][0]
+            index_schema["cfnContext"]["schema"]["maximum"] = maximum
+        return schema
