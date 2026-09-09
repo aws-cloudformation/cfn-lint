@@ -34,6 +34,8 @@ class MaxProperties(CloudFormationLintRule):
                 f"has more than {mP!r} properties"
             )
             return
+        if mP <= 1:
+            return
         if percent > self.config["threshold"]:
             rule = self.child_rules.get(self.approaching_limit_rule)
             if not rule:
