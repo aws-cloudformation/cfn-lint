@@ -127,6 +127,21 @@ class _Fail(CfnLintKeyword):
             ],
         ),
         (
+            "Invalid GetAtt string form without an attribute",
+            {"Fn::GetAtt": "MyBucket"},
+            {"type": "string"},
+            _template,
+            {},
+            [
+                ValidationError(
+                    "{'Fn::GetAtt': 'MyBucket'} is not a valid GetAtt. "
+                    "It must specify a resource and an attribute name",
+                    path=deque(["Fn::GetAtt"]),
+                    validator="fn_getatt",
+                ),
+            ],
+        ),
+        (
             "Invalid GetAtt with a bad response type",
             {"Fn::GetAtt": "MyBucket.Arn"},
             {"type": "array"},
