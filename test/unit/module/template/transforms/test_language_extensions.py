@@ -1510,3 +1510,55 @@ class TestTransformFindInMapDistinctObjects(TestCase):
             metadata["A"],
             template["Mappings"]["FooMap"]["TopKey"]["SecondKey"],
         )
+
+
+class TestTransformRefDistinctObjects(TestCase):
+    """Regression test for the Fn::ForEach Ref variant of issue #4697.
+
+    Two Refs to the same loop parameter that resolves to a dict/list must not
+    share object identity in the transformed template, or W1101 reports a
+    YAML-alias false positive.
+    """
+
+    def setUp(self) -> None:
+        self.template_obj = convert_dict(
+            {
+                "Transform": ["AWS::LanguageExtensions"],
+                "Parameters": {
+                    "Names": {"Type": "CommaDelimitedList"},
+                },
+                "Resources": {
+                    "Fn::ForEach::Loop": [
+                        "Name",
+                        {"Ref": "Names"},
+                        {
+                            "Bucket${Name}": {
+                                "Type": "AWS::S3::Bucket",
+                                "Properties": {
+                                    "Tags": [
+                                        {"Key": "a", "Value": {"Ref": "Name"}},
+                                        {"Key": "b", "Value": {"Ref": "Name"}},
+                                    ]
+                                },
+                            }
+                        },
+                    ]
+                },
+            }
+        )
+        return super().setUp()
+
+    def test_transform(self):
+        cfn = Template(filename="", template=self.template_obj, regions=["us-east-1"])
+        matches, template = language_extension(cfn)
+        self.assertListEqual(matches, [])
+        buckets = [
+            r for r in template["Resources"].values() if r["Type"] == "AWS::S3::Bucket"
+        ]
+        self.assertTrue(buckets, "expected the ForEach to expand into buckets")
+        for bucket in buckets:
+            tags = bucket["Properties"]["Tags"]
+            # Both Values resolve to the same parameter ...
+            self.assertEqual(tags[0]["Value"], tags[1]["Value"])
+            # ... but must be independent objects, not a shared reference.
+            self.assertIsNot(tags[0]["Value"], tags[1]["Value"])

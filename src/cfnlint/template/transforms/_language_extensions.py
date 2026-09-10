@@ -183,12 +183,15 @@ class _Transform:
                 elif k == "Ref":
                     if isinstance(v, str):
                         if v in params:
-                            return params[v]
+                            # Copy so two Refs to the same parameter do not
+                            # share one object (see the Fn::FindInMap note
+                            # above / issue #4697).
+                            return deepcopy(params[v])
                     elif isinstance(v, dict):
                         r = self._walk(v, params, cfn)
                         if isinstance(r, str):
                             if r in params:
-                                return params[r]
+                                return deepcopy(params[r])
                         obj[k] = r
                 elif k == "Fn::If":
                     if isinstance(v, list) and len(v) == 3:
