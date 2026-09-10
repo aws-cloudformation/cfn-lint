@@ -164,7 +164,15 @@ class _Transform:
                         map_value = mapping.value(cfn, params, True, False)
                         # if we can resolve it we will return it
                         if isinstance(map_value, tuple([list]) + _SCALAR_TYPES):
-                            return map_value
+                            # Return an independent copy of the resolved value.
+                            # ``mapping.value`` hands back the object stored in
+                            # the ``Mappings`` section, so returning it directly
+                            # makes every location that resolves to the same
+                            # mapping entry share one object. That shared
+                            # identity looks like a YAML alias to W1101 (false
+                            # positive, issue #4697) and lets a later mutation of
+                            # one location bleed into the mapping definition.
+                            return deepcopy(map_value)
                     except Exception as e:  # pylint: disable=broad-exception-caught
                         # We couldn't resolve the FindInMap so we are going to
                         # leave it as it is

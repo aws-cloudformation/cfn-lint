@@ -1461,3 +1461,52 @@ class TestTransformSubWithUnderscoreVariable(TestCase):
         self.assertIn("Fn::Sub", bucket_name)
         self.assertEqual(bucket_name["Fn::Sub"][0], "${Bucket_Arn}/*")
         self.assertIn("Bucket_Arn", bucket_name["Fn::Sub"][1])
+
+
+class TestTransformFindInMapDistinctObjects(TestCase):
+    """Regression test for issue #4697 (W1101 false positive).
+
+    Two Fn::FindInMap calls that resolve to the same mapping entry must not
+    share object identity in the transformed template. Shared identity looks
+    like a YAML alias to rule W1101 and produces a false positive.
+    """
+
+    def setUp(self) -> None:
+        self.template_obj = convert_dict(
+            {
+                "Transform": ["AWS::LanguageExtensions"],
+                "Mappings": {
+                    "FooMap": {
+                        "TopKey": {
+                            "SecondKey": [0],
+                        },
+                    },
+                },
+                "Resources": {
+                    "NoOp": {
+                        "Type": "AWS::CloudFormation::WaitConditionHandle",
+                        "Metadata": {
+                            "A": {"Fn::FindInMap": ["FooMap", "TopKey", "SecondKey"]},
+                            "B": {"Fn::FindInMap": ["FooMap", "TopKey", "SecondKey"]},
+                        },
+                    },
+                },
+            }
+        )
+        return super().setUp()
+
+    def test_transform(self):
+        cfn = Template(filename="", template=self.template_obj, regions=["us-east-1"])
+        matches, template = language_extension(cfn)
+        self.assertListEqual(matches, [])
+        metadata = template["Resources"]["NoOp"]["Metadata"]
+        # Both resolve to the mapping value [0] ...
+        self.assertEqual(metadata["A"], [0])
+        self.assertEqual(metadata["B"], [0])
+        # ... but must be independent objects, not a shared reference (which
+        # would trip W1101 and let a mutation of one bleed into the other).
+        self.assertIsNot(metadata["A"], metadata["B"])
+        self.assertIsNot(
+            metadata["A"],
+            template["Mappings"]["FooMap"]["TopKey"]["SecondKey"],
+        )
