@@ -56,6 +56,30 @@ def rule():
                 )
             ],
         ),
+        (
+            # BillingMode omitted defaults to PROVISIONED
+            {
+                "TableName": "foo",
+            },
+            [
+                ValidationError(
+                    "'ProvisionedThroughput' is a required property",
+                    rule=TableBillingModeProvisioned(),
+                    path=deque([]),
+                    validator="required",
+                    schema_path=deque(["then", "required"]),
+                )
+            ],
+        ),
+        (
+            {
+                "ProvisionedThroughput": {
+                    "WriteCapacityUnits": 5,
+                    "ReadCapacityUnits": 5,
+                },
+            },
+            [],
+        ),
     ],
 )
 def test_validate(instance, expected, rule, validator):
