@@ -151,6 +151,29 @@ def _append_queues(queue1: Iterable, queue2: Iterable) -> deque:
                 )
             ],
         ),
+        (
+            # A stage entry that is itself an Fn::If can resolve to
+            # AWS::NoValue, so the list index no longer reflects the realized
+            # order. A source stage at any such index must not be flagged.
+            "Source",
+            {
+                "path": _append_queues(
+                    _standard_path,
+                    [1, "Fn::If", 1, "Actions", 0, "ActionTypeId", "Category"],
+                ),
+            },
+            [],
+        ),
+        (
+            "Source",
+            {
+                "path": _append_queues(
+                    _standard_path,
+                    [0, "Fn::If", 1, "Actions", 0, "ActionTypeId", "Category"],
+                ),
+            },
+            [],
+        ),
     ],
     indirect=["path"],
 )

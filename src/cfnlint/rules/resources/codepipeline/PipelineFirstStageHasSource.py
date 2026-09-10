@@ -45,10 +45,14 @@ class PipelineFirstStageHasSource(CfnLintKeyword):
             if path[i] == "Fn::If":
                 i += 2
                 continue
-            if path[i] == 0:
-                return True
-            elif isinstance(path[i], int):
-                return False
+            if isinstance(path[i], int):
+                # When a stage entry is itself wrapped in an Fn::If it can
+                # resolve to AWS::NoValue, so the list index no longer reflects
+                # the realized order of the stages. We can't tell where this
+                # stage lands, so don't make a first-stage determination.
+                if i + 1 < len(path) and path[i + 1] == "Fn::If":
+                    return None
+                return path[i] == 0
             i += 1
 
         return None
