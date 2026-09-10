@@ -34,6 +34,15 @@ _template = {
 _template_with_transform = _template.copy()
 _template_with_transform["Transform"] = "AWS::LanguageExtensions"
 
+_custom_template = {
+    "Resources": {
+        "MyCustomResource": {
+            "Type": "Custom::Thing",
+            "Properties": {"ServiceToken": "arn:aws:lambda:us-east-1:1:function:f"},
+        },
+    },
+}
+
 
 class _Pass(CfnLintKeyword):
     id = "AAAAA"
@@ -125,6 +134,29 @@ class _Fail(CfnLintKeyword):
                     validator="fn_getatt",
                 ),
             ],
+        ),
+        (
+            "Invalid GetAtt string form without an attribute",
+            {"Fn::GetAtt": "MyBucket"},
+            {"type": "string"},
+            _template,
+            {},
+            [
+                ValidationError(
+                    "{'Fn::GetAtt': 'MyBucket'} is not a valid GetAtt. "
+                    "It must specify a resource and an attribute name",
+                    path=deque(["Fn::GetAtt"]),
+                    validator="fn_getatt",
+                ),
+            ],
+        ),
+        (
+            "Valid GetAtt to a custom resource attribute with non-alphanumerics",
+            {"Fn::GetAtt": "MyCustomResource.My_Attribute-1"},
+            {"type": "string"},
+            _custom_template,
+            {},
+            [],
         ),
         (
             "Invalid GetAtt with a bad response type",
