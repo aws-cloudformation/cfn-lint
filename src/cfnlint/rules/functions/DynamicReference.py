@@ -22,7 +22,7 @@ _ssm = {
     "prefixItems": [
         {"type": "string", "const": "resolve"},
         {"type": "string", "enum": ["ssm", "ssm-secure"]},
-        {"type": "string", "pattern": "[a-zA-Z0-9_.-/]+"},
+        {"type": "string", "pattern": "[a-zA-Z0-9_.\\-/]+"},
         {"type": "string", "pattern": "\\d+"},
     ],
     "maxItems": 4,
