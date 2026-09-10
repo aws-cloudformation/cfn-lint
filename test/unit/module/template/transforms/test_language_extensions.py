@@ -1461,3 +1461,149 @@ class TestTransformSubWithUnderscoreVariable(TestCase):
         self.assertIn("Fn::Sub", bucket_name)
         self.assertEqual(bucket_name["Fn::Sub"][0], "${Bucket_Arn}/*")
         self.assertIn("Bucket_Arn", bucket_name["Fn::Sub"][1])
+
+
+class TestTransformFindInMapDistinctObjects(TestCase):
+    """Regression test for issue #4697 (W1101 false positive).
+
+    Two Fn::FindInMap calls that resolve to the same mapping entry must not
+    share object identity in the transformed template. Shared identity looks
+    like a YAML alias to rule W1101 and produces a false positive.
+    """
+
+    def setUp(self) -> None:
+        self.template_obj = convert_dict(
+            {
+                "Transform": ["AWS::LanguageExtensions"],
+                "Mappings": {
+                    "FooMap": {
+                        "TopKey": {
+                            "SecondKey": [0],
+                        },
+                    },
+                },
+                "Resources": {
+                    "NoOp": {
+                        "Type": "AWS::CloudFormation::WaitConditionHandle",
+                        "Metadata": {
+                            "A": {"Fn::FindInMap": ["FooMap", "TopKey", "SecondKey"]},
+                            "B": {"Fn::FindInMap": ["FooMap", "TopKey", "SecondKey"]},
+                        },
+                    },
+                },
+            }
+        )
+        return super().setUp()
+
+    def test_transform(self):
+        cfn = Template(filename="", template=self.template_obj, regions=["us-east-1"])
+        matches, template = language_extension(cfn)
+        self.assertListEqual(matches, [])
+        metadata = template["Resources"]["NoOp"]["Metadata"]
+        # Both resolve to the mapping value [0] ...
+        self.assertEqual(metadata["A"], [0])
+        self.assertEqual(metadata["B"], [0])
+        # ... but must be independent objects, not a shared reference (which
+        # would trip W1101 and let a mutation of one bleed into the other).
+        self.assertIsNot(metadata["A"], metadata["B"])
+        self.assertIsNot(
+            metadata["A"],
+            template["Mappings"]["FooMap"]["TopKey"]["SecondKey"],
+        )
+
+
+class TestTransformRefDistinctObjects(TestCase):
+    """Regression test for the Fn::ForEach Ref variant of issue #4697.
+
+    Two Refs to the same loop parameter that resolves to a dict/list must not
+    share object identity in the transformed template, or W1101 reports a
+    YAML-alias false positive.
+    """
+
+    def setUp(self) -> None:
+        self.template_obj = convert_dict(
+            {
+                "Transform": ["AWS::LanguageExtensions"],
+                "Parameters": {
+                    "Names": {"Type": "CommaDelimitedList"},
+                },
+                "Resources": {
+                    "Fn::ForEach::Loop": [
+                        "Name",
+                        {"Ref": "Names"},
+                        {
+                            "Bucket${Name}": {
+                                "Type": "AWS::S3::Bucket",
+                                "Properties": {
+                                    "Tags": [
+                                        {"Key": "a", "Value": {"Ref": "Name"}},
+                                        {"Key": "b", "Value": {"Ref": "Name"}},
+                                    ]
+                                },
+                            }
+                        },
+                    ]
+                },
+            }
+        )
+        return super().setUp()
+
+    def test_transform(self):
+        cfn = Template(filename="", template=self.template_obj, regions=["us-east-1"])
+        matches, template = language_extension(cfn)
+        self.assertListEqual(matches, [])
+        buckets = [
+            r for r in template["Resources"].values() if r["Type"] == "AWS::S3::Bucket"
+        ]
+        self.assertTrue(buckets, "expected the ForEach to expand into buckets")
+        for bucket in buckets:
+            tags = bucket["Properties"]["Tags"]
+            # Both Values resolve to the same parameter ...
+            self.assertEqual(tags[0]["Value"], tags[1]["Value"])
+            # ... but must be independent objects, not a shared reference.
+            self.assertIsNot(tags[0]["Value"], tags[1]["Value"])
+
+
+class TestTransformNestedRefResolvesParameter(TestCase):
+    """Cover the dict-form Ref path where a Ref value resolves to a parameter.
+
+    ``{"Ref": {"Ref": "Ptr"}}`` walks the inner Ref to a string that is itself
+    a loop parameter name, so the outer Ref resolves to that parameter's value.
+    """
+
+    def setUp(self) -> None:
+        self.template_obj = convert_dict(
+            {
+                "Transform": ["AWS::LanguageExtensions"],
+                "Resources": {
+                    "Fn::ForEach::Outer": [
+                        "Ptr",
+                        ["Name"],
+                        {
+                            "Fn::ForEach::Inner": [
+                                "Name",
+                                ["hello"],
+                                {
+                                    "Res${Name}": {
+                                        "Type": "AWS::SNS::Topic",
+                                        "Properties": {
+                                            "TopicName": {"Ref": {"Ref": "Ptr"}}
+                                        },
+                                    }
+                                },
+                            ]
+                        },
+                    ]
+                },
+            }
+        )
+        return super().setUp()
+
+    def test_transform(self):
+        cfn = Template(filename="", template=self.template_obj, regions=["us-east-1"])
+        matches, template = language_extension(cfn)
+        self.assertListEqual(matches, [])
+        self.assertEqual(
+            template["Resources"]["Reshello"]["Properties"]["TopicName"],
+            "hello",
+        )
