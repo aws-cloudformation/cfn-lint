@@ -96,6 +96,17 @@ def context(cfn):
             [],
         ),
         (
+            "Valid SSM Parameter name with only a hyphen",
+            "{{resolve:ssm:-:1}}",
+            {"type": "test"},
+            {
+                "E1051": _TestRule(),
+                "E1027": _TestRule(),
+                "W1051": _TestRule(),
+            },
+            [],
+        ),
+        (
             "Valid when item isn't a string",
             {},
             {"type": "test"},
