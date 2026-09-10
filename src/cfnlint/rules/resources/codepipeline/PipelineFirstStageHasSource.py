@@ -52,7 +52,7 @@ class PipelineFirstStageHasSource(CfnLintKeyword):
                 # stage lands, so don't make a first-stage determination.
                 if i + 1 < len(path) and path[i + 1] == "Fn::If":
                     return None
-                return path[i] == 0
+                return bool(path[i] == 0)
             i += 1
 
         return None
