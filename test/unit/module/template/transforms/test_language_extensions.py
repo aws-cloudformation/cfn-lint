@@ -1562,3 +1562,48 @@ class TestTransformRefDistinctObjects(TestCase):
             self.assertEqual(tags[0]["Value"], tags[1]["Value"])
             # ... but must be independent objects, not a shared reference.
             self.assertIsNot(tags[0]["Value"], tags[1]["Value"])
+
+
+class TestTransformNestedRefResolvesParameter(TestCase):
+    """Cover the dict-form Ref path where a Ref value resolves to a parameter.
+
+    ``{"Ref": {"Ref": "Ptr"}}`` walks the inner Ref to a string that is itself
+    a loop parameter name, so the outer Ref resolves to that parameter's value.
+    """
+
+    def setUp(self) -> None:
+        self.template_obj = convert_dict(
+            {
+                "Transform": ["AWS::LanguageExtensions"],
+                "Resources": {
+                    "Fn::ForEach::Outer": [
+                        "Ptr",
+                        ["Name"],
+                        {
+                            "Fn::ForEach::Inner": [
+                                "Name",
+                                ["hello"],
+                                {
+                                    "Res${Name}": {
+                                        "Type": "AWS::SNS::Topic",
+                                        "Properties": {
+                                            "TopicName": {"Ref": {"Ref": "Ptr"}}
+                                        },
+                                    }
+                                },
+                            ]
+                        },
+                    ]
+                },
+            }
+        )
+        return super().setUp()
+
+    def test_transform(self):
+        cfn = Template(filename="", template=self.template_obj, regions=["us-east-1"])
+        matches, template = language_extension(cfn)
+        self.assertListEqual(matches, [])
+        self.assertEqual(
+            template["Resources"]["Reshello"]["Properties"]["TopicName"],
+            "hello",
+        )
