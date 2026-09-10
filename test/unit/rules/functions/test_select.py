@@ -37,9 +37,57 @@ def template():
     [
         (
             "Valid Fn::Select with array",
-            {"Fn::Select": [1, ["bar"]]},
+            {"Fn::Select": [0, ["bar"]]},
             {"type": "string"},
             [],
+        ),
+        (
+            "Invalid Fn::Select with an out of bounds index",
+            {"Fn::Select": [1, ["bar"]]},
+            {"type": "string"},
+            [
+                ValidationError(
+                    "1 is greater than the maximum of 0",
+                    path=deque(["Fn::Select", 0]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "else",
+                            "prefixItems",
+                            0,
+                            "cfnContext",
+                            "schema",
+                            "maximum",
+                        ]
+                    ),
+                    validator="fn_select",
+                ),
+            ],
+        ),
+        (
+            "Invalid Fn::Select with an out of bounds index and functions",
+            {"Fn::Select": [5, [{"Ref": "AWS::Region"}, "bar"]]},
+            {"type": "string"},
+            [
+                ValidationError(
+                    "5 is greater than the maximum of 1",
+                    path=deque(["Fn::Select", 0]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "else",
+                            "prefixItems",
+                            0,
+                            "cfnContext",
+                            "schema",
+                            "maximum",
+                        ]
+                    ),
+                    validator="fn_select",
+                ),
+            ],
         ),
         (
             "Invalid Fn::Select is NOT a array",
