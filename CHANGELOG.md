@@ -1,3 +1,13 @@
+### v1.56.3
+## What's Changed
+* fix [W1028](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W1028): scope to enclosing `Fn::If` pins by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4690
+* fix [E1017](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1017): report out-of-bounds `Fn::Select` on a literal list by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4695
+* fix [E1010](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1010): report clean error for Fn::GetAtt string form without an attribute by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4696
+* Update CloudFormation schemas to `2026-09-10` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4691
+* fix [W1101](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W1101): resolved `Fn::FindInMap` should not share identity (W1101 false positive) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4698
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.56.2...v1.56.3
+
 ### v1.56.2
 ## What's Changed
 * fix: Allow intrinsics in SAM Globals properties by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4683
