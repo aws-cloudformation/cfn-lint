@@ -186,6 +186,21 @@ class GetAtt(BaseFn):
         if validator.is_type(value, "array"):
             value = self._resolve_sam_getatt(value, validator)
 
+            # The string form (``{"Fn::GetAtt": "MyResource"}``) is split on
+            # the first ".". The schema's ``minItems``/``maxItems`` and the
+            # string ``pattern`` reject a missing attribute, but resolve it
+            # cleanly here too so a malformed value can never reach the
+            # ``value[1]`` indexing in ``_resolve_getatt`` and crash with an
+            # IndexError.
+            if len(value) < 2:
+                yield ValidationError(
+                    f"{instance!r} is not a valid GetAtt. It must specify a "
+                    "resource and an attribute name",
+                    validator=self.fn.py,
+                    path=deque([self.fn.name]),
+                )
+                return
+
         if errs:
             if any(getattr(e, "unknown", False) for e in errs):
                 format_errs = list(self._run_format_rule(validator, s, value))
@@ -196,19 +211,6 @@ class GetAtt(BaseFn):
                         yield e
             else:
                 yield from iter(errs)
-            return
-
-        # The string form (``{"Fn::GetAtt": "MyResource"}``) is split on the
-        # first ".". ``minItems``/``maxItems`` in the schema only constrain the
-        # array form, so a dotless string slips through with no attribute name
-        # and later indexing (``value[1]``) would crash. Report it cleanly.
-        if len(value) < 2:
-            yield ValidationError(
-                f"{instance!r} is not a valid GetAtt. It must specify a "
-                "resource and an attribute name",
-                validator=self.fn.py,
-                path=deque([self.fn.name]),
-            )
             return
 
         errs = list(
