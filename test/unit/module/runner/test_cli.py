@@ -3,7 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import json
 import logging
+import os
+import tempfile
 from io import StringIO
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
@@ -291,3 +294,189 @@ class TestCli(BaseTestCase):
                 with self.assertRaises(SystemExit):
                     main()
                 mock_print.assert_called_once_with("Invalid key 'bad'")
+
+
+class TestCliConvert(BaseTestCase):
+    """Test --convert with config"""
+
+    def tearDown(self):
+        """Setup"""
+        for handler in LOGGER.handlers:
+            LOGGER.removeHandler(handler)
+
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_convert_json(self, mock_stdout):
+        config = ConfigMixIn(
+            [
+                "--convert",
+                "json",
+                "--template",
+                "test/fixtures/templates/good/generic.yaml",
+            ]
+        )
+
+        runner = Runner(config)
+
+        with self.assertRaises(SystemExit) as e:
+            runner.cli()
+
+        self.assertEqual(e.exception.code, 0)
+
+        template = json.loads(mock_stdout.getvalue())
+        self.assertIn("Resources", template)
+        # short form functions are written out in their long form
+        self.assertEqual(
+            {"Ref": "RootInstanceProfile"},
+            template["Resources"]["MyEC2Instance"]["Properties"]["IamInstanceProfile"],
+        )
+
+    def test_convert_json_to_output_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output_file = os.path.join(directory, "generic.json")
+            config = ConfigMixIn(
+                [
+                    "--convert",
+                    "json",
+                    "--output-file",
+                    output_file,
+                    "--template",
+                    "test/fixtures/templates/good/generic.yaml",
+                ]
+            )
+
+            runner = Runner(config)
+
+            with self.assertRaises(SystemExit) as e:
+                runner.cli()
+
+            self.assertEqual(e.exception.code, 0)
+
+            with open(output_file) as f:
+                self.assertIn("Resources", json.load(f))
+
+    @patch("sys.stderr", new_callable=StringIO)
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_convert_json_bad_template(self, mock_stdout, mock_stderr):
+        config = ConfigMixIn(
+            [
+                "--convert",
+                "json",
+                "--template",
+                "test/fixtures/templates/bad/core/config_invalid_yaml.yaml",
+            ]
+        )
+
+        runner = Runner(config)
+
+        with self.assertRaises(SystemExit) as e:
+            runner.cli()
+
+        self.assertEqual(e.exception.code, 2)
+        # stdout stays clean so it can be redirected into a file
+        self.assertEqual("", mock_stdout.getvalue())
+        self.assertIn("E0000", mock_stderr.getvalue())
+
+    @patch("sys.stderr", new_callable=StringIO)
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_convert_json_unserializable_value(self, mock_stdout, mock_stderr):
+        """A value with no JSON equivalent is reported, not raised"""
+        with tempfile.TemporaryDirectory() as directory:
+            template = os.path.join(directory, "binary.yaml")
+            with open(template, "w") as f:
+                f.write("Resources:\n  Bucket:\n    Type: !!binary R0lGODlh\n")
+
+            config = ConfigMixIn(["--convert", "json", "--template", template])
+
+            runner = Runner(config)
+
+            with self.assertRaises(SystemExit) as e:
+                runner.cli()
+
+            self.assertEqual(e.exception.code, 2)
+            self.assertEqual("", mock_stdout.getvalue())
+            self.assertIn("cannot be written as JSON", mock_stderr.getvalue())
+
+    @patch("sys.stderr", new_callable=StringIO)
+    def test_convert_json_multiple_templates(self, mock_stderr):
+        config = ConfigMixIn(
+            [
+                "--convert",
+                "json",
+                "--template",
+                "test/fixtures/templates/good/generic.yaml",
+                "test/fixtures/templates/good/minimal.yaml",
+            ]
+        )
+
+        runner = Runner(config)
+
+        with self.assertRaises(SystemExit) as e:
+            runner.cli()
+
+        self.assertEqual(e.exception.code, 1)
+        self.assertIn("needs one template, found 2", mock_stderr.getvalue())
+
+    @patch("sys.stderr", new_callable=StringIO)
+    @patch("sys.stdin.isatty")
+    def test_convert_json_template_resolves_to_nothing(self, mock_isatty, mock_stderr):
+        """A template that matches no file is not an invitation to read stdin"""
+        mock_isatty.return_value = False
+
+        config = ConfigMixIn(
+            [
+                "--convert",
+                "json",
+                "--ignore-bad-template",
+                "--template",
+                "test/fixtures/templates/dne/*.yaml",
+            ]
+        )
+
+        runner = Runner(config)
+
+        with self.assertRaises(SystemExit) as e:
+            runner.cli()
+
+        self.assertEqual(e.exception.code, 1)
+        self.assertIn("needs one template, found 0", mock_stderr.getvalue())
+
+    @patch("sys.stderr", new_callable=StringIO)
+    @patch("sys.stdin.isatty")
+    def test_convert_json_with_deployment_files(self, mock_isatty, mock_stderr):
+        """Deployment files would otherwise be dropped in favor of stdin"""
+        mock_isatty.return_value = False
+
+        config = ConfigMixIn(
+            ["--convert", "json"],
+            deployment_files=["test/fixtures/templates/good/generic.yaml"],
+        )
+
+        runner = Runner(config)
+
+        with self.assertRaises(SystemExit) as e:
+            runner.cli()
+
+        self.assertEqual(e.exception.code, 1)
+        self.assertIn("cannot be used with deployment files", mock_stderr.getvalue())
+
+    @patch("sys.stdout", new_callable=StringIO)
+    @patch("fileinput.input")
+    @patch("sys.stdin.isatty")
+    def test_convert_json_from_stdin(self, mock_isatty, mock_fileinput, mock_stdout):
+        mock_fileinput.return_value = StringIO(
+            "Resources:\n  Bucket:\n    Type: AWS::S3::Bucket\n"
+        )
+        mock_isatty.return_value = False
+
+        config = ConfigMixIn(["--convert", "json"])
+
+        runner = Runner(config)
+
+        with self.assertRaises(SystemExit) as e:
+            runner.cli()
+
+        self.assertEqual(e.exception.code, 0)
+        self.assertEqual(
+            {"Resources": {"Bucket": {"Type": "AWS::S3::Bucket"}}},
+            json.loads(mock_stdout.getvalue()),
+        )
