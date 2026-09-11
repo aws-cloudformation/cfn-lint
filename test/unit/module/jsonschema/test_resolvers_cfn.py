@@ -767,6 +767,119 @@ def test_invalid_functions(name, instance, response):
             {"Fn::Join": ["-", [{"Ref": "Environment"}, {"Ref": "DNE"}]]},
             [],
         ),
+        (
+            "Fn::Select resolves every index a Ref can take",
+            {"Fn::Select": [{"Ref": "Index"}, ["a", "b"]]},
+            [
+                (
+                    "a",
+                    Context(
+                        ref_values={"Index": "0"},
+                        path=Path(
+                            value_path=deque(
+                                ["Parameters", "Index", "AllowedValues", 0]
+                            )
+                        ),
+                    ),
+                    None,
+                ),
+                (
+                    "b",
+                    Context(
+                        ref_values={"Index": "1"},
+                        path=Path(
+                            value_path=deque(
+                                ["Parameters", "Index", "AllowedValues", 1]
+                            )
+                        ),
+                    ),
+                    None,
+                ),
+            ],
+        ),
+        (
+            "Fn::Select uses previous values when doing resolution",
+            {
+                "Fn::Select": [
+                    {"Ref": "Index"},
+                    [{"Ref": "Environment"}, {"Ref": "Environment"}],
+                ]
+            },
+            [
+                (
+                    "dev",
+                    Context(
+                        ref_values={"Index": "0", "Environment": "dev"},
+                        path=Path(
+                            value_path=deque(
+                                ["Parameters", "Environment", "AllowedValues", 0]
+                            )
+                        ),
+                    ),
+                    None,
+                ),
+                (
+                    "test",
+                    Context(
+                        ref_values={"Index": "0", "Environment": "test"},
+                        path=Path(
+                            value_path=deque(
+                                ["Parameters", "Environment", "AllowedValues", 1]
+                            )
+                        ),
+                    ),
+                    None,
+                ),
+                (
+                    "prod",
+                    Context(
+                        ref_values={"Index": "0", "Environment": "prod"},
+                        path=Path(
+                            value_path=deque(
+                                ["Parameters", "Environment", "AllowedValues", 2]
+                            )
+                        ),
+                    ),
+                    None,
+                ),
+                (
+                    "dev",
+                    Context(
+                        ref_values={"Index": "1", "Environment": "dev"},
+                        path=Path(
+                            value_path=deque(
+                                ["Parameters", "Environment", "AllowedValues", 0]
+                            )
+                        ),
+                    ),
+                    None,
+                ),
+                (
+                    "test",
+                    Context(
+                        ref_values={"Index": "1", "Environment": "test"},
+                        path=Path(
+                            value_path=deque(
+                                ["Parameters", "Environment", "AllowedValues", 1]
+                            )
+                        ),
+                    ),
+                    None,
+                ),
+                (
+                    "prod",
+                    Context(
+                        ref_values={"Index": "1", "Environment": "prod"},
+                        path=Path(
+                            value_path=deque(
+                                ["Parameters", "Environment", "AllowedValues", 2]
+                            )
+                        ),
+                    ),
+                    None,
+                ),
+            ],
+        ),
     ],
 )
 def test_valid_functions(name, instance, response):
@@ -781,6 +894,12 @@ def test_valid_functions(name, instance, response):
                 {
                     "Type": "String",
                     "AllowedValues": ["dev", "test", "prod"],
+                }
+            ),
+            "Index": Parameter(
+                {
+                    "Type": "String",
+                    "AllowedValues": ["0", "1"],
                 }
             ),
         },

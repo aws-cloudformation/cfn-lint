@@ -356,19 +356,17 @@ def select(validator: Validator, instance: Any) -> ResolutionResult:
     if not len(instance) == 2:
         return
 
-    # get the values from the list
-    indexes = validator.resolve_value(instance[0])
-    objs = validator.resolve_value(instance[1])
-
-    for i, _, _ in indexes:
-        for obj, obj_v, _ in objs:
-            try:
-                i = int(i)
-            except ValueError:
-                continue
-            if not validator.is_type(obj, "array"):
-                continue
-            if i < 0:
+    # resolve the list with the index's validator so the values the index
+    # resolved from (a Ref to a parameter, for instance) are carried along
+    for i, index_v, _ in validator.resolve_value(instance[0]):
+        try:
+            i = int(i)
+        except (ValueError, TypeError):
+            continue
+        if i < 0:
+            continue
+        for obj, obj_v, _ in index_v.resolve_value(instance[1]):
+            if not obj_v.is_type(obj, "array"):
                 continue
             if len(obj) <= i:
                 continue
