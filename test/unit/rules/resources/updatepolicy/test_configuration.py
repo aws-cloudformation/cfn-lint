@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 import pytest
 
+from cfnlint.context.context import Transforms
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.updatepolicy.Configuration import Configuration
 
@@ -28,6 +29,42 @@ def rule():
                     path=["UpdatePolicy"],
                     rule=Configuration(),
                     instance=[],
+                    validator="type",
+                    validator_value="object",
+                    schema_path=[
+                        "allOf",
+                        0,
+                        "then",
+                        "properties",
+                        "UpdatePolicy",
+                        "type",
+                    ],
+                )
+            ],
+        ),
+        (
+            "Invalid with autoscaling group select policy",
+            {
+                "Type": "AWS::AutoScaling::AutoScalingGroup",
+                "UpdatePolicy": {
+                    "Fn::Select": [
+                        0,
+                        [{"AutoScalingRollingUpdate": {"MaxBatchSize": 1}}],
+                    ]
+                },
+            },
+            [
+                ValidationError(
+                    "{'Fn::Select': [0, [{'AutoScalingRollingUpdate': "
+                    "{'MaxBatchSize': 1}}]]} is not of type 'object'",
+                    path=["UpdatePolicy"],
+                    rule=Configuration(),
+                    instance={
+                        "Fn::Select": [
+                            0,
+                            [{"AutoScalingRollingUpdate": {"MaxBatchSize": 1}}],
+                        ]
+                    },
                     validator="type",
                     validator_value="object",
                     schema_path=[
@@ -185,3 +222,29 @@ def rule():
 def test_update_policy_configuration(name, instance, expected, rule, validator):
     errors = list(rule.validate(validator, {}, instance, {}))
     assert errors == expected, f"Test {name!r} got {errors!r}"
+
+
+def test_update_policy_allows_select_with_language_extensions(rule, validator):
+    validator = validator.evolve(
+        context=validator.context.evolve(
+            transforms=Transforms(["AWS::LanguageExtensions"]),
+        )
+    )
+    errors = list(
+        rule.validate(
+            validator,
+            {},
+            {
+                "Type": "AWS::AutoScaling::AutoScalingGroup",
+                "UpdatePolicy": {
+                    "Fn::Select": [
+                        0,
+                        [{"AutoScalingRollingUpdate": {"MaxBatchSize": 1}}],
+                    ]
+                },
+            },
+            {},
+        )
+    )
+
+    assert errors == []
