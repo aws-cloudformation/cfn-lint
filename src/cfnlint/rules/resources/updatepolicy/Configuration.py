@@ -6,8 +6,8 @@ SPDX-License-Identifier: MIT-0
 from typing import Any
 
 import cfnlint.data.schemas.other.resources
-from cfnlint.helpers import FUNCTIONS
-from cfnlint.jsonschema import Validator
+from cfnlint.helpers import FUNCTIONS, is_function
+from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 from cfnlint.schema.resolver import RefResolver
 
@@ -32,6 +32,30 @@ class Configuration(CfnLintJsonSchema):
         )
 
     def validate(self, validator: Validator, keywords: Any, instance: Any, schema: Any):
+        update_policy = instance.get("UpdatePolicy")
+        function, _ = is_function(update_policy)
+        if (
+            function == "Fn::Select"
+            and not validator.context.transforms.has_language_extensions_transform()
+        ):
+            yield ValidationError(
+                f"{update_policy!r} is not of type 'object'",
+                path=["UpdatePolicy"],
+                rule=self,
+                instance=update_policy,
+                validator="type",
+                validator_value="object",
+                schema_path=[
+                    "allOf",
+                    0,
+                    "then",
+                    "properties",
+                    "UpdatePolicy",
+                    "type",
+                ],
+            )
+            return
+
         validator = validator.evolve(
             context=validator.context.evolve(
                 functions=list(FUNCTIONS),
