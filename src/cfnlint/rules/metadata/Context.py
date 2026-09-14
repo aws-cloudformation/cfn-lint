@@ -457,12 +457,20 @@ class ContextMissing(_ContextRuleMixin, CloudFormationLintRule):
         )
         if len(significant) >= 2 and not has_template_context:
             matches.append(RuleMatch(["Metadata"], _MSG_TEMPLATE_MISSING))
-        # One aggregate finding naming every resource missing context, anchored at
-        # the first of them.
+        # One aggregate finding naming every resource missing context, anchored
+        # at the first of them. Resources whose per-resource ignore_checks
+        # suppresses I4010 are filtered out before the aggregate is built, so
+        # suppressing one resource removes it from the list rather than killing
+        # the entire finding.
+        directives = cfn.get_directives()
+        suppressed = set()
+        for rule_id, resource_names in directives.items():
+            if self.id.startswith(rule_id):
+                suppressed.update(resource_names)
         missing = [
             (logical_id, resource)
             for logical_id, resource in significant
-            if _get_context(resource) is None
+            if _get_context(resource) is None and logical_id not in suppressed
         ]
         if missing:
             matches.append(self._resource_aggregate(missing))

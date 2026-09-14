@@ -126,6 +126,56 @@ class TestContextMissing(BaseTestCase):
         template = "Resources:\n  Malformed: not-a-dict\n"
         self.assertEqual([], _match(_missing_rule(), template))
 
+    def test_ignore_checks_on_one_resource_preserves_aggregate_for_others(self):
+        # Suppressing I4010 on one resource must remove only that resource
+        # from the aggregate, not kill the entire finding.
+        template = (
+            "Resources:\n"
+            "  SuppressedQueue:\n"
+            "    Type: AWS::SQS::Queue\n"
+            "    Metadata:\n"
+            "      cfn-lint:\n"
+            "        config:\n"
+            "          ignore_checks:\n"
+            "            - I4010\n"
+            "  UnsuppressedTopic:\n"
+            "    Type: AWS::SNS::Topic\n"
+        )
+        matches = _match(_missing_rule(), template)
+        # The aggregate should still report UnsuppressedTopic.
+        aggregate_matches = [
+            m for m in matches if not m.message.startswith("This template")
+        ]
+        self.assertEqual(1, len(aggregate_matches))
+        self.assertIn("UnsuppressedTopic", aggregate_matches[0].message)
+        self.assertNotIn("SuppressedQueue", aggregate_matches[0].message)
+
+    def test_ignore_checks_on_all_resources_suppresses_aggregate_entirely(self):
+        template = (
+            "Resources:\n"
+            "  QueueA:\n"
+            "    Type: AWS::SQS::Queue\n"
+            "    Metadata:\n"
+            "      cfn-lint:\n"
+            "        config:\n"
+            "          ignore_checks:\n"
+            "            - I4010\n"
+            "  QueueB:\n"
+            "    Type: AWS::SQS::Queue\n"
+            "    Metadata:\n"
+            "      cfn-lint:\n"
+            "        config:\n"
+            "          ignore_checks:\n"
+            "            - I4010\n"
+        )
+        matches = _match(_missing_rule(), template)
+        # Template finding may still fire (2 significant resources, no
+        # template context), but no resource aggregate.
+        aggregate_matches = [
+            m for m in matches if not m.message.startswith("This template")
+        ]
+        self.assertEqual(0, len(aggregate_matches))
+
 
 class TestContextMissingWhy(BaseTestCase):
     """I4011 missing-why: flags blocks with no 'why' and no trust."""
