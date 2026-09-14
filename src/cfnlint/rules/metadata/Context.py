@@ -9,7 +9,7 @@ SPDX-License-Identifier: MIT-0
 # notes (aws/aws-cdk#38381).
 #
 #   I4010 missing-context    Template or significant resource has no Context block
-#   I4011 missing-why        Context present but has neither 'why' nor 'gaps'
+#   I4011 missing-why        Context present but has neither 'why' nor 'trust'
 #   I4012 schema-violation   Supplied Context field fails schema validation
 #
 # All three are experimental and informational, so both --include-experimental
@@ -87,9 +87,6 @@ _INCIDENTAL_ID_PATTERN = re.compile(
 _CDK_METADATA_TYPE = "AWS::CDK::Metadata"
 _CDK_METADATA_LOGICAL_ID = "CDKMetadata"
 _CDK_PATH_KEY = "aws:cdk:path"
-
-# Per-resource opt-out marker.
-_OPT_OUT_MARKER = "context intentionally omitted"
 
 # Resource types not *required* to carry context: subordinate resources
 # near-universally attached to a parent (e.g. a function's log group) rather than
@@ -174,20 +171,6 @@ def _get_context(resource: dict[str, Any]) -> Any:
     return metadata.get(CONTEXT_KEY)
 
 
-def _is_opted_out(context: Any) -> bool:
-    """True when the block carries the explicit per-resource opt-out marker.
-
-    Matching is case-insensitive and substring-based, so variations like
-    "Context Intentionally Omitted (JIRA-123)" are accepted.
-    """
-    if not isinstance(context, dict):
-        return False
-    gaps = context.get("gaps")
-    if not isinstance(gaps, list):
-        return False
-    return any(isinstance(gap, str) and _OPT_OUT_MARKER in gap.lower() for gap in gaps)
-
-
 # Diagnostic message templates, kept together so the wording lives in one place
 # apart from the detection logic. Runtime values are filled in with str.format().
 _TEMPLATE_FIELDS_STR = ", ".join(sorted(_TEMPLATE_FIELDS))
@@ -226,15 +209,17 @@ _MSG_RESOURCE_AGGREGATE = (
     "These architecture-relevant resources are missing {context_display}: "
     "{summary}. For each listed resource, add {context_display}. Set 'why' to the "
     "resource's purpose or design rationale. If the rationale is not documented, "
-    "set 'gaps' to [\"rationale not documented\"] instead of guessing. Add "
-    "'must' as a list only for known constraints whose violation would break the "
-    "system; otherwise omit it. Leave unlisted resources unchanged."
+    'set trust to {{src: infer, conf: low, note: "rationale not documented"}} '
+    "instead of guessing. Add 'must' as a list only for known constraints whose "
+    "violation would break the system; otherwise omit it. Leave unlisted "
+    "resources unchanged."
 )
 _MSG_MISSING_WHY = (
     "{logical_id}: {context_display} has no 'why'. Add 'why': purpose + notable "
     'choices, telegraphic style (e.g. "buffer order events async; FIFO rejected '
-    '(throughput > ordering)") -- or declare gaps: [rationale not documented]. '
-    "Never restate the Type/logical id/property values."
+    '(throughput > ordering)") -- or set trust to {{src: infer, conf: low, '
+    'note: "rationale not documented"}}. Never restate the Type/logical '
+    "id/property values."
 )
 
 
@@ -429,7 +414,7 @@ class _ContextRuleMixin:
         matches = []
         for logical_id, resource in self._primary_resources(cfn):
             context = _get_context(resource)
-            if context is None or _is_opted_out(context):
+            if context is None:
                 continue
             base_path = ["Resources", logical_id, "Metadata", CONTEXT_KEY]
             for finding in _schema_findings(
@@ -439,11 +424,10 @@ class _ContextRuleMixin:
         template_metadata = cfn.template.get("Metadata")
         if isinstance(template_metadata, dict) and CONTEXT_KEY in template_metadata:
             context = template_metadata[CONTEXT_KEY]
-            if not _is_opted_out(context):
-                for finding in _schema_findings(
-                    context, "TemplateContext", ["Metadata", CONTEXT_KEY], "Template"
-                ):
-                    matches.append(RuleMatch(finding.path, finding.message))
+            for finding in _schema_findings(
+                context, "TemplateContext", ["Metadata", CONTEXT_KEY], "Template"
+            ):
+                matches.append(RuleMatch(finding.path, finding.message))
         return matches
 
 
@@ -459,7 +443,7 @@ class ContextMissing(_ContextRuleMixin, CloudFormationLintRule):
         " Incidental framework resources and subordinate types such as"
         " AWS::Logs::LogGroup are not expected to carry one."
     )
-    source_url = "https://github.com/aws/aws-cdk/pull/38381"
+    source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-attribute-metadata.html#aws-attribute-metadata-context-schema"
     tags = ["metadata", "context"]
 
     def match(self, cfn: Any) -> list[RuleMatch]:
@@ -502,15 +486,15 @@ class ContextMissing(_ContextRuleMixin, CloudFormationLintRule):
 
 
 class ContextMissingWhy(_ContextRuleMixin, CloudFormationLintRule):
-    """missing-why: Context exists but has neither 'why' nor a 'gaps' entry."""
+    """missing-why: Context exists but has no 'why' and no reduced-confidence trust."""
 
     id = "I4011"
     experimental = True
     shortdesc = "Context block has no 'why'"
     description = (
         f"Check that a {_CONTEXT_DISPLAY} block records a"
-        " 'why' rationale, or declares a 'gaps' entry acknowledging that the"
-        " rationale is undocumented."
+        " 'why' rationale, or declares a trust block with reduced confidence"
+        " acknowledging the rationale is undocumented."
     )
     source_url = ContextMissing.source_url
     tags = ["metadata", "context"]
@@ -519,13 +503,16 @@ class ContextMissingWhy(_ContextRuleMixin, CloudFormationLintRule):
         matches = []
         for logical_id, resource in self._primary_resources(cfn):
             context = _get_context(resource)
-            if not isinstance(context, dict) or _is_opted_out(context):
+            if not isinstance(context, dict):
                 continue
             why = context.get("why")
-            gaps = context.get("gaps")
+            trust = context.get("trust")
             has_why = isinstance(why, str) and why.strip()
-            has_gaps = isinstance(gaps, list) and len(gaps) > 0
-            if has_why or has_gaps:
+            has_trust = isinstance(trust, dict) and trust.get("conf") in (
+                "low",
+                "medium",
+            )
+            if has_why or has_trust:
                 continue
             matches.append(
                 RuleMatch(

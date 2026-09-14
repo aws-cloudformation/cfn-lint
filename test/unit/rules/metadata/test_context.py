@@ -128,7 +128,7 @@ class TestContextMissing(BaseTestCase):
 
 
 class TestContextMissingWhy(BaseTestCase):
-    """I4011 missing-why: flags blocks with neither 'why' nor 'gaps'."""
+    """I4011 missing-why: flags blocks with no 'why' and no trust."""
 
     def test_flags_missing_why(self):
         template = (
@@ -137,21 +137,24 @@ class TestContextMissingWhy(BaseTestCase):
             "    Type: AWS::SNS::Topic\n"
             "    Metadata:\n"
             f"      {CONTEXT_KEY}:\n"
-            "        ops: check the TTL\n"
+            "        must:\n"
+            "          - at least one subscriber\n"
         )
         matches = _match(ContextMissingWhy(), template)
         self.assertEqual(1, len(matches))
         self.assertIn("Notifier", matches[0].message)
 
-    def test_gaps_entry_satisfies_the_rule(self):
+    def test_trust_with_low_confidence_satisfies_the_rule(self):
         template = (
             "Resources:\n"
             "  LegacyTable:\n"
             "    Type: AWS::DynamoDB::Table\n"
             "    Metadata:\n"
             f"      {CONTEXT_KEY}:\n"
-            "        gaps:\n"
-            "          - rationale not documented\n"
+            "        trust:\n"
+            "          src: infer\n"
+            "          conf: low\n"
+            "          note: rationale not documented\n"
         )
         self.assertEqual([], _match(ContextMissingWhy(), template))
 
@@ -160,15 +163,16 @@ class TestContextMissingWhy(BaseTestCase):
         template = "Resources:\n  OrderQueue:\n    Type: AWS::SQS::Queue\n"
         self.assertEqual([], _match(ContextMissingWhy(), template))
 
-    def test_opted_out_resource_is_not_flagged_for_missing_why(self):
+    def test_trust_block_alone_not_flagged_for_missing_why(self):
         template = (
             "Resources:\n"
             "  OrderQueue:\n"
             "    Type: AWS::SQS::Queue\n"
             "    Metadata:\n"
             f"      {CONTEXT_KEY}:\n"
-            "        gaps:\n"
-            "          - context intentionally omitted\n"
+            "        trust:\n"
+            "          src: infer\n"
+            "          conf: medium\n"
         )
         self.assertEqual([], _match(ContextMissingWhy(), template))
 
@@ -360,20 +364,23 @@ class TestContextSchemaRules(BaseTestCase):
         template = "Resources:\n  OrderQueue:\n    Type: AWS::SQS::Queue\n"
         self.assertEqual([], _match(ContextSchemaViolation(), template))
 
-    def test_opted_out_resource_block_is_not_validated(self):
-        # The opt-out marker suppresses validation of the rest of the block,
-        # even when it holds a field that would otherwise be flagged.
+    def test_all_supplied_context_is_validated_even_with_trust(self):
+        # There is no opt-out marker; all supplied context is validated.
+        # A block with a schema violation is flagged regardless of trust.
         template = (
             "Resources:\n"
             "  OrderQueue:\n"
             "    Type: AWS::SQS::Queue\n"
             "    Metadata:\n"
             f"      {CONTEXT_KEY}:\n"
-            "        gaps:\n"
-            "          - context intentionally omitted\n"
+            "        trust:\n"
+            "          src: infer\n"
+            "          conf: low\n"
             "        must: not a list\n"
         )
-        self.assertEqual([], _match(ContextSchemaViolation(), template))
+        matches = _match(ContextSchemaViolation(), template)
+        self.assertEqual(1, len(matches))
+        self.assertIn("array of strings", matches[0].message)
 
 
 class TestTargetingAndConfig(BaseTestCase):
@@ -484,15 +491,16 @@ class TestTargetingAndConfig(BaseTestCase):
         # Two findings: template diagnostic + resource aggregate covering both.
         self.assertEqual(2, len(matches))
 
-    def test_opt_out_marker_suppresses_schema_rules(self):
+    def test_gaps_field_is_now_a_schema_violation(self):
+        # gaps was removed from the published schema; supplying it is flagged
+        # as an unrecognized field.
         template = (
-            "Metadata:\n"
-            f"  {CONTEXT_KEY}:\n"
-            "    gaps:\n"
-            "      - context intentionally omitted\n"
-            "    why: misplaced but opted out\n"
+            f"Metadata:\n  {CONTEXT_KEY}:\n    arch: ok\n    gaps:\n      - some gap\n"
         )
-        self.assertEqual([], _match(ContextSchemaViolation(), template))
+        matches = _match(ContextSchemaViolation(), template)
+        self.assertTrue(
+            any("not a recognized Context field" in m.message for m in matches)
+        )
 
     def test_additional_low_value_types_config_excludes(self):
         rule = ContextMissing()
