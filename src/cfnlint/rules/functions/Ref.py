@@ -37,6 +37,33 @@ class Ref(BaseFn):
         ]
         self.child_rules.update(dict.fromkeys(self._all_refs))
 
+    def _skip_resolved_error(self, err: ValidationError, validator: Validator) -> bool:
+        if err.validator != "ref":
+            return False
+        if not isinstance(err.schema, dict) or err.schema.get("maximum") != 65536:
+            return False
+        if list(validator.context.path.cfn_path) != [
+            "Resources",
+            "AWS::FSx::FileSystem",
+            "Properties",
+            "StorageCapacity",
+        ]:
+            return False
+
+        path = list(validator.context.path.path)
+        if len(path) < 2 or path[0] != "Resources":
+            return False
+        resource = validator.cfn.template.get("Resources", {}).get(path[1], {})
+        properties = resource.get("Properties", {})
+        if not isinstance(properties, dict):
+            return False
+        lustre_config = properties.get("LustreConfiguration", {})
+        return (
+            properties.get("FileSystemType") == "LUSTRE"
+            and isinstance(lustre_config, dict)
+            and lustre_config.get("DeploymentType") == "PERSISTENT_2"
+        )
+
     def ref(
         self,
         validator: Validator,

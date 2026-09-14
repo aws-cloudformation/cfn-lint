@@ -7,10 +7,11 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import create_context_for_template
+from cfnlint.context import Path, create_context_for_template
 from cfnlint.context.context import Transforms
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.functions.Ref import Ref
+from cfnlint.rules.functions.RefResolved import RefResolved
 from cfnlint.template import Template
 
 
@@ -228,3 +229,67 @@ def test_validate(name, instance, schema, context_evolve, expected, rule, contex
     )(context=context, cfn=cfn)
     errs = list(rule.ref(validator, schema, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"
+
+
+@pytest.mark.parametrize(
+    "deployment_type,expected_count",
+    [
+        ("PERSISTENT_2", 0),
+        ("SCRATCH_2", 1),
+    ],
+)
+def test_ref_skips_stale_fsx_lustre_persistent2_capacity_maximum(
+    deployment_type, expected_count
+):
+    template = {
+        "Parameters": {
+            "StorageCapacityGiB": {
+                "Type": "Number",
+                "Default": 1200,
+                "MaxValue": 460800,
+            }
+        },
+        "Resources": {
+            "LustreScratch": {
+                "Type": "AWS::FSx::FileSystem",
+                "Properties": {
+                    "FileSystemType": "LUSTRE",
+                    "LustreConfiguration": {"DeploymentType": deployment_type},
+                    "StorageCapacity": {"Ref": "StorageCapacityGiB"},
+                },
+            }
+        },
+    }
+    cfn = Template("", template, ["us-east-1"])
+    validator = CfnTemplateValidator({}).extend(validators={})(
+        schema={},
+        cfn=cfn,
+        context=create_context_for_template(cfn).evolve(
+            path=Path(
+                path=deque(
+                    ["Resources", "LustreScratch", "Properties", "StorageCapacity"]
+                ),
+                cfn_path=deque(
+                    [
+                        "Resources",
+                        "AWS::FSx::FileSystem",
+                        "Properties",
+                        "StorageCapacity",
+                    ]
+                ),
+            )
+        ),
+    )
+    ref = Ref()
+    ref.child_rules["W1030"] = RefResolved()
+
+    errs = list(
+        ref.resolve(
+            validator,
+            {"type": "integer", "minimum": 32, "maximum": 65536},
+            {"Ref": "StorageCapacityGiB"},
+            {},
+        )
+    )
+
+    assert len(errs) == expected_count

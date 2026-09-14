@@ -197,11 +197,15 @@ class BaseFn(CfnLintJsonSchema):
                 return
 
             for err in errs:
-                all_errs.append(
-                    self._clean_resolve_errors(err, value, instance, validator)
-                )
+                clean_err = self._clean_resolve_errors(err, value, instance, validator)
+                if self._skip_resolved_error(clean_err, validator):
+                    continue
+                all_errs.append(clean_err)
 
         yield from iter(all_errs)
+
+    def _skip_resolved_error(self, err: ValidationError, validator: Validator) -> bool:
+        return False
 
     def _resolve_ref(self, validator, schema) -> Any:
         resolve = getattr(validator.resolver, "resolve", None)
