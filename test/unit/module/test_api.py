@@ -35,8 +35,8 @@ class TestLint(TestCase):
             config=ManualArgs(regions=["us-east-1", "us-west-2", "eu-west-1"]),
         )
         self.assertEqual(
-            sorted(["W4010", "W4010", "W2010", "W2010"]),
-            sorted([match.rule.id for match in matches]),
+            ["W2010", "W2010"],
+            [match.rule.id for match in matches],
             f"Got matches: {matches!r}",
         )
 
@@ -103,17 +103,13 @@ class TestLint(TestCase):
             config=ManualArgs(regions=["us-east-1", "us-west-2", "eu-west-1"]),
         )
         self.assertEqual(
-            sorted(["W4010", "E1020"]),
-            sorted([match.rule.id for match in matches]),
-            f"Got matches: {matches!r}",
+            ["E1020"], [match.rule.id for match in matches], f"Got matches: {matches!r}"
         )
 
     def test_sam_template(self):
         filename = "test/fixtures/templates/good/transform/list_transform_many.yaml"
         matches = self.helper_lint_string_from_file(filename)
-        self.assertEqual(
-            ["W4010"], [match.rule.id for match in matches], f"Got matches: {matches!r}"
-        )
+        self.assertEqual([], matches, f"Got matches: {matches!r}")
 
 
 class TestV0Usage(TestCase):
@@ -130,7 +126,7 @@ class TestV0Usage(TestCase):
         filename = "test/fixtures/templates/bad/noecho.yaml"
         matches = self.helper_lint_string_from_file(filename)
         self.assertEqual(
-            sorted(["W4010", "W4010", "W2010", "W2010"]),
+            sorted(["I4010", "I4010", "W2010", "W2010"]),
             sorted([match.rule.id for match in matches]),
             f"Got matches: {matches!r}",
         )
@@ -168,7 +164,7 @@ class TestV0Usage(TestCase):
         filename = "test/fixtures/templates/bad/issues.yaml"
         matches = self.helper_lint_string_from_file(filename)
         self.assertEqual(
-            sorted(["W4010", "E1020"]),
+            sorted(["E1020", "I4010"]),
             sorted([match.rule.id for match in matches]),
             f"Got matches: {matches!r}",
         )
@@ -177,7 +173,7 @@ class TestV0Usage(TestCase):
         filename = "test/fixtures/templates/good/transform/list_transform_many.yaml"
         matches = self.helper_lint_string_from_file(filename)
         self.assertEqual(
-            ["W4010"], [match.rule.id for match in matches], f"Got matches: {matches!r}"
+            ["I4010"], [match.rule.id for match in matches], f"Got matches: {matches!r}"
         )
 
 
@@ -199,8 +195,8 @@ class TestLintFile(TestCase):
             config=ManualArgs(regions=["us-east-1", "us-west-2", "eu-west-1"]),
         )
         self.assertEqual(
-            sorted(["W4010", "W4010", "W2010", "W2010"]),
-            sorted([match.rule.id for match in matches]),
+            ["W2010", "W2010"],
+            [match.rule.id for match in matches],
             f"Got matches: {matches!r}",
         )
 
@@ -260,9 +256,7 @@ class TestLintFile(TestCase):
             config=ManualArgs(regions=["us-east-1", "us-west-2", "eu-west-1"]),
         )
         self.assertEqual(
-            sorted(["W4010", "E1020"]),
-            sorted([match.rule.id for match in matches]),
-            f"Got matches: {matches!r}",
+            ["E1020"], [match.rule.id for match in matches], f"Got matches: {matches!r}"
         )
 
     def test_sam_template(self):
@@ -271,9 +265,7 @@ class TestLintFile(TestCase):
             "test/fixtures/templates/good/transform/list_transform_many.yaml"
         )
         matches = lint_file(filename)
-        self.assertEqual(
-            ["W4010"], [match.rule.id for match in matches], f"Got matches: {matches!r}"
-        )
+        self.assertEqual([], matches, f"Got matches: {matches!r}")
 
     def test_empty_file(self):
         """Test linting an empty file"""

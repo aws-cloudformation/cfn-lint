@@ -49,9 +49,7 @@ class TestComplete(BaseTestCase):
         runner = Runner(config)
         runner.rules = self.collection
 
-        matches = list(runner.run())
-        self.assertEqual(2, len(matches))
-        self.assertTrue(all(m.rule.id == "W4010" for m in matches))
+        self.assertEqual([], list(runner.run()))
 
     def test_fail_run(self):
         """Failure test required"""

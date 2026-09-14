@@ -10,18 +10,18 @@ SPDX-License-Identifier: MIT-0
 # notes (emitted by the CDK context aspect, aws/aws-cdk#38381). These rules
 # implement the Context family on the cfn-lint surface:
 #
-#   W4010 missing-context    Template or significant resource has no Context block
-#   W4011 missing-why        Context present but has neither 'why' nor 'gaps'
-#   W4012 schema-violation   Supplied Context field fails schema v1 validation
+#   I4010 missing-context    Template or significant resource has no Context block
+#   I4011 missing-why        Context present but has neither 'why' nor 'gaps'
+#   I4012 schema-violation   Supplied Context field fails schema v1 validation
 #
-# All rules are warnings (advisory, never blocking). Each accepts a 'severity'
-# config option (--configure-rule W4010:severity=error) so CI can escalate.
+# All rules are experimental and informational (off by default). Enable with
+# --include-experimental --include-checks I to opt in. Severity is fixed by
+# rule-ID prefix; escalation is achieved through rule selection.
 #
-# All three rules are on by default. Templates that do not adopt the Context
-# convention can disable missing-context with the standard mechanism
-# (--ignore-checks W4010 or ignore_checks in a config file). The
-# validate-supplied rules (W4011, W4012) only fire when an author has actually
-# written a Context block, so they are silent otherwise.
+# Templates that do not adopt the Context convention can disable missing-context
+# with the standard mechanism (--ignore-checks I4010 or ignore_checks in a
+# config file). The validate-supplied rules (I4011, I4012) only fire when an
+# author has actually written a Context block, so they are silent otherwise.
 #
 # Targeting follows a shared exclusion set: incidental/framework resources
 # (matched against the canonical incidental pattern set on logical IDs and the
@@ -30,12 +30,12 @@ SPDX-License-Identifier: MIT-0
 # and can extend the incidental set via the additional_incidental_patterns
 # config option.
 #
-# missing-context (W4010) additionally applies a significance policy: only
+# missing-context (I4010) additionally applies a significance policy: only
 # resources *required* to carry context are flagged when it is absent.
 # Subordinate / low-value resource types (e.g. AWS::Logs::LogGroup) are not
-# required and are skipped by W4010, but any context an author does supply is
-# still validated by W4011-W4012. Extend the low-value set via the
-# additional_low_value_types config option. W4010 also flags a template that has
+# required and are skipped by I4010, but any context an author does supply is
+# still validated by I4011-I4012. Extend the low-value set via the
+# additional_low_value_types config option. I4010 also flags a template that has
 # more than one significant resource but whose top-level Metadata has no Context
 # block describing its architecture.
 
@@ -109,8 +109,8 @@ _OPT_OUT_MARKER = "context intentionally omitted"
 # Resource types not *required* to carry context: subordinate / low-value
 # resources near-universally attached to a parent (e.g. a function's log group)
 # rather than independently architecture-relevant. Missing context is NOT flagged
-# on these (W4010); any context an author supplies is still validated
-# (W4011-W4012). Extend via the 'additional_low_value_types' config option.
+# on these (I4010); any context an author supplies is still validated
+# (I4011-I4012). Extend via the 'additional_low_value_types' config option.
 #
 # Significance-policy choice: two LogGroup policies were considered --
 # (a) exempt every AWS::Logs::LogGroup by type, or (b) exempt only
@@ -126,10 +126,6 @@ _LOW_VALUE_TYPES = frozenset(
     }
 )
 
-_VALID_SEVERITIES = frozenset({"error", "warning", "informational"})
-_DEFAULT_SEVERITY = "warning"
-
-_SEVERITY_CONFIG: dict[str, Any] = {"default": _DEFAULT_SEVERITY, "type": "string"}
 _PATTERNS_CONFIG: dict[str, Any] = {"default": [], "type": "list", "itemtype": "string"}
 
 
@@ -170,7 +166,7 @@ def _is_low_value(resource: dict[str, Any], extra_types: list[str]) -> bool:
     """True when the resource's type is subordinate/low-value.
 
     Low-value resources are not *required* to carry context (missing-context is
-    suppressed by W4010), but any context they supply is still validated.
+    suppressed by I4010), but any context they supply is still validated.
     """
     rtype = resource.get("Type")
     if not isinstance(rtype, str):
@@ -352,8 +348,8 @@ def _schema_findings(
     ):
         err_path = list(error.absolute_path)
         # Top-level unknown keys are handled above. cfnlint's validator reports the
-        # offending key in the path (length 1), so skip those and keep nested
-        # (length >= 2) additionalProperties violations are genuine shape problems.
+        # offending key in the path (length 1), so skip those; nested (length >= 2)
+        # additionalProperties violations are genuine shape problems.
         if error.validator == "additionalProperties" and len(err_path) <= 1:
             continue
         field = ".".join(str(p) for p in err_path) or "Context"
@@ -394,7 +390,8 @@ def _schema_findings(
 
 
 class _ContextRuleMixin:
-    """Shared config (severity, extra incidental patterns) and iteration helpers."""
+    """Shared config (extra incidental patterns, low-value types) and
+    iteration helpers."""
 
     config: dict[str, Any]
     id: str
@@ -406,22 +403,11 @@ class _ContextRuleMixin:
         # rule registration then calls configure(), which applies these defaults
         # plus any user-provided --configure-rule overrides.
         self.config_definition = {
-            "severity": dict(_SEVERITY_CONFIG),
             "additional_incidental_patterns": dict(_PATTERNS_CONFIG),
             "additional_low_value_types": dict(_PATTERNS_CONFIG),
         }
-        self.config.setdefault("severity", _DEFAULT_SEVERITY)
         self.config.setdefault("additional_incidental_patterns", [])
         self.config.setdefault("additional_low_value_types", [])
-
-    @property
-    def severity(self) -> str:
-        configured = (
-            self.config.get("severity") if isinstance(self.config, dict) else None
-        )
-        if configured in _VALID_SEVERITIES:
-            return str(configured)
-        return _DEFAULT_SEVERITY
 
     def _extra_patterns(self) -> list[str]:
         patterns = self.config.get("additional_incidental_patterns", [])
@@ -435,7 +421,7 @@ class _ContextRuleMixin:
         """Primary resources *required* to carry context.
 
         Non-incidental resources minus subordinate/low-value types. Used by
-        missing-context (W4010); the validate-supplied rules use
+        missing-context (I4010); the validate-supplied rules use
         ``_primary_resources`` so they still check any context present on a
         low-value resource.
         """
@@ -451,8 +437,6 @@ class _ContextRuleMixin:
         extra = self._extra_patterns()
         results = []
         for logical_id, resource in cfn.get_resources().items():
-            if not isinstance(resource, dict):
-                continue
             if _is_incidental(str(logical_id), resource, extra):
                 continue
             results.append((str(logical_id), resource))
@@ -487,18 +471,16 @@ class _ContextRuleMixin:
 
 
 class ContextMissing(_ContextRuleMixin, CloudFormationLintRule):
-    """missing-context: a primary resource has no Context metadata block at all."""
+    """missing-context: an architecture-relevant resource has no Context block."""
 
-    id = "W4010"
-    shortdesc = "Template or significant resource has no Context block"
+    id = "I4010"
+    experimental = True
+    shortdesc = "Template or architecture-relevant resource has no Context block"
     description = (
-        f"Flags a template whose top-level Metadata has no {_CONTEXT_DISPLAY}"
-        f" block, and significant resources missing a {_CONTEXT_DISPLAY}"
-        " block. Incidental/framework resources and subordinate low-value"
-        " types (e.g. AWS::Logs::LogGroup) are not required to carry context."
-        " Rationale written as YAML comments is not visible to cfn-lint;"
-        " disable this rule (ignore_checks W4010) on templates that document"
-        " context that way or do not adopt the Context convention."
+        f"Check for a machine-readable {_CONTEXT_DISPLAY}"
+        " block on the template and on architecture-relevant resources."
+        " Incidental framework resources and subordinate types such as"
+        " AWS::Logs::LogGroup are not expected to carry one."
     )
     source_url = "https://github.com/aws/aws-cdk/pull/38381"
     tags = ["metadata", "context"]
@@ -548,11 +530,13 @@ class ContextMissing(_ContextRuleMixin, CloudFormationLintRule):
 class ContextMissingWhy(_ContextRuleMixin, CloudFormationLintRule):
     """missing-why: Context exists but has neither 'why' nor a 'gaps' entry."""
 
-    id = "W4011"
-    shortdesc = "Context metadata block has no 'why'"
+    id = "I4011"
+    experimental = True
+    shortdesc = "Context block has no 'why'"
     description = (
-        "Flags Context blocks lacking a 'why' rationale and any 'gaps' entry"
-        " acknowledging the unknown."
+        f"Check that a {_CONTEXT_DISPLAY} block records a"
+        " 'why' rationale, or declares a 'gaps' entry acknowledging that the"
+        " rationale is undocumented."
     )
     source_url = ContextMissing.source_url
     tags = ["metadata", "context"]
@@ -583,15 +567,14 @@ class ContextMissingWhy(_ContextRuleMixin, CloudFormationLintRule):
 class ContextSchemaViolation(_ContextRuleMixin, CloudFormationLintRule):
     """schema-violation: a supplied Context block fails schema v1 validation."""
 
-    id = "W4012"
+    id = "I4012"
+    experimental = True
     shortdesc = "Context field does not match the schema"
     description = (
-        "Flags a supplied Context block that does not match the Context schema v1: "
-        "fields with the wrong type or shape (e.g. 'must' a string not an array; "
-        "'trust' missing required 'src'/'conf'), enum fields with an unrecognized "
-        "value (mutable/mutability levels, trust.src, trust.conf), and fields placed "
-        "at the wrong level (template-only fields on a resource, or resource-only "
-        "fields on the template)."
+        f"Check a supplied {_CONTEXT_DISPLAY} block against"
+        " the Context schema: field types and shapes, recognized enum values,"
+        " and fields placed at the correct level (template fields on the"
+        " template, resource fields on resources)."
     )
     source_url = ContextMissing.source_url
     tags = ["metadata", "context"]

@@ -27,27 +27,27 @@ class TestCfnJson(BaseTestCase):
         self.filenames = {
             "config_rule": {
                 "filename": "test/fixtures/templates/quickstart/config-rules.json",
-                "failures": 7,
+                "failures": 5,
             },
             "iam": {
                 "filename": "test/fixtures/templates/quickstart/iam.json",
-                "failures": 6,
+                "failures": 4,
             },
             "nat_instance": {
                 "filename": "test/fixtures/templates/quickstart/nat-instance.json",
-                "failures": 9,
+                "failures": 7,
             },
             "vpc_management": {
                 "filename": "test/fixtures/templates/quickstart/vpc-management.json",
-                "failures": 13,
+                "failures": 11,
             },
             "vpc": {
                 "filename": "test/fixtures/templates/quickstart/vpc.json",
-                "failures": 7,
+                "failures": 5,
             },
             "poller": {
                 "filename": "test/fixtures/templates/public/lambda-poller.json",
-                "failures": 3,
+                "failures": 1,
             },
         }
 

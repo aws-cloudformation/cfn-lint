@@ -23,14 +23,14 @@ def _match(rule, template_str):
 
 
 def _missing_rule():
-    """ContextMissing (on by default; disable via ignore_checks W4010)."""
+    """ContextMissing: flags templates and architecture-relevant resources."""
     return ContextMissing()
 
 
 class TestContextMissing(BaseTestCase):
-    """W4010 missing-context: significance gate + two-finding aggregate."""
+    """I4010 missing-context: significance gate + two-finding aggregate."""
 
-    def test_enabled_by_default(self):
+    def test_flags_single_significant_resource(self):
         template = "Resources:\n  OrderQueue:\n    Type: AWS::SQS::Queue\n"
         self.assertEqual(1, len(_match(ContextMissing(), template)))
 
@@ -128,7 +128,7 @@ class TestContextMissing(BaseTestCase):
 
 
 class TestContextMissingWhy(BaseTestCase):
-    """W4011 missing-why: flags blocks with neither 'why' nor 'gaps'."""
+    """I4011 missing-why: flags blocks with neither 'why' nor 'gaps'."""
 
     def test_flags_missing_why(self):
         template = (
@@ -155,9 +155,26 @@ class TestContextMissingWhy(BaseTestCase):
         )
         self.assertEqual([], _match(ContextMissingWhy(), template))
 
+    def test_resource_without_a_context_block_is_not_flagged(self):
+        # I4011 only judges blocks that exist; a missing block is I4010's job.
+        template = "Resources:\n  OrderQueue:\n    Type: AWS::SQS::Queue\n"
+        self.assertEqual([], _match(ContextMissingWhy(), template))
+
+    def test_opted_out_resource_is_not_flagged_for_missing_why(self):
+        template = (
+            "Resources:\n"
+            "  OrderQueue:\n"
+            "    Type: AWS::SQS::Queue\n"
+            "    Metadata:\n"
+            f"      {CONTEXT_KEY}:\n"
+            "        gaps:\n"
+            "          - context intentionally omitted\n"
+        )
+        self.assertEqual([], _match(ContextMissingWhy(), template))
+
 
 class TestContextSchemaRules(BaseTestCase):
-    """W4012 validates a supplied Context block against schema v1."""
+    """I4012 validates a supplied Context block against schema v1."""
 
     def test_malformed_field_wrong_type(self):
         template = (
@@ -175,7 +192,7 @@ class TestContextSchemaRules(BaseTestCase):
 
     def test_supplied_context_on_low_value_is_still_validated(self):
         # Design contract: require missing context selectively, but VALIDATE
-        # supplied context everywhere. A LogGroup is exempt from W4010, yet a
+        # supplied context everywhere. A LogGroup is exempt from I4010, yet a
         # malformed Context block an author wrote on it is still flagged.
         template = (
             "Resources:\n"
@@ -202,7 +219,7 @@ class TestContextSchemaRules(BaseTestCase):
             "    Metadata:\n"
             f"      {CONTEXT_KEY}:\n"
             "        why: ok\n"
-            "        bogusfield: 1\n"
+            "        unrecognizedfield: 1\n"
         )
         matches = _match(ContextSchemaViolation(), template)
         self.assertEqual(1, len(matches))
@@ -239,6 +256,125 @@ class TestContextSchemaRules(BaseTestCase):
         matches = _match(ContextSchemaViolation(), template)
         self.assertEqual(2, len(matches))
 
+    def test_resource_context_block_that_is_not_a_mapping(self):
+        # A scalar where the Context block belongs: reported as a shape problem
+        # rather than crashing while looking for the opt-out marker.
+        template = (
+            "Resources:\n"
+            "  Fn:\n"
+            "    Type: AWS::Lambda::Function\n"
+            "    Metadata:\n"
+            f"      {CONTEXT_KEY}: just a string\n"
+        )
+        matches = _match(ContextSchemaViolation(), template)
+        self.assertEqual(1, len(matches))
+        self.assertIn("Fn", matches[0].message)
+        self.assertIn("Expected a mapping of Context fields", matches[0].message)
+
+    def test_template_context_block_that_is_not_a_mapping(self):
+        template = (
+            f"Metadata:\n  {CONTEXT_KEY}: just a string\n"
+            "Resources:\n"
+            "  Fn:\n"
+            "    Type: AWS::Lambda::Function\n"
+            "    Metadata:\n"
+            f"      {CONTEXT_KEY}:\n"
+            "        why: ok\n"
+        )
+        matches = _match(ContextSchemaViolation(), template)
+        self.assertEqual(1, len(matches))
+        self.assertIn("Template", matches[0].message)
+        self.assertIn("Expected a mapping of Context fields", matches[0].message)
+
+    def test_expected_shape_for_trust_object(self):
+        template = (
+            "Resources:\n"
+            "  Fn:\n"
+            "    Type: AWS::Lambda::Function\n"
+            "    Metadata:\n"
+            f"      {CONTEXT_KEY}:\n"
+            "        why: ok\n"
+            "        trust: a string\n"
+        )
+        matches = _match(ContextSchemaViolation(), template)
+        self.assertEqual(1, len(matches))
+        self.assertIn("object with required 'src' and 'conf'", matches[0].message)
+
+    def test_expected_shape_for_mutability_level_ref(self):
+        # A list where a single mutability token belongs: the shape message
+        # enumerates the allowed levels from the schema.
+        template = (
+            "Resources:\n"
+            "  Fn:\n"
+            "    Type: AWS::Lambda::Function\n"
+            "    Metadata:\n"
+            f"      {CONTEXT_KEY}:\n"
+            "        why: ok\n"
+            "        mutable:\n"
+            "          - must-never-change\n"
+        )
+        messages = [m.message for m in _match(ContextSchemaViolation(), template)]
+        self.assertTrue(
+            any("one of: must-never-change" in message for message in messages),
+            messages,
+        )
+
+    def test_expected_shape_for_ref_entry_array(self):
+        template = f"Metadata:\n  {CONTEXT_KEY}:\n    arch: ok\n    ref: 5\n"
+        matches = _match(ContextSchemaViolation(), template)
+        self.assertEqual(1, len(matches))
+        self.assertIn("array of ref entries", matches[0].message)
+
+    def test_expected_shape_for_mutability_mapping(self):
+        template = (
+            "Resources:\n"
+            "  Fn:\n"
+            "    Type: AWS::Lambda::Function\n"
+            "    Metadata:\n"
+            f"      {CONTEXT_KEY}:\n"
+            "        why: ok\n"
+            "        mutability: not-a-map\n"
+        )
+        matches = _match(ContextSchemaViolation(), template)
+        self.assertEqual(1, len(matches))
+        self.assertIn(
+            "mapping of property name to mutability level", matches[0].message
+        )
+
+    def test_expected_shape_for_plain_string_field(self):
+        template = (
+            "Resources:\n"
+            "  Fn:\n"
+            "    Type: AWS::Lambda::Function\n"
+            "    Metadata:\n"
+            f"      {CONTEXT_KEY}:\n"
+            "        why:\n"
+            "          - a list\n"
+        )
+        matches = _match(ContextSchemaViolation(), template)
+        self.assertEqual(1, len(matches))
+        self.assertIn("expected shape: string", matches[0].message)
+
+    def test_resource_without_a_context_block_is_not_validated(self):
+        # Nothing supplied means nothing to validate; I4010 owns that case.
+        template = "Resources:\n  OrderQueue:\n    Type: AWS::SQS::Queue\n"
+        self.assertEqual([], _match(ContextSchemaViolation(), template))
+
+    def test_opted_out_resource_block_is_not_validated(self):
+        # The opt-out marker suppresses validation of the rest of the block,
+        # even when it holds a field that would otherwise be flagged.
+        template = (
+            "Resources:\n"
+            "  OrderQueue:\n"
+            "    Type: AWS::SQS::Queue\n"
+            "    Metadata:\n"
+            f"      {CONTEXT_KEY}:\n"
+            "        gaps:\n"
+            "          - context intentionally omitted\n"
+            "        must: not a list\n"
+        )
+        self.assertEqual([], _match(ContextSchemaViolation(), template))
+
 
 class TestTargetingAndConfig(BaseTestCase):
     """Shared targeting policy and configuration options."""
@@ -246,6 +382,30 @@ class TestTargetingAndConfig(BaseTestCase):
     def test_cdk_metadata_resource_is_incidental(self):
         template = "Resources:\n  CDKMetadata:\n    Type: AWS::CDK::Metadata\n"
         self.assertEqual([], _match(_missing_rule(), template))
+
+    def test_cdk_metadata_logical_id_with_other_type_is_incidental(self):
+        # The CDKMetadata logical ID is incidental on its own, even when the
+        # Type is something else (synth variations should not leak findings).
+        template = "Resources:\n  CDKMetadata:\n    Type: AWS::SQS::Queue\n"
+        self.assertEqual([], _match(_missing_rule(), template))
+
+    def test_cdk_path_metadata_marks_resource_incidental(self):
+        # A resource whose logical ID looks primary is still incidental when its
+        # aws:cdk:path places it inside the CDK provider framework.
+        template = (
+            "Resources:\n"
+            "  StackHelperFn:\n"
+            "    Type: AWS::Lambda::Function\n"
+            "    Metadata:\n"
+            "      aws:cdk:path: Stack/MyResource/Provider/framework-onEvent/Resource\n"
+        )
+        self.assertEqual([], _match(_missing_rule(), template))
+
+    def test_non_string_resource_type_is_not_low_value(self):
+        # A malformed (non-string) Type cannot be matched against the low-value
+        # list, so the resource stays in scope rather than being silently exempt.
+        template = "Resources:\n  Weird:\n    Type:\n      - AWS::SQS::Queue\n"
+        self.assertEqual(1, len(_match(_missing_rule(), template)))
 
     def test_framework_handler_logical_ids_are_incidental(self):
         # CloudFormation strips hyphens from logical IDs at synth, so the CDK
@@ -300,18 +460,23 @@ class TestTargetingAndConfig(BaseTestCase):
         template = "Resources:\n  MyHelperQueue:\n    Type: AWS::SQS::Queue\n"
         self.assertEqual([], rule.match(_decoded_template(template)))
 
-    def test_default_severity_is_warning(self):
-        self.assertEqual("warning", ContextMissing().severity)
-
-    def test_configured_severity_is_honored(self):
+    def test_additional_incidental_pattern_matching_neither_candidate(self):
+        # A valid extra pattern that matches neither the logical ID nor the
+        # aws:cdk:path leaves the resource in scope.
         rule = ContextMissing()
-        rule.config["severity"] = "error"
-        self.assertEqual("error", rule.severity)
+        rule.config["additional_incidental_patterns"] = ["NoSuchThing"]
+        template = (
+            "Resources:\n"
+            "  OrderQueue:\n"
+            "    Type: AWS::SQS::Queue\n"
+            "    Metadata:\n"
+            "      aws:cdk:path: Stack/OrderQueue/Resource\n"
+        )
+        self.assertEqual(1, len(rule.match(_decoded_template(template))))
 
-    def test_invalid_severity_falls_back_to_warning(self):
-        rule = ContextMissing()
-        rule.config["severity"] = "catastrophic"
-        self.assertEqual("warning", rule.severity)
+    def test_severity_is_informational(self):
+        # Severity is derived from the I-prefix id; no configurable override.
+        self.assertEqual("informational", ContextMissing().severity)
 
     def test_invalid_regex_in_additional_incidental_patterns_is_skipped(self):
         # An invalid regex in the config should not crash the rule; the
@@ -338,6 +503,60 @@ class TestTargetingAndConfig(BaseTestCase):
         template = "Resources:\n  Queue:\n    Type: AWS::SQS::Queue\n"
         matches = rule.match(_decoded_template(template))
         self.assertEqual(1, len(matches))
+
+
+class TestEnablementGating(BaseTestCase):
+    """Both gates (I prefix + experimental) must be open before rules fire."""
+
+    def test_i4010_off_by_default(self):
+        self.assertFalse(
+            ContextMissing().is_enabled(
+                include_experimental=False, include_rules=["W", "E"]
+            )
+        )
+
+    def test_i4010_informational_gate_alone_is_not_enough(self):
+        # I in include_rules, but experimental gate still closed.
+        self.assertFalse(
+            ContextMissing().is_enabled(
+                include_experimental=False, include_rules=["W", "E", "I"]
+            )
+        )
+
+    def test_i4010_enabled_when_both_gates_open(self):
+        self.assertTrue(
+            ContextMissing().is_enabled(
+                include_experimental=True, include_rules=["W", "E", "I"]
+            )
+        )
+
+    def test_i4011_off_by_default(self):
+        self.assertFalse(
+            ContextMissingWhy().is_enabled(
+                include_experimental=False, include_rules=["W", "E"]
+            )
+        )
+
+    def test_i4011_enabled_when_both_gates_open(self):
+        self.assertTrue(
+            ContextMissingWhy().is_enabled(
+                include_experimental=True, include_rules=["W", "E", "I"]
+            )
+        )
+
+    def test_i4012_off_by_default(self):
+        self.assertFalse(
+            ContextSchemaViolation().is_enabled(
+                include_experimental=False, include_rules=["W", "E"]
+            )
+        )
+
+    def test_i4012_enabled_when_both_gates_open(self):
+        self.assertTrue(
+            ContextSchemaViolation().is_enabled(
+                include_experimental=True, include_rules=["W", "E", "I"]
+            )
+        )
 
 
 def _decoded_template(template_str):
