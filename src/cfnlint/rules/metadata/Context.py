@@ -89,15 +89,22 @@ _CDK_METADATA_LOGICAL_ID = "CDKMetadata"
 _CDK_PATH_KEY = "aws:cdk:path"
 
 # Resource types not *required* to carry context: subordinate resources
-# near-universally attached to a parent (e.g. a function's log group) rather than
-# independently architecture-relevant. Exempting the whole type keeps the false
-# positive rate low, at the cost of also exempting a genuinely standalone audit
-# LogGroup. Context supplied on one is still validated by I4011-I4012. Extend via
-# the 'additional_low_value_types' config option.
+# near-universally attached to a parent (e.g. a function's log group, a
+# bucket's bucket policy) rather than independently architecture-relevant.
+# Policy and permission types are exempt because the policy body IS the
+# rationale, and the template already contains it. IAM::Role and
+# IAM::ManagedPolicy are deliberately kept: both have real hand-authored
+# forms where 'why' adds value. Context supplied on any exempt resource
+# is still validated by I4011-I4012. Extend via 'additional_low_value_types'.
 _LOW_VALUE_TYPES = frozenset(
     {
+        "AWS::IAM::Policy",
+        "AWS::Lambda::Permission",
         "AWS::Logs::LogGroup",
         "AWS::Logs::LogStream",
+        "AWS::S3::BucketPolicy",
+        "AWS::SNS::TopicPolicy",
+        "AWS::SQS::QueuePolicy",
     }
 )
 
@@ -440,8 +447,10 @@ class ContextMissing(_ContextRuleMixin, CloudFormationLintRule):
     description = (
         f"Check for a machine-readable {_CONTEXT_DISPLAY}"
         " block on the template and on architecture-relevant resources."
-        " Incidental framework resources and subordinate types such as"
-        " AWS::Logs::LogGroup are not expected to carry one."
+        " Incidental framework resources, subordinate types such as"
+        " AWS::Logs::LogGroup, and resource policies (AWS::IAM::Policy,"
+        " BucketPolicy, TopicPolicy, QueuePolicy, Lambda::Permission)"
+        " are not expected to carry one."
     )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-attribute-metadata.html#aws-attribute-metadata-context-schema"
     tags = ["metadata", "context"]
