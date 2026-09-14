@@ -407,6 +407,52 @@ class TestTargetingAndConfig(BaseTestCase):
         template = "Resources:\n  Weird:\n    Type:\n      - AWS::SQS::Queue\n"
         self.assertEqual(1, len(_match(_missing_rule(), template)))
 
+    def test_module_pseudo_resource_is_not_required_to_carry_context(self):
+        # A '*::MODULE' type expands to resources defined outside this template,
+        # so its architectural significance cannot be judged from the Type.
+        template = (
+            "Resources:\n"
+            "  MyModule:\n"
+            "    Type: AWS::S3::Bucket::MODULE\n"
+            "    Properties: {}\n"
+        )
+        self.assertEqual([], _match(_missing_rule(), template))
+
+    def test_module_does_not_count_toward_the_template_finding(self):
+        # Two resources where one is a module leaves a single significant
+        # resource, so no template-level architecture finding is emitted.
+        template = (
+            "Resources:\n"
+            "  MyModule:\n"
+            "    Type: AWS::S3::Bucket::MODULE\n"
+            "    Properties: {}\n"
+            "  OrderQueue:\n"
+            "    Type: AWS::SQS::Queue\n"
+        )
+        matches = _match(_missing_rule(), template)
+        self.assertEqual(1, len(matches))
+        self.assertFalse(matches[0].message.startswith("This template"))
+        self.assertNotIn("MyModule", matches[0].message)
+
+    def test_supplied_context_on_a_module_is_still_validated(self):
+        # Exempt from the missing-context requirement, but a malformed Context
+        # block an author wrote on a module is still flagged.
+        template = (
+            "Resources:\n"
+            "  MyModule:\n"
+            "    Type: AWS::S3::Bucket::MODULE\n"
+            "    Properties: {}\n"
+            "    Metadata:\n"
+            f"      {CONTEXT_KEY}:\n"
+            "        why: wraps the shared bucket conventions\n"
+            "        must: not a list\n"
+        )
+        self.assertEqual([], _match(_missing_rule(), template))
+        matches = _match(ContextSchemaViolation(), template)
+        self.assertEqual(1, len(matches))
+        self.assertIn("MyModule", matches[0].message)
+        self.assertIn("array of strings", matches[0].message)
+
     def test_framework_handler_logical_ids_are_incidental(self):
         # CloudFormation strips hyphens from logical IDs at synth, so the CDK
         # provider-framework handlers render hyphen-free (e.g. frameworkonEvent).

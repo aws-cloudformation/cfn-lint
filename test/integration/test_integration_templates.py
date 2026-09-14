@@ -147,7 +147,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results_filename": (
                 "test/fixtures/results/integration/module-sub-resources_yaml.json"
             ),
-            "exit_code": 8,
+            "exit_code": 0,
         },
         {
             "filename": "test/fixtures/templates/integration/creationpolicy.yaml",

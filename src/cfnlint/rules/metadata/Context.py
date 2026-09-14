@@ -174,6 +174,24 @@ def _is_low_value(resource: dict[str, Any], extra_types: list[str]) -> bool:
     return rtype in _LOW_VALUE_TYPES or rtype in extra_types
 
 
+def _is_module(resource: dict[str, Any]) -> bool:
+    """True for a MODULE pseudo-resource (a '*::MODULE' type).
+
+    A module is an indirection: the resources it expands to live in the
+    registered module body, not in this template, so whether it is
+    architecture-relevant cannot be determined from its Type -- the same type
+    could wrap a single log bucket or an entire data tier. cfn-lint already
+    treats module resources permissively for this reason (their type is not
+    checked for existence, and Ref/GetAtt to their sub-resources is accepted
+    without resolution).
+
+    Only the missing-context requirement is suppressed; context an author does
+    supply on a module is still validated.
+    """
+    rtype = resource.get("Type")
+    return isinstance(rtype, str) and rtype.endswith("::MODULE")
+
+
 def _get_context(resource: dict[str, Any]) -> Any:
     """Return the resource's Context metadata block (any shape), or None."""
     metadata = resource.get("Metadata")
@@ -420,16 +438,16 @@ class _ContextRuleMixin:
     def _significant_resources(self, cfn: Any) -> list[tuple[str, dict[str, Any]]]:
         """Primary resources *required* to carry context.
 
-        Non-incidental resources minus subordinate/low-value types. Used by
-        missing-context (I4010); the validate-supplied rules use
-        ``_primary_resources`` so they still check any context present on a
-        low-value resource.
+        Non-incidental resources minus subordinate/low-value types and MODULE
+        pseudo-resources. Used by missing-context (I4010); the validate-supplied
+        rules use ``_primary_resources`` so they still check any context present
+        on a low-value resource or a module.
         """
         low_value_extra = self._extra_low_value_types()
         return [
             (logical_id, resource)
             for logical_id, resource in self._primary_resources(cfn)
-            if not _is_low_value(resource, low_value_extra)
+            if not _is_low_value(resource, low_value_extra) and not _is_module(resource)
         ]
 
     def _primary_resources(self, cfn: Any) -> list[tuple[str, dict[str, Any]]]:
