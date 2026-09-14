@@ -3,41 +3,17 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-# cfn-lint rules for CloudFormation Metadata.com.aws.cloudformation.Context blocks.
-#
-# The Context convention lets templates carry design rationale in metadata: a
+# cfn-lint rules for CloudFormation Metadata.com.aws.cloudformation.Context
+# blocks, a convention for carrying design rationale in template metadata: a
 # top-level architecture summary plus per-resource "why / must / mutability"
-# notes (emitted by the CDK context aspect, aws/aws-cdk#38381). These rules
-# implement the Context family on the cfn-lint surface:
+# notes (aws/aws-cdk#38381).
 #
 #   I4010 missing-context    Template or significant resource has no Context block
 #   I4011 missing-why        Context present but has neither 'why' nor 'gaps'
-#   I4012 schema-violation   Supplied Context field fails schema v1 validation
+#   I4012 schema-violation   Supplied Context field fails schema validation
 #
-# All rules are experimental and informational (off by default). Enable with
-# --include-experimental --include-checks I to opt in. Severity is fixed by
-# rule-ID prefix; escalation is achieved through rule selection.
-#
-# Templates that do not adopt the Context convention can disable missing-context
-# with the standard mechanism (--ignore-checks I4010 or ignore_checks in a
-# config file). The validate-supplied rules (I4011, I4012) only fire when an
-# author has actually written a Context block, so they are silent otherwise.
-#
-# Targeting follows a shared exclusion set: incidental/framework resources
-# (matched against the canonical incidental pattern set on logical IDs and the
-# aws:cdk:path metadata value) are never flagged. Authors opt out per resource
-# with gaps: [context intentionally omitted] or cfn-lint's native suppression,
-# and can extend the incidental set via the additional_incidental_patterns
-# config option.
-#
-# missing-context (I4010) additionally applies a significance policy: only
-# resources *required* to carry context are flagged when it is absent.
-# Subordinate / low-value resource types (e.g. AWS::Logs::LogGroup) are not
-# required and are skipped by I4010, but any context an author does supply is
-# still validated by I4011-I4012. Extend the low-value set via the
-# additional_low_value_types config option. I4010 also flags a template that has
-# more than one significant resource but whose top-level Metadata has no Context
-# block describing its architecture.
+# All three are experimental and informational, so both --include-experimental
+# and --include-checks I are required before any of them emits a finding.
 
 from __future__ import annotations
 
@@ -48,10 +24,6 @@ import cfnlint.data.schemas.other.metadata
 from cfnlint.helpers import load_resource
 from cfnlint.jsonschema import StandardValidator
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
-
-# ---------------------------------------------------------------------------
-# Shared constants
-# ---------------------------------------------------------------------------
 
 # Canonical location of the Context block (aws/aws-cdk#38381).
 CONTEXT_KEY = "com.aws.cloudformation.Context"
@@ -82,38 +54,31 @@ _VALIDATORS: dict[str, StandardValidator] = {
     "TemplateContext": StandardValidator(_get_subschema("TemplateContext")),
 }
 
-# Incidental resources: infrastructure a synthesizer generated, which no author
-# chose and cannot meaningfully describe. Asking for design rationale on these
-# would be a false positive, so they are never flagged.
+# Incidental resources: helpers a synthesizer generated, which no author chose
+# and cannot meaningfully describe. CDK draws this line structurally (its context
+# aspect walks the defaultChild chain and skips its own helpers); cfn-lint sees
+# only the synthesized template, so it approximates that by naming convention.
+# The set is therefore not exhaustive -- BucketDeployment's handler, for one, is
+# not matched. CDK's lambdaPurpose prefix is the axis to extend along, since it
+# stays constant even where the singleton uuid is computed at synth time. Extend
+# per-run with the additional_incidental_patterns config option.
 #
-# This list approximates, by naming convention, a distinction CDK draws
-# structurally. CDK's context aspect walks the defaultChild chain and skips its
-# own incidental helpers (auto-created IAM policies, log-retention functions,
-# custom-resource plumbing), so those resources reach a template with no Context
-# block by design. cfn-lint sees only the synthesized template and has no
-# construct tree, so it matches the logical IDs and aws:cdk:path values those
-# helpers are known to produce. The two implementations can drift: when CDK adds
-# a helper, this set needs the matching token. Users can extend it per-run with
-# the additional_incidental_patterns config option.
-#
-# The AwsCustomResource provider singleton is the one entry that is a bare
-# identifier. CDK derives it as lambdaPurpose + uuid with non-alphanumerics
-# stripped ("AWS" + AwsCustomResource.PROVIDER_FUNCTION_UUID). Both inputs are
-# public and effectively frozen: the derived name is the singleton's lookup key,
-# so changing it would orphan already-deployed functions. The Provider path
-# segment below matches this resource whenever aws:cdk:path is present; the
-# literal covers templates synthesized without path metadata.
+# The AwsCustomResource provider singleton is the one bare identifier. CDK
+# derives it as lambdaPurpose + uuid with non-alphanumerics stripped ("AWS" +
+# AwsCustomResource.PROVIDER_FUNCTION_UUID); the result is the singleton's lookup
+# key, so changing it would orphan deployed functions. The Provider path segment
+# below covers it when aws:cdk:path is present, the literal when it is not.
 _CDK_AWS_CUSTOM_RESOURCE_SINGLETON_ID = "AWS679f53fac002430cb0da5b7982bd2287"
 
-# aws:cdk:path values: segment-bounded where a token is ambiguous (Provider),
-# substring where the token is unique enough (LogRetention, framework-*).
+# Segment-bounded where a token is ambiguous (Provider), substring where it is
+# unique enough (LogRetention, framework-*).
 _INCIDENTAL_PATH_PATTERN = re.compile(
     r"LogRetention|(?:^|/)Provider(?:/|$)|framework-onEvent|framework-isComplete"
     rf"|framework-onTimeout|{_CDK_AWS_CUSTOM_RESOURCE_SINGLETON_ID}"
 )
-# Bare logical IDs: CloudFormation strips hyphens at synth, so framework-onEvent
-# renders as frameworkonEvent. Anchored where an unanchored match would create
-# false positives such as "DataProviderTable".
+# CloudFormation strips hyphens at synth, so framework-onEvent renders as
+# frameworkonEvent. Anchored where an unanchored match would hit names like
+# "DataProviderTable".
 _INCIDENTAL_ID_PATTERN = re.compile(
     r"^LogRetention|(?<=[a-z])Provider(?=framework)"
     r"|frameworkonEvent|frameworkisComplete"
@@ -126,19 +91,12 @@ _CDK_PATH_KEY = "aws:cdk:path"
 # Per-resource opt-out marker.
 _OPT_OUT_MARKER = "context intentionally omitted"
 
-# Resource types not *required* to carry context: subordinate / low-value
-# resources near-universally attached to a parent (e.g. a function's log group)
-# rather than independently architecture-relevant. Missing context is NOT flagged
-# on these (I4010); any context an author supplies is still validated
-# (I4011-I4012). Extend via the 'additional_low_value_types' config option.
-#
-# Significance-policy choice: two LogGroup policies were considered --
-# (a) exempt every AWS::Logs::LogGroup by type, or (b) exempt only
-# mechanically-subordinate LogGroups while still requiring context on
-# independently-significant audit/logging groups. This rule takes (a) for a low
-# false-positive rate. Tradeoff: a genuinely standalone audit LogGroup is also
-# exempted from the requirement (its supplied context is still validated). Revisit
-# with subordinate-detection if standalone logging resources must be covered.
+# Resource types not *required* to carry context: subordinate resources
+# near-universally attached to a parent (e.g. a function's log group) rather than
+# independently architecture-relevant. Exempting the whole type keeps the false
+# positive rate low, at the cost of also exempting a genuinely standalone audit
+# LogGroup. Context supplied on one is still validated by I4011-I4012. Extend via
+# the 'additional_low_value_types' config option.
 _LOW_VALUE_TYPES = frozenset(
     {
         "AWS::Logs::LogGroup",
@@ -149,9 +107,7 @@ _LOW_VALUE_TYPES = frozenset(
 _PATTERNS_CONFIG: dict[str, Any] = {"default": [], "type": "list", "itemtype": "string"}
 
 
-# ---------------------------------------------------------------------------
-# Shared helpers (module-level so the mixin below stays stateless)
-# ---------------------------------------------------------------------------
+# Shared helpers, module-level so the mixin below stays stateless.
 
 
 def _is_incidental(
@@ -164,13 +120,11 @@ def _is_incidental(
         return True
     metadata = resource.get("Metadata")
     cdk_path = metadata.get(_CDK_PATH_KEY) if isinstance(metadata, dict) else None
-    # Logical ID: anchored pattern to avoid false positives (e.g. DataProviderTable).
     if _INCIDENTAL_ID_PATTERN.search(logical_id):
         return True
-    # aws:cdk:path: segment-bounded for Provider, substring for unique tokens.
     if cdk_path and _INCIDENTAL_PATH_PATTERN.search(str(cdk_path)):
         return True
-    # User-configured extra patterns: applied to both logical ID and cdk path.
+    # User-configured patterns apply to both the logical ID and the cdk path.
     candidates = [logical_id] + ([str(cdk_path)] if cdk_path else [])
     for pattern in extra_patterns:
         for candidate in candidates:
@@ -234,12 +188,8 @@ def _is_opted_out(context: Any) -> bool:
     return any(isinstance(gap, str) and _OPT_OUT_MARKER in gap.lower() for gap in gaps)
 
 
-# ---------------------------------------------------------------------------
-# Diagnostic message templates. Named so the wording lives in one place, apart
-# from the detection logic, and is easy to review. Runtime values are filled in
-# with str.format(); {context_display} is the dotted Metadata path and field
-# lists come from the schema. Fully-static messages are baked with f-strings.
-# ---------------------------------------------------------------------------
+# Diagnostic message templates, kept together so the wording lives in one place
+# apart from the detection logic. Runtime values are filled in with str.format().
 _TEMPLATE_FIELDS_STR = ", ".join(sorted(_TEMPLATE_FIELDS))
 _RESOURCE_FIELDS_STR = ", ".join(sorted(_RESOURCE_FIELDS))
 
@@ -378,16 +328,13 @@ def _schema_findings(
                 )
             )
 
-    # Field-level validation for known fields (skip top-level additionalProperties --
-    # handled above; nested additionalProperties are genuine shape problems).
     validator = _VALIDATORS[placement_def]
     for error in sorted(
         validator.iter_errors(block), key=lambda e: list(e.absolute_path)
     ):
         err_path = list(error.absolute_path)
-        # Top-level unknown keys are handled above. cfnlint's validator reports the
-        # offending key in the path (length 1), so skip those; nested (length >= 2)
-        # additionalProperties violations are genuine shape problems.
+        # Top-level unknown keys are reported above; the validator puts the
+        # offending key at path length 1. Nested ones are real shape problems.
         if error.validator == "additionalProperties" and len(err_path) <= 1:
             continue
         field = ".".join(str(p) for p in err_path) or "Context"
@@ -420,11 +367,8 @@ def _schema_findings(
     return findings
 
 
-# ---------------------------------------------------------------------------
-# Rule base behavior (mixin -- shared config and targeting logic extracted
-# per the DRY principle; NOT a CloudFormationLintRule subclass so cfn-lint's
-# plugin loader does not register it as a standalone rule)
-# ---------------------------------------------------------------------------
+# Shared config and targeting logic. Deliberately NOT a CloudFormationLintRule
+# subclass, so cfn-lint's plugin loader does not register it as a standalone rule.
 
 
 class _ContextRuleMixin:
@@ -503,11 +447,6 @@ class _ContextRuleMixin:
         return matches
 
 
-# ---------------------------------------------------------------------------
-# Core rules
-# ---------------------------------------------------------------------------
-
-
 class ContextMissing(_ContextRuleMixin, CloudFormationLintRule):
     """missing-context: an architecture-relevant resource has no Context block."""
 
@@ -526,19 +465,16 @@ class ContextMissing(_ContextRuleMixin, CloudFormationLintRule):
     def match(self, cfn: Any) -> list[RuleMatch]:
         matches = []
         significant = self._significant_resources(cfn)
-        # Finding 1 -- template diagnostic: an architecture summary describes how
-        # multiple components relate, so require it only when the template has more
-        # than one significant resource. A single significant resource's own 'why'
-        # already captures its rationale.
+        # An architecture summary describes how components relate, so require one
+        # only above a single resource -- one resource's own 'why' covers it.
         template_metadata = cfn.template.get("Metadata")
         has_template_context = (
             isinstance(template_metadata, dict) and CONTEXT_KEY in template_metadata
         )
         if len(significant) >= 2 and not has_template_context:
             matches.append(RuleMatch(["Metadata"], _MSG_TEMPLATE_MISSING))
-        # Finding 2 -- resource aggregate: a single finding listing every significant
-        # resource missing context. All resource names appear in the message for
-        # actionability; the finding points to the first resource's location.
+        # One aggregate finding naming every resource missing context, anchored at
+        # the first of them.
         missing = [
             (logical_id, resource)
             for logical_id, resource in significant
