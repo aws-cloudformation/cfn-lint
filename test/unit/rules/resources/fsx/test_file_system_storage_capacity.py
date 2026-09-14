@@ -71,6 +71,26 @@ def rule():
             0,
             None,
         ),
+        # Valid: SCRATCH_1 Lustre at the minimum (all Lustre types share min 1200)
+        (
+            {
+                "FileSystemType": "LUSTRE",
+                "LustreConfiguration": {"DeploymentType": "SCRATCH_1"},
+                "StorageCapacity": 1200,
+            },
+            0,
+            None,
+        ),
+        # Valid: PERSISTENT_1 Lustre above the stale 65536 cap
+        (
+            {
+                "FileSystemType": "LUSTRE",
+                "LustreConfiguration": {"DeploymentType": "PERSISTENT_1"},
+                "StorageCapacity": 100800,
+            },
+            0,
+            None,
+        ),
         # Valid: ONTAP at the minimum and well above the stale cap
         (
             {"FileSystemType": "ONTAP", "StorageCapacity": 1024},
@@ -99,6 +119,26 @@ def rule():
             {"FileSystemType": "LUSTRE", "StorageCapacity": 1000},
             1,
             "1000 is less than the minimum of 1200 for 'LUSTRE' file systems",
+        ),
+        # Invalid: SCRATCH_1 Lustre below the minimum
+        (
+            {
+                "FileSystemType": "LUSTRE",
+                "LustreConfiguration": {"DeploymentType": "SCRATCH_1"},
+                "StorageCapacity": 1000,
+            },
+            1,
+            "1000 is less than the minimum of 1200 for 'LUSTRE' file systems",
+        ),
+        # Invalid: PERSISTENT_1 Lustre below the minimum
+        (
+            {
+                "FileSystemType": "LUSTRE",
+                "LustreConfiguration": {"DeploymentType": "PERSISTENT_1"},
+                "StorageCapacity": 800,
+            },
+            1,
+            "800 is less than the minimum of 1200 for 'LUSTRE' file systems",
         ),
         # Invalid: OpenZFS below the minimum
         (
