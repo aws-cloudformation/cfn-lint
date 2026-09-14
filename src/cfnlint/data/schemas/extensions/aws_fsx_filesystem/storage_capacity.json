@@ -1,0 +1,90 @@
+{
+ "allOf": [
+  {
+   "if": {
+    "properties": {
+     "FileSystemType": {
+      "enum": [
+       "WINDOWS"
+      ]
+     }
+    },
+    "required": [
+     "FileSystemType"
+    ]
+   },
+   "then": {
+    "properties": {
+     "StorageCapacity": {
+      "maximum": 65536,
+      "minimum": 32
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "FileSystemType": {
+      "enum": [
+       "LUSTRE"
+      ]
+     }
+    },
+    "required": [
+     "FileSystemType"
+    ]
+   },
+   "then": {
+    "properties": {
+     "StorageCapacity": {
+      "minimum": 1200
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "FileSystemType": {
+      "enum": [
+       "OPENZFS"
+      ]
+     }
+    },
+    "required": [
+     "FileSystemType"
+    ]
+   },
+   "then": {
+    "properties": {
+     "StorageCapacity": {
+      "maximum": 524288,
+      "minimum": 64
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "FileSystemType": {
+      "enum": [
+       "ONTAP"
+      ]
+     }
+    },
+    "required": [
+     "FileSystemType"
+    ]
+   },
+   "then": {
+    "properties": {
+     "StorageCapacity": {
+      "minimum": 1024
+     }
+    }
+   }
+  }
+ ]
+}
