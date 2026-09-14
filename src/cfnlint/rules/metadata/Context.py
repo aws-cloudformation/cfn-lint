@@ -82,22 +82,42 @@ _VALIDATORS: dict[str, StandardValidator] = {
     "TemplateContext": StandardValidator(_get_subschema("TemplateContext")),
 }
 
-# Canonical incidental pattern set: generated helper resources emitted by the
-# CDK context aspect (log-retention custom resources, provider framework
-# handlers). These are never flagged.
+# Incidental resources: infrastructure a synthesizer generated, which no author
+# chose and cannot meaningfully describe. Asking for design rationale on these
+# would be a false positive, so they are never flagged.
 #
-# For aws:cdk:path values, patterns are matched per path segment where
-# ambiguity exists (Provider) or as substrings where the token is unique
-# enough (LogRetention, framework-*, AWS679...). For bare logical IDs, we
-# anchor patterns to avoid false positives like "DataProviderTable".
+# This list approximates, by naming convention, a distinction CDK draws
+# structurally. CDK's context aspect walks the defaultChild chain and skips its
+# own incidental helpers (auto-created IAM policies, log-retention functions,
+# custom-resource plumbing), so those resources reach a template with no Context
+# block by design. cfn-lint sees only the synthesized template and has no
+# construct tree, so it matches the logical IDs and aws:cdk:path values those
+# helpers are known to produce. The two implementations can drift: when CDK adds
+# a helper, this set needs the matching token. Users can extend it per-run with
+# the additional_incidental_patterns config option.
+#
+# The AwsCustomResource provider singleton is the one entry that is a bare
+# identifier. CDK derives it as lambdaPurpose + uuid with non-alphanumerics
+# stripped ("AWS" + AwsCustomResource.PROVIDER_FUNCTION_UUID). Both inputs are
+# public and effectively frozen: the derived name is the singleton's lookup key,
+# so changing it would orphan already-deployed functions. The Provider path
+# segment below matches this resource whenever aws:cdk:path is present; the
+# literal covers templates synthesized without path metadata.
+_CDK_AWS_CUSTOM_RESOURCE_SINGLETON_ID = "AWS679f53fac002430cb0da5b7982bd2287"
+
+# aws:cdk:path values: segment-bounded where a token is ambiguous (Provider),
+# substring where the token is unique enough (LogRetention, framework-*).
 _INCIDENTAL_PATH_PATTERN = re.compile(
     r"LogRetention|(?:^|/)Provider(?:/|$)|framework-onEvent|framework-isComplete"
-    r"|framework-onTimeout|AWS679f53fac002430cb0da5b7982bd2287"
+    rf"|framework-onTimeout|{_CDK_AWS_CUSTOM_RESOURCE_SINGLETON_ID}"
 )
+# Bare logical IDs: CloudFormation strips hyphens at synth, so framework-onEvent
+# renders as frameworkonEvent. Anchored where an unanchored match would create
+# false positives such as "DataProviderTable".
 _INCIDENTAL_ID_PATTERN = re.compile(
     r"^LogRetention|(?<=[a-z])Provider(?=framework)"
     r"|frameworkonEvent|frameworkisComplete"
-    r"|frameworkonTimeout|^AWS679f53fac002430cb0da5b7982bd2287$"
+    rf"|frameworkonTimeout|^{_CDK_AWS_CUSTOM_RESOURCE_SINGLETON_ID}$"
 )
 _CDK_METADATA_TYPE = "AWS::CDK::Metadata"
 _CDK_METADATA_LOGICAL_ID = "CDKMetadata"
