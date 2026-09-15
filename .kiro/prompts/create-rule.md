@@ -71,7 +71,7 @@ class MyRule(CfnLintJsonSchema):
 **3. Schema Correction / Constraint (enhanced-schemas repo)**
 - Fixing a schema bug or adding a value constraint (pattern, enum, min/max) is done in the [resource-provider-enhanced-schemas](https://github.com/aws-cloudformation/resource-provider-enhanced-schemas) repo, NOT here
 - Add an RFC 6902 `manual.json` patch under `schemas/patches/extensions/<resource_type>/`; it is applied when the schemas are assembled and flows into cfn-lint on the next sync
-- The local `src/cfnlint/data/schemas/patches/` tree is legacy and no longer read at runtime — editing it has no effect
+- The local `src/cfnlint/data/schemas/patches/` tree is not consumed by cfn-lint — editing it has no effect
 - Example (`manual.json`):
 ```json
 [

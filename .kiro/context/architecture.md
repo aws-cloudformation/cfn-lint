@@ -93,7 +93,7 @@ Template File(s) → Decode → Transform → Validate (Rules) → Format → Ou
   - `providers/`: Per-region index files (which resource types exist in each region, mapped to content hashes)
   - `resources/`: Content-addressed schema bodies (`<hash>.json`) — the actual resource schemas
   - `extensions/`: Schema extensions for additional validation
-  - `patches/`: Legacy local patches — no longer applied at runtime
+  - `patches/`: Not consumed by cfn-lint — schema corrections now live in enhanced-schemas
   - `other/`: Non-resource schemas (functions, conditions, parameters, etc.)
 
 ## Key Workflows
@@ -167,7 +167,7 @@ src/cfnlint/
 │       ├── providers/     # Per-region index files (types per region + hashes)
 │       ├── resources/     # Content-addressed schema bodies (<hash>.json)
 │       ├── extensions/    # Schema extensions
-│       ├── patches/       # Legacy local patches (not applied at runtime)
+│       ├── patches/       # Not consumed by cfn-lint (corrections live in enhanced-schemas)
 │       └── other/         # Non-resource schemas
 ├── config.py         # Configuration management
 ├── api.py            # Public API
@@ -235,7 +235,7 @@ test/                 # Test suite
 - Extend base AWS schemas with additional constraints
 
 ### Schema Patches
-- Fix/override AWS schemas in the [resource-provider-enhanced-schemas](https://github.com/aws-cloudformation/resource-provider-enhanced-schemas) repo (`manual.json`); the local `data/schemas/patches/` tree is legacy and no longer applied
+- Fix/override AWS schemas in the [resource-provider-enhanced-schemas](https://github.com/aws-cloudformation/resource-provider-enhanced-schemas) repo (`manual.json`); the local `data/schemas/patches/` tree is not consumed by cfn-lint (editing it has no effect). The `--override-spec` CLI feature is separate — it applies a user-supplied patch file to schemas at load time (`cfnlint.schema._patch`).
 
 ### Custom Formatters
 - Extend `BaseFormatter` class
