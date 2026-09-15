@@ -2,7 +2,7 @@
 
 ## Language & Runtime
 
-- **Python 3.9-3.13** - Core language
+- **Python 3.10-3.14** - Core language (`requires-python = ">=3.10,<3.15"`)
 - **Type hints** - Use throughout codebase
 
 ## Core Dependencies
@@ -33,10 +33,9 @@
 
 ## AWS Integration
 
-- Schemas generated from AWS CloudFormation resource provider schemas
-- Updated via boto3 CloudFormation client
+- Resource provider schemas are sourced from the [resource-provider-enhanced-schemas](https://github.com/aws-cloudformation/resource-provider-enhanced-schemas) repo, downloaded as `schemas-cfn-lint.zip` from its `latest` release (see `src/cfnlint/schema/manager.py`; refresh with `cfn-lint --update-specs`)
 - Per-region schema support
-- Pricing API for instance type validation
+- boto3 is still used by supplemental scripts that enrich schemas with AWS API data (e.g. RDS/ElastiCache engine versions) and the Pricing API for instance-type validation
 
 ## Architecture Patterns
 

@@ -27,10 +27,9 @@ Template File(s) → Decode → Transform → Validate (Rules) → Format → Ou
 - Outputs: Template with location metadata for precise error reporting
 
 **Transform** (`src/cfnlint/template/transforms/`)
-- `_sam.py`: AWS SAM (Serverless Application Model) transformation
+- `_sam_globals.py`: Merges SAM `Globals` into `AWS::Serverless::*` resources. The `aws-sam-translator` dependency was removed (#4491); SAM resources are validated directly against their schemas and **persist unexpanded** in the linted template
 - `_language_extensions.py`: Language extensions (Fn::ForEach, etc.)
 - Transforms templates before validation
-- Handles S3 URI resolution, managed policies, variable replacement
 
 **Template** (`src/cfnlint/template/template.py`)
 - Core `Template` class: Central data structure representing parsed template
@@ -90,13 +89,12 @@ Template File(s) → Decode → Transform → Validate (Rules) → Format → Ou
 - `match.py`: Match/error data structure
 
 #### 7. **Data & Schemas** (`src/cfnlint/data/`)
-- `schemas/`: JSON Schema definitions
-  - `providers/`: Per-region resource schemas (generated from AWS APIs)
+- `schemas/`: JSON Schema definitions, sourced from the [resource-provider-enhanced-schemas](https://github.com/aws-cloudformation/resource-provider-enhanced-schemas) repo
+  - `providers/`: Per-region index files (which resource types exist in each region, mapped to content hashes)
+  - `resources/`: Content-addressed schema bodies (`<hash>.json`) — the actual resource schemas
   - `extensions/`: Schema extensions for additional validation
-  - `patches/`: Schema corrections
+  - `patches/`: Legacy local patches — no longer applied at runtime
   - `other/`: Non-resource schemas (functions, conditions, parameters, etc.)
-- `AdditionalSpecs/`: Additional specifications
-- `Serverless/`: SAM-related data
 
 ## Key Workflows
 
@@ -166,9 +164,10 @@ src/cfnlint/
 ├── formatters/       # Output formatters
 ├── data/             # Schemas and specifications
 │   └── schemas/
-│       ├── providers/     # AWS resource schemas
+│       ├── providers/     # Per-region index files (types per region + hashes)
+│       ├── resources/     # Content-addressed schema bodies (<hash>.json)
 │       ├── extensions/    # Schema extensions
-│       ├── patches/       # Schema patches
+│       ├── patches/       # Legacy local patches (not applied at runtime)
 │       └── other/         # Non-resource schemas
 ├── config.py         # Configuration management
 ├── api.py            # Public API
@@ -177,9 +176,9 @@ src/cfnlint/
 └── helpers.py        # Utility functions
 
 scripts/              # Maintenance scripts
-├── boto/             # Schema generation from boto3
 ├── release/          # Release automation
-└── update_*.py       # Schema update scripts
+├── update_schemas_from_aws_api.py   # Enrich schemas with AWS API data (RDS/ElastiCache)
+└── update_specs_from_pricing.py     # Instance types from the Pricing API
 
 test/                 # Test suite
 ├── unit/             # Unit tests (mirrors src structure)
@@ -236,8 +235,7 @@ test/                 # Test suite
 - Extend base AWS schemas with additional constraints
 
 ### Schema Patches
-- Override/fix AWS schemas via `data/schemas/patches/`
-- Applied during schema loading
+- Fix/override AWS schemas in the [resource-provider-enhanced-schemas](https://github.com/aws-cloudformation/resource-provider-enhanced-schemas) repo (`manual.json`); the local `data/schemas/patches/` tree is legacy and no longer applied
 
 ### Custom Formatters
 - Extend `BaseFormatter` class
@@ -248,7 +246,7 @@ test/                 # Test suite
 ### Example: Validating EC2 Instance
 1. Template decoded → `Template` object with EC2::Instance resource
 2. Rules filtered → EC2-specific rules enabled
-3. Schema loaded → EC2::Instance schema from `providers/<region>.py`
+3. Schema loaded → EC2::Instance schema resolved via `providers/<region>.json` → `resources/<hash>.json`
 4. Rule execution:
    - `ResourceType` rule checks type exists
    - `Properties` rule validates against schema
@@ -289,23 +287,20 @@ test/                 # Test suite
 
 ## Schema Update Process
 
-Schemas are generated from AWS APIs and updated regularly:
+Resource schemas are **not generated in this repo**. They are produced by the
+[resource-provider-enhanced-schemas](https://github.com/aws-cloudformation/resource-provider-enhanced-schemas)
+repo and published as `schemas-cfn-lint.zip` on its `latest` release (#4539).
 
-1. **Boto3 Update** (`scripts/boto/update_schemas_from_boto.py`):
-   - Fetches resource schemas from boto3
-   - Generates per-region schema files
-   - Applies automated patches
+1. **Sync from enhanced-schemas** (`src/cfnlint/schema/manager.py`, `cfn-lint --update-specs`):
+   - Downloads `schemas-cfn-lint.zip` (guarded by `version.json` / ETag)
+   - Populates `providers/` (per-region indexes) and `resources/` (content-addressed bodies)
+   - To add or fix a resource-schema constraint, patch the enhanced-schemas repo (`manual.json`), not this one
 
-2. **Manual Patches** (`scripts/boto/_manual_patches.py`):
-   - Hand-crafted schema corrections
-   - Applied during generation
+2. **Supplemental AWS API data** (`scripts/update_schemas_from_aws_api.py`):
+   - Enriches schemas with data from AWS APIs (RDS, ElastiCache) — engine versions, etc.
 
-3. **API Updates** (`scripts/update_schemas_from_aws_api.py`):
-   - Fetches additional data from AWS APIs (RDS, ElastiCache)
-   - Updates engine versions, instance types
-
-4. **Pricing Updates** (`scripts/update_specs_from_pricing.py`):
-   - Fetches instance types from AWS Pricing API
+3. **Pricing Updates** (`scripts/update_specs_from_pricing.py`):
+   - Fetches instance types from the AWS Pricing API
 
 ## Performance Considerations
 
@@ -351,7 +346,7 @@ for value in template.get_values(properties, 'InstanceType'):
 - `src/cfnlint/jsonschema/validators.py`: JSON Schema validator
 - `src/cfnlint/schema/manager.py`: Schema management
 - `src/cfnlint/config.py`: Configuration handling
-- `scripts/boto/update_schemas_from_boto.py`: Schema generation
+- `src/cfnlint/schema/manager.py`: Schema management + sync from enhanced-schemas
 
 ## Debugging Tips
 
@@ -364,6 +359,6 @@ for value in template.get_values(properties, 'InstanceType'):
 
 ## Version Information
 
-- Python: 3.9-3.13 supported
+- Python: 3.10-3.14 supported (`requires-python = ">=3.10,<3.15"`)
 - Dependencies: boto3, jsonschema, pydot (optional), junit-xml (optional)
 - AWS Regions: All public regions + GovCloud + China + ISO regions

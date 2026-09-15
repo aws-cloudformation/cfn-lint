@@ -1,114 +1,59 @@
-# Validate and Update Smithy Service Name Mappings
+# Schema Constraints & Smithy Mappings — moved to enhanced-schemas
 
-## Context
+> **This work no longer happens in the cfn-lint repo.** As of #4539, cfn-lint
+> stopped generating and patching schemas locally. The `scripts/smithy/` and
+> `scripts/boto/` tooling this prompt used to describe has been removed.
 
-The `scripts/smithy/_automated_patches.py` file contains a `renamer()` function that maps Smithy service names to CloudFormation service names. When service name mappings are incorrect or missing, resources won't get Smithy patches generated.
+## Where it lives now
 
-## Current State
+Resource schemas — including Smithy-derived constraints, format keywords, and
+hand-authored corrections — are produced by
+[resource-provider-enhanced-schemas](https://github.com/aws-cloudformation/resource-provider-enhanced-schemas)
+and published as `schemas-cfn-lint.zip` on its `latest` release. cfn-lint
+downloads that archive into `src/cfnlint/data/schemas/{providers,resources}/`
+(see `src/cfnlint/schema/manager.py`; refresh with `cfn-lint --update-specs`).
 
-After migration, we have:
-- **~600 resources** with smithy.json patches
-- **~9 resources** with only boto patches (legacy/discontinued services - acceptable)
-- **35 resources** with manual.json patches (for schema flattening issues)
+To change a resource schema, open a PR against that repo — not this one.
 
-## Task
+## Patch layers (in the enhanced-schemas repo)
 
-When new AWS services are added or service name mappings are missing:
+Per resource type, under `schemas/patches/extensions/<resource_type>/`:
 
-1. **Identify missing mappings**: Run comparison to find resources without smithy patches
-2. **Find correct Smithy service names**: Check the Smithy models directory
-3. **Update the renamer function**: Add the correct mapping
-4. **Re-run and verify**: Confirm patches are generated
+- `manual.json` — hand-authored corrections/constraints. **Committed** (source of truth).
+- `smithy.json` — generated from Smithy models. **git-ignored.**
+- `format.json` — generated format keywords. **git-ignored.**
 
-## Files
+Patches apply in filename order (`format` < `manual` < `smithy`), and the
+Smithy generator auto-defers to any field `manual.json` governs — so to override
+a Smithy-derived constraint you add just that one field to `manual.json`.
 
-- `scripts/smithy/_automated_patches.py` - Contains the `renamer()` function
-- `scripts/smithy/detailed_comparison.py` - Shows patch coverage
-- `scripts/smithy/identify_missing_patches.py` - Identifies boto patches not in smithy
-- https://github.com/aws/api-models-aws - Smithy models repository (clone locally to check service names)
-
-## Common Mapping Patterns
-
-| CloudFormation Service | Boto Name | Smithy Name |
-|------------------------|-----------|-------------|
-| ApiGateway | apigateway | api-gateway |
-| AutoScaling | autoscaling | auto-scaling |
-| AutoScalingPlans | autoscalingplans | auto-scaling-plans |
-| CertificateManager | acm | acm |
-| Config | config | config-service |
-| CostExplorer | ce | cost-explorer |
-| CloudWatchEvents | events | cloudwatch-events |
-| CloudWatchLogs | logs | cloudwatch-logs |
-| StepFunctions | stepfunctions | sfn |
-
-## Steps
-
-### 1. Check current coverage
-```bash
-cd /Users/kddejong/code/github.com/aws-cloudformation/cfn-lint
-python scripts/smithy/detailed_comparison.py
-```
-
-### 2. Find Smithy service name
-```bash
-# Clone the Smithy models repo if needed
-git clone https://github.com/aws/api-models-aws.git /tmp/api-models-aws
-
-# List all Smithy services
-ls /tmp/api-models-aws/models/ | grep -i <service-keyword>
-
-# Or browse online: https://github.com/aws/api-models-aws/tree/main/models
-```
-
-### 3. Update renamer function
-
-Edit `scripts/smithy/_automated_patches.py`:
-
-```python
-def renamer(name):
-    """Map Smithy service names to CloudFormation service names"""
-    manual_fixes = {
-        # Add new mapping:
-        "smithy-service-name": "cloudformation-service-name",
-    }
-    if name in manual_fixes:
-        return manual_fixes[name].lower()
-    return name.replace("-", "").lower()
-```
-
-### 4. Re-run update script
-```bash
-python scripts/smithy/update_schemas_from_smithy.py
-```
-
-### 5. Verify patches created
-```bash
-ls src/cfnlint/data/schemas/patches/extensions/all/aws_<service>_<resource>/smithy.json
-python scripts/smithy/detailed_comparison.py
-```
-
-## Handling Missing Patches
-
-If boto has patches that smithy doesn't (due to schema flattening):
+## Typical workflow (in the enhanced-schemas checkout)
 
 ```bash
-# Identify missing patches
-python scripts/smithy/identify_missing_patches.py
+# Regenerate smithy/format patches (Smithy service-name mapping lives here now)
+cfn-schemas generate
 
-# This creates/updates manual.json files automatically
-# Review the changes and commit if appropriate
+# Assemble the cfn-lint format (providers/ + resources/)
+cfn-schemas assemble --output build/cfnlint
+
+# Validate + audit patch paths
+cfn-schemas validate
+cfn-schemas audit-patches
 ```
 
-## Expected Outcome
+## Validating the effect in cfn-lint (without a release)
 
-- New service gets smithy.json patches
-- Comparison shows resource in "BOTH" category
-- Total smithy patches increase
+Point cfn-lint at the freshly assembled schemas via the cache dir, then lint a
+template that exercises the constraint:
 
-## Legacy Services
+```bash
+# assemble produced build/cfnlint/{providers,resources}
+CACHE="$XDG_CACHE_HOME/aws/cfn-lint/schemas"   # or ~/.cache/aws/cfn-lint/schemas
+mkdir -p "$CACHE"
+cp -r build/cfnlint/providers build/cfnlint/resources "$CACHE/"
+echo '{"schema_date": "2099-01-01T00:00:00"}' > "$CACHE/version.json"  # beat the bundled date
+XDG_CACHE_HOME="$XDG_CACHE_HOME" cfn-lint template.yaml
+```
 
-These services don't exist in Smithy (acceptable):
-- OpsWorks (maintenance mode)
-- OpsWorks CM (maintenance mode)
-- RoboMaker (discontinued)
-- Lookout for Metrics (discontinued)
+cfn-lint prefers the cache over its bundled schemas when the cache's
+`schema_date` is newer (`ProviderSchemaManager._resolve_schema_dirs`).
