@@ -14,7 +14,7 @@ from cfnlint.rules.metadata.ContextSchemaViolation import (
 
 
 class TestContextSchemaRules(BaseTestCase):
-    """I4012 validates a supplied Context block against schema v1."""
+    """W4012 validates a supplied Context block against schema v1."""
 
     def test_cdk_template_is_skipped_entirely(self):
         template = (
@@ -28,7 +28,7 @@ class TestContextSchemaRules(BaseTestCase):
             "        why: 12345\n"
         )
         # why: 12345 is a schema violation (string expected), but the
-        # entire template is CDK-synthesized so I4012 skips it.
+        # entire template is CDK-synthesized so W4012 skips it.
         self.assertEqual([], match(ContextSchemaViolation(), template))
 
     def test_malformed_field_wrong_type(self):

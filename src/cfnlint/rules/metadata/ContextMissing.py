@@ -12,12 +12,13 @@ from cfnlint.rules.metadata._BaseContext import (
     _CONTEXT_DISPLAY,
     _PATTERNS_CONFIG,
     CONTEXT_KEY,
+    CONTEXT_SCHEMA_URL,
     ContextRuleMixin,
     _get_context,
 )
 
 # Types not required to carry context (subordinate/policy resources).
-# Supplied context is still validated by I4012. Extend via
+# Supplied context is still validated by W4012. Extend via
 # additional_low_value_types.
 _LOW_VALUE_TYPES = frozenset(
     {
@@ -52,7 +53,7 @@ _MSG_RESOURCE_AGGREGATE = (
 def _is_low_value(resource: dict[str, Any], extra_types: list[str]) -> bool:
     """True for subordinate/low-value types, exempt from missing-context here.
 
-    Any context these do supply is still validated by I4012.
+    Any context these do supply is still validated by W4012.
     """
     rtype = resource.get("Type")
     if not isinstance(rtype, str):
@@ -65,7 +66,7 @@ def _is_module(resource: dict[str, Any]) -> bool:
 
     A module's Type can't say if it's architecture-relevant, so only the
     missing-context requirement is suppressed; supplied context is still
-    validated by I4012.
+    validated by W4012.
     """
     rtype = resource.get("Type")
     return isinstance(rtype, str) and rtype.endswith("::MODULE")
@@ -85,13 +86,13 @@ class ContextMissing(ContextRuleMixin, CloudFormationLintRule):
         " BucketPolicy, TopicPolicy, QueuePolicy, Lambda::Permission)"
         " are not expected to carry one."
     )
-    source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-attribute-metadata.html#aws-attribute-metadata-context-schema"
+    source_url = CONTEXT_SCHEMA_URL
     tags = ["metadata", "context"]
 
     def __init__(self) -> None:
         super().__init__()
         # I4010 is the only rule that exempts low-value types from the
-        # missing-context requirement. I4011/I4012 validate supplied context
+        # missing-context requirement. W4011/W4012 validate supplied context
         # everywhere, so they don't expose this option.
         self.config_definition["additional_low_value_types"] = dict(_PATTERNS_CONFIG)
         self.config.setdefault("additional_low_value_types", [])
@@ -101,17 +102,9 @@ class ContextMissing(ContextRuleMixin, CloudFormationLintRule):
             return []
         matches = []
         significant = self._significant_resources(cfn)
-        # Both findings aggregate over many resources, so per-resource
-        # ignore_checks has to be applied here rather than left to the runner's
-        # post-hoc match filter: that filter keys off a match's own path, which
-        # would suppress the whole aggregate because one listed resource happens
-        # to be first, and never suppresses the template finding at all (its
-        # path does not start with "Resources"). Filtering the input instead
-        # means suppressing one resource drops just that resource from both
-        # findings, and suppressing all of them drops both findings.
-        #
-        # Keys are matched exactly, as the runner does -- a directive key is a
-        # literal rule id, not a prefix.
+        # Apply per-resource ignore_checks here: runner's post-hoc filter keys
+        # off match path, which would suppress the whole aggregate or miss the
+        # template finding. Exact-match keys only (not prefixes).
         directives = cfn.get_directives()
         suppressed = set(directives.get(self.id, []))
         missing = [
@@ -135,7 +128,7 @@ class ContextMissing(ContextRuleMixin, CloudFormationLintRule):
         """Primary resources *required* to carry context.
 
         Non-incidental resources minus subordinate/low-value types and MODULE
-        pseudo-resources. I4011/I4012 use ``_primary_resources`` directly so they
+        pseudo-resources. W4011/W4012 use ``_primary_resources`` directly so they
         still check any context present on a low-value resource or a module.
         """
         low_value_extra = self._extra_low_value_types()

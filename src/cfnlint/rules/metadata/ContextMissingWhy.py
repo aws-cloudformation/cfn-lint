@@ -11,6 +11,7 @@ from cfnlint.rules import CloudFormationLintRule, RuleMatch
 from cfnlint.rules.metadata._BaseContext import (
     _CONTEXT_DISPLAY,
     CONTEXT_KEY,
+    CONTEXT_SCHEMA_URL,
     ContextRuleMixin,
     _get_context,
 )
@@ -25,17 +26,17 @@ _MSG_MISSING_WHY = (
 
 
 class ContextMissingWhy(ContextRuleMixin, CloudFormationLintRule):
-    """missing-why: Context exists but has no 'why' and no reduced-confidence trust."""
+    """missing-why: Context exists but has no 'why' and no conf: low trust block."""
 
-    id = "I4011"
+    id = "W4011"
     experimental = True
     shortdesc = "Context block has no 'why'"
     description = (
         f"Check that a {_CONTEXT_DISPLAY} block records a"
-        " 'why' rationale, or declares a trust block with reduced confidence"
+        " 'why' rationale, or declares a trust block with conf: low"
         " acknowledging the rationale is undocumented."
     )
-    source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-attribute-metadata.html#aws-attribute-metadata-context-schema"
+    source_url = CONTEXT_SCHEMA_URL
     tags = ["metadata", "context"]
 
     def match(self, cfn: Any) -> list[RuleMatch]:
@@ -49,12 +50,9 @@ class ContextMissingWhy(ContextRuleMixin, CloudFormationLintRule):
             why = context.get("why")
             trust = context.get("trust")
             has_why = isinstance(why, str) and bool(why.strip())
-            # Only reduced confidence excuses a missing 'why'. conf: high is a
-            # claim that the rationale IS known, so it does not.
-            has_trust = isinstance(trust, dict) and trust.get("conf") in (
-                "low",
-                "medium",
-            )
+            # Only low confidence excuses a missing 'why'. medium/high assert
+            # the rationale is at least partly known, so they do not.
+            has_trust = isinstance(trust, dict) and trust.get("conf") == "low"
             if has_why or has_trust:
                 continue
             matches.append(

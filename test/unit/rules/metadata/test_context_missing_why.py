@@ -12,7 +12,7 @@ from cfnlint.rules.metadata.ContextMissingWhy import ContextMissingWhy
 
 
 class TestContextMissingWhy(BaseTestCase):
-    """I4011 missing-why: flags blocks with no 'why' and no trust."""
+    """W4011 missing-why: flags blocks with no 'why' and no trust."""
 
     def test_cdk_template_is_skipped_entirely(self):
         template = (
@@ -60,7 +60,9 @@ class TestContextMissingWhy(BaseTestCase):
         template = "Resources:\n  OrderQueue:\n    Type: AWS::SQS::Queue\n"
         self.assertEqual([], match(ContextMissingWhy(), template))
 
-    def test_trust_block_alone_not_flagged_for_missing_why(self):
+    def test_medium_confidence_trust_does_not_excuse_a_missing_why(self):
+        # Only conf: low excuses a missing 'why'. medium claims the rationale
+        # is partly known, which is not "undocumented".
         template = (
             "Resources:\n"
             "  OrderQueue:\n"
@@ -71,11 +73,13 @@ class TestContextMissingWhy(BaseTestCase):
             "          src: infer\n"
             "          conf: medium\n"
         )
-        self.assertEqual([], match(ContextMissingWhy(), template))
+        matches = match(ContextMissingWhy(), template)
+        self.assertEqual(1, len(matches))
+        self.assertIn("OrderQueue", matches[0].message)
 
     def test_high_confidence_trust_does_not_excuse_a_missing_why(self):
         # conf: high claims the rationale IS known, so it is not an escape
-        # hatch; only low/medium acknowledge undocumented rationale.
+        # hatch; only low acknowledges undocumented rationale.
         template = (
             "Resources:\n"
             "  OrderQueue:\n"
@@ -91,7 +95,7 @@ class TestContextMissingWhy(BaseTestCase):
         self.assertIn("OrderQueue", matches[0].message)
 
     def test_low_value_resource_with_context_but_no_why_is_flagged(self):
-        # Low-value types are exempt from I4010 (missing-context), but I4011
+        # Low-value types are exempt from I4010 (missing-context), but W4011
         # still validates any context they supply.
         template = (
             "Resources:\n"
@@ -104,13 +108,13 @@ class TestContextMissingWhy(BaseTestCase):
         )
         # Exempt from I4010...
         self.assertEqual([], match(ContextMissing(), template))
-        # ...but I4011 still flags missing-why.
+        # ...but W4011 still flags missing-why.
         matches = match(ContextMissingWhy(), template)
         self.assertEqual(1, len(matches))
         self.assertIn("ServiceLogGroup", matches[0].message)
 
     def test_module_with_context_but_no_why_is_flagged(self):
-        # MODULE pseudo-resources are exempt from I4010, but I4011 still
+        # MODULE pseudo-resources are exempt from I4010, but W4011 still
         # validates any context they supply.
         template = (
             "Resources:\n"
@@ -124,7 +128,7 @@ class TestContextMissingWhy(BaseTestCase):
         )
         # Exempt from I4010...
         self.assertEqual([], match(ContextMissing(), template))
-        # ...but I4011 still flags missing-why.
+        # ...but W4011 still flags missing-why.
         matches = match(ContextMissingWhy(), template)
         self.assertEqual(1, len(matches))
         self.assertIn("MyModule", matches[0].message)

@@ -26,10 +26,11 @@ class TestTargetingAndConfig(BaseTestCase):
         template = "Resources:\n  CDKMetadata:\n    Type: AWS::SQS::Queue\n"
         self.assertEqual([], match(missing_rule(), template))
 
-    def test_cdk_path_provider_segment_is_incidental(self):
-        # Isolates the /Provider/ path alternative -- removing it from
-        # _INCIDENTAL_PATH_PATTERN would fail this test since 'Provider' alone
-        # does not match the framework-onEvent|isComplete|onTimeout alternatives.
+    def test_aws_cdk_path_marks_template_as_cdk(self):
+        # Any resource carrying aws:cdk:path triggers _is_cdk_template, which
+        # short-circuits match() to return [] before incidental-ID matching.
+        # This covers CDK stacks synthesized with analyticsReporting: false
+        # (no AWS::CDK::Metadata resource).
         template = (
             "Resources:\n"
             "  StackHelperFn:\n"

@@ -14,6 +14,7 @@ from cfnlint.rules import CloudFormationLintRule, RuleMatch
 from cfnlint.rules.metadata._BaseContext import (
     _CONTEXT_DISPLAY,
     CONTEXT_KEY,
+    CONTEXT_SCHEMA_URL,
     ContextRuleMixin,
     _get_context,
 )
@@ -199,7 +200,7 @@ def _schema_findings(
 class ContextSchemaViolation(ContextRuleMixin, CloudFormationLintRule):
     """schema-violation: a supplied Context block fails schema v1 validation."""
 
-    id = "I4012"
+    id = "W4012"
     experimental = True
     shortdesc = "Context field does not match the schema"
     description = (
@@ -208,7 +209,7 @@ class ContextSchemaViolation(ContextRuleMixin, CloudFormationLintRule):
         " and fields placed at the correct level (template fields on the"
         " template, resource fields on resources)."
     )
-    source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-attribute-metadata.html#aws-attribute-metadata-context-schema"
+    source_url = CONTEXT_SCHEMA_URL
     tags = ["metadata", "context"]
 
     def match(self, cfn: Any) -> list[RuleMatch]:

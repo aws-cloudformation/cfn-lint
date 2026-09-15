@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 
 # Shared infrastructure for the Context metadata validation rules
-# (I4010/I4011/I4012): CDK/incidental detection, resource iteration, and the
+# (I4010/W4011/W4012): CDK/incidental detection, resource iteration, and the
 # common config surface. Rule-specific logic lives in each rule's own file.
 #
 # CDK-synthesized templates are skipped entirely (detected by AWS::CDK::Metadata
@@ -18,16 +18,15 @@ from typing import Any
 CONTEXT_KEY = "com.aws.cloudformation.Context"
 _CONTEXT_DISPLAY = "Metadata.com.aws.cloudformation.Context"
 
+# Shared source URL for all Context rules (they document the same schema).
+CONTEXT_SCHEMA_URL = "https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-attribute-metadata.html#aws-attribute-metadata-context-schema"
+
 # Incidental resources: CDK helpers no author chose. CDK sees structure; cfn-lint
 # sees only names, so it approximates via patterns. Extend with config option
 # additional_incidental_patterns. The AwsCustomResource singleton ID is fixed
 # (changing it orphans deployed functions).
 _CDK_AWS_CUSTOM_RESOURCE_SINGLETON_ID = "AWS679f53fac002430cb0da5b7982bd2287"
 
-_INCIDENTAL_PATH_PATTERN = re.compile(
-    r"LogRetention|(?:^|/)Provider(?:/|$)|framework-onEvent|framework-isComplete"
-    rf"|framework-onTimeout|{_CDK_AWS_CUSTOM_RESOURCE_SINGLETON_ID}"
-)
 # CFN strips hyphens at synth (framework-onEvent -> frameworkonEvent).
 _INCIDENTAL_ID_PATTERN = re.compile(
     r"^LogRetention|(?<=[a-z])Provider(?=framework)"
@@ -44,26 +43,24 @@ _PATTERNS_CONFIG: dict[str, Any] = {"default": [], "type": "list", "itemtype": "
 def _is_incidental(
     logical_id: str, resource: dict[str, Any], extra_patterns: list[str]
 ) -> bool:
-    """True when the resource is incidental/framework per the targeting policy."""
+    """True when the resource is incidental/framework per the targeting policy.
+
+    User-configured patterns match the logical ID only. (Templates carrying
+    aws:cdk:path are already short-circuited as CDK templates before this
+    function is reached, so path-based matching here would be dead code.)
+    """
     if resource.get("Type") == _CDK_METADATA_TYPE:
         return True
     if logical_id == _CDK_METADATA_LOGICAL_ID:
         return True
-    metadata = resource.get("Metadata")
-    cdk_path = metadata.get(_CDK_PATH_KEY) if isinstance(metadata, dict) else None
     if _INCIDENTAL_ID_PATTERN.search(logical_id):
         return True
-    if cdk_path and _INCIDENTAL_PATH_PATTERN.search(str(cdk_path)):
-        return True
-    # User-configured patterns apply to both the logical ID and the cdk path.
-    candidates = [logical_id] + ([str(cdk_path)] if cdk_path else [])
     for pattern in extra_patterns:
-        for candidate in candidates:
-            try:
-                if re.search(pattern, candidate):
-                    return True
-            except re.error:
-                continue
+        try:
+            if re.search(pattern, logical_id):
+                return True
+        except re.error:
+            continue
     return False
 
 
@@ -90,7 +87,7 @@ class ContextRuleMixin:
         #
         # Only additional_incidental_patterns is shared (all three rules use
         # _primary_resources). additional_low_value_types is I4010-only because
-        # I4011/I4012 validate supplied context everywhere -- low-value resources
+        # W4011/W4012 validate supplied context everywhere -- low-value resources
         # are not exempt from validation.
         self.config_definition = {
             "additional_incidental_patterns": dict(_PATTERNS_CONFIG),

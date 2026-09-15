@@ -213,7 +213,7 @@ class TestContextMissing(BaseTestCase):
             "      cfn-lint:\n"
             "        config:\n"
             "          ignore_checks:\n"
-            "            - I4011\n"
+            "            - W4011\n"
             "  QueueB:\n"
             "    Type: AWS::SQS::Queue\n"
         )
