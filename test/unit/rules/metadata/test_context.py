@@ -126,6 +126,38 @@ class TestContextMissing(BaseTestCase):
         template = "Resources:\n  Malformed: not-a-dict\n"
         self.assertEqual([], _match(_missing_rule(), template))
 
+    def test_cdk_template_is_skipped_entirely(self):
+        # CDK-synthesized templates are out of scope -- the user authored
+        # L2/L3 constructs, not raw CloudFormation.
+        template = (
+            "Resources:\n"
+            "  CDKMetadata:\n"
+            "    Type: AWS::CDK::Metadata\n"
+            "    Properties:\n"
+            "      Analytics: v2:some-data\n"
+            "  UserQueue:\n"
+            "    Type: AWS::SQS::Queue\n"
+            "  UserTopic:\n"
+            "    Type: AWS::SNS::Topic\n"
+        )
+        self.assertEqual([], _match(_missing_rule(), template))
+
+    def test_cdk_template_without_metadata_resource_is_skipped(self):
+        # CDK templates synthesized with analyticsReporting: false omit the
+        # AWS::CDK::Metadata resource but still stamp aws:cdk:path on resources.
+        template = (
+            "Resources:\n"
+            "  UserQueue:\n"
+            "    Type: AWS::SQS::Queue\n"
+            "    Metadata:\n"
+            "      aws:cdk:path: Stack/UserQueue/Resource\n"
+            "  UserTopic:\n"
+            "    Type: AWS::SNS::Topic\n"
+            "    Metadata:\n"
+            "      aws:cdk:path: Stack/UserTopic/Resource\n"
+        )
+        self.assertEqual([], _match(_missing_rule(), template))
+
     def test_ignore_checks_on_one_resource_preserves_aggregate_for_others(self):
         # Suppressing I4010 on one resource must remove only that resource
         # from the aggregate, not kill the entire finding.
@@ -180,6 +212,20 @@ class TestContextMissing(BaseTestCase):
 class TestContextMissingWhy(BaseTestCase):
     """I4011 missing-why: flags blocks with no 'why' and no trust."""
 
+    def test_cdk_template_is_skipped_entirely(self):
+        template = (
+            "Resources:\n"
+            "  CDKMetadata:\n"
+            "    Type: AWS::CDK::Metadata\n"
+            "  Notifier:\n"
+            "    Type: AWS::SNS::Topic\n"
+            "    Metadata:\n"
+            f"      {CONTEXT_KEY}:\n"
+            "        must:\n"
+            "          - at least one subscriber\n"
+        )
+        self.assertEqual([], _match(ContextMissingWhy(), template))
+
     def test_flags_missing_why(self):
         template = (
             "Resources:\n"
@@ -229,6 +275,21 @@ class TestContextMissingWhy(BaseTestCase):
 
 class TestContextSchemaRules(BaseTestCase):
     """I4012 validates a supplied Context block against schema v1."""
+
+    def test_cdk_template_is_skipped_entirely(self):
+        template = (
+            "Resources:\n"
+            "  CDKMetadata:\n"
+            "    Type: AWS::CDK::Metadata\n"
+            "  Fn:\n"
+            "    Type: AWS::Lambda::Function\n"
+            "    Metadata:\n"
+            f"      {CONTEXT_KEY}:\n"
+            "        why: 12345\n"
+        )
+        # why: 12345 is a schema violation (string expected), but the
+        # entire template is CDK-synthesized so I4012 skips it.
+        self.assertEqual([], _match(ContextSchemaViolation(), template))
 
     def test_malformed_field_wrong_type(self):
         template = (
@@ -565,17 +626,11 @@ class TestTargetingAndConfig(BaseTestCase):
         self.assertEqual([], rule.match(_decoded_template(template)))
 
     def test_additional_incidental_pattern_matching_neither_candidate(self):
-        # A valid extra pattern that matches neither the logical ID nor the
-        # aws:cdk:path leaves the resource in scope.
+        # A valid extra pattern that matches neither the logical ID nor any
+        # metadata path leaves the resource in scope.
         rule = ContextMissing()
         rule.config["additional_incidental_patterns"] = ["NoSuchThing"]
-        template = (
-            "Resources:\n"
-            "  OrderQueue:\n"
-            "    Type: AWS::SQS::Queue\n"
-            "    Metadata:\n"
-            "      aws:cdk:path: Stack/OrderQueue/Resource\n"
-        )
+        template = "Resources:\n  OrderQueue:\n    Type: AWS::SQS::Queue\n"
         self.assertEqual(1, len(rule.match(_decoded_template(template))))
 
     def test_severity_is_informational(self):

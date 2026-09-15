@@ -14,6 +14,10 @@ SPDX-License-Identifier: MIT-0
 #
 # All three are experimental and informational, so both --include-experimental
 # and --include-checks I are required before any of them emits a finding.
+#
+# CDK-synthesized templates are skipped entirely (detected by AWS::CDK::Metadata
+# or aws:cdk:path on any resource). The user authored L2/L3 constructs, not raw
+# CloudFormation, so context validation does not apply.
 
 from __future__ import annotations
 
@@ -383,6 +387,27 @@ class _ContextRuleMixin:
         self.config.setdefault("additional_incidental_patterns", [])
         self.config.setdefault("additional_low_value_types", [])
 
+    @staticmethod
+    def _is_cdk_template(cfn: Any) -> bool:
+        """True when the template was synthesized by CDK.
+
+        CDK-synthesized templates are out of scope for context validation
+        because the user authored L2/L3 constructs, not raw CloudFormation.
+        Detection: the ``AWS::CDK::Metadata`` resource, the ``CDKMetadata``
+        logical ID, or any resource carrying ``aws:cdk:path`` metadata (covers
+        templates synthesized with analyticsReporting disabled).
+        """
+        for logical_id, resource in cfn.get_resources().items():
+            if (
+                resource.get("Type") == _CDK_METADATA_TYPE
+                or str(logical_id) == _CDK_METADATA_LOGICAL_ID
+            ):
+                return True
+            metadata = resource.get("Metadata")
+            if isinstance(metadata, dict) and _CDK_PATH_KEY in metadata:
+                return True
+        return False
+
     def _extra_patterns(self) -> list[str]:
         patterns = self.config.get("additional_incidental_patterns", [])
         return [str(p) for p in patterns] if isinstance(patterns, list) else []
@@ -456,6 +481,8 @@ class ContextMissing(_ContextRuleMixin, CloudFormationLintRule):
     tags = ["metadata", "context"]
 
     def match(self, cfn: Any) -> list[RuleMatch]:
+        if self._is_cdk_template(cfn):
+            return []
         matches = []
         significant = self._significant_resources(cfn)
         # An architecture summary describes how components relate, so require one
@@ -517,6 +544,8 @@ class ContextMissingWhy(_ContextRuleMixin, CloudFormationLintRule):
     tags = ["metadata", "context"]
 
     def match(self, cfn: Any) -> list[RuleMatch]:
+        if self._is_cdk_template(cfn):
+            return []
         matches = []
         for logical_id, resource in self._primary_resources(cfn):
             context = _get_context(resource)
@@ -558,4 +587,6 @@ class ContextSchemaViolation(_ContextRuleMixin, CloudFormationLintRule):
     tags = ["metadata", "context"]
 
     def match(self, cfn: Any) -> list[RuleMatch]:
+        if self._is_cdk_template(cfn):
+            return []
         return self._schema_matches(cfn)
