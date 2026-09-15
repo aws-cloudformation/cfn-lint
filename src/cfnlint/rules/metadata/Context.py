@@ -29,11 +29,7 @@ from cfnlint.helpers import load_resource
 from cfnlint.jsonschema import StandardValidator
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
-# Canonical location of the Context block (aws/aws-cdk#38381).
 CONTEXT_KEY = "com.aws.cloudformation.Context"
-
-# Human-facing display of the block's location. Dotted form is concise and
-# consistent with cfn-lint path conventions in diagnostic messages.
 _CONTEXT_DISPLAY = "Metadata.com.aws.cloudformation.Context"
 
 _SCHEMA = load_resource(cfnlint.data.schemas.other.metadata, "context.json")
@@ -52,37 +48,22 @@ def _get_subschema(def_name: str) -> dict[str, Any]:
     }
 
 
-# Pre-built validators (one per placement level -- schemas are static for the module).
 _VALIDATORS: dict[str, StandardValidator] = {
     "ResourceContext": StandardValidator(_get_subschema("ResourceContext")),
     "TemplateContext": StandardValidator(_get_subschema("TemplateContext")),
 }
 
-# Incidental resources: helpers a synthesizer generated, which no author chose
-# and cannot meaningfully describe. CDK draws this line structurally (its context
-# aspect walks the defaultChild chain and skips its own helpers); cfn-lint sees
-# only the synthesized template, so it approximates that by naming convention.
-# The set is therefore not exhaustive -- BucketDeployment's handler, for one, is
-# not matched. CDK's lambdaPurpose prefix is the axis to extend along, since it
-# stays constant even where the singleton uuid is computed at synth time. Extend
-# per-run with the additional_incidental_patterns config option.
-#
-# The AwsCustomResource provider singleton is the one bare identifier. CDK
-# derives it as lambdaPurpose + uuid with non-alphanumerics stripped ("AWS" +
-# AwsCustomResource.PROVIDER_FUNCTION_UUID); the result is the singleton's lookup
-# key, so changing it would orphan deployed functions. The Provider path segment
-# below covers it when aws:cdk:path is present, the literal when it is not.
+# Incidental resources: CDK helpers no author chose. CDK sees structure; cfn-lint
+# sees only names, so it approximates via patterns. Extend with config option
+# additional_incidental_patterns. The AwsCustomResource singleton ID is fixed
+# (changing it orphans deployed functions).
 _CDK_AWS_CUSTOM_RESOURCE_SINGLETON_ID = "AWS679f53fac002430cb0da5b7982bd2287"
 
-# Segment-bounded where a token is ambiguous (Provider), substring where it is
-# unique enough (LogRetention, framework-*).
 _INCIDENTAL_PATH_PATTERN = re.compile(
     r"LogRetention|(?:^|/)Provider(?:/|$)|framework-onEvent|framework-isComplete"
     rf"|framework-onTimeout|{_CDK_AWS_CUSTOM_RESOURCE_SINGLETON_ID}"
 )
-# CloudFormation strips hyphens at synth, so framework-onEvent renders as
-# frameworkonEvent. Anchored where an unanchored match would hit names like
-# "DataProviderTable".
+# CFN strips hyphens at synth (framework-onEvent -> frameworkonEvent).
 _INCIDENTAL_ID_PATTERN = re.compile(
     r"^LogRetention|(?<=[a-z])Provider(?=framework)"
     r"|frameworkonEvent|frameworkisComplete"
@@ -92,14 +73,8 @@ _CDK_METADATA_TYPE = "AWS::CDK::Metadata"
 _CDK_METADATA_LOGICAL_ID = "CDKMetadata"
 _CDK_PATH_KEY = "aws:cdk:path"
 
-# Resource types not *required* to carry context: subordinate resources
-# near-universally attached to a parent (e.g. a function's log group, a
-# bucket's bucket policy) rather than independently architecture-relevant.
-# Policy and permission types are exempt because the policy body IS the
-# rationale, and the template already contains it. IAM::Role and
-# IAM::ManagedPolicy are deliberately kept: both have real hand-authored
-# forms where 'why' adds value. Context supplied on any exempt resource
-# is still validated by I4011-I4012. Extend via 'additional_low_value_types'.
+# Types not required to carry context (subordinate/policy resources).
+# Supplied context is still validated. Extend via additional_low_value_types.
 _LOW_VALUE_TYPES = frozenset(
     {
         "AWS::IAM::Policy",
@@ -159,16 +134,10 @@ def _is_low_value(resource: dict[str, Any], extra_types: list[str]) -> bool:
 def _is_module(resource: dict[str, Any]) -> bool:
     """True for a MODULE pseudo-resource (a '*::MODULE' type).
 
-    A module is an indirection: the resources it expands to live in the
-    registered module body, not in this template, so whether it is
-    architecture-relevant cannot be determined from its Type -- the same type
-    could wrap a single log bucket or an entire data tier. cfn-lint already
-    treats module resources permissively for this reason (their type is not
-    checked for existence, and Ref/GetAtt to their sub-resources is accepted
-    without resolution).
-
-    Only the missing-context requirement is suppressed; context an author does
-    supply on a module is still validated.
+    A module's Type says nothing about whether it is architecture-relevant --
+    it could wrap one log bucket or a whole data tier -- so only the
+    missing-context requirement is suppressed. Supplied context is still
+    validated.
     """
     rtype = resource.get("Type")
     return isinstance(rtype, str) and rtype.endswith("::MODULE")
@@ -182,8 +151,6 @@ def _get_context(resource: dict[str, Any]) -> Any:
     return metadata.get(CONTEXT_KEY)
 
 
-# Diagnostic message templates, kept together so the wording lives in one place
-# apart from the detection logic. Runtime values are filled in with str.format().
 _TEMPLATE_FIELDS_STR = ", ".join(sorted(_TEMPLATE_FIELDS))
 _RESOURCE_FIELDS_STR = ", ".join(sorted(_RESOURCE_FIELDS))
 
@@ -255,7 +222,9 @@ def _expected_shape(field: str, placement_def: str) -> str:
         return "mapping of property name to mutability level"
     if schema_type == "string":
         return "string"
-    return "see the Context schema v1"
+    # Unreachable for the current schema; every field above is covered. Kept so
+    # a field added later degrades to a usable message instead of a KeyError.
+    return f"see the '{field}' definition in the Context schema"
 
 
 class _Finding:
@@ -363,13 +332,8 @@ def _schema_findings(
     return findings
 
 
-# Shared config and targeting logic. Deliberately NOT a CloudFormationLintRule
-# subclass, so cfn-lint's plugin loader does not register it as a standalone rule.
-
-
 class _ContextRuleMixin:
-    """Shared config (extra incidental patterns, low-value types) and
-    iteration helpers."""
+    """Shared config (extra incidental patterns) and iteration helpers."""
 
     config: dict[str, Any]
     id: str
@@ -380,12 +344,15 @@ class _ContextRuleMixin:
         # instance, so the shared definition must be (re)applied here. cfn-lint's
         # rule registration then calls configure(), which applies these defaults
         # plus any user-provided --configure-rule overrides.
+        #
+        # Only additional_incidental_patterns is shared (all three rules use
+        # _primary_resources). additional_low_value_types is I4010-only because
+        # I4011/I4012 validate supplied context everywhere -- low-value resources
+        # are not exempt from validation.
         self.config_definition = {
             "additional_incidental_patterns": dict(_PATTERNS_CONFIG),
-            "additional_low_value_types": dict(_PATTERNS_CONFIG),
         }
         self.config.setdefault("additional_incidental_patterns", [])
-        self.config.setdefault("additional_low_value_types", [])
 
     @staticmethod
     def _is_cdk_template(cfn: Any) -> bool:
@@ -480,20 +447,32 @@ class ContextMissing(_ContextRuleMixin, CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-attribute-metadata.html#aws-attribute-metadata-context-schema"
     tags = ["metadata", "context"]
 
+    def __init__(self) -> None:
+        super().__init__()
+        # I4010 is the only rule that exempts low-value types from the
+        # missing-context requirement. I4011/I4012 validate supplied context
+        # everywhere, so they don't expose this option.
+        self.config_definition["additional_low_value_types"] = dict(_PATTERNS_CONFIG)
+        self.config.setdefault("additional_low_value_types", [])
+
     def match(self, cfn: Any) -> list[RuleMatch]:
         if self._is_cdk_template(cfn):
             return []
         matches = []
         significant = self._significant_resources(cfn)
-        # Resources whose per-resource ignore_checks suppresses I4010 are
-        # filtered out before either finding is built. Suppressing one resource
-        # removes it from both the template-level gate and the resource
-        # aggregate; suppressing all removes both findings.
+        # Both findings aggregate over many resources, so per-resource
+        # ignore_checks has to be applied here rather than left to the runner's
+        # post-hoc match filter: that filter keys off a match's own path, which
+        # would suppress the whole aggregate because one listed resource happens
+        # to be first, and never suppresses the template finding at all (its
+        # path does not start with "Resources"). Filtering the input instead
+        # means suppressing one resource drops just that resource from both
+        # findings, and suppressing all of them drops both findings.
+        #
+        # Keys are matched exactly, as the runner does -- a directive key is a
+        # literal rule id, not a prefix.
         directives = cfn.get_directives()
-        suppressed = set()
-        for rule_id, resource_names in directives.items():
-            if self.id.startswith(rule_id):
-                suppressed.update(resource_names)
+        suppressed = set(directives.get(self.id, []))
         missing = [
             (logical_id, resource)
             for logical_id, resource in significant
@@ -552,7 +531,9 @@ class ContextMissingWhy(_ContextRuleMixin, CloudFormationLintRule):
                 continue
             why = context.get("why")
             trust = context.get("trust")
-            has_why = isinstance(why, str) and why.strip()
+            has_why = isinstance(why, str) and bool(why.strip())
+            # Only reduced confidence excuses a missing 'why'. conf: high is a
+            # claim that the rationale IS known, so it does not.
             has_trust = isinstance(trust, dict) and trust.get("conf") in (
                 "low",
                 "medium",

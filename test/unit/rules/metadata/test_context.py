@@ -11,6 +11,7 @@ from cfnlint.rules.metadata.Context import (
     ContextMissing,
     ContextMissingWhy,
     ContextSchemaViolation,
+    _expected_shape,
 )
 from cfnlint.template import Template
 
@@ -20,6 +21,11 @@ def _match(rule, template_str):
     decoded = cfn_yaml.loads(template_str)
     cfn = Template("test.yaml", decoded)
     return rule.match(cfn)
+
+
+def _decoded_template(template_str):
+    """Decode a template string into a Template, for tests that reuse a rule."""
+    return Template("test.yaml", cfn_yaml.loads(template_str))
 
 
 def _missing_rule():
@@ -127,8 +133,6 @@ class TestContextMissing(BaseTestCase):
         self.assertEqual([], _match(_missing_rule(), template))
 
     def test_cdk_template_is_skipped_entirely(self):
-        # CDK-synthesized templates are out of scope -- the user authored
-        # L2/L3 constructs, not raw CloudFormation.
         template = (
             "Resources:\n"
             "  CDKMetadata:\n"
@@ -143,8 +147,7 @@ class TestContextMissing(BaseTestCase):
         self.assertEqual([], _match(_missing_rule(), template))
 
     def test_cdk_template_without_metadata_resource_is_skipped(self):
-        # CDK templates synthesized with analyticsReporting: false omit the
-        # AWS::CDK::Metadata resource but still stamp aws:cdk:path on resources.
+        # Covers analyticsReporting: false (no AWS::CDK::Metadata, has aws:cdk:path).
         template = (
             "Resources:\n"
             "  UserQueue:\n"
@@ -159,8 +162,6 @@ class TestContextMissing(BaseTestCase):
         self.assertEqual([], _match(_missing_rule(), template))
 
     def test_ignore_checks_on_one_resource_preserves_aggregate_for_others(self):
-        # Suppressing I4010 on one resource must remove only that resource
-        # from the aggregate, not kill the entire finding.
         template = (
             "Resources:\n"
             "  SuppressedQueue:\n"
@@ -174,18 +175,14 @@ class TestContextMissing(BaseTestCase):
             "    Type: AWS::SNS::Topic\n"
         )
         matches = _match(_missing_rule(), template)
-        # The aggregate should still report UnsuppressedTopic.
-        aggregate_matches = [
-            m for m in matches if not m.message.startswith("This template")
-        ]
-        self.assertEqual(1, len(aggregate_matches))
-        self.assertIn("UnsuppressedTopic", aggregate_matches[0].message)
-        self.assertNotIn("SuppressedQueue", aggregate_matches[0].message)
+        # With one of two significant resources suppressed, missing drops to 1,
+        # so the len(missing) >= 2 template gate should no longer fire.
+        self.assertEqual(1, len(matches))
+        self.assertFalse(matches[0].message.startswith("This template"))
+        self.assertIn("UnsuppressedTopic", matches[0].message)
+        self.assertNotIn("SuppressedQueue", matches[0].message)
 
     def test_ignore_checks_on_all_resources_suppresses_both_findings(self):
-        # Suppressing I4010 on all resources removes both the resource
-        # aggregate and the template-level finding (since the >= 2 gate uses
-        # the suppression-filtered list).
         template = (
             "Resources:\n"
             "  QueueA:\n"
@@ -205,6 +202,50 @@ class TestContextMissing(BaseTestCase):
         )
         matches = _match(_missing_rule(), template)
         self.assertEqual(0, len(matches))
+
+    def test_ignore_checks_rule_id_prefix_does_not_suppress(self):
+        # Directive keys are matched exactly, as cfn-lint's runner does. A rule
+        # id prefix such as 'I' or 'I40' is not a directive for I4010, so it
+        # must leave both findings intact.
+        for prefix in ("I", "I40", "I401"):
+            template = (
+                "Resources:\n"
+                "  QueueA:\n"
+                "    Type: AWS::SQS::Queue\n"
+                "    Metadata:\n"
+                "      cfn-lint:\n"
+                "        config:\n"
+                "          ignore_checks:\n"
+                f"            - {prefix}\n"
+                "  QueueB:\n"
+                "    Type: AWS::SQS::Queue\n"
+            )
+            matches = _match(_missing_rule(), template)
+            self.assertEqual(2, len(matches), f"prefix {prefix!r}: {matches}")
+            aggregate = next(
+                m for m in matches if not m.message.startswith("This template")
+            )
+            self.assertIn("QueueA", aggregate.message)
+
+    def test_ignore_checks_for_another_rule_does_not_suppress(self):
+        template = (
+            "Resources:\n"
+            "  QueueA:\n"
+            "    Type: AWS::SQS::Queue\n"
+            "    Metadata:\n"
+            "      cfn-lint:\n"
+            "        config:\n"
+            "          ignore_checks:\n"
+            "            - I4011\n"
+            "  QueueB:\n"
+            "    Type: AWS::SQS::Queue\n"
+        )
+        matches = _match(_missing_rule(), template)
+        self.assertEqual(2, len(matches))
+        aggregate = next(
+            m for m in matches if not m.message.startswith("This template")
+        )
+        self.assertIn("QueueA", aggregate.message)
 
 
 class TestContextMissingWhy(BaseTestCase):
@@ -253,7 +294,6 @@ class TestContextMissingWhy(BaseTestCase):
         self.assertEqual([], _match(ContextMissingWhy(), template))
 
     def test_resource_without_a_context_block_is_not_flagged(self):
-        # I4011 only judges blocks that exist; a missing block is I4010's job.
         template = "Resources:\n  OrderQueue:\n    Type: AWS::SQS::Queue\n"
         self.assertEqual([], _match(ContextMissingWhy(), template))
 
@@ -269,6 +309,62 @@ class TestContextMissingWhy(BaseTestCase):
             "          conf: medium\n"
         )
         self.assertEqual([], _match(ContextMissingWhy(), template))
+
+    def test_high_confidence_trust_does_not_excuse_a_missing_why(self):
+        # conf: high claims the rationale IS known, so it is not an escape
+        # hatch; only low/medium acknowledge undocumented rationale.
+        template = (
+            "Resources:\n"
+            "  OrderQueue:\n"
+            "    Type: AWS::SQS::Queue\n"
+            "    Metadata:\n"
+            f"      {CONTEXT_KEY}:\n"
+            "        trust:\n"
+            "          src: authored\n"
+            "          conf: high\n"
+        )
+        matches = _match(ContextMissingWhy(), template)
+        self.assertEqual(1, len(matches))
+        self.assertIn("OrderQueue", matches[0].message)
+
+    def test_low_value_resource_with_context_but_no_why_is_flagged(self):
+        # Low-value types are exempt from I4010 (missing-context), but I4011
+        # still validates any context they supply.
+        template = (
+            "Resources:\n"
+            "  ServiceLogGroup:\n"
+            "    Type: AWS::Logs::LogGroup\n"
+            "    Metadata:\n"
+            f"      {CONTEXT_KEY}:\n"
+            "        must:\n"
+            "          - retain 30 days\n"
+        )
+        # Exempt from I4010...
+        self.assertEqual([], _match(ContextMissing(), template))
+        # ...but I4011 still flags missing-why.
+        matches = _match(ContextMissingWhy(), template)
+        self.assertEqual(1, len(matches))
+        self.assertIn("ServiceLogGroup", matches[0].message)
+
+    def test_module_with_context_but_no_why_is_flagged(self):
+        # MODULE pseudo-resources are exempt from I4010, but I4011 still
+        # validates any context they supply.
+        template = (
+            "Resources:\n"
+            "  MyModule:\n"
+            "    Type: AWS::S3::Bucket::MODULE\n"
+            "    Properties: {}\n"
+            "    Metadata:\n"
+            f"      {CONTEXT_KEY}:\n"
+            "        must:\n"
+            "          - versioning enabled\n"
+        )
+        # Exempt from I4010...
+        self.assertEqual([], _match(ContextMissing(), template))
+        # ...but I4011 still flags missing-why.
+        matches = _match(ContextMissingWhy(), template)
+        self.assertEqual(1, len(matches))
+        self.assertIn("MyModule", matches[0].message)
 
 
 class TestContextSchemaRules(BaseTestCase):
@@ -304,9 +400,6 @@ class TestContextSchemaRules(BaseTestCase):
         self.assertIn("array of strings", matches[0].message)
 
     def test_supplied_context_on_low_value_is_still_validated(self):
-        # Design contract: require missing context selectively, but VALIDATE
-        # supplied context everywhere. A LogGroup is exempt from I4010, yet a
-        # malformed Context block an author wrote on it is still flagged.
         template = (
             "Resources:\n"
             "  ServiceLogGroup:\n"
@@ -370,8 +463,6 @@ class TestContextSchemaRules(BaseTestCase):
         self.assertEqual(2, len(matches))
 
     def test_resource_context_block_that_is_not_a_mapping(self):
-        # A scalar where the Context block belongs: reported as a shape problem
-        # rather than crashing while looking for the opt-out marker.
         template = (
             "Resources:\n"
             "  Fn:\n"
@@ -414,8 +505,6 @@ class TestContextSchemaRules(BaseTestCase):
         self.assertIn("object with required 'src' and 'conf'", matches[0].message)
 
     def test_expected_shape_for_mutability_level_ref(self):
-        # A list where a single mutability token belongs: the shape message
-        # enumerates the allowed levels from the schema.
         template = (
             "Resources:\n"
             "  Fn:\n"
@@ -468,14 +557,20 @@ class TestContextSchemaRules(BaseTestCase):
         self.assertEqual(1, len(matches))
         self.assertIn("expected shape: string", matches[0].message)
 
+    def test_expected_shape_falls_back_for_a_field_not_in_the_schema(self):
+        # Defensive branch: unreachable through match() because every field the
+        # schema defines hits an explicit branch. Called directly so a field
+        # added later is known to degrade to a message rather than raise.
+        self.assertEqual(
+            "see the 'nosuchfield' definition in the Context schema",
+            _expected_shape("nosuchfield", "ResourceContext"),
+        )
+
     def test_resource_without_a_context_block_is_not_validated(self):
-        # Nothing supplied means nothing to validate; I4010 owns that case.
         template = "Resources:\n  OrderQueue:\n    Type: AWS::SQS::Queue\n"
         self.assertEqual([], _match(ContextSchemaViolation(), template))
 
     def test_all_supplied_context_is_validated_even_with_trust(self):
-        # There is no opt-out marker; all supplied context is validated.
-        # A block with a schema violation is flagged regardless of trust.
         template = (
             "Resources:\n"
             "  OrderQueue:\n"
@@ -500,8 +595,6 @@ class TestTargetingAndConfig(BaseTestCase):
         self.assertEqual([], _match(_missing_rule(), template))
 
     def test_cdk_metadata_logical_id_with_other_type_is_incidental(self):
-        # The CDKMetadata logical ID is incidental on its own, even when the
-        # Type is something else (synth variations should not leak findings).
         template = "Resources:\n  CDKMetadata:\n    Type: AWS::SQS::Queue\n"
         self.assertEqual([], _match(_missing_rule(), template))
 
@@ -509,7 +602,7 @@ class TestTargetingAndConfig(BaseTestCase):
         # The (?:^|/)Provider(?:/|$) alternative in _INCIDENTAL_PATH_PATTERN marks
         # a resource incidental when its aws:cdk:path contains a /Provider/ segment,
         # even if the path does NOT contain a framework-* handler suffix. This test
-        # isolates that branch — removing the /Provider/ alternative from the pattern
+        # isolates that branch -- removing the /Provider/ alternative from the pattern
         # would cause this test to fail, since 'Provider' alone does not match the
         # framework-onEvent|isComplete|onTimeout alternatives.
         template = (
@@ -522,14 +615,10 @@ class TestTargetingAndConfig(BaseTestCase):
         self.assertEqual([], _match(_missing_rule(), template))
 
     def test_non_string_resource_type_is_not_low_value(self):
-        # A malformed (non-string) Type cannot be matched against the low-value
-        # list, so the resource stays in scope rather than being silently exempt.
         template = "Resources:\n  Weird:\n    Type:\n      - AWS::SQS::Queue\n"
         self.assertEqual(1, len(_match(_missing_rule(), template)))
 
     def test_module_pseudo_resource_is_not_required_to_carry_context(self):
-        # A '*::MODULE' type expands to resources defined outside this template,
-        # so its architectural significance cannot be judged from the Type.
         template = (
             "Resources:\n"
             "  MyModule:\n"
@@ -539,8 +628,6 @@ class TestTargetingAndConfig(BaseTestCase):
         self.assertEqual([], _match(_missing_rule(), template))
 
     def test_module_does_not_count_toward_the_template_finding(self):
-        # Two resources where one is a module leaves a single significant
-        # resource, so no template-level architecture finding is emitted.
         template = (
             "Resources:\n"
             "  MyModule:\n"
@@ -555,8 +642,6 @@ class TestTargetingAndConfig(BaseTestCase):
         self.assertNotIn("MyModule", matches[0].message)
 
     def test_supplied_context_on_a_module_is_still_validated(self):
-        # Exempt from the missing-context requirement, but a malformed Context
-        # block an author wrote on a module is still flagged.
         template = (
             "Resources:\n"
             "  MyModule:\n"
@@ -574,9 +659,7 @@ class TestTargetingAndConfig(BaseTestCase):
         self.assertIn("array of strings", matches[0].message)
 
     def test_framework_handler_logical_ids_are_incidental(self):
-        # CloudFormation strips hyphens from logical IDs at synth, so the CDK
-        # provider-framework handlers render hyphen-free (e.g. frameworkonEvent).
-        # The incidental ID pattern must match them with no Provider prefix.
+        # CFN strips hyphens (framework-onEvent -> frameworkonEvent).
         template = (
             "Resources:\n"
             "  StackframeworkonEventABC123:\n"
@@ -594,7 +677,7 @@ class TestTargetingAndConfig(BaseTestCase):
         # The AwsCustomResource provider singleton has a fixed logical ID derived
         # from lambdaPurpose + uuid (AWS679f53fac002430cb0da5b7982bd2287). Changing
         # this ID would orphan deployed functions, so the pattern anchors it exactly.
-        # This test isolates that branch — removing the singleton alternative from
+        # This test isolates that branch -- removing the singleton alternative from
         # _INCIDENTAL_ID_PATTERN would cause this test to fail, since the ID does
         # not match LogRetention, Provider(?=framework), or framework*.
         template = (
@@ -608,9 +691,9 @@ class TestTargetingAndConfig(BaseTestCase):
         # The (?<=[a-z])Provider(?=framework) alternative in _INCIDENTAL_ID_PATTERN
         # matches IDs where 'Provider' immediately precedes 'framework' but the
         # suffix is NOT one of the known handler names (onEvent/isComplete/onTimeout).
-        # This test isolates that branch — removing Provider(?=framework) from the
+        # This test isolates that branch -- removing Provider(?=framework) from the
         # pattern would cause the test to fail, since 'frameworkHandler' does not
-        # match the frameworkonEvent|frameworkisComplete|frameworkonTimeout alternatives.
+        # match the frameworkonEvent|frameworkisComplete|frameworkonTimeout ones.
         template = (
             "Resources:\n"
             "  AppProviderframeworkHandler123:\n"
@@ -619,8 +702,6 @@ class TestTargetingAndConfig(BaseTestCase):
         self.assertEqual([], _match(_missing_rule(), template))
 
     def test_provider_substring_does_not_over_match(self):
-        # "Provider" embedded in a resource name is a primary resource, not a
-        # CDK framework helper, so a missing Context block is still flagged.
         template = (
             "Resources:\n"
             "  DataProviderTable:\n"
@@ -633,8 +714,6 @@ class TestTargetingAndConfig(BaseTestCase):
         self.assertEqual(2, len(matches))
 
     def test_gaps_field_is_now_a_schema_violation(self):
-        # gaps was removed from the published schema; supplying it is flagged
-        # as an unrecognized field.
         template = (
             f"Metadata:\n  {CONTEXT_KEY}:\n    arch: ok\n    gaps:\n      - some gap\n"
         )
@@ -656,20 +735,15 @@ class TestTargetingAndConfig(BaseTestCase):
         self.assertEqual([], rule.match(_decoded_template(template)))
 
     def test_additional_incidental_pattern_matching_neither_candidate(self):
-        # A valid extra pattern that matches neither the logical ID nor any
-        # metadata path leaves the resource in scope.
         rule = ContextMissing()
         rule.config["additional_incidental_patterns"] = ["NoSuchThing"]
         template = "Resources:\n  OrderQueue:\n    Type: AWS::SQS::Queue\n"
         self.assertEqual(1, len(rule.match(_decoded_template(template))))
 
     def test_severity_is_informational(self):
-        # Severity is derived from the I-prefix id; no configurable override.
         self.assertEqual("informational", ContextMissing().severity)
 
     def test_invalid_regex_in_additional_incidental_patterns_is_skipped(self):
-        # An invalid regex in the config should not crash the rule; the
-        # malformed pattern is silently skipped (except re.error branch).
         rule = ContextMissing()
         rule.config["additional_incidental_patterns"] = ["[invalid"]
         template = "Resources:\n  Queue:\n    Type: AWS::SQS::Queue\n"
@@ -677,8 +751,6 @@ class TestTargetingAndConfig(BaseTestCase):
         self.assertEqual(1, len(matches))
 
     def test_non_list_additional_low_value_types_is_ignored(self):
-        # If config somehow holds a non-list value, the guard returns []
-        # rather than crashing (else [] branch in _extra_low_value_types).
         rule = ContextMissing()
         rule.config["additional_low_value_types"] = "not-a-list"
         template = "Resources:\n  Queue:\n    Type: AWS::SQS::Queue\n"
@@ -686,7 +758,6 @@ class TestTargetingAndConfig(BaseTestCase):
         self.assertEqual(1, len(matches))
 
     def test_non_list_additional_incidental_patterns_is_ignored(self):
-        # Same guard for additional_incidental_patterns (else [] branch).
         rule = ContextMissing()
         rule.config["additional_incidental_patterns"] = "not-a-list"
         template = "Resources:\n  Queue:\n    Type: AWS::SQS::Queue\n"
@@ -705,7 +776,6 @@ class TestEnablementGating(BaseTestCase):
         )
 
     def test_i4010_informational_gate_alone_is_not_enough(self):
-        # I in include_rules, but experimental gate still closed.
         self.assertFalse(
             ContextMissing().is_enabled(
                 include_experimental=False, include_rules=["W", "E", "I"]
@@ -747,6 +817,26 @@ class TestEnablementGating(BaseTestCase):
             )
         )
 
+    def test_config_surface_i4010_has_both_options(self):
+        # I4010 is the only rule that exempts low-value types, so it registers
+        # both config options.
+        self.assertEqual(
+            sorted(ContextMissing().config_definition.keys()),
+            ["additional_incidental_patterns", "additional_low_value_types"],
+        )
 
-def _decoded_template(template_str):
-    return Template("test.yaml", cfn_yaml.loads(template_str))
+    def test_config_surface_i4011_has_only_incidental_patterns(self):
+        # I4011 validates supplied context everywhere -- low-value types are
+        # not exempt -- so it exposes only additional_incidental_patterns.
+        self.assertEqual(
+            sorted(ContextMissingWhy().config_definition.keys()),
+            ["additional_incidental_patterns"],
+        )
+
+    def test_config_surface_i4012_has_only_incidental_patterns(self):
+        # I4012 validates supplied context everywhere -- low-value types are
+        # not exempt -- so it exposes only additional_incidental_patterns.
+        self.assertEqual(
+            sorted(ContextSchemaViolation().config_definition.keys()),
+            ["additional_incidental_patterns"],
+        )
