@@ -182,7 +182,10 @@ class TestContextMissing(BaseTestCase):
         self.assertIn("UnsuppressedTopic", aggregate_matches[0].message)
         self.assertNotIn("SuppressedQueue", aggregate_matches[0].message)
 
-    def test_ignore_checks_on_all_resources_suppresses_aggregate_entirely(self):
+    def test_ignore_checks_on_all_resources_suppresses_both_findings(self):
+        # Suppressing I4010 on all resources removes both the resource
+        # aggregate and the template-level finding (since the >= 2 gate uses
+        # the suppression-filtered list).
         template = (
             "Resources:\n"
             "  QueueA:\n"
@@ -201,12 +204,7 @@ class TestContextMissing(BaseTestCase):
             "            - I4010\n"
         )
         matches = _match(_missing_rule(), template)
-        # Template finding may still fire (2 significant resources, no
-        # template context), but no resource aggregate.
-        aggregate_matches = [
-            m for m in matches if not m.message.startswith("This template")
-        ]
-        self.assertEqual(0, len(aggregate_matches))
+        self.assertEqual(0, len(matches))
 
 
 class TestContextMissingWhy(BaseTestCase):
@@ -507,15 +505,19 @@ class TestTargetingAndConfig(BaseTestCase):
         template = "Resources:\n  CDKMetadata:\n    Type: AWS::SQS::Queue\n"
         self.assertEqual([], _match(_missing_rule(), template))
 
-    def test_cdk_path_metadata_marks_resource_incidental(self):
-        # A resource whose logical ID looks primary is still incidental when its
-        # aws:cdk:path places it inside the CDK provider framework.
+    def test_cdk_path_provider_segment_is_incidental(self):
+        # The (?:^|/)Provider(?:/|$) alternative in _INCIDENTAL_PATH_PATTERN marks
+        # a resource incidental when its aws:cdk:path contains a /Provider/ segment,
+        # even if the path does NOT contain a framework-* handler suffix. This test
+        # isolates that branch — removing the /Provider/ alternative from the pattern
+        # would cause this test to fail, since 'Provider' alone does not match the
+        # framework-onEvent|isComplete|onTimeout alternatives.
         template = (
             "Resources:\n"
             "  StackHelperFn:\n"
             "    Type: AWS::Lambda::Function\n"
             "    Metadata:\n"
-            "      aws:cdk:path: Stack/MyResource/Provider/framework-onEvent/Resource\n"
+            "      aws:cdk:path: Stack/MyResource/Provider/Resource\n"
         )
         self.assertEqual([], _match(_missing_rule(), template))
 
@@ -584,6 +586,34 @@ class TestTargetingAndConfig(BaseTestCase):
             "  StackframeworkonTimeoutABC123:\n"
             "    Type: AWS::Lambda::Function\n"
             "  LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a:\n"
+            "    Type: AWS::Lambda::Function\n"
+        )
+        self.assertEqual([], _match(_missing_rule(), template))
+
+    def test_aws_custom_resource_singleton_is_incidental(self):
+        # The AwsCustomResource provider singleton has a fixed logical ID derived
+        # from lambdaPurpose + uuid (AWS679f53fac002430cb0da5b7982bd2287). Changing
+        # this ID would orphan deployed functions, so the pattern anchors it exactly.
+        # This test isolates that branch — removing the singleton alternative from
+        # _INCIDENTAL_ID_PATTERN would cause this test to fail, since the ID does
+        # not match LogRetention, Provider(?=framework), or framework*.
+        template = (
+            "Resources:\n"
+            "  AWS679f53fac002430cb0da5b7982bd2287:\n"
+            "    Type: AWS::Lambda::Function\n"
+        )
+        self.assertEqual([], _match(_missing_rule(), template))
+
+    def test_provider_framework_logical_id_is_incidental(self):
+        # The (?<=[a-z])Provider(?=framework) alternative in _INCIDENTAL_ID_PATTERN
+        # matches IDs where 'Provider' immediately precedes 'framework' but the
+        # suffix is NOT one of the known handler names (onEvent/isComplete/onTimeout).
+        # This test isolates that branch — removing Provider(?=framework) from the
+        # pattern would cause the test to fail, since 'frameworkHandler' does not
+        # match the frameworkonEvent|frameworkisComplete|frameworkonTimeout alternatives.
+        template = (
+            "Resources:\n"
+            "  AppProviderframeworkHandler123:\n"
             "    Type: AWS::Lambda::Function\n"
         )
         self.assertEqual([], _match(_missing_rule(), template))
