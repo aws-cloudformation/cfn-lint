@@ -11,9 +11,16 @@ from cfnlint.rules import CloudFormationLintRule, RuleMatch
 from cfnlint.rules.metadata._BaseContext import (
     _CONTEXT_DISPLAY,
     CONTEXT_KEY,
-    MSG_MISSING_WHY,
     ContextRuleMixin,
     _get_context,
+)
+
+_MSG_MISSING_WHY = (
+    "{logical_id}: {context_display} has no 'why'. Add 'why': purpose + notable "
+    'choices, telegraphic style (e.g. "buffer order events async; FIFO rejected '
+    '(throughput > ordering)") -- or set trust to {{src: infer, conf: low, '
+    'note: "rationale not documented"}}. Never restate the Type/logical '
+    "id/property values."
 )
 
 
@@ -53,7 +60,7 @@ class ContextMissingWhy(ContextRuleMixin, CloudFormationLintRule):
             matches.append(
                 RuleMatch(
                     ["Resources", logical_id, "Metadata", CONTEXT_KEY],
-                    MSG_MISSING_WHY.format(
+                    _MSG_MISSING_WHY.format(
                         logical_id=logical_id, context_display=_CONTEXT_DISPLAY
                     ),
                 )

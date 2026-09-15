@@ -12,11 +12,63 @@ from cfnlint.rules.metadata._BaseContext import (
     _CONTEXT_DISPLAY,
     _PATTERNS_CONFIG,
     CONTEXT_KEY,
-    MSG_RESOURCE_AGGREGATE,
-    MSG_TEMPLATE_MISSING,
     ContextRuleMixin,
     _get_context,
 )
+
+# Types not required to carry context (subordinate/policy resources).
+# Supplied context is still validated by I4012. Extend via
+# additional_low_value_types.
+_LOW_VALUE_TYPES = frozenset(
+    {
+        "AWS::IAM::Policy",
+        "AWS::Lambda::Permission",
+        "AWS::Logs::LogGroup",
+        "AWS::Logs::LogStream",
+        "AWS::S3::BucketPolicy",
+        "AWS::SNS::TopicPolicy",
+        "AWS::SQS::QueuePolicy",
+    }
+)
+
+_MSG_TEMPLATE_MISSING = (
+    f"This template is missing a top-level {_CONTEXT_DISPLAY} block describing its "
+    f"architecture. Add top-level {_CONTEXT_DISPLAY} and set 'arch' to a concise "
+    "summary of the template's high-level resource and data flow. Add 'must' as a "
+    "list only for known cross-cutting constraints; otherwise omit it. Do not "
+    "guess or invent constraints."
+)
+_MSG_RESOURCE_AGGREGATE = (
+    "These architecture-relevant resources are missing {context_display}: "
+    "{summary}. For each listed resource, add {context_display}. Set 'why' to the "
+    "resource's purpose or design rationale. If the rationale is not documented, "
+    'set trust to {{src: infer, conf: low, note: "rationale not documented"}} '
+    "instead of guessing. Add 'must' as a list only for known constraints whose "
+    "violation would break the system; otherwise omit it. Leave unlisted "
+    "resources unchanged."
+)
+
+
+def _is_low_value(resource: dict[str, Any], extra_types: list[str]) -> bool:
+    """True for subordinate/low-value types, exempt from missing-context here.
+
+    Any context these do supply is still validated by I4012.
+    """
+    rtype = resource.get("Type")
+    if not isinstance(rtype, str):
+        return False
+    return rtype in _LOW_VALUE_TYPES or rtype in extra_types
+
+
+def _is_module(resource: dict[str, Any]) -> bool:
+    """True for a MODULE pseudo-resource ('*::MODULE').
+
+    A module's Type can't say if it's architecture-relevant, so only the
+    missing-context requirement is suppressed; supplied context is still
+    validated by I4012.
+    """
+    rtype = resource.get("Type")
+    return isinstance(rtype, str) and rtype.endswith("::MODULE")
 
 
 class ContextMissing(ContextRuleMixin, CloudFormationLintRule):
@@ -74,10 +126,28 @@ class ContextMissing(ContextRuleMixin, CloudFormationLintRule):
             isinstance(template_metadata, dict) and CONTEXT_KEY in template_metadata
         )
         if len(missing) >= 2 and not has_template_context:
-            matches.append(RuleMatch(["Metadata"], MSG_TEMPLATE_MISSING))
+            matches.append(RuleMatch(["Metadata"], _MSG_TEMPLATE_MISSING))
         if missing:
             matches.append(self._resource_aggregate(missing))
         return matches
+
+    def _significant_resources(self, cfn: Any) -> list[tuple[str, dict[str, Any]]]:
+        """Primary resources *required* to carry context.
+
+        Non-incidental resources minus subordinate/low-value types and MODULE
+        pseudo-resources. I4011/I4012 use ``_primary_resources`` directly so they
+        still check any context present on a low-value resource or a module.
+        """
+        low_value_extra = self._extra_low_value_types()
+        return [
+            (logical_id, resource)
+            for logical_id, resource in self._primary_resources(cfn)
+            if not _is_low_value(resource, low_value_extra) and not _is_module(resource)
+        ]
+
+    def _extra_low_value_types(self) -> list[str]:
+        types = self.config.get("additional_low_value_types", [])
+        return [str(t) for t in types] if isinstance(types, list) else []
 
     def _resource_aggregate(
         self, missing: list[tuple[str, dict[str, Any]]]
@@ -90,7 +160,7 @@ class ContextMissing(ContextRuleMixin, CloudFormationLintRule):
         primary_id, _ = missing[0]
         return RuleMatch(
             ["Resources", primary_id],
-            MSG_RESOURCE_AGGREGATE.format(
+            _MSG_RESOURCE_AGGREGATE.format(
                 context_display=_CONTEXT_DISPLAY, summary=summary
             ),
         )

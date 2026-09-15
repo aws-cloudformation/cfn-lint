@@ -6,8 +6,11 @@ SPDX-License-Identifier: MIT-0
 from test.testlib.testcase import BaseTestCase
 from test.unit.rules.metadata._context_helpers import match, missing_rule
 
-from cfnlint.rules.metadata._BaseContext import CONTEXT_KEY, _expected_shape
-from cfnlint.rules.metadata.ContextSchemaViolation import ContextSchemaViolation
+from cfnlint.rules.metadata._BaseContext import CONTEXT_KEY
+from cfnlint.rules.metadata.ContextSchemaViolation import (
+    ContextSchemaViolation,
+    _expected_shape,
+)
 
 
 class TestContextSchemaRules(BaseTestCase):
