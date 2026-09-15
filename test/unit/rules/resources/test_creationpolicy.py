@@ -7,6 +7,7 @@ from collections import deque
 
 import pytest
 
+from cfnlint.context.context import Transforms
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.CreationPolicy import CreationPolicy
 
@@ -137,6 +138,21 @@ def template():
             [],
         ),
         (
+            "Invalid Wait Condition select policy",
+            {"Fn::Select": [0, [{"ResourceSignal": {"Count": 0, "Timeout": "PT1M"}}]]},
+            {
+                "path": deque(["Resources", "MyWaitCondition", "CreationPolicy"]),
+            },
+            [
+                ValidationError(
+                    "{'Fn::Select': [0, [{'ResourceSignal': {'Count': 0, "
+                    "'Timeout': 'PT1M'}}]]} is not of type 'object'",
+                    rule=CreationPolicy(),
+                    validator="type",
+                )
+            ],
+        ),
+        (
             "Invalid Instance",
             {"Foo": {"Bar"}},
             {
@@ -175,3 +191,35 @@ def test_deletion_policy(name, instance, expected, rule, validator):
     )
 
     assert errors == expected, f"{name}: {errors} != {expected}"
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        {
+            "path": deque(["Resources", "MyWaitCondition", "CreationPolicy"]),
+        },
+    ],
+    indirect=["path"],
+)
+def test_creation_policy_allows_select_with_language_extensions(rule, validator):
+    validator = validator.evolve(
+        context=validator.context.evolve(
+            transforms=Transforms(["AWS::LanguageExtensions"]),
+        )
+    )
+    errors = list(
+        rule.validate(
+            validator=validator,
+            dP="creationpolicy",
+            instance={
+                "Fn::Select": [
+                    0,
+                    [{"ResourceSignal": {"Count": 0, "Timeout": "PT1M"}}],
+                ]
+            },
+            schema={},
+        )
+    )
+
+    assert errors == []
