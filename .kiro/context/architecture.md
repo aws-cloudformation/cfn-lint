@@ -94,6 +94,7 @@ Template File(s) → Decode → Transform → Validate (Rules) → Format → Ou
   - `resources/`: Content-addressed schema bodies (`<hash>.json`) — the actual resource schemas
   - `extensions/`: Schema extensions for additional validation
   - `other/`: Non-resource schemas (functions, conditions, parameters, etc.)
+- `AdditionalSpecs/`: Additional specifications (e.g. region/service availability data)
 
 ## Key Workflows
 
@@ -290,7 +291,7 @@ Resource schemas are **not generated in this repo**. They are produced by the
 repo and published as `schemas-cfn-lint.zip` on its `latest` release (#4539).
 
 1. **Sync from enhanced-schemas** (`src/cfnlint/schema/manager.py`, `cfn-lint --update-specs`):
-   - Downloads `schemas-cfn-lint.zip` (guarded by `version.json` / ETag)
+   - Downloads `schemas-cfn-lint.zip` (guarded by `version.json` / ETag) into the schema cache (`~/.cache/aws/cfn-lint/schemas/`), which is used in preference to the bundled schemas when newer
    - Populates `providers/` (per-region indexes) and `resources/` (content-addressed bodies)
    - To add or fix a resource-schema constraint, patch the enhanced-schemas repo (`manual.json`), not this one
 

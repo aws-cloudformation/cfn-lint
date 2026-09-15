@@ -9,9 +9,12 @@
 Resource schemas — including Smithy-derived constraints, format keywords, and
 hand-authored corrections — are produced by
 [resource-provider-enhanced-schemas](https://github.com/aws-cloudformation/resource-provider-enhanced-schemas)
-and published as `schemas-cfn-lint.zip` on its `latest` release. cfn-lint
-downloads that archive into `src/cfnlint/data/schemas/{providers,resources}/`
-(see `src/cfnlint/schema/manager.py`; refresh with `cfn-lint --update-specs`).
+and published as `schemas-cfn-lint.zip` on its `latest` release. `cfn-lint
+--update-specs` downloads that archive into cfn-lint's schema **cache**
+(`~/.cache/aws/cfn-lint/schemas/`, or `$XDG_CACHE_HOME/aws/cfn-lint/schemas/`),
+which is preferred over the package's bundled schemas when it is newer
+(see `src/cfnlint/schema/manager.py`). The bundled `src/cfnlint/data/schemas/`
+set is regenerated from the same source at release time.
 
 To change a resource schema, open a PR against that repo — not this one.
 
