@@ -68,10 +68,10 @@ class MyRule(CfnLintJsonSchema):
 }
 ```
 
-**3. JSON Schema Patch**
-- JSON Patch operations (RFC 6902) to fix/enhance AWS schemas
-- Location: `src/cfnlint/data/schemas/patches/extensions/all/<resource_type>/manual.json`
-- Example:
+**3. Schema Correction / Constraint (enhanced-schemas repo)**
+- Fixing a schema bug or adding a value constraint (pattern, enum, min/max) is done in the [resource-provider-enhanced-schemas](https://github.com/aws-cloudformation/resource-provider-enhanced-schemas) repo, NOT here
+- Add an RFC 6902 `manual.json` patch under `schemas/patches/extensions/<resource_type>/`; it is applied when the schemas are assembled and flows into cfn-lint on the next sync
+- Example (`manual.json`):
 ```json
 [
   {"op": "add", "path": "/properties/DelaySeconds/maximum", "value": 900},
@@ -127,7 +127,7 @@ class MyRule(CfnLintJsonSchema):
 
 - Python rules: `src/cfnlint/rules/resources/<service>/<RuleName>.py`
 - Schema extensions: `src/cfnlint/data/schemas/extensions/<resource_type>/<filename>.json`
-- Schema patches: `src/cfnlint/data/schemas/patches/extensions/all/<resource_type>/manual.json`
+- Schema corrections/constraints: `manual.json` in the [resource-provider-enhanced-schemas](https://github.com/aws-cloudformation/resource-provider-enhanced-schemas) repo (not this repo)
 - Tests: `test/unit/rules/resources/<service>/test_<rule_name>.py`
 
 ---

@@ -10,10 +10,10 @@ src/cfnlint/           # Source code
 │   ├── functions/     # Intrinsic function validation
 │   ├── jsonschema/    # Schema-based rules
 │   └── custom/        # Custom rule operators
-├── data/schemas/      # JSON schemas
-│   ├── providers/     # AWS resource schemas (per region)
-│   ├── extensions/    # Schema extensions (organized by resource type)
-│   └── patches/       # Schema corrections
+├── data/schemas/      # JSON schemas (sourced from resource-provider-enhanced-schemas)
+│   ├── providers/     # Per-region index files: which resource types exist per region + content hashes
+│   ├── resources/     # Content-addressed schema bodies (<hash>.json) — the actual resource schemas
+│   └── extensions/    # Schema extensions (organized by resource type)
 ├── jsonschema/        # Custom JSON Schema validator
 ├── template/          # Template representation
 ├── schema/            # Schema management
@@ -42,7 +42,7 @@ scripts/               # Maintenance and schema updates
 
 ### Schemas
 - **Extensions**: `src/cfnlint/data/schemas/extensions/<resource_type>/<descriptive_name>.json`
-- **Patches**: `src/cfnlint/data/schemas/patches/extensions/all/<resource_type>/manual.json`
+- **Schema corrections/constraints**: add these in the [resource-provider-enhanced-schemas](https://github.com/aws-cloudformation/resource-provider-enhanced-schemas) repo (e.g. `schemas/patches/extensions/<resource_type>/manual.json`), NOT in this repo — cfn-lint consumes the assembled result.
 - **Resource type format**: Lowercase with underscores (e.g., `aws_ec2_instance`)
 
 ## Import Patterns
