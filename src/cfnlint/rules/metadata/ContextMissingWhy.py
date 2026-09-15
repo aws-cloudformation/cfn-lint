@@ -1,0 +1,61 @@
+"""
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
+"""
+
+from __future__ import annotations
+
+from typing import Any
+
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.rules.metadata._BaseContext import (
+    _CONTEXT_DISPLAY,
+    CONTEXT_KEY,
+    MSG_MISSING_WHY,
+    ContextRuleMixin,
+    _get_context,
+)
+
+
+class ContextMissingWhy(ContextRuleMixin, CloudFormationLintRule):
+    """missing-why: Context exists but has no 'why' and no reduced-confidence trust."""
+
+    id = "I4011"
+    experimental = True
+    shortdesc = "Context block has no 'why'"
+    description = (
+        f"Check that a {_CONTEXT_DISPLAY} block records a"
+        " 'why' rationale, or declares a trust block with reduced confidence"
+        " acknowledging the rationale is undocumented."
+    )
+    source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-attribute-metadata.html#aws-attribute-metadata-context-schema"
+    tags = ["metadata", "context"]
+
+    def match(self, cfn: Any) -> list[RuleMatch]:
+        if self._is_cdk_template(cfn):
+            return []
+        matches = []
+        for logical_id, resource in self._primary_resources(cfn):
+            context = _get_context(resource)
+            if not isinstance(context, dict):
+                continue
+            why = context.get("why")
+            trust = context.get("trust")
+            has_why = isinstance(why, str) and bool(why.strip())
+            # Only reduced confidence excuses a missing 'why'. conf: high is a
+            # claim that the rationale IS known, so it does not.
+            has_trust = isinstance(trust, dict) and trust.get("conf") in (
+                "low",
+                "medium",
+            )
+            if has_why or has_trust:
+                continue
+            matches.append(
+                RuleMatch(
+                    ["Resources", logical_id, "Metadata", CONTEXT_KEY],
+                    MSG_MISSING_WHY.format(
+                        logical_id=logical_id, context_display=_CONTEXT_DISPLAY
+                    ),
+                )
+            )
+        return matches

@@ -3,21 +3,11 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-# cfn-lint rules for CloudFormation Metadata.com.aws.cloudformation.Context
-# blocks, a convention for carrying design rationale in template metadata: a
-# top-level architecture summary plus per-resource "why / must / mutability"
-# notes (aws/aws-cdk#38381).
-#
-#   I4010 missing-context    Template or significant resource has no Context block
-#   I4011 missing-why        Context present but has neither 'why' nor 'trust'
-#   I4012 schema-violation   Supplied Context field fails schema validation
-#
-# All three are experimental and informational, so both --include-experimental
-# and --include-checks I are required before any of them emits a finding.
+# Shared infrastructure for the Context metadata validation rules
+# (I4010/I4011/I4012).
 #
 # CDK-synthesized templates are skipped entirely (detected by AWS::CDK::Metadata
-# or aws:cdk:path on any resource). The user authored L2/L3 constructs, not raw
-# CloudFormation, so context validation does not apply.
+# or aws:cdk:path). The user authored L2/L3 constructs, not raw CloudFormation.
 
 from __future__ import annotations
 
@@ -27,7 +17,7 @@ from typing import Any
 import cfnlint.data.schemas.other.metadata
 from cfnlint.helpers import load_resource
 from cfnlint.jsonschema import StandardValidator
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.rules import RuleMatch
 
 CONTEXT_KEY = "com.aws.cloudformation.Context"
 _CONTEXT_DISPLAY = "Metadata.com.aws.cloudformation.Context"
@@ -88,9 +78,6 @@ _LOW_VALUE_TYPES = frozenset(
 )
 
 _PATTERNS_CONFIG: dict[str, Any] = {"default": [], "type": "list", "itemtype": "string"}
-
-
-# Shared helpers, module-level so the mixin below stays stateless.
 
 
 def _is_incidental(
@@ -176,14 +163,14 @@ _MSG_WRONG_SHAPE = (
     "{location}: '{field}' does not match expected shape. {detail}. Fix the field "
     "to match the expected shape: {expected}."
 )
-_MSG_TEMPLATE_MISSING = (
+MSG_TEMPLATE_MISSING = (
     f"This template is missing a top-level {_CONTEXT_DISPLAY} block describing its "
     f"architecture. Add top-level {_CONTEXT_DISPLAY} and set 'arch' to a concise "
     "summary of the template's high-level resource and data flow. Add 'must' as a "
     "list only for known cross-cutting constraints; otherwise omit it. Do not "
     "guess or invent constraints."
 )
-_MSG_RESOURCE_AGGREGATE = (
+MSG_RESOURCE_AGGREGATE = (
     "These architecture-relevant resources are missing {context_display}: "
     "{summary}. For each listed resource, add {context_display}. Set 'why' to the "
     "resource's purpose or design rationale. If the rationale is not documented, "
@@ -192,7 +179,7 @@ _MSG_RESOURCE_AGGREGATE = (
     "violation would break the system; otherwise omit it. Leave unlisted "
     "resources unchanged."
 )
-_MSG_MISSING_WHY = (
+MSG_MISSING_WHY = (
     "{logical_id}: {context_display} has no 'why'. Add 'why': purpose + notable "
     'choices, telegraphic style (e.g. "buffer order events async; FIFO rejected '
     '(throughput > ordering)") -- or set trust to {{src: infer, conf: low, '
@@ -332,7 +319,7 @@ def _schema_findings(
     return findings
 
 
-class _ContextRuleMixin:
+class ContextRuleMixin:
     """Shared config (extra incidental patterns) and iteration helpers."""
 
     config: dict[str, Any]
@@ -428,145 +415,3 @@ class _ContextRuleMixin:
             ):
                 matches.append(RuleMatch(finding.path, finding.message))
         return matches
-
-
-class ContextMissing(_ContextRuleMixin, CloudFormationLintRule):
-    """missing-context: an architecture-relevant resource has no Context block."""
-
-    id = "I4010"
-    experimental = True
-    shortdesc = "Template or architecture-relevant resource has no Context block"
-    description = (
-        f"Check for a machine-readable {_CONTEXT_DISPLAY}"
-        " block on the template and on architecture-relevant resources."
-        " Incidental framework resources, subordinate types such as"
-        " AWS::Logs::LogGroup, and resource policies (AWS::IAM::Policy,"
-        " BucketPolicy, TopicPolicy, QueuePolicy, Lambda::Permission)"
-        " are not expected to carry one."
-    )
-    source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-attribute-metadata.html#aws-attribute-metadata-context-schema"
-    tags = ["metadata", "context"]
-
-    def __init__(self) -> None:
-        super().__init__()
-        # I4010 is the only rule that exempts low-value types from the
-        # missing-context requirement. I4011/I4012 validate supplied context
-        # everywhere, so they don't expose this option.
-        self.config_definition["additional_low_value_types"] = dict(_PATTERNS_CONFIG)
-        self.config.setdefault("additional_low_value_types", [])
-
-    def match(self, cfn: Any) -> list[RuleMatch]:
-        if self._is_cdk_template(cfn):
-            return []
-        matches = []
-        significant = self._significant_resources(cfn)
-        # Both findings aggregate over many resources, so per-resource
-        # ignore_checks has to be applied here rather than left to the runner's
-        # post-hoc match filter: that filter keys off a match's own path, which
-        # would suppress the whole aggregate because one listed resource happens
-        # to be first, and never suppresses the template finding at all (its
-        # path does not start with "Resources"). Filtering the input instead
-        # means suppressing one resource drops just that resource from both
-        # findings, and suppressing all of them drops both findings.
-        #
-        # Keys are matched exactly, as the runner does -- a directive key is a
-        # literal rule id, not a prefix.
-        directives = cfn.get_directives()
-        suppressed = set(directives.get(self.id, []))
-        missing = [
-            (logical_id, resource)
-            for logical_id, resource in significant
-            if _get_context(resource) is None and logical_id not in suppressed
-        ]
-        # An architecture summary describes how components relate, so require one
-        # only above a single resource -- one resource's own 'why' covers it.
-        template_metadata = cfn.template.get("Metadata")
-        has_template_context = (
-            isinstance(template_metadata, dict) and CONTEXT_KEY in template_metadata
-        )
-        if len(missing) >= 2 and not has_template_context:
-            matches.append(RuleMatch(["Metadata"], _MSG_TEMPLATE_MISSING))
-        if missing:
-            matches.append(self._resource_aggregate(missing))
-        return matches
-
-    def _resource_aggregate(
-        self, missing: list[tuple[str, dict[str, Any]]]
-    ) -> RuleMatch:
-        """Build one aggregate finding covering ``missing`` resources."""
-        summary = ", ".join(
-            f"{logical_id} ({resource.get('Type', 'unknown type')})"
-            for logical_id, resource in missing
-        )
-        primary_id, _ = missing[0]
-        return RuleMatch(
-            ["Resources", primary_id],
-            _MSG_RESOURCE_AGGREGATE.format(
-                context_display=_CONTEXT_DISPLAY, summary=summary
-            ),
-        )
-
-
-class ContextMissingWhy(_ContextRuleMixin, CloudFormationLintRule):
-    """missing-why: Context exists but has no 'why' and no reduced-confidence trust."""
-
-    id = "I4011"
-    experimental = True
-    shortdesc = "Context block has no 'why'"
-    description = (
-        f"Check that a {_CONTEXT_DISPLAY} block records a"
-        " 'why' rationale, or declares a trust block with reduced confidence"
-        " acknowledging the rationale is undocumented."
-    )
-    source_url = ContextMissing.source_url
-    tags = ["metadata", "context"]
-
-    def match(self, cfn: Any) -> list[RuleMatch]:
-        if self._is_cdk_template(cfn):
-            return []
-        matches = []
-        for logical_id, resource in self._primary_resources(cfn):
-            context = _get_context(resource)
-            if not isinstance(context, dict):
-                continue
-            why = context.get("why")
-            trust = context.get("trust")
-            has_why = isinstance(why, str) and bool(why.strip())
-            # Only reduced confidence excuses a missing 'why'. conf: high is a
-            # claim that the rationale IS known, so it does not.
-            has_trust = isinstance(trust, dict) and trust.get("conf") in (
-                "low",
-                "medium",
-            )
-            if has_why or has_trust:
-                continue
-            matches.append(
-                RuleMatch(
-                    ["Resources", logical_id, "Metadata", CONTEXT_KEY],
-                    _MSG_MISSING_WHY.format(
-                        logical_id=logical_id, context_display=_CONTEXT_DISPLAY
-                    ),
-                )
-            )
-        return matches
-
-
-class ContextSchemaViolation(_ContextRuleMixin, CloudFormationLintRule):
-    """schema-violation: a supplied Context block fails schema v1 validation."""
-
-    id = "I4012"
-    experimental = True
-    shortdesc = "Context field does not match the schema"
-    description = (
-        f"Check a supplied {_CONTEXT_DISPLAY} block against"
-        " the Context schema: field types and shapes, recognized enum values,"
-        " and fields placed at the correct level (template fields on the"
-        " template, resource fields on resources)."
-    )
-    source_url = ContextMissing.source_url
-    tags = ["metadata", "context"]
-
-    def match(self, cfn: Any) -> list[RuleMatch]:
-        if self._is_cdk_template(cfn):
-            return []
-        return self._schema_matches(cfn)
