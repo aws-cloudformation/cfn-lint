@@ -17,7 +17,6 @@
 ### 3. Schema Correction / Constraint (in enhanced-schemas repo)
 - Fixing a schema bug or adding a value constraint (pattern, enum, min/max) is **not** done in this repo
 - The resource schemas are assembled from [resource-provider-enhanced-schemas](https://github.com/aws-cloudformation/resource-provider-enhanced-schemas); add a `manual.json` RFC 6902 patch there (e.g. `schemas/patches/extensions/<resource_type>/manual.json`), then the change flows into cfn-lint on the next schema sync
-- The `src/cfnlint/data/schemas/patches/` tree in THIS repo is not consumed by cfn-lint — editing it has no effect
 
 ### 4. Custom Python Rule
 - Full custom validation logic

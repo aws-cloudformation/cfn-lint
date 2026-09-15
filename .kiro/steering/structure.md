@@ -13,8 +13,7 @@ src/cfnlint/           # Source code
 ├── data/schemas/      # JSON schemas (sourced from resource-provider-enhanced-schemas)
 │   ├── providers/     # Per-region index files: which resource types exist per region + content hashes
 │   ├── resources/     # Content-addressed schema bodies (<hash>.json) — the actual resource schemas
-│   ├── extensions/    # Schema extensions (organized by resource type)
-│   └── patches/       # Not consumed by cfn-lint — schema corrections now live in enhanced-schemas; editing here has no effect
+│   └── extensions/    # Schema extensions (organized by resource type)
 ├── jsonschema/        # Custom JSON Schema validator
 ├── template/          # Template representation
 ├── schema/            # Schema management
@@ -43,7 +42,7 @@ scripts/               # Maintenance and schema updates
 
 ### Schemas
 - **Extensions**: `src/cfnlint/data/schemas/extensions/<resource_type>/<descriptive_name>.json`
-- **Schema corrections/constraints**: add these in the [resource-provider-enhanced-schemas](https://github.com/aws-cloudformation/resource-provider-enhanced-schemas) repo (e.g. `schemas/patches/extensions/<resource_type>/manual.json`), NOT in this repo — cfn-lint consumes the assembled result. The local `data/schemas/patches/` tree is not consumed by cfn-lint; editing files there has no effect. (This is separate from the `--override-spec` feature, which applies a user-supplied patch file at load time.)
+- **Schema corrections/constraints**: add these in the [resource-provider-enhanced-schemas](https://github.com/aws-cloudformation/resource-provider-enhanced-schemas) repo (e.g. `schemas/patches/extensions/<resource_type>/manual.json`), NOT in this repo — cfn-lint consumes the assembled result.
 - **Resource type format**: Lowercase with underscores (e.g., `aws_ec2_instance`)
 
 ## Import Patterns
