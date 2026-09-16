@@ -37,6 +37,13 @@ class GetAttFormat(CfnLintKeyword):
         ]
 
         self._resource_type_attribute_exceptions = [("AWS::SSM::Parameter", "Value")]
+        self._resource_type_attribute_format_exceptions = [
+            (
+                "AWS::Serverless::Function",
+                "Arn",
+                "AWS::Lambda::Function.Arn",
+            )
+        ]
 
     def validate(
         self, validator: Validator, _, instance: Any, schema: Any
@@ -60,6 +67,13 @@ class GetAttFormat(CfnLintKeyword):
                 return
 
             if (t, attr) in self._resource_type_attribute_exceptions:
+                return
+
+            if (
+                t,
+                attr,
+                fmt,
+            ) in self._resource_type_attribute_format_exceptions:
                 return
 
             getatt_ptr = validator.context.resources[resource].get_atts(region)[attr]

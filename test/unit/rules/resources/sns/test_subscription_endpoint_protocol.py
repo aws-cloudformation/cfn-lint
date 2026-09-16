@@ -37,6 +37,14 @@ _template = {
                 "Role": "arn:aws:iam::123456789012:role/my-role",
             },
         },
+        "ServerlessFunction": {
+            "Type": "AWS::Serverless::Function",
+            "Properties": {
+                "Runtime": "python3.12",
+                "Handler": "index.handler",
+                "CodeUri": "src/",
+            },
+        },
         "Topic": {"Type": "AWS::SNS::Topic"},
         "Subscription": {
             "Type": "AWS::SNS::Subscription",
@@ -71,6 +79,25 @@ _template = {
                             "TopicArn": {"Ref": "Topic"},
                             "Protocol": "lambda",
                             "Endpoint": {"Fn::GetAtt": ["Function", "Arn"]},
+                        },
+                    },
+                },
+            },
+            deque(["Resources", "Subscription", "Properties"]),
+            {"fn_getatt": _getatt.fn_getatt},
+            0,
+        ),
+        # lambda + Serverless Function Arn — valid
+        (
+            {
+                "Resources": {
+                    **_template["Resources"],
+                    "Subscription": {
+                        "Type": "AWS::SNS::Subscription",
+                        "Properties": {
+                            "TopicArn": {"Ref": "Topic"},
+                            "Protocol": "lambda",
+                            "Endpoint": {"Fn::GetAtt": ["ServerlessFunction", "Arn"]},
                         },
                     },
                 },
