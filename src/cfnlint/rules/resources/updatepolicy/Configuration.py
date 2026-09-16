@@ -32,6 +32,10 @@ class Configuration(CfnLintJsonSchema):
         )
 
     def validate(self, validator: Validator, keywords: Any, instance: Any, schema: Any):
+        # Fn::Select declares an all_types output, so the generic output-type
+        # check (see #4641) treats it as object-compatible. CloudFormation,
+        # however, rejects a bare Fn::Select here ("Expected an object") unless
+        # AWS::LanguageExtensions resolves it before deployment. See #4645.
         update_policy = instance.get("UpdatePolicy")
         function, _ = is_function(update_policy)
         if (
@@ -44,15 +48,6 @@ class Configuration(CfnLintJsonSchema):
                 rule=self,
                 instance=update_policy,
                 validator="type",
-                validator_value="object",
-                schema_path=[
-                    "allOf",
-                    0,
-                    "then",
-                    "properties",
-                    "UpdatePolicy",
-                    "type",
-                ],
             )
             return
 

@@ -66,15 +66,6 @@ def rule():
                         ]
                     },
                     validator="type",
-                    validator_value="object",
-                    schema_path=[
-                        "allOf",
-                        0,
-                        "then",
-                        "properties",
-                        "UpdatePolicy",
-                        "type",
-                    ],
                 )
             ],
         ),

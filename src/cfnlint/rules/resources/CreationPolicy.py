@@ -83,6 +83,10 @@ class CreationPolicy(CfnLintJsonSchema):
             return
         resource_type = validator.context.resources[resource_name].type
 
+        # Fn::Select declares an all_types output, so the generic output-type
+        # check (see #4641) treats it as object-compatible. CloudFormation,
+        # however, rejects a bare Fn::Select here ("Expected an object") unless
+        # AWS::LanguageExtensions resolves it before deployment. See #4645.
         function, _ = is_function(instance)
         if (
             function == "Fn::Select"
