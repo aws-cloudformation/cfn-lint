@@ -12322,6 +12322,11 @@
    "createcapacityprovider": {},
    "createcodeinterpreter": {},
    "createconfigurationbundle": {},
+   "createconsentportal": {
+    "Resources": [
+     "consent-portal"
+    ]
+   },
    "createdataset": {},
    "createdatasetversion": {
     "Resources": [
@@ -12459,6 +12464,11 @@
    "deleteconfigurationbundle": {
     "Resources": [
      "configuration-bundle"
+    ]
+   },
+   "deleteconsentportal": {
+    "Resources": [
+     "consent-portal"
     ]
    },
    "deletedataset": {
@@ -12692,6 +12702,11 @@
    "getconfigurationbundleversion": {
     "Resources": [
      "configuration-bundle"
+    ]
+   },
+   "getconsentportal": {
+    "Resources": [
+     "consent-portal"
     ]
    },
    "getdataset": {
@@ -12998,6 +13013,7 @@
      "configuration-bundle"
     ]
    },
+   "listconsentportals": {},
    "listdatasetexamples": {
     "Resources": [
      "dataset"
@@ -13341,6 +13357,11 @@
      "configuration-bundle"
     ]
    },
+   "updateconsentportal": {
+    "Resources": [
+     "consent-portal"
+    ]
+   },
    "updatedataset": {
     "Resources": [
      "dataset"
@@ -13522,6 +13543,14 @@
    "configuration-bundle": {
     "ARNFormats": [
      "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:configuration-bundle/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "consent-portal": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:${Account}:consent-portal/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -25472,6 +25501,11 @@
      "instance"
     ]
    },
+   "listevaluationformaiversions": {
+    "Resources": [
+     "instance"
+    ]
+   },
    "listevaluationforms": {
     "Resources": [
      "instance"
@@ -30105,6 +30139,12 @@
      "dxlag"
     ]
    },
+   "associateconnectionstoresiliencygroup": {
+    "Resources": [
+     "dx-resiliency-group",
+     "dxcon"
+    ]
+   },
    "associateconnectionwithlag": {
     "Resources": [
      "dxcon",
@@ -30195,6 +30235,7 @@
      "dxlag"
     ]
    },
+   "createresiliencygroup": {},
    "createtransitvirtualinterface": {
     "Resources": [
      "dxcon",
@@ -30230,6 +30271,11 @@
    "deletelag": {
     "Resources": [
      "dxlag"
+    ]
+   },
+   "deleteresiliencygroup": {
+    "Resources": [
+     "dx-resiliency-group"
     ]
    },
    "deletevirtualinterface": {
@@ -30309,6 +30355,7 @@
    "describetags": {
     "Resources": [
      "dx-gateway",
+     "dx-resiliency-group",
      "dxcon",
      "dxlag",
      "dxvif"
@@ -30328,12 +30375,29 @@
      "dxlag"
     ]
    },
+   "disassociateconnectionsfromresiliencygroup": {
+    "Resources": [
+     "dx-resiliency-group",
+     "dxcon"
+    ]
+   },
    "disassociatemacseckey": {
     "Resources": [
      "dxcon",
      "dxlag"
     ]
    },
+   "getresiliencygroup": {
+    "Resources": [
+     "dx-resiliency-group"
+    ]
+   },
+   "listresiliencygroupassociations": {
+    "Resources": [
+     "dx-resiliency-group"
+    ]
+   },
+   "listresiliencygroups": {},
    "listvirtualinterfaceroutes": {
     "Resources": [
      "dxvif"
@@ -30357,6 +30421,7 @@
    "tagresource": {
     "Resources": [
      "dx-gateway",
+     "dx-resiliency-group",
      "dxcon",
      "dxlag",
      "dxvif"
@@ -30365,12 +30430,18 @@
    "untagresource": {
     "Resources": [
      "dx-gateway",
+     "dx-resiliency-group",
      "dxcon",
      "dxlag",
      "dxvif"
     ]
    },
    "updateconnection": {
+    "Resources": [
+     "dxcon"
+    ]
+   },
+   "updateconnectionsbillingmode": {
     "Resources": [
      "dxcon"
     ]
@@ -30386,6 +30457,11 @@
      "dxlag"
     ]
    },
+   "updateresiliencygroup": {
+    "Resources": [
+     "dx-resiliency-group"
+    ]
+   },
    "updatevirtualinterfaceattributes": {
     "Resources": [
      "dxvif"
@@ -30396,6 +30472,14 @@
    "dx-gateway": {
     "ARNFormats": [
      "arn:${Partition}:directconnect::${Account}:dx-gateway/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "dx-resiliency-group": {
+    "ARNFormats": [
+     "arn:${Partition}:directconnect::${Account}:dx-resiliency-group/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -50957,6 +51041,11 @@
      "datastore"
     ]
    },
+   "describefhirbulkpatchjob": {
+    "Resources": [
+     "datastore"
+    ]
+   },
    "describefhirdatastore": {
     "Resources": [
      "datastore"
@@ -51132,6 +51221,11 @@
     ]
    },
    "startfhirbulkmembermatchjob": {
+    "Resources": [
+     "datastore"
+    ]
+   },
+   "startfhirbulkpatchjob": {
     "Resources": [
      "datastore"
     ]
@@ -52307,7 +52401,11 @@
  },
  "identitystore": {
   "Actions": {
-   "addregion": {},
+   "addregion": {
+    "Resources": [
+     "Identitystore"
+    ]
+   },
    "creategroup": {
     "Resources": [
      "Identitystore"
@@ -52340,7 +52438,11 @@
      "User"
     ]
    },
-   "deleteidentitystore": {},
+   "deleteidentitystore": {
+    "Resources": [
+     "Identitystore"
+    ]
+   },
    "deleteuser": {
     "Resources": [
      "Identitystore",
@@ -52361,7 +52463,11 @@
      "User"
     ]
    },
-   "describeregion": {},
+   "describeregion": {
+    "Resources": [
+     "Identitystore"
+    ]
+   },
    "describeuser": {
     "Resources": [
      "Identitystore",
@@ -52416,14 +52522,22 @@
      "Identitystore"
     ]
    },
-   "listregions": {},
+   "listregions": {
+    "Resources": [
+     "Identitystore"
+    ]
+   },
    "listusers": {
     "Resources": [
      "AllUsers",
      "Identitystore"
     ]
    },
-   "removeregion": {},
+   "removeregion": {
+    "Resources": [
+     "Identitystore"
+    ]
+   },
    "reserveuser": {
     "Resources": [
      "Identitystore"
@@ -52435,7 +52549,11 @@
      "Identitystore"
     ]
    },
-   "updateidentitystore": {},
+   "updateidentitystore": {
+    "Resources": [
+     "Identitystore"
+    ]
+   },
    "updateuser": {
     "Resources": [
      "Identitystore",
@@ -72401,6 +72519,7 @@
  },
  "notifications": {
   "Actions": {
+   "accesssensitiveevents": {},
    "associatechannel": {
     "Resources": [
      "NotificationConfiguration"
@@ -72518,6 +72637,11 @@
    "listtagsforresource": {},
    "putfeatureoptinstatus": {},
    "registernotificationhub": {},
+   "subscribesensitiveevents": {
+    "Resources": [
+     "ManagedNotificationConfiguration"
+    ]
+   },
    "tagresource": {
     "Resources": [
      "NotificationConfiguration"
@@ -72531,6 +72655,11 @@
    "updateeventrule": {
     "Resources": [
      "EventRule"
+    ]
+   },
+   "updatemanagednotificationchannelassociation": {
+    "Resources": [
+     "ManagedNotificationConfiguration"
     ]
    },
    "updatenotificationconfiguration": {
@@ -85658,12 +85787,22 @@
      "application"
     ]
    },
+   "listtestrundependencies": {
+    "Resources": [
+     "service"
+    ]
+   },
    "listtestrunevents": {
     "Resources": [
      "service"
     ]
    },
    "listtestruns": {
+    "Resources": [
+     "service"
+    ]
+   },
+   "listtestrunsourceevents": {
     "Resources": [
      "service"
     ]
@@ -96625,6 +96764,12 @@
      "mailmanager-rule-set"
     ]
    },
+   "applytrackingconfigurationoverrides": {},
+   "associateemailidentitycertificate": {
+    "Resources": [
+     "identity"
+    ]
+   },
    "batchgetmetricdata": {
     "Resources": [
      "configuration-set",
@@ -96880,6 +97025,11 @@
    "describeconfigurationset": {},
    "describereceiptrule": {},
    "describereceiptruleset": {},
+   "disassociateemailidentitycertificate": {
+    "Resources": [
+     "identity"
+    ]
+   },
    "getaccount": {},
    "getaccountsendingenabled": {},
    "getaddoninstance": {
@@ -97084,6 +97234,11 @@
    "listdeliverabilitytestreports": {},
    "listdomaindeliverabilitycampaigns": {},
    "listemailidentities": {},
+   "listemailidentitycertificates": {
+    "Resources": [
+     "identity"
+    ]
+   },
    "listemailtemplates": {},
    "listexportjobs": {},
    "listidentities": {},
@@ -97385,6 +97540,11 @@
    "updatearchive": {
     "Resources": [
      "mailmanager-archive"
+    ]
+   },
+   "updateconfigurationset": {
+    "Resources": [
+     "configuration-set"
     ]
    },
    "updateconfigurationseteventdestination": {
@@ -105913,11 +106073,17 @@
    "service": {
     "ARNFormats": [
      "arn:${Partition}:vpc-lattice:${Region}:${Account}:service/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "tcp service": {
     "ARNFormats": [
      "arn:${Partition}:vpc-lattice:${Region}:${Account}:service/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    }
   }
