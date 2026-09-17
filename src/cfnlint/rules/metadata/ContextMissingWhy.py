@@ -40,7 +40,7 @@ class ContextMissingWhy(ContextRuleMixin, CloudFormationLintRule):
     tags = ["metadata", "context"]
 
     def match(self, cfn: Any) -> list[RuleMatch]:
-        if self._is_cdk_template(cfn):
+        if cfn.is_cdk_template():
             return []
         matches = []
         for logical_id, resource in self._primary_resources(cfn):

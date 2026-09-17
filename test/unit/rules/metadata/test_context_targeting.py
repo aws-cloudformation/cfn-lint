@@ -18,17 +18,17 @@ from cfnlint.rules.metadata.ContextSchemaViolation import ContextSchemaViolation
 class TestTargetingAndConfig(BaseTestCase):
     """Shared targeting policy and configuration options."""
 
-    def test_cdk_metadata_resource_is_incidental(self):
+    def test_cdk_metadata_resource_marks_template_as_cdk(self):
         template = "Resources:\n  CDKMetadata:\n    Type: AWS::CDK::Metadata\n"
         self.assertEqual([], match(missing_rule(), template))
 
-    def test_cdk_metadata_logical_id_with_other_type_is_incidental(self):
+    def test_cdk_metadata_logical_id_marks_template_as_cdk(self):
         template = "Resources:\n  CDKMetadata:\n    Type: AWS::SQS::Queue\n"
         self.assertEqual([], match(missing_rule(), template))
 
     def test_aws_cdk_path_marks_template_as_cdk(self):
-        # Any resource carrying aws:cdk:path triggers _is_cdk_template, which
-        # short-circuits match() to return [] before incidental-ID matching.
+        # Any resource carrying aws:cdk:path triggers cfn.is_cdk_template(),
+        # which short-circuits match() to return [] before incidental-ID matching.
         # This covers CDK stacks synthesized with analyticsReporting: false
         # (no AWS::CDK::Metadata resource).
         template = (

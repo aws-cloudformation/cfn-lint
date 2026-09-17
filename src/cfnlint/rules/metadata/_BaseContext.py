@@ -4,11 +4,11 @@ SPDX-License-Identifier: MIT-0
 """
 
 # Shared infrastructure for the Context metadata validation rules
-# (I4010/W4011/W4012): CDK/incidental detection, resource iteration, and the
+# (I4010/W4011/W4012): incidental detection, resource iteration, and the
 # common config surface. Rule-specific logic lives in each rule's own file.
 #
-# CDK-synthesized templates are skipped entirely (detected by AWS::CDK::Metadata
-# or aws:cdk:path). The user authored L2/L3 constructs, not raw CloudFormation.
+# CDK-synthesized templates are skipped via Template.is_cdk_template() in core.
+# The user authored L2/L3 constructs, not raw CloudFormation.
 
 from __future__ import annotations
 
@@ -33,26 +33,17 @@ _INCIDENTAL_ID_PATTERN = re.compile(
     r"|frameworkonEvent|frameworkisComplete"
     rf"|frameworkonTimeout|^{_CDK_AWS_CUSTOM_RESOURCE_SINGLETON_ID}$"
 )
-_CDK_METADATA_TYPE = "AWS::CDK::Metadata"
-_CDK_METADATA_LOGICAL_ID = "CDKMetadata"
-_CDK_PATH_KEY = "aws:cdk:path"
-
 _PATTERNS_CONFIG: dict[str, Any] = {"default": [], "type": "list", "itemtype": "string"}
 
 
-def _is_incidental(
-    logical_id: str, resource: dict[str, Any], extra_patterns: list[str]
-) -> bool:
+def _is_incidental(logical_id: str, extra_patterns: list[str]) -> bool:
     """True when the resource is incidental/framework per the targeting policy.
 
-    User-configured patterns match the logical ID only. (Templates carrying
-    aws:cdk:path are already short-circuited as CDK templates before this
-    function is reached, so path-based matching here would be dead code.)
+    CDK-template detection is handled by Template.is_cdk_template() in core,
+    which short-circuits match() before this function is reached. This function
+    handles only incidental-pattern matching (LogRetention, framework handlers,
+    AwsCustomResource singleton, and user-configured patterns).
     """
-    if resource.get("Type") == _CDK_METADATA_TYPE:
-        return True
-    if logical_id == _CDK_METADATA_LOGICAL_ID:
-        return True
     if _INCIDENTAL_ID_PATTERN.search(logical_id):
         return True
     for pattern in extra_patterns:
@@ -94,24 +85,6 @@ class ContextRuleMixin:
         }
         self.config.setdefault("additional_incidental_patterns", [])
 
-    @staticmethod
-    def _is_cdk_template(cfn: Any) -> bool:
-        """True when the template was synthesized by CDK (out of scope).
-
-        Detected via the AWS::CDK::Metadata resource, the CDKMetadata logical
-        ID, or any resource carrying aws:cdk:path (covers analyticsReporting off).
-        """
-        for logical_id, resource in cfn.get_resources().items():
-            if (
-                resource.get("Type") == _CDK_METADATA_TYPE
-                or str(logical_id) == _CDK_METADATA_LOGICAL_ID
-            ):
-                return True
-            metadata = resource.get("Metadata")
-            if isinstance(metadata, dict) and _CDK_PATH_KEY in metadata:
-                return True
-        return False
-
     def _extra_patterns(self) -> list[str]:
         patterns = self.config.get("additional_incidental_patterns", [])
         return [str(p) for p in patterns] if isinstance(patterns, list) else []
@@ -121,7 +94,7 @@ class ContextRuleMixin:
         extra = self._extra_patterns()
         results = []
         for logical_id, resource in cfn.get_resources().items():
-            if _is_incidental(str(logical_id), resource, extra):
+            if _is_incidental(str(logical_id), extra):
                 continue
             results.append((str(logical_id), resource))
         return results
