@@ -1401,6 +1401,51 @@ ElasticLoadBalancer -> MyEC2Instance [key=0, source_paths="[\\"Properties\\", \\
         template = Template("test.yaml", template)
         self.assertFalse(template.is_cdk_template())
 
+    def test_is_cdk_metadata_resource_type(self):
+        template = Template(
+            "test.yaml",
+            {
+                "Resources": {
+                    "CDKMetadata": {
+                        "Type": "AWS::CDK::Metadata",
+                        "Properties": {"Analytics": "v2:some-data"},
+                    },
+                },
+            },
+        )
+        self.assertTrue(template.is_cdk_template())
+
+    def test_is_cdk_metadata_logical_id(self):
+        # CDKMetadata logical ID with a non-CDK type still signals CDK.
+        template = Template(
+            "test.yaml",
+            {
+                "Resources": {
+                    "CDKMetadata": {
+                        "Type": "AWS::SQS::Queue",
+                    },
+                },
+            },
+        )
+        self.assertTrue(template.is_cdk_template())
+
+    def test_is_cdk_path_metadata(self):
+        # Covers analyticsReporting: false (no AWS::CDK::Metadata resource).
+        template = Template(
+            "test.yaml",
+            {
+                "Resources": {
+                    "UserQueue": {
+                        "Type": "AWS::SQS::Queue",
+                        "Metadata": {
+                            "aws:cdk:path": "Stack/UserQueue/Resource",
+                        },
+                    },
+                },
+            },
+        )
+        self.assertTrue(template.is_cdk_template())
+
     def test_is_cdk_bad_resources(self):
         template = {
             "Resources": [

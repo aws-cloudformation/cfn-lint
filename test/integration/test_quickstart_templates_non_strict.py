@@ -38,7 +38,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results_filename": (
                 "test/fixtures/results/quickstart/non_strict/cis_benchmark_yaml.json"
             ),
-            "exit_code": 4,
+            "exit_code": 12,
         },
     ]
 

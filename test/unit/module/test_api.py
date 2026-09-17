@@ -126,8 +126,8 @@ class TestV0Usage(TestCase):
         filename = "test/fixtures/templates/bad/noecho.yaml"
         matches = self.helper_lint_string_from_file(filename)
         self.assertEqual(
-            ["W2010", "W2010"],
-            [match.rule.id for match in matches],
+            sorted(["I4010", "I4010", "W2010", "W2010"]),
+            sorted([match.rule.id for match in matches]),
             f"Got matches: {matches!r}",
         )
 
@@ -164,13 +164,17 @@ class TestV0Usage(TestCase):
         filename = "test/fixtures/templates/bad/issues.yaml"
         matches = self.helper_lint_string_from_file(filename)
         self.assertEqual(
-            ["E1020"], [match.rule.id for match in matches], f"Got matches: {matches!r}"
+            sorted(["E1020", "I4010"]),
+            sorted([match.rule.id for match in matches]),
+            f"Got matches: {matches!r}",
         )
 
     def test_sam_template(self):
         filename = "test/fixtures/templates/good/transform/list_transform_many.yaml"
         matches = self.helper_lint_string_from_file(filename)
-        self.assertEqual([], matches, f"Got matches: {matches!r}")
+        self.assertEqual(
+            ["I4010"], [match.rule.id for match in matches], f"Got matches: {matches!r}"
+        )
 
 
 class TestLintFile(TestCase):

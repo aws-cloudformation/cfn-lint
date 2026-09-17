@@ -159,6 +159,10 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
     def is_cdk_template(self) -> bool:
         """Check if the template was created by the AWS Cloud Development Kit (CDK).
 
+        Detected via the AWS::CDK::Metadata resource type, the CDKMetadata
+        logical ID, or any resource carrying an aws:cdk:path metadata entry
+        (covers stacks synthesized with analyticsReporting disabled).
+
         Returns:
             bool: True if the template was created by CDK, False otherwise.
         """
@@ -166,13 +170,16 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         if not isinstance(resources, dict):
             return False
 
-        for _, properties in resources.items():
+        for logical_id, properties in resources.items():
             if not isinstance(properties, dict):
                 continue
             resource_type = properties.get("Type")
-            if not isinstance(resource_type, str):
-                continue
-            if resource_type == "AWS::CDK::Metadata":
+            if isinstance(resource_type, str) and resource_type == "AWS::CDK::Metadata":
+                return True
+            if str(logical_id) == "CDKMetadata":
+                return True
+            metadata = properties.get("Metadata")
+            if isinstance(metadata, dict) and "aws:cdk:path" in metadata:
                 return True
 
         return False

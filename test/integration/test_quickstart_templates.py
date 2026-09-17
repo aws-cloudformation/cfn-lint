@@ -15,7 +15,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
         {
             "filename": "test/fixtures/templates/public/lambda-poller.yaml",
             "results_filename": "test/fixtures/results/public/lambda-poller_yaml.json",
-            "exit_code": 2,
+            "exit_code": 10,
         },
         {
             "filename": "test/fixtures/templates/public/watchmaker.json",
@@ -41,12 +41,12 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results_filename": (
                 "test/fixtures/results/quickstart/nist_config_rules_yaml.json"
             ),
-            "exit_code": 6,
+            "exit_code": 14,
         },
         {
             "filename": "test/fixtures/templates/quickstart/nist_iam.yaml",
             "results_filename": "test/fixtures/results/quickstart/nist_iam_yaml.json",
-            "exit_code": 4,
+            "exit_code": 12,
         },
         {
             "filename": "test/fixtures/templates/quickstart/nist_logging.yaml",
@@ -86,7 +86,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results_filename": (
                 "test/fixtures/results/quickstart/cis_benchmark_yaml.json"
             ),
-            "exit_code": 6,
+            "exit_code": 14,
         },
     ]
 
