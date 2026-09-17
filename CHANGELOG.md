@@ -1,3 +1,25 @@
+### v1.57.0
+## What's Changed
+* fix: Require ProvisionedThroughput when DynamoDB BillingMode is omitted by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4702
+* fix [E3700](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3700): Skip first-stage check for conditional stage entries by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4701
+* fix: Escape hyphen in SSM dynamic reference pattern by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4700
+* add [E3725](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3725): FSx FileSystemType-specific StorageCapacity by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4708
+* docs: Refresh stale .kiro steering and prompts by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4710
+* fix: reject `Fn::Select` lifecycle policies without transform by @0xTaoZ in https://github.com/aws-cloudformation/cfn-lint/pull/4704
+* chore(deps): bump pyinstaller from `6.22.2` to `6.22.3` in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4713
+* refactor: simplify `Fn::Select` lifecycle policy error metadata by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4711
+* fix: resolve every index `Fn::Select` can take by @ashvinctrl in https://github.com/aws-cloudformation/cfn-lint/pull/4705
+* Update CloudFormation schemas to `2026-09-17` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4703
+* feat: Add metadata context validation rules (I4010, I4011, I4012) by @chrisqm-dev in https://github.com/aws-cloudformation/cfn-lint/pull/4655
+* add [I4010](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I4010): Template or architecture-relevant resource has no Context block by @chrisqm-dev in https://github.com/aws-cloudformation/cfn-lint/pull/4708
+* add [W4011](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W4011): Context block has no 'why' by @chrisqm-dev in https://github.com/aws-cloudformation/cfn-lint/pull/4708
+* add [W4012](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W4012): Context field does not match the schema by @chrisqm-dev in https://github.com/aws-cloudformation/cfn-lint/pull/4708
+
+## New Contributors
+* @ashvinctrl made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4705
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.56.3...v1.57.0
+
 ### v1.56.3
 ## What's Changed
 * fix [W1028](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W1028): scope to enclosing `Fn::If` pins by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4690
