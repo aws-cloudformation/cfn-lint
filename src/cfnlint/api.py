@@ -10,7 +10,7 @@ from typing import List
 
 from cfnlint.config import ConfigMixIn, ManualArgs
 from cfnlint.decode.decode import decode_str
-from cfnlint.helpers import REGION_PRIMARY, REGIONS
+from cfnlint.helpers import REGION_PRIMARY, REGIONS, dump_template_json
 from cfnlint.rules import Match, RulesCollection
 from cfnlint.runner import Runner, run_template_by_data
 
@@ -187,3 +187,34 @@ def graph(s: str) -> str | None:
         return None
 
     return cfn.graph.to_dot_string()
+
+
+def to_json(s: str, indent: int | None = 2) -> str | None:
+    """Convert a template string to JSON.
+
+    Accepts YAML or JSON. Short form intrinsic functions are written out in the
+    long form JSON requires, so ``!Ref Foo`` becomes ``{"Ref": "Foo"}`` and
+    ``!GetAtt Foo.Arn`` becomes ``{"Fn::GetAtt": ["Foo", "Arn"]}``.
+
+    Parameters
+    ----------
+    s : str
+        the template string
+    indent : int or None
+        the JSON indent level, None to write a single line
+
+    Returns
+    -------
+    str or None
+        the template as JSON, or None if the template could not be parsed or
+        holds a value with no JSON equivalent. Use ``lint`` to get the parse
+        errors.
+    """
+    template, errors = decode_str(s)
+    if errors or template is None:
+        return None
+
+    try:
+        return dump_template_json(template, indent)
+    except (TypeError, ValueError):
+        return None

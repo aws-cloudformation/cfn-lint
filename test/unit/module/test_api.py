@@ -5,12 +5,14 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+import json
 import os
 import tempfile
 from pathlib import Path
 from unittest import TestCase
 
 from cfnlint import lint, lint_all, lint_by_config, lint_file
+from cfnlint.api import to_json
 from cfnlint.config import ManualArgs
 from cfnlint.core import get_rules
 from cfnlint.helpers import REGIONS
@@ -399,3 +401,121 @@ Resources:
 
         result = graph("not: [valid: yaml: {")
         self.assertIsNone(result)
+
+
+class TestToJson(TestCase):
+    """Test to_json function"""
+
+    def test_to_json(self):
+        template = """AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${AWS::StackName}-bucket'
+      Tags:
+        - Key: arn
+          Value: !GetAtt Role.Arn
+        - Key: ref
+          Value: !Ref AWS::Region
+        - Key: joined
+          Value: !Join ['-', [a, b]]
+"""
+        result = to_json(template)
+
+        self.assertEqual(
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Resources": {
+                    "Bucket": {
+                        "Type": "AWS::S3::Bucket",
+                        "Properties": {
+                            "BucketName": {"Fn::Sub": "${AWS::StackName}-bucket"},
+                            "Tags": [
+                                {
+                                    "Key": "arn",
+                                    "Value": {"Fn::GetAtt": ["Role", "Arn"]},
+                                },
+                                {"Key": "ref", "Value": {"Ref": "AWS::Region"}},
+                                {
+                                    "Key": "joined",
+                                    "Value": {"Fn::Join": ["-", ["a", "b"]]},
+                                },
+                            ],
+                        },
+                    }
+                },
+            },
+            json.loads(result),
+        )
+
+    def test_to_json_keeps_key_order(self):
+        template = """Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+Parameters:
+  Name:
+    Type: String
+"""
+        result = to_json(template)
+
+        self.assertEqual(["Resources", "Parameters"], list(json.loads(result).keys()))
+
+    def test_to_json_indent(self):
+        template = "Resources:\n  Bucket:\n    Type: AWS::S3::Bucket\n"
+
+        self.assertEqual(
+            '{"Resources": {"Bucket": {"Type": "AWS::S3::Bucket"}}}',
+            to_json(template, indent=None),
+        )
+
+    def test_to_json_unquoted_date(self):
+        """An unquoted timestamp is loaded as a date and has to become a string"""
+        template = """AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+"""
+        result = to_json(template)
+
+        self.assertEqual(
+            "2010-09-09", json.loads(result).get("AWSTemplateFormatVersion")
+        )
+
+    def test_to_json_from_json(self):
+        """A JSON template converts to itself"""
+        template = '{"Resources": {"Bucket": {"Type": "AWS::S3::Bucket"}}}'
+        result = to_json(template)
+
+        self.assertEqual(json.loads(template), json.loads(result))
+
+    def test_to_json_empty_template(self):
+        self.assertEqual("{}", to_json(""))
+
+    def test_to_json_invalid_template(self):
+        self.assertIsNone(to_json("not: [valid: yaml: {"))
+
+    def test_to_json_unserializable_value(self):
+        """A value with no JSON equivalent gets the same treatment as bad syntax"""
+        self.assertIsNone(to_json("Description: !!binary R0lGODlh\n"))
+
+    def test_to_json_out_of_range_float(self):
+        """NaN and Infinity are not valid JSON, so refuse to write them"""
+        self.assertIsNone(to_json("Description: .nan\n"))
+
+    def test_to_json_is_idempotent(self):
+        """Converting the output again gives the same JSON back"""
+        with open("test/fixtures/templates/good/generic.yaml") as f:
+            once = to_json(f.read())
+
+        self.assertEqual(once, to_json(once))
+
+    def test_to_json_duplicate_keys(self):
+        """Duplicate keys are a parse error, not something to silently drop"""
+        template = """Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+  Bucket:
+    Type: AWS::SQS::Queue
+"""
+        self.assertIsNone(to_json(template))

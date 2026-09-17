@@ -8,18 +8,20 @@ from __future__ import annotations
 import logging
 import os
 import sys
-from typing import Any, Iterator
+from typing import Any, Iterator, NoReturn
 
 import cfnlint.formatters
 import cfnlint.maintenance
 from cfnlint.config import ConfigMixIn, configure_logging
+from cfnlint.decode import decode
 from cfnlint.exceptions import (
     CfnLintExitException,
     ConfigFileError,
     UnexpectedRuleException,
 )
+from cfnlint.helpers import dump_template_json
 from cfnlint.rules import Match, Rules
-from cfnlint.rules.errors import ConfigError
+from cfnlint.rules.errors import ConfigError, ParseError
 from cfnlint.runner.deployment_file.runner import expand_deployment_files
 from cfnlint.runner.parameter_file.runner import expand_parameter_files
 from cfnlint.runner.template import (
@@ -86,6 +88,10 @@ class Runner:
             Output the results of the template scan to the console or a file.
         _exit(matches: list[Match]) -> int:
             Determine the appropriate exit code based on the severity of the matches.
+        _cli_convert_exit(message: str) -> NoReturn:
+            Report a problem that stopped a conversion and exit.
+        _cli_convert() -> NoReturn:
+            Write the template out in another format instead of linting it.
         run() -> Iterator[Match]:
             Run the template validation process and yield any matches found.
         cli() -> None:
@@ -198,6 +204,63 @@ class Runner:
                 exit_code = exit_code | 2
 
         sys.exit(exit_code)
+
+    def _cli_convert_exit(self, message: str) -> NoReturn:
+        """Report a problem that stopped a conversion and exit."""
+        print(f"Configuration error: {message}", file=sys.stderr)
+        sys.exit(1)
+
+    def _cli_convert(self) -> NoReturn:
+        """Write the template out in another format instead of linting it.
+
+        The converted template goes to stdout, or to ``--output-file`` when one
+        is given.  Anything else, including parse errors, goes to stderr so that
+        stdout can be redirected straight into a file.
+        """
+        if self.config.deployment_files:
+            self._cli_convert_exit("--convert cannot be used with deployment files")
+
+        templates = self.config.templates
+        if templates is None:
+            # No template was given, so it is coming in on stdin.  This is the
+            # same convention the lint path uses.  An empty list is different:
+            # a template was given and it resolved to nothing.
+            filename: str | None = None
+        elif len(templates) == 1:
+            filename = templates[0]
+        else:
+            self._cli_convert_exit(
+                f"--convert needs one template, found {len(templates)}"
+            )
+
+        template, matches = decode(filename)
+        output: str | None = None
+        if not matches:
+            try:
+                output = dump_template_json(template)
+            except (TypeError, ValueError) as e:
+                matches = [
+                    Match.create(
+                        filename=filename or "",
+                        rule=ParseError(),
+                        message=f"Template cannot be written as JSON: {str(e)}",
+                    )
+                ]
+
+        if output is None:
+            formatter = get_formatter(self.config)
+            errors = formatter.print_matches(matches, self.rules, config=self.config)
+            if errors:
+                print(errors, file=sys.stderr)
+            sys.exit(2)
+
+        if self.config.output_file:
+            with open(self.config.output_file, "w") as output_file:
+                output_file.write(output)
+        else:
+            print(output)
+
+        sys.exit(0)
 
     def run(self) -> Iterator[Match]:
         """
@@ -327,6 +390,9 @@ class Runner:
             if sys.stdin.isatty():
                 self.config.parser.print_help()
                 sys.exit(1)
+
+        if self.config.convert:
+            self._cli_convert()
 
         try:
             self._cli_output(list(self.run()))
