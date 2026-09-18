@@ -109,10 +109,10 @@ class StateMachineDefinition(CfnLintJsonSchema):
             validator, instance, deque(["QueryLanguage"])
         ):
             if ql is None or ql == "JSONPath":
-                yield self.schema, ql_validator
+                yield self.schema, ql_validator, True
 
             if ql == "JSONata":
-                yield self._convert_schema_to_jsonata(), ql_validator
+                yield self._convert_schema_to_jsonata(), ql_validator, False
 
     def _validate_start_at(
         self,
@@ -184,6 +184,145 @@ class StateMachineDefinition(CfnLintJsonSchema):
                         iterator, k, add_path_to_message, iterator_path
                     )
 
+    # Amazon States Language payload template fields. Inside these, a field
+    # whose name ends with ".$" is evaluated as a JSONPath expression or an
+    # intrinsic function rather than being treated as a literal value.
+    # https://docs.aws.amazon.com/step-functions/latest/dg/amazon-states-language-input-output-processing.html
+    _payload_template_fields = (
+        "Parameters",
+        "ResultSelector",
+        "ItemSelector",
+        "Assign",
+    )
+
+    def _is_jsonpath_or_intrinsic(self, value: Any) -> bool:
+        # Only string values carry the ".$" JSONPath/intrinsic contract. A non
+        # string value (for example a resolved intrinsic function object) is
+        # validated elsewhere, and a substitution placeholder may resolve to a
+        # valid path at deploy time, so neither is flagged here.
+        if not isinstance(value, str):
+            return True
+        stripped = value.strip()
+        if "${" in stripped:
+            return True
+        if stripped.startswith("$"):
+            return True
+        # Intentionally loose: this accepts a malformed intrinsic such as
+        # "States.Foo bar)" as valid. Erring toward a false negative here is
+        # preferable to falsely flagging a genuine intrinsic function call.
+        if stripped.startswith("States.") and stripped.endswith(")"):
+            return True
+        return False
+
+    def _validate_payload(
+        self,
+        instance: Any,
+        k: str,
+        path: deque,
+    ) -> ValidationResult:
+        """
+        Recurse through a payload template value. Every field inside a payload
+        template inherits the payload semantics, so a nested field whose name
+        ends with '.$' must resolve to a valid JSONPath or intrinsic function.
+        """
+        if isinstance(instance, dict):
+            for key, value in instance.items():
+                child_path = deque(path)
+                child_path.append(key)
+
+                if (
+                    isinstance(key, str)
+                    and key.endswith(".$")
+                    and not self._is_jsonpath_or_intrinsic(value)
+                ):
+                    display_path = "/" + "/".join(str(p) for p in child_path)
+                    message = (
+                        f"{value!r} is not a valid JSONPath string or "
+                        f"intrinsic function for {key!r} at {display_path}"
+                    )
+                    error_path = deque([k])
+                    error_path.extend(child_path)
+                    yield ValidationError(message, path=error_path, rule=self)
+
+                yield from self._validate_payload(value, k, child_path)
+        elif isinstance(instance, list):
+            for idx, item in enumerate(instance):
+                child_path = deque(path)
+                child_path.append(idx)
+                yield from self._validate_payload(item, k, child_path)
+
+    def _validate_reference_paths(
+        self,
+        instance: Any,
+        k: str,
+        path: deque | None = None,
+        inherited_query_language: str = "JSONPath",
+    ) -> ValidationResult:
+        """
+        Per the Amazon States Language specification, inside a payload template
+        a field whose name ends with '.$' must have a value that is a valid
+        JSONPath (beginning with '$') or an intrinsic function call.
+
+        Payload detection is scoped structurally: only the payload template
+        fields that appear as a direct field of a state are validated. This
+        keeps literal data (such as a Pass 'Result') and any state that merely
+        shares a name with a payload field from being flagged.
+
+        QueryLanguage is resolved per state: a state may set its own
+        QueryLanguage to adopt JSONata incrementally, and the '.$' convention
+        does not apply to a JSONata state, so those states (and any nested
+        state machines that inherit JSONata) are skipped.
+
+        Reference: https://states-language.net/spec.html#payload-template
+        """
+        path = deque() if path is None else path
+
+        if not isinstance(instance, dict):
+            return
+
+        states = instance.get("States")
+        if not isinstance(states, dict):
+            return
+
+        for state_name, state in states.items():
+            if not isinstance(state, dict):
+                continue
+
+            state_path = deque(path)
+            state_path.extend(["States", state_name])
+
+            state_ql = state.get("QueryLanguage")
+            if not isinstance(state_ql, str):
+                state_ql = inherited_query_language
+
+            if state_ql != "JSONata":
+                for field in self._payload_template_fields:
+                    if field in state:
+                        field_path = deque(state_path)
+                        field_path.append(field)
+                        yield from self._validate_payload(state[field], k, field_path)
+
+            # Recurse into nested state machines so their payload templates are
+            # validated with the same structural scoping, carrying the resolved
+            # QueryLanguage down as the inherited default.
+            branches = state.get("Branches")
+            if isinstance(branches, list):
+                for idx, branch in enumerate(branches):
+                    branch_path = deque(state_path)
+                    branch_path.extend(["Branches", idx])
+                    yield from self._validate_reference_paths(
+                        branch, k, branch_path, state_ql
+                    )
+
+            for nested_key in ("ItemProcessor", "Iterator"):
+                nested = state.get(nested_key)
+                if isinstance(nested, dict):
+                    nested_path = deque(state_path)
+                    nested_path.append(nested_key)
+                    yield from self._validate_reference_paths(
+                        nested, k, nested_path, state_ql
+                    )
+
     def _validate_step(
         self,
         validator: Validator,
@@ -191,6 +330,7 @@ class StateMachineDefinition(CfnLintJsonSchema):
         value: Any,
         add_path_to_message: bool,
         k: str,
+        is_jsonpath: bool = True,
     ) -> ValidationResult:
         for err in validator.iter_errors(value):
             if validator.is_type(err.instance, "string"):
@@ -217,6 +357,13 @@ class StateMachineDefinition(CfnLintJsonSchema):
 
         # Validate StartAt exists
         yield from self._validate_start_at(value, k, add_path_to_message)
+
+        # Validate that ".$" payload template fields reference a JSONPath or
+        # an intrinsic function. The ".$" convention is specific to JSONPath;
+        # under QueryLanguage: JSONata a literal ".$" field name is legal and
+        # carries no JSONPath semantics, so this check is skipped there.
+        if is_jsonpath:
+            yield from self._validate_reference_paths(value, k)
 
     def validate(
         self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
@@ -245,7 +392,7 @@ class StateMachineDefinition(CfnLintJsonSchema):
                 try:
                     value = json.loads(value)
                     add_path_to_message = True
-                    for schema, schema_validator in self._clean_schema(
+                    for schema, schema_validator, is_jsonpath in self._clean_schema(
                         validator, value
                     ):
                         resolver = RefResolver.from_schema(schema, store=self.store)
@@ -258,17 +405,29 @@ class StateMachineDefinition(CfnLintJsonSchema):
                         )
 
                         yield from self._validate_step(
-                            step_validator, substitutions, value, add_path_to_message, k
+                            step_validator,
+                            substitutions,
+                            value,
+                            add_path_to_message,
+                            k,
+                            is_jsonpath,
                         )
                 except json.JSONDecodeError:
                     return
             else:
-                for schema, schema_validator in self._clean_schema(validator, value):
+                for schema, schema_validator, is_jsonpath in self._clean_schema(
+                    validator, value
+                ):
                     resolver = RefResolver.from_schema(schema, store=self.store)
                     step_validator = schema_validator.evolve(
                         resolver=resolver,
                         schema=schema,
                     )
                     yield from self._validate_step(
-                        step_validator, substitutions, value, add_path_to_message, k
+                        step_validator,
+                        substitutions,
+                        value,
+                        add_path_to_message,
+                        k,
+                        is_jsonpath,
                     )
