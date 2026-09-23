@@ -44,6 +44,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         template (dict[str, Any]): The dictionary representing the CloudFormation template.
         sections (list[str]): A list of CloudFormation template sections.
         transform_pre (dict[str, Any]): A dictionary containing pre-processed transformation data.
+        yaml_aliases (list[YamlAlias]): The YAML aliases used in the template source.
         conditions (Conditions): An instance of the Conditions class used for managing conditions.
         graph (Graph): An instance of the Graph class used for representing the template structure.
     """
@@ -79,6 +80,9 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         self.transform_pre["Fn::ForEach"] = self.search_deep_keys(
             cfnlint.helpers.FUNCTION_FOR_EACH
         )
+        # Recorded by the YAML decoder.  Transforms replace self.template, so
+        # capture them before any transform runs.
+        self.yaml_aliases = list(getattr(template, "yaml_aliases", []))
 
         self.conditions = cfnlint.conditions.Conditions(self)
         self.graph = None
