@@ -28,7 +28,6 @@ class ResourcePolicy(Policy):
                 "Resources/AWS::OpenSearchService::Domain/Properties/AccessPolicies",
                 "Resources/AWS::S3::BucketPolicy/Properties/PolicyDocument",
                 "Resources/AWS::SNS::TopicPolicy/Properties/PolicyDocument",
-                "Resources/AWS::SQS::QueuePolicy/Properties/PolicyDocument",
             ],
             "resource",
             "policy_resource.json",
