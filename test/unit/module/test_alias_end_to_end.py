@@ -56,3 +56,68 @@ class TestAliasEndToEnd(TestCase):
         # (no fatal parse error).
         self.assertIn("W1101", rule_ids, f"Got {matches!r}")
         self.assertNotIn("E0000", rule_ids, f"Got {matches!r}")
+
+    def test_scalar_alias_warns(self):
+        template = (
+            'AWSTemplateFormatVersion: "2010-09-09"\n'
+            "Resources:\n"
+            "  FirstLogGroup:\n"
+            "    Type: AWS::Logs::LogGroup\n"
+            "    Properties:\n"
+            "      RetentionInDays: &Retention 30\n"
+            "  SecondLogGroup:\n"
+            "    Type: AWS::Logs::LogGroup\n"
+            "    Properties:\n"
+            "      RetentionInDays: *Retention\n"
+        )
+        matches = lint_all(template)
+        aliases = [m for m in matches if m.rule.id == "W1101"]
+        # Reported at the alias, not the anchor
+        self.assertEqual(
+            [(m.linenumber, m.columnnumber) for m in aliases],
+            [(10, 24)],
+            f"Got {matches!r}",
+        )
+
+    def test_alias_warns_after_language_extensions_transform(self):
+        # The transform replaces the template, so the aliases recorded by the
+        # decoder must survive it
+        template = (
+            "Transform: AWS::LanguageExtensions\n"
+            "Resources:\n"
+            "  Fn::ForEach::Topics:\n"
+            "    - Name\n"
+            "    - [A, B]\n"
+            "    - Topic${Name}:\n"
+            "        Type: AWS::SNS::Topic\n"
+            "        Properties:\n"
+            "          DisplayName: &name shared\n"
+            "  Queue:\n"
+            "    Type: AWS::SQS::Queue\n"
+            "    Properties:\n"
+            "      QueueName: *name\n"
+        )
+        matches = lint_all(template)
+        aliases = [m for m in matches if m.rule.id == "W1101"]
+        self.assertEqual(
+            [(m.linenumber, m.columnnumber) for m in aliases],
+            [(13, 18)],
+            f"Got {matches!r}",
+        )
+
+    def test_alias_in_sam_template_does_not_warn(self):
+        template = (
+            "Transform: AWS::Serverless-2016-10-31\n"
+            "Resources:\n"
+            "  Topic1:\n"
+            "    Type: AWS::SNS::Topic\n"
+            "    Properties:\n"
+            "      DisplayName: &name shared\n"
+            "  Topic2:\n"
+            "    Type: AWS::SNS::Topic\n"
+            "    Properties:\n"
+            "      DisplayName: *name\n"
+        )
+        matches = lint_all(template)
+        rule_ids = [m.rule.id for m in matches]
+        self.assertNotIn("W1101", rule_ids, f"Got {matches!r}")
