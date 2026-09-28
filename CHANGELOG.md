@@ -1,3 +1,14 @@
+### v1.57.1
+## What's Changed
+* chore(deps-dev): update coverage requirement from >=7.2.1 to >=7.16.1 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4720
+* Update CloudFormation schemas to `2026-09-28` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4716
+* update [W1101](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W1101): Report every YAML alias, including scalars by @esetnik in https://github.com/aws-cloudformation/cfn-lint/pull/4724
+
+## New Contributors
+* @esetnik made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4724
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.57.0...v1.57.1
+
 ### v1.57.0
 ## What's Changed
 * fix: Require ProvisionedThroughput when DynamoDB BillingMode is omitted by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4702
