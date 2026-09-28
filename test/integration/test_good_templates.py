@@ -154,6 +154,13 @@ class TestQuickStartTemplates(BaseCliTestCase):
         },
         {
             "filename": (
+                "test/fixtures/templates/good/transform/yaml_alias_serverless.yaml"
+            ),
+            "results": [],
+            "exit_code": 0,
+        },
+        {
+            "filename": (
                 "test/fixtures/templates/good/functions/get_stack_output.yaml"
             ),
             "results": [],

@@ -22,39 +22,28 @@ class UsingAlias(CloudFormationLintRule):
     tags = ["yaml"]
 
     def match(self, cfn: Template):
-        matches: list[RuleMatch] = []
-        # A YAML alias resolves to a single object referenced from more than
-        # one place, so the template is a DAG.  Track visited object ids to
-        # (a) detect the shared (aliased) nodes and (b) avoid re-walking them,
-        # which would be exponential for nested aliases.
-        seen: set[int] = set()
-        reported: set[int] = set()
-        # Iterative walk to avoid recursion limits on deeply nested templates.
-        stack: list[tuple[object, list[str | int]]] = [(cfn.template, [])]
-        while stack:
-            obj, path = stack.pop()
-            if not isinstance(obj, (dict, list)):
-                continue
-            obj_id = id(obj)
-            if obj_id in seen:
-                if obj_id not in reported:
-                    reported.add(obj_id)
-                    matches.append(
-                        RuleMatch(
-                            path=path,
-                            message=(
-                                "This code is using a YAML alias and can only "
-                                "be deployed using the 'package' cli command "
-                                "or AWS SAM"
-                            ),
-                        )
-                    )
-                continue
-            seen.add(obj_id)
-            if isinstance(obj, dict):
-                for k, v in reversed(list(obj.items())):
-                    stack.append((v, path + [k]))
-            else:
-                for i in range(len(obj) - 1, -1, -1):
-                    stack.append((obj[i], path + [i]))
-        return matches
+        # SAM templates are deployed with the SAM CLI, which resolves the
+        # aliases client-side
+        if cfn.has_serverless_transform():
+            return []
+
+        # The YAML decoder records every alias with its own location.  The
+        # decoded template can't be used to find them: an aliased scalar is
+        # indistinguishable from a literal one.
+        return [
+            RuleMatch(
+                path=alias.path,
+                message=(
+                    f"YAML alias '*{alias.name}' is rejected by CloudFormation "
+                    "unless the template is first processed by the 'package' "
+                    "cli command or AWS SAM"
+                ),
+                location=(
+                    alias.start_mark.line,
+                    alias.start_mark.column,
+                    alias.end_mark.line,
+                    alias.end_mark.column,
+                ),
+            )
+            for alias in cfn.yaml_aliases
+        ]

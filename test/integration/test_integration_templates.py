@@ -29,6 +29,13 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "exit_code": 12,
         },
         {
+            "filename": "test/fixtures/templates/integration/yaml-alias-scalar.yaml",
+            "results_filename": (
+                "test/fixtures/results/integration/yaml-alias-scalar_yaml.json"
+            ),
+            "exit_code": 12,
+        },
+        {
             "filename": (
                 "test/fixtures/templates/integration/resources-cloudformation-init.yaml"
             ),
