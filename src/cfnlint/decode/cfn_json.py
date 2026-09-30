@@ -405,8 +405,8 @@ class CfnJSONDecoder(json.JSONDecoder):
         """Convert JSON array to be a list_node object"""
         # Python 3.15 added a required 'array_hook' parameter
         signature = inspect.signature(json.decoder.JSONArray)
-        if 'array_hook' in signature.parameters:
-            kwargs['array_hook'] = None
+        if "array_hook" in signature.parameters:
+            kwargs["array_hook"] = None
         values, end = json.decoder.JSONArray(s_and_end, scan_once, **kwargs)
         start = s_and_end[1]
         beg_mark, end_mark = get_beg_end_mark(start, end, self.newline_indexes)
