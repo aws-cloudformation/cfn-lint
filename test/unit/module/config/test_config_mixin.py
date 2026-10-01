@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 import logging
 import os
+import tempfile
 from pathlib import Path
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
@@ -198,6 +199,18 @@ class TestConfigMixIn(BaseTestCase):
                 ),
             ],
         )
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_config_literal_path_with_glob_characters(self, yaml_mock):
+        """Test literal paths containing glob metacharacters."""
+        yaml_mock.side_effect = [{}, {}]
+        with tempfile.TemporaryDirectory() as temp_dir:
+            filename = Path(temp_dir) / "template[1].yaml"
+            filename.touch()
+
+            config = cfnlint.config.ConfigMixIn(templates=[str(filename)])
+
+            self.assertEqual(config.templates, [str(filename)])
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
     @patch("sys.stdin.isatty", return_va=True)
