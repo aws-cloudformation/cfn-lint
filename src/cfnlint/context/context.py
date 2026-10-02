@@ -664,7 +664,7 @@ def _inject_sam_implicit_resources(
                 if "Role" not in dp:
                     _inject(resources, "CodeDeployServiceRole", "AWS::IAM::Role")
 
-            # Per-event permissions and implicit API detection
+            # Per-event permissions
             events = props.get("Events", {})
             if isinstance(events, dict):
                 for event_name, event in events.items():
@@ -675,6 +675,17 @@ def _inject_sam_implicit_resources(
                         f"{resource_id}{event_name}Permission",
                         "AWS::Lambda::Permission",
                     )
+
+        if resource_type in (
+            "AWS::Serverless::Function",
+            "AWS::Serverless::StateMachine",
+        ):
+            # Implicit API detection
+            events = props.get("Events", {})
+            if isinstance(events, dict):
+                for event in events.values():
+                    if not isinstance(event, dict):
+                        continue
                     event_type = event.get("Type")
                     if event_type == "Api":
                         event_props = event.get("Properties", {})
