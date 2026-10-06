@@ -1052,7 +1052,10 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         all_filenames = []
 
         for filename in filenames:
-            add_filenames = glob.glob(filename, recursive=True)
+            if Path(filename).is_file():
+                add_filenames = [filename]
+            else:
+                add_filenames = glob.glob(filename, recursive=True)
 
             if not add_filenames and not self.ignore_bad_template:
                 if raise_exception:
