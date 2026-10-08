@@ -20,7 +20,7 @@ from cfnlint.conditions._condition import ConditionNamed
 from cfnlint.conditions._equals import Equal, EqualParameter
 from cfnlint.conditions._errors import UnknownSatisfisfaction
 from cfnlint.conditions._rule import Rule
-from cfnlint.conditions._utils import get_hash
+from cfnlint.conditions._utils import add_equivalence, get_hash
 
 LOGGER = logging.getLogger(__name__)
 
@@ -206,8 +206,7 @@ class Conditions:
                 if other_name != condition_name:
                     build_params[other_name] = other_sym
             cond_expr = self._conditions[condition_name].build_cnf(build_params)
-            cnf.add_prop(Implies(cond_sym, cond_expr))
-            cnf.add_prop(Implies(cond_expr, cond_sym))
+            add_equivalence(cnf, cond_sym, cond_expr)
 
         equal_vars.update(cond_symbols)
 
