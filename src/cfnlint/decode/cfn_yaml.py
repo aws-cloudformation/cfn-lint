@@ -11,8 +11,9 @@ from __future__ import annotations
 import fileinput
 import logging
 import sys
+from typing import Any, NamedTuple
 
-from yaml import MappingNode, SafeLoader, ScalarNode, SequenceNode
+from yaml import AliasToken, MappingNode, SafeLoader, ScalarNode, SequenceNode, scan
 
 try:
     from yaml import CSafeLoader
@@ -41,6 +42,15 @@ FN_PREFIX = "Fn::"
 _MAX_EXPANDED_NODES = 250_000
 
 LOGGER = logging.getLogger(__name__)
+
+
+class YamlAlias(NamedTuple):
+    """A YAML alias ("*name") used in the source template"""
+
+    name: str
+    path: list[str | int]
+    start_mark: Mark
+    end_mark: Mark
 
 
 class CfnParseError(ConstructorError):
@@ -347,6 +357,87 @@ def _guard_alias_expansion(template, filename):
     size(template)
 
 
+def _position(mark) -> tuple[int, int]:
+    return (mark.line, mark.column)
+
+
+def _spans(node: Any, position: tuple[int, int]) -> bool:
+    """Whether position falls inside the source span of a decoded node"""
+    start = getattr(node, "start_mark", None)
+    end = getattr(node, "end_mark", None)
+    if start is None or end is None:
+        return False
+    return _position(start) <= position < _position(end)
+
+
+def _alias_path(template: Any, mark) -> list[str | int]:
+    """Find the template path of the value an alias at mark stands in for.
+
+    An alias resolves to the anchored node itself, so the aliased value
+    carries the anchor's marks, not the alias's.  Instead descend from the
+    root through the nodes whose source span contains the alias.  Within a
+    mapping, the entry holding the alias is the last key that starts before
+    it; keys from a merge ("<<") lie outside the mapping's span and are
+    skipped.  Stops at the deepest node that can be located.
+    """
+    position = _position(mark)
+    path: list[str | int] = []
+    node = template
+    while True:
+        if isinstance(node, dict):
+            # Keys without marks (e.g. "Fn::Sub" from a "!Sub" tag) start
+            # where their mapping does
+            node_start = getattr(node, "start_mark")
+            keys = [
+                (_position(getattr(key, "start_mark", node_start)), key) for key in node
+            ]
+            keys = [
+                (start, key)
+                for start, key in keys
+                if start <= position and _spans(node, start)
+            ]
+            if not keys:
+                return path
+            _, key = max(keys, key=lambda entry: entry[0])
+            path.append(key)
+            child = node[key]
+        elif isinstance(node, list):
+            index = next(
+                (i for i, item in enumerate(node) if _spans(item, position)), None
+            )
+            if index is None:
+                return path
+            path.append(index)
+            child = node[index]
+        else:
+            return path
+
+        if not _spans(child, position):
+            return path
+        node = child
+
+
+def _find_aliases(yaml_string: str, template: Any) -> list[YamlAlias]:
+    """Record where each YAML alias is used in yaml_string.
+
+    Aliases are resolved while the document is composed, which the C loader
+    does natively, so the decoded template cannot tell an aliased value from
+    a literal one.  Scan the tokens to recover each alias's own location.
+    """
+    aliases = []
+    for token in scan(yaml_string, Loader=FastLoader):
+        if isinstance(token, AliasToken):
+            aliases.append(
+                YamlAlias(
+                    name=token.value,
+                    path=_alias_path(template, token.start_mark),
+                    start_mark=Mark(token.start_mark.line, token.start_mark.column),
+                    end_mark=Mark(token.end_mark.line, token.end_mark.column),
+                )
+            )
+    return aliases
+
+
 def loads(yaml_string, fname=None):
     """
     Load the given YAML string
@@ -366,6 +457,12 @@ def loads(yaml_string, fname=None):
         # that actually use anchors pay for the walk.
         if isinstance(yaml_string, str) and "&" in yaml_string:
             _guard_alias_expansion(template, fname)
+            # CloudFormation rejects aliases, so record where they are used
+            # for rule W1101
+            if isinstance(template, dict):
+                aliases = _find_aliases(yaml_string, template)
+                if aliases:
+                    setattr(template, "yaml_aliases", aliases)
         return template
     except CfnParseError:
         raise

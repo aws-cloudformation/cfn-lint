@@ -119,3 +119,74 @@ class TestYamlParse(BaseTestCase):
                 }
             },
         )
+
+    def test_yaml_aliases(self):
+        raw_template = """
+        Resources:
+            FirstLogGroup:
+                Type: AWS::Logs::LogGroup
+                Properties:
+                    RetentionInDays: &Retention 30
+            SecondLogGroup:
+                Type: AWS::Logs::LogGroup
+                Properties: &Properties
+                    RetentionInDays: *Retention
+            ThirdLogGroup:
+                Type: AWS::Logs::LogGroup
+                Properties: *Properties
+        """
+
+        result = cfnlint.decode.cfn_yaml.loads(raw_template)
+
+        # Aliases are still resolved
+        self.assertEqual(
+            result["Resources"]["SecondLogGroup"]["Properties"]["RetentionInDays"],
+            30,
+        )
+        self.assertEqual(
+            [
+                (
+                    alias.name,
+                    alias.path,
+                    alias.start_mark.line,
+                    alias.start_mark.column,
+                    alias.end_mark.line,
+                    alias.end_mark.column,
+                )
+                for alias in result.yaml_aliases
+            ],
+            [
+                (
+                    "Retention",
+                    [
+                        "Resources",
+                        "SecondLogGroup",
+                        "Properties",
+                        "RetentionInDays",
+                    ],
+                    9,
+                    37,
+                    9,
+                    47,
+                ),
+                (
+                    "Properties",
+                    ["Resources", "ThirdLogGroup", "Properties"],
+                    12,
+                    28,
+                    12,
+                    39,
+                ),
+            ],
+        )
+
+    def test_yaml_no_aliases(self):
+        # "&" and "*" in plain scalars are not anchors or aliases
+        result = cfnlint.decode.cfn_yaml.loads(
+            """
+            A: "arn:aws:s3:::bucket/*"
+            B: this & that
+            """
+        )
+
+        self.assertFalse(hasattr(result, "yaml_aliases"))
