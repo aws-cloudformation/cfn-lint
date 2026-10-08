@@ -363,6 +363,26 @@ class TestAddEquivalence(unittest.TestCase):
         add_equivalence(cnf, Symbol("cond"), expr)
         self.assertLess(len(cnf.data), 200)
 
+    def test_single_and_or_needs_no_auxiliary_variable(self):
+        """The condition symbol is the variable of the outermost And/Or, so
+        the common one-level condition encodes exactly like Equivalent"""
+        a, b, cond = Symbol("a"), Symbol("b"), Symbol("cond")
+        for expr in [And(a, b), Or(a, b)]:
+            direct = EncodedCNF()
+            direct.add_prop(Equivalent(cond, expr))
+            encoded = EncodedCNF()
+            add_equivalence(encoded, cond, expr)
+            self.assertCountEqual(encoded.symbols, [a, b, cond])
+            self.assertCountEqual(_decode(encoded), _decode(direct))
+
+
+def _decode(cnf: EncodedCNF) -> list[frozenset]:
+    """Clauses of ``cnf`` as (symbol, is_positive) pairs"""
+    return [
+        frozenset((cnf.symbols[abs(i) - 1], i > 0) for i in clause)
+        for clause in cnf.data
+    ]
+
 
 if __name__ == "__main__":
     unittest.main()
