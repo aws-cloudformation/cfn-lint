@@ -4,13 +4,20 @@ SPDX-License-Identifier: MIT-0
 """
 
 import hashlib
+import itertools
 import json
 import unittest
+
+from sympy import And, Equivalent, Implies, Not, Or, Symbol, Xor
+from sympy.assumptions.cnf import EncodedCNF
+from sympy.logic.boolalg import BooleanFalse, BooleanTrue
+from sympy.logic.inference import satisfiable
 
 from cfnlint.conditions._utils import (
     ObjectEncoder,
     _cached_hash,
     _make_hashable,
+    add_equivalence,
     get_hash,
 )
 
@@ -305,6 +312,76 @@ class TestUtils(unittest.TestCase):
 
         # We can't directly test the cache hit, but we can
         # verify the result is consistent
+
+
+class TestAddEquivalence(unittest.TestCase):
+    """Test the Tseitin encoding used for condition equivalences"""
+
+    def test_matches_direct_encoding(self):
+        """For every assignment of the original variables the encoded
+        equivalence is satisfiable exactly when the direct one is"""
+        a, b, c, d = Symbol("a"), Symbol("b"), Symbol("c"), Symbol("d")
+        sym = Symbol("cond")
+        expressions = [
+            a,
+            Not(a),
+            And(a, b),
+            Or(a, b),
+            Or(And(a, b), And(c, d), Not(Or(a, d))),
+            Not(And(Or(a, b), Not(c))),
+            Implies(And(a, b), Or(c, d)),
+            Equivalent(a, Or(b, c)),
+            Xor(a, b, c),
+            And(Or(a, b), Or(a, b), c),
+            BooleanTrue(),
+            BooleanFalse(),
+        ]
+        for expr in expressions:
+            direct = EncodedCNF()
+            direct.add_prop(Equivalent(sym, expr))
+            encoded = EncodedCNF()
+            add_equivalence(encoded, sym, expr)
+            for values in itertools.product([True, False], repeat=5):
+                pins = [s if v else Not(s) for s, v in zip([a, b, c, d, sym], values)]
+                expected = direct.copy()
+                actual = encoded.copy()
+                for pin in pins:
+                    expected.add_prop(pin)
+                    actual.add_prop(pin)
+                self.assertEqual(
+                    bool(satisfiable(expected)),
+                    bool(satisfiable(actual)),
+                    f"{expr} with {pins}",
+                )
+
+    def test_or_of_ands_is_linear(self):
+        """An Or of n Ands is 2^n clauses when distributed, but linear
+        when each subterm gets its own variable"""
+        s = Symbol("s")
+        expr = Or(*[And(Symbol(f"r{i}"), s) for i in range(40)])
+        cnf = EncodedCNF()
+        add_equivalence(cnf, Symbol("cond"), expr)
+        self.assertLess(len(cnf.data), 200)
+
+    def test_single_and_or_needs_no_auxiliary_variable(self):
+        """The condition symbol is the variable of the outermost And/Or, so
+        the common one-level condition encodes exactly like Equivalent"""
+        a, b, cond = Symbol("a"), Symbol("b"), Symbol("cond")
+        for expr in [And(a, b), Or(a, b)]:
+            direct = EncodedCNF()
+            direct.add_prop(Equivalent(cond, expr))
+            encoded = EncodedCNF()
+            add_equivalence(encoded, cond, expr)
+            self.assertCountEqual(encoded.symbols, [a, b, cond])
+            self.assertCountEqual(_decode(encoded), _decode(direct))
+
+
+def _decode(cnf: EncodedCNF) -> list[frozenset]:
+    """Clauses of ``cnf`` as (symbol, is_positive) pairs"""
+    return [
+        frozenset((cnf.symbols[abs(i) - 1], i > 0) for i in clause)
+        for clause in cnf.data
+    ]
 
 
 if __name__ == "__main__":

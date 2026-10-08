@@ -8,6 +8,10 @@ import hashlib
 import json
 from typing import Any, Hashable
 
+from sympy import And, Dummy, Equivalent, Not, Or
+from sympy.assumptions.cnf import EncodedCNF
+from sympy.logic.boolalg import Boolean, BooleanFunction, to_nnf
+
 
 class ObjectEncoder(json.JSONEncoder):
     def default(self, o: Any) -> Any:
@@ -74,3 +78,57 @@ def get_hash(o: Any) -> str:
         return hashlib.sha1(
             json.dumps(o, sort_keys=True, cls=ObjectEncoder).encode("utf-8")
         ).hexdigest()
+
+
+def add_equivalence(cnf: EncodedCNF, symbol: Boolean, expr: Boolean) -> None:
+    """Add ``symbol <-> expr`` to ``cnf`` without exponential growth.
+
+    Handing sympy ``Equivalent(symbol, expr)`` directly makes it distribute
+    And over Or, so an Or of n Ands becomes 2^n clauses. Instead every And/Or
+    subterm of ``expr`` gets an auxiliary variable defined by a full
+    equivalence (Tseitin encoding), which keeps the clause count linear in the
+    size of ``expr``. Each auxiliary variable is fully determined by the
+    original variables, so the satisfiability of ``cnf`` plus any constraint
+    over the original variables is unchanged.
+
+    ``symbol`` itself serves as the variable of the outermost And/Or, so a
+    condition that is a single And/Or of literals costs no auxiliary variable
+    at all and encodes to the same clauses as ``Equivalent`` would.
+    """
+    literal = _tseitin(cnf, expr, {}, root=symbol)
+    if literal is not symbol:
+        cnf.add_prop(Equivalent(symbol, literal))
+
+
+def _tseitin(
+    cnf: EncodedCNF, expr: Any, cache: dict[Any, Any], root: Any = None
+) -> Any:
+    """Return a literal equivalent to ``expr``, adding defining clauses
+    for any auxiliary variables to ``cnf``. When ``root`` is given and
+    ``expr`` is an And/Or, ``root`` is used as its variable instead of a
+    fresh one."""
+    if isinstance(expr, Not):
+        return Not(_tseitin(cnf, expr.args[0], cache))
+    if isinstance(expr, (And, Or)):
+        if expr in cache:
+            return cache[expr]
+        literals = [_tseitin(cnf, arg, cache) for arg in expr.args]
+        aux = Dummy("cond") if root is None else root
+        if isinstance(expr, And):
+            # aux -> each literal; all literals -> aux
+            for literal in literals:
+                cnf.add_prop(Or(Not(aux), literal))
+            cnf.add_prop(Or(aux, *[Not(literal) for literal in literals]))
+        else:
+            # aux -> some literal; each literal -> aux
+            cnf.add_prop(Or(Not(aux), *literals))
+            for literal in literals:
+                cnf.add_prop(Or(aux, Not(literal)))
+        cache[expr] = aux
+        return aux
+    if isinstance(expr, BooleanFunction):
+        # Implies, Equivalent, Xor, ... rewritten in terms of And/Or/Not
+        nnf = to_nnf(expr, simplify=False)
+        if nnf != expr:
+            return _tseitin(cnf, nnf, cache, root)
+    return expr

@@ -352,3 +352,49 @@ class TestConditions(TestCase):
             cfn.conditions.satisfiable(
                 {"NonExistentCondition": True}, {"Environment": "dev"}
             )
+
+    def test_or_of_and_pairs_does_not_explode(self):
+        """An Fn::Or of Fn::And pairs is encoded with a linear number of
+        clauses (issue #4737). Converting it to CNF by distribution would
+        create 2^30 clauses."""
+        pairs = 30
+        template = {
+            "Parameters": {
+                "Stage": {"Type": "String", "AllowedValues": ["beta", "prod"]},
+            },
+            "Conditions": {
+                "IsDeployed": {
+                    "Fn::Or": [
+                        {
+                            "Fn::And": [
+                                {"Fn::Equals": [{"Ref": "AWS::Region"}, f"region-{i}"]},
+                                {"Fn::Equals": [{"Ref": "Stage"}, "prod"]},
+                            ]
+                        }
+                        for i in range(pairs)
+                    ]
+                },
+                "IsProd": {"Fn::Equals": [{"Ref": "Stage"}, "prod"]},
+            },
+        }
+
+        cfn = Template("", template)
+        self.assertLess(len(cfn.conditions._cnf.data), 50 * pairs)
+
+        self.assertListEqual(
+            cfn.conditions.build_scenerios_on_region("IsDeployed", "region-0"),
+            [True, False],
+        )
+        self.assertListEqual(
+            cfn.conditions.build_scenerios_on_region("IsDeployed", "us-east-1"),
+            [False],
+        )
+        self.assertTrue(cfn.conditions.check_implies({"IsDeployed": True}, "IsProd"))
+        self.assertListEqual(
+            list(cfn.conditions.build_scenarios({"IsDeployed": None, "IsProd": None})),
+            [
+                {"IsDeployed": True, "IsProd": True},
+                {"IsDeployed": False, "IsProd": True},
+                {"IsDeployed": False, "IsProd": False},
+            ],
+        )

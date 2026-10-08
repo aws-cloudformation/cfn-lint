@@ -352,3 +352,47 @@ def test_is_reachable_implication():
     # As an assumption it forces nothing.
     assumed = base.evolve({"IsUsEast1AndProd": True}, assumed=True)
     assert assumed.is_reachable("IsUsEast1", False) is True
+
+
+def test_or_of_and_pairs_does_not_explode():
+    """An Fn::Or of Fn::And pairs is encoded with a linear number of
+    clauses (issue #4737). Converting it to CNF by distribution would
+    create 2^30 clauses."""
+    pairs = 30
+    cfn = Template(
+        None,
+        {
+            "Parameters": {
+                "Stage": {"Type": "String", "AllowedValues": ["beta", "prod"]},
+            },
+            "Conditions": {
+                "IsDeployed": {
+                    "Fn::Or": [
+                        {
+                            "Fn::And": [
+                                {"Fn::Equals": [{"Ref": "AWS::Region"}, f"region-{i}"]},
+                                {"Fn::Equals": [{"Ref": "Stage"}, "prod"]},
+                            ]
+                        }
+                        for i in range(pairs)
+                    ]
+                },
+                "IsProd": {"Fn::Equals": [{"Ref": "Stage"}, "prod"]},
+            },
+            "Resources": {},
+        },
+        regions=["us-east-1"],
+    )
+    conditions = create_context_for_template(cfn).conditions
+
+    assert len(conditions.cnf.data) < 50 * pairs
+
+    deployed = conditions.evolve({"IsDeployed": True})
+    assert deployed.is_reachable("IsProd", True) is True
+    assert deployed.is_reachable("IsProd", False) is False
+
+    with pytest.raises(Unsatisfiable):
+        conditions.evolve({"IsDeployed": True, "IsProd": False})
+
+    not_prod = conditions.evolve({"IsProd": False})
+    assert not_prod.is_reachable("IsDeployed", True) is False

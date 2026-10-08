@@ -9,11 +9,11 @@ import itertools
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Iterator
 
-from sympy import Equivalent, Not, Or, Symbol
+from sympy import Not, Or, Symbol
 from sympy.assumptions.cnf import EncodedCNF
 from sympy.logic.inference import satisfiable
 
-from cfnlint.conditions._utils import get_hash
+from cfnlint.conditions._utils import add_equivalence, get_hash
 from cfnlint.context.conditions._condition import Condition
 from cfnlint.context.conditions._utils import (
     build_instance_from_scenario,
@@ -69,7 +69,7 @@ class Conditions:
             sym = Symbol(name)
             condition_symbols[name] = sym
             # Add equivalence: Symbol(name) <-> condition's boolean expression
-            cnf.add_prop(Equivalent(sym, cond.cnf))
+            add_equivalence(cnf, sym, cond.cnf)
 
         # Add parameter AllowedValues constraints
         for p_k, p_v in parameters.items():
