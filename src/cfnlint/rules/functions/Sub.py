@@ -66,6 +66,8 @@ class Sub(BaseFn):
         for param in params:
             param = param.strip()
             if "." in param:
+                if self._is_sam_stage_ref(param, validator):
+                    continue
                 for err in validator.descend(
                     instance={"Fn::GetAtt": param},
                     schema={"type": ["string"]},
@@ -78,6 +80,26 @@ class Sub(BaseFn):
                         schema={"type": ["string"]},
                     ):
                         yield self._clean_error_sub(err, {"Ref": param}, param)
+
+    def _is_sam_stage_ref(self, param: str, validator: Validator) -> bool:
+        api, attr = param.rsplit(".", 1)
+        if attr != "Stage":
+            return False
+
+        api_resource = validator.context.resources.get(api)
+        stage = f"{api}Stage"
+        stage_resource = validator.context.resources.get(stage)
+        if (
+            api_resource is None
+            or api_resource.type
+            not in ("AWS::Serverless::Api", "AWS::Serverless::HttpApi")
+            or stage_resource is None
+            or stage_resource.type
+            not in ("AWS::ApiGateway::Stage", "AWS::ApiGatewayV2::Stage")
+        ):
+            return False
+
+        return True
 
     def fn_sub(
         self, validator: Validator, s: Any, instance: Any, schema: Any
