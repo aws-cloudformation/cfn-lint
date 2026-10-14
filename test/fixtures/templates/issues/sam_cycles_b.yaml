@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      DefinitionBody: {swagger: "2.0", info: {title: t}, paths: {}}
+      AccessLogSetting:
+        DestinationArn: !GetAtt AccessLogGroup.Arn
+        Format: "$context.requestId"
+  AccessLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: ApiGatewayAccount
+  ApiGatewayAccount:
+    Type: AWS::ApiGateway::Account
+    DependsOn: Api
+    Properties:
+      CloudWatchRoleArn: !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/apigw-logs"
