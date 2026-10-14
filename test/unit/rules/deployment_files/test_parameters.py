@@ -147,3 +147,34 @@ def test_validate(name, instance, expected, rule, validator):
     errs = list(rule.validate(validator, {}, instance, {}))
 
     assert errs == expected, f"Test {name!r} got {errs!r}"
+
+
+@pytest.mark.parametrize(
+    "provided,missing",
+    [
+        ({}, {"A", "B"}),
+        ({"A": "a"}, {"B"}),
+        ({"B": "b"}, {"A"}),
+        ({"A": "a", "B": "b"}, set()),
+    ],
+)
+@pytest.mark.parametrize("reverse", [False, True])
+def test_all_required_parameters(provided, missing, reverse, rule, validator):
+    instance = {
+        "A": {"Type": "String"},
+        "Optional": {"Type": "String", "Default": "default"},
+        "B": {"Type": "String"},
+    }
+    if reverse:
+        instance = dict(reversed(instance.items()))
+    validator = validator.evolve(
+        context=validator.context.evolve(
+            parameter_sets=[ParameterSet(source=None, parameters=provided)]
+        )
+    )
+
+    errors = list(rule.validate(validator, {}, instance, {}))
+
+    assert {error.message for error in errors} == {
+        f"{name!r} is a required property" for name in missing
+    }
