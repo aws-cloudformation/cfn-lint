@@ -1,3 +1,13 @@
+### v1.57.2
+## What's Changed
+* Support changes required for Python 3.15 by @s-t-e-v-e-n-k in https://github.com/aws-cloudformation/cfn-lint/pull/4717
+* chore(deps-dev): update coverage requirement from >=7.16.1 to >=7.16.2 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4732
+
+## New Contributors
+* @s-t-e-v-e-n-k made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4717
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.57.1...v1.57.2
+
 ### v1.57.1
 ## What's Changed
 * chore(deps-dev): update coverage requirement from >=7.2.1 to >=7.16.1 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4720
