@@ -53,7 +53,7 @@ class Parameters(CfnLintJsonSchema):
             if not isinstance(parameter_object, dict):
                 continue
             if "Default" not in parameter_object:
-                schema["required"] = [parameter_name]
+                schema["required"].append(parameter_name)
 
             parameter_type = parameter_object.get("Type")
             if not isinstance(parameter_type, str):
