@@ -517,3 +517,38 @@ def test_resolve_data_in_schema_pattern_non_string():
     instance = {"target": {"value": "^s3\\.amazonaws\\.com$"}}
     result = resolve_data_in_schema(schema, instance)
     assert result["pattern"] == "^s3\\.amazonaws\\.com$"
+
+
+@pytest.mark.parametrize(
+    "instance",
+    [{}, {"target": {}}, {"target": None}, {"target": {"value": {"Ref": "Parameter"}}}],
+)
+def test_unknown_data_constraint_is_deferred(instance):
+    from cfnlint.jsonschema._keywords_cfn import resolve_data_in_schema
+
+    assert resolve_data_in_schema({"const": {"$data": "/target/value"}}, instance) == {
+        "cfnUnresolved": True
+    }
+
+
+@pytest.mark.parametrize("value", [False, 0, None, "", "aurora-mysql"])
+def test_known_data_constraint_is_preserved(value):
+    from cfnlint.jsonschema._keywords_cfn import resolve_data_in_schema
+
+    assert resolve_data_in_schema(
+        {"const": {"$data": "/target/value"}}, {"target": {"value": value}}
+    ) == {"const": value}
+
+
+def test_explicit_literal_function_comparison_is_preserved():
+    from cfnlint.jsonschema._keywords_cfn import resolve_data_in_schema
+
+    schema = {
+        "cfnContext": {
+            "functions": [],
+            "schema": {"const": {"$data": "/target/value"}},
+        }
+    }
+    assert resolve_data_in_schema(schema, {"target": {"value": {"Ref": "Vpc"}}}) == {
+        "cfnContext": {"functions": [], "schema": {"const": {"Ref": "Vpc"}}}
+    }

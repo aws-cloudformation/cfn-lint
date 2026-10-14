@@ -82,13 +82,15 @@ def resolve_data_reference(value: Any, root_instance: Any) -> Any:
             elif isinstance(current, list):
                 current = current[int(part)]
             else:
-                return value  # Can't navigate further
+                return _UNRESOLVED
         return current
     except (KeyError, IndexError, ValueError):
-        return value  # Reference not found, return original
+        return _UNRESOLVED
 
 
-def resolve_data_in_schema(schema: Any, root_instance: Any) -> Any:
+def resolve_data_in_schema(
+    schema: Any, root_instance: Any, allow_intrinsics: bool = False
+) -> Any:
     """
     Recursively resolve all $data references in a schema.
     """
@@ -119,6 +121,12 @@ def resolve_data_in_schema(schema: Any, root_instance: Any) -> Any:
             if k in _data_keywords:
                 resolved = resolve_data_reference(v, root_instance)
                 if resolved is _UNRESOLVED:
+                    result["cfnUnresolved"] = True
+                    continue
+                # Intrinsics are deployment-time values unless a cfnContext
+                # explicitly requests literal comparison of function objects.
+                if not allow_intrinsics and is_function(resolved)[0] is not None:
+                    result["cfnUnresolved"] = True
                     continue
                 if k in _numeric_keywords:
                     try:
@@ -135,10 +143,18 @@ def resolve_data_in_schema(schema: Any, root_instance: Any) -> Any:
                     continue
                 result[k] = resolved
             else:
-                result[k] = resolve_data_in_schema(v, root_instance)
+                literal_functions = allow_intrinsics or (
+                    k == "cfnContext"
+                    and isinstance(v, dict)
+                    and v.get("functions") == []
+                )
+                result[k] = resolve_data_in_schema(v, root_instance, literal_functions)
         return result
     elif isinstance(schema, list):
-        return [resolve_data_in_schema(item, root_instance) for item in schema]
+        return [
+            resolve_data_in_schema(item, root_instance, allow_intrinsics)
+            for item in schema
+        ]
     else:
         return schema
 
@@ -583,6 +599,8 @@ def _validate_gathered(
     for err in scenario_validator.descend(
         gathered, resolved_schema, schema_path="schema"
     ):
+        if err.unknown:
+            continue
         if not err.path:
             yield err
             continue
@@ -636,10 +654,18 @@ def _function_unknown(
     return
 
 
+def cfnUnresolved(
+    validator: Validator, value: Any, instance: Any, schema: dict[str, Any]
+) -> ValidationResult:
+    """Preserve unknown comparisons through negation and conditional schemas."""
+    yield ValidationError("Cannot resolve gathered schema value", unknown=True)
+
+
 cfn_validators: dict[str, V] = {
     "additionalProperties": additionalProperties,
     "cfnContext": cfnContext,
     "cfnGather": cfnGather,
+    "cfnUnresolved": cfnUnresolved,
     "dynamicValidation": dynamicValidation,
     "type": cfn_type,
     # CloudFormation intrinsic functions - default to unknown

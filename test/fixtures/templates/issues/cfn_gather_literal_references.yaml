@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  UseFifo:
+    Type: String
+    AllowedValues: ["true", "false"]
+    Default: "false"
+Resources:
+  # Literal ARN, standard -> standard
+  StdSourceLiteralStdArn:
+    Type: AWS::SQS::Queue
+    Properties:
+      RedrivePolicy:
+        deadLetterTargetArn: arn:aws:sqs:us-east-1:123456789012:std-dlq
+        maxReceiveCount: 5
+  # Literal ARN, FIFO -> .fifo
+  FifoSourceLiteralFifoArn:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: true
+      RedrivePolicy:
+        deadLetterTargetArn: arn:aws:sqs:us-east-1:123456789012:fifo-dlq.fifo
+        maxReceiveCount: 5
+  # DLQ whose FifoQueue is a parameter
+  DlqParamFifo:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: !Ref UseFifo
+  StdSourceToParamFifoDlq:
+    Type: AWS::SQS::Queue
+    Properties:
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt DlqParamFifo.Arn
+        maxReceiveCount: 5
+  # Controls: GetAtt to in-template DLQs
+  StdDlq:
+    Type: AWS::SQS::Queue
+  FifoDlq:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: true
+  ControlMatch:
+    Type: AWS::SQS::Queue
+    Properties:
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt StdDlq.Arn
+        maxReceiveCount: 5
+  ControlMismatch:
+    Type: AWS::SQS::Queue
+    Properties:
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt FifoDlq.Arn
+        maxReceiveCount: 5
+  # Same mechanism, two RDS rules: literal DBClusterIdentifier
+  Cluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-mysql
+      StorageEncrypted: true
+      MasterUsername: admin
+      MasterUserPassword: "{{resolve:secretsmanager:dummy}}"
+  Instance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: aurora-mysql
+      DBInstanceClass: db.t3.medium
+      DBClusterIdentifier: my-cluster
+      StorageEncrypted: true
