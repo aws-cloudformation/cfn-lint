@@ -7,6 +7,7 @@ import logging
 from collections import deque
 from typing import Any
 
+from cfnlint.context.conditions import Unsatisfiable
 from cfnlint.helpers import FUNCTIONS, is_function
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
@@ -120,18 +121,32 @@ class Properties(CfnLintJsonSchema):
         for regions, schema in PROVIDER_SCHEMA_MANAGER.get_resource_schemas_by_regions(
             t, validator.context.regions
         ):
-            region_validator = validator.evolve(
-                context=validator.context.evolve(
-                    regions=regions,
-                    path=validator.context.path.evolve(
-                        cfn_path=deque(["Resources", t, "Properties"]),
-                    ).descend(path="Properties"),
-                ),
-            )
+            # Equal provider schemas can still have different reachable branches.
+            region_groups = [regions]
+            if any(
+                c.is_region for c in validator.context.conditions.conditions.values()
+            ):
+                region_groups = [[region] for region in regions]
+            for region_group in region_groups:
+                try:
+                    conditions = validator.context.conditions.evolve_for_regions(
+                        region_group
+                    )
+                except Unsatisfiable:
+                    continue
+                region_validator = validator.evolve(
+                    context=validator.context.evolve(
+                        regions=region_group,
+                        conditions=conditions,
+                        path=validator.context.path.evolve(
+                            cfn_path=deque(["Resources", t, "Properties"]),
+                        ).descend(path="Properties"),
+                    ),
+                )
 
-            region_validator = self.extend_validator(
-                region_validator, schema.schema, region_validator.context.evolve()
-            )
-            for err in self._validate(region_validator, properties):
-                err.path.appendleft("Properties")
-                yield err
+                region_validator = self.extend_validator(
+                    region_validator, schema.schema, region_validator.context.evolve()
+                )
+                for err in self._validate(region_validator, properties):
+                    err.path.appendleft("Properties")
+                    yield err
