@@ -15,6 +15,7 @@ from cfnlint.config import ManualArgs
 from cfnlint.core import get_rules
 from cfnlint.helpers import REGIONS
 from cfnlint.rules.errors import ConfigError
+from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, reset
 
 
 class TestLint(TestCase):
@@ -403,3 +404,65 @@ Resources:
 
         result = graph("not: [valid: yaml: {")
         self.assertIsNone(result)
+
+
+class TestLintRegistrySchemas(TestCase):
+    """Templates using types loaded with --registry-schemas"""
+
+    def setUp(self) -> None:
+        # Earlier tests can leave the resource type caches populated
+        # without the registry types
+        reset()
+
+    def tearDown(self) -> None:
+        PROVIDER_SCHEMA_MANAGER._registry_schemas = {}
+        reset()
+
+    def test_good_template(self):
+        filename = "test/fixtures/templates/good/schema_resource.yaml"
+        with open(filename, "r") as f:
+            matches = lint(
+                f.read(),
+                config=ManualArgs(
+                    registry_schemas=["test/fixtures/registry/custom/"],
+                    regions=["us-east-1", "us-west-2"],
+                ),
+            )
+
+        self.assertListEqual([], matches, f"Got matches: {matches!r}")
+
+    def test_properties_and_getatts_are_validated(self):
+        template = """
+Resources:
+  MyReport:
+    Type: Initech::TPS::Report
+    Properties:
+      TestCode: NOT_STARTED
+      Title: My report has to be longer
+      Unknown: true
+  MissingTitle:
+    Type: Initech::TPS::Report
+    Properties:
+      TestCode: CANCELLED
+  Parameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt MyReport.Nope
+Outputs:
+  TpsCode:
+    Value: !GetAtt MyReport.TPSCode
+"""
+        matches = lint(
+            template,
+            config=ManualArgs(
+                registry_schemas=["test/fixtures/registry/custom/"],
+                regions=["us-east-1", "us-west-2"],
+            ),
+        )
+
+        self.assertListEqual(
+            ["E1010", "E3002", "E3003"],
+            sorted(match.rule.id for match in matches),
+            f"Got matches: {matches!r}",
+        )
