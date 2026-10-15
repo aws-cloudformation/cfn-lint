@@ -9,6 +9,7 @@ This script requires Boto3 and Credentials to call the Pricing API
 
 import json
 import logging
+import re
 
 import boto3
 from botocore.client import Config
@@ -114,8 +115,12 @@ def get_dax_pricing():
     return results
 
 
+def get_mq_instance_type(usage_type):
+    """The usage type shortens sizes from 2xlarge up (mq.m7g.2xl)"""
+    return re.sub(r"(\.\d+)xl$", r"\1xlarge", usage_type)
+
+
 def get_mq_pricing():
-    remap = {"mq.m5.2xl": "mq.m5.2xlarge", "mq.m5.4xl": "mq.m5.4xlarge"}
     results = {}
     for page in get_paginator("AmazonMQ"):
         for price_item in page.get("PriceList", []):
@@ -134,7 +139,7 @@ def get_mq_pricing():
                     usage_type = (
                         product.get("attributes").get("usagetype").split(":")[1]
                     )
-                    results[location].add(remap.get(usage_type, usage_type))
+                    results[location].add(get_mq_instance_type(usage_type))
     return results
 
 
