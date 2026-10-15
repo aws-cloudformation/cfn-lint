@@ -14,6 +14,7 @@ from unittest.mock import MagicMock, patch
 
 from cfnlint.helpers import get_cache_dir
 from cfnlint.schema._patch import SchemaPatch
+from cfnlint.schema._schema import Schema
 from cfnlint.schema.manager import ProviderSchemaManager, ResourceNotFoundError
 
 _fixtures_dir = Path(__file__).parent.parent.parent.parent / "fixtures" / "schemas"
@@ -402,6 +403,53 @@ class TestManagerGetResourceSchema(BaseTestCase):
         self.manager._registry_schemas[rt] = True
         schema = self.manager.get_resource_schema("us-east-1", rt)
         assert schema is True
+
+
+class TestManagerGetResourceSchemasByRegions(BaseTestCase):
+    """Test getting the unique schemas for a type across regions"""
+
+    def setUp(self) -> None:
+        super().setUp()
+
+        self.manager = _make_manager()
+
+    def test_registry_schema(self):
+        rt = "Example::Module::AlbTarget"
+        schema = Schema({"typeName": rt, "properties": {"Name": {"type": "string"}}})
+        self.manager._registry_schemas[rt] = schema
+
+        results = list(
+            self.manager.get_resource_schemas_by_regions(rt, ["us-east-1", "us-west-2"])
+        )
+
+        self.assertEqual(results, [(["us-east-1", "us-west-2"], schema)])
+
+    def test_registry_module_schema(self):
+        # A registry "::MODULE" type keeps its own schema and is not
+        # normalized to the generic Module schema
+        rt = "Foo::Bar::MODULE"
+        schema = Schema({"typeName": rt, "properties": {"Foo": {"type": "string"}}})
+        self.manager._registry_schemas[rt] = schema
+
+        results = list(self.manager.get_resource_schemas_by_regions(rt, ["us-east-1"]))
+
+        self.assertEqual(results, [(["us-east-1"], schema)])
+
+    def test_registry_schema_removed_type(self):
+        rt = "Example::Module::AlbTarget"
+        self.manager._registry_schemas[rt] = Schema({"typeName": rt})
+        self.manager.patch(SchemaPatch([], [rt], {}), "us-east-1")
+
+        results = list(self.manager.get_resource_schemas_by_regions(rt, ["us-east-1"]))
+
+        self.assertEqual(results, [])
+
+    def test_unknown_type(self):
+        results = list(
+            self.manager.get_resource_schemas_by_regions("Foo::Bar::Baz", ["us-east-1"])
+        )
+
+        self.assertEqual(results, [])
 
 
 class TestManagerPatch(BaseTestCase):
