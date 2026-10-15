@@ -438,7 +438,9 @@ def main():
     write_output(
         "aws_docdb_dbinstance",
         "dbinstanceclass_enum",
-        get_results("AmazonDocDB", ["Database Instance"]),
+        get_results(
+            "AmazonDocDB", ["Database Instance"], default=set(["db.serverless"])
+        ),
     )
     write_output(
         "aws_neptune_dbinstance",
