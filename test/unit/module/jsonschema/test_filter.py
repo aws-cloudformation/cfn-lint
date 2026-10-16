@@ -55,6 +55,16 @@ def template():
             ],
         ),
         (
+            "Don't treat the template Description as a dynamic reference",
+            "See {{resolve:ssm:secret}}",
+            {"maxLength": 5},
+            deque(["Description"]),
+            [],
+            [
+                ("See {{resolve:ssm:secret}}", {"maxLength": 5}),
+            ],
+        ),
+        (
             "Validate dynamic references with spaces",
             "{{ resolve:ssm:secret }}",
             {"enum": "Foo"},

@@ -111,6 +111,21 @@ class TestLint(TestCase):
         matches = self.helper_lint_string_from_file(filename)
         self.assertEqual([], matches, f"Got matches: {matches!r}")
 
+    def test_description_length_with_dynamic_reference_text(self):
+        # CloudFormation doesn't resolve dynamic references in the template
+        # Description, so the length limit applies to the text as written
+        description = "x" * 1030 + " {{resolve:ssm:/some/path}}"
+        template = (
+            f'Description: "{description}"\n'
+            "Resources:\n"
+            "  Topic:\n"
+            "    Type: AWS::SNS::Topic\n"
+        )
+        matches = lint(template)
+        self.assertEqual(
+            ["E1003"], [match.rule.id for match in matches], f"Got matches: {matches!r}"
+        )
+
 
 class TestV0Usage(TestCase):
     def helper_lint_string_from_file(
