@@ -133,7 +133,7 @@ def test_validate(
 def test_validate_by_py_version(rule, validator):
     document = '{ "arn:aws-us-gov:iam::123456789012:role/test"'
 
-    if sys.version_info < (3, 9) and sys.platform == "darwin":
+    if sys.version_info > (3, 15) and sys.platform == "darwin":
         message = (
             "Document is not valid (\"expected ',' or '}', but got '<stream end>'\")"
         )
