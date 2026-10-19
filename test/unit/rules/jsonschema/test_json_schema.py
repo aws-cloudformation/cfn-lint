@@ -114,6 +114,11 @@ class TestJsonSchema(BaseRuleTestCase):
                 ["Foo"],
                 validator="additionalProperties",
             ),
+            self.build_result(
+                "expected minimum property count: 1, found: 0",
+                ["Resources"],
+                validator="minProperties",
+            ),
         ]
         self.cfn = Template(
             "",
@@ -128,6 +133,15 @@ class TestJsonSchema(BaseRuleTestCase):
         self.validate(expected)
 
     def test_config(self):
+        # sections only whitelists the named section, the Resources
+        # lower bound still applies
+        expected = [
+            self.build_result(
+                "expected minimum property count: 1, found: 0",
+                ["Resources"],
+                validator="minProperties",
+            ),
+        ]
         self.rule.config["sections"] = "Foo"
         self.cfn = Template(
             "",
@@ -139,7 +153,28 @@ class TestJsonSchema(BaseRuleTestCase):
             ),
             ["us-east-1"],
         )
-        self.validate([])
+        self.validate(expected)
+
+    def test_empty_resources(self):
+        """An empty Resources section is rejected by CloudFormation
+        and must fail E1001 just like a missing Resources section"""
+        expected = [
+            self.build_result(
+                "expected minimum property count: 1, found: 0",
+                ["Resources"],
+                validator="minProperties",
+            ),
+        ]
+        self.cfn = Template(
+            "",
+            build_dict(
+                {
+                    build_str("Resources"): build_dict({}),
+                },
+            ),
+            ["us-east-1"],
+        )
+        self.validate(expected)
 
 
 def build_node(instance: str | dict, loc: str, type=str_node):
