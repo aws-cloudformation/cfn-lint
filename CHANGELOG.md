@@ -1,3 +1,21 @@
+### v1.58.0
+## What's Changed
+* test(getatts): add NumberOfAssociations to NetworkFirewall::Firewall by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4788
+* fix: handle SAM RestApi stage references by @0xTaoZ in https://github.com/aws-cloudformation/cfn-lint/pull/4730
+* fix(lambda): update SnapStart supported regions by @0xTaoZ in https://github.com/aws-cloudformation/cfn-lint/pull/4740
+* fix: Allow object form of CodeUri in SAM Globals.Function by @moneytool in https://github.com/aws-cloudformation/cfn-lint/pull/4741
+* fix(conditions): avoid exponential CNF when registering conditions by @moneytool in https://github.com/aws-cloudformation/cfn-lint/pull/4742
+* fix(formats): register log group name validation correctly by @0xTaoZ in https://github.com/aws-cloudformation/cfn-lint/pull/4745
+* fix: validate every required deployment parameter by @proton0210 in https://github.com/aws-cloudformation/cfn-lint/pull/4753
+* fix: defer unresolved gathered property comparisons by @proton0210 in https://github.com/aws-cloudformation/cfn-lint/pull/4754
+* Update CloudFormation schemas to 2026-10-20 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4727
+
+## New Contributors
+* @moneytool made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4741
+* @proton0210 made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4753
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.57.2...v1.58.0
+
 ### v1.57.2
 ## What's Changed
 * Support changes required for Python 3.15 by @s-t-e-v-e-n-k in https://github.com/aws-cloudformation/cfn-lint/pull/4717
