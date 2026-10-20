@@ -1384,6 +1384,31 @@ ElasticLoadBalancer -> MyEC2Instance [key=0, source_paths="[\\"Properties\\", \\
         }
         self.assertDictEqual(directives, expected_result)
 
+    def test_get_directives_non_dict_metadata(self):
+        """Test get_directives skips resources whose Metadata is not an object"""
+        template_yaml = {
+            "Resources": {
+                "nullMetadata": {"Metadata": None, "Type": "AWS::S3::Bucket"},
+                "listMetadata": {"Metadata": [], "Type": "AWS::S3::Bucket"},
+                "stringMetadata": {"Metadata": "foo", "Type": "AWS::S3::Bucket"},
+                "goodMetadata": {
+                    "Metadata": {"cfn-lint": {"config": {"ignore_checks": ["E3012"]}}},
+                    "Type": "AWS::S3::Bucket",
+                },
+            }
+        }
+
+        template = Template(
+            "test.yaml",
+            cfn_yaml.loads(
+                json.dumps(
+                    template_yaml, sort_keys=True, indent=4, separators=(",", ": ")
+                )
+            ),
+        )
+        directives = template.get_directives()
+        self.assertDictEqual(directives, {"E3012": ["goodMetadata"]})
+
     def test_is_cdk_bad_type(self):
         template = {
             "Resources": {
