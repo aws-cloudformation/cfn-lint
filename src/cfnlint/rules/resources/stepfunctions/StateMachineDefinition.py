@@ -49,7 +49,7 @@ class StateMachineDefinition(CfnLintJsonSchema):
 
     def _fix_message(self, err: ValidationError) -> ValidationError:
         if len(err.path) > 1:
-            err.message = f"{err.message} at {'/'.join(err.path)!r}"
+            err.message = f"{err.message} at {'/'.join(str(p) for p in err.path)!r}"
         for i, c_err in enumerate(err.context):
             err.context[i] = self._fix_message(c_err)
         return err

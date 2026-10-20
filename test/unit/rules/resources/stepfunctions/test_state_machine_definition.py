@@ -569,6 +569,65 @@ def rule():
             ],
         ),
         (
+            "Invalid string definition with an error inside a list item",
+            {
+                "Definition": (
+                    """
+                    {
+                        "StartAt": "Task",
+                        "States": {
+                            "Task": {
+                                "Type": "Task",
+                                "Resource": "arn:aws:states:::lambda:invoke",
+                                "Catch": [
+                                    {
+                                        "ErrorEquals": "States.ALL",
+                                        "Next": "Done"
+                                    }
+                                ],
+                                "End": true
+                            },
+                            "Done": {
+                                "Type": "Pass",
+                                "End": true
+                            }
+                        }
+                    }
+                """
+                )
+            },
+            [
+                ValidationError(
+                    (
+                        "'States.ALL' is not of type 'array' at "
+                        "'States/Task/Catch/0/ErrorEquals'"
+                    ),
+                    rule=StateMachineDefinition(),
+                    validator="type",
+                    schema_path=deque(
+                        [
+                            "properties",
+                            "States",
+                            "patternProperties",
+                            "^.{1,80}$",
+                            "allOf",
+                            5,
+                            "then",
+                            "properties",
+                            "Catch",
+                            "items",
+                            "properties",
+                            "ErrorEquals",
+                            "type",
+                        ]
+                    ),
+                    path=deque(
+                        ["Definition", "States", "Task", "Catch", 0, "ErrorEquals"]
+                    ),
+                ),
+            ],
+        ),
+        (
             "Valid string json with definition substitution",
             {
                 "DefinitionSubstitutions": {"jobqueue": {"Ref": "MyJob"}},
