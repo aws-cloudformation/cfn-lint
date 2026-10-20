@@ -382,3 +382,88 @@ def test_validate(name, instance, schema, expected, rule, context, cfn):
     )(context=context.evolve(strict_types=False), cfn=cfn)
     errs = list(rule.fn_sub(validator, schema, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"
+
+
+@pytest.mark.parametrize(
+    "name,template",
+    [
+        (
+            "implicit Function Api stage",
+            {
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "F": {
+                        "Type": "AWS::Serverless::Function",
+                        "Properties": {
+                            "Runtime": "python3.12",
+                            "Handler": "app.handler",
+                            "InlineCode": "def handler(e,c): pass",
+                            "Events": {
+                                "ApiEvent": {
+                                    "Type": "Api",
+                                    "Properties": {"Path": "/", "Method": "POST"},
+                                }
+                            },
+                        },
+                    }
+                },
+            },
+        ),
+        (
+            "implicit StateMachine Api stage",
+            {
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "SM": {
+                        "Type": "AWS::Serverless::StateMachine",
+                        "Properties": {
+                            "Definition": {
+                                "StartAt": "X",
+                                "States": {"X": {"Type": "Pass", "End": True}},
+                            },
+                            "Events": {
+                                "ApiEvent": {
+                                    "Type": "Api",
+                                    "Properties": {"Path": "/", "Method": "POST"},
+                                }
+                            },
+                        },
+                    }
+                },
+            },
+        ),
+        (
+            "explicit Serverless Api stage",
+            {
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Resources": {
+                    "Api": {
+                        "Type": "AWS::Serverless::Api",
+                        "Properties": {"StageName": "prod"},
+                    }
+                },
+            },
+        ),
+    ],
+)
+def test_sam_stage_ref_in_sub(name, template, rule):
+    cfn = Template("", template, regions=["us-east-1"])
+    context = cfn.context.evolve(strict_types=False)
+    validator = CfnTemplateValidator({}).extend(
+        validators={
+            "ref": Ref().ref,
+            "fn_getatt": GetAtt().fn_getatt,
+        }
+    )(context=context, cfn=cfn)
+
+    api = "ServerlessRestApi" if "ServerlessRestApi" in context.resources else "Api"
+    errs = list(
+        rule.fn_sub(
+            validator,
+            {"type": "string"},
+            {"Fn::Sub": f"${{{api}.Stage}}"},
+            {},
+        )
+    )
+
+    assert errs == [], f"Test {name!r} got {errs!r}"

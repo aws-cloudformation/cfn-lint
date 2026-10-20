@@ -96,6 +96,7 @@ class TestGetAtts(BaseTestCase):
                                                     "FirewallId",
                                                     "TransitGatewayAttachmentId",
                                                     "EndpointIds",
+                                                    "NumberOfAssociations",
                                                 ],
                                             },
                                         ]
@@ -125,6 +126,7 @@ class TestGetAtts(BaseTestCase):
                             "Resource.FirewallId",
                             "Resource.TransitGatewayAttachmentId",
                             "Resource.EndpointIds",
+                            "Resource.NumberOfAssociations",
                         ],
                     },
                 ]
