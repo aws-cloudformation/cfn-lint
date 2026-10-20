@@ -2,8 +2,32 @@
 Test cfnGather keyword functionality
 """
 
+import pytest
+
 from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.template import Template
+
+
+@pytest.mark.parametrize(
+    "constraint",
+    [
+        {"not": {"const": {"$data": "/remote/value"}}},
+        {"if": {"const": {"$data": "/remote/value"}}, "then": False},
+        {"oneOf": [{"const": {"$data": "/remote/value"}}, {"const": "actual"}]},
+    ],
+)
+def test_unknown_gathered_value_in_composite_schema(constraint):
+    schema = {
+        "cfnGather": {
+            "gather": {
+                "local": {"properties": {"value": "/Value"}},
+                "remote": {"reference": "/Target", "properties": {"value": "/Value"}},
+            },
+            "schema": {"properties": {"local": {"properties": {"value": constraint}}}},
+        }
+    }
+    validator = CfnTemplateValidator(schema=schema, cfn=Template("", {}))
+    assert list(validator.iter_errors({"Target": "external", "Value": "actual"})) == []
 
 
 class TestCfnGather:
