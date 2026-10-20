@@ -17,5 +17,5 @@ class LogGroupName(FormatKeyword):
 
     def __init__(self):
         super().__init__(
-            format="AWS::EC2::Subnet.Id", pattern=r"^[\.\-_\/#A-Za-z0-9]{1,512}\Z"
+            format="AWS::Logs::LogGroup.Name", pattern=r"^[\.\-_\/#A-Za-z0-9]{1,512}\Z"
         )
