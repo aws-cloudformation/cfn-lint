@@ -484,3 +484,23 @@ class TestInjectSamImplicitResources:
         assert "ServerlessRestApiStage" in resources
         assert "ServerlessHttpApi" in resources
         assert "ServerlessHttpApiStage" in resources
+
+    def test_state_machine_implicit_rest_api_stage(self):
+        """StateMachine Api events also generate an implicit RestApi and Stage."""
+        template_resources = {
+            "SM": {
+                "Type": "AWS::Serverless::StateMachine",
+                "Properties": {
+                    "Events": {
+                        "A": {
+                            "Type": "Api",
+                            "Properties": {"Path": "/", "Method": "GET"},
+                        },
+                    }
+                },
+            }
+        }
+        resources: dict[str, Resource] = {}
+        _inject_sam_implicit_resources(template_resources, resources)
+        assert "ServerlessRestApi" in resources
+        assert "ServerlessRestApiStage" in resources
