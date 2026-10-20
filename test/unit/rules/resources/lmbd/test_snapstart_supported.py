@@ -240,3 +240,61 @@ def test_validate(
         child_rule.validate.assert_not_called(), f"{name!r}: child rule called"
 
     assert errs == expected, f"{name!r}: expected {expected!r} got {errs!r}"
+
+
+@pytest.mark.parametrize(
+    "region",
+    [
+        "ap-south-2",
+        "ap-southeast-4",
+        "ap-southeast-5",
+        "ap-southeast-7",
+        "ca-west-1",
+        "eu-central-2",
+        "eu-south-2",
+        "il-central-1",
+        "me-central-1",
+        "mx-central-1",
+    ],
+)
+@pytest.mark.parametrize("runtime", ["java21", "python3.12", "dotnet8"])
+def test_supported_regions(region, runtime, validator):
+    rule = SnapStartSupported()
+    validator = validator.evolve(
+        context=validator.context.evolve(regions=[region]),
+    )
+    instance = {
+        "Runtime": runtime,
+        "SnapStart": {"ApplyOn": "PublishedVersions"},
+    }
+
+    assert list(rule.validate(validator, "", instance, {})) == []
+
+
+@pytest.mark.parametrize(
+    "region",
+    [
+        "ap-east-2",
+        "ap-southeast-6",
+        "cn-north-1",
+        "cn-northwest-1",
+        "us-gov-east-1",
+        "us-gov-west-1",
+    ],
+)
+def test_unsupported_regions(region, validator):
+    rule = SnapStartSupported()
+    validator = validator.evolve(
+        context=validator.context.evolve(regions=["il-central-1", region]),
+    )
+    instance = {
+        "Runtime": "java21",
+        "SnapStart": {"ApplyOn": "PublishedVersions"},
+    }
+
+    assert list(rule.validate(validator, "", instance, {})) == [
+        ValidationError(
+            f"'SnapStart' enabled functions are not supported in {[region]!r}",
+            path=deque(["SnapStart", "ApplyOn"]),
+        )
+    ]

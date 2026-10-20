@@ -77,6 +77,50 @@ def rule():
             {"cfn_path": deque(["Globals"])},
             1,
         ),
+        (
+            # https://github.com/aws-cloudformation/cfn-lint/issues/4739
+            "Object form of Function.CodeUri",
+            {"Function": {"CodeUri": {"Bucket": "my-bucket", "Key": "code.zip"}}},
+            {"Transform": ["AWS::Serverless-2016-10-31"]},
+            {"cfn_path": deque(["Globals"])},
+            0,
+        ),
+        (
+            "Object form of Function.CodeUri with Version and intrinsics",
+            {
+                "Function": {
+                    "CodeUri": {
+                        "Bucket": {"Ref": "Bucket"},
+                        "Key": {"Fn::Sub": "${AWS::StackName}/code.zip"},
+                        "Version": "3",
+                    }
+                }
+            },
+            {"Transform": ["AWS::Serverless-2016-10-31"]},
+            {"cfn_path": deque(["Globals"])},
+            0,
+        ),
+        (
+            "String form of Function.CodeUri",
+            {"Function": {"CodeUri": "s3://my-bucket/code.zip"}},
+            {"Transform": ["AWS::Serverless-2016-10-31"]},
+            {"cfn_path": deque(["Globals"])},
+            0,
+        ),
+        (
+            "Intrinsic Function.CodeUri",
+            {"Function": {"CodeUri": {"Fn::Sub": "s3://${Bucket}/code.zip"}}},
+            {"Transform": ["AWS::Serverless-2016-10-31"]},
+            {"cfn_path": deque(["Globals"])},
+            0,
+        ),
+        (
+            "Unknown key in object form of Function.CodeUri",
+            {"Function": {"CodeUri": {"Bucket": "my-bucket", "Kye": "code.zip"}}},
+            {"Transform": ["AWS::Serverless-2016-10-31"]},
+            {"cfn_path": deque(["Globals"])},
+            1,
+        ),
     ],
     indirect=["template", "path"],
 )
