@@ -1571,3 +1571,31 @@ def test_validate(
 ):
     errs = list(rule.validate(validator, {}, instance, {}))
     assert errs == expected, f"{name!r} test failed with {errs!r}"
+
+
+def test_fix_message_with_array_index_in_path(rule, validator):
+    # Regression test for https://github.com/aws-cloudformation/cfn-lint/issues/4775
+    # An error inside a JSON-string DefinitionString whose path crosses an
+    # array (here Catch[0]) must not raise TypeError while appending the
+    # path to the message, and no finding may be swallowed.
+    instance = {
+        "DefinitionString": (
+            '{"StartAt": "Missing", '
+            '"States": {'
+            '  "T": {"Type": "Task", '
+            '        "Resource": "arn:aws:states:::lambda:invoke", '
+            '        "Catch": [{"ErrorEquals": "States.ALL", "Next": "Done"}], '
+            '        "End": true}, '
+            '  "Done": {"Type": "Sleep", "End": true}}}'
+        )
+    }
+    errs = list(rule.validate(validator, {}, instance, {}))
+    messages = [e.message for e in errs]
+    assert any(
+        "at 'States/T/Catch/0/ErrorEquals'" in message for message in messages
+    ), f"array-path E3601 finding missing: {messages!r}"
+    assert any("Missing 'Next' target 'Missing'" in message for message in messages)
+    assert any("'Sleep' is not one of" in message for message in messages)
+    assert not any("sequence item" in message for message in messages), (
+        f"E1101 crash surfaced: {messages!r}"
+    )
