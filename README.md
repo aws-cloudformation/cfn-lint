@@ -359,7 +359,7 @@ If you are using a `.cfnlintrc` and specifying the `templates` or `ignore_templa
 ```yaml
 repos:
   - repo: https://github.com/aws-cloudformation/cfn-lint
-    rev: v1.57.2 # The version of cfn-lint to use
+    rev: v1.58.0 # The version of cfn-lint to use
     hooks:
       - id: cfn-lint-rc
 ```
