@@ -18,4 +18,10 @@ Parameters:
     Description: VPC To Create Stack In
     Type: String
 
-Resources: {}
+Resources:
+  LambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Sub "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:placeholder"
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
