@@ -346,9 +346,11 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         if resources:
             for resource_name, resource_values in resources.items():
                 if isinstance(resource_values, dict):
+                    metadata = resource_values.get("Metadata")
+                    if not isinstance(metadata, dict):
+                        continue
                     ignore_rule_ids = (
-                        resource_values.get("Metadata", {})
-                        .get("cfn-lint", {})
+                        metadata.get("cfn-lint", {})
                         .get("config", {})
                         .get("ignore_checks", [])
                     )
