@@ -53,6 +53,12 @@ class Conditions:
         if not isinstance(conditions, dict):
             raise ValueError("Conditions must be a object")
         for k, v in conditions.items():
+            if not isinstance(k, str):
+                # Condition logical IDs must be strings (rule E8001 reports
+                # non-string names).  Skip them here so the sympy Symbol
+                # table below never receives a non-string name, which would
+                # raise TypeError before any rule gets to run.
+                continue
             try:
                 other_conditions = conditions.copy()
                 del other_conditions[k]

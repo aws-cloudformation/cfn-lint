@@ -312,6 +312,20 @@ def test_condition_failures():
         Conditions.create_from_instance([], {}, {})
 
 
+def test_condition_non_string_names_skipped():
+    # Regression test for https://github.com/aws-cloudformation/cfn-lint/issues/4813
+    # A non-string condition logical ID must not crash create_from_instance
+    # (sympy Symbol requires a string name).  The invalid name is skipped
+    # here and reported by rule E8001.
+    conditions = Conditions.create_from_instance(
+        {123: {"Fn::Equals": ["a", "b"]}, "IsValid": {"Fn::Equals": ["a", "b"]}},
+        {},
+        {},
+    )
+    assert 123 not in conditions.conditions
+    assert "IsValid" in conditions.conditions
+
+
 def test_is_reachable_unknown_condition():
     cfn = Template(None, template(), regions=["us-east-1"])
     context = create_context_for_template(cfn)

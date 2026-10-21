@@ -62,6 +62,21 @@ class TestConfiguration(BaseRuleTestCase):
         errors = list(rule.validate(validator, {}, instance, []))
         self.assertListEqual(errors, [])
 
+    def test_condition_non_string_names_rejected(self):
+        # Regression test for https://github.com/aws-cloudformation/cfn-lint/issues/4813
+        # A non-string condition logical ID (e.g. an unquoted YAML integer key)
+        # must be reported by E8001, matching the CloudFormation rejection of
+        # non-string condition names.
+        rule = Configuration()
+        validator = CfnTemplateValidator({})
+
+        errors = list(
+            rule.validate(validator, {}, {123: {"Fn::Equals": ["a", "b"]}}, [])
+        )
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0].message, "123 is not of type 'string'")
+        self.assertEqual(errors[0].rule.id, "E8001")
+
     def test_condition_invalid_values_still_reported(self):
         # The value type check from #4770 stays: a condition with two function
         # keys and a list-valued condition are both rejected by CreateStack.
