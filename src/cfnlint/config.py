@@ -720,7 +720,11 @@ class TemplateArgs:
     def set_template_args(self, template):
         defaults = {}
         if isinstance(template, dict):
-            configs = template.get("Metadata", {}).get("cfn-lint", {}).get("config", {})
+            metadata = template.get("Metadata", {})
+            cfn_lint = (
+                metadata.get("cfn-lint", {}) if isinstance(metadata, dict) else {}
+            )
+            configs = cfn_lint.get("config", {}) if isinstance(cfn_lint, dict) else {}
 
             if isinstance(configs, dict):
                 for key, value in {
