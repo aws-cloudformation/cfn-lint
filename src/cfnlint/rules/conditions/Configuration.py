@@ -7,7 +7,7 @@ from typing import Any
 
 import cfnlint.data.schemas.other.conditions
 from cfnlint.helpers import FUNCTION_CONDITIONS
-from cfnlint.jsonschema import Validator
+from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 from cfnlint.schema.resolver import RefResolver
 
@@ -47,3 +47,16 @@ class Configuration(CfnLintJsonSchema):
         )
 
         yield from self._iter_errors(validator, instance)
+
+        # The schema type check above runs with non-strict type checking, so a
+        # non-string condition logical ID (for example an unquoted YAML integer
+        # key) passes it silently. Enforce the key type explicitly to mirror
+        # the CloudFormation rejection of non-string condition logical IDs.
+        if isinstance(instance, dict):
+            for key in instance:
+                if not isinstance(key, str):
+                    yield ValidationError(
+                        f"{key!r} is not of type 'string'",
+                        rule=self,
+                        path=(key,),
+                    )
