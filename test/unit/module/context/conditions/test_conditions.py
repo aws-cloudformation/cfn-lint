@@ -320,12 +320,8 @@ def test_mutually_exclusive_equals_without_allowed_values():
             "Conditions": {
                 "UseIpv4": {"Fn::Equals": [{"Ref": "Source"}, "ipv4"]},
                 "UseIpv6": {"Fn::Equals": [{"Ref": "Source"}, "ipv6"]},
-                "UseAcct1": {
-                    "Fn::Equals": [{"Ref": "AWS::AccountId"}, "111111111111"]
-                },
-                "UseAcct2": {
-                    "Fn::Equals": [{"Ref": "AWS::AccountId"}, "222222222222"]
-                },
+                "UseAcct1": {"Fn::Equals": [{"Ref": "AWS::AccountId"}, "111111111111"]},
+                "UseAcct2": {"Fn::Equals": [{"Ref": "AWS::AccountId"}, "222222222222"]},
             },
         },
         regions=["us-east-1"],
