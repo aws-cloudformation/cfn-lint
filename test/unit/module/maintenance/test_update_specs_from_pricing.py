@@ -21,6 +21,45 @@ def _load_update_specs_from_pricing():
 class TestUpdateSpecsFromPricing(BaseTestCase):
     """Used for testing pricing spec generation."""
 
+    def test_main_adds_serverless_to_docdb(self):
+        """DocumentDB gets db.serverless, which has no instance pricing."""
+        module = _load_update_specs_from_pricing()
+        docdb_pages = [
+            {
+                "PriceList": [
+                    json.dumps(
+                        {
+                            "product": {
+                                "productFamily": "Database Instance",
+                                "attributes": {
+                                    "location": "US East (N. Virginia)",
+                                    "locationType": "AWS Region",
+                                    "instanceType": "db.r6g.large",
+                                },
+                            }
+                        }
+                    )
+                ]
+            }
+        ]
+
+        def get_paginator(service):
+            return docdb_pages if service == "AmazonDocDB" else []
+
+        with (
+            patch.object(module, "configure_logging"),
+            patch.object(module, "get_paginator", side_effect=get_paginator),
+            patch.object(module, "get_rds_pricing"),
+            patch.object(module, "write_output") as write_output,
+        ):
+            module.main()
+
+        outputs = {call.args[0]: call.args[2] for call in write_output.call_args_list}
+        self.assertEqual(
+            outputs["aws_docdb_dbinstance"],
+            {"us-east-1": set(["db.serverless", "db.r6g.large"])},
+        )
+
     def test_get_results_copies_default_values_per_region(self):
         """Default values stay isolated between generated region enums."""
         module = _load_update_specs_from_pricing()
