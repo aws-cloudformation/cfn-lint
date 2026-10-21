@@ -103,3 +103,52 @@ class TestUpdateSpecsFromPricing(BaseTestCase):
 
         self.assertEqual(results["us-east-1"], set(["db.serverless", "db.r5.large"]))
         self.assertEqual(results["eu-west-1"], set(["db.serverless", "db.r6g.large"]))
+
+    def test_get_mq_pricing_expands_abbreviated_sizes(self):
+        """Sizes the usage type shortens to "xl" get their full API names."""
+        module = _load_update_specs_from_pricing()
+        usage_types = [
+            "mq.m5.large",
+            "mq.m5.2xl",
+            "mq.m5.4xl",
+            "mq.m7g.xlarge",
+            "mq.m7g.2xl",
+            "mq.m7g.16xl",
+            "mq.m7i.4xl",
+        ]
+        pages = [
+            {
+                "PriceList": [
+                    json.dumps(
+                        {
+                            "product": {
+                                "productFamily": "Broker Instances",
+                                "attributes": {
+                                    "location": "US East (N. Virginia)",
+                                    "usagetype": f"USE1-Broker:{usage_type}",
+                                },
+                            }
+                        }
+                    )
+                    for usage_type in usage_types
+                ]
+            }
+        ]
+
+        with patch.object(module, "get_paginator", return_value=pages):
+            results = module.get_mq_pricing()
+
+        self.assertEqual(
+            results["us-east-1"],
+            set(
+                [
+                    "mq.m5.large",
+                    "mq.m5.2xlarge",
+                    "mq.m5.4xlarge",
+                    "mq.m7g.xlarge",
+                    "mq.m7g.2xlarge",
+                    "mq.m7g.16xlarge",
+                    "mq.m7i.4xlarge",
+                ]
+            ),
+        )
