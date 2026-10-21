@@ -57,6 +57,23 @@ def template():
             {"type": "string"},
             [],
         ),
+        (
+            "Valid Fn::If as the index with language extension",
+            {"Fn::Select": [{"Fn::If": ["IsSet", "1", "0"]}, ["zero", "one"]]},
+            {"type": "string"},
+            [],
+        ),
+        (
+            "Valid nested Fn::Select as the index with language extension",
+            {
+                "Fn::Select": [
+                    {"Fn::Select": [1, {"Fn::Split": [",", "0,1"]}]},
+                    ["zero", "one"],
+                ]
+            },
+            {"type": "string"},
+            [],
+        ),
     ],
 )
 def test_validate(name, instance, schema, expected, rule, validator):

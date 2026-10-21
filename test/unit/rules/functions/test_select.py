@@ -211,6 +211,23 @@ def template():
             [],
         ),
         (
+            "Valid Fn::Select with Fn::If as the index",
+            {"Fn::Select": [{"Fn::If": ["IsSet", "1", "0"]}, ["zero", "one"]]},
+            {"type": "string"},
+            [],
+        ),
+        (
+            "Valid Fn::Select with a nested Fn::Select as the index",
+            {
+                "Fn::Select": [
+                    {"Fn::Select": [1, {"Fn::Split": [",", "0,1"]}]},
+                    ["zero", "one"],
+                ]
+            },
+            {"type": "string"},
+            [],
+        ),
+        (
             "Invalid Fn::Select with an invalid function",
             {"Fn::Select": [1, ["foo", {"foo": "bar"}]]},
             {"type": "string", "enum": ["foo"]},
