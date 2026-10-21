@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 import copy
 from functools import reduce  # pylint: disable=redefined-builtin
+from typing import Any
 
 import regex as re
 
@@ -26,6 +27,10 @@ class SubNeeded(CloudFormationLintRule):
     tags = ["functions", "sub"]
 
     exceptions = ["TemplateBody"]
+
+    # CloudFormation doesn't evaluate intrinsic functions in these template
+    # sections, so a "${...}" there is plain text and Fn::Sub can't be used
+    excluded_sections = ["Description", "Parameters", "Mappings"]
 
     def __init__(self):
         """Init"""
@@ -102,6 +107,37 @@ class SubNeeded(CloudFormationLintRule):
 
         return False
 
+    def _parent_key(self, path: list[Any]) -> Any:
+        """
+        Return the key holding the string, looking through Fn::If branches
+        so a value picked by a condition is treated like the value itself
+        """
+        index = len(path) - 2
+        while index >= 2 and path[index - 1] == "Fn::If" and path[index] in (1, 2):
+            index -= 2
+        return path[index]
+
+    def _is_macro_parameter(self, path: list[Any], cfn: Template) -> bool:
+        """
+        Fn::Transform passes its parameters to the macro without evaluating
+        them, except for AWS::Include, whose Location can use Fn::Sub
+        """
+        if "Fn::Transform" not in path:
+            return False
+        index = path.index("Fn::Transform") + 1
+        # Fn::Transform can also hold a list of transforms
+        if index < len(path) and isinstance(path[index], int):
+            index += 1
+        transform: Any = cfn.template
+        try:
+            for key in path[:index]:
+                transform = transform[key]
+        except (KeyError, IndexError, TypeError):
+            return True
+        return not (
+            isinstance(transform, dict) and transform.get("Name") == "AWS::Include"
+        )
+
     def match(self, cfn: Template) -> RuleMatches:
         matches = []
 
@@ -116,6 +152,12 @@ class SubNeeded(CloudFormationLintRule):
         for parameter_string_path in parameter_string_paths:
             # Get variable
             var = parameter_string_path[-1]
+
+            if parameter_string_path[0] in self.excluded_sections:
+                continue
+
+            if self._is_macro_parameter(parameter_string_path, cfn):
+                continue
 
             if self._validate_step_functions(var, parameter_string_path, cfn):
                 continue
@@ -135,7 +177,7 @@ class SubNeeded(CloudFormationLintRule):
             # containing a ${parameter} may not be evaluated correctly
             if (
                 "Fn::Sub" not in parameter_string_path
-                and parameter_string_path[-2] not in self.exceptions
+                and self._parent_key(parameter_string_path) not in self.exceptions
             ):
                 try:
                     if (

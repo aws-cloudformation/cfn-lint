@@ -20,6 +20,7 @@ class TestSubNeeded(BaseRuleTestCase):
             "test/fixtures/templates/good/functions/sub.yaml",
             "test/fixtures/templates/good/functions/sub_needed.yaml",
             "test/fixtures/templates/good/functions/sub_needed_transform.yaml",
+            "test/fixtures/templates/good/functions/sub_needed_not_evaluated.yaml",
         ]
 
     def test_file_positive(self):
@@ -55,5 +56,5 @@ class TestSubNeeded(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative(
-            "test/fixtures/templates/bad/functions/sub_needed.yaml", 7
+            "test/fixtures/templates/bad/functions/sub_needed.yaml", 11
         )

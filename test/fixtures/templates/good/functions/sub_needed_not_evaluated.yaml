@@ -1,0 +1,49 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+# CloudFormation does not evaluate intrinsic functions in the template
+# Description, Parameters, Mappings or the parameters of a macro called
+# with Fn::Transform, and a TemplateBody is a template of its own, so
+# "${...}" in these places is plain text and Fn::Sub can't be added
+Description: "Bucket name pattern is app-${AWS::AccountId}"
+Parameters:
+  Env:
+    Type: String
+    Default: beta
+    Description: "Bucket becomes ${Env}-${AWS::Region}"
+Conditions:
+  IsUsEast1: !Equals [!Ref "AWS::Region", us-east-1]
+  IsUsWest2: !Equals [!Ref "AWS::Region", us-west-2]
+Mappings:
+  M:
+    us-east-1:
+      Pattern: "app-${AWS::AccountId}"
+Resources:
+  Fn::Transform:
+    Name: MyMacro
+    Parameters:
+      ResourceTemplates: "{\"T\":{\"Type\":\"AWS::SNS::Topic\",\"Properties\":{\"TopicName\":{\"Fn::Sub\":\"${Env}-${AWS::Region}\"}}}}"
+  StackSet:
+    Type: AWS::CloudFormation::StackSet
+    Properties:
+      StackSetName: s
+      PermissionModel: SELF_MANAGED
+      TemplateBody: !If
+        - IsUsEast1
+        - "{\"Resources\":{\"T\":{\"Type\":\"AWS::SNS::Topic\",\"Properties\":{\"TopicName\":{\"Fn::Sub\":\"t-${AWS::Region}\"}}}}}"
+        - "{\"Resources\":{\"T\":{\"Type\":\"AWS::SNS::Topic\",\"Properties\":{\"TopicName\":{\"Fn::Sub\":\"u-${AWS::Region}\"}}}}}"
+  NestedIfStackSet:
+    Type: AWS::CloudFormation::StackSet
+    Properties:
+      StackSetName: n
+      PermissionModel: SELF_MANAGED
+      TemplateBody: !If
+        - IsUsEast1
+        - "{\"Resources\":{\"T\":{\"Type\":\"AWS::SNS::Topic\",\"Properties\":{\"TopicName\":{\"Fn::Sub\":\"t-${AWS::Region}\"}}}}}"
+        - !If
+          - IsUsWest2
+          - "{\"Resources\":{\"T\":{\"Type\":\"AWS::SNS::Topic\",\"Properties\":{\"TopicName\":{\"Fn::Sub\":\"u-${AWS::Region}\"}}}}}"
+          - "{\"Resources\":{\"T\":{\"Type\":\"AWS::SNS::Topic\",\"Properties\":{\"TopicName\":{\"Fn::Sub\":\"v-${AWS::Region}\"}}}}}"
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${Env}-${AWS::Region}"
