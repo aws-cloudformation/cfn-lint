@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from cfnlint.context.conditions.exceptions import Unsatisfiable
 from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
@@ -38,12 +39,19 @@ class Value(CfnLintJsonSchema):
         if condition:
             conditions = {condition: True}
 
+        try:
+            resolved = validator.context.conditions.evolve(conditions)
+        except Unsatisfiable:
+            # The output's own condition can never be true (for example
+            # `X and not X` over two identical conditions).  Validate without
+            # pinning the condition instead of surfacing an E6001 exception,
+            # consistent with a statically false condition used directly.
+            resolved = validator.context.conditions
+
         validator = validator.evolve(
             context=validator.context.evolve(
                 functions=list(FUNCTIONS),
-                conditions=validator.context.conditions.evolve(
-                    conditions,
-                ),
+                conditions=resolved,
                 strict_types=False,
             )
         )

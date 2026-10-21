@@ -7,7 +7,7 @@ import logging
 from collections import deque
 from typing import Any
 
-from cfnlint.context.conditions import Unsatisfiable
+from cfnlint.context.conditions.exceptions import Unsatisfiable
 from cfnlint.helpers import FUNCTIONS, is_function
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
@@ -72,13 +72,20 @@ class Properties(CfnLintJsonSchema):
         if validator.is_type(instance.get("Condition"), "string"):
             resolved_conditions = {instance.get("Condition"): True}
 
+        try:
+            conditions = validator.context.conditions.evolve(resolved_conditions)
+        except Unsatisfiable:
+            # The resource's own condition can never be true (for example
+            # `X and not X` over two identical conditions).  Validate without
+            # pinning the condition instead of surfacing an E3001 exception,
+            # consistent with a statically false condition used directly.
+            conditions = validator.context.conditions
+
         validator = validator.evolve(
             context=validator.context.evolve(
                 functions=list(FUNCTIONS),
                 strict_types=False,
-                conditions=validator.context.conditions.evolve(
-                    resolved_conditions,
-                ),
+                conditions=conditions,
             ),
             function_filter=validator.function_filter.evolve(
                 add_cfn_lint_keyword=True,

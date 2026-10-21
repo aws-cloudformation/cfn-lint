@@ -19,7 +19,9 @@ from cfnlint.rules.outputs.Value import Value  # pylint: disable=E0401
 
 
 @pytest.fixture
-def template():
+def template(request):
+    if hasattr(request, "param"):
+        return request.param
     return {
         "Parameters": {
             "additionalVpcCidr": {
@@ -212,3 +214,41 @@ def test_output_value(input, expected, validator):
     rule = Value()
     results = list(rule.validate(validator, {}, input, {}))
     assert results == expected, f"Expected {expected} results, got {results}"
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        {
+            "Conditions": {
+                "IsStageA": {"Fn::Equals": ["beta", "beta"]},
+                "IsStageB": {"Fn::Equals": ["beta", "beta"]},
+                "AAndNotB": {
+                    "Fn::And": [
+                        {"Condition": "IsStageA"},
+                        {"Fn::Not": [{"Condition": "IsStageB"}]},
+                    ]
+                },
+            },
+        }
+    ],
+    indirect=True,
+)
+def test_output_value_with_unsatisfiable_condition(validator):
+    # Regression test for https://github.com/aws-cloudformation/cfn-lint/issues/4785
+    # An output whose own condition can never be true (here `X and not X`
+    # over two identical conditions) must not raise Unsatisfiable (previously
+    # surfaced as an E6001 exception); its value is still validated.
+    rule = Value()
+    instance = {
+        "Condition": "AAndNotB",
+        "Value": {"foo": "bar"},
+    }
+    results = list(rule.validate(validator, {}, instance, {}))
+    messages = [e.message for e in results]
+    assert any(
+        "{'foo': 'bar'} is not of type 'string'" in message for message in messages
+    ), f"value finding missing on gated output: {messages!r}"
+    assert not any("raised while validating" in message for message in messages), (
+        f"crash surfaced: {messages!r}"
+    )
