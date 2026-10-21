@@ -57,6 +57,23 @@ def _backwards_compatibility(format: Any) -> Any:
     return format
 
 
+# Some provider schemas give the same underlying value different format
+# names. A Ref to an AWS::Route53::HostedZone returns the hosted zone ID,
+# which is exactly what the AliasTarget.HostedZoneId of an
+# AWS::Route53::RecordSet expects for an alias to a record in the same
+# hosted zone. See https://github.com/aws-cloudformation/cfn-lint/issues/4803
+_format_aliases = {
+    "AWS::Route53::AliasTarget.HostedZoneId": "AWS::Route53::HostedZone.Id",
+}
+
+
+def _aliased_format(format: Any) -> Any:
+    """Return the canonical format name when a known alias is used."""
+    if isinstance(format, str):
+        return _format_aliases.get(format, format)
+    return format
+
+
 def _compare_schemas(
     source: str,
     destination: dict[str, Any],
@@ -71,7 +88,7 @@ def _compare_schemas(
         tuple[bool, list[str]]: True/False if the format keyword matches
     """
 
-    dest_f = _backwards_compatibility(destination.get(_keyword))
+    dest_f = _backwards_compatibility(_aliased_format(destination.get(_keyword)))
     if dest_f == source:
         return True, [dest_f]  # Nothing else matters to be on the safe side
 
@@ -102,7 +119,7 @@ def compare_schemas(
         ValidationError: A ValidationError if the schemas don't match, otherwise None.
     """
 
-    f = _backwards_compatibility(source.get(_keyword))
+    f = _backwards_compatibility(_aliased_format(source.get(_keyword)))
 
     if f is None:
         return None

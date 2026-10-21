@@ -41,6 +41,21 @@ from cfnlint.rules.formats._schema_comparer import compare_schemas
             None,
         ),
         (
+            "Route53 hosted zone ID is valid at an alias target (issue #4803)",
+            {"format": "AWS::Route53::AliasTarget.HostedZoneId"},
+            {"format": "AWS::Route53::HostedZone.Id"},
+            None,
+        ),
+        (
+            "Unrelated formats are still rejected",
+            {"format": "AWS::EC2::VPC.Id"},
+            {"format": "AWS::S3::Bucket.Name"},
+            ValidationError(
+                "'AWS::EC2::VPC.Id' format is incompatible "
+                "with formats ['AWS::S3::Bucket.Name']",
+            ),
+        ),
+        (
             "basic valid with anyOf source",
             {"anyOf": [{"format": "foo"}, {"format": "bar"}]},
             {"format": "foo"},
