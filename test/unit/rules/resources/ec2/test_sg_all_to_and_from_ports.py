@@ -161,9 +161,7 @@ def rule():
                         "properties": {"FromPort": {"enum": [-1, "-1"]}},
                         "required": ["FromPort"],
                     },
-                    schema_path=deque(
-                        ["else", "else", "allOf", 0, "then", "required"]
-                    ),
+                    schema_path=deque(["else", "else", "allOf", 0, "then", "required"]),
                 )
             ],
         ),
@@ -183,9 +181,7 @@ def rule():
                         "properties": {"ToPort": {"enum": [-1, "-1"]}},
                         "required": ["ToPort"],
                     },
-                    schema_path=deque(
-                        ["else", "else", "allOf", 1, "then", "required"]
-                    ),
+                    schema_path=deque(["else", "else", "allOf", 1, "then", "required"]),
                 )
             ],
         ),
