@@ -123,8 +123,14 @@ class FunctionFilter:
             yield instance, schema, validator
             return
 
-        # Lets validate dynamic references when appropriate
-        if validator.is_type(instance, "string") and self.validate_dynamic_references:
+        # Lets validate dynamic references when appropriate.
+        # CloudFormation never resolves dynamic references in the template
+        # Description, so that text is validated as it is.
+        if (
+            validator.is_type(instance, "string")
+            and self.validate_dynamic_references
+            and list(validator.context.path.path) != ["Description"]
+        ):
             if REGEX_DYN_REF.findall(instance):
                 # if we are in a function we can't validate
                 # dynamic references the same way
