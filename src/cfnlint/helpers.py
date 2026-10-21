@@ -733,6 +733,38 @@ def format_json_string(json_string):
     )
 
 
+def dump_template_json(template: Any, indent: int | None = 2) -> str:
+    """Serialize a decoded template as a JSON string.
+
+    Unlike ``format_json_string`` this keeps the template's key order, so the
+    output stays in the same shape the author wrote.
+
+    Args:
+        template (Any): a decoded template
+        indent (int | None): the JSON indent level, None to write a single line
+
+    Returns:
+        str: the template as JSON
+
+    Raises:
+        TypeError: a value has no JSON equivalent, for example ``!!binary``
+        ValueError: a value cannot be written as valid JSON, for example ``.nan``
+    """
+
+    def converter(o):
+        """Convert the types YAML produces that JSON has no equivalent for"""
+        # datetime.datetime is a subclass of datetime.date.  An unquoted
+        # timestamp ("2010-09-09") is loaded as a date object, and CloudFormation
+        # reads that value as a string, so write it back out as one.
+        if isinstance(o, datetime.date):
+            return o.isoformat()
+        raise TypeError(f"Object of type {type(o).__name__} is not JSON serializable")
+
+    # allow_nan would write out NaN and Infinity, which no JSON parser has to
+    # accept.  The whole point here is producing JSON another tool can read.
+    return json.dumps(template, indent=indent, default=converter, allow_nan=False)
+
+
 def create_rules(
     mod,
     name="CloudFormationLintRule",
