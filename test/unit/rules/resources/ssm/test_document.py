@@ -7,6 +7,7 @@ import sys
 from collections import deque
 
 import pytest
+import yaml
 
 from cfnlint.jsonschema.validators import ValidationError
 from cfnlint.rules.resources.ssm.Document import Document
