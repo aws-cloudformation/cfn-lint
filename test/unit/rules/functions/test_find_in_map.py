@@ -311,6 +311,22 @@ def cfn_with_default():
     )
 
 
+@pytest.fixture(scope="module")
+def cfn_with_map_name_default():
+    return Template(
+        "",
+        {
+            "Parameters": {"MapStage": {"Type": "String", "Default": "beta"}},
+            "Resources": {"Dummy": Resource({"Type": "AWS::SNS::Topic"})},
+            "Mappings": {
+                "beta": {"us-east-1": {"Other": "x"}},
+                "gamma": {"us-east-1": {"TopicSuffix": "y", "Other": "z"}},
+            },
+        },
+        regions=["us-east-1"],
+    )
+
+
 @pytest.mark.parametrize(
     "name,instance,expected_messages",
     [
@@ -352,6 +368,90 @@ def test_resolve_from_parameter_default(
 
     # A constraining schema is required for resolution to run
     schema = {"type": "string", "pattern": "^[0-9]+$"}
+    errs = list(rule.resolve(validator, schema, instance, {}))
+
+    assert [err.message for err in errs] == expected_messages, (
+        f"{name!r} failed and got errors {[e.message for e in errs]!r}"
+    )
+
+
+@pytest.mark.parametrize(
+    "name,instance,expected_messages",
+    [
+        (
+            # The map name resolves from a parameter Default that a deployer
+            # can override, so missing keys under it aren't definite failures
+            # and must not be reported (was E1011, issue #4802).
+            "Literal keys with map name from a parameter Default are not reported",
+            {"Fn::FindInMap": [{"Ref": "MapStage"}, "us-east-1", "TopicSuffix"]},
+            [],
+        ),
+        (
+            "Ref AWS::Region top key with map name from a parameter Default "
+            "is not reported",
+            {
+                "Fn::FindInMap": [
+                    {"Ref": "MapStage"},
+                    {"Ref": "AWS::Region"},
+                    "TopicSuffix",
+                ]
+            },
+            [],
+        ),
+        (
+            "Literal top key with map name from a parameter Default is not reported",
+            {"Fn::FindInMap": [{"Ref": "MapStage"}, "us-east-1", "Missing"]},
+            [],
+        ),
+        (
+            # Hardcoded map names aren't overridable, so they are still
+            # validated even when the keys are hardcoded too.
+            "Hardcoded map name with missing second level key is still reported",
+            {"Fn::FindInMap": ["beta", "us-east-1", "TopicSuffix"]},
+            [
+                "'TopicSuffix' is not one of ['Other'] "
+                "for mapping 'beta' and key 'us-east-1'"
+            ],
+        ),
+        (
+            "Hardcoded map name with Ref AWS::Region top key is still reported",
+            {
+                "Fn::FindInMap": [
+                    "beta",
+                    {"Ref": "AWS::Region"},
+                    "TopicSuffix",
+                ]
+            },
+            [
+                "'TopicSuffix' is not a second level key when "
+                "{'Ref': 'AWS::Region'} is resolved for mapping 'beta'"
+            ],
+        ),
+        (
+            "Hardcoded unknown map name is still reported",
+            {"Fn::FindInMap": ["typo", "us-east-1", "TopicSuffix"]},
+            ["'typo' is not one of ['beta', 'gamma']"],
+        ),
+        (
+            "Valid lookup against a hardcoded map name stays silent",
+            {"Fn::FindInMap": ["beta", "us-east-1", "Other"]},
+            [],
+        ),
+    ],
+)
+def test_resolve_map_name_from_parameter_default(
+    name, instance, expected_messages, rule, cfn_with_map_name_default
+):
+    """A map name resolved from an overridable parameter Default shouldn't
+    surface key resolution errors, while hardcoded map names still do."""
+    context = create_context_for_template(cfn_with_map_name_default)
+    validator = CfnTemplateValidator({}).extend(validators={})(
+        context=context, cfn=cfn_with_map_name_default
+    )
+
+    # A constraining schema is required for resolution to run; the mapped
+    # values are single lowercase letters, so constrain to those.
+    schema = {"type": "string", "pattern": "^[a-z]$"}
     errs = list(rule.resolve(validator, schema, instance, {}))
 
     assert [err.message for err in errs] == expected_messages, (
