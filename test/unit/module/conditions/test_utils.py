@@ -10,7 +10,7 @@ import unittest
 
 from sympy import And, Equivalent, Implies, Not, Or, Symbol, Xor
 from sympy.assumptions.cnf import EncodedCNF
-from sympy.logic.boolalg import BooleanFalse, BooleanTrue
+from sympy.logic.boolalg import BooleanFalse, BooleanFunction, BooleanTrue
 from sympy.logic.inference import satisfiable
 
 from cfnlint.conditions._utils import (
@@ -374,6 +374,50 @@ class TestAddEquivalence(unittest.TestCase):
             add_equivalence(encoded, cond, expr)
             self.assertCountEqual(encoded.symbols, [a, b, cond])
             self.assertCountEqual(_decode(encoded), _decode(direct))
+
+    def test_repeated_subterm_shares_one_variable(self):
+        """A subterm that appears under several parents is encoded once and
+        its variable reused"""
+        a, b, c, d = Symbol("a"), Symbol("b"), Symbol("c"), Symbol("d")
+        sym = Symbol("cond")
+        shared = Or(a, b)
+        expr = Or(And(shared, c), And(shared, d))
+        direct = EncodedCNF()
+        direct.add_prop(Equivalent(sym, expr))
+        encoded = EncodedCNF()
+        add_equivalence(encoded, sym, expr)
+        # a, b, c, d, cond plus one variable each for the two Ands and one
+        # for the shared Or -- not a second copy of the shared Or
+        self.assertEqual(len(encoded.symbols), 8)
+        for values in itertools.product([True, False], repeat=5):
+            pins = [s if v else Not(s) for s, v in zip([a, b, c, d, sym], values)]
+            expected = direct.copy()
+            actual = encoded.copy()
+            for pin in pins:
+                expected.add_prop(pin)
+                actual.add_prop(pin)
+            self.assertEqual(bool(satisfiable(expected)), bool(satisfiable(actual)))
+
+    def test_boolean_function_without_nnf_rewrite_is_a_literal(self):
+        """A BooleanFunction that to_nnf leaves unchanged is treated as an
+        opaque literal instead of recursing forever"""
+
+        class Opaque(BooleanFunction):
+            pass
+
+        a, b, sym = Symbol("a"), Symbol("b"), Symbol("cond")
+        opaque = Opaque(a)
+        expr = And(opaque, b)
+        encoded = EncodedCNF()
+        add_equivalence(encoded, sym, expr)
+        for values in itertools.product([True, False], repeat=3):
+            pins = [s if v else Not(s) for s, v in zip([opaque, b, sym], values)]
+            actual = encoded.copy()
+            for pin in pins:
+                actual.add_prop(pin)
+            self.assertEqual(
+                bool(satisfiable(actual)), values[2] == (values[0] and values[1])
+            )
 
 
 def _decode(cnf: EncodedCNF) -> list[frozenset]:
