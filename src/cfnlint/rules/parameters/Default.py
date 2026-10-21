@@ -3,12 +3,24 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from typing import Any
+
 import regex as re
 
 from cfnlint._typing import RuleMatches
 from cfnlint.helpers import VALID_PARAMETER_TYPES_LIST
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 from cfnlint.template import Template
+
+
+def _to_parameter_string(value: Any) -> str:
+    """
+    Convert a scalar the way CloudFormation does before checking a
+    parameter Default (booleans become lowercase ``true``/``false``)
+    """
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    return str(value)
 
 
 class Default(CloudFormationLintRule):
@@ -29,7 +41,7 @@ class Default(CloudFormationLintRule):
         """
         message = "Default should be allowed by AllowedPattern"
         try:
-            if not re.match(allowed_pattern, str(allowed_value)):
+            if not re.match(allowed_pattern, _to_parameter_string(allowed_value)):
                 return [RuleMatch(path, message)]
         except re.error as ex:
             self.logger.debug(
@@ -68,7 +80,9 @@ class Default(CloudFormationLintRule):
         """
         message = "Default should be a value within AllowedValues"
 
-        if allowed_value not in allowed_values:
+        if _to_parameter_string(allowed_value) not in [
+            _to_parameter_string(value) for value in allowed_values
+        ]:
             return [RuleMatch(path, message)]
 
         return []
@@ -140,7 +154,7 @@ class Default(CloudFormationLintRule):
             default_value = paramvalue.get("Default")
             if default_value is not None and self.is_list(paramvalue):
                 comma_delimited_default_values = [
-                    x.strip() for x in str(default_value).split(",")
+                    x.strip() for x in _to_parameter_string(default_value).split(",")
                 ]
                 for value in comma_delimited_default_values:
                     param_cdl_matches.extend(
