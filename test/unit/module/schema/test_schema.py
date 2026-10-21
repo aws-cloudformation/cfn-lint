@@ -64,6 +64,29 @@ def test_schema(resource_schema):
     assert schema.get_atts["List"] == "/properties/List"
 
 
+def test_schema_waitcondition_data_getatt():
+    # The provider schema types WaitCondition Data as an object, but the
+    # user guide documents `!GetAtt <WaitCondition>.Data` in an Output,
+    # where CloudFormation renders the signal data as a JSON string.
+    # The attribute must resolve to the synthetic string type while Id
+    # keeps its schema pointer.
+    schema = Schema(
+        schema={
+            "properties": {
+                "Count": {"type": "integer"},
+                "Data": {"type": ["object"]},
+                "Handle": {"type": "string"},
+                "Id": {"type": "string"},
+                "Timeout": {"type": "string"},
+            },
+            "readOnlyProperties": ["/properties/Data", "/properties/Id"],
+            "typeName": "AWS::CloudFormation::WaitCondition",
+        }
+    )
+    assert schema.get_atts["Data"] == "/properties/CfnLintStringType"
+    assert schema.get_atts["Id"] == "/properties/Id"
+
+
 @pytest.fixture
 def resource_vpc_schema():
     return {
