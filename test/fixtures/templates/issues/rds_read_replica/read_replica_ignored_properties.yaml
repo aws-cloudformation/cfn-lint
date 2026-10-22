@@ -1,0 +1,15 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  Read replica with properties that CloudFormation silently ignores
+  (inherited from the source DB instance). W3692 must warn and no E3020
+  error may fire.
+Resources:
+  ReadReplica:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      SourceDBInstanceIdentifier: my-source-db
+      StorageEncrypted: false
+      MasterUsername: someoneelse
+      DBName: repdb

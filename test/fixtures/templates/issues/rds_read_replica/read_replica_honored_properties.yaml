@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  Read replica with properties that are honored on the replica
+  (live verified). No warning may fire.
+Resources:
+  ReadReplica:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      SourceDBInstanceIdentifier: my-source-db
+      BackupRetentionPeriod: 7
+      PreferredBackupWindow: 06:00-07:00
