@@ -34,11 +34,14 @@ _ENGINE_SUPPORTED = [
     "db2-se",
     "mariadb",
     "mysql",
+    "neptune",
     "oracle-ee",
     "oracle-ee-cdb",
     "oracle-se2",
     "oracle-se2-cdb",
     "postgres",
+    "sqlserver-dev-ee",
+    "sqlserver-dev-se",
     "sqlserver-ee",
     "sqlserver-se",
     "sqlserver-ex",
@@ -75,7 +78,9 @@ def write_output(resource, filename, obj):
 def write_db_cluster(results):
     schema = {"allOf": []}
 
-    engines = sorted(["aurora-mysql", "aurora-postgresql", "mysql", "postgres"])
+    engines = sorted(
+        ["aurora-mysql", "aurora-postgresql", "mysql", "neptune", "postgres"]
+    )
 
     schema["allOf"].append(
         {
@@ -136,7 +141,9 @@ def write_db_cluster(results):
 def write_db_cluster_deprecated(deprecated_results):
     schema = {"allOf": []}
 
-    engines = sorted(["aurora-mysql", "aurora-postgresql", "mysql", "postgres"])
+    engines = sorted(
+        ["aurora-mysql", "aurora-postgresql", "mysql", "neptune", "postgres"]
+    )
 
     for engine in engines:
         if not deprecated_results.get(engine):
