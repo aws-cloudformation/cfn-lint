@@ -135,6 +135,20 @@ from cfnlint.rules.formats._schema_comparer import compare_schemas
                 "'AWS::KMS::Alias.AliasName']",
             ),
         ),
+        (
+            "anyOf source with no format keywords is not checked",
+            {"anyOf": [{"type": "string"}, {"type": "object"}]},
+            {"format": "foo"},
+            None,
+        ),
+        (
+            "anyOf source against a destination with no format",
+            {"anyOf": [{"format": "foo"}, {"format": "bar"}]},
+            {"type": "string"},
+            ValidationError(
+                "['foo', 'bar'] format is incompatible",
+            ),
+        ),
     ],
 )
 def test_schema_comparer(name, source, destination, expected):
