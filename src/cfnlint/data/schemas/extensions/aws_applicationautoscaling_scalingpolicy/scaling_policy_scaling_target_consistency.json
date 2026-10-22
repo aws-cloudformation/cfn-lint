@@ -1,0 +1,71 @@
+{
+ "cfnGather": {
+  "gather": {
+   "policy": {
+    "properties": {
+     "ResourceId": "/ResourceId",
+     "ScalableDimension": "/ScalableDimension",
+     "ScalingTargetId": "/ScalingTargetId",
+     "ServiceNamespace": "/ServiceNamespace"
+    }
+   },
+   "target": {
+    "filter": {
+     "type": "AWS::ApplicationAutoScaling::ScalableTarget"
+    },
+    "properties": {
+     "ResourceId": "/ResourceId",
+     "ScalableDimension": "/ScalableDimension",
+     "ServiceNamespace": "/ServiceNamespace"
+    },
+    "reference": "/ScalingTargetId"
+   }
+  },
+  "schema": {
+   "if": {
+    "properties": {
+     "policy": {
+      "required": [
+       "ScalingTargetId",
+       "ResourceId"
+      ]
+     },
+     "target": {
+      "required": [
+       "ResourceId",
+       "ScalableDimension",
+       "ServiceNamespace"
+      ]
+     }
+    },
+    "required": [
+     "policy",
+     "target"
+    ]
+   },
+   "then": {
+    "properties": {
+     "policy": {
+      "properties": {
+       "ResourceId": {
+        "const": {
+         "$data": "/target/ResourceId"
+        }
+       },
+       "ScalableDimension": {
+        "const": {
+         "$data": "/target/ScalableDimension"
+        }
+       },
+       "ServiceNamespace": {
+        "const": {
+         "$data": "/target/ServiceNamespace"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

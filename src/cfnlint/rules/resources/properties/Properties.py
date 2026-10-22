@@ -142,4 +142,17 @@ class Properties(CfnLintJsonSchema):
             )
             for err in self._validate(region_validator, properties):
                 err.path.appendleft("Properties")
+                if (
+                    err.validator == "requiredXor"
+                    and t == "AWS::ApplicationAutoScaling::ScalingPolicy"
+                    and validator.is_type(properties, "object")
+                    and "ScalingTargetId" in properties
+                    and "ResourceId" in properties
+                ):
+                    # CloudFormation accepts both ScalingTargetId and the
+                    # ResourceId/ScalableDimension/ServiceNamespace trio when
+                    # they agree, so the schema's requiredXor is a false
+                    # positive here. Consistency between the two is checked
+                    # by rule E3726 instead.
+                    continue
                 yield err
