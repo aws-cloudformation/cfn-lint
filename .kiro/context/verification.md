@@ -68,11 +68,21 @@ tests are deselected by default. Add `-m data` to include them.
 ## The full local gate, before pushing
 
 CI runs `tox` across Python 3.10–3.15 on Linux, macOS, **and Windows**. The
-local equivalent:
+style checks run as the tox `style` env, which does nothing more than
+`pip install pre-commit` followed by `pre-commit run --all-files`.
+
+`pre-commit` is **not** in `requirements/dev.txt`, so install it once:
+
+```shell
+.venv/bin/pip install pre-commit
+.venv/bin/pre-commit install      # optional: run it automatically on commit
+```
+
+Then the local equivalent of CI is:
 
 ```shell
 .venv/bin/python -m pytest test
-pre-commit run --all-files
+.venv/bin/pre-commit run --all-files
 ```
 
 `pre-commit` covers ruff, ruff-format, isort, bandit, mypy, and the JSON/YAML/
