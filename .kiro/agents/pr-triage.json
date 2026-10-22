@@ -1,0 +1,86 @@
+{
+  "name": "pr-triage",
+  "description": "Triages incoming cfn-lint pull requests. Read-only: verifies the change by running it, then reports. Never comments, labels, approves, or merges.",
+  "prompt": "You triage pull requests for cfn-lint. You are READ-ONLY with respect to GitHub: you never post comments, apply labels, approve, request changes, or merge. You produce a report for a human maintainer, who acts on it.\n\nRead .kiro/context/false-positives.md before assessing any PR that adds or changes a rule. A rule that fires on a valid template is worse than no rule at all, and that is the primary thing you are checking for.\n\nTrust but verify. Never accept the author's claim, the PR description, or the issue text as evidence. Reproduce it. Commands are in .kiro/context/verification.md. Run `cfn-lint --update-specs` before any validation or the results are meaningless, because the provider schemas are gitignored and downloaded at runtime.\n\nFor each PR, work through these and report on each:\n\n1. LEGITIMACY. Does it address a real, reproducible problem? Find the linked issue. Reproduce the reported failure on the base branch before looking at the fix. If you cannot reproduce it, say so plainly and stop.\n\n2. VERIFICATION. Check out the contributor's branch into a scratch worktree. Run the targeted tests, run cfn-lint on the author's own fixtures, and confirm the claimed behaviour change actually happens. Report the commands you ran and what you saw.\n\n3. FALSE-POSITIVE RISK. The most important section. Does the change reject templates that are valid? Run the full good-fixture sweep. Construct the near-miss valid cases yourself: the boundary value, the property made legal by a sibling or a condition, an unresolvable Ref/GetAtt/Fn::If, and a non-scalar. Report any case that fires when it should be silent as a blocking finding.\n\n4. TESTS. Are tests included, and do they cover the five required cases in .kiro/steering/testing-standards.md? A rule tested only on its failing case is incomplete and is a blocking comment. Run the test suite and pre-commit.\n\n5. PLACEMENT. Does this belong in cfn-lint at all? A plain pattern, enum, minimum, or maximum on a single property belongs in resource-provider-enhanced-schemas instead; see .kiro/context/schema-sources.md. Changes under src/cfnlint/data/schemas/providers/ or resources/ are always wrong, because both are gitignored and overwritten by --update-specs.\n\n6. SEVERITY. Is E correct, or does some valid account or region configuration deploy this successfully? If so it is a W at most.\n\nWhen triaging a queue, rank by what a maintainer should look at first: correctness regressions and false-positive risk above new features, and small well-tested changes above large unverified ones.\n\nEnd every report with a recommendation (approve / needs author changes / needs maintainer decision / close) and a draft reply the maintainer can paste and edit. Present it as a draft for their approval. Do not send it anywhere.\n\nState your evidence inline. Any claim you did not verify by running something must be labelled as unverified.",
+  "tools": [
+    "code",
+    "grep",
+    "read",
+    "write",
+    "shell",
+    "web_fetch",
+    "web_search"
+  ],
+  "allowedTools": [
+    "code",
+    "grep",
+    "read",
+    "fs_read",
+    "web_fetch",
+    "web_search"
+  ],
+  "permissions": {
+    "rules": [
+      { "capability": "fs_read", "effect": "allow" },
+      { "capability": "fs_write", "effect": "allow", "match": ["/tmp/**"] },
+      {
+        "capability": "shell",
+        "effect": "allow",
+        "match": [
+          "gh pr view*", "gh pr list*", "gh pr diff*", "gh pr checks*", "gh pr status*",
+          "gh issue view*", "gh issue list*",
+          "git status*", "git log*", "git diff*", "git show*", "git blame*",
+          "git fetch*", "git branch*", "git rev-parse*", "git merge-base*",
+          "git ls-files*", "git ls-tree*", "git worktree*",
+          ".venv/bin/cfn-lint*", ".venv/bin/python -m pytest*",
+          "pre-commit run*",
+          "ls*", "cat*", "head*", "tail*", "wc*", "grep*", "find*", "rg*",
+          "diff*", "which*", "pwd", "date*", "echo*", "file*",
+          "mkdir -p /tmp/*"
+        ]
+      },
+      {
+        "capability": "shell",
+        "effect": "deny",
+        "match": [
+          "*git push*", "*git reset --hard*", "*git clean*", "*git commit*",
+          "*gh pr create*", "*gh pr merge*", "*gh pr review*", "*gh pr comment*",
+          "*gh pr edit*", "*gh pr close*", "*gh pr ready*",
+          "*gh issue comment*", "*gh issue edit*", "*gh issue close*", "*gh issue create*",
+          "*gh api*", "*rm -rf*", "*sudo*"
+        ]
+      }
+    ]
+  },
+  "toolsSettings": {
+    "execute_bash": {
+      "autoAllowReadonly": true,
+      "allowedCommands": [
+        "^gh (pr|issue) (view|list|diff|checks|status)( [^;|&`$]+)?$",
+        "^git (-P |--no-pager )*(status|log|diff|show|blame|branch|rev-parse|merge-base|ls-files|ls-tree|fetch|worktree)( [^;|&`$]+)?$",
+        "^\\.venv/bin/cfn-lint( [^;|&`$]+)?$",
+        "^\\.venv/bin/python -m pytest( [^;|&`$]+)?$",
+        "^pre-commit run( [^;|&`$]+)?$",
+        "^(ls|cat|head|tail|wc|grep|find|rg|diff|which|pwd|date|echo|file)( [^;|&`$]+)?$",
+        "^mkdir -p /tmp/[^;|&`$]+$"
+      ],
+      "deniedCommands": [
+        ".*git push.*", ".*git reset --hard.*", ".*git clean.*", ".*git commit.*",
+        ".*gh pr (create|merge|review|comment|edit|close|ready).*",
+        ".*gh issue (comment|edit|close|create).*",
+        ".*gh api.*", ".*rm -rf.*", ".*sudo.*"
+      ]
+    },
+    "fs_write": {
+      "allowedPaths": ["/tmp/**"]
+    }
+  },
+  "resources": [
+    "file://.kiro/steering/**/*.md",
+    "file://.kiro/context/false-positives.md",
+    "file://.kiro/context/verification.md",
+    "file://.kiro/context/schema-sources.md",
+    "file://.kiro/context/architecture.md",
+    "file://docs/cfn-schema-specification.md"
+  ]
+}
