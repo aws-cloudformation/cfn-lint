@@ -28,6 +28,13 @@ def rule():
             [],
         ),
         (
+            {
+                "VolumeType": "gp3",
+                "Iops": 20000,
+            },
+            [],
+        ),
+        (
             [],  # wrong type
             [],
         ),
@@ -72,17 +79,17 @@ def rule():
         (
             {
                 "VolumeType": "gp3",
-                "Iops": 64000,
+                "Iops": 80001,
             },
             [
                 ValidationError(
-                    "64000 is greater than the maximum of 16000",
+                    "80001 is greater than the maximum of 80000",
                     rule=Ebs(),
                     path=deque(["Iops"]),
                     validator="maximum",
-                    validator_value=16000,
-                    instance=64000,
-                    schema={"minimum": 3000, "maximum": 16000},
+                    validator_value=80000,
+                    instance=80001,
+                    schema={"minimum": 3000, "maximum": 80000},
                     schema_path=deque(
                         ["allOf", 2, "then", "properties", "Iops", "maximum"]
                     ),
