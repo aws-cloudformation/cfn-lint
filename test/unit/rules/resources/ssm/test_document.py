@@ -8,6 +8,7 @@ from collections import deque
 import pytest
 import yaml
 
+from cfnlint.context import Path
 from cfnlint.jsonschema.validators import ValidationError
 from cfnlint.rules.resources.ssm.Document import Document
 
@@ -127,7 +128,84 @@ def test_validate(
 ):
     errs = list(rule.validate(validator, {}, document, {}))
 
-    assert errs == expected, f"Test {name!r} failed with {errs!r}"
+    assert errs == expected
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        {
+            "Parameters": {
+                "DocTypeParam": {"Type": "String", "Default": "Automation"},
+            },
+            "Resources": {
+                "ConfigSchema": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "ApplicationConfigurationSchema",
+                        "DocumentFormat": "JSON",
+                        "Content": {
+                            "$schema": "http://json-schema.org/draft-04/schema#",
+                            "type": "object",
+                        },
+                    },
+                },
+                "ConfigData": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "ApplicationConfiguration",
+                        "DocumentFormat": "JSON",
+                        "Content": {"featureEnabled": True},
+                    },
+                },
+                "AutomationDoc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "Automation",
+                        "DocumentFormat": "YAML",
+                        "Content": {"description": "no schemaVersion"},
+                    },
+                },
+                "IntrinsicTypeDoc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": {"Ref": "DocTypeParam"},
+                        "DocumentFormat": "YAML",
+                        "Content": {"description": "no schemaVersion"},
+                    },
+                },
+            },
+        }
+    ],
+    indirect=True,
+)
+@pytest.mark.parametrize(
+    "resource_name,expected_count",
+    [
+        ("ConfigSchema", 0),
+        ("ConfigData", 0),
+        ("AutomationDoc", 1),
+        ("IntrinsicTypeDoc", 1),
+    ],
+)
+def test_validate_document_type_scoping(
+    resource_name,
+    expected_count,
+    rule,
+    validator,
+):
+    """E3051 skips AppConfig document types but still validates the rest"""
+    content = validator.cfn.template["Resources"][resource_name]["Properties"][
+        "Content"
+    ]
+    validator = validator.evolve(
+        context=validator.context.evolve(
+            path=Path(path=deque(["Resources", resource_name, "Properties", "Content"]))
+        )
+    )
+    errs = list(rule.validate(validator, {}, content, {}))
+
+    assert len(errs) == expected_count, f"{resource_name} got {errs!r}"
 
 
 def test_validate_by_py_version(rule, validator):

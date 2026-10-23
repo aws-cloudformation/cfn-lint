@@ -447,6 +447,75 @@ ElasticLoadBalancer -> MyEC2Instance [key=0, source_paths="[\\"Properties\\", \\
             [{"isPrimary": False}],
         )
 
+    def test_is_resource_available_always_true_condition(self):
+        """A resource whose condition is provably always true is always available"""
+        temp_obj = convert_dict(
+            {
+                "Conditions": {
+                    "AlwaysTrue": {"Fn::Equals": ["a", "a"]},
+                    "IsAlwaysProd": {"Fn::Equals": ["prod", "prod"]},
+                    "IsAlwaysBeta": {"Fn::Equals": ["beta", "prod"]},
+                    "AlwaysProdOrBeta": {
+                        "Fn::Or": [
+                            {"Condition": "IsAlwaysProd"},
+                            {"Condition": "IsAlwaysBeta"},
+                        ]
+                    },
+                    "IsUsEast1": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]},
+                },
+                "Resources": {
+                    "AlwaysTopic": {
+                        "Condition": "AlwaysTrue",
+                        "Type": "AWS::SNS::Topic",
+                    },
+                    "OrTopic": {
+                        "Condition": "AlwaysProdOrBeta",
+                        "Type": "AWS::SNS::Topic",
+                    },
+                    "RegionTopic": {
+                        "Condition": "IsUsEast1",
+                        "Type": "AWS::SNS::Topic",
+                    },
+                    "DependentTopic": {
+                        "Type": "AWS::SNS::Topic",
+                    },
+                },
+            }
+        )
+        template = Template("test.yaml", temp_obj)
+        # constant Fn::Equals condition: no scenario makes the resource unavailable
+        self.assertEqual(
+            template.is_resource_available(
+                ["Resources", "DependentTopic", "DependsOn"],
+                "AlwaysTopic",
+            ),
+            [],
+        )
+        # Fn::Or over constant conditions: no scenario makes the resource unavailable
+        self.assertEqual(
+            template.is_resource_available(
+                ["Resources", "DependentTopic", "DependsOn"],
+                "OrTopic",
+            ),
+            [],
+        )
+        # a genuinely conditional condition still reports the False scenario
+        self.assertEqual(
+            template.is_resource_available(
+                ["Resources", "DependentTopic", "DependsOn"],
+                "RegionTopic",
+            ),
+            [{"IsUsEast1": False}],
+        )
+        # an unknown condition name keeps the previous behavior
+        self.assertEqual(
+            template.is_resource_available(
+                ["Resources", "DependentTopic", "DependsOn"],
+                "DoesNotExist",
+            ),
+            [],
+        )
+
     def test_get_conditions_from_path(self):
         """Test is resource available"""
         temp_obj = convert_dict(
