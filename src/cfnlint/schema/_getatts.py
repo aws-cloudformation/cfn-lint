@@ -280,6 +280,15 @@ class GetAtts:
         for ro_attr in schema.schema.get("readOnlyProperties", []):
             self._attrs[self._pointer_to_attr(ro_attr)] = ro_attr
 
+        if schema.type_name == "AWS::CloudFormation::WaitCondition":
+            # The provider schema types Data as an object, but the
+            # CloudFormation user guide documents reading the signal data
+            # with `!GetAtt <WaitCondition>.Data` in an Output, where
+            # CloudFormation renders the JSON structure as a string.
+            # Resolve the attribute as a string so that documented usage
+            # validates, consistent with how the service returns it.
+            self._attrs["Data"] = "/properties/CfnLintStringType"
+
     def _pointer_to_attr(self, pointer: str) -> str:
         return ".".join(pointer.split("/")[2:])
 

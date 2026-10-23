@@ -252,3 +252,38 @@ def test_output_value_with_unsatisfiable_condition(validator):
     assert not any("raised while validating" in message for message in messages), (
         f"crash surfaced: {messages!r}"
     )
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        {
+            "Resources": {
+                "MyWaitHandle": {
+                    "Type": "AWS::CloudFormation::WaitConditionHandle",
+                },
+                "MyWaitCondition": {
+                    "Type": "AWS::CloudFormation::WaitCondition",
+                    "Properties": {
+                        "Handle": {"Ref": "MyWaitHandle"},
+                        "Timeout": "300",
+                    },
+                },
+            },
+        }
+    ],
+    indirect=True,
+)
+def test_output_value_waitcondition_data(validator):
+    # Regression test for https://github.com/aws-cloudformation/cfn-lint/issues/4804
+    # The user guide documents `!GetAtt MyWaitCondition.Data` as an Output
+    # value; CloudFormation renders the signal data as a JSON string, so
+    # E6101 must not report it even though the provider schema types the
+    # Data attribute as an object.
+    rule = Value()
+    instance = {
+        "Description": "The data passed back as part of signalling the WaitCondition",
+        "Value": {"Fn::GetAtt": ["MyWaitCondition", "Data"]},
+    }
+    results = list(rule.validate(validator, {}, instance, {}))
+    assert results == [], f"Expected no results, got {results}"
