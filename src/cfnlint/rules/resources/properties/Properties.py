@@ -15,44 +15,6 @@ from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
 
 LOGGER = logging.getLogger(__name__)
 
-# Properties that an AWS::RDS::DBInstance read replica silently ignores,
-# inheriting the values from the source DB instance instead. The enhanced
-# schema expresses these as a hard dependentExcluded error (E3020) when
-# SourceDBInstanceIdentifier is set, but setting them is not a deploy
-# failure, so they are reported by W3692 at warning severity instead.
-_READ_REPLICA_IGNORED_PROPERTIES = frozenset(
-    {
-        "DBName",
-        "MasterUsername",
-        "StorageEncrypted",
-    }
-)
-
-
-def _is_rds_read_replica_ignored_exclusion(
-    resource_type: str, err: ValidationError
-) -> bool:
-    """Whether a dependentExcluded error covers a property a read replica ignores.
-
-    Only suppresses the exclusion when it is triggered by
-    SourceDBInstanceIdentifier on AWS::RDS::DBInstance and the excluded
-    property is one a read replica silently ignores (inherited from the
-    source). MasterUserPassword and CharacterSetName keep their hard error.
-    """
-    if resource_type != "AWS::RDS::DBInstance":
-        return False
-    if err.validator != "dependentExcluded":
-        return False
-    if not err.path or err.path[-1] not in _READ_REPLICA_IGNORED_PROPERTIES:
-        return False
-    exclusions = err.validator_value
-    if not isinstance(exclusions, dict):
-        return False
-    if err.path[-1] not in exclusions.get("SourceDBInstanceIdentifier", []):
-        return False
-    instance = err.instance if isinstance(err.instance, dict) else {}
-    return "SourceDBInstanceIdentifier" in instance
-
 
 class Properties(CfnLintJsonSchema):
     """Check Base Resource Configuration"""
@@ -180,9 +142,4 @@ class Properties(CfnLintJsonSchema):
             )
             for err in self._validate(region_validator, properties):
                 err.path.appendleft("Properties")
-                if _is_rds_read_replica_ignored_exclusion(t, err):
-                    # Not a deploy failure: a read replica silently ignores
-                    # these properties and inherits them from the source DB
-                    # instance. W3692 reports them at warning severity.
-                    continue
                 yield err

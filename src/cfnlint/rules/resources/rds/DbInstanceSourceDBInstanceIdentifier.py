@@ -30,6 +30,9 @@ class DbInstanceSourceDBInstanceIdentifier(CfnLintJsonSchema):
                 module=cfnlint.data.schemas.extensions.aws_rds_dbinstance,
                 filename="sourcedbinstanceidentifier.json",
             ),
+            # The warning is per property, so every ignored property needs
+            # its own error instead of only the best match.
+            all_matches=True,
         )
 
     def message(self, instance: Any, err: ValidationError) -> str:
@@ -38,3 +41,12 @@ class DbInstanceSourceDBInstanceIdentifier(CfnLintJsonSchema):
             f"{prop!r} is ignored on a read replica and inherited "
             "from the source DB instance"
         )
+
+    def _clean_error(self, err: ValidationError) -> ValidationError:
+        # all_matches=True surfaces every ignored property, but it bypasses
+        # message(), leaving the raw "False schema does not allow ..."
+        # text. Apply the per-property message to each error instead.
+        err = super()._clean_error(err)
+        if err.rule == self:
+            err.message = self.message(None, err)
+        return err
