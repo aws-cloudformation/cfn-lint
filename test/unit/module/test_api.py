@@ -302,6 +302,16 @@ class TestLintFile(TestCase):
         matches = lint_file(filename)
         self.assertEqual([], matches, f"Got matches: {matches!r}")
 
+    def test_e3014_mutually_exclusive_conditions(self):
+        """E3014 (requiredXor) must not fire when mutually exclusive
+        Fn::Equals conditions select exactly one property of the set, even
+        when the parameter has no AllowedValues (issue #4799)."""
+        filename = Path(
+            "test/fixtures/templates/good/conditions/e3014_exclusive_conditions.yaml"
+        )
+        matches = lint_file(filename)
+        self.assertEqual([], matches, f"Got matches: {matches!r}")
+
 
 class TestLintByConfig(TestCase):
     """Test lint_by_config function"""
