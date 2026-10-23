@@ -47,9 +47,8 @@ class FunctionEnvironmentSize(CfnLintKeyword):
         for key, value in instance.items():
             if not isinstance(key, str):
                 continue
-            total_size += len(key)
-            if isinstance(value, str):
-                total_size += len(value)
+            total_size += len(key.encode("utf-8"))
+            total_size += self._max_value_size(validator, value)
 
         max_size = 4096
         if total_size > max_size:
@@ -58,3 +57,19 @@ class FunctionEnvironmentSize(CfnLintKeyword):
                 f"exceeds the 4 KB ({max_size} bytes) limit",
                 rule=self,
             )
+
+    def _max_value_size(self, validator: Validator, value: Any) -> int:
+        """Return the largest UTF-8 byte size across resolvable value scenarios.
+
+        Intrinsic functions such as Fn::Join, Fn::Sub, Fn::If and Ref are
+        resolved so literal text carried inside them counts toward the 4 KB
+        aggregate. Scenarios that cannot be resolved to a string contribute
+        nothing, preserving the previous behavior for unknown values.
+        """
+        max_size = 0
+        for resolved_value, _, resolved_errs in validator.resolve_value(value):
+            if resolved_errs:
+                continue
+            if isinstance(resolved_value, str):
+                max_size = max(max_size, len(resolved_value.encode("utf-8")))
+        return max_size

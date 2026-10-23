@@ -63,6 +63,48 @@ def rule():
             {"KEY": ["a", "b"]},
             [],
         ),
+        (
+            {"CONFIG": {"Fn::Join": ["", ["a" * 4500]]}},
+            [
+                ValidationError(
+                    "Lambda environment variables total size (4506) "
+                    "exceeds the 4 KB (4096 bytes) limit",
+                    rule=FunctionEnvironmentSize(),
+                ),
+            ],
+        ),
+        (
+            {"CONFIG": "é" * 2100},
+            [
+                ValidationError(
+                    "Lambda environment variables total size (4206) "
+                    "exceeds the 4 KB (4096 bytes) limit",
+                    rule=FunctionEnvironmentSize(),
+                ),
+            ],
+        ),
+        (
+            {"CONFIG": {"Fn::Join": ["-", ["a", "b"]]}},
+            [],
+        ),
+        (
+            {"CONFIG": {"Fn::If": ["Cond", "x" * 5000, "y"]}},
+            [
+                ValidationError(
+                    "Lambda environment variables total size (5006) "
+                    "exceeds the 4 KB (4096 bytes) limit",
+                    rule=FunctionEnvironmentSize(),
+                ),
+            ],
+        ),
+        (
+            {"CONFIG": {"Fn::Sub": "prefix-${AWS::Region}-suffix"}},
+            [],
+        ),
+        (
+            {"CONFIG": {"Ref": "SomeParam"}},
+            [],
+        ),
     ],
 )
 def test_validate(instance, expected, rule, validator):
