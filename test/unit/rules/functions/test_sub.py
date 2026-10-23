@@ -7,6 +7,7 @@ from collections import deque
 
 import pytest
 
+from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.functions.GetAtt import GetAtt
 from cfnlint.rules.functions.GetAz import GetAz
@@ -467,3 +468,76 @@ def test_sam_stage_ref_in_sub(name, template, rule):
     )
 
     assert errs == [], f"Test {name!r} got {errs!r}"
+
+
+def _sam_function(**props):
+    return {
+        "Transform": "AWS::Serverless-2016-10-31",
+        "Resources": {
+            "MyFunction": {
+                "Type": "AWS::Serverless::Function",
+                "Properties": {
+                    "Runtime": "python3.12",
+                    "Handler": "index.handler",
+                    "InlineCode": "def handler(e, c): pass",
+                    **props,
+                },
+            }
+        },
+    }
+
+
+@pytest.mark.parametrize(
+    "name,template,instance,expected_attrs",
+    [
+        (
+            "AutoPublishAlias Version",
+            _sam_function(AutoPublishAlias="live"),
+            {"Fn::Sub": "${MyFunction.Version}"},
+            [],
+        ),
+        (
+            "AutoPublishAlias Alias",
+            _sam_function(AutoPublishAlias="live"),
+            {"Fn::Sub": "${MyFunction.Alias}"},
+            [],
+        ),
+        (
+            "AutoPublishAlias Version attribute",
+            _sam_function(AutoPublishAlias="live"),
+            {"Fn::Sub": "${MyFunction.Version.Version}"},
+            [],
+        ),
+        (
+            "DeploymentPreference Version and Alias",
+            _sam_function(DeploymentPreference={"Type": "AllAtOnce"}),
+            {"Fn::Sub": "${MyFunction.Version}-${MyFunction.Alias}"},
+            [],
+        ),
+        (
+            "no AutoPublishAlias",
+            _sam_function(),
+            {"Fn::Sub": "${MyFunction.Version}-${MyFunction.Alias}"},
+            ["MyFunction.Version", "MyFunction.Alias"],
+        ),
+    ],
+)
+def test_sam_function_version_alias_in_sub(
+    name, template, instance, expected_attrs, rule
+):
+    cfn = Template("", template, regions=["us-east-1"])
+    validator = CfnTemplateValidator({}).extend(
+        validators={
+            "ref": Ref().ref,
+            "fn_getatt": GetAtt().fn_getatt,
+        }
+    )(
+        context=cfn.context.evolve(strict_types=False, functions=list(FUNCTIONS)),
+        cfn=cfn,
+    )
+
+    errs = list(rule.fn_sub(validator, {"type": "string"}, instance, {}))
+
+    assert [err.instance for err in errs] == expected_attrs, (
+        f"Test {name!r} got {errs!r}"
+    )
