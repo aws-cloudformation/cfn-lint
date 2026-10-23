@@ -16,10 +16,17 @@ class FunctionLayerArnLength(CfnLintKeyword):
     shortdesc = "Validate Lambda layer ARN length based on region"
     description = (
         "Validates the Lambda layer ARN length based on region. "
-        "Max length is 176 + len(partition) + len(region)."
+        "Max length is 192 + len(partition) + len(region), "
+        "which allows layer versions up to 19 digits."
     )
     source_url = "https://docs.aws.amazon.com/lambda/latest/dg/chapter-layers.html"
     tags = ["resources", "lambda"]
+    # Characters in a layer ARN other than the partition, region and version:
+    # "arn:" (4) + ":lambda:" (8) + ":" (1) + account ID (12) + ":layer:" (7)
+    # + layer name, max 140 + ":" (1) = 173
+    FIXED_ARN = 173
+    # Most digits a layer version can have (it's a 64-bit number, max 19 digits)
+    VERSION_DIGITS = 19
 
     def __init__(self) -> None:
         super().__init__(["Resources/AWS::Lambda::Function/Properties/Layers/*"])
@@ -32,7 +39,9 @@ class FunctionLayerArnLength(CfnLintKeyword):
 
         for region in validator.context.regions:
             partition = self._get_partition(region)
-            max_length = 176 + len(partition) + len(region)
+            max_length = (
+                self.FIXED_ARN + self.VERSION_DIGITS + len(partition) + len(region)
+            )
             if len(instance) > max_length:
                 yield ValidationError(
                     f"{instance!r} is longer than {max_length} in {region!r}"
