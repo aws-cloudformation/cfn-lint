@@ -28,7 +28,13 @@ def template():
                     {"Ref": "AWS::Region"},
                     "us-east-1",
                 ]
-            }
+            },
+            "AlwaysTrue": {"Fn::Equals": ["a", "a"]},
+            "IsAlwaysProd": {"Fn::Equals": ["prod", "prod"]},
+            "IsAlwaysBeta": {"Fn::Equals": ["beta", "prod"]},
+            "AlwaysProdOrBeta": {
+                "Fn::Or": [{"Condition": "IsAlwaysProd"}, {"Condition": "IsAlwaysBeta"}]
+            },
         },
         "Resources": {
             "ParentBucket": {
@@ -58,6 +64,22 @@ def template():
                 "Type": "AWS::S3::Bucket",
                 "DependsOn": "ToMySelf",
             },
+            "ParentBucketAlwaysTrue": {
+                "Condition": "AlwaysTrue",
+                "Type": "AWS::S3::Bucket",
+            },
+            "ChildBucketAlwaysTrue": {
+                "Type": "AWS::S3::Bucket",
+                "DependsOn": "ParentBucketAlwaysTrue",
+            },
+            "ParentBucketOrOfConstants": {
+                "Condition": "AlwaysProdOrBeta",
+                "Type": "AWS::S3::Bucket",
+            },
+            "ChildBucketOrOfConstants": {
+                "Type": "AWS::S3::Bucket",
+                "DependsOn": "ParentBucketOrOfConstants",
+            },
         },
     }
 
@@ -81,7 +103,9 @@ def template():
                     "'ChildBucket', "
                     "'ParentBucketWithGoodCondition', "
                     "'ParentBucketWithBadCondition', "
-                    "'ChildBucketWithBadCondition', 'ToMySelf']",
+                    "'ChildBucketWithBadCondition', 'ToMySelf', "
+                    "'ParentBucketAlwaysTrue', 'ChildBucketAlwaysTrue', "
+                    "'ParentBucketOrOfConstants', 'ChildBucketOrOfConstants']",
                 )
             ],
         ),
@@ -106,7 +130,9 @@ def template():
                     "'Foo' is not one of ['ParentBucket', "
                     "'ParentBucketWithGoodCondition', "
                     "'ParentBucketWithBadCondition', "
-                    "'ChildBucketWithBadCondition', 'ToMySelf']",
+                    "'ChildBucketWithBadCondition', 'ToMySelf', "
+                    "'ParentBucketAlwaysTrue', 'ChildBucketAlwaysTrue', "
+                    "'ParentBucketOrOfConstants', 'ChildBucketOrOfConstants']",
                 )
             ],
         ),
@@ -122,6 +148,18 @@ def template():
             ],
         ),
         (
+            "Valid depends on with always true condition",
+            "ParentBucketAlwaysTrue",
+            deque(["Resources", "ChildBucketAlwaysTrue", "DependsOn"]),
+            [],
+        ),
+        (
+            "Valid depends on with Or of constant conditions",
+            "ParentBucketOrOfConstants",
+            deque(["Resources", "ChildBucketOrOfConstants", "DependsOn"]),
+            [],
+        ),
+        (
             "Invalid depends on relying on itself",
             "ToMySelf",
             deque(["Resources", "ToMySelf", "DependsOn"]),
@@ -129,7 +167,9 @@ def template():
                 ValidationError(
                     "'ToMySelf' is not one of ['ParentBucket', 'ChildBucket', "
                     "'ParentBucketWithGoodCondition', "
-                    "'ParentBucketWithBadCondition', 'ChildBucketWithBadCondition']",
+                    "'ParentBucketWithBadCondition', 'ChildBucketWithBadCondition', "
+                    "'ParentBucketAlwaysTrue', 'ChildBucketAlwaysTrue', "
+                    "'ParentBucketOrOfConstants', 'ChildBucketOrOfConstants']",
                 )
             ],
         ),
