@@ -56,14 +56,28 @@ it is frequently silent or wrong about real limits.
 
 Evidence, strongest first:
 
-1. **Real templates that deploy.** The most persuasive evidence, and often
-   better than an API probe: if templates in the wild use a value you are about
-   to reject, your constraint is wrong. Search `test/fixtures/templates/`, this
-   repo's issues, and public template corpora.
-2. **A live API probe.** Call the service and observe what it accepts and
-   rejects. Record the account, region, and date in the PR.
-3. **AWS documentation.** Good for intent, often stale on exact numbers.
-4. The base CFN schema. Weakest. Treat as a hint only.
+1. **A real deployment.** `CreateStack` or `UpdateStack` succeeding on a
+   template that uses the value you would reject proves your constraint is
+   wrong. A deployment failing with CloudFormation's own error proves it is
+   right. Record the account, region, date, and the verbatim error.
+2. **Real templates in the wild that are known to deploy.** Often beats a probe,
+   and costs nothing. Search `test/fixtures/templates/`, this repo's issues, and
+   public template corpora.
+3. **A service-level API probe.** Call the service that owns the constraint
+   (`lambda CreateFunction`, `s3 CreateBucket`, `rds CreateDBInstance`) and
+   observe accept/reject. Second-best, because the service may accept what
+   CloudFormation's provider rejects, or the reverse. Record account, region,
+   and date.
+4. **AWS documentation.** Good for intent, frequently stale on exact numbers.
+5. **The base CFN resource schema.** Weakest. A hint, never proof.
+
+**`aws cloudformation validate-template` is NOT evidence** for a property-level
+constraint. It parses the template and checks template-level structure; it does
+not invoke a resource provider, so for most rules it proves nothing, and where
+it does respond it may be stricter or looser than `CreateStack`. A constraint can
+only be established by a deployment or by the owning service's API. Treat a
+`validate-template` result as no stronger than documentation, and never cite it
+as a probe.
 
 Write the evidence into the PR description. A reviewer cannot validate a
 magic number they cannot trace.
@@ -89,7 +103,8 @@ comment.
 
 Ask, in order:
 
-1. What is the evidence for this constraint, and is it traceable?
+1. What is the evidence for this constraint, and is it traceable? A deployment
+   or the owning service's API — not `validate-template`, not the base schema.
 2. Which valid templates does this now reject? Name one, or prove there are none.
 3. Is `E` the right severity, or does some valid account configuration deploy this?
 4. Does it stay silent on `Ref`, `GetAtt`, `Fn::If`, and a non-scalar?
