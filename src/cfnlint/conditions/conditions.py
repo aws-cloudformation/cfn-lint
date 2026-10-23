@@ -233,6 +233,13 @@ class Conditions:
             return
 
         c_cnf = self._cnf.copy()
+        if region:
+            for condition in self._conditions.values():
+                for equal in condition.equals:
+                    is_region, expected = equal.is_region
+                    if is_region:
+                        symbol = self._solver_params[equal.hash]
+                        c_cnf.add_prop(symbol if expected == region else Not(symbol))
         condition_names = []
         conditions_set = {}
         for condition_name, values in conditions.items():
@@ -260,12 +267,14 @@ class Conditions:
             # based on the provided conditions
             scenarios_attempted = 0
             if region:
-                products = itertools.starmap(
-                    self.build_scenerios_on_region,
-                    itertools.product(condition_names, [region]),
+                products = itertools.product(
+                    *[
+                        self.build_scenerios_on_region(name, region)
+                        for name in condition_names
+                    ]
                 )
             else:
-                products = itertools.product([True, False], repeat=len(condition_names))  # type: ignore
+                products = itertools.product([True, False], repeat=len(condition_names))
 
             for p in products:
                 cnf = c_cnf.copy()

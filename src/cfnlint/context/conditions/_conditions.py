@@ -9,7 +9,7 @@ import itertools
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Iterator
 
-from sympy import Not, Or, Symbol
+from sympy import And, Not, Or, Symbol
 from sympy.assumptions.cnf import EncodedCNF
 from sympy.logic.inference import satisfiable
 
@@ -41,6 +41,7 @@ class Conditions:
         init=True, default_factory=dict, compare=False
     )
     _max_scenarios: int = field(init=False, default=128)
+    regions: tuple[str, ...] = field(init=True, default=())
 
     @classmethod
     def create_from_instance(
@@ -182,6 +183,46 @@ class Conditions:
             cnf=cnf,
             hard_cnf=hard_cnf,
             _condition_symbols=self._condition_symbols,
+            regions=self.regions,
+        )
+
+    def evolve_for_regions(self, regions: list[str]) -> "Conditions":
+        """Restrict region comparisons to the regions currently being validated."""
+        comparisons = {}
+        for condition in self.conditions.values():
+            for equal in condition.equals:
+                if not equal.is_region:
+                    continue
+                other = equal.right if equal.left.is_region else equal.left
+                if isinstance(other.instance, str):
+                    comparisons[equal.cnf] = other.instance
+        if not comparisons or not regions:
+            return self
+
+        region_facts = Or(
+            *[
+                And(
+                    *[
+                        symbol if expected == region else Not(symbol)
+                        for symbol, expected in comparisons.items()
+                    ]
+                )
+                for region in regions
+            ]
+        )
+        cnf = self.cnf.copy()
+        hard_cnf = self.hard_cnf.copy()
+        cnf.add_prop(region_facts)
+        # Region-specific branches remain valid in other deployments. Do not
+        # classify them as universally unreachable for W1028.
+        if not satisfiable(cnf):
+            raise Unsatisfiable(new_status={}, current_status=self.status)
+        return self.__class__(
+            conditions=self.conditions,
+            cnf=cnf,
+            hard_cnf=hard_cnf,
+            _condition_symbols=self._condition_symbols,
+            regions=tuple(regions),
         )
 
     def is_reachable(self, name: str, value: bool) -> bool:
