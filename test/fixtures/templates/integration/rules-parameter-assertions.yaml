@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues: [dev, prod]
+  DestinationArn:
+    Type: String
+    Default: ""
+  AuditDestinationArn:
+    Type: String
+    Default: ""
+  UncheckedDestinationArn:
+    Type: String
+    Default: ""
+  RetentionInDays:
+    Type: Number
+    Default: 2
+Rules:
+  DestinationRequiredInProd:
+    RuleCondition: !Equals [!Ref Environment, prod]
+    Assertions:
+      - Assert: !Not [!Equals [!Ref DestinationArn, ""]]
+        AssertDescription: DestinationArn is required when Environment is prod
+  AuditDestinationRequired:
+    Assertions:
+      - Assert: !Not [!Equals [!Ref AuditDestinationArn, ""]]
+        AssertDescription: AuditDestinationArn is required
+  SupportedRetention:
+    Assertions:
+      - Assert: !Contains [["1", "3", "5", "7"], !Ref RetentionInDays]
+        AssertDescription: RetentionInDays must be 1, 3, 5 or 7
+Conditions:
+  IsProd: !Equals [!Ref Environment, prod]
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      RetentionInDays: !Ref RetentionInDays
+  SubscriptionFilter:
+    Condition: IsProd
+    Type: AWS::Logs::SubscriptionFilter
+    Properties:
+      DestinationArn: !Ref DestinationArn
+      FilterPattern: ""
+      LogGroupName: !Ref LogGroup
+  AuditSubscriptionFilter:
+    Type: AWS::Logs::SubscriptionFilter
+    Properties:
+      DestinationArn: !Ref AuditDestinationArn
+      FilterPattern: ""
+      LogGroupName: !Ref LogGroup
+  UncheckedSubscriptionFilter:
+    Type: AWS::Logs::SubscriptionFilter
+    Properties:
+      DestinationArn: !Ref UncheckedDestinationArn
+      FilterPattern: ""
+      LogGroupName: !Ref LogGroup
