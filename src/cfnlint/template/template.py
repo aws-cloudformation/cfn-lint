@@ -890,6 +890,11 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             self.template.get("Resources", {}).get(resource, {}).get("Condition")
         )
         if isinstance(resource_condition, str):
+            # a condition that is provably always true means the resource
+            # always exists, so there is no scenario where it is unavailable
+            if self.conditions.is_always_true(resource_condition):
+                return []
+
             # if path conditions are empty that means its always true
             if not path_conditions:
                 return [{resource_condition: False}]
