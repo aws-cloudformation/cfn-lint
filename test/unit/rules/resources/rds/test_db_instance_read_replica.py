@@ -39,17 +39,35 @@ def _run(rules, filename):
 def test_read_replica_ignored_properties(rules):
     # Regression test for https://github.com/aws-cloudformation/cfn-lint/issues/4817
     # StorageEncrypted, MasterUsername and DBName are silently ignored on a
-    # read replica: W3692 warns, and the E3020 dependentExcluded hard error
-    # must not fire.
+    # read replica: W3692 warns once per property, and the E3020
+    # dependentExcluded hard error must not fire.
     matches = _run(rules, "read_replica_ignored_properties.yaml")
 
     assert not [m for m in matches if m.rule.id == "E3020"], (
         f"E3020 must not fire on ignored read replica properties: {matches!r}"
     )
     warnings = [m for m in matches if m.rule.id == "W3692"]
-    assert warnings, f"W3692 must warn on ignored read replica properties: {matches!r}"
+    assert sorted(m.path[-1] for m in warnings) == [
+        "DBName",
+        "MasterUsername",
+        "StorageEncrypted",
+    ], f"expected one W3692 warning per ignored property, got {matches!r}"
     for warning in warnings:
         assert "ignored on a read replica" in warning.message
+
+
+def test_read_replica_ref_source(rules):
+    # The common in-template pattern: SourceDBInstanceIdentifier is a Ref to
+    # a source in the same template. Presence is what makes it a read
+    # replica, so the ignored properties must still warn.
+    matches = _run(rules, "read_replica_ref_source.yaml")
+
+    warnings = [m for m in matches if m.rule.id == "W3692"]
+    assert sorted(m.path[-1] for m in warnings) == [
+        "DBName",
+        "MasterUsername",
+        "StorageEncrypted",
+    ], f"expected one W3692 warning per ignored property, got {matches!r}"
 
 
 def test_read_replica_honored_properties(rules):

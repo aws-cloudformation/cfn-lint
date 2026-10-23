@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  Read replica whose SourceDBInstanceIdentifier is a Ref to a source DB in
+  the same template. Presence of the property is what makes it a read
+  replica, so W3692 must warn on each ignored property.
+Resources:
+  SourceDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      MasterUsername: dbadmin
+      MasterUserPassword: "{{resolve:secretsmanager:MyRDSSecret:SecretString:password}}"
+      DBName: srcdb
+  ReadReplica:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      SourceDBInstanceIdentifier: !Ref SourceDB
+      StorageEncrypted: false
+      MasterUsername: someoneelse
+      DBName: repdb

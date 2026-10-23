@@ -71,6 +71,62 @@ def rule():
                 )
             ],
         ),
+        # Every ignored property gets its own warning: the rule runs with
+        # all_matches=True and applies the per-property message to each
+        # error, so setting three must yield three warnings.
+        (
+            {
+                "SourceDBInstanceIdentifier": "foo",
+                "StorageEncrypted": False,
+                "MasterUsername": "foo",
+                "DBName": "foo",
+            },
+            [
+                ValidationError(
+                    "'DBName' is ignored on a read replica and "
+                    "inherited from the source DB instance",
+                    rule=DbInstanceSourceDBInstanceIdentifier(),
+                    path=deque(["DBName"]),
+                    validator=None,
+                    schema_path=deque(["then", "properties", "DBName"]),
+                ),
+                ValidationError(
+                    "'MasterUsername' is ignored on a read replica and "
+                    "inherited from the source DB instance",
+                    rule=DbInstanceSourceDBInstanceIdentifier(),
+                    path=deque(["MasterUsername"]),
+                    validator=None,
+                    schema_path=deque(["then", "properties", "MasterUsername"]),
+                ),
+                ValidationError(
+                    "'StorageEncrypted' is ignored on a read replica and "
+                    "inherited from the source DB instance",
+                    rule=DbInstanceSourceDBInstanceIdentifier(),
+                    path=deque(["StorageEncrypted"]),
+                    validator=None,
+                    schema_path=deque(["then", "properties", "StorageEncrypted"]),
+                ),
+            ],
+        ),
+        # Presence of SourceDBInstanceIdentifier is what makes it a read
+        # replica, not a resolvable string value: a Ref to a source in the
+        # same template must still warn.
+        (
+            {
+                "SourceDBInstanceIdentifier": {"Ref": "Src"},
+                "StorageEncrypted": False,
+            },
+            [
+                ValidationError(
+                    "'StorageEncrypted' is ignored on a read replica and "
+                    "inherited from the source DB instance",
+                    rule=DbInstanceSourceDBInstanceIdentifier(),
+                    path=deque(["StorageEncrypted"]),
+                    validator=None,
+                    schema_path=deque(["then", "properties", "StorageEncrypted"]),
+                )
+            ],
+        ),
         # BackupRetentionPeriod and PreferredBackupWindow are honored on
         # read replicas (live verified), so they must not warn.
         (
