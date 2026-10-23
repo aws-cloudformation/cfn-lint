@@ -215,6 +215,195 @@ _template = {
             deque(["Resources", "Mapping", "Properties"]),
             [],
         ),
+        # Fn::If on VisibilityTimeout: violation only in the second branch (#4850)
+        (
+            {
+                "Conditions": {
+                    "UseLong": {
+                        "Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"],
+                    },
+                },
+                "Resources": {
+                    "Queue": {
+                        "Type": "AWS::SQS::Queue",
+                        "Properties": {
+                            "VisibilityTimeout": {"Fn::If": ["UseLong", 1800, 30]},
+                        },
+                    },
+                    "Lambda": {
+                        "Type": "AWS::Lambda::Function",
+                        "Properties": {
+                            "Timeout": 300,
+                            "Role": {"Fn::GetAtt": "Role.Arn"},
+                        },
+                    },
+                    "Mapping": {
+                        "Type": "AWS::Lambda::EventSourceMapping",
+                        "Properties": {
+                            "EventSourceArn": {"Fn::GetAtt": "Queue.Arn"},
+                            "FunctionName": {"Ref": "Lambda"},
+                        },
+                    },
+                },
+            },
+            deque(["Resources", "Mapping", "Properties"]),
+            [
+                ValidationError(
+                    "Queue visibility timeout (30) is less "
+                    "than Function timeout (300) seconds",
+                    validator="minimum",
+                    rule=EventSourceMappingToSqsTimeout(),
+                    path_override=deque(
+                        ["Resources", "Queue", "Properties", "VisibilityTimeout"]
+                    ),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "then",
+                            "properties",
+                            "queue",
+                            "properties",
+                            "VisibilityTimeout",
+                            "minimum",
+                        ]
+                    ),
+                ),
+            ],
+        ),
+        # Fn::If on VisibilityTimeout: both branches violate (#4850)
+        (
+            {
+                "Conditions": {
+                    "UseLong": {
+                        "Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"],
+                    },
+                },
+                "Resources": {
+                    "Queue": {
+                        "Type": "AWS::SQS::Queue",
+                        "Properties": {
+                            "VisibilityTimeout": {"Fn::If": ["UseLong", 200, 30]},
+                        },
+                    },
+                    "Lambda": {
+                        "Type": "AWS::Lambda::Function",
+                        "Properties": {
+                            "Timeout": 300,
+                            "Role": {"Fn::GetAtt": "Role.Arn"},
+                        },
+                    },
+                    "Mapping": {
+                        "Type": "AWS::Lambda::EventSourceMapping",
+                        "Properties": {
+                            "EventSourceArn": {"Fn::GetAtt": "Queue.Arn"},
+                            "FunctionName": {"Ref": "Lambda"},
+                        },
+                    },
+                },
+            },
+            deque(["Resources", "Mapping", "Properties"]),
+            [
+                ValidationError(
+                    "Queue visibility timeout (200) is less "
+                    "than Function timeout (300) seconds",
+                    validator="minimum",
+                    rule=EventSourceMappingToSqsTimeout(),
+                    path_override=deque(
+                        ["Resources", "Queue", "Properties", "VisibilityTimeout"]
+                    ),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "then",
+                            "properties",
+                            "queue",
+                            "properties",
+                            "VisibilityTimeout",
+                            "minimum",
+                        ]
+                    ),
+                ),
+                ValidationError(
+                    "Queue visibility timeout (30) is less "
+                    "than Function timeout (300) seconds",
+                    validator="minimum",
+                    rule=EventSourceMappingToSqsTimeout(),
+                    path_override=deque(
+                        ["Resources", "Queue", "Properties", "VisibilityTimeout"]
+                    ),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "then",
+                            "properties",
+                            "queue",
+                            "properties",
+                            "VisibilityTimeout",
+                            "minimum",
+                        ]
+                    ),
+                ),
+            ],
+        ),
+        # Fn::If on the referenced Function Timeout: violation only in one branch
+        (
+            {
+                "Conditions": {
+                    "UseLong": {
+                        "Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"],
+                    },
+                },
+                "Resources": {
+                    "Queue": {
+                        "Type": "AWS::SQS::Queue",
+                        "Properties": {
+                            "VisibilityTimeout": 300,
+                        },
+                    },
+                    "Lambda": {
+                        "Type": "AWS::Lambda::Function",
+                        "Properties": {
+                            "Timeout": {"Fn::If": ["UseLong", 600, 3]},
+                            "Role": {"Fn::GetAtt": "Role.Arn"},
+                        },
+                    },
+                    "Mapping": {
+                        "Type": "AWS::Lambda::EventSourceMapping",
+                        "Properties": {
+                            "EventSourceArn": {"Fn::GetAtt": "Queue.Arn"},
+                            "FunctionName": {"Ref": "Lambda"},
+                        },
+                    },
+                },
+            },
+            deque(["Resources", "Mapping", "Properties"]),
+            [
+                ValidationError(
+                    "Queue visibility timeout (300) is less "
+                    "than Function timeout (600) seconds",
+                    validator="minimum",
+                    rule=EventSourceMappingToSqsTimeout(),
+                    path_override=deque(
+                        ["Resources", "Queue", "Properties", "VisibilityTimeout"]
+                    ),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "then",
+                            "properties",
+                            "queue",
+                            "properties",
+                            "VisibilityTimeout",
+                            "minimum",
+                        ]
+                    ),
+                ),
+            ],
+        ),
     ],
     indirect=["template"],
 )
