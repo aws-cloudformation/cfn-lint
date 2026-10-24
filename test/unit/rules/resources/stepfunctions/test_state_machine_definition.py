@@ -1560,6 +1560,136 @@ def rule():
             },
             [],
         ),
+        (
+            "StartAt exists in all Fn::If States branches",
+            {
+                "Definition": {
+                    "StartAt": "Echo",
+                    "States": {
+                        "Fn::If": [
+                            "DoDechunk",
+                            {
+                                "Echo": {
+                                    "Type": "Pass",
+                                    "Next": "Dechunk",
+                                },
+                                "Dechunk": {"Type": "Pass", "End": True},
+                            },
+                            {
+                                "Echo": {"Type": "Pass", "End": True},
+                            },
+                        ]
+                    },
+                }
+            },
+            [],
+        ),
+        (
+            "StartAt missing from one Fn::If States branch",
+            {
+                "Definition": {
+                    "StartAt": "Echo",
+                    "States": {
+                        "Fn::If": [
+                            "DoDechunk",
+                            {
+                                "Echo": {
+                                    "Type": "Pass",
+                                    "Next": "Dechunk",
+                                },
+                                "Dechunk": {"Type": "Pass", "End": True},
+                            },
+                            {
+                                "Other": {"Type": "Pass", "End": True},
+                            },
+                        ]
+                    },
+                }
+            },
+            [
+                ValidationError(
+                    "Missing 'Next' target 'Echo' at /StartAt",
+                    rule=StateMachineDefinition(),
+                    path=deque(["Definition", "StartAt"]),
+                ),
+            ],
+        ),
+        (
+            "StartAt missing from all Fn::If States branches",
+            {
+                "Definition": {
+                    "StartAt": "Echo",
+                    "States": {
+                        "Fn::If": [
+                            "DoDechunk",
+                            {
+                                "Other": {"Type": "Pass", "End": True},
+                            },
+                            {
+                                "Another": {"Type": "Pass", "End": True},
+                            },
+                        ]
+                    },
+                }
+            },
+            [
+                ValidationError(
+                    "Missing 'Next' target 'Echo' at /StartAt",
+                    rule=StateMachineDefinition(),
+                    path=deque(["Definition", "StartAt"]),
+                ),
+            ],
+        ),
+        (
+            "Nested StartAt inside an Fn::If States branch",
+            {
+                "Definition": {
+                    "StartAt": "Work",
+                    "States": {
+                        "Fn::If": [
+                            "DoDechunk",
+                            {
+                                "Work": {
+                                    "Type": "Parallel",
+                                    "Branches": [
+                                        {
+                                            "StartAt": "Missing",
+                                            "States": {
+                                                "Done": {
+                                                    "Type": "Pass",
+                                                    "End": True,
+                                                },
+                                            },
+                                        },
+                                    ],
+                                    "End": True,
+                                },
+                            },
+                            {
+                                "Work": {"Type": "Pass", "End": True},
+                            },
+                        ]
+                    },
+                }
+            },
+            [
+                ValidationError(
+                    "Missing 'Next' target 'Missing' "
+                    "at /States/Work/Branches/0/StartAt",
+                    rule=StateMachineDefinition(),
+                    path=deque(
+                        [
+                            "Definition",
+                            "States",
+                            "Work",
+                            "Branches",
+                            0,
+                            "StartAt",
+                        ]
+                    ),
+                ),
+            ],
+        ),
     ],
 )
 def test_validate(

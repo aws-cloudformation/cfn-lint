@@ -8,7 +8,7 @@ from __future__ import annotations
 import json
 from collections import deque
 from copy import deepcopy
-from typing import Any
+from typing import Any, Iterator
 
 import cfnlint.data.schemas.other.step_functions
 from cfnlint.helpers import is_function
@@ -117,6 +117,25 @@ class StateMachineDefinition(CfnLintJsonSchema):
             if ql == "JSONata":
                 yield self._convert_schema_to_jsonata(), ql_validator
 
+    def _expand_states(self, states: Any) -> Iterator[dict[str, Any]]:
+        """
+        Yield each state dict a States value can resolve to.
+
+        A plain States object yields itself. When States is an Fn::If,
+        CloudFormation selects one branch before Step Functions sees the
+        definition, so each branch is yielded separately (fixes #4882).
+        Branches that are not dicts (e.g. a Ref) cannot be resolved
+        statically and are skipped so they never produce a false positive.
+        """
+        fn_name, fn_value = is_function(states)
+        if fn_name == "Fn::If":
+            if isinstance(fn_value, list) and len(fn_value) == 3:
+                for branch in fn_value[1:]:
+                    yield from self._expand_states(branch)
+            return
+        if isinstance(states, dict):
+            yield states
+
     def _validate_start_at(
         self,
         definition: Any,
@@ -135,11 +154,16 @@ class StateMachineDefinition(CfnLintJsonSchema):
         states = definition.get("States")
 
         # Check if StartAt is missing
-        if not isinstance(start_at, str) or not isinstance(states, dict):
+        if not isinstance(start_at, str):
             return  # Early return to avoid further checks
+        state_dicts = list(self._expand_states(states))
+        if not state_dicts:
+            return
 
-        # Check if StartAt state exists in States object
-        if start_at not in states:
+        # Check if StartAt state exists in States object. With an Fn::If
+        # States value, CloudFormation resolves the condition first, so
+        # the machine is only valid when StartAt exists in every branch.
+        if any(start_at not in state_dict for state_dict in state_dicts):
             if path is None:  # Top level StartAt
                 error_path = deque([k, "StartAt"])
                 display_path = "/StartAt"
@@ -153,39 +177,40 @@ class StateMachineDefinition(CfnLintJsonSchema):
 
         # Validate nested StartAt in Parallel and Map states
         base_path = deque() if path is None else deque(path)
-        for state_name, state in states.items():
-            if not isinstance(state, dict):
-                continue
-            state_type = state.get("Type")
-
-            if state_type == "Parallel":
-                branches = state.get("Branches", [])
-                if not isinstance(branches, list):
+        for states in state_dicts:
+            for state_name, state in states.items():
+                if not isinstance(state, dict):
                     continue
-                for idx, branch in enumerate(branches):
-                    branch_path = deque(base_path)
-                    branch_path.extend(["States", state_name, "Branches", idx])
-                    yield from self._validate_start_at(
-                        branch, k, add_path_to_message, branch_path
-                    )
+                state_type = state.get("Type")
 
-            if state_type == "Map":
-                # ItemProcessor (distributed/inline mode)
-                processor = state.get("ItemProcessor")
-                if isinstance(processor, dict):
-                    processor_path = deque(base_path)
-                    processor_path.extend(["States", state_name, "ItemProcessor"])
-                    yield from self._validate_start_at(
-                        processor, k, add_path_to_message, processor_path
-                    )
-                # Iterator (classic map)
-                iterator = state.get("Iterator")
-                if isinstance(iterator, dict):
-                    iterator_path = deque(base_path)
-                    iterator_path.extend(["States", state_name, "Iterator"])
-                    yield from self._validate_start_at(
-                        iterator, k, add_path_to_message, iterator_path
-                    )
+                if state_type == "Parallel":
+                    branches = state.get("Branches", [])
+                    if not isinstance(branches, list):
+                        continue
+                    for idx, branch in enumerate(branches):
+                        branch_path = deque(base_path)
+                        branch_path.extend(["States", state_name, "Branches", idx])
+                        yield from self._validate_start_at(
+                            branch, k, add_path_to_message, branch_path
+                        )
+
+                if state_type == "Map":
+                    # ItemProcessor (distributed/inline mode)
+                    processor = state.get("ItemProcessor")
+                    if isinstance(processor, dict):
+                        processor_path = deque(base_path)
+                        processor_path.extend(["States", state_name, "ItemProcessor"])
+                        yield from self._validate_start_at(
+                            processor, k, add_path_to_message, processor_path
+                        )
+                    # Iterator (classic map)
+                    iterator = state.get("Iterator")
+                    if isinstance(iterator, dict):
+                        iterator_path = deque(base_path)
+                        iterator_path.extend(["States", state_name, "Iterator"])
+                        yield from self._validate_start_at(
+                            iterator, k, add_path_to_message, iterator_path
+                        )
 
     def _validate_step(
         self,
