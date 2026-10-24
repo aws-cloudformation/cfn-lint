@@ -195,6 +195,40 @@ constraint. It parses the template and checks template-level structure; it does
 not invoke a resource provider. Treat it as no stronger than documentation, and
 never cite it as a probe.
 
+### A free deployment probe for parameter constraints
+
+A parameter's `Default` is validated in the CloudFormation control plane
+**before any resource exists**, so a `create-stack` probe of a parameter
+constraint costs nothing and leaves nothing behind. Give the template the
+parameter under test and one `AWS::CloudFormation::WaitConditionHandle`:
+
+```yaml
+Parameters:
+  P:
+    Type: String
+    Default: true
+    AllowedValues: ["true", "false"]
+Resources:
+  W:
+    Type: AWS::CloudFormation::WaitConditionHandle
+```
+
+A rejection returns synchronously and creates no stack at all. An acceptance
+creates one free resource — delete the stack immediately. This covers the whole
+parameter-constraint family: `E2015`, `E2003` and their neighbours.
+
+Recorded us-east-1, 2026-10-23, seven cases: **CloudFormation renders a boolean
+`Default` lowercase.** `Default: true` deploys against
+`AllowedValues: ["true", "false"]`; against `["True", "False"]` it fails
+`Parameter 'P' must be one of AllowedValues`; against
+`AllowedPattern: ^(True|False)$` it fails `Parameter 'P' must match pattern
+^(True|False)$`. A `CommaDelimitedList` fails `Each value of parameter 'P' must
+be one of AllowedValues`. Three claims in the review of PR #4797 turned on that
+coercion model.
+
+Keep the account id in the PR description, not in this file — `.kiro/` ships in
+the public repo.
+
 When reading AWS docs, fetch the page with full-content mode — the default
 extraction truncates at ~8000 characters and can drop the property table you
 need. Appending `.md` to a `docs.aws.amazon.com` URL returns the markdown

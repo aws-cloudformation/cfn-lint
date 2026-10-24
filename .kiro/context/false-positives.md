@@ -79,6 +79,9 @@ only be established by a deployment or by the owning service's API. Treat a
 `validate-template` result as no stronger than documentation, and never cite it
 as a probe.
 
+For a parameter constraint a deployment is free, because `Default` is validated
+before any resource exists — see the parameter probe in `verification.md`.
+
 Write the evidence into the PR description. A reviewer cannot validate a
 magic number they cannot trace.
 
