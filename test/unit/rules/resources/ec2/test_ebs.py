@@ -122,3 +122,45 @@ def test_backup_lifecycle(instance, expected, rule, validator):
     errs = list(rule.validate(validator, "", instance, {}))
 
     assert errs == expected, f"Expected {expected} got {errs}"
+
+
+@pytest.mark.parametrize(
+    "instance,expected",
+    [
+        (
+            {
+                "VolumeType": "gp3",
+                "Iops": 16000,
+            },
+            [],
+        ),
+        (
+            {
+                "VolumeType": "gp3",
+                "Iops": 20000,
+            },
+            [
+                ValidationError(
+                    "20000 is greater than the maximum of 16000",
+                    rule=Ebs(),
+                    path=deque(["Iops"]),
+                    validator="maximum",
+                    validator_value=16000,
+                    instance=20000,
+                    schema={"minimum": 3000, "maximum": 16000},
+                    schema_path=deque(
+                        ["allOf", 2, "then", "properties", "Iops", "maximum"]
+                    ),
+                )
+            ],
+        ),
+    ],
+)
+def test_launch_configuration(instance, expected, rule, validator):
+    keyword = (
+        "Resources/AWS::AutoScaling::LaunchConfiguration"
+        "/Properties/BlockDeviceMappings/*/Ebs"
+    )
+    errs = list(rule.validate(validator, keyword, instance, {}))
+
+    assert errs == expected, f"Expected {expected} got {errs}"
