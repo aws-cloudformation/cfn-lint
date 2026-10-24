@@ -25,8 +25,13 @@ class TestDefault(BaseRuleTestCase):
             "test/fixtures/templates/good/parameters/default.yaml"
         )
 
+    def test_parameters_success_json(self):
+        self.helper_file_positive_template(
+            "test/fixtures/templates/good/parameters/default.json"
+        )
+
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative(
-            "test/fixtures/templates/bad/parameters/default.yaml", 9
+            "test/fixtures/templates/bad/parameters/default.yaml", 13
         )
