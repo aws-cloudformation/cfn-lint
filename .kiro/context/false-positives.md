@@ -45,6 +45,11 @@ the right place:
 | Account-, quota-, or opt-in-dependent | Warning (`W`) at most, often nothing |
 | A style or preference judgment | Warning or informational (`I`), never an error |
 
+Telling a soft quota from a hard bound is a lookup, not a guess: see "A
+deployment rejection does not tell you the limit is universal" in
+`verification.md`. Encoding a limit that Service Quotas marks `Adjustable: true`
+is a false positive for every account that has had it raised.
+
 Severity follows blast radius: `E` means CloudFormation **will** reject the
 deployment. If a valid account configuration makes the template deploy fine, it
 is not an `E`.

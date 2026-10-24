@@ -116,6 +116,8 @@ Severity follows consequence, not confidence:
    to deploy, then a service-level API probe, then AWS docs. Never the base CFN
    schema alone, and never `aws cloudformation validate-template` — it does not
    invoke a resource provider, so it cannot establish a property constraint.
+   Then check whether the number is a soft account quota, which is never an
+   `E` — see [`../context/verification.md`](../context/verification.md).
 2. **Decide where it belongs** — this repo or enhanced-schemas.
 3. **Pick the simplest rule type** that expresses it.
 4. **Handle unresolvable values.** `Ref`, `GetAtt`, `Sub`, `Fn::If`, mappings

@@ -234,4 +234,47 @@ extraction truncates at ~8000 characters and can drop the property table you
 need. Appending `.md` to a `docs.aws.amazon.com` URL returns the markdown
 source, which is also truncated by the same default and mangles inline URLs.
 
+### A deployment rejection does not tell you the limit is universal
+
+A refusal proves the value was refused for **this account, in this region,
+today**. It does not say whether you hit a hard service bound or a soft account
+quota, and the two need opposite treatment: a soft quota encoded as a constraint
+is a false positive for every account that has had it raised. Before encoding a
+number, check whether it is a quota.
+
+Service Quotas labels adjustability itself, so this is a lookup, not a judgment:
+
+```shell
+aws service-quotas list-service-quotas --service-code ebs \
+  --query 'Quotas[?contains(QuotaName,`IOPS`)].{Name:QuotaName,Code:QuotaCode,Value:Value,Adjustable:Adjustable}'
+```
+
+Three outcomes, and they decide the rule:
+
+- **Present, `Adjustable: true`** — a soft account quota. Never an `E`, and
+  usually no rule at all.
+- **Present, `Adjustable: false`** — hard for every account. An `E` is
+  defensible.
+- **Absent from Service Quotas entirely** — a per-resource service bound. This
+  is the kind cfn-lint should encode.
+
+Absence is a signal, not a gap: Service Quotas tracks **account aggregates**, so
+per-resource maxima never appear there.
+
+Corroborating signal: `get-aws-default-service-quota` gives the AWS default and
+`get-service-quota` the account's applied value. A difference between them means
+somebody raised it, which is itself proof the limit is soft.
+
+Recorded us-east-1, 2026-10-24, EBS io2 IOPS — two rejections that look alike
+resolve opposite ways:
+
+- `Iops: 256000` failed `You have exceeded your maximum io2 IOPS limit of 100000
+  IOPS in this region. Please contact AWS Support`. That 100000 is quota
+  `L-8D977E7E`, "IOPS for Provisioned IOPS SSD (io2) volumes", AWS default
+  `100000`, **`Adjustable: true`** — as was every EBS quota returned. Soft.
+  Encoding it would be a false positive for any account that raised it.
+- `Iops: 256001` failed `Volume iops of 256001 is too high; maximum is 256000`.
+  That per-volume 256000 **does not appear in Service Quotas at all** — nor does
+  io1's 64000, nor the 500:1 IOPS-to-size ratio. Hard bound, and encodable.
+
 See `false-positives.md` for how this feeds severity and placement.
