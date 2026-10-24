@@ -1,0 +1,35 @@
+---
+# Regression test for https://github.com/aws-cloudformation/cfn-lint/issues/4799
+# Two Fn::Equals on the same Ref with different literals can never both be
+# true, even when the parameter has no AllowedValues (or is a
+# pseudo-parameter). E3014 (requiredXor) must not fire: every scenario leaves
+# exactly one ingress source.
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+  Source:
+    Type: String
+    Default: ipv4
+Conditions:
+  UseIpv4: !Equals [!Ref Source, ipv4]
+  UseIpv6: !Equals [!Ref Source, ipv6]
+  UseGroup: !Not [!Or [!Condition UseIpv4, !Condition UseIpv6]]
+Resources:
+  Peer:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: peer group used as an ingress source
+      VpcId: !Ref VpcId
+  Sg:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: one ingress source selected by condition
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: !If [UseIpv4, 10.0.0.0/16, !Ref AWS::NoValue]
+          CidrIpv6: !If [UseIpv6, "2001:db8::/32", !Ref AWS::NoValue]
+          SourceSecurityGroupId: !If [UseGroup, !GetAtt Peer.GroupId, !Ref AWS::NoValue]

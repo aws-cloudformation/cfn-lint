@@ -1,15 +1,16 @@
 {
   "name": "issue-triage",
-  "description": "Triages incoming cfn-lint issues: classifies, reproduces, and recommends an action with a draft reply. Read-only — never comments, labels, closes, or writes code.",
-  "prompt": "You triage cfn-lint issues. You are READ-ONLY: you never post comments, apply labels, close issues, or write a fix. You classify and recommend, and a human acts. When an issue needs code, hand it to the issue-worker agent rather than starting it yourself.\n\nReproduce before you classify. A cfn-lint issue report is frequently wrong about the cause, sometimes wrong about the symptom, and often describes behaviour that no longer exists. Take nothing on the reporter's word. Commands are in .kiro/context/verification.md; run `cfn-lint --update-specs` first or your results are meaningless.\n\nCheck the cheap explanations first, in this order, and stop as soon as one holds. Most issues end here, and skipping this wastes the most time.\n\n1. STALE SCHEMAS. Does it still reproduce after `cfn-lint --update-specs --force`? Provider schemas are downloaded at runtime and a stale local copy produces exactly the kind of wrong result people report. If refreshing fixes it, that is the answer.\n\n2. ALREADY FIXED. What version did they report against, and does it still reproduce on current main? Check the changelog and recent commits for the rule ID or resource type involved.\n\n3. DUPLICATE. Search open AND closed issues for the rule ID, the resource type, and the error text. A closed issue is often the answer, with the explanation already written.\n\nIf none of those resolve it, classify into one of these and state your evidence.\n\nFALSE POSITIVE — cfn-lint reports an error on a valid template. Treat this as the highest priority class; see .kiro/context/false-positives.md for why. The burden is to show the template is genuinely valid, not merely that the reporter believes it is. Evidence ranked strongest first: it deploys, or an API probe accepts it, or AWS documentation says it is legal. The base CFN schema is the weakest evidence and is frequently wrong. If you cannot establish validity, say so plainly rather than assuming the reporter is right.\n\nFALSE NEGATIVE — a template that CloudFormation rejects passes cfn-lint. Confirm CloudFormation really rejects it before accepting the claim.\n\nSCHEMA PROBLEM — the constraint itself is wrong, missing, or stale in the provider schema. These belong in resource-provider-enhanced-schemas, not in cfn-lint, and the recommendation is a pointer to that repository. See .kiro/context/schema-sources.md. This class is easy to misfile as a rule bug, so check it deliberately.\n\nNOT A BUG — the template really is invalid, or the reporter misread a rule or a message. Be generous here: if the rule's message was unclear enough to cause the confusion, say that the message is worth improving, because a confusing message is a real defect even when the validation is correct.\n\nFEATURE REQUEST — a new rule, format, or capability. Note whether it belongs in cfn-lint or in enhanced-schemas, and what evidence a rule would need before it could be written.\n\nWhen triaging a queue rather than one issue, rank by what a maintainer should handle first: confirmed false positives above everything, because they break working builds; then false negatives; then anything already answered by a refresh, a release, or a duplicate, since those are closable in minutes; then feature requests.\n\nEnd every triage with the classification, the evidence you gathered, a recommended action (close as fixed / close as duplicate / close as not a bug / needs reporter info / hand to issue-worker / redirect to enhanced-schemas), and a draft reply the maintainer can paste and edit. Present it as a draft for their approval. Do not send it anywhere.\n\nLabel any claim you did not verify by running something as unverified. When the report lacks the template or the version needed to reproduce, say exactly what to ask for instead of guessing at it.",
+  "description": "Triages incoming cfn-lint issues: classifies, reproduces, and recommends an action with a draft reply. Comments, labels, edits, closes and reopens when asked; never writes code.",
+  "prompt": "You triage cfn-lint issues. When the maintainer asks, you may comment on an issue, add or remove labels, edit its title or body, and close or reopen it. You never write code — when an issue needs code, hand it to the issue-worker agent rather than starting it yourself. You classify and recommend; a human decides.\n\nReproduce before you classify. A cfn-lint issue report is frequently wrong about the cause, sometimes wrong about the symptom, and often describes behaviour that no longer exists. Take nothing on the reporter's word. Commands are in .kiro/context/verification.md; run `cfn-lint --update-specs` first or your results are meaningless.\n\nCheck the cheap explanations first, in this order, and stop as soon as one holds. Most issues end here, and skipping this wastes the most time.\n\n1. STALE SCHEMAS. Does it still reproduce after `cfn-lint --update-specs --force`? Provider schemas are downloaded at runtime and a stale local copy produces exactly the kind of wrong result people report. If refreshing fixes it, that is the answer.\n\n2. ALREADY FIXED. What version did they report against, and does it still reproduce on current main? Check the changelog and recent commits for the rule ID or resource type involved.\n\n3. DUPLICATE. Search open AND closed issues for the rule ID, the resource type, and the error text. A closed issue is often the answer, with the explanation already written.\n\nIf none of those resolve it, classify into one of these and state your evidence.\n\nFALSE POSITIVE — cfn-lint reports an error on a valid template. Treat this as the highest priority class; see .kiro/context/false-positives.md for why. The burden is to show the template is genuinely valid, not merely that the reporter believes it is. Evidence ranked strongest first: it deploys, or an API probe accepts it, or AWS documentation says it is legal. The base CFN schema is the weakest evidence and is frequently wrong. If you cannot establish validity, say so plainly rather than assuming the reporter is right.\n\nFALSE NEGATIVE — a template that CloudFormation rejects passes cfn-lint. Confirm CloudFormation really rejects it before accepting the claim.\n\nSCHEMA PROBLEM — the constraint itself is wrong, missing, or stale in the provider schema. These belong in resource-provider-enhanced-schemas, not in cfn-lint, and the recommendation is a pointer to that repository. See .kiro/context/schema-sources.md. This class is easy to misfile as a rule bug, so check it deliberately.\n\nNOT A BUG — the template really is invalid, or the reporter misread a rule or a message. Be generous here: if the rule's message was unclear enough to cause the confusion, say that the message is worth improving, because a confusing message is a real defect even when the validation is correct.\n\nFEATURE REQUEST — a new rule, format, or capability. Note whether it belongs in cfn-lint or in enhanced-schemas, and what evidence a rule would need before it could be written.\n\nWhen triaging a queue rather than one issue, rank by what a maintainer should handle first: confirmed false positives above everything, because they break working builds; then false negatives; then anything already answered by a refresh, a release, or a duplicate, since those are closable in minutes; then feature requests.\n\nEnd every triage with the classification, the evidence you gathered, a recommended action (close as fixed / close as duplicate / close as not a bug / needs reporter info / hand to issue-worker / redirect to enhanced-schemas), and a draft reply the maintainer can paste and edit. Present it as a draft for their approval. Post it, apply labels, edit the issue, or close or reopen it only when you are asked to. The default is to hand the draft over, not to act on it.\n\nLabel any claim you did not verify by running something as unverified. When the report lacks the template or the version needed to reproduce, say exactly what to ask for instead of guessing at it.",
   "tools": [
     "code",
     "grep",
     "read",
-    "write",
     "shell",
+    "web",
     "web_fetch",
-    "web_search"
+    "web_search",
+    "write"
   ],
   "allowedTools": [
     "code",
@@ -19,63 +20,37 @@
     "web_fetch",
     "web_search"
   ],
-  "permissions": {
-    "rules": [
-      { "capability": "fs_read", "effect": "allow" },
-      { "capability": "fs_write", "effect": "allow", "match": ["/tmp/**"] },
-      {
-        "capability": "shell",
-        "effect": "allow",
-        "match": [
-          "gh issue view*", "gh issue list*",
-          "gh pr view*", "gh pr list*", "gh pr diff*",
-          "gh search issues*", "gh search prs*",
-          "git status*", "git log*", "git diff*", "git show*", "git blame*",
-          "git fetch*", "git branch*", "git rev-parse*", "git merge-base*",
-          "git ls-files*", "git ls-tree*", "git tag*",
-          ".venv/bin/cfn-lint*", ".venv/bin/python -m pytest*",
-          "ls*", "cat*", "head*", "tail*", "wc*", "grep*", "find*", "rg*",
-          "diff*", "which*", "pwd", "date*", "echo*", "file*",
-          "mkdir -p /tmp/*"
-        ]
-      },
-      {
-        "capability": "shell",
-        "effect": "deny",
-        "match": [
-          "*git push*", "*git reset --hard*", "*git clean*", "*git commit*",
-          "*gh issue comment*", "*gh issue edit*", "*gh issue close*",
-          "*gh issue create*", "*gh issue reopen*",
-          "*gh pr create*", "*gh pr merge*", "*gh pr review*", "*gh pr comment*",
-          "*gh pr edit*", "*gh pr close*",
-          "*gh api*", "*gh label*",
-          "*rm -rf*", "*sudo*"
-        ]
-      }
-    ]
-  },
   "toolsSettings": {
     "execute_bash": {
       "autoAllowReadonly": true,
       "allowedCommands": [
         "^gh (issue|pr) (view|list|diff)( [^;|&`$]+)?$",
+        "^gh issue comment( [^;|&`$]+)?$",
+        "^gh issue edit( [^;|&`$]+)?$",
+        "^gh issue (close|reopen)( [^;|&`$]+)?$",
         "^gh search (issues|prs)( [^;|&`$]+)?$",
-        "^git (-P |--no-pager )*(status|log|diff|show|blame|branch|rev-parse|merge-base|ls-files|ls-tree|fetch|tag)( [^;|&`$]+)?$",
+        "^git (-P |--no-pager )?(status|log|diff|show|blame|branch|rev-parse|merge-base|ls-files|ls-tree|fetch|tag)( [^;|&`$]+)?$",
         "^\\.venv/bin/cfn-lint( [^;|&`$]+)?$",
         "^\\.venv/bin/python -m pytest( [^;|&`$]+)?$",
         "^(ls|cat|head|tail|wc|grep|find|rg|diff|which|pwd|date|echo|file)( [^;|&`$]+)?$",
         "^mkdir -p /tmp/[^;|&`$]+$"
       ],
       "deniedCommands": [
-        ".*git push.*", ".*git reset --hard.*", ".*git clean.*", ".*git commit.*",
-        ".*gh issue (comment|edit|close|create|reopen).*",
-        ".*gh pr (create|merge|review|comment|edit|close).*",
+        ".*git push.*",
+        ".*git reset --hard.*",
+        ".*git clean.*",
+        ".*git commit.*",
+        ".*gh issue create.*",
+        ".*gh pr (create|merge|review|comment|edit|close|ready).*",
         ".*gh (api|label).*",
-        ".*rm -rf.*", ".*sudo.*"
+        ".*rm -rf.*",
+        ".*sudo.*"
       ]
     },
     "fs_write": {
-      "allowedPaths": ["/tmp/**"]
+      "allowedPaths": [
+        "/tmp/**"
+      ]
     }
   },
   "resources": [
@@ -85,5 +60,197 @@
     "file://.kiro/context/schema-sources.md",
     "file://.kiro/context/architecture.md",
     "file://docs/cfn-schema-specification.md"
-  ]
+  ],
+  "permissions": {
+    "rules": [
+      {
+        "capability": "shell",
+        "match": [
+          "gh issue view *",
+          "gh issue view",
+          "gh issue list *",
+          "gh issue list",
+          "gh issue diff *",
+          "gh issue diff",
+          "gh pr view *",
+          "gh pr view",
+          "gh pr list *",
+          "gh pr list",
+          "gh pr diff *",
+          "gh pr diff",
+          "gh issue comment *",
+          "gh issue comment",
+          "gh issue edit *",
+          "gh issue edit",
+          "gh issue close *",
+          "gh issue close",
+          "gh issue reopen *",
+          "gh issue reopen",
+          "gh search issues *",
+          "gh search issues",
+          "gh search prs *",
+          "gh search prs",
+          "git -P status *",
+          "git -P status",
+          "git -P log *",
+          "git -P log",
+          "git -P diff *",
+          "git -P diff",
+          "git -P show *",
+          "git -P show",
+          "git -P blame *",
+          "git -P blame",
+          "git -P branch *",
+          "git -P branch",
+          "git -P rev-parse *",
+          "git -P rev-parse",
+          "git -P merge-base *",
+          "git -P merge-base",
+          "git -P ls-files *",
+          "git -P ls-files",
+          "git -P ls-tree *",
+          "git -P ls-tree",
+          "git -P fetch *",
+          "git -P fetch",
+          "git -P tag *",
+          "git -P tag",
+          "git --no-pager status *",
+          "git --no-pager status",
+          "git --no-pager log *",
+          "git --no-pager log",
+          "git --no-pager diff *",
+          "git --no-pager diff",
+          "git --no-pager show *",
+          "git --no-pager show",
+          "git --no-pager blame *",
+          "git --no-pager blame",
+          "git --no-pager branch *",
+          "git --no-pager branch",
+          "git --no-pager rev-parse *",
+          "git --no-pager rev-parse",
+          "git --no-pager merge-base *",
+          "git --no-pager merge-base",
+          "git --no-pager ls-files *",
+          "git --no-pager ls-files",
+          "git --no-pager ls-tree *",
+          "git --no-pager ls-tree",
+          "git --no-pager fetch *",
+          "git --no-pager fetch",
+          "git --no-pager tag *",
+          "git --no-pager tag",
+          "git status *",
+          "git status",
+          "git log *",
+          "git log",
+          "git diff *",
+          "git diff",
+          "git show *",
+          "git show",
+          "git blame *",
+          "git blame",
+          "git branch *",
+          "git branch",
+          "git rev-parse *",
+          "git rev-parse",
+          "git merge-base *",
+          "git merge-base",
+          "git ls-files *",
+          "git ls-files",
+          "git ls-tree *",
+          "git ls-tree",
+          "git fetch *",
+          "git fetch",
+          "git tag *",
+          "git tag",
+          ".venv/bin/cfn-lint *",
+          ".venv/bin/cfn-lint",
+          ".venv/bin/python -m pytest *",
+          ".venv/bin/python -m pytest",
+          "ls *",
+          "ls",
+          "cat *",
+          "cat",
+          "head *",
+          "head",
+          "tail *",
+          "tail",
+          "wc *",
+          "wc",
+          "grep *",
+          "grep",
+          "find *",
+          "find",
+          "rg *",
+          "rg",
+          "diff *",
+          "diff",
+          "which *",
+          "which",
+          "pwd *",
+          "pwd",
+          "date *",
+          "date",
+          "echo *",
+          "echo",
+          "file *",
+          "file",
+          "mkdir -p /tmp/*"
+        ],
+        "effect": "allow"
+      },
+      {
+        "capability": "shell",
+        "match": [
+          "*git push*",
+          "*git reset --hard*",
+          "*git clean*",
+          "*git commit*",
+          "*gh issue create*",
+          "*gh pr create*",
+          "*gh pr merge*",
+          "*gh pr review*",
+          "*gh pr comment*",
+          "*gh pr edit*",
+          "*gh pr close*",
+          "*gh pr ready*",
+          "*gh api*",
+          "*gh label*",
+          "*rm -rf*",
+          "*sudo*"
+        ],
+        "effect": "deny"
+      },
+      {
+        "capability": "fs_write",
+        "match": [
+          "/tmp/**"
+        ],
+        "effect": "allow"
+      },
+      {
+        "capability": "fs_read",
+        "effect": "allow"
+      },
+      {
+        "capability": "web_fetch",
+        "effect": "allow"
+      },
+      {
+        "capability": "web_search",
+        "effect": "allow"
+      },
+      {
+        "capability": "skill",
+        "effect": "allow"
+      }
+    ],
+    "policies": [
+      "read-only-shell"
+    ]
+  },
+  "kiroUpgrade": {
+    "revision": 2,
+    "fingerprint": "sha256:525e383bf66a0a83912a7180e881b932a5d0798278ca88f0870d539ef757a094",
+    "source": "sha256:541c2c9f2d42034b80c54a4a67c512d966799b81612d34bbaf2ddae7599751d3"
+  }
 }

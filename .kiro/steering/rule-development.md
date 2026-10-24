@@ -112,8 +112,12 @@ Severity follows consequence, not confidence:
 
 ## Validation Approach
 
-1. **Prove the constraint.** Real templates first, then a live API probe, then
-   AWS docs. Never the base CFN schema alone.
+1. **Prove the constraint.** A real deployment first, then real templates known
+   to deploy, then a service-level API probe, then AWS docs. Never the base CFN
+   schema alone, and never `aws cloudformation validate-template` — it does not
+   invoke a resource provider, so it cannot establish a property constraint.
+   Then check whether the number is a soft account quota, which is never an
+   `E` — see [`../context/verification.md`](../context/verification.md).
 2. **Decide where it belongs** — this repo or enhanced-schemas.
 3. **Pick the simplest rule type** that expresses it.
 4. **Handle unresolvable values.** `Ref`, `GetAtt`, `Sub`, `Fn::If`, mappings
@@ -143,5 +147,6 @@ pre-commit run --all-files
 ## Documentation
 
 - Add the rule to `docs/rules.md`
-- Record the evidence for the constraint in the PR description, including
-  account, region, and date for any live probe
+- Record the evidence for the constraint in the PR description: account, region,
+  date and the verbatim error for a deployment; account, region and date for a
+  service API probe

@@ -507,7 +507,7 @@ ElasticLoadBalancer -> MyEC2Instance [key=0, source_paths="[\\"Properties\\", \\
             ),
             [{"IsUsEast1": False}],
         )
-        # an unknown condition name keeps the previous behavior
+        # an unknown resource name keeps the previous behavior
         self.assertEqual(
             template.is_resource_available(
                 ["Resources", "DependentTopic", "DependsOn"],
@@ -515,6 +515,8 @@ ElasticLoadBalancer -> MyEC2Instance [key=0, source_paths="[\\"Properties\\", \\
             ),
             [],
         )
+        # a condition the template does not define is not provably always true
+        self.assertFalse(template.conditions.is_always_true("NoSuchCondition"))
 
     def test_get_conditions_from_path(self):
         """Test is resource available"""

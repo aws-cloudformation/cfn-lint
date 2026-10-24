@@ -107,7 +107,7 @@ def write_db_cluster(results):
             continue
 
         engine_versions = sorted(results.get(engine).keys())
-        if engine == "aurora-mysql":
+        if engine in ("aurora-mysql", "mysql"):
             for engine_version in engine_versions.copy():
                 sub_engine_version = ".".join(engine_version.split(".")[0:2])
                 if sub_engine_version not in engine_versions:
@@ -219,7 +219,7 @@ def write_db_instance(results):
                 if major_engine_version not in engine_versions:
                     engine_versions.append(major_engine_version)
             engine_versions = sorted(engine_versions)
-        if engine == "aurora-mysql":
+        if engine in ("aurora-mysql", "mariadb", "mysql"):
             for engine_version in engine_versions.copy():
                 sub_engine_version = ".".join(engine_version.split(".")[0:2])
                 if sub_engine_version not in engine_versions:
