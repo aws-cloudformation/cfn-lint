@@ -65,7 +65,10 @@ class Sub(BaseFn):
         )
         for param in params:
             param = param.strip()
-            if "." in param:
+            # SAM generated resources (a function's Version/Alias) are modeled
+            # as synthetic resources whose logical id contains a "."
+            # (``MyFn.Version``), so ``${MyFn.Version}`` is a Ref, not a GetAtt.
+            if "." in param and param not in validator.context.resources:
                 if self._is_sam_stage_ref(param, validator):
                     continue
                 for err in validator.descend(
