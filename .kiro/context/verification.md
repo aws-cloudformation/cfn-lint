@@ -55,6 +55,28 @@ one rule. Confirmed: `-c E3717` on a template with an unrelated problem reports
 
 Informational rules are opt-in: `-c I`.
 
+### Testing a branch's code, not `main`'s
+
+The install is editable, so `.venv/bin/cfn-lint` resolves `cfnlint` through a
+`.pth` holding the **main checkout's** absolute `src` path. Run it from a
+worktree and you silently measure `main`. Point `PYTHONPATH` at the worktree and
+confirm before trusting the result:
+
+```shell
+PYTHONPATH=/path/to/worktree/src .venv/bin/python -c "import cfnlint; print(cfnlint.__file__)"
+```
+
+There is no `cfnlint/__main__.py`, so `python -m cfnlint` fails with
+`No module named cfnlint.__main__`. The entry point is `cfnlint.runner:main`.
+
+### Decoding a template in a scratch script
+
+`cfnlint.decode.decode(path)` returns `(template, matches)`.
+`cfnlint.decode.cfn_yaml.load(path)` returns the template dict **directly** — so
+unpacking it into two names raises `ValueError: too many values to unpack`, or,
+worse, silently hands you two top-level key *names* when the template happens to
+have exactly two keys.
+
 ## Running the tests
 
 ```shell
@@ -64,6 +86,19 @@ Informational rules are opt-in: `-c I`.
 
 `pyproject.toml` sets `addopts = ["-m not data"]`, so the slow data-driven
 tests are deselected by default. Add `-m data` to include them.
+
+### The `-m data` trap
+
+`test/integration/test_data_file_format.py` is `-m data`, so it never runs
+locally — but `.github/workflows/ci-pr-data.yaml` runs `tox -e py -- -m "data"`
+on any change under `src/cfnlint/data/**`. It asserts every tracked `.json`
+there equals `cfnlint.helpers.format_json_string`, which means **sorted keys**,
+`indent=1`, `", "` separators, and a trailing newline. A hand-edit that only
+reorders keys passes locally and fails CI.
+
+Running `-m data` locally may fail on a file you never touched: the downloaded
+`src/cfnlint/data/schemas/resources/*.json` are gitignored and arrive without a
+trailing newline. Read which file the assertion names before believing it.
 
 ## The full local gate, before pushing
 
@@ -114,6 +149,21 @@ Reproducing the bad case is half the job. The other half is proving silence.
 Step 3 is the false-positive net. A new rule that lights up the good fixtures
 is wrong, not the fixtures.
 
+### A scratch template needs alphanumeric names
+
+A logical ID or Output name containing `_` or `-` draws `E3001`/`E6001`
+(`does not match any of the regexes: '^[a-zA-Z0-9]+$'`), which masks the finding
+you are testing. Name scratch resources `MyBucket1`, not `my_bucket-1`.
+
+### A passing negative unit test is not proof
+
+`test/unit/conftest.py` builds its validator with `strict_types=True`, while the
+real paths evolve to `strict_types=False` (`rules/resources/Metadata.py:71`,
+`rules/outputs/Value.py:55`, `rules/resources/properties/Properties.py:87`).
+Confirmed: `"123"` against `{"type": "integer"}` errors under `strict_types=True`
+and passes under `False`. So a unit test can assert a type error that never
+fires in a real lint — always confirm a negative with a full `cfn-lint` run.
+
 ## Verifying an unreleased schema change
 
 To test an enhanced-schemas change before it ships, point cfn-lint at a locally
@@ -130,10 +180,58 @@ date is **newer** than the bundled one, or the local copy is ignored.
 
 When a constraint's value is in question, ranked by strength:
 
-1. **Real templates.** If templates that deploy use the value you would reject,
-   the constraint is wrong. Often beats an API probe.
-2. **A live API probe.** Record account, region, and date.
-3. **AWS docs.** Good for intent, frequently stale on numbers.
-4. **The base CFN schema.** A hint, never proof.
+1. **A real deployment.** `CreateStack`/`UpdateStack` succeeding on the value you
+   would reject disproves the constraint; failing with CloudFormation's own error
+   proves it. Record account, region, date, and the verbatim error.
+2. **Real templates known to deploy.** Often beats a probe, and costs nothing.
+3. **A service-level API probe** — `lambda CreateFunction`, `s3 CreateBucket`,
+   `rds CreateDBInstance`. Second-best: the service and the CloudFormation
+   provider do not always agree. Record account, region, and date.
+4. **AWS docs.** Good for intent, frequently stale on numbers.
+5. **The base CFN schema.** A hint, never proof.
+
+**`aws cloudformation validate-template` is NOT evidence** for a property-level
+constraint. It parses the template and checks template-level structure; it does
+not invoke a resource provider. Treat it as no stronger than documentation, and
+never cite it as a probe.
+
+### A free deployment probe for parameter constraints
+
+A parameter's `Default` is validated in the CloudFormation control plane
+**before any resource exists**, so a `create-stack` probe of a parameter
+constraint costs nothing and leaves nothing behind. Give the template the
+parameter under test and one `AWS::CloudFormation::WaitConditionHandle`:
+
+```yaml
+Parameters:
+  P:
+    Type: String
+    Default: true
+    AllowedValues: ["true", "false"]
+Resources:
+  W:
+    Type: AWS::CloudFormation::WaitConditionHandle
+```
+
+A rejection returns synchronously and creates no stack at all. An acceptance
+creates one free resource — delete the stack immediately. This covers the whole
+parameter-constraint family: `E2015`, `E2003` and their neighbours.
+
+Recorded us-east-1, 2026-10-23, seven cases: **CloudFormation renders a boolean
+`Default` lowercase.** `Default: true` deploys against
+`AllowedValues: ["true", "false"]`; against `["True", "False"]` it fails
+`Parameter 'P' must be one of AllowedValues`; against
+`AllowedPattern: ^(True|False)$` it fails `Parameter 'P' must match pattern
+^(True|False)$`. A `CommaDelimitedList` fails `Each value of parameter 'P' must
+be one of AllowedValues`. Three claims in the review of PR #4797 turned on that
+coercion model.
+
+Keep the account id in the PR description, not in this file — `.kiro/` ships in
+the public repo.
+
+When reading AWS docs, fetch the page with full-content mode — the default
+extraction truncates at ~8000 characters and can drop the property table you
+need. Appending `.md` to a `docs.aws.amazon.com` URL returns the markdown
+source, which is also truncated by the same default and mangles inline URLs.
 
 See `false-positives.md` for how this feeds severity and placement.
