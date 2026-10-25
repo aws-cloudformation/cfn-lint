@@ -11,7 +11,7 @@ from typing import List
 from cfnlint.config import ConfigMixIn, ManualArgs
 from cfnlint.decode.decode import decode_str
 from cfnlint.helpers import REGION_PRIMARY, REGIONS
-from cfnlint.rules import Match, RulesCollection
+from cfnlint.rules import Match, Rules, RulesCollection
 from cfnlint.runner import Runner, run_template_by_data
 
 Matches = List[Match]
@@ -19,7 +19,7 @@ Matches = List[Match]
 
 def lint(
     s: str,
-    rules: RulesCollection | None = None,
+    rules: Rules | RulesCollection | None = None,
     regions: list[str] | None = None,
     config: ManualArgs | None = None,
 ) -> list[Match]:
@@ -29,8 +29,9 @@ def lint(
     ----------
     s : str
         the template string
-    rules : RulesCollection
-        The rules to run against s
+    rules : Rules | RulesCollection
+        The rules to run against s. When omitted the full built-in rule set is
+        loaded for this call; pass a prebuilt collection to reuse it across calls.
     regions : list[str]
         The regions to test against s
 
@@ -56,7 +57,7 @@ def lint(
     else:
         config_mixin = ConfigMixIn(**config)
 
-    if isinstance(rules, RulesCollection):
+    if isinstance(rules, (Rules, RulesCollection)):
         return list(
             run_template_by_data(
                 template,
