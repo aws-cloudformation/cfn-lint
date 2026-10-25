@@ -136,6 +136,9 @@ class Rules(TypedRules):
             rule.initialize(cfn)
             if self.is_rule_enabled(rule_id, config):
                 enabled_rule_ids.add(rule_id)
+        # E0002 is emitted by run_check even when RuleError is not registered
+        if self.is_rule_enabled(RuleError(), config):
+            enabled_rule_ids.add(RuleError.id)
 
         for rule_id, rule in self.data.items():
             for key in rule.child_rules.keys():
