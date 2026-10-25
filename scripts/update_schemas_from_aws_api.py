@@ -376,6 +376,13 @@ def write_elasticache_engines(results):
             continue
 
         engine_versions = sorted(results.get(engine))
+        # ElastiCache resolves "6.x" to the latest Redis OSS 6 minor version
+        if (
+            engine == "redis"
+            and "6.x" not in engine_versions
+            and any(v.startswith("6.") for v in engine_versions)
+        ):
+            engine_versions.append("6.x")
         schema["allOf"].append(
             {
                 "if": {
