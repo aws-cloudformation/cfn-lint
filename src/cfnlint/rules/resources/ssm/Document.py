@@ -24,9 +24,17 @@ class Document(CfnLintJsonSchema):
     source_url = "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html"
     tags = ["properties", "ssm", "document"]
 
+    # Document types that hold AppConfig configuration data or a JSON Schema.
+    # Neither content format carries an SSM schemaVersion key, so the
+    # Automation document schema does not apply to them.
+    _APPCONFIG_DOCUMENT_TYPES = (
+        "ApplicationConfiguration",
+        "ApplicationConfigurationSchema",
+    )
+
     def __init__(self):
         super().__init__(
-            ["Resources/AWS::SSM::Document/Properties/Content"],
+            ["Resources/AWS::SSM::Document/Properties"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.other.ssm,
                 filename="document.json",
@@ -50,6 +58,18 @@ class Document(CfnLintJsonSchema):
         # First time child rules are configured against the rule
         # so we can run this now
 
+        # The rule is keyworded at Properties, so DocumentType and Content
+        # are both keys of the instance. AppConfig document types carry
+        # configuration data or a JSON Schema, neither of which has an
+        # SSM schemaVersion key, so they skip the Automation schema.
+        if not validator.is_type(instance, "object"):
+            return
+        if instance.get("DocumentType") in self._APPCONFIG_DOCUMENT_TYPES:
+            return
+        if "Content" not in instance:
+            return
+        instance = instance.get("Content")
+
         if validator.is_type(instance, "string"):
             ssm_validator = validator.evolve(
                 context=validator.context.evolve(
@@ -66,6 +86,7 @@ class Document(CfnLintJsonSchema):
                     f"Document is not valid ({errs[0].message!r})",
                     validator="type",
                     rule=self,
+                    path=["Content"],
                 )
                 return
         else:
@@ -81,4 +102,5 @@ class Document(CfnLintJsonSchema):
         for err in ssm_validator.iter_errors(instance):
             if not err.validator.startswith("fn_") and err.validator not in ["cfnLint"]:
                 err.rule = self
+            err.path.appendleft("Content")
             yield err
