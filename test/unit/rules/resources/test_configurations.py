@@ -57,7 +57,7 @@ class TestResourceConfiguration(BaseRuleTestCase):
                 {
                     "Function": {
                         "Type": "AWS::Serverless::Function",
-                        "Description": "Wrong level",
+                        "Handler": "Wrong level",
                         "Properties": {
                             "CodeUri": "src/",
                             "Handler": "app.handler",
@@ -74,7 +74,7 @@ class TestResourceConfiguration(BaseRuleTestCase):
         self.assertEqual(
             errors[0].message,
             "Additional resource properties are ignored by the SAM transform "
-            "('Description' was unexpected)",
+            "('Handler' was unexpected)",
         )
 
     def test_standard_resource_additional_properties_are_errors(self):
@@ -87,7 +87,7 @@ class TestResourceConfiguration(BaseRuleTestCase):
                 {
                     "Bucket": {
                         "Type": "AWS::S3::Bucket",
-                        "Description": "Wrong level",
+                        "Comment": "Wrong level",
                         "Properties": {},
                     }
                 },
@@ -195,7 +195,7 @@ class TestResourceConfiguration(BaseRuleTestCase):
                 {
                     "Function": {
                         "Type": "AWS::Serverless::Function",
-                        "Description": "Wrong level",
+                        "Timeout": 3,
                         "Handler": "Also wrong level",
                         "Runtime": "python3.12",
                         "Properties": {
@@ -229,7 +229,7 @@ class TestResourceConfiguration(BaseRuleTestCase):
                 {
                     "Api": {
                         "Type": "AWS::Serverless::Api",
-                        "Description": "Wrong level",
+                        "Name": "Wrong level",
                         "Properties": {
                             "StageName": "prod",
                         },
@@ -250,7 +250,7 @@ class TestResourceConfiguration(BaseRuleTestCase):
                 {
                     "StateMachine": {
                         "Type": "AWS::Serverless::StateMachine",
-                        "Description": "Wrong level",
+                        "Name": "Wrong level",
                         "Properties": {
                             "Definition": {},
                         },
@@ -271,7 +271,7 @@ class TestResourceConfiguration(BaseRuleTestCase):
                 {
                     "Table": {
                         "Type": "AWS::Serverless::SimpleTable",
-                        "Description": "Wrong level",
+                        "Name": "Wrong level",
                         "Properties": {},
                     }
                 },
@@ -339,3 +339,48 @@ class TestResourceConfiguration(BaseRuleTestCase):
             errors[0].message,
         )
         self.assertIn("Did you mean", errors[0].message)
+
+    def test_resource_level_description(self):
+        """A string resource-level Description is accepted, anything else is E3001."""
+        validator = CfnTemplateValidator({})
+
+        errors = list(
+            self.rule.validate(
+                validator,
+                "cfnResources",
+                {
+                    "Handle": {
+                        "Type": "AWS::CloudFormation::WaitConditionHandle",
+                        "Description": "resource level description",
+                    },
+                    "Topic": {
+                        "Type": "AWS::SNS::Topic",
+                        "Description": "resource level description",
+                        "Properties": {},
+                    },
+                },
+                {},
+            )
+        )
+
+        self.assertListEqual(errors, [], errors)
+
+        errors = list(
+            self.rule.validate(
+                validator,
+                "cfnResources",
+                {
+                    "Topic": {
+                        "Type": "AWS::SNS::Topic",
+                        "Description": ["resource level description"],
+                        "Properties": {},
+                    }
+                },
+                {},
+            )
+        )
+
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0].rule.id, "E3001")
+        self.assertEqual(errors[0].validator, "type")
+        self.assertEqual(list(errors[0].path), ["Topic", "Description"])
