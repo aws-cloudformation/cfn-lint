@@ -68,7 +68,7 @@ def rule():
                     rule=Document(),
                     validator="type",
                     schema_path=deque(["properties", "schemaVersion", "type"]),
-                    path=deque(["schemaVersion"]),
+                    path=deque(["Content", "schemaVersion"]),
                 )
             ],
         ),
@@ -82,7 +82,7 @@ def rule():
                     rule=Document(),
                     validator="type",
                     schema_path=deque(["type"]),
-                    path=deque([]),
+                    path=deque(["Content"]),
                 )
             ],
         ),
@@ -100,7 +100,7 @@ def rule():
                     rule=Document(),
                     validator="type",
                     schema_path=deque(["properties", "schemaVersion", "type"]),
-                    path=deque(["schemaVersion"]),
+                    path=deque(["Content", "schemaVersion"]),
                 )
             ],
         ),
@@ -113,7 +113,7 @@ def rule():
                     rule=Document(),
                     validator="type",
                     schema_path=deque(["type"]),
-                    path=deque([]),
+                    path=deque(["Content"]),
                 )
             ],
         ),
@@ -126,7 +126,10 @@ def test_validate(
     rule,
     validator,
 ):
-    errs = list(rule.validate(validator, {}, document, {}))
+    # The rule is keyworded at Properties, so the instance is the
+    # Properties object and Content is one of its keys.
+    properties = {"DocumentType": "Automation", "Content": document}
+    errs = list(rule.validate(validator, {}, properties, {}))
 
     assert errs == expected
 
@@ -195,17 +198,47 @@ def test_validate_document_type_scoping(
     validator,
 ):
     """E3051 skips AppConfig document types but still validates the rest"""
-    content = validator.cfn.template["Resources"][resource_name]["Properties"][
-        "Content"
-    ]
+    properties = validator.cfn.template["Resources"][resource_name]["Properties"]
     validator = validator.evolve(
         context=validator.context.evolve(
-            path=Path(path=deque(["Resources", resource_name, "Properties", "Content"]))
+            path=Path(path=deque(["Resources", resource_name, "Properties"]))
         )
     )
-    errs = list(rule.validate(validator, {}, content, {}))
+    errs = list(rule.validate(validator, {}, properties, {}))
 
     assert len(errs) == expected_count, f"{resource_name} got {errs!r}"
+
+
+@pytest.mark.parametrize(
+    "document_type",
+    [
+        "ApplicationConfiguration",
+        "ApplicationConfigurationSchema",
+    ],
+)
+def test_validate_appconfig_string_content(document_type, rule, validator):
+    """E3051 skips string Content on AppConfig types before decoding it"""
+    properties = {
+        "DocumentType": document_type,
+        "Content": "featureEnabled: true",
+    }
+    errs = list(rule.validate(validator, {}, properties, {}))
+
+    assert errs == []
+
+
+def test_validate_command_without_schema_version(rule, validator):
+    """A Command document without schemaVersion is still flagged,
+    proving the AppConfig exemption is narrow rather than broad"""
+    properties = {
+        "DocumentType": "Command",
+        "Content": {"description": "no schemaVersion"},
+    }
+    errs = list(rule.validate(validator, {}, properties, {}))
+
+    assert len(errs) == 1
+    assert errs[0].message == "'schemaVersion' is a required property"
+    assert errs[0].path == deque(["Content"])
 
 
 def test_validate_by_py_version(rule, validator):
@@ -226,10 +259,11 @@ def test_validate_by_py_version(rule, validator):
             rule=Document(),
             validator="type",
             schema_path=deque([]),
-            path=deque([]),
+            path=deque(["Content"]),
         )
     ]
 
-    errs = list(rule.validate(validator, {}, document, {}))
+    properties = {"DocumentType": "Automation", "Content": document}
+    errs = list(rule.validate(validator, {}, properties, {}))
 
     assert errs == expected

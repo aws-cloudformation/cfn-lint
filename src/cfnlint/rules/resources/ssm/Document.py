@@ -32,26 +32,9 @@ class Document(CfnLintJsonSchema):
         "ApplicationConfigurationSchema",
     )
 
-    def _is_appconfig_document(self, validator: Validator) -> bool:
-        """Check if the validated Content belongs to an AppConfig document type"""
-        cfn = validator.cfn
-        if cfn is None:
-            return False
-        path = list(validator.context.path.path)
-        if len(path) < 2 or path[0] != "Resources" or not isinstance(path[1], str):
-            return False
-        resource = cfn.template.get("Resources", {}).get(path[1], {})
-        if not isinstance(resource, dict):
-            return False
-        properties = resource.get("Properties", {})
-        if not isinstance(properties, dict):
-            return False
-        # only a plain string is conclusive; an intrinsic keeps current behavior
-        return properties.get("DocumentType") in self._APPCONFIG_DOCUMENT_TYPES
-
     def __init__(self):
         super().__init__(
-            ["Resources/AWS::SSM::Document/Properties/Content"],
+            ["Resources/AWS::SSM::Document/Properties"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.other.ssm,
                 filename="document.json",
@@ -75,10 +58,17 @@ class Document(CfnLintJsonSchema):
         # First time child rules are configured against the rule
         # so we can run this now
 
-        # AppConfig document types carry configuration data or a JSON Schema,
-        # neither of which has an SSM schemaVersion key
-        if self._is_appconfig_document(validator):
+        # The rule is keyworded at Properties, so DocumentType and Content
+        # are both keys of the instance. AppConfig document types carry
+        # configuration data or a JSON Schema, neither of which has an
+        # SSM schemaVersion key, so they skip the Automation schema.
+        if not validator.is_type(instance, "object"):
             return
+        if instance.get("DocumentType") in self._APPCONFIG_DOCUMENT_TYPES:
+            return
+        if "Content" not in instance:
+            return
+        instance = instance.get("Content")
 
         if validator.is_type(instance, "string"):
             ssm_validator = validator.evolve(
@@ -96,6 +86,7 @@ class Document(CfnLintJsonSchema):
                     f"Document is not valid ({errs[0].message!r})",
                     validator="type",
                     rule=self,
+                    path=["Content"],
                 )
                 return
         else:
@@ -111,4 +102,5 @@ class Document(CfnLintJsonSchema):
         for err in ssm_validator.iter_errors(instance):
             if not err.validator.startswith("fn_") and err.validator not in ["cfnLint"]:
                 err.rule = self
+            err.path.appendleft("Content")
             yield err
