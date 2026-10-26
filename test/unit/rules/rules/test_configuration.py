@@ -46,7 +46,7 @@ def rule():
                 ValidationError(
                     "[] is not of type 'object'",
                     validator="type",
-                    schema_path=deque(["patternProperties", "^[A-Za-z0-9]+$", "type"]),
+                    schema_path=deque(["additionalProperties", "type"]),
                     path=deque(["Rule1"]),
                     rule=Configuration(),
                 )
@@ -61,13 +61,20 @@ def rule():
                 ValidationError(
                     "'Assertions' is a required property",
                     validator="required",
-                    schema_path=deque(
-                        ["patternProperties", "^[A-Za-z0-9]+$", "required"]
-                    ),
+                    schema_path=deque(["additionalProperties", "required"]),
                     path=deque(["Rule1"]),
                     rule=Configuration(),
                 )
             ],
+        ),
+        (
+            "Rule names with characters other than letters and digits",
+            {
+                "Env_Check": {"Assertions": [{"Assert": {"Fn::Equals": ["a", "a"]}}]},
+                "Env-Check": {"Assertions": [{"Assert": {"Fn::Equals": ["a", "a"]}}]},
+                "Env.Check": {"Assertions": [{"Assert": {"Fn::Equals": ["a", "a"]}}]},
+            },
+            [],
         ),
         (
             "Valid rule with RuleCondition and Assertions",
