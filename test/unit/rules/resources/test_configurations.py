@@ -384,3 +384,35 @@ class TestResourceConfiguration(BaseRuleTestCase):
         self.assertEqual(errors[0].rule.id, "E3001")
         self.assertEqual(errors[0].validator, "type")
         self.assertEqual(list(errors[0].path), ["Topic", "Description"])
+
+    def test_serverless_resource_level_description_no_warning(self):
+        """A string resource-level Description on a SAM resource must not warn.
+
+        W3001 exists for resource-level keys that only deploy because the SAM
+        transform strips them. Description is not one of those: CloudFormation
+        itself accepts, type-checks and then discards a resource-level
+        Description on every resource type, so it is valid CloudFormation and
+        neither W3001 nor E3001 applies.
+        """
+        validator = CfnTemplateValidator({})
+
+        errors = list(
+            self.rule.validate(
+                validator,
+                "cfnResources",
+                {
+                    "Function": {
+                        "Type": "AWS::Serverless::Function",
+                        "Description": "resource level description",
+                        "Properties": {
+                            "CodeUri": "src/",
+                            "Handler": "app.handler",
+                            "Runtime": "python3.12",
+                        },
+                    }
+                },
+                {},
+            )
+        )
+
+        self.assertListEqual(errors, [], errors)
