@@ -279,7 +279,9 @@ LIMITS: dict[str, Any] = {
         "value": 4096,  # in bytes
     },
     "Resources": {"number": 500, "name": 255},  # in characters
-    "template": {"body": 1000000},  # in bytes  # in bytes
+    # in bytes. "body" is the limit for a template read from S3, "inline_body"
+    # for a template passed in the TemplateBody request parameter
+    "template": {"body": 1000000, "inline_body": 51200},
     "threshold": 0.9,  # for rules about approaching the other limit values
 }
 
