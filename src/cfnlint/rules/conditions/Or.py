@@ -14,7 +14,7 @@ class Or(BaseFn):
 
     id = "E8006"
     shortdesc = "Check Fn::Or structure for validity"
-    description = "Check Fn::Or is a list of two elements"
+    description = "Check Fn::Or is a list of two to ten elements"
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-or"
     tags = ["functions", "or"]
 
