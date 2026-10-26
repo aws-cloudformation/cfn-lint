@@ -190,10 +190,20 @@ When a constraint's value is in question, ranked by strength:
 4. **AWS docs.** Good for intent, frequently stale on numbers.
 5. **The base CFN schema.** A hint, never proof.
 
-**`aws cloudformation validate-template` is NOT evidence** for a property-level
-constraint. It parses the template and checks template-level structure; it does
-not invoke a resource provider. Treat it as no stronger than documentation, and
-never cite it as a probe.
+**`aws cloudformation validate-template` is scoped to the control plane.** It
+parses the template and checks template-level structure, invoking no resource
+provider. So for anything a provider owns — property values, limits, enums,
+cross-property rules — it proves nothing: treat it as no stronger than
+documentation and never cite it as a probe. For what the control plane itself
+parses — parameter types, section structure, logical ID and name rules,
+intrinsic function shape, template size — it returns the same error
+`CreateStack` does, and it is free and leaves nothing behind.
+
+Recorded us-east-1, 2026-10-26: a parameter of
+`Type: List<AWS::SSM::Parameter::Value<String>>` draws `Template format error:
+List of AWS::SSM::Parameter::Value is not supported.` from `validate-template`
+and from `create-stack` alike, and no stack is created. Issue #4854 turned on
+that equivalence.
 
 ### A free deployment probe for parameter constraints
 

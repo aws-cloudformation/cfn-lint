@@ -76,13 +76,13 @@ Evidence, strongest first:
 4. **AWS documentation.** Good for intent, frequently stale on exact numbers.
 5. **The base CFN resource schema.** Weakest. A hint, never proof.
 
-**`aws cloudformation validate-template` is NOT evidence** for a property-level
-constraint. It parses the template and checks template-level structure; it does
-not invoke a resource provider, so for most rules it proves nothing, and where
-it does respond it may be stricter or looser than `CreateStack`. A constraint can
-only be established by a deployment or by the owning service's API. Treat a
-`validate-template` result as no stronger than documentation, and never cite it
-as a probe.
+**`aws cloudformation validate-template` is not evidence for a property-level
+constraint.** It invokes no resource provider, so a property value, limit, enum
+or cross-property rule can only be established by a deployment or by the owning
+service's API — never cite `validate-template` as a probe for one. It *is*
+evidence for what the control plane itself parses: parameter types, section
+structure, name rules, intrinsic function shape, template size. For those it
+returns the same error `CreateStack` does — see `verification.md`.
 
 For a parameter constraint a deployment is free, because `Default` is validated
 before any resource exists — see the parameter probe in `verification.md`.
