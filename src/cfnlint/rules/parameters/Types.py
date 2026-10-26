@@ -40,7 +40,10 @@ class Types(CfnLintKeyword):
         if instance.startswith(("AWS::SSM::Parameter::Value<", "List<")):
             base_type = instance
             while True:
-                if (\n                    base_type.startswith("AWS::SSM::Parameter::Value<")\n                    and base_type.endswith(">")\n                ):
+                if (
+                    base_type.startswith("AWS::SSM::Parameter::Value<")
+                    and base_type.endswith(">")
+                ):
                     base_type = base_type[len("AWS::SSM::Parameter::Value<") : -1]
                 elif base_type.startswith("List<") and base_type.endswith(">"):
                     base_type = base_type[len("List<") : -1]
