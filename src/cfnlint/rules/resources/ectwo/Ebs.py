@@ -7,10 +7,17 @@ from __future__ import annotations
 
 from typing import Any
 
+import cfnlint.data.schemas.extensions.aws_autoscaling_launchconfiguration
 import cfnlint.data.schemas.extensions.aws_ec2_instance
 import cfnlint.data.schemas.extensions.aws_ec2_securitygroup
-from cfnlint.jsonschema import ValidationError
-from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
+from cfnlint.helpers import load_resource
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
+
+_launch_configuration = (
+    "Resources/AWS::AutoScaling::LaunchConfiguration"
+    "/Properties/BlockDeviceMappings/*/Ebs"
+)
 
 
 class Ebs(CfnLintJsonSchema):
@@ -22,16 +29,18 @@ class Ebs(CfnLintJsonSchema):
     def __init__(self) -> None:
         super().__init__(
             keywords=[
-                "Resources/AWS::AutoScaling::LaunchConfiguration/Properties/BlockDeviceMappings/*/Ebs",
+                _launch_configuration,
                 "Resources/AWS::EC2::Instance/Properties/BlockDeviceMappings/*/Ebs",
-                "Resources/AWS::EC2::LaunchTemplate/Properties/LaunchTemplateData/BlockDeviceMappings/*/Ebs",
-                "Resources/AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/LaunchSpecifications/*/BlockDeviceMappings/*/Ebs",
-                "Resources/AWS::OpsWorks::Instance/Properties/BlockDeviceMappings/*/Ebs",
             ],
-            schema_details=SchemaDetails(
-                module=cfnlint.data.schemas.extensions.aws_ec2_instance,
-                filename="blockdevicemappings.json",
-            ),
+        )
+        self._schema = load_resource(
+            cfnlint.data.schemas.extensions.aws_ec2_instance,
+            filename="blockdevicemappings.json",
+        )
+        # Auto Scaling allows a lower gp3 Iops maximum than EC2 does
+        self._launch_configuration_schema = load_resource(
+            cfnlint.data.schemas.extensions.aws_autoscaling_launchconfiguration,
+            filename="blockdevicemappings.json",
         )
 
     def message(self, instance: Any, err: ValidationError) -> str:
@@ -42,3 +51,13 @@ class Ebs(CfnLintJsonSchema):
             "'Iops' is a required property when 'VolumeType' has a value "
             f"of {instance.get('VolumeType')!r}"
         )
+
+    def validate(
+        self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
+    ) -> ValidationResult:
+        if keywords == _launch_configuration:
+            schema = self._launch_configuration_schema
+        else:
+            schema = self._schema
+
+        yield from super().validate(validator, keywords, instance, schema)

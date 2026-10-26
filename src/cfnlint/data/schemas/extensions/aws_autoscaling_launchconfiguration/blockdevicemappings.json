@@ -1,0 +1,73 @@
+{
+ "allOf": [
+  {
+   "if": {
+    "properties": {
+     "VolumeType": {
+      "const": "io1",
+      "type": "string"
+     }
+    },
+    "required": [
+     "VolumeType"
+    ]
+   },
+   "then": {
+    "properties": {
+     "Iops": {
+      "maximum": 64000,
+      "minimum": 100
+     }
+    },
+    "required": [
+     "Iops"
+    ]
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "VolumeType": {
+      "const": "io2",
+      "type": "string"
+     }
+    },
+    "required": [
+     "VolumeType"
+    ]
+   },
+   "then": {
+    "properties": {
+     "Iops": {
+      "maximum": 256000,
+      "minimum": 100
+     }
+    },
+    "required": [
+     "Iops"
+    ]
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "VolumeType": {
+      "const": "gp3",
+      "type": "string"
+     }
+    },
+    "required": [
+     "VolumeType"
+    ]
+   },
+   "then": {
+    "properties": {
+     "Iops": {
+      "maximum": 16000,
+      "minimum": 3000
+     }
+    }
+   }
+  }
+ ]
+}
