@@ -121,6 +121,155 @@ class CircularDependency(CloudFormationLintRule):
                 graph.graph.remove_edge(source, target, key)
         return graph
 
+    def _edge_condition_requirements(
+        self, cfn: Template, graph: Graph, source: str, target: str, key: int
+    ) -> dict[str, set[bool]]:
+        """Conditions under which a graph edge can exist.
+
+        An edge exists only in scenarios where the source resource exists
+        (its `Condition`, when set, is True) and every `Fn::If` branch on
+        the path to the reference is taken. The returned dict maps each
+        condition name to the set of values it must take; an empty set
+        means the edge can never exist.
+        """
+        data = graph.graph.get_edge_data(source, target, key) or {}
+        source_paths = data.get("source_paths", [])
+        if not isinstance(source_paths, list):
+            source_paths = []
+        path = ["Resources", source] + list(source_paths)
+        try:
+            requirements = cfn.get_conditions_from_path(cfn.template, path)
+        except Exception:  # pylint: disable=broad-exception-caught
+            # A malformed path (for example a non-string condition name)
+            # must not break the rule: treat the edge as unconditional.
+            return {}
+        requirements = {
+            name: set(values)
+            for name, values in requirements.items()
+            if isinstance(name, str)
+        }
+        # The edge also requires the target resource to exist. When the
+        # target carries a `Condition`, that condition must be True.
+        target_values = cfn.template.get("Resources", {}).get(target, {})
+        if isinstance(target_values, dict):
+            target_condition = target_values.get("Condition")
+            if isinstance(target_condition, str):
+                requirements[target_condition] = requirements.get(
+                    target_condition, {True, False}
+                ) & {True}
+        return requirements
+
+    def _requirements_satisfiable(
+        self, cfn: Template, requirements_list: list[dict[str, set[bool]]]
+    ) -> bool:
+        """Whether one scenario satisfies every requirement in the list.
+
+        Requirements combine by intersection: a cycle exists only in a
+        scenario where all of its edges exist at once, so a condition
+        forced both True and False (for example two edges on mutually
+        exclusive `Fn::If` branches) makes the cycle impossible. The
+        check is region aware: a condition that compares `AWS::Region`
+        against a value can only hold in the matching region, so a
+        cycle is kept when it is realizable in at least one of the
+        regions being linted.
+        """
+        combined: dict[str, set[bool]] = {}
+        for requirements in requirements_list:
+            for name, values in requirements.items():
+                if name in combined:
+                    combined[name] = combined[name] & set(values)
+                else:
+                    combined[name] = set(values)
+        if any(not values for values in combined.values()):
+            return False
+        if not combined:
+            return True
+        # The conditions engine cannot reason about unknown condition
+        # names, so keep the cycle rather than risk hiding a real one.
+        if any(cfn.conditions.get(name) is None for name in combined):
+            return True
+        for region in cfn.regions:
+            narrowed: dict[str, set[bool]] = {}
+            feasible = True
+            for name, values in combined.items():
+                possible = set(cfn.conditions.build_scenerios_on_region(name, region))
+                narrowed[name] = possible & values
+                if not narrowed[name]:
+                    feasible = False
+                    break
+            if not feasible:
+                continue
+            if any(True for _ in cfn.conditions.build_scenarios(narrowed)):
+                return True
+        return False
+
+    def _edge_in_realizable_cycle(
+        self, cfn: Template, graph: Graph, source: str, target: str, key: int
+    ) -> bool:
+        """Whether an edge belongs to a cycle that can actually occur.
+
+        Searches for a path back from the target to the source whose
+        edges, together with the edge itself, admit at least one
+        scenario. Branches whose requirements already contradict are
+        pruned. If the search grows beyond its caps, the edge is kept:
+        an uncertain cycle is reported, never silently dropped.
+        """
+        edge_requirements = self._edge_condition_requirements(
+            cfn, graph, source, target, key
+        )
+        if source == target:
+            return self._requirements_satisfiable(cfn, [edge_requirements])
+
+        requirements_cache: dict[tuple[str, str, int], dict[str, set[bool]]] = {}
+
+        def requirements_for(from_node: str, to_node: str, edge_key: int):
+            cache_key = (from_node, to_node, edge_key)
+            if cache_key not in requirements_cache:
+                requirements_cache[cache_key] = self._edge_condition_requirements(
+                    cfn, graph, from_node, to_node, edge_key
+                )
+            return requirements_cache[cache_key]
+
+        def contradicts(requirements_list: list[dict[str, set[bool]]]) -> bool:
+            combined: dict[str, set[bool]] = {}
+            for requirements in requirements_list:
+                for name, values in requirements.items():
+                    if name in combined:
+                        combined[name] = combined[name] & set(values)
+                    else:
+                        combined[name] = set(values)
+            return any(not values for values in combined.values())
+
+        steps = 0
+        checks = 0
+        # Stack entries: current node, requirements along the path so
+        # far (including the reported edge), nodes already on the path.
+        stack: list[tuple[str, list[dict[str, set[bool]]], frozenset[str]]] = [
+            (target, [edge_requirements], frozenset({target}))
+        ]
+        while stack:
+            node, path_requirements, visited = stack.pop()
+            steps += 1
+            if steps > 10000 or checks > 200:
+                return True
+            for _, neighbor, edge_key in graph.graph.out_edges(node, keys=True):
+                if graph.graph.nodes[neighbor].get("type") != "Resource":
+                    continue
+                new_requirements = path_requirements + [
+                    requirements_for(node, neighbor, edge_key)
+                ]
+                if contradicts(new_requirements):
+                    continue
+                if neighbor == source:
+                    checks += 1
+                    if self._requirements_satisfiable(cfn, new_requirements):
+                        return True
+                    continue
+                if neighbor in visited:
+                    continue
+                stack.append((neighbor, new_requirements, visited | {neighbor}))
+        return False
+
     def match(self, cfn: Template) -> RuleMatches:
         matches = []
 
@@ -130,8 +279,16 @@ class CircularDependency(CloudFormationLintRule):
         for cycle in graph.get_cycles(cfn):
             source, target = cycle[:2]
             if (
-                cfn.graph.graph.nodes[source].get("type") == "Resource"
-                and cfn.graph.graph.nodes[target].get("type") == "Resource"
+                graph.graph.nodes[source].get("type") == "Resource"
+                and graph.graph.nodes[target].get("type") == "Resource"
+                # A cycle through `Fn::If` branches or `Condition`-gated
+                # resources that can never coexist is not a cycle.
+                and (
+                    len(cycle) <= 2
+                    or self._edge_in_realizable_cycle(
+                        cfn, graph, source, target, cycle[2]
+                    )
+                )
             ):
                 message = (
                     f"Circular Dependencies for resource {source}. Circular dependency"
