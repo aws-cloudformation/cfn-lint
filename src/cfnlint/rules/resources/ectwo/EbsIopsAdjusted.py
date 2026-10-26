@@ -7,14 +7,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
-from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
-
-_gp3_baseline_iops = 3000
-_gp3_minimum_iops = 100
+import cfnlint.data.schemas.extensions.aws_ec2_instance
+from cfnlint.jsonschema import ValidationError
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
-class EbsIopsAdjusted(CfnLintKeyword):
+class EbsIopsAdjusted(CfnLintJsonSchema):
     id = "W3673"
     shortdesc = "Iops below the gp3 baseline is raised rather than rejected"
     description = (
@@ -27,37 +25,17 @@ class EbsIopsAdjusted(CfnLintKeyword):
 
     def __init__(self) -> None:
         super().__init__(
-            [
+            keywords=[
                 "Resources/AWS::EC2::Instance/Properties/BlockDeviceMappings/*/Ebs",
-            ]
+            ],
+            schema_details=SchemaDetails(
+                module=cfnlint.data.schemas.extensions.aws_ec2_instance,
+                filename="blockdevicemappings_gp3_iops.json",
+            ),
         )
 
-    def validate(
-        self, validator: Validator, _: Any, instance: Any, schema: dict[str, Any]
-    ) -> ValidationResult:
-        if not isinstance(instance, dict):
-            return
-
-        volume_type = instance.get("VolumeType")
-        if not isinstance(volume_type, str) or volume_type.lower() != "gp3":
-            return
-
-        iops = instance.get("Iops")
-        # a bool is an int in Python, and a non scalar is an unresolved
-        # function that this rule cannot speak to
-        if isinstance(iops, bool) or not isinstance(iops, (int, str)):
-            return
-
-        try:
-            iops = int(iops)
-        except ValueError:
-            return
-
-        # below the minimum the volume is rejected outright, and E3671
-        # already reports that
-        if _gp3_minimum_iops <= iops < _gp3_baseline_iops:
-            yield ValidationError(
-                f"'Iops' of {iops} is raised to {_gp3_baseline_iops} for "
-                f"'VolumeType' {volume_type!r}",
-                path=["Iops"],
-            )
+    def message(self, instance: Any, err: ValidationError) -> str:
+        return (
+            f"'Iops' of {instance.get('Iops')} is raised to 3000 for "
+            f"'VolumeType' {instance.get('VolumeType')!r}"
+        )

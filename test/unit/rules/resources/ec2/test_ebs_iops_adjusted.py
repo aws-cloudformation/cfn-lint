@@ -10,6 +10,23 @@ import pytest
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.ectwo.EbsIopsAdjusted import EbsIopsAdjusted
 
+_not = {"exclusiveMaximum": 3000, "minimum": 100, "type": "number"}
+
+
+def _expected(iops):
+    return [
+        ValidationError(
+            f"'Iops' of {iops} is raised to 3000 for 'VolumeType' 'gp3'",
+            rule=EbsIopsAdjusted(),
+            path=deque(["Iops"]),
+            validator="not",
+            validator_value=_not,
+            instance=iops,
+            schema={"not": _not},
+            schema_path=deque(["then", "properties", "Iops", "not"]),
+        )
+    ]
+
 
 @pytest.fixture(scope="module")
 def rule():
@@ -34,8 +51,8 @@ def rule():
             {"VolumeType": "gp3", "Iops": 80000},
             [],
         ),
-        # below the gp3 minimum the volume is rejected, not adjusted,
-        # and E3671 reports that
+        # below the gp3 minimum the volume is rejected rather than
+        # adjusted, and E3671 reports that
         (
             {"VolumeType": "gp3", "Iops": 99},
             [],
@@ -59,6 +76,12 @@ def rule():
         ),
         (
             {"Iops": 2999},
+            [],
+        ),
+        # 'VolumeType' is a case sensitive enum, so a mismatched case is
+        # already an E3030 and must not also draw this warning
+        (
+            {"VolumeType": "GP3", "Iops": 2999},
             [],
         ),
         # unresolved functions on the value
@@ -100,46 +123,33 @@ def rule():
             [],
         ),
         (
+            {"VolumeType": "gp3", "Iops": {}},
+            [],
+        ),
+        (
             {"VolumeType": "gp3", "Iops": "three thousand"},
+            [],
+        ),
+        (
+            {"VolumeType": "gp3", "Iops": None},
+            [],
+        ),
+        (
+            {"VolumeType": "gp3", "Iops": True},
             [],
         ),
         # the value is adjusted
         (
             {"VolumeType": "gp3", "Iops": 2999},
-            [
-                ValidationError(
-                    "'Iops' of 2999 is raised to 3000 for 'VolumeType' 'gp3'",
-                    path=deque(["Iops"]),
-                )
-            ],
+            _expected(2999),
         ),
         (
             {"VolumeType": "gp3", "Iops": 100},
-            [
-                ValidationError(
-                    "'Iops' of 100 is raised to 3000 for 'VolumeType' 'gp3'",
-                    path=deque(["Iops"]),
-                )
-            ],
-        ),
-        # CloudFormation converts a string to the number it represents
-        (
-            {"VolumeType": "gp3", "Iops": "2999"},
-            [
-                ValidationError(
-                    "'Iops' of 2999 is raised to 3000 for 'VolumeType' 'gp3'",
-                    path=deque(["Iops"]),
-                )
-            ],
+            _expected(100),
         ),
         (
-            {"VolumeType": "GP3", "Iops": 2999},
-            [
-                ValidationError(
-                    "'Iops' of 2999 is raised to 3000 for 'VolumeType' 'GP3'",
-                    path=deque(["Iops"]),
-                )
-            ],
+            {"VolumeType": "gp3", "Iops": 2999, "VolumeSize": 100},
+            _expected(2999),
         ),
     ],
 )
