@@ -116,6 +116,55 @@ def rule():
                 )
             ],
         ),
+        # gp3 below 3000 is clamped up by EC2, not rejected, so the floor
+        # on this path is 100 (the value the service itself reports)
+        (
+            {
+                "VolumeType": "gp3",
+                "Iops": 2999,
+            },
+            [],
+        ),
+        (
+            {
+                "VolumeType": "gp3",
+                "Iops": 100,
+            },
+            [],
+        ),
+        (
+            {
+                "VolumeType": "gp3",
+            },
+            [],
+        ),
+        (
+            {
+                "VolumeType": "gp3",
+                "Iops": {"Ref": "MyParameter"},
+            },
+            [],
+        ),
+        (
+            {
+                "VolumeType": "gp3",
+                "Iops": 99,
+            },
+            [
+                ValidationError(
+                    "99 is less than the minimum of 100",
+                    rule=Ebs(),
+                    path=deque(["Iops"]),
+                    validator="minimum",
+                    validator_value=100,
+                    instance=99,
+                    schema={"minimum": 100, "maximum": 80000},
+                    schema_path=deque(
+                        ["allOf", 2, "then", "properties", "Iops", "minimum"]
+                    ),
+                )
+            ],
+        ),
     ],
 )
 def test_backup_lifecycle(instance, expected, rule, validator):
@@ -150,6 +199,29 @@ def test_backup_lifecycle(instance, expected, rule, validator):
                     schema={"minimum": 3000, "maximum": 16000},
                     schema_path=deque(
                         ["allOf", 2, "then", "properties", "Iops", "maximum"]
+                    ),
+                )
+            ],
+        ),
+        # Auto Scaling genuinely rejects gp3 below 3000 with
+        # "GP3 volumes must have between 3000 and 16000 IOPS.", so this
+        # path keeps the 3000 floor the EC2 instance path drops
+        (
+            {
+                "VolumeType": "gp3",
+                "Iops": 2999,
+            },
+            [
+                ValidationError(
+                    "2999 is less than the minimum of 3000",
+                    rule=Ebs(),
+                    path=deque(["Iops"]),
+                    validator="minimum",
+                    validator_value=3000,
+                    instance=2999,
+                    schema={"minimum": 3000, "maximum": 16000},
+                    schema_path=deque(
+                        ["allOf", 2, "then", "properties", "Iops", "minimum"]
                     ),
                 )
             ],
