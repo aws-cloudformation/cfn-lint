@@ -100,3 +100,24 @@ def test_validate(instance, expected, rule, validator, schema):
     rule._schema = schema
     errs = list(rule.validate(validator, "", instance, {}))
     assert errs == expected, f"Expected {expected} got {errs}"
+
+
+@pytest.mark.parametrize(
+    "instance,expected_count",
+    [
+        # https://github.com/aws-cloudformation/cfn-lint/issues/4840
+        # A shortened prefix is only deprecated when no available version
+        # remains under it. RDS still resolves these to available releases.
+        ({"Engine": "aurora-postgresql", "EngineVersion": "16"}, 0),
+        ({"Engine": "aurora-mysql", "EngineVersion": "8.0"}, 0),
+        # Genuinely deprecated versions still warn.
+        ({"Engine": "aurora-postgresql", "EngineVersion": "16.1"}, 1),
+        ({"Engine": "aurora-mysql", "EngineVersion": "5.7"}, 1),
+    ],
+)
+def test_validate_shipped_schema(instance, expected_count, validator):
+    errs = list(
+        DbClusterEngineVersionDeprecated().validate(validator, "", instance, {})
+    )
+    assert len(errs) == expected_count, f"Got {errs}"
+    assert all("deprecated" in err.message for err in errs)

@@ -138,7 +138,21 @@ def write_db_cluster(results):
     write_output("aws_rds_dbcluster", "engine_version", schema)
 
 
-def write_db_cluster_deprecated(deprecated_results):
+def _has_available_version(available_versions, prefix):
+    """Check if any available version falls under a shortened prefix.
+
+    A major-only or major.minor value is usable as long as RDS still has
+    an available release under it, since RDS resolves it to a recent
+    release. Only a prefix with no available version under it is
+    deprecated.
+    """
+    return any(
+        version == prefix or version.startswith(f"{prefix}.")
+        for version in available_versions
+    )
+
+
+def write_db_cluster_deprecated(deprecated_results, available_results):
     schema = {"allOf": []}
 
     engines = sorted(
@@ -149,17 +163,22 @@ def write_db_cluster_deprecated(deprecated_results):
         if not deprecated_results.get(engine):
             continue
 
+        available_versions = available_results.get(engine, {})
         engine_versions = sorted(deprecated_results.get(engine).keys())
         if engine == "aurora-mysql":
             for engine_version in engine_versions.copy():
                 sub_engine_version = ".".join(engine_version.split(".")[0:2])
-                if sub_engine_version not in engine_versions:
+                if sub_engine_version not in engine_versions and not (
+                    _has_available_version(available_versions, sub_engine_version)
+                ):
                     engine_versions.append(sub_engine_version)
             engine_versions = sorted(engine_versions)
         if engine == "aurora-postgresql":
             for engine_version in engine_versions.copy():
                 sub_engine_version = engine_version.split(".")[0]
-                if sub_engine_version not in engine_versions:
+                if sub_engine_version not in engine_versions and not (
+                    _has_available_version(available_versions, sub_engine_version)
+                ):
                     engine_versions.append(sub_engine_version)
             engine_versions = sorted(engine_versions)
 
@@ -247,7 +266,7 @@ def write_db_instance(results):
     write_output("aws_rds_dbinstance", "engine_version", schema)
 
 
-def write_db_instance_deprecated(deprecated_results):
+def write_db_instance_deprecated(deprecated_results, available_results):
     schema = {"allOf": []}
 
     engines = sorted(["aurora-mysql", "aurora-postgresql", "mysql", "postgres"])
@@ -256,17 +275,22 @@ def write_db_instance_deprecated(deprecated_results):
         if not deprecated_results.get(engine):
             continue
 
+        available_versions = available_results.get(engine, {})
         engine_versions = sorted(list(deprecated_results.get(engine).keys()))
         if engine == "postgres":
             for engine_version in engine_versions.copy():
                 major_engine_version = ".".join(engine_version.split(".")[0:1])
-                if major_engine_version not in engine_versions:
+                if major_engine_version not in engine_versions and not (
+                    _has_available_version(available_versions, major_engine_version)
+                ):
                     engine_versions.append(major_engine_version)
             engine_versions = sorted(engine_versions)
         if engine == "aurora-mysql":
             for engine_version in engine_versions.copy():
                 sub_engine_version = ".".join(engine_version.split(".")[0:2])
-                if sub_engine_version not in engine_versions:
+                if sub_engine_version not in engine_versions and not (
+                    _has_available_version(available_versions, sub_engine_version)
+                ):
                     engine_versions.append(sub_engine_version)
             engine_versions = sorted(engine_versions)
 
@@ -430,9 +454,9 @@ def rds_api():
                 available_results[engine][engine_version] = {}
 
     write_db_cluster(results)
-    write_db_cluster_deprecated(deprecated_results)
+    write_db_cluster_deprecated(deprecated_results, available_results)
     write_db_instance(results)
-    write_db_instance_deprecated(deprecated_results)
+    write_db_instance_deprecated(deprecated_results, available_results)
 
     results_db_instance_class = dict.fromkeys(available_results.keys(), dict())
     for engine, versions in available_results.items():
