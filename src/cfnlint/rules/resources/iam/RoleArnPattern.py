@@ -45,6 +45,14 @@ class RoleArnPattern(CfnLintKeyword):
 
         patrn = "^arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/[a-zA-Z_0-9+=,.@\\-_/]+$"
 
+        # AWS Batch also accepts a role name, with its path prefix when the
+        # role's path is not "/" (for example "service-role/my-role"): only a
+        # value that claims to be an ARN has to match the ARN pattern
+        if list(validator.context.path.path)[-1:] == ["ServiceRole"] and not (
+            arn.startswith("arn:")
+        ):
+            return
+
         if not re.match(patrn, arn):
             yield ValidationError(
                 f"{arn!r} does not match {patrn!r}",
