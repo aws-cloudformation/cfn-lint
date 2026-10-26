@@ -171,6 +171,10 @@ def uniq_keys(container, keys):
 
     Tries to rely on the container being recursively sortable, or otherwise
     falls back on (slow) brute force.
+
+    An element with an empty string for one of the keys is not compared: an
+    empty value names nothing, so repeating it is not a duplicate (IAM accepts
+    several statements with an empty `Sid`).
     """
     c = []
     for i in container:
@@ -178,6 +182,8 @@ def uniq_keys(container, keys):
             o = {}
             for k in keys:
                 o[k] = i[k]
+            if any(isinstance(v, str) and v == "" for v in o.values()):
+                continue
             c.append(o)
         except (KeyError, TypeError):
             pass
