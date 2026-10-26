@@ -457,3 +457,67 @@ def test_resolve_map_name_from_parameter_default(
     assert [err.message for err in errs] == expected_messages, (
         f"{name!r} failed and got errors {[e.message for e in errs]!r}"
     )
+
+
+@pytest.mark.parametrize(
+    "name,instance,expected_messages",
+    [
+        (
+            "Hardcoded top level key is reported without constraints",
+            {"Fn::FindInMap": ["StageMap", "typo", "TCS"]},
+            ["'typo' is not one of ['gamma', 'prod'] for mapping 'StageMap'"],
+        ),
+        (
+            "Hardcoded second level key is reported without constraints",
+            {"Fn::FindInMap": ["StageMap", "gamma", "typo"]},
+            ["'typo' is not one of ['TCS'] for mapping 'StageMap' and key 'gamma'"],
+        ),
+        (
+            "Unknown map name is reported without constraints",
+            {"Fn::FindInMap": ["NopeMap", "gamma", "TCS"]},
+            ["'NopeMap' is not one of ['StageMap']"],
+        ),
+        (
+            "Valid lookup is silent without constraints",
+            {"Fn::FindInMap": ["StageMap", "gamma", "TCS"]},
+            [],
+        ),
+        (
+            "Top level key from a parameter Default is not reported "
+            "without constraints",
+            {"Fn::FindInMap": ["StageMap", {"Ref": "Stage"}, "TCS"]},
+            [],
+        ),
+        (
+            "Bad key with a DefaultValue is not reported without constraints",
+            {
+                "Fn::FindInMap": [
+                    "StageMap",
+                    "typo",
+                    "TCS",
+                    {"DefaultValue": "fallback"},
+                ]
+            },
+            [],
+        ),
+    ],
+)
+def test_resolve_without_schema_constraints(
+    name, instance, expected_messages, rule, cfn_with_default
+):
+    """Definite lookup failures must surface even when the target
+    property's schema carries no constraining keyword (the positions
+    #4873 covers: Condition operands, Fn::Join items, Fn::Sub variables,
+    and unconstrained properties)."""
+    context = create_context_for_template(cfn_with_default)
+    validator = CfnTemplateValidator({}).extend(validators={})(
+        context=context, cfn=cfn_with_default
+    )
+
+    # No constraining keyword: BaseFn.resolve would skip resolution here.
+    schema = {"type": "string"}
+    errs = list(rule.resolve(validator, schema, instance, {}))
+
+    assert [err.message for err in errs] == expected_messages, (
+        f"{name!r} failed and got errors {[e.message for e in errs]!r}"
+    )
