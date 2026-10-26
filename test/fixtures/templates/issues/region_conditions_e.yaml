@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Conditions:
+  IsWest2: !Equals [!Ref "AWS::Region", us-west-2]
+Resources:
+  StdDlq:
+    Type: AWS::SQS::Queue
+  FifoDlq:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: true
+  StdSourceIfRegion:
+    Type: AWS::SQS::Queue
+    Properties:
+      RedrivePolicy:
+        deadLetterTargetArn: !If [IsWest2, !GetAtt FifoDlq.Arn, !GetAtt StdDlq.Arn]
+        maxReceiveCount: 5
+  StdSourceCondFalse:
+    Type: AWS::SQS::Queue
+    Condition: IsWest2
+    Properties:
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt FifoDlq.Arn
+        maxReceiveCount: 5
+  FifoIfSource:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: !If [IsWest2, true, !Ref "AWS::NoValue"]
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt StdDlq.Arn
+        maxReceiveCount: 5
