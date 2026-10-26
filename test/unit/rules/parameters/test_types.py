@@ -83,7 +83,8 @@ def rule():
             "AWS::SSM::Parameter::Value<Strng>",
             [
                 ValidationError(
-                    "'AWS::SSM::Parameter::Value<Strng>' has an invalid base parameter type 'Strng'",
+                    "'AWS::SSM::Parameter::Value<Strng>' has an invalid base "
+                    "parameter type 'Strng'",
                     rule=Types(),
                 )
             ],
@@ -93,7 +94,8 @@ def rule():
             "AWS::SSM::Parameter::Value<List<Strng>>",
             [
                 ValidationError(
-                    "'AWS::SSM::Parameter::Value<List<Strng>>' has an invalid base parameter type 'Strng'",
+                    "'AWS::SSM::Parameter::Value<List<Strng>>' has an invalid "
+                    "base parameter type 'Strng'",
                     rule=Types(),
                 )
             ],
