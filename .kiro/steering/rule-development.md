@@ -114,9 +114,10 @@ Severity follows consequence, not confidence:
 
 1. **Prove the constraint.** A real deployment first, then real templates known
    to deploy, then a service-level API probe, then AWS docs. Never the base CFN
-   schema alone, and never `aws cloudformation validate-template` — it does not
-   invoke a resource provider, so it cannot establish a property constraint.
-   Then check whether the number is a soft account quota, which is never an
+   schema alone, and never `aws cloudformation validate-template` for a property
+   constraint — it invokes no resource provider, though it does establish
+   control-plane structure such as parameter types. Then check whether the
+   number is a soft account quota, which is never an
    `E` — see [`../context/verification.md`](../context/verification.md).
 2. **Decide where it belongs** — this repo or enhanced-schemas.
 3. **Pick the simplest rule type** that expresses it.
