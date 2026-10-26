@@ -199,14 +199,24 @@ class ProviderSchemaManager:
             Iterator[tuple[list[str], Schema]]: the unique schemas with
               their associated regions
         """
-        resource_type = self._normalize_resource_type(resource_type)
+        # Match get_resource_schema: registry schemas are looked up before
+        # the type is normalized, so a registry "::MODULE" type keeps its
+        # own schema.
+        is_registry_type = resource_type in self._registry_schemas
+        if not is_registry_type:
+            resource_type = self._normalize_resource_type(resource_type)
 
         hash_to_regions: dict[str, list[str]] = {}
         hash_to_schema: dict[str, Schema] = {}
 
         for region in regions:
-            provider_types = self._load_provider_module(region)
-            schema_hash = provider_types.get(resource_type)
+            if is_registry_type:
+                # Registry schemas are not in any region's provider mapping,
+                # and one schema covers every region.
+                schema_hash: str | None = resource_type
+            else:
+                provider_types = self._load_provider_module(region)
+                schema_hash = provider_types.get(resource_type)
 
             if not schema_hash:
                 continue

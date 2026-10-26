@@ -1,0 +1,280 @@
+# Verification — Trust but Verify
+
+Never accept a claim about cfn-lint behaviour without running it. Not your own
+claim, not an issue reporter's, not a PR author's. Reproduction comes first and
+is cheap.
+
+Every command below was confirmed against this repository. If one stops
+working, fix this file.
+
+## Setup, once
+
+```shell
+python -m venv .venv
+.venv/bin/pip install -e ".[full]"
+.venv/bin/pip install -r requirements/dev.txt
+.venv/bin/cfn-lint --update-specs      # REQUIRED
+```
+
+`--update-specs` is not optional. The provider schemas are gitignored and
+downloaded at runtime (see `schema-sources.md`). Without them, validation
+silently falls back to the small test fixture schema set and results are
+meaningless. CI runs `cfn-lint --update-specs --force` before every job.
+
+## Running the linter
+
+```shell
+.venv/bin/cfn-lint -t template.yaml
+```
+
+### The flag gotcha that silently lints nothing
+
+List-valued flags (`-c`, `-i`, `-r`, `-m`) consume every following argument,
+including your template path:
+
+```shell
+# WRONG — the path is eaten as a rule ID, nothing is linted,
+# and you get a confusing "E1001 'Resources' is a required property"
+cfn-lint -c E3717 template.yaml
+
+# RIGHT — separate the path with -t
+cfn-lint -c E3717 -t template.yaml
+
+# RIGHT — or terminate the flag list with --
+cfn-lint -c E3717 -- template.yaml
+```
+
+An empty or nonsensical result from a flagged invocation almost always means
+this, not a broken rule.
+
+### `-c` adds, it does not restrict
+
+`--include-checks` **adds** rules to the default set. It cannot narrow a run to
+one rule. Confirmed: `-c E3717` on a template with an unrelated problem reports
+`E3002` as well. To focus on one rule, read for its ID in the output.
+
+Informational rules are opt-in: `-c I`.
+
+### Testing a branch's code, not `main`'s
+
+The install is editable, so `.venv/bin/cfn-lint` resolves `cfnlint` through a
+`.pth` holding the **main checkout's** absolute `src` path. Run it from a
+worktree and you silently measure `main`. Point `PYTHONPATH` at the worktree and
+confirm before trusting the result:
+
+```shell
+PYTHONPATH=/path/to/worktree/src .venv/bin/python -c "import cfnlint; print(cfnlint.__file__)"
+```
+
+There is no `cfnlint/__main__.py`, so `python -m cfnlint` fails with
+`No module named cfnlint.__main__`. The entry point is `cfnlint.runner:main`.
+
+### Decoding a template in a scratch script
+
+`cfnlint.decode.decode(path)` returns `(template, matches)`.
+`cfnlint.decode.cfn_yaml.load(path)` returns the template dict **directly** — so
+unpacking it into two names raises `ValueError: too many values to unpack`, or,
+worse, silently hands you two top-level key *names* when the template happens to
+have exactly two keys.
+
+## Running the tests
+
+```shell
+.venv/bin/python -m pytest test/unit/rules/resources/lmbd/test_function_capacity_provider_timeout.py
+.venv/bin/python -m pytest test/unit/rules/            # all rule tests
+```
+
+`pyproject.toml` sets `addopts = ["-m not data"]`, so the slow data-driven
+tests are deselected by default. Add `-m data` to include them.
+
+### The `-m data` trap
+
+`test/integration/test_data_file_format.py` is `-m data`, so it never runs
+locally — but `.github/workflows/ci-pr-data.yaml` runs `tox -e py -- -m "data"`
+on any change under `src/cfnlint/data/**`. It asserts every tracked `.json`
+there equals `cfnlint.helpers.format_json_string`, which means **sorted keys**,
+`indent=1`, `", "` separators, and a trailing newline. A hand-edit that only
+reorders keys passes locally and fails CI.
+
+Running `-m data` locally may fail on a file you never touched: the downloaded
+`src/cfnlint/data/schemas/resources/*.json` are gitignored and arrive without a
+trailing newline. Read which file the assertion names before believing it.
+
+## The full local gate, before pushing
+
+CI runs `tox` across Python 3.10–3.15 on Linux, macOS, **and Windows**. The
+style checks run as the tox `style` env, which does nothing more than
+`pip install pre-commit` followed by `pre-commit run --all-files`.
+
+`pre-commit` is **not** in `requirements/dev.txt`, so install it once:
+
+```shell
+.venv/bin/pip install pre-commit
+.venv/bin/pre-commit install      # optional: run it automatically on commit
+```
+
+Then the local equivalent of CI is:
+
+```shell
+.venv/bin/python -m pytest test
+.venv/bin/pre-commit run --all-files
+```
+
+`pre-commit` covers ruff, ruff-format, isort, bandit, mypy, and the JSON/YAML/
+AST checks. Running it is the cheapest way to avoid a red PR.
+
+Two recurring CI failures worth pre-empting:
+
+- **mypy runs on all three platforms.** Platform-conditional imports
+  (`fcntl` vs `msvcrt`) fail on the other OS. Add `# type: ignore[attr-defined]`
+  on *both* branches; `warn_unused_ignores` is off, so this is harmless.
+- **ruff-format collapses multi-line calls.** Use magic trailing commas to keep
+  the formatting you intended.
+
+## Verifying a rule actually behaves
+
+Reproducing the bad case is half the job. The other half is proving silence.
+
+```shell
+# 1. the reported template must fail
+.venv/bin/cfn-lint -t /tmp/bad.yaml
+
+# 2. the near-miss valid template must be SILENT — this is the real test
+.venv/bin/cfn-lint -t /tmp/good.yaml
+
+# 3. no regression across the good fixtures
+.venv/bin/cfn-lint -t "test/fixtures/templates/good/**/*.yaml"
+```
+
+Step 3 is the false-positive net. A new rule that lights up the good fixtures
+is wrong, not the fixtures.
+
+### A scratch template needs alphanumeric names
+
+A logical ID or Output name containing `_` or `-` draws `E3001`/`E6001`
+(`does not match any of the regexes: '^[a-zA-Z0-9]+$'`), which masks the finding
+you are testing. Name scratch resources `MyBucket1`, not `my_bucket-1`.
+
+### A passing negative unit test is not proof
+
+`test/unit/conftest.py` builds its validator with `strict_types=True`, while the
+real paths evolve to `strict_types=False` (`rules/resources/Metadata.py:71`,
+`rules/outputs/Value.py:55`, `rules/resources/properties/Properties.py:87`).
+Confirmed: `"123"` against `{"type": "integer"}` errors under `strict_types=True`
+and passes under `False`. So a unit test can assert a type error that never
+fires in a real lint — always confirm a negative with a full `cfn-lint` run.
+
+## Verifying an unreleased schema change
+
+To test an enhanced-schemas change before it ships, point cfn-lint at a locally
+built schema set:
+
+```shell
+XDG_CACHE_HOME=/path/to/built/cache .venv/bin/cfn-lint -t template.yaml
+```
+
+The cache must contain `providers/`, `resources/`, and a `version.json` whose
+date is **newer** than the bundled one, or the local copy is ignored.
+
+## Verifying against reality, not documentation
+
+When a constraint's value is in question, ranked by strength:
+
+1. **A real deployment.** `CreateStack`/`UpdateStack` succeeding on the value you
+   would reject disproves the constraint; failing with CloudFormation's own error
+   proves it. Record account, region, date, and the verbatim error.
+2. **Real templates known to deploy.** Often beats a probe, and costs nothing.
+3. **A service-level API probe** — `lambda CreateFunction`, `s3 CreateBucket`,
+   `rds CreateDBInstance`. Second-best: the service and the CloudFormation
+   provider do not always agree. Record account, region, and date.
+4. **AWS docs.** Good for intent, frequently stale on numbers.
+5. **The base CFN schema.** A hint, never proof.
+
+**`aws cloudformation validate-template` is NOT evidence** for a property-level
+constraint. It parses the template and checks template-level structure; it does
+not invoke a resource provider. Treat it as no stronger than documentation, and
+never cite it as a probe.
+
+### A free deployment probe for parameter constraints
+
+A parameter's `Default` is validated in the CloudFormation control plane
+**before any resource exists**, so a `create-stack` probe of a parameter
+constraint costs nothing and leaves nothing behind. Give the template the
+parameter under test and one `AWS::CloudFormation::WaitConditionHandle`:
+
+```yaml
+Parameters:
+  P:
+    Type: String
+    Default: true
+    AllowedValues: ["true", "false"]
+Resources:
+  W:
+    Type: AWS::CloudFormation::WaitConditionHandle
+```
+
+A rejection returns synchronously and creates no stack at all. An acceptance
+creates one free resource — delete the stack immediately. This covers the whole
+parameter-constraint family: `E2015`, `E2003` and their neighbours.
+
+Recorded us-east-1, 2026-10-23, seven cases: **CloudFormation renders a boolean
+`Default` lowercase.** `Default: true` deploys against
+`AllowedValues: ["true", "false"]`; against `["True", "False"]` it fails
+`Parameter 'P' must be one of AllowedValues`; against
+`AllowedPattern: ^(True|False)$` it fails `Parameter 'P' must match pattern
+^(True|False)$`. A `CommaDelimitedList` fails `Each value of parameter 'P' must
+be one of AllowedValues`. Three claims in the review of PR #4797 turned on that
+coercion model.
+
+Keep the account id in the PR description, not in this file — `.kiro/` ships in
+the public repo.
+
+When reading AWS docs, fetch the page with full-content mode — the default
+extraction truncates at ~8000 characters and can drop the property table you
+need. Appending `.md` to a `docs.aws.amazon.com` URL returns the markdown
+source, which is also truncated by the same default and mangles inline URLs.
+
+### A deployment rejection does not tell you the limit is universal
+
+A refusal proves the value was refused for **this account, in this region,
+today**. It does not say whether you hit a hard service bound or a soft account
+quota, and the two need opposite treatment: a soft quota encoded as a constraint
+is a false positive for every account that has had it raised. Before encoding a
+number, check whether it is a quota.
+
+Service Quotas labels adjustability itself, so this is a lookup, not a judgment:
+
+```shell
+aws service-quotas list-service-quotas --service-code ebs \
+  --query 'Quotas[?contains(QuotaName,`IOPS`)].{Name:QuotaName,Code:QuotaCode,Value:Value,Adjustable:Adjustable}'
+```
+
+Three outcomes, and they decide the rule:
+
+- **Present, `Adjustable: true`** — a soft account quota. Never an `E`, and
+  usually no rule at all.
+- **Present, `Adjustable: false`** — hard for every account. An `E` is
+  defensible.
+- **Absent from Service Quotas entirely** — a per-resource service bound. This
+  is the kind cfn-lint should encode.
+
+Absence is a signal, not a gap: Service Quotas tracks **account aggregates**, so
+per-resource maxima never appear there.
+
+Corroborating signal: `get-aws-default-service-quota` gives the AWS default and
+`get-service-quota` the account's applied value. A difference between them means
+somebody raised it, which is itself proof the limit is soft.
+
+Recorded us-east-1, 2026-10-24, EBS io2 IOPS — two rejections that look alike
+resolve opposite ways:
+
+- `Iops: 256000` failed `You have exceeded your maximum io2 IOPS limit of 100000
+  IOPS in this region. Please contact AWS Support`. That 100000 is quota
+  `L-8D977E7E`, "IOPS for Provisioned IOPS SSD (io2) volumes", AWS default
+  `100000`, **`Adjustable: true`** — as was every EBS quota returned. Soft.
+  Encoding it would be a false positive for any account that raised it.
+- `Iops: 256001` failed `Volume iops of 256001 is too high; maximum is 256000`.
+  That per-volume 256000 **does not appear in Service Quotas at all** — nor does
+  io1's 64000, nor the 500:1 IOPS-to-size ratio. Hard bound, and encodable.
+
+See `false-positives.md` for how this feeds severity and placement.

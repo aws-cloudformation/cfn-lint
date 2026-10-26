@@ -307,9 +307,56 @@ def test_evolve_from_instance(current_status, instance, expected):
     assert result_set == expected_set
 
 
+def test_mutually_exclusive_equals_without_allowed_values():
+    """Two Fn::Equals comparing the same Ref to different literals can never
+    both be true, even when the parameter has no AllowedValues or is a
+    pseudo-parameter (issue #4799)."""
+    cfn = Template(
+        None,
+        {
+            "Parameters": {
+                "Source": {"Type": "String", "Default": "ipv4"},
+            },
+            "Conditions": {
+                "UseIpv4": {"Fn::Equals": [{"Ref": "Source"}, "ipv4"]},
+                "UseIpv6": {"Fn::Equals": [{"Ref": "Source"}, "ipv6"]},
+                "UseAcct1": {"Fn::Equals": [{"Ref": "AWS::AccountId"}, "111111111111"]},
+                "UseAcct2": {"Fn::Equals": [{"Ref": "AWS::AccountId"}, "222222222222"]},
+            },
+        },
+        regions=["us-east-1"],
+    )
+    conditions = create_context_for_template(cfn).conditions
+
+    # each condition is still individually reachable
+    assert conditions.is_reachable("UseIpv4", True) is True
+    assert conditions.is_reachable("UseIpv6", True) is True
+    assert conditions.is_reachable("UseAcct1", True) is True
+
+    # ...but the mutually exclusive pairs can never both be true
+    with pytest.raises(Unsatisfiable):
+        conditions.evolve({"UseIpv4": True, "UseIpv6": True})
+    with pytest.raises(Unsatisfiable):
+        conditions.evolve({"UseAcct1": True, "UseAcct2": True})
+
+
 def test_condition_failures():
     with pytest.raises(ValueError):
         Conditions.create_from_instance([], {}, {})
+
+
+def test_condition_non_string_names_skipped():
+    # Regression test for https://github.com/aws-cloudformation/cfn-lint/issues/4813
+    # A non-string condition logical ID must not crash create_from_instance
+    # (sympy Symbol requires a string name).  The invalid name is skipped
+    # here and reported by rule E8001.
+    conditions = Conditions.create_from_instance(
+        {123: {"Fn::Equals": ["a", "b"]}, "IsValid": {"Fn::Equals": ["a", "b"]}},
+        {},
+        {},
+    )
+    assert 123 not in conditions.conditions
+    assert "IsValid" in conditions.conditions
 
 
 def test_is_reachable_unknown_condition():

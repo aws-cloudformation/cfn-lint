@@ -25,16 +25,20 @@ class ImageId(FormatKeyword):
             format="AWS::EC2::Image.Id", pattern=r"^ami-([0-9a-z]{8}|[0-9a-z]{17})$"
         )
 
+    # EC2 resolves a `resolve:ssm:` reference to an AMI at launch, so these
+    # values never match the AMI id pattern. Accepted for launch templates
+    # (see #3329) and plain instances alike.
+    _SSM_IMAGE_ID_PATHS = (
+        "Resources/AWS::EC2::LaunchTemplate/Properties/LaunchTemplateData/ImageId",
+        "Resources/AWS::EC2::Instance/Properties/ImageId",
+    )
+
     def format(self, validator: Validator, instance: Any) -> bool:
         if not isinstance(instance, str):
             return True
 
-        if (
-            validator.context.path.cfn_path_string
-            == "Resources/AWS::EC2::LaunchTemplate/"
-            "Properties/LaunchTemplateData/ImageId"
-        ):
-            if instance.startswith("resolve:ssm"):
+        if instance.startswith("resolve:ssm"):
+            if validator.context.path.cfn_path_string in self._SSM_IMAGE_ID_PATHS:
                 return True
 
         if re.match(self.pattern, instance):

@@ -352,6 +352,21 @@ class Conditions:
             return True
 
     @lru_cache
+    def is_always_true(self, condition_name: str) -> bool:
+        """Determine if a condition provably always evaluates to true.
+
+        Args:
+            condition_name (str): The name of the condition to validate
+
+        Returns:
+            bool: True when the condition cannot evaluate to False,
+                otherwise False
+        """
+        if condition_name not in self._conditions:
+            return False
+        return self.check_implies({}, condition_name)
+
+    @lru_cache
     def build_scenerios_on_region(self, condition_name: str, region: str) -> list[bool]:
         """Based on a region validate if the condition_name could be true
 

@@ -112,3 +112,15 @@ class TestTempalteArgs(BaseTestCase):
         config = cfnlint.config.TemplateArgs({"Metadata": {"cfn-lint": {"config": []}}})
 
         self.assertEqual(config._template_args, {})
+
+    def test_template_args_non_object_metadata(self):
+        """test template args with a non-object Metadata or cfn-lint value"""
+        for template in [
+            {"Metadata": "hello"},
+            {"Metadata": None},
+            {"Metadata": ["a"]},
+            {"Metadata": {"cfn-lint": "hello"}},
+        ]:
+            with self.subTest(template=template):
+                config = cfnlint.config.TemplateArgs(template)
+                self.assertEqual(config.template_args, {})

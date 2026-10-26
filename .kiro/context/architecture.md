@@ -351,10 +351,16 @@ for value in template.get_values(properties, 'InstanceType'):
 
 1. **Enable Debug Logging**: Use `-D` flag for detailed rule execution logs
 2. **Enable Info Logging**: Use `-I` flag for template processing info
-3. **Test Single Rule**: Use `-c <rule_id>` to run only specific rule
-4. **Ignore Rules**: Use `-i <rule_id>` to exclude problematic rules
-5. **Check Schema**: Use `--info` to see SAM transformation details
-6. **Validate Schema**: Integration tests in `test/integration/test_schema_files.py`
+3. **Focus on One Rule**: `-c` *adds* rules to the default set — it cannot
+   restrict a run to a single rule. Read for the rule ID in the output instead.
+   Informational rules are opt-in with `-c I`.
+4. **Watch the flag gotcha**: list-valued flags (`-c`, `-i`, `-r`, `-m`) swallow
+   the template path. `cfn-lint -c E3717 template.yaml` lints **nothing** and
+   reports a confusing `E1001 'Resources' is a required property`. Separate the
+   path with `-t`, or terminate the list with `--`.
+5. **Ignore Rules**: Use `-i <rule_id>` to exclude problematic rules
+6. **Check Transform**: Use `--info` to see SAM transformation details
+7. **Validate Schema**: Integration tests in `test/integration/test_schema_files.py`
 
 ## Version Information
 

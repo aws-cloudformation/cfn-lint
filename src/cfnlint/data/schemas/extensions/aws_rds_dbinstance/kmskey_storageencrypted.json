@@ -1,16 +1,36 @@
 {
  "if": {
-  "properties": {
-   "Engine": {
-    "pattern": "^(?!custom-).*$",
-    "type": "string"
+  "allOf": [
+   {
+    "properties": {
+     "Engine": {
+      "pattern": "^(?!custom-).*$",
+      "type": "string"
+     }
+    },
+    "required": [
+     "KmsKeyId",
+     "Engine"
+    ],
+    "type": "object"
+   },
+   {
+    "not": {
+     "anyOf": [
+      {
+       "required": [
+        "SourceDBInstanceIdentifier"
+       ]
+      },
+      {
+       "required": [
+        "SourceDbiResourceId"
+       ]
+      }
+     ]
+    }
    }
-  },
-  "required": [
-   "KmsKeyId",
-   "Engine"
-  ],
-  "type": "object"
+  ]
  },
  "then": {
   "properties": {

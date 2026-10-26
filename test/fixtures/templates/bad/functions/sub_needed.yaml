@@ -4,6 +4,8 @@ Parameters:
   AMIId:
     Type: 'String'
     Description: 'The AMI ID for the image to use.'
+Conditions:
+  IsUsEast1: !Equals [!Ref "AWS::Region", us-east-1]
 Resources:
   myInstance:
     Type: AWS::EC2::Instance
@@ -31,6 +33,33 @@ Resources:
     Type: AWS::SNS::Topic
     Properties:
       TopicName: "${aws:username}-topic"
+  myRegionTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: "${AWS::Region}-topic" # Pseudo parameter without a Sub
+  myConditionalTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !If # Fn::If outside of a TemplateBody is still checked
+        - IsUsEast1
+        - "${AWS::Region}-topic"
+        - !Ref AWS::NoValue
+  myIncludedTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+      AttributeDefinitions:
+        Fn::Transform: # AWS::Include resolves a Sub in Location
+          Name: AWS::Include
+          Parameters:
+            Location: "s3://${AMIId}/attribute-definitions.yaml"
+  myKey:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: "Key in ${AWS::Region}" # Only the template Description is skipped
 
   TestBadStateMachine1:
     Type: AWS::StepFunctions::StateMachine

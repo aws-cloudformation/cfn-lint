@@ -50,6 +50,103 @@ def rule():
         ),
         (
             {
+                "IpProtocol": "icmp",
+                "ToPort": -1,
+                "FromPort": 8,
+            },
+            [],
+        ),
+        # IpProtocol "-1" allows traffic on all ports regardless of any
+        # port range, so no pairing constraint applies
+        (
+            {
+                "IpProtocol": "-1",
+                "ToPort": -1,
+            },
+            [],
+        ),
+        (
+            {
+                "IpProtocol": "-1",
+                "FromPort": -1,
+            },
+            [],
+        ),
+        (
+            {
+                "IpProtocol": "-1",
+                "ToPort": -1,
+                "FromPort": 0,
+            },
+            [],
+        ),
+        (
+            {
+                "IpProtocol": "-1",
+                "ToPort": 65535,
+                "FromPort": -1,
+            },
+            [],
+        ),
+        (
+            {
+                "IpProtocol": -1,
+                "ToPort": -1,
+                "FromPort": 5,
+            },
+            [],
+        ),
+        (
+            {
+                "IpProtocol": "-1",
+            },
+            [],
+        ),
+        # icmpv6/"58" get the same treatment as icmp: a specific type
+        # may use -1 (all codes) as the ToPort
+        (
+            {
+                "IpProtocol": "icmpv6",
+                "ToPort": -1,
+                "FromPort": 128,
+            },
+            [],
+        ),
+        (
+            {
+                "IpProtocol": "58",
+                "ToPort": -1,
+                "FromPort": 129,
+            },
+            [],
+        ),
+        (
+            {
+                "IpProtocol": 58,
+                "ToPort": -1,
+                "FromPort": 129,
+            },
+            [],
+        ),
+        # protocol matching is case-insensitive
+        (
+            {
+                "IpProtocol": "ICMP",
+                "ToPort": -1,
+                "FromPort": 8,
+            },
+            [],
+        ),
+        (
+            {
+                "IpProtocol": "Icmpv6",
+                "ToPort": -1,
+                "FromPort": 128,
+            },
+            [],
+        ),
+        (
+            {
                 "ToPort": -1,
             },
             [
@@ -64,7 +161,7 @@ def rule():
                         "properties": {"FromPort": {"enum": [-1, "-1"]}},
                         "required": ["FromPort"],
                     },
-                    schema_path=deque(["else", "allOf", 0, "then", "required"]),
+                    schema_path=deque(["else", "else", "allOf", 0, "then", "required"]),
                 )
             ],
         ),
@@ -84,7 +181,7 @@ def rule():
                         "properties": {"ToPort": {"enum": [-1, "-1"]}},
                         "required": ["ToPort"],
                     },
-                    schema_path=deque(["else", "allOf", 1, "then", "required"]),
+                    schema_path=deque(["else", "else", "allOf", 1, "then", "required"]),
                 )
             ],
         ),
@@ -103,7 +200,16 @@ def rule():
                     instance=5,
                     schema={"enum": [-1, "-1"]},
                     schema_path=deque(
-                        ["else", "allOf", 0, "then", "properties", "FromPort", "enum"]
+                        [
+                            "else",
+                            "else",
+                            "allOf",
+                            0,
+                            "then",
+                            "properties",
+                            "FromPort",
+                            "enum",
+                        ]
                     ),
                 )
             ],
@@ -123,7 +229,16 @@ def rule():
                     instance=5,
                     schema={"enum": [-1, "-1"]},
                     schema_path=deque(
-                        ["else", "allOf", 1, "then", "properties", "ToPort", "enum"]
+                        [
+                            "else",
+                            "else",
+                            "allOf",
+                            1,
+                            "then",
+                            "properties",
+                            "ToPort",
+                            "enum",
+                        ]
                     ),
                 )
             ],
@@ -141,9 +256,136 @@ def rule():
                     path=deque(["ToPort"]),
                     validator="enum",
                     validator_value=[-1, "-1"],
-                    instance=5,
+                    instance=8,
                     schema={"enum": [-1, "-1"]},
-                    schema_path=deque(["then", "then", "properties", "ToPort", "enum"]),
+                    schema_path=deque(
+                        ["else", "then", "then", "properties", "ToPort", "enum"]
+                    ),
+                )
+            ],
+        ),
+        # tcp/udp still require both ports to be -1 when one is -1
+        (
+            {
+                "IpProtocol": "tcp",
+                "ToPort": -1,
+                "FromPort": 0,
+            },
+            [
+                ValidationError(
+                    "Both ['FromPort', 'ToPort'] must be -1 when one is -1",
+                    rule=SecurityGroupAllToAndFromPorts(),
+                    path=deque(["FromPort"]),
+                    validator="enum",
+                    validator_value=[-1, "-1"],
+                    instance=0,
+                    schema={"enum": [-1, "-1"]},
+                    schema_path=deque(
+                        [
+                            "else",
+                            "else",
+                            "allOf",
+                            0,
+                            "then",
+                            "properties",
+                            "FromPort",
+                            "enum",
+                        ]
+                    ),
+                )
+            ],
+        ),
+        (
+            {
+                "IpProtocol": "udp",
+                "ToPort": 53,
+                "FromPort": -1,
+            },
+            [
+                ValidationError(
+                    "Both ['FromPort', 'ToPort'] must be -1 when one is -1",
+                    rule=SecurityGroupAllToAndFromPorts(),
+                    path=deque(["ToPort"]),
+                    validator="enum",
+                    validator_value=[-1, "-1"],
+                    instance=53,
+                    schema={"enum": [-1, "-1"]},
+                    schema_path=deque(
+                        [
+                            "else",
+                            "else",
+                            "allOf",
+                            1,
+                            "then",
+                            "properties",
+                            "ToPort",
+                            "enum",
+                        ]
+                    ),
+                )
+            ],
+        ),
+        # a wildcard icmpv6 type still requires a wildcard code
+        (
+            {
+                "IpProtocol": "icmpv6",
+                "ToPort": 0,
+                "FromPort": -1,
+            },
+            [
+                ValidationError(
+                    "Both ['FromPort', 'ToPort'] must be -1 when one is -1",
+                    rule=SecurityGroupAllToAndFromPorts(),
+                    path=deque(["ToPort"]),
+                    validator="enum",
+                    validator_value=[-1, "-1"],
+                    instance=0,
+                    schema={"enum": [-1, "-1"]},
+                    schema_path=deque(
+                        ["else", "then", "then", "properties", "ToPort", "enum"]
+                    ),
+                )
+            ],
+        ),
+        (
+            {
+                "IpProtocol": "58",
+                "ToPort": 0,
+                "FromPort": -1,
+            },
+            [
+                ValidationError(
+                    "Both ['FromPort', 'ToPort'] must be -1 when one is -1",
+                    rule=SecurityGroupAllToAndFromPorts(),
+                    path=deque(["ToPort"]),
+                    validator="enum",
+                    validator_value=[-1, "-1"],
+                    instance=0,
+                    schema={"enum": [-1, "-1"]},
+                    schema_path=deque(
+                        ["else", "then", "then", "properties", "ToPort", "enum"]
+                    ),
+                )
+            ],
+        ),
+        (
+            {
+                "IpProtocol": "ICMP",
+                "ToPort": 0,
+                "FromPort": -1,
+            },
+            [
+                ValidationError(
+                    "Both ['FromPort', 'ToPort'] must be -1 when one is -1",
+                    rule=SecurityGroupAllToAndFromPorts(),
+                    path=deque(["ToPort"]),
+                    validator="enum",
+                    validator_value=[-1, "-1"],
+                    instance=0,
+                    schema={"enum": [-1, "-1"]},
+                    schema_path=deque(
+                        ["else", "then", "then", "properties", "ToPort", "enum"]
+                    ),
                 )
             ],
         ),

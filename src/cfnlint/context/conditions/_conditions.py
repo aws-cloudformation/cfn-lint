@@ -53,6 +53,12 @@ class Conditions:
         if not isinstance(conditions, dict):
             raise ValueError("Conditions must be a object")
         for k, v in conditions.items():
+            if not isinstance(k, str):
+                # Condition logical IDs must be strings (rule E8001 reports
+                # non-string names).  Skip them here so the sympy Symbol
+                # table below never receives a non-string name, which would
+                # raise TypeError before any rule gets to run.
+                continue
             try:
                 other_conditions = conditions.copy()
                 del other_conditions[k]
@@ -71,28 +77,42 @@ class Conditions:
             # Add equivalence: Symbol(name) <-> condition's boolean expression
             add_equivalence(cnf, sym, cond.cnf)
 
+        # NAND: two Fn::Equals comparing the same single-valued reference
+        # (a parameter, with or without AllowedValues, or a pseudo-parameter
+        # such as AWS::Region or AWS::AccountId) to different static values
+        # cannot both be true. Previously this constraint was only added
+        # inside the AllowedValues loop below, so plain parameters and
+        # pseudo-parameters never got it (issue #4799).
+        equals_by_ref: dict[str, list[tuple[Symbol, str]]] = {}
+        for _, c_v in obj.items():
+            for i in c_v.equals:
+                if not isinstance(i.left.instance, str):
+                    continue
+                if not isinstance(i.right.instance, dict):
+                    continue
+                seen = equals_by_ref.setdefault(i.right.hash, [])
+                for prev_cnf, prev_val in seen:
+                    if prev_val != i.left.instance:
+                        cnf.add_prop(~(i.cnf & prev_cnf))
+                seen.append((i.cnf, i.left.instance))
+
         # Add parameter AllowedValues constraints
         for p_k, p_v in parameters.items():
             if not p_v.allowed_values:
                 continue
             allowed_values = p_v.allowed_values.copy()
-            equals_cnfs: list[tuple[Symbol, str]] = []
+            equals_cnfs: list[Symbol] = []
             for _, c_v in obj.items():
                 for i in c_v.equals:
                     if i.right.hash == get_hash({"Ref": p_k}):
                         if not isinstance(i.left.instance, str):
                             continue
-                        # NAND: two equals comparing the same param to
-                        # different static values can't both be true
-                        for prev_cnf, prev_val in equals_cnfs:
-                            if prev_val != i.left.instance:
-                                cnf.add_prop(~(i.cnf & prev_cnf))
-                        equals_cnfs.append((i.cnf, i.left.instance))
+                        equals_cnfs.append(i.cnf)
                         if i.left.instance in allowed_values:
                             allowed_values.remove(i.left.instance)
 
             if not allowed_values and equals_cnfs:
-                cnf.add_prop(Or(*[c for c, _ in equals_cnfs]))
+                cnf.add_prop(Or(*equals_cnfs))
 
         return cls(
             conditions=obj,

@@ -1,88 +1,152 @@
 # Rule Development Standards
 
+Read [`../context/false-positives.md`](../context/false-positives.md) first. A
+rule that fires on a valid template is worse than no rule at all, and that
+constraint shapes every decision below.
+
+Before writing a rule, confirm it belongs here at all — most property
+constraints belong in enhanced-schemas. See
+[`../context/schema-sources.md`](../context/schema-sources.md).
+
 ## Rule Types
 
-### 1. Template Path Rule (CfnLintKeyword)
-- Validates values at specific template paths
-- Use for: property value validation, format checking
-- Extends: `CfnLintKeyword`
-- Pattern: `keywords=["Resources/AWS::Service::Resource/Properties/PropertyName"]`
+Listed in order of preference. Choose the simplest one that expresses the
+constraint.
 
-### 2. Schema-Based Rule (CfnLintJsonSchema)
-- Validates using JSON Schema extensions
-- **Requires both Python rule AND JSON schema file**
-- Use for: complex property relationships, conditional validation
-- Extends: `CfnLintJsonSchema` or `CfnLintJsonSchemaRegional`
+### 1. Schema Extension + `CfnLintJsonSchema` (the common case)
 
-### 3. Schema Correction / Constraint (in enhanced-schemas repo)
-- Fixing a schema bug or adding a value constraint (pattern, enum, min/max) is **not** done in this repo
-- The resource schemas are assembled from [resource-provider-enhanced-schemas](https://github.com/aws-cloudformation/resource-provider-enhanced-schemas); add a `manual.json` RFC 6902 patch there (e.g. `schemas/patches/extensions/<resource_type>/manual.json`), then the change flows into cfn-lint on the next schema sync
+A JSON Schema file carries the logic; the Python class carries the rule ID and
+the error message. Use for anything conditional on a sibling property.
 
-### 4. Custom Python Rule
-- Full custom validation logic
-- Use for: complex checks, resource relationships
-- Extends: `CloudFormationLintRule`
-
-## Rule Structure
+**Requires both a Python rule and a JSON schema file.**
 
 ```python
-from cfnlint.rules import CloudFormationLintRule
+import cfnlint.data.schemas.extensions.aws_lambda_function
+from cfnlint.jsonschema import ValidationError
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
-class RuleName(CloudFormationLintRule):
-    id = "E3XXX"  # Find next available in docs/rules.md
-    shortdesc = "Brief description"
-    description = "Detailed explanation with AWS documentation reference"
-    source_url = "https://docs.aws.amazon.com/..."
-    tags = ["resources", "service"]
 
-    def match(self, cfn):
-        matches = []
-        # Validation logic
-        return matches
+class FunctionCapacityProviderTimeout(CfnLintJsonSchema):
+    id = "E3717"
+    shortdesc = "Validate Lambda function Timeout based on CapacityProviderConfig"
+    description = (
+        "The maximum Timeout of 900 seconds only applies to functions without "
+        "CapacityProviderConfig."
+    )
+    source_url = "https://docs.aws.amazon.com/lambda/latest/dg/configuration-timeout.html"
+    tags = ["resources", "lambda"]
+
+    def __init__(self) -> None:
+        super().__init__(
+            keywords=["Resources/AWS::Lambda::Function/Properties"],
+            schema_details=SchemaDetails(
+                module=cfnlint.data.schemas.extensions.aws_lambda_function,
+                filename="capacity_provider_timeout.json",
+            ),
+        )
+
+    def message(self, instance: Any, err: ValidationError) -> str:
+        return f"{instance.get('Timeout')} is greater than the maximum of 900 ..."
 ```
+
+Schema at `src/cfnlint/data/schemas/extensions/<resource_type>/<name>.json`:
+
+```json
+{
+  "if": {
+    "properties": { "CapacityProviderConfig": false },
+    "required": []
+  },
+  "then": {
+    "properties": { "Timeout": { "maximum": 900 } }
+  }
+}
+```
+
+Use `CfnLintJsonSchemaRegional` when the constraint differs by region.
+
+### 2. Cross-Resource Extension (`cfnGather`)
+
+Same shape as above, but the schema uses `cfnGather` to follow `Ref`/`GetAtt`
+into another resource. Documented in
+[`../../docs/cfn-schema-specification.md`](../../docs/cfn-schema-specification.md).
+Examples: `aws_sqs_queue/queue_dlq.json`, `aws_ecs_service/service_fargate.json`.
+
+### 3. Template Path Rule (`CfnLintKeyword`)
+
+Validates the value at a template path, when the check needs Python but not
+cross-resource data. Pass `keywords=[...]`; wildcards are supported.
+
+### 4. Custom Python Rule (`CloudFormationLintRule`)
+
+Full control, for template-wide analysis — circular dependencies, graph
+properties, cross-section consistency. **Rare: roughly 25 of 400 rule files.**
+Do not reach for this by default.
+
+### 5. Schema Correction or Value Constraint — not in this repo
+
+A plain `pattern`, `enum`, `minimum`, or `maximum` on one property belongs in
+[`resource-provider-enhanced-schemas`](https://github.com/aws-cloudformation/resource-provider-enhanced-schemas)
+as an RFC 6902 patch in `schemas/patches/extensions/<resource_type>/manual.json`.
+It reaches cfn-lint on the next schema sync. Editing
+`src/cfnlint/data/schemas/providers/` or `resources/` never works — both are
+gitignored and overwritten by `--update-specs`.
 
 ## Rule Metadata
 
-- **id**: Use correct category (E3XXX for resources)
-- **shortdesc**: One line, no period
-- **description**: Explain why this matters, link to AWS docs
-- **source_url**: AWS documentation reference
-- **tags**: Include resource category and service
+- **id** — correct category (see Rule ID System in `structure.md`); find the
+  next free ID in `docs/rules.md`
+- **shortdesc** — one line, no period
+- **description** — why this matters; state the constraint precisely
+- **source_url** — the AWS documentation that establishes the constraint
+- **tags** — `["resources", "<service>"]`
+
+## Severity
+
+Severity follows consequence, not confidence:
+
+- **`E`** — CloudFormation **will** reject the deployment. If any valid account
+  configuration deploys successfully, it is not an error.
+- **`W`** — valid but inadvisable, or quota- and opt-in-dependent.
+- **`I`** — informational, opt-in via `-c I`.
 
 ## Validation Approach
 
-1. **Search AWS documentation** for requirements
-2. **Check existing schemas** for similar patterns
-3. **Choose simplest rule type** that works
-4. **Test with CloudFormation functions** (Ref, GetAtt, Sub)
-5. **Handle conditions** if resource can be conditional
+1. **Prove the constraint.** A real deployment first, then real templates known
+   to deploy, then a service-level API probe, then AWS docs. Never the base CFN
+   schema alone, and never `aws cloudformation validate-template` — it does not
+   invoke a resource provider, so it cannot establish a property constraint.
+   Then check whether the number is a soft account quota, which is never an
+   `E` — see [`../context/verification.md`](../context/verification.md).
+2. **Decide where it belongs** — this repo or enhanced-schemas.
+3. **Pick the simplest rule type** that expresses it.
+4. **Handle unresolvable values.** `Ref`, `GetAtt`, `Sub`, `Fn::If`, mappings
+   and nestings of them must produce no error.
+5. **Handle conditions** when the resource can be conditional.
 
 ## Error Messages
 
-- Be specific about what's wrong
-- Include expected vs actual values
-- Reference AWS documentation when helpful
-- Example: "InstanceType 'm4.16xlarge' is a previous generation instance. Use current generation instances for better performance."
+State the actual value, the limit, and the condition under which the limit
+applies. The reader is looking at their template, not at your rule.
 
-## Testing Requirements
-
-- Test valid templates (no matches)
-- Test invalid templates (expected matches)
-- Test with CloudFormation functions
-- Test with conditions (if applicable)
-- Test edge cases
-
-## Documentation
-
-- Add rule to `docs/rules.md` with description and examples
-- Include example of failing template
-- Document any configuration options
-- Link to AWS documentation
+> `5400 is greater than the maximum of 900 for functions without 'CapacityProviderConfig'`
 
 ## Before Submitting
 
-1. Run tests: `pytest test/unit/rules/resources/service/test_rule.py`
-2. Check coverage: `pytest --cov=cfnlint.rules.resources.service.rule_name`
-3. Run linter: `ruff check src/cfnlint/rules/resources/service/rule_name.py`
-4. Type check: `mypy src/cfnlint/rules/resources/service/rule_name.py`
-5. Test against real templates: `cfn-lint -c E3XXX template.yaml`
+Full command reference in
+[`../context/verification.md`](../context/verification.md).
+
+```shell
+.venv/bin/python -m pytest test/unit/rules/resources/<service>/test_<rule>.py
+.venv/bin/cfn-lint -t /tmp/bad.yaml                              # must fire
+.venv/bin/cfn-lint -t /tmp/good.yaml                             # must be silent
+.venv/bin/cfn-lint -t "test/fixtures/templates/good/**/*.yaml"   # no regressions
+pre-commit run --all-files
+```
+
+## Documentation
+
+- Add the rule to `docs/rules.md`
+- Record the evidence for the constraint in the PR description: account, region,
+  date and the verbatim error for a deployment; account, region and date for a
+  service API probe
