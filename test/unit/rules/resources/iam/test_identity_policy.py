@@ -246,6 +246,35 @@ class TestIdentityPolicies(TestCase):
         self.assertEqual(errs[0].message, "array items are not unique for keys ['Sid']")
         self.assertListEqual(list(errs[0].path), ["Statement"])
 
+    def test_empty_sid(self):
+        """IAM accepts an empty Sid, also on several statements"""
+        validator = CfnTemplateValidator()
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Sid": "",
+                    "Effect": "Allow",
+                    "Action": "s3:GetObject",
+                    "Resource": "*",
+                },
+                {
+                    "Sid": "",
+                    "Effect": "Allow",
+                    "Action": "s3:PutObject",
+                    "Resource": "*",
+                },
+            ],
+        }
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertListEqual(errs, [])
+
     def test_pattern_sid(self):
         validator = CfnTemplateValidator()
 
@@ -270,7 +299,7 @@ class TestIdentityPolicies(TestCase):
             errs,
             [
                 ValidationError(
-                    message="'A ' does not match '^[A-Za-z0-9]+$'",
+                    message="'A ' does not match '^[A-Za-z0-9]*$'",
                     validator="pattern",
                     path=deque(["Statement", 0, "Sid"]),
                     schema_path=deque(
