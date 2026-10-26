@@ -1,0 +1,147 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  Environment:
+    Type: String
+    AllowedValues: [prod, dev]
+  PipelineName:
+    Type: String
+Conditions:
+  IsProd: !Equals [!Ref Environment, prod]
+  IsNotProd: !Not [!Condition IsProd]
+Resources:
+  Topic:
+    Type: AWS::SNS::Topic
+  PipelineRule0:
+    Type: AWS::CodeStarNotifications::NotificationRule
+    Properties:
+      Name: PipelineRule0
+      DetailType: FULL
+      Resource: !Sub arn:${AWS::Partition}:codepipeline:${AWS::Region}:${AWS::AccountId}:${PipelineName}
+      EventTypeIds:
+        - codepipeline-pipeline-pipeline-execution-failed
+      Targets:
+        - TargetType: SNS
+          TargetAddress: !Ref Topic
+  PipelineRule1:
+    Type: AWS::CodeStarNotifications::NotificationRule
+    Properties:
+      Name: PipelineRule1
+      DetailType: FULL
+      Resource: !Sub arn:${AWS::Partition}:codepipeline:${AWS::Region}:${AWS::AccountId}:${PipelineName}
+      EventTypeIds:
+        - codepipeline-pipeline-pipeline-execution-failed
+      Targets:
+        - TargetType: SNS
+          TargetAddress: !Ref Topic
+  PipelineRule2:
+    Type: AWS::CodeStarNotifications::NotificationRule
+    Properties:
+      Name: PipelineRule2
+      DetailType: FULL
+      Resource: !Sub arn:${AWS::Partition}:codepipeline:${AWS::Region}:${AWS::AccountId}:${PipelineName}
+      EventTypeIds:
+        - codepipeline-pipeline-pipeline-execution-failed
+      Targets:
+        - TargetType: SNS
+          TargetAddress: !Ref Topic
+  PipelineRule3:
+    Type: AWS::CodeStarNotifications::NotificationRule
+    Properties:
+      Name: PipelineRule3
+      DetailType: FULL
+      Resource: !Sub arn:${AWS::Partition}:codepipeline:${AWS::Region}:${AWS::AccountId}:${PipelineName}
+      EventTypeIds:
+        - codepipeline-pipeline-pipeline-execution-failed
+      Targets:
+        - TargetType: SNS
+          TargetAddress: !Ref Topic
+  PipelineRule4:
+    Type: AWS::CodeStarNotifications::NotificationRule
+    Properties:
+      Name: PipelineRule4
+      DetailType: FULL
+      Resource: !Sub arn:${AWS::Partition}:codepipeline:${AWS::Region}:${AWS::AccountId}:${PipelineName}
+      EventTypeIds:
+        - codepipeline-pipeline-pipeline-execution-failed
+      Targets:
+        - TargetType: SNS
+          TargetAddress: !Ref Topic
+  PipelineRule5:
+    Type: AWS::CodeStarNotifications::NotificationRule
+    Properties:
+      Name: PipelineRule5
+      DetailType: FULL
+      Resource: !Sub arn:${AWS::Partition}:codepipeline:${AWS::Region}:${AWS::AccountId}:${PipelineName}
+      EventTypeIds:
+        - codepipeline-pipeline-pipeline-execution-failed
+      Targets:
+        - TargetType: SNS
+          TargetAddress: !Ref Topic
+  PipelineRule6:
+    Type: AWS::CodeStarNotifications::NotificationRule
+    Properties:
+      Name: PipelineRule6
+      DetailType: FULL
+      Resource: !Sub arn:${AWS::Partition}:codepipeline:${AWS::Region}:${AWS::AccountId}:${PipelineName}
+      EventTypeIds:
+        - codepipeline-pipeline-pipeline-execution-failed
+      Targets:
+        - TargetType: SNS
+          TargetAddress: !Ref Topic
+  PipelineRule7:
+    Type: AWS::CodeStarNotifications::NotificationRule
+    Properties:
+      Name: PipelineRule7
+      DetailType: FULL
+      Resource: !Sub arn:${AWS::Partition}:codepipeline:${AWS::Region}:${AWS::AccountId}:${PipelineName}
+      EventTypeIds:
+        - codepipeline-pipeline-pipeline-execution-failed
+      Targets:
+        - TargetType: SNS
+          TargetAddress: !Ref Topic
+  PipelineRule8:
+    Type: AWS::CodeStarNotifications::NotificationRule
+    Properties:
+      Name: PipelineRule8
+      DetailType: FULL
+      Resource: !Sub arn:${AWS::Partition}:codepipeline:${AWS::Region}:${AWS::AccountId}:${PipelineName}
+      EventTypeIds:
+        - codepipeline-pipeline-pipeline-execution-failed
+      Targets:
+        - TargetType: SNS
+          TargetAddress: !Ref Topic
+  PipelineRule9:
+    Type: AWS::CodeStarNotifications::NotificationRule
+    Properties:
+      Name: PipelineRule9
+      DetailType: FULL
+      Resource: !Sub arn:${AWS::Partition}:codepipeline:${AWS::Region}:${AWS::AccountId}:${PipelineName}
+      EventTypeIds:
+        - codepipeline-pipeline-pipeline-execution-failed
+      Targets:
+        - TargetType: SNS
+          TargetAddress: !Ref Topic
+  ProdRule:
+    Type: AWS::CodeStarNotifications::NotificationRule
+    Condition: IsProd
+    Properties:
+      Name: ProdRule
+      DetailType: FULL
+      Resource: !Sub arn:${AWS::Partition}:codepipeline:${AWS::Region}:${AWS::AccountId}:${PipelineName}
+      EventTypeIds:
+        - codepipeline-pipeline-pipeline-execution-failed
+      Targets:
+        - TargetType: SNS
+          TargetAddress: !Ref Topic
+  DevRule:
+    Type: AWS::CodeStarNotifications::NotificationRule
+    Condition: IsNotProd
+    Properties:
+      Name: DevRule
+      DetailType: FULL
+      Resource: !Sub arn:${AWS::Partition}:codepipeline:${AWS::Region}:${AWS::AccountId}:${PipelineName}
+      EventTypeIds:
+        - codepipeline-pipeline-pipeline-execution-failed
+      Targets:
+        - TargetType: SNS
+          TargetAddress: !Ref Topic
