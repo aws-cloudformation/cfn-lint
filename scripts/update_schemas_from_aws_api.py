@@ -12,7 +12,6 @@ import logging
 
 import boto3
 from botocore.client import Config
-from botocore.exceptions import ClientError
 
 LOGGER = logging.getLogger("cfnlint")
 
@@ -48,16 +47,6 @@ _ENGINE_SUPPORTED = [
     "sqlserver-ex",
     "sqlserver-web",
 ]
-
-# DescribeOrderableDBInstanceOptions refuses these as a 400 scoped to the request
-_ORDERABLE_OPTIONS_SKIP_CODES = frozenset(
-    ["InvalidParameterCombination", "InvalidParameterValue"]
-)
-
-
-def _has_orderable_db_instance_options(engine):
-    """RDS Custom development engines need an account owned CEV to be enumerable."""
-    return "-dev-" not in engine
 
 
 def configure_logging():
@@ -441,7 +430,7 @@ def rds_api():
                 if engine not in deprecated_results:
                     deprecated_results[engine] = {}
                 deprecated_results[engine][engine_version] = {}
-            else:
+            elif status == "available":
                 # Track available versions for DB instance options
                 if engine not in available_results:
                     available_results[engine] = {}
@@ -452,18 +441,8 @@ def rds_api():
     write_db_instance(results)
     write_db_instance_deprecated(deprecated_results)
 
-    results_db_instance_class = dict.fromkeys(
-        (
-            engine
-            for engine in available_results.keys()
-            if _has_orderable_db_instance_options(engine)
-        ),
-        dict(),
-    )
+    results_db_instance_class = dict.fromkeys(available_results.keys(), dict())
     for engine, versions in available_results.items():
-        if not _has_orderable_db_instance_options(engine):
-            LOGGER.info(f"Skipping RDS DB options collection for engine {engine!r}")
-            continue
         LOGGER.info(f"Starting RDS DB options collection for engine {engine!r}")
         for engine_version in versions.keys():
             minor_engine_verison = ".".join(engine_version.split(".")[:2])
@@ -477,23 +456,14 @@ def rds_api():
                     "DBInstanceClass": set(),
                 }
 
-            try:
-                for page in rds_client.get_paginator(
-                    "describe_orderable_db_instance_options"
-                ).paginate(Engine=engine, EngineVersion=engine_version):
-                    for options in page.get("OrderableDBInstanceOptions"):
-                        db_instance_class = options.get("DBInstanceClass")
-                        results_db_instance_class[engine][minor_engine_verison][
-                            "DBInstanceClass"
-                        ].add(db_instance_class)
-            except ClientError as e:
-                error = e.response.get("Error", {})
-                if error.get("Code") not in _ORDERABLE_OPTIONS_SKIP_CODES:
-                    raise
-                LOGGER.warning(
-                    f"Skipping DB instance classes for engine {engine!r} "
-                    f"version {engine_version!r}: {error.get('Message')}"
-                )
+            for page in rds_client.get_paginator(
+                "describe_orderable_db_instance_options"
+            ).paginate(Engine=engine, EngineVersion=engine_version):
+                for options in page.get("OrderableDBInstanceOptions"):
+                    db_instance_class = options.get("DBInstanceClass")
+                    results_db_instance_class[engine][minor_engine_verison][
+                        "DBInstanceClass"
+                    ].add(db_instance_class)
 
     write_db_instance_version_dbinstanceclass(results_db_instance_class)
 
