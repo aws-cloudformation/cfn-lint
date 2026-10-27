@@ -430,7 +430,7 @@ def rds_api():
                 if engine not in deprecated_results:
                     deprecated_results[engine] = {}
                 deprecated_results[engine][engine_version] = {}
-            else:
+            elif status == "available":
                 # Track available versions for DB instance options
                 if engine not in available_results:
                     available_results[engine] = {}
