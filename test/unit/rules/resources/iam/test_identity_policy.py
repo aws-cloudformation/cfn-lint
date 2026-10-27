@@ -275,6 +275,31 @@ class TestIdentityPolicies(TestCase):
         )
         self.assertListEqual(errs, [])
 
+    def test_newline_only_sid(self):
+        """A Sid made only of a newline is not an empty Sid"""
+        validator = CfnTemplateValidator()
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Sid": "\n",
+                    "Effect": "Allow",
+                    "Action": "s3:GetObject",
+                    "Resource": "*",
+                },
+            ],
+        }
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertEqual(len(errs), 1, errs)
+        self.assertEqual(errs[0].validator, "pattern")
+        self.assertListEqual(list(errs[0].path), ["Statement", 0, "Sid"])
+
     def test_pattern_sid(self):
         validator = CfnTemplateValidator()
 
@@ -299,7 +324,7 @@ class TestIdentityPolicies(TestCase):
             errs,
             [
                 ValidationError(
-                    message="'A ' does not match '^[A-Za-z0-9]*$'",
+                    message="'A ' does not match '^[A-Za-z0-9]*\\\\Z'",
                     validator="pattern",
                     path=deque(["Statement", 0, "Sid"]),
                     schema_path=deque(
