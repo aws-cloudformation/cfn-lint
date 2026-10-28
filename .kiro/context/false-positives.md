@@ -107,14 +107,21 @@ For every rule, the suite must contain:
 If a PR adds a rule and only tests the failing case, that is a blocking review
 comment.
 
-## Reviewing someone else's rule
+## Reviewing someone else's change
 
 Ask, in order:
 
-1. What is the evidence for this constraint, and is it traceable? A deployment
+1. **What does this change reach?** Name every rule, schema and resource type that
+   inherits the new behaviour. A change under `src/cfnlint/jsonschema/`, to a shared
+   helper, or to a schema in `data/schemas/other/` is a change to the engine, not to
+   a rule — enumerate the callers before judging anything else. If you cannot state
+   the surface, you cannot review the fix.
+2. **What does it stop reporting?** A change that only removes findings still needs
+   justifying, and it will generate no user complaints to correct it later.
+3. What is the evidence for this constraint, and is it traceable? A deployment
    or the owning service's API — not `validate-template`, not the base schema.
-2. Which valid templates does this now reject? Name one, or prove there are none.
-3. Is `E` the right severity, or does some valid account configuration deploy this?
-4. Does it stay silent on `Ref`, `GetAtt`, `Fn::If`, and a non-scalar?
-5. Does this belong in a rule at all, or in enhanced-schemas? See `schema-sources.md`.
-6. Run it. See `verification.md` — do not accept the author's claim untested.
+4. Which valid templates does this now reject? Name one, or prove there are none.
+5. Is `E` the right severity, or does some valid account configuration deploy this?
+6. Does it stay silent on `Ref`, `GetAtt`, `Fn::If`, and a non-scalar?
+7. Does this belong in a rule at all, or in enhanced-schemas? See `schema-sources.md`.
+8. Run it. See `verification.md` — do not accept the author's claim untested.
