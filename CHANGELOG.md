@@ -49,6 +49,8 @@
 * Fix [E3062](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3062): scope DBInstanceClass enum per engine by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4870
 * fix(scripts): only collect orderable options for available RDS versions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4946
 * Update CloudFormation schemas to `2026-10-28` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4808
+* fix(config): only accept `append_rules` and `output_file` from the CLI, `--config-file`, or `~/.cfnlintrc` by @abouzou in https://github.com/aws-cloudformation/cfn-lint/commit/7bdcb335b595a66eb83bc74590d88f982155a4ad
+* Update python runtime to python 3.13 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4952
 
 ## New Contributors
 * @Varshith-Kali made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4786
@@ -58,6 +60,7 @@
 * @botantony made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4764
 * @blacksoxx made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4922
 * @hoganbr-amzn made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4943
+* @abouzou made their first contribution in https://github.com/aws-cloudformation/cfn-lint/commit/7bdcb335b595a66eb83bc74590d88f982155a4ad
 
 **Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.58.0...v1.59.0
 
