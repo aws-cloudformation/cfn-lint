@@ -2772,10 +2772,25 @@
    "batchgeteffectivelifecyclepolicy": {},
    "batchgetlifecyclepolicy": {},
    "batchgetvpcendpoint": {},
+   "cancelingestionjob": {
+    "Resources": [
+     "IngestionJob"
+    ]
+   },
    "createaccesspolicy": {},
    "createcollection": {},
    "createcollectiongroup": {},
    "createindex": {},
+   "createingestionjob": {
+    "Resources": [
+     "Collection"
+    ]
+   },
+   "createingestionstream": {
+    "Resources": [
+     "Collection"
+    ]
+   },
    "createlifecyclepolicy": {},
    "createsecurityconfig": {},
    "createsecuritypolicy": {},
@@ -2797,6 +2812,11 @@
     ]
    },
    "deleteindex": {},
+   "deleteingestionstream": {
+    "Resources": [
+     "IngestionStream"
+    ]
+   },
    "deletelifecyclepolicy": {},
    "deletesecurityconfig": {},
    "deletesecuritypolicy": {},
@@ -2804,19 +2824,60 @@
    "getaccesspolicy": {},
    "getaccountsettings": {},
    "getindex": {},
+   "getingestionjob": {
+    "Resources": [
+     "IngestionJob"
+    ]
+   },
+   "getingestionstream": {
+    "Resources": [
+     "IngestionStream"
+    ]
+   },
    "getpoliciesstats": {},
    "getsecurityconfig": {},
    "getsecuritypolicy": {},
    "listaccesspolicies": {},
    "listcollectiongroups": {},
    "listcollections": {},
+   "listingestionjobs": {
+    "Resources": [
+     "Collection"
+    ]
+   },
+   "listingestionstreams": {
+    "Resources": [
+     "Collection"
+    ]
+   },
    "listlifecyclepolicies": {},
    "listsecurityconfigs": {},
    "listsecuritypolicies": {},
-   "listtagsforresource": {},
+   "listtagsforresource": {
+    "Resources": [
+     "Collection",
+     "CollectionGroup",
+     "IngestionJob",
+     "IngestionStream"
+    ]
+   },
    "listvpcendpoints": {},
-   "tagresource": {},
-   "untagresource": {},
+   "tagresource": {
+    "Resources": [
+     "Collection",
+     "CollectionGroup",
+     "IngestionJob",
+     "IngestionStream"
+    ]
+   },
+   "untagresource": {
+    "Resources": [
+     "Collection",
+     "CollectionGroup",
+     "IngestionJob",
+     "IngestionStream"
+    ]
+   },
    "updateaccesspolicy": {},
    "updateaccountsettings": {},
    "updatecollection": {
@@ -2855,6 +2916,22 @@
    "dashboards": {
     "ARNFormats": [
      "arn:${Partition}:aoss:${Region}:${Account}:dashboards/default"
+    ]
+   },
+   "ingestionjob": {
+    "ARNFormats": [
+     "arn:${Partition}:aoss:${Region}:${Account}:collection/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "ingestionstream": {
+    "ARNFormats": [
+     "arn:${Partition}:aoss:${Region}:${Account}:collection/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    }
   }
@@ -23153,118 +23230,6 @@
    }
   }
  },
- "codestar": {
-  "Actions": {
-   "associateteammember": {
-    "Resources": [
-     "project"
-    ]
-   },
-   "createproject": {},
-   "createuserprofile": {
-    "Resources": [
-     "user"
-    ]
-   },
-   "deleteextendedaccess": {
-    "Resources": [
-     "project"
-    ]
-   },
-   "deleteproject": {
-    "Resources": [
-     "project"
-    ]
-   },
-   "deleteuserprofile": {
-    "Resources": [
-     "user"
-    ]
-   },
-   "describeproject": {
-    "Resources": [
-     "project"
-    ]
-   },
-   "describeuserprofile": {},
-   "disassociateteammember": {
-    "Resources": [
-     "project"
-    ]
-   },
-   "getextendedaccess": {
-    "Resources": [
-     "project"
-    ]
-   },
-   "listprojects": {},
-   "listresources": {
-    "Resources": [
-     "project"
-    ]
-   },
-   "listtagsforproject": {
-    "Resources": [
-     "project"
-    ]
-   },
-   "listteammembers": {
-    "Resources": [
-     "project"
-    ]
-   },
-   "listuserprofiles": {},
-   "putextendedaccess": {
-    "Resources": [
-     "project"
-    ]
-   },
-   "tagproject": {
-    "Resources": [
-     "project"
-    ]
-   },
-   "untagproject": {
-    "Resources": [
-     "project"
-    ]
-   },
-   "updateproject": {
-    "Resources": [
-     "project"
-    ]
-   },
-   "updateteammember": {
-    "Resources": [
-     "project"
-    ]
-   },
-   "updateuserprofile": {
-    "Resources": [
-     "user"
-    ]
-   },
-   "verifyservicerole": {}
-  },
-  "Resources": {
-   "project": {
-    "ARNFormats": [
-     "arn:${Partition}:codestar:${Region}:${Account}:project/.*"
-    ],
-    "ConditionKeys": [
-     "aws:ResourceTag/${TagKey}"
-    ]
-   },
-   "user": {
-    "ARNFormats": [
-     "arn:${Partition}:iam::${Account}:user/.*"
-    ],
-    "ConditionKeys": [
-     "iam:ResourceTag/${TagKey}"
-    ]
-   }
-  }
- },
  "codestar-connections": {
   "Actions": {
    "createconnection": {},
@@ -27982,6 +27947,207 @@
   },
   "Resources": {}
  },
+ "continuum": {
+  "Actions": {
+   "associatecollector": {
+    "Resources": [
+     "environments"
+    ]
+   },
+   "createcodefinding": {
+    "Resources": [
+     "code-findings",
+     "environments"
+    ]
+   },
+   "createcodescan": {
+    "Resources": [
+     "code-scans",
+     "environments"
+    ]
+   },
+   "createcollector": {
+    "Resources": [
+     "collectors"
+    ]
+   },
+   "createenvironment": {
+    "Resources": [
+     "environments",
+     "integrations"
+    ]
+   },
+   "createintegration": {
+    "Resources": [
+     "integrations"
+    ]
+   },
+   "deletecollector": {
+    "Resources": [
+     "collectors"
+    ]
+   },
+   "deleteenvironment": {
+    "Resources": [
+     "environments"
+    ]
+   },
+   "deleteintegration": {
+    "Resources": [
+     "integrations"
+    ]
+   },
+   "disassociatecollector": {
+    "Resources": [
+     "environments"
+    ]
+   },
+   "getcodefinding": {
+    "Resources": [
+     "code-findings"
+    ]
+   },
+   "getcodeissue": {
+    "Resources": [
+     "code-issues"
+    ]
+   },
+   "getcodeissueartifact": {
+    "Resources": [
+     "code-issues"
+    ]
+   },
+   "getcodescan": {
+    "Resources": [
+     "code-scans"
+    ]
+   },
+   "getcollector": {
+    "Resources": [
+     "collectors"
+    ]
+   },
+   "getcollectordataaccessauthorization": {
+    "Resources": [
+     "collectors"
+    ]
+   },
+   "getenvironment": {
+    "Resources": [
+     "environments"
+    ]
+   },
+   "getintegration": {
+    "Resources": [
+     "integrations"
+    ]
+   },
+   "getresourcepolicy": {
+    "Resources": [
+     "collectors"
+    ]
+   },
+   "listassociatedcollectors": {
+    "Resources": [
+     "environments"
+    ]
+   },
+   "listassociatedenvironments": {
+    "Resources": [
+     "collectors"
+    ]
+   },
+   "listcodefindings": {
+    "Resources": [
+     "environments"
+    ]
+   },
+   "listcodeissueartifacts": {
+    "Resources": [
+     "code-issues"
+    ]
+   },
+   "listcodeissues": {
+    "Resources": [
+     "environments"
+    ]
+   },
+   "listcodescans": {
+    "Resources": [
+     "environments"
+    ]
+   },
+   "listcollectors": {
+    "Resources": [
+     "collectors"
+    ]
+   },
+   "listenvironments": {
+    "Resources": [
+     "environments"
+    ]
+   },
+   "listintegrations": {
+    "Resources": [
+     "integrations"
+    ]
+   },
+   "putresourcepolicy": {
+    "Resources": [
+     "collectors"
+    ]
+   },
+   "startintegrationauthorization": {},
+   "updatecollector": {
+    "Resources": [
+     "collectors"
+    ]
+   },
+   "updateenvironment": {
+    "Resources": [
+     "environments",
+     "integrations"
+    ]
+   },
+   "updateintegration": {
+    "Resources": [
+     "integrations"
+    ]
+   }
+  },
+  "Resources": {
+   "code-findings": {
+    "ARNFormats": [
+     "arn:${Partition}:continuum:${Region}:${Account}:environments/.*"
+    ]
+   },
+   "code-issues": {
+    "ARNFormats": [
+     "arn:${Partition}:continuum:${Region}:${Account}:environments/.*"
+    ]
+   },
+   "code-scans": {
+    "ARNFormats": [
+     "arn:${Partition}:continuum:${Region}:${Account}:environments/.*"
+    ]
+   },
+   "collectors": {
+    "ARNFormats": [
+     "arn:${Partition}:continuum:${Region}:${Account}:collectors/.*"
+    ]
+   },
+   "environments": {
+    "ARNFormats": [
+     "arn:${Partition}:continuum:${Region}:${Account}:environments/.*"
+    ]
+   },
+   "integrations": {
+    "ARNFormats": [
+     "arn:${Partition}:continuum:${Region}:${Account}:integrations/.*"
+    ]
+   }
+  }
+ },
  "controlcatalog": {
   "Actions": {
    "getcontrol": {
@@ -28881,17 +29047,41 @@
     ]
    },
    "createagent": {},
-   "createlocationazureblob": {},
+   "createlocationazureblob": {
+    "Resources": [
+     "agent"
+    ]
+   },
    "createlocationefs": {},
    "createlocationfsxlustre": {},
    "createlocationfsxontap": {},
    "createlocationfsxopenzfs": {},
    "createlocationfsxwindows": {},
-   "createlocationhdfs": {},
-   "createlocationnfs": {},
-   "createlocationobjectstorage": {},
-   "createlocations3": {},
-   "createlocationsmb": {},
+   "createlocationhdfs": {
+    "Resources": [
+     "agent"
+    ]
+   },
+   "createlocationnfs": {
+    "Resources": [
+     "agent"
+    ]
+   },
+   "createlocationobjectstorage": {
+    "Resources": [
+     "agent"
+    ]
+   },
+   "createlocations3": {
+    "Resources": [
+     "agent"
+    ]
+   },
+   "createlocationsmb": {
+    "Resources": [
+     "agent"
+    ]
+   },
    "createtask": {
     "Resources": [
      "agent",
@@ -29076,6 +29266,7 @@
    },
    "updatelocationazureblob": {
     "Resources": [
+     "agent",
      "location"
     ]
    },
@@ -29106,16 +29297,19 @@
    },
    "updatelocationhdfs": {
     "Resources": [
+     "agent",
      "location"
     ]
    },
    "updatelocationnfs": {
     "Resources": [
+     "agent",
      "location"
     ]
    },
    "updatelocationobjectstorage": {
     "Resources": [
+     "agent",
      "location"
     ]
    },
@@ -29126,6 +29320,7 @@
    },
    "updatelocationsmb": {
     "Resources": [
+     "agent",
      "location"
     ]
    },
@@ -33678,6 +33873,11 @@
     ]
    },
    "disablekinesisstreamingdestination": {
+    "Resources": [
+     "table"
+    ]
+   },
+   "disassociatetablereplica": {
     "Resources": [
      "table"
     ]
@@ -39368,6 +39568,7 @@
    },
    "describepullthroughcacherules": {},
    "describeregistry": {},
+   "describereplicationbackfillresults": {},
    "describerepositories": {
     "Resources": [
      "repository"
@@ -39415,6 +39616,7 @@
     ]
    },
    "listpulltimeupdateexclusions": {},
+   "listreplicationbackfills": {},
    "listtagsforresource": {
     "Resources": [
      "repository"
@@ -39466,6 +39668,8 @@
      "repository"
     ]
    },
+   "startreplicationbackfill": {},
+   "stopreplicationbackfill": {},
    "tagresource": {
     "Resources": [
      "repository"
@@ -42846,6 +43050,11 @@
    },
    "createdictionary": {},
    "createfeed": {},
+   "createscheduleaction": {
+    "Resources": [
+     "feed"
+    ]
+   },
    "deletedictionary": {
     "Resources": [
      "dictionary"
@@ -42857,6 +43066,11 @@
     ]
    },
    "deletefeedpolicy": {
+    "Resources": [
+     "feed"
+    ]
+   },
+   "deletescheduleaction": {
     "Resources": [
      "feed"
     ]
@@ -42893,6 +43107,11 @@
    },
    "listdictionaries": {},
    "listfeeds": {},
+   "listscheduleactions": {
+    "Resources": [
+     "feed"
+    ]
+   },
    "listtagsforresource": {},
    "putfeedpolicy": {
     "Resources": [
@@ -43671,6 +43890,11 @@
      "datasource"
     ]
    },
+   "addreplicationpeer": {
+    "Resources": [
+     "domain"
+    ]
+   },
    "addtags": {
     "Resources": [
      "application",
@@ -43705,6 +43929,11 @@
     ]
    },
    "cancelservicesoftwareupdate": {
+    "Resources": [
+     "domain"
+    ]
+   },
+   "comparedomainconfiguration": {
     "Resources": [
      "domain"
     ]
@@ -43816,6 +44045,11 @@
      "domain"
     ]
    },
+   "describedomainreplication": {
+    "Resources": [
+     "domain"
+    ]
+   },
    "describedomains": {
     "Resources": [
      "domain"
@@ -43904,6 +44138,11 @@
     ]
    },
    "eshttpput": {
+    "Resources": [
+     "domain"
+    ]
+   },
+   "failoverreplication": {
     "Resources": [
      "domain"
     ]
@@ -44050,6 +44289,11 @@
    },
    "rejectinboundconnection": {},
    "rejectinboundcrossclustersearchconnection": {},
+   "removereplicationpeer": {
+    "Resources": [
+     "domain"
+    ]
+   },
    "removetags": {
     "Resources": [
      "application",
@@ -44084,6 +44328,11 @@
     ]
    },
    "startservicesoftwareupdate": {
+    "Resources": [
+     "domain"
+    ]
+   },
+   "switchoverreplication": {
     "Resources": [
      "domain"
     ]
@@ -54373,6 +54622,7 @@
    "getencryptionkey": {},
    "getfindingsreportstatus": {},
    "getmember": {},
+   "getondemandscanstatus": {},
    "getsbomexport": {},
    "listaccountpermissions": {},
    "listcisscanconfigurations": {},
@@ -54391,6 +54641,7 @@
    "listfindingaggregations": {},
    "listfindings": {},
    "listmembers": {},
+   "listondemandscans": {},
    "listtagsforresource": {},
    "listusagetotals": {},
    "resetencryptionkey": {},
@@ -54399,6 +54650,7 @@
    "sendcissessiontelemetry": {},
    "startcissession": {},
    "startcodesecurityscan": {},
+   "startondemandscan": {},
    "stopcissession": {},
    "tagresource": {
     "Resources": [
@@ -59297,6 +59549,11 @@
      "Encoder-Configuration"
     ]
    },
+   "createfailoverslateconfiguration": {
+    "Resources": [
+     "Failover-Slate-Configuration"
+    ]
+   },
    "createingestconfiguration": {
     "Resources": [
      "Ingest-Configuration"
@@ -59346,6 +59603,11 @@
    "deleteencoderconfiguration": {
     "Resources": [
      "Encoder-Configuration"
+    ]
+   },
+   "deletefailoverslateconfiguration": {
+    "Resources": [
+     "Failover-Slate-Configuration"
     ]
    },
    "deleteingestconfiguration": {
@@ -59411,6 +59673,11 @@
    "getencoderconfiguration": {
     "Resources": [
      "Encoder-Configuration"
+    ]
+   },
+   "getfailoverslateconfiguration": {
+    "Resources": [
+     "Failover-Slate-Configuration"
     ]
    },
    "getingestconfiguration": {
@@ -59501,6 +59768,11 @@
     ]
    },
    "listencoderconfigurations": {},
+   "listfailoverslateconfigurations": {
+    "Resources": [
+     "Failover-Slate-Configuration"
+    ]
+   },
    "listingestconfigurations": {},
    "listparticipantevents": {
     "Resources": [
@@ -59562,6 +59834,7 @@
      "Channel",
      "Composition",
      "Encoder-Configuration",
+     "Failover-Slate-Configuration",
      "Ingest-Configuration",
      "Playback-Key-Pair",
      "Playback-Restriction-Policy",
@@ -59577,6 +59850,7 @@
      "Channel"
     ]
    },
+   "revokeconnectiontoken": {},
    "startcomposition": {
     "Resources": [
      "Channel",
@@ -59616,6 +59890,7 @@
      "Channel",
      "Composition",
      "Encoder-Configuration",
+     "Failover-Slate-Configuration",
      "Ingest-Configuration",
      "Playback-Key-Pair",
      "Playback-Restriction-Policy",
@@ -59632,6 +59907,7 @@
      "Channel",
      "Composition",
      "Encoder-Configuration",
+     "Failover-Slate-Configuration",
      "Ingest-Configuration",
      "Playback-Key-Pair",
      "Playback-Restriction-Policy",
@@ -59646,6 +59922,11 @@
    "updatechannel": {
     "Resources": [
      "Channel"
+    ]
+   },
+   "updatefailoverslateconfiguration": {
+    "Resources": [
+     "Failover-Slate-Configuration"
     ]
    },
    "updateingestconfiguration": {
@@ -59692,6 +59973,14 @@
    "encoder-configuration": {
     "ARNFormats": [
      "arn:${Partition}:ivs:${Region}:${Account}:encoder-configuration/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "failover-slate-configuration": {
+    "ARNFormats": [
+     "arn:${Partition}:ivs:${Region}:${Account}:failover-slate-configuration/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -59891,12 +60180,14 @@
    },
    "createcluster": {
     "Resources": [
-     "cluster"
+     "cluster",
+     "configuration"
     ]
    },
    "createclusterv2": {
     "Resources": [
-     "cluster"
+     "cluster",
+     "configuration"
     ]
    },
    "createconfiguration": {
@@ -60397,6 +60688,21 @@
     ]
    },
    "listworkerconfigurations": {},
+   "pauseconnector": {
+    "Resources": [
+     "connector"
+    ]
+   },
+   "restartconnector": {
+    "Resources": [
+     "connector"
+    ]
+   },
+   "resumeconnector": {
+    "Resources": [
+     "connector"
+    ]
+   },
    "tagresource": {
     "Resources": [
      "connector",
@@ -61617,6 +61923,11 @@
     ]
    },
    "createkey": {},
+   "decapsulate": {
+    "Resources": [
+     "key"
+    ]
+   },
    "decrypt": {
     "Resources": [
      "key"
@@ -61662,6 +61973,11 @@
     ]
    },
    "enablekeyrotation": {
+    "Resources": [
+     "key"
+    ]
+   },
+   "encapsulate": {
     "Resources": [
      "key"
     ]
@@ -71865,7 +72181,8 @@
    "associatefirewallpolicy": {
     "Resources": [
      "Firewall",
-     "FirewallPolicy"
+     "FirewallPolicy",
+     "FirewallPolicyV2"
     ]
    },
    "associatesubnets": {
@@ -71887,7 +72204,8 @@
    "createfirewall": {
     "Resources": [
      "Firewall",
-     "FirewallPolicy"
+     "FirewallPolicy",
+     "FirewallPolicyV2"
     ]
    },
    "createfirewallpolicy": {
@@ -71895,6 +72213,14 @@
      "FirewallPolicy",
      "StatefulRuleGroup",
      "StatelessRuleGroup",
+     "TLSInspectionConfiguration"
+    ]
+   },
+   "createfirewallpolicyv2": {
+    "Resources": [
+     "FirewallPolicyV2",
+     "FirewallRuleGroup",
+     "IpsRuleGroup",
      "TLSInspectionConfiguration"
     ]
    },
@@ -71922,6 +72248,8 @@
    },
    "createrulegroup": {
     "Resources": [
+     "FirewallRuleGroup",
+     "IpsRuleGroup",
      "StatefulRuleGroup",
      "StatelessRuleGroup"
     ]
@@ -71950,6 +72278,11 @@
    "deletefirewallpolicy": {
     "Resources": [
      "FirewallPolicy"
+    ]
+   },
+   "deletefirewallpolicyv2": {
+    "Resources": [
+     "FirewallPolicyV2"
     ]
    },
    "deletenetworkfirewalltransitgatewayattachment": {
@@ -71981,12 +72314,17 @@
     "Resources": [
      "Firewall",
      "FirewallPolicy",
+     "FirewallPolicyV2",
+     "FirewallRuleGroup",
+     "IpsRuleGroup",
      "StatefulRuleGroup",
      "StatelessRuleGroup"
     ]
    },
    "deleterulegroup": {
     "Resources": [
+     "FirewallRuleGroup",
+     "IpsRuleGroup",
      "StatefulRuleGroup",
      "StatelessRuleGroup"
     ]
@@ -72024,6 +72362,14 @@
      "TLSInspectionConfiguration"
     ]
    },
+   "describefirewallpolicyv2": {
+    "Resources": [
+     "FirewallPolicyV2",
+     "FirewallRuleGroup",
+     "IpsRuleGroup",
+     "TLSInspectionConfiguration"
+    ]
+   },
    "describeflowoperation": {
     "Resources": [
      "Firewall"
@@ -72058,24 +72404,33 @@
     "Resources": [
      "Firewall",
      "FirewallPolicy",
+     "FirewallPolicyV2",
+     "FirewallRuleGroup",
+     "IpsRuleGroup",
      "StatefulRuleGroup",
      "StatelessRuleGroup"
     ]
    },
    "describerulegroup": {
     "Resources": [
+     "FirewallRuleGroup",
+     "IpsRuleGroup",
      "StatefulRuleGroup",
      "StatelessRuleGroup"
     ]
    },
    "describerulegroupmetadata": {
     "Resources": [
+     "FirewallRuleGroup",
+     "IpsRuleGroup",
      "StatefulRuleGroup",
      "StatelessRuleGroup"
     ]
    },
    "describerulegroupsummary": {
     "Resources": [
+     "FirewallRuleGroup",
+     "IpsRuleGroup",
      "StatefulRuleGroup",
      "StatelessRuleGroup"
     ]
@@ -72122,6 +72477,11 @@
      "FirewallPolicy"
     ]
    },
+   "listfirewallpoliciesv2": {
+    "Resources": [
+     "FirewallPolicyV2"
+    ]
+   },
    "listfirewalls": {
     "Resources": [
      "Firewall"
@@ -72158,6 +72518,9 @@
      "ContainerAssociation",
      "Firewall",
      "FirewallPolicy",
+     "FirewallPolicyV2",
+     "FirewallRuleGroup",
+     "IpsRuleGroup",
      "StatefulRuleGroup",
      "StatelessRuleGroup",
      "TLSInspectionConfiguration",
@@ -72178,6 +72541,9 @@
     "Resources": [
      "Firewall",
      "FirewallPolicy",
+     "FirewallPolicyV2",
+     "FirewallRuleGroup",
+     "IpsRuleGroup",
      "StatefulRuleGroup",
      "StatelessRuleGroup"
     ]
@@ -72207,6 +72573,9 @@
      "ContainerAssociation",
      "Firewall",
      "FirewallPolicy",
+     "FirewallPolicyV2",
+     "FirewallRuleGroup",
+     "IpsRuleGroup",
      "Proxy",
      "ProxyConfiguration",
      "ProxyRuleGroup",
@@ -72221,6 +72590,9 @@
      "ContainerAssociation",
      "Firewall",
      "FirewallPolicy",
+     "FirewallPolicyV2",
+     "FirewallRuleGroup",
+     "IpsRuleGroup",
      "Proxy",
      "ProxyConfiguration",
      "ProxyRuleGroup",
@@ -72273,6 +72645,14 @@
      "Firewall"
     ]
    },
+   "updatefirewallpolicyv2": {
+    "Resources": [
+     "FirewallPolicyV2",
+     "FirewallRuleGroup",
+     "IpsRuleGroup",
+     "TLSInspectionConfiguration"
+    ]
+   },
    "updateloggingconfiguration": {
     "Resources": [
      "Firewall"
@@ -72305,6 +72685,8 @@
    },
    "updaterulegroup": {
     "Resources": [
+     "FirewallRuleGroup",
+     "IpsRuleGroup",
      "StatefulRuleGroup",
      "StatelessRuleGroup"
     ]
@@ -72340,6 +72722,30 @@
    "firewallpolicy": {
     "ARNFormats": [
      "arn:${Partition}:network-firewall:${Region}:${Account}:firewall-policy/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "firewallpolicyv2": {
+    "ARNFormats": [
+     "arn:${Partition}:network-firewall:${Region}:${Account}:firewall-policy-v2/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "firewallrulegroup": {
+    "ARNFormats": [
+     "arn:${Partition}:network-firewall:${Region}:${Account}:firewall-rulegroup/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "ipsrulegroup": {
+    "ARNFormats": [
+     "arn:${Partition}:network-firewall:${Region}:${Account}:ips-rulegroup/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -73227,6 +73633,11 @@
      "attachment"
     ]
    },
+   "listattachmentnatconfigurations": {
+    "Resources": [
+     "attachment"
+    ]
+   },
    "listattachmentroutingpolicyassociations": {
     "Resources": [
      "core-network"
@@ -73340,6 +73751,11 @@
      "link",
      "peering",
      "site"
+    ]
+   },
+   "updateattachmentnatconfiguration": {
+    "Resources": [
+     "attachment"
     ]
    },
    "updateconnection": {
@@ -74580,6 +74996,7 @@
    "createcloudvmcluster": {
     "Resources": [
      "cloud-exadata-infrastructure",
+     "exascale-db-storage-vault",
      "odb-network"
     ]
    },
@@ -74594,7 +75011,11 @@
      "odb-network"
     ]
    },
-   "createexascaledbstoragevault": {},
+   "createexascaledbstoragevault": {
+    "Resources": [
+     "cloud-exadata-infrastructure"
+    ]
+   },
    "creategrantshare": {},
    "createodbnetwork": {},
    "createodbpeeringconnection": {
@@ -74807,7 +75228,11 @@
      "exascale-db-storage-vault"
     ]
    },
-   "listexascaledbstoragevaults": {},
+   "listexascaledbstoragevaults": {
+    "Resources": [
+     "cloud-exadata-infrastructure"
+    ]
+   },
    "listflexcomponents": {},
    "listgiminorversions": {},
    "listgiversions": {},
@@ -74933,6 +75358,11 @@
    "updateexadbvmcluster": {
     "Resources": [
      "exadb-vm-cluster"
+    ]
+   },
+   "updateexascalecloudexadatainfrastructure": {
+    "Resources": [
+     "cloud-exadata-infrastructure"
     ]
    },
    "updateexascaledbstoragevault": {
@@ -77381,6 +77811,7 @@
      "engagement-invitation"
     ]
    },
+   "searchopportunities": {},
    "searchpartnercentralcontent": {},
    "searchpartnerprofiles": {},
    "sendemailverificationcode": {},
@@ -83827,6 +84258,7 @@
      "cluster-pg",
      "cluster-snapshot",
      "db",
+     "db-capacity-reservation",
      "deployment",
      "es",
      "global-cluster",
@@ -83859,6 +84291,11 @@
    "backtrackdbcluster": {
     "Resources": [
      "cluster"
+    ]
+   },
+   "canceldbcapacityreservation": {
+    "Resources": [
+     "db-capacity-reservation"
     ]
    },
    "cancelexporttask": {},
@@ -83906,6 +84343,11 @@
      "cev"
     ]
    },
+   "createdbcapacityreservation": {
+    "Resources": [
+     "db-capacity-reservation"
+    ]
+   },
    "createdbcluster": {
     "Resources": [
      "cluster",
@@ -83937,6 +84379,7 @@
     "Resources": [
      "cluster",
      "db",
+     "db-capacity-reservation",
      "og",
      "pg",
      "secgrp",
@@ -83947,6 +84390,7 @@
     "Resources": [
      "cluster",
      "db",
+     "db-capacity-reservation",
      "og",
      "pg",
      "subgrp"
@@ -84144,6 +84588,11 @@
     ]
    },
    "describecertificates": {},
+   "describedbcapacityreservations": {
+    "Resources": [
+     "db-capacity-reservation"
+    ]
+   },
    "describedbclusterautomatedbackups": {
     "Resources": [
      "cluster",
@@ -84372,6 +84821,7 @@
      "cluster-pg",
      "cluster-snapshot",
      "db",
+     "db-capacity-reservation",
      "es",
      "global-cluster",
      "integration",
@@ -84405,6 +84855,11 @@
      "cev"
     ]
    },
+   "modifydbcapacityreservation": {
+    "Resources": [
+     "db-capacity-reservation"
+    ]
+   },
    "modifydbcluster": {
     "Resources": [
      "cluster",
@@ -84431,6 +84886,7 @@
    "modifydbinstance": {
     "Resources": [
      "db",
+     "db-capacity-reservation",
      "og",
      "pg",
      "secgrp",
@@ -84573,6 +85029,7 @@
      "cluster-pg",
      "cluster-snapshot",
      "db",
+     "db-capacity-reservation",
      "deployment",
      "es",
      "global-cluster",
@@ -84632,6 +85089,7 @@
     "Resources": [
      "cluster-snapshot",
      "db",
+     "db-capacity-reservation",
      "og",
      "pg",
      "snapshot",
@@ -84641,6 +85099,7 @@
    "restoredbinstancefroms3": {
     "Resources": [
      "db",
+     "db-capacity-reservation",
      "og",
      "pg",
      "secgrp",
@@ -84651,6 +85110,7 @@
     "Resources": [
      "auto-backup",
      "db",
+     "db-capacity-reservation",
      "og",
      "pg",
      "subgrp"
@@ -84674,7 +85134,8 @@
    },
    "startdbinstance": {
     "Resources": [
-     "db"
+     "db",
+     "db-capacity-reservation"
     ]
    },
    "startdbinstanceautomatedbackupsreplication": {
@@ -84804,6 +85265,14 @@
      "rds:StorageSize",
      "rds:Vpc",
      "rds:db-tag/${TagKey}"
+    ]
+   },
+   "db-capacity-reservation": {
+    "ARNFormats": [
+     "arn:${Partition}:rds:${Region}:${Account}:db-capacity-reservation:.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "deployment": {
@@ -89232,6 +89701,11 @@
    "associatefirewallrulegroup": {
     "Resources": [
      "firewall-rule-group-association"
+    ]
+   },
+   "associatefirewallrulegroupwithservice": {
+    "Resources": [
+     "firewall-rule-group"
     ]
    },
    "associateresolverendpointipaddress": {
@@ -96245,11 +96719,6 @@
     ]
    },
    "batchdeletethreatmodels": {
-    "Resources": [
-     "AgentSpace"
-    ]
-   },
-   "batchdeletethreats": {
     "Resources": [
      "AgentSpace"
     ]
@@ -105546,6 +106015,11 @@
      "callanalyticscategory"
     ]
    },
+   "updatelanguagemodel": {
+    "Resources": [
+     "languagemodel"
+    ]
+   },
    "updatemedicalvocabulary": {
     "Resources": [
      "medicalvocabulary"
@@ -109910,6 +110384,16 @@
      "Assistant"
     ]
    },
+   "registerassistantreplicakey": {
+    "Resources": [
+     "Assistant"
+    ]
+   },
+   "registerknowledgebasereplicakey": {
+    "Resources": [
+     "KnowledgeBase"
+    ]
+   },
    "removeassistantaiagent": {
     "Resources": [
      "Assistant"
@@ -112003,6 +112487,7 @@
   "Actions": {
    "batchgettraces": {},
    "batchgettracesummarybyid": {},
+   "callwithbearertoken": {},
    "canceltraceretrieval": {},
    "creategroup": {
     "Resources": [
