@@ -13,7 +13,7 @@ from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
 class TableInputTableType(CfnLintKeyword):
-    id = "W3706"
+    id = "W3707"
     shortdesc = "Validate Glue table TableType is a recognized value"
     description = (
         "Glue stores any string in TableInput.TableType, so a misspelled value "
