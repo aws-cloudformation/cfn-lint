@@ -1,3 +1,66 @@
+### v1.59.0
+## What's Changed
+* test(conditions): cover add_equivalence branches by @moneytool in https://github.com/aws-cloudformation/cfn-lint/pull/4790
+* Fix [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3002)/[E6101](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E6101): don't crash when a resource or output condition can never be true by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4786
+* Fix crash when a resource's Metadata is not an object by @Neg23 in https://github.com/aws-cloudformation/cfn-lint/pull/4784
+* Fix [E3601](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3601): stringify path segments so array indices do not crash message formatting by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4782
+* Fix [E1017](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1017): allow Fn::If and nested Fn::Select as the Fn::Select index by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4793
+* Add [E1001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1001): require at least one resource in the Resources section by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4781
+* fix: Check the length of a template Description that mentions a dynamic reference by @sayaksatpathi in https://github.com/aws-cloudformation/cfn-lint/pull/4765
+* Fix [E8001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E8001): stop rejecting condition names CloudFormation accepts by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4787
+* Fix crash when the template Metadata is not an object by @Neg23 in https://github.com/aws-cloudformation/cfn-lint/pull/4807
+* Fix [E3004](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3004): evaluate SAM resource dependency cycles before reporting by @proton0210 in https://github.com/aws-cloudformation/cfn-lint/pull/4755
+* Fix [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1029): skip where CloudFormation doesn't evaluate Fn::Sub by @Thanatos9404 in https://github.com/aws-cloudformation/cfn-lint/pull/4759
+* Fix [E8001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E8001): report non-string condition names instead of crashing by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4814
+* fix: Validate --registry-schemas types against their schema again by @sayaksatpathi in https://github.com/aws-cloudformation/cfn-lint/pull/4763
+* Fix [E3620](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3620): Add db.serverless to the DocumentDB instance classes by @Thanatos9404 in https://github.com/aws-cloudformation/cfn-lint/pull/4761
+* Fix [E3670](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3670): Use full xlarge names for Amazon MQ instance types by @Thanatos9404 in https://github.com/aws-cloudformation/cfn-lint/pull/4760
+* feat: add Python 3.15 support by @botantony in https://github.com/aws-cloudformation/cfn-lint/pull/4764
+* Fix [E3690](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3690)/[E3691](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3691): accept neptune and sqlserver-dev engines by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4830
+* Fix [E3049](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3049): don't report when HealthCheckPort is omitted by @Neg23 in https://github.com/aws-cloudformation/cfn-lint/pull/4829
+* Fix [E1152](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1152): accept resolve:ssm: ImageId on AWS::EC2::Instance by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4828
+* feat(kiro): add issue-triage, issue-worker, and pr-reviewer agents by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4831
+* fix(formats): match an anyOf of formats on the source schema by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4832
+* Update tests for schema changes by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4864
+* fix(conditions): extend Fn::Equals mutual-exclusion beyond AllowedValues parameters by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4805
+* Fix [E3688](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3688): false positives on IpProtocol "-1", icmpv6 and "ICMP" rules by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4806
+* chore(deps): bump setuptools from 84.0.0 to 84.2.1 in /requirements by @dependabot[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4861
+* Update tests for schema changes by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4872
+* feat(kiro): widen triage issue access, machine-generate permissions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4868
+* Fix [E1019](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1019): resolve SAM generated Version/Alias references in Fn::Sub by @moneytool in https://github.com/aws-cloudformation/cfn-lint/pull/4798
+* Fix [E3720](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3720): do not require StorageEncrypted on RDS read replicas by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4842
+* docs: rank deployment above probes in agent evidence hierarchy by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4867
+* Fix [E3690](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3690)/[E3691](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3691): allow major-only EngineVersion for mysql and mariadb by @moneytool in https://github.com/aws-cloudformation/cfn-lint/pull/4796
+* Fix [E2015](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2015): compare Default as CloudFormation strings by @moneytool in https://github.com/aws-cloudformation/cfn-lint/pull/4797
+* docs: check quota adjustability before encoding a limit by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4895
+* Fix [E3005](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3005): skip DependsOn check when target condition is always true by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4843
+* Fix [E3001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3001): allow a string resource-level Description by @blacksoxx in https://github.com/aws-cloudformation/cfn-lint/pull/4922
+* Fix [E3671](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3671): Set gp3 Iops limits per resource type by @Thanatos9404 in https://github.com/aws-cloudformation/cfn-lint/pull/4866
+* Test [W3001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3001): pin that a resource-level Description does not warn by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4923
+* Fix [E3671](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3671): allow gp3 Iops from 100 and warn when it is raised by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4930
+* Fix [E3051](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3051): skip Automation schema for AppConfig SSM document types by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4844
+* docs(kiro): narrow the validate-template prohibition to provider-owned constraints by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4932
+* Add [E1165](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1165): AWS::IAM::Role.Name format keyword by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4936
+* Remove rule `E3511` in favour of the [E1156](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1156) role ARN format by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4942
+* Fix [E3615](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3615): Allow a CloudWatch alarm Period of 20 by @Thanatos9404 in https://github.com/aws-cloudformation/cfn-lint/pull/4905
+* Update schemas (AdditionalSpecs/LmbdRuntimeLifecycle.json): Lambda runtime lifecycle dates from AWS docs by @hoganbr-amzn in https://github.com/aws-cloudformation/cfn-lint/pull/4943
+* Fix [E2531](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2531)/[W2531](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W2531)/[E2533](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2533): handle unscheduled Lambda runtime block dates by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4945
+* Fix [E3695](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3695): Allow redis EngineVersion 6.x on CacheCluster by @Thanatos9404 in https://github.com/aws-cloudformation/cfn-lint/pull/4906
+* Fix [E3062](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3062): scope DBInstanceClass enum per engine by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4870
+* fix(scripts): only collect orderable options for available RDS versions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4946
+* Update CloudFormation schemas to `2026-10-28` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4808
+
+## New Contributors
+* @Varshith-Kali made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4786
+* @Neg23 made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4784
+* @sayaksatpathi made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4765
+* @Thanatos9404 made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4759
+* @botantony made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4764
+* @blacksoxx made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4922
+* @hoganbr-amzn made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4943
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.58.0...v1.59.0
+
 ### v1.58.0
 ## What's Changed
 * test(getatts): add NumberOfAssociations to NetworkFirewall::Firewall by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4788
