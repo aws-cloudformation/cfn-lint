@@ -92,6 +92,14 @@ It reaches cfn-lint on the next schema sync. Editing
 `src/cfnlint/data/schemas/providers/` or `resources/` never works — both are
 gitignored and overwritten by `--update-specs`.
 
+### Keyword behaviour for one rule
+
+A rule that needs a keyword to behave differently registers an override in
+`self.validators` and delegates to the stock keyword. `E1700` does this for
+`patternProperties`; the `outputs`, `parameters` and `resources` configuration rules
+do the same. Do not change the keyword's implementation in `src/cfnlint/jsonschema/`
+to suit one rule — every schema using that keyword inherits it.
+
 ## Rule Metadata
 
 - **id** — correct category (see Rule ID System in `structure.md`); find the
