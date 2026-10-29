@@ -34,7 +34,7 @@ class Document(CfnLintJsonSchema):
 
     def __init__(self):
         super().__init__(
-            ["Resources/AWS::SSM::Document/Properties"],
+            ["Resources/AWS::SSM::Document/Properties/Content"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.other.ssm,
                 filename="document.json",
@@ -58,17 +58,18 @@ class Document(CfnLintJsonSchema):
         # First time child rules are configured against the rule
         # so we can run this now
 
-        # The rule is keyworded at Properties, so DocumentType and Content
-        # are both keys of the instance. AppConfig document types carry
-        # configuration data or a JSON Schema, neither of which has an
-        # SSM schemaVersion key, so they skip the Automation schema.
-        if not validator.is_type(instance, "object"):
-            return
-        if instance.get("DocumentType") in self._APPCONFIG_DOCUMENT_TYPES:
-            return
-        if "Content" not in instance:
-            return
-        instance = instance.get("Content")
+        # An AppConfig DocumentType makes the Automation schema inapplicable
+        for document_type, _ in validator.cfn.get_cfn_path(
+            [
+                "Resources",
+                str(validator.context.path.path[1]),
+                "Properties",
+                "DocumentType",
+            ],
+            validator.context,
+        ):
+            if document_type in self._APPCONFIG_DOCUMENT_TYPES:
+                return
 
         if validator.is_type(instance, "string"):
             ssm_validator = validator.evolve(
@@ -86,7 +87,6 @@ class Document(CfnLintJsonSchema):
                     f"Document is not valid ({errs[0].message!r})",
                     validator="type",
                     rule=self,
-                    path=["Content"],
                 )
                 return
         else:
@@ -102,5 +102,4 @@ class Document(CfnLintJsonSchema):
         for err in ssm_validator.iter_errors(instance):
             if not err.validator.startswith("fn_") and err.validator not in ["cfnLint"]:
                 err.rule = self
-            err.path.appendleft("Content")
             yield err
