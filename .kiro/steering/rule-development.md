@@ -92,6 +92,14 @@ It reaches cfn-lint on the next schema sync. Editing
 `src/cfnlint/data/schemas/providers/` or `resources/` never works — both are
 gitignored and overwritten by `--update-specs`.
 
+### Keyword behaviour for one rule
+
+A rule that needs a keyword to behave differently registers an override in
+`self.validators` and delegates to the stock keyword. `E1700` does this for
+`patternProperties`; the `outputs`, `parameters` and `resources` configuration rules
+do the same. Do not change the keyword's implementation in `src/cfnlint/jsonschema/`
+to suit one rule — every schema using that keyword inherits it.
+
 ## Rule Metadata
 
 - **id** — correct category (see Rule ID System in `structure.md`); find the
@@ -114,9 +122,10 @@ Severity follows consequence, not confidence:
 
 1. **Prove the constraint.** A real deployment first, then real templates known
    to deploy, then a service-level API probe, then AWS docs. Never the base CFN
-   schema alone, and never `aws cloudformation validate-template` — it does not
-   invoke a resource provider, so it cannot establish a property constraint.
-   Then check whether the number is a soft account quota, which is never an
+   schema alone, and never `aws cloudformation validate-template` for a property
+   constraint — it invokes no resource provider, though it does establish
+   control-plane structure such as parameter types. Then check whether the
+   number is a soft account quota, which is never an
    `E` — see [`../context/verification.md`](../context/verification.md).
 2. **Decide where it belongs** — this repo or enhanced-schemas.
 3. **Pick the simplest rule type** that expresses it.

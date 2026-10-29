@@ -36,6 +36,10 @@ This format validates that the value is a valid Amazon Machine Image (AMI), whic
 
 This format validates that the value is a valid IAM Role ARN, which is a string of the pattern `^arn:aws[a-zA-Z-]*:iam::\d{12}:role/.+$`.  More info in [docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html)
 
+### AWS::IAM::Role.Name
+
+This format validates that the value is a valid IAM Role name, optionally prefixed with its IAM path, which is a string of the pattern `^(/[!-~]+/)?[a-zA-Z0-9_+=,.@-]{1,64}$`. The name part is the IAM `RoleName` spec `[\w+=,.@-]{1,64}` and the optional leading group is the IAM `Path` spec `(\u002F)|(\u002F[\u0021-\u007E]+\u002F)`, because the APIs that accept a role name take the path and the name concatenated. `\w` is spelled out in ASCII because it is Unicode-aware in Python but ASCII-only in ECMA-262.  More info in [docs](https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateRole.html)
+
 ### AWS::KMS::Key.Arn
 
 This format validates that the value is a valid KMS key ARN (key or alias), which is a string of the pattern `^arn:aws[a-zA-Z-]*:kms:[a-z0-9-]+:\d{12}:(key|alias)/.+$`.  More info in [docs](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id)

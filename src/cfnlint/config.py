@@ -30,6 +30,8 @@ LOGGER = logging.getLogger("cfnlint")
 
 _DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), "rules")
 
+_CLI_OR_USER_CONFIG_ONLY_KEYS = ("append_rules", "output_file")
+
 
 def configure_logging(debug_logging, info_logging):
     ch = logging.StreamHandler()
@@ -155,6 +157,7 @@ class ConfigFileArgs:
             project_config = self._read_config(self._project_config_file)
             LOGGER.debug("Validating Project CFNLINTRC")
             self.validate_config(project_config, self.schema)
+            self._check_cli_or_user_only_keys(project_config)
 
             LOGGER.debug("User configuration loaded as")
             LOGGER.debug("%s", user_config)
@@ -163,6 +166,20 @@ class ConfigFileArgs:
 
             LOGGER.debug("Merging configurations...")
             self.file_args = self.merge_config(user_config, project_config)
+
+    def _check_cli_or_user_only_keys(self, project_config):
+        if not isinstance(project_config, dict):
+            return
+        keys = [k for k in _CLI_OR_USER_CONFIG_ONLY_KEYS if k in project_config]
+        if keys:
+            raise ConfigFileError(
+                (
+                    f"{', '.join(repr(k) for k in keys)} cannot be set in "
+                    f"{self._project_config_file}; set it with a CLI flag, "
+                    "--config-file, or ~/.cfnlintrc"
+                ),
+                None,
+            )
 
     def validate_config(self, config, schema):
         """Validate configuration against schema

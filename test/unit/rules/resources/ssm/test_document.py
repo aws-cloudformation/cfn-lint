@@ -3,11 +3,14 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import json
 from collections import deque
 
 import pytest
 import yaml
 
+from cfnlint.api import lint
+from cfnlint.context import Path
 from cfnlint.decode.mark import Mark
 from cfnlint.decode.node import dict_node, str_node
 from cfnlint.jsonschema.validators import ValidationError
@@ -18,6 +21,16 @@ from cfnlint.rules.resources.ssm.Document import Document
 def rule():
     rule = Document()
     yield rule
+
+
+def _at_content(validator, resource_name="Doc"):
+    return validator.evolve(
+        context=validator.context.evolve(
+            path=Path(
+                path=deque(["Resources", resource_name, "Properties", "Content"]),
+            )
+        )
+    )
 
 
 @pytest.mark.parametrize(
@@ -127,9 +140,138 @@ def test_validate(
     rule,
     validator,
 ):
-    errs = list(rule.validate(validator, {}, document, {}))
+    errs = list(rule.validate(_at_content(validator), {}, document, {}))
 
     assert errs == expected, f"Test {name!r} failed with {errs!r}"
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        {
+            "Parameters": {
+                "DocTypeParam": {"Type": "String", "Default": "Automation"},
+                "Env": {"Type": "String", "Default": "prod"},
+            },
+            "Conditions": {"IsProd": {"Fn::Equals": [{"Ref": "Env"}, "prod"]}},
+            "Resources": {
+                "ConfigSchema": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "ApplicationConfigurationSchema",
+                        "DocumentFormat": "JSON",
+                        "Content": {
+                            "$schema": "http://json-schema.org/draft-04/schema#",
+                            "type": "object",
+                        },
+                    },
+                },
+                "ConfigData": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "ApplicationConfiguration",
+                        "DocumentFormat": "JSON",
+                        "Content": {"featureEnabled": True},
+                    },
+                },
+                "AutomationDoc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "Automation",
+                        "DocumentFormat": "YAML",
+                        "Content": {"description": "no schemaVersion"},
+                    },
+                },
+                "NoDocumentType": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "Content": {"description": "no schemaVersion"},
+                    },
+                },
+                "IntrinsicTypeDoc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": {"Ref": "DocTypeParam"},
+                        "DocumentFormat": "YAML",
+                        "Content": {"description": "no schemaVersion"},
+                    },
+                },
+                "ConditionalAppConfigDoc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": {
+                            "Fn::If": [
+                                "IsProd",
+                                "ApplicationConfiguration",
+                                "ApplicationConfigurationSchema",
+                            ]
+                        },
+                        "Content": {"featureEnabled": True},
+                    },
+                },
+                "ConditionalPlainDoc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": {"Fn::If": ["IsProd", "Command", "Automation"]},
+                        "Content": {"description": "no schemaVersion"},
+                    },
+                },
+                "ConditionalMixedDoc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": {
+                            "Fn::If": ["IsProd", "ApplicationConfiguration", "Command"]
+                        },
+                        "Content": {"featureEnabled": True},
+                    },
+                },
+                "ConfigDataString": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "ApplicationConfiguration",
+                        "Content": "featureEnabled: true",
+                    },
+                },
+                "ConfigSchemaString": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "ApplicationConfigurationSchema",
+                        "Content": '{"type": "object"}',
+                    },
+                },
+            },
+        }
+    ],
+    indirect=True,
+)
+@pytest.mark.parametrize(
+    "resource_name,expected_count",
+    [
+        ("ConfigSchema", 0),
+        ("ConfigData", 0),
+        ("AutomationDoc", 1),
+        ("NoDocumentType", 1),
+        ("IntrinsicTypeDoc", 1),
+        ("ConditionalAppConfigDoc", 0),
+        ("ConditionalPlainDoc", 1),
+        ("ConditionalMixedDoc", 0),
+        ("ConfigDataString", 0),
+        ("ConfigSchemaString", 0),
+    ],
+)
+def test_validate_document_type_scoping(
+    resource_name,
+    expected_count,
+    rule,
+    validator,
+):
+    """E3051 skips AppConfig document types but still validates the rest"""
+    content = validator.cfn.template["Resources"][resource_name]["Properties"][
+        "Content"
+    ]
+    errs = list(rule.validate(_at_content(validator, resource_name), {}, content, {}))
+
+    assert len(errs) == expected_count, f"{resource_name} got {errs!r}"
 
 
 def test_validate_string_content_as_str_node(rule, validator):
@@ -142,14 +284,14 @@ def test_validate_string_content_as_str_node(rule, validator):
         Mark(0, 0),
         Mark(0, 0),
     )
-    assert list(rule.validate(validator, {}, valid, {})) == []
+    assert list(rule.validate(_at_content(validator), {}, valid, {})) == []
 
     malformed = str_node(
         "{bad json",
         Mark(0, 0),
         Mark(0, 0),
     )
-    errs = list(rule.validate(validator, {}, malformed, {}))
+    errs = list(rule.validate(_at_content(validator), {}, malformed, {}))
     assert len(errs) == 1
     assert errs[0].message.startswith("Document is not valid (")
     assert "a string or stream input is required" not in errs[0].message
@@ -161,7 +303,7 @@ def test_validate_string_content_as_str_node(rule, validator):
         Mark(0, 0),
         Mark(0, 0),
     )
-    errs = list(rule.validate(validator, {}, bad_version, {}))
+    errs = list(rule.validate(_at_content(validator), {}, bad_version, {}))
     assert any("is not one of" in err.message for err in errs)
     assert any("2.2" in err.message for err in errs)
     assert not any(
@@ -179,7 +321,7 @@ def test_validate_object_content_as_dict_node(rule, validator):
         Mark(0, 0),
         Mark(0, 0),
     )
-    assert list(rule.validate(validator, {}, valid, {})) == []
+    assert list(rule.validate(_at_content(validator), {}, valid, {})) == []
 
 
 def test_validate_by_py_version(rule, validator):
@@ -204,6 +346,116 @@ def test_validate_by_py_version(rule, validator):
         )
     ]
 
-    errs = list(rule.validate(validator, {}, document, {}))
+    errs = list(rule.validate(_at_content(validator), {}, document, {}))
 
     assert errs == expected
+
+
+@pytest.mark.parametrize(
+    "name,resources,expected",
+    [
+        (
+            "Content from a Ref is not resolvable",
+            {
+                "Doc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "Command",
+                        "Content": {"Ref": "DocBody"},
+                    },
+                }
+            },
+            [],
+        ),
+        (
+            "Content from a GetAtt is not resolvable",
+            {
+                "Stack1": {
+                    "Type": "AWS::CloudFormation::Stack",
+                    "Properties": {"TemplateURL": "https://example.com/t.yaml"},
+                },
+                "Doc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "Command",
+                        "Content": {"Fn::GetAtt": ["Stack1", "Outputs.Body"]},
+                    },
+                },
+            },
+            [],
+        ),
+        (
+            "Content from a Sub is not resolvable",
+            {
+                "Doc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "Command",
+                        "Content": {"Fn::Sub": '{"schemaVersion":"${DocBody}"}'},
+                    },
+                }
+            },
+            [],
+        ),
+        (
+            "Content from a Fn::If validates each branch",
+            {
+                "Doc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "Command",
+                        "Content": {
+                            "Fn::If": [
+                                "IsProd",
+                                {"schemaVersion": "2.2", "mainSteps": []},
+                                {"description": "no schemaVersion"},
+                            ]
+                        },
+                    },
+                }
+            },
+            ["E3051"],
+        ),
+        (
+            "A Command document still needs a schemaVersion",
+            {
+                "Doc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "Command",
+                        "Content": {"description": "no schemaVersion"},
+                    },
+                }
+            },
+            ["E3051"],
+        ),
+        (
+            "An AppConfig document does not",
+            {
+                "Doc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "ApplicationConfiguration",
+                        "Content": {"featureEnabled": True},
+                    },
+                }
+            },
+            [],
+        ),
+    ],
+)
+def test_keyword_registration(name, resources, expected):
+    """Content behind an intrinsic function is filtered before E3051 runs"""
+    template = {
+        "Parameters": {
+            "DocBody": {"Type": "String", "Default": '{"schemaVersion":"2.2"}'},
+            "Env": {"Type": "String", "Default": "prod"},
+        },
+        "Conditions": {"IsProd": {"Fn::Equals": [{"Ref": "Env"}, "prod"]}},
+        "Resources": resources,
+    }
+    matches = lint(json.dumps(template), regions=["us-east-1"])
+
+    assert [
+        match.rule.id for match in matches if match.rule.id == "E3051"
+    ] == expected, f"Test {name!r} failed with {matches!r}"

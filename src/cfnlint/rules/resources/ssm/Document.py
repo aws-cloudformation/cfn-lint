@@ -24,6 +24,14 @@ class Document(CfnLintJsonSchema):
     source_url = "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html"
     tags = ["properties", "ssm", "document"]
 
+    # Document types that hold AppConfig configuration data or a JSON Schema.
+    # Neither content format carries an SSM schemaVersion key, so the
+    # Automation document schema does not apply to them.
+    _APPCONFIG_DOCUMENT_TYPES = (
+        "ApplicationConfiguration",
+        "ApplicationConfigurationSchema",
+    )
+
     def __init__(self):
         super().__init__(
             ["Resources/AWS::SSM::Document/Properties/Content"],
@@ -49,6 +57,19 @@ class Document(CfnLintJsonSchema):
     ) -> ValidationResult:
         # First time child rules are configured against the rule
         # so we can run this now
+
+        # An AppConfig DocumentType makes the Automation schema inapplicable
+        for document_type, _ in validator.cfn.get_cfn_path(
+            [
+                "Resources",
+                str(validator.context.path.path[1]),
+                "Properties",
+                "DocumentType",
+            ],
+            validator.context,
+        ):
+            if document_type in self._APPCONFIG_DOCUMENT_TYPES:
+                return
 
         if validator.is_type(instance, "string"):
             ssm_validator = validator.evolve(
