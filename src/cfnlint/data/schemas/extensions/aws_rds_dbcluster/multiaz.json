@@ -14,6 +14,16 @@
   ]
  },
  "then": {
+  "else": {
+   "required": [
+    "AllocatedStorage"
+   ]
+  },
+  "if": {
+   "required": [
+    "ReplicationSourceIdentifier"
+   ]
+  },
   "properties": {
    "AvailabilityZones": false,
    "BacktrackWindow": false,
@@ -25,7 +35,6 @@
    "EngineMode": false,
    "GlobalClusterIdentifier": false,
    "NetworkType": false,
-   "ReplicationSourceIdentifier": false,
    "ScalingConfiguration": false,
    "ServerlessV2ScalingConfiguration": false,
    "SourceRegion": false,
@@ -43,10 +52,13 @@
    }
   },
   "required": [
-   "AllocatedStorage",
    "DBClusterInstanceClass",
-   "Iops",
-   "StorageType"
-  ]
+   "Iops"
+  ],
+  "then": {
+   "properties": {
+    "AllocatedStorage": false
+   }
+  }
  }
 }

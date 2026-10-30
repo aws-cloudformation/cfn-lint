@@ -32,17 +32,21 @@ class DbClusterMultiAz(CfnLintJsonSchema):
             all_matches=True,
         )
 
-    # DBClusterInstanceClass is required
-    # AllocatedStorage is required
-    # Iops is required
+    # Rewrite messages for forbidden properties; read replicas get their own
     def validate(
         self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
         for err in super().validate(validator, keywords, instance, schema):
             if err.schema is False:
-                err.message = (
-                    "Additional properties are not allowed "
-                    f"{err.path[0]!r} when creating Multi-AZ cluster"
-                )
+                if list(err.schema_path)[:2] == ["then", "then"]:
+                    err.message = (
+                        f"{err.path[0]!r} is not allowed on a Multi-AZ DB "
+                        "cluster read replica (ReplicationSourceIdentifier is set)"
+                    )
+                else:
+                    err.message = (
+                        "Additional properties are not allowed "
+                        f"{err.path[0]!r} when creating Multi-AZ cluster"
+                    )
 
             yield err
