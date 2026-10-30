@@ -294,6 +294,50 @@ class TestConditions(TestCase):
             )
         )
 
+    def test_check_condition_partition(self):
+        """Partition based condition testing"""
+        template = decode_str(
+            """
+        Parameters:
+          Environment:
+            Type: String
+            AllowedValues: ["prod", "dev", "stage"]
+        Conditions:
+          IsIso: !Equals [!Ref AWS::Partition, "aws-iso"]
+          IsChina: !Equals ["aws-cn", !Ref AWS::Partition]
+          IsNotIso: !Not [!Condition IsIso]
+          IsIsoEast1: !And
+            - !Condition IsIso
+            - !Equals [!Ref AWS::Region, "us-iso-east-1"]
+          IsGovOrIso: !Or
+            - !Condition IsIso
+            - !Equals [!Ref AWS::Partition, "aws-us-gov"]
+          IsProd: !Equals [!Ref Environment, "prod"]
+          IsProdIso: !And [!Condition IsProd, !Condition IsIso]
+        """
+        )[0]
+
+        cfn = Template("", template)
+
+        def scenarios(name, region):
+            return cfn.conditions.build_scenerios_on_region(name, region)
+
+        self.assertListEqual(scenarios("IsIso", "us-iso-east-1"), [True])
+        self.assertListEqual(scenarios("IsIso", "us-iso-west-1"), [True])
+        self.assertListEqual(scenarios("IsIso", "us-isob-east-1"), [False])
+        self.assertListEqual(scenarios("IsIso", "us-east-1"), [False])
+        self.assertListEqual(scenarios("IsChina", "cn-north-1"), [True])
+        self.assertListEqual(scenarios("IsChina", "us-gov-west-1"), [False])
+        self.assertListEqual(scenarios("IsNotIso", "us-iso-east-1"), [False])
+        self.assertListEqual(scenarios("IsNotIso", "eu-west-1"), [True])
+        self.assertListEqual(scenarios("IsIsoEast1", "us-iso-east-1"), [True])
+        self.assertListEqual(scenarios("IsIsoEast1", "us-iso-west-1"), [False])
+        self.assertListEqual(scenarios("IsGovOrIso", "us-gov-east-1"), [True])
+        self.assertListEqual(scenarios("IsGovOrIso", "cn-north-1"), [False])
+        self.assertListEqual(scenarios("IsProd", "us-iso-east-1"), [True, False])
+        self.assertListEqual(scenarios("IsProdIso", "us-iso-east-1"), [True, False])
+        self.assertListEqual(scenarios("IsProdIso", "us-east-1"), [False])
+
     def test_build_scenerios_on_region_with_condition_dne(self):
         """Get condition and test"""
         template = decode_str(
