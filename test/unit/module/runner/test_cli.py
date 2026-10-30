@@ -291,3 +291,31 @@ class TestCli(BaseTestCase):
                 with self.assertRaises(SystemExit):
                     main()
                 mock_print.assert_called_once_with("Invalid key 'bad'")
+
+
+class TestMainOverrideSpec(BaseTestCase):
+    """main() turns a bad override spec into an exit code, not a traceback"""
+
+    @patch(
+        "sys.argv",
+        [
+            "cfn-lint",
+            "--override-spec",
+            "/nonexistent/spec.json",
+            "-t",
+            "test/fixtures/templates/good/generic.yaml",
+        ],
+    )
+    def test_missing_override_spec_exits_one(self):
+        from cfnlint.runner.cli import main
+        from cfnlint.schema import _patch
+
+        _patch.reset()
+        try:
+            with self.assertLogs("cfnlint.runner.cli", level="ERROR") as logs:
+                with self.assertRaises(SystemExit) as e:
+                    main()
+            self.assertEqual(e.exception.code, 1)
+            self.assertIn("Override spec file not found", logs.output[0])
+        finally:
+            _patch.reset()
