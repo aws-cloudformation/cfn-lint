@@ -455,6 +455,187 @@ class TestConditionsWithRules(TestCase):
         )
 
 
+class TestRulesConstrainParameterValues(TestCase):
+    """Rule assertions on a parameter vs a literal constrain resolved values"""
+
+    def test_unconditional_not_equals(self):
+        template = decode_str(
+            """
+        Parameters:
+          DestinationArn:
+            Type: String
+            Default: ""
+        Rules:
+          DestinationRequired:
+            Assertions:
+            - Assert: !Not [!Equals [!Ref DestinationArn, ""]]
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertFalse(cfn.conditions.satisfiable({}, {"DestinationArn": ""}))
+        self.assertTrue(
+            cfn.conditions.satisfiable({}, {"DestinationArn": "arn:aws:logs"})
+        )
+        # no resolved value for the parameter leaves the rule unpinned
+        self.assertTrue(cfn.conditions.satisfiable({}, {}))
+
+    def test_rule_condition(self):
+        template = decode_str(
+            """
+        Parameters:
+          Environment:
+            Type: String
+            Default: dev
+            AllowedValues: [dev, prod]
+          DestinationArn:
+            Type: String
+            Default: ""
+        Rules:
+          DestinationRequiredInProd:
+            RuleCondition: !Equals [!Ref Environment, prod]
+            Assertions:
+            - Assert: !Not [!Equals [!Ref DestinationArn, ""]]
+        Conditions:
+          IsProd: !Equals [!Ref Environment, prod]
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertFalse(
+            cfn.conditions.satisfiable({"IsProd": True}, {"DestinationArn": ""})
+        )
+        self.assertTrue(
+            cfn.conditions.satisfiable({"IsProd": False}, {"DestinationArn": ""})
+        )
+        self.assertTrue(
+            cfn.conditions.satisfiable({"IsProd": True}, {"DestinationArn": "arn"})
+        )
+        self.assertTrue(cfn.conditions.satisfiable({}, {"DestinationArn": ""}))
+        self.assertFalse(
+            cfn.conditions.satisfiable(
+                {}, {"DestinationArn": "", "Environment": "prod"}
+            )
+        )
+
+    def test_equals_pins_value(self):
+        template = decode_str(
+            """
+        Parameters:
+          Engine:
+            Type: String
+        Rules:
+          EngineIsPostgres:
+            Assertions:
+            - Assert: !Equals [!Ref Engine, postgres]
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertTrue(cfn.conditions.satisfiable({}, {"Engine": "postgres"}))
+        self.assertFalse(cfn.conditions.satisfiable({}, {"Engine": "mysql"}))
+
+    def test_or_of_equals(self):
+        template = decode_str(
+            """
+        Parameters:
+          Engine:
+            Type: String
+        Rules:
+          EngineIsSupported:
+            Assertions:
+            - Assert: !Or
+              - !Equals [!Ref Engine, postgres]
+              - !Equals [!Ref Engine, mysql]
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertTrue(cfn.conditions.satisfiable({}, {"Engine": "postgres"}))
+        self.assertTrue(cfn.conditions.satisfiable({}, {"Engine": "mysql"}))
+        self.assertFalse(cfn.conditions.satisfiable({}, {"Engine": "oracle"}))
+
+    def test_contains(self):
+        template = decode_str(
+            """
+        Parameters:
+          Engine:
+            Type: String
+        Rules:
+          EngineIsSupported:
+            Assertions:
+            - Assert: !Contains [[postgres, mysql], !Ref Engine]
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertEqual(len(cfn.conditions._rules), 1)
+        self.assertTrue(cfn.conditions.satisfiable({}, {"Engine": "postgres"}))
+        self.assertTrue(cfn.conditions.satisfiable({}, {"Engine": "mysql"}))
+        self.assertFalse(cfn.conditions.satisfiable({}, {"Engine": "oracle"}))
+
+    def test_duplicate_and_static_equals(self):
+        template = decode_str(
+            """
+        Parameters:
+          Engine:
+            Type: String
+        Rules:
+          EngineIsPostgres:
+            Assertions:
+            - Assert: !Equals [!Ref Engine, postgres]
+          EngineIsPostgresAgain:
+            Assertions:
+            - Assert: !Equals [postgres, !Ref Engine]
+          AlwaysTrue:
+            Assertions:
+            - Assert: !Equals [a, a]
+        """
+        )[0]
+
+        cfn = Template("", template)
+        # the same Fn::Equals in two rules is collected once and a static
+        # Fn::Equals is not collected
+        self.assertEqual(len(cfn.conditions._rule_parameter_equals), 1)
+        self.assertTrue(cfn.conditions.satisfiable({}, {"Engine": "postgres"}))
+        self.assertFalse(cfn.conditions.satisfiable({}, {"Engine": "mysql"}))
+
+    def test_not_pinned(self):
+        template = decode_str(
+            """
+        Parameters:
+          Subnets:
+            Type: CommaDelimitedList
+          AccountId:
+            Type: String
+        Rules:
+          InUsEast1:
+            Assertions:
+            - Assert: !Equals [!Ref AWS::Region, us-east-1]
+          SameAccount:
+            Assertions:
+            - Assert: !Equals [!Ref AccountId, !Ref AWS::AccountId]
+          NotEmpty:
+            Assertions:
+            - Assert: !Not [!Equals [!Ref Subnets, ""]]
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertEqual(len(cfn.conditions._rules), 3)
+        # pseudo parameters, Ref against Ref and list values are left alone
+        self.assertTrue(
+            cfn.conditions.satisfiable(
+                {},
+                {
+                    "AWS::Region": "us-west-2",
+                    "AccountId": "123456789012",
+                    "Subnets": [""],
+                },
+            )
+        )
+
+
 class TestAssertion(TestCase):
     def test_assertion_errors(self):
         with self.assertRaises(ValueError):
@@ -468,6 +649,19 @@ class TestAssertion(TestCase):
 
         with self.assertRaises(ValueError):
             _Assertion({"Condition": {"C": "D"}}, {})
+
+    def test_assertion_contains_unsupported(self):
+        for value in [
+            "foo",
+            [["a"]],
+            [[], {"Ref": "P"}],
+            [[{"Ref": "Q"}], {"Ref": "P"}],
+            [["a"], "a"],
+            [["a"], {"Fn::GetAtt": ["R", "Arn"]}],
+        ]:
+            with self.subTest(value=value):
+                with self.assertRaises(ValueError):
+                    _Assertion({"Fn::Contains": value}, {})
 
     def test_init_rules_with_list(self):
         template = decode_str(
