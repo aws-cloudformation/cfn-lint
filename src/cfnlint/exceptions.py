@@ -96,3 +96,10 @@ class ConfigFileError(CfnLintExitException):
         """
         super().__init__(msg)
         self.config = config
+
+
+class SchemaPatchError(CfnLintExitException):
+    """
+    An exception that is raised when an override spec cannot be read or a JSON
+    patch in it cannot be applied to the schema it names.
+    """
