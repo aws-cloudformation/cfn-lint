@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: EventBridge rule targets that are not supported services
+Conditions:
+  IsUsEast1: !Equals [!Ref "AWS::Region", us-east-1]
+Resources:
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+  Function:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Runtime: python3.13
+      Role: !GetAtt Role.Arn
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return event
+  Rule:
+    Type: AWS::Events::Rule
+    Properties:
+      State: ENABLED
+      ScheduleExpression: "cron(0/15 * * * ? *)"
+      Targets:
+        - Id: GetAttRole
+          Arn: !GetAtt Role.Arn
+        - Id: SubRole
+          Arn: !Sub "${Role.Arn}"
+        - Id: LiteralRole
+          Arn: arn:aws:iam::123456789012:role/my-role
+        - Id: SubLiteralRole
+          Arn: !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/my-role"
+        - Id: ConditionalTarget
+          Arn: !If [IsUsEast1, !GetAtt Function.Arn, !GetAtt Role.Arn]
