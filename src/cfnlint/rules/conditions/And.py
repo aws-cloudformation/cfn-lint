@@ -14,7 +14,7 @@ class And(BaseFn):
 
     id = "E8004"
     shortdesc = "Check Fn::And structure for validity"
-    description = "Check Fn::And is a list of two elements"
+    description = "Check Fn::And is a list of two to ten elements"
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-and"
     tags = ["functions", "and"]
 
