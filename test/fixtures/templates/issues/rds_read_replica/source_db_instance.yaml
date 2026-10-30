@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  Source DB instance (no SourceDBInstanceIdentifier). Setting these
+  properties is normal here; no warning may fire.
+Resources:
+  SourceDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      MasterUsername: dbadmin
+      MasterUserPassword: "{{resolve:secretsmanager:MyRDSSecret:SecretString:password}}"
+      DBName: srcdb
+      StorageEncrypted: true
+      BackupRetentionPeriod: 7
+      PreferredBackupWindow: 03:00-04:00
