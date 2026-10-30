@@ -11,6 +11,8 @@ import yaml
 
 from cfnlint.api import lint
 from cfnlint.context import Path
+from cfnlint.decode.mark import Mark
+from cfnlint.decode.node import dict_node, str_node
 from cfnlint.jsonschema.validators import ValidationError
 from cfnlint.rules.resources.ssm.Document import Document
 
@@ -270,6 +272,56 @@ def test_validate_document_type_scoping(
     errs = list(rule.validate(_at_content(validator, resource_name), {}, content, {}))
 
     assert len(errs) == expected_count, f"{resource_name} got {errs!r}"
+
+
+def test_validate_string_content_as_str_node(rule, validator):
+    # Content decoded from a template arrives as a str_node, not a plain
+    # str. Regression test for #4894: a well-formed JSON string must not
+    # draw the generic parser error, and a malformed one must report the
+    # actual parse defect instead of that same generic message.
+    valid = str_node(
+        '{"schemaVersion":"2.2","description":"ok","mainSteps":[]}',
+        Mark(0, 0),
+        Mark(0, 0),
+    )
+    assert list(rule.validate(_at_content(validator), {}, valid, {})) == []
+
+    malformed = str_node(
+        "{bad json",
+        Mark(0, 0),
+        Mark(0, 0),
+    )
+    errs = list(rule.validate(_at_content(validator), {}, malformed, {}))
+    assert len(errs) == 1
+    assert errs[0].message.startswith("Document is not valid (")
+    assert "a string or stream input is required" not in errs[0].message
+
+    # Inner schema validation must also run on string content: an empty
+    # schemaVersion parses as null and fails the enum check.
+    bad_version = str_node(
+        '{"schemaVersion":}',
+        Mark(0, 0),
+        Mark(0, 0),
+    )
+    errs = list(rule.validate(_at_content(validator), {}, bad_version, {}))
+    assert any("is not one of" in err.message for err in errs)
+    assert any("2.2" in err.message for err in errs)
+    assert not any(
+        "a string or stream input is required" in err.message for err in errs
+    )
+
+
+def test_validate_object_content_as_dict_node(rule, validator):
+    # Object-form Content is untouched by the string fix.
+    valid = dict_node(
+        {
+            "schemaVersion": "2.2",
+            "mainSteps": [{"action": "aws:runShellScript"}],
+        },
+        Mark(0, 0),
+        Mark(0, 0),
+    )
+    assert list(rule.validate(_at_content(validator), {}, valid, {})) == []
 
 
 def test_validate_by_py_version(rule, validator):

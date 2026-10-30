@@ -81,7 +81,8 @@ class Document(CfnLintJsonSchema):
                 schema=self.schema,
             )
 
-            instance, errs = decode_str(instance)
+            # The C YAML loader rejects str subclasses, so flatten the str_node
+            instance, errs = decode_str(str(instance))
             if errs:
                 yield ValidationError(
                     f"Document is not valid ({errs[0].message!r})",
