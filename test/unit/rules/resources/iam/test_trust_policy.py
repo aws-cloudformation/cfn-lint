@@ -286,7 +286,7 @@ class TestTrustPolicy(TestCase):
                 self.assertListEqual(errs, [])
 
     def test_unsupported_sts_principal(self):
-        """Test an sts principal that is neither assumed-role, root nor federated-user"""
+        """Test that an unsupported sts principal is caught"""
         validator = CfnTemplateValidator({}).evolve(
             context=Context(
                 functions=FUNCTIONS,
