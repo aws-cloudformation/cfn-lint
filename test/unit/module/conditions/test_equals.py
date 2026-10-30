@@ -72,3 +72,19 @@ class TestEquals(TestCase):
         equal = Equal(["us-west-2", "us-east-1"])
 
         self.assertFalse(equal.test({"foo": "bar"}))
+
+    def test_equals_is_partition(self):
+        """Test Equals against Ref AWS::Partition"""
+        equal = Equal([{"Ref": "AWS::Partition"}, "aws-iso"])
+        self.assertEqual(equal.is_partition, (True, "aws-iso"))
+        self.assertEqual(equal.is_region, (False, ""))
+
+        equal = Equal(["aws-cn", {"Ref": "AWS::Partition"}])
+        self.assertEqual(equal.is_partition, (True, "aws-cn"))
+
+        equal = Equal([self.equals, "us-east-1"])
+        self.assertEqual(equal.is_partition, (False, ""))
+        self.assertEqual(equal.is_region, (True, "us-east-1"))
+
+        equal = Equal([self.parameter_env, "prod"])
+        self.assertEqual(equal.is_partition, (False, ""))

@@ -21,6 +21,7 @@ from cfnlint.conditions._equals import Equal, EqualParameter
 from cfnlint.conditions._errors import UnknownSatisfisfaction
 from cfnlint.conditions._rule import Rule
 from cfnlint.conditions._utils import add_equivalence, get_hash
+from cfnlint.helpers import get_partition
 
 LOGGER = logging.getLogger(__name__)
 
@@ -379,26 +380,37 @@ class Conditions:
                condition could be True, False or both based on the region parameter
         """
         cnf_region = self._cnf.copy()
-        found_region = False
+        found_pseudo = False
 
         # validate the condition name exists
         # return True/False if it doesn't
         if condition_name not in self._conditions:
             return [True, False]
 
+        # A region fixes the partition too, so an Equals against
+        # Ref AWS::Partition is decided the same way as one against Ref AWS::Region
+        partition = get_partition(region)
         for eql in self._conditions[condition_name].equals:
             is_region, equal_region = eql.is_region
             if is_region:
-                found_region = True
+                found_pseudo = True
                 if equal_region == region:
                     cnf_region.add_prop(And(self._solver_params[eql.hash]))
                 else:
                     cnf_region.add_prop(Not(self._solver_params[eql.hash]))
+            is_partition, equal_partition = eql.is_partition
+            if is_partition:
+                found_pseudo = True
+                if equal_partition == partition:
+                    cnf_region.add_prop(And(self._solver_params[eql.hash]))
+                else:
+                    cnf_region.add_prop(Not(self._solver_params[eql.hash]))
 
-        # The condition doesn't use a region parameter so it can be True or False
+        # The condition doesn't use AWS::Region or AWS::Partition so it can be
+        # True or False
         # Note: It is possible its a hard coded condition but
         # for now we will return True and False
-        if not found_region:
+        if not found_pseudo:
             return [True, False]
 
         results = []

@@ -7,8 +7,11 @@ from collections import deque
 from test.unit.rules import BaseRuleTestCase
 from unittest.mock import Mock, patch
 
+from cfnlint.context import create_context_for_template
+from cfnlint.decode import decode_str
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.resources.ResourceType import ResourceType
+from cfnlint.template import Template
 
 
 class TestType(BaseRuleTestCase):
@@ -97,6 +100,43 @@ class TestType(BaseRuleTestCase):
             [
                 ValidationError(
                     "Resource type 'Foo::Bar::Type' does not exist in 'us-east-1'",
+                    path=deque(["Type"]),
+                    schema_path=deque([]),
+                    rule=ResourceType(),
+                ),
+            ],
+            errors,
+        )
+
+    def test_types_with_partition_conditions(self):
+        template = decode_str(
+            """
+        Conditions:
+          IsChina: !Equals [!Ref AWS::Partition, "aws-cn"]
+        Resources:
+          ChinaOnly:
+            Type: Foo::Bar::Type
+            Condition: IsChina
+        """
+        )[0]
+        cfn = Template("", template, ["us-east-1", "cn-north-1"])
+        validator = CfnTemplateValidator({}).evolve(
+            cfn=cfn, context=create_context_for_template(cfn)
+        )
+        errors = list(
+            self.rule.validate(
+                validator,
+                "cfnResources",
+                {"Type": "Foo::Bar::Type", "Condition": "IsChina"},
+                {},
+            )
+        )
+
+        self.assertListEqual(
+            errors,
+            [
+                ValidationError(
+                    "Resource type 'Foo::Bar::Type' does not exist in 'cn-north-1'",
                     path=deque(["Type"]),
                     schema_path=deque([]),
                     rule=ResourceType(),
