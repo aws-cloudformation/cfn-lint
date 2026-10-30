@@ -133,3 +133,46 @@ def test_validate(name, instance, expected, rule, context, cfn):
     errs = list(rule.validate(validator, {}, instance, {}))
 
     assert errs == expected, f"Test {name!r} got {errs!r}"
+
+
+def test_validate_bad_name_uses_e6004(context, cfn):
+    # A non-alphanumeric output name fails as additionalProperties at
+    # the section level; with child rules loaded it must map to E6004.
+    from cfnlint.rules.outputs.Pattern import Pattern
+
+    rule = Configuration()
+    rule.child_rules["E6004"] = Pattern()
+    validator = CfnTemplateValidator(context=context, cfn=cfn)
+    errs = list(
+        rule.validate(
+            validator,
+            {},
+            {"Ref&3": {"Value": "Foo"}},
+            {},
+        )
+    )
+
+    assert len(errs) == 1
+    assert errs[0].rule.id == "E6004"
+
+
+def test_validate_nested_property_stays_e6001(context, cfn):
+    # An unknown property inside an output is also an
+    # additionalProperties failure, but nested under patternProperties;
+    # it must stay E6001 even with child rules loaded.
+    from cfnlint.rules.outputs.Pattern import Pattern
+
+    rule = Configuration()
+    rule.child_rules["E6004"] = Pattern()
+    validator = CfnTemplateValidator(context=context, cfn=cfn)
+    errs = list(
+        rule.validate(
+            validator,
+            {},
+            {"MyOutput": {"Value": "Foo", "Name": "String"}},
+            {},
+        )
+    )
+
+    assert len(errs) == 1
+    assert errs[0].rule.id == "E6001"

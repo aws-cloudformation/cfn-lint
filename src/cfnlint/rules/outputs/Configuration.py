@@ -67,4 +67,18 @@ class Configuration(CfnLintJsonSchema):
             context=validator.context.evolve(strict_types=False),
         )
 
-        yield from super()._iter_errors(cfn_validator, instance)
+        for err in super()._iter_errors(cfn_validator, instance):
+            # The Outputs name rule is expressed as patternProperties
+            # with additionalProperties false, so a non-alphanumeric
+            # output name fails as additionalProperties at the section
+            # level instead of pattern. Route only that section-level
+            # failure to E6004; nested additionalProperties failures
+            # (unknown properties inside an output or its export) keep
+            # their E6001 rule.
+            if err.validator == "additionalProperties" and list(err.schema_path) == [
+                "additionalProperties"
+            ]:
+                pattern_rule = self.child_rules.get("E6004")
+                if pattern_rule is not None:
+                    err.rule = pattern_rule
+            yield err
