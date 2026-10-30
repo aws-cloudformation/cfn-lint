@@ -50,6 +50,79 @@ class TestTrustPolicy(TestCase):
         )
         self.assertListEqual(errs, [])
 
+    def test_valid_trust_policy_every_partition(self):
+        """Principal ARNs are valid in every partition"""
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::IAM::Role", "Properties"])
+                ),
+            )
+        )
+
+        for partition in ("aws-eusc", "aws-iso", "aws-iso-b", "aws-iso-e", "aws-iso-f"):
+            for principal in (
+                f"arn:{partition}:iam::123456789012:root",
+                f"arn:{partition}:iam::123456789012:role/Reader",
+                f"arn:{partition}:sts::123456789012:assumed-role/Reader/session",
+                f"arn:{partition}:sts::123456789012:root",
+                f"arn:{partition}:sts::123456789012:federated-user/example",
+            ):
+                policy = {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": "sts:AssumeRole",
+                            "Principal": {"AWS": principal},
+                        }
+                    ],
+                }
+                with self.subTest(principal=principal):
+                    errs = list(
+                        self.rule.validate(
+                            validator=validator,
+                            policy=policy,
+                            schema={},
+                            policy_type=None,
+                        )
+                    )
+                    self.assertListEqual(errs, [])
+
+    def test_invalid_trust_policy_non_aws_partition(self):
+        """A partition that does not start with aws is rejected"""
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::IAM::Role", "Properties"])
+                ),
+            )
+        )
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": "sts:AssumeRole",
+                    "Principal": {"AWS": "arn:azure:iam::123456789012:root"},
+                }
+            ],
+        }
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertEqual(len(errs), 1, errs)
+        self.assertIn(
+            "'arn:azure:iam::123456789012:root' does not match "
+            "'^arn:(aws[A-Za-z\\\\-]*?):iam::\\\\d{12}:(?:root|user|role)'",
+            [err.message for err in errs[0].context],
+        )
+
     def test_valid_trust_policy_account_id(self):
         """Test a valid trust policy with account ID principal"""
         validator = CfnTemplateValidator({}).evolve(
