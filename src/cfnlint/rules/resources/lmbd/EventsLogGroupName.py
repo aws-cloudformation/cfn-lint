@@ -24,7 +24,9 @@ class EventsLogGroupName(CloudFormationLintRule):
         "The current limit for a CloudWatch Log Group is they can have 5 subscription"
         " filters. We will look for duplicate LogGroupNames inside Subscription Filters"
         " and make sure they are within 5. This doesn't account for any other"
-        " subscription filters getting set."
+        " subscription filters getting set. Filters gated by Conditions are counted"
+        " per condition scenario, so filters that can never exist at the same time"
+        " are not counted together."
     )
     source_url = "https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/cloudwatch_limits_cwl.html"
     tags = ["resources", "lambda"]
@@ -39,17 +41,60 @@ class EventsLogGroupName(CloudFormationLintRule):
         )
 
         log_group_paths = self.__get_log_group_name_list(cfn)
-        for _, paths in log_group_paths.items():
-            if len(paths) > self.limit:
-                matches.append(RuleMatch(paths[2], message))
+        for _, entries in log_group_paths.items():
+            path = self.__get_limit_exceeding_path(cfn, entries)
+            if path is not None:
+                matches.append(RuleMatch(path, message))
 
         return matches
+
+    def __get_limit_exceeding_path(
+        self,
+        cfn: Template,
+        entries: list[tuple[list[str | int], str | None]],
+    ) -> list[str | int] | None:
+        """Return the path of the first filter over the limit, if any.
+
+        Filters without a Condition exist in every scenario. Filters with a
+        Condition exist only in scenarios where that Condition is true, so
+        the count that matters is the largest count over all satisfiable
+        condition scenarios, not the flat total. When the Conditions cannot
+        be resolved (for example an undefined Condition name) fall back to
+        the flat total so the rule keeps reporting instead of going silent.
+        """
+        conditions = {condition for _, condition in entries if condition}
+        if not conditions:
+            if len(entries) > self.limit:
+                return entries[self.limit][0]
+            return None
+
+        scenarios = list(
+            cfn.conditions.build_scenarios({name: {True, False} for name in conditions})
+        )
+        if not scenarios:
+            if len(entries) > self.limit:
+                return entries[self.limit][0]
+            return None
+
+        worst: list[list[str | int]] = []
+        for scenario in scenarios:
+            present = [
+                path
+                for path, condition in entries
+                if condition is None or scenario.get(condition, True)
+            ]
+            if len(present) > len(worst):
+                worst = present
+
+        if len(worst) > self.limit:
+            return worst[self.limit]
+        return None
 
     def __get_log_group_name_list(
         self,
         cfn: Template,
-    ) -> dict[str, list[list[str | int]]]:
-        log_group_paths: dict[str, list[list[str | int]]] = {}
+    ) -> dict[str, list[tuple[list[str | int], str | None]]]:
+        log_group_paths: dict[str, list[tuple[list[str | int], str | None]]] = {}
 
         # Enumerate AWS::Logs::SubscriptionFilter resources
         for resource_name, resource in cfn.get_resources(
@@ -64,7 +109,10 @@ class EventsLogGroupName(CloudFormationLintRule):
                 log_group_paths[log_group_name] = []
 
             log_group_paths[log_group_name].append(
-                ["Resources", resource_name, "Properties", "LogGroupName"],
+                (
+                    ["Resources", resource_name, "Properties", "LogGroupName"],
+                    self.__get_condition(resource),
+                ),
             )
 
         # Enumerate AWS::Serverless::Function CloudWatchLogs events
@@ -96,18 +144,29 @@ class EventsLogGroupName(CloudFormationLintRule):
                     log_group_paths[log_group_name] = []
 
                 log_group_paths[log_group_name].append(
-                    [
-                        "Resources",
-                        resource_name,
-                        "Properties",
-                        "Events",
-                        event_id,
-                        "Properties",
-                        "LogGroupName",
-                    ],
+                    (
+                        [
+                            "Resources",
+                            resource_name,
+                            "Properties",
+                            "Events",
+                            event_id,
+                            "Properties",
+                            "LogGroupName",
+                        ],
+                        # A SAM event inherits the Condition of its function
+                        self.__get_condition(resource),
+                    ),
                 )
 
         return log_group_paths
+
+    def __get_condition(self, resource: dict) -> str | None:
+        """Return the resource Condition name, if it is a plain string."""
+        condition = resource.get("Condition")
+        if isinstance(condition, str):
+            return condition
+        return None
 
     def match(self, cfn: Template) -> RuleMatches:
         """Check if Lambda Events Subscription is duplicated"""
