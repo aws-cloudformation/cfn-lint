@@ -32,6 +32,17 @@ class UnsupportedParameterType(CfnLintKeyword):
         if not validator.is_type(instance, "string"):
             return
 
+        # Lists of Systems Manager parameter types are covered by E2002
+        # with an error, since CloudFormation rejects them outright. Do
+        # not also report them here: the "may accept" wording below
+        # would be wrong for a type CloudFormation refuses.
+        if instance.startswith("List<") and instance.endswith(">"):
+            inner = instance[5:-1]
+            if inner == "AWS::SSM::Parameter::Name" or (
+                inner.startswith("AWS::SSM::Parameter::Value<") and inner.endswith(">")
+            ):
+                return
+
         # Check if it's an SSM or List type but not in the supported list
         if (
             instance.startswith("AWS::SSM::Parameter::Value<")
