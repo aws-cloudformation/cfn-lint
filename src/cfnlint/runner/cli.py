@@ -16,6 +16,7 @@ from cfnlint.config import ConfigMixIn, configure_logging
 from cfnlint.exceptions import (
     CfnLintExitException,
     ConfigFileError,
+    TemplatesNotFoundError,
     UnexpectedRuleException,
 )
 from cfnlint.rules import Match, Rules
@@ -104,10 +105,12 @@ class Runner:
         self.formatter = get_formatter(self.config)
         self.rules: Rules = Rules()
         self._get_rules()
+        # recorded, not reported, so a library caller isn't exited mid-construction
+        self._templates_error: str | None = None
         try:
             self.config.templates
         except ValueError as e:
-            self._cli_output([Match(str(e), ConfigError(), None)])
+            self._templates_error = str(e)
         # load registry schemas before patching
         if self.config.registry_schemas:
             for path in self.config.registry_schemas:
@@ -219,8 +222,11 @@ class Runner:
             Match: The matches found by running the rules against the template.
 
         Raises:
-            None: This function does not raise any exceptions.
+            TemplatesNotFoundError: If the configured templates match no files.
         """
+
+        if self._templates_error:
+            raise TemplatesNotFoundError(self._templates_error)
 
         if (
             not sys.stdin.isatty()
@@ -265,6 +271,9 @@ class Runner:
         Raises:
             None: This function does not raise any exceptions.
         """
+        if self._templates_error:
+            self._cli_output([Match(self._templates_error, ConfigError(), None)])
+
         # Add our logging configuration when running CLI
         configure_logging(self.config.debug, self.config.info)
 
