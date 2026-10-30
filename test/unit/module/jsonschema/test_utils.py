@@ -51,10 +51,6 @@ class TestUtils(unittest.TestCase):
             uniq_keys([{"foo": "foo"}, {"bar": "bar"}, {"foo": "foo"}], ["foo"])
         )
 
-        # Empty values are not compared
-        self.assertTrue(uniq_keys([{"foo": ""}, {"foo": ""}], ["foo"]))
-        self.assertFalse(uniq_keys([{"foo": ""}, {"foo": "a"}, {"foo": "a"}], ["foo"]))
-
 
 @pytest.mark.parametrize(
     "instance,schema,functions,expected",

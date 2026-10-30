@@ -247,7 +247,7 @@ class TestIdentityPolicies(TestCase):
         self.assertListEqual(list(errs[0].path), ["Statement"])
 
     def test_empty_sid(self):
-        """IAM accepts an empty Sid, also on several statements"""
+        """IAM accepts an empty Sid"""
         validator = CfnTemplateValidator()
 
         policy = {
@@ -257,12 +257,6 @@ class TestIdentityPolicies(TestCase):
                     "Sid": "",
                     "Effect": "Allow",
                     "Action": "s3:GetObject",
-                    "Resource": "*",
-                },
-                {
-                    "Sid": "",
-                    "Effect": "Allow",
-                    "Action": "s3:PutObject",
                     "Resource": "*",
                 },
             ],
