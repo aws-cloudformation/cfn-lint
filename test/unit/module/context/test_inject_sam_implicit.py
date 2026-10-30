@@ -388,6 +388,22 @@ class TestInjectSamImplicitResources:
         assert "ServerlessDeploymentApplication" not in resources
         assert "FnDeploymentGroup" not in resources
 
+    def test_no_codedeploy_without_deployment_preference(self):
+        """No CodeDeploy resources unless DeploymentPreference is specified."""
+        template_resources = {
+            "Fn": {
+                "Type": "AWS::Serverless::Function",
+                "Properties": {"Handler": "index.handler", "Runtime": "python3.12"},
+            }
+        }
+        resources: dict[str, Resource] = {}
+        _inject_sam_implicit_resources(template_resources, resources)
+        assert "ServerlessDeploymentApplication" not in resources
+        assert "FnDeploymentGroup" not in resources
+        assert "CodeDeployServiceRole" not in resources
+        # the implicit execution role is still generated
+        assert "FnRole" in resources
+
     def test_event_permissions(self):
         """Each event generates a Permission resource."""
         template_resources = {

@@ -1,4 +1,9 @@
-__all__ = ["Context", "create_context_for_template", "ParameterSet"]
+__all__ = [
+    "Context",
+    "create_context_for_template",
+    "ParameterSet",
+    "sam_generated_resources",
+]
 
 from cfnlint.context.conditions.exceptions import Unsatisfiable
 from cfnlint.context.context import (
@@ -7,4 +12,5 @@ from cfnlint.context.context import (
     Path,
     Resource,
     create_context_for_template,
+    sam_generated_resources,
 )
