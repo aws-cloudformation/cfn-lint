@@ -18,12 +18,14 @@ SPDX-License-Identifier: MIT
 # https://github.com/python-jsonschema/jsonschema
 from __future__ import annotations
 
+import itertools
 from collections import deque
-from typing import Any
+from typing import Any, Iterator
 
 import regex as re
 
 import cfnlint.jsonschema._keywords as validators_standard
+from cfnlint.context.conditions import Unsatisfiable
 from cfnlint.helpers import (
     BOOLEAN_STRINGS,
     FUNCTION_FOR_EACH,
@@ -378,15 +380,20 @@ def cfnGather(
 
     if not remote_entries:
         if local_entries:
-            gathered, path_maps = _gather_locals(validator, instance, local_entries)
-            yield from _validate_gathered(
-                validator,
-                gathered,
-                path_maps,
-                {},
-                local_entries,
-                validation_schema,
+            entry_candidates, path_maps = _gather_locals(
+                validator, instance, local_entries
             )
+            for gathered, branch_validator in _combine_gathered(
+                validator, entry_candidates
+            ):
+                yield from _validate_gathered(
+                    branch_validator,
+                    gathered,
+                    path_maps,
+                    {},
+                    local_entries,
+                    validation_schema,
+                )
         return
 
     primary_name = next(iter(remote_entries))
@@ -406,17 +413,20 @@ def cfnGather(
             if isinstance(ref_value, dict):
                 continue
             # Plain value — validate local entries only
-            gathered, path_maps = _gather_locals(
+            entry_candidates, path_maps = _gather_locals(
                 scenario_validator, instance, local_entries
             )
-            yield from _validate_gathered(
-                scenario_validator,
-                gathered,
-                path_maps,
-                {},
-                local_entries,
-                validation_schema,
-            )
+            for gathered, branch_validator in _combine_gathered(
+                scenario_validator, entry_candidates
+            ):
+                yield from _validate_gathered(
+                    branch_validator,
+                    gathered,
+                    path_maps,
+                    {},
+                    local_entries,
+                    validation_schema,
+                )
             continue
 
         if resource_name not in validator.context.resources:
@@ -428,7 +438,7 @@ def cfnGather(
             continue
 
         # Gather all entries
-        gathered, path_maps = _gather_locals(
+        entry_candidates, path_maps = _gather_locals(
             scenario_validator, instance, local_entries
         )
         resource_names: dict[str, str] = {}
@@ -446,20 +456,23 @@ def cfnGather(
                 continue
 
             props_spec = spec.get("properties", {})
-            gathered[name] = _gather_properties(
+            entry_candidates[name] = _gather_properties(
                 scenario_validator, rn, instance, props_spec, rtype
             )
             path_maps[name] = {k: _prop_path(v) for k, v in props_spec.items()}
             resource_names[name] = rn
 
-        yield from _validate_gathered(
-            scenario_validator,
-            gathered,
-            path_maps,
-            resource_names,
-            local_entries,
-            validation_schema,
-        )
+        for gathered, branch_validator in _combine_gathered(
+            scenario_validator, entry_candidates
+        ):
+            yield from _validate_gathered(
+                branch_validator,
+                gathered,
+                path_maps,
+                resource_names,
+                local_entries,
+                validation_schema,
+            )
 
 
 def _to_path(path_str: str) -> deque[str | int]:
@@ -519,15 +532,20 @@ def _gather_properties(
     instance: Any,
     specs: dict[str, Any],
     resource_type: str | None = None,
-) -> dict[str, Any]:
-    """Gather property values using get_value_from_path for condition resolution."""
-    gathered: dict[str, Any] = {}
+) -> dict[str, list[tuple[Any, Validator]]]:
+    """Gather property values using get_value_from_path for condition resolution.
+
+    Returns one list of (value, scenario_validator) candidates per property
+    key so that every Fn::If branch is validated, not just the first one.
+    Duplicate branch values are collected once to avoid duplicate findings.
+    """
+    candidates: dict[str, list[tuple[Any, Validator]]] = {}
     template = validator.cfn.template
 
     for key, spec in specs.items():
         if isinstance(spec, str) and spec == "$type":
             if resource_type:
-                gathered[key] = resource_type
+                candidates[key] = [(resource_type, validator)]
             continue
 
         if isinstance(spec, str):
@@ -548,42 +566,82 @@ def _gather_properties(
             source = instance
             full_path = path_parts
 
-        value = None
-        found = False
-        for val, _ in get_value_from_path(validator, source, full_path.copy()):
+        branch_candidates: list[tuple[Any, Validator]] = []
+        for val, branch_validator in get_value_from_path(
+            validator, source, full_path.copy()
+        ):
             if val is None:
                 continue
             fn_k, fn_v = is_function(val)
             if fn_k == "Ref" and fn_v == "AWS::NoValue":
                 continue
-            value = val
-            found = True
-            break
+            if not any(v == val for v, _ in branch_candidates):
+                branch_candidates.append((val, branch_validator))
 
-        if not found:
+        if not branch_candidates:
             if has_default:
-                gathered[key] = default
+                candidates[key] = [(default, validator)]
             continue
 
-        gathered[key] = value
-    return gathered
+        candidates[key] = branch_candidates
+    return candidates
+
+
+def _combine_gathered(
+    validator: Validator,
+    entries: dict[str, dict[str, list[tuple[Any, Validator]]]],
+) -> Iterator[tuple[dict[str, dict[str, Any]], Validator]]:
+    """Yield one (gathered, scenario_validator) per branch-value combination.
+
+    Combines the per-key branch candidates of every gather entry into
+    gathered objects, one per scenario, merging the condition statuses each
+    branch was resolved under. Conflicting combinations are unsatisfiable
+    and skipped.
+    """
+    keys = [(entry_name, key) for entry_name, props in entries.items() for key in props]
+    if not keys:
+        yield {entry_name: {} for entry_name in entries}, validator
+        return
+
+    for combo in itertools.product(
+        *(entries[entry_name][key] for entry_name, key in keys)
+    ):
+        gathered: dict[str, dict[str, Any]] = {entry_name: {} for entry_name in entries}
+        statuses: dict[str, bool] = {}
+        for (entry_name, key), (value, branch_validator) in zip(keys, combo):
+            gathered[entry_name][key] = value
+            statuses.update(branch_validator.context.conditions.status)
+        try:
+            scenario_validator = validator.evolve(
+                context=validator.context.evolve(
+                    conditions=validator.context.conditions.evolve(
+                        status=statuses,
+                    ),
+                ),
+            )
+        except Unsatisfiable:
+            continue
+        yield gathered, scenario_validator
 
 
 def _gather_locals(
     scenario_validator: Validator,
     instance: Any,
     local_entries: dict[str, dict[str, Any]],
-) -> tuple[dict[str, Any], dict[str, dict[str, list[str]]]]:
-    """Gather properties for all local entries."""
-    gathered: dict[str, Any] = {}
+) -> tuple[
+    dict[str, dict[str, list[tuple[Any, Validator]]]],
+    dict[str, dict[str, list[str]]],
+]:
+    """Gather property candidates for all local entries."""
+    entry_candidates: dict[str, dict[str, list[tuple[Any, Validator]]]] = {}
     path_maps: dict[str, dict[str, list[str]]] = {}
     for name, spec in local_entries.items():
         props_spec = spec.get("properties", {})
-        gathered[name] = _gather_properties(
+        entry_candidates[name] = _gather_properties(
             scenario_validator, None, instance, props_spec
         )
         path_maps[name] = {k: _prop_path(v) for k, v in props_spec.items()}
-    return gathered, path_maps
+    return entry_candidates, path_maps
 
 
 def _validate_gathered(
