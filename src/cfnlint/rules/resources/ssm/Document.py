@@ -81,13 +81,7 @@ class Document(CfnLintJsonSchema):
                 schema=self.schema,
             )
 
-            # decode_str only accepts a plain str. Content decoded from a
-            # template arrives as a str_node (a str subclass carrying source
-            # marks), which decode_str rejects with a generic parser error.
-            # Converting to a plain str keeps the content identical while
-            # letting the document parse. The decoded document gets fresh
-            # source marks from parsing the string itself, so no location
-            # information is lost by the conversion.
+            # The C YAML loader rejects str subclasses, so flatten the str_node
             instance, errs = decode_str(str(instance))
             if errs:
                 yield ValidationError(
