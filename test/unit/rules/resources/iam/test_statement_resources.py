@@ -364,6 +364,28 @@ def template():
                 # ),
             ],
         ),
+        (
+            # any of the ARN formats listed for the resource type is valid
+            {
+                "Action": "lex:RecognizeText",
+                "Resource": "arn:aws:lex:us-east-1:123456789012:bot-alias/ABCDEFGHIJ/TSTALIASID",
+            },
+            [],
+        ),
+        (
+            {
+                "Action": "lex:RecognizeText",
+                "Resource": "arn:aws:lex:us-east-1:123456789012:bot:MyBot:MyAlias",
+            },
+            [],
+        ),
+        (
+            {
+                "Action": "lex:DescribeBot",
+                "Resource": "arn:aws:lex:us-east-1:123456789012:bot/ABCDEFGHIJ",
+            },
+            [],
+        ),
     ],
 )
 def test_rule(instance, expected, rule, validator):
