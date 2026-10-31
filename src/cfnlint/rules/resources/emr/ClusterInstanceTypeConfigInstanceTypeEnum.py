@@ -22,8 +22,12 @@ class ClusterInstanceTypeConfigInstanceTypeEnum(CfnLintJsonSchemaRegional):
             keywords=[
                 "Resources/AWS::EMR::Cluster/Properties/Instances/CoreInstanceFleet/InstanceTypeConfigs/*/InstanceType",
                 "Resources/AWS::EMR::Cluster/Properties/Instances/CoreInstanceGroup/InstanceType",
+                "Resources/AWS::EMR::Cluster/Properties/Instances/MasterInstanceFleet/InstanceTypeConfigs/*/InstanceType",
+                "Resources/AWS::EMR::Cluster/Properties/Instances/MasterInstanceGroup/InstanceType",
                 "Resources/AWS::EMR::Cluster/Properties/Instances/TaskInstanceFleets/*/InstanceTypeConfigs/*/InstanceType",
                 "Resources/AWS::EMR::Cluster/Properties/Instances/TaskInstanceGroups/*/InstanceType",
+                "Resources/AWS::EMR::InstanceFleetConfig/Properties/InstanceTypeConfigs/*/InstanceType",
+                "Resources/AWS::EMR::InstanceGroupConfig/Properties/InstanceType",
             ],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_emr_cluster,
