@@ -190,6 +190,19 @@ When a constraint's value is in question, ranked by strength:
 4. **AWS docs.** Good for intent, frequently stale on numbers.
 5. **The base CFN schema.** A hint, never proof.
 
+**Prefer a stack.** Many deployment probes are free, because a synchronous rejection
+creates nothing — a parameter `Default`, a template format error, an IAM policy
+document, a resource whose only companion is a `WaitConditionHandle`. Reach for a
+service API probe when a stack probe would be costly or impossible, not when it is
+merely easier, and say which you used. The provider is what users deploy through;
+the service API is only what it calls.
+
+Recorded us-east-1, 2026-10-28, `AWS::IAM::Role` inline `Policies` via
+`CreateStack`: duplicate `Sid: ""` reaches `CREATE_COMPLETE`, while a repeated
+non-empty `Sid` rolls back with `Statement IDs (SID) in a single policy must be
+unique.` and `Sid: "A\n"` with `Statement IDs (SID) must be alpha-numeric.` — the
+provider surfaces IAM's own errors, so the two levels agree here.
+
 **`aws cloudformation validate-template` is scoped to the control plane.** It
 parses the template and checks template-level structure, invoking no resource
 provider. So for anything a provider owns — property values, limits, enums,

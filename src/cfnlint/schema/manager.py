@@ -10,13 +10,13 @@ import logging
 import os
 import re
 import shutil
-import sys
 import tempfile
 import zipfile
 from functools import lru_cache
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Iterator, Sequence
 
+from cfnlint.exceptions import SchemaPatchError
 from cfnlint.helpers import (
     REGIONS,
     get_cache_dir,
@@ -535,8 +535,9 @@ class ProviderSchemaManager:
             try:
                 schema.patch(patches=patches)
             except Exception as e:
-                print(f"Error applying patch {patches} for {resource_type}: {e}")
-                sys.exit(1)
+                raise SchemaPatchError(
+                    f"Error applying patch {patches} for {resource_type}: {e}"
+                ) from e
 
     @lru_cache(maxsize=None)
     def get_type_getatts(self, resource_type: str, region: str) -> AttributeDict:

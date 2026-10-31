@@ -398,6 +398,73 @@ class TestTrustPolicy(TestCase):
             f"Trust policies should not require Resource, got: {err_messages}",
         )
 
+    def test_sts_root_and_federated_user_principals(self):
+        """Test sts root and federated-user principals, which IAM accepts"""
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::IAM::Role", "Properties"])
+                ),
+            )
+        )
+
+        for principal in (
+            "arn:aws:sts::123456789012:root",
+            "arn:aws-cn:sts::123456789012:federated-user/example",
+            "arn:aws-us-gov:sts::123456789012:federated-user/example",
+        ):
+            with self.subTest(principal=principal):
+                policy = {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": "sts:AssumeRole",
+                            "Principal": {"AWS": principal},
+                        }
+                    ],
+                }
+
+                errs = list(
+                    self.rule.validate(
+                        validator=validator,
+                        policy=policy,
+                        schema={},
+                        policy_type=None,
+                    )
+                )
+                self.assertListEqual(errs, [])
+
+    def test_unsupported_sts_principal(self):
+        """Test that an unsupported sts principal is caught"""
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::IAM::Role", "Properties"])
+                ),
+            )
+        )
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": "sts:AssumeRole",
+                    "Principal": {"AWS": "arn:aws:sts::123456789012:user/example"},
+                }
+            ],
+        }
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertTrue(errs)
+
     def test_assumed_role_principal(self):
         """Test a valid assumed role principal"""
         validator = CfnTemplateValidator({}).evolve(

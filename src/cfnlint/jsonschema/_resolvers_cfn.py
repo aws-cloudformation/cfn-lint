@@ -87,6 +87,19 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
     if k == "Ref" and v in PSEUDOPARAMS:
         return
     for map_name, map_v, _ in validator.resolve_value(instance[0]):
+
+        def _flag_key_errors(v: Validator) -> Validator:
+            # When the map name itself resolved from a parameter's Default,
+            # a deployer can override it at deployment time, so key errors
+            # found under it are not definite failures. The #4580 skip in
+            # BaseFn.resolve checks the resolved-from-parameters flag on the
+            # validator yielded with an error, so carry that flag here.
+            if map_v.context.is_resolved_from_parameters:
+                return v.evolve(
+                    context=v.context.evolve(is_resolved_from_parameters=True)
+                )
+            return v
+
         if not validator.is_type(map_name, "string"):
             continue
 
@@ -163,7 +176,7 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                 if not found_top_level_key:
                     yield (
                         None,
-                        validator,
+                        _flag_key_errors(validator),
                         ValidationError(
                             f"{instance[1]!r} is not a "
                             f"first level key for mapping {map_name!r}",
@@ -173,7 +186,7 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                 elif not found_second_key:
                     yield (
                         None,
-                        validator,
+                        _flag_key_errors(validator),
                         ValidationError(
                             f"{instance[2]!r} is not a "
                             "second level key when "
@@ -196,7 +209,7 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                     results.append(
                         (
                             None,
-                            top_v,
+                            _flag_key_errors(top_v),
                             ValidationError(
                                 f"{top_level_key!r} is not one of "
                                 f"{top_level_keys!r} for mapping "
@@ -235,7 +248,7 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                         results.append(
                             (
                                 None,
-                                second_v,
+                                _flag_key_errors(second_v),
                                 ValidationError(
                                     f"{second_level_key!r} is not "
                                     f"one of {second_level_keys!r} "
