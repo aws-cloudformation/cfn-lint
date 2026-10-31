@@ -226,7 +226,9 @@ class TestTrustPolicy(TestCase):
         self.assertTrue(len(errs) > 0, "Expected errors for group ARN principal")
         err_messages = [e.message for e in errs]
         self.assertTrue(
-            any("is not valid under any of the given schemas" in m for m in err_messages),
+            any(
+                "is not valid under any of the given schemas" in m for m in err_messages
+            ),
             f"Expected anyOf validation error, got: {err_messages}",
         )
 
@@ -495,3 +497,86 @@ class TestTrustPolicy(TestCase):
             )
         )
         self.assertListEqual(errs, [])
+
+    def _validator(self):
+        return CfnTemplateValidator({}).evolve(
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::IAM::Role", "Properties"])
+                ),
+            )
+        )
+
+    def _errs(self, principal):
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": "sts:AssumeRole",
+                    "Principal": principal,
+                }
+            ],
+        }
+        return list(
+            self.rule.validate(
+                validator=self._validator(),
+                policy=policy,
+                schema={},
+                policy_type=None,
+            )
+        )
+
+    def test_trust_principal_other_keys_valid(self):
+        """Test string and array forms of the non-AWS principal keys pass"""
+        for key in ("CanonicalUser", "Federated", "Service"):
+            for value in ("example", ["example", "other"]):
+                with self.subTest(key=key, value=value):
+                    self.assertListEqual(self._errs({key: value}), [])
+
+    def test_trust_principal_other_keys_invalid_type(self):
+        """Test that a non-string, non-array value is caught"""
+        for key in ("CanonicalUser", "Federated", "Service"):
+            with self.subTest(key=key):
+                errs = self._errs({key: 42})
+                self.assertEqual(len(errs), 1, errs)
+                self.assertEqual(errs[0].message, "42 is not of type 'string', 'array'")
+
+    def test_trust_principal_other_keys_invalid_item_type(self):
+        """Test that a non-string array item is caught"""
+        for key in ("CanonicalUser", "Federated", "Service"):
+            with self.subTest(key=key):
+                errs = self._errs({key: [{"a": "b"}]})
+                self.assertEqual(len(errs), 1, errs)
+                self.assertEqual(errs[0].message, "{'a': 'b'} is not of type 'string'")
+
+    def test_trust_principal_other_keys_with_aws_sibling(self):
+        """Test the non-AWS principal keys pass alongside an AWS principal"""
+        for key in ("CanonicalUser", "Federated", "Service"):
+            with self.subTest(key=key):
+                self.assertListEqual(
+                    self._errs(
+                        {
+                            key: "example",
+                            "AWS": "arn:aws:iam::123456789012:root",
+                        }
+                    ),
+                    [],
+                )
+
+    def test_trust_principal_other_keys_unresolvable(self):
+        """Test that unresolvable values on the non-AWS principal keys pass"""
+        unresolvable = (
+            {"Ref": "MyParameter"},
+            {"Fn::GetAtt": ["MyResource", "Arn"]},
+            {"Fn::If": ["MyCondition", "example", "other"]},
+        )
+        for key in ("CanonicalUser", "Federated", "Service"):
+            for value in unresolvable:
+                with self.subTest(key=key, value=value):
+                    self.assertListEqual(self._errs({key: value}), [])
+
+    def test_trust_principal_other_keys_absent(self):
+        """Test a principal with none of the non-AWS keys present passes"""
+        self.assertListEqual(self._errs({"AWS": "arn:aws:iam::123456789012:root"}), [])
