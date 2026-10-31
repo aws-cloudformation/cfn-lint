@@ -42,10 +42,50 @@ def template():
             [],
         ),
         (
-            "Valid or with boolean types",
+            "Invalid literal boolean operand",
             {"Fn::Not": [True]},
             {},
-            [],
+            [
+                ValidationError(
+                    "True should not be valid under {'type': ['boolean']}",
+                    validator="fn_not",
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "not",
+                        ]
+                    ),
+                    path=deque(["Fn::Not", 0]),
+                ),
+            ],
+        ),
+        (
+            "Invalid boolean-like string operand",
+            {"Fn::Not": ["false"]},
+            {},
+            [
+                ValidationError(
+                    "'false' should not be valid under {'type': ['boolean']}",
+                    validator="fn_not",
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "not",
+                        ]
+                    ),
+                    path=deque(["Fn::Not", 0]),
+                ),
+            ],
         ),
         (
             "Invalid Type",

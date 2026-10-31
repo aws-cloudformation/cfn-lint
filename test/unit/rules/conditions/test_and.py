@@ -42,10 +42,82 @@ def template():
             [],
         ),
         (
-            "Valid and with boolean types",
+            "Invalid literal boolean operands",
             {"Fn::And": [True, False]},
             {},
-            [],
+            [
+                ValidationError(
+                    "True should not be valid under {'type': ['boolean']}",
+                    validator="fn_and",
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "not",
+                        ]
+                    ),
+                    path=deque(["Fn::And", 0]),
+                ),
+                ValidationError(
+                    "False should not be valid under {'type': ['boolean']}",
+                    validator="fn_and",
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "not",
+                        ]
+                    ),
+                    path=deque(["Fn::And", 1]),
+                ),
+            ],
+        ),
+        (
+            "Invalid boolean-like string operands",
+            {"Fn::And": ["true", "False"]},
+            {},
+            [
+                ValidationError(
+                    "'true' should not be valid under {'type': ['boolean']}",
+                    validator="fn_and",
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "not",
+                        ]
+                    ),
+                    path=deque(["Fn::And", 0]),
+                ),
+                ValidationError(
+                    "'False' should not be valid under {'type': ['boolean']}",
+                    validator="fn_and",
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "not",
+                        ]
+                    ),
+                    path=deque(["Fn::And", 1]),
+                ),
+            ],
         ),
         (
             "Invalid Type",
@@ -80,12 +152,28 @@ def template():
                         ]
                     ),
                     path=deque(["Fn::And", 0]),
-                )
+                ),
+                ValidationError(
+                    "True should not be valid under {'type': ['boolean']}",
+                    validator="fn_and",
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "not",
+                        ]
+                    ),
+                    path=deque(["Fn::And", 1]),
+                ),
             ],
         ),
         (
             "Invalid functions in Conditions",
-            {"Fn::And": [True, {"Fn::Contains": []}]},
+            {"Fn::And": [{"Condition": "IsUsEast1"}, {"Fn::Contains": []}]},
             {"path": deque(["Conditions", "Condition1"])},
             [
                 ValidationError(
