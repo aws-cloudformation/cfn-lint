@@ -67,6 +67,27 @@ client = session.client("pricing", region_name="us-east-1", config=config)
 
 _UNSUPPORTED_REGIONS = set()
 
+_NEPTUNE_X2IEZN = {
+    f"db.x2iezn.{size}"
+    for size in ["2xlarge", "4xlarge", "6xlarge", "8xlarge", "12xlarge"]
+}
+_NEPTUNE_EXTRA_INSTANCE_TYPES = {
+    "ap-southeast-1": {
+        f"db.x2iedn.{size}"
+        for size in [
+            "xlarge",
+            "2xlarge",
+            "4xlarge",
+            "8xlarge",
+            "16xlarge",
+            "24xlarge",
+            "32xlarge",
+        ]
+    },
+    "us-east-1": _NEPTUNE_X2IEZN,
+    "us-west-2": _NEPTUNE_X2IEZN,
+}
+
 
 def configure_logging():
     """Setup Logging"""
@@ -447,13 +468,16 @@ def main():
             "AmazonDocDB", ["Database Instance"], default=set(["db.serverless"])
         ),
     )
-    write_output(
-        "aws_neptune_dbinstance",
-        "dbinstanceclass_enum",
-        get_results(
-            "AmazonNeptune", ["Database Instance"], default=set(["db.serverless"])
-        ),
+    _neptune_results = get_results(
+        "AmazonNeptune", ["Database Instance"], default=set(["db.serverless"])
     )
+    # The pricing API does not list these orderable Neptune instance classes
+    # (see `aws rds describe-orderable-db-instance-options --engine neptune`)
+    for region, instance_types in _NEPTUNE_EXTRA_INSTANCE_TYPES.items():
+        _neptune_results.setdefault(region, set(["db.serverless"])).update(
+            instance_types
+        )
+    write_output("aws_neptune_dbinstance", "dbinstanceclass_enum", _neptune_results)
     write_output(
         "aws_elasticache_cachecluster",
         "cachenodetype_enum",
