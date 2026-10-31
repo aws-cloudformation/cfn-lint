@@ -37,6 +37,7 @@ class Conditions:
         self._init_conditions(cfn=cfn)
         self._init_parameters(cfn=cfn)
         self._init_rules(cfn=cfn)
+        self._rule_parameter_equals = self._init_rule_parameter_equals(cfn=cfn)
         self._cnf, self._solver_params = self._build_cnf(list(self._conditions.keys()))
 
     def _init_conditions(self, cfn):
@@ -99,6 +100,47 @@ class Conditions:
                     k,
                     error_message,
                 )
+
+    def _init_rule_parameter_equals(self, cfn: Any) -> list[tuple[str, str, str]]:
+        """Collect the Fn::Equals in Rules that compare one template parameter
+        to a literal value, as (parameter name, literal, equal hash).
+
+        These are pinned to True/False in ``satisfiable`` when a value for the
+        parameter has been resolved, so a value that a rule assertion rules
+        out makes the scenario unsatisfiable.
+        """
+        parameters = cfn.template.get("Parameters")
+        if not isinstance(parameters, dict):
+            return []
+
+        ref_hashes = {get_hash({"Ref": name}): name for name in parameters}
+        results: list[tuple[str, str, str]] = []
+        seen: set[str] = set()
+        for rule in self._rules:
+            for equal in rule.equals:
+                if equal.hash in seen or equal.is_static is not None:
+                    continue
+                if len(equal.parameters) != 1:
+                    continue
+                literal = equal.left if isinstance(equal.left, str) else equal.right
+                name = ref_hashes.get(equal.parameters[0].hash)
+                if not isinstance(literal, str) or name is None:
+                    continue
+                seen.add(equal.hash)
+                results.append((name, literal, equal.hash))
+        return results
+
+    def _rule_parameter_props(self, parameter_values: dict[str, Any]) -> list[Any]:
+        props: list[Any] = []
+        for name, literal, equal_hash in self._rule_parameter_equals:
+            value = parameter_values.get(name)
+            if not isinstance(value, str):
+                continue
+            if value == literal:
+                props.append(Symbol(equal_hash))
+            else:
+                props.append(Not(Symbol(equal_hash)))
+        return props
 
     def get(self, name: str, default: Any = None) -> ConditionNamed:
         """Return the conditions"""
@@ -434,7 +476,8 @@ class Conditions:
         Raises:
             UnknownSatisfisfaction: If we don't know how to satisfy a condition
         """
-        if not conditions:
+        rule_props = self._rule_parameter_props(parameter_values)
+        if not conditions and not rule_props:
             if self._rules:
                 satisfied = satisfiable(self._cnf, all_models=False)
                 if satisfied is False:
@@ -475,6 +518,27 @@ class Conditions:
                 else:
                     cnf.add_prop(Not(Symbol(c_equals.hash)))
 
+                if opt:
+                    cnf.add_prop(
+                        self._conditions[condition_name].build_true_cnf(
+                            self._solver_params
+                        )
+                    )
+                else:
+                    cnf.add_prop(
+                        self._conditions[condition_name].build_false_cnf(
+                            self._solver_params
+                        )
+                    )
+
+        if rule_props:
+            # A resolved parameter value is constrained by a rule assertion.
+            # Pin the scenario's conditions as well so assertions under a
+            # RuleCondition are evaluated against this scenario.
+            at_least_one_param_found = True
+            for prop in rule_props:
+                cnf.add_prop(prop)
+            for condition_name, opt in conditions.items():
                 if opt:
                     cnf.add_prop(
                         self._conditions[condition_name].build_true_cnf(
