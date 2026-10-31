@@ -599,14 +599,16 @@ def _inject(
             pass
 
 
-def _inject_sam_implicit_resources(
-    template_resources: Any, resources: dict[str, Resource]
-) -> None:
-    """Add synthetic resources for SAM implicit APIs and generated roles.
+def sam_generated_resources(
+    template_resources: Any,
+) -> Iterator[tuple[str, str]]:
+    """Yield ``(logical_id, resource_type)`` for resources the SAM transform generates.
 
-    SAM auto-generates these when Functions have Api/HttpApi events
-    without explicit RestApiId/ApiId references, and IAM Roles when
-    no explicit Role property is set.
+    This models the resource generation of the ``AWS::Serverless-2016-10-31``
+    transform (which cfn-lint no longer runs since #4491): implicit IAM roles,
+    Lambda versions/aliases/URLs, CodeDeploy resources, per-event permissions,
+    and implicit APIs. Rules can use this to reason about the post-transform
+    template without re-enabling the transform for the whole ruleset.
     """
     if not isinstance(template_resources, dict):
         return
@@ -628,41 +630,29 @@ def _inject_sam_implicit_resources(
             "AWS::Serverless::StateMachine",
         ):
             if "Role" not in props:
-                _inject(resources, f"{resource_id}Role", "AWS::IAM::Role")
+                yield f"{resource_id}Role", "AWS::IAM::Role"
 
         if resource_type == "AWS::Serverless::Function":
             # Version/Alias when AutoPublishAlias or DeploymentPreference
             has_alias = "AutoPublishAlias" in props or "DeploymentPreference" in props
             if has_alias:
-                for suffix, rtype in (
-                    (f"{resource_id}.Version", "AWS::Lambda::Version"),
-                    (f"{resource_id}.Alias", "AWS::Lambda::Alias"),
-                ):
-                    if suffix not in resources:
-                        try:
-                            resources[suffix] = Resource({"Type": rtype})
-                        except ValueError:
-                            pass
+                yield f"{resource_id}.Version", "AWS::Lambda::Version"
+                yield f"{resource_id}.Alias", "AWS::Lambda::Alias"
 
             # Url when FunctionUrlConfig is set
             if "FunctionUrlConfig" in props:
-                _inject(resources, f"{resource_id}Url", "AWS::Lambda::Url")
+                yield f"{resource_id}Url", "AWS::Lambda::Url"
 
             # DeploymentPreference generates CodeDeploy resources
-            dp = props.get("DeploymentPreference", {})
+            dp = props.get("DeploymentPreference")
             if isinstance(dp, dict) and dp.get("Enabled", True):
-                _inject(
-                    resources,
-                    "ServerlessDeploymentApplication",
-                    "AWS::CodeDeploy::Application",
-                )
-                _inject(
-                    resources,
+                yield "ServerlessDeploymentApplication", "AWS::CodeDeploy::Application"
+                yield (
                     f"{resource_id}DeploymentGroup",
                     "AWS::CodeDeploy::DeploymentGroup",
                 )
                 if "Role" not in dp:
-                    _inject(resources, "CodeDeployServiceRole", "AWS::IAM::Role")
+                    yield "CodeDeployServiceRole", "AWS::IAM::Role"
 
             # Per-event permissions
             events = props.get("Events", {})
@@ -670,8 +660,7 @@ def _inject_sam_implicit_resources(
                 for event_name, event in events.items():
                     if not isinstance(event, dict):
                         continue
-                    _inject(
-                        resources,
+                    yield (
                         f"{resource_id}{event_name}Permission",
                         "AWS::Lambda::Permission",
                     )
@@ -703,30 +692,35 @@ def _inject_sam_implicit_resources(
                             needs_http_api = True
 
         if resource_type == "AWS::Serverless::Api":
-            _inject(resources, f"{resource_id}Stage", "AWS::ApiGateway::Stage")
+            yield f"{resource_id}Stage", "AWS::ApiGateway::Stage"
             if "Domain" in props:
-                _inject(
-                    resources,
-                    f"{resource_id}DomainName",
-                    "AWS::ApiGateway::DomainName",
-                )
+                yield f"{resource_id}DomainName", "AWS::ApiGateway::DomainName"
             if "Auth" in props:
-                _inject(
-                    resources,
-                    f"{resource_id}UsagePlan",
-                    "AWS::ApiGateway::UsagePlan",
-                )
+                yield f"{resource_id}UsagePlan", "AWS::ApiGateway::UsagePlan"
 
         if resource_type == "AWS::Serverless::HttpApi":
-            _inject(resources, f"{resource_id}Stage", "AWS::ApiGatewayV2::Stage")
+            yield f"{resource_id}Stage", "AWS::ApiGatewayV2::Stage"
 
     if needs_rest_api:
-        _inject(resources, "ServerlessRestApi", "AWS::Serverless::Api")
-        _inject(resources, "ServerlessRestApiStage", "AWS::ApiGateway::Stage")
+        yield "ServerlessRestApi", "AWS::Serverless::Api"
+        yield "ServerlessRestApiStage", "AWS::ApiGateway::Stage"
 
     if needs_http_api:
-        _inject(resources, "ServerlessHttpApi", "AWS::Serverless::HttpApi")
-        _inject(resources, "ServerlessHttpApiStage", "AWS::ApiGatewayV2::Stage")
+        yield "ServerlessHttpApi", "AWS::Serverless::HttpApi"
+        yield "ServerlessHttpApiStage", "AWS::ApiGatewayV2::Stage"
+
+
+def _inject_sam_implicit_resources(
+    template_resources: Any, resources: dict[str, Resource]
+) -> None:
+    """Add synthetic resources for SAM implicit APIs and generated roles.
+
+    SAM auto-generates these when Functions have Api/HttpApi events
+    without explicit RestApiId/ApiId references, and IAM Roles when
+    no explicit Role property is set.
+    """
+    for logical_id, resource_type in sam_generated_resources(template_resources):
+        _inject(resources, logical_id, resource_type)
 
 
 def create_context_for_template(
