@@ -81,8 +81,12 @@ class TestTrustPolicy(TestCase):
         )
         self.assertListEqual(errs, [])
 
-    def test_valid_trust_policy_wildcard(self):
-        """Test a valid trust policy with wildcard principal"""
+    def test_invalid_trust_policy_wildcard_string(self):
+        """Test a trust policy with the string form Principal '*' is rejected.
+
+        IAM CreateRole rejects the bare string form in a trust policy
+        ("invalid principal: STAR"); only the object form {"AWS": "*"} is valid.
+        """
         validator = CfnTemplateValidator({}).evolve(
             context=Context(
                 functions=FUNCTIONS,
@@ -99,6 +103,155 @@ class TestTrustPolicy(TestCase):
                     "Effect": "Allow",
                     "Action": "sts:AssumeRole",
                     "Principal": "*",
+                }
+            ],
+        }
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertTrue(len(errs) > 0, "Expected errors for string Principal '*'")
+        err_messages = [e.message for e in errs]
+        self.assertTrue(
+            any("is not of type 'object'" in m for m in err_messages),
+            f"Expected object type error, got: {err_messages}",
+        )
+
+    def test_valid_trust_policy_aws_wildcard_object(self):
+        """Test a trust policy with the object form {"AWS": "*"} still passes"""
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::IAM::Role", "Properties"])
+                ),
+            )
+        )
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": "sts:AssumeRole",
+                    "Principal": {
+                        "AWS": "*",
+                    },
+                }
+            ],
+        }
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertListEqual(errs, [])
+
+    def test_invalid_trust_policy_not_principal(self):
+        """Test that NotPrincipal is rejected in a trust policy.
+
+        IAM does not allow the NotPrincipal element in a role trust policy;
+        CreateRole fails with "AssumeRole policy must not contain NotPrincipal field".
+        """
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::IAM::Role", "Properties"])
+                ),
+            )
+        )
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Deny",
+                    "Action": "sts:AssumeRole",
+                    "NotPrincipal": {
+                        "AWS": "arn:aws:iam::123456789012:root",
+                    },
+                }
+            ],
+        }
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertTrue(len(errs) > 0, "Expected errors for NotPrincipal")
+        err_messages = [e.message for e in errs]
+        self.assertTrue(
+            any("NotPrincipal" in m for m in err_messages),
+            f"Expected NotPrincipal error, got: {err_messages}",
+        )
+
+    def test_invalid_trust_policy_group_principal(self):
+        """Test that an IAM group ARN is rejected as a trust policy principal.
+
+        IAM does not allow identifying a user group as a principal in a policy;
+        CreateRole fails with 'Invalid principal in policy'.
+        """
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::IAM::Role", "Properties"])
+                ),
+            )
+        )
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": "sts:AssumeRole",
+                    "Principal": {
+                        "AWS": "arn:aws:iam::123456789012:group/my-group",
+                    },
+                }
+            ],
+        }
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertTrue(len(errs) > 0, "Expected errors for group ARN principal")
+        err_messages = [e.message for e in errs]
+        self.assertTrue(
+            any(
+                "is not valid under any of the given schemas" in m for m in err_messages
+            ),
+            f"Expected anyOf validation error, got: {err_messages}",
+        )
+
+    def test_valid_trust_policy_user_principal(self):
+        """Test a trust policy with a user ARN principal still passes"""
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::IAM::Role", "Properties"])
+                ),
+            )
+        )
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": "sts:AssumeRole",
+                    "Principal": {
+                        "AWS": "arn:aws:iam::123456789012:user/alice",
+                    },
                 }
             ],
         }
@@ -344,3 +497,86 @@ class TestTrustPolicy(TestCase):
             )
         )
         self.assertListEqual(errs, [])
+
+    def _validator(self):
+        return CfnTemplateValidator({}).evolve(
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::IAM::Role", "Properties"])
+                ),
+            )
+        )
+
+    def _errs(self, principal):
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": "sts:AssumeRole",
+                    "Principal": principal,
+                }
+            ],
+        }
+        return list(
+            self.rule.validate(
+                validator=self._validator(),
+                policy=policy,
+                schema={},
+                policy_type=None,
+            )
+        )
+
+    def test_trust_principal_other_keys_valid(self):
+        """Test string and array forms of the non-AWS principal keys pass"""
+        for key in ("CanonicalUser", "Federated", "Service"):
+            for value in ("example", ["example", "other"]):
+                with self.subTest(key=key, value=value):
+                    self.assertListEqual(self._errs({key: value}), [])
+
+    def test_trust_principal_other_keys_invalid_type(self):
+        """Test that a non-string, non-array value is caught"""
+        for key in ("CanonicalUser", "Federated", "Service"):
+            with self.subTest(key=key):
+                errs = self._errs({key: 42})
+                self.assertEqual(len(errs), 1, errs)
+                self.assertEqual(errs[0].message, "42 is not of type 'string', 'array'")
+
+    def test_trust_principal_other_keys_invalid_item_type(self):
+        """Test that a non-string array item is caught"""
+        for key in ("CanonicalUser", "Federated", "Service"):
+            with self.subTest(key=key):
+                errs = self._errs({key: [{"a": "b"}]})
+                self.assertEqual(len(errs), 1, errs)
+                self.assertEqual(errs[0].message, "{'a': 'b'} is not of type 'string'")
+
+    def test_trust_principal_other_keys_with_aws_sibling(self):
+        """Test the non-AWS principal keys pass alongside an AWS principal"""
+        for key in ("CanonicalUser", "Federated", "Service"):
+            with self.subTest(key=key):
+                self.assertListEqual(
+                    self._errs(
+                        {
+                            key: "example",
+                            "AWS": "arn:aws:iam::123456789012:root",
+                        }
+                    ),
+                    [],
+                )
+
+    def test_trust_principal_other_keys_unresolvable(self):
+        """Test that unresolvable values on the non-AWS principal keys pass"""
+        unresolvable = (
+            {"Ref": "MyParameter"},
+            {"Fn::GetAtt": ["MyResource", "Arn"]},
+            {"Fn::If": ["MyCondition", "example", "other"]},
+        )
+        for key in ("CanonicalUser", "Federated", "Service"):
+            for value in unresolvable:
+                with self.subTest(key=key, value=value):
+                    self.assertListEqual(self._errs({key: value}), [])
+
+    def test_trust_principal_other_keys_absent(self):
+        """Test a principal with none of the non-AWS keys present passes"""
+        self.assertListEqual(self._errs({"AWS": "arn:aws:iam::123456789012:root"}), [])
