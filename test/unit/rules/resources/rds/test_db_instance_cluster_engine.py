@@ -101,6 +101,107 @@ _template = {
             deque(["Resources", "Instance", "Properties"]),
             [],
         ),
+        # Fn::If on the local Engine: mismatch only in the second branch (#4850)
+        (
+            {
+                "Conditions": {
+                    "UsePostgres": {
+                        "Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"],
+                    },
+                },
+                "Resources": {
+                    **_template["Resources"],
+                    "Instance": {
+                        "Type": "AWS::RDS::DBInstance",
+                        "Properties": {
+                            "DBClusterIdentifier": {"Ref": "Cluster"},
+                            "DBInstanceClass": "db.r5.large",
+                            "Engine": {
+                                "Fn::If": [
+                                    "UsePostgres",
+                                    "aurora-mysql",
+                                    "aurora-postgresql",
+                                ]
+                            },
+                        },
+                    },
+                },
+            },
+            deque(["Resources", "Instance", "Properties"]),
+            [
+                ValidationError(
+                    "'aurora-mysql' was expected",
+                    validator="const",
+                    rule=DbInstanceClusterEngine(),
+                    path=deque(["Engine"]),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "properties",
+                            "local",
+                            "properties",
+                            "Engine",
+                            "const",
+                        ]
+                    ),
+                ),
+            ],
+        ),
+        # Fn::If on the remote Cluster Engine: mismatch only in one branch (#4850)
+        (
+            {
+                "Conditions": {
+                    "UsePostgres": {
+                        "Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"],
+                    },
+                },
+                "Resources": {
+                    "Cluster": {
+                        "Type": "AWS::RDS::DBCluster",
+                        "Properties": {
+                            "Engine": {
+                                "Fn::If": [
+                                    "UsePostgres",
+                                    "aurora-postgresql",
+                                    "aurora-mysql",
+                                ]
+                            },
+                            "MasterUsername": "admin",
+                            "MasterUserPassword": "password",
+                        },
+                    },
+                    "Instance": {
+                        "Type": "AWS::RDS::DBInstance",
+                        "Properties": {
+                            "DBClusterIdentifier": {"Ref": "Cluster"},
+                            "DBInstanceClass": "db.r5.large",
+                            "Engine": "aurora-mysql",
+                        },
+                    },
+                },
+            },
+            deque(["Resources", "Instance", "Properties"]),
+            [
+                ValidationError(
+                    "'aurora-postgresql' was expected",
+                    validator="const",
+                    rule=DbInstanceClusterEngine(),
+                    path=deque(["Engine"]),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "properties",
+                            "local",
+                            "properties",
+                            "Engine",
+                            "const",
+                        ]
+                    ),
+                ),
+            ],
+        ),
     ],
     indirect=["template"],
 )
