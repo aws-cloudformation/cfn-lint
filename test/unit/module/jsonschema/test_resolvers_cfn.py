@@ -1001,6 +1001,45 @@ def test_find_in_map_with_transform(name, instance, response):
     _resolve(name, instance, response, context=context)
 
 
+@pytest.mark.parametrize(
+    "name,instance,response",
+    [
+        (
+            "Valid ToJsonString with an object",
+            {"Fn::ToJsonString": {"A": "B", "C": "D"}},
+            [('{"A":"B","C":"D"}', Context(), None)],
+        ),
+        (
+            "Valid ToJsonString with a nested object",
+            {"Fn::ToJsonString": {"A": {"B": "C"}}},
+            [('{"A":{"B":"C"}}', Context(), None)],
+        ),
+        (
+            "Valid ToJsonString with an array",
+            {"Fn::ToJsonString": ["A", "B"]},
+            [('["A","B"]', Context(), None)],
+        ),
+        (
+            "Valid ToJsonString keeps spaces inside a string value",
+            {"Fn::ToJsonString": {"A": "B C"}},
+            [('{"A":"B C"}', Context(), None)],
+        ),
+        (
+            "Valid ToJsonString with non string scalars",
+            {"Fn::ToJsonString": {"A": 1, "B": True, "C": None}},
+            [('{"A":1,"B":true,"C":null}', Context(), None)],
+        ),
+        (
+            "Unresolvable ToJsonString with a GetAtt",
+            {"Fn::ToJsonString": {"Fn::GetAtt": "MyResource.Arn"}},
+            [],
+        ),
+    ],
+)
+def test_to_json_string(name, instance, response):
+    _resolve(name, instance, response)
+
+
 def test_if():
     cfn = Template(
         None,
