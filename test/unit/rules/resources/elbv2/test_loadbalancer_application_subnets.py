@@ -69,3 +69,91 @@ def test_backup_lifecycle(instance, expected, rule, validator):
     errs = list(rule.validate(validator, "", instance, {}))
 
     assert errs == expected, f"Expected {expected} got {errs}"
+
+
+_template = {
+    "Parameters": {
+        "SubnetId": {"Type": "AWS::EC2::Subnet::Id"},
+    },
+    "Resources": {
+        "LocalZoneSubnet": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "VpcId": "vpc-123",
+                "CidrBlock": "10.0.0.0/24",
+                "AvailabilityZone": "us-west-2-lax-1a",
+            },
+        },
+        "ZoneSubnet": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "VpcId": "vpc-123",
+                "CidrBlock": "10.0.1.0/24",
+                "AvailabilityZone": "us-west-2a",
+            },
+        },
+    },
+}
+
+
+@pytest.mark.parametrize(
+    "instance,template,expected",
+    [
+        (
+            {"Subnets": [{"Ref": "LocalZoneSubnet"}]},
+            _template,
+            [],
+        ),
+        (
+            {"SubnetMappings": [{"SubnetId": {"Ref": "LocalZoneSubnet"}}]},
+            _template,
+            [],
+        ),
+        (
+            {"Subnets": [{"Ref": "ZoneSubnet"}]},
+            _template,
+            [
+                ValidationError(
+                    "expected minimum item count: 2, found: 1",
+                    rule=LoadBalancerApplicationSubnets(),
+                    path=deque(["Subnets"]),
+                    validator="minItems",
+                    schema_path=deque(["then", "properties", "Subnets", "minItems"]),
+                )
+            ],
+        ),
+        (
+            {"Subnets": [{"Ref": "SubnetId"}]},
+            _template,
+            [
+                ValidationError(
+                    "expected minimum item count: 2, found: 1",
+                    rule=LoadBalancerApplicationSubnets(),
+                    path=deque(["Subnets"]),
+                    validator="minItems",
+                    schema_path=deque(["then", "properties", "Subnets", "minItems"]),
+                )
+            ],
+        ),
+        (
+            {"SubnetMappings": [{"SubnetId": {"Ref": "ZoneSubnet"}}]},
+            _template,
+            [
+                ValidationError(
+                    "expected minimum item count: 2, found: 1",
+                    rule=LoadBalancerApplicationSubnets(),
+                    path=deque(["SubnetMappings"]),
+                    validator="minItems",
+                    schema_path=deque(
+                        ["then", "properties", "SubnetMappings", "minItems"]
+                    ),
+                )
+            ],
+        ),
+    ],
+    indirect=["template"],
+)
+def test_local_zone_subnets(instance, template, expected, rule, validator):
+    errs = list(rule.validate(validator, "", instance, {}))
+
+    assert errs == expected, f"Expected {expected} got {errs}"
