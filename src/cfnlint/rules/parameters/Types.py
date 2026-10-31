@@ -35,10 +35,30 @@ class Types(CfnLintKeyword):
         if instance in VALID_PARAMETER_TYPES:
             return
 
-        # Check if it matches SSM or List pattern (undocumented but accepted)
-        if instance.startswith("AWS::SSM::Parameter::Value<") or instance.startswith(
-            "List<"
-        ):
+        # Undocumented AWS-qualified types may be accepted by CloudFormation,
+        # but misspelled base types inside List or SSM wrappers are rejected.
+        if instance.startswith(("AWS::SSM::Parameter::Value<", "List<")):
+            base_type = instance
+            while True:
+                if (
+                    base_type.startswith("AWS::SSM::Parameter::Value<")
+                    and base_type.endswith(">")
+                ):
+                    base_type = base_type[len("AWS::SSM::Parameter::Value<") : -1]
+                elif base_type.startswith("List<") and base_type.endswith(">"):
+                    base_type = base_type[len("List<") : -1]
+                else:
+                    break
+
+            if "::" not in base_type and base_type not in (
+                "String",
+                "Number",
+                "CommaDelimitedList",
+            ):
+                yield ValidationError(
+                    f"{instance!r} has an invalid base parameter type {base_type!r}",
+                    rule=self,
+                )
             return
 
         # Invalid type

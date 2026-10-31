@@ -59,6 +59,58 @@ def rule():
             [],
         ),
         (
+            "Documented SSM list type",
+            "AWS::SSM::Parameter::Value<List<String>>",
+            [],
+        ),
+        (
+            "Undocumented but accepted AWS-qualified List type",
+            "List<AWS::EC2::Subnet::Idd>",
+            [],
+        ),
+        (
+            "List with misspelled base type",
+            "List<Strng>",
+            [
+                ValidationError(
+                    "'List<Strng>' has an invalid base parameter type 'Strng'",
+                    rule=Types(),
+                )
+            ],
+        ),
+        (
+            "SSM parameter with misspelled base type",
+            "AWS::SSM::Parameter::Value<Strng>",
+            [
+                ValidationError(
+                    "'AWS::SSM::Parameter::Value<Strng>' has an invalid base "
+                    "parameter type 'Strng'",
+                    rule=Types(),
+                )
+            ],
+        ),
+        (
+            "SSM parameter with misspelled nested List base type",
+            "AWS::SSM::Parameter::Value<List<Strng>>",
+            [
+                ValidationError(
+                    "'AWS::SSM::Parameter::Value<List<Strng>>' has an invalid "
+                    "base parameter type 'Strng'",
+                    rule=Types(),
+                )
+            ],
+        ),
+        (
+            "List with unknown unqualified base type",
+            "List<Bogus>",
+            [
+                ValidationError(
+                    "'List<Bogus>' has an invalid base parameter type 'Bogus'",
+                    rule=Types(),
+                )
+            ],
+        ),
+        (
             "Invalid type (not string)",
             [],
             [],
