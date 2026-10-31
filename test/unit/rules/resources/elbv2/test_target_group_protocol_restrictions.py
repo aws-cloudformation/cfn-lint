@@ -54,6 +54,93 @@ def rule():
                 )
             ],
         ),
+        (
+            {"Protocol": "TCP", "ProtocolVersion": "HTTP1"},
+            [
+                ValidationError(
+                    "Additional properties are not allowed ('ProtocolVersion' "
+                    "was unexpected)",
+                    rule=TargetGroupProtocolRestrictions(),
+                    path=deque(["ProtocolVersion"]),
+                    validator="additionalProperties",
+                    schema_path=deque(
+                        ["then", "allOf", 1, "then", "properties", "ProtocolVersion"]
+                    ),
+                )
+            ],
+        ),
+        (
+            {"Protocol": "UDP", "ProtocolVersion": "HTTP1"},
+            [
+                ValidationError(
+                    "Additional properties are not allowed ('ProtocolVersion' "
+                    "was unexpected)",
+                    rule=TargetGroupProtocolRestrictions(),
+                    path=deque(["ProtocolVersion"]),
+                    validator="additionalProperties",
+                    schema_path=deque(
+                        ["then", "allOf", 1, "then", "properties", "ProtocolVersion"]
+                    ),
+                )
+            ],
+        ),
+        (
+            {"Protocol": "TLS", "ProtocolVersion": "HTTP1"},
+            [
+                ValidationError(
+                    "Additional properties are not allowed ('ProtocolVersion' "
+                    "was unexpected)",
+                    rule=TargetGroupProtocolRestrictions(),
+                    path=deque(["ProtocolVersion"]),
+                    validator="additionalProperties",
+                    schema_path=deque(
+                        ["then", "allOf", 1, "then", "properties", "ProtocolVersion"]
+                    ),
+                )
+            ],
+        ),
+        (
+            {"Protocol": "TCP_UDP", "ProtocolVersion": "HTTP1"},
+            [
+                ValidationError(
+                    "Additional properties are not allowed ('ProtocolVersion' "
+                    "was unexpected)",
+                    rule=TargetGroupProtocolRestrictions(),
+                    path=deque(["ProtocolVersion"]),
+                    validator="additionalProperties",
+                    schema_path=deque(
+                        ["then", "allOf", 1, "then", "properties", "ProtocolVersion"]
+                    ),
+                )
+            ],
+        ),
+        (
+            {"Protocol": "GENEVE", "Port": 6081, "ProtocolVersion": "HTTP1"},
+            [
+                ValidationError(
+                    "Additional properties are not allowed ('ProtocolVersion' "
+                    "was unexpected)",
+                    rule=TargetGroupProtocolRestrictions(),
+                    path=deque(["ProtocolVersion"]),
+                    validator="additionalProperties",
+                    schema_path=deque(
+                        ["then", "allOf", 1, "then", "properties", "ProtocolVersion"]
+                    ),
+                )
+            ],
+        ),
+        (
+            {"Protocol": "HTTP", "ProtocolVersion": "HTTP1"},
+            [],
+        ),
+        (
+            {"Protocol": "HTTPS", "ProtocolVersion": "HTTP2"},
+            [],
+        ),
+        (
+            {"Protocol": {}, "ProtocolVersion": "HTTP1"},
+            [],
+        ),
     ],
 )
 def test_backup_lifecycle(instance, expected, rule, validator):
