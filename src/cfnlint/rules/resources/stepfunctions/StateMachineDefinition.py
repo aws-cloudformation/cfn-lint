@@ -41,6 +41,9 @@ class StateMachineDefinition(CfnLintJsonSchema):
             all_matches=True,
         )
 
+        self.jsonata_schema = self._convert_schema_to_jsonata()
+        self._add_state_level_jsonata(self.jsonata_schema)
+
         self.store = {
             "definition": self.schema,
         }
@@ -93,19 +96,67 @@ class StateMachineDefinition(CfnLintJsonSchema):
                 }
             }
         ]
-        schema["definitions"]["wait"]["properties"]["Seconds"] = {
-            "maximum": 99999999,
-            "minimum": 0,
-            # JSONata supports JSONata expressions for Seconds
-            "type": ["number", "string"],
+        # Numeric fields also accept a JSONata expression string, and their
+        # *Path counterparts are JSONPath only
+        for state_type, fields in {
+            "map": [
+                "MaxConcurrency",
+                "ToleratedFailureCount",
+                "ToleratedFailurePercentage",
+            ],
+            "task": ["HeartbeatSeconds", "TimeoutSeconds"],
+            "wait": ["Seconds"],
+        }.items():
+            properties = schema["definitions"][state_type]["properties"]
+            for field in fields:
+                types = properties[field]["type"]
+                if not isinstance(types, list):
+                    types = [types]
+                properties[field] = {**properties[field], "type": [*types, "string"]}
+                properties[f"{field}Path"] = False
+        schema["definitions"]["map"]["properties"]["ItemsPath"] = False
+        schema["definitions"]["wait"]["properties"]["TimestampPath"] = False
+        schema["definitions"]["map"]["properties"]["ItemSelector"] = {
+            "type": ["string", "object"],
         }
-        for k in ["ItemsPath", "MaxConcurrencyPath"]:
-            schema["definitions"]["map"]["properties"][k] = False
         for state_type in ["choice", "fail", "map", "parallel", "pass", "task", "wait"]:
             schema["definitions"][state_type]["properties"]["Arguments"] = {
                 "type": ["string", "object"],
             }
         return schema
+
+    def _add_state_level_jsonata(self, jsonata_schema: dict[str, Any]) -> None:
+        """
+        Route a state that sets QueryLanguage to JSONata under a JSONPath
+        state machine to a copy of its JSONata definition. Nested states
+        do not inherit the parent state's QueryLanguage, so their $refs
+        keep resolving against the base schema. The copies also keep the
+        base #/definitions/common, whose JSONPath-only fields are
+        themselves conditional on QueryLanguage; making common
+        unconditional would stop the copies from rejecting InputPath.
+        """
+        definitions = self.schema["definitions"]
+        routes = definitions["state"]["allOf"]
+        for condition in list(routes):
+            state_type = condition["then"]["$ref"].rsplit("/", 1)[-1]
+            jsonata_type = f"jsonata_{state_type}"
+            definitions[jsonata_type] = jsonata_schema["definitions"][state_type]
+            type_check = condition["if"]["properties"]["Type"]
+            condition["if"]["properties"]["QueryLanguage"] = {
+                "not": {"const": "JSONata"}
+            }
+            routes.append(
+                {
+                    "if": {
+                        "properties": {
+                            "Type": type_check,
+                            "QueryLanguage": {"const": "JSONata"},
+                        },
+                        "required": ["Type", "QueryLanguage"],
+                    },
+                    "then": {"$ref": f"#/definitions/{jsonata_type}"},
+                }
+            )
 
     def _clean_schema(self, validator: Validator, instance: Any):
         for ql, ql_validator in get_value_from_path(
@@ -115,7 +166,7 @@ class StateMachineDefinition(CfnLintJsonSchema):
                 yield self.schema, ql_validator
 
             if ql == "JSONata":
-                yield self._convert_schema_to_jsonata(), ql_validator
+                yield self.jsonata_schema, ql_validator
 
     def _validate_start_at(
         self,
