@@ -3,10 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import json
 from collections import deque
 
 import pytest
 
+from cfnlint.api import lint
 from cfnlint.context.context import Transforms
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.functions.Ref import Ref
@@ -154,3 +156,20 @@ def test_validate(name, instance, schema, context_evolve, expected, rule, contex
     )(context=context, cfn=cfn)
     errs = list(rule.fn_tojsonstring(validator, schema, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"
+
+
+def test_resolved_errors_use_w1040():
+    template = {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Transform": "AWS::LanguageExtensions",
+        "Resources": {
+            "Queue": {
+                "Type": "AWS::SQS::Queue",
+                "Properties": {
+                    "VisibilityTimeout": {"Fn::ToJsonString": [1, 2]},
+                },
+            },
+        },
+    }
+    matches = lint(json.dumps(template), regions=["us-east-1"])
+    assert [m.rule.id for m in matches] == ["W1040"]
