@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Conditions:
+  IsChina: !Equals [!Ref "AWS::Region", cn-north-1]
+Resources:
+  TG:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckProtocol: !If [IsChina, TCP, HTTPS]
+      Matcher:
+        HttpCode: !If [IsChina, !Ref "AWS::NoValue", 200-299]
+      Port: 443
+      Protocol: TCP
+      VpcId: vpc-12345678

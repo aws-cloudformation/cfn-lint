@@ -58,16 +58,22 @@ class PrimaryIdentifiers(CloudFormationLintRule):
 
         return conditions1
 
-    def _validate_resource_type_uniqueness(self, cfn, resource_type, ids):
+    def _validate_resource_type_uniqueness(self, cfn, resource_type, ids, region):
         matches = []
         seens = []
         for resource_name, resource_attributes in cfn.get_resources(
             resource_type
         ).items():
             condition = resource_attributes.get("Condition")
+            if condition and True not in cfn.conditions.build_scenerios_on_region(
+                condition, region
+            ):
+                continue
             properties = resource_attributes.get("Properties", {})
             path = ["Resources", resource_name, "Properties"]
-            for scenario in cfn.get_object_without_conditions(properties):
+            for scenario in cfn.get_object_without_conditions(
+                properties, region=region
+            ):
                 object = scenario.get("Object")
                 conditions = scenario.get("Scenario")
                 if conditions is None:
@@ -78,10 +84,11 @@ class PrimaryIdentifiers(CloudFormationLintRule):
                 # if there is a resource level condition lets see if its valid
                 # and add it to the scenario as needed
                 if condition:
-                    if scenario:
-                        if not cfn.conditions.check_implies(scenario, condition):
-                            continue
+                    if condition in conditions and True not in conditions[condition]:
+                        continue
                     conditions[condition] = set([True])
+                    if not any(cfn.conditions.build_scenarios(conditions, region)):
+                        continue
 
                 # validate object is an object just in case it was emptied out
                 # from the condition (Ref: AWS::NoValue)
@@ -110,7 +117,9 @@ class PrimaryIdentifiers(CloudFormationLintRule):
                             if not merged_conditions:
                                 found = True
                                 seen.resources.add(resource_name)
-                            for _ in cfn.conditions.build_scenarios(merged_conditions):
+                            for _ in cfn.conditions.build_scenarios(
+                                merged_conditions, region
+                            ):
                                 seen.resources.add(resource_name)
                                 # because the conditions could be unique
                                 # we will validate conditions being equal
@@ -152,36 +161,39 @@ class PrimaryIdentifiers(CloudFormationLintRule):
             if isinstance(t, str):
                 tS.add(t)
 
-        matches = []
+        matches: RuleMatches = []
         for t in tS:
-            try:
-                if t in self.config.get("exceptions", {}):
-                    schema = self.config.get("exceptions", {}).get(t)
-                else:
-                    schema = PROVIDER_SCHEMA_MANAGER.get_resource_schema(
-                        cfn.regions[0], t
-                    ).schema
+            for region in cfn.regions:
+                try:
+                    if t in self.config.get("exceptions", {}):
+                        schema = self.config.get("exceptions", {}).get(t)
+                    else:
+                        schema = PROVIDER_SCHEMA_MANAGER.get_resource_schema(
+                            region, t
+                        ).schema
 
-                # we are worried about primary identifiers that can be set
-                # by the customer so if any primary identifiers are read
-                # only we have to skip evaluation
-                primary_ids = schema.get("primaryIdentifier", [])
-                if not primary_ids:
+                    # we are worried about primary identifiers that can be set
+                    # by the customer so if any primary identifiers are read
+                    # only we have to skip evaluation
+                    primary_ids = schema.get("primaryIdentifier", [])
+                    if not primary_ids:
+                        continue
+
+                    read_only_ids = schema.get("readOnlyProperties", [])
+
+                    if any(id in read_only_ids for id in primary_ids):
+                        continue
+
+                    primary_ids = [id.replace("/properties/", "") for id in primary_ids]
+                    # most primaryIdentifiers are at the root level. At this time
+                    # we can only validate if they are at the root of Properties
+                    if any("/" in id for id in primary_ids):
+                        continue
+                    matches.extend(
+                        self._validate_resource_type_uniqueness(
+                            cfn, t, primary_ids, region
+                        )
+                    )
+                except ResourceNotFoundError:
                     continue
-
-                read_only_ids = schema.get("readOnlyProperties", [])
-
-                if any(id in read_only_ids for id in primary_ids):
-                    continue
-
-                primary_ids = [id.replace("/properties/", "") for id in primary_ids]
-                # most primaryIdentifiers are at the root level. At this time
-                # we can only validate if they are at the root of Properties
-                if any("/" in id for id in primary_ids):
-                    continue
-                matches.extend(
-                    self._validate_resource_type_uniqueness(cfn, t, primary_ids)
-                )
-            except ResourceNotFoundError:
-                continue
         return matches
