@@ -76,10 +76,48 @@ def rule():
             [],
         ),
         (
-            # isof partition
+            # eusc partition
             "arn:aws:lambda:us-east-1:123456789012:layer:short:1",
             ["eusc-de-east-1"],
             [],
+        ),
+        (
+            # isof partition (aws-iso-f), at the max of 199
+            "arn:aws-iso-f:lambda:us-isof-east-1:123456789012:layer:"
+            + "a" * 142
+            + ":1",
+            ["us-isof-east-1"],
+            [],
+        ),
+        (
+            # isof partition (aws-iso-f), one past the max
+            "arn:aws-iso-f:lambda:us-isof-east-1:123456789012:layer:"
+            + "a" * 143
+            + ":1",
+            ["us-isof-east-1"],
+            [
+                ValidationError(
+                    "'arn:aws-iso-f:lambda:us-isof-east-1:123456789012:layer:"
+                    f"{'a' * 143}:1' is longer than 199 in 'us-isof-east-1'"
+                ),
+            ],
+        ),
+        (
+            # eusc partition (aws-eusc), at the max of 198
+            "arn:aws-eusc:lambda:eusc-de-east-1:123456789012:layer:" + "a" * 142 + ":1",
+            ["eusc-de-east-1"],
+            [],
+        ),
+        (
+            # eusc partition (aws-eusc), one past the max
+            "arn:aws-eusc:lambda:eusc-de-east-1:123456789012:layer:" + "a" * 143 + ":1",
+            ["eusc-de-east-1"],
+            [
+                ValidationError(
+                    "'arn:aws-eusc:lambda:eusc-de-east-1:123456789012:layer:"
+                    f"{'a' * 143}:1' is longer than 198 in 'eusc-de-east-1'"
+                ),
+            ],
         ),
         (
             {"Ref": "LayerArn"},
