@@ -24,36 +24,48 @@ def rule():
             [],
         ),
         (
-            # 189 chars, us-east-1 max is 188
-            "arn:aws:lambda:us-east-1:123456789012:layer:" + "a" * 143 + ":1",
+            # 205 chars, us-east-1 max is 204
+            "arn:aws:lambda:us-east-1:123456789012:layer:" + "a" * 159 + ":1",
             ["us-east-1"],
             [
                 ValidationError(
-                    f"'arn:aws:lambda:us-east-1:123456789012:layer:{'a' * 143}:1'"
-                    " is longer than 188 in 'us-east-1'"
+                    f"'arn:aws:lambda:us-east-1:123456789012:layer:{'a' * 159}:1'"
+                    " is longer than 204 in 'us-east-1'"
                 ),
             ],
         ),
         (
-            # Same ARN passes in ap-southeast-1 (max 193)
-            "arn:aws:lambda:us-east-1:123456789012:layer:" + "a" * 143 + ":1",
+            # 140-char layer name with a 4-digit version (issue #4849)
+            "arn:aws:lambda:us-east-1:123456789012:layer:" + "a" * 140 + ":1000",
+            ["us-east-1"],
+            [],
+        ),
+        (
+            # exactly 204 chars, the us-east-1 max, so no error
+            "arn:aws:lambda:us-east-1:123456789012:layer:" + "a" * 158 + ":1",
+            ["us-east-1"],
+            [],
+        ),
+        (
+            # 159-char name: errors in us-east-1 (max 204), passes here (max 209)
+            "arn:aws:lambda:us-east-1:123456789012:layer:" + "a" * 159 + ":1",
             ["ap-southeast-1"],
             [],
         ),
         (
-            # us-gov partition (max 199)
-            "arn:aws:lambda:us-east-1:123456789012:layer:" + "a" * 143 + ":1",
+            # us-gov partition (max 215)
+            "arn:aws:lambda:us-east-1:123456789012:layer:" + "a" * 159 + ":1",
             ["us-gov-west-1"],
             [],
         ),
         (
-            # cn partition (max 192 for cn-north-1)
-            "arn:aws:lambda:cn-north-1:123456789012:layer:" + "a" * 146 + ":1",
+            # cn partition (max 208 for cn-north-1)
+            "arn:aws:lambda:cn-north-1:123456789012:layer:" + "a" * 162 + ":1",
             ["cn-north-1"],
             [
                 ValidationError(
-                    f"'arn:aws:lambda:cn-north-1:123456789012:layer:{'a' * 146}:1'"
-                    " is longer than 192 in 'cn-north-1'"
+                    f"'arn:aws:lambda:cn-north-1:123456789012:layer:{'a' * 162}:1'"
+                    " is longer than 208 in 'cn-north-1'"
                 ),
             ],
         ),
