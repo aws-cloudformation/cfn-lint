@@ -531,7 +531,7 @@ def if_(validator: Validator, instance: Any) -> ResolutionResult:
 
 def to_json_string(validator: Validator, instance: Any) -> ResolutionResult:
     for value, v, err in validator.resolve_value(instance):
-        yield json.dumps(value), v, err
+        yield json.dumps(value, separators=(",", ":")), v, err
 
 
 # not all functions need to be resolved.  These functions
