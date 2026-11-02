@@ -12,9 +12,8 @@
      ]
     },
     {
-     "requiredXor": [
-      "Principal",
-      "NotPrincipal"
+     "required": [
+      "Principal"
      ]
     },
     {
@@ -36,16 +35,75 @@
     "NotAction": {
      "$ref": "policy#/definitions/Action"
     },
-    "NotPrincipal": {
-     "$ref": "policy#/definitions/Principal"
-    },
     "Principal": {
-     "$ref": "policy#/definitions/Principal"
+     "$ref": "#/definitions/TrustPrincipal"
     },
     "Sid": {
      "$ref": "policy#/definitions/Statement/properties/Sid"
     }
    }
+  },
+  "TrustAwsPrincipalArn": {
+   "anyOf": [
+    {
+     "const": "*"
+    },
+    {
+     "pattern": "^\\d{12}$"
+    },
+    {
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov):iam::\\d{12}:(?:root|user|role)"
+    },
+    {
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov):sts::\\d{12}:(?:assumed-role|root|federated-user)"
+    },
+    {
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov):iam::cloudfront:user/.+$"
+    }
+   ]
+  },
+  "TrustPrincipal": {
+   "properties": {
+    "AWS": {
+     "$ref": "#/definitions/TrustAwsPrincipalArn",
+     "items": {
+      "$ref": "#/definitions/TrustAwsPrincipalArn",
+      "type": "string"
+     },
+     "type": [
+      "string",
+      "array"
+     ]
+    },
+    "CanonicalUser": {
+     "items": {
+      "type": "string"
+     },
+     "type": [
+      "string",
+      "array"
+     ]
+    },
+    "Federated": {
+     "items": {
+      "type": "string"
+     },
+     "type": [
+      "string",
+      "array"
+     ]
+    },
+    "Service": {
+     "items": {
+      "type": "string"
+     },
+     "type": [
+      "string",
+      "array"
+     ]
+    }
+   },
+   "type": "object"
   }
  },
  "properties": {

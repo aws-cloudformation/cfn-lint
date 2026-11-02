@@ -104,6 +104,75 @@ def template():
                 ),
             ],
         ),
+        (
+            "Valid array command",
+            {
+                "config": {
+                    "commands": {
+                        "000_reload": {"command": ["systemctl", "daemon-reload"]},
+                        "001_chmod": {
+                            "command": ["chmod", "+x", "/opt/check_python.sh"],
+                            "ignoreErrors": "true",
+                        },
+                        "002_string": {"command": "systemctl daemon-reload"},
+                    },
+                },
+            },
+            [],
+        ),
+        (
+            "Invalid command type",
+            {"config": {"commands": {"000": {"command": 42}}}},
+            [
+                ValidationError(
+                    "42 is not of type 'string', 'array'",
+                    path=deque(["config", "commands", "000", "command"]),
+                    schema_path=deque(
+                        [
+                            "patternProperties",
+                            "^.+$",
+                            "properties",
+                            "commands",
+                            "patternProperties",
+                            "^.+$",
+                            "properties",
+                            "command",
+                            "type",
+                        ]
+                    ),
+                    validator="type",
+                    rule=CfnInit(),
+                    path_override=deque([]),
+                ),
+            ],
+        ),
+        (
+            "Invalid array command item type",
+            {"config": {"commands": {"000": {"command": ["echo", 42]}}}},
+            [
+                ValidationError(
+                    "42 is not of type 'string'",
+                    path=deque(["config", "commands", "000", "command", 1]),
+                    schema_path=deque(
+                        [
+                            "patternProperties",
+                            "^.+$",
+                            "properties",
+                            "commands",
+                            "patternProperties",
+                            "^.+$",
+                            "properties",
+                            "command",
+                            "items",
+                            "type",
+                        ]
+                    ),
+                    validator="type",
+                    rule=CfnInit(),
+                    path_override=deque([]),
+                ),
+            ],
+        ),
     ],
 )
 def test_validate(name, instance, expected, rule, validator):

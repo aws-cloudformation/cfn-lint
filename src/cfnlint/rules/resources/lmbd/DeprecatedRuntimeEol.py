@@ -12,6 +12,7 @@ from cfnlint.data import AdditionalSpecs
 from cfnlint.helpers import load_resource
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
+from cfnlint.rules.resources.lmbd._runtime_lifecycle import deprecated_message
 
 
 class DeprecatedRuntimeEol(CfnLintKeyword):
@@ -48,17 +49,18 @@ class DeprecatedRuntimeEol(CfnLintKeyword):
         if not runtime_data:
             return
         current_date = datetime.today()
+        create_block = runtime_data["create-block"]
+        update_block = runtime_data["update-block"]
+
         if (
             datetime.strptime(runtime_data["deprecated"], "%Y-%m-%d") <= current_date
-            and datetime.strptime(runtime_data["create-block"], "%Y-%m-%d")
-            > current_date
-            and datetime.strptime(runtime_data["update-block"], "%Y-%m-%d")
-            > current_date
-        ):
-            yield ValidationError(
-                f"Runtime {runtime!r} was deprecated on "
-                f"{runtime_data['deprecated']!r}. Creation was disabled on "
-                f"{runtime_data['create-block']!r} and update on "
-                f"{runtime_data['update-block']!r}. Please consider "
-                f"updating to {runtime_data['successor']!r}",
+            and (
+                create_block is None
+                or datetime.strptime(create_block, "%Y-%m-%d") > current_date
             )
+            and (
+                update_block is None
+                or datetime.strptime(update_block, "%Y-%m-%d") > current_date
+            )
+        ):
+            yield ValidationError(deprecated_message(runtime, runtime_data))

@@ -14,6 +14,7 @@ from cfnlint import lint, lint_all, lint_by_config, lint_file
 from cfnlint.config import ManualArgs
 from cfnlint.core import get_rules
 from cfnlint.helpers import REGIONS
+from cfnlint.rules import CloudFormationLintRule, RuleMatch, Rules
 from cfnlint.rules.errors import ConfigError
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, reset
 
@@ -491,3 +492,37 @@ Outputs:
             sorted(match.rule.id for match in matches),
             f"Got matches: {matches!r}",
         )
+
+
+class _CountResources(CloudFormationLintRule):
+    id = "E9999"
+    shortdesc = "Count resources"
+    description = "Test rule that reports the number of resources"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/"
+    tags = ["resources"]
+
+    def match(self, cfn):
+        return [RuleMatch(["Resources"], f"{len(cfn.get_resources())} resources")]
+
+
+class TestLintWithRules(TestCase):
+    """lint(rules=...) with the 1.x Rules collection"""
+
+    def test_rules_collection_is_used(self):
+        rules = Rules()
+        rules.register(_CountResources())
+        template = "Resources:\n  Bucket:\n    Type: AWS::S3::Bucket\n"
+        matches = lint(template, rules=rules)
+        self.assertListEqual([m.rule.id for m in matches], ["E9999"])
+        self.assertEqual(matches[0].message, "1 resources")
+
+    def test_rules_collection_with_config(self):
+        rules = Rules()
+        rules.register(_CountResources())
+        template = "Resources:\n  Bucket:\n    Type: AWS::S3::Bucket\n"
+        matches = lint(
+            template,
+            rules=rules,
+            config=ManualArgs(regions=["us-west-2"], ignore_checks=["E9999"]),
+        )
+        self.assertListEqual(matches, [])

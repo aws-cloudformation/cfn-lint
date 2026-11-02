@@ -10,13 +10,21 @@ __all__ = [
     "run_template_by_file_path",
     "expand_deployment_files",
     "CfnLintExitException",
+    "ConfigFileError",
+    "DuplicateRuleError",
     "InvalidRegionException",
+    "SchemaPatchError",
+    "TemplatesNotFoundError",
     "UnexpectedRuleException",
 ]
 
 from cfnlint.exceptions import (
     CfnLintExitException,
+    ConfigFileError,
+    DuplicateRuleError,
     InvalidRegionException,
+    SchemaPatchError,
+    TemplatesNotFoundError,
     UnexpectedRuleException,
 )
 from cfnlint.runner.cli import Runner, main

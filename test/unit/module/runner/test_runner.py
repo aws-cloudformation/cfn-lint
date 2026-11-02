@@ -9,6 +9,7 @@ from unittest.mock import patch
 import pytest
 
 from cfnlint.config import ConfigMixIn
+from cfnlint.exceptions import TemplatesNotFoundError
 from cfnlint.runner import Runner
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, Schema, reset
 
@@ -97,15 +98,27 @@ def test_init_schemas(name, registry_path, patch_path, expected):
 
 
 def test_no_templates():
-    params = ["--template", "does-not-exist.yaml"]
+    config = ConfigMixIn(["--template", "does-not-exist.yaml"])
 
-    config = ConfigMixIn(params)
-    with patch("sys.exit") as exit:
-        with patch("sys.stdout", new=StringIO()) as out:
-            exit.assert_not_called()
-            Runner(config)
-            assert (
-                out.getvalue().strip() == "E0003 does-not-exist.yaml could not "
-                "be processed by glob.glob\nNone:1:1"
-            )
-            exit.assert_called_once_with(2)
+    with patch("sys.stdout", new=StringIO()) as out:
+        runner = Runner(config)
+        # construction neither reports nor exits
+        assert out.getvalue() == ""
+
+        with pytest.raises(SystemExit) as e:
+            runner.cli()
+
+        assert e.value.code == 2
+        assert (
+            out.getvalue().strip() == "E0003 does-not-exist.yaml could not "
+            "be processed by glob.glob\nNone:1:1"
+        )
+
+
+def test_no_templates_run_raises():
+    config = ConfigMixIn(["--template", "does-not-exist.yaml"])
+
+    with pytest.raises(TemplatesNotFoundError) as e:
+        list(Runner(config).run())
+
+    assert str(e.value) == "does-not-exist.yaml could not be processed by glob.glob"

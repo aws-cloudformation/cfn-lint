@@ -3,12 +3,16 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import json
 from collections import deque
 
 import pytest
 import yaml
 
+from cfnlint.api import lint
 from cfnlint.context import Path
+from cfnlint.decode.mark import Mark
+from cfnlint.decode.node import dict_node, str_node
 from cfnlint.jsonschema.validators import ValidationError
 from cfnlint.rules.resources.ssm.Document import Document
 
@@ -17,6 +21,16 @@ from cfnlint.rules.resources.ssm.Document import Document
 def rule():
     rule = Document()
     yield rule
+
+
+def _at_content(validator, resource_name="Doc"):
+    return validator.evolve(
+        context=validator.context.evolve(
+            path=Path(
+                path=deque(["Resources", resource_name, "Properties", "Content"]),
+            )
+        )
+    )
 
 
 @pytest.mark.parametrize(
@@ -68,7 +82,7 @@ def rule():
                     rule=Document(),
                     validator="type",
                     schema_path=deque(["properties", "schemaVersion", "type"]),
-                    path=deque(["Content", "schemaVersion"]),
+                    path=deque(["schemaVersion"]),
                 )
             ],
         ),
@@ -82,7 +96,7 @@ def rule():
                     rule=Document(),
                     validator="type",
                     schema_path=deque(["type"]),
-                    path=deque(["Content"]),
+                    path=deque([]),
                 )
             ],
         ),
@@ -100,7 +114,7 @@ def rule():
                     rule=Document(),
                     validator="type",
                     schema_path=deque(["properties", "schemaVersion", "type"]),
-                    path=deque(["Content", "schemaVersion"]),
+                    path=deque(["schemaVersion"]),
                 )
             ],
         ),
@@ -113,7 +127,7 @@ def rule():
                     rule=Document(),
                     validator="type",
                     schema_path=deque(["type"]),
-                    path=deque(["Content"]),
+                    path=deque([]),
                 )
             ],
         ),
@@ -126,12 +140,9 @@ def test_validate(
     rule,
     validator,
 ):
-    # The rule is keyworded at Properties, so the instance is the
-    # Properties object and Content is one of its keys.
-    properties = {"DocumentType": "Automation", "Content": document}
-    errs = list(rule.validate(validator, {}, properties, {}))
+    errs = list(rule.validate(_at_content(validator), {}, document, {}))
 
-    assert errs == expected
+    assert errs == expected, f"Test {name!r} failed with {errs!r}"
 
 
 @pytest.mark.parametrize(
@@ -140,7 +151,9 @@ def test_validate(
         {
             "Parameters": {
                 "DocTypeParam": {"Type": "String", "Default": "Automation"},
+                "Env": {"Type": "String", "Default": "prod"},
             },
+            "Conditions": {"IsProd": {"Fn::Equals": [{"Ref": "Env"}, "prod"]}},
             "Resources": {
                 "ConfigSchema": {
                     "Type": "AWS::SSM::Document",
@@ -169,12 +182,61 @@ def test_validate(
                         "Content": {"description": "no schemaVersion"},
                     },
                 },
+                "NoDocumentType": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "Content": {"description": "no schemaVersion"},
+                    },
+                },
                 "IntrinsicTypeDoc": {
                     "Type": "AWS::SSM::Document",
                     "Properties": {
                         "DocumentType": {"Ref": "DocTypeParam"},
                         "DocumentFormat": "YAML",
                         "Content": {"description": "no schemaVersion"},
+                    },
+                },
+                "ConditionalAppConfigDoc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": {
+                            "Fn::If": [
+                                "IsProd",
+                                "ApplicationConfiguration",
+                                "ApplicationConfigurationSchema",
+                            ]
+                        },
+                        "Content": {"featureEnabled": True},
+                    },
+                },
+                "ConditionalPlainDoc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": {"Fn::If": ["IsProd", "Command", "Automation"]},
+                        "Content": {"description": "no schemaVersion"},
+                    },
+                },
+                "ConditionalMixedDoc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": {
+                            "Fn::If": ["IsProd", "ApplicationConfiguration", "Command"]
+                        },
+                        "Content": {"featureEnabled": True},
+                    },
+                },
+                "ConfigDataString": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "ApplicationConfiguration",
+                        "Content": "featureEnabled: true",
+                    },
+                },
+                "ConfigSchemaString": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "ApplicationConfigurationSchema",
+                        "Content": '{"type": "object"}',
                     },
                 },
             },
@@ -188,7 +250,13 @@ def test_validate(
         ("ConfigSchema", 0),
         ("ConfigData", 0),
         ("AutomationDoc", 1),
+        ("NoDocumentType", 1),
         ("IntrinsicTypeDoc", 1),
+        ("ConditionalAppConfigDoc", 0),
+        ("ConditionalPlainDoc", 1),
+        ("ConditionalMixedDoc", 0),
+        ("ConfigDataString", 0),
+        ("ConfigSchemaString", 0),
     ],
 )
 def test_validate_document_type_scoping(
@@ -198,47 +266,62 @@ def test_validate_document_type_scoping(
     validator,
 ):
     """E3051 skips AppConfig document types but still validates the rest"""
-    properties = validator.cfn.template["Resources"][resource_name]["Properties"]
-    validator = validator.evolve(
-        context=validator.context.evolve(
-            path=Path(path=deque(["Resources", resource_name, "Properties"]))
-        )
-    )
-    errs = list(rule.validate(validator, {}, properties, {}))
+    content = validator.cfn.template["Resources"][resource_name]["Properties"][
+        "Content"
+    ]
+    errs = list(rule.validate(_at_content(validator, resource_name), {}, content, {}))
 
     assert len(errs) == expected_count, f"{resource_name} got {errs!r}"
 
 
-@pytest.mark.parametrize(
-    "document_type",
-    [
-        "ApplicationConfiguration",
-        "ApplicationConfigurationSchema",
-    ],
-)
-def test_validate_appconfig_string_content(document_type, rule, validator):
-    """E3051 skips string Content on AppConfig types before decoding it"""
-    properties = {
-        "DocumentType": document_type,
-        "Content": "featureEnabled: true",
-    }
-    errs = list(rule.validate(validator, {}, properties, {}))
+def test_validate_string_content_as_str_node(rule, validator):
+    # Content decoded from a template arrives as a str_node, not a plain
+    # str. Regression test for #4894: a well-formed JSON string must not
+    # draw the generic parser error, and a malformed one must report the
+    # actual parse defect instead of that same generic message.
+    valid = str_node(
+        '{"schemaVersion":"2.2","description":"ok","mainSteps":[]}',
+        Mark(0, 0),
+        Mark(0, 0),
+    )
+    assert list(rule.validate(_at_content(validator), {}, valid, {})) == []
 
-    assert errs == []
-
-
-def test_validate_command_without_schema_version(rule, validator):
-    """A Command document without schemaVersion is still flagged,
-    proving the AppConfig exemption is narrow rather than broad"""
-    properties = {
-        "DocumentType": "Command",
-        "Content": {"description": "no schemaVersion"},
-    }
-    errs = list(rule.validate(validator, {}, properties, {}))
-
+    malformed = str_node(
+        "{bad json",
+        Mark(0, 0),
+        Mark(0, 0),
+    )
+    errs = list(rule.validate(_at_content(validator), {}, malformed, {}))
     assert len(errs) == 1
-    assert errs[0].message == "'schemaVersion' is a required property"
-    assert errs[0].path == deque(["Content"])
+    assert errs[0].message.startswith("Document is not valid (")
+    assert "a string or stream input is required" not in errs[0].message
+
+    # Inner schema validation must also run on string content: an empty
+    # schemaVersion parses as null and fails the enum check.
+    bad_version = str_node(
+        '{"schemaVersion":}',
+        Mark(0, 0),
+        Mark(0, 0),
+    )
+    errs = list(rule.validate(_at_content(validator), {}, bad_version, {}))
+    assert any("is not one of" in err.message for err in errs)
+    assert any("2.2" in err.message for err in errs)
+    assert not any(
+        "a string or stream input is required" in err.message for err in errs
+    )
+
+
+def test_validate_object_content_as_dict_node(rule, validator):
+    # Object-form Content is untouched by the string fix.
+    valid = dict_node(
+        {
+            "schemaVersion": "2.2",
+            "mainSteps": [{"action": "aws:runShellScript"}],
+        },
+        Mark(0, 0),
+        Mark(0, 0),
+    )
+    assert list(rule.validate(_at_content(validator), {}, valid, {})) == []
 
 
 def test_validate_by_py_version(rule, validator):
@@ -259,11 +342,120 @@ def test_validate_by_py_version(rule, validator):
             rule=Document(),
             validator="type",
             schema_path=deque([]),
-            path=deque(["Content"]),
+            path=deque([]),
         )
     ]
 
-    properties = {"DocumentType": "Automation", "Content": document}
-    errs = list(rule.validate(validator, {}, properties, {}))
+    errs = list(rule.validate(_at_content(validator), {}, document, {}))
 
     assert errs == expected
+
+
+@pytest.mark.parametrize(
+    "name,resources,expected",
+    [
+        (
+            "Content from a Ref is not resolvable",
+            {
+                "Doc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "Command",
+                        "Content": {"Ref": "DocBody"},
+                    },
+                }
+            },
+            [],
+        ),
+        (
+            "Content from a GetAtt is not resolvable",
+            {
+                "Stack1": {
+                    "Type": "AWS::CloudFormation::Stack",
+                    "Properties": {"TemplateURL": "https://example.com/t.yaml"},
+                },
+                "Doc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "Command",
+                        "Content": {"Fn::GetAtt": ["Stack1", "Outputs.Body"]},
+                    },
+                },
+            },
+            [],
+        ),
+        (
+            "Content from a Sub is not resolvable",
+            {
+                "Doc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "Command",
+                        "Content": {"Fn::Sub": '{"schemaVersion":"${DocBody}"}'},
+                    },
+                }
+            },
+            [],
+        ),
+        (
+            "Content from a Fn::If validates each branch",
+            {
+                "Doc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "Command",
+                        "Content": {
+                            "Fn::If": [
+                                "IsProd",
+                                {"schemaVersion": "2.2", "mainSteps": []},
+                                {"description": "no schemaVersion"},
+                            ]
+                        },
+                    },
+                }
+            },
+            ["E3051"],
+        ),
+        (
+            "A Command document still needs a schemaVersion",
+            {
+                "Doc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "Command",
+                        "Content": {"description": "no schemaVersion"},
+                    },
+                }
+            },
+            ["E3051"],
+        ),
+        (
+            "An AppConfig document does not",
+            {
+                "Doc": {
+                    "Type": "AWS::SSM::Document",
+                    "Properties": {
+                        "DocumentType": "ApplicationConfiguration",
+                        "Content": {"featureEnabled": True},
+                    },
+                }
+            },
+            [],
+        ),
+    ],
+)
+def test_keyword_registration(name, resources, expected):
+    """Content behind an intrinsic function is filtered before E3051 runs"""
+    template = {
+        "Parameters": {
+            "DocBody": {"Type": "String", "Default": '{"schemaVersion":"2.2"}'},
+            "Env": {"Type": "String", "Default": "prod"},
+        },
+        "Conditions": {"IsProd": {"Fn::Equals": [{"Ref": "Env"}, "prod"]}},
+        "Resources": resources,
+    }
+    matches = lint(json.dumps(template), regions=["us-east-1"])
+
+    assert [
+        match.rule.id for match in matches if match.rule.id == "E3051"
+    ] == expected, f"Test {name!r} failed with {matches!r}"
