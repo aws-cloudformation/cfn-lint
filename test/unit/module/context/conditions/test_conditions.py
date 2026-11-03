@@ -415,6 +415,36 @@ def test_inline_equals_mutual_exclusion():
         conditions.evolve({"IsEast": True, "IsElsewhere": True})
 
 
+def test_allowed_values_covered_through_reference():
+    """The Or that forces a fully covered AllowedValues parameter is still
+    emitted when the covering Fn::Equals are only reachable by traversing
+    another condition. Deduping on the Ref rather than on the Fn::Equals
+    would leave a value uncovered and drop the Or (issue #4984)."""
+    cfn = Template(
+        None,
+        {
+            "Parameters": {
+                "Stage": {"Type": "String", "AllowedValues": ["beta", "prod"]},
+            },
+            "Conditions": {
+                "IsBetaOrProd": {
+                    "Fn::Or": [
+                        {"Fn::Equals": [{"Ref": "Stage"}, "beta"]},
+                        {"Fn::Equals": [{"Ref": "Stage"}, "prod"]},
+                    ]
+                },
+            },
+            "Resources": {},
+        },
+        regions=["us-east-1"],
+    )
+    conditions = create_context_for_template(cfn).conditions
+
+    # Stage can only be beta or prod, so a condition covering both is always true
+    assert conditions.is_reachable("IsBetaOrProd", True) is True
+    assert conditions.is_reachable("IsBetaOrProd", False) is False
+
+
 def test_condition_failures():
     with pytest.raises(ValueError):
         Conditions.create_from_instance([], {}, {})
