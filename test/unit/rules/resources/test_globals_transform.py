@@ -115,6 +115,22 @@ def rule():
             0,
         ),
         (
+            # https://github.com/aws-cloudformation/cfn-lint/issues/4985
+            "Function.CodeSigningConfigArn",
+            {"Function": {"CodeSigningConfigArn": "arn:aws:lambda:us-east-1:123456789012:code-signing-config:csc-123"}},
+            {"Transform": ["AWS::Serverless-2016-10-31"]},
+            {"cfn_path": deque(["Globals"])},
+            0,
+        ),
+        (
+            # https://github.com/aws-cloudformation/cfn-lint/issues/4985
+            "Non-intrinsic object still rejected for Function.CodeSigningConfigArn",
+            {"Function": {"CodeSigningConfigArn": {"Foo": "bar"}}},
+            {"Transform": ["AWS::Serverless-2016-10-31"]},
+            {"cfn_path": deque(["Globals"])},
+            1,
+        ),
+        (
             "Unknown key in object form of Function.CodeUri",
             {"Function": {"CodeUri": {"Bucket": "my-bucket", "Kye": "code.zip"}}},
             {"Transform": ["AWS::Serverless-2016-10-31"]},
