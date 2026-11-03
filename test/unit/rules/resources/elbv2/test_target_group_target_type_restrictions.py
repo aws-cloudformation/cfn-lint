@@ -41,6 +41,10 @@ def rule():
             [],
         ),
         (
+            {"TargetType": "lambda", "ProtocolVersion": "HTTP1"},
+            [],
+        ),
+        (
             {"TargetType": "lambda", "Port": "443"},
             [
                 ValidationError(

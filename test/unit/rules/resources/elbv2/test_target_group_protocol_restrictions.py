@@ -141,6 +141,10 @@ def rule():
             {"Protocol": {}, "ProtocolVersion": "HTTP1"},
             [],
         ),
+        (
+            {"Protocol": "TCP", "ProtocolVersion": {"Ref": "VersionParam"}},
+            [],
+        ),
     ],
 )
 def test_backup_lifecycle(instance, expected, rule, validator):

@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT-0
 from typing import Any
 
 import cfnlint.data.schemas.extensions.aws_elasticloadbalancingv2_targetgroup
+from cfnlint.helpers import is_function
 from cfnlint.jsonschema import ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
@@ -36,6 +37,11 @@ class TargetGroupProtocolRestrictions(CfnLintJsonSchema):
     ) -> ValidationResult:
         for err in super().validate(validator, keywords, instance, schema):
             if not err.schema:
+                # A forbidden property set by an intrinsic function stays
+                # silent: the resolved value is unknown at lint time.
+                fn, _ = is_function(err.instance)
+                if fn in validator.context.functions:
+                    continue
                 err.message = (
                     f"Additional properties are not allowed ({err.path[0]!r} "
                     "was unexpected)"
