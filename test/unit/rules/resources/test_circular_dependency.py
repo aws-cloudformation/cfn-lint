@@ -60,9 +60,28 @@ class TestRulesRefCircular(BaseRuleTestCase):
             err_count,
         )
 
+    def test_file_negative_region_gated(self):
+        """Cycles through Condition-gated resources are still reported
+
+        CloudFormation does not evaluate resource Conditions when
+        building the dependency graph, so these cycles are rejected
+        even in us-west-2, where the IsUsEast1 gate can never be true.
+        """
+        config = ConfigMixIn(
+            include_experimental=True,
+            include_checks=["I"],
+            regions=["us-west-2"],
+        )
+        self.helper_file_negative(
+            "test/fixtures/templates/bad/resources_circular_dependency_region_gated.yaml",
+            4,
+            config,
+        )
+
     def test_file_negative_conditions_other_region(self):
-        """Region-gated cycles disappear outside their region"""
-        err_count = 2
+        """Fn::If region-gated cycles disappear outside their region,
+        but DependsOn cycles to a gated target are still reported"""
+        err_count = 4
         config = ConfigMixIn(
             include_experimental=True,
             include_checks=["I"],

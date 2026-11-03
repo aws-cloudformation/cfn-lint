@@ -126,11 +126,14 @@ class CircularDependency(CloudFormationLintRule):
     ) -> dict[str, set[bool]]:
         """Conditions under which a graph edge can exist.
 
-        An edge exists only in scenarios where the source resource exists
-        (its `Condition`, when set, is True) and every `Fn::If` branch on
-        the path to the reference is taken. The returned dict maps each
-        condition name to the set of values it must take; an empty set
-        means the edge can never exist.
+        An edge exists only in scenarios where every `Fn::If` branch on
+        the path to the reference is taken. Resource `Condition`s are
+        deliberately excluded: CloudFormation resolves `Fn::If` before
+        cycle detection but does not evaluate resource Conditions when
+        building that graph, so a cycle through a gated resource is
+        still rejected even when the gate can never be true. The
+        returned dict maps each condition name to the set of values it
+        must take; an empty set means the edge can never exist.
         """
         data = graph.graph.get_edge_data(source, target, key) or {}
         source_paths = data.get("source_paths", [])
@@ -138,26 +141,18 @@ class CircularDependency(CloudFormationLintRule):
             source_paths = []
         path = ["Resources", source] + list(source_paths)
         try:
-            requirements = cfn.get_conditions_from_path(cfn.template, path)
+            requirements = cfn.get_conditions_from_path(
+                cfn.template, path, include_resource_conditions=False
+            )
         except Exception:  # pylint: disable=broad-exception-caught
             # A malformed path (for example a non-string condition name)
             # must not break the rule: treat the edge as unconditional.
             return {}
-        requirements = {
+        return {
             name: set(values)
             for name, values in requirements.items()
             if isinstance(name, str)
         }
-        # The edge also requires the target resource to exist. When the
-        # target carries a `Condition`, that condition must be True.
-        target_values = cfn.template.get("Resources", {}).get(target, {})
-        if isinstance(target_values, dict):
-            target_condition = target_values.get("Condition")
-            if isinstance(target_condition, str):
-                requirements[target_condition] = requirements.get(
-                    target_condition, {True, False}
-                ) & {True}
-        return requirements
 
     def _requirements_satisfiable(
         self, cfn: Template, requirements_list: list[dict[str, set[bool]]]
@@ -170,8 +165,8 @@ class CircularDependency(CloudFormationLintRule):
         exclusive `Fn::If` branches) makes the cycle impossible. The
         check is region aware: a condition that compares `AWS::Region`
         against a value can only hold in the matching region, so a
-        cycle is kept when it is realizable in at least one of the
-        regions being linted.
+        cycle through an `Fn::If` branch is kept only when it is
+        realizable in at least one of the regions being linted.
         """
         combined: dict[str, set[bool]] = {}
         for requirements in requirements_list:
@@ -281,8 +276,8 @@ class CircularDependency(CloudFormationLintRule):
             if (
                 graph.graph.nodes[source].get("type") == "Resource"
                 and graph.graph.nodes[target].get("type") == "Resource"
-                # A cycle through `Fn::If` branches or `Condition`-gated
-                # resources that can never coexist is not a cycle.
+                # A cycle through `Fn::If` branches that can never
+                # coexist is not a cycle.
                 and (
                     len(cycle) <= 2
                     or self._edge_in_realizable_cycle(
