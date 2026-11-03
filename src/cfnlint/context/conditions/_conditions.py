@@ -83,13 +83,19 @@ class Conditions:
         # cannot both be true. Previously this constraint was only added
         # inside the AllowedValues loop below, so plain parameters and
         # pseudo-parameters never got it (issue #4799).
+        # A condition's equals includes those of every condition it references,
+        # so pair each distinct Fn::Equals only once (#4984).
         equals_by_ref: dict[str, list[tuple[Symbol, str]]] = {}
+        paired: set[str] = set()
         for _, c_v in obj.items():
             for i in c_v.equals:
                 if not isinstance(i.left.instance, str):
                     continue
                 if not isinstance(i.right.instance, dict):
                     continue
+                if i.hash in paired:
+                    continue
+                paired.add(i.hash)
                 seen = equals_by_ref.setdefault(i.right.hash, [])
                 for prev_cnf, prev_val in seen:
                     if prev_val != i.left.instance:
