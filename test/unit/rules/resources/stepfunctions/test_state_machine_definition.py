@@ -634,7 +634,7 @@ def rule():
             [
                 ValidationError(
                     "'${invalid}' does not match "
-                    "'^arn:aws:([a-z]|-)+:([a-z]|[0-9]|-)*:[0-9]*:([a-z]|-)+:[a-zA-Z0-9-_.]+(:(\\\\$LATEST|[a-zA-Z0-9-_\\\\.]+))?$'",
+                    "'^arn:aws[A-Za-z\\\\-]*?:([a-z]|-)+:([a-z]|[0-9]|-)*:[0-9]*:([a-z]|-)+:[a-zA-Z0-9-_.]+(:(\\\\$LATEST|[a-zA-Z0-9-_\\\\.]+))?$'",
                     rule=StateMachineDefinition(),
                     validator="pattern",
                     schema_path=deque(
@@ -741,7 +741,7 @@ def rule():
             [
                 ValidationError(
                     "'${jobqueue}' does not match "
-                    "'^arn:aws:([a-z]|-)+:([a-z]|[0-9]|-)*:[0-9]*:([a-z]|-)+:[a-zA-Z0-9-_.]+(:(\\\\$LATEST|[a-zA-Z0-9-_\\\\.]+))?$'",
+                    "'^arn:aws[A-Za-z\\\\-]*?:([a-z]|-)+:([a-z]|[0-9]|-)*:[0-9]*:([a-z]|-)+:[a-zA-Z0-9-_.]+(:(\\\\$LATEST|[a-zA-Z0-9-_\\\\.]+))?$'",
                     rule=StateMachineDefinition(),
                     validator="pattern",
                     schema_path=deque(
@@ -1559,6 +1559,67 @@ def rule():
                 }
             },
             [],
+        ),
+        (
+            "Task resource ARNs from other partitions",
+            {
+                "Definition": {
+                    "StartAt": "China",
+                    "States": {
+                        "China": {
+                            "Type": "Task",
+                            "Resource": "arn:aws-cn:lambda:cn-north-1:123456789012:function:worker",
+                            "Next": "Eusc",
+                        },
+                        "Eusc": {
+                            "Type": "Task",
+                            "Resource": "arn:aws-eusc:lambda:eusc-de-east-1:123456789012:function:worker:$LATEST",
+                            "End": True,
+                        },
+                    },
+                }
+            },
+            [],
+        ),
+        (
+            "Task resource ARN from an unknown partition",
+            {
+                "Definition": {
+                    "StartAt": "Other",
+                    "States": {
+                        "Other": {
+                            "Type": "Task",
+                            "Resource": "arn:azure:lambda:us-east-1:123456789012:function:worker",
+                            "End": True,
+                        },
+                    },
+                }
+            },
+            [
+                ValidationError(
+                    (
+                        "'arn:azure:lambda:us-east-1:123456789012:function:worker' "
+                        "does not match '^arn:aws[A-Za-z\\\\-]*?:([a-z]|-)+:([a-z]|[0-9]|-)*:[0-9]*:([a-z]|-)+:[a-zA-Z0-9-_.]+(:(\\\\$LATEST|[a-zA-Z0-9-_\\\\.]+))?$'"
+                    ),
+                    rule=StateMachineDefinition(),
+                    validator="pattern",
+                    schema_path=deque(
+                        [
+                            "properties",
+                            "States",
+                            "patternProperties",
+                            "^.{1,80}$",
+                            "allOf",
+                            5,
+                            "then",
+                            "properties",
+                            "Resource",
+                            "pattern",
+                        ]
+                    ),
+                    path=deque(["Definition", "States", "Other", "Resource"]),
+                ),
+            ],
         ),
     ],
 )
