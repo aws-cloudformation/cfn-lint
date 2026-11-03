@@ -404,6 +404,42 @@ _template = {
                 ),
             ],
         ),
+        # Same condition gates both sides: only (300, 1800) and (10, 30)
+        # can occur, both fine, so no finding even though cross pairs
+        # like (300, 30) would violate
+        (
+            {
+                "Conditions": {
+                    "UseLong": {
+                        "Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"],
+                    },
+                },
+                "Resources": {
+                    "Queue": {
+                        "Type": "AWS::SQS::Queue",
+                        "Properties": {
+                            "VisibilityTimeout": {"Fn::If": ["UseLong", 1800, 30]},
+                        },
+                    },
+                    "Lambda": {
+                        "Type": "AWS::Lambda::Function",
+                        "Properties": {
+                            "Timeout": {"Fn::If": ["UseLong", 300, 10]},
+                            "Role": {"Fn::GetAtt": "Role.Arn"},
+                        },
+                    },
+                    "Mapping": {
+                        "Type": "AWS::Lambda::EventSourceMapping",
+                        "Properties": {
+                            "EventSourceArn": {"Fn::GetAtt": "Queue.Arn"},
+                            "FunctionName": {"Ref": "Lambda"},
+                        },
+                    },
+                },
+            },
+            deque(["Resources", "Mapping", "Properties"]),
+            [],
+        ),
     ],
     indirect=["template"],
 )

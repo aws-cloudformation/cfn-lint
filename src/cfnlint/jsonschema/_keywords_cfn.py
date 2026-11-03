@@ -608,9 +608,25 @@ def _combine_gathered(
     ):
         gathered: dict[str, dict[str, Any]] = {entry_name: {} for entry_name in entries}
         statuses: dict[str, bool] = {}
+        conflict = False
         for (entry_name, key), (value, branch_validator) in zip(keys, combo):
             gathered[entry_name][key] = value
-            statuses.update(branch_validator.context.conditions.status)
+            for (
+                condition,
+                condition_status,
+            ) in branch_validator.context.conditions.status.items():
+                if condition in statuses and statuses[condition] != condition_status:
+                    # Two branches disagree about the same condition, so
+                    # this combination cannot occur. Merging would let the
+                    # later branch overwrite the earlier one and validate
+                    # an impossible pair.
+                    conflict = True
+                    break
+                statuses[condition] = condition_status
+            if conflict:
+                break
+        if conflict:
+            continue
         try:
             scenario_validator = validator.evolve(
                 context=validator.context.evolve(
