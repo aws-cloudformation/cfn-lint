@@ -17,6 +17,7 @@ from cfnlint.helpers import is_function
 
 LOGGER = logging.getLogger(__name__)
 REF_REGION = get_hash({"Ref": "AWS::Region"})
+REF_PARTITION = get_hash({"Ref": "AWS::Partition"})
 
 
 class EqualParameter:
@@ -58,6 +59,7 @@ class Equal:
     _right: EqualParameter | str
     _is_static: bool | None
     _is_region: Tuple[bool, str]
+    _is_partition: Tuple[bool, str]
 
     def __init__(self, equal: list[str | dict]) -> None:
         self._is_static = None
@@ -78,16 +80,21 @@ class Equal:
                 if self._left == self._right:
                     self._is_static = True
 
-            self._is_region = (False, "")
-            if isinstance(self._left, EqualParameter):
-                if self._left.hash == REF_REGION and isinstance(self._right, str):
-                    self._is_region = (True, self._right)
-            if isinstance(self._right, EqualParameter):
-                if self._right.hash == REF_REGION and isinstance(self._left, str):
-                    self._is_region = (True, self._left)
+            self._is_region = self._compares_pseudo_parameter(REF_REGION)
+            self._is_partition = self._compares_pseudo_parameter(REF_PARTITION)
 
             return
         raise ValueError("Equals has to be a list of two values")
+
+    def _compares_pseudo_parameter(self, ref_hash: str) -> Tuple[bool, str]:
+        """Return (True, literal) if this compares the given Ref with a literal"""
+        if isinstance(self._left, EqualParameter):
+            if self._left.hash == ref_hash and isinstance(self._right, str):
+                return (True, self._right)
+        if isinstance(self._right, EqualParameter):
+            if self._right.hash == ref_hash and isinstance(self._left, str):
+                return (True, self._left)
+        return (False, "")
 
     def _init_parameter(self, parameter: dict[str, Any] | str) -> EqualParameter | str:
         if isinstance(parameter, dict):
@@ -136,6 +143,20 @@ class Equal:
               being compared
         """
         return self._is_region
+
+    @property
+    def is_partition(self) -> Tuple[bool, str]:
+        """Returns a Tuple if the condition is comparing a partition to a string
+
+        Args:
+            None
+
+        Returns:
+            Tuple[bool, str]: Tuple where the boolean is True if the condition
+              is using Ref: AWS::Partition and the second element is for the
+              partition being compared
+        """
+        return self._is_partition
 
     @property
     def left(self):
