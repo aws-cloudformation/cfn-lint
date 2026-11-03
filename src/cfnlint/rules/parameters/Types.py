@@ -35,15 +35,15 @@ class Types(CfnLintKeyword):
         if instance in VALID_PARAMETER_TYPES:
             return
 
-        # Lists of Systems Manager parameter types are rejected by
+        # Lists of Systems Manager parameter value types are rejected by
         # CloudFormation outright, unlike a single SSM parameter type
         # which CloudFormation accepts but does not validate. The
         # documented equivalent is AWS::SSM::Parameter::Value<List<...>>.
+        # List<AWS::SSM::Parameter::Name> is intentionally left out:
+        # that form deploys, so it must not be reported as an error.
         if instance.startswith("List<") and instance.endswith(">"):
             inner = instance[5:-1]
-            if inner == "AWS::SSM::Parameter::Name" or (
-                inner.startswith("AWS::SSM::Parameter::Value<") and inner.endswith(">")
-            ):
+            if inner.startswith("AWS::SSM::Parameter::Value<") and inner.endswith(">"):
                 yield ValidationError(
                     f"{instance!r} is not supported by CloudFormation. "
                     "Lists of Systems Manager parameter types are not "

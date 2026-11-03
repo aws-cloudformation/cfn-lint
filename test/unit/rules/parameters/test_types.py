@@ -75,17 +75,6 @@ def rule():
             ],
         ),
         (
-            "List of SSM parameter name type is rejected",
-            "List<AWS::SSM::Parameter::Name>",
-            [
-                ValidationError(
-                    "'List<AWS::SSM::Parameter::Name>' is not supported "
-                    "by CloudFormation.",
-                    rule=Types(),
-                )
-            ],
-        ),
-        (
             "Invalid type (not string)",
             [],
             [],
