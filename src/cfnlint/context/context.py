@@ -26,6 +26,8 @@ from cfnlint.helpers import (
     REGION_PRIMARY,
     TRANSFORM_LANGUAGE_EXTENSION,
     TRANSFORM_SAM,
+    get_partition,
+    get_url_suffix,
 )
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, AttributeDict
 
@@ -322,29 +324,17 @@ def _get_pseudo_value(parameter: str) -> str | list[str] | None:
 
 def _get_pseudo_value_by_region(parameter: str, region: str) -> str | list[str]:
     if parameter == "AWS::NotificationARNs":
-        return [f"arn:{_get_partition(region)}:sns:{region}:123456789012:notification"]
+        return [f"arn:{get_partition(region)}:sns:{region}:123456789012:notification"]
     if parameter == "AWS::Partition":
-        return _get_partition(region)
+        return get_partition(region)
     if parameter == "AWS::Region":
         return region
     if parameter == "AWS::StackId":
         return (
-            f"arn:{_get_partition(region)}:cloudformation:{region}"
+            f"arn:{get_partition(region)}:cloudformation:{region}"
             ":123456789012:stack/teststack/51af3dc0-da77-11e4-872e-1234567db123"
         )
-    if region in ("cn-north-1", "cn-northwest-1"):
-        return "amazonaws.com.cn"
-    else:
-        return "amazonaws.com"
-
-
-def _get_partition(region) -> str:
-    if region in ("us-gov-east-1", "us-gov-west-1"):
-        return "aws-us-gov"
-    if region in ("cn-north-1", "cn-northwest-1"):
-        return "aws-cn"
-    else:
-        return "aws"
+    return get_url_suffix(region)
 
 
 class _Ref(ABC):
