@@ -103,6 +103,8 @@ class Condition:
             status=status,
             cnf=self.cnf,
             hash=self.hash,  # Pass the hash along
+            fn_equals=self.fn_equals,
+            condition=self.condition,
         )
 
     @property

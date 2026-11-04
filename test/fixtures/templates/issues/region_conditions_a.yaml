@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Conditions:
+  IsIAD: !Equals [!Ref "AWS::Region", us-east-1]
+Resources:
+  RoleOne:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !If [IsIAD, role-one-iad, role-shared-elsewhere]
+      AssumeRolePolicyDocument: {Version: "2012-10-17", Statement: [{Effect: Allow, Principal: {Service: ec2.amazonaws.com}, Action: "sts:AssumeRole"}]}
+  RoleTwo:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !If [IsIAD, role-two-iad, role-shared-elsewhere]
+      AssumeRolePolicyDocument: {Version: "2012-10-17", Statement: [{Effect: Allow, Principal: {Service: ec2.amazonaws.com}, Action: "sts:AssumeRole"}]}

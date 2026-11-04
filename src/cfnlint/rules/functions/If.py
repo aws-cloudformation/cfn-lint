@@ -54,6 +54,14 @@ class If(BaseFn):
             return
 
         for i in [1, 2]:
+            if validator.context.conditions.regions and all(
+                (i == 1)
+                not in validator.cfn.conditions.build_scenerios_on_region(
+                    value[0], region
+                )
+                for region in validator.context.regions
+            ):
+                continue
             # we pass through the functions for the paths down
             # the second and third element of the if
             try:
@@ -73,6 +81,14 @@ class If(BaseFn):
                     err.path.appendleft(key)
                     yield err
             except Unsatisfiable as e:
+                condition = validator.context.conditions.conditions.get(value[0])
+                if (
+                    validator.context.conditions.regions
+                    and condition is not None
+                    and condition.is_region
+                    and validator.context.conditions.is_reachable(value[0], i == 1)
+                ):
+                    continue
                 # The branch could not be evolved under the current conditions.
                 # Only report it as unreachable when the condition truly cannot
                 # take this value given the forced facts (resource/output

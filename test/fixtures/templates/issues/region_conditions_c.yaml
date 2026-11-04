@@ -1,0 +1,10 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Conditions:
+  IsUsEast1: !Equals [us-east-1, !Ref "AWS::Region"]
+Resources:
+  Host:
+    Type: AWS::EC2::Instance
+    Condition: IsUsEast1
+    Properties:
+      ImageId: ami-12345678
+      InstanceType: c4.2xlarge
