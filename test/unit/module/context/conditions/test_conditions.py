@@ -340,6 +340,111 @@ def test_mutually_exclusive_equals_without_allowed_values():
         conditions.evolve({"UseAcct1": True, "UseAcct2": True})
 
 
+def test_referenced_equals_paired_once():
+    """A condition's equals includes those of every condition it references,
+    so the same Fn::Equals is reachable many times over. Pairing it on each
+    visit makes the clause count quadratic in the references rather than in
+    the distinct Fn::Equals (issue #4984)."""
+    regions = 30
+    cfn = Template(
+        None,
+        {
+            "Conditions": {
+                **{
+                    f"IsRegion{i}": {
+                        "Fn::Equals": [{"Ref": "AWS::Region"}, f"region-{i}"]
+                    }
+                    for i in range(regions)
+                },
+                **{
+                    f"InGroup{i}": {
+                        "Fn::Or": [
+                            {"Condition": f"IsRegion{(i + j) % regions}"}
+                            for j in range(10)
+                        ]
+                    }
+                    for i in range(regions)
+                },
+            },
+            "Resources": {},
+        },
+        regions=["us-east-1"],
+    )
+    conditions = create_context_for_template(cfn).conditions
+
+    assert len(conditions.cnf.data) < 2 * regions * regions
+
+    # the mutual exclusion from #4799 still holds
+    assert conditions.is_reachable("IsRegion0", True) is True
+    assert conditions.is_reachable("IsRegion1", True) is True
+    with pytest.raises(Unsatisfiable):
+        conditions.evolve({"IsRegion0": True, "IsRegion1": True})
+
+    # a group is satisfiable, and excludes a region none of its members allow
+    in_group = conditions.evolve({"InGroup0": True})
+    assert in_group.is_reachable("IsRegion0", True) is True
+    assert in_group.is_reachable("IsRegion20", True) is False
+
+
+def test_inline_equals_mutual_exclusion():
+    """An Fn::Equals reached only by traversing another condition is still
+    paired, so an enclosing Fn::Or stays mutually exclusive with a sibling
+    condition on the same Ref (issue #4984)."""
+    cfn = Template(
+        None,
+        {
+            "Conditions": {
+                "IsEast": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]},
+                "IsElsewhere": {
+                    "Fn::Or": [
+                        {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-west-2"]},
+                        {"Fn::Equals": [{"Ref": "AWS::Region"}, "eu-west-1"]},
+                    ]
+                },
+            },
+            "Resources": {},
+        },
+        regions=["us-east-1"],
+    )
+    conditions = create_context_for_template(cfn).conditions
+
+    assert conditions.is_reachable("IsEast", True) is True
+    assert conditions.is_reachable("IsElsewhere", True) is True
+
+    with pytest.raises(Unsatisfiable):
+        conditions.evolve({"IsEast": True, "IsElsewhere": True})
+
+
+def test_allowed_values_covered_through_reference():
+    """The Or that forces a fully covered AllowedValues parameter is still
+    emitted when the covering Fn::Equals are only reachable by traversing
+    another condition. Deduping on the Ref rather than on the Fn::Equals
+    would leave a value uncovered and drop the Or (issue #4984)."""
+    cfn = Template(
+        None,
+        {
+            "Parameters": {
+                "Stage": {"Type": "String", "AllowedValues": ["beta", "prod"]},
+            },
+            "Conditions": {
+                "IsBetaOrProd": {
+                    "Fn::Or": [
+                        {"Fn::Equals": [{"Ref": "Stage"}, "beta"]},
+                        {"Fn::Equals": [{"Ref": "Stage"}, "prod"]},
+                    ]
+                },
+            },
+            "Resources": {},
+        },
+        regions=["us-east-1"],
+    )
+    conditions = create_context_for_template(cfn).conditions
+
+    # Stage can only be beta or prod, so a condition covering both is always true
+    assert conditions.is_reachable("IsBetaOrProd", True) is True
+    assert conditions.is_reachable("IsBetaOrProd", False) is False
+
+
 def test_condition_failures():
     with pytest.raises(ValueError):
         Conditions.create_from_instance([], {}, {})

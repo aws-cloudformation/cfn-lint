@@ -37,9 +37,68 @@ def rule():
         (
             {
                 "AccessControl": "AuthenticatedRead",
-                "OwnershipControls": {"Rules": [{"ObjectOwnership": "BucketOwner"}]},
+                "OwnershipControls": {"Rules": [{"ObjectOwnership": "ObjectWriter"}]},
             },
             [],
+        ),
+        (
+            {
+                "AccessControl": "AuthenticatedRead",
+                "OwnershipControls": {
+                    "Rules": [{"ObjectOwnership": "BucketOwnerPreferred"}]
+                },
+            },
+            [],
+        ),
+        (
+            {
+                "AccessControl": "AuthenticatedRead",
+                "OwnershipControls": {
+                    "Rules": [
+                        {"ObjectOwnership": "BucketOwnerEnforced"},
+                        {"ObjectOwnership": "ObjectWriter"},
+                    ]
+                },
+            },
+            [],
+        ),
+        (
+            {
+                "AccessControl": "AuthenticatedRead",
+                "OwnershipControls": {
+                    "Rules": [{"ObjectOwnership": {"Ref": "ObjectOwnershipParameter"}}]
+                },
+            },
+            [],
+        ),
+        (
+            {
+                "AccessControl": "AuthenticatedRead",
+                "OwnershipControls": {
+                    "Rules": [{"ObjectOwnership": "BucketOwnerEnforced"}]
+                },
+            },
+            [
+                ValidationError(
+                    "A bucket with 'AccessControl' set should have at least one "
+                    "'OwnershipControls' rule with 'ObjectOwnership' set to "
+                    "'ObjectWriter' or 'BucketOwnerPreferred'. "
+                    "'BucketOwnerEnforced' disables ACLs.",
+                    path=deque(["OwnershipControls", "Rules"]),
+                    validator="contains",
+                    schema_path=deque(
+                        [
+                            "then",
+                            "properties",
+                            "OwnershipControls",
+                            "properties",
+                            "Rules",
+                            "contains",
+                        ]
+                    ),
+                    rule=AccessControlOwnership(),
+                )
+            ],
         ),
         (
             {

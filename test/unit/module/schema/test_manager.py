@@ -12,6 +12,7 @@ from pathlib import Path
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import MagicMock, patch
 
+from cfnlint.exceptions import SchemaPatchError
 from cfnlint.helpers import get_cache_dir
 from cfnlint.schema._patch import SchemaPatch
 from cfnlint.schema._schema import Schema
@@ -460,9 +461,7 @@ class TestManagerPatch(BaseTestCase):
         self.manager = _make_manager()
         self.schema_patch = [{"op": "add", "path": "/cfnSchema", "value": ["test"]}]
 
-    @patch("cfnlint.schema.manager.print")
-    @patch("cfnlint.schema.manager.sys.exit")
-    def test_patch_failure(self, mock_exit, mock_print):
+    def test_patch_failure(self):
         """Test when patching a schema fails"""
         mock_schema = MagicMock()
         mock_schema.patch.side_effect = Exception("Invalid patch operation")
@@ -472,14 +471,15 @@ class TestManagerPatch(BaseTestCase):
         resource_type = "AWS::EC2::Instance"
         patch = SchemaPatch([], [], {resource_type: self.schema_patch})
 
-        self.manager.patch(patch, "us-east-1")
+        with self.assertRaises(SchemaPatchError) as raised:
+            self.manager.patch(patch, "us-east-1")
 
-        mock_print.assert_called_with(
+        self.assertEqual(
+            str(raised.exception),
             f"Error applying patch {self.schema_patch} for "
-            f"{resource_type}: Invalid patch operation"
+            f"{resource_type}: Invalid patch operation",
         )
-
-        mock_exit.assert_called_with(1)
+        self.assertEqual(raised.exception.exit_code, 1)
 
 
 class TestReadSchemaDate(BaseTestCase):

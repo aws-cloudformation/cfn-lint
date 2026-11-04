@@ -106,6 +106,26 @@ class TestRules(BaseTestCase):
             matches,
         )
 
+    def test_rule_failure_without_rule_error_registered(self):
+        rules = Rules()
+        rules.extend([RuleFail()])
+
+        cfn = Template("-", {}, regions=["us-east-1"])
+
+        matches = list(rules.run("-", cfn, ConfigMixIn([])))
+        self.assertEqual(len(matches), 1)
+        self.assertEqual(matches[0].rule.id, RuleError.id)
+        self.assertIn("EYYYY", matches[0].message)
+
+    def test_rule_failure_respects_ignore_of_rule_error(self):
+        rules = Rules()
+        rules.extend([RuleFail()])
+
+        cfn = Template("-", {}, regions=["us-east-1"])
+
+        matches = list(rules.run("-", cfn, ConfigMixIn([], ignore_checks=["E0002"])))
+        self.assertListEqual(matches, [])
+
     def test_parent_child(self):
         rules = Rules()
         rules.extend([RuleParent(), RuleChild()])

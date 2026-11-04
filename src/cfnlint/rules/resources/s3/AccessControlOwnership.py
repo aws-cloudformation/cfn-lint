@@ -33,6 +33,13 @@ class AccessControlOwnership(CfnLintJsonSchema):
         )
 
     def message(self, instance: Any, err: ValidationError) -> str:
+        if err.validator == "contains":
+            return (
+                "A bucket with 'AccessControl' set should have at least one "
+                "'OwnershipControls' rule with 'ObjectOwnership' set to "
+                "'ObjectWriter' or 'BucketOwnerPreferred'. "
+                "'BucketOwnerEnforced' disables ACLs."
+            )
         return (
             "A bucket with 'AccessControl' set should also have "
             "at least one 'OwnershipControl' configured"

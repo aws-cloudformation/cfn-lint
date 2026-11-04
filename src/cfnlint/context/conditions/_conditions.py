@@ -15,6 +15,7 @@ from sympy.logic.inference import satisfiable
 
 from cfnlint.conditions._utils import add_equivalence, get_hash
 from cfnlint.context.conditions._condition import Condition
+from cfnlint.context.conditions._equals import Equal
 from cfnlint.context.conditions._utils import (
     build_instance_from_scenario,
     get_conditions_from_property,
@@ -77,6 +78,13 @@ class Conditions:
             # Add equivalence: Symbol(name) <-> condition's boolean expression
             add_equivalence(cnf, sym, cond.cnf)
 
+        # A condition's equals includes those of every condition it references,
+        # so visit each distinct Fn::Equals once (#4984).
+        distinct_equals: dict[str, Equal] = {}
+        for _, c_v in obj.items():
+            for i in c_v.equals:
+                distinct_equals.setdefault(i.hash, i)
+
         # NAND: two Fn::Equals comparing the same single-valued reference
         # (a parameter, with or without AllowedValues, or a pseudo-parameter
         # such as AWS::Region or AWS::AccountId) to different static values
@@ -84,32 +92,31 @@ class Conditions:
         # inside the AllowedValues loop below, so plain parameters and
         # pseudo-parameters never got it (issue #4799).
         equals_by_ref: dict[str, list[tuple[Symbol, str]]] = {}
-        for _, c_v in obj.items():
-            for i in c_v.equals:
-                if not isinstance(i.left.instance, str):
-                    continue
-                if not isinstance(i.right.instance, dict):
-                    continue
-                seen = equals_by_ref.setdefault(i.right.hash, [])
-                for prev_cnf, prev_val in seen:
-                    if prev_val != i.left.instance:
-                        cnf.add_prop(~(i.cnf & prev_cnf))
-                seen.append((i.cnf, i.left.instance))
+        for i in distinct_equals.values():
+            if not isinstance(i.left.instance, str):
+                continue
+            if not isinstance(i.right.instance, dict):
+                continue
+            seen = equals_by_ref.setdefault(i.right.hash, [])
+            for prev_cnf, prev_val in seen:
+                if prev_val != i.left.instance:
+                    cnf.add_prop(~(i.cnf & prev_cnf))
+            seen.append((i.cnf, i.left.instance))
 
         # Add parameter AllowedValues constraints
         for p_k, p_v in parameters.items():
             if not p_v.allowed_values:
                 continue
             allowed_values = p_v.allowed_values.copy()
+            p_hash = get_hash({"Ref": p_k})
             equals_cnfs: list[Symbol] = []
-            for _, c_v in obj.items():
-                for i in c_v.equals:
-                    if i.right.hash == get_hash({"Ref": p_k}):
-                        if not isinstance(i.left.instance, str):
-                            continue
-                        equals_cnfs.append(i.cnf)
-                        if i.left.instance in allowed_values:
-                            allowed_values.remove(i.left.instance)
+            for i in distinct_equals.values():
+                if i.right.hash == p_hash:
+                    if not isinstance(i.left.instance, str):
+                        continue
+                    equals_cnfs.append(i.cnf)
+                    if i.left.instance in allowed_values:
+                        allowed_values.remove(i.left.instance)
 
             if not allowed_values and equals_cnfs:
                 cnf.add_prop(Or(*equals_cnfs))
