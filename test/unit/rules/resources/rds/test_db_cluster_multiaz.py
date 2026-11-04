@@ -99,11 +99,13 @@ def rule():
                     schema_path=deque(["then", "required"]),
                 ),
                 ValidationError(
-                    "'Iops' is a required property",
+                    "Set 'Iops' or set 'StorageType' to 'gp3'; without either, "
+                    "RDS uses gp2 storage, which Multi-AZ DB clusters do not "
+                    "support",
                     rule=DbClusterMultiAz(),
                     path=deque([]),
                     validator="required",
-                    schema_path=deque(["then", "required"]),
+                    schema_path=deque(["then", "allOf", 1, "then", "required"]),
                 ),
             ],
         ),
@@ -184,11 +186,91 @@ def rule():
                     schema_path=deque(["then", "required"]),
                 ),
                 ValidationError(
-                    "'Iops' is a required property",
+                    "Set 'Iops' or set 'StorageType' to 'gp3'; without either, "
+                    "RDS uses gp2 storage, which Multi-AZ DB clusters do not "
+                    "support",
                     rule=DbClusterMultiAz(),
                     path=deque([]),
                     validator="required",
-                    schema_path=deque(["then", "required"]),
+                    schema_path=deque(["then", "allOf", 1, "then", "required"]),
+                ),
+            ],
+        ),
+        (
+            {
+                "Engine": "postgres",
+                "AllocatedStorage": 100,
+                "DBClusterInstanceClass": "foo",
+                "StorageType": "gp3",
+            },
+            [],
+        ),
+        (
+            {
+                "Engine": "postgres",
+                "DBClusterInstanceClass": "foo",
+                "StorageType": "gp3",
+                "ReplicationSourceIdentifier": {"Ref": "SourceDbArn"},
+            },
+            [],
+        ),
+        (
+            {
+                "Engine": "postgres",
+                "DBClusterInstanceClass": "foo",
+                "StorageType": "io1",
+                "ReplicationSourceIdentifier": {"Ref": "SourceDbArn"},
+            },
+            [
+                ValidationError(
+                    "'Iops' is a required property when 'StorageType' is 'io1'",
+                    rule=DbClusterMultiAz(),
+                    path=deque([]),
+                    validator="required",
+                    schema_path=deque(["then", "allOf", 0, "then", "required"]),
+                ),
+            ],
+        ),
+        (
+            {
+                "Engine": "postgres",
+                "AllocatedStorage": 100,
+                "DBClusterInstanceClass": "foo",
+                "StorageType": {"Ref": "StorageType"},
+            },
+            [],
+        ),
+        (
+            {
+                "Engine": "postgres",
+                "AllocatedStorage": 100,
+                "DBClusterInstanceClass": "foo",
+                "StorageType": "io2",
+            },
+            [
+                ValidationError(
+                    "'Iops' is a required property when 'StorageType' is 'io2'",
+                    rule=DbClusterMultiAz(),
+                    path=deque([]),
+                    validator="required",
+                    schema_path=deque(["then", "allOf", 0, "then", "required"]),
+                ),
+            ],
+        ),
+        (
+            {
+                "Engine": "mysql",
+                "AllocatedStorage": 100,
+                "DBClusterInstanceClass": "foo",
+                "StorageType": "io1",
+            },
+            [
+                ValidationError(
+                    "'Iops' is a required property when 'StorageType' is 'io1'",
+                    rule=DbClusterMultiAz(),
+                    path=deque([]),
+                    validator="required",
+                    schema_path=deque(["then", "allOf", 0, "then", "required"]),
                 ),
             ],
         ),
@@ -268,3 +350,26 @@ def test_conditional_read_replica(name, allocated_storage, expected):
     assert [
         match.message for match in matches if match.rule.id == "E3692"
     ] == expected, f"Test {name!r} failed with {matches!r}"
+
+
+def test_conditional_storage_type():
+    template = {
+        "Parameters": {"UseIo1": {"Type": "String", "Default": "false"}},
+        "Conditions": {"IsIo1": {"Fn::Equals": [{"Ref": "UseIo1"}, "true"]}},
+        "Resources": {
+            "Cluster": {
+                "Type": "AWS::RDS::DBCluster",
+                "Properties": {
+                    "Engine": "postgres",
+                    "DBClusterInstanceClass": "db.m6gd.large",
+                    "AllocatedStorage": 100,
+                    "StorageType": {"Fn::If": ["IsIo1", "io1", "gp3"]},
+                },
+            }
+        },
+    }
+    matches = lint(json.dumps(template), regions=["us-east-1"])
+
+    assert [match.message for match in matches if match.rule.id == "E3692"] == [
+        "'Iops' is a required property when 'StorageType' is 'io1'"
+    ], f"Got {matches!r}"
