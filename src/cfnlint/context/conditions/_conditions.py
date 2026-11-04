@@ -29,19 +29,51 @@ if TYPE_CHECKING:
 @dataclass(frozen=True)
 class Conditions:
     conditions: dict[str, Condition] = field(init=True, default_factory=dict)
-    cnf: EncodedCNF = field(init=True, default_factory=EncodedCNF, compare=False)
-    # hard_cnf mirrors cnf but excludes pins that were only *assumed* by
-    # condition-scenario enumeration (see evolve(assumed=True)).  It therefore
-    # represents the conditions that are actually forced at this point in the
-    # template (resource/output Condition, enclosing Fn::If, parameter and
-    # condition definitions).  Reachability questions (W1028) must be answered
-    # against hard_cnf so that a value merely being explored by enumeration is
-    # not mistaken for an impossible one.
-    hard_cnf: EncodedCNF = field(init=True, default_factory=EncodedCNF, compare=False)
+    # The template's condition definitions and parameter constraints.
+    _base_cnf: EncodedCNF = field(init=True, default_factory=EncodedCNF, compare=False)
+    # Every pinned condition, including those assumed by scenario enumeration.
+    _pins: frozenset[tuple[str, bool]] = field(
+        init=True, default_factory=frozenset, compare=False
+    )
+    # The pins that are facts at this point in the template (resource/output
+    # Condition, enclosing Fn::If).  Pins only *assumed* by condition-scenario
+    # enumeration (see evolve(assumed=True)) are left out.  Reachability
+    # questions (W1028) must be answered against these so that a value merely
+    # being explored by enumeration is not mistaken for an impossible one.
+    _hard_pins: frozenset[tuple[str, bool]] = field(
+        init=True, default_factory=frozenset, compare=False
+    )
     _condition_symbols: dict[str, Symbol] = field(
         init=True, default_factory=dict, compare=False
     )
+    # Whether a set of pins is satisfiable.  The answer holds only for this
+    # _base_cnf, so pass the dict on only together with it (evolve does).
+    _satisfiable: dict[frozenset[tuple[str, bool]], bool] = field(
+        init=True, default_factory=dict, compare=False, repr=False
+    )
     _max_scenarios: int = field(init=False, default=128)
+
+    @property
+    def cnf(self) -> EncodedCNF:
+        """The template's condition clauses plus every pin, as a new copy."""
+        return self._cnf_with(self._pins)
+
+    @property
+    def hard_cnf(self) -> EncodedCNF:
+        """The template's condition clauses plus the hard pins, as a new copy."""
+        return self._cnf_with(self._hard_pins)
+
+    def _cnf_with(self, pins: frozenset[tuple[str, bool]]) -> EncodedCNF:
+        cnf = self._base_cnf.copy()
+        for name, value in sorted(pins):
+            sym = self._condition_symbols[name]
+            cnf.add_prop(sym if value else Not(sym))
+        return cnf
+
+    def _is_satisfiable(self, pins: frozenset[tuple[str, bool]]) -> bool:
+        if pins not in self._satisfiable:
+            self._satisfiable[pins] = bool(satisfiable(self._cnf_with(pins)))
+        return self._satisfiable[pins]
 
     @classmethod
     def create_from_instance(
@@ -123,16 +155,15 @@ class Conditions:
 
         return cls(
             conditions=obj,
-            cnf=cnf,
-            hard_cnf=cnf.copy(),
+            _base_cnf=cnf,
             _condition_symbols=condition_symbols,
         )
 
     def evolve(self, status: dict[str, bool], assumed: bool = False) -> "Conditions":
         """Pin one or more conditions to a value.
 
-        When ``assumed`` is True the pin is recorded only in ``cnf`` (used for
-        pruning impossible scenarios) and not in ``hard_cnf``.  This is used by
+        When ``assumed`` is True the pin is recorded only in the pins (used for
+        pruning impossible scenarios) and not in the hard pins.  This is used by
         condition-scenario enumeration, which explores both values of a
         condition; those values are hypotheses, not facts, so a branch that
         merely disagrees with the scenario currently being enumerated must not
@@ -155,30 +186,29 @@ class Conditions:
             return self
 
         conditions: dict[str, Condition] = {}
-        cnf = self.cnf.copy()
-        hard_cnf = self.hard_cnf.copy()
+        pins: set[tuple[str, bool]] = set()
+        hard_pins = set(self._hard_pins)
         for condition, value in self.conditions.items():
             s = status.get(condition, value.status)
             try:
                 conditions[condition] = value.evolve(status=s)
                 if s is not None and condition in self._condition_symbols:
-                    sym = self._condition_symbols[condition]
-                    prop = sym if s else Not(sym)
-                    cnf.add_prop(prop)
+                    pins.add((condition, s))
                     # Only the conditions being pinned by *this* call, and only
-                    # when they are facts (not enumeration hypotheses), belong
-                    # in hard_cnf.  Conditions carried over from a prior evolve
-                    # are already present in the copied hard_cnf if they were
-                    # facts, and must stay out of it if they were assumptions.
+                    # when they are facts (not enumeration hypotheses), join
+                    # the hard pins.  Conditions carried over from a prior
+                    # evolve are already there if they were facts, and must
+                    # stay out if they were assumptions.
                     if not assumed and condition in status:
-                        hard_cnf.add_prop(prop)
+                        hard_pins.add((condition, s))
             except ValueError as e:
                 raise Unsatisfiable(
                     new_status=status,
                     current_status=self.status,
                 ) from e
 
-        if not satisfiable(cnf):
+        new_pins = frozenset(pins)
+        if not self._is_satisfiable(new_pins):
             raise Unsatisfiable(
                 new_status=status,
                 current_status=self.status,
@@ -186,24 +216,23 @@ class Conditions:
 
         return cls(
             conditions=conditions,
-            cnf=cnf,
-            hard_cnf=hard_cnf,
+            _base_cnf=self._base_cnf,
+            _pins=new_pins,
+            _hard_pins=frozenset(hard_pins),
             _condition_symbols=self._condition_symbols,
+            _satisfiable=self._satisfiable,
         )
 
     def is_reachable(self, name: str, value: bool) -> bool:
         """Return whether ``name`` can take ``value`` given the forced facts.
 
-        This is answered against ``hard_cnf`` so that a condition merely being
+        This is answered against the hard pins so that a condition merely being
         explored by scenario enumeration is not treated as impossible.  An
         unknown condition is conservatively considered reachable.
         """
         if name not in self._condition_symbols:
             return True
-        cnf = self.hard_cnf.copy()
-        sym = self._condition_symbols[name]
-        cnf.add_prop(sym if value else Not(sym))
-        return bool(satisfiable(cnf))
+        return self._is_satisfiable(self._hard_pins | {(name, value)})
 
     def _build_conditions(self, conditions: set[str]) -> Iterator["Conditions"]:
         scenarios_attempted = 0

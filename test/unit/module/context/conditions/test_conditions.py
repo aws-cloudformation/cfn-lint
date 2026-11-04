@@ -3,8 +3,14 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-import pytest
+import json
+from unittest.mock import patch
 
+import pytest
+from sympy import Not, Symbol
+from sympy.logic.inference import satisfiable
+
+from cfnlint.api import ManualArgs, lint
 from cfnlint.context import create_context_for_template
 from cfnlint.context.conditions._conditions import Conditions
 from cfnlint.context.conditions.exceptions import Unsatisfiable
@@ -548,3 +554,116 @@ def test_or_of_and_pairs_does_not_explode():
 
     not_prod = conditions.evolve({"IsProd": False})
     assert not_prod.is_reachable("IsDeployed", True) is False
+
+
+def test_each_set_of_pins_is_solved_once():
+    """Every Fn::If and condition scenario asks whether its pins are
+    satisfiable, and most ask about the same pins. Solving each set once
+    keeps the solver calls from growing with the number of Fn::If
+    (issue #4991)."""
+    cfn = Template(None, template(), regions=["us-east-1"])
+    base = create_context_for_template(cfn).conditions
+
+    with patch(
+        "cfnlint.context.conditions._conditions.satisfiable", wraps=satisfiable
+    ) as solver:
+        first = base.evolve({"IsUsEast1": True})
+        base.evolve({"IsUsEast1": True})
+        base.evolve({"IsUsEast1": True}, assumed=True)
+        assert solver.call_count == 1
+
+        # The same pins reached in a different order or from another branch.
+        first.evolve({"IsProd": True})
+        base.evolve({"IsProd": True}).evolve({"IsUsEast1": True})
+        base.evolve({"IsProd": True, "IsUsEast1": True})
+        assert solver.call_count == 3
+
+        # A reachability question is a set of pins too.
+        assert first.is_reachable("IsProd", True) is True
+        assert first.evolve({"IsProd": True}).is_reachable("IsUsEast1", True)
+        assert solver.call_count == 3
+
+        # An unsatisfiable set is remembered as well.
+        for _ in range(2):
+            with pytest.raises(Unsatisfiable):
+                first.evolve({"IsUsWest2": True})
+        assert solver.call_count == 4
+
+
+def test_pins_keep_facts_and_assumptions_apart():
+    cfn = Template(None, template(), regions=["us-east-1"])
+    base = create_context_for_template(cfn).conditions
+
+    # Same statuses after the second pin, but only the fact forces IsUsEast1.
+    assumed = base.evolve({"IsUsEast1": True}, assumed=True).evolve({"IsProd": True})
+    fact = base.evolve({"IsUsEast1": True}).evolve({"IsProd": True})
+    assert assumed.status == fact.status
+    assert assumed.is_reachable("IsUsEast1", False) is True
+    assert fact.is_reachable("IsUsEast1", False) is False
+
+
+def test_cnf_is_the_template_clauses_plus_one_per_pin():
+    cfn = Template(None, template(), regions=["us-east-1"])
+    base = create_context_for_template(cfn).conditions
+    clauses = len(base.cnf.data)
+
+    pinned = base.evolve({"IsUsEast1": True}, assumed=True).evolve({"IsProd": True})
+    assert len(pinned.cnf.data) == clauses + 2
+    assert len(pinned.hard_cnf.data) == clauses + 1
+
+    # Each access is a new copy, so changing one does not reach later answers:
+    # this evolve would raise Unsatisfiable if Not(IsProd) had been kept.
+    pinned.cnf.add_prop(Not(Symbol("IsProd")))
+    assert len(pinned.cnf.data) == clauses + 2
+    pinned.evolve({"IsAi": True})
+
+
+def _alarms_reusing_conditions(alarms):
+    return {
+        "Parameters": {"Stage": {"Type": "String", "AllowedValues": ["beta", "prod"]}},
+        "Conditions": {
+            "IsProd": {"Fn::Equals": [{"Ref": "Stage"}, "prod"]},
+            "IsEast": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]},
+            "IsProdEast": {
+                "Fn::And": [{"Condition": "IsProd"}, {"Condition": "IsEast"}]
+            },
+        },
+        "Resources": {
+            f"Alarm{i}": {
+                "Type": "AWS::CloudWatch::Alarm",
+                # Fn::If inside a conditional resource evolves the resource's
+                # Conditions, so the cache must reach evolved objects too.
+                "Condition": "IsProd",
+                "Properties": {
+                    "Namespace": "Service",
+                    "MetricName": f"Metric{i}",
+                    "Statistic": "Sum",
+                    "ComparisonOperator": "GreaterThanThreshold",
+                    "EvaluationPeriods": 1,
+                    "Threshold": {"Fn::If": ["IsProdEast", 1, 10]},
+                    "Period": {"Fn::If": ["IsEast", 300, 60]},
+                },
+            }
+            for i in range(alarms)
+        },
+    }
+
+
+def test_solver_calls_do_not_grow_with_reused_conditions():
+    """Resources that reuse the same conditions in Fn::If ask the same
+    questions, so a whole lint solves the same number of pin sets however
+    many such resources there are (issue #4991)."""
+    calls = []
+    for alarms in (5, 20):
+        with patch(
+            "cfnlint.context.conditions._conditions.satisfiable", wraps=satisfiable
+        ) as solver:
+            matches = lint(
+                json.dumps(_alarms_reusing_conditions(alarms)),
+                config=ManualArgs(regions=["us-east-1"]),
+            )
+        assert matches == []
+        calls.append(solver.call_count)
+
+    assert calls[0] > 0
+    assert calls[0] == calls[1]
