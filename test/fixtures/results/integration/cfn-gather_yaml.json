@@ -27,7 +27,7 @@
     },
     {
         "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
-        "Id": "061b93eb-8243-1097-665f-b94dd0931fe2",
+        "Id": "83ecc7b9-ea1f-47ef-91cc-9c3a65a113d7",
         "Level": "Informational",
         "Location": {
             "End": {
@@ -43,7 +43,7 @@
                 "LineNumber": 4
             }
         },
-        "Message": "These architecture-relevant resources are missing Metadata.com.aws.cloudformation.Context: TaskDef (AWS::ECS::TaskDefinition), FargateService (AWS::ECS::Service), AwsvpcTaskDef (AWS::ECS::TaskDefinition), ServiceNoNetConfig (AWS::ECS::Service), FifoQueue (AWS::SQS::Queue), StandardDLQ (AWS::SQS::Queue), RestApi (AWS::ApiGateway::RestApi), CognitoAuthorizer (AWS::ApiGateway::Authorizer), MethodBadAuth (AWS::ApiGateway::Method), RestApi2 (AWS::ApiGateway::RestApi), Deployment (AWS::ApiGateway::Deployment), StageBadApi (AWS::ApiGateway::Stage), SqsFifoQueue (AWS::SQS::Queue), FifoProcessor (AWS::Lambda::Function), FifoMapping (AWS::Lambda::EventSourceMapping), AuroraCluster (AWS::RDS::DBCluster), BadEngineInstance (AWS::RDS::DBInstance). For each listed resource, add Metadata.com.aws.cloudformation.Context. Set 'why' to the resource's purpose or design rationale. If the rationale is not documented, set trust to {src: infer, conf: low, note: \"rationale not documented\"} instead of guessing. Add 'must' as a list only for known constraints whose violation would break the system; otherwise omit it. Leave unlisted resources unchanged.",
+        "Message": "These architecture-relevant resources are missing Metadata.com.aws.cloudformation.Context: TaskDef (AWS::ECS::TaskDefinition), FargateService (AWS::ECS::Service), AwsvpcTaskDef (AWS::ECS::TaskDefinition), ServiceNoNetConfig (AWS::ECS::Service), FifoQueue (AWS::SQS::Queue), StandardDLQ (AWS::SQS::Queue), RestApi (AWS::ApiGateway::RestApi), CognitoAuthorizer (AWS::ApiGateway::Authorizer), MethodBadAuth (AWS::ApiGateway::Method), RestApi2 (AWS::ApiGateway::RestApi), Deployment (AWS::ApiGateway::Deployment), StageBadApi (AWS::ApiGateway::Stage), SqsFifoQueue (AWS::SQS::Queue), FifoProcessor (AWS::Lambda::Function), FifoMapping (AWS::Lambda::EventSourceMapping), FifoBatchingWindowMapping (AWS::Lambda::EventSourceMapping), AuroraCluster (AWS::RDS::DBCluster), BadEngineInstance (AWS::RDS::DBInstance). For each listed resource, add Metadata.com.aws.cloudformation.Context. Set 'why' to the resource's purpose or design rationale. If the rationale is not documented, set trust to {src: infer, conf: low, note: \"rationale not documented\"} instead of guessing. Add 'must' as a list only for known constraints whose violation would break the system; otherwise omit it. Leave unlisted resources unchanged.",
         "ParentId": null,
         "Rule": {
             "Description": "Check for a machine-readable Metadata.com.aws.cloudformation.Context block on the template and on architecture-relevant resources. Incidental framework resources, subordinate types such as AWS::Logs::LogGroup, and resource policies (AWS::IAM::Policy, BucketPolicy, TopicPolicy, QueuePolicy, Lambda::Permission) are not expected to carry one.",
@@ -534,12 +534,41 @@
     },
     {
         "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
-        "Id": "4efbd946-f86d-bb23-b6ff-7af196332ac3",
+        "Id": "0a4fe64a-1a45-67ca-c1ab-49c8ece73533",
+        "Level": "Error",
+        "Location": {
+            "End": {
+                "ColumnNumber": 37,
+                "LineNumber": 114
+            },
+            "Path": [
+                "Resources",
+                "FifoBatchingWindowMapping",
+                "Properties",
+                "MaximumBatchingWindowInSeconds"
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 114
+            }
+        },
+        "Message": "10 is greater than the maximum of 0 when the event source is an SQS FIFO queue",
+        "ParentId": null,
+        "Rule": {
+            "Description": "When an EventSourceMapping references a FIFO SQS queue, MaximumBatchingWindowInSeconds must be omitted or 0. Lambda rejects the mapping with 'Batching window is not supported for FIFO queues'.",
+            "Id": "E3729",
+            "ShortDescription": "Validate SQS FIFO queue EventSourceMapping has no batching window",
+            "Source": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
+        "Id": "6c3d8693-3be6-72f2-e5fa-73cc357fdac8",
         "Level": "Informational",
         "Location": {
             "End": {
                 "ColumnNumber": 16,
-                "LineNumber": 109
+                "LineNumber": 116
             },
             "Path": [
                 "Resources",
@@ -547,7 +576,7 @@
             ],
             "Start": {
                 "ColumnNumber": 3,
-                "LineNumber": 109
+                "LineNumber": 116
             }
         },
         "Message": "'DeletionPolicy' is a required property (The default action when replacing/removing a resource is to delete it. Set explicit values for stateful resource)",
@@ -561,12 +590,12 @@
     },
     {
         "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
-        "Id": "fb7138ef-2fa2-64e4-3707-e6189ebe1bef",
+        "Id": "689c8360-009d-1bf2-0826-9d9d16058ebd",
         "Level": "Informational",
         "Location": {
             "End": {
                 "ColumnNumber": 16,
-                "LineNumber": 109
+                "LineNumber": 116
             },
             "Path": [
                 "Resources",
@@ -574,7 +603,7 @@
             ],
             "Start": {
                 "ColumnNumber": 3,
-                "LineNumber": 109
+                "LineNumber": 116
             }
         },
         "Message": "'UpdateReplacePolicy' is a required property (The default action when replacing/removing a resource is to delete it. Set explicit values for stateful resource)",
@@ -588,12 +617,12 @@
     },
     {
         "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
-        "Id": "f78e7724-7e4c-3b6b-8093-8484913a9faf",
+        "Id": "9ac1ab63-0e25-fa50-b099-40fa25688ebd",
         "Level": "Informational",
         "Location": {
             "End": {
                 "ColumnNumber": 15,
-                "LineNumber": 111
+                "LineNumber": 118
             },
             "Path": [
                 "Resources",
@@ -602,7 +631,7 @@
             ],
             "Start": {
                 "ColumnNumber": 5,
-                "LineNumber": 111
+                "LineNumber": 118
             }
         },
         "Message": "'BackupRetentionPeriod' is a required property (The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource)",
@@ -616,12 +645,12 @@
     },
     {
         "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
-        "Id": "2a9a71e3-8dee-8a1e-5105-7973b751a2b4",
+        "Id": "63ea0b99-c910-bf16-ed50-bc618f209ed1",
         "Level": "Warning",
         "Location": {
             "End": {
                 "ColumnNumber": 25,
-                "LineNumber": 114
+                "LineNumber": 121
             },
             "Path": [
                 "Resources",
@@ -631,7 +660,7 @@
             ],
             "Start": {
                 "ColumnNumber": 7,
-                "LineNumber": 114
+                "LineNumber": 121
             }
         },
         "Message": "Password shouldn't be hardcoded for Resources/AuroraCluster/Properties/MasterUserPassword",
@@ -645,12 +674,12 @@
     },
     {
         "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
-        "Id": "efdfefc7-48df-ccbc-a6eb-7d44b97d0770",
+        "Id": "d6a6697b-c860-6fc2-a9c7-4a15b66f0dd6",
         "Level": "Informational",
         "Location": {
             "End": {
                 "ColumnNumber": 20,
-                "LineNumber": 115
+                "LineNumber": 122
             },
             "Path": [
                 "Resources",
@@ -658,7 +687,7 @@
             ],
             "Start": {
                 "ColumnNumber": 3,
-                "LineNumber": 115
+                "LineNumber": 122
             }
         },
         "Message": "'DeletionPolicy' is a required property (The default action when replacing/removing a resource is to delete it. Set explicit values for stateful resource)",
@@ -672,12 +701,12 @@
     },
     {
         "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
-        "Id": "e253bc0e-37e9-7a80-7bf2-e59cadbcd736",
+        "Id": "25e086dc-0de2-4826-9cab-10ca9855b8d6",
         "Level": "Informational",
         "Location": {
             "End": {
                 "ColumnNumber": 20,
-                "LineNumber": 115
+                "LineNumber": 122
             },
             "Path": [
                 "Resources",
@@ -685,7 +714,7 @@
             ],
             "Start": {
                 "ColumnNumber": 3,
-                "LineNumber": 115
+                "LineNumber": 122
             }
         },
         "Message": "'UpdateReplacePolicy' is a required property (The default action when replacing/removing a resource is to delete it. Set explicit values for stateful resource)",
@@ -699,12 +728,12 @@
     },
     {
         "Filename": "test/fixtures/templates/integration/cfn-gather.yaml",
-        "Id": "83fbfd34-0096-e3b0-8098-f73da3515d18",
+        "Id": "cfaa8f2d-7dfd-1013-345d-5b4efb761eb6",
         "Level": "Error",
         "Location": {
             "End": {
                 "ColumnNumber": 13,
-                "LineNumber": 120
+                "LineNumber": 127
             },
             "Path": [
                 "Resources",
@@ -714,7 +743,7 @@
             ],
             "Start": {
                 "ColumnNumber": 7,
-                "LineNumber": 120
+                "LineNumber": 127
             }
         },
         "Message": "'aurora-mysql' was expected",
