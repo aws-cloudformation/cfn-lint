@@ -24,7 +24,12 @@ class SnapStartSupported(CfnLintKeyword):
     tags = ["resources", "lambda"]
 
     def __init__(self):
-        super().__init__(["Resources/AWS::Lambda::Function/Properties"])
+        super().__init__(
+            [
+                "Resources/AWS::Lambda::Function/Properties",
+                "Resources/AWS::Serverless::Function/Properties",
+            ]
+        )
         self.child_rules = {"I2530": None}
         self.regions = [
             "us-east-2",
