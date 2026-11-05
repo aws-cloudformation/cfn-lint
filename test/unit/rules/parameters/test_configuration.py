@@ -204,6 +204,23 @@ def context(cfn):
             },
             [],
         ),
+        (
+            "Exactly 200 parameters is okay",
+            {f"Param{i:03d}": {"Type": "String"} for i in range(200)},
+            [],
+        ),
+        (
+            "More than 200 parameters",
+            {f"Param{i:03d}": {"Type": "String"} for i in range(201)},
+            [
+                ValidationError(
+                    "expected maximum property count: 200, found: 201",
+                    validator="maxProperties",
+                    schema_path=deque(["maxProperties"]),
+                    rule=None,  # none becuase we don't load child rule
+                )
+            ],
+        ),
     ],
 )
 def test_validate(name, instance, expected, rule, context, cfn):
