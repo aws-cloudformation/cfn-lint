@@ -1,3 +1,47 @@
+### v1.60.0
+## What's Changed
+* Fix [E3697](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3697): measure Lambda environment size as compact JSON bytes by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4860
+* docs(kiro): make blast radius a first-class review question by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4954
+* Fix [E3051](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3051): stop firing on Content behind an intrinsic function by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4956
+* Fix [E0002](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E0002): report errors from rule collections that do not register RuleError by @hoganbr-amzn in https://github.com/aws-cloudformation/cfn-lint/pull/4908
+* fix: let `api.lint()` run a Rules collection passed by the caller by @hoganbr-amzn in https://github.com/aws-cloudformation/cfn-lint/pull/4909
+* fix: raise `SchemaPatchError` instead of exiting from schema patching by @hoganbr-amzn in https://github.com/aws-cloudformation/cfn-lint/pull/4911
+* Fix [E3045](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3045): flag AccessControl with BucketOwnerEnforced OwnershipControls by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4792
+* Allow array form for AWS::CloudFormation::Init commands by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4809
+* Fix [E1011](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1011): skip FindInMap key errors when map name comes from a parameter Default by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4810
+* Fix [E3051](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3051): validate SSM Document Content given as a JSON string by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4902
+* fix: stop `Runner.__init__` exiting on an unresolvable template glob by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4966
+* Fix [E2011](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2011)/[E7002](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E7002): report [I2011](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I2011) and [I7002](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I7002) for names near the limit by @hoganbr-amzn in https://github.com/aws-cloudformation/cfn-lint/pull/4965
+* Fix [E1700](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1700): stop rejecting rule names CloudFormation accepts by @pcbeingused333 in https://github.com/aws-cloudformation/cfn-lint/pull/4924
+* Fix [E3530](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3530): accept sts root and federated-user principals by @pcbeingused333 in https://github.com/aws-cloudformation/cfn-lint/pull/4927
+* Fix [E3530](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3530): flag NotPrincipal, group ARNs, and string "*" in role trust policies by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4862
+* Fix [E1011](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1011): emit compact JSON from the Fn::ToJsonString resolver by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4972
+* Fix [E1011](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1011): report bad Fn::FindInMap keys in unconstrained positions by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4919
+* Fix [E2529](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2529): count subscription filters per condition scenario by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4917
+* Fix [E3510](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3510): accept an empty Sid, repeated or not by @pcbeingused333 in https://github.com/aws-cloudformation/cfn-lint/pull/4937
+* Remove the dead `E6004` outputs name rule by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4983
+* Fix [E3026](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3026): skip NumCacheClusters check for cluster mode groups sized by NodeGroupConfiguration or ReplicasPerNodeGroup by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4920
+* Fix [E3601](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3601): accept Task resource ARNs from every partition by @hoganbr-amzn in https://github.com/aws-cloudformation/cfn-lint/pull/4978
+* fix(iam): accept IAM principal ARNs from every partition by @hoganbr-amzn in https://github.com/aws-cloudformation/cfn-lint/pull/4976
+* fix(context): resolve AWS::Partition and AWS::URLSuffix in every region by @hoganbr-amzn in https://github.com/aws-cloudformation/cfn-lint/pull/4980
+* chore: let the triage agent ask before pr create/comment by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4988
+* Fix [E3046](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3046): allow the awslogs flush-interval and buffered-events options by @pcbeingused333 in https://github.com/aws-cloudformation/cfn-lint/pull/4925
+* fix(conditions): pair each Fn::Equals once when building condition CNF by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4987
+* Fix [E3006](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3006): decide Fn::Equals on AWS::Partition from the region by @hoganbr-amzn in https://github.com/aws-cloudformation/cfn-lint/pull/4982
+* perf: deduplicate matches with a set by @hoganbr-amzn in https://github.com/aws-cloudformation/cfn-lint/pull/4910
+* Fix [E3601](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3601): support state-level JSONata and JSONata numeric fields by @hoganbr-amzn in https://github.com/aws-cloudformation/cfn-lint/pull/4947
+* fix: exclude the test directory from bandit by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4989
+* perf(conditions): solve each set of condition pins once by @hoganbr-amzn in https://github.com/aws-cloudformation/cfn-lint/pull/4992
+* Update PyPI workflow and snapshot results script by @satyakigh in https://github.com/aws-cloudformation/cfn-lint/pull/4990
+* Fix [E3009](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3009): require `command` in cfn-init commands entries by @moneytool in https://github.com/aws-cloudformation/cfn-lint/pull/4914
+* ci: publish to pypi before uploading the release asset by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4996
+* Fix [E3692](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3692): allow Multi-AZ read replicas and omitted StorageType by @hoganbr-amzn in https://github.com/aws-cloudformation/cfn-lint/pull/4963
+
+## New Contributors
+* @pcbeingused333 made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4924
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.59.0...v1.60.0
+
 ### v1.59.0
 ## What's Changed
 * test(conditions): cover add_equivalence branches by @moneytool in https://github.com/aws-cloudformation/cfn-lint/pull/4790
