@@ -394,7 +394,8 @@ def split(validator: Validator, instance: Any) -> ResolutionResult:
 
     for delimiter, _, _ in validator.resolve_value(instance[0]):
         for source_string, source_v, _ in validator.resolve_value(instance[1]):
-            if not source_v.is_type(delimiter, "string"):
+            # str.split raises on an empty separator
+            if not source_v.is_type(delimiter, "string") or delimiter == "":
                 continue
             if not source_v.is_type(source_string, "string"):
                 continue
