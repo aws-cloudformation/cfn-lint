@@ -14,6 +14,8 @@ jobs:
     if: github.repository == 'aws-cloudformation/cfn-lint'
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
@@ -59,11 +61,18 @@ jobs:
         if: >-
           github.event.release.prerelease == false &&
           steps.release-version.outputs.stable == 'true'
-        uses: softprops/action-gh-release@v3
-        with:
-          tag_name: ${{ github.event.release.tag_name }}
-          files: dist/*.tar.gz
-          fail_on_unmatched_files: true
-          token: ${{ github.token }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          shopt -s nullglob
+          sdists=(dist/*.tar.gz)
+          if [[ ${#sdists[@]} -ne 1 ]]; then
+            echo "Expected one source distribution, found ${#sdists[@]}" >&2
+            exit 1
+          fi
+
+          gh release upload "$RELEASE_TAG" "${sdists[0]}" \
+            --repo "$GITHUB_REPOSITORY"
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
