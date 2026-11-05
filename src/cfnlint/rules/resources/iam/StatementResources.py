@@ -160,9 +160,10 @@ class StatementResources(CfnLintKeyword):
                         arn_formats = self.service_map[service]["Resources"][
                             resource.lower()
                         ].get("ARNFormats")
-                        for arn_format in arn_formats:
-                            arn = _Arn(arn_format)
-                        if arn in all_resource_arns:
+                        if any(
+                            _Arn(arn_format) in all_resource_arns
+                            for arn_format in arn_formats
+                        ):
                             break
                     else:
                         yield ValidationError(
