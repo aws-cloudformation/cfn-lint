@@ -57,6 +57,8 @@ jobs:
           else
             echo "stable=false" >> "$GITHUB_OUTPUT"
           fi
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
       - name: Upload stable source distribution to GitHub release
         if: >-
           github.event.release.prerelease == false &&
@@ -73,6 +75,4 @@ jobs:
           fi
 
           gh release upload "$RELEASE_TAG" "${sdists[0]}" \
-            --repo "$GITHUB_REPOSITORY"
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+            --repo "$GITHUB_REPOSITORY" --clobber
