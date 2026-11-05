@@ -36,6 +36,7 @@
 * Fix [E3009](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3009): require `command` in cfn-init commands entries by @moneytool in https://github.com/aws-cloudformation/cfn-lint/pull/4914
 * ci: publish to pypi before uploading the release asset by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4996
 * Fix [E3692](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3692): allow Multi-AZ read replicas and omitted StorageType by @hoganbr-amzn in https://github.com/aws-cloudformation/cfn-lint/pull/4963
+* Update CloudFormation schemas to `2026-11-05` by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4955
 
 ## New Contributors
 * @pcbeingused333 made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4924
