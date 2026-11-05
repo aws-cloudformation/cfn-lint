@@ -109,7 +109,6 @@ run_lint "$TEMPLATES_DIR/quickstart/openshift_master.yaml" "$RESULTS_DIR/quickst
 if $AUTO_DISCOVER; then
 find "$TEMPLATES_DIR" -type f \( -name '*.yaml' -o -name '*.yml' -o -name '*.json' \) \
     ! -path '*/override_spec/*' \
-    ! -path '*/bad/override/*' \
     ! -name '__init__.py' \
     ! -name 'README.md' \
     | sort > "${HANDLED}.all"
