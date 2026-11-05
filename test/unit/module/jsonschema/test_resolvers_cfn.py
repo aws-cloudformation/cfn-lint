@@ -140,6 +140,11 @@ def test_resolvers_ref(name, instance, response):
             [],
         ),
         (
+            "Invalid Split with an empty delimiter",
+            {"Fn::Split": ["", "abc"]},
+            [],
+        ),
+        (
             "Invalid GetAZs with an invalid type ",
             {"Fn::GetAZs": {"a": "b"}},
             [],
