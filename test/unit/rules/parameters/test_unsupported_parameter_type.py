@@ -103,6 +103,13 @@ def rule():
                 )
             ],
         ),
+        (
+            # E2002 reports this with an error, so W2002 stays silent:
+            # its "may accept" wording would be wrong here.
+            "List of SSM parameter type is covered by E2002",
+            "List<AWS::SSM::Parameter::Value<String>>",
+            [],
+        ),
     ],
 )
 def test_validate(name, instance, expected, rule, validator):
