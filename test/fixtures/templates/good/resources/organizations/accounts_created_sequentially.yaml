@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  Environment:
+    Type: String
+    AllowedValues:
+      - dev
+      - prod
+Conditions:
+  IsDev: !Equals [!Ref Environment, dev]
+  IsProd: !Equals [!Ref Environment, prod]
+Resources:
+  # Chained with DependsOn
+  SecurityAccount:
+    Type: AWS::Organizations::Account
+    Properties:
+      AccountName: Security
+      Email: security@example.com
+  LogArchiveAccount:
+    Type: AWS::Organizations::Account
+    DependsOn: SecurityAccount
+    Properties:
+      AccountName: Log Archive
+      Email: log-archive@example.com
+  # Ordered through a Ref to the previous account (transitive with the others)
+  SharedServicesAccount:
+    Type: AWS::Organizations::Account
+    Properties:
+      AccountName: Shared Services
+      Email: shared-services@example.com
+      Tags:
+        - Key: CreatedAfter
+          Value: !Ref LogArchiveAccount
+  # Ordered through Fn::Sub
+  NetworkAccount:
+    Type: AWS::Organizations::Account
+    Properties:
+      AccountName: !Sub "Network ${SharedServicesAccount}"
+      Email: network@example.com
+  # Never created in the same stack as ProdWorkloadAccount
+  DevWorkloadAccount:
+    Type: AWS::Organizations::Account
+    Condition: IsDev
+    DependsOn: NetworkAccount
+    Properties:
+      AccountName: Workload Dev
+      Email: workload-dev@example.com
+  ProdWorkloadAccount:
+    Type: AWS::Organizations::Account
+    Condition: IsProd
+    DependsOn: NetworkAccount
+    Properties:
+      AccountName: Workload Prod
+      Email: workload-prod@example.com

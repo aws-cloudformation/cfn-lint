@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  Environment:
+    Type: String
+Conditions:
+  IsDev: !Equals [!Ref Environment, dev]
+Resources:
+  SecurityAccount:
+    Type: AWS::Organizations::Account
+    Properties:
+      AccountName: Security
+      Email: security@example.com
+  LogArchiveAccount: # created at the same time as SecurityAccount
+    Type: AWS::Organizations::Account
+    Properties:
+      AccountName: Log Archive
+      Email: log-archive@example.com
+  SandboxAccount: # created at the same time as both accounts above
+    Type: AWS::Organizations::Account
+    Condition: IsDev
+    Properties:
+      AccountName: Sandbox
+      Email: sandbox@example.com
