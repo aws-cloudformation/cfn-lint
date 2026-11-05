@@ -1,0 +1,34 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Cycles through Condition-gated resources that CloudFormation still
+  rejects, so E3004 must report them even when linted outside us-east-1.
+  Resource Conditions are not evaluated when CloudFormation builds the
+  dependency graph, so a gate that can never be true does not remove
+  the cycle.
+Conditions:
+  IsUsEast1: !Equals [!Ref "AWS::Region", us-east-1]
+Resources:
+  # Cycle between two resources both gated on IsUsEast1. In us-west-2
+  # neither resource is created, but CloudFormation still rejects the
+  # cycle at stack validation.
+  QueueC1:
+    Type: AWS::SQS::Queue
+    Condition: IsUsEast1
+    Properties:
+      QueueName: !Sub "${QueueC2.QueueName}-c1"
+  QueueC2:
+    Type: AWS::SQS::Queue
+    Condition: IsUsEast1
+    Properties:
+      QueueName: !Sub "${QueueC1.QueueName}-c2"
+  # DependsOn cycle pointing at a region-gated target that is never
+  # created in us-west-2. CloudFormation still rejects the cycle.
+  QueueD1:
+    Type: AWS::SQS::Queue
+    DependsOn: QueueD2
+  QueueD2:
+    Type: AWS::SQS::Queue
+    Condition: IsUsEast1
+    Properties:
+      QueueName: !Sub "${QueueD1.QueueName}-dlq"

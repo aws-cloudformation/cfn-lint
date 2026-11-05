@@ -1,0 +1,30 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Cycles that can never occur, so E3004 must stay silent
+Conditions:
+  IsUsEast1: !Equals [!Ref "AWS::Region", us-east-1]
+Resources:
+  # Each edge sits on the opposite branch of the same condition, so no
+  # single scenario contains the cycle.
+  QueueA4:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !If [IsUsEast1, !Sub "${QueueB4.QueueName}-a", example-plain-a]
+  QueueB4:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !If [IsUsEast1, example-plain-b, !Sub "${QueueA4.QueueName}-b"]
+  # Three node cycle where the closing edge sits on the opposite branch
+  # of the condition that opens it, so the cycle can never close.
+  QueueA5:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !If [IsUsEast1, !Sub "${QueueB5.QueueName}-a", example-a]
+  QueueB5:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "${QueueC5.QueueName}-b"
+  QueueC5:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !If [IsUsEast1, example-c, !Sub "${QueueA5.QueueName}-c"]

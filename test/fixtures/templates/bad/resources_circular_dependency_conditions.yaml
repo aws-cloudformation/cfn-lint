@@ -1,0 +1,46 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Cycles that can occur, so E3004 must report them
+Conditions:
+  IsUsEast1: !Equals [!Ref "AWS::Region", us-east-1]
+  IsProd: !Equals [!Ref EnvType, prod]
+Parameters:
+  EnvType:
+    Type: String
+    Default: prod
+Resources:
+  # Real cycle in us-east-1: the edge exists on the true branch and the
+  # target resource is gated on the same condition.
+  QueueA1:
+    Type: AWS::SQS::Queue
+    Properties:
+      RedrivePolicy: !If
+        - IsUsEast1
+        - deadLetterTargetArn: !GetAtt QueueB1.Arn
+          maxReceiveCount: 3
+        - !Ref "AWS::NoValue"
+  QueueB1:
+    Type: AWS::SQS::Queue
+    Condition: IsUsEast1
+    Properties:
+      QueueName: !Sub "${QueueA1.QueueName}-dlq"
+  # Real cycle: the gated edge can be taken whenever IsProd is true,
+  # which does not depend on the region.
+  QueueA2:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "${QueueB2.QueueName}-a"
+  QueueB2:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !If [IsProd, !Sub "${QueueA2.QueueName}-b", example-plain-b]
+  # Real cycle in us-east-1: DependsOn plus a reference back from the
+  # condition-gated target.
+  QueueA3:
+    Type: AWS::SQS::Queue
+    DependsOn: QueueB3
+  QueueB3:
+    Type: AWS::SQS::Queue
+    Condition: IsUsEast1
+    Properties:
+      QueueName: !Sub "${QueueA3.QueueName}-dlq"
