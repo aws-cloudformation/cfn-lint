@@ -21,6 +21,7 @@ class TestSubNeeded(BaseRuleTestCase):
             "test/fixtures/templates/good/functions/sub_needed.yaml",
             "test/fixtures/templates/good/functions/sub_needed_transform.yaml",
             "test/fixtures/templates/good/functions/sub_needed_not_evaluated.yaml",
+            "test/fixtures/templates/good/transform/sub_needed_sam_api.yaml",
         ]
 
     def test_file_positive(self):

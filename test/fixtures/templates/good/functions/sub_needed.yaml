@@ -220,29 +220,3 @@ Resources:
                 httpMethod: POST
                 payloadFormatVersion: "2.0"
                 uri: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:e1029-import-variables-fn/invocations
-  SamApiWithAwsVariables:
-    Type: AWS::Serverless::Api
-    Properties:
-      Name: e1029-import-variables-sam
-      StageName: test
-      DefinitionBody:
-        swagger: "2.0"
-        info:
-          title: e1029-import-variables-sam
-        x-amazon-apigateway-policy:
-          Version: "2012-10-17"
-          Statement:
-            - Effect: Allow
-              Principal: "*"
-              Action: execute-api:Invoke
-              Resource: arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/GET/topics
-        paths:
-          /topics:
-            get:
-              responses:
-                "200":
-                  description: ok
-              x-amazon-apigateway-integration:
-                type: aws
-                httpMethod: POST
-                uri: arn:${AWS::Partition}:apigateway:${AWS::Region}:sns:action/ListTopics
