@@ -102,7 +102,7 @@ trailing newline. Read which file the assertion names before believing it.
 
 ## The full local gate, before pushing
 
-CI runs `tox` across Python 3.10–3.15 on Linux, macOS, **and Windows**. The
+CI runs `tox` across Python 3.11–3.15 on Linux, macOS, **and Windows**. The
 style checks run as the tox `style` env, which does nothing more than
 `pip install pre-commit` followed by `pre-commit run --all-files`.
 
