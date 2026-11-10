@@ -344,6 +344,20 @@ def cfn_with_map_name_default():
             [],
         ),
         (
+            # A top-level key built from pseudo parameters only resolves
+            # to lint-time placeholder values, so it is not a definite
+            # failure and must not be reported (issue #5010).
+            "Top level key from Fn::Sub with pseudo parameters is not reported",
+            {
+                "Fn::FindInMap": [
+                    "StageMap",
+                    {"Fn::Sub": "${AWS::AccountId}-${AWS::Region}"},
+                    "TCS",
+                ]
+            },
+            [],
+        ),
+        (
             # Hardcoded keys aren't overridable, so they are still validated.
             "Hardcoded top level key is still reported",
             {"Fn::FindInMap": ["StageMap", "typo", "TCS"]},
@@ -486,6 +500,50 @@ def test_resolve_map_name_from_parameter_default(
             "Top level key from a parameter Default is not reported "
             "without constraints",
             {"Fn::FindInMap": ["StageMap", {"Ref": "Stage"}, "TCS"]},
+            [],
+        ),
+        (
+            # A top-level key built from pseudo parameters only resolves
+            # to lint-time placeholder values, so it is not a definite
+            # failure and must not be reported (issue #5010).
+            "Top level key from Fn::Sub with pseudo parameters is not "
+            "reported without constraints",
+            {
+                "Fn::FindInMap": [
+                    "StageMap",
+                    {"Fn::Sub": "${AWS::AccountId}-${AWS::Region}"},
+                    "TCS",
+                ]
+            },
+            [],
+        ),
+        (
+            "Top level key from Fn::Sub with only AWS::AccountId is not "
+            "reported without constraints",
+            {
+                "Fn::FindInMap": [
+                    "StageMap",
+                    {"Fn::Sub": "${AWS::AccountId}"},
+                    "TCS",
+                ]
+            },
+            [],
+        ),
+        (
+            "Top level key from Fn::Join with a pseudo parameter is not "
+            "reported without constraints",
+            {
+                "Fn::FindInMap": [
+                    "StageMap",
+                    {
+                        "Fn::Join": [
+                            "-",
+                            [{"Ref": "AWS::AccountId"}, "us-east-1"],
+                        ]
+                    },
+                    "TCS",
+                ]
+            },
             [],
         ),
         (

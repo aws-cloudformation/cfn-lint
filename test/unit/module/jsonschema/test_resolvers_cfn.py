@@ -616,6 +616,83 @@ def test_invalid_functions(name, instance, response):
             [],
         ),
         (
+            # A top-level key built from pseudo parameters only resolves
+            # to lint-time placeholder values, so it cannot be validated
+            # against the mapping keys (issue #5010).
+            "Valid FindInMap with a Sub of pseudo parameters for top level key",
+            {
+                "Fn::FindInMap": [
+                    "accounts",
+                    {"Fn::Sub": "${AWS::AccountId}-${AWS::Region}"},
+                    "dev",
+                ]
+            },
+            [],
+        ),
+        (
+            "Valid FindInMap with a Sub of only AWS::AccountId for top level key",
+            {
+                "Fn::FindInMap": [
+                    "accounts",
+                    {"Fn::Sub": "${AWS::AccountId}"},
+                    "dev",
+                ]
+            },
+            [],
+        ),
+        (
+            # A bare Ref to AWS::Region resolves against the region list,
+            # but the same value inside a Sub is a lint-time placeholder
+            # for the deploy-time region, so the key is not validated.
+            "Valid FindInMap with a Sub of only AWS::Region for top level key",
+            {
+                "Fn::FindInMap": [
+                    "accounts",
+                    {"Fn::Sub": "${AWS::Region}"},
+                    "bar",
+                ]
+            },
+            [],
+        ),
+        (
+            "Valid FindInMap with a Join of a pseudo parameter for top level key",
+            {
+                "Fn::FindInMap": [
+                    "accounts",
+                    {
+                        "Fn::Join": [
+                            "-",
+                            [{"Ref": "AWS::AccountId"}, "us-east-1"],
+                        ]
+                    },
+                    "dev",
+                ]
+            },
+            [],
+        ),
+        (
+            # A Sub with no pseudo parameters still resolves and is validated.
+            "Invalid FindInMap with a Sub of a literal for top level key",
+            {
+                "Fn::FindInMap": [
+                    "accounts",
+                    {"Fn::Sub": "unknown"},
+                    "dev",
+                ]
+            },
+            [
+                (
+                    None,
+                    Context(),
+                    ValidationError(
+                        "'unknown' is not one of ['123456789012', 'us-east-1'] "
+                        "for mapping 'accounts'",
+                        path=deque(["Fn::FindInMap", 1]),
+                    ),
+                )
+            ],
+        ),
+        (
             "Valid FindInMap with a Sub with no parameters",
             {"Fn::FindInMap": ["environments", "lion", {"Fn::Sub": "dev"}]},
             [
