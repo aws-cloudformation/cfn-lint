@@ -197,13 +197,7 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                     )
             continue
 
-        # A top-level key built from a pseudo parameter (for example
-        # Fn::Sub "${AWS::AccountId}-${AWS::Region}") only resolves to
-        # lint-time placeholder values, so it can never be validated
-        # against the mapping keys. Resolve it with pseudo parameters
-        # disabled, the same treatment the second-level key already
-        # gets below, so such keys yield neither a value nor an error.
-        # Literal keys and keys resolved from parameters are unaffected.
+        # Keys from pseudo parameters can't be matched to mapping keys (#5010)
         key_validator = validator.evolve(
             context=validator.context.evolve(resolve_pseudo_parameters=False)
         )
