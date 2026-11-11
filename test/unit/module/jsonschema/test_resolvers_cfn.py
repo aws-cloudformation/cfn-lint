@@ -616,6 +616,83 @@ def test_invalid_functions(name, instance, response):
             [],
         ),
         (
+            # A top-level key built from pseudo parameters only resolves
+            # to lint-time placeholder values, so it cannot be validated
+            # against the mapping keys (issue #5010).
+            "Valid FindInMap with a Sub of pseudo parameters for top level key",
+            {
+                "Fn::FindInMap": [
+                    "accounts",
+                    {"Fn::Sub": "${AWS::AccountId}-${AWS::Region}"},
+                    "dev",
+                ]
+            },
+            [],
+        ),
+        (
+            "Valid FindInMap with a Sub of only AWS::AccountId for top level key",
+            {
+                "Fn::FindInMap": [
+                    "accounts",
+                    {"Fn::Sub": "${AWS::AccountId}"},
+                    "dev",
+                ]
+            },
+            [],
+        ),
+        (
+            # A bare Ref to AWS::Region resolves against the region list,
+            # but the same value inside a Sub is a lint-time placeholder
+            # for the deploy-time region, so the key is not validated.
+            "Valid FindInMap with a Sub of only AWS::Region for top level key",
+            {
+                "Fn::FindInMap": [
+                    "accounts",
+                    {"Fn::Sub": "${AWS::Region}"},
+                    "bar",
+                ]
+            },
+            [],
+        ),
+        (
+            "Valid FindInMap with a Join of a pseudo parameter for top level key",
+            {
+                "Fn::FindInMap": [
+                    "accounts",
+                    {
+                        "Fn::Join": [
+                            "-",
+                            [{"Ref": "AWS::AccountId"}, "us-east-1"],
+                        ]
+                    },
+                    "dev",
+                ]
+            },
+            [],
+        ),
+        (
+            # A Sub with no pseudo parameters still resolves and is validated.
+            "Invalid FindInMap with a Sub of a literal for top level key",
+            {
+                "Fn::FindInMap": [
+                    "accounts",
+                    {"Fn::Sub": "unknown"},
+                    "dev",
+                ]
+            },
+            [
+                (
+                    None,
+                    Context(),
+                    ValidationError(
+                        "'unknown' is not one of ['123456789012', 'us-east-1'] "
+                        "for mapping 'accounts'",
+                        path=deque(["Fn::FindInMap", 1]),
+                    ),
+                )
+            ],
+        ),
+        (
             "Valid FindInMap with a Sub with no parameters",
             {"Fn::FindInMap": ["environments", "lion", {"Fn::Sub": "dev"}]},
             [
@@ -999,6 +1076,45 @@ def test_find_in_map_with_transform(name, instance, response):
         resources={},
     )
     _resolve(name, instance, response, context=context)
+
+
+@pytest.mark.parametrize(
+    "name,instance,response",
+    [
+        (
+            "Valid ToJsonString with an object",
+            {"Fn::ToJsonString": {"A": "B", "C": "D"}},
+            [('{"A":"B","C":"D"}', Context(), None)],
+        ),
+        (
+            "Valid ToJsonString with a nested object",
+            {"Fn::ToJsonString": {"A": {"B": "C"}}},
+            [('{"A":{"B":"C"}}', Context(), None)],
+        ),
+        (
+            "Valid ToJsonString with an array",
+            {"Fn::ToJsonString": ["A", "B"]},
+            [('["A","B"]', Context(), None)],
+        ),
+        (
+            "Valid ToJsonString keeps spaces inside a string value",
+            {"Fn::ToJsonString": {"A": "B C"}},
+            [('{"A":"B C"}', Context(), None)],
+        ),
+        (
+            "Valid ToJsonString with non string scalars",
+            {"Fn::ToJsonString": {"A": 1, "B": True, "C": None}},
+            [('{"A":1,"B":true,"C":null}', Context(), None)],
+        ),
+        (
+            "Unresolvable ToJsonString with a GetAtt",
+            {"Fn::ToJsonString": {"Fn::GetAtt": "MyResource.Arn"}},
+            [],
+        ),
+    ],
+)
+def test_to_json_string(name, instance, response):
+    _resolve(name, instance, response)
 
 
 def test_if():

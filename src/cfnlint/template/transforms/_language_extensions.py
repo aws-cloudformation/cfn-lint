@@ -17,7 +17,12 @@ import regex as re
 
 from cfnlint.conditions._utils import get_hash
 from cfnlint.decode.node import str_node
-from cfnlint.helpers import FUNCTION_FOR_EACH, REGEX_SUB_PARAMETERS
+from cfnlint.helpers import (
+    FUNCTION_FOR_EACH,
+    REGEX_SUB_PARAMETERS,
+    get_partition,
+    get_url_suffix,
+)
 from cfnlint.template.transforms._types import TransformResult
 
 LOGGER = logging.getLogger("cfnlint")
@@ -494,11 +499,7 @@ class _ForEachValueRef(_ForEachValue):
 
         region = cfn.regions[0]
         account_id = "123456789012"
-        partition = "aws"
-        if region in ("us-gov-east-1", "us-gov-west-1"):
-            partition = "aws-us-gov"
-        if region in ("cn-north-1", "cn-northwest-1"):
-            partition = "aws-cn"
+        partition = get_partition(region)
         if v == "AWS::Region":
             return region
 
@@ -527,10 +528,7 @@ class _ForEachValueRef(_ForEachValue):
             return "teststack"
 
         if v == "AWS::URLSuffix":
-            if region in ("cn-north-1", "cn-northwest-1"):
-                return "amazonaws.com.cn"
-
-            return "amazonaws.com"
+            return get_url_suffix(region)
 
         p = cfn.template.get("Parameters", {}).get(v)
         if not p:

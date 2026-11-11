@@ -5,7 +5,7 @@ on:
     types: [published]
 
 permissions:
-  contents: read
+  contents: write
   id-token: write
 
 jobs:
@@ -14,6 +14,8 @@ jobs:
     if: github.repository == 'aws-cloudformation/cfn-lint'
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
@@ -30,8 +32,47 @@ jobs:
           cp -r "$cache_dir/providers" src/cfnlint/data/schemas/providers
           cp -r "$cache_dir/resources" src/cfnlint/data/schemas/resources
           cp "$cache_dir/version.json" src/cfnlint/data/schemas/version.json
-      - name: Build and publish
+      - name: Build distributions
         run: |
           python -m build
+      - name: Determine release stability
+        id: release-version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          package_version="$(
+            awk -F'"' '/^__version__ = / { print $2 }' src/cfnlint/version.py
+          )"
+          if [[ -z "$package_version" ]]; then
+            echo "Unable to read the package version" >&2
+            exit 1
+          fi
+          if [[ "$RELEASE_TAG" != "v$package_version" ]]; then
+            echo "Release tag $RELEASE_TAG does not match package v$package_version" >&2
+            exit 1
+          fi
+
+          if [[ "$package_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(\.post[0-9]+)?$ ]]; then
+            echo "stable=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "stable=false" >> "$GITHUB_OUTPUT"
+          fi
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
+      - name: Upload stable source distribution to GitHub release
+        if: >-
+          github.event.release.prerelease == false &&
+          steps.release-version.outputs.stable == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          shopt -s nullglob
+          sdists=(dist/*.tar.gz)
+          if [[ ${#sdists[@]} -ne 1 ]]; then
+            echo "Expected one source distribution, found ${#sdists[@]}" >&2
+            exit 1
+          fi
+
+          gh release upload "$RELEASE_TAG" "${sdists[0]}" \
+            --repo "$GITHUB_REPOSITORY" --clobber

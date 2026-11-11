@@ -634,7 +634,7 @@ def rule():
             [
                 ValidationError(
                     "'${invalid}' does not match "
-                    "'^arn:aws:([a-z]|-)+:([a-z]|[0-9]|-)*:[0-9]*:([a-z]|-)+:[a-zA-Z0-9-_.]+(:(\\\\$LATEST|[a-zA-Z0-9-_\\\\.]+))?$'",
+                    "'^arn:aws[A-Za-z\\\\-]*?:([a-z]|-)+:([a-z]|[0-9]|-)*:[0-9]*:([a-z]|-)+:[a-zA-Z0-9-_.]+(:(\\\\$LATEST|[a-zA-Z0-9-_\\\\.]+))?$'",
                     rule=StateMachineDefinition(),
                     validator="pattern",
                     schema_path=deque(
@@ -741,7 +741,7 @@ def rule():
             [
                 ValidationError(
                     "'${jobqueue}' does not match "
-                    "'^arn:aws:([a-z]|-)+:([a-z]|[0-9]|-)*:[0-9]*:([a-z]|-)+:[a-zA-Z0-9-_.]+(:(\\\\$LATEST|[a-zA-Z0-9-_\\\\.]+))?$'",
+                    "'^arn:aws[A-Za-z\\\\-]*?:([a-z]|-)+:([a-z]|[0-9]|-)*:[0-9]*:([a-z]|-)+:[a-zA-Z0-9-_.]+(:(\\\\$LATEST|[a-zA-Z0-9-_\\\\.]+))?$'",
                     rule=StateMachineDefinition(),
                     validator="pattern",
                     schema_path=deque(
@@ -924,7 +924,7 @@ def rule():
                             "patternProperties",
                             "^.{1,80}$",
                             "allOf",
-                            5,
+                            13,
                             "then",
                             "allOf",
                             0,
@@ -1062,11 +1062,10 @@ def rule():
                             "patternProperties",
                             "^.{1,80}$",
                             "allOf",
-                            0,
+                            8,
                             "then",
                             "allOf",
                             0,
-                            "then",
                             "properties",
                             "Choices",
                             "items",
@@ -1074,6 +1073,31 @@ def rule():
                         ]
                     ),
                     path=deque(["Definition", "States", "Choices3", "Choices", 0]),
+                ),
+                ValidationError(
+                    "Additional properties are not allowed ('And' was unexpected)",
+                    rule=StateMachineDefinition(),
+                    validator="additionalProperties",
+                    schema_path=deque(
+                        [
+                            "properties",
+                            "States",
+                            "patternProperties",
+                            "^.{1,80}$",
+                            "allOf",
+                            8,
+                            "then",
+                            "allOf",
+                            0,
+                            "properties",
+                            "Choices",
+                            "items",
+                            "additionalProperties",
+                        ]
+                    ),
+                    path=deque(
+                        ["Definition", "States", "Choices3", "Choices", 0, "And"]
+                    ),
                 ),
             ],
         ),
@@ -1560,6 +1584,67 @@ def rule():
             },
             [],
         ),
+        (
+            "Task resource ARNs from other partitions",
+            {
+                "Definition": {
+                    "StartAt": "China",
+                    "States": {
+                        "China": {
+                            "Type": "Task",
+                            "Resource": "arn:aws-cn:lambda:cn-north-1:123456789012:function:worker",
+                            "Next": "Eusc",
+                        },
+                        "Eusc": {
+                            "Type": "Task",
+                            "Resource": "arn:aws-eusc:lambda:eusc-de-east-1:123456789012:function:worker:$LATEST",
+                            "End": True,
+                        },
+                    },
+                }
+            },
+            [],
+        ),
+        (
+            "Task resource ARN from an unknown partition",
+            {
+                "Definition": {
+                    "StartAt": "Other",
+                    "States": {
+                        "Other": {
+                            "Type": "Task",
+                            "Resource": "arn:azure:lambda:us-east-1:123456789012:function:worker",
+                            "End": True,
+                        },
+                    },
+                }
+            },
+            [
+                ValidationError(
+                    (
+                        "'arn:azure:lambda:us-east-1:123456789012:function:worker' "
+                        "does not match '^arn:aws[A-Za-z\\\\-]*?:([a-z]|-)+:([a-z]|[0-9]|-)*:[0-9]*:([a-z]|-)+:[a-zA-Z0-9-_.]+(:(\\\\$LATEST|[a-zA-Z0-9-_\\\\.]+))?$'"
+                    ),
+                    rule=StateMachineDefinition(),
+                    validator="pattern",
+                    schema_path=deque(
+                        [
+                            "properties",
+                            "States",
+                            "patternProperties",
+                            "^.{1,80}$",
+                            "allOf",
+                            5,
+                            "then",
+                            "properties",
+                            "Resource",
+                            "pattern",
+                        ]
+                    ),
+                    path=deque(["Definition", "States", "Other", "Resource"]),
+                ),
+            ],
+        ),
     ],
 )
 def test_validate(
@@ -1599,3 +1684,323 @@ def test_fix_message_with_array_index_in_path(rule, validator):
     assert not any("sequence item" in message for message in messages), (
         f"E1101 crash surfaced: {messages!r}"
     )
+
+
+def _state(state, next_state=None, **properties):
+    state = {**state, **properties}
+    if next_state:
+        state["Next"] = next_state
+    else:
+        state["End"] = True
+    return state
+
+
+_TASK = {
+    "Type": "Task",
+    "Resource": "arn:aws:states:::lambda:invoke",
+    "Arguments": {"FunctionName": "arn:aws:lambda:us-east-1:123456789012:function:f"},
+}
+
+_INLINE_MAP = {
+    "Type": "Map",
+    "Items": "{% $states.input.items %}",
+    "ItemProcessor": {
+        "StartAt": "P",
+        "States": {"P": {"Type": "Pass", "End": True}},
+    },
+}
+
+_DISTRIBUTED_MAP = {
+    **_INLINE_MAP,
+    "ItemProcessor": {
+        "ProcessorConfig": {"Mode": "DISTRIBUTED", "ExecutionType": "STANDARD"},
+        "StartAt": "P",
+        "States": {"P": {"Type": "Pass", "End": True}},
+    },
+}
+
+
+@pytest.mark.parametrize(
+    "name,definition,expected",
+    [
+        (
+            "JSONata set on states under a JSONPath state machine",
+            # https://github.com/aws-cloudformation/cfn-lint/issues/4881
+            {
+                "StartAt": "Task",
+                "States": {
+                    "Task": _state(
+                        _TASK,
+                        "Wait",
+                        QueryLanguage="JSONata",
+                        Arguments="{% $states.input %}",
+                        TimeoutSeconds="{% $states.input.timeout %}",
+                    ),
+                    "Wait": _state(
+                        {"Type": "Wait"},
+                        "Map",
+                        QueryLanguage="JSONata",
+                        Seconds="{% $states.input.seconds %}",
+                    ),
+                    "Map": _state(
+                        _INLINE_MAP,
+                        "Done",
+                        QueryLanguage="JSONata",
+                        ItemSelector="{% $states.context.Map.Item.Value %}",
+                    ),
+                    "Done": {
+                        "Type": "Succeed",
+                        "QueryLanguage": "JSONata",
+                        "Output": "{% $states.input %}",
+                    },
+                },
+            },
+            [],
+        ),
+        (
+            "JSONata expressions in numeric fields",
+            {
+                "QueryLanguage": "JSONata",
+                "StartAt": "Task",
+                "States": {
+                    "Task": _state(
+                        _TASK,
+                        "Map",
+                        TimeoutSeconds="{% $states.input.timeout %}",
+                        HeartbeatSeconds="{% $states.input.heartbeat %}",
+                    ),
+                    "Map": _state(
+                        _DISTRIBUTED_MAP,
+                        MaxConcurrency="{% $states.input.concurrency %}",
+                        ToleratedFailureCount="{% $states.input.count %}",
+                        ToleratedFailurePercentage="{% $states.input.percent %}",
+                        ItemSelector="{% $states.context.Map.Item.Value %}",
+                    ),
+                },
+            },
+            [],
+        ),
+        (
+            "JSONata numeric fields keep their limits",
+            {
+                "QueryLanguage": "JSONata",
+                "StartAt": "Task",
+                "States": {"Task": _state(_TASK, TimeoutSeconds=0)},
+            },
+            [
+                (
+                    "0 is less than the minimum of 1",
+                    ["Definition", "States", "Task", "TimeoutSeconds"],
+                ),
+            ],
+        ),
+        (
+            "JSONata numeric fields accept the boundary value",
+            {
+                "QueryLanguage": "JSONata",
+                "StartAt": "Task",
+                "States": {"Task": _state(_TASK, TimeoutSeconds=1)},
+            },
+            [],
+        ),
+        (
+            "Unresolvable numeric fields are silent",
+            {
+                "QueryLanguage": "JSONata",
+                "StartAt": "Task",
+                "States": {
+                    "Task": _state(_TASK, TimeoutSeconds={"Ref": "Timeout"}),
+                },
+            },
+            [],
+        ),
+        (
+            "Unresolvable QueryLanguage on a state skips the state",
+            # The route for every state type depends on QueryLanguage, so a
+            # value cfn-lint cannot resolve leaves the state unchecked.
+            # Bogus is invalid in both languages and proves nothing fires.
+            {
+                "StartAt": "Task",
+                "States": {
+                    "Task": _state(
+                        _TASK,
+                        QueryLanguage={"Ref": "QueryLanguage"},
+                        Arguments="{% $states.input %}",
+                        Bogus=1,
+                    ),
+                },
+            },
+            [],
+        ),
+        (
+            "Conditional QueryLanguage on a state is checked for each value",
+            {
+                "StartAt": "Task",
+                "States": {
+                    "Task": _state(
+                        {"Type": "Task", "Resource": _TASK["Resource"]},
+                        QueryLanguage={"Fn::If": ["IsJSONata", "JSONata", "JSONPath"]},
+                        Parameters={},
+                        Output={},
+                    ),
+                },
+            },
+            [
+                (
+                    "Additional properties are not allowed ('Output' was unexpected)",
+                    ["Definition", "States", "Task", "Output"],
+                ),
+                (
+                    "Additional properties are not allowed ('Parameters' was unexpected)",
+                    ["Definition", "States", "Task", "Parameters"],
+                ),
+            ],
+        ),
+        (
+            "Path fields are not allowed with JSONata",
+            {
+                "QueryLanguage": "JSONata",
+                "StartAt": "Task",
+                "States": {
+                    "Task": _state(
+                        _TASK,
+                        "Wait",
+                        HeartbeatSecondsPath="$.heartbeat",
+                        TimeoutSecondsPath="$.timeout",
+                    ),
+                    "Wait": _state(
+                        {"Type": "Wait"},
+                        "Map",
+                        SecondsPath="$.seconds",
+                        TimestampPath="$.timestamp",
+                    ),
+                    "Map": _state(
+                        _DISTRIBUTED_MAP,
+                        MaxConcurrencyPath="$.concurrency",
+                        ToleratedFailureCountPath="$.count",
+                        ToleratedFailurePercentagePath="$.percent",
+                    ),
+                },
+            },
+            [
+                (
+                    "Additional properties are not allowed ('HeartbeatSecondsPath' was unexpected)",
+                    ["Definition", "States", "Task", "HeartbeatSecondsPath"],
+                ),
+                (
+                    "Additional properties are not allowed ('TimeoutSecondsPath' was unexpected)",
+                    ["Definition", "States", "Task", "TimeoutSecondsPath"],
+                ),
+                (
+                    "Additional properties are not allowed ('SecondsPath' was unexpected)",
+                    ["Definition", "States", "Wait", "SecondsPath"],
+                ),
+                (
+                    "Additional properties are not allowed ('TimestampPath' was unexpected)",
+                    ["Definition", "States", "Wait", "TimestampPath"],
+                ),
+                (
+                    "Additional properties are not allowed ('MaxConcurrencyPath' was unexpected)",
+                    ["Definition", "States", "Map", "MaxConcurrencyPath"],
+                ),
+                (
+                    "Additional properties are not allowed ('ToleratedFailureCountPath' was unexpected)",
+                    ["Definition", "States", "Map", "ToleratedFailureCountPath"],
+                ),
+                (
+                    "Additional properties are not allowed ('ToleratedFailurePercentagePath' was unexpected)",
+                    ["Definition", "States", "Map", "ToleratedFailurePercentagePath"],
+                ),
+            ],
+        ),
+        (
+            "Child states do not inherit QueryLanguage from a parent state",
+            {
+                "StartAt": "Map",
+                "States": {
+                    "Map": _state(
+                        _INLINE_MAP,
+                        QueryLanguage="JSONata",
+                        ItemProcessor={
+                            "StartAt": "Child",
+                            "States": {
+                                "Child": _state(
+                                    {"Type": "Pass"},
+                                    InputPath="$",
+                                    Output="{% $states.input %}",
+                                )
+                            },
+                        },
+                    ),
+                },
+            },
+            [
+                (
+                    "Additional properties are not allowed ('Output' was unexpected)",
+                    [
+                        "Definition",
+                        "States",
+                        "Map",
+                        "ItemProcessor",
+                        "States",
+                        "Child",
+                        "Output",
+                    ],
+                ),
+            ],
+        ),
+        (
+            "Succeed state fields follow the query language",
+            {
+                "StartAt": "JSONPath",
+                "States": {
+                    "JSONPath": {
+                        "Type": "Succeed",
+                        "InputPath": "$.input",
+                        "OutputPath": "$.output",
+                        "Output": {"a": 1},
+                    },
+                    "JSONata": {
+                        "Type": "Succeed",
+                        "QueryLanguage": "JSONata",
+                        "InputPath": "$.input",
+                        "Output": "{% $states.input %}",
+                    },
+                },
+            },
+            [
+                (
+                    "Additional properties are not allowed ('Output' was unexpected)",
+                    ["Definition", "States", "JSONPath", "Output"],
+                ),
+                (
+                    "Additional properties are not allowed ('InputPath' was unexpected)",
+                    ["Definition", "States", "JSONata", "InputPath"],
+                ),
+            ],
+        ),
+    ],
+)
+@pytest.mark.parametrize(
+    "template",
+    [
+        {
+            "Parameters": {
+                "QueryLanguage": {"Type": "String"},
+                "Timeout": {"Type": "Number"},
+            },
+            "Conditions": {
+                "IsJSONata": {"Fn::Equals": [{"Ref": "QueryLanguage"}, "JSONata"]}
+            },
+        }
+    ],
+    indirect=True,
+)
+def test_query_language(name, definition, expected, rule, validator):
+    errs = list(rule.validate(validator, {}, {"Definition": definition}, {}))
+    # unknown errors come from unresolvable values and never become matches
+    errs = [err for err in errs if not err.unknown]
+    assert [(err.message, list(err.path)) for err in errs] == expected, (
+        f"{name!r} test failed with {errs!r}"
+    )
+    assert all(err.rule is rule for err in errs), f"{name!r} errors not from {rule.id}"

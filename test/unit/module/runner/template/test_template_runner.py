@@ -110,3 +110,26 @@ class TestRunner(BaseTestCase):
             )
         )
         self.assertEqual(len(failures), 6, "Got failures {}".format(failures))
+
+
+class TestDedup(BaseTestCase):
+    def test_dedup_keeps_first_of_equal_matches_in_order(self):
+        from cfnlint.rules import Match
+        from cfnlint.rules.errors import RuleError
+        from cfnlint.runner.template.runner import _dedup
+
+        def m(line, message):
+            return Match(
+                linenumber=line,
+                columnnumber=1,
+                linenumberend=line,
+                columnnumberend=2,
+                filename="t.yaml",
+                rule=RuleError(),
+                message=message,
+            )
+
+        matches = [m(1, "a"), m(2, "b"), m(1, "a"), m(3, "a"), m(2, "b")]
+        self.assertListEqual(
+            list(_dedup(iter(matches))), [m(1, "a"), m(2, "b"), m(3, "a")]
+        )
