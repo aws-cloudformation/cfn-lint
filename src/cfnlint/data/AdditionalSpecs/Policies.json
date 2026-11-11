@@ -1344,7 +1344,9 @@
   "Actions": {
    "callforwardedtool": {},
    "checkconnectionstatus": {},
+   "closesession": {},
    "doubleclick": {},
+   "executesequence": {},
    "getscreenshot": {},
    "getsessioninfo": {},
    "holdkey": {},
@@ -1361,7 +1363,8 @@
    "scroll": {},
    "toggleappswitcher": {},
    "tripleclick": {},
-   "typetext": {}
+   "typetext": {},
+   "wait": {}
   },
   "Resources": {}
  },
@@ -1542,12 +1545,22 @@
      "agentspace"
     ]
    },
+   "getknowledgegraph": {
+    "Resources": [
+     "agentspace"
+    ]
+   },
    "getknowledgeitem": {
     "Resources": [
      "agentspace"
     ]
    },
    "getoperatorapp": {
+    "Resources": [
+     "agentspace"
+    ]
+   },
+   "getplan": {
     "Resources": [
      "agentspace"
     ]
@@ -1577,7 +1590,17 @@
      "agentspace"
     ]
    },
+   "listagentspacemetrics": {
+    "Resources": [
+     "agentspace"
+    ]
+   },
    "listagentspaces": {},
+   "listassetchanges": {
+    "Resources": [
+     "agentspace"
+    ]
+   },
    "listassetfiles": {
     "Resources": [
      "agentspace"
@@ -1689,6 +1712,11 @@
    },
    "searchserviceaccessibleresource": {},
    "sendmessage": {
+    "Resources": [
+     "agentspace"
+    ]
+   },
+   "stopplan": {
     "Resources": [
      "agentspace"
     ]
@@ -7828,6 +7856,11 @@
      "environment"
     ]
    },
+   "getresourceactivitiesqueryresults": {
+    "Resources": [
+     "environment"
+    ]
+   },
    "gettask": {
     "Resources": [
      "environment"
@@ -7982,6 +8015,11 @@
      "environment"
     ]
    },
+   "startresourceactivitiesquery": {
+    "Resources": [
+     "environment"
+    ]
+   },
    "tagresource": {
     "Resources": [
      "environment"
@@ -8046,8 +8084,7 @@
     "Resources": [
      "environment"
     ]
-   },
-   "vendconnectionaccesstoken": {}
+   }
   },
   "Resources": {
    "environment": {
@@ -8117,6 +8154,11 @@
      "workgroup"
     ]
    },
+   "createsystemtableconfiguration": {
+    "Resources": [
+     "system-table"
+    ]
+   },
    "createworkgroup": {
     "Resources": [
      "workgroup"
@@ -8145,6 +8187,11 @@
    "deletepreparedstatement": {
     "Resources": [
      "workgroup"
+    ]
+   },
+   "deletesystemtableconfiguration": {
+    "Resources": [
+     "system-table"
     ]
    },
    "deleteworkgroup": {
@@ -8257,6 +8304,11 @@
      "workgroup"
     ]
    },
+   "getsystemtableconfiguration": {
+    "Resources": [
+     "system-table"
+    ]
+   },
    "gettable": {},
    "gettablemetadata": {
     "Resources": [
@@ -8319,6 +8371,7 @@
      "workgroup"
     ]
    },
+   "listsystemtablestatuses": {},
    "listtablemetadata": {
     "Resources": [
      "datacatalog"
@@ -8329,6 +8382,7 @@
      "capacity-reservation",
      "datacatalog",
      "session",
+     "system-table",
      "workgroup"
     ]
    },
@@ -8371,6 +8425,7 @@
      "capacity-reservation",
      "datacatalog",
      "session",
+     "system-table",
      "workgroup"
     ]
    },
@@ -8385,6 +8440,7 @@
      "capacity-reservation",
      "datacatalog",
      "session",
+     "system-table",
      "workgroup"
     ]
    },
@@ -8418,6 +8474,11 @@
      "workgroup"
     ]
    },
+   "updatesystemtableconfiguration": {
+    "Resources": [
+     "system-table"
+    ]
+   },
    "updateworkgroup": {
     "Resources": [
      "workgroup"
@@ -8444,6 +8505,14 @@
    "session": {
     "ARNFormats": [
      "arn:${Partition}:athena:${Region}:${Account}:workgroup/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "system-table": {
+    "ARNFormats": [
+     "arn:${Partition}:athena:${Region}:${Account}:system-table/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -9453,6 +9522,11 @@
      "SellerDashboard"
     ]
    },
+   "getsellerreportingdata": {
+    "Resources": [
+     "SellerDataset"
+    ]
+   },
    "gettaxcomplianceprofile": {
     "Resources": [
      "TaxComplianceProfile"
@@ -9684,6 +9758,11 @@
     ]
    },
    "sellerdashboard": {
+    "ARNFormats": [
+     "arn:${Partition}:aws-marketplace::${Account}:.*"
+    ]
+   },
+   "sellerdataset": {
     "ARNFormats": [
      "arn:${Partition}:aws-marketplace::${Account}:.*"
     ]
@@ -13618,6 +13697,11 @@
      "registry"
     ]
    },
+   "invokewebanswer": {
+    "Resources": [
+     "web-answer"
+    ]
+   },
    "invokewebsearch": {
     "Resources": [
      "web-search"
@@ -14348,6 +14432,11 @@
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "web-answer": {
+    "ARNFormats": [
+     "arn:${Partition}:bedrock-agentcore:${Region}:aws:tool/web-answer.v1"
     ]
    },
    "web-search": {
@@ -20692,6 +20781,7 @@
    "describealarmsformetric": {},
    "describeanomalydetectors": {},
    "describeinsightrules": {},
+   "detectgroupoutliers": {},
    "disablealarmactions": {
     "Resources": [
      "alarm"
@@ -20827,6 +20917,7 @@
    },
    "getspacecredentials": {},
    "getspacecredentialsfororganization": {},
+   "getspacedataaccess": {},
    "gettelemetryqueryresults": {},
    "gettopologydiscoverystatus": {},
    "gettopologymap": {},
@@ -27227,6 +27318,11 @@
    "updatenotificationcontent": {
     "Resources": [
      "notification"
+    ]
+   },
+   "updateoutboundemailcontactmessage": {
+    "Resources": [
+     "contact"
     ]
    },
    "updateparticipantauthentication": {
@@ -33784,6 +33880,16 @@
      "table"
     ]
    },
+   "bulkputitems": {
+    "Resources": [
+     "table"
+    ]
+   },
+   "cancelbulkoperation": {
+    "Resources": [
+     "bulk-operation"
+    ]
+   },
    "conditioncheckitem": {
     "Resources": [
      "table"
@@ -33849,6 +33955,11 @@
    "describebackup": {
     "Resources": [
      "backup"
+    ]
+   },
+   "describebulkoperation": {
+    "Resources": [
+     "bulk-operation"
     ]
    },
    "describecontinuousbackups": {
@@ -33960,6 +34071,7 @@
    },
    "injecterror": {},
    "listbackups": {},
+   "listbulkoperations": {},
    "listcontributorinsights": {},
    "listexports": {
     "Resources": [
@@ -34062,6 +34174,11 @@
      "table"
     ]
    },
+   "startbulkoperation": {
+    "Resources": [
+     "bulk-operation"
+    ]
+   },
    "tagresource": {
     "Resources": [
      "stream",
@@ -34139,6 +34256,11 @@
    "backup": {
     "ARNFormats": [
      "arn:${Partition}:dynamodb:${Region}:${Account}:table/.*"
+    ]
+   },
+   "bulk-operation": {
+    "ARNFormats": [
+     "arn:${Partition}:dynamodb:${Region}:${Account}:bulk-operation/.*"
     ]
    },
    "export": {
@@ -34609,6 +34731,12 @@
     "Resources": [
      "capacity-reservation",
      "capacity-reservation-cancellation-quote"
+    ]
+   },
+   "createcapacityreservationdatechangequote": {
+    "Resources": [
+     "capacity-reservation",
+     "capacity-reservation-modification-quote"
     ]
    },
    "createcapacityreservationfleet": {
@@ -35377,6 +35505,11 @@
      "client-vpn-endpoint"
     ]
    },
+   "deleteclientvpnendpointauthorizationpolicy": {
+    "Resources": [
+     "client-vpn-endpoint"
+    ]
+   },
    "deleteclientvpnroute": {
     "Resources": [
      "client-vpn-endpoint",
@@ -36025,6 +36158,7 @@
    "describecapacitymanagerdataexports": {},
    "describecapacityreservationbillingrequests": {},
    "describecapacityreservationcancellationquotes": {},
+   "describecapacityreservationdatechangequotes": {},
    "describecapacityreservationfleets": {},
    "describecapacityreservations": {},
    "describecapacityreservationtopology": {},
@@ -36645,6 +36779,11 @@
      "capacity-reservation"
     ]
    },
+   "getclientvpnendpointauthorizationpolicy": {
+    "Resources": [
+     "client-vpn-endpoint"
+    ]
+   },
    "getcoippoolusage": {
     "Resources": [
      "coip-pool"
@@ -36686,6 +36825,11 @@
     ]
    },
    "getimageblockpublicaccessstate": {},
+   "getimagefindings": {
+    "Resources": [
+     "image"
+    ]
+   },
    "getinstancemetadatadefaults": {},
    "getinstancetpmekpub": {
     "Resources": [
@@ -36862,6 +37006,11 @@
    "getsnapshotblockpublicaccessstate": {},
    "getspotplacementscores": {},
    "getsubnetcidrreservations": {},
+   "gettransitgatewayattachmentnatconfiguration": {
+    "Resources": [
+     "transit-gateway-attachment"
+    ]
+   },
    "gettransitgatewayattachmentpropagations": {},
    "gettransitgatewaymeteringpolicyentries": {
     "Resources": [
@@ -36994,7 +37143,8 @@
    "modifyavailabilityzonegroup": {},
    "modifycapacityreservation": {
     "Resources": [
-     "capacity-reservation"
+     "capacity-reservation",
+     "capacity-reservation-modification-quote"
     ]
    },
    "modifycapacityreservationfleet": {
@@ -37008,6 +37158,11 @@
      "security-group",
      "transit-gateway",
      "vpc"
+    ]
+   },
+   "modifyclientvpnendpointauthorizationpolicy": {
+    "Resources": [
+     "client-vpn-endpoint"
     ]
    },
    "modifydefaultcreditspecification": {},
@@ -37254,6 +37409,11 @@
     "Resources": [
      "transit-gateway",
      "transit-gateway-route-table"
+    ]
+   },
+   "modifytransitgatewayattachmentnatconfiguration": {
+    "Resources": [
+     "transit-gateway-attachment"
     ]
    },
    "modifytransitgatewaymeteringpolicy": {
@@ -37897,6 +38057,7 @@
      "ec2:EndDate",
      "ec2:EndDateType",
      "ec2:EphemeralStorage",
+     "ec2:FutureCapacitySpecification",
      "ec2:InstanceCount",
      "ec2:InstanceMatchCriteria",
      "ec2:InstancePlatform",
@@ -37932,6 +38093,20 @@
    "capacity-reservation-fleet": {
     "ARNFormats": [
      "arn:${Partition}:ec2:${Region}:${Account}:capacity-reservation-fleet/.*"
+    ],
+    "ConditionKeys": [
+     "aws:RequestTag/${TagKey}",
+     "aws:ResourceTag/${TagKey}",
+     "aws:TagKeys",
+     "ec2:Attribute",
+     "ec2:Attribute/${AttributeName}",
+     "ec2:Region",
+     "ec2:ResourceTag/${TagKey}"
+    ]
+   },
+   "capacity-reservation-modification-quote": {
+    "ARNFormats": [
+     "arn:${Partition}:ec2:${Region}:${Account}:capacity-reservation-modification-quote/.*"
     ],
     "ConditionKeys": [
      "aws:RequestTag/${TagKey}",
@@ -38185,6 +38360,7 @@
      "ec2:BootModeOverride",
      "ec2:ImageID",
      "ec2:ImageType",
+     "ec2:ImageWatermarkKeys",
      "ec2:IsLaunchTemplateResource",
      "ec2:LaunchTemplate",
      "ec2:Owner",
@@ -44386,6 +44562,11 @@
      "application"
     ]
    },
+   "updateclone": {
+    "Resources": [
+     "domain"
+    ]
+   },
    "updatedatasource": {
     "Resources": [
      "domain"
@@ -47412,6 +47593,11 @@
  "gamelift": {
   "Actions": {
    "acceptmatch": {},
+   "allowvendedlogdeliveryforresource": {
+    "Resources": [
+     "gameSessionQueue"
+    ]
+   },
    "claimgameserver": {
     "Resources": [
      "gameServerGroup"
@@ -52109,6 +52295,12 @@
      "Subscription"
     ]
    },
+   "batchrefillpatientpharmacyprescriptions": {
+    "Resources": [
+     "Domain",
+     "Integration"
+    ]
+   },
    "cancelappointment": {
     "Resources": [
      "Domain",
@@ -52264,6 +52456,12 @@
     ]
    },
    "listpatientmedications": {
+    "Resources": [
+     "Domain",
+     "Integration"
+    ]
+   },
+   "listpatientpharmacyprescriptions": {
     "Resources": [
      "Domain",
      "Integration"
@@ -69940,6 +70138,7 @@
    "createconnector": {},
    "createlaunchconfigurationtemplate": {},
    "createnetworkmigrationdefinition": {},
+   "createremotesourceaction": {},
    "createreplicationconfigurationtemplate": {},
    "createvcenterclientformgn": {},
    "createwave": {},
@@ -69966,6 +70165,11 @@
    "deletenetworkmigrationdefinition": {
     "Resources": [
      "NetworkMigrationDefinitionResource"
+    ]
+   },
+   "deleteremotesourceaction": {
+    "Resources": [
+     "RemoteSourceActionResource"
     ]
    },
    "deletereplicationconfigurationtemplate": {
@@ -70051,6 +70255,11 @@
    },
    "getchannelcommandsformgn": {},
    "getlaunchconfiguration": {
+    "Resources": [
+     "SourceServerResource"
+    ]
+   },
+   "getlaunchconfigurationdefaults": {
     "Resources": [
      "SourceServerResource"
     ]
@@ -70143,6 +70352,11 @@
      "NetworkMigrationDefinitionResource"
     ]
    },
+   "listnetworkmigrationinsights": {
+    "Resources": [
+     "NetworkMigrationDefinitionResource"
+    ]
+   },
    "listnetworkmigrationmappersegmentconstructs": {
     "Resources": [
      "NetworkMigrationDefinitionResource"
@@ -70163,6 +70377,18 @@
      "NetworkMigrationDefinitionResource"
     ]
    },
+   "listremotesourceactioninvocationresults": {
+    "Resources": [
+     "SourceServerResource"
+    ]
+   },
+   "listremotesourceactioninvocations": {
+    "Resources": [
+     "RemoteSourceActionJobResource"
+    ]
+   },
+   "listremotesourceactionjobs": {},
+   "listremotesourceactions": {},
    "listsourceserveractions": {
     "Resources": [
      "SourceServerResource"
@@ -70307,6 +70533,13 @@
      "NetworkMigrationDefinitionResource"
     ]
    },
+   "startremotesourceactionjob": {
+    "Resources": [
+     "ConnectorResource",
+     "RemoteSourceActionResource",
+     "SourceServerResource"
+    ]
+   },
    "startreplication": {
     "Resources": [
      "SourceServerResource"
@@ -70331,6 +70564,8 @@
      "ImportResource",
      "JobResource",
      "LaunchConfigurationTemplateResource",
+     "RemoteSourceActionJobResource",
+     "RemoteSourceActionResource",
      "ReplicationConfigurationTemplateResource",
      "SourceServerResource",
      "VcenterClientResource",
@@ -70358,6 +70593,8 @@
      "ConnectorResource",
      "JobResource",
      "LaunchConfigurationTemplateResource",
+     "RemoteSourceActionJobResource",
+     "RemoteSourceActionResource",
      "ReplicationConfigurationTemplateResource",
      "SourceServerResource",
      "VcenterClientResource",
@@ -70405,6 +70642,11 @@
      "SourceServerResource"
     ]
    },
+   "updatelaunchconfigurationdefaults": {
+    "Resources": [
+     "SourceServerResource"
+    ]
+   },
    "updatelaunchconfigurationtemplate": {
     "Resources": [
      "LaunchConfigurationTemplateResource"
@@ -70423,6 +70665,11 @@
    "updatenetworkmigrationmappersegmentconstruct": {
     "Resources": [
      "NetworkMigrationDefinitionResource"
+    ]
+   },
+   "updateremotesourceaction": {
+    "Resources": [
+     "RemoteSourceActionResource"
     ]
    },
    "updatereplicationconfiguration": {
@@ -70504,6 +70751,22 @@
    "networkmigrationdefinitionresource": {
     "ARNFormats": [
      "arn:${Partition}:mgn:${Region}:${Account}:network-migration-definition/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "remotesourceactionjobresource": {
+    "ARNFormats": [
+     "arn:${Partition}:mgn:${Region}:${Account}:remote-source-action-job/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
+   "remotesourceactionresource": {
+    "ARNFormats": [
+     "arn:${Partition}:mgn:${Region}:${Account}:remote-source-action/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
@@ -75601,6 +75864,11 @@
     ]
    },
    "acceptshare": {},
+   "authorizerunprocessing": {
+    "Resources": [
+     "run"
+    ]
+   },
    "batchdeletereadset": {
     "Resources": [
      "sequenceStore"
@@ -78604,9 +78872,20 @@
  "payments": {
   "Actions": {
    "acceptfinancingapplicationterms": {},
+   "createconnectedaccount": {},
    "createfinancingapplication": {},
    "createpaymentinstrument": {},
+   "deleteconnectedaccount": {
+    "Resources": [
+     "connectedaccount"
+    ]
+   },
    "deletepaymentinstrument": {},
+   "getconnectedaccount": {
+    "Resources": [
+     "connectedaccount"
+    ]
+   },
    "getfinancingapplication": {},
    "getfinancingline": {},
    "getfinancinglinewithdrawal": {},
@@ -78617,6 +78896,7 @@
     ]
    },
    "getpaymentstatus": {},
+   "listconnectedaccounts": {},
    "listfinancingapplications": {},
    "listfinancinglines": {},
    "listfinancinglinewithdrawals": {},
@@ -78626,17 +78906,20 @@
    "listpaymentprogramstatus": {},
    "listtagsforresource": {
     "Resources": [
+     "connectedaccount",
      "payment-instrument"
     ]
    },
    "makepayment": {},
    "tagresource": {
     "Resources": [
+     "connectedaccount",
      "payment-instrument"
     ]
    },
    "untagresource": {
     "Resources": [
+     "connectedaccount",
      "payment-instrument"
     ]
    },
@@ -78645,6 +78928,14 @@
    "updatepaymentpreferences": {}
   },
   "Resources": {
+   "connectedaccount": {
+    "ARNFormats": [
+     "arn:${Partition}:payments::${Account}:connectedaccount/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "payment-instrument": {
     "ARNFormats": [
      "arn:${Partition}:payments::${Account}:payment-instrument:.*"
@@ -82591,6 +82882,7 @@
   "Actions": {
    "accountconfigurations": {},
    "allowvendedlogdeliveryforresource": {},
+   "authorizeoauthaccess": {},
    "batchcreatetopicreviewedanswer": {
     "Resources": [
      "topic"
@@ -82616,6 +82908,16 @@
    "cancelingestion": {
     "Resources": [
      "ingestion"
+    ]
+   },
+   "createaccesscontrolapplication": {
+    "Resources": [
+     "accessControlApplication"
+    ]
+   },
+   "createaccesscontrolapplicationsecret": {
+    "Resources": [
+     "accessControlApplication"
     ]
    },
    "createaccountcustomization": {},
@@ -82719,6 +83021,11 @@
      "assignment"
     ]
    },
+   "createinboundconnector": {
+    "Resources": [
+     "inboundConnector"
+    ]
+   },
    "createingestion": {
     "Resources": [
      "ingestion"
@@ -82741,6 +83048,7 @@
     ]
    },
    "createoauthclientapplication": {},
+   "createoauthtoken": {},
    "createreader": {
     "Resources": [
      "user"
@@ -82793,6 +83101,16 @@
     ]
    },
    "createvpcconnection": {},
+   "deleteaccesscontrolapplication": {
+    "Resources": [
+     "accessControlApplication"
+    ]
+   },
+   "deleteaccesscontrolapplicationsecret": {
+    "Resources": [
+     "accessControlApplication"
+    ]
+   },
    "deleteaccountcustomization": {
     "Resources": [
      "customization"
@@ -82911,6 +83229,11 @@
     ]
    },
    "deleteidentitypropagationconfig": {},
+   "deleteinboundconnector": {
+    "Resources": [
+     "inboundConnector"
+    ]
+   },
    "deleteknowledgebase": {
     "Resources": [
      "knowledgeBase"
@@ -82991,6 +83314,11 @@
    "deletevpcconnection": {
     "Resources": [
      "vpcconnection"
+    ]
+   },
+   "describeaccesscontrolapplication": {
+    "Resources": [
+     "accessControlApplication"
     ]
    },
    "describeaccountcustomization": {
@@ -83194,6 +83522,11 @@
      "assignment"
     ]
    },
+   "describeinboundconnector": {
+    "Resources": [
+     "inboundConnector"
+    ]
+   },
    "describeingestion": {
     "Resources": [
      "ingestion"
@@ -83234,6 +83567,7 @@
      "refreshschedule"
     ]
    },
+   "describeresourcepermissions": {},
    "describerolecustompermission": {},
    "describeselfupgradeconfiguration": {},
    "describespace": {
@@ -83349,6 +83683,7 @@
     ]
    },
    "getsessionembedurl": {},
+   "listaccesscontrolapplications": {},
    "listactionconnectors": {},
    "listagents": {
     "Resources": [
@@ -83445,6 +83780,12 @@
     ]
    },
    "listidentitypropagationconfigs": {},
+   "listinboundconnectorapplicationassociations": {
+    "Resources": [
+     "inboundConnector"
+    ]
+   },
+   "listinboundconnectors": {},
    "listingestions": {},
    "listkmskeysforuser": {},
    "listknowledgebases": {},
@@ -83470,6 +83811,7 @@
    "listspaces": {},
    "listtagsforresource": {
     "Resources": [
+     "accessControlApplication",
      "actionconnector",
      "analysis",
      "app",
@@ -83483,6 +83825,7 @@
      "emailCustomizationTemplate",
      "flow",
      "folder",
+     "inboundConnector",
      "namespace",
      "oauthClientApplication",
      "template",
@@ -83576,6 +83919,7 @@
      "analysis"
     ]
    },
+   "revokeoauthtoken": {},
    "scopedownpolicy": {},
    "searchactionconnectors": {
     "Resources": [
@@ -83675,6 +84019,7 @@
    "subscribe": {},
    "tagresource": {
     "Resources": [
+     "accessControlApplication",
      "actionconnector",
      "analysis",
      "app",
@@ -83688,6 +84033,7 @@
      "emailCustomizationTemplate",
      "flow",
      "folder",
+     "inboundConnector",
      "ingestion",
      "namespace",
      "oauthClientApplication",
@@ -83706,6 +84052,7 @@
    "unsubscribe": {},
    "untagresource": {
     "Resources": [
+     "accessControlApplication",
      "actionconnector",
      "analysis",
      "app",
@@ -83719,6 +84066,7 @@
      "emailCustomizationTemplate",
      "flow",
      "folder",
+     "inboundConnector",
      "ingestion",
      "namespace",
      "oauthClientApplication",
@@ -83727,6 +84075,16 @@
      "topic",
      "user",
      "vpcconnection"
+    ]
+   },
+   "updateaccesscontrolapplication": {
+    "Resources": [
+     "accessControlApplication"
+    ]
+   },
+   "updateaccesscontrolapplicationsecret": {
+    "Resources": [
+     "accessControlApplication"
     ]
    },
    "updateaccountcustomization": {
@@ -83893,6 +84251,16 @@
     ]
    },
    "updateidentitypropagationconfig": {},
+   "updateinboundconnector": {
+    "Resources": [
+     "inboundConnector"
+    ]
+   },
+   "updateinboundconnectorapplicationassociations": {
+    "Resources": [
+     "inboundConnector"
+    ]
+   },
    "updateiprestriction": {},
    "updatekeyregistration": {},
    "updateknowledgebase": {
@@ -84011,6 +84379,14 @@
    }
   },
   "Resources": {
+   "accesscontrolapplication": {
+    "ARNFormats": [
+     "arn:${Partition}:quicksight:${Region}:${Account}:access-control-application/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "account": {
     "ARNFormats": [
      "arn:${Partition}:quicksight:${Region}:${Account}:account/.*"
@@ -84183,6 +84559,14 @@
      "arn:${Partition}:quicksight:${Region}:${Account}:group/.*"
     ]
    },
+   "inboundconnector": {
+    "ARNFormats": [
+     "arn:${Partition}:quicksight:${Region}:${Account}:inbound-connector/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
+    ]
+   },
    "ingestion": {
     "ARNFormats": [
      "arn:${Partition}:quicksight:${Region}:${Account}:dataset/.*"
@@ -84291,13 +84675,28 @@
      "resource-share"
     ]
    },
-   "createpermission": {},
+   "createpermission": {
+    "Resources": [
+     "customer-managed-permission"
+    ]
+   },
    "createpermissionversion": {
     "Resources": [
      "customer-managed-permission"
     ]
    },
-   "createresourceshare": {},
+   "createresourceshare": {
+    "Resources": [
+     "customer-managed-permission",
+     "permission",
+     "resource-share"
+    ]
+   },
+   "deletecustomermanagedpermissionpolicy": {
+    "Resources": [
+     "customer-managed-permission"
+    ]
+   },
    "deletepermission": {
     "Resources": [
      "customer-managed-permission"
@@ -84326,6 +84725,11 @@
     ]
    },
    "enablesharingwithawsorganization": {},
+   "getcustomermanagedpermissionpolicy": {
+    "Resources": [
+     "customer-managed-permission"
+    ]
+   },
    "getpermission": {
     "Resources": [
      "customer-managed-permission",
@@ -84341,14 +84745,14 @@
      "resource-share-invitation"
     ]
    },
-   "listpermissionassociations": {
+   "listpermissionassociations": {},
+   "listpermissions": {},
+   "listpermissionversions": {
     "Resources": [
      "customer-managed-permission",
      "permission"
     ]
    },
-   "listpermissions": {},
-   "listpermissionversions": {},
    "listprincipals": {},
    "listreplacepermissionassociationswork": {},
    "listresources": {},
@@ -84367,6 +84771,11 @@
    "promoteresourcesharecreatedfrompolicy": {
     "Resources": [
      "resource-share"
+    ]
+   },
+   "putcustomermanagedpermissionpolicy": {
+    "Resources": [
+     "customer-managed-permission"
     ]
    },
    "rejectresourceshareinvitation": {
@@ -84397,6 +84806,11 @@
      "resource-share"
     ]
    },
+   "updatepermission": {
+    "Resources": [
+     "customer-managed-permission"
+    ]
+   },
    "updateresourceshare": {
     "Resources": [
      "resource-share"
@@ -84411,12 +84825,13 @@
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}",
      "ram:PermissionArn",
-     "ram:PermissionResourceType"
+     "ram:PermissionResourceType",
+     "ram:ResourceTag/${TagKey}"
     ]
    },
    "permission": {
     "ARNFormats": [
-     "arn:${Partition}:ram::${Account}:permission/.*"
+     "arn:${Partition}:ram::aws:permission/.*"
     ],
     "ConditionKeys": [
      "ram:PermissionArn",
@@ -84430,7 +84845,9 @@
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}",
      "ram:AllowsExternalPrincipals",
-     "ram:ResourceShareName"
+     "ram:ResourceShareName",
+     "ram:ResourceTag/${TagKey}",
+     "ram:RetainSharingOnAccountLeaveOrganization"
     ]
    },
    "resource-share-invitation": {
@@ -84438,6 +84855,7 @@
      "arn:${Partition}:ram:${Region}:${Account}:resource-share-invitation/.*"
     ],
     "ConditionKeys": [
+     "ram:ResourceShareName",
      "ram:ShareOwnerAccountId"
     ]
    }
@@ -89672,6 +90090,7 @@
    "renewdomain": {},
    "resendcontactreachabilityemail": {},
    "resendoperationauthorization": {},
+   "restoredomain": {},
    "retrievedomainauthcode": {},
    "transferdomain": {},
    "transferdomaintoanotherawsaccount": {},
@@ -89947,6 +90366,7 @@
      "profile-association"
     ]
    },
+   "updateprofileassociation": {},
    "updateprofileresourceassociation": {}
   },
   "Resources": {
@@ -92530,6 +92950,11 @@
      "TableBucket"
     ]
    },
+   "gettablebucketlogging": {
+    "Resources": [
+     "TableBucket"
+    ]
+   },
    "gettablebucketmaintenanceconfiguration": {
     "Resources": [
      "TableBucket"
@@ -92639,6 +93064,11 @@
     ]
    },
    "puttablebucketencryption": {
+    "Resources": [
+     "TableBucket"
+    ]
+   },
+   "puttablebucketlogging": {
     "Resources": [
      "TableBucket"
     ]
@@ -98178,6 +98608,11 @@
      "hub"
     ]
    },
+   "updatesecurityhubv2": {
+    "Resources": [
+     "hubv2"
+    ]
+   },
    "updatestandardscontrol": {
     "Resources": [
      "hub"
@@ -100344,6 +100779,11 @@
      "console"
     ]
    },
+   "createbearertoken": {
+    "Resources": [
+     "oauth2-resource-service-principal"
+    ]
+   },
    "createoauth2publicclient": {
     "Resources": [
      "oauth2-public-client-registration"
@@ -102095,6 +102535,7 @@
      "parameter"
     ]
    },
+   "deregisterdefaulthostmanagementconfiguration": {},
    "deregistermanagedinstance": {
     "Resources": [
      "managed-instance"
@@ -102428,6 +102869,7 @@
      "parameter"
     ]
    },
+   "registerdefaulthostmanagementconfiguration": {},
    "registerdefaultpatchbaseline": {
     "Resources": [
      "patchbaseline"
@@ -103415,9 +103857,23 @@
    "createcontrolchannel": {},
    "createdatachannel": {},
    "opencontrolchannel": {},
-   "opendatachannel": {}
+   "opendatachannel": {
+    "Resources": [
+     "session"
+    ]
+   }
   },
-  "Resources": {}
+  "Resources": {
+   "session": {
+    "ARNFormats": [
+     "arn:${Partition}:ssm:${Region}:${Account}:session/.*"
+    ],
+    "ConditionKeys": [
+     "ssm:resourceTag/aws:ssmmessages:session-id",
+     "ssm:resourceTag/aws:ssmmessages:target-id"
+    ]
+   }
+  }
  },
  "sso": {
   "Actions": {
