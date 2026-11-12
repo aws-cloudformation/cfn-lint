@@ -119,7 +119,7 @@ make a failure disappear.
 
 - Aim for 100% line coverage on new rules
 - Cover both branches of every condition in the rule
-- CI runs `tox` on Python 3.10–3.15 across Linux, macOS, and Windows
+- CI runs `tox` on Python 3.11–3.15 across Linux, macOS, and Windows
 
 ## Running Tests
 

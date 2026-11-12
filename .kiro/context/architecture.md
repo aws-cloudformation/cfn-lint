@@ -364,6 +364,6 @@ for value in template.get_values(properties, 'InstanceType'):
 
 ## Version Information
 
-- Python: 3.10-3.14 supported (`requires-python = ">=3.10,<3.15"`)
+- Python: 3.11-3.15 supported (`requires-python = ">=3.11,<3.16"`)
 - Dependencies: boto3, jsonschema, pydot (optional), junit-xml (optional)
 - AWS Regions: All public regions + GovCloud + China + ISO regions
