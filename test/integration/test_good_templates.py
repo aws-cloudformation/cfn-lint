@@ -177,6 +177,14 @@ class TestQuickStartTemplates(BaseCliTestCase):
         {
             "filename": (
                 "test/fixtures/templates/good/functions/"
+                "getatt_serverless_webfunction.yaml"
+            ),
+            "results": [],
+            "exit_code": 0,
+        },
+        {
+            "filename": (
+                "test/fixtures/templates/good/functions/"
                 "sub_serverless_function_version.yaml"
             ),
             "results": [],

@@ -124,6 +124,29 @@ def test_nested_stacks(name, instance, filename, decode_results, expected_getatt
         )
 
 
+def test_sam_webfunction_getatts():
+    """A SAM WebFunction resolves GetAtts against the generated
+    Lambda WebFunction, which keeps the same logical ID. See
+    https://github.com/aws-cloudformation/cfn-lint/issues/5013
+    """
+    region = "us-east-1"
+    resource = Resource({"Type": "AWS::Serverless::WebFunction"})
+
+    expected = AttributeDict(
+        {
+            "FunctionArn": "/properties/FunctionArn",
+            "State": "/properties/State",
+            "StateReason": "/properties/StateReason",
+            "CreatedAt": "/properties/CreatedAt",
+            "UpdatedAt": "/properties/UpdatedAt",
+        }
+    )
+
+    assert expected == resource.get_atts(region), (
+        f"WebFunction GetAtts got {resource.get_atts(region)!r}"
+    )
+
+
 @pytest.mark.parametrize(
     "name,template_url",
     [
