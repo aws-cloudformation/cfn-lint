@@ -1,3 +1,10 @@
+### v1.60.1
+## What's Changed
+* Fix [E1011](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1011): skip FindInMap key errors when the key comes from a pseudo parameter by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/5011
+* Update CloudFormation schemas to 2026-11-11 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/4998
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.60.0...v1.60.1
+
 ### v1.60.0
 ## What's Changed
 * Fix [E3697](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3697): measure Lambda environment size as compact JSON bytes by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/4860
