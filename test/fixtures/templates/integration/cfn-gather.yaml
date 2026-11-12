@@ -105,6 +105,13 @@ Resources:
       EventSourceArn: !GetAtt SqsFifoQueue.Arn
       FunctionName: !Ref FifoProcessor
       BatchSize: 15
+  # E3729: SQS FIFO EventSourceMapping with MaximumBatchingWindowInSeconds
+  FifoBatchingWindowMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn: !GetAtt SqsFifoQueue.Arn
+      FunctionName: !Ref FifoProcessor
+      MaximumBatchingWindowInSeconds: 10
   # E3707: DBInstance engine doesn't match DBCluster engine
   AuroraCluster:
     Type: AWS::RDS::DBCluster
