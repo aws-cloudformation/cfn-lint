@@ -40,6 +40,9 @@ class ToJsonString(BaseFn):
             )
             return
 
+        resolved_rule = self.child_rules[self.resolved_rule]
         for err in super().validate(validator, s, instance, schema):
-            err.rule = self
+            # keep resolved-value errors under the W1040 child rule
+            if resolved_rule is None or err.rule is not resolved_rule:
+                err.rule = self
             yield err
