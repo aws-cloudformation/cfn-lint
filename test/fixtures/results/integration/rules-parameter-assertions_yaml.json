@@ -1,0 +1,85 @@
+[
+    {
+        "Filename": "test/fixtures/templates/integration/rules-parameter-assertions.yaml",
+        "Id": "c722b434-0a7b-c037-e121-12e7b9cb10a8",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 2,
+                "LineNumber": 1
+            },
+            "Path": [
+                "Metadata"
+            ],
+            "Start": {
+                "ColumnNumber": 1,
+                "LineNumber": 1
+            }
+        },
+        "Message": "This template is missing a top-level Metadata.com.aws.cloudformation.Context block describing its architecture. Add top-level Metadata.com.aws.cloudformation.Context and set 'arch' to a concise summary of the template's high-level resource and data flow. Add 'must' as a list only for known cross-cutting constraints; otherwise omit it. Do not guess or invent constraints.",
+        "ParentId": null,
+        "Rule": {
+            "Description": "Check for a machine-readable Metadata.com.aws.cloudformation.Context block on the template and on architecture-relevant resources. Incidental framework resources, subordinate types such as AWS::Logs::LogGroup, and resource policies (AWS::IAM::Policy, BucketPolicy, TopicPolicy, QueuePolicy, Lambda::Permission) are not expected to carry one.",
+            "Id": "I4010",
+            "ShortDescription": "Template or architecture-relevant resource has no Context block",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-attribute-metadata.html#aws-attribute-metadata-context-schema"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/rules-parameter-assertions.yaml",
+        "Id": "c8e3125b-ed58-9046-eb32-8df5f54890d2",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 21,
+                "LineNumber": 42
+            },
+            "Path": [
+                "Resources",
+                "SubscriptionFilter"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 42
+            }
+        },
+        "Message": "These architecture-relevant resources are missing Metadata.com.aws.cloudformation.Context: SubscriptionFilter (AWS::Logs::SubscriptionFilter), AuditSubscriptionFilter (AWS::Logs::SubscriptionFilter), UncheckedSubscriptionFilter (AWS::Logs::SubscriptionFilter). For each listed resource, add Metadata.com.aws.cloudformation.Context. Set 'why' to the resource's purpose or design rationale. If the rationale is not documented, set trust to {src: infer, conf: low, note: \"rationale not documented\"} instead of guessing. Add 'must' as a list only for known constraints whose violation would break the system; otherwise omit it. Leave unlisted resources unchanged.",
+        "ParentId": null,
+        "Rule": {
+            "Description": "Check for a machine-readable Metadata.com.aws.cloudformation.Context block on the template and on architecture-relevant resources. Incidental framework resources, subordinate types such as AWS::Logs::LogGroup, and resource policies (AWS::IAM::Policy, BucketPolicy, TopicPolicy, QueuePolicy, Lambda::Permission) are not expected to carry one.",
+            "Id": "I4010",
+            "ShortDescription": "Template or architecture-relevant resource has no Context block",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-attribute-metadata.html#aws-attribute-metadata-context-schema"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/rules-parameter-assertions.yaml",
+        "Id": "bef968f7-0c09-cfcb-a311-0bd383d0d9bb",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 21,
+                "LineNumber": 58
+            },
+            "Path": [
+                "Resources",
+                "UncheckedSubscriptionFilter",
+                "Properties",
+                "DestinationArn",
+                "Ref"
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 58
+            }
+        },
+        "Message": "{'Ref': 'UncheckedDestinationArn'} is shorter than 1 when 'Ref' is resolved",
+        "ParentId": null,
+        "Rule": {
+            "Description": "Resolve the Ref and then validate the values against the schema",
+            "Id": "W1030",
+            "ShortDescription": "Validate the values that come from a Ref function",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html"
+        }
+    }
+]
