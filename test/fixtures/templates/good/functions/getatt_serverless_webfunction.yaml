@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+
+# Regression test for https://github.com/aws-cloudformation/cfn-lint/issues/5013
+# The SAM transform generates an ``AWS::Lambda::WebFunction`` under the same
+# logical ID, so GetAtt on an ``AWS::Serverless::WebFunction`` resolves
+# against the generated resource's attributes. The SAM schema carries no
+# readOnlyProperties for the type, so without the fallback every attribute
+# was rejected with E6101.
+Resources:
+  WebApp:
+    Type: AWS::Serverless::WebFunction
+    Properties:
+      Runtime: nodejs24.x
+      CodeUri: s3://my-bucket/code.zip
+      AuthType: ApplicationManaged
+
+Outputs:
+  FunctionArn:
+    Value: !GetAtt WebApp.FunctionArn
+  State:
+    Value: !GetAtt WebApp.State
+  StateReason:
+    Value: !GetAtt WebApp.StateReason
+  CreatedAt:
+    Value: !GetAtt WebApp.CreatedAt
+  UpdatedAt:
+    Value: !GetAtt WebApp.UpdatedAt
