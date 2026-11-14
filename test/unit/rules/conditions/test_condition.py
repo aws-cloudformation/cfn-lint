@@ -45,12 +45,14 @@ def path():
                     validator="condition",
                     schema_path=deque(["dynamicValidation", "enum"]),
                     path=deque(["Condition"]),
+                    rule=Condition(),
                 ),
                 ValidationError(
                     "[] is not of type 'string'",
                     validator="condition",
                     schema_path=deque(["type"]),
                     path=deque(["Condition"]),
+                    rule=Condition(),
                 ),
             ],
         ),
@@ -63,6 +65,7 @@ def path():
                     validator="condition",
                     schema_path=deque(["dynamicValidation", "enum"]),
                     path=deque(["Condition"]),
+                    rule=Condition(),
                 )
             ],
         ),
