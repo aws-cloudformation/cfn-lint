@@ -115,6 +115,27 @@ def rule():
             0,
         ),
         (
+            # https://github.com/aws-cloudformation/cfn-lint/issues/4890
+            "Function.AutoPublishAliasAllProperties",
+            {
+                "Function": {
+                    "AutoPublishAlias": "live",
+                    "AutoPublishAliasAllProperties": True,
+                }
+            },
+            {"Transform": ["AWS::Serverless-2016-10-31"]},
+            {"cfn_path": deque(["Globals"])},
+            0,
+        ),
+        (
+            # https://github.com/aws-cloudformation/cfn-lint/issues/4890
+            "Non-intrinsic object for Function.AutoPublishAliasAllProperties",
+            {"Function": {"AutoPublishAliasAllProperties": {"Foo": "bar"}}},
+            {"Transform": ["AWS::Serverless-2016-10-31"]},
+            {"cfn_path": deque(["Globals"])},
+            1,
+        ),
+        (
             "Unknown key in object form of Function.CodeUri",
             {"Function": {"CodeUri": {"Bucket": "my-bucket", "Kye": "code.zip"}}},
             {"Transform": ["AWS::Serverless-2016-10-31"]},
