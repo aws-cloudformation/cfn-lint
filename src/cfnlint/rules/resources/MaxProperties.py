@@ -10,7 +10,6 @@ from typing import Any
 from cfnlint.context import sam_generated_resources
 from cfnlint.rules.jsonschema.MaxProperties import MaxProperties as ParentMaxProperties
 
-
 # CloudFormation resources the SAM transform creates for each serverless
 # resource itself, on top of the generated ones from `sam_generated_resources`.
 # The SAM translator is no longer a dependency (see #4491), so E3010 counts a
