@@ -91,6 +91,39 @@ def template():
             [],
         ),
         (
+            "Valid command",
+            {
+                "config": {
+                    "commands": {"000_reload": {"command": "echo", "cwd": "/tmp"}}
+                }
+            },
+            [],
+        ),
+        (
+            "Command entry missing command",
+            {"config": {"commands": {"000_reload": {"cwd": "/tmp"}}}},
+            [
+                ValidationError(
+                    "'command' is a required property",
+                    path=deque(["config", "commands", "000_reload"]),
+                    schema_path=deque(
+                        [
+                            "patternProperties",
+                            "^.+$",
+                            "properties",
+                            "commands",
+                            "patternProperties",
+                            "^.+$",
+                            "required",
+                        ]
+                    ),
+                    validator="required",
+                    rule=CfnInit(),
+                    path_override=deque([]),
+                ),
+            ],
+        ),
+        (
             "Bad type",
             [],
             [

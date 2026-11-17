@@ -35,7 +35,6 @@ class Configuration(CfnLintJsonSchema):
         self.rule_set = {
             "propertyNames": "E6011",
             "maxLength": "E6011",
-            "pattern": "E6004",
             "required": "E6002",
             "type": "E6003",
             "maxProperties": "E6010",

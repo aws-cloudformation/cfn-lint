@@ -153,3 +153,29 @@ Resources:
       ReplicationGroupDescription: test
       SecurityGroupIds:
       - sg-test
+  SeventhReplicationGroup:
+    Type: "AWS::ElastiCache::ReplicationGroup"
+    Properties:
+      AutomaticFailoverEnabled: true
+      CacheNodeType: cache.t4g.micro
+      CacheParameterGroupName: !Ref "MyClusterParameterGroup"
+      Engine: "redis"
+      EngineVersion: "7.1"
+      ReplicationGroupDescription: two shards by NodeGroupConfiguration
+      NodeGroupConfiguration:
+        - NodeGroupId: "0001"
+          ReplicaCount: 1
+          Slots: "0-8191"
+        - NodeGroupId: "0002"
+          ReplicaCount: 1
+          Slots: "8192-16383"
+  EighthReplicationGroup:
+    Type: "AWS::ElastiCache::ReplicationGroup"
+    Properties:
+      AutomaticFailoverEnabled: true
+      CacheNodeType: cache.t4g.micro
+      CacheParameterGroupName: !Ref "MyClusterParameterGroup"
+      Engine: "redis"
+      EngineVersion: "7.1"
+      ReplicationGroupDescription: one shard sized by ReplicasPerNodeGroup
+      ReplicasPerNodeGroup: 1
