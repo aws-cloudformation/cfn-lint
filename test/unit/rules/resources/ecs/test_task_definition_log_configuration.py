@@ -41,6 +41,18 @@ def rule():
             [],
         ),
         (
+            {
+                "LogDriver": "awslogs",
+                "Options": {
+                    "awslogs-group": "foo",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-force-flush-interval-seconds": "5",
+                    "awslogs-max-buffered-events": "4096",
+                },
+            },
+            [],
+        ),
+        (
             [],  # wrong type
             [],
         ),

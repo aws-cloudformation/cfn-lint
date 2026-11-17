@@ -139,6 +139,20 @@ AVAILABILITY_ZONES = {
 
 REGIONS = list(AVAILABILITY_ZONES.keys())
 REGION_PRIMARY = "us-east-1"
+
+# (region pattern, partition, DNS suffix). Patterns and values follow botocore's
+# endpoints.json ``regionRegex`` / ``dnsSuffix`` for each partition. The first
+# pattern that matches a region wins; anything unrecognised is commercial.
+PARTITIONS: list[tuple[re.Pattern[str], str, str]] = [
+    (re.compile(r"^us-gov-\w+-\d+$"), "aws-us-gov", "amazonaws.com"),
+    (re.compile(r"^cn-\w+-\d+$"), "aws-cn", "amazonaws.com.cn"),
+    (re.compile(r"^us-iso-\w+-\d+$"), "aws-iso", "c2s.ic.gov"),
+    (re.compile(r"^us-isob-\w+-\d+$"), "aws-iso-b", "sc2s.sgov.gov"),
+    (re.compile(r"^eu-isoe-\w+-\d+$"), "aws-iso-e", "cloud.adc-e.uk"),
+    (re.compile(r"^us-isof-\w+-\d+$"), "aws-iso-f", "csp.hci.ic.gov"),
+    (re.compile(r"^eusc-de-\w+-\d+$"), "aws-eusc", "amazonaws.eu"),
+]
+
 TAG_MAP = "tag:yaml.org,2002:map"
 UNCONVERTED_SUFFIXES = ["Ref", "Condition"]
 FN_PREFIX = "Fn::"
@@ -410,6 +424,23 @@ class RegexDict(dict):
             return self[key]
         except KeyError:
             return default
+
+
+def _partition_entry(region: str) -> tuple[str, str]:
+    for pattern, partition, suffix in PARTITIONS:
+        if pattern.match(region):
+            return partition, suffix
+    return "aws", "amazonaws.com"
+
+
+def get_partition(region: str) -> str:
+    """Return the ``AWS::Partition`` value for a region (``aws`` when unknown)."""
+    return _partition_entry(region)[0]
+
+
+def get_url_suffix(region: str) -> str:
+    """Return the ``AWS::URLSuffix`` for a region (``amazonaws.com`` when unknown)."""
+    return _partition_entry(region)[1]
 
 
 def get_cache_dir() -> str:
