@@ -402,6 +402,19 @@ Remote entries follow a `Ref` or `GetAtt` to another resource and collect its pr
 
 Property specifications can be a simple string (the path) or an object with `path` and `default` keys. The `default` value is used when the property doesn't exist on the remote resource.
 
+A property specification can also name the `GetAtt` attribute that is equivalent to `Ref` for the referenced resource with `resolveReference`. When set, a gathered `Fn::GetAtt` value on that attribute is canonicalized to its equivalent `Ref` form before comparison, so `{"Ref": "Api"}` and `{"Fn::GetAtt": ["Api", "RestApiId"]}` compare equal when the attribute holds the same value `Ref` returns. `GetAtt` on any other attribute, and all other values, are left unchanged:
+
+```json
+{
+  "properties": {
+    "RestApiId": {
+      "path": "/RestApiId",
+      "resolveReference": "RestApiId"
+    }
+  }
+}
+```
+
 ##### Using $data references
 
 The `schema` section supports `$data` references to compare gathered values against each other. A `$data` reference is an absolute JSON pointer into the gathered object:
