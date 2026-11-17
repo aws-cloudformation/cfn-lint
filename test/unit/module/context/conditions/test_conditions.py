@@ -3,8 +3,14 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-import pytest
+import json
+from unittest.mock import patch
 
+import pytest
+from sympy import Not, Symbol
+from sympy.logic.inference import satisfiable
+
+from cfnlint.api import ManualArgs, lint
 from cfnlint.context import create_context_for_template
 from cfnlint.context.conditions._conditions import Conditions
 from cfnlint.context.conditions.exceptions import Unsatisfiable
@@ -340,6 +346,111 @@ def test_mutually_exclusive_equals_without_allowed_values():
         conditions.evolve({"UseAcct1": True, "UseAcct2": True})
 
 
+def test_referenced_equals_paired_once():
+    """A condition's equals includes those of every condition it references,
+    so the same Fn::Equals is reachable many times over. Pairing it on each
+    visit makes the clause count quadratic in the references rather than in
+    the distinct Fn::Equals (issue #4984)."""
+    regions = 30
+    cfn = Template(
+        None,
+        {
+            "Conditions": {
+                **{
+                    f"IsRegion{i}": {
+                        "Fn::Equals": [{"Ref": "AWS::Region"}, f"region-{i}"]
+                    }
+                    for i in range(regions)
+                },
+                **{
+                    f"InGroup{i}": {
+                        "Fn::Or": [
+                            {"Condition": f"IsRegion{(i + j) % regions}"}
+                            for j in range(10)
+                        ]
+                    }
+                    for i in range(regions)
+                },
+            },
+            "Resources": {},
+        },
+        regions=["us-east-1"],
+    )
+    conditions = create_context_for_template(cfn).conditions
+
+    assert len(conditions.cnf.data) < 2 * regions * regions
+
+    # the mutual exclusion from #4799 still holds
+    assert conditions.is_reachable("IsRegion0", True) is True
+    assert conditions.is_reachable("IsRegion1", True) is True
+    with pytest.raises(Unsatisfiable):
+        conditions.evolve({"IsRegion0": True, "IsRegion1": True})
+
+    # a group is satisfiable, and excludes a region none of its members allow
+    in_group = conditions.evolve({"InGroup0": True})
+    assert in_group.is_reachable("IsRegion0", True) is True
+    assert in_group.is_reachable("IsRegion20", True) is False
+
+
+def test_inline_equals_mutual_exclusion():
+    """An Fn::Equals reached only by traversing another condition is still
+    paired, so an enclosing Fn::Or stays mutually exclusive with a sibling
+    condition on the same Ref (issue #4984)."""
+    cfn = Template(
+        None,
+        {
+            "Conditions": {
+                "IsEast": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]},
+                "IsElsewhere": {
+                    "Fn::Or": [
+                        {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-west-2"]},
+                        {"Fn::Equals": [{"Ref": "AWS::Region"}, "eu-west-1"]},
+                    ]
+                },
+            },
+            "Resources": {},
+        },
+        regions=["us-east-1"],
+    )
+    conditions = create_context_for_template(cfn).conditions
+
+    assert conditions.is_reachable("IsEast", True) is True
+    assert conditions.is_reachable("IsElsewhere", True) is True
+
+    with pytest.raises(Unsatisfiable):
+        conditions.evolve({"IsEast": True, "IsElsewhere": True})
+
+
+def test_allowed_values_covered_through_reference():
+    """The Or that forces a fully covered AllowedValues parameter is still
+    emitted when the covering Fn::Equals are only reachable by traversing
+    another condition. Deduping on the Ref rather than on the Fn::Equals
+    would leave a value uncovered and drop the Or (issue #4984)."""
+    cfn = Template(
+        None,
+        {
+            "Parameters": {
+                "Stage": {"Type": "String", "AllowedValues": ["beta", "prod"]},
+            },
+            "Conditions": {
+                "IsBetaOrProd": {
+                    "Fn::Or": [
+                        {"Fn::Equals": [{"Ref": "Stage"}, "beta"]},
+                        {"Fn::Equals": [{"Ref": "Stage"}, "prod"]},
+                    ]
+                },
+            },
+            "Resources": {},
+        },
+        regions=["us-east-1"],
+    )
+    conditions = create_context_for_template(cfn).conditions
+
+    # Stage can only be beta or prod, so a condition covering both is always true
+    assert conditions.is_reachable("IsBetaOrProd", True) is True
+    assert conditions.is_reachable("IsBetaOrProd", False) is False
+
+
 def test_condition_failures():
     with pytest.raises(ValueError):
         Conditions.create_from_instance([], {}, {})
@@ -443,3 +554,116 @@ def test_or_of_and_pairs_does_not_explode():
 
     not_prod = conditions.evolve({"IsProd": False})
     assert not_prod.is_reachable("IsDeployed", True) is False
+
+
+def test_each_set_of_pins_is_solved_once():
+    """Every Fn::If and condition scenario asks whether its pins are
+    satisfiable, and most ask about the same pins. Solving each set once
+    keeps the solver calls from growing with the number of Fn::If
+    (issue #4991)."""
+    cfn = Template(None, template(), regions=["us-east-1"])
+    base = create_context_for_template(cfn).conditions
+
+    with patch(
+        "cfnlint.context.conditions._conditions.satisfiable", wraps=satisfiable
+    ) as solver:
+        first = base.evolve({"IsUsEast1": True})
+        base.evolve({"IsUsEast1": True})
+        base.evolve({"IsUsEast1": True}, assumed=True)
+        assert solver.call_count == 1
+
+        # The same pins reached in a different order or from another branch.
+        first.evolve({"IsProd": True})
+        base.evolve({"IsProd": True}).evolve({"IsUsEast1": True})
+        base.evolve({"IsProd": True, "IsUsEast1": True})
+        assert solver.call_count == 3
+
+        # A reachability question is a set of pins too.
+        assert first.is_reachable("IsProd", True) is True
+        assert first.evolve({"IsProd": True}).is_reachable("IsUsEast1", True)
+        assert solver.call_count == 3
+
+        # An unsatisfiable set is remembered as well.
+        for _ in range(2):
+            with pytest.raises(Unsatisfiable):
+                first.evolve({"IsUsWest2": True})
+        assert solver.call_count == 4
+
+
+def test_pins_keep_facts_and_assumptions_apart():
+    cfn = Template(None, template(), regions=["us-east-1"])
+    base = create_context_for_template(cfn).conditions
+
+    # Same statuses after the second pin, but only the fact forces IsUsEast1.
+    assumed = base.evolve({"IsUsEast1": True}, assumed=True).evolve({"IsProd": True})
+    fact = base.evolve({"IsUsEast1": True}).evolve({"IsProd": True})
+    assert assumed.status == fact.status
+    assert assumed.is_reachable("IsUsEast1", False) is True
+    assert fact.is_reachable("IsUsEast1", False) is False
+
+
+def test_cnf_is_the_template_clauses_plus_one_per_pin():
+    cfn = Template(None, template(), regions=["us-east-1"])
+    base = create_context_for_template(cfn).conditions
+    clauses = len(base.cnf.data)
+
+    pinned = base.evolve({"IsUsEast1": True}, assumed=True).evolve({"IsProd": True})
+    assert len(pinned.cnf.data) == clauses + 2
+    assert len(pinned.hard_cnf.data) == clauses + 1
+
+    # Each access is a new copy, so changing one does not reach later answers:
+    # this evolve would raise Unsatisfiable if Not(IsProd) had been kept.
+    pinned.cnf.add_prop(Not(Symbol("IsProd")))
+    assert len(pinned.cnf.data) == clauses + 2
+    pinned.evolve({"IsAi": True})
+
+
+def _alarms_reusing_conditions(alarms):
+    return {
+        "Parameters": {"Stage": {"Type": "String", "AllowedValues": ["beta", "prod"]}},
+        "Conditions": {
+            "IsProd": {"Fn::Equals": [{"Ref": "Stage"}, "prod"]},
+            "IsEast": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]},
+            "IsProdEast": {
+                "Fn::And": [{"Condition": "IsProd"}, {"Condition": "IsEast"}]
+            },
+        },
+        "Resources": {
+            f"Alarm{i}": {
+                "Type": "AWS::CloudWatch::Alarm",
+                # Fn::If inside a conditional resource evolves the resource's
+                # Conditions, so the cache must reach evolved objects too.
+                "Condition": "IsProd",
+                "Properties": {
+                    "Namespace": "Service",
+                    "MetricName": f"Metric{i}",
+                    "Statistic": "Sum",
+                    "ComparisonOperator": "GreaterThanThreshold",
+                    "EvaluationPeriods": 1,
+                    "Threshold": {"Fn::If": ["IsProdEast", 1, 10]},
+                    "Period": {"Fn::If": ["IsEast", 300, 60]},
+                },
+            }
+            for i in range(alarms)
+        },
+    }
+
+
+def test_solver_calls_do_not_grow_with_reused_conditions():
+    """Resources that reuse the same conditions in Fn::If ask the same
+    questions, so a whole lint solves the same number of pin sets however
+    many such resources there are (issue #4991)."""
+    calls = []
+    for alarms in (5, 20):
+        with patch(
+            "cfnlint.context.conditions._conditions.satisfiable", wraps=satisfiable
+        ) as solver:
+            matches = lint(
+                json.dumps(_alarms_reusing_conditions(alarms)),
+                config=ManualArgs(regions=["us-east-1"]),
+            )
+        assert matches == []
+        calls.append(solver.call_count)
+
+    assert calls[0] > 0
+    assert calls[0] == calls[1]

@@ -344,6 +344,20 @@ def cfn_with_map_name_default():
             [],
         ),
         (
+            # A top-level key built from pseudo parameters only resolves
+            # to lint-time placeholder values, so it is not a definite
+            # failure and must not be reported (issue #5010).
+            "Top level key from Fn::Sub with pseudo parameters is not reported",
+            {
+                "Fn::FindInMap": [
+                    "StageMap",
+                    {"Fn::Sub": "${AWS::AccountId}-${AWS::Region}"},
+                    "TCS",
+                ]
+            },
+            [],
+        ),
+        (
             # Hardcoded keys aren't overridable, so they are still validated.
             "Hardcoded top level key is still reported",
             {"Fn::FindInMap": ["StageMap", "typo", "TCS"]},
@@ -452,6 +466,114 @@ def test_resolve_map_name_from_parameter_default(
     # A constraining schema is required for resolution to run; the mapped
     # values are single lowercase letters, so constrain to those.
     schema = {"type": "string", "pattern": "^[a-z]$"}
+    errs = list(rule.resolve(validator, schema, instance, {}))
+
+    assert [err.message for err in errs] == expected_messages, (
+        f"{name!r} failed and got errors {[e.message for e in errs]!r}"
+    )
+
+
+@pytest.mark.parametrize(
+    "name,instance,expected_messages",
+    [
+        (
+            "Hardcoded top level key is reported without constraints",
+            {"Fn::FindInMap": ["StageMap", "typo", "TCS"]},
+            ["'typo' is not one of ['gamma', 'prod'] for mapping 'StageMap'"],
+        ),
+        (
+            "Hardcoded second level key is reported without constraints",
+            {"Fn::FindInMap": ["StageMap", "gamma", "typo"]},
+            ["'typo' is not one of ['TCS'] for mapping 'StageMap' and key 'gamma'"],
+        ),
+        (
+            "Unknown map name is reported without constraints",
+            {"Fn::FindInMap": ["NopeMap", "gamma", "TCS"]},
+            ["'NopeMap' is not one of ['StageMap']"],
+        ),
+        (
+            "Valid lookup is silent without constraints",
+            {"Fn::FindInMap": ["StageMap", "gamma", "TCS"]},
+            [],
+        ),
+        (
+            "Top level key from a parameter Default is not reported "
+            "without constraints",
+            {"Fn::FindInMap": ["StageMap", {"Ref": "Stage"}, "TCS"]},
+            [],
+        ),
+        (
+            # A top-level key built from pseudo parameters only resolves
+            # to lint-time placeholder values, so it is not a definite
+            # failure and must not be reported (issue #5010).
+            "Top level key from Fn::Sub with pseudo parameters is not "
+            "reported without constraints",
+            {
+                "Fn::FindInMap": [
+                    "StageMap",
+                    {"Fn::Sub": "${AWS::AccountId}-${AWS::Region}"},
+                    "TCS",
+                ]
+            },
+            [],
+        ),
+        (
+            "Top level key from Fn::Sub with only AWS::AccountId is not "
+            "reported without constraints",
+            {
+                "Fn::FindInMap": [
+                    "StageMap",
+                    {"Fn::Sub": "${AWS::AccountId}"},
+                    "TCS",
+                ]
+            },
+            [],
+        ),
+        (
+            "Top level key from Fn::Join with a pseudo parameter is not "
+            "reported without constraints",
+            {
+                "Fn::FindInMap": [
+                    "StageMap",
+                    {
+                        "Fn::Join": [
+                            "-",
+                            [{"Ref": "AWS::AccountId"}, "us-east-1"],
+                        ]
+                    },
+                    "TCS",
+                ]
+            },
+            [],
+        ),
+        (
+            "Bad key with a DefaultValue is not reported without constraints",
+            {
+                "Fn::FindInMap": [
+                    "StageMap",
+                    "typo",
+                    "TCS",
+                    {"DefaultValue": "fallback"},
+                ]
+            },
+            [],
+        ),
+    ],
+)
+def test_resolve_without_schema_constraints(
+    name, instance, expected_messages, rule, cfn_with_default
+):
+    """Definite lookup failures must surface even when the target
+    property's schema carries no constraining keyword (the positions
+    #4873 covers: Condition operands, Fn::Join items, Fn::Sub variables,
+    and unconstrained properties)."""
+    context = create_context_for_template(cfn_with_default)
+    validator = CfnTemplateValidator({}).extend(validators={})(
+        context=context, cfn=cfn_with_default
+    )
+
+    # No constraining keyword: BaseFn.resolve would skip resolution here.
+    schema = {"type": "string"}
     errs = list(rule.resolve(validator, schema, instance, {}))
 
     assert [err.message for err in errs] == expected_messages, (
