@@ -27,7 +27,10 @@ class TestYamlParse(BaseTestCase):
             },
             "generic_bad": {
                 "filename": "test/fixtures/templates/bad/generic.yaml",
-                "failures": 38,
+                # 39 includes W1028 on the dead Fn::If branch at line 180:
+                # IsProduction is a constant Fn::Equals of equal literals,
+                # so its false branch can never be chosen (issue #5023).
+                "failures": 39,
             },
         }
 

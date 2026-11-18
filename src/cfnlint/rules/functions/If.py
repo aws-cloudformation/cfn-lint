@@ -91,6 +91,18 @@ class If(BaseFn):
                         path=deque([key, i]),
                         rule=self.child_rules["W1028"],
                     )
+                    # The branch can never be chosen: its condition is
+                    # provably constant (for example an Fn::Equals of two
+                    # unequal literals, already reported as W8003) or it
+                    # contradicts a forced fact. CloudFormation never passes
+                    # this branch's value to the resource, so validating it
+                    # only produces findings about a value that cannot occur
+                    # (for example E1151 on the dead branch of an Fn::If).
+                    # Do not descend into it. When the branch is merely
+                    # pinned by condition-scenario enumeration it stays
+                    # reachable in its own scenario, so it is still
+                    # validated below.
+                    continue
                 element_validator = validator.evolve(
                     context=validator.context.evolve(
                         path=validator.context.path.descend(
