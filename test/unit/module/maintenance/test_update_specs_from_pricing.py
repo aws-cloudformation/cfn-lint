@@ -152,3 +152,73 @@ class TestUpdateSpecsFromPricing(BaseTestCase):
                 ]
             ),
         )
+
+    def test_sagemaker_api_instance_types_resolve_every_shape(self):
+        """Every mapped shape exists in the SageMaker service model."""
+        module = _load_update_specs_from_pricing()
+
+        results = module.get_sagemaker_api_instance_types()
+
+        self.assertEqual(
+            sorted(results),
+            [
+                "aws_sagemaker_cluster",
+                "aws_sagemaker_hosting",
+                "aws_sagemaker_processing",
+                "aws_sagemaker_transform",
+            ],
+        )
+        for resource, instance_types in results.items():
+            self.assertIn("ml.m5.large", instance_types, resource)
+
+    def test_main_adds_api_instance_types_to_every_sagemaker_region(self):
+        """The Price List omits types the SageMaker API accepts."""
+        module = _load_update_specs_from_pricing()
+        sagemaker_pricing = {
+            "us-east-1": {
+                "Cluster": set(["ml.priced.cluster"]),
+                "Host": set(["ml.priced.host"]),
+                "Processing": set(["ml.priced.processing"]),
+                "Tsform": set(["ml.priced.transform"]),
+            },
+            "eu-west-1": {
+                "Cluster": set(["ml.priced.cluster"]),
+                "Host": set(["ml.priced.host"]),
+                "Processing": set(["ml.priced.processing"]),
+                "Tsform": set(["ml.priced.transform"]),
+            },
+        }
+        api_types = {
+            "aws_sagemaker_cluster": set(["ml.api.cluster"]),
+            "aws_sagemaker_hosting": set(["ml.api.host"]),
+            "aws_sagemaker_processing": set(["ml.api.processing"]),
+            "aws_sagemaker_transform": set(["ml.api.transform"]),
+        }
+
+        with (
+            patch.object(module, "configure_logging"),
+            patch.object(module, "get_paginator", return_value=[]),
+            patch.object(module, "get_rds_pricing"),
+            patch.object(
+                module, "get_sagemaker_pricing", return_value=sagemaker_pricing
+            ),
+            patch.object(
+                module, "get_sagemaker_api_instance_types", return_value=api_types
+            ),
+            patch.object(module, "write_output") as write_output,
+        ):
+            module.main()
+
+        outputs = {call.args[0]: call.args[2] for call in write_output.call_args_list}
+        for resource, suffix in [
+            ("aws_sagemaker_cluster", "cluster"),
+            ("aws_sagemaker_hosting", "host"),
+            ("aws_sagemaker_processing", "processing"),
+            ("aws_sagemaker_transform", "transform"),
+        ]:
+            expected = set([f"ml.priced.{suffix}", f"ml.api.{suffix}"])
+            self.assertEqual(
+                outputs[resource],
+                {"us-east-1": expected, "eu-west-1": expected},
+                resource,
+            )
