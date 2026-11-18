@@ -29,6 +29,7 @@ class FunctionCapacityProviderTimeout(CfnLintJsonSchema):
         super().__init__(
             keywords=[
                 "Resources/AWS::Lambda::Function/Properties",
+                "Resources/AWS::Serverless::Function/Properties",
             ],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_lambda_function,
