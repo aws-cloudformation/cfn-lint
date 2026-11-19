@@ -34,6 +34,26 @@ def rule():
             [],
         ),
         (
+            "Misspelled List base type is covered by E2002",
+            "List<Strng>",
+            [],
+        ),
+        (
+            "Unknown List base type is covered by E2002",
+            "List<Bogus>",
+            [],
+        ),
+        (
+            "Misspelled SSM base type is covered by E2002",
+            "AWS::SSM::Parameter::Value<Strng>",
+            [],
+        ),
+        (
+            "Misspelled SSM List base type is covered by E2002",
+            "AWS::SSM::Parameter::Value<List<Strng>>",
+            [],
+        ),
+        (
             "Invalid type (not string)",
             [],
             [],
