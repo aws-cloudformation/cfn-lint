@@ -121,6 +121,57 @@ def rule():
             {"cfn_path": deque(["Globals"])},
             1,
         ),
+        (
+            # https://github.com/aws-cloudformation/cfn-lint/issues/5029
+            "Function.FileSystemConfigs with intrinsic Arn",
+            {
+                "Function": {
+                    "FileSystemConfigs": [
+                        {
+                            "Arn": {"Ref": "AccessPointArn"},
+                            "LocalMountPath": "/mnt/efs",
+                        }
+                    ]
+                }
+            },
+            {"Transform": ["AWS::Serverless-2016-10-31"]},
+            {"cfn_path": deque(["Globals"])},
+            0,
+        ),
+        (
+            # https://github.com/aws-cloudformation/cfn-lint/issues/5029
+            "Unknown key in Function.FileSystemConfigs entry",
+            {
+                "Function": {
+                    "FileSystemConfigs": [
+                        {
+                            "Arn": "arn:aws:elasticfilesystem:us-east-1:123456789012:access-point/fsap-0123456789abcdef0",
+                            "LocalMountPath": "/mnt/efs",
+                            "Foo": "bar",
+                        }
+                    ]
+                }
+            },
+            {"Transform": ["AWS::Serverless-2016-10-31"]},
+            {"cfn_path": deque(["Globals"])},
+            1,
+        ),
+        (
+            # https://github.com/aws-cloudformation/cfn-lint/issues/5029
+            "Function.FileSystemConfigs entry missing LocalMountPath",
+            {
+                "Function": {
+                    "FileSystemConfigs": [
+                        {
+                            "Arn": "arn:aws:elasticfilesystem:us-east-1:123456789012:access-point/fsap-0123456789abcdef0",
+                        }
+                    ]
+                }
+            },
+            {"Transform": ["AWS::Serverless-2016-10-31"]},
+            {"cfn_path": deque(["Globals"])},
+            1,
+        ),
     ],
     indirect=["template", "path"],
 )
