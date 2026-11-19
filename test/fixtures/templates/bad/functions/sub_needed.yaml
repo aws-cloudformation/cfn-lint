@@ -100,3 +100,31 @@ Resources:
           - "    }"
           - "}"
       RoleArn: arn:aws:iam::123456789012:role/abc
+
+  ApiMethodWithAwsVariables:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/test/invocations
+      ResourceId: test
+      RestApiId: test
+  RestApiBodyLocationWithAwsVariables:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: e1029-body-location
+      BodyS3Location:
+        Bucket: my-bucket
+        Key: api-${AWS::Region}.yaml
+  RestApiWithOtherAwsVariable:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: e1029-other-variable
+      Body:
+        swagger: "2.0"
+        info:
+          title: e1029-other-variable
+          description: Stack ${AWS::StackName} is not resolved by API Gateway

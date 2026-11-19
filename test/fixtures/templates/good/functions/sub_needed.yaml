@@ -7,6 +7,8 @@ Parameters:
   AMIId:
     Type: 'String'
     Description: 'The AMI ID for the image to use.'
+Conditions:
+  IsUsEast1: !Equals [!Ref "AWS::Region", us-east-1]
 Resources:
   myPolicy:
     Type: AWS::IAM::Policy
@@ -154,3 +156,67 @@ Resources:
       DefinitionSubstitutions:
         definition_substitution_1: test
       RoleArn: arn:aws:iam::123456789012:role/abc
+  RestApiWithAwsVariables:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: e1029-import-variables
+      Body:
+        swagger: "2.0"
+        info:
+          title: e1029-import-variables
+        x-amazon-apigateway-policy:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal: "*"
+              Action: execute-api:Invoke
+              Resource: arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/GET/topics
+        paths:
+          /topics:
+            get:
+              responses:
+                "200":
+                  description: ok
+              x-amazon-apigateway-integration:
+                type: aws
+                httpMethod: POST
+                uri: arn:${AWS::Partition}:apigateway:${AWS::Region}:sns:action/ListTopics
+  ConditionalRestApiWithAwsVariables:
+    Type: AWS::ApiGateway::RestApi
+    Properties: !If
+      - IsUsEast1
+      - Name: e1029-conditional
+        Body:
+          swagger: "2.0"
+          info:
+            title: e1029-conditional
+          paths:
+            /topics:
+              get:
+                responses:
+                  "200":
+                    description: ok
+                x-amazon-apigateway-integration:
+                  type: aws
+                  httpMethod: POST
+                  uri: arn:${AWS::Partition}:apigateway:${AWS::Region}:sns:action/ListTopics
+      - !Ref AWS::NoValue
+  HttpApiWithAwsVariables:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Body:
+        openapi: "3.0.1"
+        info:
+          title: e1029-import-variables-httpapi
+          version: "1"
+        paths:
+          /hello:
+            get:
+              responses:
+                "200":
+                  description: ok
+              x-amazon-apigateway-integration:
+                type: aws_proxy
+                httpMethod: POST
+                payloadFormatVersion: "2.0"
+                uri: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:e1029-import-variables-fn/invocations
