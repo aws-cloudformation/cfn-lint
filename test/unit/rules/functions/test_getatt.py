@@ -31,6 +31,21 @@ _template = {
     },
 }
 
+_sam_webfunction_template = {
+    "Transform": "AWS::Serverless-2016-10-31",
+    "Resources": {
+        "WebApp": {
+            "Type": "AWS::Serverless::WebFunction",
+            "Properties": {
+                "Runtime": "nodejs24.x",
+                "CodeUri": "s3://my-bucket/code.zip",
+                "AuthType": "ApplicationManaged",
+            },
+        },
+    },
+}
+
+
 _template_with_transform = _template.copy()
 _template_with_transform["Transform"] = "AWS::LanguageExtensions"
 
@@ -75,6 +90,41 @@ class _Fail(CfnLintKeyword):
             _template,
             {},
             [],
+        ),
+        (
+            "Valid GetAtt on a SAM WebFunction resolves against the "
+            "generated Lambda WebFunction",
+            {"Fn::GetAtt": ["WebApp", "FunctionArn"]},
+            {"type": "string"},
+            _sam_webfunction_template,
+            {},
+            [],
+        ),
+        (
+            "Valid GetAtt on a SAM WebFunction for State",
+            {"Fn::GetAtt": ["WebApp", "State"]},
+            {"type": "string"},
+            _sam_webfunction_template,
+            {},
+            [],
+        ),
+        (
+            "Invalid GetAtt on a SAM WebFunction rejects attributes "
+            "outside the generated resource",
+            {"Fn::GetAtt": ["WebApp", "Arn"]},
+            {"type": "string"},
+            _sam_webfunction_template,
+            {},
+            [
+                ValidationError(
+                    "'Arn' is not one of ['FunctionArn', 'State', "
+                    "'StateReason', 'CreatedAt', 'UpdatedAt'] "
+                    "in ['us-east-1']",
+                    path=deque(["Fn::GetAtt", 1]),
+                    schema_path=deque([]),
+                    validator="fn_getatt",
+                ),
+            ],
         ),
         (
             "Invalid GetAtt with bad attribute",

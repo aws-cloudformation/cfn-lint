@@ -29,7 +29,11 @@ from cfnlint.helpers import (
     get_partition,
     get_url_suffix,
 )
-from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, AttributeDict
+from cfnlint.schema import (
+    PROVIDER_SCHEMA_MANAGER,
+    AttributeDict,
+    ResourceNotFoundError,
+)
 
 if TYPE_CHECKING:
     from cfnlint.template import Template
@@ -537,7 +541,22 @@ class Resource(_Ref):
     def get_atts(self, region: str = REGION_PRIMARY) -> AttributeDict:
         if self._nested_stack_get_atts is not None:
             return self._nested_stack_get_atts
-        return PROVIDER_SCHEMA_MANAGER.get_type_getatts(self.type, region)
+        atts = PROVIDER_SCHEMA_MANAGER.get_type_getatts(self.type, region)
+        if not atts and self.type in _SAM_GENERATED_RESOURCE_TYPES:
+            # The SAM transform generates a CloudFormation resource under
+            # the same logical ID, so GetAtt on the SAM resource resolves
+            # against the generated resource. The SAM schema carries no
+            # readOnlyProperties for these types, so without this fallback
+            # every attribute is rejected (for example, FunctionArn on
+            # AWS::Serverless::WebFunction). If the SAM schema ever gains
+            # its own readOnlyProperties the fallback no longer applies.
+            try:
+                return PROVIDER_SCHEMA_MANAGER.get_type_getatts(
+                    _SAM_GENERATED_RESOURCE_TYPES[self.type], region
+                )
+            except ResourceNotFoundError:
+                pass
+        return atts
 
     def ref(self, region: str = REGION_PRIMARY) -> dict[str, Any]:
         return PROVIDER_SCHEMA_MANAGER.get_type_ref(self.type, region)
@@ -587,6 +606,16 @@ def _inject(
             resources[logical_id] = Resource({"Type": resource_type})
         except ValueError:
             pass
+
+
+# SAM resource types whose transform generates a CloudFormation resource
+# under the SAME logical ID. A GetAtt on the SAM resource resolves against
+# the generated resource, because the SAM transform keeps the logical ID
+# on the generated resource (for example, AWS::Serverless::WebFunction
+# generates AWS::Lambda::WebFunction).
+_SAM_GENERATED_RESOURCE_TYPES = {
+    "AWS::Serverless::WebFunction": "AWS::Lambda::WebFunction",
+}
 
 
 def _inject_sam_implicit_resources(
