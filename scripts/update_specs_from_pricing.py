@@ -347,25 +347,6 @@ def get_rds_pricing():
         f.write("\n")
 
 
-_SAGEMAKER_INSTANCE_TYPE_SHAPES = {
-    "aws_sagemaker_cluster": "ClusterInstanceType",
-    "aws_sagemaker_hosting": "ProductionVariantInstanceType",
-    "aws_sagemaker_processing": "ProcessingInstanceType",
-    "aws_sagemaker_transform": "TransformInstanceType",
-}
-
-
-def get_sagemaker_api_instance_types():
-    """Valid instance types per property from the SageMaker service model."""
-    service_model = session.client(
-        "sagemaker", region_name="us-east-1", config=config
-    ).meta.service_model
-    return {
-        resource: set(service_model.shape_for(shape).enum)
-        for resource, shape in _SAGEMAKER_INSTANCE_TYPE_SHAPES.items()
-    }
-
-
 def get_sagemaker_pricing():
     results = {}
     for page in get_paginator("AmazonSageMaker"):
@@ -537,17 +518,6 @@ def main():
         for region, prefixes in _sagemaker_results.items()
         if prefixes.get("Cluster")
     }
-    # the Price List only covers priced products, so it omits types the
-    # API accepts (#4884)
-    _sagemaker_enums = {
-        "aws_sagemaker_cluster": _sagemaker_cluster,
-        "aws_sagemaker_hosting": _sagemaker_hosting,
-        "aws_sagemaker_processing": _sagemaker_processing,
-        "aws_sagemaker_transform": _sagemaker_transform,
-    }
-    for resource, api_types in get_sagemaker_api_instance_types().items():
-        for instance_types in _sagemaker_enums[resource].values():
-            instance_types.update(api_types)
     write_output(
         "aws_sagemaker_cluster",
         "instancetype_enum",

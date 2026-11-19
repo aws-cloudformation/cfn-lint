@@ -21,6 +21,7 @@ rds_client = session.client("rds", region_name="us-east-1", config=config)
 elasticache_client = session.client(
     "elasticache", region_name="us-east-1", config=config
 )
+sagemaker_client = session.client("sagemaker", region_name="us-east-1", config=config)
 
 _ENGINE_SUPPORTED = [
     "aurora-mysql",
@@ -64,6 +65,13 @@ def configure_logging():
     for handler in LOGGER.handlers:
         LOGGER.removeHandler(handler)
     LOGGER.addHandler(ch)
+
+
+def read_output(resource, filename):
+    filename = f"src/cfnlint/data/schemas/extensions/{resource}/{filename}.json"
+
+    with open(filename, encoding="utf-8") as f:
+        return json.load(f)
 
 
 def write_output(resource, filename, obj):
@@ -483,6 +491,35 @@ def elasticache_api():
     write_elasticache_engines(results)
 
 
+_SAGEMAKER_INSTANCE_TYPE_SHAPES = {
+    "aws_sagemaker_cluster": "ClusterInstanceType",
+    "aws_sagemaker_hosting": "ProductionVariantInstanceType",
+    "aws_sagemaker_processing": "ProcessingInstanceType",
+    "aws_sagemaker_transform": "TransformInstanceType",
+}
+
+
+def sagemaker_api():
+    """Add types the API accepts to the pricing derived enums (#4884).
+
+    Runs after update_specs_from_pricing, which only sees priced products.
+    """
+    service_model = sagemaker_client.meta.service_model
+
+    for resource, shape in _SAGEMAKER_INSTANCE_TYPE_SHAPES.items():
+        instance_types = set(service_model.shape_for(shape).enum)
+        schema = read_output(resource, "instancetype_enum")
+        write_output(
+            resource,
+            "instancetype_enum",
+            {
+                region: {"enum": sorted(set(values["enum"]) | instance_types)}
+                for region, values in schema.items()
+                if region != "description"
+            },
+        )
+
+
 def main():
     """main function"""
     configure_logging()
@@ -490,6 +527,8 @@ def main():
     rds_api()
     LOGGER.info("Starting Elasticache data collection")
     elasticache_api()
+    LOGGER.info("Starting SageMaker data collection")
+    sagemaker_api()
 
 
 if __name__ == "__main__":
