@@ -1,0 +1,83 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  QueueA:
+    Type: AWS::SQS::Queue
+  QueueB:
+    Type: AWS::SQS::Queue
+  QueueC:
+    Type: AWS::SQS::Queue
+  # SQS rejects this: "Each statement in the policy should have exactly one resource."
+  Policy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref QueueA
+        - !Ref QueueB
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action: sqs:SendMessage
+            Resource:
+              - !GetAtt QueueA.Arn
+              - !GetAtt QueueB.Arn
+  PolicyThree:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref QueueA
+        - !Ref QueueB
+        - !Ref QueueC
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action: sqs:SendMessage
+            Resource: !GetAtt QueueA.Arn
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action: sqs:ReceiveMessage
+            Resource:
+              - !GetAtt QueueA.Arn
+              - !GetAtt QueueB.Arn
+              - !GetAtt QueueC.Arn
+  PolicyNotResource:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref QueueC
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Deny
+            Principal: "*"
+            Action: sqs:SendMessage
+            NotResource:
+              - !GetAtt QueueA.Arn
+              - !GetAtt QueueB.Arn
+  PolicyString:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref QueueA
+        - !Ref QueueB
+      PolicyDocument: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {"AWS": "arn:aws:iam::123456789012:root"},
+              "Action": "sqs:SendMessage",
+              "Resource": [
+                "arn:aws:sqs:us-east-1:123456789012:queue-a",
+                "arn:aws:sqs:us-east-1:123456789012:queue-b"
+              ]
+            }
+          ]
+        }
