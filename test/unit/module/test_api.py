@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+import json
 import os
 import tempfile
 from pathlib import Path
@@ -20,6 +21,43 @@ from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, reset
 
 
 class TestLint(TestCase):
+    def test_sub_escaped_literal_length(self):
+        for prefix_length, expected in ((1011, []), (1012, ["W1031"])):
+            for sub_value in (
+                "x" * prefix_length + "${AWS::Region}${!X}",
+                ["x" * prefix_length + "${AWS::Region}${!X}", {}],
+            ):
+                with self.subTest(prefix_length=prefix_length, sub_value=sub_value):
+                    template = {
+                        "Resources": {
+                            "Parameter": {
+                                "Type": "AWS::SSM::Parameter",
+                                "Properties": {
+                                    "Type": "String",
+                                    "Value": "value",
+                                    "Description": {"Fn::Sub": sub_value},
+                                },
+                            }
+                        }
+                    }
+                    matches = lint(
+                        json.dumps(template),
+                        config=ManualArgs(regions=["us-east-1"]),
+                    )
+
+                    self.assertEqual(expected, [match.rule.id for match in matches])
+                    if matches:
+                        self.assertEqual(
+                            list(matches[0].path),
+                            [
+                                "Resources",
+                                "Parameter",
+                                "Properties",
+                                "Description",
+                                "Fn::Sub",
+                            ],
+                        )
+
     def helper_lint_string_from_file(
         self, filename=None, config: ManualArgs | None = None
     ):

@@ -428,10 +428,13 @@ def _sub_parameter_expansion(
 
 
 def _sub_string(validator: Validator, string: str) -> ResolutionResult:
-    sub_regex = re.compile(r"(\${([^!].*?)})")
+    sub_regex = re.compile(r"(\${([^!].*?|!.*?)})")
 
     def _replace(matchobj):
         nonlocal validator
+        if matchobj.group(2).startswith("!"):
+            return "${" + matchobj.group(2)[1:] + "}"
+
         for value, c in validator.context.ref_value(matchobj.group(2).strip()):
             if not isinstance(value, (str, int, float, bool)):
                 raise ValueError(f"Parameter {matchobj.group(2)!r} has wrong type")

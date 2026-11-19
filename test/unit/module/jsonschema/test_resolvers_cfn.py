@@ -57,6 +57,46 @@ def test_resolvers_ref(name, instance, response):
 
 
 @pytest.mark.parametrize(
+    "instance,expected",
+    [
+        ({"Fn::Sub": "${!Literal}"}, "${Literal}"),
+        ({"Fn::Sub": ["${!Literal}", {}]}, "${Literal}"),
+        (
+            {"Fn::Sub": ["${!Value}-${Value}", {"Value": "text"}]},
+            "${Value}-text",
+        ),
+        ({"Fn::Sub": ["${!Value}", {"Value": "text"}]}, "${Value}"),
+        (
+            {"Fn::Sub": ["${Value}", {"Value": "${!Literal}"}]},
+            "${!Literal}",
+        ),
+        (
+            {"Fn::Sub": ["${!Literal}-${Value}", {"Value": "${!Literal}"}]},
+            "${Literal}-${!Literal}",
+        ),
+        ({"Fn::Sub": r"\${!Literal}"}, r"\${Literal}"),
+        ({"Fn::Sub": "${!One}-${!Two}"}, "${One}-${Two}"),
+        ({"Fn::Join": ["", ["${!Literal}"]]}, "${!Literal}"),
+        (
+            {"Fn::Sub": ["${Value}", {"Value": {"Ref": "Input"}}]},
+            "${!Literal}",
+        ),
+    ],
+)
+def test_sub_escaped_literals(instance, expected):
+    context = Context(
+        parameters={"Input": Parameter({"Type": "String", "Default": "${!Literal}"})}
+    )
+    validator = CfnTemplateValidator().evolve(context=context)
+
+    resolutions = list(validator.resolve_value(instance))
+
+    assert len(resolutions) == 1
+    assert resolutions[0][0] == expected
+    assert resolutions[0][2] is None
+
+
+@pytest.mark.parametrize(
     "name,instance,response",
     [
         (
