@@ -29,3 +29,23 @@ def test_names(name, instance, num_of_errors):
     assert (
         len(list(rule.equals_is_useful(validator, {}, instance, {}))) == num_of_errors
     ), f"Expected {num_of_errors} errors for {name} and {instance}"
+
+
+@pytest.mark.parametrize(
+    "instance,expected",
+    [
+        ([True, "true"], True),
+        (["true", True], True),
+        ([False, "false"], True),
+        (["false", False], True),
+        (["True", True], False),
+        ([True, "false"], False),
+    ],
+)
+def test_boolean_and_string_result(instance, expected):
+    rule = EqualsIsUseful()
+    validator = CfnTemplateValidator({})
+    errors = list(rule.equals_is_useful(validator, {}, instance, {}))
+    assert [error.message for error in errors] == [
+        f"{instance!r} will always return {expected!r}"
+    ]

@@ -47,7 +47,7 @@ class EqualsIsUseful(CloudFormationLintRule):
             if validator.is_type(first, "boolean"):
                 first = "true" if first else "false"
             if validator.is_type(second, "boolean"):
-                first = "true" if first else "false"
+                second = "true" if second else "false"
             if str(first) == str(second):
                 yield ValidationError(
                     f"{instance!r} will always return {True!r}",
