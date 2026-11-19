@@ -131,6 +131,42 @@ def rule():
                 )
             ],
         ),
+        (
+            "Exactly 200 mappings is okay",
+            {f"Map{i:03d}": {"Key": {"Value": "Foo"}} for i in range(200)},
+            [],
+        ),
+        (
+            "More than 200 mappings",
+            {f"Map{i:03d}": {"Key": {"Value": "Foo"}} for i in range(201)},
+            [
+                ValidationError(
+                    "expected maximum property count: 200, found: 201",
+                    validator="maxProperties",
+                    schema_path=deque(["maxProperties"]),
+                    rule=None,  # none because we don't load child rule
+                )
+            ],
+        ),
+        (
+            "More than 200 keys in one mapping",
+            {"Big": {f"k{i:03d}": {"Value": "Foo"} for i in range(201)}},
+            [
+                ValidationError(
+                    "expected maximum property count: 200, found: 201",
+                    validator="maxProperties",
+                    schema_path=deque(
+                        [
+                            "patternProperties",
+                            "^[a-zA-Z0-9]+$",
+                            "maxProperties",
+                        ]
+                    ),
+                    rule=None,  # none because we don't load child rule
+                    path=deque(["Big"]),
+                )
+            ],
+        ),
     ],
 )
 def test_validate(name, instance, expected, rule, validator):
