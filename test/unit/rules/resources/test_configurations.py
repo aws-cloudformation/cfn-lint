@@ -158,6 +158,25 @@ class TestResourceConfiguration(BaseRuleTestCase):
         self.assertEqual(len(errors[0].path), 1)
         self.assertIn("my-func", errors[0].message)
 
+    def test_non_dict_error_instance_passes_through(self):
+        """Non-dict error instance does not crash the serverless check.
+
+        Covers the isinstance(err.instance, dict) guard: a forbidden
+        property with a scalar value (TargetType lambda with Port)
+        yields an additionalProperties error whose instance is the
+        scalar value, not a dict. Without the guard this raised
+        AttributeError, surfacing as E1101 instead of the E3681
+        finding. The error must pass through untouched.
+        """
+        err = ValidationError(
+            "Additional properties are not allowed ('Port' was unexpected)",
+            validator="additionalProperties",
+            path=deque(["TargetGroup", "Properties", "Port"]),
+            instance=443,
+        )
+
+        self.assertFalse(self.rule._is_serverless_additional_property(err))
+
     def test_non_additional_properties_error_passes_through(self):
         """Non-additionalProperties error on Serverless resource passes through.
 
