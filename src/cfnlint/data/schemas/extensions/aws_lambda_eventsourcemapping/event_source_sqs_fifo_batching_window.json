@@ -1,0 +1,79 @@
+{
+ "allOf": [
+  {
+   "cfnGather": {
+    "gather": {
+     "local": {
+      "properties": {
+       "MaximumBatchingWindowInSeconds": {
+        "path": "/MaximumBatchingWindowInSeconds"
+       }
+      }
+     },
+     "queue": {
+      "filter": {
+       "type": "AWS::SQS::Queue"
+      },
+      "properties": {
+       "FifoQueue": {
+        "default": false,
+        "path": "/FifoQueue"
+       }
+      },
+      "reference": "/EventSourceArn"
+     }
+    },
+    "schema": {
+     "if": {
+      "properties": {
+       "queue": {
+        "properties": {
+         "FifoQueue": {
+          "const": true
+         }
+        },
+        "required": [
+         "FifoQueue"
+        ]
+       }
+      },
+      "required": [
+       "queue"
+      ]
+     },
+     "then": {
+      "properties": {
+       "local": {
+        "properties": {
+         "MaximumBatchingWindowInSeconds": {
+          "maximum": 0
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "EventSourceArn": {
+      "pattern": "^arn:aws[a-zA-Z-]*:sqs:[^:]*:[^:]*:.+\\.fifo$",
+      "type": "string"
+     }
+    },
+    "required": [
+     "EventSourceArn"
+    ]
+   },
+   "then": {
+    "properties": {
+     "MaximumBatchingWindowInSeconds": {
+      "maximum": 0
+     }
+    }
+   }
+  }
+ ]
+}
