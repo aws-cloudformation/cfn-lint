@@ -216,6 +216,76 @@ class TestIdentityPolicies(TestCase):
             list(errs[0].path), ["Statement", 0, "Condition", "iam:PassedToService"]
         )
 
+    def test_binary_equals_condition_operators(self):
+        """BinaryEquals accepts IfExists and the set-operator prefixes"""
+        validator = CfnTemplateValidator()
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": "kms:Decrypt",
+                    "Resource": "*",
+                    "Condition": {
+                        "BinaryEqualsIfExists": {
+                            "kms:EncryptionContext:key": "QmluYXJ5VmFsdWVJbkJhc2U2NA=="
+                        },
+                        "ForAnyValue:BinaryEquals": {
+                            "kms:EncryptionContext:key": "QmluYXJ5VmFsdWVJbkJhc2U2NA=="
+                        },
+                        "ForAllValues:BinaryEquals": {
+                            "kms:EncryptionContext:key": "QmluYXJ5VmFsdWVJbkJhc2U2NA=="
+                        },
+                        "ForAnyValue:BinaryEqualsIfExists": {
+                            "kms:EncryptionContext:key": "QmluYXJ5VmFsdWVJbkJhc2U2NA=="
+                        },
+                        "ForAllValues:BinaryEqualsIfExists": {
+                            "kms:EncryptionContext:key": "QmluYXJ5VmFsdWVJbkJhc2U2NA=="
+                        },
+                    },
+                }
+            ],
+        }
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertListEqual(errs, [])
+
+    def test_binary_equals_unknown_operator(self):
+        """A BinaryEquals name IAM does not define is still rejected"""
+        validator = CfnTemplateValidator()
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": "kms:Decrypt",
+                    "Resource": "*",
+                    "Condition": {
+                        "BinaryNotEquals": {
+                            "kms:EncryptionContext:key": "QmluYXJ5VmFsdWVJbkJhc2U2NA=="
+                        }
+                    },
+                }
+            ],
+        }
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertEqual(len(errs), 1, errs)
+        self.assertTrue(errs[0].message.startswith("'BinaryNotEquals' does not match"))
+        self.assertListEqual(
+            list(errs[0].path), ["Statement", 0, "Condition", "BinaryNotEquals"]
+        )
+
     def test_duplicate_sid(self):
         validator = CfnTemplateValidator()
 
