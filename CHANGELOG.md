@@ -1,3 +1,12 @@
+### v1.61.0
+## What's Changed
+* chore: remove Python 3.10 support (EOL October 2026) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/5006
+* Fix [E3696](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3696): also flag ApplicationLogLevel when LogFormat is Text by @badmintoncryer in https://github.com/aws-cloudformation/cfn-lint/pull/5027
+* Update CloudFormation schemas to 2026-11-19 by @github-actions[bot] in https://github.com/aws-cloudformation/cfn-lint/pull/5012
+* Fix [E3717](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3717): raise the Timeout maximum to 1800 for functions without CapacityProviderConfig by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/5030
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.60.1...v1.61.0
+
 ### v1.60.1
 ## What's Changed
 * Fix [E1011](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1011): skip FindInMap key errors when the key comes from a pseudo parameter by @Varshith-Kali in https://github.com/aws-cloudformation/cfn-lint/pull/5011
