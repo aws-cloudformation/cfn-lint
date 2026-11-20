@@ -7,8 +7,9 @@ from collections import deque
 
 import pytest
 
-from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.conditions.Not import Not
+from cfnlint.rules.conditions.Or import Or
 
 
 @pytest.fixture
@@ -47,7 +48,8 @@ def template():
             {},
             [
                 ValidationError(
-                    "True should not be valid under {'type': ['boolean']}",
+                    "True is not a valid Fn::Not operand; operands must "
+                    "be a condition or a condition function",
                     validator="fn_not",
                     schema_path=deque(
                         [
@@ -70,7 +72,8 @@ def template():
             {},
             [
                 ValidationError(
-                    "'false' should not be valid under {'type': ['boolean']}",
+                    "'false' is not a valid Fn::Not operand; operands must "
+                    "be a condition or a condition function",
                     validator="fn_not",
                     schema_path=deque(
                         [
@@ -124,6 +127,29 @@ def template():
             ],
         ),
         (
+            "Fn::GetAtt operand",
+            {"Fn::Not": [{"Fn::GetAtt": ["MyBucket", "Arn"]}]},
+            {},
+            [
+                ValidationError(
+                    "{'Fn::GetAtt': ['MyBucket', 'Arn']} is not of type 'boolean'",
+                    validator="fn_not",
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
+                    path=deque(["Fn::Not", 0]),
+                )
+            ],
+        ),
+        (
             "Invalid functions in Conditions",
             {"Fn::Not": [{"Fn::Contains": []}]},
             {"path": deque(["Conditions", "Condition1"])},
@@ -158,3 +184,45 @@ def template():
 def test_condition(name, instance, errors, rule, validator):
     errs = list(rule.validate(validator, {}, instance, {}))
     assert errs == errors, name
+
+
+def test_literal_nested_in_or(rule, cfn, context):
+    # The nested Fn::Or is only validated when its rule is registered
+    # on the validator, as it is in a full template run.
+    validator = CfnTemplateValidator({}).extend(validators={"fn_or": Or().fn_or})(
+        context=context, cfn=cfn, schema={}
+    )
+    errs = list(
+        rule.validate(
+            validator,
+            {},
+            {"Fn::Not": [{"Fn::Or": [{"Condition": "IsUsEast1"}, True]}]},
+            {},
+        )
+    )
+    assert errs == [
+        ValidationError(
+            "True is not a valid Fn::Not operand; operands must "
+            "be a condition or a condition function",
+            validator="fn_not",
+            schema_path=deque(
+                [
+                    "cfnContext",
+                    "schema",
+                    "items",
+                    "else",
+                    "cfnContext",
+                    "schema",
+                    "fn_or",
+                    "cfnContext",
+                    "schema",
+                    "items",
+                    "else",
+                    "cfnContext",
+                    "schema",
+                    "not",
+                ]
+            ),
+            path=deque(["Fn::Not", 0, "Fn::Or", 1]),
+        )
+    ]

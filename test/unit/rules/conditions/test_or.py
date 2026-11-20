@@ -47,7 +47,8 @@ def template():
             {},
             [
                 ValidationError(
-                    "True should not be valid under {'type': ['boolean']}",
+                    "True is not a valid Fn::Or operand; operands must "
+                    "be a condition or a condition function",
                     validator="fn_or",
                     schema_path=deque(
                         [
@@ -63,7 +64,8 @@ def template():
                     path=deque(["Fn::Or", 0]),
                 ),
                 ValidationError(
-                    "False should not be valid under {'type': ['boolean']}",
+                    "False is not a valid Fn::Or operand; operands must "
+                    "be a condition or a condition function",
                     validator="fn_or",
                     schema_path=deque(
                         [
@@ -86,7 +88,8 @@ def template():
             {},
             [
                 ValidationError(
-                    "'true' should not be valid under {'type': ['boolean']}",
+                    "'true' is not a valid Fn::Or operand; operands must "
+                    "be a condition or a condition function",
                     validator="fn_or",
                     schema_path=deque(
                         [
@@ -102,7 +105,8 @@ def template():
                     path=deque(["Fn::Or", 0]),
                 ),
                 ValidationError(
-                    "'False' should not be valid under {'type': ['boolean']}",
+                    "'False' is not a valid Fn::Or operand; operands must "
+                    "be a condition or a condition function",
                     validator="fn_or",
                     schema_path=deque(
                         [
@@ -154,7 +158,8 @@ def template():
                     path=deque(["Fn::Or", 0]),
                 ),
                 ValidationError(
-                    "True should not be valid under {'type': ['boolean']}",
+                    "True is not a valid Fn::Or operand; operands must "
+                    "be a condition or a condition function",
                     validator="fn_or",
                     schema_path=deque(
                         [
@@ -169,6 +174,34 @@ def template():
                     ),
                     path=deque(["Fn::Or", 1]),
                 ),
+            ],
+        ),
+        (
+            "Fn::If operand",
+            {
+                "Fn::Or": [
+                    {"Condition": "IsUsEast1"},
+                    {"Fn::If": ["IsUsEast1", True, False]},
+                ]
+            },
+            {},
+            [
+                ValidationError(
+                    "{'Fn::If': ['IsUsEast1', True, False]} is not of type 'boolean'",
+                    validator="fn_or",
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
+                    path=deque(["Fn::Or", 1]),
+                )
             ],
         ),
         (
