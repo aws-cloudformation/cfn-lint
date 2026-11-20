@@ -60,6 +60,99 @@ class TestUpdateSpecsFromPricing(BaseTestCase):
             {"us-east-1": set(["db.serverless", "db.r6g.large"])},
         )
 
+    def test_main_adds_sagemaker_api_types(self):
+        """SageMaker enums keep API-valid types pricing files elsewhere."""
+        module = _load_update_specs_from_pricing()
+
+        def _sagemaker_product(usagetype, instance_name):
+            return json.dumps(
+                {
+                    "product": {
+                        "productFamily": "ML Instance",
+                        "attributes": {
+                            "location": "US East (Ohio)",
+                            "locationType": "AWS Region",
+                            "instanceName": instance_name,
+                            "usagetype": usagetype,
+                        },
+                    }
+                }
+            )
+
+        sagemaker_pages = [
+            {
+                "PriceList": [
+                    _sagemaker_product("USE2-Cluster:ml.p5.48xlarge", "ml.p5.48xlarge"),
+                    _sagemaker_product("USE2-Tsform:ml.m5.large", "ml.m5.large"),
+                    _sagemaker_product("USE2-Host:ml.m5.large", "ml.m5.large"),
+                    _sagemaker_product("USE2-Processing:ml.m5.large", "ml.m5.large"),
+                ]
+            }
+        ]
+
+        def get_paginator(service):
+            return sagemaker_pages if service == "AmazonSageMaker" else []
+
+        with (
+            patch.object(module, "configure_logging"),
+            patch.object(module, "get_paginator", side_effect=get_paginator),
+            patch.object(module, "get_rds_pricing"),
+            patch.object(module, "write_output") as write_output,
+        ):
+            module.main()
+
+        outputs = {call.args[0]: call.args[2] for call in write_output.call_args_list}
+        self.assertEqual(
+            outputs["aws_sagemaker_cluster"],
+            {"us-east-2": set(["ml.p5.48xlarge", "ml.p5e.48xlarge"])},
+        )
+        self.assertEqual(
+            outputs["aws_sagemaker_transform"],
+            {
+                "us-east-2": set(
+                    [
+                        "ml.m5.large",
+                        "ml.p3.2xlarge",
+                        "ml.p3.8xlarge",
+                        "ml.p3.16xlarge",
+                        "ml.inf2.xlarge",
+                        "ml.inf2.8xlarge",
+                        "ml.inf2.24xlarge",
+                        "ml.inf2.48xlarge",
+                        "ml.trn1.2xlarge",
+                        "ml.trn1.32xlarge",
+                    ]
+                )
+            },
+        )
+        self.assertEqual(
+            outputs["aws_sagemaker_hosting"],
+            {
+                "us-east-2": set(
+                    [
+                        "ml.m5.large",
+                        "ml.m8g.medium",
+                        "ml.m8g.large",
+                        "ml.m8g.xlarge",
+                        "ml.m8g.2xlarge",
+                        "ml.m8g.4xlarge",
+                        "ml.m8g.8xlarge",
+                        "ml.m8g.12xlarge",
+                        "ml.m8g.16xlarge",
+                        "ml.m8g.24xlarge",
+                        "ml.m8g.48xlarge",
+                    ]
+                )
+            },
+        )
+        processing = outputs["aws_sagemaker_processing"]["us-east-2"]
+        self.assertIn("ml.c8i.xlarge", processing)
+        self.assertIn("ml.c8i.96xlarge", processing)
+        self.assertIn("ml.m7i-flex.large", processing)
+        self.assertIn("ml.c8i-flex.xlarge", processing)
+        self.assertNotIn("ml.c8i.large", processing)
+        self.assertEqual(len(processing), 44)
+
     def test_get_results_copies_default_values_per_region(self):
         """Default values stay isolated between generated region enums."""
         module = _load_update_specs_from_pricing()
