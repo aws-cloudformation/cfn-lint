@@ -1,0 +1,116 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: EventBridge rule targets that are supported or can't be resolved
+Parameters:
+  TargetArn:
+    Type: String
+Resources:
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: sts:AssumeRole
+  Function:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Runtime: python3.13
+      Role: !GetAtt Role.Arn
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            return event
+  Topic:
+    Type: AWS::SNS::Topic
+  Queue:
+    Type: AWS::SQS::Queue
+  StateMachine:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      RoleArn: !GetAtt Role.Arn
+      DefinitionString: '{"StartAt": "Pass", "States": {"Pass": {"Type": "Pass", "End": true}}}'
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+  Stack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/bucket/template.yaml
+  Custom:
+    Type: Custom::TargetLookup
+    Properties:
+      ServiceToken: !GetAtt Function.Arn
+  Rule:
+    Type: AWS::Events::Rule
+    Properties:
+      State: ENABLED
+      ScheduleExpression: "rate(5 minutes)"
+      Targets:
+        - Id: Function
+          Arn: !GetAtt Function.Arn
+          RoleArn: !GetAtt Role.Arn
+        - Id: Topic
+          Arn: !Ref Topic
+        - Id: Queue
+          Arn: !GetAtt Queue.Arn
+  Rule2:
+    Type: AWS::Events::Rule
+    Properties:
+      State: ENABLED
+      ScheduleExpression: "rate(5 minutes)"
+      Targets:
+        - Id: StateMachine
+          Arn: !Ref StateMachine
+          RoleArn: !GetAtt Role.Arn
+        - Id: LogGroup
+          Arn: !GetAtt LogGroup.Arn
+        - Id: Parameter
+          Arn: !Ref TargetArn
+        - Id: StackOutput
+          Arn: !GetAtt Stack.Outputs.TargetArn
+        - Id: Custom
+          Arn: !GetAtt Custom.Arn
+  Rule3:
+    Type: AWS::Events::Rule
+    Properties:
+      State: ENABLED
+      ScheduleExpression: "rate(5 minutes)"
+      Targets:
+        - Id: Import
+          Arn: !ImportValue SharedTargetArn
+        - Id: Join
+          Arn: !Join [":", ["arn", !Ref "AWS::Partition", "iam", "", !Ref "AWS::AccountId", "role/my-role"]]
+        - Id: SubService
+          Arn: !Sub
+            - "arn:${AWS::Partition}:${Service}:${AWS::Region}:${AWS::AccountId}:my-target"
+            - Service: !Ref TargetArn
+        - Id: EventBus
+          Arn: !Sub "arn:${AWS::Partition}:events:${AWS::Region}:${AWS::AccountId}:event-bus/default"
+        - Id: Ec2Api
+          Arn: !Sub "arn:${AWS::Partition}:events:${AWS::Region}:${AWS::AccountId}:target/create-snapshot"
+  Rule4:
+    Type: AWS::Events::Rule
+    Properties:
+      State: ENABLED
+      ScheduleExpression: "rate(5 minutes)"
+      Targets:
+        - Id: Ecs
+          Arn: arn:aws:ecs:us-east-1:123456789012:cluster/my-cluster
+          RoleArn: !GetAtt Role.Arn
+        - Id: ApiGateway
+          Arn: arn:aws:execute-api:us-east-1:123456789012:a1b2c3/prod/POST/orders
+        - Id: Firehose
+          Arn: arn:aws:firehose:us-east-1:123456789012:deliverystream/my-stream
+          RoleArn: !GetAtt Role.Arn
+        - Id: RedshiftServerless
+          Arn: arn:aws:redshift-serverless:us-east-1:123456789012:workgroup/abc
+          RoleArn: !GetAtt Role.Arn
+        - Id: Incidents
+          Arn: arn:aws:ssm-incidents::123456789012:response-plan/my-plan
+          RoleArn: !GetAtt Role.Arn
+Outputs:
+  Placeholder:
+    Value: !Ref Rule
