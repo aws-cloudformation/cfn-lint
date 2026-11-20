@@ -30,6 +30,7 @@ def rule():
             ["ap-southeast-1"],
             0,
         ),
+        ("x2iezn not offered in eu-west-1", "db.x2iezn.2xlarge", ["eu-west-1"], 1),
         ("Not a Neptune instance class", "db.m5.large", ["us-east-1"], 1),
     ],
 )
