@@ -408,3 +408,37 @@ class TestResourcePolicy(TestCase):
                 )
             ],
         )
+
+    def test_repeated_empty_sid_sns(self):
+        """SNS rejects repeated empty Sids, so they are reported"""
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::SNS::TopicPolicy", "Properties"])
+                ),
+            )
+        )
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Sid": "",
+                    "Effect": "Allow",
+                    "Action": action,
+                    "Resource": "arn:aws:sns:us-east-1:123456789012:topic",
+                    "Principal": {"AWS": "arn:aws:iam::123456789012:root"},
+                }
+                for action in ["sns:Publish", "sns:Subscribe"]
+            ],
+        }
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertEqual(len(errs), 1, errs)
+        self.assertEqual(errs[0].message, "array items are not unique for keys ['Sid']")
+        self.assertListEqual(list(errs[0].path), ["Statement"])
