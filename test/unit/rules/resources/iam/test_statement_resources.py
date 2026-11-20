@@ -368,7 +368,9 @@ def template():
             # any of the ARN formats listed for the resource type is valid
             {
                 "Action": "lex:RecognizeText",
-                "Resource": "arn:aws:lex:us-east-1:123456789012:bot-alias/ABCDEFGHIJ/TSTALIASID",
+                "Resource": (
+                    "arn:aws:lex:us-east-1:123456789012:bot-alias/ABCDEFGHIJ/TSTALIASID"
+                ),
             },
             [],
         ),
