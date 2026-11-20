@@ -8,7 +8,7 @@ from __future__ import annotations
 import logging
 from typing import Any, Dict
 
-from sympy import And, Implies, Symbol
+from sympy import And, Implies, Or, Symbol
 from sympy.logic.boolalg import BooleanFunction, BooleanTrue
 
 from cfnlint.conditions._condition import (
@@ -19,7 +19,7 @@ from cfnlint.conditions._condition import (
     ConditionOr,
 )
 from cfnlint.conditions._equals import Equal
-from cfnlint.helpers import FUNCTION_CONDITIONS
+from cfnlint.helpers import FUNCTION_CONDITIONS, is_function
 
 LOGGER = logging.getLogger(__name__)
 
@@ -31,6 +31,7 @@ class _Assertion:
     def __init__(self, condition: Any, all_conditions: dict[str, dict]) -> None:
         self._fn_equals: Equal | None = None
         self._condition: ConditionList | ConditionNamed | None = None
+        self._fn_contains: list[Equal] | None = None
 
         if len(condition) == 1:
             for k, v in condition.items():
@@ -49,12 +50,34 @@ class _Assertion:
                     if not isinstance(v, str):
                         raise ValueError(f"Condition value {v!r} must be a string")
                     self._condition = ConditionNamed(v, all_conditions)
+                elif k == "Fn::Contains":
+                    self._fn_contains = self._init_contains(v)
                 else:
                     raise ValueError(f"Unknown key ({k}) in condition")
         else:
             raise ValueError("Condition value must be an object of length 1")
 
+    @staticmethod
+    def _init_contains(value: Any) -> list[Equal]:
+        """Fn::Contains [[literal, ...], {"Ref": Parameter}] is the same as
+        an Fn::Or of an Fn::Equals per literal.  Any other shape is not
+        supported."""
+        if not isinstance(value, list) or len(value) != 2:
+            raise ValueError("Fn::Contains value should be an array of two items")
+        literals, ref = value
+        if not isinstance(literals, list) or not literals:
+            raise ValueError("Fn::Contains first item should be a non empty array")
+        if not all(isinstance(lit, (str, int, float, bool)) for lit in literals):
+            raise ValueError("Fn::Contains only supports a list of literal values")
+        ref_k, ref_v = is_function(ref)
+        if ref_k != "Ref" or not isinstance(ref_v, str):
+            raise ValueError("Fn::Contains only supports a Ref as the second item")
+        return [Equal([ref, str(lit)]) for lit in literals]
+
     def build_cnf(self, params: dict[str, Symbol]) -> BooleanFunction | Symbol | None:
+        if self._fn_contains:
+            return Or(*[equal.build_cnf(params) for equal in self._fn_contains])
+
         if self._fn_equals:
             try:
                 return self._fn_equals.build_cnf(params)
@@ -71,6 +94,8 @@ class _Assertion:
 
     @property
     def equals(self) -> list[Equal]:
+        if self._fn_contains:
+            return list(self._fn_contains)
         if self._fn_equals:
             return [self._fn_equals]
         if self._condition:

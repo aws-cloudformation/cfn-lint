@@ -59,6 +59,15 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "exit_code": 10,
         },
         {
+            "filename": (
+                "test/fixtures/templates/integration/rules-parameter-assertions.yaml"
+            ),
+            "results_filename": (
+                "test/fixtures/results/integration/rules-parameter-assertions_yaml.json"
+            ),
+            "exit_code": 12,
+        },
+        {
             "filename": "test/fixtures/templates/integration/metdata.yaml",
             "results_filename": "test/fixtures/results/integration/metadata_yaml.json",
             "exit_code": 4,
