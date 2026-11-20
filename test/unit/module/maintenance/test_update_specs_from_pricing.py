@@ -60,6 +60,52 @@ class TestUpdateSpecsFromPricing(BaseTestCase):
             {"us-east-1": set(["db.serverless", "db.r6g.large"])},
         )
 
+    def test_main_adds_neptune_extra_instance_types(self):
+        """Neptune x2iezn is added only to the regions that offer it."""
+        module = _load_update_specs_from_pricing()
+        neptune_pages = [
+            {
+                "PriceList": [
+                    json.dumps(
+                        {
+                            "product": {
+                                "productFamily": "Database Instance",
+                                "attributes": {
+                                    "location": location,
+                                    "locationType": "AWS Region",
+                                    "instanceType": "db.r6g.large",
+                                },
+                            }
+                        }
+                    )
+                    for location in [
+                        "US East (N. Virginia)",
+                        "US West (Oregon)",
+                        "EU (Ireland)",
+                    ]
+                ]
+            }
+        ]
+
+        def get_paginator(service):
+            return neptune_pages if service == "AmazonNeptune" else []
+
+        with (
+            patch.object(module, "configure_logging"),
+            patch.object(module, "get_paginator", side_effect=get_paginator),
+            patch.object(module, "get_rds_pricing"),
+            patch.object(module, "write_output") as write_output,
+        ):
+            module.main()
+
+        outputs = {call.args[0]: call.args[2] for call in write_output.call_args_list}
+        neptune = outputs["aws_neptune_dbinstance"]
+        regions_with_x2iezn = {
+            region for region, types in neptune.items() if "db.x2iezn.2xlarge" in types
+        }
+        self.assertEqual(regions_with_x2iezn, {"us-east-1", "us-west-2"})
+        self.assertNotIn("db.x2iezn.2xlarge", neptune["eu-west-1"])
+
     def test_get_results_copies_default_values_per_region(self):
         """Default values stay isolated between generated region enums."""
         module = _load_update_specs_from_pricing()
