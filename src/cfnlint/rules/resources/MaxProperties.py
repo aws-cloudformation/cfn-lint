@@ -10,11 +10,7 @@ from typing import Any
 from cfnlint.context import sam_generated_resources
 from cfnlint.rules.jsonschema.MaxProperties import MaxProperties as ParentMaxProperties
 
-# CloudFormation resources the SAM transform creates for each serverless
-# resource itself, on top of the generated ones from `sam_generated_resources`.
-# The SAM translator is no longer a dependency (see #4491), so E3010 counts a
-# conservative lower bound of the post-transform total: it fires only when the
-# template provably exceeds the limit, never on an over-estimate.
+# Base post-transform count per serverless resource type.
 _SERVERLESS_BASE_RESOURCE_COUNTS = {
     # AWS::Serverless::Connector only adds permissions to existing resources,
     # it creates no standalone resource of its own.
@@ -68,6 +64,13 @@ class MaxProperties(ParentMaxProperties):
 
     def __init__(self) -> None:
         super().__init__("I3010")
+
+    def _over_limit_message(self, validator, instance, mP) -> str:
+        count = self._count_properties(validator, instance)
+        return (
+            f"{validator.context.path.path_string!r} "
+            f"has {count} properties, more than the limit of {mP!r}"
+        )
 
     def _count_properties(self, validator, instance) -> int:
         cfn = getattr(validator, "cfn", None)

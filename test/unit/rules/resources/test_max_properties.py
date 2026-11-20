@@ -5,6 +5,8 @@ SPDX-License-Identifier: MIT-0
 
 from test.unit.rules import BaseRuleTestCase
 
+import pytest
+
 from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.resources.ApproachingMaxProperties import ApproachingMaxProperties
 from cfnlint.rules.resources.Configuration import Configuration
@@ -132,7 +134,9 @@ class TestMaxPropertiesSamTransform(BaseRuleTestCase):
         errors = self._max_properties_errors(_sam_template(260))
         self.assertEqual(len(errors), 1)
         self.assertEqual(errors[0].rule.id, "E3010")
-        self.assertIn("has more than 500 properties", errors[0].message)
+        self.assertIn(
+            "has 520 properties, more than the limit of 500", errors[0].message
+        )
 
     def test_sam_template_under_limit_is_clean(self):
         errors = self._max_properties_errors(_sam_template(200))
@@ -176,3 +180,118 @@ class TestMaxPropertiesSamTransform(BaseRuleTestCase):
         errors = self._max_properties_errors(template)
         self.assertEqual(len(errors), 1)
         self.assertEqual(errors[0].rule.id, "E3010")
+
+
+@pytest.fixture
+def rule():
+    config_rule = Configuration()
+    e3010 = MaxProperties()
+    e3010.child_rules = {"I3010": ApproachingMaxProperties()}
+    config_rule.child_rules["E3010"] = e3010
+    yield config_rule
+
+
+def _e3010_errors(rule, validator, template):
+    return [
+        e
+        for e in rule.validate(validator, "Resources", template["Resources"], {})
+        if e.validator == "maxProperties" and e.rule.id == "E3010"
+    ]
+
+
+@pytest.mark.parametrize(
+    "name,deployment_preference,expected_count",
+    [
+        (
+            "DeploymentPreference without Enabled defaults to enabled",
+            {"Type": "AllAtOnce"},
+            7,
+        ),
+        (
+            "DeploymentPreference with Enabled true",
+            {"Type": "AllAtOnce", "Enabled": True},
+            7,
+        ),
+        (
+            "DeploymentPreference with Enabled false",
+            {"Type": "AllAtOnce", "Enabled": False},
+            4,
+        ),
+        (
+            "DeploymentPreference with Enabled as a string takes the cheaper branch",
+            {"Type": "AllAtOnce", "Enabled": "false"},
+            4,
+        ),
+        (
+            "DeploymentPreference with Enabled as a Ref takes the cheaper branch",
+            {"Type": "AllAtOnce", "Enabled": {"Ref": "EnableDeploy"}},
+            4,
+        ),
+        (
+            "DeploymentPreference with Enabled as an Fn::If takes the cheaper branch",
+            {
+                "Type": "AllAtOnce",
+                "Enabled": {"Fn::If": ["UseDeploy", True, False]},
+            },
+            4,
+        ),
+    ],
+)
+def test_function_deployment_preference_enabled(
+    name, deployment_preference, expected_count
+):
+    resources = {"Fn": _sam_function(DeploymentPreference=deployment_preference)}
+    count = post_sam_transform_resource_count(resources)
+    assert count == expected_count, f"Test {name!r} got {count!r}"
+
+
+@pytest.mark.parametrize(
+    "name,count,expected_count",
+    [
+        ("250 functions is exactly 500", 250, 500),
+        ("251 functions expands past the limit", 251, 502),
+    ],
+)
+def test_sam_function_count_boundary(name, count, expected_count):
+    template = _sam_template(count)
+    actual = post_sam_transform_resource_count(template["Resources"])
+    assert actual == expected_count, f"Test {name!r} got {actual!r}"
+
+
+@pytest.mark.parametrize(
+    "name,template,err_count,message",
+    [
+        (
+            "250 functions is exactly 500, no E3010",
+            _sam_template(250),
+            0,
+            None,
+        ),
+        (
+            "251 functions expands to 502, fires E3010",
+            _sam_template(251),
+            1,
+            "has 502 properties, more than the limit of 500",
+        ),
+        (
+            "100 functions with unresolvable Enabled take the cheaper branch",
+            _sam_template(
+                100,
+                DeploymentPreference={
+                    "Type": "AllAtOnce",
+                    "Enabled": {"Ref": "EnableDeploy"},
+                },
+            ),
+            0,
+            None,
+        ),
+    ],
+    indirect=["template"],
+)
+def test_sam_function_count_boundary_rule(
+    name, template, err_count, message, rule, validator
+):
+    errors = _e3010_errors(rule, validator, template)
+    assert len(errors) == err_count, f"Test {name!r} got {errors!r}"
+    if message:
+        assert message in errors[0].message

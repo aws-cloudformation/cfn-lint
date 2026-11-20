@@ -633,9 +633,12 @@ def sam_generated_resources(
             if "FunctionUrlConfig" in props:
                 yield f"{resource_id}Url", "AWS::Lambda::Url"
 
-            # DeploymentPreference generates CodeDeploy resources
+            # DeploymentPreference generates CodeDeploy resources only when
+            # Enabled is provably true. An unresolvable value (a Ref, an
+            # Fn::If, or a non-boolean such as the string "false") takes the
+            # cheaper branch, so the lower bound never over-estimates.
             dp = props.get("DeploymentPreference")
-            if isinstance(dp, dict) and dp.get("Enabled", True):
+            if isinstance(dp, dict) and dp.get("Enabled", True) is True:
                 yield "ServerlessDeploymentApplication", "AWS::CodeDeploy::Application"
                 yield (
                     f"{resource_id}DeploymentGroup",
