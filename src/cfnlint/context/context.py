@@ -452,6 +452,22 @@ class Parameter(_Ref):
         return self.type.startswith("AWS::SSM::Parameter::")
 
 
+_PROJECT_ROOT_MARKERS = (".git", ".cfnlintrc", ".cfnlintrc.yaml", ".cfnlintrc.yml")
+
+
+def _project_root(base_dir: str) -> str:
+    """Nearest ancestor of base_dir holding a project marker, else base_dir."""
+    current = base_dir
+    while True:
+        for marker in _PROJECT_ROOT_MARKERS:
+            if os.path.exists(os.path.join(current, marker)):
+                return current
+        parent = os.path.dirname(current)
+        if parent == current:
+            return base_dir
+        current = parent
+
+
 def _nested_stack_get_atts(filename: str, template_url: str) -> None | AttributeDict:
     if (
         template_url.startswith("http://")
@@ -464,13 +480,16 @@ def _nested_stack_get_atts(filename: str, template_url: str) -> None | Attribute
     if os.path.isabs(template_url):
         return None
 
-    base_dir = os.path.dirname(os.path.abspath(filename))
-    template_path = os.path.normpath(os.path.join(base_dir, template_url))
+    # realpath so symlinks can't escape the containment check below
+    base_dir = os.path.dirname(os.path.realpath(filename))
+    template_path = os.path.realpath(os.path.join(base_dir, template_url))
 
-    # Ensure resolved path stays within current working directory
-    # to prevent path traversal attacks (e.g., ../../../../etc/passwd)
-    cwd = os.path.abspath(os.getcwd())
-    if not (template_path.startswith(cwd + os.sep) or template_path == cwd):
+    # the nested template must live inside the linted template's project
+    root = _project_root(base_dir)
+    try:
+        if os.path.commonpath([root, template_path]) != root:
+            return None
+    except ValueError:
         return None
 
     if re.match(REGEX_DYN_REF, template_path):
@@ -482,6 +501,11 @@ def _nested_stack_get_atts(filename: str, template_url: str) -> None | Attribute
     except Exception:  # noqa: E722
         return None
     if matches or tmp is None:
+        return None
+
+    # only trust Outputs from a file shaped like a template
+    resources = tmp.get("Resources")
+    if not isinstance(resources, dict) or not resources:
         return None
 
     outputs = AttributeDict()
