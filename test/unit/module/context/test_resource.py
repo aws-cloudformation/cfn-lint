@@ -225,75 +225,95 @@ _RESOLVED = AttributeDict({"Outputs.VpcId": "/properties/CfnLintStringType"})
 
 
 @pytest.fixture
-def project(tmp_path):
-    """A project with a marker, a sibling template dir, and a file outside it"""
-    (tmp_path / "project" / ".git").mkdir(parents=True)
-    (tmp_path / "project" / "templates").mkdir()
-    (tmp_path / "project" / "common").mkdir()
+def workspace(tmp_path):
+    """A template directory, a sibling directory, and one outside both"""
+    (tmp_path / "workspace" / "templates").mkdir(parents=True)
+    (tmp_path / "workspace" / "common").mkdir()
     (tmp_path / "outside").mkdir()
-    (tmp_path / "project" / "templates" / "nested.yaml").write_text(_NESTED_TEMPLATE)
-    (tmp_path / "project" / "common" / "nested.yaml").write_text(_NESTED_TEMPLATE)
-    (tmp_path / "project" / "common" / "config.yaml").write_text(_NOT_A_TEMPLATE)
+    (tmp_path / "workspace" / "templates" / "nested.yaml").write_text(_NESTED_TEMPLATE)
+    (tmp_path / "workspace" / "common" / "nested.yaml").write_text(_NESTED_TEMPLATE)
+    (tmp_path / "workspace" / "common" / "config.yaml").write_text(_NOT_A_TEMPLATE)
     (tmp_path / "outside" / "nested.yaml").write_text(_NESTED_TEMPLATE)
     return tmp_path
 
 
-@pytest.mark.parametrize(
-    "name,template_url,expected",
-    [
-        ("Sibling directory inside the project", "../common/nested.yaml", _RESOLVED),
-        ("Same directory", "./nested.yaml", _RESOLVED),
-        ("Escapes the project", "../../outside/nested.yaml", _PERMISSIVE),
-        ("Missing file", "../common/no-such-file.yaml", _PERMISSIVE),
-        ("File that isn't a template", "../common/config.yaml", _PERMISSIVE),
-    ],
-)
-def test_nested_stack_project_containment(name, template_url, expected, project):
-    """A nested template resolves inside the project and nowhere else"""
+def _nested_get_atts(workspace, template_url):
     instance = {
         "Type": "AWS::CloudFormation::Stack",
         "Properties": {"TemplateURL": template_url},
     }
-    filename = str(project / "project" / "templates" / "main.yaml")
+    filename = str(workspace / "workspace" / "templates" / "main.yaml")
+    return Resource(instance, filename).get_atts("us-east-1")
 
-    resource = Resource(instance, filename)
 
-    assert expected == resource.get_atts("us-east-1"), (
-        f"{name!r} got {resource.get_atts('us-east-1')}"
+@pytest.mark.parametrize(
+    "name,cwd,template_url,expected",
+    [
+        (
+            "Same directory",
+            "workspace",
+            "./nested.yaml",
+            _RESOLVED,
+        ),
+        (
+            "Sibling directory below the cwd",
+            "workspace",
+            "../common/nested.yaml",
+            _RESOLVED,
+        ),
+        (
+            "Sibling directory above the cwd",
+            "workspace/templates",
+            "../common/nested.yaml",
+            _PERMISSIVE,
+        ),
+        (
+            "Outside the cwd",
+            "workspace",
+            "../../outside/nested.yaml",
+            _PERMISSIVE,
+        ),
+        (
+            "Filesystem root as the cwd",
+            os.sep,
+            "../common/nested.yaml",
+            _RESOLVED,
+        ),
+        (
+            "Missing file",
+            "workspace",
+            "../common/no-such-file.yaml",
+            _PERMISSIVE,
+        ),
+        (
+            "File that isn't a template",
+            "workspace",
+            "../common/config.yaml",
+            _PERMISSIVE,
+        ),
+    ],
+)
+def test_nested_stack_containment(
+    name, cwd, template_url, expected, workspace, monkeypatch
+):
+    """A nested template resolves below the working directory and nowhere else"""
+    monkeypatch.chdir(cwd if os.path.isabs(cwd) else workspace / cwd)
+
+    assert expected == _nested_get_atts(workspace, template_url), (
+        f"{name!r} got {_nested_get_atts(workspace, template_url)}"
     )
 
 
-def test_nested_stack_absolute_path_blocked(project):
-    instance = {
-        "Type": "AWS::CloudFormation::Stack",
-        "Properties": {
-            "TemplateURL": str(project / "project" / "common" / "nested.yaml")
-        },
-    }
-    filename = str(project / "project" / "templates" / "main.yaml")
+def test_nested_stack_absolute_path_blocked(workspace, monkeypatch):
+    monkeypatch.chdir(workspace)
+    template_url = str(workspace / "workspace" / "common" / "nested.yaml")
 
-    assert _PERMISSIVE == Resource(instance, filename).get_atts("us-east-1")
+    assert _PERMISSIVE == _nested_get_atts(workspace, template_url)
 
 
 @pytest.mark.skipif(os.name == "nt", reason="symlinks need privileges on Windows")
-def test_nested_stack_symlink_cannot_escape_project(project):
-    (project / "project" / "templates" / "vendor").symlink_to(project / "outside")
-    instance = {
-        "Type": "AWS::CloudFormation::Stack",
-        "Properties": {"TemplateURL": "./vendor/nested.yaml"},
-    }
-    filename = str(project / "project" / "templates" / "main.yaml")
+def test_nested_stack_symlink_cannot_escape_cwd(workspace, monkeypatch):
+    (workspace / "workspace" / "vendor").symlink_to(workspace / "outside")
+    monkeypatch.chdir(workspace / "workspace")
 
-    assert _PERMISSIVE == Resource(instance, filename).get_atts("us-east-1")
-
-
-@pytest.mark.parametrize("cwd", [".", "project", "project/templates", "outside"])
-def test_nested_stack_resolution_is_cwd_independent(cwd, project, monkeypatch):
-    monkeypatch.chdir(project / cwd)
-    instance = {
-        "Type": "AWS::CloudFormation::Stack",
-        "Properties": {"TemplateURL": "../common/nested.yaml"},
-    }
-    filename = str(project / "project" / "templates" / "main.yaml")
-
-    assert _RESOLVED == Resource(instance, filename).get_atts("us-east-1")
+    assert _PERMISSIVE == _nested_get_atts(workspace, "../vendor/nested.yaml")
