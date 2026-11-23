@@ -58,6 +58,21 @@ def _cached_hash(hashable_obj: Hashable) -> str:
         ).hexdigest()
 
 
+def equals_string(value: Any) -> str:
+    """Return the string CloudFormation compares in ``Fn::Equals``.
+
+    CloudFormation compares ``Fn::Equals`` operands as strings: a boolean
+    true is ``"true"`` (not Python's ``"True"``) and ``1`` is ``"1"``, so
+    ``Fn::Equals [true, "true"]`` is true while ``[true, "True"]`` is
+    false. This matches the semantics W8003 already documents from live
+    testing (see ``EqualsIsUseful``). Plain ``str()`` would stringify a
+    boolean as ``"True"`` and fold ``[true, "true"]`` to false.
+    """
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    return str(value)
+
+
 def get_hash(o: Any) -> str:
     """Return a hash of an object
     This version prioritizes consistency over performance by always

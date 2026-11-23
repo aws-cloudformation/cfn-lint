@@ -13,7 +13,7 @@ from typing import Any
 from sympy import Symbol
 from sympy.logic.boolalg import BooleanFalse, BooleanTrue
 
-from cfnlint.conditions._utils import get_hash
+from cfnlint.conditions._utils import equals_string, get_hash
 from cfnlint.helpers import is_function
 
 LOGGER = logging.getLogger(__name__)
@@ -56,7 +56,12 @@ class EqualParameter:
     @classmethod
     def create_from_instance(cls, instance: Any) -> "EqualParameter":
         if isinstance(instance, (str, bool, int, float)):
-            return cls(instance=str(instance))
+            # CloudFormation compares Fn::Equals operands as strings, so
+            # a boolean true is "true", not Python's "True" (see
+            # equals_string). Without this, [true, "true"] folds to false
+            # and the branch CloudFormation actually takes is reported
+            # as unreachable.
+            return cls(instance=equals_string(instance))
 
         if isinstance(instance, dict):
             return cls(instance=instance)

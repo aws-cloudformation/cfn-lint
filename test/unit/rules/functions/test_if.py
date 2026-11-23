@@ -25,6 +25,9 @@ def template():
             "IsUsEast1": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]},
             "IsStaticTrue": {"Fn::Equals": ["true", "true"]},
             "IsStaticFalse": {"Fn::Equals": ["false", "true"]},
+            # CloudFormation compares Fn::Equals operands as strings, so
+            # [true, "true"] is always true (issue #5026).
+            "IsBoolStringTrue": {"Fn::Equals": [True, "true"]},
         },
         "Parameters": {
             "MyParameter": {
@@ -92,7 +95,8 @@ def validator(cfn, context):
             [
                 ValidationError(
                     "{'Ref': 'MyParameter'} is not one of "
-                    "['IsUsEast1', 'IsStaticTrue', 'IsStaticFalse']",
+                    "['IsUsEast1', 'IsStaticTrue', 'IsStaticFalse', "
+                    "'IsBoolStringTrue']",
                     path=deque(["Fn::If", 0]),
                     schema_path=deque(
                         [
@@ -146,7 +150,8 @@ def validator(cfn, context):
             [
                 ValidationError(
                     "'foo' is not one of "
-                    "['IsUsEast1', 'IsStaticTrue', 'IsStaticFalse']",
+                    "['IsUsEast1', 'IsStaticTrue', 'IsStaticFalse', "
+                    "'IsBoolStringTrue']",
                     path=deque(["Fn::If", 0]),
                     schema_path=deque(
                         [
@@ -203,6 +208,28 @@ def validator(cfn, context):
                 ValidationError(
                     "['Fn::If', 2] is not reachable. When setting condition "
                     "'IsStaticTrue' to False",
+                    path=deque(["Fn::If", 2]),
+                ),
+            ],
+        ),
+        (
+            # A boolean compared with its string form is true in
+            # CloudFormation, so [true, "true"] is always true and the
+            # true branch is reachable and validated (issue #5026). Only
+            # the false branch is dead.
+            "Boolean Fn::Equals against its string form is always true",
+            {"Fn::If": ["IsBoolStringTrue", "foo", True]},
+            {"type": "boolean"},
+            [
+                ValidationError(
+                    "'foo' is not of type 'boolean'",
+                    path=deque(["Fn::If", 1]),
+                    schema_path=deque(["type"]),
+                    validator="type",
+                ),
+                ValidationError(
+                    "['Fn::If', 2] is not reachable. When setting condition "
+                    "'IsBoolStringTrue' to False",
                     path=deque(["Fn::If", 2]),
                 ),
             ],

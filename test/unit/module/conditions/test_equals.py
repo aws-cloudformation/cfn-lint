@@ -73,6 +73,21 @@ class TestEquals(TestCase):
 
         self.assertFalse(equal.test({"foo": "bar"}))
 
+    def test_equals_boolean_string_test(self):
+        """CloudFormation compares Fn::Equals operands as strings, so a
+        boolean true equals "true" but not "True" (issue #5026)."""
+        equal = Equal([True, "true"])
+        self.assertTrue(equal.is_static)
+
+        equal = Equal([False, "false"])
+        self.assertTrue(equal.is_static)
+
+        equal = Equal([True, "True"])
+        self.assertFalse(equal.is_static)
+
+        equal = Equal([True, False])
+        self.assertFalse(equal.is_static)
+
     def test_equals_is_partition(self):
         """Test Equals against Ref AWS::Partition"""
         equal = Equal([{"Ref": "AWS::Partition"}, "aws-iso"])

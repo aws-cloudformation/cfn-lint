@@ -59,6 +59,11 @@ def template():
             },
             "IsStaticTrue": {"Fn::Equals": [1, "1"]},
             "IsStaticFalse": {"Fn::Equals": [1, "2"]},
+            # CloudFormation compares Fn::Equals operands as strings, so
+            # a boolean true equals "true" but not "True" (issue #5026).
+            "IsBoolStringTrue": {"Fn::Equals": [True, "true"]},
+            "IsBoolStringFalse": {"Fn::Equals": [True, "True"]},
+            "IsBoolFalseString": {"Fn::Equals": [False, "false"]},
             "TwoObjects": {
                 "Fn::Equals": [
                     {"Ref": "Environment"},
@@ -92,9 +97,16 @@ def test_conditions():
     cfn = Template(None, template(), regions=["us-east-1"])
     context = create_context_for_template(cfn)
 
-    assert len(context.conditions.conditions) == 22
+    assert len(context.conditions.conditions) == 25
     assert context.conditions.conditions["IsStaticTrue"].fn_equals.is_static is True
     assert context.conditions.conditions["IsStaticFalse"].fn_equals.is_static is False
+    assert context.conditions.conditions["IsBoolStringTrue"].fn_equals.is_static is True
+    assert (
+        context.conditions.conditions["IsBoolStringFalse"].fn_equals.is_static is False
+    )
+    assert (
+        context.conditions.conditions["IsBoolFalseString"].fn_equals.is_static is True
+    )
     assert (
         context.conditions.conditions["TwoObjects"].fn_equals.hash
         == context.conditions.conditions["TwoObjectsSameHash"].fn_equals.hash
