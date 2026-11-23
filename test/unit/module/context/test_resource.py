@@ -274,8 +274,8 @@ def _nested_get_atts(workspace, template_url):
             _PERMISSIVE,
         ),
         (
-            "Filesystem root as the cwd",
-            os.sep,
+            "Drive root as the cwd",
+            None,
             "../common/nested.yaml",
             _RESOLVED,
         ),
@@ -297,7 +297,7 @@ def test_nested_stack_containment(
     name, cwd, template_url, expected, workspace, monkeypatch
 ):
     """A nested template resolves below the working directory and nowhere else"""
-    monkeypatch.chdir(cwd if os.path.isabs(cwd) else workspace / cwd)
+    monkeypatch.chdir(workspace.anchor if cwd is None else workspace / cwd)
 
     assert expected == _nested_get_atts(workspace, template_url), (
         f"{name!r} got {_nested_get_atts(workspace, template_url)}"
@@ -317,3 +317,15 @@ def test_nested_stack_symlink_cannot_escape_cwd(workspace, monkeypatch):
     monkeypatch.chdir(workspace / "workspace")
 
     assert _PERMISSIVE == _nested_get_atts(workspace, "../vendor/nested.yaml")
+
+
+def test_nested_stack_unrelated_drive(workspace, monkeypatch):
+    """commonpath raises when the cwd and the template are on different drives"""
+
+    def _different_drives(paths):
+        raise ValueError("Paths don't have the same drive")
+
+    monkeypatch.setattr(os.path, "commonpath", _different_drives)
+    monkeypatch.chdir(workspace)
+
+    assert _PERMISSIVE == _nested_get_atts(workspace, "./nested.yaml")
