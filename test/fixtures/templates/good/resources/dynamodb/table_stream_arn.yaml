@@ -1,0 +1,76 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  StreamSpec:
+    Type: String
+    Default: NEW_AND_OLD_IMAGES
+Conditions:
+  UseStream: !Equals [!Ref StreamSpec, NEW_AND_OLD_IMAGES]
+Resources:
+  StreamEnabledTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: OrderId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: OrderId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+  RefTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: OrderId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: OrderId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      StreamSpecification: !Ref StreamSpec
+  ConditionalTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: OrderId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: OrderId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      StreamSpecification: !If
+        - UseStream
+        - StreamViewType: NEW_AND_OLD_IMAGES
+        - !Ref AWS::NoValue
+  NoStreamTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: OrderId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: OrderId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+  StreamEnabledEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt StreamEnabledTable.StreamArn
+  RefEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt RefTable.StreamArn
+  ConditionalEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt ConditionalTable.StreamArn
+  ArnEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt NoStreamTable.Arn
