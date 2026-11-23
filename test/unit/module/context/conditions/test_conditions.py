@@ -59,6 +59,11 @@ def template():
             },
             "IsStaticTrue": {"Fn::Equals": [1, "1"]},
             "IsStaticFalse": {"Fn::Equals": [1, "2"]},
+            # CloudFormation compares Fn::Equals operands as strings, so
+            # a boolean true equals "true" but not "True" (issue #5026).
+            "IsBoolStringTrue": {"Fn::Equals": [True, "true"]},
+            "IsBoolStringFalse": {"Fn::Equals": [True, "True"]},
+            "IsBoolFalseString": {"Fn::Equals": [False, "false"]},
             "TwoObjects": {
                 "Fn::Equals": [
                     {"Ref": "Environment"},
@@ -92,9 +97,16 @@ def test_conditions():
     cfn = Template(None, template(), regions=["us-east-1"])
     context = create_context_for_template(cfn)
 
-    assert len(context.conditions.conditions) == 22
+    assert len(context.conditions.conditions) == 25
     assert context.conditions.conditions["IsStaticTrue"].fn_equals.is_static is True
     assert context.conditions.conditions["IsStaticFalse"].fn_equals.is_static is False
+    assert context.conditions.conditions["IsBoolStringTrue"].fn_equals.is_static is True
+    assert (
+        context.conditions.conditions["IsBoolStringFalse"].fn_equals.is_static is False
+    )
+    assert (
+        context.conditions.conditions["IsBoolFalseString"].fn_equals.is_static is True
+    )
     assert (
         context.conditions.conditions["TwoObjects"].fn_equals.hash
         == context.conditions.conditions["TwoObjectsSameHash"].fn_equals.hash
@@ -175,6 +187,22 @@ def test_conditions():
         ),
         ({}, {"BadFn": True}, {"BadFn": True}),
         ({}, {"BadFn": False}, {"BadFn": False}),
+        # A static Fn::Equals is a constant, so pinning its condition to
+        # the impossible value is unsatisfiable (issue #5023).
+        (
+            {},
+            {"IsStaticFalse": True},
+            Unsatisfiable(
+                new_status={"IsStaticFalse": True}, current_status={}
+            ),
+        ),
+        (
+            {},
+            {"IsStaticTrue": False},
+            Unsatisfiable(
+                new_status={"IsStaticTrue": False}, current_status={}
+            ),
+        ),
     ],
 )
 def test_condition_status(current_status, new_status, expected):
@@ -667,3 +695,70 @@ def test_solver_calls_do_not_grow_with_reused_conditions():
 
     assert calls[0] > 0
     assert calls[0] == calls[1]
+
+
+def test_constant_condition_fnif_dead_branch_not_validated():
+    """An Fn::If branch guarded by a constant condition can never be
+    chosen, so its value is not validated (issue #5023). The issue
+    template reports W8003 on the constant condition but no E1151 on
+    the dead branch's empty string."""
+    template = {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Conditions": {
+            "UseExistingVpc": {"Fn::Equals": ["false", "true"]},
+            "CreateVpc": {"Fn::Not": [{"Condition": "UseExistingVpc"}]},
+        },
+        "Resources": {
+            "Vpc": {
+                "Type": "AWS::EC2::VPC",
+                "Condition": "CreateVpc",
+                "Properties": {"CidrBlock": "10.0.0.0/16"},
+            },
+            "SecurityGroup": {
+                "Type": "AWS::EC2::SecurityGroup",
+                "Properties": {
+                    "GroupDescription": "Security group in the VPC",
+                    "VpcId": {"Fn::If": ["UseExistingVpc", "", {"Ref": "Vpc"}]},
+                },
+            },
+        },
+    }
+
+    matches = lint(
+        json.dumps(template),
+        config=ManualArgs(regions=["us-east-1"]),
+    )
+
+    rule_ids = [match.rule.id for match in matches]
+    assert "E1151" not in rule_ids
+    assert "W8003" in rule_ids
+
+
+def test_constant_condition_fnif_live_branch_still_validated():
+    """Mirror case: with an always-true condition only the true branch
+    is validated, so an invalid value there still reports E1151 while
+    the invalid value in the dead false branch does not."""
+    template = {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Conditions": {
+            "AlwaysTrue": {"Fn::Equals": ["true", "true"]},
+        },
+        "Resources": {
+            "SecurityGroup": {
+                "Type": "AWS::EC2::SecurityGroup",
+                "Properties": {
+                    "GroupDescription": "Security group in the VPC",
+                    "VpcId": {"Fn::If": ["AlwaysTrue", "not-a-vpc-id", "also-bad"]},
+                },
+            },
+        },
+    }
+
+    matches = lint(
+        json.dumps(template),
+        config=ManualArgs(regions=["us-east-1"]),
+    )
+
+    rule_ids = [match.rule.id for match in matches]
+    assert rule_ids.count("E1151") == 1
+    assert "W8003" in rule_ids

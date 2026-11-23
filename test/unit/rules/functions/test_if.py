@@ -22,7 +22,12 @@ def template():
     return {
         "AWSTemplateFormatVersion": "2010-09-09",
         "Conditions": {
-            "IsUsEast1": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]}
+            "IsUsEast1": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]},
+            "IsStaticTrue": {"Fn::Equals": ["true", "true"]},
+            "IsStaticFalse": {"Fn::Equals": ["false", "true"]},
+            # CloudFormation compares Fn::Equals operands as strings, so
+            # [true, "true"] is always true (issue #5026).
+            "IsBoolStringTrue": {"Fn::Equals": [True, "true"]},
         },
         "Parameters": {
             "MyParameter": {
@@ -89,7 +94,9 @@ def validator(cfn, context):
             {"type": "string"},
             [
                 ValidationError(
-                    "{'Ref': 'MyParameter'} is not one of ['IsUsEast1']",
+                    "{'Ref': 'MyParameter'} is not one of "
+                    "['IsUsEast1', 'IsStaticTrue', 'IsStaticFalse', "
+                    "'IsBoolStringTrue']",
                     path=deque(["Fn::If", 0]),
                     schema_path=deque(
                         [
@@ -142,7 +149,9 @@ def validator(cfn, context):
             {"type": "boolean"},
             [
                 ValidationError(
-                    "'foo' is not one of ['IsUsEast1']",
+                    "'foo' is not one of "
+                    "['IsUsEast1', 'IsStaticTrue', 'IsStaticFalse', "
+                    "'IsBoolStringTrue']",
                     path=deque(["Fn::If", 0]),
                     schema_path=deque(
                         [
@@ -172,11 +181,56 @@ def validator(cfn, context):
                     schema_path=deque(["fn_if"]),
                     validator="fn_if",
                 ),
+            ],
+        ),
+        (
+            # The true branch can never be chosen: IsStaticFalse is a
+            # constant Fn::Equals of two unequal literals. Only W1028
+            # reports the dead branch; the invalid value inside it is
+            # not validated (issue #5023).
+            "Dead true branch of an always-false condition is not validated",
+            {"Fn::If": ["IsStaticFalse", "foo", True]},
+            {"type": "boolean"},
+            [
+                ValidationError(
+                    "['Fn::If', 1] is not reachable. When setting condition "
+                    "'IsStaticFalse' to True",
+                    path=deque(["Fn::If", 1]),
+                ),
+            ],
+        ),
+        (
+            # Mirror case: the false branch can never be chosen.
+            "Dead false branch of an always-true condition is not validated",
+            {"Fn::If": ["IsStaticTrue", True, "foo"]},
+            {"type": "boolean"},
+            [
+                ValidationError(
+                    "['Fn::If', 2] is not reachable. When setting condition "
+                    "'IsStaticTrue' to False",
+                    path=deque(["Fn::If", 2]),
+                ),
+            ],
+        ),
+        (
+            # A boolean compared with its string form is true in
+            # CloudFormation, so [true, "true"] is always true and the
+            # true branch is reachable and validated (issue #5026). Only
+            # the false branch is dead.
+            "Boolean Fn::Equals against its string form is always true",
+            {"Fn::If": ["IsBoolStringTrue", "foo", True]},
+            {"type": "boolean"},
+            [
                 ValidationError(
                     "'foo' is not of type 'boolean'",
-                    path=deque(["Fn::If", 2, "Fn::If", 1]),
-                    schema_path=deque(["fn_if", "type"]),
+                    path=deque(["Fn::If", 1]),
+                    schema_path=deque(["type"]),
                     validator="type",
+                ),
+                ValidationError(
+                    "['Fn::If', 2] is not reachable. When setting condition "
+                    "'IsBoolStringTrue' to False",
+                    path=deque(["Fn::If", 2]),
                 ),
             ],
         ),

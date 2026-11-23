@@ -69,7 +69,10 @@ class TestRulesCollection(BaseTestCase):
         filename = "test/fixtures/templates/bad/generic.yaml"
         template = cfnlint.decode.cfn_yaml.load(filename)
         cfn = Template(filename, template, ["us-east-1"])
-        expected_err_count = 41
+        # 42 includes W1028 on the dead Fn::If branch at line 180:
+        # IsProduction is a constant Fn::Equals of equal literals, so its
+        # false branch can never be chosen (issue #5023).
+        expected_err_count = 42
         matches = []
         matches.extend(self.rules.run(filename, cfn))
         assert len(matches) == expected_err_count, (

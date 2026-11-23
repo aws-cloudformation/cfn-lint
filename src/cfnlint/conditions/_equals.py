@@ -12,7 +12,7 @@ from typing import Any, Mapping, Tuple
 from sympy import Symbol
 from sympy.logic.boolalg import BooleanFalse, BooleanTrue
 
-from cfnlint.conditions._utils import get_hash
+from cfnlint.conditions._utils import equals_string, get_hash
 from cfnlint.helpers import is_function
 
 LOGGER = logging.getLogger(__name__)
@@ -99,7 +99,9 @@ class Equal:
     def _init_parameter(self, parameter: dict[str, Any] | str) -> EqualParameter | str:
         if isinstance(parameter, dict):
             return EqualParameter(parameter)
-        return str(parameter)
+        # CloudFormation compares Fn::Equals operands as strings, so a
+        # boolean true is "true", not Python's "True" (see equals_string).
+        return equals_string(parameter)
 
     @property
     def is_static(self) -> bool | None:
