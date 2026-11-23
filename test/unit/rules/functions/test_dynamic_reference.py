@@ -41,6 +41,17 @@ def context(cfn):
     "name,instance,schema,child_rules,expected",
     [
         (
+            "Valid SSM Parameter followed by later closing braces",
+            '{"ami":"{{resolve:ssm:Parameter}}","cache":{"ttl":600}}',
+            {"type": "test"},
+            {
+                "E1051": _TestRule(),
+                "E1027": _TestRule(),
+                "W1051": _TestRule(),
+            },
+            [],
+        ),
+        (
             "Valid SSM Parameter",
             "{{resolve:ssm:Parameter}}",
             {"type": "test"},
