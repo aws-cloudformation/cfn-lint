@@ -1,0 +1,105 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  NodeGroups:
+    Type: Number
+    Default: 1
+  ParameterGroup:
+    Type: String
+    Default: default.valkey8
+Conditions:
+  UseCluster: !Equals [!Ref NodeGroups, 3]
+Resources:
+  ClusteredGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: cluster mode enabled
+      Engine: valkey
+      CacheNodeType: cache.t4g.micro
+      ClusterMode: enabled
+      TransitEncryptionEnabled: true
+  MultiShardGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: three node groups
+      Engine: valkey
+      CacheNodeType: cache.t4g.micro
+      NumNodeGroups: 3
+      ReplicasPerNodeGroup: 1
+      TransitEncryptionEnabled: true
+  ClusterParameterGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: cluster enabled parameter group
+      Engine: valkey
+      CacheNodeType: cache.t4g.micro
+      CacheParameterGroupName: default.valkey8.cluster.on
+      TransitEncryptionEnabled: true
+  UndeterminedNodeGroups:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: node groups from a parameter
+      Engine: valkey
+      CacheNodeType: cache.t4g.micro
+      NumNodeGroups: !Ref NodeGroups
+      TransitEncryptionEnabled: true
+  UndeterminedParameterGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: parameter group from a parameter
+      Engine: valkey
+      CacheNodeType: cache.t4g.micro
+      CacheParameterGroupName: !Ref ParameterGroup
+      TransitEncryptionEnabled: true
+  ConditionalGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: clustered in one scenario only
+      Engine: valkey
+      CacheNodeType: cache.t4g.micro
+      NumNodeGroups: !If [UseCluster, 3, 1]
+      TransitEncryptionEnabled: true
+  DisabledGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: one shard, cluster mode disabled
+      Engine: valkey
+      CacheNodeType: cache.t4g.micro
+      NumNodeGroups: 1
+      ReplicasPerNodeGroup: 0
+      TransitEncryptionEnabled: true
+  ClusteredEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt ClusteredGroup.ConfigurationEndPoint.Address
+  MultiShardEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt MultiShardGroup.ConfigurationEndPoint.Address
+  ClusterParameterGroupEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt ClusterParameterGroup.ConfigurationEndPoint.Port
+  UndeterminedNodeGroupsEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt UndeterminedNodeGroups.ConfigurationEndPoint.Address
+  UndeterminedParameterGroupEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt UndeterminedParameterGroup.ConfigurationEndPoint.Address
+  ConditionalEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt ConditionalGroup.ConfigurationEndPoint.Address
+  PrimaryEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt DisabledGroup.PrimaryEndPoint.Address

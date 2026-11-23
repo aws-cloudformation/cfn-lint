@@ -1,0 +1,46 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  DisabledGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: one shard, cluster mode disabled
+      Engine: valkey
+      CacheNodeType: cache.t4g.micro
+      NumNodeGroups: 1
+      ReplicasPerNodeGroup: 0
+      TransitEncryptionEnabled: true
+  DisabledGroupNoNodeGroups:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: no node groups, default parameter group
+      Engine: valkey
+      CacheNodeType: cache.t4g.micro
+      CacheParameterGroupName: default.valkey8
+      TransitEncryptionEnabled: true
+  DisabledGroupExplicit:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: cluster mode explicitly disabled
+      Engine: valkey
+      CacheNodeType: cache.t4g.micro
+      ClusterMode: disabled
+      TransitEncryptionEnabled: true
+  Endpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt DisabledGroup.ConfigurationEndPoint.Address
+  EndpointPort:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt DisabledGroupNoNodeGroups.ConfigurationEndPoint.Address
+  EndpointExplicit:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt DisabledGroupExplicit.ConfigurationEndPoint.Port
+Outputs:
+  EndpointPort:
+    Value: !GetAtt DisabledGroup.ConfigurationEndPoint.Port
