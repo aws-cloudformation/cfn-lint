@@ -47,6 +47,19 @@ def rule():
             True,
         ),
         (
+            "Valid image id using ssm on EC2 instance",
+            "resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64",
+            deque(
+                [
+                    "Resources",
+                    "AWS::EC2::Instance",
+                    "Properties",
+                    "ImageId",
+                ]
+            ),
+            True,
+        ),
+        (
             "Invalid image id using ssm",
             "resolve:ssm:/aws/service/ecs/optimized-ami/amazon-linux-2023/recommended/image_id",
             deque([]),

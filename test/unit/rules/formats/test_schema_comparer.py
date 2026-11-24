@@ -47,10 +47,38 @@ from cfnlint.rules.formats._schema_comparer import compare_schemas
             None,
         ),
         (
-            "basic valid with anyOf source with no valid formats",
+            "invalid with anyOf source when destination matches none",
             {"anyOf": [{"format": "bar"}, {"format": "foobar"}]},
             {"format": "foo"},
+            ValidationError(
+                "['bar', 'foobar'] format is incompatible with formats ['foo']",
+            ),
+        ),
+        (
+            "valid with anyOf source matching the second format",
+            {
+                "anyOf": [
+                    {"format": "AWS::Route53::AliasTarget.HostedZoneId"},
+                    {"format": "AWS::Route53::HostedZone.Id"},
+                ]
+            },
+            {"format": "AWS::Route53::HostedZone.Id"},
             None,
+        ),
+        (
+            "invalid with anyOf source Route53 against a VPC id",
+            {
+                "anyOf": [
+                    {"format": "AWS::Route53::AliasTarget.HostedZoneId"},
+                    {"format": "AWS::Route53::HostedZone.Id"},
+                ]
+            },
+            {"format": "AWS::EC2::VPC.Id"},
+            ValidationError(
+                "['AWS::Route53::AliasTarget.HostedZoneId', "
+                "'AWS::Route53::HostedZone.Id'] format is incompatible "
+                "with formats ['AWS::EC2::VPC.Id']",
+            ),
         ),
         (
             "basic valid with anyOf destination",
@@ -105,6 +133,20 @@ from cfnlint.rules.formats._schema_comparer import compare_schemas
                 "with formats "
                 "['AWS::KMS::Key.Arn', 'AWS::KMS::Key.Id', "
                 "'AWS::KMS::Alias.AliasName']",
+            ),
+        ),
+        (
+            "anyOf source with no format keywords is not checked",
+            {"anyOf": [{"type": "string"}, {"type": "object"}]},
+            {"format": "foo"},
+            None,
+        ),
+        (
+            "anyOf source against a destination with no format",
+            {"anyOf": [{"format": "foo"}, {"format": "bar"}]},
+            {"type": "string"},
+            ValidationError(
+                "['foo', 'bar'] format is incompatible",
             ),
         ),
     ],

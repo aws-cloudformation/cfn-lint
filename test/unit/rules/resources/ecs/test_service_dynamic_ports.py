@@ -345,6 +345,27 @@ _service = {
                 }
             },
             deque(["Resources", "Service", "Properties"]),
+            [],
+        ),
+        (
+            {
+                "Resources": {
+                    "TaskDefinition": dict(_task_definition),
+                    "TargetGroup": jsonpatch.apply_patch(
+                        dict(_target_group),
+                        [
+                            {"op": "remove", "path": "/Properties/HealthCheckPort"},
+                            {
+                                "op": "replace",
+                                "path": "/Properties/Protocol",
+                                "value": "GENEVE",
+                            },
+                        ],
+                    ),
+                    "Service": dict(_service),
+                }
+            },
+            deque(["Resources", "Service", "Properties"]),
             [
                 ValidationError(
                     "When using an ECS task definition of host "
@@ -358,6 +379,32 @@ _service = {
                     rule=ServiceDynamicPorts(),
                 )
             ],
+        ),
+        (
+            {
+                "Parameters": {
+                    "MyProtocol": {
+                        "Type": "String",
+                    }
+                },
+                "Resources": {
+                    "TaskDefinition": dict(_task_definition),
+                    "TargetGroup": jsonpatch.apply_patch(
+                        dict(_target_group),
+                        [
+                            {"op": "remove", "path": "/Properties/HealthCheckPort"},
+                            {
+                                "op": "replace",
+                                "path": "/Properties/Protocol",
+                                "value": {"Ref": "MyProtocol"},
+                            },
+                        ],
+                    ),
+                    "Service": dict(_service),
+                },
+            },
+            deque(["Resources", "Service", "Properties"]),
+            [],
         ),
         (
             {

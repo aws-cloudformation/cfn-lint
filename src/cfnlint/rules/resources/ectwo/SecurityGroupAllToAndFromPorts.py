@@ -15,7 +15,12 @@ from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, Schema
 class SecurityGroupAllToAndFromPorts(CfnLintJsonSchema):
     id = "E3688"
     shortdesc = "Validate that to and from ports are both -1"
-    description = "When ToPort or FromPort are -1 the other one must also be -1"
+    description = (
+        "When ToPort or FromPort are -1 the other one must also be -1. "
+        "No pairing constraint applies when IpProtocol is -1. For icmp "
+        "and icmpv6 a FromPort of -1 (all types) requires a ToPort of -1 "
+        "(all codes)."
+    )
     tags = ["resources"]
 
     def __init__(self) -> None:

@@ -15,7 +15,7 @@ from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, Schema
 class AlarmPeriod(CfnLintJsonSchema):
     id = "E3615"
     shortdesc = "Validate the period is a valid value"
-    description = "Valid values are 10, 30, 60, and any multiple of 60."
+    description = "Valid values are 10, 20, 30, 60, and any multiple of 60."
     tags = ["resources", "cloudwatch"]
 
     def __init__(self) -> None:
@@ -28,4 +28,4 @@ class AlarmPeriod(CfnLintJsonSchema):
         )
 
     def message(self, instance: Any, err: ValidationError) -> str:
-        return f"{err.instance!r} is not one of [10, 30, 60] or a multiple of 60"
+        return f"{err.instance!r} is not one of [10, 20, 30, 60] or a multiple of 60"

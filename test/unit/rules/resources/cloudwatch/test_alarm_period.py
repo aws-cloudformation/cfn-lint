@@ -38,6 +38,18 @@ def rule():
         ),
         (
             {
+                "Period": 20,
+            },
+            [],
+        ),
+        (
+            {
+                "Period": "20",
+            },
+            [],
+        ),
+        (
+            {
                 "Period": 30,
             },
             [],
@@ -54,7 +66,7 @@ def rule():
             },
             [
                 ValidationError(
-                    "45 is not one of [10, 30, 60] or a multiple of 60",
+                    "45 is not one of [10, 20, 30, 60] or a multiple of 60",
                     rule=AlarmPeriod(),
                     path=deque(["Period"]),
                     validator="enum",
@@ -68,7 +80,7 @@ def rule():
             },
             [
                 ValidationError(
-                    "'45' is not one of [10, 30, 60] or a multiple of 60",
+                    "'45' is not one of [10, 20, 30, 60] or a multiple of 60",
                     rule=AlarmPeriod(),
                     path=deque(["Period"]),
                     validator="enum",
@@ -82,7 +94,7 @@ def rule():
             },
             [
                 ValidationError(
-                    "121 is not one of [10, 30, 60] or a multiple of 60",
+                    "121 is not one of [10, 20, 30, 60] or a multiple of 60",
                     rule=AlarmPeriod(),
                     path=deque(["Period"]),
                     validator="multipleOf",
@@ -98,7 +110,7 @@ def rule():
             },
             [
                 ValidationError(
-                    "'121' is not one of [10, 30, 60] or a multiple of 60",
+                    "'121' is not one of [10, 20, 30, 60] or a multiple of 60",
                     rule=AlarmPeriod(),
                     path=deque(["Period"]),
                     validator="multipleOf",

@@ -34,11 +34,14 @@ _ENGINE_SUPPORTED = [
     "db2-se",
     "mariadb",
     "mysql",
+    "neptune",
     "oracle-ee",
     "oracle-ee-cdb",
     "oracle-se2",
     "oracle-se2-cdb",
     "postgres",
+    "sqlserver-dev-ee",
+    "sqlserver-dev-se",
     "sqlserver-ee",
     "sqlserver-se",
     "sqlserver-ex",
@@ -75,7 +78,9 @@ def write_output(resource, filename, obj):
 def write_db_cluster(results):
     schema = {"allOf": []}
 
-    engines = sorted(["aurora-mysql", "aurora-postgresql", "mysql", "postgres"])
+    engines = sorted(
+        ["aurora-mysql", "aurora-postgresql", "mysql", "neptune", "postgres"]
+    )
 
     schema["allOf"].append(
         {
@@ -102,7 +107,7 @@ def write_db_cluster(results):
             continue
 
         engine_versions = sorted(results.get(engine).keys())
-        if engine == "aurora-mysql":
+        if engine in ("aurora-mysql", "mysql"):
             for engine_version in engine_versions.copy():
                 sub_engine_version = ".".join(engine_version.split(".")[0:2])
                 if sub_engine_version not in engine_versions:
@@ -136,7 +141,9 @@ def write_db_cluster(results):
 def write_db_cluster_deprecated(deprecated_results):
     schema = {"allOf": []}
 
-    engines = sorted(["aurora-mysql", "aurora-postgresql", "mysql", "postgres"])
+    engines = sorted(
+        ["aurora-mysql", "aurora-postgresql", "mysql", "neptune", "postgres"]
+    )
 
     for engine in engines:
         if not deprecated_results.get(engine):
@@ -212,7 +219,7 @@ def write_db_instance(results):
                 if major_engine_version not in engine_versions:
                     engine_versions.append(major_engine_version)
             engine_versions = sorted(engine_versions)
-        if engine == "aurora-mysql":
+        if engine in ("aurora-mysql", "mariadb", "mysql"):
             for engine_version in engine_versions.copy():
                 sub_engine_version = ".".join(engine_version.split(".")[0:2])
                 if sub_engine_version not in engine_versions:
@@ -369,6 +376,13 @@ def write_elasticache_engines(results):
             continue
 
         engine_versions = sorted(results.get(engine))
+        # ElastiCache resolves "6.x" to the latest Redis OSS 6 minor version
+        if (
+            engine == "redis"
+            and "6.x" not in engine_versions
+            and any(v.startswith("6.") for v in engine_versions)
+        ):
+            engine_versions.append("6.x")
         schema["allOf"].append(
             {
                 "if": {
@@ -416,7 +430,7 @@ def rds_api():
                 if engine not in deprecated_results:
                     deprecated_results[engine] = {}
                 deprecated_results[engine][engine_version] = {}
-            else:
+            elif status == "available":
                 # Track available versions for DB instance options
                 if engine not in available_results:
                     available_results[engine] = {}
@@ -427,7 +441,7 @@ def rds_api():
     write_db_instance(results)
     write_db_instance_deprecated(deprecated_results)
 
-    results_db_instance_class = dict.fromkeys(available_results.keys(), dict())
+    results_db_instance_class = {engine: {} for engine in available_results}
     for engine, versions in available_results.items():
         LOGGER.info(f"Starting RDS DB options collection for engine {engine!r}")
         for engine_version in versions.keys():

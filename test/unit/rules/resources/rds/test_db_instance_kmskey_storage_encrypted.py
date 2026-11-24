@@ -87,6 +87,31 @@ def rule():
                 ),
             ],
         ),
+        (
+            {
+                "Engine": "postgres",
+                "KmsKeyId": "arn:aws:kms:us-east-1:123456789012:key/1234",
+                "SourceDBInstanceIdentifier": "my-source-db",
+            },
+            [],
+        ),
+        (
+            {
+                "Engine": "postgres",
+                "KmsKeyId": "arn:aws:kms:us-east-1:123456789012:key/1234",
+                "SourceDbiResourceId": "db-ABCDEFGHIJKLMNOP",
+            },
+            [],
+        ),
+        (
+            {
+                "Engine": "postgres",
+                "KmsKeyId": "arn:aws:kms:us-east-1:123456789012:key/1234",
+                "StorageEncrypted": True,
+                "SourceDBInstanceIdentifier": "my-source-db",
+            },
+            [],
+        ),
     ],
 )
 def test_validate(instance, expected, rule, validator):

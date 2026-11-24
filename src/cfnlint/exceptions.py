@@ -96,3 +96,29 @@ class ConfigFileError(CfnLintExitException):
         """
         super().__init__(msg)
         self.config = config
+
+
+class SchemaPatchError(CfnLintExitException):
+    """
+    An exception that is raised when an override spec cannot be read or a JSON
+    patch in it cannot be applied to the schema it names.
+    """
+
+
+class TemplatesNotFoundError(CfnLintExitException):
+    """
+    An exception that is raised when the configured templates cannot be resolved.
+
+    This exception is raised when a template path or glob given to the linter
+    matches no files. The CLI reports this as an error level match, so the exit
+    code is 2 rather than the default of 1.
+    """
+
+    def __init__(self, msg: str):
+        """
+        Initialize a new TemplatesNotFoundError instance.
+
+        Args:
+            msg (str): The error message
+        """
+        super().__init__(msg, 2)

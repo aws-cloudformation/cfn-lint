@@ -105,7 +105,36 @@ def compare_schemas(
     f = _backwards_compatibility(source.get(_keyword))
 
     if f is None:
-        return None
+        # A property may accept any of several formats (anyOf). It is
+        # compatible when the destination matches ANY of them; only report
+        # when none match.
+        source_formats = [
+            _backwards_compatibility(subschema.get(_keyword))
+            for subschema in source.get("anyOf", [])
+            if subschema.get(_keyword) is not None
+        ]
+        if not source_formats:
+            return None
+
+        dest_formats: list[str] = []
+        for source_format in source_formats:
+            match, dest_formats = _compare_schemas(source_format, destination)
+            if match:
+                return None
+
+        if dest_formats:
+            return ValidationError(
+                f"{source_formats!r} format is incompatible with "
+                f"formats {dest_formats!r}",
+                schema={"format": source_formats},
+                instance=dest_formats,
+            )
+
+        return ValidationError(
+            f"{source_formats!r} format is incompatible",
+            schema={"format": source_formats},
+            instance=None,
+        )
 
     match, formats = _compare_schemas(f, destination)
     if match:

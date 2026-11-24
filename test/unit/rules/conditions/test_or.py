@@ -42,10 +42,86 @@ def template():
             [],
         ),
         (
-            "Valid or with boolean types",
+            "Invalid literal boolean operands",
             {"Fn::Or": [True, False]},
             {},
-            [],
+            [
+                ValidationError(
+                    "True is not a valid Fn::Or operand; operands must "
+                    "be a condition or a condition function",
+                    validator="fn_or",
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "not",
+                        ]
+                    ),
+                    path=deque(["Fn::Or", 0]),
+                ),
+                ValidationError(
+                    "False is not a valid Fn::Or operand; operands must "
+                    "be a condition or a condition function",
+                    validator="fn_or",
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "not",
+                        ]
+                    ),
+                    path=deque(["Fn::Or", 1]),
+                ),
+            ],
+        ),
+        (
+            "Invalid boolean-like string operands",
+            {"Fn::Or": ["true", "False"]},
+            {},
+            [
+                ValidationError(
+                    "'true' is not a valid Fn::Or operand; operands must "
+                    "be a condition or a condition function",
+                    validator="fn_or",
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "not",
+                        ]
+                    ),
+                    path=deque(["Fn::Or", 0]),
+                ),
+                ValidationError(
+                    "'False' is not a valid Fn::Or operand; operands must "
+                    "be a condition or a condition function",
+                    validator="fn_or",
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "not",
+                        ]
+                    ),
+                    path=deque(["Fn::Or", 1]),
+                ),
+            ],
         ),
         (
             "Invalid Type",
@@ -80,12 +156,57 @@ def template():
                         ]
                     ),
                     path=deque(["Fn::Or", 0]),
+                ),
+                ValidationError(
+                    "True is not a valid Fn::Or operand; operands must "
+                    "be a condition or a condition function",
+                    validator="fn_or",
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "not",
+                        ]
+                    ),
+                    path=deque(["Fn::Or", 1]),
+                ),
+            ],
+        ),
+        (
+            "Fn::If operand",
+            {
+                "Fn::Or": [
+                    {"Condition": "IsUsEast1"},
+                    {"Fn::If": ["IsUsEast1", True, False]},
+                ]
+            },
+            {},
+            [
+                ValidationError(
+                    "{'Fn::If': ['IsUsEast1', True, False]} is not of type 'boolean'",
+                    validator="fn_or",
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
+                    path=deque(["Fn::Or", 1]),
                 )
             ],
         ),
         (
             "Invalid functions in Conditions",
-            {"Fn::Or": [True, {"Fn::Contains": []}]},
+            {"Fn::Or": [{"Condition": "IsUsEast1"}, {"Fn::Contains": []}]},
             {"path": deque(["Conditions", "Condition1"])},
             [
                 ValidationError(

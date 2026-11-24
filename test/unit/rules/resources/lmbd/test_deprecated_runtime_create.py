@@ -43,7 +43,7 @@ def rule():
                 ValidationError(
                     "Runtime 'python3.7' was deprecated on "
                     "'2023-12-04'. Creation was disabled on "
-                    "'2024-01-09' and update on '2027-03-03'. "
+                    "'2024-01-09' and update on '2027-08-31'. "
                     "Please consider updating to 'python3.14'",
                 )
             ],
@@ -51,7 +51,7 @@ def rule():
         (
             # will be caught by the update rule
             "python3.7",
-            datetime(2027, 3, 4),
+            datetime(2027, 9, 1),
             [],
         ),
         (
@@ -69,4 +69,82 @@ def test_lambda_runtime(instance, date, expected, rule, validator):
         mock_dt.today.return_value = date
         mock_dt.strptime = datetime.strptime
         errs = list(rule.validate(validator, "LambdaRuntime", instance, {}))
+    assert errs == expected, f"Expected {expected} got {errs}"
+
+
+@pytest.mark.parametrize(
+    "runtime_data,date,expected",
+    [
+        (
+            # blocking not scheduled, before deprecation
+            {
+                "create-block": None,
+                "deprecated": "2026-11-10",
+                "successor": "foo2",
+                "update-block": None,
+            },
+            datetime(2026, 11, 9),
+            [],
+        ),
+        (
+            # blocking not scheduled, after deprecation
+            {
+                "create-block": None,
+                "deprecated": "2026-11-10",
+                "successor": "foo2",
+                "update-block": None,
+            },
+            datetime(2026, 11, 10),
+            [],
+        ),
+        (
+            # creation blocking not scheduled, update already blocked
+            {
+                "create-block": None,
+                "deprecated": "2026-11-10",
+                "successor": "foo2",
+                "update-block": "2026-11-20",
+            },
+            datetime(2026, 11, 20),
+            [],
+        ),
+        (
+            # update blocking not scheduled, creation not blocked yet
+            {
+                "create-block": "2026-11-20",
+                "deprecated": "2026-11-10",
+                "successor": "foo2",
+                "update-block": None,
+            },
+            datetime(2026, 11, 19),
+            [],
+        ),
+        (
+            # update blocking not scheduled, creation already blocked
+            {
+                "create-block": "2026-11-20",
+                "deprecated": "2026-11-10",
+                "successor": "foo2",
+                "update-block": None,
+            },
+            datetime(2026, 11, 20),
+            [
+                ValidationError(
+                    "Runtime 'foo1' was deprecated on '2026-11-10'. "
+                    "Creation was disabled on '2026-11-20' and update "
+                    "blocking is not yet scheduled. "
+                    "Please consider updating to 'foo2'",
+                )
+            ],
+        ),
+    ],
+)
+def test_lambda_runtime_unscheduled(runtime_data, date, expected, rule, validator):
+    with patch(
+        "cfnlint.rules.resources.lmbd.DeprecatedRuntimeCreate.datetime"
+    ) as mock_dt:
+        mock_dt.today.return_value = date
+        mock_dt.strptime = datetime.strptime
+        with patch.dict(rule.deprecated_runtimes, {"foo1": runtime_data}):
+            errs = list(rule.validate(validator, "LambdaRuntime", "foo1", {}))
     assert errs == expected, f"Expected {expected} got {errs}"

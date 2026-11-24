@@ -27,6 +27,21 @@ class ServiceDynamicPorts(CfnLintKeyword):
     )
     tags = ["resources"]
 
+    # Target group protocols where an omitted HealthCheckPort
+    # defaults to "traffic-port"
+    _traffic_port_default_protocols = frozenset(
+        [
+            "HTTP",
+            "HTTPS",
+            "TCP",
+            "TLS",
+            "UDP",
+            "TCP_UDP",
+            "QUIC",
+            "TCP_QUIC",
+        ]
+    )
+
     def __init__(self) -> None:
         super().__init__(
             keywords=["Resources/AWS::ECS::Service/Properties"],
@@ -102,6 +117,17 @@ class ServiceDynamicPorts(CfnLintKeyword):
                     lb_validator,
                 )
 
+    def _health_check_port_defaults_to_traffic_port(self, target_group: Any) -> bool:
+        properties = target_group.get("Properties")
+        if not isinstance(properties, dict):
+            return True
+        protocol = properties.get("Protocol")
+        if not isinstance(protocol, str):
+            # Protocol is missing or set with a function (like Ref),
+            # so we can't tell the default. Don't report.
+            return True
+        return protocol in self._traffic_port_default_protocols
+
     def _get_target_group_properties(
         self, validator: Validator, resource_name: Any
     ) -> Iterator[tuple[str | int | None, Validator]]:
@@ -117,6 +143,8 @@ class ServiceDynamicPorts(CfnLintKeyword):
             path=deque(["Properties", "HealthCheckPort"]),
         ):
             if port is None:
+                if self._health_check_port_defaults_to_traffic_port(target_group):
+                    continue
                 yield port, port_validator
                 continue
 
