@@ -76,13 +76,13 @@ Evidence, strongest first:
 4. **AWS documentation.** Good for intent, frequently stale on exact numbers.
 5. **The base CFN resource schema.** Weakest. A hint, never proof.
 
-**`aws cloudformation validate-template` is NOT evidence** for a property-level
-constraint. It parses the template and checks template-level structure; it does
-not invoke a resource provider, so for most rules it proves nothing, and where
-it does respond it may be stricter or looser than `CreateStack`. A constraint can
-only be established by a deployment or by the owning service's API. Treat a
-`validate-template` result as no stronger than documentation, and never cite it
-as a probe.
+**`aws cloudformation validate-template` is not evidence for a property-level
+constraint.** It invokes no resource provider, so a property value, limit, enum
+or cross-property rule can only be established by a deployment or by the owning
+service's API — never cite `validate-template` as a probe for one. It *is*
+evidence for what the control plane itself parses: parameter types, section
+structure, name rules, intrinsic function shape, template size. For those it
+returns the same error `CreateStack` does — see `verification.md`.
 
 For a parameter constraint a deployment is free, because `Default` is validated
 before any resource exists — see the parameter probe in `verification.md`.
@@ -107,14 +107,21 @@ For every rule, the suite must contain:
 If a PR adds a rule and only tests the failing case, that is a blocking review
 comment.
 
-## Reviewing someone else's rule
+## Reviewing someone else's change
 
 Ask, in order:
 
-1. What is the evidence for this constraint, and is it traceable? A deployment
+1. **What does this change reach?** Name every rule, schema and resource type that
+   inherits the new behaviour. A change under `src/cfnlint/jsonschema/`, to a shared
+   helper, or to a schema in `data/schemas/other/` is a change to the engine, not to
+   a rule — enumerate the callers before judging anything else. If you cannot state
+   the surface, you cannot review the fix.
+2. **What does it stop reporting?** A change that only removes findings still needs
+   justifying, and it will generate no user complaints to correct it later.
+3. What is the evidence for this constraint, and is it traceable? A deployment
    or the owning service's API — not `validate-template`, not the base schema.
-2. Which valid templates does this now reject? Name one, or prove there are none.
-3. Is `E` the right severity, or does some valid account configuration deploy this?
-4. Does it stay silent on `Ref`, `GetAtt`, `Fn::If`, and a non-scalar?
-5. Does this belong in a rule at all, or in enhanced-schemas? See `schema-sources.md`.
-6. Run it. See `verification.md` — do not accept the author's claim untested.
+4. Which valid templates does this now reject? Name one, or prove there are none.
+5. Is `E` the right severity, or does some valid account configuration deploy this?
+6. Does it stay silent on `Ref`, `GetAtt`, `Fn::If`, and a non-scalar?
+7. Does this belong in a rule at all, or in enhanced-schemas? See `schema-sources.md`.
+8. Run it. See `verification.md` — do not accept the author's claim untested.

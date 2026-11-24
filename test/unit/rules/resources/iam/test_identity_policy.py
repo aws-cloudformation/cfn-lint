@@ -3,9 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import json
 from collections import deque
 from unittest import TestCase
 
+import pytest
+
+from cfnlint.api import lint
 from cfnlint.context import Context
 from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
@@ -246,6 +250,54 @@ class TestIdentityPolicies(TestCase):
         self.assertEqual(errs[0].message, "array items are not unique for keys ['Sid']")
         self.assertListEqual(list(errs[0].path), ["Statement"])
 
+    def test_empty_sid(self):
+        """IAM accepts an empty Sid"""
+        validator = CfnTemplateValidator()
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Sid": "",
+                    "Effect": "Allow",
+                    "Action": "s3:GetObject",
+                    "Resource": "*",
+                },
+            ],
+        }
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertListEqual(errs, [])
+
+    def test_newline_only_sid(self):
+        """A Sid made only of a newline is not an empty Sid"""
+        validator = CfnTemplateValidator()
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Sid": "\n",
+                    "Effect": "Allow",
+                    "Action": "s3:GetObject",
+                    "Resource": "*",
+                },
+            ],
+        }
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertEqual(len(errs), 1, errs)
+        self.assertEqual(errs[0].validator, "pattern")
+        self.assertListEqual(list(errs[0].path), ["Statement", 0, "Sid"])
+
     def test_pattern_sid(self):
         validator = CfnTemplateValidator()
 
@@ -270,7 +322,7 @@ class TestIdentityPolicies(TestCase):
             errs,
             [
                 ValidationError(
-                    message="'A ' does not match '^[A-Za-z0-9]+$'",
+                    message="'A ' does not match '^[A-Za-z0-9]*\\\\Z'",
                     validator="pattern",
                     path=deque(["Statement", 0, "Sid"]),
                     schema_path=deque(
@@ -287,3 +339,189 @@ class TestIdentityPolicies(TestCase):
                 )
             ],
         )
+
+    def _sid_errors(self, policy):
+        return list(
+            self.rule.validate(
+                validator=CfnTemplateValidator().evolve(
+                    context=Context(functions=FUNCTIONS)
+                ),
+                policy=policy,
+                schema={},
+                policy_type=None,
+            )
+        )
+
+    def _statements(self, *sids):
+        """One statement per Sid; None leaves the Sid out"""
+        actions = ["s3:GetObject", "s3:PutObject", "s3:ListBucket", "kms:Decrypt"]
+        self.assertLessEqual(len(sids), len(actions))
+        statements = []
+        for sid, action in zip(sids, actions):
+            statement = {"Effect": "Allow", "Action": action, "Resource": "*"}
+            if sid is not None:
+                statement["Sid"] = sid
+            statements.append(statement)
+        return statements
+
+    def test_repeated_empty_sid(self):
+        """IAM accepts any number of empty Sids"""
+        policy = {"Version": "2012-10-17", "Statement": self._statements("", "")}
+
+        self.assertListEqual(self._sid_errors(policy), [])
+
+    def test_repeated_empty_sid_with_unique_sids(self):
+        """Empty Sids alongside distinct named Sids are valid"""
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": self._statements("", "Read", "", "Write"),
+        }
+
+        self.assertListEqual(self._sid_errors(policy), [])
+
+    def test_repeated_empty_sid_with_duplicate_sid(self):
+        """A repeated named Sid is reported when empty Sids are also present"""
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": self._statements("", "", "Same", "Same"),
+        }
+
+        errs = self._sid_errors(policy)
+        self.assertEqual(len(errs), 1, errs)
+        self.assertEqual(errs[0].message, "array items are not unique for keys ['Sid']")
+        self.assertListEqual(list(errs[0].path), ["Statement"])
+
+    def test_repeated_empty_sid_string_policy(self):
+        """A policy given as a JSON string is checked the same way"""
+        policy = json.dumps(
+            {"Version": "2012-10-17", "Statement": self._statements("", "")}
+        )
+
+        self.assertListEqual(self._sid_errors(policy), [])
+
+        policy = json.dumps(
+            {"Version": "2012-10-17", "Statement": self._statements("All", "All")}
+        )
+
+        errs = self._sid_errors(policy)
+        self.assertEqual(len(errs), 1, errs)
+        self.assertEqual(errs[0].validator, "uniqueKeys")
+
+    def test_absent_sid(self):
+        """Statements without a Sid, alone or next to empty Sids, are valid"""
+        for sids in ((None, None), ("", None, "", None)):
+            with self.subTest(sids=sids):
+                policy = {
+                    "Version": "2012-10-17",
+                    "Statement": self._statements(*sids),
+                }
+                self.assertListEqual(self._sid_errors(policy), [])
+
+    def test_statement_object_empty_sid(self):
+        """A single Statement object has nothing to repeat"""
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": self._statements("")[0],
+        }
+
+        self.assertListEqual(self._sid_errors(policy), [])
+
+
+_TEMPLATE_CONDITION = """
+Parameters:
+  Env:
+    Type: String
+Conditions:
+  IsProd: !Equals [!Ref Env, prod]
+Resources:
+  Policy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: {first}
+            Effect: Allow
+            Action: s3:GetObject
+            Resource: "*"
+          - Sid: {second}
+            Effect: Allow
+            Action: s3:ListBucket
+            Resource: "*"
+          - !If
+            - IsProd
+            - Sid: ""
+              Effect: Allow
+              Action: s3:PutObject
+              Resource: "*"
+            - !Ref AWS::NoValue
+"""
+
+
+_TEMPLATE_STATEMENT_CONDITION = """
+Parameters:
+  Env:
+    Type: String
+Conditions:
+  IsProd: !Equals [!Ref Env, prod]
+Resources:
+  Policy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement: !If
+          - IsProd
+          - - Sid: ""
+              Effect: Allow
+              Action: s3:GetObject
+              Resource: "*"
+            - Sid: ""
+              Effect: Allow
+              Action: s3:PutObject
+              Resource: "*"
+          - - Sid: {sid}
+              Effect: Allow
+              Action: s3:GetObject
+              Resource: "*"
+            - Sid: {sid}
+              Effect: Allow
+              Action: s3:PutObject
+              Resource: "*"
+"""
+
+
+@pytest.mark.parametrize(
+    "sid,expected",
+    [
+        ('""', []),
+        ("Same", ["E3510"]),
+    ],
+    ids=[
+        "empty sids in both Fn::If branches",
+        "repeated sid in one Fn::If branch",
+    ],
+)
+def test_repeated_empty_sid_statement_condition(sid, expected):
+    template = _TEMPLATE_STATEMENT_CONDITION.replace("{sid}", sid)
+    matches = lint(template, regions=["us-east-1"])
+    assert [m.rule.id for m in matches if m.rule.id == "E3510"] == expected
+
+
+@pytest.mark.parametrize(
+    "first,second,expected",
+    [
+        ('""', '""', []),
+        ("Read", "Write", []),
+        ("Same", "Same", ["E3510"]),
+    ],
+    ids=[
+        "empty sids with an empty sid under Fn::If",
+        "unique sids with an empty sid under Fn::If",
+        "repeated sid with an empty sid under Fn::If",
+    ],
+)
+def test_repeated_empty_sid_condition(first, second, expected):
+    template = _TEMPLATE_CONDITION.replace("{first}", first).replace("{second}", second)
+    matches = lint(template, regions=["us-east-1"])
+    assert [m.rule.id for m in matches if m.rule.id == "E3510"] == expected

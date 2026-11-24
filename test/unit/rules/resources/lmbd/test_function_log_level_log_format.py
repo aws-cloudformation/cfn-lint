@@ -32,6 +32,16 @@ def rule():
         (
             {
                 "LoggingConfig": {
+                    "LogFormat": "JSON",
+                    "ApplicationLogLevel": "INFO",
+                }
+            },
+            0,
+            None,
+        ),
+        (
+            {
+                "LoggingConfig": {
                     "LogFormat": "Text",
                 }
             },
@@ -48,6 +58,19 @@ def rule():
                 "LoggingConfig": {
                     "LogFormat": "Text",
                     "SystemLogLevel": "INFO",
+                }
+            },
+            1,
+            (
+                "LogLevel is not supported when LogFormat is set to 'Text'. "
+                "Remove LogLevel from your request or change the LogFormat to 'JSON'"
+            ),
+        ),
+        (
+            {
+                "LoggingConfig": {
+                    "LogFormat": "Text",
+                    "ApplicationLogLevel": "INFO",
                 }
             },
             1,

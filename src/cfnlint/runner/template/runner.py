@@ -29,10 +29,21 @@ def _dedup(matches: Iterator[Match]) -> Iterator[Match]:
     Yields:
         Match: The unique matches from the input sequence.
     """
-    seen: list[Match] = []
+    # key covers every field Match.__eq__ compares; rules compare by id
+    seen: set[tuple] = set()
     for match in matches:
-        if match not in seen:
-            seen.append(match)
+        key = (
+            match.message,
+            match.rule.id,
+            match.filename,
+            match.linenumber,
+            match.columnnumber,
+            match.linenumberend,
+            match.columnnumberend,
+            match.parent_id,
+        )
+        if key not in seen:
+            seen.add(key)
             yield match
 
 

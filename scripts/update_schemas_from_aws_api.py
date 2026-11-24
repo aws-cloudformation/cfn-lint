@@ -376,6 +376,13 @@ def write_elasticache_engines(results):
             continue
 
         engine_versions = sorted(results.get(engine))
+        # ElastiCache resolves "6.x" to the latest Redis OSS 6 minor version
+        if (
+            engine == "redis"
+            and "6.x" not in engine_versions
+            and any(v.startswith("6.") for v in engine_versions)
+        ):
+            engine_versions.append("6.x")
         schema["allOf"].append(
             {
                 "if": {
@@ -423,7 +430,7 @@ def rds_api():
                 if engine not in deprecated_results:
                     deprecated_results[engine] = {}
                 deprecated_results[engine][engine_version] = {}
-            else:
+            elif status == "available":
                 # Track available versions for DB instance options
                 if engine not in available_results:
                     available_results[engine] = {}
@@ -434,7 +441,7 @@ def rds_api():
     write_db_instance(results)
     write_db_instance_deprecated(deprecated_results)
 
-    results_db_instance_class = dict.fromkeys(available_results.keys(), dict())
+    results_db_instance_class = {engine: {} for engine in available_results}
     for engine, versions in available_results.items():
         LOGGER.info(f"Starting RDS DB options collection for engine {engine!r}")
         for engine_version in versions.keys():

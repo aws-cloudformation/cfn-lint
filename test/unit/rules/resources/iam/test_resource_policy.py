@@ -269,6 +269,41 @@ class TestResourcePolicy(TestCase):
         )
         self.assertListEqual(errs, [])
 
+    def test_principal_every_partition(self):
+        """Principal ARNs are valid in every partition"""
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::S3::BucketPolicy", "Properties"])
+                ),
+            )
+        )
+
+        for principal in (
+            "arn:aws-eusc:iam::123456789012:root",
+            "arn:aws-eusc:iam::123456789012:role/Reader",
+            "arn:aws-eusc:sts::123456789012:assumed-role/Reader/session",
+        ):
+            policy = {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {"AWS": principal},
+                        "Action": "s3:GetObject",
+                        "Resource": "arn:aws-eusc:s3:::bucket/*",
+                    }
+                ],
+            }
+            with self.subTest(principal=principal):
+                errs = list(
+                    self.rule.validate(
+                        validator=validator, policy=policy, schema={}, policy_type=None
+                    )
+                )
+                self.assertListEqual(errs, [])
+
     def test_assumed_role(self):
         validator = CfnTemplateValidator({}).evolve(
             context=Context(
@@ -373,3 +408,37 @@ class TestResourcePolicy(TestCase):
                 )
             ],
         )
+
+    def test_repeated_empty_sid_sns(self):
+        """SNS rejects repeated empty Sids, so they are reported"""
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::SNS::TopicPolicy", "Properties"])
+                ),
+            )
+        )
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Sid": "",
+                    "Effect": "Allow",
+                    "Action": action,
+                    "Resource": "arn:aws:sns:us-east-1:123456789012:topic",
+                    "Principal": {"AWS": "arn:aws:iam::123456789012:root"},
+                }
+                for action in ["sns:Publish", "sns:Subscribe"]
+            ],
+        }
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertEqual(len(errs), 1, errs)
+        self.assertEqual(errs[0].message, "array items are not unique for keys ['Sid']")
+        self.assertListEqual(list(errs[0].path), ["Statement"])

@@ -16,7 +16,7 @@ class FunctionCapacityProviderTimeout(CfnLintJsonSchema):
     id = "E3717"
     shortdesc = "Validate Lambda function Timeout based on CapacityProviderConfig"
     description = (
-        "The maximum Timeout of 900 seconds only applies to functions without "
+        "The maximum Timeout of 1800 seconds only applies to functions without "
         "CapacityProviderConfig. Functions using Lambda Managed Instances "
         "(CapacityProviderConfig) can specify a Timeout up to 5400 seconds."
     )
@@ -29,6 +29,7 @@ class FunctionCapacityProviderTimeout(CfnLintJsonSchema):
         super().__init__(
             keywords=[
                 "Resources/AWS::Lambda::Function/Properties",
+                "Resources/AWS::Serverless::Function/Properties",
             ],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_lambda_function,
@@ -39,6 +40,6 @@ class FunctionCapacityProviderTimeout(CfnLintJsonSchema):
     def message(self, instance: Any, err: ValidationError) -> str:
         timeout = instance.get("Timeout")
         return (
-            f"{timeout} is greater than the maximum of 900 for functions "
+            f"{timeout} is greater than the maximum of 1800 for functions "
             "without 'CapacityProviderConfig' (Lambda Managed Instances)"
         )
