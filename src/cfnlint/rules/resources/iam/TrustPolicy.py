@@ -26,3 +26,4 @@ class TrustPolicy(Policy):
             "trust",
             "policy_trust.json",
         )
+        self.validators = {"uniqueKeys": self._unique_named_sids}

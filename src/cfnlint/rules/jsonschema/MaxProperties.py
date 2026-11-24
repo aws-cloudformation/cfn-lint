@@ -23,16 +23,27 @@ class MaxProperties(CloudFormationLintRule):
             self.child_rules[approaching_limit_rule] = None
 
     # pylint: disable=unused-argument
+    def _count_properties(self, validator, instance) -> int:
+        """Number of properties in the instance used for the limit check.
+
+        Rules can override this to count something other than the written
+        properties (for example, resources the template expands to).
+        """
+        return len(instance)
+
+    # pylint: disable=unused-argument
+    def _over_limit_message(self, validator, instance, mP) -> str:
+        """Message for an instance that exceeds the property limit."""
+        return f"{validator.context.path.path_string!r} has more than {mP!r} properties"
+
+    # pylint: disable=unused-argument
     def maxProperties(self, validator, mP, instance, schema):
         if not validator.is_type(instance, "object"):
             return
 
-        percent = len(instance) / mP
+        percent = self._count_properties(validator, instance) / mP
         if percent > 1:
-            yield ValidationError(
-                f"{validator.context.path.path_string!r} "
-                f"has more than {mP!r} properties"
-            )
+            yield ValidationError(self._over_limit_message(validator, instance, mP))
             return
         if mP <= 1:
             return

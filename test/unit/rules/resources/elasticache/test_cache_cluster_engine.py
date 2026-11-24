@@ -25,6 +25,10 @@ def rule():
             [],
         ),
         (
+            {"Engine": "redis", "EngineVersion": "6.x"},
+            [],
+        ),
+        (
             {
                 "Engine": "redis",
             },
@@ -43,7 +47,7 @@ def rule():
                 ValidationError(
                     "'7.1.0' is not one of "
                     "['4.0.10', '5.0.6', "
-                    "'6.0', '6.2', '7.0', '7.1']",
+                    "'6.0', '6.2', '6.x', '7.0', '7.1']",
                     validator="enum",
                     path=deque(["EngineVersion"]),
                     schema_path=[

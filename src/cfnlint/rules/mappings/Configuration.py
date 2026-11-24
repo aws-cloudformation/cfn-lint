@@ -33,6 +33,7 @@ class Configuration(CfnLintJsonSchema):
         )
         self.rule_set = {
             "maxProperties": "E7010",
+            "propertyNames": "E7002",
             "maxLength": "E7002",
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))

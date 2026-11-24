@@ -9,6 +9,7 @@ import os
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import MagicMock, mock_open, patch
 
+from cfnlint.exceptions import SchemaPatchError
 from cfnlint.schema._patch import SchemaPatch
 from cfnlint.schema.other_schema_manager import OtherSchemaManager, SchemaNotFoundError
 
@@ -109,11 +110,7 @@ class TestOtherSchemaManager(BaseTestCase):
 
     @patch("cfnlint.schema.other_schema_manager.load_resource")
     @patch("cfnlint.schema.other_schema_manager.jsonpatch.JsonPatch")
-    @patch("cfnlint.schema.other_schema_manager.sys.exit")
-    @patch("cfnlint.schema.other_schema_manager.print")
-    def test_patch_failure(
-        self, mock_print, mock_exit, mock_json_patch, mock_load_resource
-    ):
+    def test_patch_failure(self, mock_json_patch, mock_load_resource):
         """Test when patching a schema fails"""
         # Setup the schema to be loaded successfully
         mock_load_resource.return_value = self.test_schema
@@ -128,16 +125,14 @@ class TestOtherSchemaManager(BaseTestCase):
         patch = SchemaPatch([], [], {schema_path: self.schema_patch})
 
         # Apply the patch
-        self.manager.patch(patch, "us-east-1")
+        with self.assertRaises(SchemaPatchError) as raised:
+            self.manager.patch(patch, "us-east-1")
 
-        # Verify that print was called with the error message
-        mock_print.assert_called_with(
+        self.assertEqual(
+            str(raised.exception),
             f"Error applying patch {self.schema_patch} for "
-            f"{schema_path}: Invalid patch operation"
+            f"{schema_path}: Invalid patch operation",
         )
-
-        # Verify that sys.exit was called with exit code 1
-        mock_exit.assert_called_with(1)
 
     @patch("cfnlint.schema.other_schema_manager.open", new_callable=mock_open)
     @patch("cfnlint.schema.other_schema_manager.os.walk")
