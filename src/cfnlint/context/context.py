@@ -464,13 +464,16 @@ def _nested_stack_get_atts(filename: str, template_url: str) -> None | Attribute
     if os.path.isabs(template_url):
         return None
 
-    base_dir = os.path.dirname(os.path.abspath(filename))
-    template_path = os.path.normpath(os.path.join(base_dir, template_url))
+    # realpath so symlinks can't escape the containment check below
+    base_dir = os.path.dirname(os.path.realpath(filename))
+    template_path = os.path.realpath(os.path.join(base_dir, template_url))
 
-    # Ensure resolved path stays within current working directory
-    # to prevent path traversal attacks (e.g., ../../../../etc/passwd)
-    cwd = os.path.abspath(os.getcwd())
-    if not (template_path.startswith(cwd + os.sep) or template_path == cwd):
+    # the nested template must stay inside the working directory
+    cwd = os.path.realpath(os.getcwd())
+    try:
+        if os.path.commonpath([cwd, template_path]) != cwd:
+            return None
+    except ValueError:
         return None
 
     if re.match(REGEX_DYN_REF, template_path):
@@ -482,6 +485,11 @@ def _nested_stack_get_atts(filename: str, template_url: str) -> None | Attribute
     except Exception:  # noqa: E722
         return None
     if matches or tmp is None:
+        return None
+
+    # only trust Outputs from a file shaped like a template
+    resources = tmp.get("Resources")
+    if not isinstance(resources, dict) or not resources:
         return None
 
     outputs = AttributeDict()
