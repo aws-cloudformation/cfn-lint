@@ -753,6 +753,7 @@ def create_context_for_template(
             cfn.template.get("Conditions", {}),
             cfn.template.get("Rules", {}),
             parameters,
+            cfn.template.get("Mappings", {}),
         )
     except (ValueError, AttributeError):
         conditions = Conditions.create_from_instance({}, {}, {})
