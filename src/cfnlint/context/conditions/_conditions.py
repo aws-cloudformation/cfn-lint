@@ -5,7 +5,6 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-import itertools
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Iterator
 
@@ -52,6 +51,7 @@ class Conditions:
         init=True, default_factory=dict, compare=False, repr=False
     )
     _max_scenarios: int = field(init=False, default=128)
+    _max_pin_attempts: int = field(init=False, default=2048)
 
     @property
     def cnf(self) -> EncodedCNF:
@@ -235,19 +235,45 @@ class Conditions:
         return self._is_satisfiable(self._hard_pins | {(name, value)})
 
     def _build_conditions(self, conditions: set[str]) -> Iterator["Conditions"]:
-        scenarios_attempted = 0
-        for product in itertools.product([True, False], repeat=len(conditions)):
-            params = dict(zip(conditions, product))
-            try:
-                yield self.evolve(params, assumed=True)
-            except Unsatisfiable:
-                pass
+        """Yield up to ``_max_scenarios`` satisfiable scenarios.
 
-            scenarios_attempted += 1
-            # On occassions people will use a lot of non-related conditions
-            # this is fail safe to limit the maximum number of responses
-            if scenarios_attempted >= self._max_scenarios:
+        Conditions are pinned one at a time, True before False, so scenarios
+        come in the same order as ``itertools.product``.  A set of pins that
+        is unsatisfiable is skipped with every scenario that extends it.
+        Every satisfiable set of pins extends to at least one scenario, so the
+        first scenario is found within two pins per condition, and the search
+        stops after ``_max_pin_attempts`` pins.
+        """
+        names = list(conditions)
+        yielded = 0
+        attempts = 0
+
+        def scenarios(i: int, current: "Conditions") -> Iterator["Conditions"]:
+            nonlocal yielded, attempts
+            if i == len(names):
+                yielded += 1
+                yield current
                 return
+            name = names[i]
+            for value in (True, False):
+                # On occasions people will use a lot of non-related conditions
+                # this is fail safe to limit the maximum number of responses
+                # and the pins tried to find them
+                if yielded >= self._max_scenarios or attempts >= self._max_pin_attempts:
+                    return
+                attempts += 1
+                try:
+                    scenario = current.evolve({name: value}, assumed=True)
+                except Unsatisfiable:
+                    # evolve only returns satisfiable pins, so when one value
+                    # is unsatisfiable the other is satisfiable and needs no
+                    # solver call.  self may not have been solved yet.
+                    if current is not self:
+                        self._satisfiable[current._pins | {(name, not value)}] = True
+                    continue
+                yield from scenarios(i + 1, scenario)
+
+        yield from scenarios(0, self)
 
     def evolve_from_instance(
         self, instance: Any, context: "Context"

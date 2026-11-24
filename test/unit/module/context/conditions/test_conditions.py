@@ -667,3 +667,138 @@ def test_solver_calls_do_not_grow_with_reused_conditions():
 
     assert calls[0] > 0
     assert calls[0] == calls[1]
+
+
+def _subscription_with_exclusive_conditions(count):
+    """An SNS subscription missing its required Protocol, with one optional
+    property per condition. Every condition compares the same parameter to a
+    different value, so at most one of them is true."""
+    properties = [
+        ("DeliveryPolicy", {"healthyRetryPolicy": {"numRetries": 3}}),
+        ("Endpoint", "arn:aws:lambda:us-east-1:123456789012:function:handler"),
+        ("FilterPolicy", {"type": ["order"]}),
+        ("FilterPolicyScope", "MessageAttributes"),
+        ("RawMessageDelivery", True),
+        (
+            "RedrivePolicy",
+            {"deadLetterTargetArn": "arn:aws:sqs:us-east-1:123456789012:dlq"},
+        ),
+        ("Region", "us-east-1"),
+        (
+            "ReplayPolicy",
+            {"pointType": "Timestamp", "startingPoint": "2024-01-01T00:00:00Z"},
+        ),
+        ("SubscriptionRoleArn", "arn:aws:iam::123456789012:role/sns"),
+    ][:count]
+    return {
+        "Parameters": {"Env": {"Type": "String", "Default": "none"}},
+        "Conditions": {
+            f"IsEnv{i}": {"Fn::Equals": [{"Ref": "Env"}, f"env{i}"]}
+            for i in range(count)
+        },
+        "Resources": {
+            "Topic": {"Type": "AWS::SNS::Topic"},
+            "Subscription": {
+                "Type": "AWS::SNS::Subscription",
+                "Properties": {
+                    "TopicArn": {"Ref": "Topic"},
+                    **{
+                        name: {"Fn::If": [f"IsEnv{i}", value, {"Ref": "AWS::NoValue"}]}
+                        for i, (name, value) in enumerate(properties)
+                    },
+                },
+            },
+        },
+    }
+
+
+@pytest.mark.parametrize("count", [7, 9])
+def test_scenarios_skip_unsatisfiable_combinations(count):
+    """Combinations that pin two exclusive conditions True are never
+    satisfiable, so they must not use up the scenario limit before the
+    satisfiable ones are reached (issue #5047)."""
+    cfn = Template(None, _subscription_with_exclusive_conditions(count))
+    context = create_context_for_template(cfn)
+    instance = cfn.template["Resources"]["Subscription"]["Properties"]
+
+    scenarios = [
+        s.status for _, s in context.conditions.evolve_from_instance(instance, context)
+    ]
+
+    # One scenario with every condition False, and one per condition True.
+    assert len(scenarios) == count + 1
+    assert sorted(sum(s.values()) for s in scenarios) == [0] + [1] * count
+
+
+def test_scenarios_limit_counts_satisfiable_scenarios():
+    """Independent conditions are all satisfiable together, so the limit is
+    reached with exactly that many scenarios."""
+    count = 8
+    cfn = Template(
+        None,
+        {
+            "Parameters": {
+                f"P{i}": {"Type": "String", "Default": "a"} for i in range(count)
+            },
+            "Conditions": {
+                f"C{i}": {"Fn::Equals": [{"Ref": f"P{i}"}, "a"]} for i in range(count)
+            },
+        },
+    )
+    context = create_context_for_template(cfn)
+    instance = [{"Fn::If": [f"C{i}", i, {"Ref": "AWS::NoValue"}]} for i in range(count)]
+
+    scenarios = [
+        tuple(sorted(s.status.items()))
+        for _, s in context.conditions.evolve_from_instance(instance, context)
+    ]
+
+    assert len(scenarios) == context.conditions._max_scenarios
+    assert len(set(scenarios)) == len(scenarios)
+
+
+def test_scenarios_skip_solving_the_only_possible_value():
+    """When pinning a condition True is unsatisfiable, pinning it False is
+    satisfiable without asking the solver."""
+    cfn = Template(None, _subscription_with_exclusive_conditions(3))
+    context = create_context_for_template(cfn)
+    instance = cfn.template["Resources"]["Subscription"]["Properties"]
+
+    with patch(
+        "cfnlint.context.conditions._conditions.satisfiable", wraps=satisfiable
+    ) as solver:
+        scenarios = list(context.conditions.evolve_from_instance(instance, context))
+
+    assert len(scenarios) == 4
+    # 12 sets of pins are evaluated; the three False pins that follow an
+    # unsatisfiable True pin are not solved.
+    assert solver.call_count == 9
+
+
+@pytest.mark.parametrize("count", [7, 9])
+def test_required_property_with_exclusive_conditions(count):
+    """E3003 reports the missing Protocol however many exclusive conditions
+    the other properties use (issue #5047)."""
+    matches = lint(
+        json.dumps(_subscription_with_exclusive_conditions(count)),
+        config=ManualArgs(regions=["us-east-1"]),
+    )
+
+    assert [(m.rule.id, m.message) for m in matches] == [
+        ("E3003", "'Protocol' is a required property")
+    ]
+
+
+@pytest.mark.parametrize("attempts,expected", [(17, 1), (16, 0)])
+def test_scenarios_stop_at_the_pin_attempt_limit(attempts, expected):
+    """The first scenario takes at most two pins per condition: with nine
+    exclusive conditions, the first condition True and then each later one
+    tried True and False."""
+    cfn = Template(None, _subscription_with_exclusive_conditions(9))
+    context = create_context_for_template(cfn)
+    instance = cfn.template["Resources"]["Subscription"]["Properties"]
+    object.__setattr__(context.conditions, "_max_pin_attempts", attempts)
+
+    scenarios = list(context.conditions.evolve_from_instance(instance, context))
+
+    assert len(scenarios) == expected
