@@ -653,3 +653,53 @@ class TestTrustPolicy(TestCase):
     def test_trust_principal_other_keys_absent(self):
         """Test a principal with none of the non-AWS keys present passes"""
         self.assertListEqual(self._errs({"AWS": "arn:aws:iam::123456789012:root"}), [])
+
+    def _sid_errs(self, *sids):
+        services = [
+            "lambda.amazonaws.com",
+            "ec2.amazonaws.com",
+            "ecs-tasks.amazonaws.com",
+            "states.amazonaws.com",
+        ]
+        self.assertLessEqual(len(sids), len(services))
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::IAM::Role", "Properties"])
+                ),
+            )
+        )
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Sid": sid,
+                    "Effect": "Allow",
+                    "Action": "sts:AssumeRole",
+                    "Principal": {"Service": service},
+                }
+                for sid, service in zip(sids, services)
+            ],
+        }
+        return list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+
+    def test_repeated_empty_sid(self):
+        """IAM accepts any number of empty Sids in a trust policy"""
+        self.assertListEqual(self._sid_errs("", ""), [])
+        self.assertListEqual(self._sid_errs("", "Lambda", "", "Ec2"), [])
+
+    def test_repeated_sid(self):
+        """A repeated named Sid is reported, with or without empty Sids"""
+        for sids in (("Same", "Same"), ("", "", "Same", "Same")):
+            with self.subTest(sids=sids):
+                errs = self._sid_errs(*sids)
+                self.assertEqual(len(errs), 1, errs)
+                self.assertEqual(
+                    errs[0].message, "array items are not unique for keys ['Sid']"
+                )
+                self.assertListEqual(list(errs[0].path), ["Statement"])
