@@ -39,6 +39,11 @@ class Conditions:
         self._init_parameters(cfn=cfn)
         self._init_rules(cfn=cfn)
         self._cnf, self._solver_params = self._build_cnf(list(self._conditions.keys()))
+        # Answers from satisfiable, keyed by condition statuses and parameter
+        # values.  Nothing _satisfiable reads changes after __init__.
+        self._satisfiable_cache: dict[
+            tuple[frozenset[tuple[str, bool]], tuple[tuple[str, Any], ...]], bool
+        ] = {}
 
     def _init_conditions(self, cfn):
         conditions = cfn.template.get("Conditions")
@@ -431,14 +436,16 @@ class Conditions:
         return results
 
     def satisfiable(
-        self, conditions: dict[str, bool], parameter_values: dict[str, str]
+        self, conditions: dict[str, bool], parameter_values: dict[str, Any]
     ) -> bool:
-        """Given a list of condition names this function will
-        determine if the conditions are satisfied
+        """Determine if the conditions can have the given statuses
+        when parameters have the given values. Answers are cached on
+        the instance.
 
         Args:
-            condition_names (dict[str, bool]): A list of condition names with if
-              they are True or False
+            conditions (dict[str, bool]): Condition names and whether
+              each is True or False
+            parameter_values (dict[str, Any]): Parameter names and values
 
         Returns:
             bool: True if the conditions are satisfied
@@ -446,6 +453,33 @@ class Conditions:
         Raises:
             UnknownSatisfisfaction: If we don't know how to satisfy a condition
         """
+        # The key keeps parameter order because _satisfiable reads
+        # parameter_values in order. Without conditions the answer
+        # does not depend on parameter_values.
+        try:
+            key = (
+                frozenset(conditions.items()),
+                (
+                    tuple(
+                        (name, tuple(value) if isinstance(value, list) else value)
+                        for name, value in parameter_values.items()
+                    )
+                    if conditions
+                    else ()
+                ),
+            )
+            cached = self._satisfiable_cache.get(key)
+        except TypeError:
+            return self._satisfiable(conditions, parameter_values)
+        if cached is None:
+            cached = self._satisfiable_cache[key] = self._satisfiable(
+                conditions, parameter_values
+            )
+        return cached
+
+    def _satisfiable(
+        self, conditions: dict[str, bool], parameter_values: dict[str, Any]
+    ) -> bool:
         if not conditions:
             if self._rules:
                 satisfied = satisfiable(self._cnf, all_models=False)
