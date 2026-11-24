@@ -139,6 +139,22 @@ def template():
             [],
         ),
         (
+            "Valid Fn::Split with Fn::GetStackOutput",
+            {
+                "Fn::Split": [
+                    ",",
+                    {
+                        "Fn::GetStackOutput": {
+                            "StackName": "producer-stack",
+                            "OutputName": "TopicNames",
+                        }
+                    },
+                ]
+            },
+            {"type": "array"},
+            [],
+        ),
+        (
             "Invalid Fn::Split with a dynamic reference",
             {"Fn::Split": ["foo", "{{resolve:ssm:Foo:1}}"]},
             {"type": "array"},
