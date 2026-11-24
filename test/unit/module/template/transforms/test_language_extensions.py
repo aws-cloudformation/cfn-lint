@@ -196,6 +196,17 @@ class TestRef(TestCase):
         with self.assertRaises(_ResolveError):
             fe.value(self.cfn)
 
+    def test_ref_partition_follows_region(self):
+        cfn = Template(
+            filename="", template=self.template_obj, regions=["us-iso-east-1"]
+        )
+
+        fe = _ForEachValue.create({"Ref": "AWS::Partition"})
+        self.assertEqual(fe.value(cfn), "aws-iso")
+
+        fe = _ForEachValue.create({"Ref": "AWS::URLSuffix"})
+        self.assertEqual(fe.value(cfn), "c2s.ic.gov")
+
 
 class TestFindInMap(TestCase):
     def setUp(self) -> None:

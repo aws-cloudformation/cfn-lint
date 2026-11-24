@@ -268,6 +268,14 @@ class BaseFn(CfnLintJsonSchema):
         )
 
         if errs:
+            # BaseFn rules bypass CfnLintJsonSchema._iter_errors, so a
+            # message() override on a rule would otherwise never run.
+            # Apply it only when the rule overrides message(); the base
+            # implementation returns the short description, which would
+            # clobber the schema messages of every other function rule.
+            if type(self).message is not CfnLintJsonSchema.message:
+                for err in errs:
+                    err.message = self.message(instance, err)
             yield from iter(errs)
             return
 

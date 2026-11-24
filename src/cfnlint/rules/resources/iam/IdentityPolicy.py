@@ -34,3 +34,4 @@ class IdentityPolicy(Policy):
             "identity",
             "policy_identity.json",
         )
+        self.validators = {"uniqueKeys": self._unique_named_sids}

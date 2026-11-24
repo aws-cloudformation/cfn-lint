@@ -36,13 +36,19 @@ _CAPACITY_PROVIDER_CONFIG = {
         ),
         # Valid: classic function at the maximum
         (
-            {"Timeout": 900},
+            {"Timeout": 1800},
             0,
             None,
         ),
         # Valid: classic function below the maximum
         (
             {"Timeout": 3},
+            0,
+            None,
+        ),
+        # Valid: above the old 900 second maximum
+        (
+            {"Timeout": 901},
             0,
             None,
         ),
@@ -58,9 +64,15 @@ _CAPACITY_PROVIDER_CONFIG = {
         # Valid: LMI function at the classic maximum
         (
             {
-                "Timeout": 900,
+                "Timeout": 1800,
                 "CapacityProviderConfig": _CAPACITY_PROVIDER_CONFIG,
             },
+            0,
+            None,
+        ),
+        # Valid: unresolved value
+        (
+            {"Timeout": {"Ref": "FunctionTimeout"}},
             0,
             None,
         ),
@@ -72,10 +84,10 @@ _CAPACITY_PROVIDER_CONFIG = {
         ),
         # Invalid: classic function above the maximum
         (
-            {"Timeout": 901},
+            {"Timeout": 1801},
             1,
             (
-                "901 is greater than the maximum of 900 for functions "
+                "1801 is greater than the maximum of 1800 for functions "
                 "without 'CapacityProviderConfig' (Lambda Managed Instances)"
             ),
         ),
@@ -83,7 +95,7 @@ _CAPACITY_PROVIDER_CONFIG = {
             {"Timeout": 5400},
             1,
             (
-                "5400 is greater than the maximum of 900 for functions "
+                "5400 is greater than the maximum of 1800 for functions "
                 "without 'CapacityProviderConfig' (Lambda Managed Instances)"
             ),
         ),

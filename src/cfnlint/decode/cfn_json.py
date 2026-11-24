@@ -359,9 +359,7 @@ def load(filename):
 
     if (filename is None) and (not sys.stdin.isatty()):
         filename = "-"  # no filename provided, it's stdin
-        fileinput_args = {"files": filename}
-        if sys.version_info.major <= 3 and sys.version_info.minor >= 10:
-            fileinput_args["encoding"] = "utf-8"
+        fileinput_args = {"files": filename, "encoding": "utf-8"}
         with fileinput.input(**fileinput_args) as f:
             for line in f:
                 content = content + line

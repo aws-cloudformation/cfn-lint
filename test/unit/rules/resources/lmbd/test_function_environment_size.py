@@ -27,11 +27,34 @@ def rule():
             [],
         ),
         (
+            # 4096 bytes of key and value, but 4103 as compact JSON
             {"A" * 2048: "B" * 2048},
-            [],
+            [
+                ValidationError(
+                    "Lambda environment variables total size (4103) "
+                    "exceeds the 4 KB (4096 bytes) limit",
+                    rule=FunctionEnvironmentSize(),
+                ),
+            ],
         ),
         (
             {"A" * 2048: "B" * 2049},
+            [
+                ValidationError(
+                    "Lambda environment variables total size (4104) "
+                    "exceeds the 4 KB (4096 bytes) limit",
+                    rule=FunctionEnvironmentSize(),
+                ),
+            ],
+        ),
+        (
+            # Exactly 4096 bytes as compact JSON stays silent
+            {"K" * 2044: "V" * 2045},
+            [],
+        ),
+        (
+            # One byte over the limit as compact JSON
+            {"K" * 2044: "V" * 2046},
             [
                 ValidationError(
                     "Lambda environment variables total size (4097) "
@@ -41,15 +64,36 @@ def rule():
             ],
         ),
         (
-            {f"KEY{i}": "x" * 100 for i in range(50)},
+            # 100 variables: 3500 bytes of key and value, 4101 as
+            # compact JSON (the 6n + 1 structural overhead matters)
+            {f"V{i:03d}": "a" * 31 for i in range(100)},
             [
                 ValidationError(
-                    f"Lambda environment variables total size "
-                    f"({sum(len(f'KEY{i}') + 100 for i in range(50))}) "
-                    f"exceeds the 4 KB (4096 bytes) limit",
+                    "Lambda environment variables total size (4101) "
+                    "exceeds the 4 KB (4096 bytes) limit",
                     rule=FunctionEnvironmentSize(),
                 ),
             ],
+        ),
+        (
+            {f"KEY{i}": "x" * 100 for i in range(50)},
+            [
+                ValidationError(
+                    "Lambda environment variables total size (5541) "
+                    "exceeds the 4 KB (4096 bytes) limit",
+                    rule=FunctionEnvironmentSize(),
+                ),
+            ],
+        ),
+        (
+            # Non-ASCII values count as UTF-8 bytes, not escape sequences
+            {"K": "é"},
+            [],
+        ),
+        (
+            # JSON escaping (quotes) counts toward the limit
+            {"K": 'a"b'},
+            [],
         ),
         (
             "not-an-object",

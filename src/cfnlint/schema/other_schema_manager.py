@@ -9,12 +9,12 @@ import fnmatch
 import json
 import logging
 import os
-import sys
 from functools import lru_cache
 from typing import TYPE_CHECKING, Any
 
 import jsonpatch
 
+from cfnlint.exceptions import SchemaPatchError
 from cfnlint.helpers import load_resource
 from cfnlint.schema._exceptions import SchemaNotFoundError
 
@@ -122,8 +122,9 @@ class OtherSchemaManager:
                     self._schemas[schema_path], in_place=True
                 )
             except Exception as e:
-                print(f"Error applying patch {patches} for {schema_path}: {e}")
-                sys.exit(1)
+                raise SchemaPatchError(
+                    f"Error applying patch {patches} for {schema_path}: {e}"
+                ) from e
 
 
 OTHER_SCHEMA_MANAGER: OtherSchemaManager = OtherSchemaManager()

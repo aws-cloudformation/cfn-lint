@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+
+# Regression test for https://github.com/aws-cloudformation/cfn-lint/issues/4777
+# When a SAM function has AutoPublishAlias, SAM generates
+# ``AWS::Lambda::Version`` and ``AWS::Lambda::Alias`` resources that are
+# referenceable as ``${<Function>.Version}`` and ``${<Function>.Alias}`` in
+# ``Fn::Sub``. Their logical ids contain a ".", so they must be validated as a
+# Ref to the generated resource instead of a GetAtt on the function.
+Resources:
+  Lambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      InlineCode: "exports.handler = async () => {}"
+      Handler: index.handler
+      Runtime: nodejs22.x
+      AutoPublishAlias: live
+
+  VersionTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub "v-${Lambda.Version}"
+
+  AliasTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub "a-${Lambda.Alias}"

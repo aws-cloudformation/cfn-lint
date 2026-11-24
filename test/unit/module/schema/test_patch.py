@@ -3,6 +3,7 @@ import logging
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import mock_open, patch
 
+from cfnlint.exceptions import SchemaPatchError
 from cfnlint.schema._patch import SchemaPatch
 from cfnlint.schema._patch import patch as schema_patch
 from cfnlint.schema._patch import reset
@@ -81,39 +82,44 @@ class TestManagerPatch(BaseTestCase):
             err = FileNotFoundError()
             err.errno = 2
             mock_builtin_open.side_effect = [err]
-            with self.assertRaises(SystemExit) as mock_exit:
+            with self.assertRaises(SchemaPatchError) as raised:
                 schema_patch("bad", regions=["us-east-1"])
-                self.assertEqual(mock_exit.type, SystemExit)
-                self.assertEqual(mock_exit.value.code == 1)
+            self.assertEqual(raised.exception.exit_code, 1)
 
     def test_patch_file_is_dir(self):
         with patch("builtins.open", mock_open()) as mock_builtin_open:
             err = IOError()
             err.errno = 21
             mock_builtin_open.side_effect = [err]
-            with self.assertRaises(SystemExit) as mock_exit:
+            with self.assertRaises(SchemaPatchError) as raised:
                 schema_patch("bad", regions=["us-east-1"])
-                self.assertEqual(mock_exit.type, SystemExit)
-                self.assertEqual(mock_exit.value.code == 1)
+            self.assertEqual(raised.exception.exit_code, 1)
 
     def test_patch_permission_error(self):
         with patch("builtins.open", mock_open()) as mock_builtin_open:
             err = PermissionError()
             err.errno = 13
             mock_builtin_open.side_effect = [err]
-            with self.assertRaises(SystemExit) as mock_exit:
+            with self.assertRaises(SchemaPatchError) as raised:
                 schema_patch("bad", regions=["us-east-1"])
-                self.assertEqual(mock_exit.type, SystemExit)
-                self.assertEqual(mock_exit.value.code == 1)
+            self.assertEqual(raised.exception.exit_code, 1)
+
+    def test_patch_other_io_error(self):
+        with patch("builtins.open", mock_open()) as mock_builtin_open:
+            err = IOError()
+            err.errno = 5
+            mock_builtin_open.side_effect = [err]
+            with self.assertRaises(SchemaPatchError) as raised:
+                schema_patch("bad", regions=["us-east-1"])
+            self.assertEqual(raised.exception.exit_code, 1)
 
     def test_patch_value_error(self):
         with patch("builtins.open", mock_open()) as mock_builtin_open:
             err = ValueError()
             mock_builtin_open.side_effect = [err]
-            with self.assertRaises(SystemExit) as mock_exit:
+            with self.assertRaises(SchemaPatchError) as raised:
                 schema_patch("bad", regions=["us-east-1"])
-                self.assertEqual(mock_exit.type, SystemExit)
-                self.assertEqual(mock_exit.value.code == 1)
+            self.assertEqual(raised.exception.exit_code, 1)
 
     @patch("cfnlint.schema._patch.PROVIDER_SCHEMA_MANAGER")
     @patch("cfnlint.schema._patch.OTHER_SCHEMA_MANAGER")

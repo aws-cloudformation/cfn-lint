@@ -131,3 +131,22 @@ def test_validate(instance, expected, rule, validator, schema):
     rule._schema = schema
     errs = list(rule.validate(validator, "", instance, {}))
     assert errs == expected, f"Expected {expected} got {errs}"
+
+
+@pytest.mark.parametrize(
+    "instance,expected_paths",
+    [
+        ({"Engine": "mysql", "EngineVersion": "8.0"}, []),
+        ({"Engine": "mysql", "EngineVersion": "8.4"}, []),
+        ({"Engine": "mariadb", "EngineVersion": "10.11"}, []),
+        ({"Engine": "mariadb", "EngineVersion": "11.4"}, []),
+        ({"Engine": "postgres", "EngineVersion": "16"}, []),
+        ({"Engine": "aurora-mysql", "EngineVersion": "8.0"}, []),
+        ({"Engine": "mysql", "EngineVersion": "9.99"}, [deque(["EngineVersion"])]),
+        ({"Engine": "mariadb", "EngineVersion": "9.99"}, [deque(["EngineVersion"])]),
+    ],
+)
+def test_validate_shipped_schema(instance, expected_paths, validator):
+    errs = list(DbInstanceEngineVersion().validate(validator, "", instance, {}))
+    assert [err.path for err in errs] == expected_paths, f"Got {errs}"
+    assert all(err.validator == "enum" for err in errs)

@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+import json
 from typing import Any
 
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
@@ -19,8 +20,8 @@ class FunctionEnvironmentSize(CfnLintKeyword):
     description = (
         "AWS Lambda limits the total size of all environment variables "
         "to 4 KB. If this limit is exceeded, the deployment will fail. "
-        "This rule sums the lengths of all keys and values and validates "
-        "the total does not exceed 4096 bytes."
+        "This rule measures the size of the compact JSON encoding of the "
+        "variables and validates the total does not exceed 4096 bytes."
     )
     source_url = (
         "https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html"
@@ -43,13 +44,22 @@ class FunctionEnvironmentSize(CfnLintKeyword):
         if not validator.is_type(instance, "object"):
             return
 
-        total_size = 0
+        variables: dict[str, str] = {}
         for key, value in instance.items():
             if not isinstance(key, str):
                 continue
-            total_size += len(key)
             if isinstance(value, str):
-                total_size += len(value)
+                variables[key] = value
+
+        # Lambda measures the variables as compact JSON, so the structural
+        # characters (quotes, colons, commas and braces) count toward the
+        # limit. Measure the UTF-8 byte length of the compact encoding
+        # instead of summing key and value lengths.
+        total_size = len(
+            json.dumps(variables, ensure_ascii=False, separators=(",", ":")).encode(
+                "utf-8"
+            )
+        )
 
         max_size = 4096
         if total_size > max_size:
