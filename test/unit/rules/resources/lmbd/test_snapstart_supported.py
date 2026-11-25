@@ -207,6 +207,41 @@ def rule():
                 )
             ],
         ),
+        (
+            "SnapStart enabled for python3.11 on a SAM function",
+            {
+                "Runtime": "python3.11",
+                "Handler": "index.handler",
+                "AutoPublishAlias": "live",
+                "SnapStart": {
+                    "ApplyOn": "PublishedVersions",
+                },
+            },
+            ["us-east-1"],
+            True,
+            False,
+            [
+                ValidationError(
+                    "'python3.11' is not supported for 'SnapStart' enabled functions",
+                    path=deque(["SnapStart", "ApplyOn"]),
+                )
+            ],
+        ),
+        (
+            "SnapStart enabled for java17 on a SAM function",
+            {
+                "Runtime": "java17",
+                "Handler": "index.handler",
+                "AutoPublishAlias": "live",
+                "SnapStart": {
+                    "ApplyOn": "PublishedVersions",
+                },
+            },
+            ["us-east-1"],
+            True,
+            False,
+            [],
+        ),
     ],
 )
 def test_validate(
@@ -298,3 +333,8 @@ def test_unsupported_regions(region, validator):
             path=deque(["SnapStart", "ApplyOn"]),
         )
     ]
+
+
+def test_keywords_cover_lambda_and_serverless_functions(rule):
+    assert "Resources/AWS::Lambda::Function/Properties" in rule.keywords
+    assert "Resources/AWS::Serverless::Function/Properties" in rule.keywords
