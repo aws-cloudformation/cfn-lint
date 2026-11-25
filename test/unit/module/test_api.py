@@ -313,6 +313,16 @@ class TestLintFile(TestCase):
         matches = lint_file(filename)
         self.assertEqual([], matches, f"Got matches: {matches!r}")
 
+    def test_e3064_findinmap_conditions(self):
+        """E3064 must not fire when a mapping keyed by AWS::Region makes
+        exactly one endpoint condition true in each region (issue #5044)."""
+        filename = Path(
+            "test/fixtures/templates/good/conditions/e3064_findinmap_conditions.yaml"
+        )
+        for region in ["us-east-1", "us-west-2"]:
+            matches = lint_file(filename, ManualArgs(regions=[region]))
+            self.assertEqual([], matches, f"Got matches in {region}: {matches!r}")
+
 
 class TestLintByConfig(TestCase):
     """Test lint_by_config function"""
