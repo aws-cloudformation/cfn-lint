@@ -109,6 +109,18 @@ Resources:
           Fn::GetStackOutput:
             StackName: producer-stack
             OutputName: TopicName
+  # Inside Fn::Split
+  Topic11:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::Select:
+          - 0
+          - Fn::Split:
+              - ","
+              - Fn::GetStackOutput:
+                  StackName: producer-stack
+                  OutputName: TopicNames
 Outputs:
   # Direct Output Value
   DirectOutput:
