@@ -59,6 +59,73 @@ Resources:
       CacheNodeType: cache.t4g.micro
       NumNodeGroups: !If [UseCluster, 3, 1]
       TransitEncryptionEnabled: true
+  CustomParameterGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: single shard, pre-existing parameter group
+      Engine: valkey
+      CacheNodeType: cache.t4g.micro
+      NumNodeGroups: 1
+      CacheParameterGroupName: my-custom-group
+      TransitEncryptionEnabled: true
+  SnapshotGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: restored from a snapshot by name
+      Engine: valkey
+      CacheNodeType: cache.t4g.micro
+      SnapshotName: my-snapshot
+      TransitEncryptionEnabled: true
+  SnapshotArnsGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: restored from snapshot arns
+      Engine: valkey
+      CacheNodeType: cache.t4g.micro
+      SnapshotArns:
+        - arn:aws:elasticache:us-east-1:123456789012:snapshot:my-snapshot
+      TransitEncryptionEnabled: true
+  GlobalSecondaryGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: global datastore secondary
+      Engine: valkey
+      CacheNodeType: cache.t4g.micro
+      GlobalReplicationGroupId: my-global-group
+      TransitEncryptionEnabled: true
+  RefClusterParams:
+    Type: AWS::ElastiCache::ParameterGroup
+    Properties:
+      CacheParameterGroupFamily: redis7
+      Description: cluster mode on
+      Properties:
+        cluster-enabled: "yes"
+  RefNodeGroupConfiguration:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: two shards by NodeGroupConfiguration
+      Engine: redis
+      EngineVersion: "7.1"
+      CacheNodeType: cache.t4g.micro
+      CacheParameterGroupName: !Ref RefClusterParams
+      AutomaticFailoverEnabled: true
+      NodeGroupConfiguration:
+        - NodeGroupId: "0001"
+          ReplicaCount: 1
+          Slots: "0-8191"
+        - NodeGroupId: "0002"
+          ReplicaCount: 1
+          Slots: "8192-16383"
+  RefReplicasPerNodeGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: one shard sized by ReplicasPerNodeGroup
+      Engine: redis
+      EngineVersion: "7.1"
+      CacheNodeType: cache.t4g.micro
+      CacheParameterGroupName: !Ref RefClusterParams
+      AutomaticFailoverEnabled: true
+      ReplicasPerNodeGroup: 1
   DisabledGroup:
     Type: AWS::ElastiCache::ReplicationGroup
     Properties:
@@ -98,6 +165,36 @@ Resources:
     Properties:
       Type: String
       Value: !GetAtt ConditionalGroup.ConfigurationEndPoint.Address
+  CustomParameterGroupEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt CustomParameterGroup.ConfigurationEndPoint.Address
+  SnapshotEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt SnapshotGroup.ConfigurationEndPoint.Address
+  SnapshotArnsEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt SnapshotArnsGroup.ConfigurationEndPoint.Address
+  GlobalSecondaryEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt GlobalSecondaryGroup.ConfigurationEndPoint.Address
+  RefNodeGroupConfigurationEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt RefNodeGroupConfiguration.ConfigurationEndPoint.Address
+  RefReplicasPerNodeGroupEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt RefReplicasPerNodeGroup.ConfigurationEndPoint.Address
   PrimaryEndpoint:
     Type: AWS::SSM::Parameter
     Properties:

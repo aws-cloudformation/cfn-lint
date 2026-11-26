@@ -48,6 +48,16 @@ class ReplicationGroupConfigurationEndPoint(CloudFormationLintRule):
         if cluster_mode is not None:
             return None
 
+        # A restore inherits cluster mode from the snapshot, and a global
+        # datastore secondary inherits it from the global replication
+        # group. Neither can be determined from this template.
+        if properties.get("SnapshotName") is not None:
+            return None
+        if properties.get("SnapshotArns") is not None:
+            return None
+        if properties.get("GlobalReplicationGroupId") is not None:
+            return None
+
         num_node_groups = properties.get("NumNodeGroups")
         if isinstance(num_node_groups, str):
             try:
@@ -64,11 +74,24 @@ class ReplicationGroupConfigurationEndPoint(CloudFormationLintRule):
 
         parameter_group = properties.get("CacheParameterGroupName")
         if isinstance(parameter_group, str):
-            if parameter_group.endswith(".cluster.on"):
+            name = parameter_group.lower()
+            if name.endswith(".cluster.on"):
                 return True
-        elif parameter_group is not None:
+            if name.startswith("default."):
+                # AWS default parameter groups cannot be modified, so a
+                # default group without the .cluster.on suffix has
+                # cluster-enabled set to no.
+                return False
+            # A custom or pre-existing parameter group can have
+            # cluster-enabled set either way, so its name alone does not
+            # determine cluster mode.
+            return None
+        if parameter_group is not None:
             return None
 
+        # No parameter group is named, so the AWS default for the engine
+        # family applies. That default is cluster mode disabled, and a
+        # single node group does not change that.
         return False
 
     def match_resource_properties(self, properties, _, path, cfn):
