@@ -33,6 +33,12 @@ class ReplicationGroupConfigurationEndPoint(CloudFormationLintRule):
         Returns True when cluster mode is provably enabled, False when it is
         provably disabled, and None when it cannot be determined from the
         template.
+
+        Omitting CacheParameterGroupName gives the engine's non-cluster
+        default parameter group, so a group with no parameter group named
+        is cluster mode disabled unless the template enables cluster mode
+        some other way (an explicit ClusterMode, or more than one shard
+        by NumNodeGroups or NodeGroupConfiguration).
         """
         if not isinstance(properties, dict):
             return None
@@ -70,6 +76,18 @@ class ReplicationGroupConfigurationEndPoint(CloudFormationLintRule):
             if num_node_groups > 1:
                 return True
         elif num_node_groups is not None:
+            return None
+
+        # NodeGroupConfiguration sizes the group by shard the same way
+        # NumNodeGroups does, so more than one entry means more than one
+        # shard and therefore cluster mode. A single entry is one shard,
+        # which either mode can have, so it falls through like
+        # NumNodeGroups: 1.
+        node_group_configuration = properties.get("NodeGroupConfiguration")
+        if isinstance(node_group_configuration, list):
+            if len(node_group_configuration) > 1:
+                return True
+        elif node_group_configuration is not None:
             return None
 
         parameter_group = properties.get("CacheParameterGroupName")

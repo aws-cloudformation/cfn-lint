@@ -126,6 +126,21 @@ Resources:
       CacheParameterGroupName: !Ref RefClusterParams
       AutomaticFailoverEnabled: true
       ReplicasPerNodeGroup: 1
+  TwoShardNodeGroupConfiguration:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: two shards by NodeGroupConfiguration, no parameter group
+      Engine: redis
+      EngineVersion: "7.1"
+      CacheNodeType: cache.t4g.micro
+      AutomaticFailoverEnabled: true
+      NodeGroupConfiguration:
+        - NodeGroupId: "0001"
+          ReplicaCount: 1
+          Slots: "0-8191"
+        - NodeGroupId: "0002"
+          ReplicaCount: 1
+          Slots: "8192-16383"
   DisabledGroup:
     Type: AWS::ElastiCache::ReplicationGroup
     Properties:
@@ -195,6 +210,11 @@ Resources:
     Properties:
       Type: String
       Value: !GetAtt RefReplicasPerNodeGroup.ConfigurationEndPoint.Address
+  TwoShardNodeGroupConfigurationEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt TwoShardNodeGroupConfiguration.ConfigurationEndPoint.Address
   PrimaryEndpoint:
     Type: AWS::SSM::Parameter
     Properties:
