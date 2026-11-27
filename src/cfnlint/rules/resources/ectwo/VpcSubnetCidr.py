@@ -61,6 +61,27 @@ class VpcSubnetCidr(CfnLintKeyword):
 
         return None
 
+    def _resources_via_vpc_id(
+        self, validator: Validator, vpc_name: str, resource_type: str
+    ) -> list[str]:
+        """Return resources of resource_type attached to the VPC by VpcId.
+
+        Only graph edges that originate in the resource's VpcId property
+        count. Edges from DependsOn or from any other property do not
+        make the resource part of the VPC.
+        """
+        sources: list[str] = []
+        graph = validator.cfn.graph.graph
+        for source, _, data in graph.in_edges(vpc_name, data=True):
+            if graph.nodes[source].get("resource_type") != resource_type:
+                continue
+            if source in sources:
+                continue
+            source_paths = data.get("source_paths", [])
+            if list(source_paths[:2]) == ["Properties", "VpcId"]:
+                sources.append(source)
+        return sources
+
     def _get_vpc_cidrs(
         self, validator: Validator, instance: dict[str, Any]
     ) -> Iterator[tuple[IPv4Network | IPv6Network | None, Validator]]:
@@ -113,83 +134,72 @@ class VpcSubnetCidr(CfnLintKeyword):
         # dynamic networks
         has_dynamic_network = False
 
-        for source, _ in validator.cfn.graph.graph.in_edges(
-            validator.context.path.path[1]
+        vpc_name = validator.context.path.path[1]
+        for source in self._resources_via_vpc_id(
+            validator, vpc_name, "AWS::EC2::VPCCidrBlock"
         ):
-            if (
-                validator.cfn.graph.graph.nodes[source].get("resource_type")
-                == "AWS::EC2::VPCCidrBlock"
+            for cidr_props, cidr_validator in get_value_from_path(
+                template_validator,
+                validator.cfn.template,
+                deque(["Resources", source, "Properties"]),
             ):
-                for cidr_props, cidr_validator in get_value_from_path(
-                    template_validator,
-                    validator.cfn.template,
-                    deque(["Resources", source, "Properties"]),
-                ):
-                    for cidr_network, _ in self._get_vpc_cidrs(
-                        cidr_validator, cidr_props
-                    ):
-                        if not cidr_network:
-                            has_dynamic_network = True
-                            continue
-                        if isinstance(cidr_network, IPv4Network):
-                            vpc_ipv4_networks.append(cidr_network)
-                        else:
-                            vpc_ipv6_networks.append(cidr_network)
+                for cidr_network, _ in self._get_vpc_cidrs(cidr_validator, cidr_props):
+                    if not cidr_network:
+                        has_dynamic_network = True
+                        continue
+                    if isinstance(cidr_network, IPv4Network):
+                        vpc_ipv4_networks.append(cidr_network)
+                    else:
+                        vpc_ipv6_networks.append(cidr_network)
 
         subnets: list[tuple[IPv4Network | IPv6Network, deque]] = []
-        for source, _ in validator.cfn.graph.graph.in_edges(
-            validator.context.path.path[1]
+        for source in self._resources_via_vpc_id(
+            validator, vpc_name, "AWS::EC2::Subnet"
         ):
-            if (
-                validator.cfn.graph.graph.nodes[source].get("resource_type")
-                == "AWS::EC2::Subnet"
+            for subnet_props, source_validator in get_value_from_path(
+                template_validator,
+                validator.cfn.template,
+                deque(["Resources", source, "Properties"]),
             ):
-                for subnet_props, source_validator in get_value_from_path(
-                    template_validator,
-                    validator.cfn.template,
-                    deque(["Resources", source, "Properties"]),
+                for subnet_network, subnet_validator in self._get_vpc_cidrs(
+                    source_validator, subnet_props
                 ):
-                    for subnet_network, subnet_validator in self._get_vpc_cidrs(
-                        source_validator, subnet_props
-                    ):
-                        if not subnet_network:
-                            continue
+                    if not subnet_network:
+                        continue
 
-                        subnets.append(
-                            (subnet_network, subnet_validator.context.path.path)
+                    subnets.append((subnet_network, subnet_validator.context.path.path))
+                    if has_dynamic_network:
+                        continue
+                    if not any(
+                        self._validate_subnets(
+                            subnet_network,
+                            vpc_network,
                         )
-                        if has_dynamic_network:
-                            continue
-                        if not any(
-                            self._validate_subnets(
-                                subnet_network,
-                                vpc_network,
+                        for vpc_network in vpc_ipv4_networks + vpc_ipv6_networks
+                    ):
+                        if isinstance(subnet_network, IPv4Network):
+                            # Every VPC has to have a ipv4 network
+                            # we continue if there isn't one
+                            if not vpc_ipv4_networks:
+                                continue
+                            reprs = (
+                                "is not a valid subnet of "
+                                f"{[f'{str(v)}' for v in vpc_ipv4_networks]!r}"
                             )
-                            for vpc_network in vpc_ipv4_networks + vpc_ipv6_networks
-                        ):
-                            if isinstance(subnet_network, IPv4Network):
-                                # Every VPC has to have a ipv4 network
-                                # we continue if there isn't one
-                                if not vpc_ipv4_networks:
-                                    continue
+                        else:
+                            if not vpc_ipv6_networks:
                                 reprs = (
-                                    "is not a valid subnet of "
-                                    f"{[f'{str(v)}' for v in vpc_ipv4_networks]!r}"
+                                    "is specified on a VPC that has "
+                                    "no ipv6 networks defined"
                                 )
                             else:
-                                if not vpc_ipv6_networks:
-                                    reprs = (
-                                        "is specified on a VPC that has "
-                                        "no ipv6 networks defined"
-                                    )
-                                else:
-                                    reprs = (
-                                        "is not a valid subnet of "
-                                        f"{[f'{str(v)}' for v in vpc_ipv6_networks]!r}"
-                                    )
-                            yield ValidationError(
-                                f"{str(subnet_network)!r} {reprs}",
-                                rule=self,
-                                path_override=subnet_validator.context.path.path,
-                            )
-                            continue
+                                reprs = (
+                                    "is not a valid subnet of "
+                                    f"{[f'{str(v)}' for v in vpc_ipv6_networks]!r}"
+                                )
+                        yield ValidationError(
+                            f"{str(subnet_network)!r} {reprs}",
+                            rule=self,
+                            path_override=subnet_validator.context.path.path,
+                        )
+                        continue

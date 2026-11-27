@@ -335,6 +335,124 @@ _template = {
             {"path": ["Resources", "Vpc", "Properties"]},
             [],
         ),
+        (
+            "Subnet with DependsOn on another VPC is not validated against it",
+            {"CidrBlock": "10.1.0.0/24"},
+            {
+                "Resources": {
+                    "Vpc": {
+                        "Type": "AWS::EC2::VPC",
+                    },
+                    "OtherVpc": {
+                        "Type": "AWS::EC2::VPC",
+                    },
+                    "VpcV4Subnet1": {
+                        "Type": "AWS::EC2::Subnet",
+                        "DependsOn": "Vpc",
+                        "Properties": {
+                            "CidrBlock": "10.0.0.0/18",
+                            "VpcId": {"Ref": "OtherVpc"},
+                        },
+                    },
+                },
+            },
+            {"path": ["Resources", "Vpc", "Properties"]},
+            [],
+        ),
+        (
+            "Subnet with DependsOn and VpcId on the same VPC is still validated",
+            {"CidrBlock": "11.0.0.0/16"},
+            {
+                "Resources": {
+                    "Vpc": {
+                        "Type": "AWS::EC2::VPC",
+                    },
+                    "VpcV4Subnet1": {
+                        "Type": "AWS::EC2::Subnet",
+                        "DependsOn": "Vpc",
+                        "Properties": {
+                            "CidrBlock": "10.0.0.0/24",
+                            "VpcId": {"Fn::GetAtt": ["Vpc", "VpcId"]},
+                        },
+                    },
+                },
+            },
+            {"path": ["Resources", "Vpc", "Properties"]},
+            [
+                ValidationError(
+                    "'10.0.0.0/24' is not a valid subnet of ['11.0.0.0/16']",
+                    rule=VpcSubnetCidr(),
+                    path_override=deque(
+                        ["Resources", "VpcV4Subnet1", "Properties", "CidrBlock"]
+                    ),
+                )
+            ],
+        ),
+        (
+            "Subnet referencing the VPC outside VpcId is not validated",
+            {"CidrBlock": "11.0.0.0/16"},
+            {
+                "Resources": {
+                    "Vpc": {
+                        "Type": "AWS::EC2::VPC",
+                    },
+                    "VpcV4Subnet1": {
+                        "Type": "AWS::EC2::Subnet",
+                        "Properties": {
+                            "CidrBlock": "10.0.0.0/24",
+                            "VpcId": "vpc-12345678",
+                            "Tags": [
+                                {
+                                    "Key": "Name",
+                                    "Value": {"Ref": "Vpc"},
+                                }
+                            ],
+                        },
+                    },
+                },
+            },
+            {"path": ["Resources", "Vpc", "Properties"]},
+            [],
+        ),
+        (
+            "VPCCidrBlock with DependsOn on another VPC does not widen its CIDRs",
+            {"CidrBlock": "10.0.0.0/16"},
+            {
+                "Resources": {
+                    "Vpc": {
+                        "Type": "AWS::EC2::VPC",
+                    },
+                    "OtherVpc": {
+                        "Type": "AWS::EC2::VPC",
+                    },
+                    "VpcCidr": {
+                        "Type": "AWS::EC2::VPCCidrBlock",
+                        "DependsOn": "Vpc",
+                        "Properties": {
+                            "CidrBlock": "11.0.0.0/16",
+                            "VpcId": {"Ref": "OtherVpc"},
+                        },
+                    },
+                    "VpcV4Subnet1": {
+                        "Type": "AWS::EC2::Subnet",
+                        "Properties": {
+                            "CidrBlock": "11.0.0.0/24",
+                            "VpcId": {"Fn::GetAtt": ["Vpc", "VpcId"]},
+                        },
+                    },
+                },
+            },
+            {"path": ["Resources", "Vpc", "Properties"]},
+            [
+                ValidationError(
+                    "'11.0.0.0/24' is not a valid subnet of ['10.0.0.0/16']",
+                    rule=VpcSubnetCidr(),
+                    path_override=deque(
+                        ["Resources", "VpcV4Subnet1", "Properties", "CidrBlock"]
+                    ),
+                )
+            ],
+        ),
     ],
     indirect=["template", "path"],
 )
