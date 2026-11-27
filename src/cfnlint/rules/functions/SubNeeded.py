@@ -70,10 +70,46 @@ class SubNeeded(CloudFormationLintRule):
         results.extend(self._match_values(cfn.template.get("Globals", {}), []))
         return results
 
-    def _api_exceptions(self, value):
-        """Key value exceptions"""
-        parameter_search = re.compile(r"^\$\{stageVariables\..*\}$")
-        return re.match(parameter_search, value)
+    # API Gateway resolves these variables itself when it imports an
+    # OpenAPI definition, so they need no Fn::Sub inside an API body
+    # https://docs.aws.amazon.com/apigateway/latest/developerguide/import-api-aws-variables.html
+    _api_gateway_variables = ["AWS::AccountId", "AWS::Partition", "AWS::Region"]
+
+    # Resource type to the property holding its OpenAPI body
+    _api_gateway_body_keys = {
+        "AWS::ApiGateway::RestApi": "Body",
+        "AWS::ApiGatewayV2::Api": "Body",
+        "AWS::Serverless::Api": "DefinitionBody",
+    }
+
+    def _is_apigateway_body(self, path: list[Any], cfn: Template) -> bool:
+        """Check if a path sits inside an API Gateway OpenAPI body"""
+        if len(path) < 4 or path[0] != "Resources" or path[2] != "Properties":
+            return False
+        resource = cfn.template.get("Resources", {}).get(path[1])
+        if not isinstance(resource, dict):
+            return False
+        body_key = self._api_gateway_body_keys.get(resource.get("Type"))
+        if not body_key:
+            return False
+        # Walk past Fn::If branches under Properties. The first real
+        # key must be the body property itself, not a key nested deeper
+        # inside another property.
+        index = 3
+        while index < len(path) - 1:
+            if path[index] == "Fn::If" and isinstance(path[index + 1], int):
+                index += 2
+                continue
+            return path[index] == body_key
+        return False
+
+    def _api_exceptions(self, value: str, path: list[Any], cfn: Template) -> bool:
+        """Variables API Gateway resolves without Fn::Sub"""
+        if re.match(r"^\$\{stageVariables\..*\}$", value):
+            return True
+        if value[2:-1].strip() in self._api_gateway_variables:
+            return self._is_apigateway_body(path, cfn)
+        return False
 
     def _variable_custom_excluded(self, value):
         """User-defined exceptions for variables, anywhere in the file"""
@@ -166,6 +202,11 @@ class SubNeeded(CloudFormationLintRule):
             # (for third-party tools that pre-process templates
             # before uploading them to AWS)
             if self._variable_custom_excluded(var):
+                continue
+
+            # Exclude variables API Gateway resolves itself when it
+            # imports an OpenAPI definition
+            if self._api_exceptions(var, parameter_string_path, cfn):
                 continue
 
             # Exclude literals (https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html)
