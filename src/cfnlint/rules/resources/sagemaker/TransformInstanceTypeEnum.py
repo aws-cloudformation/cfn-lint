@@ -13,7 +13,7 @@ class TransformInstanceTypeEnum(CfnLintJsonSchemaRegional):
     shortdesc = "Validate SageMaker transform instance types based on region"
     description = (
         "Validates the SageMaker transform instance types based on region "
-        "and data gathered from the pricing APIs"
+        "and data gathered from the SageMaker and pricing APIs"
     )
     tags = ["resources"]
 

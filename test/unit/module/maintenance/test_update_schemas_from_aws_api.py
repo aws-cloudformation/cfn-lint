@@ -108,3 +108,91 @@ class TestRdsEngineVersionStatus(BaseTestCase):
             },
         )
         self.assertEqual(deprecated_results, {"mysql": {"5.7.44": {}}})
+
+
+class _StubShape:
+    def __init__(self, enum):
+        self.enum = enum
+
+
+class _StubServiceModel:
+    def __init__(self, enums):
+        self._enums = enums
+
+    def shape_for(self, name):
+        return _StubShape(self._enums[name])
+
+
+class _StubMeta:
+    def __init__(self, service_model):
+        self.service_model = service_model
+
+
+class _StubSageMakerClient:
+    """Stands in for the boto3 SageMaker client, serving shape enums."""
+
+    def __init__(self, enums):
+        self.meta = _StubMeta(_StubServiceModel(enums))
+
+
+class TestSageMakerInstanceTypes(BaseTestCase):
+    """The Price List omits instance types the SageMaker API accepts."""
+
+    def test_every_mapped_shape_resolves(self):
+        """A renamed shape must fail here, not silently shrink an enum."""
+        module = _load_update_schemas_from_aws_api()
+
+        service_model = module.sagemaker_client.meta.service_model
+        for resource, shape in module._SAGEMAKER_INSTANCE_TYPE_SHAPES.items():
+            instance_types = service_model.shape_for(shape).enum
+            self.assertIn("ml.m5.large", instance_types, resource)
+
+    def test_api_types_are_added_to_every_region(self):
+        """Pricing values are kept and the API enum is added to each region."""
+        module = _load_update_schemas_from_aws_api()
+        enums = {
+            shape: [f"ml.api.{shape}"]
+            for shape in module._SAGEMAKER_INSTANCE_TYPE_SHAPES.values()
+        }
+        schema = {
+            "description": "Automatically updated using update_specs_from_pricing",
+            "us-east-1": {"enum": ["ml.priced.one"]},
+            "eu-west-1": {"enum": ["ml.priced.two"]},
+        }
+
+        with (
+            patch.object(module, "sagemaker_client", _StubSageMakerClient(enums)),
+            patch.object(module, "read_output", return_value=schema),
+            patch.object(module, "write_output") as write_output,
+        ):
+            module.sagemaker_api()
+
+        outputs = {call.args[0]: call.args[2] for call in write_output.call_args_list}
+        self.assertEqual(
+            sorted(outputs), sorted(module._SAGEMAKER_INSTANCE_TYPE_SHAPES)
+        )
+        for resource, shape in module._SAGEMAKER_INSTANCE_TYPE_SHAPES.items():
+            self.assertEqual(
+                outputs[resource],
+                {
+                    "us-east-1": {"enum": sorted(["ml.priced.one", f"ml.api.{shape}"])},
+                    "eu-west-1": {"enum": sorted(["ml.priced.two", f"ml.api.{shape}"])},
+                },
+                resource,
+            )
+            # write_output owns the description, so the pricing one must not persist
+            self.assertNotIn("description", outputs[resource], resource)
+
+    def test_main_collects_sagemaker(self):
+        """sagemaker_api is wired into main."""
+        module = _load_update_schemas_from_aws_api()
+
+        with (
+            patch.object(module, "configure_logging"),
+            patch.object(module, "rds_api"),
+            patch.object(module, "elasticache_api"),
+            patch.object(module, "sagemaker_api") as sagemaker_api,
+        ):
+            module.main()
+
+        sagemaker_api.assert_called_once_with()
