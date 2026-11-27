@@ -101,6 +101,16 @@ class TestTempalteArgs(BaseTestCase):
 
         self.assertEqual(config.template_args.get("configure_rules"), None)
 
+    def test_template_args_non_string_list_items(self):
+        """test template args ignore lists of strings that hold other types"""
+        for key in ["ignore_checks", "include_checks", "regions"]:
+            for items in [[True], [{"us-east-1": "x"}], ["E2530", 1]]:
+                with self.subTest(key=key, items=items):
+                    config = cfnlint.config.TemplateArgs(
+                        {"Metadata": {"cfn-lint": {"config": {key: items}}}}
+                    )
+                    self.assertNotIn(key, config.template_args)
+
     def test_bad_template_structure(self):
         """test template args"""
         config = cfnlint.config.TemplateArgs([])

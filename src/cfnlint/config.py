@@ -758,8 +758,13 @@ class TemplateArgs:
                     "regions": list,
                 }.items():
                     if key in configs:
-                        if isinstance(configs[key], value):
-                            defaults[key] = configs[key]
+                        if not isinstance(configs[key], value):
+                            continue
+                        if key in ("ignore_checks", "include_checks", "regions"):
+                            # these are lists of strings
+                            if not all(isinstance(v, str) for v in configs[key]):
+                                continue
+                        defaults[key] = configs[key]
 
         self._template_args = defaults
 
