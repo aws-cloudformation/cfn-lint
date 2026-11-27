@@ -10,7 +10,7 @@ from typing import Any
 import cfnlint.data.schemas.other.rules
 from cfnlint.jsonschema import Validator
 from cfnlint.jsonschema._keywords import patternProperties
-from cfnlint.jsonschema._keywords_cfn import cfn_type
+from cfnlint.jsonschema._keywords_cfn import additionalProperties, cfn_type
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
@@ -31,8 +31,20 @@ class Configuration(CfnLintJsonSchema):
         )
         self.validators = {
             "type": cfn_type,
+            "additionalProperties": self._additional_properties,
             "patternProperties": self._pattern_properties,
         }
+
+    def _additional_properties(
+        self, validator: Validator, aP: Any, instance: Any, schema: Any
+    ):
+        # re-add the keyword so nested functions are still validated
+        validator = validator.evolve(
+            function_filter=validator.function_filter.evolve(
+                add_cfn_lint_keyword=True,
+            )
+        )
+        yield from additionalProperties(validator, aP, instance, schema)
 
     def _pattern_properties(
         self, validator: Validator, aP: Any, instance: Any, schema: Any

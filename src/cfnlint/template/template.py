@@ -349,12 +349,18 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                     metadata = resource_values.get("Metadata")
                     if not isinstance(metadata, dict):
                         continue
-                    ignore_rule_ids = (
-                        metadata.get("cfn-lint", {})
-                        .get("config", {})
-                        .get("ignore_checks", [])
-                    )
+                    cfn_lint_metadata = metadata.get("cfn-lint", {})
+                    if not isinstance(cfn_lint_metadata, dict):
+                        continue
+                    config = cfn_lint_metadata.get("config", {})
+                    if not isinstance(config, dict):
+                        continue
+                    ignore_rule_ids = config.get("ignore_checks", [])
+                    if not isinstance(ignore_rule_ids, list):
+                        continue
                     for ignore_rule_id in ignore_rule_ids:
+                        if not isinstance(ignore_rule_id, str):
+                            continue
                         if ignore_rule_id not in results:
                             results[ignore_rule_id] = []
                         results[ignore_rule_id].append(resource_name)
@@ -890,6 +896,11 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             self.template.get("Resources", {}).get(resource, {}).get("Condition")
         )
         if isinstance(resource_condition, str):
+            # a condition that is provably always true means the resource
+            # always exists, so there is no scenario where it is unavailable
+            if self.conditions.is_always_true(resource_condition):
+                return []
+
             # if path conditions are empty that means its always true
             if not path_conditions:
                 return [{resource_condition: False}]

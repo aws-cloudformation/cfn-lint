@@ -1,0 +1,43 @@
+---
+# Regression test for https://github.com/aws-cloudformation/cfn-lint/issues/5044
+# Each condition reads a different key of a mapping keyed by AWS::Region, and
+# every region in the mapping makes exactly one of them true, so only one
+# endpoint with private DNS exists in the VPC. E3064 must not fire.
+AWSTemplateFormatVersion: "2010-09-09"
+Mappings:
+  RegionConfig:
+    us-east-1: {CreateEndpointA: "true", CreateEndpointB: "false"}
+    us-west-2: {CreateEndpointA: "false", CreateEndpointB: "true"}
+Conditions:
+  CreateEndpointA: !Equals [!FindInMap [RegionConfig, !Ref "AWS::Region", CreateEndpointA], "true"]
+  CreateEndpointB: !Equals [!FindInMap [RegionConfig, !Ref "AWS::Region", CreateEndpointB], "true"]
+Resources:
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+  Subnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Vpc
+      CidrBlock: 10.0.0.0/24
+  EndpointA:
+    Type: AWS::EC2::VPCEndpoint
+    Condition: CreateEndpointA
+    Properties:
+      VpcEndpointType: Interface
+      PrivateDnsEnabled: true
+      VpcId: !Ref Vpc
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.ssm"
+      SubnetIds: [!Ref Subnet]
+  EndpointB:
+    Type: AWS::EC2::VPCEndpoint
+    Condition: CreateEndpointB
+    Properties:
+      VpcEndpointType: Interface
+      PrivateDnsEnabled: true
+      VpcId: !Ref Vpc
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.ssm"
+      SubnetIds: [!Ref Subnet]

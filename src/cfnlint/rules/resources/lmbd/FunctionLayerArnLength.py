@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from cfnlint.helpers import get_partition
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
@@ -31,25 +32,9 @@ class FunctionLayerArnLength(CfnLintKeyword):
             return
 
         for region in validator.context.regions:
-            partition = self._get_partition(region)
+            partition = get_partition(region)
             max_length = 176 + len(partition) + len(region)
             if len(instance) > max_length:
                 yield ValidationError(
                     f"{instance!r} is longer than {max_length} in {region!r}"
                 )
-
-    @staticmethod
-    def _get_partition(region: str) -> str:
-        if region.startswith("cn-"):
-            return "aws-cn"
-        if region.startswith("us-gov-"):
-            return "aws-us-gov"
-        if region.startswith("us-iso-") or region.startswith("us-isof-"):
-            return "aws-iso"
-        if region.startswith("us-isob-"):
-            return "aws-iso-b"
-        if region.startswith("eu-isoe-"):
-            return "aws-iso-e"
-        if region.startswith("eusc-"):
-            return "aws-iso-f"
-        return "aws"

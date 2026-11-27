@@ -65,7 +65,10 @@ class Sub(BaseFn):
         )
         for param in params:
             param = param.strip()
-            if "." in param:
+            # SAM generated resources (a function's Version/Alias) are modeled
+            # as synthetic resources whose logical id contains a "."
+            # (``MyFn.Version``), so ``${MyFn.Version}`` is a Ref, not a GetAtt.
+            if "." in param and param not in validator.context.resources:
                 if self._is_sam_stage_ref(param, validator):
                     continue
                 for err in validator.descend(
@@ -131,9 +134,14 @@ class Sub(BaseFn):
                 path=validator.context.path.descend(path=key)
             )
         )
+        # Pass the whole Fn::Sub value to the child rules, not just the
+        # string. W1019 needs the variable map (the second element of the
+        # two-element form) to report unused variables.
         for _, rule in self.child_rules.items():
             if rule and hasattr(rule, "validate"):
-                for err in rule.validate(value_validator, s, value, schema):
+                for err in rule.validate(
+                    value_validator, s, instance.get("Fn::Sub"), schema
+                ):
                     err.path.append("Fn::Sub")
                     err.rule = rule
                     yield err

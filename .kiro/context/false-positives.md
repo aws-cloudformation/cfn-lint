@@ -45,6 +45,11 @@ the right place:
 | Account-, quota-, or opt-in-dependent | Warning (`W`) at most, often nothing |
 | A style or preference judgment | Warning or informational (`I`), never an error |
 
+Telling a soft quota from a hard bound is a lookup, not a guess: see "A
+deployment rejection does not tell you the limit is universal" in
+`verification.md`. Encoding a limit that Service Quotas marks `Adjustable: true`
+is a false positive for every account that has had it raised.
+
 Severity follows blast radius: `E` means CloudFormation **will** reject the
 deployment. If a valid account configuration makes the template deploy fine, it
 is not an `E`.
@@ -56,14 +61,31 @@ it is frequently silent or wrong about real limits.
 
 Evidence, strongest first:
 
-1. **Real templates that deploy.** The most persuasive evidence, and often
-   better than an API probe: if templates in the wild use a value you are about
-   to reject, your constraint is wrong. Search `test/fixtures/templates/`, this
-   repo's issues, and public template corpora.
-2. **A live API probe.** Call the service and observe what it accepts and
-   rejects. Record the account, region, and date in the PR.
-3. **AWS documentation.** Good for intent, often stale on exact numbers.
-4. The base CFN schema. Weakest. Treat as a hint only.
+1. **A real deployment.** `CreateStack` or `UpdateStack` succeeding on a
+   template that uses the value you would reject proves your constraint is
+   wrong. A deployment failing with CloudFormation's own error proves it is
+   right. Record the account, region, date, and the verbatim error.
+2. **Real templates in the wild that are known to deploy.** Often beats a probe,
+   and costs nothing. Search `test/fixtures/templates/`, this repo's issues, and
+   public template corpora.
+3. **A service-level API probe.** Call the service that owns the constraint
+   (`lambda CreateFunction`, `s3 CreateBucket`, `rds CreateDBInstance`) and
+   observe accept/reject. Second-best, because the service may accept what
+   CloudFormation's provider rejects, or the reverse. Record account, region,
+   and date.
+4. **AWS documentation.** Good for intent, frequently stale on exact numbers.
+5. **The base CFN resource schema.** Weakest. A hint, never proof.
+
+**`aws cloudformation validate-template` is not evidence for a property-level
+constraint.** It invokes no resource provider, so a property value, limit, enum
+or cross-property rule can only be established by a deployment or by the owning
+service's API — never cite `validate-template` as a probe for one. It *is*
+evidence for what the control plane itself parses: parameter types, section
+structure, name rules, intrinsic function shape, template size. For those it
+returns the same error `CreateStack` does — see `verification.md`.
+
+For a parameter constraint a deployment is free, because `Default` is validated
+before any resource exists — see the parameter probe in `verification.md`.
 
 Write the evidence into the PR description. A reviewer cannot validate a
 magic number they cannot trace.
@@ -85,13 +107,21 @@ For every rule, the suite must contain:
 If a PR adds a rule and only tests the failing case, that is a blocking review
 comment.
 
-## Reviewing someone else's rule
+## Reviewing someone else's change
 
 Ask, in order:
 
-1. What is the evidence for this constraint, and is it traceable?
-2. Which valid templates does this now reject? Name one, or prove there are none.
-3. Is `E` the right severity, or does some valid account configuration deploy this?
-4. Does it stay silent on `Ref`, `GetAtt`, `Fn::If`, and a non-scalar?
-5. Does this belong in a rule at all, or in enhanced-schemas? See `schema-sources.md`.
-6. Run it. See `verification.md` — do not accept the author's claim untested.
+1. **What does this change reach?** Name every rule, schema and resource type that
+   inherits the new behaviour. A change under `src/cfnlint/jsonschema/`, to a shared
+   helper, or to a schema in `data/schemas/other/` is a change to the engine, not to
+   a rule — enumerate the callers before judging anything else. If you cannot state
+   the surface, you cannot review the fix.
+2. **What does it stop reporting?** A change that only removes findings still needs
+   justifying, and it will generate no user complaints to correct it later.
+3. What is the evidence for this constraint, and is it traceable? A deployment
+   or the owning service's API — not `validate-template`, not the base schema.
+4. Which valid templates does this now reject? Name one, or prove there are none.
+5. Is `E` the right severity, or does some valid account configuration deploy this?
+6. Does it stay silent on `Ref`, `GetAtt`, `Fn::If`, and a non-scalar?
+7. Does this belong in a rule at all, or in enhanced-schemas? See `schema-sources.md`.
+8. Run it. See `verification.md` — do not accept the author's claim untested.

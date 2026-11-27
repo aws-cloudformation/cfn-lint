@@ -21,6 +21,7 @@ rds_client = session.client("rds", region_name="us-east-1", config=config)
 elasticache_client = session.client(
     "elasticache", region_name="us-east-1", config=config
 )
+sagemaker_client = session.client("sagemaker", region_name="us-east-1", config=config)
 
 _ENGINE_SUPPORTED = [
     "aurora-mysql",
@@ -66,6 +67,13 @@ def configure_logging():
     LOGGER.addHandler(ch)
 
 
+def read_output(resource, filename):
+    filename = f"src/cfnlint/data/schemas/extensions/{resource}/{filename}.json"
+
+    with open(filename, encoding="utf-8") as f:
+        return json.load(f)
+
+
 def write_output(resource, filename, obj):
     filename = f"src/cfnlint/data/schemas/extensions/{resource}/{filename}.json"
     obj["description"] = "Automatically updated using aws api"
@@ -107,7 +115,7 @@ def write_db_cluster(results):
             continue
 
         engine_versions = sorted(results.get(engine).keys())
-        if engine == "aurora-mysql":
+        if engine in ("aurora-mysql", "mysql"):
             for engine_version in engine_versions.copy():
                 sub_engine_version = ".".join(engine_version.split(".")[0:2])
                 if sub_engine_version not in engine_versions:
@@ -219,7 +227,7 @@ def write_db_instance(results):
                 if major_engine_version not in engine_versions:
                     engine_versions.append(major_engine_version)
             engine_versions = sorted(engine_versions)
-        if engine == "aurora-mysql":
+        if engine in ("aurora-mysql", "mariadb", "mysql"):
             for engine_version in engine_versions.copy():
                 sub_engine_version = ".".join(engine_version.split(".")[0:2])
                 if sub_engine_version not in engine_versions:
@@ -376,6 +384,13 @@ def write_elasticache_engines(results):
             continue
 
         engine_versions = sorted(results.get(engine))
+        # ElastiCache resolves "6.x" to the latest Redis OSS 6 minor version
+        if (
+            engine == "redis"
+            and "6.x" not in engine_versions
+            and any(v.startswith("6.") for v in engine_versions)
+        ):
+            engine_versions.append("6.x")
         schema["allOf"].append(
             {
                 "if": {
@@ -423,7 +438,7 @@ def rds_api():
                 if engine not in deprecated_results:
                     deprecated_results[engine] = {}
                 deprecated_results[engine][engine_version] = {}
-            else:
+            elif status == "available":
                 # Track available versions for DB instance options
                 if engine not in available_results:
                     available_results[engine] = {}
@@ -434,7 +449,7 @@ def rds_api():
     write_db_instance(results)
     write_db_instance_deprecated(deprecated_results)
 
-    results_db_instance_class = dict.fromkeys(available_results.keys(), dict())
+    results_db_instance_class = {engine: {} for engine in available_results}
     for engine, versions in available_results.items():
         LOGGER.info(f"Starting RDS DB options collection for engine {engine!r}")
         for engine_version in versions.keys():
@@ -476,6 +491,35 @@ def elasticache_api():
     write_elasticache_engines(results)
 
 
+_SAGEMAKER_INSTANCE_TYPE_SHAPES = {
+    "aws_sagemaker_cluster": "ClusterInstanceType",
+    "aws_sagemaker_hosting": "ProductionVariantInstanceType",
+    "aws_sagemaker_processing": "ProcessingInstanceType",
+    "aws_sagemaker_transform": "TransformInstanceType",
+}
+
+
+def sagemaker_api():
+    """Add types the API accepts to the pricing derived enums (#4884).
+
+    Runs after update_specs_from_pricing, which only sees priced products.
+    """
+    service_model = sagemaker_client.meta.service_model
+
+    for resource, shape in _SAGEMAKER_INSTANCE_TYPE_SHAPES.items():
+        instance_types = set(service_model.shape_for(shape).enum)
+        schema = read_output(resource, "instancetype_enum")
+        write_output(
+            resource,
+            "instancetype_enum",
+            {
+                region: {"enum": sorted(set(values["enum"]) | instance_types)}
+                for region, values in schema.items()
+                if region != "description"
+            },
+        )
+
+
 def main():
     """main function"""
     configure_logging()
@@ -483,6 +527,8 @@ def main():
     rds_api()
     LOGGER.info("Starting Elasticache data collection")
     elasticache_api()
+    LOGGER.info("Starting SageMaker data collection")
+    sagemaker_api()
 
 
 if __name__ == "__main__":

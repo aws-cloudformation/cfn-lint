@@ -41,6 +41,73 @@ def context(cfn):
     "name,instance,schema,child_rules,expected",
     [
         (
+            "Valid SSM Parameter followed by later closing braces",
+            '{"ami":"{{resolve:ssm:Parameter}}","cache":{"ttl":600}}',
+            {"type": "test"},
+            {
+                "E1051": _TestRule(),
+                "E1027": _TestRule(),
+                "W1051": _TestRule(),
+            },
+            [],
+        ),
+        (
+            "Two valid references in one string",
+            "{{resolve:ssm:good}}{{resolve:ssm:other}}",
+            {"type": "test"},
+            {
+                "E1051": _TestRule(),
+                "E1027": _TestRule(),
+                "W1051": _TestRule(),
+            },
+            [],
+        ),
+        (
+            "Malformed first of two references",
+            "{{resolve:ssm:bad:2:extra:more}}{{resolve:ssm:good}}",
+            {"type": "test"},
+            {
+                "E1051": _TestRule(),
+                "E1027": _TestRule(),
+                "W1051": _TestRule(),
+            },
+            [
+                ValidationError(
+                    "expected maximum item count: 4, found: 6",
+                    validator="maxItems",
+                    rule=DynamicReference(),
+                )
+            ],
+        ),
+        (
+            "Malformed second of two references",
+            "{{resolve:ssm:good}}{{resolve:ssm:bad:2:extra:more}}",
+            {"type": "test"},
+            {
+                "E1051": _TestRule(),
+                "E1027": _TestRule(),
+                "W1051": _TestRule(),
+            },
+            [
+                ValidationError(
+                    "expected maximum item count: 4, found: 6",
+                    validator="maxItems",
+                    rule=DynamicReference(),
+                )
+            ],
+        ),
+        (
+            "Valid SSM Parameter with a substitution variable",
+            "{{resolve:ssm:${Name}}}",
+            {"type": "test"},
+            {
+                "E1051": _TestRule(),
+                "E1027": _TestRule(),
+                "W1051": _TestRule(),
+            },
+            [],
+        ),
+        (
             "Valid SSM Parameter",
             "{{resolve:ssm:Parameter}}",
             {"type": "test"},

@@ -38,6 +38,10 @@ def rule():
         ),
         (
             {"HealthCheckProtocol": "TCP", "Matcher": {}},
+            [],
+        ),
+        (
+            {"HealthCheckProtocol": "TCP", "Matcher": {"HttpCode": "200-299"}},
             [
                 ValidationError(
                     "Additional properties are not allowed ('Matcher' was unexpected)",
@@ -45,7 +49,35 @@ def rule():
                     validator="additionalProperties",
                     path=deque(["Matcher"]),
                     schema_path=deque(
-                        ["then", "allOf", 0, "else", "properties", "Matcher"]
+                        ["then", "allOf", 0, "else", "properties", "Matcher", "then"]
+                    ),
+                )
+            ],
+        ),
+        (
+            {"HealthCheckProtocol": "TCP", "Matcher": {"GrpcCode": "12"}},
+            [
+                ValidationError(
+                    "Additional properties are not allowed ('Matcher' was unexpected)",
+                    rule=TargetGroupHealthCheckProtocolRestrictions(),
+                    validator="additionalProperties",
+                    path=deque(["Matcher"]),
+                    schema_path=deque(
+                        ["then", "allOf", 0, "else", "properties", "Matcher", "then"]
+                    ),
+                )
+            ],
+        ),
+        (
+            {"HealthCheckProtocol": "TCP", "ProtocolVersion": "HTTP1"},
+            [
+                ValidationError(
+                    "Additional properties are not allowed ('ProtocolVersion' was unexpected)",
+                    rule=TargetGroupHealthCheckProtocolRestrictions(),
+                    validator="additionalProperties",
+                    path=deque(["ProtocolVersion"]),
+                    schema_path=deque(
+                        ["then", "allOf", 0, "else", "properties", "ProtocolVersion"]
                     ),
                 )
             ],

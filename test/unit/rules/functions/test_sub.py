@@ -7,12 +7,15 @@ from collections import deque
 
 import pytest
 
+from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.functions.GetAtt import GetAtt
 from cfnlint.rules.functions.GetAz import GetAz
 from cfnlint.rules.functions.Ref import Ref
 from cfnlint.rules.functions.Sub import Sub
+from cfnlint.rules.functions.SubParametersUsed import SubParametersUsed
 from cfnlint.rules.functions.SubResolved import SubResolved
+from cfnlint.rules.functions.SubUnneeded import SubUnneeded
 from cfnlint.template import Template
 
 
@@ -467,3 +470,122 @@ def test_sam_stage_ref_in_sub(name, template, rule):
     )
 
     assert errs == [], f"Test {name!r} got {errs!r}"
+
+
+def _sam_function(**props):
+    return {
+        "Transform": "AWS::Serverless-2016-10-31",
+        "Resources": {
+            "MyFunction": {
+                "Type": "AWS::Serverless::Function",
+                "Properties": {
+                    "Runtime": "python3.12",
+                    "Handler": "index.handler",
+                    "InlineCode": "def handler(e, c): pass",
+                    **props,
+                },
+            }
+        },
+    }
+
+
+@pytest.mark.parametrize(
+    "name,template,instance,expected_attrs",
+    [
+        (
+            "AutoPublishAlias Version",
+            _sam_function(AutoPublishAlias="live"),
+            {"Fn::Sub": "${MyFunction.Version}"},
+            [],
+        ),
+        (
+            "AutoPublishAlias Alias",
+            _sam_function(AutoPublishAlias="live"),
+            {"Fn::Sub": "${MyFunction.Alias}"},
+            [],
+        ),
+        (
+            "AutoPublishAlias Version attribute",
+            _sam_function(AutoPublishAlias="live"),
+            {"Fn::Sub": "${MyFunction.Version.Version}"},
+            [],
+        ),
+        (
+            "DeploymentPreference Version and Alias",
+            _sam_function(DeploymentPreference={"Type": "AllAtOnce"}),
+            {"Fn::Sub": "${MyFunction.Version}-${MyFunction.Alias}"},
+            [],
+        ),
+        (
+            "no AutoPublishAlias",
+            _sam_function(),
+            {"Fn::Sub": "${MyFunction.Version}-${MyFunction.Alias}"},
+            ["MyFunction.Version", "MyFunction.Alias"],
+        ),
+    ],
+)
+def test_sam_function_version_alias_in_sub(
+    name, template, instance, expected_attrs, rule
+):
+    cfn = Template("", template, regions=["us-east-1"])
+    validator = CfnTemplateValidator({}).extend(
+        validators={
+            "ref": Ref().ref,
+            "fn_getatt": GetAtt().fn_getatt,
+        }
+    )(
+        context=cfn.context.evolve(strict_types=False, functions=list(FUNCTIONS)),
+        cfn=cfn,
+    )
+
+    errs = list(rule.fn_sub(validator, {"type": "string"}, instance, {}))
+
+    assert [err.instance for err in errs] == expected_attrs, (
+        f"Test {name!r} got {errs!r}"
+    )
+
+
+@pytest.mark.parametrize(
+    "name,instance,expected",
+    [
+        (
+            "Unused variable in the two-element form is reported",
+            {"Fn::Sub": ["hello-${A}", {"A": "x", "B": "y"}]},
+            [("Parameter 'B' not used in 'Fn::Sub'", [1, "B", "Fn::Sub"])],
+        ),
+        (
+            "Unused variable is reported even when no variable is used",
+            {"Fn::Sub": ["hello", {"B": "y"}]},
+            [
+                ("Parameter 'B' not used in 'Fn::Sub'", [1, "B", "Fn::Sub"]),
+                (
+                    "'Fn::Sub' isn't needed because there are no variables",
+                    [0, "Fn::Sub"],
+                ),
+            ],
+        ),
+        (
+            "All variables used reports nothing",
+            {"Fn::Sub": ["hello-${A}", {"A": "x"}]},
+            [],
+        ),
+    ],
+)
+def test_sub_child_rules_get_whole_sub_value(name, instance, expected, context, cfn):
+    # Regression test for W1019 going silent: fn_sub must pass the whole
+    # Fn::Sub value (string plus variable map) to its child rules, not
+    # just the string, or SubParametersUsed never sees the map.
+    rule = Sub()
+    rule.child_rules["W1019"] = SubParametersUsed()
+    rule.child_rules["W1020"] = SubUnneeded()
+    validator = CfnTemplateValidator({}).extend(
+        validators={
+            "ref": Ref().ref,
+            "fn_getatt": GetAtt().fn_getatt,
+            "fn_getazs": GetAz().fn_getazs,
+        }
+    )(context=context.evolve(strict_types=False), cfn=cfn)
+    errs = list(rule.fn_sub(validator, {"type": "string"}, instance, {}))
+    assert [(err.message, list(err.path)) for err in errs] == expected, (
+        f"Test {name!r} got {errs!r}"
+    )

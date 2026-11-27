@@ -447,6 +447,77 @@ ElasticLoadBalancer -> MyEC2Instance [key=0, source_paths="[\\"Properties\\", \\
             [{"isPrimary": False}],
         )
 
+    def test_is_resource_available_always_true_condition(self):
+        """A resource whose condition is provably always true is always available"""
+        temp_obj = convert_dict(
+            {
+                "Conditions": {
+                    "AlwaysTrue": {"Fn::Equals": ["a", "a"]},
+                    "IsAlwaysProd": {"Fn::Equals": ["prod", "prod"]},
+                    "IsAlwaysBeta": {"Fn::Equals": ["beta", "prod"]},
+                    "AlwaysProdOrBeta": {
+                        "Fn::Or": [
+                            {"Condition": "IsAlwaysProd"},
+                            {"Condition": "IsAlwaysBeta"},
+                        ]
+                    },
+                    "IsUsEast1": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]},
+                },
+                "Resources": {
+                    "AlwaysTopic": {
+                        "Condition": "AlwaysTrue",
+                        "Type": "AWS::SNS::Topic",
+                    },
+                    "OrTopic": {
+                        "Condition": "AlwaysProdOrBeta",
+                        "Type": "AWS::SNS::Topic",
+                    },
+                    "RegionTopic": {
+                        "Condition": "IsUsEast1",
+                        "Type": "AWS::SNS::Topic",
+                    },
+                    "DependentTopic": {
+                        "Type": "AWS::SNS::Topic",
+                    },
+                },
+            }
+        )
+        template = Template("test.yaml", temp_obj)
+        # constant Fn::Equals condition: no scenario makes the resource unavailable
+        self.assertEqual(
+            template.is_resource_available(
+                ["Resources", "DependentTopic", "DependsOn"],
+                "AlwaysTopic",
+            ),
+            [],
+        )
+        # Fn::Or over constant conditions: no scenario makes the resource unavailable
+        self.assertEqual(
+            template.is_resource_available(
+                ["Resources", "DependentTopic", "DependsOn"],
+                "OrTopic",
+            ),
+            [],
+        )
+        # a genuinely conditional condition still reports the False scenario
+        self.assertEqual(
+            template.is_resource_available(
+                ["Resources", "DependentTopic", "DependsOn"],
+                "RegionTopic",
+            ),
+            [{"IsUsEast1": False}],
+        )
+        # an unknown resource name keeps the previous behavior
+        self.assertEqual(
+            template.is_resource_available(
+                ["Resources", "DependentTopic", "DependsOn"],
+                "DoesNotExist",
+            ),
+            [],
+        )
+        # a condition the template does not define is not provably always true
+        self.assertFalse(template.conditions.is_always_true("NoSuchCondition"))
+
     def test_get_conditions_from_path(self):
         """Test is resource available"""
         temp_obj = convert_dict(
@@ -1391,6 +1462,60 @@ ElasticLoadBalancer -> MyEC2Instance [key=0, source_paths="[\\"Properties\\", \\
                 "nullMetadata": {"Metadata": None, "Type": "AWS::S3::Bucket"},
                 "listMetadata": {"Metadata": [], "Type": "AWS::S3::Bucket"},
                 "stringMetadata": {"Metadata": "foo", "Type": "AWS::S3::Bucket"},
+                "goodMetadata": {
+                    "Metadata": {"cfn-lint": {"config": {"ignore_checks": ["E3012"]}}},
+                    "Type": "AWS::S3::Bucket",
+                },
+            }
+        }
+
+        template = Template(
+            "test.yaml",
+            cfn_yaml.loads(
+                json.dumps(
+                    template_yaml, sort_keys=True, indent=4, separators=(",", ": ")
+                )
+            ),
+        )
+        directives = template.get_directives()
+        self.assertDictEqual(directives, {"E3012": ["goodMetadata"]})
+
+    def test_get_directives_non_dict_cfn_lint_metadata(self):
+        """Test get_directives skips Metadata.cfn-lint / config that is not an object"""
+        template_yaml = {
+            "Resources": {
+                "stringCfnLint": {
+                    "Metadata": {"cfn-lint": "foo"},
+                    "Type": "AWS::S3::Bucket",
+                },
+                "listCfnLint": {
+                    "Metadata": {"cfn-lint": []},
+                    "Type": "AWS::S3::Bucket",
+                },
+                "stringConfig": {
+                    "Metadata": {"cfn-lint": {"config": "foo"}},
+                    "Type": "AWS::S3::Bucket",
+                },
+                "nullIgnoreChecks": {
+                    "Metadata": {"cfn-lint": {"config": {"ignore_checks": None}}},
+                    "Type": "AWS::S3::Bucket",
+                },
+                "intIgnoreChecks": {
+                    "Metadata": {"cfn-lint": {"config": {"ignore_checks": 1}}},
+                    "Type": "AWS::S3::Bucket",
+                },
+                "dictElementIgnoreChecks": {
+                    "Metadata": {
+                        "cfn-lint": {"config": {"ignore_checks": [{"E3012": "x"}]}}
+                    },
+                    "Type": "AWS::S3::Bucket",
+                },
+                "listElementIgnoreChecks": {
+                    "Metadata": {
+                        "cfn-lint": {"config": {"ignore_checks": [["E3012"]]}}
+                    },
+                    "Type": "AWS::S3::Bucket",
+                },
                 "goodMetadata": {
                     "Metadata": {"cfn-lint": {"config": {"ignore_checks": ["E3012"]}}},
                     "Type": "AWS::S3::Bucket",

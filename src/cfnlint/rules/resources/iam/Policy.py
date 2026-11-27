@@ -10,6 +10,7 @@ from typing import Any
 
 from cfnlint.helpers import load_resource
 from cfnlint.jsonschema import ValidationResult, Validator
+from cfnlint.jsonschema._keywords import uniqueKeys
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 from cfnlint.schema.resolver import RefResolver
 
@@ -70,5 +71,27 @@ class Policy(CfnLintJsonSchema):
                 schema=self.identity_schema,
             )
 
+        if self.validators:
+            iam_validator = iam_validator.extend(validators=self.validators)(
+                schema=self.identity_schema
+            ).evolve(
+                cfn=iam_validator.cfn,
+                context=iam_validator.context,
+                resolver=self.resolver,
+            )
+
         for err in iam_validator.iter_errors(policy):
             yield self._clean_error(err)
+
+    def _unique_named_sids(
+        self, validator: Validator, uKs: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        # IAM requires non-empty Sids to be unique and accepts any number of
+        # empty ones
+        if "Sid" in uKs and validator.is_type(instance, "array"):
+            instance = [
+                statement
+                for statement in instance
+                if not (isinstance(statement, dict) and statement.get("Sid") == "")
+            ]
+        yield from uniqueKeys(validator, uKs, instance, schema)

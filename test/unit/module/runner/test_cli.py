@@ -3,12 +3,16 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import json
 import logging
 from io import StringIO
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
 
+import cfnlint.exceptions
+import cfnlint.runner
 from cfnlint import ConfigMixIn
+from cfnlint.exceptions import CfnLintExitException, TemplatesNotFoundError
 from cfnlint.helpers import format_json_string
 from cfnlint.runner import Runner
 
@@ -291,3 +295,116 @@ class TestCli(BaseTestCase):
                 with self.assertRaises(SystemExit):
                     main()
                 mock_print.assert_called_once_with("Invalid key 'bad'")
+
+
+class TestMainOverrideSpec(BaseTestCase):
+    """main() turns a bad override spec into an exit code, not a traceback"""
+
+    @patch(
+        "sys.argv",
+        [
+            "cfn-lint",
+            "--override-spec",
+            "/nonexistent/spec.json",
+            "-t",
+            "test/fixtures/templates/good/generic.yaml",
+        ],
+    )
+    def test_missing_override_spec_exits_one(self):
+        from cfnlint.runner.cli import main
+        from cfnlint.schema import _patch
+
+        _patch.reset()
+        try:
+            with self.assertLogs("cfnlint.runner.cli", level="ERROR") as logs:
+                with self.assertRaises(SystemExit) as e:
+                    main()
+            self.assertEqual(e.exception.code, 1)
+            self.assertIn("Override spec file not found", logs.output[0])
+        finally:
+            _patch.reset()
+
+
+class TestRunnerTemplatesNotFound(BaseTestCase):
+    """Runner construction records an unresolvable template glob
+    instead of exiting the process"""
+
+    glob = "test/fixtures/templates/this-glob-matches-nothing/*.yaml"
+
+    def test_init_does_not_exit(self):
+        # a SystemExit from the constructor fails this test
+        runner = Runner(ConfigMixIn(["--template", self.glob]))
+
+        self.assertIsInstance(runner, Runner)
+
+    def test_run_raises_a_catchable_exception(self):
+        runner = Runner(ConfigMixIn(["--template", self.glob]))
+
+        with self.assertRaises(Exception) as e:
+            list(runner.run())
+
+        self.assertIsInstance(e.exception, TemplatesNotFoundError)
+        self.assertIsInstance(e.exception, CfnLintExitException)
+        self.assertEqual(e.exception.exit_code, 2)
+        self.assertEqual(
+            str(e.exception), f"{self.glob} could not be processed by glob.glob"
+        )
+
+    def test_cli_exits_two_with_a_formatted_match(self):
+        runner = Runner(ConfigMixIn(["--template", self.glob, "--format", "json"]))
+
+        with patch("sys.stdout", new_callable=StringIO) as mock_stdout:
+            with self.assertRaises(SystemExit) as e:
+                runner.cli()
+
+        self.assertEqual(e.exception.code, 2)
+        report = json.loads(mock_stdout.getvalue())
+        self.assertEqual(len(report), 1)
+        self.assertEqual(report[0]["Rule"]["Id"], "E0003")
+        self.assertEqual(
+            report[0]["Message"], f"{self.glob} could not be processed by glob.glob"
+        )
+
+    def test_cli_honors_non_zero_exit_code_none(self):
+        runner = Runner(
+            ConfigMixIn(["--template", self.glob, "--non-zero-exit-code", "none"])
+        )
+
+        with patch("sys.stdout", new_callable=StringIO):
+            with self.assertRaises(SystemExit) as e:
+                runner.cli()
+
+        self.assertEqual(e.exception.code, 0)
+
+
+class TestRunnerExceptionExports(BaseTestCase):
+    """Every CfnLintExitException subclass is exported from cfnlint.runner"""
+
+    def test_all_subclasses_are_exported(self):
+        subclasses = {
+            name
+            for name, obj in vars(cfnlint.exceptions).items()
+            if isinstance(obj, type)
+            and issubclass(obj, CfnLintExitException)
+            and obj is not CfnLintExitException
+        }
+
+        self.assertEqual(
+            subclasses - set(cfnlint.runner.__all__),
+            set(),
+            "CfnLintExitException subclasses missing from cfnlint.runner.__all__",
+        )
+
+    def test_known_exceptions_are_importable(self):
+        for name in (
+            "CfnLintExitException",
+            "ConfigFileError",
+            "DuplicateRuleError",
+            "InvalidRegionException",
+            "SchemaPatchError",
+            "TemplatesNotFoundError",
+            "UnexpectedRuleException",
+        ):
+            with self.subTest(name=name):
+                self.assertIn(name, cfnlint.runner.__all__)
+                self.assertTrue(hasattr(cfnlint.runner, name))

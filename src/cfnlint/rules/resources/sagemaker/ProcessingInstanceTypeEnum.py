@@ -13,7 +13,7 @@ class ProcessingInstanceTypeEnum(CfnLintJsonSchemaRegional):
     shortdesc = "Validate SageMaker processing instance types based on region"
     description = (
         "Validates the SageMaker processing instance types based on region "
-        "and data gathered from the pricing APIs"
+        "and data gathered from the SageMaker and pricing APIs"
     )
     tags = ["resources"]
 

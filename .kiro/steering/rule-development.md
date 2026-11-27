@@ -92,6 +92,14 @@ It reaches cfn-lint on the next schema sync. Editing
 `src/cfnlint/data/schemas/providers/` or `resources/` never works — both are
 gitignored and overwritten by `--update-specs`.
 
+### Keyword behaviour for one rule
+
+A rule that needs a keyword to behave differently registers an override in
+`self.validators` and delegates to the stock keyword. `E1700` does this for
+`patternProperties`; the `outputs`, `parameters` and `resources` configuration rules
+do the same. Do not change the keyword's implementation in `src/cfnlint/jsonschema/`
+to suit one rule — every schema using that keyword inherits it.
+
 ## Rule Metadata
 
 - **id** — correct category (see Rule ID System in `structure.md`); find the
@@ -112,8 +120,13 @@ Severity follows consequence, not confidence:
 
 ## Validation Approach
 
-1. **Prove the constraint.** Real templates first, then a live API probe, then
-   AWS docs. Never the base CFN schema alone.
+1. **Prove the constraint.** A real deployment first, then real templates known
+   to deploy, then a service-level API probe, then AWS docs. Never the base CFN
+   schema alone, and never `aws cloudformation validate-template` for a property
+   constraint — it invokes no resource provider, though it does establish
+   control-plane structure such as parameter types. Then check whether the
+   number is a soft account quota, which is never an
+   `E` — see [`../context/verification.md`](../context/verification.md).
 2. **Decide where it belongs** — this repo or enhanced-schemas.
 3. **Pick the simplest rule type** that expresses it.
 4. **Handle unresolvable values.** `Ref`, `GetAtt`, `Sub`, `Fn::If`, mappings
@@ -143,5 +156,6 @@ pre-commit run --all-files
 ## Documentation
 
 - Add the rule to `docs/rules.md`
-- Record the evidence for the constraint in the PR description, including
-  account, region, and date for any live probe
+- Record the evidence for the constraint in the PR description: account, region,
+  date and the verbatim error for a deployment; account, region and date for a
+  service API probe

@@ -221,3 +221,45 @@ class TestConfigFileArgs(BaseTestCase):
 
         results = cfnlint.config.ConfigFileArgs()
         self.assertEqual(results.file_args, {"include_experimental": True})
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_config_parser_rejects_cli_or_user_only_project_keys(self, yaml_mock):
+        """Project .cfnlintrc rejects append_rules and output_file"""
+
+        for key, value in [
+            ("append_rules", ["project_rules"]),
+            ("output_file", "report.txt"),
+        ]:
+            with self.subTest(key=key):
+                yaml_mock.side_effect = [{}, {key: value}]
+
+                with self.assertRaises(ConfigFileError) as context:
+                    cfnlint.config.ConfigFileArgs()
+
+                self.assertIn(f"'{key}' cannot be set in", str(context.exception))
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_config_parser_keeps_cli_or_user_only_user_keys(self, yaml_mock):
+        """~/.cfnlintrc append_rules is merged with the project config"""
+
+        yaml_mock.side_effect = [
+            {"append_rules": ["user_rules"]},
+            {"regions": ["us-east-1"]},
+        ]
+
+        results = cfnlint.config.ConfigFileArgs()
+        self.assertEqual(
+            results.file_args,
+            {"append_rules": ["user_rules"], "regions": ["us-east-1"]},
+        )
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_config_parser_keeps_cli_or_user_only_config_file_keys(self, yaml_mock):
+        """--config-file append_rules is kept"""
+
+        yaml_mock.side_effect = [{"append_rules": ["user_rules"]}]
+
+        results = cfnlint.config.ConfigFileArgs(
+            config_file=Path("test/fixtures/configs/cfnlintrc_read.yaml")
+        )
+        self.assertEqual(results.file_args, {"append_rules": ["user_rules"]})

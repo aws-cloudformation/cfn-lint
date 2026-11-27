@@ -33,6 +33,7 @@ class Configuration(CfnLintJsonSchema):
             all_matches=True,
         )
         self.rule_set = {
+            "propertyNames": "E2011",
             "maxLength": "E2011",
             "maxProperties": "E2010",
             "minProperties": "E2010",

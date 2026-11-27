@@ -132,6 +132,79 @@ class TestCustomRuleParsing(BaseTestCase):
         """Test Successful Custom_Rule Parsing"""
         assert self.run_tests(self.invalid_propkey) == []
 
+    def test_in_set_whole_element_matching(self):
+        """IN and NOT_IN match whole set elements (#5034)"""
+        template = "test/fixtures/templates/good/custom_rules_in_set.yaml"
+        in_set = [
+            ("Resources/Alph/Properties/BucketName", "In set check failed"),
+            ("Resources/Gamma/Properties/BucketName", "In set check failed"),
+        ]
+        in_set_error = [
+            (
+                "Resources/Alph/Properties/BucketName",
+                "name must be alpha or beta",
+            ),
+            (
+                "Resources/Gamma/Properties/BucketName",
+                "name must be alpha or beta",
+            ),
+        ]
+        not_in_set = [
+            ("Resources/Alpha/Properties/BucketName", "Not in set check failed"),
+            ("Resources/Beta/Properties/BucketName", "Not in set check failed"),
+        ]
+        not_in_set_error = [
+            (
+                "Resources/Alpha/Properties/BucketName",
+                "name must not be alpha or beta",
+            ),
+            (
+                "Resources/Beta/Properties/BucketName",
+                "name must not be alpha or beta",
+            ),
+        ]
+        cases = [
+            (
+                "test/fixtures/custom_rules/bad/custom_rule_in_set_space.txt",
+                in_set,
+            ),
+            (
+                "test/fixtures/custom_rules/bad/custom_rule_in_set_nospace.txt",
+                in_set,
+            ),
+            (
+                "test/fixtures/custom_rules/bad/custom_rule_not_in_set_space.txt",
+                not_in_set,
+            ),
+            (
+                "test/fixtures/custom_rules/bad/custom_rule_in_set_space_error.txt",
+                in_set_error,
+            ),
+            (
+                "test/fixtures/custom_rules/bad/custom_rule_in_set_quoted_error.txt",
+                in_set_error,
+            ),
+            (
+                "test/fixtures/custom_rules/bad/custom_rule_not_in_set_space_error.txt",
+                not_in_set_error,
+            ),
+            (
+                "test/fixtures/custom_rules/bad/custom_rule_in_set_nospace_error.txt",
+                in_set_error,
+            ),
+        ]
+        for rule_file, expected in cases:
+            matches = self.run_tests_on_template(rule_file, template)
+            assert sorted(
+                (match.path_string, match.message) for match in matches
+            ) == sorted(expected), rule_file
+
+    def run_tests_on_template(self, rulename, filename):
+        template = cfnlint.decode.cfn_yaml.load(filename)
+        rules = Rules()
+        rules.update(rules.create_from_custom_rules_file(rulename))
+        return list(_run_template(filename, template, ConfigMixIn({}), rules))
+
     def test_invalid_resource_type(self):
         """Test Successful Custom_Rule Parsing"""
         assert self.run_tests(self.invalid_rt) == []

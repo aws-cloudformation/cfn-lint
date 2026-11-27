@@ -13,7 +13,7 @@ class ClusterInstanceTypeEnum(CfnLintJsonSchemaRegional):
     shortdesc = "Validate SageMaker cluster instance types based on region"
     description = (
         "Validates the SageMaker cluster instance types based on region "
-        "and data gathered from the pricing APIs"
+        "and data gathered from the SageMaker and pricing APIs"
     )
     tags = ["resources"]
 

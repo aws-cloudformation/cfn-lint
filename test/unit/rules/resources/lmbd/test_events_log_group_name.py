@@ -381,6 +381,204 @@ class TestEventsLogGroupNameUnit:
         matches = rule.match(template)
         assert len(matches) == 1
 
+    def test_mutually_exclusive_conditions_within_limit(self, rule):
+        """Filters gated by mutually exclusive Conditions are not counted together"""
+        dest_arn = "arn:aws:lambda:us-east-1:123456789012:function:f"
+        resources = {
+            "Logs": {
+                "Type": "AWS::Logs::LogGroup",
+                "Properties": {"RetentionInDays": 1},
+            },
+        }
+        for i in range(3):
+            resources[f"ProdFilter{i}"] = {
+                "Type": "AWS::Logs::SubscriptionFilter",
+                "Condition": "IsProd",
+                "Properties": {
+                    "LogGroupName": {"Ref": "Logs"},
+                    "FilterPattern": f"prod{i}",
+                    "DestinationArn": dest_arn,
+                },
+            }
+        for i in range(3):
+            resources[f"DevFilter{i}"] = {
+                "Type": "AWS::Logs::SubscriptionFilter",
+                "Condition": "IsDev",
+                "Properties": {
+                    "LogGroupName": {"Ref": "Logs"},
+                    "FilterPattern": f"dev{i}",
+                    "DestinationArn": dest_arn,
+                },
+            }
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Parameters": {
+                    "Stage": {
+                        "Type": "String",
+                        "AllowedValues": ["prod", "dev"],
+                        "Default": "prod",
+                    },
+                },
+                "Conditions": {
+                    "IsProd": {"Fn::Equals": [{"Ref": "Stage"}, "prod"]},
+                    "IsDev": {"Fn::Not": [{"Condition": "IsProd"}]},
+                },
+                "Resources": resources,
+            },
+        )
+        # 3 Prod + 3 Dev filters, but at most 3 coexist in any scenario
+        matches = rule.match(template)
+        assert len(matches) == 0
+
+    def test_same_condition_exceeds_limit(self, rule):
+        """6 filters under one Condition still exceed the limit"""
+        dest_arn = "arn:aws:lambda:us-east-1:123456789012:function:f"
+        resources = {
+            "Logs": {
+                "Type": "AWS::Logs::LogGroup",
+                "Properties": {"RetentionInDays": 1},
+            },
+        }
+        for i in range(6):
+            resources[f"ProdFilter{i}"] = {
+                "Type": "AWS::Logs::SubscriptionFilter",
+                "Condition": "IsProd",
+                "Properties": {
+                    "LogGroupName": {"Ref": "Logs"},
+                    "FilterPattern": f"prod{i}",
+                    "DestinationArn": dest_arn,
+                },
+            }
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Conditions": {
+                    "IsProd": {"Fn::Equals": [{"Ref": "Stage"}, "prod"]},
+                },
+                "Parameters": {
+                    "Stage": {
+                        "Type": "String",
+                        "AllowedValues": ["prod", "dev"],
+                        "Default": "prod",
+                    },
+                },
+                "Resources": resources,
+            },
+        )
+        matches = rule.match(template)
+        assert len(matches) == 1
+
+    def test_unconditional_plus_conditional_exceeds_limit(self, rule):
+        """Unconditional filters count in every scenario"""
+        dest_arn = "arn:aws:lambda:us-east-1:123456789012:function:f"
+        resources = {
+            "Logs": {
+                "Type": "AWS::Logs::LogGroup",
+                "Properties": {"RetentionInDays": 1},
+            },
+        }
+        for i in range(4):
+            resources[f"Filter{i}"] = {
+                "Type": "AWS::Logs::SubscriptionFilter",
+                "Properties": {
+                    "LogGroupName": {"Ref": "Logs"},
+                    "FilterPattern": f"f{i}",
+                    "DestinationArn": dest_arn,
+                },
+            }
+        for i in range(2):
+            resources[f"ProdFilter{i}"] = {
+                "Type": "AWS::Logs::SubscriptionFilter",
+                "Condition": "IsProd",
+                "Properties": {
+                    "LogGroupName": {"Ref": "Logs"},
+                    "FilterPattern": f"prod{i}",
+                    "DestinationArn": dest_arn,
+                },
+            }
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Conditions": {
+                    "IsProd": {"Fn::Equals": [{"Ref": "Stage"}, "prod"]},
+                },
+                "Parameters": {
+                    "Stage": {
+                        "Type": "String",
+                        "AllowedValues": ["prod", "dev"],
+                        "Default": "prod",
+                    },
+                },
+                "Resources": resources,
+            },
+        )
+        # 4 unconditional + 2 IsProd filters coexist when IsProd is true
+        matches = rule.match(template)
+        assert len(matches) == 1
+
+    def test_sam_events_mutually_exclusive_conditions_within_limit(self, rule):
+        """SAM events inherit their function's Condition for the count"""
+        events = {}
+        for i in range(4):
+            events[f"Event{i}"] = {
+                "Type": "CloudWatchLogs",
+                "Properties": {
+                    "LogGroupName": {"Ref": "Logs"},
+                    "FilterPattern": "",
+                },
+            }
+        template = Template(
+            "",
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Transform": "AWS::Serverless-2016-10-31",
+                "Conditions": {
+                    "IsProd": {"Fn::Equals": [{"Ref": "Stage"}, "prod"]},
+                    "IsDev": {"Fn::Not": [{"Condition": "IsProd"}]},
+                },
+                "Parameters": {
+                    "Stage": {
+                        "Type": "String",
+                        "AllowedValues": ["prod", "dev"],
+                        "Default": "prod",
+                    },
+                },
+                "Resources": {
+                    "Logs": {
+                        "Type": "AWS::Logs::LogGroup",
+                        "Properties": {"RetentionInDays": 1},
+                    },
+                    "ProdFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "Condition": "IsProd",
+                        "Properties": {
+                            "CodeUri": "hello_world/",
+                            "Handler": "app.lambda_handler",
+                            "Runtime": "python3.9",
+                            "Events": events,
+                        },
+                    },
+                    "DevFunction": {
+                        "Type": "AWS::Serverless::Function",
+                        "Condition": "IsDev",
+                        "Properties": {
+                            "CodeUri": "hello_world/",
+                            "Handler": "app.lambda_handler",
+                            "Runtime": "python3.9",
+                            "Events": events,
+                        },
+                    },
+                },
+            },
+        )
+        # 4 Prod + 4 Dev events, but at most 4 coexist in any scenario
+        matches = rule.match(template)
+        assert len(matches) == 0
+
     def test_non_cloudwatchlogs_event_ignored(self, rule):
         """Test that non-CloudWatchLogs event types are ignored"""
         template = Template(

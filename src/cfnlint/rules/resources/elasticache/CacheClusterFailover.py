@@ -81,7 +81,14 @@ class CacheClusterFailover(CloudFormationLintRule):
                     )
             num_node_groups = c_props.get("NumNodeGroups")
             if not num_node_groups:
-                # only test cache nodes if num node groups aren't specified
+                # only test cache nodes if num node groups aren't specified.
+                # NumCacheClusters is not used for cluster mode groups sized
+                # by NodeGroupConfiguration or ReplicasPerNodeGroup, so those
+                # groups are not subject to this check either.
+                if c_props.get("NodeGroupConfiguration"):
+                    return results
+                if c_props.get("ReplicasPerNodeGroup") is not None:
+                    return results
                 num_cache_nodes = c_props.get("NumCacheClusters", 0)
                 if num_cache_nodes <= 1:
                     pathmessage = path[:] + ["NumCacheClusters"]
