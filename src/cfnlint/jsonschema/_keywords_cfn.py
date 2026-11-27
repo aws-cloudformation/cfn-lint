@@ -513,6 +513,30 @@ def _resolve_remote(
     return None, None
 
 
+def _canonicalize_reference(value: Any, attribute: str) -> Any:
+    """Rewrite a GetAtt to its equivalent Ref form.
+
+    For a resource attribute whose value is the same as the resource's
+    Ref return value (for example RestApiId on AWS::ApiGateway::RestApi),
+    ``{"Fn::GetAtt": ["LogicalId", attribute]}`` denotes the same value
+    as ``{"Ref": "LogicalId"}``. Rewrite the GetAtt form (list or string)
+    to the Ref form so literal comparisons treat them as equal. All other
+    values are returned unchanged, so a GetAtt on a different attribute
+    is never mistaken for the Ref value.
+    """
+    fn_k, fn_v = is_function(value)
+    if fn_k != "Fn::GetAtt":
+        return value
+    if isinstance(fn_v, list):
+        if len(fn_v) == 2 and fn_v[1] == attribute:
+            return {"Ref": fn_v[0]}
+    elif isinstance(fn_v, str):
+        parts = fn_v.split(".", 1)
+        if len(parts) == 2 and parts[1] == attribute:
+            return {"Ref": parts[0]}
+    return value
+
+
 def _gather_properties(
     validator: Validator,
     resource_name: str | None,
@@ -564,6 +588,15 @@ def _gather_properties(
             if has_default:
                 gathered[key] = default
             continue
+
+        # A property spec may name the GetAtt attribute that is equivalent
+        # to Ref for the referenced resource (for example RestApiId on a
+        # RestApi). Canonicalize such values so Ref and GetAtt forms of the
+        # same reference compare equal.
+        if isinstance(spec, dict):
+            attribute = spec.get("resolveReference")
+            if attribute is not None:
+                value = _canonicalize_reference(value, attribute)
 
         gathered[key] = value
     return gathered

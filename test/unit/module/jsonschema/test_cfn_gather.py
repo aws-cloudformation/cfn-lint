@@ -188,3 +188,99 @@ class TestCfnGather:
         )
 
         assert len(errors) == 0
+
+    @pytest.mark.parametrize(
+        "stage_rest_api,deployment_rest_api,expected_errors",
+        [
+            # Ref and GetAtt RestApiId name the same RestApi
+            ({"Ref": "Api"}, {"Fn::GetAtt": ["Api", "RestApiId"]}, 0),
+            # Reversed: GetAtt on the local side, Ref on the remote side
+            ({"Fn::GetAtt": ["Api", "RestApiId"]}, {"Ref": "Api"}, 0),
+            # GetAtt in string form is the same reference
+            ({"Ref": "Api"}, {"Fn::GetAtt": "Api.RestApiId"}, 0),
+            # GetAtt on a different attribute is not the RestApi id
+            ({"Ref": "Api"}, {"Fn::GetAtt": ["Api", "RootResourceId"]}, 1),
+            # GetAtt on a different RestApi is a mismatch
+            ({"Ref": "Api"}, {"Fn::GetAtt": ["OtherApi", "RestApiId"]}, 1),
+            # A literal value is left unchanged and still mismatches a Ref
+            ({"Ref": "Api"}, "abc123", 1),
+        ],
+    )
+    def test_gather_resolve_reference(
+        self, stage_rest_api, deployment_rest_api, expected_errors
+    ):
+        """Test cfnGather resolveReference canonicalizes Ref/GetAtt pairs"""
+        template = {
+            "Resources": {
+                "Api": {
+                    "Type": "AWS::ApiGateway::RestApi",
+                    "Properties": {"Name": "Api"},
+                },
+                "OtherApi": {
+                    "Type": "AWS::ApiGateway::RestApi",
+                    "Properties": {"Name": "OtherApi"},
+                },
+                "Deployment": {
+                    "Type": "AWS::ApiGateway::Deployment",
+                    "Properties": {"RestApiId": deployment_rest_api},
+                },
+                "Stage": {
+                    "Type": "AWS::ApiGateway::Stage",
+                    "Properties": {
+                        "RestApiId": stage_rest_api,
+                        "DeploymentId": {"Ref": "Deployment"},
+                        "StageName": "test",
+                    },
+                },
+            }
+        }
+
+        schema = {
+            "cfnGather": {
+                "gather": {
+                    "deployment": {
+                        "filter": {"type": "AWS::ApiGateway::Deployment"},
+                        "properties": {
+                            "RestApiId": {
+                                "path": "/RestApiId",
+                                "resolveReference": "RestApiId",
+                            }
+                        },
+                        "reference": "/DeploymentId",
+                    },
+                    "stage": {
+                        "properties": {
+                            "RestApiId": {
+                                "path": "/RestApiId",
+                                "resolveReference": "RestApiId",
+                            }
+                        }
+                    },
+                },
+                "schema": {
+                    "cfnContext": {
+                        "functions": [],
+                        "schema": {
+                            "properties": {
+                                "deployment": {
+                                    "properties": {
+                                        "RestApiId": {
+                                            "const": {"$data": "/stage/RestApiId"}
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                    }
+                },
+            }
+        }
+
+        cfn = Template("test.yaml", template)
+        validator = CfnTemplateValidator(schema=schema, cfn=cfn)
+
+        errors = list(
+            validator.iter_errors(template["Resources"]["Stage"]["Properties"])
+        )
+
+        assert len(errors) == expected_errors
