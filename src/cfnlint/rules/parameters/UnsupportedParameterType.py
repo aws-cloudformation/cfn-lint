@@ -37,6 +37,26 @@ class UnsupportedParameterType(CfnLintKeyword):
             instance.startswith("AWS::SSM::Parameter::Value<")
             or instance.startswith("List<")
         ) and instance not in VALID_PARAMETER_TYPES:
+            # E2002 rejects unrecognized unqualified base types. Do not also
+            # suggest that CloudFormation might accept those invalid types.
+            base_type = instance
+            while True:
+                if base_type.startswith(
+                    "AWS::SSM::Parameter::Value<"
+                ) and base_type.endswith(">"):
+                    base_type = base_type[len("AWS::SSM::Parameter::Value<") : -1]
+                elif base_type.startswith("List<") and base_type.endswith(">"):
+                    base_type = base_type[len("List<") : -1]
+                else:
+                    break
+
+            if "::" not in base_type and base_type not in (
+                "String",
+                "Number",
+                "CommaDelimitedList",
+            ):
+                return
+
             yield ValidationError(
                 f"{instance!r} is not an officially documented "
                 "CloudFormation parameter type. While CloudFormation may "
