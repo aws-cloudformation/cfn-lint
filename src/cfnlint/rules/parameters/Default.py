@@ -119,7 +119,7 @@ class Default(CloudFormationLintRule):
         if default_value is not None:
             path = ["Parameters", paramname, "Default"]
             allowed_pattern = paramvalue.get("AllowedPattern")
-            if allowed_pattern:
+            if allowed_pattern and isinstance(allowed_pattern, str):
                 matches.extend(
                     self.check_allowed_pattern(default_value, allowed_pattern, path)
                 )
@@ -130,7 +130,7 @@ class Default(CloudFormationLintRule):
             if max_value is not None:
                 matches.extend(self.check_max_value(default_value, max_value, path))
             allowed_values = paramvalue.get("AllowedValues")
-            if allowed_values:
+            if allowed_values and isinstance(allowed_values, list):
                 matches.extend(
                     self.check_allowed_values(default_value, allowed_values, path)
                 )
