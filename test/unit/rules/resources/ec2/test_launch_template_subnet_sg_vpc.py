@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+import copy
 from collections import deque
 
 import pytest
@@ -58,6 +59,46 @@ _template = {
         },
     },
 }
+
+
+def _template_with(sg_vpc_id, subnet_vpc_id):
+    resources = copy.deepcopy(_template["Resources"])
+    resources["SG1"]["Properties"]["VpcId"] = sg_vpc_id
+    resources["Subnet1"]["Properties"]["VpcId"] = subnet_vpc_id
+    return {"Resources": resources}
+
+
+def _expected_mismatch():
+    return [
+        ValidationError(
+            ("SecurityGroup VpcId does not match Subnet VpcId in the LaunchTemplate"),
+            validator="const",
+            rule=LaunchTemplateSubnetSecurityGroupVpc(),
+            path=deque([]),
+            schema_path=deque(
+                [
+                    "cfnGather",
+                    "schema",
+                    "cfnContext",
+                    "schema",
+                    "then",
+                    "properties",
+                    "securityGroup",
+                    "properties",
+                    "VpcId",
+                    "const",
+                ]
+            ),
+            path_override=deque(
+                [
+                    "Resources",
+                    "SG1",
+                    "Properties",
+                    "VpcId",
+                ]
+            ),
+        ),
+    ]
 
 
 @pytest.mark.parametrize(
@@ -228,6 +269,53 @@ _template = {
             },
             deque(["Resources", "LaunchTemplate", "Properties"]),
             [],
+        ),
+        # Both sides GetAtt VpcId name the same VPC
+        (
+            _template_with(
+                {"Fn::GetAtt": ["Vpc", "VpcId"]},
+                {"Fn::GetAtt": ["Vpc", "VpcId"]},
+            ),
+            deque(["Resources", "LaunchTemplate", "Properties"]),
+            [],
+        ),
+        # Ref on the SecurityGroup and GetAtt VpcId on the Subnet
+        # name the same VPC, so there is no mismatch
+        (
+            _template_with(
+                {"Ref": "Vpc"},
+                {"Fn::GetAtt": ["Vpc", "VpcId"]},
+            ),
+            deque(["Resources", "LaunchTemplate", "Properties"]),
+            [],
+        ),
+        # Reversed: GetAtt on the SecurityGroup and Ref on the Subnet
+        (
+            _template_with(
+                {"Fn::GetAtt": ["Vpc", "VpcId"]},
+                {"Ref": "Vpc"},
+            ),
+            deque(["Resources", "LaunchTemplate", "Properties"]),
+            [],
+        ),
+        # GetAtt on a different VPC is still a mismatch
+        (
+            _template_with(
+                {"Fn::GetAtt": ["Vpc", "VpcId"]},
+                {"Ref": "OtherVpc"},
+            ),
+            deque(["Resources", "LaunchTemplate", "Properties"]),
+            _expected_mismatch(),
+        ),
+        # GetAtt on a different attribute is not the VPC id,
+        # so it is still a mismatch
+        (
+            _template_with(
+                {"Fn::GetAtt": ["Vpc", "CidrBlock"]},
+                {"Ref": "Vpc"},
+            ),
+            deque(["Resources", "LaunchTemplate", "Properties"]),
+            _expected_mismatch(),
         ),
     ],
     indirect=["template"],
