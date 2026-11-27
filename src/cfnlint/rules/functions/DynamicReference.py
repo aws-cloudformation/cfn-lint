@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 from collections import deque
 from typing import Any
 
-from cfnlint.helpers import REGEX_DYN_REF
+from cfnlint.helpers import REGEX_DYN_REF_ALL
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.rules.functions._BaseFn import BaseFn
 
@@ -102,7 +102,7 @@ class DynamicReference(BaseFn):
             ),
         )
 
-        for v in REGEX_DYN_REF.findall(instance):
+        for v in REGEX_DYN_REF_ALL.findall(instance):
             parts = v.split(":")
 
             found = False

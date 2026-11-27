@@ -170,6 +170,9 @@ REGEX_IPV6 = re.compile(
     re.I | re.S,
 )
 REGEX_DYN_REF = re.compile(r"^.*{{(resolve:.+)}}.*$")
+# Unanchored so that findall returns every reference in a string.
+# A ${...} Fn::Sub variable is consumed whole so its brace does not end the match.
+REGEX_DYN_REF_ALL = re.compile(r"{{(resolve:(?:\$\{[^}]*\}|.)+?)}}")
 REGEX_DYN_REF_SPACES = re.compile(
     r"\{\{\s+resolve\s*:\s*(?:ssm|ssm-secure|secretsmanager)\s*:"
 )
