@@ -83,6 +83,22 @@ class TestConfigMixIn(BaseTestCase):
         # CLI args win
         self.assertEqual(config.output_file, "test_output_2.txt")
 
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_config_file_non_zero_exit_code(self, yaml_mock):
+        """The config file sets non_zero_exit_code, the CLI overrides it"""
+
+        yaml_mock.side_effect = [{"non_zero_exit_code": "none"}, {}]
+        config = cfnlint.config.ConfigMixIn([])
+        self.assertEqual(config.non_zero_exit_code, "none")
+
+        yaml_mock.side_effect = [{"non_zero_exit_code": "none"}, {}]
+        config = cfnlint.config.ConfigMixIn(["--non-zero-exit-code", "informational"])
+        self.assertEqual(config.non_zero_exit_code, "informational")
+
+        yaml_mock.side_effect = [{}, {}]
+        config = cfnlint.config.ConfigMixIn([])
+        self.assertEqual(config.non_zero_exit_code, "informational")
+
     @patch.dict(
         os.environ,
         {

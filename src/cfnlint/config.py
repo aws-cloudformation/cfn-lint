@@ -716,9 +716,12 @@ class CliArgs:
         standard.add_argument(
             "--non-zero-exit-code",
             type=str,
-            default="informational",
+            default=None,
             choices=["informational", "warning", "error", "none"],
-            help="Exit code will be non zero from the specified rule class and higher",
+            help=(
+                "Exit code will be non zero from the specified rule class and higher "
+                "(default: informational)"
+            ),
         )
         advanced.add_argument("--force", help=argparse.SUPPRESS, action="store_true")
 
@@ -1177,7 +1180,10 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
 
     @property
     def non_zero_exit_code(self):
-        return self._get_argument_value("non_zero_exit_code", False, False)
+        return (
+            self._get_argument_value("non_zero_exit_code", False, True)
+            or "informational"
+        )
 
     @property
     def force(self):
