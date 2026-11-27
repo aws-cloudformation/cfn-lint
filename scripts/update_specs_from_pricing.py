@@ -423,6 +423,90 @@ def write_output(resource, filename, obj):
         f.write("\n")
 
 
+# Instance types the SageMaker API accepts for a property but the Price
+# List files under another usagetype prefix or not at all, so the
+# pricing-derived enums omit them (aws-cloudformation/cfn-lint#4884).
+# These are the valid values of ClusterInstanceGroupSpecification,
+# TransformResources, RealTimeInferenceConfig and MonitoringClusterConfig
+# in the SageMaker API reference. They are unioned into every region so
+# a pricing refresh cannot drop them again. Note ml.c8i.large is not
+# listed: the API lists ml.c8i.* from xlarge up, there is no ml.c8i.large.
+_SAGEMAKER_API_ADDITIONS = {
+    "aws_sagemaker_cluster": [
+        "ml.p5e.48xlarge",
+    ],
+    "aws_sagemaker_transform": [
+        "ml.p3.2xlarge",
+        "ml.p3.8xlarge",
+        "ml.p3.16xlarge",
+        "ml.inf2.xlarge",
+        "ml.inf2.8xlarge",
+        "ml.inf2.24xlarge",
+        "ml.inf2.48xlarge",
+        "ml.trn1.2xlarge",
+        "ml.trn1.32xlarge",
+    ],
+    "aws_sagemaker_hosting": [
+        "ml.m8g.medium",
+        "ml.m8g.large",
+        "ml.m8g.xlarge",
+        "ml.m8g.2xlarge",
+        "ml.m8g.4xlarge",
+        "ml.m8g.8xlarge",
+        "ml.m8g.12xlarge",
+        "ml.m8g.16xlarge",
+        "ml.m8g.24xlarge",
+        "ml.m8g.48xlarge",
+    ],
+    "aws_sagemaker_processing": [
+        # Every API-valid flex size and ml.c8i size
+        "ml.c7i-flex.xlarge",
+        "ml.c7i-flex.2xlarge",
+        "ml.c7i-flex.4xlarge",
+        "ml.c7i-flex.8xlarge",
+        "ml.c7i-flex.12xlarge",
+        "ml.c7i-flex.16xlarge",
+        "ml.c8i-flex.xlarge",
+        "ml.c8i-flex.2xlarge",
+        "ml.c8i-flex.4xlarge",
+        "ml.c8i-flex.8xlarge",
+        "ml.c8i-flex.12xlarge",
+        "ml.c8i-flex.16xlarge",
+        "ml.c8i.xlarge",
+        "ml.c8i.2xlarge",
+        "ml.c8i.4xlarge",
+        "ml.c8i.8xlarge",
+        "ml.c8i.12xlarge",
+        "ml.c8i.16xlarge",
+        "ml.c8i.24xlarge",
+        "ml.c8i.32xlarge",
+        "ml.c8i.48xlarge",
+        "ml.c8i.96xlarge",
+        "ml.m7i-flex.large",
+        "ml.m7i-flex.xlarge",
+        "ml.m7i-flex.2xlarge",
+        "ml.m7i-flex.4xlarge",
+        "ml.m7i-flex.8xlarge",
+        "ml.m7i-flex.12xlarge",
+        "ml.m7i-flex.16xlarge",
+        "ml.m8i-flex.large",
+        "ml.m8i-flex.xlarge",
+        "ml.m8i-flex.2xlarge",
+        "ml.m8i-flex.4xlarge",
+        "ml.m8i-flex.8xlarge",
+        "ml.m8i-flex.12xlarge",
+        "ml.m8i-flex.16xlarge",
+        "ml.r8i-flex.large",
+        "ml.r8i-flex.xlarge",
+        "ml.r8i-flex.2xlarge",
+        "ml.r8i-flex.4xlarge",
+        "ml.r8i-flex.8xlarge",
+        "ml.r8i-flex.12xlarge",
+        "ml.r8i-flex.16xlarge",
+    ],
+}
+
+
 def main():
     """main function"""
     configure_logging()
@@ -518,6 +602,15 @@ def main():
         for region, prefixes in _sagemaker_results.items()
         if prefixes.get("Cluster")
     }
+    _sagemaker_enums = {
+        "aws_sagemaker_cluster": _sagemaker_cluster,
+        "aws_sagemaker_processing": _sagemaker_processing,
+        "aws_sagemaker_transform": _sagemaker_transform,
+        "aws_sagemaker_hosting": _sagemaker_hosting,
+    }
+    for resource, additions in _SAGEMAKER_API_ADDITIONS.items():
+        for instance_types in _sagemaker_enums[resource].values():
+            instance_types.update(additions)
     write_output(
         "aws_sagemaker_cluster",
         "instancetype_enum",
