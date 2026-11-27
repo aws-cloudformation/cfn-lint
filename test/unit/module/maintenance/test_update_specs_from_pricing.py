@@ -152,3 +152,71 @@ class TestUpdateSpecsFromPricing(BaseTestCase):
                 ]
             ),
         )
+
+    def test_main_adds_sagemaker_hosting_extras_per_region(self):
+        """SageMaker hosting extras land only in the regions they were verified in."""
+        module = _load_update_specs_from_pricing()
+
+        def product(location, usage_type, instance_name):
+            return json.dumps(
+                {
+                    "product": {
+                        "productFamily": "ML Instance",
+                        "attributes": {
+                            "location": location,
+                            "locationType": "AWS Region",
+                            "instanceName": instance_name,
+                            "usagetype": usage_type,
+                        },
+                    }
+                }
+            )
+
+        sagemaker_pages = [
+            {
+                "PriceList": [
+                    product("US East (Ohio)", "USE2-Host:ml.m5.large", "ml.m5.large"),
+                    product(
+                        "Asia Pacific (Osaka)",
+                        "APN3-Host:ml.m5.large",
+                        "ml.m5.large",
+                    ),
+                ]
+            }
+        ]
+
+        def get_paginator(service):
+            return sagemaker_pages if service == "AmazonSageMaker" else []
+
+        with (
+            patch.object(module, "configure_logging"),
+            patch.object(module, "get_paginator", side_effect=get_paginator),
+            patch.object(module, "get_rds_pricing"),
+            patch.object(module, "write_output") as write_output,
+        ):
+            module.main()
+
+        outputs = {call.args[0]: call.args[2] for call in write_output.call_args_list}
+        hosting = outputs["aws_sagemaker_hosting"]
+
+        # us-east-2 is verified, so the extras are unioned in
+        self.assertIn("ml.m8g.large", hosting["us-east-2"])
+        self.assertIn("ml.p5e.48xlarge", hosting["us-east-2"])
+        # pricing derived values are kept
+        self.assertIn("ml.m5.large", hosting["us-east-2"])
+        # ap-northeast-3 does not offer ml.m8g.large, so it is not added there
+        self.assertNotIn("ml.m8g.large", hosting["ap-northeast-3"])
+        # a region with no pricing products is not introduced by the extras
+        self.assertIn("us-east-1", module._SAGEMAKER_HOSTING_REGION_EXTRA)
+        self.assertNotIn("us-east-1", hosting)
+
+    def test_add_region_extras_adds_no_region(self):
+        """The extras never introduce a region the pricing API did not return."""
+        module = _load_update_specs_from_pricing()
+
+        results = module.add_region_extras(
+            {"us-east-1": set(["ml.m5.large"])},
+            {"us-east-1": ["ml.m8g.large"], "us-west-1": ["ml.m8g.large"]},
+        )
+
+        self.assertEqual(results, {"us-east-1": set(["ml.m5.large", "ml.m8g.large"])})
