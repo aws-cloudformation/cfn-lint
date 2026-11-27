@@ -365,6 +365,22 @@ class TestRunnerTemplatesNotFound(BaseTestCase):
             report[0]["Message"], f"{self.glob} could not be processed by glob.glob"
         )
 
+    def test_cli_pretty_exits_two_with_a_formatted_match(self):
+        # The pretty footer re-reads config.templates, which raises again
+        # for an unresolvable glob. That must not turn the E0003 report
+        # into an uncaught traceback (see issue #4967).
+        runner = Runner(ConfigMixIn(["--template", self.glob, "--format", "pretty"]))
+
+        with patch("sys.stdout", new_callable=StringIO) as mock_stdout:
+            with self.assertRaises(SystemExit) as e:
+                runner.cli()
+
+        self.assertEqual(e.exception.code, 2)
+        output = mock_stdout.getvalue()
+        self.assertIn("E0003", output)
+        self.assertIn(f"{self.glob} could not be processed by glob.glob", output)
+        self.assertIn("Cfn-lint scanned 0 templates", output)
+
     def test_cli_honors_non_zero_exit_code_none(self):
         runner = Runner(
             ConfigMixIn(["--template", self.glob, "--non-zero-exit-code", "none"])
