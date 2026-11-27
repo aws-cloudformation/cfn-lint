@@ -22,23 +22,21 @@ def make_rule(line, lineNumber):
 
     def set_arguments(argument, error):
         raw_value = argument.split(error)
-        value = process_sets(raw_value[0])
+        if operator in ("IN", "NOT_IN"):
+            value = process_sets(raw_value[0])
+        else:
+            value = raw_value[0]
         error_message = None
         if len(raw_value) > 1:
             error_message = raw_value[1].strip().strip('"')
         return value, error_message
 
     def process_sets(raw_value):
-        if (
-            len(raw_value) > 1
-            and raw_value[0] == "["
-            and (raw_value[-2] == "]" or raw_value[-1] == "]")
-        ):
-            raw_value = raw_value[1:-2]
-            raw_value = raw_value.split(",")
-            for x in raw_value:
-                x = x.strip()
-            return raw_value
+        raw_value = raw_value.strip()
+        if len(raw_value) > 1 and raw_value[0] == "[" and raw_value[-1] == "]":
+            return [
+                element.strip().strip("\"'") for element in raw_value[1:-1].split(",")
+            ]
 
         return raw_value
 
@@ -61,8 +59,10 @@ def make_rule(line, lineNumber):
                 error_level = "E"
                 value, error_message = set_arguments(line[3], "ERROR")
             else:
-                value = process_sets(line[3])
-                value = get_value(line[3])
+                if operator in ("IN", "NOT_IN"):
+                    value = process_sets(line[3])
+                else:
+                    value = get_value(line[3])
 
             if isinstance(value, str):
                 value = value.strip().strip('"')

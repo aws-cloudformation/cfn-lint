@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+import copy
 from collections import deque
 
 import pytest
@@ -66,6 +67,33 @@ _schema_path = deque(
         "const",
     ]
 )
+
+
+def _template_with(method_rest_api, authorizer_rest_api):
+    resources = copy.deepcopy(_template["Resources"])
+    resources["Method"]["Properties"]["RestApiId"] = method_rest_api
+    resources["Authorizer1"]["Properties"]["RestApiId"] = authorizer_rest_api
+    return {"Resources": resources}
+
+
+def _expected_mismatch(expected):
+    return [
+        ValidationError(
+            f"{expected!r} was expected",
+            validator="const",
+            rule=MethodAuthorizerRestApi(),
+            path=deque([]),
+            schema_path=_schema_path,
+            path_override=deque(
+                [
+                    "Resources",
+                    "Authorizer1",
+                    "Properties",
+                    "RestApiId",
+                ]
+            ),
+        ),
+    ]
 
 
 @pytest.mark.parametrize(
@@ -133,6 +161,53 @@ _schema_path = deque(
             },
             deque(["Resources", "Method", "Properties"]),
             [],
+        ),
+        # Both sides GetAtt RestApiId name the same RestApi
+        (
+            _template_with(
+                {"Fn::GetAtt": ["RestApi1", "RestApiId"]},
+                {"Fn::GetAtt": ["RestApi1", "RestApiId"]},
+            ),
+            deque(["Resources", "Method", "Properties"]),
+            [],
+        ),
+        # Ref on the Method and GetAtt RestApiId on the Authorizer
+        # name the same RestApi, so there is no mismatch
+        (
+            _template_with(
+                {"Ref": "RestApi1"},
+                {"Fn::GetAtt": ["RestApi1", "RestApiId"]},
+            ),
+            deque(["Resources", "Method", "Properties"]),
+            [],
+        ),
+        # Reversed: GetAtt on the Method and Ref on the Authorizer
+        (
+            _template_with(
+                {"Fn::GetAtt": ["RestApi1", "RestApiId"]},
+                {"Ref": "RestApi1"},
+            ),
+            deque(["Resources", "Method", "Properties"]),
+            [],
+        ),
+        # GetAtt on a different RestApi is still a mismatch
+        (
+            _template_with(
+                {"Ref": "RestApi1"},
+                {"Fn::GetAtt": ["RestApi2", "RestApiId"]},
+            ),
+            deque(["Resources", "Method", "Properties"]),
+            _expected_mismatch({"Ref": "RestApi1"}),
+        ),
+        # GetAtt on a different attribute is not the RestApi id,
+        # so it is still a mismatch
+        (
+            _template_with(
+                {"Ref": "RestApi1"},
+                {"Fn::GetAtt": ["RestApi1", "RootResourceId"]},
+            ),
+            deque(["Resources", "Method", "Properties"]),
+            _expected_mismatch({"Ref": "RestApi1"}),
         ),
     ],
     indirect=["template"],

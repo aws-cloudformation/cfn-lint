@@ -346,6 +346,203 @@ def test_mutually_exclusive_equals_without_allowed_values():
         conditions.evolve({"UseAcct1": True, "UseAcct2": True})
 
 
+_REGION_FLAGS = {
+    "us-east-1": {"A": "true", "B": "false"},
+    "us-west-2": {"A": "false", "B": "true"},
+}
+
+
+def _find_in_map_equals(*keys, value="true"):
+    return {"Fn::Equals": [{"Fn::FindInMap": ["Flags", *keys]}, value]}
+
+
+@pytest.mark.parametrize(
+    "name,mappings,condition_a,condition_b,exclusive",
+    [
+        (
+            "Mapping keyed by AWS::Region",
+            {"Flags": _REGION_FLAGS},
+            _find_in_map_equals({"Ref": "AWS::Region"}, "A"),
+            _find_in_map_equals({"Ref": "AWS::Region"}, "B"),
+            True,
+        ),
+        (
+            "Mapping keyed by a parameter at the second level",
+            {"Flags": {"A": {"dev": "true", "prod": "false"}, "B": {"prod": "true"}}},
+            _find_in_map_equals("A", {"Ref": "Env"}),
+            _find_in_map_equals("B", {"Ref": "Env"}),
+            True,
+        ),
+        (
+            "A Ref value with no entry is not a value that makes it true",
+            {
+                "Flags": {
+                    "us-east-1": {"A": "true"},
+                    "us-west-2": {"A": "false", "B": "true"},
+                }
+            },
+            _find_in_map_equals({"Ref": "AWS::Region"}, "A"),
+            _find_in_map_equals({"Ref": "AWS::Region"}, "B"),
+            True,
+        ),
+        (
+            "Fn::Equals on the Ref and a mapping keyed by it",
+            {"Flags": _REGION_FLAGS},
+            {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]},
+            _find_in_map_equals({"Ref": "AWS::Region"}, "B"),
+            True,
+        ),
+        (
+            "Fn::Equals on the Ref with a value the mapping makes true",
+            {"Flags": _REGION_FLAGS},
+            {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-west-2"]},
+            _find_in_map_equals({"Ref": "AWS::Region"}, "B"),
+            False,
+        ),
+        (
+            "A key where both are true",
+            {
+                "Flags": {
+                    **_REGION_FLAGS,
+                    "eu-west-1": {"A": "true", "B": "true"},
+                }
+            },
+            _find_in_map_equals({"Ref": "AWS::Region"}, "A"),
+            _find_in_map_equals({"Ref": "AWS::Region"}, "B"),
+            False,
+        ),
+        (
+            "Mapping values that are not strings",
+            {
+                "Flags": {
+                    "us-east-1": {"A": True, "B": False},
+                    "us-west-2": {"A": False, "B": True},
+                }
+            },
+            _find_in_map_equals({"Ref": "AWS::Region"}, "A"),
+            _find_in_map_equals({"Ref": "AWS::Region"}, "B"),
+            False,
+        ),
+        (
+            "Compared to a value that is not a string",
+            {"Flags": _REGION_FLAGS},
+            _find_in_map_equals({"Ref": "AWS::Region"}, "A", value=True),
+            _find_in_map_equals({"Ref": "AWS::Region"}, "B", value=True),
+            False,
+        ),
+        (
+            "Top-level key that is not a string",
+            {
+                "Flags": {
+                    "111111111111": {"A": "true", "B": "false"},
+                    222222222222: {"A": "true", "B": "true"},
+                }
+            },
+            _find_in_map_equals({"Ref": "AWS::AccountId"}, "A"),
+            _find_in_map_equals({"Ref": "AWS::AccountId"}, "B"),
+            False,
+        ),
+        (
+            "Fn::FindInMap with a DefaultValue",
+            {"Flags": _REGION_FLAGS},
+            _find_in_map_equals({"Ref": "AWS::Region"}, "A", {"DefaultValue": "true"}),
+            _find_in_map_equals({"Ref": "AWS::Region"}, "B", {"DefaultValue": "true"}),
+            False,
+        ),
+        (
+            "Mapping built by Fn::Transform",
+            {"Flags": {**_REGION_FLAGS, "Fn::Transform": {"Name": "AWS::Include"}}},
+            _find_in_map_equals({"Ref": "AWS::Region"}, "A"),
+            _find_in_map_equals({"Ref": "AWS::Region"}, "B"),
+            False,
+        ),
+        (
+            "Both keys are Refs",
+            {"Flags": _REGION_FLAGS},
+            _find_in_map_equals({"Ref": "AWS::Region"}, {"Ref": "Env"}),
+            _find_in_map_equals({"Ref": "AWS::Region"}, "B"),
+            False,
+        ),
+        (
+            "Mapping that does not exist",
+            {},
+            _find_in_map_equals({"Ref": "AWS::Region"}, "A"),
+            _find_in_map_equals({"Ref": "AWS::Region"}, "B"),
+            False,
+        ),
+        (
+            "Mappings that are not an object",
+            [],
+            _find_in_map_equals({"Ref": "AWS::Region"}, "A"),
+            _find_in_map_equals({"Ref": "AWS::Region"}, "B"),
+            False,
+        ),
+        (
+            "Mappings section built by Fn::Transform",
+            {"Flags": _REGION_FLAGS, "Fn::Transform": {"Name": "AWS::Include"}},
+            _find_in_map_equals({"Ref": "AWS::Region"}, "A"),
+            _find_in_map_equals({"Ref": "AWS::Region"}, "B"),
+            False,
+        ),
+        (
+            "Mapping name that is not a string",
+            {"Flags": _REGION_FLAGS},
+            {
+                "Fn::Equals": [
+                    {"Fn::FindInMap": [{"Ref": "Env"}, {"Ref": "AWS::Region"}, "A"]},
+                    "true",
+                ]
+            },
+            {
+                "Fn::Equals": [
+                    {"Fn::FindInMap": [{"Ref": "Env"}, {"Ref": "AWS::Region"}, "B"]},
+                    "true",
+                ]
+            },
+            False,
+        ),
+        (
+            "Top-level entry that is not an object",
+            {"Flags": {**_REGION_FLAGS, "eu-west-1": "true"}},
+            _find_in_map_equals({"Ref": "AWS::Region"}, "A"),
+            _find_in_map_equals({"Ref": "AWS::Region"}, "B"),
+            False,
+        ),
+        (
+            "Static top-level key with no entry",
+            {"Flags": {"A": {"dev": "true", "prod": "false"}}},
+            _find_in_map_equals("A", {"Ref": "Env"}),
+            _find_in_map_equals("B", {"Ref": "Env"}),
+            False,
+        ),
+    ],
+)
+def test_find_in_map_mutual_exclusion(
+    name, mappings, condition_a, condition_b, exclusive
+):
+    """Two Fn::Equals that depend on the same Ref through Fn::FindInMap
+    cannot both be true when no mapping key makes both true."""
+    cfn = Template(
+        None,
+        {
+            "Parameters": {"Env": {"Type": "String"}},
+            "Mappings": mappings,
+            "Conditions": {"A": condition_a, "B": condition_b},
+            "Resources": {},
+        },
+        regions=["us-east-1"],
+    )
+    conditions = create_context_for_template(cfn).conditions
+
+    assert conditions.is_reachable("A", True) is True, name
+    assert conditions.is_reachable("B", True) is True, name
+    if exclusive:
+        with pytest.raises(Unsatisfiable):
+            conditions.evolve({"A": True, "B": True})
+    else:
+        conditions.evolve({"A": True, "B": True})
+
+
 def test_referenced_equals_paired_once():
     """A condition's equals includes those of every condition it references,
     so the same Fn::Equals is reachable many times over. Pairing it on each
@@ -449,6 +646,149 @@ def test_allowed_values_covered_through_reference():
     # Stage can only be beta or prod, so a condition covering both is always true
     assert conditions.is_reachable("IsBetaOrProd", True) is True
     assert conditions.is_reachable("IsBetaOrProd", False) is False
+
+
+def test_find_in_map_implication():
+    """When every mapping key that makes one Fn::Equals true also makes the
+    other true, the first implies the second."""
+    cfn = Template(
+        None,
+        {
+            "Mappings": {"Flags": {"us-east-1": {"A": "true", "B": "true"}}},
+            "Conditions": {
+                "A": _find_in_map_equals({"Ref": "AWS::Region"}, "A"),
+                "B": _find_in_map_equals({"Ref": "AWS::Region"}, "B"),
+                "IsEast": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]},
+            },
+            "Resources": {},
+        },
+        regions=["us-east-1"],
+    )
+    conditions = create_context_for_template(cfn).conditions
+
+    assert conditions.evolve({"A": True}).is_reachable("B", False) is False
+    assert conditions.evolve({"A": True}).is_reachable("IsEast", False) is False
+    assert conditions.evolve({"IsEast": True}).is_reachable("A", False) is False
+    assert conditions.is_reachable("A", False) is True
+
+
+def test_allowed_values_with_duplicates():
+    """A parameter whose AllowedValues repeat one value can only take it."""
+    cfn = Template(
+        None,
+        {
+            "Parameters": {
+                "AppType": {"Type": "String", "AllowedValues": ["Public", "Public"]}
+            },
+            "Conditions": {"IsPublic": {"Fn::Equals": [{"Ref": "AppType"}, "Public"]}},
+            "Resources": {},
+        },
+        regions=["us-east-1"],
+    )
+    conditions = create_context_for_template(cfn).conditions
+
+    assert conditions.is_reachable("IsPublic", False) is False
+
+
+@pytest.mark.parametrize(
+    "conditions_section",
+    [
+        {"A": _find_in_map_equals({"Ref": "AWS::Region"}, "A")},
+        {
+            "A": _find_in_map_equals({"Ref": "AWS::Region"}, "A"),
+            "B": _find_in_map_equals({"Ref": "AWS::Region"}, "B"),
+        },
+    ],
+    ids=["alone", "with another Fn::Equals on the Ref"],
+)
+def test_find_in_map_never_true(conditions_section):
+    """A Fn::Equals that no mapping key makes true is false, whether or not
+    another Fn::Equals depends on the same Ref."""
+    cfn = Template(
+        None,
+        {
+            "Mappings": {"Flags": {"us-east-1": {"A": "false", "B": "true"}}},
+            "Conditions": conditions_section,
+            "Resources": {},
+        },
+        regions=["us-east-1"],
+    )
+    conditions = create_context_for_template(cfn).conditions
+
+    assert conditions.is_reachable("A", True) is False
+
+
+def test_allowed_values_with_other_literals():
+    """A parameter with AllowedValues takes one of its AllowedValues or of
+    the values its Fn::Equals compare it to."""
+    cfn = Template(
+        None,
+        {
+            "Parameters": {"Env": {"Type": "String", "AllowedValues": ["dev", "prod"]}},
+            "Conditions": {
+                "IsDev": {"Fn::Equals": [{"Ref": "Env"}, "dev"]},
+                "IsProd": {"Fn::Equals": [{"Ref": "Env"}, "prod"]},
+                "IsTest": {"Fn::Equals": [{"Ref": "Env"}, "test"]},
+            },
+            "Resources": {},
+        },
+        regions=["us-east-1"],
+    )
+    conditions = create_context_for_template(cfn).conditions
+
+    assert conditions.is_reachable("IsTest", True) is True
+    with pytest.raises(Unsatisfiable):
+        conditions.evolve({"IsDev": False, "IsProd": False, "IsTest": False})
+
+
+@pytest.mark.parametrize("allowed_values", [5, True, "dev,prod", {"dev": "prod"}])
+def test_allowed_values_not_a_list(allowed_values):
+    """AllowedValues that is not a list adds no constraint."""
+    cfn = Template(
+        None,
+        {
+            "Parameters": {"Env": {"Type": "String", "AllowedValues": allowed_values}},
+            "Conditions": {
+                "IsDev": {"Fn::Equals": [{"Ref": "Env"}, "dev"]},
+                "IsProd": {"Fn::Equals": [{"Ref": "Env"}, "prod"]},
+            },
+            "Resources": {},
+        },
+        regions=["us-east-1"],
+    )
+    conditions = create_context_for_template(cfn).conditions
+
+    assert set(conditions.conditions) == {"IsDev", "IsProd"}
+    conditions.evolve({"IsDev": False, "IsProd": False})
+
+
+def test_values_with_the_same_effect_share_a_variable():
+    """Mapping keys that make the same Fn::Equals true share one variable,
+    so the clause count follows the distinct lookups, not the keys."""
+    keys = [f"key{i}" for i in range(200)]
+    cfn = Template(
+        None,
+        {
+            "Parameters": {"Env": {"Type": "String"}},
+            "Mappings": {
+                "Flags": {
+                    k: {f"F{j}": "true" if i % 4 == j else "false" for j in range(4)}
+                    for i, k in enumerate(keys)
+                }
+            },
+            "Conditions": {
+                f"C{j}": _find_in_map_equals({"Ref": "Env"}, f"F{j}") for j in range(4)
+            },
+            "Resources": {},
+        },
+        regions=["us-east-1"],
+    )
+    conditions = create_context_for_template(cfn).conditions
+
+    assert len(conditions.cnf.data) < 50
+    with pytest.raises(Unsatisfiable):
+        conditions.evolve({"C0": True, "C1": True})
+    conditions.evolve({"C0": False, "C1": False, "C2": False, "C3": False})
 
 
 def test_condition_failures():
@@ -667,3 +1007,138 @@ def test_solver_calls_do_not_grow_with_reused_conditions():
 
     assert calls[0] > 0
     assert calls[0] == calls[1]
+
+
+def _subscription_with_exclusive_conditions(count):
+    """An SNS subscription missing its required Protocol, with one optional
+    property per condition. Every condition compares the same parameter to a
+    different value, so at most one of them is true."""
+    properties = [
+        ("DeliveryPolicy", {"healthyRetryPolicy": {"numRetries": 3}}),
+        ("Endpoint", "arn:aws:lambda:us-east-1:123456789012:function:handler"),
+        ("FilterPolicy", {"type": ["order"]}),
+        ("FilterPolicyScope", "MessageAttributes"),
+        ("RawMessageDelivery", True),
+        (
+            "RedrivePolicy",
+            {"deadLetterTargetArn": "arn:aws:sqs:us-east-1:123456789012:dlq"},
+        ),
+        ("Region", "us-east-1"),
+        (
+            "ReplayPolicy",
+            {"pointType": "Timestamp", "startingPoint": "2024-01-01T00:00:00Z"},
+        ),
+        ("SubscriptionRoleArn", "arn:aws:iam::123456789012:role/sns"),
+    ][:count]
+    return {
+        "Parameters": {"Env": {"Type": "String", "Default": "none"}},
+        "Conditions": {
+            f"IsEnv{i}": {"Fn::Equals": [{"Ref": "Env"}, f"env{i}"]}
+            for i in range(count)
+        },
+        "Resources": {
+            "Topic": {"Type": "AWS::SNS::Topic"},
+            "Subscription": {
+                "Type": "AWS::SNS::Subscription",
+                "Properties": {
+                    "TopicArn": {"Ref": "Topic"},
+                    **{
+                        name: {"Fn::If": [f"IsEnv{i}", value, {"Ref": "AWS::NoValue"}]}
+                        for i, (name, value) in enumerate(properties)
+                    },
+                },
+            },
+        },
+    }
+
+
+@pytest.mark.parametrize("count", [7, 9])
+def test_scenarios_skip_unsatisfiable_combinations(count):
+    """Combinations that pin two exclusive conditions True are never
+    satisfiable, so they must not use up the scenario limit before the
+    satisfiable ones are reached (issue #5047)."""
+    cfn = Template(None, _subscription_with_exclusive_conditions(count))
+    context = create_context_for_template(cfn)
+    instance = cfn.template["Resources"]["Subscription"]["Properties"]
+
+    scenarios = [
+        s.status for _, s in context.conditions.evolve_from_instance(instance, context)
+    ]
+
+    # One scenario with every condition False, and one per condition True.
+    assert len(scenarios) == count + 1
+    assert sorted(sum(s.values()) for s in scenarios) == [0] + [1] * count
+
+
+def test_scenarios_limit_counts_satisfiable_scenarios():
+    """Independent conditions are all satisfiable together, so the limit is
+    reached with exactly that many scenarios."""
+    count = 8
+    cfn = Template(
+        None,
+        {
+            "Parameters": {
+                f"P{i}": {"Type": "String", "Default": "a"} for i in range(count)
+            },
+            "Conditions": {
+                f"C{i}": {"Fn::Equals": [{"Ref": f"P{i}"}, "a"]} for i in range(count)
+            },
+        },
+    )
+    context = create_context_for_template(cfn)
+    instance = [{"Fn::If": [f"C{i}", i, {"Ref": "AWS::NoValue"}]} for i in range(count)]
+
+    scenarios = [
+        tuple(sorted(s.status.items()))
+        for _, s in context.conditions.evolve_from_instance(instance, context)
+    ]
+
+    assert len(scenarios) == context.conditions._max_scenarios
+    assert len(set(scenarios)) == len(scenarios)
+
+
+def test_scenarios_skip_solving_the_only_possible_value():
+    """When pinning a condition True is unsatisfiable, pinning it False is
+    satisfiable without asking the solver."""
+    cfn = Template(None, _subscription_with_exclusive_conditions(3))
+    context = create_context_for_template(cfn)
+    instance = cfn.template["Resources"]["Subscription"]["Properties"]
+
+    with patch(
+        "cfnlint.context.conditions._conditions.satisfiable", wraps=satisfiable
+    ) as solver:
+        scenarios = list(context.conditions.evolve_from_instance(instance, context))
+
+    assert len(scenarios) == 4
+    # 12 sets of pins are evaluated; the three False pins that follow an
+    # unsatisfiable True pin are not solved.
+    assert solver.call_count == 9
+
+
+@pytest.mark.parametrize("count", [7, 9])
+def test_required_property_with_exclusive_conditions(count):
+    """E3003 reports the missing Protocol however many exclusive conditions
+    the other properties use (issue #5047)."""
+    matches = lint(
+        json.dumps(_subscription_with_exclusive_conditions(count)),
+        config=ManualArgs(regions=["us-east-1"]),
+    )
+
+    assert [(m.rule.id, m.message) for m in matches] == [
+        ("E3003", "'Protocol' is a required property")
+    ]
+
+
+@pytest.mark.parametrize("attempts,expected", [(17, 1), (16, 0)])
+def test_scenarios_stop_at_the_pin_attempt_limit(attempts, expected):
+    """The first scenario takes at most two pins per condition: with nine
+    exclusive conditions, the first condition True and then each later one
+    tried True and False."""
+    cfn = Template(None, _subscription_with_exclusive_conditions(9))
+    context = create_context_for_template(cfn)
+    instance = cfn.template["Resources"]["Subscription"]["Properties"]
+    object.__setattr__(context.conditions, "_max_pin_attempts", attempts)
+
+    scenarios = list(context.conditions.evolve_from_instance(instance, context))
+
+    assert len(scenarios) == expected

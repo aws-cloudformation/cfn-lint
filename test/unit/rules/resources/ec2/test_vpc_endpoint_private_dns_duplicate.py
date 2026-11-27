@@ -3,8 +3,11 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import json
+
 import pytest
 
+from cfnlint.api import lint
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.ectwo.VpcEndpointPrivateDnsDuplicate import (
     VpcEndpointPrivateDnsDuplicate,
@@ -343,4 +346,70 @@ def test_validate(name, instance, starting_endpoints, expected, rule, validator)
 
     assert errs == expected, (
         f"Expected test {name!r} to have {expected!r} but got {errs!r}"
+    )
+
+
+def _endpoint(condition):
+    return {
+        "Type": "AWS::EC2::VPCEndpoint",
+        "Condition": condition,
+        "Properties": {
+            "VpcEndpointType": "Interface",
+            "PrivateDnsEnabled": True,
+            "VpcId": {"Ref": "Vpc"},
+            "ServiceName": {"Fn::Sub": "com.amazonaws.${AWS::Region}.ssm"},
+            "SubnetIds": [{"Ref": "Subnet"}],
+        },
+    }
+
+
+@pytest.mark.parametrize(
+    "name,west_flags,expected",
+    [
+        (
+            "Mapping makes exactly one endpoint condition true per region",
+            {"CreateEndpointA": "false", "CreateEndpointB": "true"},
+            [],
+        ),
+        (
+            "Mapping makes both endpoint conditions true in a region",
+            {"CreateEndpointA": "true", "CreateEndpointB": "true"},
+            ["E3064"],
+        ),
+    ],
+)
+def test_find_in_map_conditions(name, west_flags, expected):
+    template = {
+        "Mappings": {
+            "RegionConfig": {
+                "us-east-1": {"CreateEndpointA": "true", "CreateEndpointB": "false"},
+                "us-west-2": west_flags,
+            }
+        },
+        "Conditions": {
+            key: {
+                "Fn::Equals": [
+                    {"Fn::FindInMap": ["RegionConfig", {"Ref": "AWS::Region"}, key]},
+                    "true",
+                ]
+            }
+            for key in ["CreateEndpointA", "CreateEndpointB"]
+        },
+        "Resources": {
+            "Vpc": {
+                "Type": "AWS::EC2::VPC",
+                "Properties": {"CidrBlock": "10.0.0.0/16"},
+            },
+            "Subnet": {
+                "Type": "AWS::EC2::Subnet",
+                "Properties": {"VpcId": {"Ref": "Vpc"}, "CidrBlock": "10.0.0.0/24"},
+            },
+            "EndpointA": _endpoint("CreateEndpointA"),
+            "EndpointB": _endpoint("CreateEndpointB"),
+        },
+    }
+    matches = lint(json.dumps(template), regions=["us-east-1"])
+
+    assert [match.rule.id for match in matches] == expected, (
+        f"Test {name!r} failed with {matches!r}"
     )

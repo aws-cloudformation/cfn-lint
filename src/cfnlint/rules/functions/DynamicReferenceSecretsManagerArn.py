@@ -26,6 +26,10 @@ class DynamicReferenceSecretsManagerArn(CloudFormationLintRule):
     tags = ["functions", "dynamic reference"]
 
     def validate(self, validator: Validator, s: Any, instance: Any, schema: Any):
+        # When run as a child rule of Fn::Sub, the instance is the whole
+        # Sub value, so use the string element of the two-element form.
+        if validator.is_type(instance, "array"):
+            instance = instance[0]
         if "Fn::Sub" == validator.context.path.path[-1]:
             if not re.match(r"^(\\\")?{{resolve:secretsmanager:.*}}(\\\")?$", instance):
                 return

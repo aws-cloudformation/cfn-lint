@@ -3,10 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import json
 import string
-from unittest import TestCase
+from unittest import TestCase, mock
 
-from cfnlint.conditions import UnknownSatisfisfaction
+from cfnlint.api import ManualArgs, lint
+from cfnlint.conditions import Conditions, UnknownSatisfisfaction
 from cfnlint.conditions._utils import get_hash
 from cfnlint.decode import decode_str
 from cfnlint.template import Template
@@ -396,6 +398,117 @@ class TestConditions(TestCase):
             cfn.conditions.satisfiable(
                 {"NonExistentCondition": True}, {"Environment": "dev"}
             )
+
+    def test_satisfiable_answers_each_question_once(self):
+        """Repeated satisfiable questions reuse the first answer"""
+        template = decode_str(
+            """
+        Parameters:
+          Environment:
+            Type: String
+            AllowedValues: [dev, prod]
+        Conditions:
+          IsProd: !Equals [!Ref Environment, "prod"]
+          IsUsEast1: !Equals [!Ref AWS::Region, "us-east-1"]
+        """
+        )[0]
+
+        cfn = Template("", template)
+        questions = [
+            ({"IsProd": True}, {"Environment": "prod"}, True),
+            ({"IsProd": True}, {"Environment": "dev"}, False),
+            ({"IsUsEast1": False}, {"AWS::Region": "us-east-1"}, False),
+            (
+                {"IsProd": False, "IsUsEast1": True},
+                {"AWS::Region": "us-east-1", "AWS::NotificationARNs": ["arn"]},
+                True,
+            ),
+        ]
+
+        with mock.patch.object(
+            Conditions,
+            "_satisfiable",
+            autospec=True,
+            side_effect=Conditions._satisfiable,
+        ) as uncached:
+            for _ in range(3):
+                for conditions, parameter_values, expected in questions:
+                    self.assertEqual(
+                        cfn.conditions.satisfiable(conditions, parameter_values),
+                        expected,
+                    )
+            self.assertEqual(uncached.call_count, len(questions))
+
+            # Without conditions the parameter values don't change the answer
+            for region in ("us-east-1", "us-west-2"):
+                self.assertTrue(cfn.conditions.satisfiable({}, {"AWS::Region": region}))
+            self.assertEqual(uncached.call_count, len(questions) + 1)
+
+            # A value that can't be part of a cache key is still answered
+            for _ in range(2):
+                self.assertTrue(
+                    cfn.conditions.satisfiable(
+                        {"IsProd": True},
+                        {"Environment": "prod", "Other": {"Key": "Value"}},
+                    )
+                )
+            self.assertEqual(uncached.call_count, len(questions) + 3)
+
+        for _ in range(2):
+            with self.assertRaises(UnknownSatisfisfaction):
+                cfn.conditions.satisfiable(
+                    {"NonExistentCondition": True}, {"Environment": "dev"}
+                )
+
+    def test_distinct_questions_do_not_grow_with_reused_fn_if_in_fn_sub(self):
+        """Resources that reuse the same Fn::If inside Fn::Sub ask the same
+        satisfiable questions, so a whole lint answers the same number of
+        distinct questions however many such resources there are
+        (issue #5048)."""
+
+        def template(log_groups):
+            return {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Conditions": {
+                    "IsUsEast1": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]},
+                    "IsUsWest2": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-west-2"]},
+                },
+                "Resources": {
+                    f"LogGroup{i}": {
+                        "Type": "AWS::Logs::LogGroup",
+                        "Properties": {
+                            "LogGroupName": {
+                                "Fn::Sub": [
+                                    f"/${{A}}/${{B}}/{i}",
+                                    {
+                                        "A": {"Fn::If": ["IsUsEast1", "a", "other"]},
+                                        "B": {"Fn::If": ["IsUsWest2", "b", "other"]},
+                                    },
+                                ]
+                            }
+                        },
+                    }
+                    for i in range(log_groups)
+                },
+            }
+
+        calls = []
+        for log_groups in (5, 20):
+            with mock.patch.object(
+                Conditions,
+                "_satisfiable",
+                autospec=True,
+                side_effect=Conditions._satisfiable,
+            ) as uncached:
+                matches = lint(
+                    json.dumps(template(log_groups)),
+                    config=ManualArgs(regions=["us-east-1"]),
+                )
+            self.assertEqual(matches, [])
+            calls.append(uncached.call_count)
+
+        self.assertGreater(calls[0], 0)
+        self.assertEqual(calls[0], calls[1])
 
     def test_or_of_and_pairs_does_not_explode(self):
         """An Fn::Or of Fn::And pairs is encoded with a linear number of
