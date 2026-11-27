@@ -5,7 +5,10 @@ SPDX-License-Identifier: MIT-0
 
 from test.unit.rules import BaseRuleTestCase
 
+import pytest
+
 from cfnlint.rules.templates.LimitSize import LimitSize  # pylint: disable=E0401
+from cfnlint.template import Template
 
 
 def write_limit_test_templates():
@@ -176,3 +179,44 @@ class TestTemplateLimitSize(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative("test/fixtures/templates/bad/limit_size.yaml", 1)
+
+
+def _write_template(path, size):
+    """Write a template file of exactly `size` bytes"""
+    body = "Resources:\n  Topic:\n    Type: AWS::SNS::Topic\n# "
+    path.write_text(body + "x" * (size - len(body)), encoding="utf-8")
+    assert path.stat().st_size == size
+
+    return str(path)
+
+
+@pytest.mark.parametrize(
+    "configs,size,expected_message",
+    [
+        # Default: the limit for a template read from S3
+        (None, 1_000_000, None),
+        (
+            None,
+            1_000_001,
+            "The template file size (1000001 bytes) exceeds the limit (1000000 bytes)",
+        ),
+        # Configured for templates passed inline, as the CLI passes the value
+        ({"max_size": "51200"}, 51_200, None),
+        (
+            {"max_size": "51200"},
+            51_201,
+            "The template file size (51201 bytes) exceeds the limit (51200 bytes)",
+        ),
+    ],
+)
+def test_configured_max_size(configs, size, expected_message, tmp_path):
+    rule = LimitSize()
+    rule.configure(configs)
+    filename = _write_template(tmp_path / "template.yaml", size)
+    template = Template(filename, {"Resources": {"Topic": {"Type": "AWS::SNS::Topic"}}})
+
+    matches = rule.match(template)
+
+    assert [match.message for match in matches] == (
+        [expected_message] if expected_message else []
+    )
