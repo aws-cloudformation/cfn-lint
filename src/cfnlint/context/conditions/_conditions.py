@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+import itertools
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Iterator, TypeGuard
 
