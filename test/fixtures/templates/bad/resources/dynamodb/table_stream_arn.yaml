@@ -1,0 +1,38 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  NoStreamTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: OrderId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: OrderId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+  DisabledTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: OrderId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: OrderId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      StreamSpecification:
+        StreamEnabled: false
+  StreamEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt NoStreamTable.StreamArn
+  DisabledEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt DisabledTable.StreamArn
+Outputs:
+  StreamArn:
+    Value: !GetAtt NoStreamTable.StreamArn
