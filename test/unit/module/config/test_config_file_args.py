@@ -35,6 +35,16 @@ class TestConfigFileArgs(BaseTestCase):
             },
         )
 
+    def test_config_parser_missing_config_file(self):
+        """Testing an explicit config file that does not exist"""
+        with self.assertRaises(ConfigFileError) as context:
+            cfnlint.config.ConfigFileArgs(
+                config_file=Path("test/fixtures/configs/does-not-exist.yaml")
+            )
+        self.assertIn(
+            "Config file not found", str(context.exception)
+        )
+
     def test_config_parser_read_config_parameters(self):
         """Testing one file successful"""
         config = cfnlint.config.ConfigFileArgs(

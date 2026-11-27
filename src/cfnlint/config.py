@@ -142,6 +142,11 @@ class ConfigFileArgs:
         """
 
         if self._custom_config_file:
+            if not self._has_file(self._custom_config_file):
+                raise ConfigFileError(
+                    f"Config file not found: {self._custom_config_file}",
+                    None,
+                )
             custom_config = self._read_config(self._custom_config_file)
             LOGGER.debug("Validating Custom CFNLINTRC")
             self.validate_config(custom_config, self.schema)
