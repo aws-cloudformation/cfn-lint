@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  QueueA:
+    Type: AWS::SQS::Queue
+  QueueB:
+    Type: AWS::SQS::Queue
+  # One policy per queue, each statement naming only its own queue
+  PolicyA:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref QueueA
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action: sqs:SendMessage
+            Resource: !GetAtt QueueA.Arn
+  PolicyB:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref QueueB
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action: sqs:SendMessage
+            Resource:
+              - !GetAtt QueueB.Arn
+          - Effect: Allow
+            Principal:
+              Service: sns.amazonaws.com
+            Action: sqs:SendMessage
+            Resource: "*"
+  PolicyString:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref QueueA
+      PolicyDocument: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {"AWS": "arn:aws:iam::123456789012:root"},
+              "Action": "sqs:SendMessage",
+              "Resource": ["arn:aws:sqs:us-east-1:123456789012:queue-a"]
+            }
+          ]
+        }
