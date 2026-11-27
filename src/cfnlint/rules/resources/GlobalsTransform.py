@@ -12,6 +12,7 @@ from cfnlint._typing import RuleMatches
 from cfnlint.helpers import FUNCTIONS, TRANSFORM_SAM, is_function
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.jsonschema._keywords_cfn import cfn_type
+from cfnlint.jsonschema.exceptions import best_match
 from cfnlint.rules import RuleMatch
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 from cfnlint.template import Template
@@ -51,6 +52,22 @@ class GlobalsTransform(CfnLintJsonSchema):
 
     def message(self, instance: Any, err: ValidationError) -> str:
         return err.message
+
+    def _iter_errors(self, validator, instance):
+        # Errors that already carry a rule are findings from function
+        # validators that ran while descending into Globals values
+        # (for example W1028 reachability errors from Fn::If). Those
+        # belong to their own rules and are reported when the
+        # transformed resources are validated, so only this rule's
+        # Globals schema errors are candidates here. Relabelling the
+        # best match would re-report a foreign finding as E3724.
+        errs = [err for err in validator.iter_errors(instance) if not err.unknown]
+        err = best_match([e for e in errs if e.rule is None])
+        if err is not None:
+            err.message = self.message(instance, err)
+            err.context = []
+            err.rule = self
+            yield err
 
     def validate(
         self, validator: Validator, keywords: Any, instance: Any, schema: Any

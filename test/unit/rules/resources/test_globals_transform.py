@@ -5,10 +5,12 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+import json
 from collections import deque
 
 import pytest
 
+from cfnlint.api import lint
 from cfnlint.rules.resources.GlobalsTransform import GlobalsTransform
 from cfnlint.template import Template
 
@@ -571,3 +573,37 @@ class TestIgnoreGlobalsMatch:
         )
         matches = rule.match(template)
         assert len(matches) == 0
+
+
+def test_unreachable_if_in_globals_reports_w1028_not_e3724():
+    # https://github.com/aws-cloudformation/cfn-lint/issues/5065
+    # A W1028 reachability error from the Fn::If validator inside
+    # Globals must stay a W1028 finding. E3724 validates the Globals
+    # section through CfnLintJsonSchema._iter_errors, which used to
+    # relabel the best-match error as its own, turning the warning
+    # into an E3724 error.
+    template = {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Transform": "AWS::Serverless-2016-10-31",
+        "Parameters": {"Env": {"Type": "String", "Default": "prod"}},
+        "Conditions": {"IsProd": {"Fn::Equals": [{"Ref": "Env"}, "prod"]}},
+        "Globals": {
+            "Function": {
+                "Runtime": "python3.12",
+                "MemorySize": {
+                    "Fn::If": ["IsProd", {"Fn::If": ["IsProd", 1024, 512]}, 256]
+                },
+            }
+        },
+        "Resources": {
+            "Fn": {
+                "Type": "AWS::Serverless::Function",
+                "Properties": {
+                    "Handler": "index.handler",
+                    "InlineCode": "def handler(e, c): return 0",
+                },
+            }
+        },
+    }
+    matches = lint(json.dumps(template), regions=["us-east-1"])
+    assert [m.rule.id for m in matches] == ["W1028"]
