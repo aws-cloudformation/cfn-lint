@@ -537,7 +537,11 @@ def _gather_properties(
 
     Returns one list of (value, scenario_validator) candidates per property
     key so that every Fn::If branch is validated, not just the first one.
-    Duplicate branch values are collected once to avoid duplicate findings.
+    Candidates are not deduplicated by value: two branches can hold the
+    same value under different condition statuses, and dropping one would
+    lose the combinations that status makes reachable. The runner already
+    drops equal matches, so identical branch values still produce one
+    finding.
     """
     candidates: dict[str, list[tuple[Any, Validator]]] = {}
     template = validator.cfn.template
@@ -575,8 +579,7 @@ def _gather_properties(
             fn_k, fn_v = is_function(val)
             if fn_k == "Ref" and fn_v == "AWS::NoValue":
                 continue
-            if not any(v == val for v, _ in branch_candidates):
-                branch_candidates.append((val, branch_validator))
+            branch_candidates.append((val, branch_validator))
 
         if not branch_candidates:
             if has_default:

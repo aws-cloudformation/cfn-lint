@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: SQS event source mapping; queue VisibilityTimeout chosen by Fn::If on a parameter condition
+Parameters:
+  Mode:
+    Type: String
+    Default: short
+    AllowedValues: [short, long]
+Conditions:
+  UseLong: !Equals [!Ref Mode, long]
+Resources:
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole
+  Function:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Role: !GetAtt Role.Arn
+      Timeout: 300
+      Code:
+        ZipFile: "def handler(event, context):\n    return None\n"
+  Queue:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: !If [UseLong, 1800, 30]
+  Mapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName: !Ref Function
+      EventSourceArn: !GetAtt Queue.Arn
+      BatchSize: 1
+      Enabled: false

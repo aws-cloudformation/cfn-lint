@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Aurora cluster whose Engine is chosen by Fn::If on a parameter condition, with one instance that names an engine literally
+Parameters:
+  UseMySql:
+    Type: String
+    Default: "false"
+    AllowedValues: ["true", "false"]
+Conditions:
+  IsMySql: !Equals [!Ref UseMySql, "true"]
+Resources:
+  Cluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: !If [IsMySql, aurora-mysql, aurora-postgresql]
+      MasterUsername: dbadmin
+      ManageMasterUserPassword: true
+  Instance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBClusterIdentifier: !Ref Cluster
+      DBInstanceClass: db.t4g.medium
+      Engine: aurora-mysql

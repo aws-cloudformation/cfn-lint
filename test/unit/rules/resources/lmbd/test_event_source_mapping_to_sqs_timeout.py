@@ -8,11 +8,14 @@ from collections import deque
 import jsonpatch
 import pytest
 
-from cfnlint.jsonschema import ValidationError
+from cfnlint.context import create_context_for_template
+from cfnlint.decode.cfn_yaml import load
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.helpers import get_value_from_path
 from cfnlint.rules.resources.lmbd.EventSourceMappingToSqsTimeout import (
     EventSourceMappingToSqsTimeout,
 )
+from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
@@ -440,6 +443,99 @@ _template = {
             deque(["Resources", "Mapping", "Properties"]),
             [],
         ),
+        # Unresolvable value: VisibilityTimeout is a Ref to a parameter,
+        # so no comparison can be made and the rule stays silent (#4850)
+        (
+            {
+                "Parameters": {
+                    "VisibilityTimeout": {"Type": "Number"},
+                },
+                "Resources": {
+                    "Queue": {
+                        "Type": "AWS::SQS::Queue",
+                        "Properties": {
+                            "VisibilityTimeout": {"Ref": "VisibilityTimeout"},
+                        },
+                    },
+                    "Lambda": {
+                        "Type": "AWS::Lambda::Function",
+                        "Properties": {
+                            "Timeout": 300,
+                            "Role": {"Fn::GetAtt": "Role.Arn"},
+                        },
+                    },
+                    "Mapping": {
+                        "Type": "AWS::Lambda::EventSourceMapping",
+                        "Properties": {
+                            "EventSourceArn": {"Fn::GetAtt": "Queue.Arn"},
+                            "FunctionName": {"Ref": "Lambda"},
+                        },
+                    },
+                },
+            },
+            deque(["Resources", "Mapping", "Properties"]),
+            [],
+        ),
+        # Duplicate branch values under different condition statuses:
+        # both VisibilityTimeout branches are 30, and the reachable
+        # UseLong=false pair is Timeout 300 / VisibilityTimeout 30.
+        # Deduping gathered values by value alone kept only the
+        # UseLong=true candidate and skipped that pair (#4869)
+        (
+            {
+                "Conditions": {
+                    "UseLong": {
+                        "Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"],
+                    },
+                },
+                "Resources": {
+                    "Queue": {
+                        "Type": "AWS::SQS::Queue",
+                        "Properties": {
+                            "VisibilityTimeout": {"Fn::If": ["UseLong", 30, 30]},
+                        },
+                    },
+                    "Lambda": {
+                        "Type": "AWS::Lambda::Function",
+                        "Properties": {
+                            "Timeout": {"Fn::If": ["UseLong", 10, 300]},
+                            "Role": {"Fn::GetAtt": "Role.Arn"},
+                        },
+                    },
+                    "Mapping": {
+                        "Type": "AWS::Lambda::EventSourceMapping",
+                        "Properties": {
+                            "EventSourceArn": {"Fn::GetAtt": "Queue.Arn"},
+                            "FunctionName": {"Ref": "Lambda"},
+                        },
+                    },
+                },
+            },
+            deque(["Resources", "Mapping", "Properties"]),
+            [
+                ValidationError(
+                    "Queue visibility timeout (30) is less "
+                    "than Function timeout (300) seconds",
+                    validator="minimum",
+                    rule=EventSourceMappingToSqsTimeout(),
+                    path_override=deque(
+                        ["Resources", "Queue", "Properties", "VisibilityTimeout"]
+                    ),
+                    schema_path=deque(
+                        [
+                            "cfnGather",
+                            "schema",
+                            "then",
+                            "properties",
+                            "queue",
+                            "properties",
+                            "VisibilityTimeout",
+                            "minimum",
+                        ]
+                    ),
+                ),
+            ],
+        ),
     ],
     indirect=["template"],
 )
@@ -449,3 +545,23 @@ def test_validate(template, start_path, expected, rule, validator):
     ):
         errs = list(rule.validate(instance_validator, "", instance, {}))
         assert errs == expected, f"Expected {expected} got {errs}"
+
+
+def test_fnif_second_branch_low_fixture(rule):
+    """Fixture template from #4850: Fn::If on a gathered property"""
+    template = load(
+        "test/fixtures/templates/bad/resources/lambda/fnif-second-branch-low.yaml"
+    )
+    cfn = Template("", template, regions=["us-east-1"])
+    context = create_context_for_template(cfn)
+    validator = CfnTemplateValidator(context=context, cfn=cfn)
+
+    errs = []
+    for instance, instance_validator in get_value_from_path(
+        validator, template, deque(["Resources", "Mapping", "Properties"])
+    ):
+        errs.extend(rule.validate(instance_validator, "", instance, {}))
+
+    assert [e.message for e in errs] == [
+        "Queue visibility timeout (30) is less than Function timeout (300) seconds"
+    ]
