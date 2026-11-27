@@ -1,0 +1,204 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  ExternalFunctionArn:
+    Type: String
+  ExternalFunctionName:
+    Type: String
+Resources:
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+  Function:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Role: !GetAtt Role.Arn
+      Code:
+        ZipFile: |
+          def handler(event, context):
+              return event
+  FunctionAlias:
+    Type: AWS::Lambda::Alias
+    Properties:
+      FunctionName: !Ref Function
+      FunctionVersion: $LATEST
+      Name: live
+  ApiPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt Function.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*
+  AliasApiPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref FunctionAlias
+      Principal: apigateway.amazonaws.com
+  S3Permission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref Function
+      Principal: s3.amazonaws.com
+      SourceAccount: !Ref AWS::AccountId
+  EventsPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Sub ${Function.Arn}
+      Principal: events.amazonaws.com
+  RestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: api
+  # Fn::Sub URI with the function ARN
+  ProxyMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestApi
+      ResourceId: !GetAtt RestApi.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Function.Arn}/invocations
+  # Fn::Join URI with an alias
+  AliasMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestApi
+      ResourceId: !GetAtt RestApi.RootResourceId
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri: !Join
+          - ""
+          - - !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/
+            - !Ref FunctionAlias
+            - /invocations
+  # API Gateway assumes a role, so no resource policy is needed
+  RoleMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestApi
+      ResourceId: !GetAtt RestApi.RootResourceId
+      HttpMethod: PUT
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Credentials: !GetAtt Role.Arn
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OtherFunction.Arn}/invocations
+  # Function outside the template is skipped
+  ExternalMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestApi
+      ResourceId: !GetAtt RestApi.RootResourceId
+      HttpMethod: DELETE
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ExternalFunctionArn}/invocations
+  HttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: http
+      ProtocolType: HTTP
+  HttpIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !GetAtt Function.Arn
+      PayloadFormatVersion: "2.0"
+  OtherFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Role: !GetAtt Role.Arn
+      Code:
+        ZipFile: |
+          def handler(event, context):
+              return event
+  # A permission whose function can't be resolved could cover anything
+  UnresolvedPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref ExternalFunctionName
+      Principal: s3.amazonaws.com
+  Queue:
+    Type: AWS::SQS::Queue
+  QueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref Queue
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - s3.amazonaws.com
+            Action: sqs:SendMessage
+            Resource: !GetAtt Queue.Arn
+  Topic:
+    Type: AWS::SNS::Topic
+  TopicPolicy:
+    Type: AWS::SNS::TopicInlinePolicy
+    Properties:
+      TopicArn: !Ref Topic
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: s3.amazonaws.com
+            Action: sns:Publish
+            Resource: !Ref Topic
+  Bucket:
+    Type: AWS::S3::Bucket
+    DependsOn:
+      - S3Permission
+      - QueuePolicy
+      - TopicPolicy
+    Properties:
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: s3:ObjectCreated:*
+            Function: !GetAtt Function.Arn
+          - Event: s3:ObjectRemoved:*
+            Function: !GetAtt OtherFunction.Arn
+        QueueConfigurations:
+          - Event: s3:ObjectCreated:*
+            Queue: !GetAtt Queue.Arn
+        TopicConfigurations:
+          - Event: s3:ObjectCreated:*
+            Topic: !Ref Topic
+  Rule:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: rate(1 hour)
+      Targets:
+        - Id: function
+          Arn: !GetAtt Function.Arn
+        # SQS targets aren't checked
+        - Id: queue
+          Arn: !GetAtt Queue.Arn
