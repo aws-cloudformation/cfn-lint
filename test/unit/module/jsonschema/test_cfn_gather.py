@@ -4,7 +4,9 @@ Test cfnGather keyword functionality
 
 import pytest
 
+from cfnlint.context import create_context_for_template
 from cfnlint.jsonschema import CfnTemplateValidator
+from cfnlint.jsonschema._keywords_cfn import _combine_gathered
 from cfnlint.template import Template
 
 
@@ -188,6 +190,56 @@ class TestCfnGather:
         )
 
         assert len(errors) == 0
+
+
+class TestCombineGathered:
+    """Direct tests for the _combine_gathered helper"""
+
+    def _validator(self, template):
+        cfn = Template("", template, regions=["us-east-1"])
+        context = create_context_for_template(cfn)
+        return CfnTemplateValidator(context=context, cfn=cfn)
+
+    def test_no_keys_yields_empty_gathered(self):
+        validator = self._validator({"Resources": {}})
+
+        assert list(_combine_gathered(validator, {})) == [({}, validator)]
+        assert list(_combine_gathered(validator, {"local": {}})) == [
+            ({"local": {}}, validator)
+        ]
+
+    def test_unsatisfiable_combination_is_skipped(self):
+        # C2 is the negation of C1, so pinning both true cannot happen
+        # even though neither branch validator conflicts on its own
+        template = {
+            "Parameters": {
+                "Mode": {"Type": "String", "AllowedValues": ["a", "b"]},
+            },
+            "Conditions": {
+                "C1": {"Fn::Equals": [{"Ref": "Mode"}, "a"]},
+                "C2": {"Fn::Not": [{"Condition": "C1"}]},
+            },
+            "Resources": {},
+        }
+        validator = self._validator(template)
+
+        def branch(status):
+            return validator.evolve(
+                context=validator.context.evolve(
+                    conditions=validator.context.conditions.evolve(status=status),
+                ),
+            )
+
+        entries = {
+            "local": {"value": [("x", branch({"C1": True}))]},
+            "remote": {"value": [("y", branch({"C2": True}))]},
+        }
+
+        assert list(_combine_gathered(validator, entries)) == []
+
+
+class TestGatherResolveReference:
+    """Test cfnGather resolveReference canonicalization"""
 
     @pytest.mark.parametrize(
         "stage_rest_api,deployment_rest_api,expected_errors",
