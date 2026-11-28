@@ -153,8 +153,18 @@ def _add_value_constraints(
     one variable, which means "the reference has one of these values".  At
     most one variable is true, at least one is true when the reference is a
     parameter with AllowedValues, and each Fn::Equals is true exactly when
-    one of its values' variables is."""
-    domain = set(allowed or ()).union(*(values for _, values in members))
+    one of its values' variables is.
+
+    When the reference is a parameter with AllowedValues the domain is
+    those values only: CloudFormation rejects any other value before
+    creating anything, so a value outside AllowedValues can never make an
+    Fn::Equals true.  Including it would leave a comparison against a
+    disallowed value satisfiable, and rules would keep validating the
+    Fn::If branch or resource that only that value could reach."""
+    if allowed is not None:
+        domain = set(allowed)
+    else:
+        domain = set().union(*(values for _, values in members))
     classes: dict[tuple[int, ...], None] = {}
     for value in sorted(domain):
         signature = tuple(n for n, (_, values) in enumerate(members) if value in values)

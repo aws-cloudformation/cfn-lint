@@ -235,10 +235,14 @@ def test_output_value(input, expected, validator):
     indirect=True,
 )
 def test_output_value_with_unsatisfiable_condition(validator):
-    # Regression test for https://github.com/aws-cloudformation/cfn-lint/issues/4785
+    # Regression tests for
+    # https://github.com/aws-cloudformation/cfn-lint/issues/4785 and
+    # https://github.com/aws-cloudformation/cfn-lint/issues/5074
     # An output whose own condition can never be true (here `X and not X`
-    # over two identical conditions) must not raise Unsatisfiable (previously
-    # surfaced as an E6001 exception); its value is still validated.
+    # over two identical conditions) must not raise Unsatisfiable
+    # (previously surfaced as an E6001 exception).  It is not validated
+    # either: CloudFormation ignores entities associated with a false
+    # condition and never evaluates their values.
     rule = Value()
     instance = {
         "Condition": "AAndNotB",
@@ -246,9 +250,7 @@ def test_output_value_with_unsatisfiable_condition(validator):
     }
     results = list(rule.validate(validator, {}, instance, {}))
     messages = [e.message for e in results]
-    assert any(
-        "{'foo': 'bar'} is not of type 'string'" in message for message in messages
-    ), f"value finding missing on gated output: {messages!r}"
+    assert messages == [], f"dead output was validated: {messages!r}"
     assert not any("raised while validating" in message for message in messages), (
         f"crash surfaced: {messages!r}"
     )

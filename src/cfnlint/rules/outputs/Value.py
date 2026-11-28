@@ -43,10 +43,14 @@ class Value(CfnLintJsonSchema):
             resolved = validator.context.conditions.evolve(conditions)
         except Unsatisfiable:
             # The output's own condition can never be true (for example
-            # `X and not X` over two identical conditions).  Validate without
-            # pinning the condition instead of surfacing an E6001 exception,
-            # consistent with a statically false condition used directly.
-            resolved = validator.context.conditions
+            # `X and not X` over two identical conditions, or a constant
+            # Fn::Equals of two unequal literals).  CloudFormation ignores
+            # entities associated with a false condition and never evaluates
+            # their values, so skip validation instead of surfacing an
+            # E6001 exception or reporting findings on an output that
+            # cannot be created.  The condition itself is still reported
+            # by W8003 where it is statically false.
+            return
 
         validator = validator.evolve(
             context=validator.context.evolve(
