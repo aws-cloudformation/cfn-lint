@@ -27,7 +27,9 @@ class TestYamlParse(BaseTestCase):
             },
             "generic_bad": {
                 "filename": "test/fixtures/templates/bad/generic.yaml",
-                "failures": 38,
+                # 39: the dead Fn::If branch guarded by the always-true
+                # IsProduction condition now reports W1028 (#5074).
+                "failures": 39,
             },
         }
 

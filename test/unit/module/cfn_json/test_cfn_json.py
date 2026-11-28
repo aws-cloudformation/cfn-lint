@@ -27,7 +27,10 @@ class TestCfnJson(BaseTestCase):
         self.filenames = {
             "config_rule": {
                 "filename": "test/fixtures/templates/quickstart/config-rules.json",
-                "failures": 5,
+                # 4: the deprecated-runtime finding on the function gated by
+                # the always-false cApprovedAMIsRule condition is no longer
+                # reported, since CloudFormation never creates it (#5074).
+                "failures": 4,
             },
             "iam": {
                 "filename": "test/fixtures/templates/quickstart/iam.json",

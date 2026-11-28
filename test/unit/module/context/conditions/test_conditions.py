@@ -719,8 +719,10 @@ def test_find_in_map_never_true(conditions_section):
 
 
 def test_allowed_values_with_other_literals():
-    """A parameter with AllowedValues takes one of its AllowedValues or of
-    the values its Fn::Equals compare it to."""
+    """A parameter with AllowedValues takes one of its AllowedValues, so a
+    comparison against a value outside the list can never be true
+    (issue #5075).  CloudFormation rejects such a value before creating
+    anything, so the compared value is not part of the domain."""
     cfn = Template(
         None,
         {
@@ -736,9 +738,68 @@ def test_allowed_values_with_other_literals():
     )
     conditions = create_context_for_template(cfn).conditions
 
-    assert conditions.is_reachable("IsTest", True) is True
+    assert conditions.is_reachable("IsTest", True) is False
+    assert conditions.is_reachable("IsTest", False) is True
+    with pytest.raises(Unsatisfiable):
+        conditions.evolve({"IsTest": True})
     with pytest.raises(Unsatisfiable):
         conditions.evolve({"IsDev": False, "IsProd": False, "IsTest": False})
+    # Comparisons against allowed values stay reachable both ways.
+    conditions.evolve({"IsDev": True})
+    conditions.evolve({"IsProd": True})
+
+
+def test_single_allowed_value():
+    """With one AllowedValue, a comparison against it is always true and a
+    comparison against any other value is always false (issue #5075)."""
+    cfn = Template(
+        None,
+        {
+            "Parameters": {"Env": {"Type": "String", "AllowedValues": ["prod"]}},
+            "Conditions": {
+                "IsProd": {"Fn::Equals": [{"Ref": "Env"}, "prod"]},
+                "IsDev": {"Fn::Equals": [{"Ref": "Env"}, "dev"]},
+            },
+            "Resources": {},
+        },
+        regions=["us-east-1"],
+    )
+    conditions = create_context_for_template(cfn).conditions
+
+    assert conditions.is_reachable("IsProd", False) is False
+    assert conditions.is_reachable("IsDev", True) is False
+    with pytest.raises(Unsatisfiable):
+        conditions.evolve({"IsProd": False})
+    with pytest.raises(Unsatisfiable):
+        conditions.evolve({"IsDev": True})
+    conditions.evolve({"IsProd": True, "IsDev": False})
+
+
+def test_static_equals_condition():
+    """A constant Fn::Equals folds to a constant in the solver, so pinning
+    the condition to its impossible value is unsatisfiable (issue #5074).
+    CloudFormation compares operands as strings, so [true, "true"] is
+    always true while [false, "true"] is always false."""
+    cfn = Template(
+        None,
+        {
+            "Conditions": {
+                "NeverTrue": {"Fn::Equals": [False, "true"]},
+                "AlwaysTrue": {"Fn::Equals": [True, "true"]},
+            },
+            "Resources": {},
+        },
+        regions=["us-east-1"],
+    )
+    conditions = create_context_for_template(cfn).conditions
+
+    assert conditions.is_reachable("NeverTrue", True) is False
+    assert conditions.is_reachable("AlwaysTrue", False) is False
+    with pytest.raises(Unsatisfiable):
+        conditions.evolve({"NeverTrue": True})
+    with pytest.raises(Unsatisfiable):
+        conditions.evolve({"AlwaysTrue": False})
+    conditions.evolve({"NeverTrue": False, "AlwaysTrue": True})
 
 
 @pytest.mark.parametrize("allowed_values", [5, True, "dev,prod", {"dev": "prod"}])

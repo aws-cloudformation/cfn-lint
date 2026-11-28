@@ -103,33 +103,124 @@ def test_validate(name, instance, patches, expected, rule, validator):
 
 
 @pytest.mark.parametrize(
+    "template,condition",
+    [
+        (
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Conditions": {
+                    "IsFeatureOn": {"Fn::Equals": ["false", "true"]},
+                    "IsFeatureEnabled": {"Fn::Equals": ["false", "true"]},
+                    "OnAndNotEnabled": {
+                        "Fn::And": [
+                            {"Condition": "IsFeatureOn"},
+                            {"Fn::Not": [{"Condition": "IsFeatureEnabled"}]},
+                        ]
+                    },
+                },
+            },
+            "OnAndNotEnabled",
+        ),
+        (
+            # A constant Fn::Equals of two unequal literals can never be
+            # true (issue #5074).
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Conditions": {
+                    "NeverTrue": {"Fn::Equals": ["us-east-1", "us-west-2"]},
+                },
+            },
+            "NeverTrue",
+        ),
+        (
+            # A parameter can only take one of its AllowedValues, so a
+            # comparison against a value outside the list can never be
+            # true (issue #5075).
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Parameters": {
+                    "Env": {
+                        "Type": "String",
+                        "Default": "prod",
+                        "AllowedValues": ["prod"],
+                    },
+                },
+                "Conditions": {
+                    "IsDev": {"Fn::Equals": [{"Ref": "Env"}, "dev"]},
+                },
+            },
+            "IsDev",
+        ),
+    ],
+    indirect=["template"],
+)
+def test_validate_with_unsatisfiable_condition(rule, validator, condition):
+    # Regression tests for
+    # https://github.com/aws-cloudformation/cfn-lint/issues/4785 and
+    # https://github.com/aws-cloudformation/cfn-lint/issues/5074
+    # A resource whose own condition can never be true must not raise
+    # Unsatisfiable (previously surfaced as an E3001 exception).  It is
+    # not validated either: CloudFormation ignores entities associated
+    # with a false condition and never evaluates their properties, so a
+    # property error on such a resource cannot occur at deploy time.
+    instance = {
+        "Type": "MyType",
+        "Condition": condition,
+        "Properties": {"BogusProperty": 1},
+    }
+    schema_manager = MagicMock()
+    schema_manager.get_resource_schemas_by_regions.return_value = [
+        (
+            ["us-east-1"],
+            Schema(
+                {
+                    "typeName": "MyType",
+                    "properties": {},
+                    "additionalProperties": False,
+                }
+            ),
+        )
+    ]
+
+    with patch(
+        "cfnlint.rules.resources.properties.Properties.PROVIDER_SCHEMA_MANAGER",
+        schema_manager,
+    ):
+        errs = list(rule.validate(validator, {}, instance, {}))
+
+    messages = [e.message for e in errs]
+    assert messages == [], f"dead resource was validated: {messages!r}"
+    assert not any("raised while validating" in message for message in messages), (
+        f"crash surfaced: {messages!r}"
+    )
+
+
+@pytest.mark.parametrize(
     "template",
     [
         {
+            # Control for issue #5075: dev is an allowed value, so the
+            # condition can be true and the resource is validated.
             "AWSTemplateFormatVersion": "2010-09-09",
-            "Conditions": {
-                "IsFeatureOn": {"Fn::Equals": ["false", "true"]},
-                "IsFeatureEnabled": {"Fn::Equals": ["false", "true"]},
-                "OnAndNotEnabled": {
-                    "Fn::And": [
-                        {"Condition": "IsFeatureOn"},
-                        {"Fn::Not": [{"Condition": "IsFeatureEnabled"}]},
-                    ]
+            "Parameters": {
+                "Env": {
+                    "Type": "String",
+                    "Default": "prod",
+                    "AllowedValues": ["prod", "dev"],
                 },
+            },
+            "Conditions": {
+                "IsDev": {"Fn::Equals": [{"Ref": "Env"}, "dev"]},
             },
         }
     ],
     indirect=True,
 )
-def test_validate_with_unsatisfiable_condition(rule, validator):
-    # Regression test for https://github.com/aws-cloudformation/cfn-lint/issues/4785
-    # A resource whose own condition can never be true (here `X and not X`
-    # over two identical conditions) must not raise Unsatisfiable (previously
-    # surfaced as an E3001 exception); its property errors are reported the
-    # same way as on an ungated resource.
+def test_validate_with_satisfiable_condition(rule, validator):
+    # A resource whose condition can be true is validated as before.
     instance = {
         "Type": "MyType",
-        "Condition": "OnAndNotEnabled",
+        "Condition": "IsDev",
         "Properties": {"BogusProperty": 1},
     }
     schema_manager = MagicMock()
@@ -158,6 +249,3 @@ def test_validate_with_unsatisfiable_condition(rule, validator):
         in message
         for message in messages
     ), f"property finding missing on gated resource: {messages!r}"
-    assert not any("raised while validating" in message for message in messages), (
-        f"crash surfaced: {messages!r}"
-    )

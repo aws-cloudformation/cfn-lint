@@ -22,12 +22,21 @@ def template():
     return {
         "AWSTemplateFormatVersion": "2010-09-09",
         "Conditions": {
-            "IsUsEast1": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]}
+            "IsUsEast1": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]},
+            "IsStaticFalse": {"Fn::Equals": ["false", "true"]},
+            # Env can only be prod, so this comparison can never be true
+            # (issue #5075).
+            "IsDev": {"Fn::Equals": [{"Ref": "Env"}, "dev"]},
         },
         "Parameters": {
             "MyParameter": {
                 "Type": "String",
                 "Default": "foobar",
+            },
+            "Env": {
+                "Type": "String",
+                "Default": "prod",
+                "AllowedValues": ["prod"],
             },
         },
         "Resources": {},
@@ -89,7 +98,8 @@ def validator(cfn, context):
             {"type": "string"},
             [
                 ValidationError(
-                    "{'Ref': 'MyParameter'} is not one of ['IsUsEast1']",
+                    "{'Ref': 'MyParameter'} is not one of "
+                    "['IsUsEast1', 'IsStaticFalse', 'IsDev']",
                     path=deque(["Fn::If", 0]),
                     schema_path=deque(
                         [
@@ -142,7 +152,7 @@ def validator(cfn, context):
             {"type": "boolean"},
             [
                 ValidationError(
-                    "'foo' is not one of ['IsUsEast1']",
+                    "'foo' is not one of ['IsUsEast1', 'IsStaticFalse', 'IsDev']",
                     path=deque(["Fn::If", 0]),
                     schema_path=deque(
                         [
@@ -172,11 +182,38 @@ def validator(cfn, context):
                     schema_path=deque(["fn_if"]),
                     validator="fn_if",
                 ),
+                # The unreachable branch is not validated: CloudFormation
+                # never passes its value to the resource (issue #5075).
+            ],
+        ),
+        (
+            # The true branch can never be chosen: IsStaticFalse is a
+            # constant Fn::Equals of two unequal literals. Only W1028
+            # reports the dead branch; the invalid value inside it is
+            # not validated (issue #5074).
+            "Dead true branch of an always-false condition is not validated",
+            {"Fn::If": ["IsStaticFalse", "foo", True]},
+            {"type": "boolean"},
+            [
                 ValidationError(
-                    "'foo' is not of type 'boolean'",
-                    path=deque(["Fn::If", 2, "Fn::If", 1]),
-                    schema_path=deque(["fn_if", "type"]),
-                    validator="type",
+                    "['Fn::If', 1] is not reachable. When setting condition "
+                    "'IsStaticFalse' to True",
+                    path=deque(["Fn::If", 1]),
+                ),
+            ],
+        ),
+        (
+            # The true branch can never be chosen: Env can only be prod,
+            # so IsDev compares it against a value outside AllowedValues.
+            # Only W1028 reports the dead branch (issue #5075).
+            "Dead true branch outside AllowedValues is not validated",
+            {"Fn::If": ["IsDev", "foo", True]},
+            {"type": "boolean"},
+            [
+                ValidationError(
+                    "['Fn::If', 1] is not reachable. When setting condition "
+                    "'IsDev' to True",
+                    path=deque(["Fn::If", 1]),
                 ),
             ],
         ),

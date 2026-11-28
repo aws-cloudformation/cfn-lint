@@ -11,8 +11,9 @@ from functools import cmp_to_key
 from typing import Any
 
 from sympy import Symbol
+from sympy.logic.boolalg import BooleanFalse, BooleanTrue
 
-from cfnlint.conditions._utils import get_hash
+from cfnlint.conditions._utils import equals_string, get_hash
 from cfnlint.helpers import is_function
 
 LOGGER = logging.getLogger(__name__)
@@ -55,7 +56,11 @@ class EqualParameter:
     @classmethod
     def create_from_instance(cls, instance: Any) -> "EqualParameter":
         if isinstance(instance, (str, bool, int, float)):
-            return cls(instance=str(instance))
+            # CloudFormation compares Fn::Equals operands as strings, so a
+            # boolean true is "true", not Python's "True" (see equals_string).
+            # Without this, [true, "true"] folds to false and the branch
+            # CloudFormation actually takes is reported as unreachable.
+            return cls(instance=equals_string(instance))
 
         if isinstance(instance, dict):
             return cls(instance=instance)
@@ -82,7 +87,7 @@ class Equal:
 
     is_static: bool | None = field(init=False, default=None)
 
-    cnf: Symbol = field(init=False)
+    cnf: Symbol | BooleanTrue | BooleanFalse = field(init=False)
 
     @classmethod
     def create_from_instance(cls, instance: Any) -> "Equal":
@@ -102,7 +107,19 @@ class Equal:
             object.__setattr__(
                 self, "is_static", self.left.instance == self.right.instance
             )
-        object.__setattr__(self, "cnf", Symbol(self.hash))
+        # A static Fn::Equals is a constant, not a free variable: fold it
+        # to BooleanTrue/BooleanFalse so the condition solver knows the
+        # condition can only take one value. Otherwise a branch guarded by
+        # an always-false condition stays satisfiable and rules keep
+        # validating values that can never be chosen (e.g. E1151 on the
+        # dead branch of an Fn::If). This mirrors the older solver in
+        # cfnlint.conditions._equals.Equal.build_cnf.
+        if self.is_static is True:
+            object.__setattr__(self, "cnf", BooleanTrue())
+        elif self.is_static is False:
+            object.__setattr__(self, "cnf", BooleanFalse())
+        else:
+            object.__setattr__(self, "cnf", Symbol(self.hash))
 
     @property
     def parameters(self) -> list[EqualParameter]:
