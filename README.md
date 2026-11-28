@@ -45,8 +45,9 @@ Python 3.11 to 3.15 are supported.
 
 ### Pip
 
-`pip install cfn-lint`. If pip is not available, run
-`python setup.py clean --all` then `python setup.py install`.
+Run `python -m pip install cfn-lint` with a supported Python version. If your Python installation does not include pip, install it using your operating system’s package manager or run `python -m ensurepip` where available.
+
+To install from a local checkout, run `python -m pip install .` from the repository root.
 
 #### Optional dependencies
 
